@@ -1,3 +1,0 @@
-!define seleniumDriver {firefox}
-
- * >PrivatlakarPortal.WebTests
