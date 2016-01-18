@@ -2,7 +2,7 @@
 <configuration scan="true" scanPeriod="30 seconds">
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <filter class="se.inera.privatlakarportal.common.monitoring.util.MarkerFilter">
+    <filter class="se.inera.intyg.rehabstod.common.monitoring.util.MarkerFilter">
       <markers>Monitoring, HSA</markers>
       <onMatch>DENY</onMatch>
       <onMismatch>ACCEPT</onMismatch>
@@ -14,24 +14,24 @@
 
   <!-- Daily rolling file appender for logging monitoring events -->
   <appender name="MONITORING" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <filter class="se.inera.privatlakarportal.common.monitoring.util.MarkerFilter">
+    <filter class="se.inera.intyg.rehabstod.common.monitoring.util.MarkerFilter">
       <marker>Monitoring</marker>
       <onMatch>ACCEPT</onMatch>
       <onMismatch>DENY</onMismatch>
     </filter>
     <file>${catalina.base}/logs/privatlakarportal-monitoring.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>${catalina.base}/logs/privatlakarportal-monitoring.%d{yyyy-MM-dd}.log
+      <fileNamePattern>${catalina.base}/logs/rehabstod-monitoring.%d{yyyy-MM-dd}.log
       </fileNamePattern>
     </rollingPolicy>
     <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-      <layout class="se.inera.privatlakarportal.logging.PatternLayoutWithUserContext">
+      <layout class="se.inera.intyg.rehabstod.logging.PatternLayoutWithUserContext">
         <param name="Pattern" value="%date{ISO8601} %session %user - %msg%n" />
       </layout>
     </encoder>
   </appender>
 
-  <logger name="se.inera.privatlakarportal" level="info"/>
+  <logger name="se.inera.intyg.rehabstod" level="info"/>
 
   <root>
     <level value="info" />
