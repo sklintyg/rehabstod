@@ -5,6 +5,7 @@ build/
 .classpath
 
 bin
+out
 generatedSource
 
 web/node_modules
