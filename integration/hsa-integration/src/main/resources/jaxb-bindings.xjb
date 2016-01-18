@@ -8,12 +8,12 @@
             collectionType="java.util.ArrayList"
             generateValueClass="true">
       <jaxb:javaType name="org.joda.time.LocalDate" xmlType="xs:date"
-                     parseMethod="se.inera.privatlakarportal.hsa.adapter.LocalDateAdapter.parseDate"
-                     printMethod="se.inera.privatlakarportal.hsa.adapter.LocalDateAdapter.printDate"/>
+                     parseMethod="se.inera.intyg.rehabstod.hsa.adapter.LocalDateAdapter.parseDate"
+                     printMethod="se.inera.intyg.rehabstod.hsa.adapter.LocalDateAdapter.printDate"/>
 
       <jaxb:javaType name="org.joda.time.LocalDateTime" xmlType="xs:dateTime"
-                     parseMethod="se.inera.privatlakarportal.hsa.adapter.LocalDateAdapter.parseDateTime"
-                     printMethod="se.inera.privatlakarportal.hsa.adapter.LocalDateAdapter.printDateTime"/>
+                     parseMethod="se.inera.intyg.rehabstod.hsa.adapter.LocalDateAdapter.parseDateTime"
+                     printMethod="se.inera.intyg.rehabstod.hsa.adapter.LocalDateAdapter.printDateTime"/>
     </jaxb:globalBindings>
   </jaxb:bindings>
 

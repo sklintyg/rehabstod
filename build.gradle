@@ -18,7 +18,7 @@ def getDate() {
 
 allprojects {
 
-    group = 'se.inera.intyg.rhs'
+    group = 'se.inera.intyg.rehabsstod'
 
     if (System.env.BUILD_VERSION && System.env.BUILD_NUMBER) {
         if (System.env.BRANCH == 'develop' || System.env.BRANCH.contains('feature')) {

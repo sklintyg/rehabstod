@@ -9,7 +9,7 @@ angular.module('privatlakareApp').factory('UserModel',
             data.status = null;
             data.personnummer = null;
             data.authenticationScheme = null;
-            data.fakeSchemeId = 'urn:inera:privatlakarportal:eleg:fake';
+            data.fakeSchemeId = 'urn:inera:rehabstod:eleg:fake';
             data.loggedIn = false;
             data.nameFromPuService = false;
             data.nameUpdated = false;

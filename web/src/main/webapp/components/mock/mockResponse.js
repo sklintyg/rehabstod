@@ -30,8 +30,8 @@ angular.module('privatlakareApp').value('mockResponse', {
             'namn':'Oskar Johansson',
             'status':'NOT_STARTED',
             'personalIdentityNumber': '191212121212',
-            'authenticationScheme': 'urn:inera:privatlakarportal:eleg:fake',
-            'fakeSchemeId': 'urn:inera:privatlakarportal:eleg:fake',
+            'authenticationScheme': 'urn:inera:rehabstod:eleg:fake',
+            'fakeSchemeId': 'urn:inera:rehabstod:eleg:fake',
             'loggedIn': false,
             'nameFromPuService': false,
             'nameUpdated': false
@@ -41,8 +41,8 @@ angular.module('privatlakareApp').value('mockResponse', {
         'namn':'Oskar Johansson',
         'status':'NOT_STARTED',
         'personalIdentityNumber': '191212121212',
-        'authenticationScheme': 'urn:inera:privatlakarportal:eleg:fake',
-        'fakeSchemeId': 'urn:inera:privatlakarportal:eleg:fake',
+        'authenticationScheme': 'urn:inera:rehabstod:eleg:fake',
+        'fakeSchemeId': 'urn:inera:rehabstod:eleg:fake',
         'loggedIn': false,
         'nameFromPuService': false,
         'nameUpdated': false

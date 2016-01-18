@@ -1,6 +1,6 @@
 {
-  "name": "privatlakarportal",
-  "description": "Portal för registrering av privatläkare",
+  "name": "rehabstod",
+  "description": "Applikation för rehabstöd",
   "version": "0.0.1",
   "dependencies": {
     "bower": "1.3.12",

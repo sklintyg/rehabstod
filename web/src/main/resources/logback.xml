@@ -19,7 +19,7 @@
       <onMatch>ACCEPT</onMatch>
       <onMismatch>DENY</onMismatch>
     </filter>
-    <file>${catalina.base}/logs/privatlakarportal-monitoring.log</file>
+    <file>${catalina.base}/logs/rehabstod-monitoring.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>${catalina.base}/logs/rehabstod-monitoring.%d{yyyy-MM-dd}.log
       </fileNamePattern>

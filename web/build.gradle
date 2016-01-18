@@ -78,13 +78,12 @@ grunt_build.dependsOn bowerInstall
 grunt_build_no_minify.dependsOn bowerInstall
 
 gretty {
-    httpPort = 8090
+    httpPort = 8790
     contextPath = '/'
     logbackConfigFile = "${projectDir}/src/main/resources/logback.xml"
     jvmArgs = [
         '-Dspring.profiles.active=dev',
         '-rehabstod.config.file=' + projectDir + '/src/main/resources/dev.properties',
-        '-Drehabstod.mailresource.file=' + projectDir + '/src/main/resources/dev.mailresource.properties',
         '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
         '-Drehabstod.resources.folder=/' +projectDir + '/src/main/resources',
         '-XX:MaxPermSize=256M'

@@ -30,7 +30,7 @@
     <property name="logErrors" value="true"/>
   </bean>
 
-  <bean id="userDetailsService" class="se.inera.intyg.rehabstod.auth.UserDetailsService"/>
+  <bean id="elegUserDetailsService" class="se.inera.intyg.rehabstod.auth.ElegUserDetailsService"/>
 
   <!-- Initialization of OpenSAML library-->
   <bean class="org.springframework.security.saml.SAMLBootstrap"/>
@@ -39,7 +39,8 @@
   <bean id="velocityEngine" class="org.springframework.security.saml.util.VelocityFactory" factory-method="getEngine"/>
 
   <!-- XML parser pool needed for OpenSAML parsing -->
-  <bean id="parserPool" class="org.opensaml.xml.parse.StaticBasicParserPool" scope="singleton" init-method="initialize"/>
+  <bean id="parserPool" class="org.opensaml.xml.parse.StaticBasicParserPool" scope="singleton"
+        init-method="initialize"/>
   <bean id="parserPoolHolder" class="org.springframework.security.saml.parser.ParserPoolHolder" scope="singleton"/>
 
   <bean id="failureHandler"
@@ -67,9 +68,9 @@
 
 
   <!-- =============================================================== -->
-  <!-- These URLs are unsecured in all profiles except rhs-security-prod -->
+  <!-- These URLs are unsecured in all profiles except pp-security-prod -->
   <!-- =============================================================== -->
-  <beans profile="dev,rhs-security-dev,rhs-security-test">
+  <beans profile="dev,pp-security-dev,pp-security-test">
     <security:http security="none" pattern="/welcome.html"/>
   </beans>
   <beans profile="dev,testability-api">
@@ -78,10 +79,10 @@
   </beans>
 
   <!-- =============================================================== -->
-  <!-- The dev and rhs-security-dev profiles only supports Fake login  -->
+  <!-- The dev and pp-security-dev profiles only supports Fake login -->
   <!-- =============================================================== -->
-  <beans profile="!rhs-security-test">
-    <beans profile="dev,rhs-security-dev">
+  <beans profile="!pp-security-test">
+    <beans profile="dev,pp-security-dev">
       <security:http use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
         <security:csrf disabled="true"/>
         <security:access-denied-handler error-page="/welcome.html"/>
@@ -91,7 +92,7 @@
         <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
       </security:http>
       <security:authentication-manager alias="authenticationManager">
-        <security:authentication-provider ref="fakeAuthenticationProvider"/>
+        <security:authentication-provider ref="fakeElegAuthenticationProvider"/>
       </security:authentication-manager>
     </beans>
   </beans>
@@ -115,10 +116,10 @@
     </bean>
   </beans>
 
-  <!-- ======================================================================== -->
-  <!-- The rhssecurity-test profile support both Säkerhetstjänst and Fake login -->
-  <!-- ======================================================================== -->
-  <beans profile="rhs-security-test">
+  <!-- =============================================================== -->
+  <!-- The pp-security-test profile support both CGI eleg and Fake login -->
+  <!-- =============================================================== -->
+  <beans profile="pp-security-test">
     <!-- Unauthenticated requests matching samlRequestMatcher will be sent to saml login flow -->
     <security:http use-expressions="false" entry-point-ref="samlEntryPoint" request-matcher-ref="samlRequestMatcher">
       <security:csrf disabled="true"/>
@@ -147,9 +148,9 @@
   </beans>
 
   <!-- =============================================================== -->
-  <!-- The rhs-security-prod profile only supports SITHS login         -->
+  <!-- The pp-security-prod profile only supports CGI e-leg login      -->
   <!-- =============================================================== -->
-  <beans profile="prod,rhs-security-prod">
+  <beans profile="prod,pp-security-prod">
     <security:http use-expressions="false" entry-point-ref="samlEntryPoint" request-matcher-ref="samlRequestMatcher">
       <security:csrf disabled="true"/>
       <security:headers/>
@@ -169,7 +170,7 @@
 
 
 
-  <beans profile="dev,rhs-security-dev,rhs-security-test">
+  <beans profile="dev,pp-security-dev,pp-security-test">
     <bean id="fakeAuthFilter" class="se.inera.intyg.rehabstod.auth.FakeAuthenticationFilter">
       <property name="authenticationManager" ref="authenticationManager"/>
       <property name="sessionAuthenticationStrategy" ref="registerSessionAuthenticationStrategy"/>
@@ -180,14 +181,14 @@
         class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
       <property name="defaultTargetUrl" value="/"/>
     </bean>
-    <bean id="fakeAuthenticationProvider"
-        class="se.inera.intyg.rehabstod.auth.FakeAuthenticationProvider">
-      <property name="userDetailsService" ref="userDetailsService"/>
+    <bean id="fakeElegAuthenticationProvider"
+        class="se.inera.intyg.rehabstod.auth.FakeElegAuthenticationProvider">
+      <property name="elegUserDetailsService" ref="elegUserDetailsService"/>
     </bean>
   </beans>
 
 
-  <beans profile="prod,rhs-security-test,rhs-security-prod">
+  <beans profile="prod,pp-security-test,pp-security-prod">
 
     <bean id="samlFilter" class="org.springframework.security.web.FilterChainProxy">
       <security:filter-chain-map request-matcher="ant">
@@ -228,14 +229,14 @@
 
     <!-- Central storage of cryptographic keys -->
     <bean id="keyManager" class="org.springframework.security.saml.key.JKSKeyManager">
-      <constructor-arg value="${sakerhetstjanst.saml.keystore.file}"/>
-      <constructor-arg type="java.lang.String" value="${sakerhetstjanst.saml.keystore.password}"/>
+      <constructor-arg value="${cgi.eleg.saml.keystore.file}"/>
+      <constructor-arg type="java.lang.String" value="${cgi.eleg.saml.keystore.password}"/>
       <constructor-arg>
         <map>
-          <entry key="${sakerhetstjanst.saml.keystore.alias}" value="${sakerhetstjanst.saml.keystore.password}"/>
+          <entry key="${cgi.eleg.saml.keystore.alias}" value="${cgi.eleg.saml.keystore.password}"/>
         </map>
       </constructor-arg>
-      <constructor-arg type="java.lang.String" value="${sakerhetstjanst.saml.keystore.alias}"/>
+      <constructor-arg type="java.lang.String" value="${cgi.eleg.saml.keystore.alias}"/>
     </bean>
 
     <!-- Entry point to initialize authentication, default values taken from properties file -->
@@ -257,75 +258,72 @@
       <constructor-arg>
         <list>
 
-          <!-- START SERVICE PROVIDER BEAN FOR SITHS -->
+          <!-- START SERVICE PROVIDER BEAN FOR E-LEG -->
           <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
             <constructor-arg>
               <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
                 <constructor-arg>
-                  <value type="java.io.File">${config.dir}/sp-sakerhetstjanst.xml</value>
+                  <value type="java.io.File">${config.dir}/sp-eleg.xml</value>
                 </constructor-arg>
                 <property name="parserPool" ref="parserPool"/>
               </bean>
             </constructor-arg>
-            <property name="metadataTrustCheck" value="true"/>
 
             <constructor-arg>
               <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
-                <property name="alias" value="defaultAlias"/>
+                <property name="alias" value="eleg"/>
                 <property name="local" value="true"/>
                 <property name="securityProfile" value="metaiop"/>
-                <property name="sslSecurityProfile" value="metaiop"/>
+                <property name="sslSecurityProfile" value="metaiop"/>    <!-- pkix -->
                 <property name="signMetadata" value="true"/>
+
                 <!-- The signingKey and encryptionKey refers to the _aliases_ of the key in the keystore defined in the keyManager bean -->
-                <property name="signingKey" value="${sakerhetstjanst.saml.keystore.alias}"/>
-                <property name="encryptionKey" value="${sakerhetstjanst.saml.keystore.alias}"/>
+                <property name="signingKey" value="${cgi.eleg.saml.keystore.alias}"/>
+                <property name="encryptionKey" value="${cgi.eleg.saml.keystore.alias}"/>
                 <property name="requireArtifactResolveSigned" value="true"/>
-                <property name="requireLogoutRequestSigned" value="false"/>
-                <property name="requireLogoutResponseSigned" value="false"/>
+                <property name="requireLogoutRequestSigned" value="true"/>
+                <property name="requireLogoutResponseSigned" value="true"/>
+                <property name="idpDiscoveryEnabled" value="false"/>
               </bean>
             </constructor-arg>
+
+            <property name="metadataTrustCheck" value="true"/>
           </bean>
-          <!--  END SERVICE PROVIDER BEAN FOR SITHS -->
+          <!-- END SERVICE PROVIDER BEAN FOR E-LEG -->
 
-
-          <!-- START IDENTITY PROVIDER BEAN FOR SITHS -->
+          <!-- START IDENTITY PROVIDER BEAN FOR E-LEG -->
           <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
             <constructor-arg>
               <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
                 <constructor-arg>
-                  <value type="java.io.File">${config.dir}/idp-sakerhetstjanst.xml</value>
+                  <value type="java.io.File">${config.dir}/idp-eleg.xml</value>
                 </constructor-arg>
                 <property name="parserPool" ref="parserPool"/>
               </bean>
             </constructor-arg>
             <constructor-arg>
               <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
-                <property name="alias" value="defaultAlias"/>
+                <property name="alias" value="eleg"/>
               </bean>
             </constructor-arg>
 
-            <property name="metadataTrustCheck" value="true"/>
+            <!--
+            TODO: If set to true, application startup fails with:
+            TODO: org.opensaml.saml2.metadata.provider.FilterException: Signature trust establishment failed for metadata entry
+            TODO: Need to look into certificates here. It may be a problem that only occurs vs test environments.
+               -->
+            <property name="metadataTrustCheck" value="false"/>
           </bean>
-          <!-- END IDENTITY PROVIDER BEAN FOR SITHS -->
-
+          <!-- END IDENTITY PROVIDER BEAN FOR E-LEG -->
         </list>
       </constructor-arg>
-
       <property name="refreshCheckInterval" value="86400000"/>
-
-      <!-- Setting SITHS as default login method to be redirected to when requesting protected resource. -->
-      <!-- This value _must_ match the entityID specified in idp-sakerhetstjanst.xml.  -->
-      <property name="defaultIDP" value="${sakerhetstjanst.saml.idp.metadata.url}" />
-
-      <!-- This makes sure the Sakerhetstjanst SP metadata is used by default -->
-      <!-- This value _must_ match the entityID specified in sp-sakerhetstjanst.xml  -->
-      <property name="hostedSPName" value="${sakerhetstjanst.saml.entityId}" />
 
     </bean>
 
-    <!-- SAML Authentication Provider responsible for validating of received SAML messages over SITHS -->
+    <!-- SAML Authentication Provider responsible for validating of received SAML messages over SITHS or e-leg -->
     <bean id="samlAuthenticationProvider" class="org.springframework.security.saml.SAMLAuthenticationProvider">
-      <property name="userDetails" ref="userDetailsService"/>
+      <property name="userDetails" ref="elegUserDetailsService"/>
       <property name="forcePrincipalAsString" value="false"/>
     </bean>
 
@@ -371,7 +369,7 @@
 
     <!-- SAML 2.0 WebSSO Assertion Consumer -->
     <bean id="webSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerImpl">
-      <property name="responseSkew" value="${sakerhetstjanst.saml.responseSkew}"/>
+      <property name="responseSkew" value="${cgi.eleg.saml.responseSkew}"/>
     </bean>
 
     <!-- SAML 2.0 Holder-of-Key WebSSO Assertion Consumer -->
