@@ -183,4 +183,3 @@ configure (subprojects.findAll {
         }
     }
 }
-∫
