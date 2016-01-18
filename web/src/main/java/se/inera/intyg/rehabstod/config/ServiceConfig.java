@@ -31,9 +31,6 @@ public class ServiceConfig {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @Value("${terms.ws.services.url}")
-    private String termsUrl;
-
     @Bean
     public ServletContextAttributeExporter contextAttributes() {
         final Map<String, Object> attributes = new HashMap<String, Object>();
