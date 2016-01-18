@@ -1,7 +1,0 @@
-ENV_CFG="-Dspring.profiles.active={{ profiles }}"
-JVM_CFG="-Xms1024m -Xmx1024m -Dfile.encoding=UTF-8 -Djsse.enableSNIExtension=false"
-PRIVATLAKARPORTAL_CFG="-Dprivatlakarportal.config.folder={{ config_etc_folder }} -Dprivatlakarportal.config.file={{ config_etc_folder }}/privatlakarportal.properties -Dprivatlakarportal.logback.file={{ config_etc_folder }}/privatlakarportal-logback.xml -Dprivatlakarportal.mailresource.file={{ config_etc_folder }}/privatlakarportal.mailresource.properties"
-PRIVATLAKARPORTAL_RESOURCES="-Dprivatlakarportal.resources.folder={{ app_resources_folder }}"
-CREDENTIALS_CFG="-Dcredentials.file={{ config_etc_folder }}/credentials.properties"
-LOGSENDER_CFG="-Dlogsender.config.folder={{ config_etc_folder }} -Dlogsender.config.file={{ config_etc_folder }}/logsender.properties -Dlogsender.logback.file={{ config_etc_folder }}/logsender-logback.xml"
-export JAVA_OPTS="$JAVA_OPTS $ENV_CFG $JVM_CFG $PRIVATLAKARPORTAL_CFG $PRIVATLAKARPORTAL_RESOURCES $CREDENTIALS_CFG $LOGSENDER_CFG"

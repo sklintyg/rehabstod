@@ -1,7 +1,0 @@
-!3 Test suite för Inera Privatläkarportal
-
- * PrivatlakarPortal
-
-!3 Web Suites
- * ChromeSuite
- * FirefoxSuite
