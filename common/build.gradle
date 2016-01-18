@@ -1,9 +1,8 @@
-description = 'Inera Privatlakaportal common module'
+description = 'Inera Rehabstöd common module'
 
 apply plugin: 'java'
 
 dependencies {
-    compile project(":privatlakarportal-persistence")
 
     compile 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.5.1'

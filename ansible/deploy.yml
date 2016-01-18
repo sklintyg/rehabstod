@@ -1,13 +1,13 @@
-# This playbook deploys privatlakarportalen 
+# This playbook deploys rehabstod 
 
-- hosts: privatlakarportal-tomcat
+- hosts: rehabstod-tomcat
   sudo: yes 
   vars:
     # repo - values: 'snapshots or 'releases'
     repo: releases
-    version: 1.0.0-b32
+    version: 1.0.0-b1
     config_version: master
 
   roles:
     - app-resources
-    - privatlakarportal
+    - rehabstod

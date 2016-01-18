@@ -1,7 +1,7 @@
 ---
-# This playbook provisions application resources for Privatlakarportalen 
+# This playbook provisions application resources for Rehabstöd 
 
-- hosts: privatlakarportal-tomcat
+- hosts: rehabstod-tomcat
   sudo: yes 
 
   roles:

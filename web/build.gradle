@@ -24,7 +24,7 @@ node {
     distBaseUrl = 'https://build-inera.nordicmedtest.se/node/'
 }
 
-if (project.hasProperty('privatlakarportal.useMinifiedJavaScript')) {
+if (project.hasProperty('rehabstod.useMinifiedJavaScript')) {
     war {
         webAppDirName = 'build/webapp'
     }
@@ -83,10 +83,10 @@ gretty {
     logbackConfigFile = "${projectDir}/src/main/resources/logback.xml"
     jvmArgs = [
         '-Dspring.profiles.active=dev',
-        '-Dprivatlakarportal.config.file=' + projectDir + '/src/main/resources/dev.properties',
-        '-Dprivatlakarportal.mailresource.file=' + projectDir + '/src/main/resources/dev.mailresource.properties',
+        '-rehabstod.config.file=' + projectDir + '/src/main/resources/dev.properties',
+        '-Drehabstod.mailresource.file=' + projectDir + '/src/main/resources/dev.mailresource.properties',
         '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
-        '-Dprivatlakarportal.resources.folder=/' +projectDir + '/src/main/resources',
+        '-Drehabstod.resources.folder=/' +projectDir + '/src/main/resources',
         '-XX:MaxPermSize=256M'
     ]
     fastReload = true
@@ -95,11 +95,8 @@ gretty {
 }
 
 dependencies {
-    compile project(":privatlakarportal-persistence")
-    compile project(":privatlakarportal-hsa-integration")
-    compile project(":privatlakarportal-pu-integration")
-    compile project(":privatlakarportal-wc-integration")
-    compile project(":privatlakarportal-common")
+    compile project(":rehabstod-hsa-integration")
+    compile project(":rehabstod-common")
     
     compile "org.springframework:spring-webmvc:${springContextVersion}"
     compile "org.springframework.ws:spring-ws-core:2.2.2.RELEASE"

@@ -1,11 +1,5 @@
-[privatlakarportal-tomcat]
-privatlakarportal-test ansible_ssh_host=webcert.inera.nordicmedtest.se ansible_ssh_user=inera ansible_ssh_port=21022 ansible_ssh_private_key_file=~/.ssh/inera_rsa
-
-[privatlakarportal-mysql]
-privatlakarportal-test ansible_ssh_host=webcert.inera.nordicmedtest.se ansible_ssh_user=inera ansible_ssh_port=21022 ansible_ssh_private_key_file=~/.ssh/inera_rsa
+[rehabstod-tomcat]
+rehabstod-test ansible_ssh_host=rhs.inera.nordicmedtest.se ansible_ssh_user=inera ansible_ssh_port=21022 ansible_ssh_private_key_file=~/.ssh/inera_rsa
 
 [tomcat:children]
-privatlakarportal-tomcat
-
-[mysql:children]
-privatlakarportal-mysql
+rehabstod-tomcat

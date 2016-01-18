@@ -1,4 +1,4 @@
-description = 'Inera Privatlakaportal HSA-Integration module'
+description = 'Inera Rehabstöd HSA-Integration module'
 
 ext.wsdlFile = file("src/main/resources/schemas/wsdl/HsaWsInteraction_3.18.wsdl")
 ext.generatedJavaDir = file("generatedSource/java")
@@ -29,8 +29,7 @@ task wsdl2Java(type: JavaExec) {
 compileJava.dependsOn(wsdl2Java)
 
 dependencies {
-    compile project(":privatlakarportal-persistence")
-    compile project(":privatlakarportal-common")
+    compile project(":rehabstod-common")
 
     compile "org.jvnet.jaxb2_commons:jaxb2-basics:${jaxb2Version}"
     compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.2.3"

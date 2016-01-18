@@ -18,7 +18,7 @@ def getDate() {
 
 allprojects {
 
-    group = 'se.inera.privatlakarportal'
+    group = 'se.inera.intyg.rhs'
 
     if (System.env.BUILD_VERSION && System.env.BUILD_NUMBER) {
         if (System.env.BRANCH == 'develop' || System.env.BRANCH.contains('feature')) {
@@ -75,31 +75,19 @@ if (project.hasProperty('runSonar')) {
 
             property "sonar.exclusions", [
                 "file:**/generatedSource/**",
-                "src/main/java/se/inera/privatlakarportal/**/config/**",
+                "src/main/java/se/inera/intyg/rhs/**/config/**",
                 "**/stub/**",
                 "**/exception/**",
                 "**/*Exception*.java",
                 "**/*Fake*.java"
                 ]
 
-            project(":privatlakarportal-web") {
+            project(":rehabstod-web") {
                 sonarRunner {
                     sonarProperties {
                         property "sonar.javascript.lcov.reportPath", "$buildDir/karma/coverage/lcov/lcov.info"
                         property "sonar.sources", "${projectDir}/src/main/resources,${projectDir}/src/main/java,${projectDir}/src/main/webapp/app"
                     }
-                }
-            }
-
-            //Skip these projects entirely
-            project(":privatlakarportal-specifications") {
-                sonarRunner {
-                    skipProject = true
-                }
-            }
-            project(":privatlakarportal-liquibase-runner") {
-                sonarRunner {
-                    skipProject = true
                 }
             }
         }
@@ -168,8 +156,7 @@ private void addProjectPropertiesFromFile(propfile) {
 
 configure (subprojects.findAll {
     [
-        'privatlakarportal-liquibase-runner',
-        'privatlakarportal-web'
+        'rehabstod-web'
     ].contains(it.name) }) {
 
     apply plugin: 'maven'
@@ -196,3 +183,4 @@ configure (subprojects.findAll {
         }
     }
 }
+∫
