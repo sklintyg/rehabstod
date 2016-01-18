@@ -1,0 +1,129 @@
+import org.gradle.api.tasks.Exec
+import org.apache.tools.ant.filters.*
+
+buildscript {
+    dependencies {
+        classpath 'org.akhikhl.gretty:gretty:1.2.0'
+        classpath 'com.moowork.gradle:gradle-grunt-plugin:0.10'
+	classpath 'se.inera.intyg:gradle-fitnesse-plugin:1.0-SNAPSHOT'
+    }
+}
+
+apply plugin: 'war'
+apply plugin: 'org.akhikhl.gretty'
+apply plugin: 'com.moowork.grunt'
+
+
+grunt {
+    colors = true
+}
+
+node {
+    version = '0.12.4'
+    download = true
+    distBaseUrl = 'https://build-inera.nordicmedtest.se/node/'
+}
+
+if (project.hasProperty('privatlakarportal.useMinifiedJavaScript')) {
+    war {
+        webAppDirName = 'build/webapp'
+    }
+    war.dependsOn grunt_build
+}
+else {
+    war.dependsOn grunt_build_no_minify
+}
+
+
+
+task assembleManifestClasspath() << {
+    war {
+        manifest {
+            def buildNumber = System.env.BUILD_NUMBER != null ? System.env.BUILD_NUMBER : '1.0.0-SNAPSHOT'
+            attributes("Build": buildNumber)
+            def gitRevision = System.env.GIT_COMMIT != null ? System.env.GIT_COMMIT : 'Local-build'
+            attributes("Git-revision" : gitRevision)
+            attributes("Build-Time": new Date())
+        }
+    }
+}
+
+war.dependsOn assembleManifestClasspath
+
+task createVersionPropertyFile(dependsOn: processResources) << {
+    def propertyFile = "${buildDir}/resources/main/version.properties"
+    ant.touch(file: propertyFile, mkdirs: "true")
+    ant.propertyfile(file: propertyFile) {
+        entry(key: 'buildVersion', default: buildVersion)
+        entry(key: 'buildTime', default: buildTime)
+        entry(key: 'buildNumber', default: buildNumber)
+    }
+}
+
+createVersionPropertyFile.dependsOn assembleManifestClasspath
+
+war.dependsOn createVersionPropertyFile
+
+task bowerInstall(type: NodeTask, dependsOn:npmInstall) {
+    script = file('node_modules/bower/bin/bower')
+    args = ["--config.storage.cache=${gradle.getGradleUserHomeDir()}/caches/bower/cache",
+            "--config.storage.packages=${gradle.getGradleUserHomeDir()}/caches/bower/packages",
+            "--config.storage.registry=${gradle.getGradleUserHomeDir()}/caches/bower/registry",
+            'install']
+    inputs.files file('bower.json')
+    outputs.files file('src/main/webapp/bower_components')
+}
+
+grunt_build.dependsOn bowerInstall
+grunt_build_no_minify.dependsOn bowerInstall
+
+gretty {
+    httpPort = 8090
+    contextPath = '/'
+    logbackConfigFile = "${projectDir}/src/main/resources/logback.xml"
+    jvmArgs = [
+        '-Dspring.profiles.active=dev',
+        '-Dprivatlakarportal.config.file=' + projectDir + '/src/main/resources/dev.properties',
+        '-Dprivatlakarportal.mailresource.file=' + projectDir + '/src/main/resources/dev.mailresource.properties',
+        '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
+        '-Dprivatlakarportal.resources.folder=/' +projectDir + '/src/main/resources',
+        '-XX:MaxPermSize=256M'
+    ]
+    fastReload = true
+    inplaceMode = 'hard'
+    scanInterval = 0
+}
+
+dependencies {
+    compile project(":privatlakarportal-persistence")
+    compile project(":privatlakarportal-hsa-integration")
+    compile project(":privatlakarportal-pu-integration")
+    compile project(":privatlakarportal-wc-integration")
+    compile project(":privatlakarportal-common")
+    
+    compile "org.springframework:spring-webmvc:${springContextVersion}"
+    compile "org.springframework.ws:spring-ws-core:2.2.2.RELEASE"
+    compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
+    compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
+    compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+    compile 'org.slf4j:slf4j-api:1.7.10'
+    compile 'ch.qos.logback:logback-classic:1.0.13'
+    compile 'wsdl4j:wsdl4j:1.6.3'
+    compile 'commons-lang:commons-lang:2.6'
+    compile 'org.apache.commons:commons-lang3:3.1'
+    
+    compile 'se.riv.itintegration.monitoring:itintegration-monitoring-schemas:1.0.0.0'
+
+    compile 'org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}'
+    compile 'org.apache.cxf:cxf-rt-transports-http:${cxfVersion}'
+    
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:1.10.19'
+    testCompile "org.springframework:spring-test:${springContextVersion}"
+    testCompile 'org.unitils:unitils-core:3.3'
+    
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    providedCompile 'jstl:jstl:1.2'
+}

@@ -1,0 +1,58 @@
+---
+# file: roles/privatlakarportal/tasks/main.yml
+
+- name: stop tomcat
+  service: name={{ tomcat_service }} state=stopped pattern={{ tomcat_service }}
+
+- name: create release directory
+  file: path={{ releases_folder }} state=directory
+
+- name: Make sure liquibase runner file download is forced when using shapshot repo
+  file: state=absent  path={{ releases_folder }}/privatlakarportal-liquibase-runner-{{ version }}.zip
+  when: repo == "snapshots"
+
+- name: download liquibase-runner-{{ version }}.zip
+  get_url: url=https://build-inera.nordicmedtest.se/nexus/content/repositories/{{ repo }}/se/inera/privatlakarportal/privatlakarportal-liquibase-runner/{{ version }}/privatlakarportal-liquibase-runner-{{ version }}.zip
+      dest={{ releases_folder }}/privatlakarportal-liquibase-runner-{{ version }}.zip
+
+- name: Unzip liquibase-runner-{{ version }}.zip
+  command: unzip -od {{ releases_folder }} {{ releases_folder }}/privatlakarportal-liquibase-runner-{{ version }}.zip
+  args:
+    creates: "{{ releases_folder }}/privatlakarportal-liquibase-runner-{{ version }}/bin/liquibase-runner"
+
+- name: run liquibase update
+  command: "{{ releases_folder }}/privatlakarportal-liquibase-runner-{{ version }}/bin/privatlakarportal-liquibase-runner --url={{ database_url }} --username={{ database_username }} --password={{ database_password }} update"
+  args:
+      chdir: "{{ releases_folder }}/privatlakarportal-liquibase-runner-{{ version }}"
+  environment:
+      JAVA_HOME: "{{ java_home }}"
+
+- name: Make sure privatlakarportal-web file download is forced when using shapshots repo
+  file: state=absent  path={{ releases_folder }}/privatlakarportal-web-{{ version }}.war
+  when: repo == "snapshots"
+
+- name: Download privatlakarportal-web-{{ version }}.war
+  get_url: url=https://build-inera.nordicmedtest.se/nexus/content/repositories/{{ repo }}/se/inera/privatlakarportal/privatlakarportal-web/{{ version }}/privatlakarportal-web-{{ version }}.war
+      dest={{ releases_folder }}/privatlakarportal-web-{{ version }}.war
+
+- name: remove old version of unpacked privatlakarportal war
+  file: state=absent
+      path={{ webapps_folder }}/ROOT
+
+- name: remove old version of ROOT.war
+  file: state=absent
+      path={{ webapps_folder }}/ROOT.war
+
+- name: Deploy privatlakarportal-web-{{ version }}.war as ROOT.war in {{ webapps_folder }}
+  command: cp {{ releases_folder }}/privatlakarportal-web-{{ version }}.war {{ webapps_folder }}/ROOT.war
+
+- name: Create version file
+  template: src=version.txt.j2 dest={{ webapps_folder }}/version.txt
+
+- name: update configuration to {{ config_version }}
+  git: repo={{ config_repository }}
+       dest={{ config_folder }}
+       version={{ config_version }}
+
+- name: start tomcat
+  service: name={{ tomcat_service }} state=started pattern={{ tomcat_service }}

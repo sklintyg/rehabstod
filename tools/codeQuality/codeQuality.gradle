@@ -1,0 +1,42 @@
+apply plugin: 'findbugs'
+apply plugin: 'pmd'
+//apply plugin: 'checkstyle'
+
+findbugs {
+    ignoreFailures = false
+    effort = "max"
+    reportLevel = "low"
+    includeFilter = rootProject.file("tools/codeQuality/findbugsIncludeFilter.xml")
+    sourceSets = [ sourceSets.main ]
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        if (project.properties['findBugsHtmlOutput'] == "true") {
+            xml.enabled = false
+            html.enabled = true
+        }
+        else {
+            xml.enabled = true
+            html.enabled = false
+        }
+    }
+}
+
+pmd {
+    ignoreFailures = false
+    ruleSetFiles = rootProject.files("tools/codeQuality/pmdRuleSet.xml")
+    ruleSets = []
+    sourceSets = [ sourceSets.main ]
+}
+
+pmdMain.source = fileTree('src/main/java')
+
+//checkstyle {
+//    configProperties.checkstyleConfigDir = file("$rootProject.projectDir/tools/codeQuality")
+//    config = resources.text.fromFile("${rootProject.projectDir}/tools/codeQuality/checkstyle.xml")
+//    ignoreFailures = false
+//    showViolations = false
+//}
+//
+//checkstyleMain.source = "src/main/java"

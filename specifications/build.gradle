@@ -1,0 +1,52 @@
+ext {
+    // Versions used for maintaining dependencies
+    seleniumVersion = '2.47.1'
+    phantomJsVersion = '1.1.0'
+}
+
+buildscript { dependencies { classpath 'se.inera.intyg:gradle-fitnesse-plugin:1.0-SNAPSHOT' } }
+
+description = 'Inera Privatläkarportal Fitnesse specifications'
+
+apply plugin: 'groovy'
+apply plugin: 'inera-fitnesse'
+
+fitnesse {
+    port = 9125
+    root = "FitNesseRoot"
+    workingDir = "src/test/fitnesse"
+    extraProperties = [
+        baseUrl: baseUrl,
+        seleniumDriver: seleniumDriver
+    ]
+    wikiStartPage = "PrivatlakarPortal.WebTests"
+
+    if (project.hasProperty('fileOutput')) {
+        outputFormat = "xml&includehtml"
+    }
+}
+
+dependencies {
+    compile project(":privatlakarportal-web")
+
+    // selenium drivers
+    compile "org.seleniumhq.selenium:selenium-ie-driver:$seleniumVersion"
+    compile "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
+    compile "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+    compile "org.seleniumhq.selenium:selenium-safari-driver:$seleniumVersion"
+    compile "org.seleniumhq.selenium:selenium-htmlunit-driver:$seleniumVersion"
+    compile "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
+    compile("com.github.detro.ghostdriver:phantomjsdriver:$phantomJsVersion") { transitive = false }
+
+    // geb
+    compile 'org.codehaus.geb:geb-core:0.7.2'
+    compile 'org.codehaus.geb:geb-spock:0.7.2'
+
+    fitnesse "org.fitnesse:fitnesse:20150814"
+
+    compile "org.fitnesse:fitnesse:20140901"
+    compile "org.codehaus.groovy:groovy-all:2.4.0"
+    compile "org.codehaus.groovy.modules.http-builder:http-builder:0.7.1"
+    compile "org.apache.httpcomponents:httpmime:4.4.1"
+    compile "org.apache.httpcomponents:httpcore:4.4.1"
+}

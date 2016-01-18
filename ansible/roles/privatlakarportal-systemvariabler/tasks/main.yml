@@ -1,0 +1,15 @@
+---
+# file: roles/privatlakarportal-systemvariabler/tasks/main.yml
+
+- name: Create privatlakarportal-env.sh file
+  template: src=privatlakarportal-env.sh.j2 dest="{{ inera_tomcat_folder }}/privatlakarportal-env.sh" mode=755
+
+- name: configure setenv.sh
+  lineinfile:
+    dest="{{ tomcat_bin }}/setenv.sh"
+    create=yes
+    mode=755
+    regexp="privatlakarportal-env\.sh"
+    insertafter="EOF"
+    line=". \"{{ inera_tomcat_folder }}/privatlakarportal-env.sh\""
+

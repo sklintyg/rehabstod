@@ -1,0 +1,11 @@
+---
+# This playbook provisions Tomcat resources for Privatlakarportalen 
+
+- hosts: privatlakarportal-tomcat
+  sudo: yes 
+
+  roles:
+    - privatlakarportal-systemvariabler
+    - privatlakarportal-resurser
+    - privatlakarportal-jarfiler
+    - config-folder

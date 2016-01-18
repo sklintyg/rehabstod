@@ -1,0 +1,16 @@
+﻿!contents -R2 -g -p -f -h
+
+!| Import|
+| se.inera.privatlakarportal.page |
+| se.inera.privatlakarportal.spec |
+| se.inera.privatlakarportal.spec.util |
+
+!| Config |
+| property | value |
+| geb.build.baseUrl |  ${baseUrl} |
+| privatlakarportal.baseUrl| ${baseUrl} |
+| geb.env | ${seleniumDriver} |
+
+
+| script | Browser |
+| öppna |

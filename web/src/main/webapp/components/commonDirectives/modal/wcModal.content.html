@@ -1,0 +1,30 @@
+<!--<div class="modal-dialog" ng-class="{'modal-sm': size == 'sm', 'modal-lg': size == 'lg'}"><div class="modal-content" modal-transclude></div></div>-->
+<div class="modal-dialog {{modal.extraDlgClass}}" ng-class="{'modal-sm': size == 'sm', 'modal-lg': size == 'lg'}"
+     style="width: {{modal.width}}; max-width: {{modal.maxWidth}}; min-width: {{modal.minWidth}}; height: {{modal.height}}; max-height: {{modal.maxHeight}}; min-height: {{modal.minHeight}}; ">
+
+  <div class="modal-content"
+       style="min-height:{{modal.contentMinHeight}}">
+
+    <div id="{{modal.dialogId}}" class="modal-header">
+      <button class="close" ng-click="close()" ng-if="modal.showClose">×</button>
+      <h3 ng-focus="model.focus" tabindex="-1">
+        <span message key="{{modal.titleId}}"></span>
+      </h3>
+    </div>
+
+    <div class="modal-body">
+      <!-- modalBody -->
+    </div>
+
+    <div class="modal-footer" style="bottom: 0;width: 100%;margin-top:0px;height:74px">
+      <div class="form-inline">
+        <button ng-repeat="button in modal.buttons" id="{{button.id}}" class="btn {{button.className}}"
+                ng-click="modal.buttonAction($index)">
+          <span message key="{{button.text}}"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+

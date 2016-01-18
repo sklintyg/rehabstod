@@ -1,0 +1,65 @@
+{
+    "personId": "191212121212",
+    "hsaId": "SE165565594230-WEBCERT00001",
+    "fullstandigtNamn": "Test User",
+    "forskrivarKod": "0000000",
+    "godkandAnvandare": true,
+    "enhetsId": "SE165565594230-WEBCERT00001",
+    "enhetsNamn": "Test verksamhet",
+    "arbetsplatsKod": "0000000",
+    "agarform": "Privat",
+    "postadress": "Test adress",
+    "postnummer": "12345",
+    "postort": "Test postort",
+    "telefonnummer": "123456789",
+    "epost": "test@example.com",
+    "enhetStartdatum": "2015-09-30T00:00:00.000",
+    "enhetSlutDatum": null,
+    "lan": "Test län",
+    "kommun": "Test kommun",
+    "vardgivareId": "SE165565594230-WEBCERT00001",
+    "vardgivareNamn": "Test verksamhet",
+    "vardgivareStartdatum": "2015-08-30T00:00:00.000",
+    "vardgivareSlutdatum": null,
+    "befattningar": [
+        {
+            "kod": "201010"
+        }
+    ],
+    "legitimeradeYrkesgrupper": [
+        {
+            "kod": "LK",
+            "namn": "Läkare"
+        }
+    ],
+    "specialiteter": [
+        {
+            "kod": "32",
+            "namn": "Klinisk fysiologi"
+        },
+        {
+            "kod": "74",
+            "namn": "Nukleärmedicin"
+        }
+    ],
+    "verksamhetstyper": [
+        {
+            "kod": "10"
+        }
+    ],
+    "vardformer": [
+        {
+            "kod": "01"
+        }
+    ],
+    "medgivande": [
+        {
+            "godkandDatum": "2015-09-09",
+            "medgivandeText": {
+                "version": 1,
+                "datum": "2015-08-01",
+                "medgivandeText": "Medgivandetext"
+            }
+        }
+    ]
+}

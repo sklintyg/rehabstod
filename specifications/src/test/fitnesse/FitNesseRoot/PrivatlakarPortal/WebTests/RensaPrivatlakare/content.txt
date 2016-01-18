@@ -1,0 +1,77 @@
+!3 Ta bort testdata
+| !-TaBortPrivatlakare-! |
+| id           | resultat? |
+| 195206172339 | true      |
+
+| !-TaBortPrivatlakare-! |
+| id           | resultat? |
+| 191212121212 | true      |
+
+
+!3 Skapa privatläkare via REST
+| !-SkapaPrivatlakare-! |
+| personnummer | fornamn | efternamn | befattning | verksamhetensNamn | agarForm | vardform | verksamhetstyp | arbetsplatskod | telefonnummer | epost | adress | postnummer | postort | kommun | lan | godkant medgivande version |
+|195206172339|Björn Anders Daniel|Pärsson|201013|Kliniken|Privat|03|12|0123456|070123456|a@a.a|Gatan|13100|NACKA|NACKA|STOCKHOLM|1|
+
+| !-SkapaPrivatlakare-! |
+| personnummer | fornamn | efternamn | befattning | verksamhetensNamn | agarForm | vardform | verksamhetstyp | arbetsplatskod | telefonnummer | epost | adress | postnummer | postort | kommun | lan | godkant medgivande version |
+|191212121212|Tolvan|Privatläkarsson|201013|Kliniken|Privat|03|12|0123456|070123456|a@a.a|Gatan|13100|NACKA|NACKA|STOCKHOLM|1|
+
+!3 Trigga rensningsrutin som normalt körs en gång per dag
+| script | !-RensningPrivatlakare-! |
+| kor rensning |
+
+!3 Inget har tagits bort eftersom de inte är äldre än 12 månader
+| script | !-RensningPrivatlakare-! |
+| ensure | finns privatlakare | 191212121212 |
+| ensure | finns privatlakare | 195206172339 |
+
+!3 Sätt registringsdatum till äldre än 12 månader
+| script | !-RensningPrivatlakare-! |
+| satt registreringsdatum | 1980-01-01 | for privatlakare | 195206172339 | 
+| satt registreringsdatum | 1980-01-01 | for privatlakare | 191212121212 |
+
+!3 Trigga rensningsrutin som normalt körs en gång per dag
+| script | !-RensningPrivatlakare-! |
+| kor rensning |
+
+!3 Gamla registreringar som aldrig fått läkarbehörighet ska nu vara borttagna
+| script | !-RensningPrivatlakare-! |
+| ensure | finns privatlakare | 191212121212 |
+| reject | finns privatlakare | 195206172339 |
+
+!3 Verifiera att läkare som har loggat in i Webcert inte tas bort av rensningsrutinen även om de inte längre är läkare efter 12 månader.
+
+!4 Tolvan loggar in i webcert
+| script | !-HospUppdatering-! |
+| check | logga in genom webcert | 191212121212 | OK |
+
+!4 Ta bort läkarbehörighet för Tolvan
+| script | !-HospUppdatering-! |
+| ta bort hosp information | 191212121212|
+
+!4 Tolvan loggar in genom webcert, detta tillåts nu ej
+| script | !-HospUppdatering-! |
+| check | logga in genom webcert | 195206172339 | ERROR |
+
+!4 Trigga rensningsrutin som normalt körs en gång per dag
+| script | !-RensningPrivatlakare-! |
+| kor rensning |
+
+!4 Tolvan ska inte bli borttagen eftersom han någon gång har loggat in i Webcert
+| script | !-RensningPrivatlakare-! |
+| ensure | finns privatlakare | 191212121212 |
+
+!3 Ta bort testdata
+| !-TaBortPrivatlakare-! |
+| id           | resultat? |
+| 195206172339 | true      |
+
+| !-TaBortPrivatlakare-! |
+| id           | resultat? |
+| 191212121212 | true      |
+
+!3 Återställ tolvans hosp informatinon
+| !-LaggTillHospInformation-! |
+| personNummer | lakarbehorighet |
+| 191212121212  | true |

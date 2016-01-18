@@ -1,0 +1,29 @@
+<div>
+  <div class="header clearfix">
+    <div class="headerbox">
+      <span class="headerbox-logo pull-left">
+        <a ng-href="/#/"><img alt="Till startsidan" src="assets/images/logo.png" /></a></span>
+      <span class="headerbox-date pull-left">
+        <span id="location" class="location">{{today | date:"shortDate"}}</span><br>
+      </span>
+    </div>
+
+    <div ng-show="user.loggedIn">
+      <div class="headerbox-avatar pull-right">
+        <a ui-sref="app.minsida"><img ng-src="assets/images/avatar.png"></a>
+      </div>
+      <div class="headerbox-user pull-right">
+        <div class="headerbox-user-profile">
+        <span id="logged-in-role">
+          {{statusText}}
+        </span>
+          - <span class="logged-in">{{user.name}}</span><br>
+        <span class="pull-right">
+          <span ng-show="userModel.isRegistered()"><a id="updateAccount" href="{{exitLink.link}}">{{exitLink.name}}</a> |&nbsp;</span><a
+            id="logoutLink" href="{{logoutLocation}}"><span message key="common.logout"></span></a>
+        </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

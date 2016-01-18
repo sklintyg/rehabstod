@@ -1,0 +1,11 @@
+{
+    "personalIdentityNumber": "197705232382",
+    "personalPrescriptionCode": "1234568",
+    "educationCodes":["educationCode1","educationCode2"],
+    "restrictions":["restriction1","restriction2"],
+    "restrictionCodes":["restrictionCode1","restrictionCode2"],
+    "titleCodes":["LK"],
+    "specialityCodes":["specialityCode1","specialityCode2"],
+    "specialityNames":["specialityName1","specialityName2"],
+    "hsaTitles":["Läkare"]
+}

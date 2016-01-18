@@ -1,0 +1,10 @@
+!contents -R2 -g -p -f -h
+
+!3 Logga in
+| script | !-LoggaIn-! |
+| logga in som | private-practicioner-4 |
+
+!3 Det ska inte gå att genomföra registrering eftersom personuppgifter inte kunde hämtas
+| script | Startsida |
+| felsidan visas |
+

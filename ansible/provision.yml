@@ -1,0 +1,5 @@
+---
+# This playbook provisions the environment for Privatlakarportalen 
+
+- include: provision_mysql.yml
+- include: provision_tomcat.yml

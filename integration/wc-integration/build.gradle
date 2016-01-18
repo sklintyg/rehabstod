@@ -1,0 +1,20 @@
+description = 'Inera Privatlakaportal Webcert-Integration module'
+
+apply plugin: 'java'
+
+dependencies {
+    compile project(":privatlakarportal-persistence")
+    compile project(":privatlakarportal-common")
+    compile project(":privatlakarportal-hsa-integration")
+
+    compile 'se.inera.intyg.infrastructure.directory.privatepractitioner:intyg-infrastructure-directory-privatepractitioner-schemas:1.0.0'
+    compile 'se.inera.intyg.infrastructure.directory.privatepractitioner.terms:intyg-infrastructure-directory-privatepractitioner-terms-schemas:1.0.0'
+
+    compile "org.springframework:spring-context:${springContextVersion}"
+    compile 'com.google.guava:guava:18.0'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:1.10.19'
+    testCompile 'org.unitils:unitils-core:3.3'
+    testCompile "org.springframework:spring-test:${springContextVersion}"
+}

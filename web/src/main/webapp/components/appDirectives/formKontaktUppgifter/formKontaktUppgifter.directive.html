@@ -1,0 +1,31 @@
+<div pp-field="telefonnummer">
+  <input type="text" id="telefonnummer" name="telefonnummer" ng-model="registerModel.telefonnummer" class='form-control'
+         value="" required popover-placement="right" popover-trigger="focus"
+         popover="{{'label.form.telefonnummer.popover' | message}}" pp-focus-me="focusTelefonnummer"
+         maxlength="20">
+</div>
+
+<div pp-field="epost">
+  <input type="email" id="epost" name="epost" ng-model="registerModel.epost" class='form-control'
+         style='max-width: 20em' value="" required popover-placement="right" popover-trigger="focus"
+         ng-paste="preventPaste($event, 'Epost')"
+         maxlength="200"
+         popover="{{'label.form.epost.popover' | message}}">
+  <div alert-single alert-model="viewState.errorMessage.pasteEpost" alert-message-id="label.form.error.pastenotallowed"></div>
+</div>
+
+<div pp-field="epost2">
+  <input type="email" id="epost2" name="epost2" ng-model="registerModel.epost2" class='form-control'
+         style='max-width: 20em' value="" required validate-confirm-email="epost"
+         ng-paste="preventPaste($event, 'Epost2')"
+         maxlength="200">
+  <div alert-single alert-model="viewState.errorMessage.pasteEpost2" alert-message-id="label.form.error.pastenotallowed"></div>
+</div>
+
+<div pp-field="adress">
+  <input type="text" id="adress" name="adress" ng-model="registerModel.adress" class='form-control'
+         style='max-width: 30em' value="" required
+         maxlength="150">
+</div>
+
+<div postnummer-region-lookup register-form="registerForm" register-model="registerModel"></div>

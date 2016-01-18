@@ -1,0 +1,81 @@
+!3 Rensa testdata
+| !-TaBortPrivatlakare-! |
+| id           | resultat? |
+| 199008252398 | true      |
+
+| script | !-RegistreringsMail-! | 
+| rensaMailStubbe |
+
+!3 Logga in
+| script | !-LoggaIn-! |
+| logga in som | private-practicioner-1 |
+
+!3 Starta registrering
+| script | Startsida |
+| startsidan visas |
+| starta registrering|
+
+!3 Fyll i registrering sida 1
+| script | Registrera |
+| registrering steg1 sidan visas |
+| ange befattning | Specialistläkare |
+| ange verksamhetensnamn | Fitnesse verksamhet |
+| ange vardform | Hemsjukvård |
+| ange verksamhetstyp | Primärvårdsverksamhet |
+| ange arbetsplatskod | 770088 |
+| fortsätt |
+
+!3 Fyll i registrering sida 2
+| script | Registrera |
+| registrering steg2 sidan visas |
+| ange telefonnummer | 987654321 |
+| ange epost | !-test@example.com-! |
+| ange epost2 | !-test@example.com-! |
+| ange gatuadress | gatuadress |
+| ange postnummer| 13100 |
+| fortsätt |
+
+!3 Verifiera registrering sida 3
+| script | Registrera |
+| registrering steg3 sidan visas |
+| check | personnummer | 19900825-2398 |
+| check | namn| Oskar II Johansson |
+| check | befattning | Specialistläkare |
+| check | verksamhetensnamn | Fitnesse verksamhet |
+| check | agarform| Privat |
+| check | vardform | Hemsjukvård  |
+| check | verksamhetstyp | Primärvårdsverksamhet |
+| check | arbetsplatskod | 770088 |
+| check | telefonnummer | 987654321 |
+| check | epost | !-test@example.com-! |
+| check | gatuadress | gatuadress |
+| check | postnummer | 13100 |
+| check | postort | NACKA |
+| check | kommun | NACKA |
+| check | lan | STOCKHOLM |
+| check | legitimeradYrkesgrupp | Läkare |
+| check | specialitet | specialityName1, specialityName2 |
+| check | forskrivarkod | 1234567 |
+| check | hospMeddelande | hospComplete |
+| check anvandarvillkor |
+| visa användarvillkor |
+| användarvillkoren visas |
+| stäng användarvillkoren |
+| vanta | 1 |
+| registrering steg3 sidan visas |
+| skapa konto |
+
+!3 Verifiera att vi hamnar på klar-sidan
+| script | Registrera |
+| klar sidan visas |
+
+!3 Verifiera att registreringsmail mottagits 
+| script | !-RegistreringsMail-! | 
+| mailHarSkickats | 199008252398 |
+| check | mailMottaget | true |
+| check | mailInnehåll | Registration klar | 
+
+
+| !-TaBortPrivatlakare-! |
+| id           | resultat? |
+| 199008252398 | true      |

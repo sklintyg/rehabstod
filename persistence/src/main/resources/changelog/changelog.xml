@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+  logicalFilePath="classpath:changelog/changelog.xml">
+  
+
+  <changeSet id="1" author="me">
+    <!-- initial creation of tables -->
+
+    <createTable tableName="PRIVATLAKARE_ID">
+      <column name="ID" type="bigint">
+        <constraints primaryKey="true" unique="true" nullable="false" />
+      </column>
+    </createTable>
+
+    <addAutoIncrement columnDataType="bigint"
+        columnName="ID" incrementBy="1" startWith="1"
+        tableName="PRIVATLAKARE_ID" />
+
+    <createTable tableName="PRIVATLAKARE">
+      <column name="PRIVATLAKARE_ID" type="varchar(255)">
+        <constraints primaryKey="true" unique="true" nullable="false" />
+      </column>
+      <column name="HSAID" type="varchar(255)">
+        <constraints unique="true" nullable="false" />
+      </column>
+      <column name="PERSONID" type="varchar(255)">
+        <constraints unique="true" nullable="false" />
+      </column>
+      <column name="FULLSTANDIGT_NAMN" type="varchar(255)">
+        <constraints nullable="false" />
+      </column>
+      <column name="FORSKRIVARKOD" type="varchar(255)">
+        <constraints nullable="true" />
+      </column>
+      <column name="GODKAND_ANVANDARE" type="boolean">
+        <constraints nullable="false" />
+      </column>
+
+      <!-- Enhet -->
+      <column name="ENHETS_ID" type="varchar(255)">
+         <constraints nullable="false" />
+       </column>
+      <column name="ENHETS_NAMN" type="varchar(255)">
+         <constraints nullable="false" />
+       </column>
+      <column name="ARBETSPLATSKOD" type="varchar(255)">
+         <constraints nullable="true" />
+       </column>
+      <column name="AGARFORM" type="varchar(255)" defaultValue="Privat">
+         <constraints nullable="false" />
+       </column>
+      <column name="POSTADRESS" type="varchar(255)">
+         <constraints nullable="false" />
+       </column>
+      <column name="POSTNUMMER" type="varchar(255)">
+         <constraints nullable="false" />
+       </column>
+      <column name="POSTORT" type="varchar(255)">
+         <constraints nullable="false" />
+       </column>
+      <column name="TELEFONNUMMER" type="varchar(255)">
+         <constraints nullable="false" />
+       </column>
+      <column name="EPOST" type="varchar(255)">
+         <constraints nullable="false" />
+       </column>
+      <column name="ENHET_STARTDATUM" type="datetime">
+         <constraints nullable="true" />
+       </column>
+      <column name="ENHET_SLUTDATUM" type="datetime">
+         <constraints nullable="true" />
+       </column>
+
+      <!-- Geografisk indelning -->
+      <column name="LAN" type="varchar(255)">
+         <constraints nullable="true" />
+       </column>
+      <column name="KOMMUN" type="varchar(255)">
+         <constraints nullable="true" />
+       </column>
+
+      <!-- Vårdgivare -->
+      <column name="VARDGIVARE_ID" type="varchar(255)">
+         <constraints nullable="false" />
+       </column>
+      <column name="VARDGIVARE_NAMN" type="varchar(255)">
+         <constraints nullable="false" />
+       </column>
+      <column name="VARDGIVARE_STARTDATUM" type="datetime">
+         <constraints nullable="true" />
+       </column>
+      <column name="VARDGIVARE_SLUTDATUM" type="datetime">
+         <constraints nullable="true" />
+       </column>
+    </createTable>
+
+    <!-- Specialitet -->
+    <createTable tableName="SPECIALITET">
+      <column name="ID" type="bigint">
+        <constraints unique="true" nullable="false" />
+      </column>
+      <column name="PRIVATLAKARE_ID" type="varchar(255)">
+        <constraints nullable="false" />
+      </column>
+      <column name="KOD" type="varchar(255)">
+        <constraints nullable="true" />
+      </column>
+      <column name="NAMN" type="varchar(255)">
+        <constraints nullable="true" />
+      </column>
+    </createTable>
+
+    <addAutoIncrement columnDataType="bigint"
+        columnName="ID" incrementBy="1" startWith="1"
+        tableName="SPECIALITET" />
+
+    <addForeignKeyConstraint baseColumnNames="PRIVATLAKARE_ID"
+        baseTableName="SPECIALITET" constraintName="SPECIALITET_PRIVATLAKARE"
+        referencedColumnNames="PRIVATLAKARE_ID" referencedTableName="PRIVATLAKARE" />
+
+    <!-- Befattning -->
+    <createTable tableName="BEFATTNING">
+      <column name="ID" type="bigint">
+        <constraints unique="true" nullable="false" />
+      </column>
+      <column name="PRIVATLAKARE_ID" type="varchar(255)">
+        <constraints nullable="false" />
+      </column>
+      <column name="KOD" type="varchar(255)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addAutoIncrement columnDataType="bigint"
+        columnName="ID" incrementBy="1" startWith="1"
+        tableName="BEFATTNING" />
+
+    <addForeignKeyConstraint baseColumnNames="PRIVATLAKARE_ID"
+        baseTableName="BEFATTNING" constraintName="BEFATTNING_PRIVATLAKARE"
+        referencedColumnNames="PRIVATLAKARE_ID" referencedTableName="PRIVATLAKARE" />
+
+    <!-- Legitimerad yrkesgrupp -->
+    <createTable tableName="LEGITIMERAD_YRKESGRUPP">
+      <column name="ID" type="bigint">
+        <constraints unique="true" nullable="false" />
+      </column>
+      <column name="PRIVATLAKARE_ID" type="varchar(255)">
+        <constraints nullable="false" />
+      </column>
+      <column name="KOD" type="varchar(255)">
+        <constraints nullable="false" />
+      </column>
+      <column name="NAMN" type="varchar(255)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addAutoIncrement columnDataType="bigint"
+        columnName="ID" incrementBy="1" startWith="1"
+        tableName="LEGITIMERAD_YRKESGRUPP" />
+
+    <addForeignKeyConstraint baseColumnNames="PRIVATLAKARE_ID"
+        baseTableName="LEGITIMERAD_YRKESGRUPP" constraintName="LEGITIMERAD_YRKESGRUPP_PRIVATLAKARE"
+        referencedColumnNames="PRIVATLAKARE_ID" referencedTableName="PRIVATLAKARE" />
+
+    <!-- Verksamhetstyp -->
+    <createTable tableName="VERKSAMHETSTYP">
+      <column name="ID" type="bigint">
+        <constraints unique="true" nullable="false" />
+      </column>
+      <column name="PRIVATLAKARE_ID" type="varchar(255)">
+        <constraints nullable="false" />
+      </column>
+      <column name="KOD" type="varchar(255)">
+         <constraints nullable="false" />
+       </column>
+    </createTable>
+
+    <addAutoIncrement columnDataType="bigint"
+        columnName="ID" incrementBy="1" startWith="1"
+        tableName="VERKSAMHETSTYP" />
+
+    <addForeignKeyConstraint baseColumnNames="PRIVATLAKARE_ID"
+        baseTableName="VERKSAMHETSTYP" constraintName="VERKSAMHETSTYP_PRIVATLAKARE"
+        referencedColumnNames="PRIVATLAKARE_ID" referencedTableName="PRIVATLAKARE" />
+
+    <!-- Vårdform -->
+    <createTable tableName="VARDFORM">
+      <column name="ID" type="bigint">
+        <constraints unique="true" nullable="false" />
+      </column>
+      <column name="PRIVATLAKARE_ID" type="varchar(255)">
+        <constraints nullable="false" />
+      </column>
+      <column name="KOD" type="varchar(255)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addAutoIncrement columnDataType="bigint"
+        columnName="ID" incrementBy="1" startWith="1"
+        tableName="VARDFORM" />
+
+    <addForeignKeyConstraint baseColumnNames="PRIVATLAKARE_ID"
+        baseTableName="VARDFORM" constraintName="VARDFORM_PRIVATLAKARE"
+        referencedColumnNames="PRIVATLAKARE_ID" referencedTableName="PRIVATLAKARE" />
+
+  </changeSet>
+
+  <changeSet id="2" author="pb">
+    <!-- table to store time of last hosp update -->
+    <createTable tableName="HOSP_UPPDATERING">
+      <column name="ID" type="bigint">
+        <constraints primaryKey="true" unique="true" nullable="false" />
+      </column>
+      <column name="SENASTE_HOSP_UPPDATERING" type="datetime">
+        <constraints nullable="true" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="3" author="pb">
+    <addColumn tableName="PRIVATLAKARE">
+      <column name="SENASTE_HOSP_UPPDATERING" type="datetime">
+        <constraints nullable="true" />
+      </column>
+    </addColumn>
+  </changeSet>
+
+  <changeSet id="4" author="pb">
+    <createTable tableName="MEDGIVANDETEXT">
+      <column name="VERSION" type="bigint">
+        <constraints primaryKey="true" nullable="false" />
+      </column>
+      <column name="DATUM" type="datetime">
+        <constraints nullable="false" />
+      </column>
+      <column name="MEDGIVANDE_TEXT" type="text">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <createTable tableName="MEDGIVANDE">
+      <column name="ID" type="bigint">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="MEDGIVANDE_VERSION" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="PRIVATLAKARE_ID" type="varchar(255)">
+        <constraints nullable="false" />
+      </column>
+      <column name="GODKAND_DATUM" type="datetime">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+    <addAutoIncrement columnDataType="bigint"
+        columnName="ID" incrementBy="1" startWith="1"
+        tableName="MEDGIVANDE" />
+
+    <addUniqueConstraint
+        columnNames="MEDGIVANDE_VERSION, PRIVATLAKARE_ID"
+        constraintName="MEDGIVANDE_UNIQUE_CONST"
+        tableName="MEDGIVANDE"/>
+
+    <addForeignKeyConstraint baseColumnNames="PRIVATLAKARE_ID"
+        baseTableName="MEDGIVANDE" constraintName="MEDGIVANDE_PRIVATLAKARE_FK"
+        referencedColumnNames="PRIVATLAKARE_ID" referencedTableName="PRIVATLAKARE" />
+
+    <addForeignKeyConstraint baseColumnNames="MEDGIVANDE_VERSION"
+        baseTableName="MEDGIVANDE" constraintName="MEDGIVANDE_MEDGIVANDETEXT_FK"
+        referencedColumnNames="VERSION" referencedTableName="MEDGIVANDETEXT" />
+
+  </changeSet>
+
+  <changeSet id="5" author="pb">
+    <addColumn tableName="PRIVATLAKARE">
+      <column name="REGISTRERINGSDATUM" type="datetime">
+        <constraints nullable="false" />
+      </column>
+    </addColumn>
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,27 @@
+!3 Rensa testdata
+| !-TaBortPrivatlakare-! |
+| id           | resultat? |
+| 199008252398 | true      |
+
+!3 Logga in som privatläkare
+| script | !-LoggaIn-! |
+| logga in som | private-practicioner-1 |
+
+!3 Gå till startsidan
+| script | Startsida |
+| startsidan visas |
+
+!3 Visa användarvillkor
+| script | Startsida |
+| visa användarvillkor |
+| användarvillkoren visas |
+
+!3 Stäng användarvillkor
+| script | Startsida |
+| stäng användarvillkoren |
+
+| script | Registrera |
+| vanta | 1 |
+
+| script | Startsida |
+| startsidan visas |

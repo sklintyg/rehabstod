@@ -1,0 +1,51 @@
+<div pp-field="postnummer">
+  <input type="text" id="postnummer" name="postnummer" ng-model="registerModel.postnummer" class='form-control'
+         style='max-width: 6em' value="" required ng-maxlength="6" maxlength="6" popover-placement="right"
+         popover-trigger="focus" popover="{{'label.form.postnummer.popover' | message}}"
+         validate-region region-model="registerModel"
+         maxlength="6">
+</div>
+
+<div alert-message alert-show="viewState.errorMessage.region" alert-severity="danger"></div>
+<div class="alert alert-warning" ng-show="viewState.validPostnummer && registerModel.postort == null && viewState.errorMessage.region == null && kommunNoHitsWarningText != null">
+  <i>{{kommunNoHitsWarningText}}</i>
+</div>
+
+<div>
+  <div pp-spinner show-spinner="viewState.loading.region" label="common.label.loading">
+
+    <div>
+
+      <div pp-field="postort">
+        <div class="readonly-field" id="postort">
+          {{registerModel.postort}}
+        </div>
+      </div>
+
+      <div pp-field="kommun">
+        <div ng-show="!viewState.kommunSelectionMode">
+          <div class="readonly-field" id="valdKommun">
+            {{registerModel.kommun}}
+          </div>
+        </div>
+        <div ng-if="viewState.kommunSelectionMode">
+          <select required id="kommun" name="kommun" class="form-control" ng-model="viewState.kommunSelected"
+                  ng-options="s.label for s in viewState.kommunOptions track by s.id" popover-placement="right"
+                  popover-trigger="focus" popover="{{'label.form.kommun.popover' | message}}">
+            <option value="">{{'label.form.kommun.option' | message}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <div pp-field="lan">
+          <div class="readonly-field" id="lan">
+            {{registerModel.lan}}
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

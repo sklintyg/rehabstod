@@ -1,0 +1,10 @@
+# Spring profiles
+profiles: test,pp-security-test,testability-api,hsa-stub,mail-stub
+
+# Configuration repository
+environment_name: "demo"
+config_etc_folder: "{{ config_folder }}/{{ environment_name }}"
+
+# Tomcat
+tomcat_service: tomcat-priv
+tomcat_home: "{{ inera_root }}/{{ tomcat_service }}"
