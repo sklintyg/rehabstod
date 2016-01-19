@@ -19,9 +19,12 @@
 
 package se.inera.intyg.rehabstod.integration.hsa.stub;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class HsaPerson {
 
     private String hsaId;

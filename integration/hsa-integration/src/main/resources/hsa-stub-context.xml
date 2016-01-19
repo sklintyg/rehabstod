@@ -47,7 +47,9 @@
     <bean class="se.inera.intyg.rehabstod.integration.hsa.stub.BootstrapBean"/>
   </beans>
 
+
   <beans profile="dev,testability-api">
+    <!--
     <jaxrs:server address="/hsa-api">
       <jaxrs:serviceBeans>
         <ref bean="hsaStubRestApi"/>
@@ -59,7 +61,7 @@
         <entry key="json" value="application/json"/>
       </jaxrs:extensionMappings>
     </jaxrs:server>
-
+     -->
     <bean id="hsaStubRestApi" class="se.inera.intyg.rehabstod.integration.hsa.stub.HsaStubRestApi"/>
   </beans>
 
