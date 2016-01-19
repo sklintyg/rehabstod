@@ -258,63 +258,58 @@
       <constructor-arg>
         <list>
 
-          <!-- START SERVICE PROVIDER BEAN FOR E-LEG -->
+          <!-- START SERVICE PROVIDER BEAN FOR SITHS -->
           <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
             <constructor-arg>
               <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
                 <constructor-arg>
-                  <value type="java.io.File">${config.dir}/sp-eleg.xml</value>
+                  <value type="java.io.File">${config.dir}/sp-sakerhetstjanst.xml</value>
                 </constructor-arg>
                 <property name="parserPool" ref="parserPool"/>
               </bean>
             </constructor-arg>
+            <property name="metadataTrustCheck" value="true"/>
 
             <constructor-arg>
               <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
-                <property name="alias" value="eleg"/>
+                <property name="alias" value="defaultAlias"/>
                 <property name="local" value="true"/>
                 <property name="securityProfile" value="metaiop"/>
-                <property name="sslSecurityProfile" value="metaiop"/>    <!-- pkix -->
+                <property name="sslSecurityProfile" value="metaiop"/>
                 <property name="signMetadata" value="true"/>
-
                 <!-- The signingKey and encryptionKey refers to the _aliases_ of the key in the keystore defined in the keyManager bean -->
-                <property name="signingKey" value="${cgi.eleg.saml.keystore.alias}"/>
-                <property name="encryptionKey" value="${cgi.eleg.saml.keystore.alias}"/>
+                <property name="signingKey" value="${sakerhetstjanst.saml.keystore.alias}"/>
+                <property name="encryptionKey" value="${sakerhetstjanst.saml.keystore.alias}"/>
                 <property name="requireArtifactResolveSigned" value="true"/>
-                <property name="requireLogoutRequestSigned" value="true"/>
-                <property name="requireLogoutResponseSigned" value="true"/>
-                <property name="idpDiscoveryEnabled" value="false"/>
+                <property name="requireLogoutRequestSigned" value="false"/>
+                <property name="requireLogoutResponseSigned" value="false"/>
+              </bean>
+            </constructor-arg>
+          </bean>
+          <!--  END SERVICE PROVIDER BEAN FOR SITHS -->
+
+
+          <!-- START IDENTITY PROVIDER BEAN FOR SITHS -->
+          <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+            <constructor-arg>
+              <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
+                <constructor-arg>
+                  <value type="java.io.File">${config.dir}/idp-sakerhetstjanst.xml</value>
+                </constructor-arg>
+                <property name="parserPool" ref="parserPool"/>
+              </bean>
+            </constructor-arg>
+            <constructor-arg>
+              <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
+                <property name="alias" value="defaultAlias"/>
               </bean>
             </constructor-arg>
 
             <property name="metadataTrustCheck" value="true"/>
           </bean>
-          <!-- END SERVICE PROVIDER BEAN FOR E-LEG -->
+          <!-- END IDENTITY PROVIDER BEAN FOR SITHS -->
 
-          <!-- START IDENTITY PROVIDER BEAN FOR E-LEG -->
-          <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
-            <constructor-arg>
-              <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
-                <constructor-arg>
-                  <value type="java.io.File">${config.dir}/idp-eleg.xml</value>
-                </constructor-arg>
-                <property name="parserPool" ref="parserPool"/>
-              </bean>
-            </constructor-arg>
-            <constructor-arg>
-              <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
-                <property name="alias" value="eleg"/>
-              </bean>
-            </constructor-arg>
 
-            <!--
-            TODO: If set to true, application startup fails with:
-            TODO: org.opensaml.saml2.metadata.provider.FilterException: Signature trust establishment failed for metadata entry
-            TODO: Need to look into certificates here. It may be a problem that only occurs vs test environments.
-               -->
-            <property name="metadataTrustCheck" value="false"/>
-          </bean>
-          <!-- END IDENTITY PROVIDER BEAN FOR E-LEG -->
         </list>
       </constructor-arg>
       <property name="refreshCheckInterval" value="86400000"/>
