@@ -1,4 +1,4 @@
-var app = angular.module('privatlakareApp', [
+var app = angular.module('rehabstodApp', [
   'ngAnimate',
   'ngCookies',
   'ngResource',

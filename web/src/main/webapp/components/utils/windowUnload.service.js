@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').factory('WindowUnload',
+angular.module('rehabstodApp').factory('WindowUnload',
     function($window, $log, UserModel) {
         'use strict';
 

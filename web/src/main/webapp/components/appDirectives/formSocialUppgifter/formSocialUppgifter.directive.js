@@ -1,7 +1,7 @@
 /**
  * Form directive to show socialstyrelsenuppgifter
  */
-angular.module('privatlakareApp').directive('formSocialUppgifter',
+angular.module('rehabstodApp').directive('formSocialUppgifter',
     function(HospService, HospViewState, HospModel, ObjectHelper) {
         'use strict';
 

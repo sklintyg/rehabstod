@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').factory('dialogService',
+angular.module('rehabstodApp').factory('dialogService',
     function($animate, $modal, $rootScope, $timeout, $window) {
         'use strict';
 

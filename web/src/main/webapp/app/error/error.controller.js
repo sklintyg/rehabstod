@@ -1,4 +1,4 @@
-angular.module('privatlakareApp')
+angular.module('rehabstodApp')
     .controller('ErrorCtrl', function ($scope, $sessionStorage, $stateParams,
         APP_CONFIG) {
         'use strict';

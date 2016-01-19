@@ -1,4 +1,4 @@
-var app = angular.module('privatlakareApp', [
+var app = angular.module('rehabstodApp', [
   'ngAnimate',
   'ngCookies',
   'ngResource',
@@ -11,7 +11,7 @@ var app = angular.module('privatlakareApp', [
 
 deferredBootstrapper.bootstrap({
     element: document.body,
-    module: 'privatlakareApp',
+    module: 'rehabstodApp',
     resolve: {
         APP_CONFIG: ['$http', function ($http) {
             'use strict';
@@ -131,14 +131,7 @@ app.run(
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState/*, fromParams*/) {
                 $window.doneLoading = false;
-
-                if (toState.data && angular.isFunction(toState.data.rule)) {
-                    var result = toState.data.rule(fromState);
-                    if (result && result.to) {
-                        event.preventDefault();
-                        $state.go(result.to, result.params);
-                    }
-                }
+                $log.log('$stateChangeStart: ' + fromState.name + ' to ' + toState.name);
             });
 
         $rootScope.$on('$stateNotFound',

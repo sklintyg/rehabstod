@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').factory('UserProxy',
+angular.module('rehabstodApp').factory('UserProxy',
         function($http, $log, $q,
                networkConfig) {
             'use strict';

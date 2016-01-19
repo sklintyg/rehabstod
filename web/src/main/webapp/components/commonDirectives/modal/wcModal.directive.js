@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').directive('wcModal',
+angular.module('rehabstodApp').directive('wcModal',
     function(wcModalService) {
         'use strict';
 

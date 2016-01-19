@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').factory('ObjectHelper',
+angular.module('rehabstodApp').factory('ObjectHelper',
     function() {
         'use strict';
 

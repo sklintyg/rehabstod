@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').service('HospViewState',
+angular.module('rehabstodApp').service('HospViewState',
     function() {
         'use strict';
 

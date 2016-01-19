@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').factory('HospModel',
+angular.module('rehabstodApp').factory('HospModel',
     function() {
         'use strict';
 

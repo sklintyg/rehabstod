@@ -1,7 +1,7 @@
 /**
  * Show an alert that can be closed
  */
-angular.module('privatlakareApp').directive('alertMessage',
+angular.module('rehabstodApp').directive('alertMessage',
     [
         function() {
             'use strict';

@@ -1,5 +1,5 @@
-angular.module('privatlakareApp').controller('HeaderController',
-        function($scope, $window, $state, $log, UserModel, LinkBuilder, $sessionStorage) {
+angular.module('rehabstodApp').controller('HeaderController',
+        function($scope, $window, $state, $log, UserModel) {
             'use strict';
 
             //Expose 'now' as a model property for the template to render as todays date
@@ -14,11 +14,6 @@ angular.module('privatlakareApp').controller('HeaderController',
                 $scope.statusText = UserModel.getStatusText();
             }, true);
 
-            $scope.$on('$stateChangeSuccess',
-                function(event, toState, toParams, fromState/*, $state, fromParams*/) {
-                    // sessionStorage.from is defined in boot.controller.js.
-                    $scope.exitLink = LinkBuilder.getExitLink(fromState.name, toState.name, UserModel.get().status, $sessionStorage.from);
-                });
 
             /**
              * Private functions

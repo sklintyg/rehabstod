@@ -7,7 +7,7 @@
  *
  * Usage: <message key="some.resource.key" [fallback="defaulttextifnokeyfound"]/>
  */
-angular.module('privatlakareApp').factory('messageService',
+angular.module('rehabstodApp').factory('messageService',
     function($rootScope) {
         'use strict';
 

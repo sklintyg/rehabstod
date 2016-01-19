@@ -2,7 +2,7 @@ describe('Model: UserModel', function() {
     'use strict';
 
     // Load the module and mock away everything that is not necessary.
-    beforeEach(angular.mock.module('privatlakareApp', function(/*$provide*/) {
+    beforeEach(angular.mock.module('rehabstodApp', function(/*$provide*/) {
         //$provide.value('APP_CONFIG', {});
     }));
 

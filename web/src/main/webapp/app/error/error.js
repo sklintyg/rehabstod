@@ -1,4 +1,4 @@
-angular.module('privatlakareApp')
+angular.module('rehabstodApp')
     .config(function ($stateProvider) {
         'use strict';
         $stateProvider

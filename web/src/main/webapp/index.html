@@ -7,7 +7,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <base href="/">
-<title>Privatläkarportalen</title>
+<title>Rehabstöd</title>
 <meta name="description" content="">
 <meta name="viewport" content="width=device-width">
 <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -21,7 +21,6 @@
 <!-- injector:css -->
 <link rel="stylesheet" href="app/app.css">
 <link rel="stylesheet" href="app/header/header.css">
-<link rel="stylesheet" href="app/navbar/navbar.css">
 <link rel="stylesheet" href="app/vendor-override.css">
 <link rel="stylesheet" href="components/commonDirectives/alertMessage/alertMessage.css">
 <link rel="stylesheet" href="components/commonDirectives/alertSingle/alertSingle.css">
@@ -48,7 +47,7 @@
         <div class="col-lg-12">
           <h1 class="page-header ng-scope">Ett fel har inträffat</h1>
           <div class="content alert alert-danger">
-            Något gick fel vid uppstarten av Privatläkarportalen. Du kan prova att ladda om sidan.
+            Något gick fel vid uppstarten av Rehabstödet. Du kan prova att ladda om sidan.
           </div>
           <a class="btn btn-success" href="/">Gå till startsidan</a>
         </div>
@@ -88,50 +87,17 @@
   <!-- injector:js -->
   <script src="app/app.controller.js"></script>
   <script src="app/app.js"></script>
-  <script src="app/boot/boot.controller.js"></script>
-  <script src="app/boot/boot.js"></script>
-  <script src="app/boot/bootLink.controller.js"></script>
   <script src="app/error/error.controller.js"></script>
   <script src="app/error/error.js"></script>
   <script src="app/header/header.controller.js"></script>
   <script src="app/messages.js"></script>
-  <script src="app/minsida/minsida.controller.js"></script>
-  <script src="app/minsida/minsida.js"></script>
-  <script src="app/minsida/minsidaViewstate.service.js"></script>
-  <script src="app/navbar/navbar.controller.js"></script>
-  <script src="app/register/abort/abort.controller.js"></script>
-  <script src="app/register/abort/abort.js"></script>
-  <script src="app/register/complete/complete.controller.js"></script>
-  <script src="app/register/complete/complete.js"></script>
-  <script src="app/register/register.controller.js"></script>
-  <script src="app/register/register.js"></script>
-  <script src="app/register/registerNavigation.service.js"></script>
-  <script src="app/register/step1/step1.controller.js"></script>
-  <script src="app/register/step1/step1.js"></script>
-  <script src="app/register/step2/step2.controller.js"></script>
-  <script src="app/register/step2/step2.js"></script>
-  <script src="app/register/step3/step3.controller.js"></script>
-  <script src="app/register/step3/step3.js"></script>
-  <script src="app/register/step3/step3Viewstate.service.js"></script>
-  <script src="app/register/waiting/waiting.controller.js"></script>
-  <script src="app/register/waiting/waiting.js"></script>
   <script src="app/start/start.controller.js"></script>
   <script src="app/start/start.js"></script>
-  <script src="app/terms/appTerms.controller.js"></script>
-  <script src="app/terms/terms.controller.js"></script>
-  <script src="app/terms/terms.js"></script>
-  <script src="app/terms/terms.service.js"></script>
-  <script src="components/appDirectives/formGrundUppgifter/formGrundUppgifter.directive.js"></script>
-  <script src="components/appDirectives/formGrundUppgifter/formGrundUppgifterViewstate.service.js"></script>
-  <script src="components/appDirectives/formKontaktUppgifter/formKontaktUppgifter.directive.js"></script>
-  <script src="components/appDirectives/formKontaktUppgifter/formKontaktUppgifterViewstate.service.js"></script>
   <script src="components/appDirectives/formSocialUppgifter/formSocialUppgifter.directive.js"></script>
   <script src="components/appDirectives/formSocialUppgifter/hosp.model.js"></script>
   <script src="components/appDirectives/formSocialUppgifter/hosp.proxy.js"></script>
   <script src="components/appDirectives/formSocialUppgifter/hosp.service.js"></script>
   <script src="components/appDirectives/formSocialUppgifter/hospViewstate.service.js"></script>
-  <script src="components/appDirectives/postnummerRegionLookup/postnummerRegionLookup.directive.js"></script>
-  <script src="components/appDirectives/postnummerRegionLookup/postnummerRegionLookupViewState.service.js"></script>
   <script src="components/commonDirectives/alertMessage/alertMessage.directive.js"></script>
   <script src="components/commonDirectives/alertSingle/alertSingle.directive.js"></script>
   <script src="components/commonDirectives/message/message.directive.js"></script>
@@ -140,26 +106,14 @@
   <script src="components/commonDirectives/modal/modalView.service.js"></script>
   <script src="components/commonDirectives/modal/wcModal.directive.js"></script>
   <script src="components/commonDirectives/modal/wcModal.service.js"></script>
-  <script src="components/commonDirectives/ppField/ppField.directive.js"></script>
-  <script src="components/commonDirectives/ppFocusMe/ppFocusMe.directive.js"></script>
   <script src="components/commonDirectives/ppSpinner/ppSpinner.directive.js"></script>
   <script src="components/commonDirectives/ppTooltip/ppTooltip.directive.js"></script>
-  <script src="components/commonDirectives/validation/validateConfirmEmail.directive.js"></script>
-  <script src="components/commonDirectives/validation/validateRegion.directive.js"></script>
   <script src="components/mock/mockResponse.js"></script>
   <script src="components/modal/dialogService.js"></script>
-  <script src="components/models/appTermsModal.model.js"></script>
-  <script src="components/models/register.model.js"></script>
-  <script src="components/models/terms.model.js"></script>
   <script src="components/models/user.model.js"></script>
-  <script src="components/proxies/omrade.proxy.js"></script>
-  <script src="components/proxies/register.proxy.js"></script>
-  <script src="components/proxies/terms.proxy.js"></script>
   <script src="components/proxies/user.proxy.js"></script>
   <script src="components/utils/http403ResponseInterceptor.service.js"></script>
-  <script src="components/utils/linkBuilder.service.js"></script>
   <script src="components/utils/object.helper.js"></script>
-  <script src="components/utils/postnummer.helper.js"></script>
   <script src="components/utils/string.helper.js"></script>
   <script src="components/utils/windowUnload.service.js"></script>
   <!-- endinjector -->

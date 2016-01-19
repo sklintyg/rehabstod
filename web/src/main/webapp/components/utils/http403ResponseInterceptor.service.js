@@ -11,7 +11,7 @@
  *
  * http403ResponseInterceptorProvider.setRedirectUrl("/web/403-error.jsp");
  */
-angular.module('privatlakareApp').provider('http403ResponseInterceptor',
+angular.module('rehabstodApp').provider('http403ResponseInterceptor',
     function() {
         'use strict';
 

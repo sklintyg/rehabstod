@@ -8,7 +8,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="ROBOTS" content="nofollow, noindex"/>
-<title>Privatläkarportalen</title>
+<title>Rehabstöd</title>
 <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
 <style>
   h1 {
@@ -27,26 +27,25 @@
           <c:when test="${param.reason eq \"logout\"}">
             <h1 class="page-header">Du är utloggad</h1>
             <p>Din webbläsare kan hålla kvar information även efter utloggningen. Du bör därför stänga samtliga öppna webbläsarfönster.</p>
-            <p><a href="<spring:eval expression="@environment.getProperty('webcert.start.url')" />">Gå till Webcerts startsida</a></p>
           </c:when>
 
           <c:when test="${param.reason eq \"login.failed\"}">
-            <h1 class="page-header">Privatläkarportalen</h1>
+            <h1 class="page-header">Rehabstöd</h1>
             <div class="alert alert-danger">Inloggningen misslyckades. Gå tillbaka till <a href="/">startsidan</a>.</div>
           </c:when>
 
           <c:when test="${param.reason eq \"denied\"}">
-            <h1 class="page-header">Privatläkarportalen</h1>
+            <h1 class="page-header">Rehabstöd</h1>
             <div class="alert alert-danger">Åtkomst nekad. Gå tillbaka till <a href="/">startsidan</a>.</div>
           </c:when>
 
           <c:when test="${param.reason eq \"notfound\"}">
-            <h1 class="page-header">Privatläkarportalen</h1>
+            <h1 class="page-header">Rehabstöd</h1>
             <div class="alert alert-danger">Sidan finns inte. Gå tillbaka till <a href="/">startsidan</a>.</div>
           </c:when>
 
           <c:otherwise>
-            <h1 class="page-header">Privatläkarportalen</h1>
+            <h1 class="page-header">Rehabstöd</h1>
             <div class="alert alert-danger">Ett tekniskt fel har uppstått. Gå tillbaka till <a href="/">startsidan</a>.</div>
           </c:otherwise>
         </c:choose>

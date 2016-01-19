@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').factory('wcModalService',
+angular.module('rehabstodApp').factory('wcModalService',
     function($rootScope, $timeout, $window, $modal, $templateCache, $http, $q) {
         'use strict';
 

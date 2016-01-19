@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').directive('ppSpinner',
+angular.module('rehabstodApp').directive('ppSpinner',
     ['$timeout','$window', function($timeout, $window) {
         'use strict';
 

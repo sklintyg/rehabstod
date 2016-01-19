@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').factory('ModalViewService',
+angular.module('rehabstodApp').factory('ModalViewService',
     function($window, $state, $log, $timeout) {
         'use strict';
 

@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').factory('UserModel',
+angular.module('rehabstodApp').factory('UserModel',
     function($window, $timeout) {
         'use strict';
 

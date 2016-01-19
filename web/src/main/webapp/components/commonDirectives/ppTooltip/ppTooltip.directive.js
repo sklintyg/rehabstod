@@ -1,7 +1,7 @@
 /**
  * Enable tooltips for other components than wcFields
  */
-angular.module('privatlakareApp').directive('ppTooltip',
+angular.module('rehabstodApp').directive('ppTooltip',
     [ 'messageService',
         function(messageService) {
             'use strict';

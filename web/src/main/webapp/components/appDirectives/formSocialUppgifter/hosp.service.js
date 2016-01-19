@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').service('HospService',
+angular.module('rehabstodApp').service('HospService',
     function($state,
         HospProxy, ObjectHelper) {
         'use strict';

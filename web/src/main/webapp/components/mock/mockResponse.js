@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').value('mockResponse', {
+angular.module('rehabstodApp').value('mockResponse', {
     'hospOK': {
         'hospInformation': {
             'personalPrescriptionCode' : '1234567',

@@ -1,4 +1,4 @@
-angular.module('privatlakareApp').directive('message',
+angular.module('rehabstodApp').directive('message',
         function($log, $rootScope, $sce, $compile,
             messageService) {
             'use strict';
