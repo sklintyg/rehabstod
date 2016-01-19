@@ -62,7 +62,7 @@ module.exports = function(grunt) {
                     {
                         context: '/',
                         host: 'localhost',
-                        port: 8090
+                        port: 8790
                     }
                 ]
             }
