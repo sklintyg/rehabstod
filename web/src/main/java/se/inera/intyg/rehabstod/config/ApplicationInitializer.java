@@ -17,7 +17,7 @@ import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
 
-import se.inera.intyg.rehabstod.hsa.config.HsaConfiguration;
+// import se.inera.intyg.rehabstod.hsa.config.HsaConfiguration;
 
 
 public class ApplicationInitializer implements WebApplicationInitializer {
@@ -25,7 +25,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(javax.servlet.ServletContext servletContext) throws ServletException {
         AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
-        appContext.register(ApplicationConfig.class, HsaConfiguration.class, ServiceConfig.class);
+        appContext.register(ApplicationConfig.class, HsaConfiguration.class,
+                ServiceConfig.class);
         servletContext.addListener(new ContextLoaderListener(appContext));
  
         AnnotationConfigWebApplicationContext webConfig = new AnnotationConfigWebApplicationContext();

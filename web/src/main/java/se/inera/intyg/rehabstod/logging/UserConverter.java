@@ -32,7 +32,7 @@ public class UserConverter extends ClassicConverter {
 
         if (principal instanceof RehabstodUser) {
             RehabstodUser user = (RehabstodUser) auth.getPrincipal();
-            return HashUtility.hash(user.getPersonalIdentityNumber());
+            return HashUtility.hash(user.getHsaId());
         }
 
         return NO_USER;
