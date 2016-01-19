@@ -1,0 +1,18 @@
+{
+    "@class" : "se.inera.intyg.rehabstod.integration.hsa.model.Vardgivare",
+    "id" : "rehab-vardgivare-1",
+    "namn" : "Rehabstod-Vårdgivare1",
+    "vardenheter" : [
+        {
+        	"@class" : "se.inera.intyg.rehabstod.integration.hsa.model.Vardenhet",
+            "id" : "rehab-enhet-1",
+            "namn" : "Rehabstod-Enhet1",
+            "epost" : "enhet1@rehabstod.invalid.se",
+            "telefonnummer" : "0101234567890",
+            "postadress" : "Storgatan 1",
+            "postnummer" : "12345",
+            "postort" : "Småmåla",
+            "arbetsplatskod" : "1234567890"
+        }
+    ]
+}

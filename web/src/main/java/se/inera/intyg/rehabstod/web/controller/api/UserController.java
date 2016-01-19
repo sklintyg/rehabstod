@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.model.User;
+import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetUserResponse;
 
 /**
@@ -14,13 +15,13 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetUserResponse;
 @RequestMapping("/api/user")
 public class UserController {
 
+    @Autowired
+    UserService userService;
+
     @RequestMapping(value = "")
     public GetUserResponse getUser() {
 
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            return null;
-        }
-        RehabstodUser user = (RehabstodUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        RehabstodUser user = userService.getUser();
 
         return new GetUserResponse(new User(user, false));
     }
