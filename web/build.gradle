@@ -102,7 +102,8 @@ dependencies {
     compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
     compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
     compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.4'
     compile 'com.googlecode.json-simple:json-simple:1.1.1'
     compile 'org.slf4j:slf4j-api:1.7.10'
     compile 'ch.qos.logback:logback-classic:1.0.13'

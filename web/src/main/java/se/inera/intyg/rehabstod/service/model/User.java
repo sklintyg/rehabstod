@@ -15,9 +15,9 @@ public class User {
 
 
     public User(RehabstodUser rehabstodUser, boolean nameUpdated) {
-        personalIdentityNumber = rehabstodUser.getPersonalIdentityNumber();
-        name = rehabstodUser.getName();
-        nameFromPuService = rehabstodUser.isNameFromPuService();
+        personalIdentityNumber = rehabstodUser.getHsaId();
+        name = rehabstodUser.getNamn();
+        nameFromPuService = true;
         authenticationScheme = rehabstodUser.getAuthenticationScheme();
 
         this.nameUpdated = nameUpdated;

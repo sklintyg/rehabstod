@@ -21,7 +21,7 @@ import se.inera.intyg.rehabstod.service.monitoring.PingForConfigurationResponder
  * Created by pebe on 2015-09-07.
  */
 @Configuration
-@ComponentScan("se.inera.intyg.rehabstod.service, se.inera.intyg.rehabstod.common.service")
+@ComponentScan("se.inera.intyg.rehabstod.service, se.inera.intyg.rehabstod.auth, se.inera.intyg.rehabstod.common.service")
 @EnableScheduling
 public class ServiceConfig {
 

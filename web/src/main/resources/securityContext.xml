@@ -30,7 +30,7 @@
     <property name="logErrors" value="true"/>
   </bean>
 
-  <bean id="elegUserDetailsService" class="se.inera.intyg.rehabstod.auth.ElegUserDetailsService"/>
+  <bean id="rehabstodUserDetailsService" class="se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService"/>
 
   <!-- Initialization of OpenSAML library-->
   <bean class="org.springframework.security.saml.SAMLBootstrap"/>
@@ -92,7 +92,7 @@
         <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
       </security:http>
       <security:authentication-manager alias="authenticationManager">
-        <security:authentication-provider ref="fakeElegAuthenticationProvider"/>
+        <security:authentication-provider ref="rehabstodAuthenticationProvider"/>
       </security:authentication-manager>
     </beans>
   </beans>
@@ -143,7 +143,7 @@
 
     <security:authentication-manager alias="authenticationManager">
       <security:authentication-provider ref="samlAuthenticationProvider"/>
-      <security:authentication-provider ref="fakeElegAuthenticationProvider"/>
+      <security:authentication-provider ref="rehabstodAuthenticationProvider"/>
     </security:authentication-manager>
   </beans>
 
@@ -171,7 +171,7 @@
 
 
   <beans profile="dev,pp-security-dev,pp-security-test">
-    <bean id="fakeAuthFilter" class="se.inera.intyg.rehabstod.auth.FakeAuthenticationFilter">
+    <bean id="fakeAuthFilter" class="se.inera.intyg.rehabstod.auth.fake.FakeAuthenticationFilter">
       <property name="authenticationManager" ref="authenticationManager"/>
       <property name="sessionAuthenticationStrategy" ref="registerSessionAuthenticationStrategy"/>
       <property name="authenticationSuccessHandler" ref="fakeSuccessHandler"/>
@@ -181,9 +181,9 @@
         class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
       <property name="defaultTargetUrl" value="/"/>
     </bean>
-    <bean id="fakeElegAuthenticationProvider"
-        class="se.inera.intyg.rehabstod.auth.FakeElegAuthenticationProvider">
-      <property name="elegUserDetailsService" ref="elegUserDetailsService"/>
+    <bean id="rehabstodAuthenticationProvider"
+        class="se.inera.intyg.rehabstod.auth.fake.FakeAuthenticationProvider">
+      <property name="userDetails" ref="rehabstodUserDetailsService"/>
     </bean>
   </beans>
 
@@ -323,7 +323,7 @@
 
     <!-- SAML Authentication Provider responsible for validating of received SAML messages over SITHS or e-leg -->
     <bean id="samlAuthenticationProvider" class="org.springframework.security.saml.SAMLAuthenticationProvider">
-      <property name="userDetails" ref="elegUserDetailsService"/>
+      <property name="userDetails" ref="rehabstodUserDetailsService"/>
       <property name="forcePrincipalAsString" value="false"/>
     </bean>
 

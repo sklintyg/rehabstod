@@ -19,7 +19,7 @@ public class LoggingSessionRegistryImpl extends SessionRegistryImpl {
     public void registerNewSession(String sessionId, Object principal) {
         if (principal != null && principal instanceof RehabstodUser) {
             RehabstodUser user = (RehabstodUser) principal;
-            monitoringService.logUserLogin(user.getPersonalIdentityNumber(), user.getAuthenticationScheme());
+            monitoringService.logUserLogin(user.getHsaId(), user.getAuthenticationScheme());
         }
         super.registerNewSession(sessionId, principal);
     }
@@ -34,7 +34,7 @@ public class LoggingSessionRegistryImpl extends SessionRegistryImpl {
                 // TODO: We could log specifically that a session has expired. Is this something we want to do?
                 //       sessionInformation.isExpired()
                 RehabstodUser user = (RehabstodUser) principal;
-                monitoringService.logUserLogout(user.getPersonalIdentityNumber(), user.getAuthenticationScheme());
+                monitoringService.logUserLogout(user.getHsaId(), user.getAuthenticationScheme());
             }
         }
         super.removeSessionInformation(sessionId);
