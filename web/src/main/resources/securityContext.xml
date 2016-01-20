@@ -68,9 +68,9 @@
 
 
   <!-- =============================================================== -->
-  <!-- These URLs are unsecured in all profiles except pp-security-prod -->
+  <!-- These URLs are unsecured in all profiles except rhs-security-prod -->
   <!-- =============================================================== -->
-  <beans profile="dev,pp-security-dev,pp-security-test">
+  <beans profile="dev,rhs-security-dev,rhs-security-test">
     <security:http security="none" pattern="/welcome.html"/>
   </beans>
   <beans profile="dev,testability-api">
@@ -79,10 +79,10 @@
   </beans>
 
   <!-- =============================================================== -->
-  <!-- The dev and pp-security-dev profiles only supports Fake login -->
+  <!-- The dev and rhs-security-dev profiles only supports Fake login -->
   <!-- =============================================================== -->
-  <beans profile="!pp-security-test">
-    <beans profile="dev,pp-security-dev">
+  <beans profile="!rhs-security-test">
+    <beans profile="dev,rhs-security-dev">
       <security:http use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
         <security:csrf disabled="true"/>
         <security:access-denied-handler error-page="/welcome.html"/>
@@ -117,9 +117,9 @@
   </beans>
 
   <!-- =============================================================== -->
-  <!-- The pp-security-test profile support both CGI eleg and Fake login -->
+  <!-- The rhs-security-test profile support both CGI eleg and Fake login -->
   <!-- =============================================================== -->
-  <beans profile="pp-security-test">
+  <beans profile="rhs-security-test">
     <!-- Unauthenticated requests matching samlRequestMatcher will be sent to saml login flow -->
     <security:http use-expressions="false" entry-point-ref="samlEntryPoint" request-matcher-ref="samlRequestMatcher">
       <security:csrf disabled="true"/>
@@ -148,9 +148,10 @@
   </beans>
 
   <!-- =============================================================== -->
-  <!-- The pp-security-prod profile only supports CGI e-leg login      -->
+  <!-- The rhs-security-prod profile only supports SITHS login         -->
   <!-- =============================================================== -->
-  <beans profile="prod,pp-security-prod">
+  
+  <beans profile="prod,rhs-security-prod">
     <security:http use-expressions="false" entry-point-ref="samlEntryPoint" request-matcher-ref="samlRequestMatcher">
       <security:csrf disabled="true"/>
       <security:headers/>
@@ -168,9 +169,7 @@
     </security:authentication-manager>
   </beans>
 
-
-
-  <beans profile="dev,pp-security-dev,pp-security-test">
+  <beans profile="dev,rhs-security-dev,rhs-security-test">
     <bean id="fakeAuthFilter" class="se.inera.intyg.rehabstod.auth.fake.FakeAuthenticationFilter">
       <property name="authenticationManager" ref="authenticationManager"/>
       <property name="sessionAuthenticationStrategy" ref="registerSessionAuthenticationStrategy"/>
@@ -187,8 +186,7 @@
     </bean>
   </beans>
 
-
-  <beans profile="prod,pp-security-test,pp-security-prod">
+  <beans profile="prod,rhs-security-test,rhs-security-prod">
 
     <bean id="samlFilter" class="org.springframework.security.web.FilterChainProxy">
       <security:filter-chain-map request-matcher="ant">
@@ -229,14 +227,14 @@
 
     <!-- Central storage of cryptographic keys -->
     <bean id="keyManager" class="org.springframework.security.saml.key.JKSKeyManager">
-      <constructor-arg value="${cgi.eleg.saml.keystore.file}"/>
-      <constructor-arg type="java.lang.String" value="${cgi.eleg.saml.keystore.password}"/>
+      <constructor-arg value="${sakerhetstjanst.saml.keystore.file}"/>
+      <constructor-arg type="java.lang.String" value="${sakerhetstjanst.saml.keystore.password}"/>
       <constructor-arg>
         <map>
-          <entry key="${cgi.eleg.saml.keystore.alias}" value="${cgi.eleg.saml.keystore.password}"/>
+          <entry key="${sakerhetstjanst.saml.keystore.alias}" value="${sakerhetstjanst.saml.keystore.password}"/>
         </map>
       </constructor-arg>
-      <constructor-arg type="java.lang.String" value="${cgi.eleg.saml.keystore.alias}"/>
+      <constructor-arg type="java.lang.String" value="${sakerhetstjanst.saml.keystore.alias}"/>
     </bean>
 
     <!-- Entry point to initialize authentication, default values taken from properties file -->
@@ -364,7 +362,7 @@
 
     <!-- SAML 2.0 WebSSO Assertion Consumer -->
     <bean id="webSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerImpl">
-      <property name="responseSkew" value="${cgi.eleg.saml.responseSkew}"/>
+      <property name="responseSkew" value="${sakerhetstjanst.saml.responseSkew}"/>
     </bean>
 
     <!-- SAML 2.0 Holder-of-Key WebSSO Assertion Consumer -->
