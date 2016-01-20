@@ -1,5 +1,5 @@
 /*
-  Gradle settings for Privatläkarportal
+  Gradle settings for Rehabstod
  */
 rootProject.name = 'rehabstod'
 include ':web', ':integration/hsa-integration', ':common'
