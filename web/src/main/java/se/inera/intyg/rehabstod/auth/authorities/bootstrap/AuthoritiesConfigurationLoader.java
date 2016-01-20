@@ -61,8 +61,6 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
 
     /**
      * Constructor taking a path to the authorities configuration file.
-     *
-     * @param authoritiesConfigurationFile path to YAML configuration file
      */
     public AuthoritiesConfigurationLoader() {
         authoritiesConfigurationFile = "classpath:authorities.yaml";
