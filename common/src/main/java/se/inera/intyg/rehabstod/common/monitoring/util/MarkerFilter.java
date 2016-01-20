@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class MarkerFilter extends AbstractMatcherFilter<ILoggingEvent> {
-    private List<Marker> markersToMatch = new ArrayList<>();
+    private List<Marker> markersToMatch = new ArrayList();
 
     @Override
     public void start() {
