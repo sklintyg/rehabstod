@@ -32,7 +32,6 @@ import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -86,16 +85,17 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
 
         Resource resource = getResource(authoritiesConfigurationFile);
-        URI uri = null;
+        String path = null;
 
         try {
-            uri = resource.getURI();
-            if (uri == null) {
+            if (resource.getURI() == null) {
                 throw new AuthoritiesException("Could not load authorities configuration file. Path to file is null.");
             }
-            authoritiesConfiguration = loadConfiguration(Paths.get(uri));
+
+            path = resource.getURI().getPath();
+            authoritiesConfiguration = loadConfiguration(Paths.get(path));
         } catch (IOException ioe) {
-           throw new AuthoritiesException(format("Could not load authorities configuration file %s", uri.getPath()), ioe);
+           throw new AuthoritiesException(format("Could not load authorities configuration file %s", path), ioe);
         }
 
     }

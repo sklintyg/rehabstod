@@ -242,9 +242,9 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
 
     private void decorateRehabstodUserWithAdditionalInfo(RehabstodUser user, SAMLCredential credential, List<PersonInformationType> hsaPersonInfo) {
 
-        List<String> specialiseringar = extractSpecialiseringar(hsaPersonInfo);
-        List<String> legitimeradeYrkesgrupper = extractLegitimeradeYrkesgrupper(hsaPersonInfo);
-        List<String> befattningar = extractBefattningar(hsaPersonInfo);
+//        List<String> specialiseringar = extractSpecialiseringar(hsaPersonInfo);
+//        List<String> legitimeradeYrkesgrupper = extractLegitimeradeYrkesgrupper(hsaPersonInfo);
+//        List<String> befattningar = extractBefattningar(hsaPersonInfo);
         String titel = extractTitel(hsaPersonInfo);
 
      //   webcertUser.setSpecialiseringar(specialiseringar);
