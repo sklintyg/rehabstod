@@ -1,10 +1,10 @@
 # Spring profiles
-profiles: test,pp-security-test,hsa-stub
+profiles: test,rhs-security-test,hsa-stub
 
 # Configuration repository
 environment_name: "dev"
 config_etc_folder: "{{ config_folder }}/{{ environment_name }}"
 
 # Tomcat
-tomcat_service: tomcat-priv
+tomcat_service: tomcat-rehabstod
 tomcat_home: "{{ inera_root }}/{{ tomcat_service }}"

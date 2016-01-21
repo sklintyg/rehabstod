@@ -11,9 +11,9 @@ profiles: test
 
 # Configuration repository
 environment_name: "test"
-config_name: privatlakarportal-konfiguration
-config_repository: https://github.com/sklintyg/privatlakarportal-konfiguration.git
-config_folder: "{{ inera_root }}/privatlakarportal-konfiguration"
+config_name: rehabstod-konfiguration
+config_repository: https://github.com/sklintyg/rehabstod-konfiguration.git
+config_folder: "{{ inera_root }}/rehabstod-konfiguration"
 gitcrypt_key_name: "git-crypt4.key"
 gitcrypt_key_file: "./{{ gitcrypt_key_name }}"
 config_etc_folder: "{{ config_folder }}/{{ environment_name }}"
@@ -21,7 +21,7 @@ config_etc_folder: "{{ config_folder }}/{{ environment_name }}"
 # Application resources
 # Note: end with slash, in order to copy only files inside the source folder, not the folder itself
 app_resources_src: "{{ playbook_dir }}/../web/src/main/resources/"
-app_resources_folder: "{{ inera_root }}/privatlakarportal-resources"
+app_resources_folder: "{{ inera_root }}/rehabstod-resources"
 
 # Tomcat installation
 tomcat_service: inera-tomcat
@@ -34,14 +34,14 @@ webapps_folder: "{{ inera_tomcat_folder }}/webapps"
 
 
 # Database configuration
-database_server: localhost
-database_port: 3306
-database_name: privatlakarportal
-database_username: inera
-database_password: inera
-database_driver: com.mysql.jdbc.Driver
-database_url: "jdbc:mysql://{{ database_server }}:{{ database_port }}/{{ database_name }}?useCompression=true"
-database_pool_maxActive: 20
-database_pool_maxIdle: 20
-database_pool_minIdle: 10
-database_pool_initialSize: 10
+#database_server: localhost
+#database_port: 3306
+#database_name: rehabstod
+#database_username: inera
+#database_password: inera
+#database_driver: com.mysql.jdbc.Driver
+#database_url: "jdbc:mysql://{{ database_server }}:{{ database_port }}/{{ database_name }}?useCompression=true"
+#database_pool_maxActive: 20
+#database_pool_maxIdle: 20
+#database_pool_minIdle: 10
+#database_pool_initialSize: 10

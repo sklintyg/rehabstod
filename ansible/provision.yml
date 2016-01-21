@@ -1,5 +1,4 @@
 ---
-# This playbook provisions the environment for Privatlakarportalen 
+# This playbook provisions the environment for Rehabstöd
 
-- include: provision_mysql.yml
 - include: provision_tomcat.yml

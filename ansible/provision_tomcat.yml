@@ -1,11 +1,11 @@
 ---
-# This playbook provisions Tomcat resources for Privatlakarportalen 
+# This playbook provisions Tomcat resources for Rehabstöd
 
-- hosts: privatlakarportal-tomcat
+- hosts: rehabstod-tomcat
   sudo: yes 
 
   roles:
-    - privatlakarportal-systemvariabler
-    - privatlakarportal-resurser
-    - privatlakarportal-jarfiler
+    - rehabstod-systemvariabler
+    - rehabstod-resurser
+    - rehabstod-jarfiler
     - config-folder
