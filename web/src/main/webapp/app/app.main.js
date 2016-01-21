@@ -7,7 +7,8 @@ var app = angular.module('rehabstodApp', [
   'ngMessages',
   'ui.router',
   'ui.bootstrap',
-  'ui.bootstrap-slider'
+  'ui.bootstrap-slider',
+  'smart-table'
 ]);
 
 deferredBootstrapper.bootstrap({

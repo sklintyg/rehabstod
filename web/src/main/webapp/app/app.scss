@@ -73,8 +73,9 @@ body {
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   font-weight: bold; }
 
-input, textarea, .uneditable-input {
+/*input, textarea, .uneditable-input {
   max-width: 206px; }
+*/
 
 select {
   max-width: 340px; }
@@ -206,11 +207,17 @@ h5.inline-heading {
   display: block !important;
 }
 
+.panel.panel-noborder {
+  border: none;
+  box-shadow: none;
+}
+
 // Component styles are injected through grunt
 // injector
 @import 'error/error.scss';
 @import 'print.scss';
 @import 'sjukfall/searchfilter/searchfilter.scss';
+@import 'sjukfall/searchresults/searchresults.scss';
 @import 'commonDirectives/ppTooltip/ppTooltip.scss';
 @import 'commonDirectives/rhsSlider/rhsSlider.scss';
 @import 'commonDirectives/rhsStatCircle/rhsStatCircle.scss';

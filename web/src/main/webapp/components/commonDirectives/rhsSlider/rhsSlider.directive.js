@@ -10,10 +10,10 @@ angular.module('rehabstodApp').directive('rhsSlider',
                 },
                 controller: function($scope) {
                     $scope.slider = {
-                        value: [15, 60],
+                        value: [1, 366],
                         model: [],
                         min: 1,
-                        max: 365,
+                        max: 366,
                         step: 1,
                         formatterFn: function(value) {
                             var text;
@@ -23,10 +23,18 @@ angular.module('rehabstodApp').directive('rhsSlider',
                                 text = 'Från';
                             }
 
-                            text += '\nDag ' + value;
+                            text += '\n';
 
                             if (value === $scope.slider.max) {
-                                text += '+';
+                                text += '365+';
+                            } else {
+                                text += value;
+                            }
+
+                            if (value === 1) {
+                                text += ' dag';
+                            } else {
+                                text += ' dagar';
                             }
 
                             return text;
