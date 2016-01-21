@@ -22,8 +22,6 @@ package se.inera.intyg.rehabstod.auth.authorities.bootstrap;
 import static java.lang.String.format;
 
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -50,8 +48,6 @@ import java.nio.file.Paths;
 @Component("AuthoritiesConfigurationLoader")
 public class AuthoritiesConfigurationLoader implements InitializingBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AuthoritiesConfigurationLoader.class);
-
     private String authoritiesConfigurationFile;
 
     private AuthoritiesConfiguration authoritiesConfiguration;
@@ -61,7 +57,7 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
      * Constructor loading the default configuration file authorities.yaml from classpath.
      */
     public AuthoritiesConfigurationLoader() {
-        authoritiesConfigurationFile = "classpath:authorities.yaml";
+        this("classpath:authorities.yaml");
     }
 
     /**
@@ -94,8 +90,10 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
 
         try {
             uri = resource.getURI();
-            authoritiesConfiguration = loadConfiguration(Paths.get(resource.getURI()));
-            System.err.println(authoritiesConfiguration.toString());
+            if (uri == null) {
+                throw new AuthoritiesException("Could not load authorities configuration file. Path to file is null.");
+            }
+            authoritiesConfiguration = loadConfiguration(Paths.get(uri));
         } catch (IOException ioe) {
            throw new AuthoritiesException(format("Could not load authorities configuration file %s", uri.getPath()), ioe);
         }
@@ -104,8 +102,6 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
 
     /**
      * Gets the loaded authorities configuration.
-     *
-     * @return
      */
     public AuthoritiesConfiguration getConfiguration() {
         return this.authoritiesConfiguration;
@@ -123,8 +119,7 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
     private AuthoritiesConfiguration loadConfiguration(Path path) throws IOException {
         Yaml yaml = new Yaml();
         try (InputStream in = Files.newInputStream(path)) {
-            AuthoritiesConfiguration ac = yaml.loadAs(in, AuthoritiesConfiguration.class);
-            return ac;
+            return yaml.loadAs(in, AuthoritiesConfiguration.class);
         }
     }
 
