@@ -13,6 +13,18 @@
             "postnummer" : "12345",
             "postort" : "Småmåla",
             "arbetsplatskod" : "1234567890"
+        },
+
+        {
+            "@class" : "se.inera.intyg.common.integration.hsa.model.Vardenhet",
+            "id" : "rehab-enhet-2",
+            "namn" : "Rehabstod-Enhet2",
+            "epost" : "enhet2@rehabstod.invalid.se",
+            "telefonnummer" : "0101234567891",
+            "postadress" : "Storgatan 2",
+            "postnummer" : "12345",
+            "postort" : "Småmåla",
+            "arbetsplatskod" : "1234567892"
         }
     ]
 }

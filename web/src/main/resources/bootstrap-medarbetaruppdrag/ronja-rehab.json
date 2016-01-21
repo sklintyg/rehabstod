@@ -4,6 +4,10 @@
     	{
     	 	"enhet":"rehab-enhet-1",
     	 	"andamal":["Vård och behandling", "Admin"]
-    	}
+    	},
+		{
+			"enhet":"rehab-enhet-2",
+			"andamal":["Vård och behandling", "Admin"]
+		}
     ]
 }
