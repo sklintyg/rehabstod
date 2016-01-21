@@ -42,15 +42,13 @@ changedby: Magnus Ekstrand
 # ====================================================================================================
 
 # De ingångar till systemet som finns
-knownRequestOrigins:
-  - &kro010 NORMAL
+knownRequestOrigins: []
 
 # De intygstyper som systemet har
-knownIntygstyper:
+knownIntygstyper: []
 
 # De rättigheter som systemet har
-knownPrivileges:
-  - &kp010 VISA_SJUKFALL
+knownPrivileges: []
 
 # De roller som systemet har
 knownRoles:
@@ -63,31 +61,21 @@ knownRoles:
 # ====================================================================================================
 
 # Ingångar
-requestOrigins:
-  - &ro010
-    name: *kro010
-    intygstyper: # Implicit alla
+requestOrigins: []
 
 # Rättigheter
-privileges:
-  - &p000
-    name: *kp000
-    desc: Visa intyg
-    intygstyper: # Implicit alla
-    requestOrigins: # Implicit alla
+privileges: []
 
 # Roller
 roles:
   - &r010
     name: *kr010 # LAKARE
     desc: Läkare
-    privileges:
-      - *p010 # VISA_SJUKFALL
+    privileges: []
   - &r020
     name: *kr020 # REHABKOORDINATOR
     desc: Rehabkoordinator
-    privileges:
-      - *p010 # VISA_SJUKFALL
+    privileges: []
 
 # Legitimerade yrkesroller
 titles:
@@ -110,4 +98,3 @@ titleCodes:
   - titleCode: 204090
     groupPrescriptionCode: 9100009
     role: *r010 # LAKARE
-
