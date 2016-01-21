@@ -1,36 +1,3 @@
-# ====================================================================================================
-#   Konfiguration för Webcerts rollhantering
-#
-#   YAML specifikation: http://www.yaml.org/spec/1.2/spec.html
-#
-#   Kort förklaring till vissa konstruktioner i filen:
-#
-#   '-'   används för att skapa listor av värden
-#   '&'   används för att skapa ett ankare (unik nyckel)
-#   '*'   används för att peka på ett ankare, kallas också alias
-#   '<<:' används för att slå ihop och skriva över värden
-#
-#   '&' och '*' används för att undvika duplikat i en YAML-fil
-#
-#   Överskådligt exempel:
-#
-#  defaults: &defaults
-#     adapter:  postgres
-#     host:     localhost
-#
-#   development:
-#     database: myapp_development
-#     <<: *defaults
-#
-#   test:
-#     database: myapp_test
-#     <<: *defaults
-#
-#   & sets up the name of the anchor (“defaults”),
-#   << means “merge the given hash into the current one”, and
-#   * includes the named anchor (“defaults” again).
-#
-# ====================================================================================================
 ---
 version: 1.0
 released: 2015-12-18
@@ -42,15 +9,13 @@ changedby: Magnus Ekstrand
 # ====================================================================================================
 
 # De ingångar till systemet som finns
-knownRequestOrigins:
-  - &kro010 NORMAL
+knownRequestOrigins: []
 
 # De intygstyper som systemet har
-knownIntygstyper:
+knownIntygstyper: []
 
 # De rättigheter som systemet har
-knownPrivileges:
-  - &kp010 VISA_SJUKFALL
+knownPrivileges: []
 
 # De roller som systemet har
 knownRoles:
@@ -63,31 +28,21 @@ knownRoles:
 # ====================================================================================================
 
 # Ingångar
-requestOrigins:
-  - &ro010
-    name: *kro010
-    intygstyper: # Implicit alla
+requestOrigins: []
 
 # Rättigheter
-privileges:
-  - &p000
-    name: *kp000
-    desc: Visa intyg
-    intygstyper: # Implicit alla
-    requestOrigins: # Implicit alla
+privileges: []
 
 # Roller
 roles:
   - &r010
     name: *kr010 # LAKARE
     desc: Läkare
-    privileges:
-      - *p010 # VISA_SJUKFALL
+    privileges: []
   - &r020
     name: *kr020 # REHABKOORDINATOR
     desc: Rehabkoordinator
-    privileges:
-      - *p010 # VISA_SJUKFALL
+    privileges: []
 
 # Legitimerade yrkesroller
 titles:
@@ -110,4 +65,3 @@ titleCodes:
   - titleCode: 204090
     groupPrescriptionCode: 9100009
     role: *r010 # LAKARE
-

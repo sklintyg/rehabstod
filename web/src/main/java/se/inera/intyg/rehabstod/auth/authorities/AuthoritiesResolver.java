@@ -19,13 +19,25 @@
 
 package se.inera.intyg.rehabstod.auth.authorities;
 
-import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.ROLE_ADMIN;
+import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.ROLE_KOORDINATOR;
 import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.ROLE_LAKARE;
-import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.ROLE_TANDLAKARE;
 import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.TITLECODE_AT_LAKARE;
 import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.TITLE_LAKARE;
-import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.TITLE_TANDLAKARE;
 
+import org.opensaml.saml2.core.Assertion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.saml.SAMLCredential;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion;
+import se.inera.intyg.rehabstod.auth.authorities.bootstrap.AuthoritiesConfigurationLoader;
+import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
+import se.inera.intyg.rehabstod.integration.hsa.services.HsaPersonService;
+import se.riv.infrastructure.directory.v1.PersonInformationType;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -35,24 +47,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.opensaml.saml2.core.Assertion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.saml.SAMLCredential;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-
-import se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion;
-import se.inera.intyg.rehabstod.auth.authorities.bootstrap.AuthoritiesConfigurationLoader;
-import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
-import se.inera.intyg.rehabstod.integration.hsa.services.HsaPersonService;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
-
 /**
- * Created by Magnus Ekstrand on 20/11/15.
+ * Created by Magnus Ekstrand on 21/01/16.
  */
 @Service
 public class AuthoritiesResolver {
@@ -198,7 +194,7 @@ public class AuthoritiesResolver {
         }
 
         // 6. Användaren är en vårdadministratör inom landstinget
-        return fnRole.apply(ROLE_ADMIN);
+        return fnRole.apply(ROLE_KOORDINATOR);
     }
 
     /** Lookup user role by looking into 'legitimerade yrkesgrupper'.
@@ -219,10 +215,6 @@ public class AuthoritiesResolver {
 
         if (legitimeradeYrkesgrupper.contains(TITLE_LAKARE)) {
             return fnRole.apply(ROLE_LAKARE);
-        }
-
-        if (legitimeradeYrkesgrupper.contains(TITLE_TANDLAKARE)) {
-            return fnRole.apply(ROLE_TANDLAKARE);
         }
 
         return null;

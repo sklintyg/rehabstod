@@ -1,0 +1,26 @@
+Version: 1.0
+Released: Fri Dec 18 01:00:00 CET 2015
+Changedby: Magnus Ekstrand
+KnownRequestOrigins: []
+KnownRoles: [LAKARE, REHABKOORDINATOR]
+KnownPrivileges: []
+KnownIntygstyper: []
+RequestOrigins: []
+Privileges: []
+Roles: [
+Role { name='LAKARE', desc='Läkare', privileges= []},
+Role { name='REHABKOORDINATOR', desc='Rehabkoordinator', privileges= []}]
+Titles: [
+Title { title='Läkare', desc='null', role=
+Role { name='LAKARE', desc='Läkare', privileges= []}},
+Title { title='Rehabkoordinator', desc='null', role=
+Role { name='REHABKOORDINATOR', desc='Rehabkoordinator', privileges= []}}]
+TitleCodes: [
+TitleCode { titleCode='204010', groupPrescriptionCode='null', role=
+Role { name='LAKARE', desc='Läkare', privileges= []}},
+TitleCode { titleCode='203090', groupPrescriptionCode='9300005', role=
+Role { name='LAKARE', desc='Läkare', privileges= []}},
+TitleCode { titleCode='203090', groupPrescriptionCode='9400003', role=
+Role { name='LAKARE', desc='Läkare', privileges= []}},
+TitleCode { titleCode='204090', groupPrescriptionCode='9100009', role=
+Role { name='LAKARE', desc='Läkare', privileges= []}}]

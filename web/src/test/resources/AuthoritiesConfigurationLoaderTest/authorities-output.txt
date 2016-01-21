@@ -1,0 +1,36 @@
+Version: 1.0
+Released: Fri Dec 18 01:00:00 CET 2015
+Changedby: Magnus Ekstrand
+KnownRequestOrigins: [NORMAL]
+KnownRoles: [LAKARE, REHABKOORDINATOR]
+KnownPrivileges: [VISA_SJUKFALL]
+KnownIntygstyper: []
+RequestOrigins: [
+RequestOrigin { name='NORMAL', intygstyper= []}]
+Privileges: [
+Privilege { name='VISA_SJUKFALL', desc='Visa Sjukfall', intygstyper= [], requestOrigins= []}]
+Roles: [
+Role { name='LAKARE', desc='Läkare', privileges= [
+Privilege { name='VISA_SJUKFALL', desc='Visa Sjukfall', intygstyper= [], requestOrigins= []}]},
+Role { name='REHABKOORDINATOR', desc='Rehabkoordinator', privileges= [
+Privilege { name='VISA_SJUKFALL', desc='Visa Sjukfall', intygstyper= [], requestOrigins= []}]}]
+Titles: [
+Title { title='Läkare', desc='null', role=
+Role { name='LAKARE', desc='Läkare', privileges= [
+Privilege { name='VISA_SJUKFALL', desc='Visa Sjukfall', intygstyper= [], requestOrigins= []}]}},
+Title { title='Rehabkoordinator', desc='null', role=
+Role { name='REHABKOORDINATOR', desc='Rehabkoordinator', privileges= [
+Privilege { name='VISA_SJUKFALL', desc='Visa Sjukfall', intygstyper= [], requestOrigins= []}]}}]
+TitleCodes: [
+TitleCode { titleCode='204010', groupPrescriptionCode='null', role=
+Role { name='LAKARE', desc='Läkare', privileges= [
+Privilege { name='VISA_SJUKFALL', desc='Visa Sjukfall', intygstyper= [], requestOrigins= []}]}},
+TitleCode { titleCode='203090', groupPrescriptionCode='9300005', role=
+Role { name='LAKARE', desc='Läkare', privileges= [
+Privilege { name='VISA_SJUKFALL', desc='Visa Sjukfall', intygstyper= [], requestOrigins= []}]}},
+TitleCode { titleCode='203090', groupPrescriptionCode='9400003', role=
+Role { name='LAKARE', desc='Läkare', privileges= [
+Privilege { name='VISA_SJUKFALL', desc='Visa Sjukfall', intygstyper= [], requestOrigins= []}]}},
+TitleCode { titleCode='204090', groupPrescriptionCode='9100009', role=
+Role { name='LAKARE', desc='Läkare', privileges= [
+Privilege { name='VISA_SJUKFALL', desc='Visa Sjukfall', intygstyper= [], requestOrigins= []}]}}]

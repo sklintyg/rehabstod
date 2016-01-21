@@ -21,15 +21,6 @@ package se.inera.intyg.rehabstod.auth;
 
 import static se.inera.intyg.rehabstod.integration.hsa.stub.Medarbetaruppdrag.VARD_OCH_BEHANDLING;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.opensaml.saml2.core.Assertion;
@@ -42,8 +33,8 @@ import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolver;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolverUtil;
 import se.inera.intyg.rehabstod.auth.authorities.Role;
 import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingMedarbetaruppdragException;
@@ -52,6 +43,14 @@ import se.inera.intyg.rehabstod.integration.hsa.model.Vardgivare;
 import se.inera.intyg.rehabstod.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.rehabstod.integration.hsa.services.HsaPersonService;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 
 /**
@@ -213,35 +212,35 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         //RehabstodUserOrigin webCertUserOrigin = new RehabstodUserOrigin();
 
         // Create the WebCert user object injection user's privileges
-        RehabstodUser webcertUser = new RehabstodUser(sa.getHsaId(), sa.getFornamn() + " " + sa.getMellanOchEfternamn());
+        RehabstodUser user = new RehabstodUser(sa.getHsaId(), sa.getFornamn() + " " + sa.getMellanOchEfternamn());
 
-        webcertUser.setHsaId(sa.getHsaId());
-        webcertUser.setNamn(compileName(sa.getFornamn(), sa.getMellanOchEfternamn()));
-        webcertUser.setVardgivare(authorizedVardgivare);
+        user.setHsaId(sa.getHsaId());
+        user.setNamn(compileName(sa.getFornamn(), sa.getMellanOchEfternamn()));
+        user.setVardgivare(authorizedVardgivare);
 
         // Set role and privileges
-       // webcertUser.setRoles(AuthoritiesResolverUtil.toMap(role));
-       // webcertUser.setAuthorities(AuthoritiesResolverUtil.toMap(role.getPrivileges()));
+        user.setRoles(AuthoritiesResolverUtil.toMap(role));
+        //webcertUser.setAuthorities(AuthoritiesResolverUtil.toMap(role.getPrivileges()));
 
         // Förskrivarkod is sensitiv information, not allowed to store real value
-        webcertUser.setForskrivarkod("0000000");
+        user.setForskrivarkod("0000000");
 
         // Set user's authentication scheme
-        webcertUser.setAuthenticationScheme(sa.getAuthenticationScheme());
+        user.setAuthenticationScheme(sa.getAuthenticationScheme());
 
         // Set application mode / request origin
-      //  String requestOrigin = webCertUserOrigin.resolveOrigin(getCurrentRequest());
-       // webcertUser.setOrigin(getAuthoritiesResolver().getRequestOrigin(requestOrigin).getName());
+        //String requestOrigin = webCertUserOrigin.resolveOrigin(getCurrentRequest());
+        //webcertUser.setOrigin(getAuthoritiesResolver().getRequestOrigin(requestOrigin).getName());
 
-        decorateRehabstodUserWithAdditionalInfo(webcertUser, credential, personInfo);
+        decorateRehabstodUserWithAdditionalInfo(user, credential, personInfo);
       //  decorateRehabstodUserWithAvailableFeatures(webcertUser);
       //  decorateRehabstodUserWithAuthenticationMethod(webcertUser, credential);
-        decorateRehabstodUserWithDefaultVardenhet(webcertUser, credential);
+        decorateRehabstodUserWithDefaultVardenhet(user, credential);
 
-        return webcertUser;
+        return user;
     }
 
-    private void decorateRehabstodUserWithAdditionalInfo(RehabstodUser webcertUser, SAMLCredential credential, List<PersonInformationType> hsaPersonInfo) {
+    private void decorateRehabstodUserWithAdditionalInfo(RehabstodUser user, SAMLCredential credential, List<PersonInformationType> hsaPersonInfo) {
 
         List<String> specialiseringar = extractSpecialiseringar(hsaPersonInfo);
         List<String> legitimeradeYrkesgrupper = extractLegitimeradeYrkesgrupper(hsaPersonInfo);
@@ -251,7 +250,7 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
      //   webcertUser.setSpecialiseringar(specialiseringar);
      //   webcertUser.setLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper);
      //   webcertUser.setBefattningar(befattningar);
-        webcertUser.setTitel(titel);
+        user.setTitel(titel);
     }
 
     private List<String> extractBefattningar(List<PersonInformationType> hsaPersonInfo) {

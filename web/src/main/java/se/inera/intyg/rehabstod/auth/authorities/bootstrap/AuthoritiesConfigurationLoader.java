@@ -21,13 +21,7 @@ package se.inera.intyg.rehabstod.auth.authorities.bootstrap;
 
 import static java.lang.String.format;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
+import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -35,11 +29,15 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
-
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConfiguration;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
 
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 /**
@@ -60,10 +58,18 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
 
 
     /**
-     * Constructor taking a path to the authorities configuration file.
+     * Constructor loading the default configuration file authorities.yaml from classpath.
      */
     public AuthoritiesConfigurationLoader() {
         authoritiesConfigurationFile = "classpath:authorities.yaml";
+    }
+
+    /**
+     * Constructor taking a path to the authorities configuration file.
+     */
+    public AuthoritiesConfigurationLoader(String authoritiesConfigurationFile) {
+        Assert.notNull(authoritiesConfigurationFile, "Illegal argument: authoritiesConfigurationFile cannot be null. Argument must resolve to a configuration file");
+        this.authoritiesConfigurationFile = authoritiesConfigurationFile;
     }
 
 
@@ -89,6 +95,7 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
         try {
             uri = resource.getURI();
             authoritiesConfiguration = loadConfiguration(Paths.get(resource.getURI()));
+            System.err.println(authoritiesConfiguration.toString());
         } catch (IOException ioe) {
            throw new AuthoritiesException(format("Could not load authorities configuration file %s", uri.getPath()), ioe);
         }
