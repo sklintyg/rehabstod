@@ -17,7 +17,6 @@ def getDate() {
 }
 
 allprojects {
-
     group = 'se.inera.intyg.rehabsstod'
 
     if (System.env.BUILD_VERSION && System.env.BUILD_NUMBER) {
@@ -48,7 +47,11 @@ allprojects {
             jcenter()
         }
     }
-    
+
+    apply plugin: 'checkstyle'
+    checkstyle {
+        configFile = rootProject.file('tools/codeQuality/checkstyle.xml')
+    }
 }
 
 if (project.hasProperty('runSonar')) {
@@ -97,11 +100,9 @@ if (project.hasProperty('runSonar')) {
 
 subprojects {
     apply plugin: 'java'
-
     if (project.hasProperty('codeQuality')) {
         apply from: rootProject.file("tools/codeQuality/codeQuality.gradle")
     }
-
 
     if (project.hasProperty('runSonar')) {
         apply plugin: 'jacoco'
