@@ -23,47 +23,6 @@ package se.inera.intyg.rehabstod.auth.authorities.validation;
  * Created by marced on 18/12/15.
  */
 public interface AuthExpectationSpecification {
-    /**
-     * To pass, the user must have at least one of the given features active.
-     * Also, if intygstyp context is given, that intygsmodule must also have given feature active.
-     * <p/>
-     * If multiple featureConstraints are given, this is effectively an OR condition. To express an AND condition you
-     * can simply chain multiple features("x").features("y")
-     *
-     * @param featureConstraints
-     * @return
-     */
-    AuthExpectationSpecification features(String... featureConstraints);
-
-    /**
-     * To pass, the user must NOT have ANY of the given features active.
-     * Also, if intygstyp context is given that intygsmodule must also have given feature active to be considered
-     * active.
-     * <p/>
-     *
-     * @param featureConstraints
-     * @return
-     */
-    AuthExpectationSpecification notFeatures(String... featureConstraints);
-
-    /**
-     * To pass, the user's request origin must match one of the given validOriginTypes.
-     * <p/>
-     * If multiple validOriginTypes are given, this is effectively an OR condition. To express an AND condition you can
-     * simply chain multiple origins(type1).origins(type2)
-     *
-     * @param validOriginTypes
-     * @return
-     */
-   // AuthExpectationSpecification origins(WebCertUserOriginType... validOriginTypes);
-
-    /**
-     * To pass, the user's request origin must NOT match any of the given invalidOriginTypes.
-     *
-     * @param invalidOriginTypes
-     * @return
-     */
-   // AuthExpectationSpecification notOrigins(WebCertUserOriginType... invalidOriginTypes);
 
     /**
      * To pass, the user's must have a role matching one of the given validRoles.
@@ -83,29 +42,6 @@ public interface AuthExpectationSpecification {
      * @return
      */
     AuthExpectationSpecification notRoles(String... invalidRoles);
-
-    /**
-     * To pass, the following must be fulfilled.
-     * <ul>
-     * <li>The user must have the basic privilegeConstraint.</li>
-     * <li>If the privilegeConstraint's has a intygstyp constraint - that must match a given intygstype context.</li>
-     * <li>If the privilegeConstraint's has a requestOrigin constraint - that must match the users origin.</li>
-     * <li>If the privilegeConstraint's requestOrigin constraint itself has a intygstype constraint - that must also
-     * match given intygstype context.</li>
-     * </ul>
-     *
-     * @param privilegeConstraint
-     * @return
-     */
-    AuthExpectationSpecification privilege(String privilegeConstraint);
-
-    /**
-     * A negation of privilege method to be able to express privilege a user must NOT.
-     *
-     * @param privilegeConstraint
-     * @return
-     */
-    AuthExpectationSpecification notPrivilege(String privilegeConstraint);
 
     /**
      * Returns true if all added checks passes, otherwise false.

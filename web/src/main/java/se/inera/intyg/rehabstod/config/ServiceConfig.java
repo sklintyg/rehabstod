@@ -1,21 +1,19 @@
 package se.inera.intyg.rehabstod.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.cxf.Bus;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.context.support.ServletContextAttributeExporter;
-
 import se.inera.intyg.rehabstod.service.monitoring.HealthCheckService;
 import se.inera.intyg.rehabstod.service.monitoring.PingForConfigurationResponderImpl;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by pebe on 2015-09-07.

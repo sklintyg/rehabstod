@@ -35,5 +35,5 @@ pmdMain.source = fileTree('src/main/java')
 checkstyle {
     configFile = rootProject.file('tools/codeQuality/checkstyle.xml')
     ignoreFailures = false
-    showViolations = false
+    showViolations = true
 }

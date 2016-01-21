@@ -33,15 +33,15 @@ import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import se.inera.intyg.common.integration.hsa.model.Vardenhet;
+import se.inera.intyg.common.integration.hsa.model.Vardgivare;
+import se.inera.intyg.common.integration.hsa.services.HsaOrganizationsService;
+import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolverUtil;
 import se.inera.intyg.rehabstod.auth.authorities.Role;
 import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingMedarbetaruppdragException;
-import se.inera.intyg.common.integration.hsa.model.Vardenhet;
-import se.inera.intyg.common.integration.hsa.model.Vardgivare;
-import se.inera.intyg.common.integration.hsa.services.HsaOrganizationsService;
-import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,9 +69,6 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
 
     @Autowired
     private AuthoritiesResolver authoritiesResolver;
-
-  //  @Autowired
-  //  private MonitoringLogService monitoringLogService;
 
 
     // ~ API
@@ -148,6 +145,28 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         return hsaPersonInfo;
     }
 
+    protected String compileName(String fornamn, String mellanOchEfterNamn) {
+
+        StringBuilder sb = new StringBuilder();
+
+        if (StringUtils.isNotBlank(fornamn)) {
+            sb.append(fornamn);
+        }
+
+        if (StringUtils.isNotBlank(mellanOchEfterNamn)) {
+            if (sb.length() > 0) {
+                sb.append(" ");
+            }
+            sb.append(mellanOchEfterNamn);
+        }
+
+        return sb.toString();
+    }
+
+    protected HttpServletRequest getCurrentRequest() {
+        return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    }
+
 
     // ~ Package scope
     // =====================================================================================
@@ -184,6 +203,7 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         return new SakerhetstjanstAssertion(assertion);
     }
 
+
     // ~ Private scope
     // =====================================================================================
 
@@ -209,7 +229,6 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         LOG.debug("Decorate/populate user object with additional information");
 
         SakerhetstjanstAssertion sa = getAssertion(credential);
-        //RehabstodUserOrigin webCertUserOrigin = new RehabstodUserOrigin();
 
         // Create the WebCert user object injection user's privileges
         RehabstodUser user = new RehabstodUser(sa.getHsaId(), sa.getFornamn() + " " + sa.getMellanOchEfternamn());
@@ -220,7 +239,6 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
 
         // Set role and privileges
         user.setRoles(AuthoritiesResolverUtil.toMap(role));
-        //webcertUser.setAuthorities(AuthoritiesResolverUtil.toMap(role.getPrivileges()));
 
         // Förskrivarkod is sensitiv information, not allowed to store real value
         user.setForskrivarkod("0000000");
@@ -228,13 +246,7 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         // Set user's authentication scheme
         user.setAuthenticationScheme(sa.getAuthenticationScheme());
 
-        // Set application mode / request origin
-        //String requestOrigin = webCertUserOrigin.resolveOrigin(getCurrentRequest());
-        //webcertUser.setOrigin(getAuthoritiesResolver().getRequestOrigin(requestOrigin).getName());
-
         decorateRehabstodUserWithAdditionalInfo(user, credential, personInfo);
-      //  decorateRehabstodUserWithAvailableFeatures(webcertUser);
-      //  decorateRehabstodUserWithAuthenticationMethod(webcertUser, credential);
         decorateRehabstodUserWithDefaultVardenhet(user, credential);
 
         return user;
@@ -242,15 +254,35 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
 
     private void decorateRehabstodUserWithAdditionalInfo(RehabstodUser user, SAMLCredential credential, List<PersonInformationType> hsaPersonInfo) {
 
-//        List<String> specialiseringar = extractSpecialiseringar(hsaPersonInfo);
-//        List<String> legitimeradeYrkesgrupper = extractLegitimeradeYrkesgrupper(hsaPersonInfo);
-//        List<String> befattningar = extractBefattningar(hsaPersonInfo);
+        List<String> legitimeradeYrkesgrupper = extractLegitimeradeYrkesgrupper(hsaPersonInfo);
+        List<String> befattningar = extractBefattningar(hsaPersonInfo);
         String titel = extractTitel(hsaPersonInfo);
 
-     //   webcertUser.setSpecialiseringar(specialiseringar);
-     //   webcertUser.setLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper);
-     //   webcertUser.setBefattningar(befattningar);
+        user.setLegitimeradeYrkesgrupper(legitimeradeYrkesgrupper);
+        user.setBefattningar(befattningar);
         user.setTitel(titel);
+    }
+
+    private void decorateRehabstodUserWithDefaultVardenhet(RehabstodUser user, SAMLCredential credential) {
+
+        // Get HSA id for the selected MIU
+        String medarbetaruppdragHsaId = getAssertion(credential).getEnhetHsaId();
+
+        boolean changeSuccess;
+
+        if (StringUtils.isNotBlank(medarbetaruppdragHsaId)) {
+            changeSuccess = user.changeValdVardenhet(medarbetaruppdragHsaId);
+        } else {
+            LOG.error("Assertion did not contain any 'medarbetaruppdrag', defaulting to use one of the Vardenheter present in the user");
+            changeSuccess = setFirstVardenhetOnFirstVardgivareAsDefault(user);
+        }
+
+        if (!changeSuccess) {
+            LOG.error("When logging in user '{}', unit with HSA-id {} could not be found in users MIUs", user.getHsaId(), medarbetaruppdragHsaId);
+            throw new MissingMedarbetaruppdragException(user.getHsaId());
+        }
+
+        LOG.debug("Setting care unit '{}' as default unit on user '{}'", user.getValdVardenhet().getId(), user.getHsaId());
     }
 
     private List<String> extractBefattningar(List<PersonInformationType> hsaPersonInfo) {
@@ -281,38 +313,6 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         return titleSet.stream().sorted().collect(Collectors.joining(", "));
     }
 
-//    private void decorateRehabstodUserWithAuthenticationMethod(RehabstodUser webcertUser, SAMLCredential credential) {
-//        String authenticationScheme = getAssertion(credential).getAuthenticationScheme();
-//
-//        if (authenticationScheme.endsWith(":fake")) {
-//            webcertUser.setAuthenticationMethod(AuthenticationMethod.FAKE);
-//        } else {
-//            webcertUser.setAuthenticationMethod(AuthenticationMethod.SITHS);
-//        }
-//    }
-
-    private void decorateRehabstodUserWithDefaultVardenhet(RehabstodUser user, SAMLCredential credential) {
-
-        // Get HSA id for the selected MIU
-        String medarbetaruppdragHsaId = getAssertion(credential).getEnhetHsaId();
-
-        boolean changeSuccess;
-
-        if (StringUtils.isNotBlank(medarbetaruppdragHsaId)) {
-            changeSuccess = user.changeValdVardenhet(medarbetaruppdragHsaId);
-        } else {
-            LOG.error("Assertion did not contain any 'medarbetaruppdrag', defaulting to use one of the Vardenheter present in the user");
-            changeSuccess = setFirstVardenhetOnFirstVardgivareAsDefault(user);
-        }
-
-        if (!changeSuccess) {
-            LOG.error("When logging in user '{}', unit with HSA-id {} could not be found in users MIUs", user.getHsaId(), medarbetaruppdragHsaId);
-            throw new MissingMedarbetaruppdragException(user.getHsaId());
-        }
-
-        LOG.debug("Setting care unit '{}' as default unit on user '{}'", user.getValdVardenhet().getId(), user.getHsaId());
-    }
-
     private List<String> extractLegitimeradeYrkesgrupper(List<PersonInformationType> hsaUserTypes) {
         Set<String> lygSet = new TreeSet<>();
 
@@ -326,31 +326,6 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         return new ArrayList<>(lygSet);
     }
 
-    private List<String> extractSpecialiseringar(List<PersonInformationType> hsaUserTypes) {
-        Set<String> specSet = new TreeSet<>();
-
-        for (PersonInformationType userType : hsaUserTypes) {
-            if (userType.getSpecialityName() != null) {
-                List<String> specialityNames = userType.getSpecialityName();
-                specSet.addAll(specialityNames);
-            }
-        }
-
-        return new ArrayList<>(specSet);
-    }
-
-//    private String extractTitel(List<PersonInformationType> hsaUserTypes) {
-//        List<String> titlar = new ArrayList<>();
-//
-//        for (PersonInformationType userType : hsaUserTypes) {
-//            if (StringUtils.isNotBlank(userType.getTitle())) {
-//                titlar.add(userType.getTitle());
-//            }
-//        }
-//
-//        return StringUtils.join(titlar, COMMA);
-//    }
-
     private boolean setFirstVardenhetOnFirstVardgivareAsDefault(RehabstodUser user) {
         Vardgivare firstVardgivare = user.getVardgivare().get(0);
         user.setValdVardgivare(firstVardgivare);
@@ -359,35 +334,6 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         user.setValdVardenhet(firstVardenhet);
 
         return true;
-    }
-
-    // - - - - - Protected scope - - - - -
-
-    protected String compileName(String fornamn, String mellanOchEfterNamn) {
-
-        StringBuilder sb = new StringBuilder();
-
-        if (StringUtils.isNotBlank(fornamn)) {
-            sb.append(fornamn);
-        }
-
-        if (StringUtils.isNotBlank(mellanOchEfterNamn)) {
-            if (sb.length() > 0) {
-                sb.append(" ");
-            }
-            sb.append(mellanOchEfterNamn);
-        }
-
-        return sb.toString();
-    }
-
-//    protected void decorateRehabstodUserWithAvailableFeatures(RehabstodUser webcertUser) {
-//        Set<String> availableFeatures = webcertFeatureService.getActiveFeatures();
-//        webcertUser.setFeatures(availableFeatures);
-//    }
-
-    protected HttpServletRequest getCurrentRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     }
 
 }

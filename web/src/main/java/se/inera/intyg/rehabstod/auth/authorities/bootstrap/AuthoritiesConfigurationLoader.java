@@ -82,7 +82,7 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
      *                   as failure to set an essential property) or if initialization fails.
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() throws AuthoritiesException {
 
         Resource resource = getResource(authoritiesConfigurationFile);
         String path = null;
