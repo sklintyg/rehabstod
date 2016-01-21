@@ -2,8 +2,8 @@ package se.inera.intyg.rehabstod.auth;
 
 import se.inera.intyg.rehabstod.auth.authorities.Privilege;
 import se.inera.intyg.rehabstod.auth.authorities.Role;
-import se.inera.intyg.rehabstod.integration.hsa.model.SelectableVardenhet;
-import se.inera.intyg.rehabstod.integration.hsa.model.Vardgivare;
+import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
+import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 
 import java.io.Serializable;
 import java.util.List;

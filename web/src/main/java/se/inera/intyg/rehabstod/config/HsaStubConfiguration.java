@@ -1,8 +1,5 @@
 package se.inera.intyg.rehabstod.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.cxf.Bus;
-import org.apache.cxf.jaxws.EndpointImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -10,9 +7,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
-import se.inera.intyg.rehabstod.integration.hsa.stub.BootstrapBean;
-import se.inera.intyg.rehabstod.integration.hsa.stub.GetEmployeeResponderStub;
-import se.inera.intyg.rehabstod.integration.hsa.stub.HsaServiceStub;
+
+import se.inera.intyg.common.integration.hsa.stub.BootstrapBean;
+import se.inera.intyg.common.integration.hsa.stub.HsaServiceStub;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Created by eriklupander on 2016-01-18.

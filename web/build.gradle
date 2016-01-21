@@ -90,8 +90,9 @@ gretty {
 }
 
 dependencies {
-    compile project(":rehabstod-hsa-integration")
     compile project(":rehabstod-common")
+
+    compile "se.inera.intyg.common:hsa-integration:0-SNAPSHOT"
     
     compile "org.springframework:spring-webmvc:${springContextVersion}"
     compile "org.springframework.ws:spring-ws-core:2.2.2.RELEASE"

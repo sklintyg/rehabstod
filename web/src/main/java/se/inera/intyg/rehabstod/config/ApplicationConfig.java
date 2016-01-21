@@ -1,5 +1,6 @@
 package se.inera.intyg.rehabstod.config;
 
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
@@ -23,5 +24,10 @@ public class ApplicationConfig {
         source.setBasename("version");
         source.setUseCodeAsDefaultMessage(true);
         return source;
+    }
+
+    @Bean(name = "jacksonJsonProvider")
+    public JacksonJaxbJsonProvider jacksonJsonProvider() {
+        return new JacksonJaxbJsonProvider();
     }
 }

@@ -19,7 +19,7 @@
 
 package se.inera.intyg.rehabstod.auth;
 
-import static se.inera.intyg.rehabstod.integration.hsa.stub.Medarbetaruppdrag.VARD_OCH_BEHANDLING;
+import static se.inera.intyg.common.integration.hsa.stub.Medarbetaruppdrag.VARD_OCH_BEHANDLING;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -38,10 +38,10 @@ import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolverUtil;
 import se.inera.intyg.rehabstod.auth.authorities.Role;
 import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingMedarbetaruppdragException;
-import se.inera.intyg.rehabstod.integration.hsa.model.Vardenhet;
-import se.inera.intyg.rehabstod.integration.hsa.model.Vardgivare;
-import se.inera.intyg.rehabstod.integration.hsa.services.HsaOrganizationsService;
-import se.inera.intyg.rehabstod.integration.hsa.services.HsaPersonService;
+import se.inera.intyg.common.integration.hsa.model.Vardenhet;
+import se.inera.intyg.common.integration.hsa.model.Vardgivare;
+import se.inera.intyg.common.integration.hsa.services.HsaOrganizationsService;
+import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 import javax.servlet.http.HttpServletRequest;

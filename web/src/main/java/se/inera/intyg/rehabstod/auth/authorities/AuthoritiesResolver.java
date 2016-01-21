@@ -34,7 +34,7 @@ import org.springframework.util.Assert;
 import se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion;
 import se.inera.intyg.rehabstod.auth.authorities.bootstrap.AuthoritiesConfigurationLoader;
 import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
-import se.inera.intyg.rehabstod.integration.hsa.services.HsaPersonService;
+import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 import javax.servlet.http.HttpServletRequest;

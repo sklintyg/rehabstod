@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.rehabstod.auth.authorities.bootstrap.AuthoritiesConfigurationLoader;
-import se.inera.intyg.rehabstod.integration.hsa.services.HsaPersonService;
+import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
 
 import java.util.Arrays;
 import java.util.Collections;
