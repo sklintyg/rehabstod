@@ -6,7 +6,8 @@ var app = angular.module('rehabstodApp', [
   'ngStorage',
   'ngMessages',
   'ui.router',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'ui.bootstrap-slider'
 ]);
 
 deferredBootstrapper.bootstrap({

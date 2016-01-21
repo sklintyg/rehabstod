@@ -1,40 +1,45 @@
-<a data-toggle="collapse" data-target="#searchfilterBox" aria-expanded="false" aria-controls="searchfilterBox">
-  Visa sökfilter
-</a>
-<div class="box collapse" id="searchfilterBox">
-  <form>
-    <div class="row">
-      <div class="col-sm-4">
-        <div class="form-group">
-          <label for="lakare" class="control-label">Välj läkare</label>
-          <select id="lakare" class="form-control" name="lakare">
-            <option>Alla valda</option>
-            <option>Mästerkatten</option>
-          </select>
-        </div>
-      </div>
+<div class="container">
+  <button class="btn btn-link btn-link-minimal" ng-click="showSearchFilter = !showSearchFilter"
+          ng-switch="showSearchFilter">
+    <span ng-switch-when="false">Visa sökfilter</span><span ng-switch-when="true">Dölj sökfilter</span>
+  </button>
 
-      <div class="col-sm-5">
-        <div class="form-group">
-          <label for="diagnos" class="control-label">Välj diagnoser</label>
-          <select id="diagnos" class="form-control" name="diagnos">
-            <option>Alla valda</option>
-            <option>Röda hund</option>
-          </select>
+  <div class="box" ng-show="showSearchFilter">
+    <form>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="form-group">
+            <label for="lakare" class="control-label">Välj läkare</label>
+            <select id="lakare" class="form-control" name="lakare">
+              <option>Alla valda</option>
+              <option>Mästerkatten</option>
+            </select>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-9">
-        <div class="form-group">
-          <label for="sjukskrivningslangd" class="control-label">Välj sjukskrivningslängd</label>
-        </div>
-      </div>
 
-      <div class="col-sm-3">
-        <button type="submit" class="btn btn-primary">Gör urval</button>
-        <button type="reset" class="btn btn-default">Återställ</button>
+        <div class="col-sm-5">
+          <div class="form-group">
+            <label for="diagnos" class="control-label">Välj diagnoser</label>
+            <select id="diagnos" class="form-control" name="diagnos">
+              <option>Alla valda</option>
+              <option>Röda hund</option>
+            </select>
+          </div>
+        </div>
       </div>
-    </div>
-  </form>
+      <div class="row row-relative">
+        <div class="col-sm-9">
+          <div class="form-group">
+            <label class="control-label">Välj sjukskrivningslängd</label>
+            <rhs-slider />
+          </div>
+        </div>
+
+        <div class="col-sm-3 bottom-align-text">
+          <button type="submit" class="btn btn-primary">Gör urval</button>
+          <button type="reset" class="btn btn-default">Återställ</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
