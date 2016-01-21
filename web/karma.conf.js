@@ -25,6 +25,7 @@ module.exports = function(config) {
             'src/main/webapp/bower_components/angular-deferred-bootstrap/angular-deferred-bootstrap.js',
             'src/main/webapp/bower_components/ngstorage/ngStorage.js',
             // endbower
+            'src/main/webapp/bower_components/seiyria-bootstrap-slider/js/bootstrap-slider.js',
             'src/main/webapp/bower_components/angular-mocks/angular-mocks.js',
             'src/main/webapp/app/app.main.test.js',
             'src/main/webapp/app/**/*.js',
