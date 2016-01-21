@@ -3,7 +3,7 @@
  */
 angular.module('rehabstodApp').directive('rhsStatCircle',
     ['messageService',
-        function(messageService) {
+        function(/*messageService*/) {
             'use strict';
 
             return {
@@ -13,7 +13,7 @@ angular.module('rehabstodApp').directive('rhsStatCircle',
                     size: '@',
                     backgroundColor: '@'
                 },
-                controller: function($scope) {
+                controller: function(/*scope*/) {
 
                 },
                 templateUrl: 'components/commonDirectives/rhsStatCircle/rhsStatCircle.directive.html'

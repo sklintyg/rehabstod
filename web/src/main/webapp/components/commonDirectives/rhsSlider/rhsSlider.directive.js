@@ -1,6 +1,6 @@
 angular.module('rehabstodApp').directive('rhsSlider',
     ['messageService',
-        function(messageService) {
+        function(/*messageService*/) {
             'use strict';
 
             return {
@@ -16,17 +16,17 @@ angular.module('rehabstodApp').directive('rhsSlider',
                         max: 365,
                         step: 1,
                         formatterFn: function(value) {
-                            var text = "";
-                            if (value == $scope.slider.model[1]) {
-                                text  += "Till";
+                            var text;
+                            if (value === $scope.slider.model[1]) {
+                                text  = 'Till';
                             } else {
-                                text += "Från";
+                                text = 'Från';
                             }
 
-                            text += "\nDag " + value;
+                            text += '\nDag ' + value;
 
-                            if (value == $scope.slider.max) {
-                                text += "+";
+                            if (value === $scope.slider.max) {
+                                text += '+';
                             }
 
                             return text;
@@ -38,6 +38,7 @@ angular.module('rehabstodApp').directive('rhsSlider',
         }]);
 
 
+/* jshint ignore:start */
 Slider.prototype._layout = function() {
     var positionPercentages;
 
@@ -224,3 +225,4 @@ Slider.prototype._layout = function() {
         }
     }
 };
+/* jshint ignore:end */
