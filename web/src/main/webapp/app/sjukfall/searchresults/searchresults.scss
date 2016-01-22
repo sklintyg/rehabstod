@@ -5,3 +5,19 @@
 .st-sort-descent:after{
   content: '\25BC';
 }
+
+.searchresult-table {
+  font-size: 12px;
+
+  .searchresult-table-head {
+    background-color: #465761;
+    color: #fff;
+    padding: 7px 5px;
+    font-weight: normal;
+  }
+
+  .searchresult-table-row > td {
+    padding: 5px 5px;
+  }
+
+}
