@@ -1,13 +1,14 @@
 package se.inera.intyg.rehabstod.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
-import se.inera.intyg.common.integration.hsa.stub.BootstrapBean;
+
 import se.inera.intyg.common.integration.hsa.stub.HsaServiceStub;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Created by eriklupander on 2016-01-18.
