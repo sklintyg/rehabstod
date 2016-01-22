@@ -1,11 +1,11 @@
 angular.module('rehabstodApp').factory('dialogService',
-    function($animate, $modal, $rootScope, $timeout, $window) {
+    function($animate, $uibModal, $rootScope, $timeout, $window) {
         'use strict';
 
         var _modal = null;
 
         function _open(options) {
-            _modal = $modal.open(options);
+            _modal = $uibModal.open(options);
             _runOnDialogDoneLoading(_modal);
             return _modal;
         }

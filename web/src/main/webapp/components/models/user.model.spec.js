@@ -15,12 +15,8 @@ describe('Model: UserModel', function() {
 
     describe('set', function() {
         it('should add dash personnummer without', function() {
-            UserModel.set({personalIdentityNumber: '191212121212'});
-            expect(UserModel.get().personnummer).toEqual('19121212-1212');
-        });
-        it('should not add dash personnummer that already has a dash', function() {
-            UserModel.set({personalIdentityNumber: '19121212-1212'});
-            expect(UserModel.get().personnummer).toEqual('19121212-1212');
+            UserModel.set({namn: 'Kalle'});
+            expect(UserModel.get().name).toEqual('Kalle');
         });
     });
 

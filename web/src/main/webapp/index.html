@@ -13,8 +13,8 @@
 <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 <!-- build:css(src/main/webapp) app/vendor.css -->
 <!-- bower:css -->
-<link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css" />
 <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+<link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css" />
 <!-- endbower -->
 <!-- endbuild -->
 <!-- build:css({build/.tmp,src/main/webapp}) app/app.css -->
@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="app/app.css">
 <link rel="stylesheet" href="app/header/header.css">
 <link rel="stylesheet" href="app/sjukfall/statistics/statistics.css">
+<link rel="stylesheet" href="app/start/start.page.css">
 <link rel="stylesheet" href="app/vendor-override.css">
 <link rel="stylesheet" href="components/commonDirectives/alertMessage/alertMessage.css">
 <link rel="stylesheet" href="components/commonDirectives/alertSingle/alertSingle.css">
@@ -80,7 +81,7 @@
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <script src="bower_components/angular-deferred-bootstrap/angular-deferred-bootstrap.js"></script>
-  <script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
+  <script src="bower_components/seiyria-bootstrap-slider/js/bootstrap-slider.js"></script>
   <script src="bower_components/angular-bootstrap-slider/slider.js"></script>
   <script src="bower_components/angular-smart-table/dist/smart-table.js"></script>
   <script src="bower_components/ngstorage/ngStorage.js"></script>
@@ -94,12 +95,15 @@
   <script src="app/app.js"></script>
   <script src="app/error/error.controller.js"></script>
   <script src="app/error/error.js"></script>
+  <script src="app/header/careunit/SelectCareUnit.controller.js"></script>
   <script src="app/header/header.controller.js"></script>
   <script src="app/messages.js"></script>
   <script src="app/sjukfall/searchfilter/searchfilter.controller.js"></script>
   <script src="app/sjukfall/searchresults/searchresults.controller.js"></script>
   <script src="app/sjukfall/sjukfall.js"></script>
   <script src="app/sjukfall/sjukfall.page.controller.js"></script>
+  <script src="app/start/start.js"></script>
+  <script src="app/start/start.page.controller.js"></script>
   <script src="components/appDirectives/formSocialUppgifter/formSocialUppgifter.directive.js"></script>
   <script src="components/appDirectives/formSocialUppgifter/hosp.model.js"></script>
   <script src="components/appDirectives/formSocialUppgifter/hosp.proxy.js"></script>
@@ -110,9 +114,6 @@
   <script src="components/commonDirectives/message/message.directive.js"></script>
   <script src="components/commonDirectives/message/message.filter.js"></script>
   <script src="components/commonDirectives/message/message.service.js"></script>
-  <script src="components/commonDirectives/modal/modalView.service.js"></script>
-  <script src="components/commonDirectives/modal/wcModal.directive.js"></script>
-  <script src="components/commonDirectives/modal/wcModal.service.js"></script>
   <script src="components/commonDirectives/ppSpinner/ppSpinner.directive.js"></script>
   <script src="components/commonDirectives/ppTooltip/ppTooltip.directive.js"></script>
   <script src="components/commonDirectives/rhsSlider/rhsSlider.directive.js"></script>

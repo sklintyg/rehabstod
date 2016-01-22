@@ -107,7 +107,7 @@ app.run(
 
         // Get logged in user
         UserModel.init();
-        UserModel.set(USER_DATA.user);
+        UserModel.set(USER_DATA);
 
         /* jshint -W117 */
         messageService.addResources(ppMessages);// jshint ignore:line

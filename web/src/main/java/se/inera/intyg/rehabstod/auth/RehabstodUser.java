@@ -13,7 +13,7 @@ import java.util.Set;
 /**
  * Created by pebe on 2015-08-11.
  */
-public class RehabstodUser implements Serializable{
+public class RehabstodUser implements Serializable {
 
     private static final long serialVersionUID = 8711015219408194075L;
 
@@ -37,7 +37,6 @@ public class RehabstodUser implements Serializable{
     private Map<String, Role> roles;
     private Map<String, Privilege> authorities;
     private String origin;
-
 
     public RehabstodUser(String hsaId, String namn) {
         this.hsaId = hsaId;
@@ -155,6 +154,10 @@ public class RehabstodUser implements Serializable{
         }
 
         return false;
+    }
+
+    public int getTotaltAntalVardenheter() {
+        return (int) getVardgivare().stream().map(vg -> vg.getHsaIds().size()).count();
     }
 
     public Set<String> getFeatures() {

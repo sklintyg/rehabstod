@@ -6,13 +6,15 @@ angular.module('rehabstodApp').factory('UserModel',
 
         function _reset() {
             data.name = null;
-            data.status = null;
-            data.personnummer = null;
+            data.role = null;
             data.authenticationScheme = null;
-            data.fakeSchemeId = 'urn:inera:rehabstod:eleg:fake';
+            data.fakeSchemeId = 'urn:inera:rehabstod:siths:fake';
+            data.valdVardenhet = null;
+            data.valdVardgivare = null;
+            data.vardgivare = null;
+            data.totaltAntalVardenheter = 0;
+
             data.loggedIn = false;
-            data.nameFromPuService = false;
-            data.nameUpdated = false;
             return data;
         }
 
@@ -20,6 +22,24 @@ angular.module('rehabstodApp').factory('UserModel',
             $timeout(function() {
                 $window.location.href = newLocation;
             });
+        }
+
+        /**
+         * Roles property containt 1 property that also is the role object, since we don't know which role the
+         * user has, we have do this clumsy dance to get to it.
+         * @param roles
+         * @returns {*}
+         * @private
+         */
+        function _resolveRole(roles) {
+            if (angular.isDefined(roles)) {
+                if (roles.hasOwnProperty('LAKARE')) {
+                    return roles.LAKARE;
+                } else if (roles.hasOwnProperty('REHABKOORDINATOR')) {
+                    return roles.REHABKOORDINATOR;
+                }
+            }
+            return null;
         }
 
         return {
@@ -30,44 +50,21 @@ angular.module('rehabstodApp').factory('UserModel',
             },
 
             set: function(user) {
-                data.name = user.name;
-                data.personnummer = user.personalIdentityNumber;
-
-                if(typeof data.personnummer === 'string') {
-                    var dashIndex = data.personnummer.length-4;
-                    if(data.personnummer.charAt(dashIndex - 1) !== '-') {
-                        data.personnummer = data.personnummer.slice(0, dashIndex) + '-' + data.personnummer.slice(dashIndex);
-                    }
-                }
-
-                data.status = user.status;
+                _reset();
+                data.name = user.namn;
+                data.role = _resolveRole(user.roles);
                 data.authenticationScheme = user.authenticationScheme;
+                data.valdVardenhet = user.valdVardenhet;
+                data.valdVardgivare = user.valdVardgivare;
+                data.vardgivare = user.vardgivare;
+                data.totaltAntalVardenheter = user.totaltAntalVardenheter;
                 data.loggedIn = true;
-                data.nameFromPuService = user.nameFromPuService;
-                data.nameUpdated = user.nameUpdated;
             },
             get: function() {
                 return data;
             },
-            getStatusText: function() {
-                var statusText;
-                switch(data.status) {
-                case 'AUTHORIZED':
-                case 'NOT_AUTHORIZED':
-                case 'WAITING_FOR_HOSP':
-                    statusText = 'Privatläkare';
-                    break;
-                default:
-                    statusText = 'Ej registrerad användare';
-                }
-                return statusText;
-            },
-            hasApplicationPermission: function() {
-                return data.status === 'AUTHORIZED';
-            },
-            isRegistered: function() {
-                return data.status === 'NOT_AUTHORIZED' || data.status === 'AUTHORIZED' || data.status === 'WAITING_FOR_HOSP';
-            },
+
+
             fakeLogin: function() {
                 if (data.authenticationScheme === data.fakeSchemeId) {
                     _changeLocation('/welcome.html');

@@ -4,7 +4,10 @@
       <span class="headerbox-logo pull-left">
         <a ng-href="/#/"><img alt="Till startsidan" src="assets/images/logo.png" /></a></span>
       <span class="headerbox-date pull-left">
-        <span id="location" class="location">{{today | date:"shortDate"}}</span><br>
+        <span id="location" class="location">{{today | date:"shortDate"}} - {{user.valdVardgivare.namn}} - {{user.valdVardenhet.namn}}</span>
+        <br>
+        <a class="otherLocations" ng-show="user.totaltAntalVardenheter > 1" data-ng-click="openChangeCareUnitDialog()">Byt vårdenhet</a>
+
       </span>
     </div>
 
@@ -14,14 +17,13 @@
       </div>
       <div class="headerbox-user pull-right">
         <div class="headerbox-user-profile">
-        <span id="logged-in-role">
-          {{statusText}}
-        </span>
+          <span id="logged-in-role">
+            {{user.role.desc}}
+          </span>
           - <span class="logged-in">{{user.name}}</span><br>
-        <span class="pull-right">
-          <span ng-show="userModel.isRegistered()"><a id="updateAccount" href="{{exitLink.link}}">{{exitLink.name}}</a> |&nbsp;</span><a
-            id="logoutLink" href="{{logoutLocation}}"><span message key="common.logout"></span></a>
-        </span>
+          <span class="pull-right">
+            <a id="logoutLink" href="{{logoutLocation}}"><span message key="common.logout"></span></a>
+          </span>
         </div>
       </div>
     </div>
