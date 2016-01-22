@@ -2,6 +2,14 @@
   margin-bottom: 3em;
 
   .slider-selection {
-    background: #999;
+    background: #33b4c3;
+  }
+
+  .slider-handle {
+    background-color: #33b4c3;
+    background-image: -webkit-linear-gradient(top, #33b4c3 0%, #33b4c3 100%);
+    background-image: -o-linear-gradient(top, #33b4c3 0%, #33b4c3 100%);
+    background-image: linear-gradient(to bottom, #33b4c3 0%, #33b4c3 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#33b4c3', endColorstr='#33b4c3', GradientType=0);
   }
 }
