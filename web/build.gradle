@@ -84,6 +84,15 @@ gretty {
         '-Drehabstod.resources.folder=/' +projectDir + '/src/main/resources',
         '-XX:MaxPermSize=256M'
     ]
+
+/***************** Konfiguration för att köra med SITHS och HSA aktiverat lokalt. *******************/
+//    jvmArgs = [
+//            '-Dspring.profiles.active=dev,rhs-security-test',
+//            '-Drehabstod.config.folder=' + projectDir + '/../../rehabstod-konfiguration/demo',
+//            '-Drehabstod.config.file=' + projectDir + '/../../rehabstod-konfiguration/demo/rehabstod.properties',
+//            '-Dcredentials.file=' + projectDir + '/../../rehabstod-konfiguration/demo/credentials.properties',
+//            '-Drehabstod.resources.folder=/' +projectDir + '/src/main/resources'
+//    ]
     fastReload = true
     inplaceMode = 'hard'
     scanInterval = 0
