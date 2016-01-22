@@ -157,7 +157,8 @@ public class RehabstodUser implements Serializable {
     }
 
     public int getTotaltAntalVardenheter() {
-        return (int) getVardgivare().stream().map(vg -> vg.getHsaIds().size()).count();
+        //count all hasid's in the datastructure
+        return (int) getVardgivare().stream().flatMap(vg -> vg.getHsaIds().stream()).count();
     }
 
     public Set<String> getFeatures() {
