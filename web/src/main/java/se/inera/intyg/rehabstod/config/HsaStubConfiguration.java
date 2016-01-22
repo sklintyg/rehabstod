@@ -19,11 +19,6 @@ import se.inera.intyg.common.integration.hsa.stub.HsaServiceStub;
 public class HsaStubConfiguration {
 
     @Bean
-    BootstrapBean bootstrap() {
-        return new BootstrapBean();
-    }
-
-    @Bean
     HsaServiceStub hsaServiceStub() {
         return new HsaServiceStub();
     }
