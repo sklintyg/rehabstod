@@ -38,9 +38,6 @@ var RehabstodSjukfallPage = RehabstodBasePage._extend({
     isAt: function isAt() {
         return isAt._super.call(this);
     },
-    clickDoFilter: function() {
-        element(by.id('rhs-sjukfallPage-doFilterBtn')).click();
-    },
     clickResetFilter: function() {
         element(by.id('rhs-sjukfallPage-resetFilterBtn')).click();
     }
