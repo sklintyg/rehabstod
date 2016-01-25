@@ -1,4 +1,4 @@
-<div class="container" st-table="rowCollection">
+<div class="container" st-set-filter="rhsSearchfilter" st-table="displayedCollection" st-safe-src="rowCollection">
 
   <div class="row">
     <div class="col-sm-3">
@@ -6,45 +6,59 @@
         <input st-search placeholder="Sök" class="input-sm form-control" type="search" />
       </div>
     </div>
+    <div class="col-sm-3">
+      <div class="form-group">
+        <rhs-table-number-range predicate="sjukskrivningslangd" lower="model.sjukskrivningslangd.low" higher="model.sjukskrivningslangd.high"></rhs-table-number-range>
+
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="form-group">
+        <st-select-multiple collection="rowCollection" predicate="lakare"></st-select-multiple>
+      </div>
+    </div>
   </div>
 
-  <table st-table="rowCollection" class="searchresult-table table table-striped">
+  <table class="searchresult-table table table-striped">
     <thead>
-      <tr>
-        <th class="searchresult-table-head">#</th>
-        <th class="searchresult-table-head" st-sort="personnummer">Personnummer</th>
-        <th class="searchresult-table-head" st-sort="namn">Namn</th>
-        <th class="searchresult-table-head" st-sort="enkeltIntyg">Enkelt Intyg</th>
-        <th class="searchresult-table-head" st-sort="diagnos">Diagnos</th>
-        <th class="searchresult-table-head" st-sort="startdatum" st-sort-default="true">Startdatum</th>
-        <th class="searchresult-table-head" st-sort="slutdatum">Slutdatum</th>
-        <th class="searchresult-table-head" st-sort="sjukskrivningslangd">Sjukskrivningslängd</th>
-        <th class="searchresult-table-head" st-sort="grad">Grad</th>
-        <th class="searchresult-table-head" st-sort="lakare">Läkare</th>
-      </tr>
+    <tr>
+      <th class="searchresult-table-head">#</th>
+      <th class="searchresult-table-head" st-sort="personnummer">Personnummer</th>
+      <th class="searchresult-table-head" st-sort="namn">Namn</th>
+      <th class="searchresult-table-head" st-sort="enkeltIntyg">Enkelt Intyg</th>
+      <th class="searchresult-table-head" st-sort="diagnos">Diagnos</th>
+      <th class="searchresult-table-head" st-sort="startdatum" st-sort-default="true">Startdatum</th>
+      <th class="searchresult-table-head" st-sort="slutdatum">Slutdatum</th>
+      <th class="searchresult-table-head" st-sort="sjukskrivningslangd">Sjukskrivningslängd</th>
+      <th class="searchresult-table-head" st-sort="grad">Grad</th>
+      <th class="searchresult-table-head" st-sort="lakare">Läkare</th>
+    </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="row in rowCollection" class="searchresult-table-row">
-        <td>{{row.number}}</td>
-        <td>{{row.personnummer}}</td>
-        <td>{{row.namn}}</td>
-        <td>{{row.enkeltIntyg}}</td>
-        <td>{{row.diagnos}}</td>
-        <td>{{row.startdatum}}</td>
-        <td>{{row.slutdatum}}</td>
-        <td>
-          <rhs-table-column-day days="{{row.sjukskrivningslangd}}"></rhs-table-column-day> ({{row.antalIntyg}} intyg)
-        </td>
-        <td>{{row.grad}}</td>
-        <td>{{row.lakare}}</td>
-      </tr>
+    <tr ng-repeat="row in displayedCollection" class="searchresult-table-row">
+      <td>{{row.number}}</td>
+      <td>{{row.personnummer}}</td>
+      <td>{{row.namn}}</td>
+      <td>{{row.enkeltIntyg}}</td>
+      <td>{{row.diagnos}}</td>
+      <td>{{row.startdatum}}</td>
+      <td>{{row.slutdatum}}</td>
+      <td>
+        <ng-pluralize count="row.sjukskrivningslangd" when="{
+                     'one': '1 dag',
+                     'other': '{} dagar'}"></ng-pluralize>
+        ({{row.antalIntyg}} intyg)
+      </td>
+      <td>{{row.grad}}</td>
+      <td>{{row.lakare}}</td>
+    </tr>
     </tbody>
     <tfoot>
-      <tr>
-        <td colspan="11" class="text-center">
-          <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
-        </td>
-      </tr>
+    <tr>
+      <td colspan="11" class="text-center">
+        <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
+      </td>
+    </tr>
     </tfoot>
   </table>
 

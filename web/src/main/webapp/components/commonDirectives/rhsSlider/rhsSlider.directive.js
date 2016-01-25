@@ -6,39 +6,36 @@ angular.module('rehabstodApp').directive('rhsSlider',
             return {
                 restrict: 'E',
                 scope: {
-                    
+                    sliderModel: '='
                 },
                 controller: function($scope) {
-                    $scope.slider = {
-                        value: [1, 366],
-                        model: [],
-                        min: 1,
-                        max: 366,
-                        step: 1,
-                        formatterFn: function(value) {
-                            var text;
-                            if (value === $scope.slider.model[1]) {
-                                text  = 'Till';
-                            } else {
-                                text = 'Från';
-                            }
-
-                            text += '\n';
-
-                            if (value === $scope.slider.max) {
-                                text += '365+';
-                            } else {
-                                text += value;
-                            }
-
-                            if (value === 1) {
-                                text += ' dag';
-                            } else {
-                                text += ' dagar';
-                            }
-
-                            return text;
+                    $scope.value = $scope.sliderModel;
+                    $scope.min =  1;
+                    $scope.max = 366;
+                    $scope.step = 1;
+                    $scope.formatterFn =  function(value) {
+                        var text;
+                        if (value === $scope.sliderModel[1]) {
+                            text  = 'Till';
+                        } else {
+                            text = 'Från';
                         }
+
+                        text += '\n';
+
+                        if (value === $scope.max) {
+                            text += '365+';
+                        } else {
+                            text += value;
+                        }
+
+                        if (value === 1) {
+                            text += ' dag';
+                        } else {
+                            text += ' dagar';
+                        }
+
+                        return text;
                     };
                 },
                 templateUrl: 'components/commonDirectives/rhsSlider/rhsSlider.directive.html'
