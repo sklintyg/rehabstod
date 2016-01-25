@@ -1,0 +1,6 @@
+{
+    "dev": {
+        "REHABSTOD_URL": "http://localhost:8790/",
+        "INTYGTJANST_URL": "http://localhost:8080/inera-certificate"
+    }
+}
