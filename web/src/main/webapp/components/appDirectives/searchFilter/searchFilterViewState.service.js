@@ -5,11 +5,15 @@ angular.module('rehabstodApp').service('searchfilterViewState',
 
         this.reset = function() {
 
-            this.model = {
+            this.sjukfall = [];
+
+            this.filter = {
                 sjukskrivningslangd: {
                     high: null,
                     low: null
-                }
+                },
+                lakare : null,
+                diagnos: null
             };
 
             return this;

@@ -10,32 +10,15 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', ['$filter', function($f
     return function (array, expression) {
         function customComparator(actual, expected) {
 
-            var isLower = expected.lower;
-            var isHigher = expected.higher;
-            var higherLimit;
-            var lowerLimit;
-
-
             if (angular.isObject(expected)) {
 
-                if (isLower || isHigher) {
-                    //number range
-                    if (isLower) {
-                        lowerLimit = expected.lower;
+                //matchAny
+                if (expected.matchAny) {
+                    return matchAny(actual, expected.matchAny);
+                }
 
-                        if (actual < lowerLimit) {
-                            return false;
-                        }
-                    }
-
-                    if (isHigher) {
-                        higherLimit = expected.higher;
-                        if (actual > higherLimit) {
-                            return false;
-                        }
-                    }
-
-                    return true;
+                if (expected.lower || expected.higher) {
+                    return range(actual, expected.lower, expected.higher);
                 }
                 //etc
 
@@ -43,6 +26,41 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', ['$filter', function($f
 
             }
             return standardComparator(actual, expected);
+        }
+
+        function range(actual, lower, higher) {
+            //number range
+            if (lower) {
+                if (actual < lower) {
+                    return false;
+                }
+            }
+
+            if (higher) {
+                if (actual > higher) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function matchAny(actual, matchAny) {
+            if (matchAny.all) {
+                return true;
+            }
+
+            if (!actual) {
+                return false;
+            }
+
+            for (var i = 0; i < matchAny.items.length; i++) {
+                if (actual.toLowerCase() === matchAny.items[i].toLowerCase()) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         var output = filterFilter(array, expression, customComparator);
