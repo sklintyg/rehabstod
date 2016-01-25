@@ -94,10 +94,6 @@ button.btn-link-minimal {
     color: #ffffff;
 }
 
-.buttonbar .btn-inverse {
-    padding: 7px 15px;
-}
-
 
 .dropdown-menu {
     padding: 5px 5px;
@@ -108,32 +104,8 @@ button.btn-link-minimal {
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 }
 
-.dropdown-menu button.btn-success {
-    padding: 5px 10px;
-}
-
 form {
     margin: 0;
-}
-
-.wc-datepicker-wrapper {
-    width: 130px;
-}
-
-[datepicker] thead tr th {
-    padding-bottom: 10px;
-}
-
-.input-year {
-    width: 4em;
-}
-
-.input-full {
-    max-width: 100%;
-}
-
-.input-5 {
-    max-width: 5em;
 }
 
 .navbar {
@@ -314,34 +286,6 @@ input[type=checkbox] {
 /**
 UI-bootstrap
 **/
-
-/* modal */
-
-.modal-header {
-    padding: 15px 0 10px 15px;
-}
-.modal-header h3 {
-    padding: 0;
-}
-
-.modal-footer {
-    text-align: left;
-}
-
-.modal-body h3 {
-    padding: 5px 0 5px 0;
-}
-
-.modal-body h4 {
-    padding: 5px 0 10px 0;
-    font-size: 14px;
-    line-height: 18px;
-}
-
-.modal-body h5 {
-    padding: 10px 0 5px 0;
-    font-size: 14px;
-}
 
 .panel-heading h4.panel-title {
     padding: 0;

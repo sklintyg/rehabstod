@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <button class="close" data-ng-click="$close(false)">×</button>
+  <button class="close" data-dismiss="modal" data-ng-click="$close()">×</button>
   <h3>Välj vårdenhet</h3>
 </div>
 <div class="modal-body">
@@ -57,4 +57,9 @@
     <hr />
   </div>
   <div class="alert alert-danger" ng-show="error">Tekniskt fel. Kunde inte byta vårdenhet.</div>
+</div>
+<div class="modal-footer">
+  <div style="float:right">
+  <button class="btn cancel" data-ng-click="$close()">Avbryt</button>
+</div>
 </div>
