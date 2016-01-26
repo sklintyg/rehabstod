@@ -11,10 +11,20 @@ angular.module('rehabstodApp')
 
         $scope.displayedCollection = [].concat($scope.model.sjukfall);
 
-        $scope.$watch('displayedCollection', function(val) {
-            var number = 1;
-            angular.forEach(val, function(value) {
+        $scope.currentPage = 1;
+
+        $scope.$watch('displayedCollection', updateRowNumber);
+
+        $scope.pageChangedFn = function(newPage) {
+            $scope.currentPage = newPage;
+
+            updateRowNumber();
+        };
+
+        function updateRowNumber() {
+            var number = ($scope.currentPage - 1) * $scope.itemsByPage + 1;
+            angular.forEach($scope.displayedCollection, function(value) {
                 value.number = number++;
             });
-        });
+        }
     });
