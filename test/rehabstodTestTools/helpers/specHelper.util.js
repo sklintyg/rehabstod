@@ -29,9 +29,6 @@ var WelcomePage = pages.welcomePage;
 var RehabstodStartPage = pages.startPage;
 var RehabstodSjukfallPage = pages.sjukfallPage;
 
-//var SokSkrivIntygPage = pages.sokSkrivIntyg.pickPatient;
-// var SokSkrivValjUtkastType = pages.sokSkrivIntyg.valjUtkastType;
-
 module.exports = {
     login: function(userOptional) {
         WelcomePage.get();

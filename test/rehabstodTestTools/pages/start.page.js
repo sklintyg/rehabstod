@@ -43,6 +43,9 @@ var RehabstodStartPageBase = RehabstodBasePage._extend({
     },
     clickMyUnit: function() {
         element(by.id('rhs-startPage-myBtn')).click();
+    },
+    clickBytVardenhet: function() {
+        element(by.id('rhs-header-otherLocations')).click();
     }
 });
 
