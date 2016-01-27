@@ -112,27 +112,8 @@ app.run(
         /* jshint -W117 */
         messageService.addResources(ppMessages);// jshint ignore:line
 
-        $window.animations = 0;
-        $window.doneLoading = false;
-        $window.dialogDoneLoading = true;
-        $window.rendered = true;
-        $window.saving = false;
-        $window.hasRegistered = false;
-        // watch the digest cycle
-        $rootScope.$watch(function() {
-            if ($window.hasRegistered) {
-                return;
-            }
-            $window.hasRegistered = true;
-            // Note that we're using a private Angular method here (for now)
-            $rootScope.$$postDigest(function() {
-                $window.hasRegistered = false;
-            });
-        });
-
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState/*, fromParams*/) {
-                $window.doneLoading = false;
                 $log.debug('$stateChangeStart: ' + fromState.name + ' to ' + toState.name);
 
                 if (toState.data && angular.isFunction(toState.data.rule)) {
@@ -152,7 +133,6 @@ app.run(
 
         $rootScope.$on('$stateChangeSuccess',
             function(/*event, toState, toParams, fromState, fromParams*/){
-                $window.doneLoading = true;
             });
 
         $rootScope.$on('$stateChangeError',

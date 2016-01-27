@@ -1,12 +1,12 @@
 var app = angular.module('rehabstodApp', [
-  'ngAnimate',
-  'ngCookies',
-  'ngResource',
-  'ngSanitize',
-  'ngStorage',
-  'ngMessages',
-  'ui.router',
-  'ui.bootstrap'
+    'ngAnimate',
+    'ngCookies',
+    'ngResource',
+    'ngSanitize',
+    'ngStorage',
+    'ngMessages',
+    'ui.router',
+    'ui.bootstrap'
 ]);
 
 app.value('networkConfig', {
@@ -77,7 +77,7 @@ app.constant('datepickerPopupConfig', {
 // Inject language resources
 app.run(
     function($log, $rootScope, $state, $window,
-        messageService) {
+        messageService, AppNavViewstate) {
         'use strict';
 
         $rootScope.lang = 'sv';
@@ -86,33 +86,17 @@ app.run(
         /* jshint -W117 */
         messageService.addResources(ppMessages);// jshint ignore:line
 
-        $window.animations = 0;
-        $window.doneLoading = false;
-        $window.dialogDoneLoading = true;
-        $window.rendered = true;
-        $window.saving = false;
-        $window.hasRegistered = false;
-        // watch the digest cycle
-        $rootScope.$watch(function() {
-            if ($window.hasRegistered) {
-                return;
-            }
-            $window.hasRegistered = true;
-            // Note that we're using a private Angular method here (for now)
-            $rootScope.$$postDigest(function() {
-                $window.hasRegistered = false;
-            });
-        });
-
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState/*, fromParams*/) {
-                $window.doneLoading = false;
+                $log.debug('$stateChangeStart: ' + fromState.name + ' to ' + toState.name);
 
                 if (toState.data && angular.isFunction(toState.data.rule)) {
-                    var result = toState.data.rule(fromState);
+                    var result = toState.data.rule(fromState, AppNavViewstate);
                     if (result && result.to) {
+                        //override to-state and instead go to supplied alternative state.
                         event.preventDefault();
-                        $state.go(result.to, result.params);
+                        $log.debug('$stateChangeStart was overridden by rule to state destination : ' + result.to);
+                        $state.go(result.to, result.params, result.options);
                     }
                 }
             });
@@ -123,7 +107,6 @@ app.run(
 
         $rootScope.$on('$stateChangeSuccess',
             function(/*event, toState, toParams, fromState, fromParams*/){
-                $window.doneLoading = true;
             });
 
         $rootScope.$on('$stateChangeError',
