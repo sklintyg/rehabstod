@@ -14,7 +14,7 @@ describe('Model: UserModel', function() {
     }));
 
     describe('set', function() {
-        it('should add dash personnummer without', function() {
+        it('should set name correctly', function() {
             UserModel.set({namn: 'Kalle'});
             expect(UserModel.get().name).toEqual('Kalle');
         });

@@ -94,7 +94,7 @@ app.constant('datepickerPopupConfig', {
 // Inject language resources
 app.run(
     function($log, $rootScope, $state, $window,
-        messageService, UserProxy, UserModel, USER_DATA) {
+        messageService, UserProxy, UserModel, USER_DATA, AppNavViewstate) {
         'use strict';
 
         // Always scroll to top
@@ -133,7 +133,17 @@ app.run(
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState/*, fromParams*/) {
                 $window.doneLoading = false;
-                $log.log('$stateChangeStart: ' + fromState.name + ' to ' + toState.name);
+                $log.debug('$stateChangeStart: ' + fromState.name + ' to ' + toState.name);
+
+                if (toState.data && angular.isFunction(toState.data.rule)) {
+                    var result = toState.data.rule(fromState, AppNavViewstate);
+                    if (result && result.to) {
+                        //override to-state and instead go to supplied alternative state.
+                        event.preventDefault();
+                        $log.debug('$stateChangeStart was overridden by rule to state destination : ' + result.to);
+                        $state.go(result.to, result.params, result.options);
+                    }
+                }
             });
 
         $rootScope.$on('$stateNotFound',

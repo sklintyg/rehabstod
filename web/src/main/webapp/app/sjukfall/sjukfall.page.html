@@ -1,5 +1,8 @@
-<p id="sjukfallPage">
+<p id="sjukfallPage"></p>
+<div ng-if="user.isLakare">
+  <a id="backToStartSidaBtn" ui-sref="app.start" class="backlink-icon" title="Tillbaka till urval">Till Urval</a>
+</div>
 <div ui-view="statistics"></div>
 <div ui-view="searchfilter"></div>
 <div ui-view="searchresults"></div>
-</p>
+

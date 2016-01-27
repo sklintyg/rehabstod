@@ -96,11 +96,16 @@ a {
   color: #28b4c4;
   cursor: pointer; }
 
-a.backlink {
-  display: inline-block;
-  line-height: 18px;
-  padding-left: 15px;
-  background: transparent url(/img/back-link-icon.gif) center left no-repeat; }
+a.backlink-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: transparent url(/assets/images/backlink-icon.png) center left no-repeat;
+  float: left;
+  margin: 2px 20px 0 0; }
+a:hover.backlink-icon {
+  background: transparent url(/assets/images/backlink-icon-hover.png) center left no-repeat;
+}
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0;

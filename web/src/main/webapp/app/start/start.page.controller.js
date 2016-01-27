@@ -1,7 +1,11 @@
 angular.module('rehabstodApp')
-    .controller('StartPageCtrl', function($scope, $log, UserModel) {
+    .controller('StartPageCtrl', function($scope, $state, $log, AppNavViewstate) {
         'use strict';
         $log.debug('StartPageCtrl init');
-        $scope.user = UserModel.get();
+
+        $scope.onSelectUrval = function(urval) {
+            AppNavViewstate.setVisningsLage(urval);
+            $state.go('app.sjukfall');
+        };
 
     });

@@ -1,5 +1,5 @@
 angular.module('rehabstodApp').factory('UserModel',
-    function($window, $timeout) {
+    function($window, $timeout, ObjectHelper) {
         'use strict';
 
         var data = {};
@@ -59,11 +59,15 @@ angular.module('rehabstodApp').factory('UserModel',
                 data.vardgivare = user.vardgivare;
                 data.totaltAntalVardenheter = user.totaltAntalVardenheter;
                 data.loggedIn = true;
+                data.isLakare = this.isLakare();
             },
             get: function() {
                 return data;
             },
 
+            isLakare: function() {
+                return (ObjectHelper.isDefined(data.role) && data.role.name === 'LAKARE');
+            },
 
             fakeLogin: function() {
                 if (data.authenticationScheme === data.fakeSchemeId) {

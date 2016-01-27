@@ -32,31 +32,32 @@
 </head>
 <body>
   <!--[if lt IE 9]>
-  <p class="browsehappy">Du använder en <strong>omodern</strong> webbläsare. Var vänlig <a href="http://browsehappy.com/">uppgradera
+  <p class="browsehappy">Du använder en <strong>omodern</strong> webbläsare. Var vänlig <a
+      href="http://browsehappy.com/">uppgradera
     din webbläsare</a> för att få bästa upplevelse av denna webbplats.</p>
   <![endif]-->
 
-    <div class="container" id="boot-loading" style="display:none">
-      <div class="row">
-        <div class="col-lg-12">
-          <h1 class="page-header ng-scope">Var vänlig vänta, laddar...</h1>
-          <img aria-labelledby="loading-message" src="assets/images/ajax-loader.gif" />
-        </div>
-      </div>
-    </div>
-
-    <div class="container" id="boot-error" style="display:none">
-      <div class="row">
-        <div class="col-lg-12">
-          <h1 class="page-header ng-scope">Ett fel har inträffat</h1>
-          <div class="content alert alert-danger">
-            Något gick fel vid uppstarten av Rehabstödet. Du kan prova att ladda om sidan.
-          </div>
-          <a class="btn btn-success" href="/">Gå till startsidan</a>
-        </div>
+  <div class="container" id="boot-loading" style="display:none">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="page-header ng-scope">Var vänlig vänta, laddar...</h1>
+        <img aria-labelledby="loading-message" src="assets/images/ajax-loader.gif" />
       </div>
     </div>
   </div>
+
+  <div class="container" id="boot-error" style="display:none">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="page-header ng-scope">Ett fel har inträffat</h1>
+        <div class="content alert alert-danger">
+          Något gick fel vid uppstarten av Rehabstödet. Du kan prova att ladda om sidan.
+        </div>
+        <a class="btn btn-success" href="/">Gå till startsidan</a>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Site content here -->
   <div ui-view="dialogs"></div>
@@ -130,6 +131,7 @@
   <script src="components/utils/object.helper.js"></script>
   <script src="components/utils/string.helper.js"></script>
   <script src="components/utils/windowUnload.service.js"></script>
+  <script src="components/viewstates/AppNavViewState.service.js"></script>
   <!-- endinjector -->
   <!-- endbuild -->
 </body>
