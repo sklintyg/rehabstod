@@ -1,11 +1,11 @@
 angular.module('rehabstodApp')
-    .controller('SearchFilterCtrl', function($scope, searchfilterViewState) {
+    .controller('SearchFilterCtrl', function($scope, SjukfallFilterViewState, SjukfallModel) {
         'use strict';
 
         $scope.showSearchFilter = true;
-        $scope.model = searchfilterViewState;
+        $scope.model = SjukfallModel;
 
-        $scope.$watch('model.sjukfall', function(value) {
+        $scope.$watch('model.get()', function(value) {
             $scope.lakare = unigeValues(value, 'lakare');
             $scope.diagnos = unigeValues(value, 'diagnos');
         }, true);
@@ -13,7 +13,7 @@ angular.module('rehabstodApp')
 
         $scope.sjukskrivningslangd = [1, 366];
 
-        $scope.filter = searchfilterViewState.filter;
+        $scope.filter = SjukfallFilterViewState;
 
         $scope.$watch('sjukskrivningslangd', function(val) {
             $scope.filter.sjukskrivningslangd.low = val[0];

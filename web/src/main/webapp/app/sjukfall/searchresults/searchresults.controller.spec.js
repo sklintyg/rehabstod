@@ -5,17 +5,17 @@ describe('Controller: SearchResultsCtrl', function () {
     beforeEach(module('rehabstodApp'));
 
     var scope;
-    var searchfilterViewState;
+    var SjukfallModel;
 
     // Initialize the controller and a mock scope
-    beforeEach(inject(function ($controller, $rootScope, _searchfilterViewState_) {
+    beforeEach(inject(function ($controller, $rootScope, _SjukfallModel_) {
         scope = $rootScope.$new();
 
-        searchfilterViewState = _searchfilterViewState_;
+        SjukfallModel = _SjukfallModel_;
 
         $controller('SearchResultsCtrl', {
             $scope: scope,
-            searchfilterViewState: _searchfilterViewState_
+            SjukfallModel: _SjukfallModel_
         });
     }));
 
@@ -23,7 +23,7 @@ describe('Controller: SearchResultsCtrl', function () {
     it('should add row number to model', function($timeout) {
         expect(scope.displayedCollection).toEqual([]);
 
-        searchfilterViewState.sjukfall = [{name: 'first'}, {name: 'next'}];
+        SjukfallModel.set([{name: 'first'}, {name: 'next'}]);
 
         var expectArray = [{name: 'first', number: 1}, {name: 'next', number: 2}];
 
@@ -35,7 +35,7 @@ describe('Controller: SearchResultsCtrl', function () {
     it('should update row number when table page changes', function($timeout) {
         expect(scope.displayedCollection).toEqual([]);
 
-        searchfilterViewState.sjukfall = [{name: 'first'}, {name: 'next'}];
+        SjukfallModel.set([{name: 'first'}, {name: 'next'}]);
 
         scope.itemsByPage = 1;
 

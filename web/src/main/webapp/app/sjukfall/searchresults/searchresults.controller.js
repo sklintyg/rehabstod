@@ -1,15 +1,15 @@
 angular.module('rehabstodApp')
-    .controller('SearchResultsCtrl', function($scope, searchfilterViewState) {
+    .controller('SearchResultsCtrl', function($scope, SjukfallFilterViewState, SjukfallModel) {
         'use strict';
 
 
-        $scope.filter = searchfilterViewState.filter;
+        $scope.filter = SjukfallFilterViewState;
 
-        $scope.model = searchfilterViewState;
+        $scope.model = SjukfallModel;
 
         $scope.itemsByPage = 100;
 
-        $scope.displayedCollection = [].concat($scope.model.sjukfall);
+        $scope.displayedCollection = [].concat($scope.model.get());
 
         $scope.currentPage = 1;
 
