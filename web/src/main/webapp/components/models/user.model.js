@@ -13,6 +13,7 @@ angular.module('rehabstodApp').factory('UserModel',
             data.valdVardgivare = null;
             data.vardgivare = null;
             data.totaltAntalVardenheter = 0;
+            data.isLakare = false;
 
             data.loggedIn = false;
             return data;

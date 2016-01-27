@@ -13,7 +13,6 @@ angular.module('rehabstodApp').service('AppNavViewstate',
         };
 
         this.isVisningsLageValt = function() {
-            //var value =  ((UserModel.get().role.name === 'LAKARE') && (angular.isUndefined(this.vardenhetsUrval)));
             return !angular.isUndefined(this.state.visningsLage);
         };
 
