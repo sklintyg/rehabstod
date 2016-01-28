@@ -1,72 +1,10 @@
-<h1 id="rhs-startPage-header" class="page-header">Sjukfall på enhet {{user.valdVardgivare.namn}} - {{user.valdVardenhet.namn}}</h1>
-
 <div id="startPage" class="container center-block">
-  <div class="row">
-    <div class="col-xs-12">
-      <rhs-stat-circle size="80px" background-color="#598341">100 st</rhs-stat-circle>
-      <div class="statistics-circle-text hidden-xs">
-        Antalet pågående sjukskrivningar på {{user.valdVardenhet.namn}}
-      </div>
-      <rhs-stat-circle size="80px" background-color="#ea8034">64%</rhs-stat-circle>
-      <img src="/assets/images/female_icon.png">
-      <img src="/assets/images/male_icon.png">
-      <rhs-stat-circle size="80px" background-color="#138391">36%</rhs-stat-circle>
-      <div class="statistics-circle-text hidden-xs">Könsfördelning</div>
-    </div>
-  </div>
+  <h1 id="rhs-startPage-header" class="page-header">Sjukskrivningar på enhet {{user.valdVardgivare.namn}} -
+    {{user.valdVardenhet.namn}}</h1>
 
-  <h2 class="page-header">Välj vilken information du har behov att ta del av</span></h2>
+  <div ui-view="header"></div>
+  <div ui-view="selection"></div>
 
-  <div class="row">
-    <div class="col-xs-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Samtliga pågående fall på enheten</h3>
-        </div>
-        <div class="panel-body start-page-view-option-panel">
-          <div class="row">
-            <div class="col-xs-12">
-              <p>
-                Detta alternativ visar alla pågående sjukfall på enheten som du även kan filtrera och sortera.
-                (info om hur detta kommer att pdl-loggas?) </p>
-            </div>
-            <div class="col-xs-12">
-              <a data-ng-click="onSelectUrval('alla')">
-                <button id="rhs-startPage-allBtn" class="btn btn-primary">Visa alla sjukfall</button>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-xs-6">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Endast de sjukskrivningar där jag utfärdat det senaste intyget</h3>
-          </div>
-          <div class="panel-body start-page-view-option-panel">
-            <div class="row">
-              <div class="col-xs-12">
-                <p>
-                  För läkare: Endast de sjukskrivningar där jag utfärdat det senaste intyget kommer att visas.
-                  (info om hur detta kommer att pdl-loggas?)
-                  Ev. visar vi bara detta alternativ on inloggad användare är läkare. </p>
-              </div>
-              <div class="col-xs-12">
-                <a data-ng-click="onSelectUrval('mina')">
-                  <button id="rhs-startPage-myBtn" class="btn btn-primary">Visa mina sjukfall</button>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-    </div>
-  </div>
 
 </div>
 

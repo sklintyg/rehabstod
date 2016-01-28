@@ -119,9 +119,8 @@ app.run(
                 if (toState.data && angular.isFunction(toState.data.rule)) {
                     var result = toState.data.rule(fromState, AppNavViewstate);
                     if (result && result.to) {
-                        //override to-state and instead go to supplied alternative state.
                         event.preventDefault();
-                        $log.debug('$stateChangeStart was overridden by rule to state destination : ' + result.to);
+                        $log.debug('$stateChangeStart to ' + toState.to + ' was overridden by a rule. new destination : ' + result.to);
                         $state.go(result.to, result.params, result.options);
                     }
                 }

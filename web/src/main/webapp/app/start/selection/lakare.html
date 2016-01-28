@@ -1,0 +1,53 @@
+<h2>Välj vilken information du har behov att ta del av</h2>
+
+<p>Som läkare har du rätt att ta del av sjukskrivningar på alla enheter du har medarbetaruppdrag för. Dock är det viktigt att bara..... <br>
+  Gå vidare genom att välja vilken information du vill ta del av. </p>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Endast de sjukskrivningar där jag utfärdat det senaste intyget</h3>
+      </div>
+      <div class="panel-body start-page-view-option-panel">
+        <div class="row">
+          <div class="col-xs-12">
+            <p>
+              Som läkare kan du välja att endast ta del av de sjukskrivningar där du själv utfärdat det senaste intyget.
+              (info om hur detta kommer att pdl-loggas?) </p>
+          </div>
+          <div class="col-xs-12">
+            <a data-ng-click="onSelectUrval('mina')" class="pull-right">
+              <button id="rhs-startPage-myBtn" class="btn btn-primary">Visa mina sjukskrivningar</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Samtliga pågående fall på enheten</h3>
+      </div>
+      <div class="panel-body start-page-view-option-panel">
+        <div class="row">
+          <div class="col-xs-12">
+            <p>
+              Välj detta alternativ om du har behov av att även se sjukskrivningar där det senaste intyget är utfärdade
+              av andra läkare på vårdeneheten.
+              För att ta del av dessa skall du ha ett behov av det. (info om hur detta kommer att pdl-loggas?) </p>
+          </div>
+          <div class="col-xs-12">
+            <a data-ng-click="onSelectUrval('alla')" class="pull-right">
+              <button id="rhs-startPage-allBtn" class="btn btn-secondary">Visa alla sjukskrivningar</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

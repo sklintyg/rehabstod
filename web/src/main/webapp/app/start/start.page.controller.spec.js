@@ -1,4 +1,4 @@
-describe('Controller: SjukfallPageCtrl', function () {
+describe('Controller: StartPageCtrl', function () {
   'use strict';
 
   // load the controller's module
@@ -9,7 +9,7 @@ describe('Controller: SjukfallPageCtrl', function () {
   // Initialize the controller and a mock scope
   beforeEach(inject(function (_$httpBackend_, $controller, $rootScope) {
     scope = $rootScope.$new();
-    $controller('SjukfallPageCtrl', {
+    $controller('StartPageCtrl', {
       $scope: scope
     });
   }));
