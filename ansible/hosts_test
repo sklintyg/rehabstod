@@ -1,5 +1,5 @@
 [rehabstod-tomcat]
-rehabstod-test ansible_ssh_host=87.238.57.182 ansible_ssh_user=inera ansible_ssh_port=27022 ansible_ssh_private_key_file=~/.ssh/inera_rsa
+rehabstod-test ansible_ssh_host=rehabstod.inera.nordicmedtest.se ansible_ssh_user=inera ansible_ssh_port=27022 ansible_ssh_private_key_file=~/.ssh/inera_rsa
 
 [tomcat:children]
 rehabstod-tomcat
