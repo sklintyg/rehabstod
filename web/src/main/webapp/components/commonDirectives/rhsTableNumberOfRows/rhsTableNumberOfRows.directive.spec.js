@@ -16,7 +16,7 @@ describe('Directive: RhsTableNumberOfRows', function () {
         $scope = $rootScope.$new();
     }));
 
-    it('ensures callFoo does whatever it is supposed to', function() {
+    it('should show the correct number of rows in table', function() {
         // Arrange
 
         var tableCtrl = {
