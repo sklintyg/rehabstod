@@ -6,12 +6,10 @@ angular.module('rehabstodApp')
                 url: '/',
                 views: {
                     'content@app': {
-                        templateUrl: 'app/start/start.page.html',
-                        controller: 'StartPageCtrl'
+                        templateUrl: 'app/start/start.page.html'
                     },
                     'header@app.start': {
-                        templateUrl: 'app/start/header/header.html',
-                        controller: 'SelectionHeaderCtrl'
+                        templateUrl: 'app/start/header/header.html'
                     }
                 },
                 data: {
