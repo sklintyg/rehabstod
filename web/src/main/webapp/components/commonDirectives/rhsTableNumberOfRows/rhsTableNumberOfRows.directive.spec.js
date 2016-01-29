@@ -29,12 +29,12 @@ describe('Directive: RhsTableNumberOfRows', function () {
         element.data('$stTableController', tableCtrl);
 
         var rowElement = $compile(element)($scope);
-        
+
         // Act
         $scope.$digest();
 
         // Assert
-        expect(rowElement.html()).toContain("Antal poster: 3");
+        expect(rowElement.html()).toContain('Antal poster: 3');
         expect(tableCtrl.getFilteredCollection).toHaveBeenCalled();
     });
 });
