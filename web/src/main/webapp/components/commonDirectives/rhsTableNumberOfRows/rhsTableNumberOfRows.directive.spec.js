@@ -3,6 +3,7 @@ describe('Directive: RhsTableNumberOfRows', function () {
 
     // load the controller's module
     beforeEach(module('rehabstodApp'));
+    beforeEach(module('htmlTemplates'));
 
     var $compile;
     var $scope;
@@ -15,7 +16,7 @@ describe('Directive: RhsTableNumberOfRows', function () {
         $scope = $rootScope.$new();
     }));
 
-    xit('ensures callFoo does whatever it is supposed to', function() {
+    it('ensures callFoo does whatever it is supposed to', function() {
         // Arrange
 
         var tableCtrl = {
@@ -28,15 +29,12 @@ describe('Directive: RhsTableNumberOfRows', function () {
         element.data('$stTableController', tableCtrl);
 
         var rowElement = $compile(element)($scope);
-
-        var rowsScope = rowElement.scope();
-
+        
         // Act
         $scope.$digest();
 
         // Assert
-
-        expect(rowsScope.rows).toEqual(3);
+        expect(rowElement.html()).toContain("Antal poster: 3");
         expect(tableCtrl.getFilteredCollection).toHaveBeenCalled();
     });
 });
