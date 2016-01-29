@@ -6,7 +6,8 @@ angular.module('rehabstodApp')
             .state('app', {
                 views: {
                     'app@': { templateUrl: 'app/app.html', controller: 'AppCtrl' },
-                    'header@': { templateUrl: 'app/header/header.html', controller: 'HeaderController' }
+                    'header@': { templateUrl: 'app/header/header.html', controller: 'HeaderController' },
+                    'navbar@': { templateUrl: 'app/navbar/navbar.html', controller: 'NavbarCtrl' }
                 }
             });
     });

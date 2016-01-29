@@ -220,6 +220,7 @@ h5.inline-heading {
 // Component styles are injected through grunt
 // injector
 @import 'error/error.scss';
+@import 'navbar/navbar.scss';
 @import 'print.scss';
 @import 'sjukfall/searchfilter/searchfilter.scss';
 @import 'sjukfall/searchresults/searchresults.scss';

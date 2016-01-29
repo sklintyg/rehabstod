@@ -1,0 +1,34 @@
+$white: #fff;
+$color_eastern_blue_approx: #24a1af;
+
+
+.navbar .navbar-nav .navbar-nav-disabled {
+  color: #ccc;
+}
+
+/*Override of bootstrap navbar styling */
+%navbar-background {
+  background: $color_eastern_blue_approx !important;
+  color: $white !important;
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(enabled=false)" !important;
+}
+
+.navbar-default .navbar-nav {
+  > .active > a {
+    @extend %navbar-background;
+    &:hover {
+      @extend %navbar-background;
+    }
+    &:focus {
+      @extend %navbar-background;
+    }
+  }
+  > li > a {
+    &:hover {
+      @extend %navbar-background;
+    }
+    &:focus {
+      @extend %navbar-background;
+    }
+  }
+}

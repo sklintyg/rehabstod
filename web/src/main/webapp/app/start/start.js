@@ -13,6 +13,28 @@ angular.module('rehabstodApp')
                         templateUrl: 'app/start/header/header.html',
                         controller: 'SelectionHeaderCtrl'
                     }
+                },
+                data: {
+                    rule: function(fromState, toState, AppNavViewstate, UserModel) {
+
+                        if (toState.name !== 'app.start') {
+                            return;
+                        }
+
+                        if (UserModel.isLakare()) {
+                            return {
+                                to: 'app.start.lakare',
+                                params: {},
+                                options: {location: 'replace'}
+                            };
+                        } else {
+                            return {
+                                to: 'app.start.rehabkoordinator',
+                                params: {},
+                                options: {location: 'replace'}
+                            };
+                        }
+                    }
                 }
             })
             .state('app.start.lakare', {

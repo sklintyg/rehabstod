@@ -17,7 +17,7 @@ angular.module('rehabstodApp')
                     }
                 },
                 data: {
-                    rule: function(fromState, AppNavViewstate) {
+                    rule: function(fromState, toState, AppNavViewstate) {
                         if (!AppNavViewstate.isVisningsLageValt()) {
                             return {
                                 to: 'app.start',
@@ -28,6 +28,4 @@ angular.module('rehabstodApp')
                     }
                 }
             });
-
-
     });

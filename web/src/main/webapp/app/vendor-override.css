@@ -144,6 +144,12 @@ form {
     padding: 8px 20px 8px;
 }
 
+.navbar .nav > li > .navbar-text {
+    padding: 8px 20px 8px;
+    margin: 0;
+}
+
+
 .navbar-collapse.in .nav > li {
     border-left: 1px solid #ddd;
     margin-right: 15px;

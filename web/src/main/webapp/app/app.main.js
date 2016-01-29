@@ -117,7 +117,7 @@ app.run(
                 $log.debug('$stateChangeStart: ' + fromState.name + ' to ' + toState.name);
 
                 if (toState.data && angular.isFunction(toState.data.rule)) {
-                    var result = toState.data.rule(fromState, AppNavViewstate);
+                    var result = toState.data.rule(fromState, toState, AppNavViewstate, UserModel);
                     if (result && result.to) {
                         event.preventDefault();
                         $log.debug('$stateChangeStart to ' + toState.to + ' was overridden by a rule. new destination : ' + result.to);
