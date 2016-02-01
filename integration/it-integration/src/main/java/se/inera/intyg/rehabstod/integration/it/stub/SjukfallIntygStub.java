@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.getactivesickleavesforcareunit.v1.GetActiveSickLeavesForCareUnitResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.getactivesickleavesforcareunit.v1.GetActiveSickLeavesForCareUnitResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.getactivesickleavesforcareunit.v1.GetActiveSickLeavesForCareUnitType;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.getactivesickleavesforcareunit.v1.ResultCodeEnum;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitType;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Service
 @Profile({"dev", "rhs-hsa-stub"})
-public class SjukfallIntygStub implements GetActiveSickLeavesForCareUnitResponderInterface {
+public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitResponderInterface {
 
     private List<IntygsData> intygsData = new ArrayList<>();
 
@@ -53,10 +53,10 @@ public class SjukfallIntygStub implements GetActiveSickLeavesForCareUnitResponde
 
 
     @Override
-    public GetActiveSickLeavesForCareUnitResponseType getActiveSickLeavesForCareUnit(String logicalAddress, GetActiveSickLeavesForCareUnitType parameters) {
-        GetActiveSickLeavesForCareUnitResponseType resp = new GetActiveSickLeavesForCareUnitResponseType();
+    public ListActiveSickLeavesForCareUnitResponseType listActiveSickLeavesForCareUnit(String logicalAddress, ListActiveSickLeavesForCareUnitType parameters) {
+        ListActiveSickLeavesForCareUnitResponseType resp = new ListActiveSickLeavesForCareUnitResponseType();
         resp.setResultCode(ResultCodeEnum.OK);
-        resp.getIntygsData().addAll(intygsData);
+        resp.getIntygsLista().getIntygsData().addAll(intygsData);
         resp.setVardgivare(fakedVardgivare);
         return resp;
     }

@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.getactivesickleavesforcareunit.v1.GetActiveSickLeavesForCareUnitResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.getactivesickleavesforcareunit.v1.ResultCodeEnum;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.integration.it.exception.IntygstjanstIntegrationException;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
@@ -25,9 +25,9 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
 
     @Override
     public List<IntygsData> getIntygsDataForCareUnit(String hsaId) {
-        GetActiveSickLeavesForCareUnitResponseType responseType = intygstjanstClientService.getSjukfall(hsaId);
+        ListActiveSickLeavesForCareUnitResponseType responseType = intygstjanstClientService.getSjukfall(hsaId);
         if (responseType.getResultCode() == ResultCodeEnum.OK) {
-            return responseType.getIntygsData();
+            return responseType.getIntygsLista().getIntygsData();
         } else {
             log.error("An error occured fetching sick leave certificates. Error type: {0}. Error msg: {1}", responseType.getResultCode().name(), responseType.getComment());
             throw new IntygstjanstIntegrationException();

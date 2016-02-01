@@ -1,30 +1,28 @@
 package se.inera.intyg.rehabstod.integration.it.stub;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Diagnos;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
+
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
-
-import javax.annotation.PostConstruct;
-
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-
-import org.slf4j.Logger;
-
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Diagnos;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Sjukskrivningsgrad;
 
 /**
  * Can generate a suitable amount of intygsdata.
@@ -76,7 +74,11 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
                 intygsData.setDiagnos(nextDiagnosis());
                 intygsData.setSkapadAv(hosPerson);
                 intygsData.setEnhet(enhet);
-                intygsData.getSjukskrivningsgrader().addAll(getDefaultSjukskrivningsGrader());
+
+                Arbetsformaga arbetsformaga = new Arbetsformaga();
+                arbetsformaga.getFormaga().addAll(getDefaultSjukskrivningsGrader());
+                intygsData.setArbetsformaga(arbetsformaga);
+
                 intygsDataList.add(intygsData);
             }
         }
@@ -93,20 +95,20 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hosPerson.setPersonalId(hsaId);
     }
 
-    private List<Sjukskrivningsgrad> getDefaultSjukskrivningsGrader() {
-        List<Sjukskrivningsgrad> sjukskrivningsgradList = new ArrayList<>();
+    private List<Formaga> getDefaultSjukskrivningsGrader() {
+        List<Formaga> sjukskrivningsgradList = new ArrayList<>();
 
-        Sjukskrivningsgrad sg1 = buildSjukskrivningsGrad(100, -2, -1);
-        Sjukskrivningsgrad sg2 = buildSjukskrivningsGrad(75, -1, 2);
+        Formaga sg1 = buildSjukskrivningsGrad(100, -2, -1);
+        Formaga sg2 = buildSjukskrivningsGrad(75, -1, 2);
 
         sjukskrivningsgradList.add(sg1);
         sjukskrivningsgradList.add(sg2);
         return sjukskrivningsgradList;
     }
 
-    private Sjukskrivningsgrad buildSjukskrivningsGrad(int value, Integer startOffset, Integer slutOffset) {
-        Sjukskrivningsgrad sg2 = new Sjukskrivningsgrad();
-        sg2.setGrad(value);
+    private Formaga buildSjukskrivningsGrad(int value, Integer startOffset, Integer slutOffset) {
+        Formaga sg2 = new Formaga();
+        sg2.setNedsattning(value);
         sg2.setStartdatum(org.joda.time.LocalDate.now().plusWeeks(startOffset));
         sg2.setSlutdatum(org.joda.time.LocalDate.now().plusWeeks(slutOffset));
         return sg2;

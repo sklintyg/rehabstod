@@ -1,7 +1,8 @@
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,12 +10,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by eriklupander on 2016-01-31.
@@ -40,8 +39,8 @@ public class SjukfallIntygDataGeneratorTest {
         assertEquals(40, intygsData.size());
         assertEquals("19791110-9291",intygsData.get(0).getPatient().getPersonId().getExtension());
         assertEquals("M16",intygsData.get(0).getDiagnos().getKod());
-        assertNotNull("M16",intygsData.get(0).getSjukskrivningsgrader().get(0).getStartdatum());
-        assertNotNull("M16",intygsData.get(0).getSjukskrivningsgrader().get(0).getSlutdatum());
+        assertNotNull("M16",intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum());
+        assertNotNull("M16",intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum());
     }
 
     private List<String> buildPersonnummerList() {
