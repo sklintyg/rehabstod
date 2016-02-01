@@ -19,9 +19,9 @@ public class CertificateController {
     @Autowired
     private CertificateService certificateService;
 
-    @RequestMapping(value = "/{hsaId}")
-    public List<IntygsData> getCertificatesForCareUnit(@PathVariable("hsaId") String hsaId) {
-         return certificateService.getIntygsData(hsaId);
+    @RequestMapping(value = "")
+    public List<IntygsData> getCertificatesForCareUnit() {
+         return certificateService.getIntygsData();
     }
 
 }

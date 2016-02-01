@@ -3,9 +3,11 @@ package se.inera.intyg.rehabstod.service.certificate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
+import se.inera.intyg.rehabstod.service.user.UserService;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -14,10 +16,14 @@ import java.util.List;
 public class CertificateServiceImpl implements CertificateService {
 
     @Autowired
-    IntygstjanstIntegrationService intygstjanstIntegrationService;
+    private IntygstjanstIntegrationService intygstjanstIntegrationService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
-    public List<IntygsData> getIntygsData(String hsaId) {
+    public List<IntygsData> getIntygsData() {
+        String hsaId = userService.getUser().getValdVardenhet().getId();
         return intygstjanstIntegrationService.getIntygsDataForCareUnit(hsaId);
     }
 }

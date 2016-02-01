@@ -10,6 +10,7 @@ import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickle
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
 
 import javax.annotation.PostConstruct;
@@ -56,7 +57,11 @@ public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitRespond
     public ListActiveSickLeavesForCareUnitResponseType listActiveSickLeavesForCareUnit(String logicalAddress, ListActiveSickLeavesForCareUnitType parameters) {
         ListActiveSickLeavesForCareUnitResponseType resp = new ListActiveSickLeavesForCareUnitResponseType();
         resp.setResultCode(ResultCodeEnum.OK);
-        resp.getIntygsLista().getIntygsData().addAll(intygsData);
+
+        IntygsLista intygsLista = new IntygsLista();
+        intygsLista.getIntygsData().addAll(intygsData);
+        resp.setIntygsLista(intygsLista);
+
         resp.setVardgivare(fakedVardgivare);
         return resp;
     }

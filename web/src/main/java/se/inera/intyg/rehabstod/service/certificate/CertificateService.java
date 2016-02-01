@@ -9,6 +9,6 @@ import java.util.List;
  */
 public interface CertificateService {
 
-    List<IntygsData> getIntygsData(String hsaId);
+    List<IntygsData> getIntygsData();
 
 }

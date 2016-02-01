@@ -27,6 +27,8 @@ import java.util.UUID;
 /**
  * Can generate a suitable amount of intygsdata.
  *
+ * Currently hard-coding the same doctor and enhet for all. (Jan Nilsson on enhet IFV1239877878-1042)
+ *
  * Created by eriklupander on 2016-01-29.
  */
 @Component
@@ -54,12 +56,20 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     }
 
 
-
-
+    /**
+     * Generate intygsdata for a given number of patients, with N intyg per patient.
+     *
+     * @param numberOfPatients
+     *                  Number of patients to base intyg data on.
+     * @param intygPerPatient
+     *                  Number of intyg to generate intyg per patient on.
+     * @return
+     *        List of all IntygsData
+     */
     public List<IntygsData> generateIntygsData(Integer numberOfPatients, Integer intygPerPatient) {
 
         if (numberOfPatients > 13000) {
-            throw new IllegalArgumentException("Cannot seed more than 13000 patients");
+            throw new IllegalArgumentException("Cannot seed more than 13000 patients or we would have to recycle personnummer...");
         }
 
         seedPatients(numberOfPatients);
@@ -86,14 +96,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         return intygsDataList;
     }
 
-    private void initHoSPerson() {
-        hosPerson = new HosPersonal();
-        hosPerson.setEnhet(enhet);
-        hosPerson.setFullstandigtNamn("Jan Nilsson");
-        HsaId hsaId = new HsaId();
-        hsaId.setExtension("IFV1239877878-1049");
-        hosPerson.setPersonalId(hsaId);
-    }
+
 
     private List<Formaga> getDefaultSjukskrivningsGrader() {
         List<Formaga> sjukskrivningsgradList = new ArrayList<>();
@@ -152,8 +155,6 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         return patient;
     }
 
-
-
     private void initDiagnoser() {
         Diagnos d1 = new Diagnos();
         d1.setKod("M16");
@@ -187,5 +188,14 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hsaId.setExtension("IFV1239877878-1042");
         enhet.setEnhetsId(hsaId);
         enhet.setEnhetsnamn("WebCert-Enhet1");
+    }
+
+    private void initHoSPerson() {
+        hosPerson = new HosPersonal();
+        hosPerson.setEnhet(enhet);
+        hosPerson.setFullstandigtNamn("Jan Nilsson");
+        HsaId hsaId = new HsaId();
+        hsaId.setExtension("IFV1239877878-1049");
+        hosPerson.setPersonalId(hsaId);
     }
 }

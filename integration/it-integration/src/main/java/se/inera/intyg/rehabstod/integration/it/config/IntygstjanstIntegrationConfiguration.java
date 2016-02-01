@@ -14,7 +14,6 @@ import se.inera.intyg.rehabstod.integration.it.stub.SjukfallIntygStub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 @Configuration
 @ComponentScan({
         "se.inera.intyg.rehabstod.integration.it.client",
@@ -28,11 +27,6 @@ public class IntygstjanstIntegrationConfiguration {
 
     @Autowired
     private SjukfallIntygStub sjukfallIntygStub;
-
-//    @Bean
-//    SjukfallStub sjukfallWebServiceStub() {
-//        return new SjukfallStub();
-//    }
 
     @Bean
     public ObjectMapper objectMapper() {

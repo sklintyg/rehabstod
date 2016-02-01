@@ -37,10 +37,10 @@ public class SjukfallIntygDataGeneratorTest {
         when(personnummerLoader.readTestPersonnummer()).thenReturn(buildPersonnummerList());
         List<IntygsData> intygsData = testee.generateIntygsData(10, 4);
         assertEquals(40, intygsData.size());
-        assertEquals("19791110-9291",intygsData.get(0).getPatient().getPersonId().getExtension());
-        assertEquals("M16",intygsData.get(0).getDiagnos().getKod());
-        assertNotNull("M16",intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum());
-        assertNotNull("M16",intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum());
+        assertEquals("19791110-9291", intygsData.get(0).getPatient().getPersonId().getExtension());
+        assertEquals("M16", intygsData.get(0).getDiagnos().getKod());
+        assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum());
+        assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum());
     }
 
     private List<String> buildPersonnummerList() {
