@@ -59,38 +59,6 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $too
 
 });
 
-// Global config of default date picker config (individual attributes can be
-// overridden per directive usage)
-app.constant('datepickerConfig', {
-    formatDay: 'dd',
-    formatMonth: 'MMMM',
-    formatYear: 'yyyy',
-    formatDayHeader: 'EEE',
-    formatDayTitle: 'MMMM yyyy',
-    formatMonthTitle: 'yyyy',
-    datepickerMode: 'day',
-    minMode: 'day',
-    maxMode: 'year',
-    showWeeks: true,
-    startingDay: 1,
-    yearRange: 20,
-    minDate: null,
-    maxDate: null
-});
-
-// Global config of default date picker config (individual attributes can be
-// overridden per directive usage)
-
-app.constant('datepickerPopupConfig', {
-    datepickerPopup: 'yyyy-MM-dd',
-    currentText: 'Idag',
-    clearText: 'Rensa',
-    closeText: 'OK',
-    closeOnDateSelection: true,
-    appendToBody: false,
-    showButtonBar: true
-});
-
 // Inject language resources
 app.run(
     function($log, $rootScope, $state, $window,
