@@ -23,7 +23,6 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
     @Override
     public ListActiveSickLeavesForCareUnitResponseType getSjukfall(String unitHsaId) {
         ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
-        ListActiveSickLeavesForCareUnitResponseType response = service.listActiveSickLeavesForCareUnit(logicalAddress, params);
-        return response;
+        return service.listActiveSickLeavesForCareUnit(logicalAddress, params);
     }
 }
