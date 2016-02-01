@@ -19,6 +19,8 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
 
 /**
+ * Simple test.
+ *
  * Created by eriklupander on 2016-02-01.
  */
 @RunWith(MockitoJUnitRunner.class)
