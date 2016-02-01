@@ -1,5 +1,8 @@
 package se.inera.intyg.rehabstod.common.integration.json;
 
+import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.joda.ser.LocalDateSerializer;
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -23,6 +26,9 @@ public class CustomObjectMapper extends ObjectMapper {
         private Module() {
             addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
             addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer());
+
+            addSerializer(LocalDate.class, new LocalDateSerializer());
+            addDeserializer(LocalDate.class, new LocalDateDeserializer());
         }
 
     }
