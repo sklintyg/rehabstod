@@ -7,7 +7,7 @@ describe('Controller: SjukfallPageCtrl', function () {
     var scope;
     var SjukfallModel;
     var SjukfallService;
-    var sjukFallData = [{name: "Hej"}];
+    var sjukFallData = [{name: 'Hej'}];
 
     describe('Load succeeded ', function () {
         // Initialize the controller and a mock scope
@@ -17,7 +17,7 @@ describe('Controller: SjukfallPageCtrl', function () {
             SjukfallService = _SjukfallService_;
             SjukfallModel = _SjukfallModel_;
 
-            spyOn(SjukfallService, "loadSjukfall").and.callFake(function() {
+            spyOn(SjukfallService, 'loadSjukfall').and.callFake(function() {
                 var promise = $q.defer();
 
                 promise.resolve(sjukFallData);
@@ -52,7 +52,7 @@ describe('Controller: SjukfallPageCtrl', function () {
 
             SjukfallModel.set(sjukFallData);
 
-            spyOn(SjukfallService, "loadSjukfall").and.callFake(function() {
+            spyOn(SjukfallService, 'loadSjukfall').and.callFake(function() {
                 var promise = $q.defer();
 
                 promise.reject();
