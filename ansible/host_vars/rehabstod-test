@@ -1,5 +1,5 @@
 # Spring profiles
-profiles: test,rhs-security-test,hsa-stub,testability-api
+profiles: test,rhs-security-test,rhs-it-stub,hsa-stub,testability-api
 
 # Configuration repository
 environment_name: "test"

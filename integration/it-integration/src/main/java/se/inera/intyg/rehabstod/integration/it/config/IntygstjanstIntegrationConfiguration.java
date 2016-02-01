@@ -35,28 +35,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Configuration
 @ComponentScan({
         "se.inera.intyg.rehabstod.integration.it.client",
-        "se.inera.intyg.rehabstod.integration.it.service",
-        "se.inera.intyg.rehabstod.integration.it.stub"})
+        "se.inera.intyg.rehabstod.integration.it.service"})
 @ImportResource("classpath:it-services.xml")
 public class IntygstjanstIntegrationConfiguration {
-
-    @Autowired
-    private ApplicationContext applicationContext;
-
-    @Autowired
-    private SjukfallIntygStub sjukfallIntygStub;
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
-
-    @Bean
-    public EndpointImpl termsWsResponder() {
-        Bus bus = (Bus) applicationContext.getBean(Bus.DEFAULT_BUS_ID);
-        Object implementor = sjukfallIntygStub;
-        EndpointImpl endpoint = new EndpointImpl(bus, implementor);
-        endpoint.publish("/get-active-sickleaves-for-careunit/v1.0");
-        return endpoint;
-    }
+//
+//    @Autowired
+//    private ApplicationContext applicationContext;
+//
+//    @Autowired
+//    private SjukfallIntygStub sjukfallIntygStub;
+//
+//    @Bean
+//    public ObjectMapper objectMapper() {
+//        return new ObjectMapper();
+//    }
+//
+//    @Bean
+//    public EndpointImpl intygstjanstResponder() {
+//        Bus bus = (Bus) applicationContext.getBean(Bus.DEFAULT_BUS_ID);
+//        Object implementor = sjukfallIntygStub;
+//        EndpointImpl endpoint = new EndpointImpl(bus, implementor);
+//        endpoint.publish("/get-active-sickleaves-for-careunit/v1.0");
+//        return endpoint;
+//    }
 }

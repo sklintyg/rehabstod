@@ -39,7 +39,7 @@ import java.util.List;
  * Created by eriklupander on 2016-01-29.
  */
 @Service
-@Profile({"dev", "rhs-hsa-stub"})
+@Profile({"dev", "rhs-it-stub"})
 public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitResponderInterface {
 
     private List<IntygsData> intygsData = new ArrayList<>();

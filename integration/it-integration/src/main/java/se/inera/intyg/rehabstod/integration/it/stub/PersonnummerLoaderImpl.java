@@ -35,7 +35,7 @@ import java.util.List;
  * Created by eriklupander on 2016-01-31.
  */
 @Component
-@Profile({"dev", "rhs-hsa-stub"})
+@Profile({"dev", "rhs-it-stub"})
 public class PersonnummerLoaderImpl implements PersonnummerLoader {
 
     public List<String> readTestPersonnummer() throws IOException {

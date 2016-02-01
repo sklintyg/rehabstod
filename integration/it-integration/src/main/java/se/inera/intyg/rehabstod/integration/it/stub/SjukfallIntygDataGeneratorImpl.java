@@ -50,7 +50,7 @@ import java.util.UUID;
  * Created by eriklupander on 2016-01-29.
  */
 @Component
-@Profile({"dev", "rhs-hsa-stub"})
+@Profile({"dev", "rhs-it-stub"})
 public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerator {
 
     private static final Logger log = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
