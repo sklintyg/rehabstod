@@ -100,6 +100,7 @@ gretty {
 
 dependencies {
     compile project(":rehabstod-common")
+    compile project(":rehabstod-it-integration")
 
     compile "se.inera.intyg.common:hsa-integration:0-SNAPSHOT"
     

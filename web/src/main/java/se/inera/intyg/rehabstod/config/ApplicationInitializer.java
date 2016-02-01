@@ -15,6 +15,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
+import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 
 
 // import se.inera.intyg.rehabstod.hsa.config.HsaConfiguration;
@@ -25,8 +26,10 @@ public class ApplicationInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(javax.servlet.ServletContext servletContext) throws ServletException {
         AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
+
         appContext.register(ApplicationConfig.class, HsaConfiguration.class,
-                ServiceConfig.class);
+                ServiceConfig.class, IntygstjanstIntegrationConfiguration.class);
+
         servletContext.addListener(new ContextLoaderListener(appContext));
  
         AnnotationConfigWebApplicationContext webConfig = new AnnotationConfigWebApplicationContext();

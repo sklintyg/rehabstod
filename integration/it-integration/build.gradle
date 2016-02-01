@@ -1,0 +1,19 @@
+description = 'Inera Rehabstöd Intygstjänst-Integration module'
+
+apply plugin: 'java'
+
+dependencies {
+    compile project(":rehabstod-common")
+
+    compile 'se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:0-SNAPSHOT'
+    compile "org.springframework:spring-beans:${springContextVersion}"
+    compile "org.springframework:spring-context:${springContextVersion}"
+    compile 'joda-time:joda-time:2.2'
+    compile 'org.slf4j:slf4j-api:1.7.10'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:1.10.19'
+    testCompile 'org.unitils:unitils-core:3.3'
+    testCompile "org.springframework:spring-test:${springContextVersion}"
+    testCompile 'joda-time:joda-time:2.2'
+}

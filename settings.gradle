@@ -2,8 +2,8 @@
   Gradle settings for Rehabstod
  */
 rootProject.name = 'rehabstod'
-include ':web', ':common'
+include ':web', ':common', ':integration/it-integration'
 
 project(':web').name = 'rehabstod-web'
 project(':common').name = 'rehabstod-common'
-
+project(':integration/it-integration').name = 'rehabstod-it-integration'
