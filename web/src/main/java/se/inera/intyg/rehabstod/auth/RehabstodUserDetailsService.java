@@ -52,7 +52,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-
 /**
  * @author andreaskaltenbach
  */
@@ -69,7 +68,6 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
 
     @Autowired
     private AuthoritiesResolver authoritiesResolver;
-
 
     // ~ API
     // =====================================================================================
@@ -106,7 +104,6 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
             throw new RuntimeException(getAssertion(credential).getHsaId(), e);
         }
     }
-
 
     // ~ Protected scope
     // =====================================================================================
@@ -167,7 +164,6 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     }
 
-
     // ~ Package scope
     // =====================================================================================
 
@@ -189,7 +185,7 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
             return createRehabstodUser(role, credential, authorizedVardgivare, personInfo);
 
         } catch (MissingMedarbetaruppdragException e) {
-            //monitoringLogService.logMissingMedarbetarUppdrag(getAssertion(credential).getHsaId());
+            // monitoringLogService.logMissingMedarbetarUppdrag(getAssertion(credential).getHsaId());
             throw e;
         }
 
@@ -202,7 +198,6 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
 
         return new SakerhetstjanstAssertion(assertion);
     }
-
 
     // ~ Private scope
     // =====================================================================================
@@ -225,7 +220,8 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         }
     }
 
-    private RehabstodUser createRehabstodUser(Role role, SAMLCredential credential, List<Vardgivare> authorizedVardgivare, List<PersonInformationType> personInfo) {
+    private RehabstodUser createRehabstodUser(Role role, SAMLCredential credential, List<Vardgivare> authorizedVardgivare,
+            List<PersonInformationType> personInfo) {
         LOG.debug("Decorate/populate user object with additional information");
 
         SakerhetstjanstAssertion sa = getAssertion(credential);
@@ -247,9 +243,18 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         user.setAuthenticationScheme(sa.getAuthenticationScheme());
 
         decorateRehabstodUserWithAdditionalInfo(user, credential, personInfo);
+        clearMottagningarFromUser(user);
         decorateRehabstodUserWithDefaultVardenhet(user, credential);
 
         return user;
+    }
+
+    private void clearMottagningarFromUser(RehabstodUser user) {
+        for (Vardgivare vg : user.getVardgivare()) {
+            for (Vardenhet ve : vg.getVardenheter()) {
+                ve.setMottagningar(null);
+            }
+        }
     }
 
     private void decorateRehabstodUserWithAdditionalInfo(RehabstodUser user, SAMLCredential credential, List<PersonInformationType> hsaPersonInfo) {
@@ -336,4 +341,8 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         return true;
     }
 
+    @Autowired
+    public void setAuthoritiesResolver(AuthoritiesResolver authoritiesResolver) {
+        this.authoritiesResolver = authoritiesResolver;
+    }
 }

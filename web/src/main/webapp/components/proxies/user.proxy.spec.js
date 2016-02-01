@@ -24,7 +24,7 @@ describe('Proxy: UserProxy', function() {
             var onSuccess = jasmine.createSpy('onSuccess');
             var onError = jasmine.createSpy('onError');
 
-            $httpBackend.expectGET('/api/user').respond(mockResponse.userOK);
+            $httpBackend.expectGET('/api/user').respond(mockResponse.userModel);
 
             UserProxy.getUser().then(onSuccess, onError);
             $httpBackend.flush();
@@ -35,4 +35,23 @@ describe('Proxy: UserProxy', function() {
             expect(onError).not.toHaveBeenCalled();
         });
     });
+
+    describe('UserProxy', function() {
+        it('should return user when change selected unit', function() {
+
+            var onSuccess = jasmine.createSpy('onSuccess');
+            var onError = jasmine.createSpy('onError');
+
+            $httpBackend.expectPOST('/api/user/andraenhet').respond(mockResponse.userModel);
+
+            UserProxy.changeSelectedUnit('123').then(onSuccess, onError);
+            $httpBackend.flush();
+            // promises are resolved/dispatched only on next $digest cycle
+            $rootScope.$apply();
+
+            expect(onSuccess).toHaveBeenCalledWith(mockResponse.userModel);
+            expect(onError).not.toHaveBeenCalled();
+        });
+    });
+
 });

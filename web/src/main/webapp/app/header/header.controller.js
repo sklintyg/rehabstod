@@ -1,5 +1,5 @@
 angular.module('rehabstodApp').controller('HeaderController',
-    function($scope, $window, $state, $log, UserModel, $uibModal) {
+    function($scope, $window, $state, $log, UserProxy, UserModel, $uibModal) {
         'use strict';
 
         //Expose 'now' as a model property for the template to render as todays date
@@ -24,8 +24,13 @@ angular.module('rehabstodApp').controller('HeaderController',
                 size: 'md'
             });
 
-            modalInstance.result.then(function(selectedItem) {
-                $log.debug('SelectCareUnit Modal closed with a selection :' + selectedItem);
+            modalInstance.result.then(function(enhet) {
+                $log.debug('SelectCareUnit Modal closed with a selection :' + enhet.id);
+                UserProxy.changeSelectedUnit(enhet.id).then(function(updatedUserModel) {
+                    UserModel.set(updatedUserModel);
+                }, function() {
+                    //Handle errors
+                });
             }, function() {
                 $log.debug('SelectCareUnit Modal cancelled');
             });

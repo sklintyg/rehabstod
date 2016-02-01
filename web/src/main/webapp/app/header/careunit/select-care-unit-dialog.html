@@ -3,53 +3,23 @@
   <h3>Välj vårdenhet</h3>
 </div>
 <div id="rhs-startPage-selectVardEnhetModal" class="modal-body">
-  <div ng-repeat="vg in vardgivare | orderBy:'namn'">
+  <div ng-repeat="vg in user.vardgivare | orderBy:'namn'">
     <div class="row">
-      <div class="col-xs-5 col-xs-offset-1"><strong>{{vg.namn}}</strong></div>
+      <div class="col-xs-5"><strong>{{vg.namn}}</strong></div>
     </div>
     <div ng-repeat="enhet in vg.vardenheter | orderBy:'namn'">
       <div class="row">
-        <div class="col-xs-1">
-          <button class="close pull-left" id="expand-enhet-{{enhet.id}}" style="float:left;"
-                  ng-if="enhet.mottagningar.length > 0" ng-click="toggle(enhet)">
-            <span class="glyphicon" ng-class="enhet.showMottagning ? 'glyphicon-minus' : 'glyphicon-plus'">
-            </span>
-          </button>
-        </div>
         <div class="col-xs-5">
-          <div ng-if="enhet.id == currentId">
-            <span style="padding-left:13px; color:#999"><!-- TODO: styling for unselectable (currenctly active) should be the similar? as for button variant -->
+          <div ng-if="enhet.id == user.valdVardenhet.id">
+            <span class="btn btn-link disabled">
               {{enhet.namn}}
             </span>
           </div>
-          <div ng-if="enhet.id != currentId">
+          <div ng-if="enhet.id != user.valdVardenhet.id">
             <button id="select-active-unit-{{enhet.id}}-modal" class="btn btn-link"
                     data-ng-click="onSelectVardenhet(enhet)">
               {{enhet.namn}}
             </button>
-          </div>
-
-
-        </div>
-      </div>
-      <div ng-show="enhet.showMottagning">
-        <div class="row" ng-repeat="mottagning in enhet.mottagningar | orderBy:'namn'">
-          <div class="col-xs-5 col-xs-offset-1">
-
-            <div ng-if="mottagning.id == currentId">
-              <span style="padding-left:13px; color:#999"><!-- TODO: styling for unselectable (currenctly active) should be the similar? as for button variant -->
-              {{mottagning.namn}}
-               </span>
-            </div>
-
-            <div ng-if="mottagning.id != currentId">
-              <button id="select-active-unit-{{mottagning.id}}-modal" class="btn btn-link"
-                      data-ng-click="onSelectVardenhet(mottagning)">
-                {{mottagning.namn}}
-              </button>
-            </div>
-
-
           </div>
         </div>
       </div>
@@ -58,7 +28,5 @@
   <div class="alert alert-danger" ng-show="error">Tekniskt fel. Kunde inte byta vårdenhet.</div>
 </div>
 <div class="modal-footer">
-  <div style="float:right">
-  <button class="btn cancel" data-ng-click="cancel()">Avbryt</button>
-</div>
+    <button class="btn cancel" data-ng-click="cancel()">Avbryt</button>
 </div>
