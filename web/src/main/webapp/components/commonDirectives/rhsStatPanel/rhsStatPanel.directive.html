@@ -1,13 +1,13 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <rhs-stat-circle size="80px" background-color="#598341">{{total}} st</rhs-stat-circle>
+    <rhs-stat-circle size="80px" background-color="#598341">{{model.total}} st</rhs-stat-circle>
     <div class="rhs-stat-panel-circle-text hidden-xs">
       Antalet pågående sjukskrivningar på {{vardenhet.namn}}
     </div>
-    <rhs-stat-circle size="80px" background-color="#ea8034">{{women}} %</rhs-stat-circle>
+    <rhs-stat-circle size="80px" background-color="#ea8034">{{model.women}} %</rhs-stat-circle>
     <img src="/assets/images/female_icon.png">
     <img src="/assets/images/male_icon.png">
-    <rhs-stat-circle size="80px" background-color="#138391">{{men}} %</rhs-stat-circle>
+    <rhs-stat-circle size="80px" background-color="#138391">{{model.men}} %</rhs-stat-circle>
     <div class="rhs-stat-panel-circle-text hidden-xs">Könsfördelning</div>
   </div>
 </div>

@@ -1,6 +1,6 @@
 angular.module('rehabstodApp').directive('rhsStatPanel',
-    ['messageService',
-        function(/*messageService*/) {
+    ['messageService', 'UnitCertificateSummaryModel', 'UnitCertificateSummaryProxy',
+        function(messageService, UnitCertificateSummaryModel, UnitCertificateSummaryProxy) {
             'use strict';
 
             return {
@@ -10,10 +10,13 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                 },
                 controller: function($scope) {
 
-                    $scope.men = 36;
-                    $scope.women = 64;
-                    $scope.total = 1100;
+                    $scope.model = UnitCertificateSummaryModel.get();
 
+                    if ($scope.model.total === null) {
+                        UnitCertificateSummaryProxy.get().then(function(data) {
+                            UnitCertificateSummaryModel.set(data);
+                        });
+                    }
                 },
                 templateUrl: 'components/commonDirectives/rhsStatPanel/rhsStatPanel.directive.html'
             };
