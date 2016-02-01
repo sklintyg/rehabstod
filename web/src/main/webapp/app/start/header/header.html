@@ -1,17 +1,5 @@
 <div class="row">
   <div class="col-md-8">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <rhs-stat-circle size="80px" background-color="#598341">100 st</rhs-stat-circle>
-        <div class="statistics-circle-text hidden-xs">
-          Antalet pågående sjukskrivningar på {{user.valdVardenhet.namn}}
-        </div>
-        <rhs-stat-circle size="80px" background-color="#ea8034">64%</rhs-stat-circle>
-        <img src="/assets/images/female_icon.png">
-        <img src="/assets/images/male_icon.png">
-        <rhs-stat-circle size="80px" background-color="#138391">36%</rhs-stat-circle>
-        <div class="statistics-circle-text hidden-xs">Könsfördelning</div>
-      </div>
-    </div>
+    <rhs-stat-panel vardenhet="user.valdVardenhet"></rhs-stat-panel>
   </div>
 </div>
