@@ -5,8 +5,14 @@ angular.module('rehabstodApp')
             .state('app.sjukfall', {
                 url: '/sjukfall',
                 views: {
-                    'content@app': {templateUrl: 'app/sjukfall/sjukfall.page.html', controller: 'SjukfallPageCtrl'},
-                    'statistics@app.sjukfall': {templateUrl: 'app/sjukfall/statistics/statistics.html'},
+                    'content@app': {
+                        templateUrl: 'app/sjukfall/sjukfall.page.html',
+                        controller: 'SjukfallPageCtrl'
+                    },
+                    'statistics@app.sjukfall': {
+                        templateUrl: 'app/sjukfall/statistics/statistics.html',
+                        controller: 'StatisticsCtrl'
+                    },
                     'searchfilter@app.sjukfall': {
                         templateUrl: 'app/sjukfall/searchfilter/searchfilter.html',
                         controller: 'SearchFilterCtrl'

@@ -1,5 +1,5 @@
 angular.module('rehabstodApp')
-    .controller('AppCtrl', function($scope, $log, $state, UserModel) {
+    .controller('StartPageCtrl', function($scope, $log, $state, UserModel) {
         'use strict';
         // UserModel properties are used by almost all sub-view's.
         // We expose it here in the applications main controller's scope and it will prototypically trickle
