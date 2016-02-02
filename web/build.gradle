@@ -91,7 +91,7 @@ gretty {
 //            '-Drehabstod.config.folder=' + projectDir + '/../../rehabstod-konfiguration/demo',
 //            '-Drehabstod.config.file=' + projectDir + '/../../rehabstod-konfiguration/demo/rehabstod.properties',
 //            '-Dcredentials.file=' + projectDir + '/../../rehabstod-konfiguration/demo/credentials.properties',
-//            '-Drehabstod.resources.folder=/' +projectDir + '/src/main/resources'
+//            '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources'
 //    ]
     fastReload = true
     inplaceMode = 'hard'

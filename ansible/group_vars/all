@@ -21,6 +21,7 @@ config_etc_folder: "{{ config_folder }}/{{ environment_name }}"
 # Application resources
 # Note: end with slash, in order to copy only files inside the source folder, not the folder itself
 app_resources_src: "{{ playbook_dir }}/../web/src/main/resources/"
+app_ext_resources_src: "{{ playbook_dir }}/../src/main/resources/"
 app_resources_folder: "{{ inera_root }}/rehabstod-resources"
 
 # Tomcat installation

@@ -10,3 +10,7 @@
 - name: copy application resources
   copy: src="{{ app_resources_src }}"
        dest="{{ app_resources_folder }}"
+
+- name: copy externalized application resources
+ copy: src="{{ app_ext_resources_src }}"
+      dest="{{ app_resources_folder }}"
