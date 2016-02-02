@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -38,8 +39,11 @@ import java.util.List;
 @Profile({"dev", "rhs-it-stub"})
 public class PersonnummerLoaderImpl implements PersonnummerLoader {
 
+    @Value("${rhs.stub.personnummer.file}")
+    private String testPersonnummerFile;
+
     public List<String> readTestPersonnummer() throws IOException {
-        Resource resource = getResource("classpath:stubdata/testpersonnummer_skatteverket.csv");
+        Resource resource = getResource(testPersonnummerFile);
         LineIterator it = FileUtils.lineIterator(resource.getFile(), "UTF-8");
 
         List<String> personnummerList = new ArrayList<>();
