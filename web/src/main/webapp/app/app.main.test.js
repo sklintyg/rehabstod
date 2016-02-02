@@ -76,8 +76,8 @@ app.constant('datepickerPopupConfig', {
 
 // Inject language resources
 app.run(
-    function($log, $rootScope, $state, $window,
-        messageService, AppNavViewstate) {
+    function($log, $rootScope, $state, $window, UserModel,
+        messageService) {
         'use strict';
 
         $rootScope.lang = 'sv';
@@ -91,7 +91,7 @@ app.run(
                 $log.debug('$stateChangeStart: ' + fromState.name + ' to ' + toState.name);
 
                 if (toState.data && angular.isFunction(toState.data.rule)) {
-                    var result = toState.data.rule(fromState, AppNavViewstate);
+                    var result = toState.data.rule(fromState, toState, UserModel);
                     if (result && result.to) {
                         //override to-state and instead go to supplied alternative state.
                         event.preventDefault();

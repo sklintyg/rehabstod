@@ -11,6 +11,7 @@ describe('Model: UserModel', function() {
         hsaId: 'IFV1239877878-1049',
         namn: 'Jan Nilsson',
         titel: '',
+        urval: null,
         authenticationScheme: 'urn:inera:rehabstod:siths:fake',
         vardgivare: [{
             '@class': 'se.inera.intyg.common.integration.hsa.model.Vardgivare',
@@ -79,6 +80,19 @@ describe('Model: UserModel', function() {
             UserModel.set(testJsonData);
             expect(UserModel.get().name).toEqual('Jan Nilsson');
             expect(UserModel.isLakare()).toBeTruthy();
+
+        });
+    });
+
+    describe('urval', function() {
+        it('should handle get/set urval correctly', function() {
+            UserModel.set(testJsonData);
+            expect(UserModel.get().urval).toBeNull();
+            expect(UserModel.isUrvalSet()).toBeFalsy();
+
+            UserModel.setUrval('ALL');
+            expect(UserModel.get().urval).toEqual('ALL');
+            expect(UserModel.isUrvalSet()).toBeTruthy();
 
         });
     });

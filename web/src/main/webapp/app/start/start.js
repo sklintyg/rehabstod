@@ -13,7 +13,7 @@ angular.module('rehabstodApp')
                     }
                 },
                 data: {
-                    rule: function(fromState, toState, AppNavViewstate, UserModel) {
+                    rule: function(fromState, toState, UserModel) {
 
                         if (toState.name !== 'app.start') {
                             return;

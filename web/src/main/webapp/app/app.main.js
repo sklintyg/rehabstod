@@ -62,7 +62,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $too
 // Inject language resources
 app.run(
     function($log, $rootScope, $state, $window,
-        messageService, UserProxy, UserModel, USER_DATA, AppNavViewstate) {
+        messageService, UserProxy, UserModel, USER_DATA) {
         'use strict';
 
         // Always scroll to top
@@ -85,7 +85,7 @@ app.run(
                 $log.debug('$stateChangeStart: ' + fromState.name + ' to ' + toState.name);
 
                 if (toState.data && angular.isFunction(toState.data.rule)) {
-                    var result = toState.data.rule(fromState, toState, AppNavViewstate, UserModel);
+                    var result = toState.data.rule(fromState, toState, UserModel);
                     if (result && result.to) {
                         event.preventDefault();
                         $log.debug('$stateChangeStart to ' + toState.to + ' was overridden by a rule. new destination : ' + result.to);

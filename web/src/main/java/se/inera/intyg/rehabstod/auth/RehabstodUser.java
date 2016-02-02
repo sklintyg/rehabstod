@@ -22,6 +22,7 @@ import se.inera.intyg.rehabstod.auth.authorities.Privilege;
 import se.inera.intyg.rehabstod.auth.authorities.Role;
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
+import se.inera.intyg.rehabstod.service.Urval;
 
 import java.io.Serializable;
 import java.util.List;
@@ -49,6 +50,7 @@ public class RehabstodUser implements Serializable {
 
     private SelectableVardenhet valdVardenhet;
     private SelectableVardenhet valdVardgivare;
+    private Urval urval;
 
     // Fields related to the authority context
     private Set<String> features;
@@ -155,6 +157,14 @@ public class RehabstodUser implements Serializable {
 
     public void setVardgivare(List<Vardgivare> vardgivare) {
         this.vardgivare = vardgivare;
+    }
+
+    public Urval getUrval() {
+        return urval;
+    }
+
+    public void setUrval(Urval urval) {
+        this.urval = urval;
     }
 
     public boolean changeValdVardenhet(String vardenhetId) {

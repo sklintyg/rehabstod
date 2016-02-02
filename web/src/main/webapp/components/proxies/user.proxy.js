@@ -63,9 +63,42 @@ angular.module('rehabstodApp').factory('UserProxy',
             return promise.promise;
         }
 
+        /*
+         * Get user data for logged in user
+         */
+        function _changeUrval(newUrval) {
+            $log.debug('_changeUrval');
+
+            var promise = $q.defer();
+
+            var restPath = '/api/user/urval';
+            var dto = {
+                urval: newUrval
+            };
+
+            $log.debug('REST call: _changeUrval ' + restPath);
+            $http.post(restPath, dto, {timeout: networkConfig.defaultTimeout}).success(function(data) {
+                $log.debug(restPath + ' - success');
+
+                if (typeof data !== 'undefined') {
+                    promise.resolve(data);
+                } else {
+                    $log.debug('JSON response syntax error. Rejected.');
+                    promise.reject(null);
+                }
+            }).error(function(data, status) {
+                $log.error('error ' + status);
+                // Let calling code handle the error of no data response
+                promise.reject(data);
+            });
+
+            return promise.promise;
+        }
+
         // Return public API for the service
         return {
             getUser: _getUser,
-            changeSelectedUnit: _changeSelectedUnit
+            changeSelectedUnit: _changeSelectedUnit,
+            changeUrval: _changeUrval
         };
     });

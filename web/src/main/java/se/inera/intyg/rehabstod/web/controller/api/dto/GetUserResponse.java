@@ -25,6 +25,7 @@ import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.Role;
+import se.inera.intyg.rehabstod.service.Urval;
 
 /**
  * Reponse dto for the getUser api.
@@ -46,6 +47,8 @@ public class GetUserResponse {
 
     private int totaltAntalVardenheter;
 
+    private Urval urval;
+
     public GetUserResponse(RehabstodUser user) {
         this.hsaId = user.getHsaId();
         this.namn = user.getNamn();
@@ -59,6 +62,7 @@ public class GetUserResponse {
         this.valdVardgivare = user.getValdVardgivare();
         this.valdVardenhet = user.getValdVardenhet();
         this.totaltAntalVardenheter = user.getTotaltAntalVardenheter();
+        this.urval = user.getUrval();
     }
 
     public String getHsaId() {
@@ -139,6 +143,14 @@ public class GetUserResponse {
 
     public void setTotaltAntalVardenheter(int totaltAntalVardenheter) {
         this.totaltAntalVardenheter = totaltAntalVardenheter;
+    }
+
+    public Urval getUrval() {
+        return urval;
+    }
+
+    public void setUrval(Urval urval) {
+        this.urval = urval;
     }
 
 }

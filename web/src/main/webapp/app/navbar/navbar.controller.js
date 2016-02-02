@@ -1,5 +1,5 @@
 angular.module('rehabstodApp')
-    .controller('NavbarCtrl', function($scope, $state, $location, AppNavViewstate) {
+    .controller('NavbarCtrl', function($scope, $state, $location, UserModel) {
         'use strict';
         $scope.menu = [
             {
@@ -10,7 +10,7 @@ angular.module('rehabstodApp')
                 title: 'Pågående sjukskrivningar',
                 link: '/#/sjukfall',
                 disabled: function() {
-                    return !AppNavViewstate.isVisningsLageValt();
+                    return !UserModel.isUrvalSet();
                 }
             },
             {

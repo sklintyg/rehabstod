@@ -4,28 +4,48 @@ describe('Controller: SelectionCtrl', function() {
     // load the controller's module
     beforeEach(module('rehabstodApp'));
 
-    var scope, state, appNavViewstate;
+    var scope, state, userModel, userProxy;
+    var succeed = true;
+    var user = {};
+    var error = {};
+
 
     // Initialize the controller and a mock scope
-    beforeEach(inject(function($controller, $rootScope, _$state_, _AppNavViewstate_) {
+    beforeEach(inject(function($controller, $rootScope, _$state_, _UserModel_, _UserProxy_) {
         scope = $rootScope.$new();
         state = _$state_;
-        appNavViewstate = _AppNavViewstate_;
-
+        userModel = _UserModel_;
+        userProxy = _UserProxy_;
         $controller('SelectionCtrl', {
-            $scope: scope
+            $scope: scope,
+            UserModel: userModel,
+            UserProxy: userProxy
+
         });
     }));
 
 
-    it('should setVisningsLage and then change state to sjukfall', function() {
-
-        spyOn(appNavViewstate, 'setVisningsLage');
+    it('should setUrval on user and then change state to sjukfall', function() {
+        user = {urval: 'ALL'};
         spyOn(state, 'go');
+        spyOn(userModel, 'set');
 
-        scope.onSelectUrval('alla');
+        spyOn(userProxy, 'changeUrval').and.callFake(function() {
+            return {
+                then: function(onSuccess, onError) {
+                    if (succeed) {
+                        onSuccess(user);
+                    } else {
+                        onError(error);
+                    }
+                }
+            };
+        });
 
-        expect(appNavViewstate.setVisningsLage).toHaveBeenCalledWith('alla');
+        scope.onSelectUrval(user.urval);
+
+        expect(userProxy.changeUrval).toHaveBeenCalledWith('ALL');
+        expect(userModel.set).toHaveBeenCalledWith(user);
         expect(state.go).toHaveBeenCalledWith('app.sjukfall');
 
     });

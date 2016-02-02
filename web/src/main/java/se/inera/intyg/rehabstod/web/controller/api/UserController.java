@@ -31,6 +31,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeUrvalRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetUserResponse;
 
 @RestController
@@ -81,4 +82,18 @@ public class UserController {
         return new GetUserResponse(user);
     }
 
+    @RequestMapping(value = "/urval", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public GetUserResponse changeSelectedUrvalOnUser(@RequestBody ChangeUrvalRequest changeUrvalRequest) {
+
+        RehabstodUser user = userService.getUser();
+
+        if (user == null) {
+            throw new AuthoritiesException("No user in session");
+        }
+        user.setUrval(changeUrvalRequest.getUrval());
+
+        LOG.debug("Selected urval is now '{}'", user.getUrval());
+
+        return new GetUserResponse(user);
+    }
 }

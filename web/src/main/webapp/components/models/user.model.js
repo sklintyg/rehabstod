@@ -14,6 +14,7 @@ angular.module('rehabstodApp').factory('UserModel',
             data.vardgivare = null;
             data.totaltAntalVardenheter = 0;
             data.isLakare = false;
+            data.urval = null;
 
             data.loggedIn = false;
             return data;
@@ -61,6 +62,7 @@ angular.module('rehabstodApp').factory('UserModel',
                 data.totaltAntalVardenheter = user.totaltAntalVardenheter;
                 data.loggedIn = true;
                 data.isLakare = this.isLakare();
+                data.urval = user.urval;
             },
             get: function() {
                 return data;
@@ -68,6 +70,14 @@ angular.module('rehabstodApp').factory('UserModel',
 
             isLakare: function() {
                 return (ObjectHelper.isDefined(data.role) && data.role.name === 'LAKARE');
+            },
+
+            isUrvalSet: function() {
+                return (ObjectHelper.isDefined(data.urval));
+            },
+
+            setUrval: function(newUrval) {
+                data.urval = newUrval;
             },
 
             fakeLogin: function() {

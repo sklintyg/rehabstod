@@ -34,8 +34,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeUrvalRequest;
 
 /**
  * Created by marced on 01/02/16.
@@ -92,6 +94,18 @@ public class UserControllerTest {
 
         verify(userService).getUser();
         verify(rehabUserMock).changeValdVardenhet(eq(req.getId()));
+
+    }
+
+    @Test
+    public void testChangeUrvalSuccess() {
+        ChangeUrvalRequest req = new ChangeUrvalRequest(Urval.ISSUED_BY_ME);
+
+
+        userController.changeSelectedUrvalOnUser(req);
+
+        verify(userService).getUser();
+        verify(rehabUserMock).setUrval(eq(req.getUrval()));
 
     }
 }

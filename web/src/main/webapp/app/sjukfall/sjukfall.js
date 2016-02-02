@@ -17,8 +17,8 @@ angular.module('rehabstodApp')
                     }
                 },
                 data: {
-                    rule: function(fromState, toState, AppNavViewstate) {
-                        if (!AppNavViewstate.isVisningsLageValt()) {
+                    rule: function(fromState, toState, UserModel) {
+                        if (!UserModel.isUrvalSet()) {
                             return {
                                 to: 'app.start',
                                 params: {},
