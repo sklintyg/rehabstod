@@ -12,5 +12,5 @@
        dest="{{ app_resources_folder }}"
 
 - name: copy externalized application resources
- copy: src="{{ app_ext_resources_src }}"
-      dest="{{ app_resources_folder }}"
+  copy: src="{{ app_ext_resources_src }}"
+       dest="{{ app_resources_folder }}"

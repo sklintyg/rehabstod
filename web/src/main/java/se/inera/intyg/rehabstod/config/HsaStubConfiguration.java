@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Configuration
 @ComponentScan({"se.inera.intyg.rehabstod.common"})
 @ImportResource("classpath:hsa-stub-context.xml")
-@Profile({"dev", "hsa-stub"})
+@Profile({"dev", "wc-hsa-stub"})
 public class HsaStubConfiguration {
 
     @Bean
