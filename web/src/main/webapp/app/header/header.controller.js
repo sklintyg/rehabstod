@@ -28,6 +28,8 @@ angular.module('rehabstodApp').controller('HeaderController',
                 $log.debug('SelectCareUnit Modal closed with a selection :' + enhet.id);
                 UserProxy.changeSelectedUnit(enhet.id).then(function(updatedUserModel) {
                     UserModel.set(updatedUserModel);
+
+                    $scope.$emit('changeSelectedUnit', {enhet: enhet.id});
                 }, function() {
                     //Handle errors
                 });
