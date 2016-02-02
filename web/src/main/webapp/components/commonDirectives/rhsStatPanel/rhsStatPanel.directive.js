@@ -1,6 +1,6 @@
 angular.module('rehabstodApp').directive('rhsStatPanel',
-    ['UnitCertificateSummaryModel', 'UnitCertificateSummaryProxy', '$rootScope', '$log',
-        function(UnitCertificateSummaryModel, UnitCertificateSummaryProxy, $rootScope, $log) {
+    ['UnitCertificateSummaryModel', 'UnitCertificateSummaryProxy', '$rootScope',
+        function(UnitCertificateSummaryModel, UnitCertificateSummaryProxy, $rootScope) {
             'use strict';
 
             return {
@@ -19,8 +19,9 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         });
                     }
 
-                    var unregisterFn = $rootScope.$on('changeSelectedUnit', function(event, value) {
+                    var unregisterFn = $rootScope.$on('SelectedUnitChanged', function(event, value) {
                         $log.debug(value);
+
                         _loadData();
                     });
                     //rootscope on event listeners aren't unregistered automatically when 'this' directives
