@@ -19,10 +19,13 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         });
                     }
 
-                    $rootScope.$on('changeSelectedUnit', function(event, value) {
+                    var unregisterFn = $rootScope.$on('changeSelectedUnit', function(event, value) {
                         $log.debug(value);
                         _loadData();
                     });
+                    //rootscope on event listeners aren't unregistered automatically when 'this' directives
+                    //scope is destroyed, so let's take care of that.
+                    $scope.$on('$destroy', unregisterFn);
 
                     /**
                      * Exposed scope properties
