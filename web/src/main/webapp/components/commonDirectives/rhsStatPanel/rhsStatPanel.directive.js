@@ -19,9 +19,7 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         });
                     }
 
-                    var unregisterFn = $rootScope.$on('SelectedUnitChanged', function(event, value) {
-                        $log.debug(value);
-
+                    var unregisterFn = $rootScope.$on('SelectedUnitChanged', function(/*event, value*/) {
                         _loadData();
                     });
                     //rootscope on event listeners aren't unregistered automatically when 'this' directives
