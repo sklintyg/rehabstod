@@ -16,15 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.web.controller.api.dto;
+package se.inera.intyg.rehabstod.service.certificate.dto;
 
-public class GetUnitCertificateSummaryResponse {
+public class SjukfallSummary {
+
     private int total;
-    private int men;
-    private int women;
+    private double men;
+    private double women;
 
 
-    public GetUnitCertificateSummaryResponse(int total, int men, int women) {
+    public SjukfallSummary(int total, double men, double women) {
         this.total = total;
         this.men = men;
         this.women = women;
@@ -34,11 +35,9 @@ public class GetUnitCertificateSummaryResponse {
         return total;
     }
 
-    public int getMen() {
+    public double getMen() {
         return men;
     }
 
-    public int getWomen() {
-        return women;
-    }
+    public double getWomen() { return women; }
 }

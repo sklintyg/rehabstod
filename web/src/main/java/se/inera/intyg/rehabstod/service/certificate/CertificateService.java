@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.certificate;
 
+import se.inera.intyg.rehabstod.service.certificate.dto.SjukfallSummary;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.util.List;
@@ -28,5 +29,7 @@ import java.util.List;
 public interface CertificateService {
 
     List<IntygsData> getIntygsData();
+
+    SjukfallSummary getSummary();
 
 }
