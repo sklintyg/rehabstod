@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Defines the transport model of an authenticated rehabstod user model, e.g returned by /api/user",
+  "properties": {
+    "hsaId": {
+      "type": "string"
+    },
+    "namn": {
+      "type": "string"
+    },
+    "titel": {
+      "type": "string"
+    },
+    "authenticationScheme": {
+      "type": "string"
+    },
+
+    "vardgivare": {
+      "additionalItems": false,
+      "items": {},
+      "minItems": 1,
+      "type": "array"
+    },
+    "befattningar": {
+      "additionalItems": false,
+      "items": {},
+      "minItems": 0,
+      "type": "array"
+    },
+
+    "roles": {
+      "additionalProperties": true,
+      "properties": {},
+      "type": "object"
+    },
+    "valdVardenhet": {
+      "additionalProperties": false,
+      "properties": {
+        "@class": {
+          "type": "string"
+        },
+        "arbetsplatskod": {
+          "type": "string"
+        },
+        "epost": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "mottagningar": {
+          "additionalItems": false,
+          "items": {},
+          "type": "array"
+        },
+        "namn": {
+          "type": "string"
+        },
+        "postadress": {
+          "type": "string"
+        },
+        "postnummer": {
+          "type": "string"
+        },
+        "postort": {
+          "type": "string"
+        },
+        "telefonnummer": {
+          "type": "string"
+        },
+        "start": {
+          "type": "null"
+        },
+        "end": {
+          "type": "null"
+        }
+      },
+      "type": "object"
+    },
+    "valdVardgivare": {
+      "additionalProperties": false,
+      "properties": {
+        "@class": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "namn": {
+          "type": "string"
+        },
+        "vardenheter": {
+          "additionalItems": false,
+          "items": {},
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+
+    "totaltAntalVardenheter": {
+      "type": "integer"
+    },
+
+    "urval": {
+      "type": ["string", "null"],
+      "enum": [
+        "ALL",
+        "ISSUED_BY_ME",
+        null
+      ]
+    }
+
+  },
+  "required": [
+    "hsaId",
+    "namn",
+    "titel",
+    "authenticationScheme",
+    "vardgivare",
+    "befattningar",
+    "roles",
+    "valdVardenhet",
+    "valdVardgivare",
+    "totaltAntalVardenheter",
+    "urval"
+  ],
+  "title": "WebCertUser transport model",
+  "type": "object",
+  "additionalProperties": false
+}

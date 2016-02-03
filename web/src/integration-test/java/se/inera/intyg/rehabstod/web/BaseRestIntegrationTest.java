@@ -46,10 +46,6 @@ public abstract class BaseRestIntegrationTest {
 
     protected static FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder("IFV1239877878-1049", "rest", "testman",
             "IFV1239877878-1042").lakare(true).build();
-    protected static final String DEFAULT_FRAGE_TEXT = "TEST_FRAGA";
-    protected static final String DEFAULT_INTYGSTYP = "fk7263";
-
-    protected final String DEFAULT_PATIENT_PERSONNUMMER = "19121212-1212";
     protected CustomObjectMapper objectMapper = new CustomObjectMapper();
 
     /**
@@ -59,12 +55,12 @@ public abstract class BaseRestIntegrationTest {
     public void setup() {
         RestAssured.reset();
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        RestAssured.baseURI = "http://localhost:8790/";
+        RestAssured.baseURI = System.getProperty("integration.tests.baseUrl");
     }
 
 
     /**
-     * Log in to webcert using the supplied FakeCredentials.
+     * Log in to rehabstod using the supplied FakeCredentials.
      *
      * @param fakeCredentials
      *            who to log in as

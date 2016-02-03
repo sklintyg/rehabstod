@@ -28,6 +28,8 @@ configurations {
 }
 
 task integrationTest(type: Test) {
+    systemProperties['integration.tests.baseUrl'] =  'http://localhost:8790/'
+
     testClassesDir = sourceSets.integrationTest.output.classesDir
     classpath = sourceSets.integrationTest.runtimeClasspath
     outputs.upToDateWhen { false }
