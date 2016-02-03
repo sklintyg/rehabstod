@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Schema for sjukfall-summary as resturned from e.g /sjukfall-summary",
+  "type": "object",
+  "properties": {
+    "total": {
+      "type": "integer"
+    },
+    "men": {
+      "type": "number"
+    },
+    "women": {
+      "type": "number"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "total",
+    "men",
+    "women"
+  ]
+}
