@@ -32,7 +32,7 @@
         http://cxf.apache.org/schemas/configuration/http-conf.xsd">
 
   <beans profile="!dev">
-    <http:conduit name="{urn:riv:clinicalprocess:healthcond:rehabilitation:GetActiveSickLeavesForCareUnit:1:rivtabp21}GetActiveSickLeavesForCareUnitResponderInterfacePort.http-conduit">
+    <http:conduit name="{urn:riv:clinicalprocess:healthcond:rehabilitation:ListActiveSickLeavesForCareUnit:1:rivtabp21}ListActiveSickLeavesForCareUnitResponderInterfacePort.http-conduit">
       <http:client AllowChunking="false" AutoRedirect="true" Connection="Keep-Alive"/>
       <http:tlsClientParameters disableCNCheck="true">
         <sec:trustManagers>

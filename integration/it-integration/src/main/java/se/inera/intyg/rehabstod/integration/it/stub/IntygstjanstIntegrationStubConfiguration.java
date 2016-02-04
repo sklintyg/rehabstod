@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 @ComponentScan({ "se.inera.intyg.rehabstod.integration.it.stub" })
-@Profile({ "dev", "rhs-it-stub" })
+@Profile({"rhs-it-stub" })
 public class IntygstjanstIntegrationStubConfiguration {
 
     @Autowired

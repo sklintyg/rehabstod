@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitType;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 
 /**
  * Created by eriklupander on 2016-01-29.
@@ -41,6 +42,9 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
     @Override
     public ListActiveSickLeavesForCareUnitResponseType getSjukfall(String unitHsaId) {
         ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
+        HsaId hsaId = new HsaId();
+        hsaId.setExtension(unitHsaId);
+        params.setEnhetsId(hsaId);
         return service.listActiveSickLeavesForCareUnit(logicalAddress, params);
     }
 }

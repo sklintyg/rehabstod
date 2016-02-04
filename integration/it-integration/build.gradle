@@ -10,6 +10,8 @@ dependencies {
     compile "org.springframework:spring-context:${springContextVersion}"
     compile 'joda-time:joda-time:2.2'
     compile 'org.slf4j:slf4j-api:1.7.10'
+    compile 'org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}'
+    compile 'org.apache.cxf:cxf-rt-transports-http:${cxfVersion}'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.10.19'

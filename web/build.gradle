@@ -117,7 +117,8 @@ gretty {
         '-Drehabstod.config.file=' + projectDir + '/src/main/resources/dev.properties',
         '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
         '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources',
-        '-XX:MaxPermSize=256M'
+        '-XX:MaxPermSize=256M',
+        '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8011'
     ]
 
 /***************** Konfiguration för att köra med SITHS och HSA aktiverat lokalt. *******************/
