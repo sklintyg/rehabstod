@@ -1,28 +1,41 @@
 var app = angular.module('rehabstodApp', [
-  'ngAnimate',
-  'ngCookies',
-  'ngResource',
-  'ngSanitize',
-  'ngStorage',
-  'ngMessages',
-  'ui.router',
-  'ui.bootstrap',
-  'ui.bootstrap-slider',
-  'smart-table'
+    'ngAnimate',
+    'ngCookies',
+    'ngResource',
+    'ngSanitize',
+    'ngStorage',
+    'ngMessages',
+    'ui.router',
+    'ui.bootstrap',
+    'ui.bootstrap-slider',
+    'smart-table'
 ]);
 
 deferredBootstrapper.bootstrap({
     element: document.body,
     module: 'rehabstodApp',
     resolve: {
-        APP_CONFIG: ['$http', function ($http) {
+        APP_CONFIG: ['$http', function($http) {
             'use strict';
             return $http.get('/api/config');
         }],
-        USER_DATA: ['$http', function ($http) {
+        USER_DATA: ['$http', function($http) {
             'use strict';
             return $http.get('/api/user');
         }]
+    },
+    onError: function(error) {
+        'use strict';
+        //We don't have access to any components in our app yet, since the bootstrap resolve failed, so
+        //redirect to error page with our best guess.
+
+        var reason = 'unknown';
+        //If the resolve failed with a 403 status, we're most likely not authenticated, e.g used a
+        //bookmark / deep link without logging in first.
+        if (error && error.status === 403) {
+            reason = 'denied';
+        }
+        window.location.href = '/error.jsp?reason=' + reason; // jshint ignore:line
     }
 });
 
@@ -33,7 +46,7 @@ app.value('networkConfig', {
     hospTimeout: 1000 // prod: 30000
 });
 
-app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $tooltipProvider, $httpProvider,
+app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $tooltipProvider, $httpProvider,
     http403ResponseInterceptorProvider) {
     'use strict';
 
@@ -53,7 +66,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $too
     $httpProvider.interceptors.push('http403ResponseInterceptor');
 
     // Add replaceAll function to all strings.
-    String.prototype.replaceAll = function(f,r) { // jshint ignore:line
+    String.prototype.replaceAll = function(f, r) { // jshint ignore:line
         return this.split(f).join(r);
     };
 
@@ -66,8 +79,8 @@ app.run(
         'use strict';
 
         // Always scroll to top
-        $rootScope.$on('$stateChangeSuccess',function(){
-            $('html, body').animate({ scrollTop: 0 }, 200);
+        $rootScope.$on('$stateChangeSuccess', function() {
+            $('html, body').animate({scrollTop: 0}, 200);
         });
 
         $rootScope.lang = 'sv';
@@ -88,22 +101,24 @@ app.run(
                     var result = toState.data.rule(fromState, toState, UserModel);
                     if (result && result.to) {
                         event.preventDefault();
-                        $log.debug('$stateChangeStart to ' + toState.to + ' was overridden by a rule. new destination : ' + result.to);
+                        $log.debug(
+                            '$stateChangeStart to ' + toState.to + ' was overridden by a rule. new destination : ' +
+                            result.to);
                         $state.go(result.to, result.params, result.options);
                     }
                 }
             });
 
         $rootScope.$on('$stateNotFound',
-            function(/*event, unfoundState, fromState, fromParams*/){
+            function(/*event, unfoundState, fromState, fromParams*/) {
             });
 
         $rootScope.$on('$stateChangeSuccess',
-            function(/*event, toState, toParams, fromState, fromParams*/){
+            function(/*event, toState, toParams, fromState, fromParams*/) {
             });
 
         $rootScope.$on('$stateChangeError',
-            function(event, toState/*, toParams, fromState, fromParams, error*/){
+            function(event, toState/*, toParams, fromState, fromParams, error*/) {
                 $log.log('$stateChangeError');
                 $log.log(toState);
             });

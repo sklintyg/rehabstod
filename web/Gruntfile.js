@@ -180,7 +180,7 @@ module.exports = function(grunt) {
         wiredep: {
             target: {
                 src: [
-                    '<%= config.client %>/index.html',
+                    '<%= config.client %>/app.html',
                     'karma.conf.ci.js'
                 ],
                 ignorePath: '<%= config.client %>/',
@@ -235,7 +235,7 @@ module.exports = function(grunt) {
         // concat, minify and revision files. Creates configurations in memory so
         // additional tasks can operate on them
         useminPrepare: {
-            html: ['<%= config.client %>/index.html'],
+            html: ['<%= config.client %>/app.html'],
             options: {
                 dest: '<%= config.dist %>',
                 staging: '<%= config.tmp %>'
@@ -382,7 +382,7 @@ module.exports = function(grunt) {
             options: {
                 lineEnding: grunt.util.linefeed
             },
-            // Inject application script files into index.html (doesn't include bower)
+            // Inject application script files into app.html (doesn't include bower)
             scripts: {
                 options: {
                     transform: function(filePath) {
@@ -394,7 +394,7 @@ module.exports = function(grunt) {
                     endtag: '<!-- endinjector -->'
                 },
                 files: {
-                    '<%= config.client %>/index.html': [
+                    '<%= config.client %>/app.html': [
                         ['{<%= config.tmp %>,<%= config.client %>}/{app,components}/**/*.js',
                             '!{<%= config.tmp %>,<%= config.client %>}/app/app.main.js',
                             '!{<%= config.tmp %>,<%= config.client %>}/app/app.main.test.js',
@@ -435,7 +435,7 @@ module.exports = function(grunt) {
                     endtag: '<!-- endinjector -->'
                 },
                 files: {
-                    '<%= config.client %>/index.html': [
+                    '<%= config.client %>/app.html': [
                         '<%= config.client %>/{app,components}/**/*.css'
                     ]
                 }
