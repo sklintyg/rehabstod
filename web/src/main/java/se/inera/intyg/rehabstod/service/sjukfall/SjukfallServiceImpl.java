@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
-import se.inera.intyg.rehabstod.ruleengine.SjukfallCalculatorEngine;
+import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SjukfallCalculatorEngine;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
@@ -40,7 +40,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     private IntygstjanstIntegrationService intygstjanstIntegrationService;
 
     @Autowired
-    private SjukfallCalculatorEngine calculatorEngine;
+    private SjukfallCalculatorEngine sjukfallCalculatorEngine;
 
     @Override
     public List<Sjukfall> getSjukfall(String enhetsId, GetSjukfallRequest request) {
@@ -51,7 +51,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
 
         // 2.1; Calculate sjukfall
-        List<Sjukfall> sjukfall = calculatorEngine.calculate(intygsData, request);
+        List<Sjukfall> sjukfall = sjukfallCalculatorEngine.calculate(intygsData, request);
 
         // 2.2; update cache if necessary
 

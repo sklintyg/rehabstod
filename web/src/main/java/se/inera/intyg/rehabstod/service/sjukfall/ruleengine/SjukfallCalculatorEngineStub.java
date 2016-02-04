@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.ruleengine;
+package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
@@ -27,6 +27,8 @@ import java.util.List;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
+ *
+ * This is to be deleted. It's only purpose is to create stubbed data until the rule engine is in place.
  */
 public class SjukfallCalculatorEngineStub extends SjukfallCalculatorEngine {
 

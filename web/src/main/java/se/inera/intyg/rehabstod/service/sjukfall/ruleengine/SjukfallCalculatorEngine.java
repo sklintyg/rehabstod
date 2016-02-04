@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.ruleengine;
+package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
+import org.springframework.stereotype.Component;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
@@ -28,6 +29,7 @@ import java.util.List;
 /**
  * Created by Magnus Ekstrand on 03/02/16.
  */
+@Component
 public class SjukfallCalculatorEngine {
 
     public SjukfallCalculatorEngine() {
