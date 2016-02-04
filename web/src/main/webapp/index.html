@@ -11,16 +11,9 @@
 <meta name="description" content="">
 <meta name="viewport" content="width=device-width">
 <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-<!-- build:css(src/main/webapp) app/vendor.css -->
-<!-- bower:css -->
-<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-<!-- endbower -->
-<!-- endbuild -->
 <!-- build:css({build/.tmp,src/main/webapp}) app/app.css -->
-<link rel="stylesheet" href="app/app.css">
 <!-- injector:css -->
 <link rel="stylesheet" href="app/app.css">
-<link rel="stylesheet" href="app/vendor-override.css">
 <!-- endinjector -->
 <!-- endbuild -->
 </head>
@@ -140,53 +133,5 @@
       });
     });
   </script>
-
-
-  <!-- build:js({build/.tmp,src/main/webapp}) app/app.main.js -->
-  <script src="app/app.main.js"></script>
-  <!-- injector:js -->
-  <script src="app/about/about.js"></script>
-  <script src="app/app.js"></script>
-  <script src="app/error/error.controller.js"></script>
-  <script src="app/error/error.js"></script>
-  <script src="app/header/careunit/SelectCareUnit.controller.js"></script>
-  <script src="app/header/header.controller.js"></script>
-  <script src="app/messages.js"></script>
-  <script src="app/navbar/navbar.controller.js"></script>
-  <script src="app/sjukfall/searchfilter/searchfilter.controller.js"></script>
-  <script src="app/sjukfall/searchresults/searchresults.controller.js"></script>
-  <script src="app/sjukfall/sjukfall.js"></script>
-  <script src="app/sjukfall/sjukfall.page.controller.js"></script>
-  <script src="app/sjukfall/sjukfall.service.js"></script>
-  <script src="app/sjukfall/statistics/statistics.controller.js"></script>
-  <script src="app/start/header/startheader.controller.js"></script>
-  <script src="app/start/selection/selection.controller.js"></script>
-  <script src="app/start/start.js"></script>
-  <script src="app/start/start.page.controller.js"></script>
-  <script src="components/commonDirectives/message/message.directive.js"></script>
-  <script src="components/commonDirectives/message/message.filter.js"></script>
-  <script src="components/commonDirectives/message/message.service.js"></script>
-  <script src="components/commonDirectives/ppSpinner/ppSpinner.directive.js"></script>
-  <script src="components/commonDirectives/ppTooltip/ppTooltip.directive.js"></script>
-  <script src="components/commonDirectives/rhsSearchfilter/rhsSearchfilter.filter.js"></script>
-  <script src="components/commonDirectives/rhsSlider/rhsSlider.directive.js"></script>
-  <script src="components/commonDirectives/rhsStatCircle/rhsStatCircle.directive.js"></script>
-  <script src="components/commonDirectives/rhsStatPanel/rhsStatPanel.directive.js"></script>
-  <script src="components/commonDirectives/rhsSuffix/rhsSuffix.filter.js"></script>
-  <script src="components/commonDirectives/rhsTableNumberOfRows/rhsTableNumberOfRows.directive.js"></script>
-  <script src="components/commonDirectives/rhsTableNumberRange/rhsTableNumberRange.directive.js"></script>
-  <script src="components/mock/mockResponse.js"></script>
-  <script src="components/models/sjukfall.model.js"></script>
-  <script src="components/models/unitCertificateSummaryProxy.model.js"></script>
-  <script src="components/models/user.model.js"></script>
-  <script src="components/proxies/unitCertificateSummary.proxy.js"></script>
-  <script src="components/proxies/user.proxy.js"></script>
-  <script src="components/utils/http403ResponseInterceptor.service.js"></script>
-  <script src="components/utils/object.helper.js"></script>
-  <script src="components/utils/string.helper.js"></script>
-  <script src="components/utils/windowUnload.service.js"></script>
-  <script src="components/viewstates/sjukfallFilterViewState.service.js"></script>
-  <!-- endinjector -->
-  <!-- endbuild -->
 </body>
 </html>

@@ -9,7 +9,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="ROBOTS" content="nofollow, noindex"/>
 <title>Rehabstöd</title>
-<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
+<!-- build:css({build/.tmp,src/main/webapp}) app/app.css -->
+<!-- injector:css -->
+<link rel="stylesheet" href="app/app.css">
+<!-- endinjector -->
+<!-- endbuild -->
 <style>
   h1 {
     font-family: 'Helvetica Neue', helvetica, arial, sans-serif;

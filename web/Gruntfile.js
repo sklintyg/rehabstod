@@ -162,15 +162,15 @@ module.exports = function(grunt) {
         // Add vendor prefixed styles
         autoprefixer: {
             options: {
-                browsers: ['last 1 version']
+                browsers: ['last 2 versions', 'ie 9']
             },
             dist: {
                 files: [
                     {
                         expand: true,
-                        cwd: '<%= config.tmp %>/',
+                        cwd: '<%= config.client %>/',
                         src: '{,*/}*.css',
-                        dest: '<%= config.tmp %>/'
+                        dest: '<%= config.client %>/'
                     }
                 ]
             }
@@ -436,6 +436,15 @@ module.exports = function(grunt) {
                 },
                 files: {
                     '<%= config.client %>/app.html': [
+                        '<%= config.client %>/{app,components}/**/*.css'
+                    ],
+                    '<%= config.client %>/index.html': [
+                        '<%= config.client %>/{app,components}/**/*.css'
+                    ],
+                    '<%= config.client %>/welcome.html': [
+                        '<%= config.client %>/{app,components}/**/*.css'
+                    ],
+                    '<%= config.client %>/error.jsp': [
                         '<%= config.client %>/{app,components}/**/*.css'
                     ]
                 }
