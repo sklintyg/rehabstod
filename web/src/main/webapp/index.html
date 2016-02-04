@@ -26,35 +26,42 @@
 </head>
 <style>
 
-.index-page {
-  background-color: #28b4c4;
-}
-.content-container {
-  background-color: #fff;
-  -ms-box-shadow: 0 -5px 25px #323232;
-  -webkit-box-shadow: 0 -5px 25px #323232;
-  -moz-box-shadow: 0 -5px 25px #323232;
-  box-shadow: 0 -5px 25px #323232;
-  margin-left: -15px;
-  margin-right: -15px;
-  padding: 50px 100px;
-  min-height: 400px;
-}
-.content-footer {
-  color: #fff;
-  margin: 0 auto;
-  width: 700px;
-  max-width: 700px;
-  padding-top: 20px;
-}
-.content-footer a {
-  text-decoration: underline;
-  color: #fff;
-}
-.rehab-logo {
-  padding-top: 1.6em;
-  padding-right: 5em;
-}
+  /* styles specific for this page only */
+
+  .index-page {
+    background-color: #28b4c4;
+  }
+
+  .rehab-logo {
+    padding-top: 1.6em;
+    padding-right: 1.6em;
+  }
+
+  .content-container {
+    background-color: #fff;
+    -ms-box-shadow: 0 -5px 25px #323232;
+    -webkit-box-shadow: 0 -5px 25px #323232;
+    -moz-box-shadow: 0 -5px 25px #323232;
+    box-shadow: 0 -5px 25px #323232;
+    margin-left: -15px;
+    margin-right: -15px;
+    padding: 50px 100px;
+    min-height: 400px;
+  }
+
+  .content-footer {
+    color: #fff;
+    margin: 0 auto;
+    width: 700px;
+    max-width: 700px;
+    padding-top: 20px;
+  }
+
+  .content-footer a {
+    text-decoration: underline;
+    color: #fff;
+  }
+
 
 </style>
 <body class="index-page">
@@ -73,19 +80,21 @@
         <div class="col-xs-6">
           <h1>Välkommen till Rehabstöd</h1>
           <p>
-            Rehabstödet är en tjänst som ger rehabkoordinatorer och läkare en detaljerad bild över pågående sjukskrivningar i vården.
+            Rehabstödet är en tjänst som ger rehabkoordinatorer och läkare en detaljerad bild över pågående
+            sjukskrivningar i vården.
             Den detaljerade bilden ska i sin tur vara en hjälp vid planering av rehabilitering. <br>
             <br>
             I tjänsten kan du:
           <ul style="margin-bottom:30px">
             <li>Söka fram all pågående sjukskrivningar på de vårdenheter som omfattas av ditt medarbetaruppdrag.</li>
-            <li>Filtrera och sortera sjukskrivningarna på bland annat sjukskrivningslängd, läkare, diagnos med mera.</li>
+            <li>Filtrera och sortera sjukskrivningarna på bland annat sjukskrivningslängd, läkare, diagnos med mera.
+            </li>
             <li>Exportera eller skriva ut en framtagen lista för vidare uppföljningsarbete på enheten.</li>
           </ul>
           </p>
           <p>För att logga in måste du ha ett giltigt SITHS-kort med medarbetaruppdrag vård och behandling där ...</p>
           <div>
-          <a href="/saml/login/alias/defaultAlias" class="btn btn-success" id="loginBtn">Logga in</a>
+            <a href="/saml/login/alias/defaultAlias" class="btn btn-success" id="loginBtn">Logga in</a>
           </div>
         </div>
       </div>
@@ -124,9 +133,10 @@
   <!-- endbower -->
   <!-- endbuild -->
   <script>
-    $( document ).ready(function() {
-      $( "#toggleCookieInfo" ).click(function() {
-        $( "#cookieInfoText" ).slideToggle( "fast");
+    $(document).ready(function() {
+      $('#toggleCookieInfo').click(function(event) {
+        event.preventDefault();
+        $('#cookieInfoText').slideToggle('fast');
       });
     });
   </script>
