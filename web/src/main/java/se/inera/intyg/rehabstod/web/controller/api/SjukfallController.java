@@ -24,10 +24,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.service.certificate.SjukfallService;
+import se.inera.intyg.rehabstod.service.certificate.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallResponse;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
 import java.util.List;
@@ -47,12 +49,26 @@ public class SjukfallController {
 
 
     @RequestMapping(value = "",  method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public GetSjukfallResponse getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
+    public List<Sjukfall> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
 
-        String enhetsId = userService.getUser().getValdVardenhet().getId();
-        List<Sjukfall> sjukfall = sjukfallService.getSjukfall(enhetsId, request);
+        RehabstodUser user = userService.getUser();
+        if (user == null) {
+            throw new AuthoritiesException("No user in session");
+        }
 
-        return new GetSjukfallResponse(sjukfall);
+        String enhetsId = user.getValdVardenhet().getId();
+        return sjukfallService.getSjukfall(enhetsId, request);
+    }
+
+    @RequestMapping(value = "/summary", method = RequestMethod.GET)
+    public SjukfallSummary getUnitCertificateSummary() {
+        RehabstodUser user = userService.getUser();
+        if (user == null) {
+            throw new AuthoritiesException("No user in session");
+        }
+
+        String enhetsId = user.getValdVardenhet().getId();
+        return sjukfallService.getSummary(enhetsId);
     }
 
 }

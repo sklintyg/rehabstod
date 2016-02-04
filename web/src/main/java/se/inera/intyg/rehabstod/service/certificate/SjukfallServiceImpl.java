@@ -22,11 +22,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
 import se.inera.intyg.rehabstod.ruleengine.SjukfallCalculatorEngine;
+import se.inera.intyg.rehabstod.service.certificate.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -55,5 +57,22 @@ public class SjukfallServiceImpl implements SjukfallService {
 
 
         return sjukfall;
+    }
+
+    @Override
+    public SjukfallSummary getSummary(String enhetsId) {
+
+        List<IntygsData> intygsDataList = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
+
+        List<String> personNummer = intygsDataList.stream().map(e -> e.getPatient().getPersonId().getExtension()).distinct().collect(Collectors.toList());
+
+        int total = personNummer.size();
+        int menTotal = (int) personNummer.stream().filter(p -> p.substring(11, 12).matches("^\\d*[13579]$")).count();
+        int womenTotal = total - menTotal;
+
+        double men = (menTotal*1.0/total)*100;
+        double women = (womenTotal*1.0/total)*100;
+
+        return new SjukfallSummary(total, men, women);
     }
 }

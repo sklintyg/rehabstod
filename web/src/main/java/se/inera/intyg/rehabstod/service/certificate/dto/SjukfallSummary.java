@@ -16,23 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.web.controller;
+package se.inera.intyg.rehabstod.service.certificate.dto;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+public class SjukfallSummary {
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+    private int total;
+    private double men;
+    private double women;
 
-@Controller
-public class WebController {
 
-    @RequestMapping(value="/", method = GET)
-    public String getIndexPage() {
-        return "index";
+    public SjukfallSummary(int total, double men, double women) {
+        this.total = total;
+        this.men = men;
+        this.women = women;
     }
 
-    @RequestMapping(value="/version", method = GET)
-    public String getVersionPage() {
-        return "version";
+    public int getTotal() {
+        return total;
     }
+
+    public double getMen() {
+        return men;
+    }
+
+    public double getWomen() { return women; }
 }

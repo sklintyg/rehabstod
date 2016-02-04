@@ -29,7 +29,7 @@ angular.module('rehabstodApp').controller('HeaderController',
                 UserProxy.changeSelectedUnit(enhet.id).then(function(updatedUserModel) {
                     UserModel.set(updatedUserModel);
 
-                    $scope.$emit('changeSelectedUnit', {enhet: enhet.id});
+                    $scope.$emit('SelectedUnitChanged', {enhet: enhet.id});
                 }, function() {
                     //Handle errors
                 });

@@ -43,7 +43,7 @@ angular.module('rehabstodApp').provider('http403ResponseInterceptor',
 
                     var redirectUrl = config.redirectUrl;
                     if (UserModel.get().authenticationScheme === UserModel.get().fakeSchemeId) {
-                        redirectUrl = '/welcome.html';
+                        redirectUrl = '/welcome.html?utloggad';
                     }
 
                     UserModel.get().loggedIn = false;

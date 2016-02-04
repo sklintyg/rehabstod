@@ -1,38 +1,27 @@
 angular.module('rehabstodApp')
-    .controller('NavbarCtrl', function($scope, $state, $location, UserModel) {
+    .controller('NavbarCtrl', function($scope, $state, UserModel) {
         'use strict';
         $scope.menu = [
             {
-                'title': 'Start',
-                'link': '/#/'
+                title: 'Start',
+                link: 'app.start'
             },
             {
                 title: 'Pågående sjukskrivningar',
-                link: '/#/sjukfall',
+                link: 'app.sjukfall',
                 disabled: function() {
                     return !UserModel.isUrvalSet();
                 }
             },
             {
                 title: 'Om Rehabstöd',
-                link: '/#/about'
+                link: 'app.about'
             }
         ];
 
         $scope.isCollapsed = true;
 
-        $scope.isActive = function(page) {
-            if (!page) {
-                return false;
-            }
-
-            page = page.substr(page.lastIndexOf('/') + 1);
-            if (($state.current.data && angular.isString($state.current.data.defaultActive)) &&
-                (page === $state.current.data.defaultActive)) {
-                return true;
-            }
-
-            var currentRoute = $location.path().substr($location.path().lastIndexOf('/') + 1);
-            return page === currentRoute;
+        $scope.isActive = function(stateName) {
+            return $state.includes(stateName);
         };
     });

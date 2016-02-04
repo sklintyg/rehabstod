@@ -33,7 +33,9 @@
   <context:component-scan base-package="org.springframework.security.saml"/>
 
   <!-- Unsecured pages -->
-  <security:http security="none" pattern="/index.html" />
+  <security:http security="none" pattern="/" /> <!-- root of app, will be redirected to index.html that's in welcome-list -->
+  <security:http security="none" pattern="/index.html" /> <!-- keep this(?), if user actually enters index.html -->
+  <security:http security="none" pattern="/app/**"/> <!-- all static resources under /app is ok to access non authenticated -->
   <security:http security="none" pattern="/assets/**"/>
   <security:http security="none" pattern="/bower_components/**"/>
   <security:http security="none" pattern="/saml/web/**"/>
@@ -127,7 +129,7 @@
             <constructor-arg index="0" value="/" />
           </bean>
           <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-            <constructor-arg index="0" value="/index.html" />
+            <constructor-arg index="0" value="/app.html" />
           </bean>
           <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
             <constructor-arg index="0" value="/saml/**" />
@@ -199,7 +201,7 @@
     </bean>
     <bean id="fakeSuccessHandler"
         class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
-      <property name="defaultTargetUrl" value="/"/>
+      <property name="defaultTargetUrl" value="/app.html"/>
     </bean>
     <bean id="rehabstodAuthenticationProvider"
         class="se.inera.intyg.rehabstod.auth.fake.FakeAuthenticationProvider">
@@ -219,7 +221,7 @@
     </bean>
 
     <!-- Decide which requests should be saved for redirection after successful login.
-         Triggers on: / and /index.html
+         Triggers on: / and /app.html
          We don't want to save /api requests since this will make the browser display the data. -->
     <bean id="saveRequestMatcher" class="org.springframework.security.web.util.matcher.OrRequestMatcher">
       <constructor-arg>
@@ -229,7 +231,7 @@
             <constructor-arg index="1" value="GET"/>
           </bean>
           <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-            <constructor-arg index="0" value="/index.html" />
+            <constructor-arg index="0" value="/app.html" />
             <constructor-arg index="1" value="GET"/>
           </bean>
         </list>
@@ -242,7 +244,7 @@
     <!-- Handler deciding where to redirect user after successful login -->
     <bean id="successRedirectHandler"
           class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
-      <property name="defaultTargetUrl" value="/"/>
+      <property name="defaultTargetUrl" value="/app.html"/>
       <property name="requestCache" ref="httpSessionRequestCache" />
     </bean>
 

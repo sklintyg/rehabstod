@@ -48,6 +48,11 @@ public class PersonnummerLoaderImpl implements PersonnummerLoader {
 
         List<String> personnummerList = new ArrayList<>();
         try {
+            // Skip CSV column name
+            if (it.hasNext()) {
+                it.nextLine();
+            }
+
             while (it.hasNext()) {
                 String line = it.nextLine();
                 personnummerList.add(line);

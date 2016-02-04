@@ -72,7 +72,7 @@ describe('Directive: RhsStatPanel', function() {
         });
 
         it('should load data on event', function() {
-            scope.$emit('changeSelectedUnit', {enhet: '123'});
+            scope.$emit('SelectedUnitChanged', {enhet: '123'});
             scope.$digest();
 
             // Assert

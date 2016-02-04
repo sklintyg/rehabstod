@@ -24,7 +24,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -32,13 +31,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import se.inera.intyg.rehabstod.ruleengine.SjukfallCalculatorEngine;
+import se.inera.intyg.common.integration.hsa.model.Vardenhet;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.certificate.SjukfallService;
+import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallResponse;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -50,30 +51,33 @@ public class SjukfallControllerTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Mock
-    private SjukfallService sjukfallService;
+    RehabstodUser rehabUserMock;
 
     @Mock
-    private SjukfallCalculatorEngine calculatorEngine;
+    UserService userService;
+
+    @Mock
+    private SjukfallService sjukfallService;
 
     @InjectMocks
     private SjukfallController sjukfallController = new SjukfallController();
 
     @Before
     public void before() {
-        when(sjukfallService.getSjukfall(anyString(), any(GetSjukfallRequest.class))).thenReturn(new ArrayList<Sjukfall>());
-        when(calculatorEngine.calculate(any(ArrayList.class), any(GetSjukfallRequest.class))).thenReturn(new ArrayList<Sjukfall>());
+        when(userService.getUser()).thenReturn(rehabUserMock);
+        when(rehabUserMock.getValdVardenhet()).thenReturn(new Vardenhet("123", "enhet"));
     }
 
     @Test
-    @Ignore
     public void testGetSjukfall() {
         // Given
         GetSjukfallRequest request = new GetSjukfallRequest();
 
         // When
+        when(sjukfallService.getSjukfall(anyString(), any(GetSjukfallRequest.class))).thenReturn(new ArrayList<Sjukfall>());
 
         // Then
-        GetSjukfallResponse response = sjukfallController.getSjukfallForCareUnit(request);
+        List<Sjukfall> response = sjukfallController.getSjukfallForCareUnit(request);
 
         verify(sjukfallService).getSjukfall(anyString(), any(GetSjukfallRequest.class));
     }

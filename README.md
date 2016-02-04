@@ -29,3 +29,10 @@ Nu går det att öppna en webbläsare och surfa till
 `http://localhost:8790/welcome.html` 
 
 Observera jetty körs i gradleprocessen, så gradle "blir inte klar" förrän du stoppar servern med ^c, och applikationen är bara igång fram till dess.
+
+## Köra Integrationstester
+Vi har integrationstester skrivna med [REST-Assured](https://github.com/jayway/rest-assured)
+
+De körs inte automatiskt vid bygge av applikationen utan man behöver köra dem med kommandot
+
+`gradle integrationTest`

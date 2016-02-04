@@ -5,20 +5,17 @@ describe('Controller: NavbarCtrl', function () {
     beforeEach(module('rehabstodApp'));
 
     var scope;
-    var location;
     var state;
 
     // Initialize the controller and a mock scope
-    beforeEach(inject(function (_$httpBackend_, $controller, $rootScope, _$location_, _$state_) {
+    beforeEach(inject(function (_$httpBackend_, $controller, $rootScope, _$state_) {
         scope = $rootScope.$new();
-        location = _$location_;
         state = _$state_;
 
 
 
         $controller('NavbarCtrl', {
             $scope: scope,
-            $location: location,
             $state: state
         });
     }));
@@ -30,11 +27,14 @@ describe('Controller: NavbarCtrl', function () {
 
     it('Test isActive if active', function() {
 
-        spyOn(location, 'path').and.callFake(function() {
-           return '/#/start';
+        spyOn(state, 'includes').and.callFake(function(stateName) {
+           return (stateName === 'should.be.active');
         });
 
-        expect(scope.isActive('/#/start')).toBeTruthy();
-        expect(scope.isActive('/#/notactive')).toBeFalsy();
+        expect(scope.isActive('should.be.active')).toBeTruthy();
+        expect(state.includes).toHaveBeenCalledWith('should.be.active');
+
+        expect(scope.isActive('notactive')).toBeFalsy();
+        expect(state.includes).toHaveBeenCalledWith('notactive');
     });
 });

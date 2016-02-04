@@ -10,7 +10,7 @@
       <div class="navbar-collapse collapse" ng-class="!isCollapsed && 'in'" id="navbar-main">
         <ul class="nav navbar-nav">
           <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
-            <a ng-if="!item.disabled()" ng-href="{{item.link}}">{{item.title}}</a>
+            <a ng-if="!item.disabled()" ui-sref="{{item.link}}">{{item.title}}</a>
             <p ng-if="item.disabled()" class="navbar-text navbar-nav-disabled ">{{item.title}}</p>
           </li>
         </ul>
