@@ -26,7 +26,7 @@ import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 
 /**
- * Basic test suite that verifies that the endpoint (/api/sjukfall-summary) is available and repond according to
+ * Basic test suite that verifies that the endpoint (/api/sjukfall/summary) is available and respond according to
  * specification.
  *
  * Created by martin on 02/02/16.
