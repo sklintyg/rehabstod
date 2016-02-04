@@ -16,30 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.web.controller.api;
+package se.inera.intyg.rehabstod.service.certificate;
+
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import se.inera.intyg.rehabstod.service.certificate.CertificateService;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
 /**
- * Temporary controller, delete this!!
+ * Created by eriklupander on 2016-02-01.
  */
-@RestController
-@RequestMapping("/api/certificate")
-public class CertificateController {
+public interface SjukfallService {
 
-    @Autowired
-    private CertificateService certificateService;
-
-    @RequestMapping(value = "")
-    public List<IntygsData> getCertificatesForCareUnit() {
-         return certificateService.getIntygsData();
-    }
+    List<Sjukfall> getSjukfall(String enhetsId, GetSjukfallRequest request);
 
 }

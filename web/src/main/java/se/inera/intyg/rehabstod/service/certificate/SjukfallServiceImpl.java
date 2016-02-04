@@ -18,30 +18,42 @@
  */
 package se.inera.intyg.rehabstod.service.certificate;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
-import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.ruleengine.SjukfallCalculatorEngine;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+
+import java.util.List;
 
 /**
  * Created by eriklupander on 2016-02-01.
  */
 @Service
-public class CertificateServiceImpl implements CertificateService {
+public class SjukfallServiceImpl implements SjukfallService {
 
     @Autowired
     private IntygstjanstIntegrationService intygstjanstIntegrationService;
 
     @Autowired
-    private UserService userService;
+    private SjukfallCalculatorEngine calculatorEngine;
 
     @Override
-    public List<IntygsData> getIntygsData() {
-        String hsaId = userService.getUser().getValdVardenhet().getId();
-        return intygstjanstIntegrationService.getIntygsDataForCareUnit(hsaId);
+    public List<Sjukfall> getSjukfall(String enhetsId, GetSjukfallRequest request) {
+
+        // 1; check the cache for data
+
+        // 2; fetch data from backend if cache was invalidated
+        List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
+
+        // 2.1; Calculate sjukfall
+        List<Sjukfall> sjukfall = calculatorEngine.calculate(intygsData, request);
+
+        // 2.2; update cache if necessary
+
+
+        return sjukfall;
     }
 }
