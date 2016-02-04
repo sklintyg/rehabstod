@@ -9,3 +9,16 @@
   padding-left: 10px;
   font-size: 80%;
 }
+
+
+.rhs-stat-panel-gender {
+  display: inline-block;
+}
+
+
+@media (max-width: 548px) {
+  .rhs-stat-panel-gender {
+    display: inline-block;
+    margin-top: 5px;
+  }
+}

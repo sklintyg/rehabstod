@@ -1,13 +1,15 @@
 <div class="panel panel-default rhs-stat-panel">
   <div class="panel-body">
-    <rhs-stat-circle size="80px" background-color="#598341">{{model.total | rhsSuffixFilter: 'st' : '...'}}</rhs-stat-circle>
-    <div class="rhs-stat-panel-circle-text hidden-xs">
+    <rhs-stat-circle size="80px" background-color="#598341">{{model.total | rhsSuffix: 'st' : '...'}}</rhs-stat-circle>
+    <div class="rhs-stat-panel-circle-text">
       Antalet pågående sjukskrivningar på {{vardenhet.namn}}
     </div>
-    <rhs-stat-circle size="80px" background-color="#ea8034">{{model.women | rhsSuffixFilter: '%' : '...'}}</rhs-stat-circle>
-    <img src="/assets/images/female_icon.png">
-    <img src="/assets/images/male_icon.png">
-    <rhs-stat-circle size="80px" background-color="#138391">{{model.men | rhsSuffixFilter: '%' : '...'}}</rhs-stat-circle>
-    <div class="rhs-stat-panel-circle-text hidden-xs">Könsfördelning</div>
+    <div class="rhs-stat-panel-gender">
+      <rhs-stat-circle size="80px" background-color="#ea8034">{{model.women | rhsSuffix: '%' : '...'}}</rhs-stat-circle>
+      <img src="/assets/images/female_icon.png">
+      <img src="/assets/images/male_icon.png">
+      <rhs-stat-circle size="80px" background-color="#138391">{{model.men | rhsSuffix: '%' : '...'}}</rhs-stat-circle>
+      <div class="rhs-stat-panel-circle-text hidden-xs">Könsfördelning</div>
+    </div>
   </div>
 </div>
