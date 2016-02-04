@@ -18,23 +18,22 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import org.junit.Test;
-
-import com.jayway.restassured.RestAssured;
-import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
-
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
+import com.jayway.restassured.RestAssured;
+import org.junit.Test;
+import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
+
 /**
- * Basic test suite that verifies that the endpoint (/api/sjukfall-summary) is available and repond according to
+ * Basic test suite that verifies that the endpoint (/api/sjukfall/summary) is available and respond according to
  * specification.
  *
  * Created by martin on 02/02/16.
  */
 public class SjukfallSummaryControllerIT extends BaseRestIntegrationTest {
 
-    private static final String API_ENDPOINT = "api/sjukfall-summary";
+    private static final String API_ENDPOINT = "api/sjukfall/summary";
 
     @Test
     public void testGetSjukfallSummaryNotLoggedIn() {

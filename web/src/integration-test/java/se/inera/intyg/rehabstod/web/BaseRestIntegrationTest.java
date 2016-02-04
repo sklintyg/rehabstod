@@ -20,6 +20,9 @@ package se.inera.intyg.rehabstod.web;
 
 
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.junit.Assert.assertNotNull;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
@@ -29,9 +32,6 @@ import se.inera.intyg.common.util.integration.integration.json.CustomObjectMappe
 import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 
 import javax.servlet.http.HttpServletResponse;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.junit.Assert.assertNotNull;
 
 
 /**

@@ -12,7 +12,7 @@ angular.module('rehabstodApp').factory('UnitCertificateSummaryProxy',
 
             var promise = $q.defer();
 
-            var restPath = '/api/sjukfall-summary';
+            var restPath = '/api/sjukfall/summary';
             $http.get(restPath, {timeout: timeout}).success(function(data) {
                 $log.debug('unit statistic - got data:');
                 $log.debug(data);

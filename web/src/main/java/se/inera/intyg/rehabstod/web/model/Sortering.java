@@ -16,20 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.certificate;
-
-import se.inera.intyg.rehabstod.service.certificate.dto.SjukfallSummary;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.util.List;
+package se.inera.intyg.rehabstod.web.model;
 
 /**
- * Created by eriklupander on 2016-02-01.
+ * Created by Magnus Ekstrand on 03/02/16.
  */
-public interface CertificateService {
+public class Sortering {
 
-    List<IntygsData> getIntygsData();
+    private String kolumn;
+    private String order;
 
-    SjukfallSummary getSummary();
+    public Sortering() {
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Sortering sortering = (Sortering) o;
+
+        if (!kolumn.equals(sortering.kolumn)) return false;
+        return order.equals(sortering.order);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = kolumn.hashCode();
+        result = 31 * result + order.hashCode();
+        return result;
+    }
 }
