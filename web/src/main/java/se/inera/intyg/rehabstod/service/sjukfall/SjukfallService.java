@@ -16,28 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.certificate.dto;
+package se.inera.intyg.rehabstod.service.sjukfall;
 
-public class SjukfallSummary {
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
-    private int total;
-    private double men;
-    private double women;
+import java.util.List;
 
+/**
+ * Created by eriklupander on 2016-02-01.
+ */
+public interface SjukfallService {
 
-    public SjukfallSummary(int total, double men, double women) {
-        this.total = total;
-        this.men = men;
-        this.women = women;
-    }
+    List<Sjukfall> getSjukfall(String enhetsId, GetSjukfallRequest request);
 
-    public int getTotal() {
-        return total;
-    }
+    SjukfallSummary getSummary(String enhetsId);
 
-    public double getMen() {
-        return men;
-    }
-
-    public double getWomen() { return women; }
 }
