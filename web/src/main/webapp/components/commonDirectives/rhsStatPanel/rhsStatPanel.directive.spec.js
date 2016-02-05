@@ -6,28 +6,28 @@ describe('Directive: RhsStatPanel', function() {
     beforeEach(module('htmlTemplates'));
 
     var scope, compile;
-    var UnitCertificateSummaryModel;
-    var UnitCertificateSummaryProxy;
+    var SjukfallSummaryModel;
+    var SjukfallSummaryProxy;
     var testData = {total: 100, men: 0, women: 100};
 
 
 
     // Initialize the controller and a mock scope
-    beforeEach(inject(function($compile, $rootScope, _UnitCertificateSummaryModel_, _UnitCertificateSummaryProxy_) {
+    beforeEach(inject(function($compile, $rootScope, _SjukfallSummaryModel_, _SjukfallSummaryProxy_) {
         compile = $compile;
         scope = $rootScope.$new();
-        UnitCertificateSummaryModel = _UnitCertificateSummaryModel_;
-        UnitCertificateSummaryProxy = _UnitCertificateSummaryProxy_;
+        SjukfallSummaryModel = _SjukfallSummaryModel_;
+        SjukfallSummaryProxy = _SjukfallSummaryProxy_;
     }));
 
 
     it('should not reload data if already loaded', function() {
 
         // Arrange
-        spyOn(UnitCertificateSummaryModel, 'get').and.callFake(function() {
+        spyOn(SjukfallSummaryModel, 'get').and.callFake(function() {
             return testData;
         });
-        spyOn(UnitCertificateSummaryProxy, 'get');
+        spyOn(SjukfallSummaryProxy, 'get');
 
         // Act
         var element = compile('<rhs-stat-panel></rhs-stat-panel>')(scope);
@@ -36,8 +36,8 @@ describe('Directive: RhsStatPanel', function() {
         var elementScope = element.isolateScope() || element.scope();
 
         // Assert
-        expect(UnitCertificateSummaryModel.get).toHaveBeenCalled();
-        expect(UnitCertificateSummaryProxy.get).not.toHaveBeenCalled();
+        expect(SjukfallSummaryModel.get).toHaveBeenCalled();
+        expect(SjukfallSummaryProxy.get).not.toHaveBeenCalled();
         expect(elementScope.model).toBe(testData);
     });
 
@@ -48,8 +48,8 @@ describe('Directive: RhsStatPanel', function() {
 
         beforeEach(function() {
             // Arrange
-            spyOn(UnitCertificateSummaryModel, 'set').and.callThrough();
-            spyOn(UnitCertificateSummaryProxy, 'get').and.callFake(function() {
+            spyOn(SjukfallSummaryModel, 'set').and.callThrough();
+            spyOn(SjukfallSummaryProxy, 'get').and.callFake(function() {
                 return {
                     then : function(onSuccess) {
                         onSuccess(testData);
@@ -66,8 +66,8 @@ describe('Directive: RhsStatPanel', function() {
 
         it('should load data if not loaded', function() {
             // Assert
-            expect(UnitCertificateSummaryProxy.get).toHaveBeenCalled();
-            expect(UnitCertificateSummaryModel.set).toHaveBeenCalledWith(testData);
+            expect(SjukfallSummaryProxy.get).toHaveBeenCalled();
+            expect(SjukfallSummaryModel.set).toHaveBeenCalledWith(testData);
             expect(elementScope.model).toEqual(testData);
         });
 
@@ -76,8 +76,8 @@ describe('Directive: RhsStatPanel', function() {
             scope.$digest();
 
             // Assert
-            expect(UnitCertificateSummaryProxy.get.calls.count()).toEqual(2);
-            expect(UnitCertificateSummaryModel.set).toHaveBeenCalledWith(testData);
+            expect(SjukfallSummaryProxy.get.calls.count()).toEqual(2);
+            expect(SjukfallSummaryModel.set).toHaveBeenCalledWith(testData);
             expect(elementScope.model).toEqual(testData);
         });
     });

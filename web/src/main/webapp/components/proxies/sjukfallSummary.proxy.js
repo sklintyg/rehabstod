@@ -1,4 +1,4 @@
-angular.module('rehabstodApp').factory('UnitCertificateSummaryProxy',
+angular.module('rehabstodApp').factory('SjukfallSummaryProxy',
     function($http, $log, $q,
         ObjectHelper, networkConfig) {
         'use strict';

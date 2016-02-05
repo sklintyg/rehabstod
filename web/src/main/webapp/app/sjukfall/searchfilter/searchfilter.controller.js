@@ -7,7 +7,7 @@ angular.module('rehabstodApp')
 
         $scope.$watch('model.get()', function(value) {
             $scope.lakare = unigeValues(value, 'lakare');
-            $scope.diagnos = unigeValues(value, 'diagnos');
+            $scope.diagnos = unigeValues(value, 'diagnos.original');
         }, true);
 
 

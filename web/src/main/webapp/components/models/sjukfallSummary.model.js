@@ -1,4 +1,4 @@
-angular.module('rehabstodApp').factory('UnitCertificateSummaryModel',
+angular.module('rehabstodApp').factory('SjukfallSummaryModel',
     function() {
         'use strict';
 

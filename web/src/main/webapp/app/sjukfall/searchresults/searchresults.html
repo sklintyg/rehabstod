@@ -1,6 +1,6 @@
 <div class="container" st-set-filter="rhsSearchfilter" st-table="displayedCollection" st-safe-src="model.get()">
 
-  <rhs-table-number-range predicate="sjukskrivningslangd" lower="filter.sjukskrivningslangd.low" higher="filter.sjukskrivningslangd.high"></rhs-table-number-range>
+  <rhs-table-number-range predicate="dagar" lower="filter.sjukskrivningslangd.low" higher="filter.sjukskrivningslangd.high"></rhs-table-number-range>
 
   <div class="row">
     <div class="col-sm-3">
@@ -16,33 +16,33 @@
     <thead>
     <tr>
       <th class="searchresult-table-head">#</th>
-      <th class="searchresult-table-head" st-sort="personnummer">Personnummer</th>
-      <th class="searchresult-table-head" st-sort="namn">Namn</th>
-      <th class="searchresult-table-head" st-sort="diagnos">Diagnos</th>
-      <th class="searchresult-table-head" st-sort="startdatumVardgivare" st-sort-default="true">Startdatum vårdgivare</th>
-      <th class="searchresult-table-head" st-sort="startdatumVardenhet">Startdatum vårdenhet</th>
-      <th class="searchresult-table-head" st-sort="slutdatum">Slutdatum</th>
-      <th class="searchresult-table-head" st-sort="sjukskrivningslangd">Sjukskrivningslängd</th>
-      <th class="searchresult-table-head" st-sort="grad">Grad</th>
+      <th class="searchresult-table-head" st-sort="patient.id">Personnummer</th>
+      <th class="searchresult-table-head" st-sort="patient.namn">Namn</th>
+      <th class="searchresult-table-head" st-sort="diagnos.original">Diagnos</th>
+      <th class="searchresult-table-head" st-sort="vgstart">Startdatum vårdgivare</th>
+      <th class="searchresult-table-head" st-sort="vestart" st-sort-default="true">Startdatum vårdenhet</th>
+      <th class="searchresult-table-head" st-sort="slut">Slutdatum</th>
+      <th class="searchresult-table-head" st-sort="dagar">Sjukskrivningslängd</th>
+      <th class="searchresult-table-head" st-sort="aktivgrad">Grad</th>
       <th class="searchresult-table-head" st-sort="lakare">Läkare</th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="row in displayedCollection" class="searchresult-table-row">
       <td>{{row.number}}</td>
-      <td>{{row.personnummer}}</td>
-      <td>{{row.namn}}</td>
-      <td>{{row.diagnos}}</td>
-      <td>{{row.startdatumVardgivare}}</td>
-      <td>{{row.startdatumVardenhet}}</td>
-      <td>{{row.slutdatum}}</td>
+      <td>{{row.patient.id}} (<strong>{{row.patient.alder}} år</strong>)</td>
+      <td>{{row.patient.namn}}</td>
+      <td>{{row.diagnos.original}}</td>
+      <td>{{row.vgstart}}</td>
+      <td>{{row.vestart}}</td>
+      <td>{{row.slut}}</td>
       <td>
-        <ng-pluralize count="row.sjukskrivningslangd" when="{
+        <ng-pluralize count="row.dagar" when="{
                      'one': '1 dag',
                      'other': '{} dagar'}"></ng-pluralize>
-        ({{row.antalIntyg}} intyg)
+        ({{row.intyg}} intyg)
       </td>
-      <td>{{row.grad}}</td>
+      <td><rhs-table-grad active="row.aktivgrad" grader="row.grader" /></td>
       <td>{{row.lakare}}</td>
     </tr>
     </tbody>

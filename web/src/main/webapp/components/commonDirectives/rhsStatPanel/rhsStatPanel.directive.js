@@ -1,6 +1,6 @@
 angular.module('rehabstodApp').directive('rhsStatPanel',
-    ['UnitCertificateSummaryModel', 'UnitCertificateSummaryProxy', '$rootScope',
-        function(UnitCertificateSummaryModel, UnitCertificateSummaryProxy, $rootScope) {
+    ['SjukfallSummaryModel', 'SjukfallSummaryProxy', '$rootScope',
+        function(SjukfallSummaryModel, SjukfallSummaryProxy, $rootScope) {
             'use strict';
 
             return {
@@ -14,8 +14,9 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                      * Private functions
                      */
                     function _loadData() {
-                        UnitCertificateSummaryProxy.get().then(function(data) {
-                            UnitCertificateSummaryModel.set(data);
+                        SjukfallSummaryModel.reset();
+                        SjukfallSummaryProxy.get().then(function(data) {
+                            SjukfallSummaryModel.set(data);
                         });
                     }
 
@@ -29,7 +30,7 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                     /**
                      * Exposed scope properties
                      */
-                    $scope.model = UnitCertificateSummaryModel.get();
+                    $scope.model = SjukfallSummaryModel.get();
 
                     if ($scope.model.total === null) {
                         _loadData();
