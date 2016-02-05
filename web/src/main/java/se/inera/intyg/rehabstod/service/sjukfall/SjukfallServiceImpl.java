@@ -73,7 +73,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         int menTotal = (int) personNummer.stream().filter(p -> p.substring(11, 12).matches("^\\d*[13579]$")).count();
         int womenTotal = total - menTotal;
 
-        double men = 0 ;
+        double men = 0;
         double women = 0;
 
         if (total > 0) {
