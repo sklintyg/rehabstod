@@ -31,6 +31,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.joda.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.joda.ser.LocalDateTimeSerializer;
 
+import java.text.SimpleDateFormat;
+
 public class CustomObjectMapper extends ObjectMapper {
 
     public CustomObjectMapper() {
@@ -38,6 +40,8 @@ public class CustomObjectMapper extends ObjectMapper {
         configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         registerModule(new Module());
+
+        setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
     }
 
     private static final class Module extends SimpleModule {

@@ -1,8 +1,9 @@
-angular.module('rehabstodApp').factory('SjukfallService',
-    function($log, $q) {
+angular.module('rehabstodApp').factory('SjukfallService', [
+    '$log', '$q', 'SjukfallProxy',
+    function($log, $q, SjukfallProxy) {
         'use strict';
 
-        function _loadSjukfallTemp() {
+        /*function _loadSjukfallTemp() {
             var
                 nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'],
                 familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'],
@@ -36,13 +37,13 @@ angular.module('rehabstodApp').factory('SjukfallService',
                         grupp: null,
                         kod: null
                     },
-                    vgstart: '2015-09-' + dag,
-                    vestart: '2015-10-' + dag,
+                    startVG: '2015-09-' + dag,
+                    startVE: '2015-10-' + dag,
                     slut: '2015-12-15',
                     dagar: langd,
                     intyg: Math.floor(Math.random() * 5) + 1,
                     grader: grader,
-                    aktivgrad: grad,
+                    aktivGrad: grad,
                     lakare: lakare
                 };
             }
@@ -53,17 +54,26 @@ angular.module('rehabstodApp').factory('SjukfallService',
             }
 
             return collection;
-        }
+        }*/
 
         function _loadSjukfall() {
+            var query = {
+                maxIntygsGlapp: 0
+            };
+
+            return SjukfallProxy.get(query);
+
+
+            /*
+
             var promise = $q.defer();
 
             promise.resolve(_loadSjukfallTemp());
 
-            return promise.promise;
+            return promise.promise;*/
         }
 
         return {
             loadSjukfall: _loadSjukfall
         };
-    });
+    }]);

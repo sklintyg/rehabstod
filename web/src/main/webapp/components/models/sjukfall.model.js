@@ -17,7 +17,6 @@ angular.module('rehabstodApp').factory('SjukfallModel',
             },
 
             set: function(newData) {
-                _reset();
                 data = newData;
             },
             get: function() {

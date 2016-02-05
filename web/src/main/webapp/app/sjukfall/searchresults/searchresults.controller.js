@@ -7,13 +7,13 @@ angular.module('rehabstodApp')
 
         $scope.model = SjukfallModel;
 
-        $scope.itemsByPage = 100;
+        $scope.itemsByPage = 50;
 
         $scope.displayedCollection = [].concat($scope.model.get());
 
         $scope.currentPage = 1;
 
-        $scope.$watch('displayedCollection', updateRowNumber);
+        $scope.$watchCollection('displayedCollection', updateRowNumber);
 
         $scope.pageChangedFn = function(newPage) {
             $scope.currentPage = newPage;
