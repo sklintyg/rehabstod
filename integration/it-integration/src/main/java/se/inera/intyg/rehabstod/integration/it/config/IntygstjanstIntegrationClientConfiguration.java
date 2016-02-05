@@ -21,41 +21,26 @@ package se.inera.intyg.rehabstod.integration.it.config;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 
+/**
+ * Created by eriklupander on 2016-02-05.
+ */
 @Configuration
-@ComponentScan({
-        "se.inera.intyg.rehabstod.integration.it.client",
-        "se.inera.intyg.rehabstod.integration.it.service" })
-@ImportResource("classpath:it-services.xml")
-public class IntygstjanstIntegrationConfiguration {
+@Profile("!rhs-it-stub")
+public class IntygstjanstIntegrationClientConfiguration {
 
+    @Value("${it.service.url}")
+    private String itWsUrl;
 
-
-    //
-    // @Autowired
-    // private ApplicationContext applicationContext;
-    //
-    // @Autowired
-    // private SjukfallIntygStub sjukfallIntygStub;
-    //
-    // @Bean
-    // public ObjectMapper objectMapper() {
-    // return new ObjectMapper();
-    // }
-    //
-    // @Bean
-    // public EndpointImpl intygstjanstResponder() {
-    // Bus bus = (Bus) applicationContext.getBean(Bus.DEFAULT_BUS_ID);
-    // Object implementor = sjukfallIntygStub;
-    // EndpointImpl endpoint = new EndpointImpl(bus, implementor);
-    // endpoint.publish("/get-active-sickleaves-for-careunit/v1.0");
-    // return endpoint;
-    // }
-
-
+    @Bean
+    @Profile(value = {"dev", "test", "prod"})
+    public ListActiveSickLeavesForCareUnitResponderInterface itIntegrationWebServiceClient() {
+        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
+        proxyFactoryBean.setAddress(itWsUrl);
+        proxyFactoryBean.setServiceClass(ListActiveSickLeavesForCareUnitResponderInterface.class);
+        return (ListActiveSickLeavesForCareUnitResponderInterface) proxyFactoryBean.create();
+    }
 }
