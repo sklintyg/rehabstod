@@ -5,6 +5,6 @@ angular.module('rehabstodApp').filter('rhsSuffix', function() {
 
         var returnValue = suffix ? input + ' ' + suffix : input;
 
-        return input ? returnValue : noValue;
+        return input || input === 0 ? returnValue : noValue;
     };
 });

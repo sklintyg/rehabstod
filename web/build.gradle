@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath 'org.akhikhl.gretty:gretty:1.2.0'
+        classpath 'org.akhikhl.gretty:gretty:1.2.4'
         classpath 'com.moowork.gradle:gradle-grunt-plugin:0.10'
 	    classpath 'se.inera.intyg:gradle-fitnesse-plugin:1.0-SNAPSHOT'
     }

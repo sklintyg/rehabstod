@@ -63,9 +63,9 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Override
     public SjukfallSummary getSummary(String enhetsId) {
 
-        List<IntygsData> intygsDataList = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
+        List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
 
-        List<String> personNummer = intygsDataList.stream().map(e -> e.getPatient().getPersonId().getExtension()).distinct()
+        List<String> personNummer = intygsData.stream().map(e -> e.getPatient().getPersonId().getExtension()).distinct()
                 .collect(Collectors.toList());
 
         int total = personNummer.size();
@@ -73,9 +73,15 @@ public class SjukfallServiceImpl implements SjukfallService {
         int menTotal = (int) personNummer.stream().filter(p -> p.substring(11, 12).matches("^\\d*[13579]$")).count();
         int womenTotal = total - menTotal;
 
-        double men = (menTotal * 1.0 / total) * 100;
-        double women = (womenTotal * 1.0 / total) * 100;
+        double men = 0 ;
+        double women = 0;
+
+        if (total > 0) {
+             men = (menTotal * 1.0 / total) * 100;
+             women = (womenTotal * 1.0 / total) * 100;
+        }
         // CHECKSTYLE:ON MagicNumber
+
         return new SjukfallSummary(total, men, women);
     }
 }

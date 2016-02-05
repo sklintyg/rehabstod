@@ -20,10 +20,10 @@ describe('Filter: RhsSuffixFilter', function () {
 
     it('should return value with suffix', inject(function (rhsSuffixFilter) {
 
-
-        expect(rhsSuffixFilter('123', null, null)).toEqual('123');
-        expect(rhsSuffixFilter('123', 'st', null)).toEqual('123 st');
-        expect(rhsSuffixFilter('123', 'st', '...')).toEqual('123 st');
+        expect(rhsSuffixFilter(123, null, null)).toEqual(123);
+        expect(rhsSuffixFilter(123, 'st', null)).toEqual('123 st');
+        expect(rhsSuffixFilter(123, 'st', '...')).toEqual('123 st');
+        expect(rhsSuffixFilter(0, 'st', '...')).toEqual('0 st');
     }));
 
 });
