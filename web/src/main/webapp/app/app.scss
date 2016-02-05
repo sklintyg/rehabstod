@@ -1,5 +1,28 @@
 $default-border-radius: 5px;
 
+$alert-warning-text: #8A6D3B; /* WCAG AA compliant */
+$alert-info-text: #306E8D; /* WCAG AA compliant */
+$alert-info-border: #9cd7e3;
+$alert-danger-text: #A94442; /* WCAG AA compliant */
+
+$form-group-margin-bottom: 10px;
+
+$navbar-default-link-hover-color: #fff;
+$navbar-default-link-hover-bg: #24a1af;
+
+$navbar-default-link-active-color: $navbar-default-link-hover-color;
+$navbar-default-link-active-bg: $navbar-default-link-hover-bg;
+
+$slider-color: #33b4c3;
+
+$link-color: #28b4c4;
+
+$font-size-h1: 24px;
+$font-size-h2: 16px;
+$font-size-h3: 16px;
+
+$blue-color: #008391;
+
 @import '../bower_components/bootstrap-sass/assets/stylesheets/bootstrap.scss';
 
 /**
@@ -22,33 +45,10 @@ $default-border-radius: 5px;
   max-height: 450px;
   overflow-y: scroll; }
 
-/* Printable modal */
-@media print {
-  body.modalprinter * {
-    visibility: hidden; }
-  body.modalprinter .modal,
-  body.modalprinter .modal-header *,
-  body.modalprinter .modal-body * {
-    visibility: visible;
-    overflow-y: visible;
-    position: initial; }
-  body.modalprinter .modal-dialog {
-    position: absolute;
-    padding: 0;
-    margin: 0;
-    left: 0;
-    top: 0;
-    width: initial; }
-  body.modalprinter .modal-terms .modal-body {
-    max-height: initial;
-    overflow-y: visible; } }
-
 /*****************************
 App-wide special styles
 *******************************/
 html, body, .container-fluid {
-  font-size: 14px;
-  font-family: "Helvetica Neue", helvetica, arial, sans-serif;
   text-align: left; }
 
 body {
@@ -77,18 +77,7 @@ p.leading-number {
 }
 
 a {
-  color: #28b4c4;
-  cursor: pointer; }
-
-a.backlink-icon {
-  display: block;
-  width: 24px;
-  height: 24px;
-  background: transparent url(/assets/images/backlink-icon.png) center left no-repeat;
-  float: left;
-  margin: 2px 20px 0 0; }
-a:hover.backlink-icon {
-  background: transparent url(/assets/images/backlink-icon-hover.png) center left no-repeat;
+  cursor: pointer;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -96,8 +85,7 @@ h1, h2, h3, h4, h5, h6 {
   padding-bottom: 10px; }
 
 h1 {
-  font-size: 24px;
-  color: #008391; }
+  color: $blue-color; }
 
 h1.backlink-heading {
   display: inline-block;
@@ -105,7 +93,6 @@ h1.backlink-heading {
   line-height: 29px; }
 
 h2 {
-  font-size: 16px;
   line-height: 20px;
   padding-top: 30px; }
 
@@ -115,11 +102,10 @@ h2.less-top-padding {
 
 .col-head {
   font-size: 20px;
-  color: #008391;
+  color: $blue-color;
   padding-bottom: 10px; }
 
 h3 {
-  font-size: 16px;
   font-weight: bold;
   line-height: 20px; }
 
@@ -134,29 +120,11 @@ h5.inline-heading {
   white-space: pre-line; }
 
 .bluebox {
-  background-color: #008391;
+  background-color: $blue-color;
   border-radius: 8px 8px 8px 8px;
   color: #fff;
   padding: 20px;
   margin-bottom: 10px; }
-
-.number-circle {
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  padding: 4px 0 0 0;
-  background: #fff;
-  border: 1px solid #777;
-  color: #111;
-  text-align: center;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.number-circle.leading {
-  position:absolute;
-  left: 0;
-}
 
 .box {
   display: block;
@@ -201,7 +169,6 @@ h5.inline-heading {
 // injector
 @import 'error/error.scss';
 @import 'header/header.scss';
-@import 'navbar/navbar.scss';
 @import 'print.scss';
 @import 'sjukfall/searchfilter/searchfilter.scss';
 @import 'sjukfall/searchresults/searchresults.scss';

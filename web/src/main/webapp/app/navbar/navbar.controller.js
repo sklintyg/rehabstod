@@ -20,8 +20,4 @@ angular.module('rehabstodApp')
         ];
 
         $scope.isCollapsed = true;
-
-        $scope.isActive = function(stateName) {
-            return $state.includes(stateName);
-        };
     });

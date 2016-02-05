@@ -4,11 +4,6 @@
     font-weight: bold;
 }
 
-.form-group {
-    margin: 0;
-    padding: 0 0 10px 0;
-}
-
 .buttonbar .btn {
     margin: 15px 20px 0 0;
 }
@@ -307,24 +302,8 @@ UI-bootstrap
     max-width: 600px;
 }
 
-.alert-warning {
-    color: #8A6D3B; /* WCAG AA compliant */
-    background-image: none;
-}
-
-.alert-danger {
-    color: #A94442; /* WCAG AA compliant */
-    background-image: none;
-}
-
 .alert-danger a {
     color: #A94442;
-}
-
-.alert-info {
-    color: #306E8D; /* WCAG AA compliant */
-    border: 1px solid #9cd7e3;
-    background-image: none;
 }
 
 .alert-column {

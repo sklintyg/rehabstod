@@ -1,13 +1,15 @@
+$slider-color:  #ccc !default;
+
 .rhs-slider {
   margin-bottom: 3em;
 
   .slider-selection {
-    background: #33b4c3;
+    background: $slider-color;
     filter: none;
   }
 
   .slider-handle {
-    background-color: #33b4c3;
+    background-color: $slider-color;
     background-image: none;
   }
 }
