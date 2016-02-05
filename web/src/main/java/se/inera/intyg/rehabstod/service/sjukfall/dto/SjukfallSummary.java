@@ -24,7 +24,6 @@ public class SjukfallSummary {
     private double men;
     private double women;
 
-
     public SjukfallSummary(int total, double men, double women) {
         this.total = total;
         this.men = men;
@@ -39,5 +38,7 @@ public class SjukfallSummary {
         return men;
     }
 
-    public double getWomen() { return women; }
+    public double getWomen() {
+        return women;
+    }
 }

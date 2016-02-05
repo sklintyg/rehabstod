@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Created by pebe on 2015-08-19.
  */
-public class Verksamhetstyper {
+public final class Verksamhetstyper {
 
     public static final String VERKSAMHETSTYP_NAME = "Verksamhetskod";
     public static final String VERKSAMHETSTYP_OID = "1.2.752.129.2.2.1.3";

@@ -53,8 +53,10 @@ public class SjukfallIntygDataGeneratorTest {
     @Test
     public void testGenerateIntygsData() throws Exception {
         when(personnummerLoader.readTestPersonnummer()).thenReturn(buildPersonnummerList());
-        List<IntygsData> intygsData = testee.generateIntygsData(10, 4);
-        assertEquals(40, intygsData.size());
+        final int numberOfPatients = 10;
+        final int intygPerPatient = 4;
+        List<IntygsData> intygsData = testee.generateIntygsData(numberOfPatients, intygPerPatient);
+        assertEquals(numberOfPatients * intygPerPatient, intygsData.size());
         assertEquals("19791110-9291", intygsData.get(0).getPatient().getPersonId().getExtension());
         assertEquals("M16", intygsData.get(0).getDiagnos().getKod());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum());

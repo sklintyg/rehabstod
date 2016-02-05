@@ -18,9 +18,12 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities;
 
-
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,13 +32,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import se.inera.intyg.rehabstod.auth.authorities.bootstrap.AuthoritiesConfigurationLoader;
+
 import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
+import se.inera.intyg.rehabstod.auth.authorities.bootstrap.AuthoritiesConfigurationLoader;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
+//CHECKSTYLE:OFF MagicNumber
 @RunWith(MockitoJUnitRunner.class)
 public class AuthoritiesResolverTest {
 
@@ -116,21 +117,23 @@ public class AuthoritiesResolverTest {
         // when
         for (int i = 0; i < befattningsKoder.size(); i++) {
             for (int j = 0; j < gruppforskrivarKoder.size(); j++) {
-                Role role = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder.get(i), gruppforskrivarKoder.get(j));
+                Role role = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder.get(i),
+                        gruppforskrivarKoder.get(j));
                 roleMatrix[i][j] = role;
-                //System.err.println("[" + i + "," + j + "] " + (role == null ? "null" : role.getName()));
+                // System.err.println("[" + i + "," + j + "] " + (role == null ? "null" : role.getName()));
             }
         }
 
         // then
 
-        /* Expected matrix:
-            [0,0] null
-            [0,1] null
-            [1,0] LAKARE
-            [1,1] null
-            [2,0] null
-            [2,1] LAKARE
+        /*
+         * Expected matrix:
+         * [0,0] null
+         * [0,1] null
+         * [1,0] LAKARE
+         * [1,1] null
+         * [2,0] null
+         * [2,1] LAKARE
          */
 
         for (int i = 0; i < befattningsKoder.size(); i++) {

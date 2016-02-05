@@ -23,6 +23,7 @@ package se.inera.intyg.rehabstod.web.model;
  */
 public class LangdIntervall {
 
+    private static final int HASH_SEED = 31;
     private int min;
     private int max;
 
@@ -47,12 +48,18 @@ public class LangdIntervall {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         LangdIntervall that = (LangdIntervall) o;
 
-        if (min != that.min) return false;
+        if (min != that.min) {
+            return false;
+        }
         return max == that.max;
 
     }
@@ -60,7 +67,7 @@ public class LangdIntervall {
     @Override
     public int hashCode() {
         int result = min;
-        result = 31 * result + max;
+        result = HASH_SEED * result + max;
         return result;
     }
 }

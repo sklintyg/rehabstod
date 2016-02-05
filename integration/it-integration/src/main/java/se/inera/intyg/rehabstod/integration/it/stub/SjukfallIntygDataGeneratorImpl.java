@@ -49,11 +49,12 @@ import java.util.UUID;
  *
  * Created by eriklupander on 2016-01-29.
  */
+//CHECKSTYLE:OFF MagicNumber
 @Component
 @Profile({"dev", "rhs-it-stub"})
 public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerator {
 
-    private static final Logger log = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
 
     private Queue<Patient> seededPatients = new LinkedList<>();
 
@@ -110,7 +111,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
                 intygsDataList.add(intygsData);
             }
         }
-        log.info("Generated {0} intygsData items for stub", intygsDataList.size());
+        LOG.info("Generated {0} intygsData items for stub", intygsDataList.size());
         return intygsDataList;
     }
 

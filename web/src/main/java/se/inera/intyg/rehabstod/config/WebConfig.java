@@ -41,8 +41,12 @@ import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan({"se.inera.intyg.rehabstod.web", "se.inera.intyg.rehabstod.common.service.stub"})
+@ComponentScan({ "se.inera.intyg.rehabstod.web", "se.inera.intyg.rehabstod.common.service.stub" })
 public class WebConfig extends WebMvcConfigurerAdapter {
+
+    private static final int SECONDS_IN_HOUR = 3600;
+    private static final int HOURS_IN_DAY = 24;
+    private static final int DAYS_TO_CACHE = 15;
 
     @Bean
     public ViewResolver viewResolver() {
@@ -66,10 +70,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        int cachePeriod = 3600 * 24 * 15;
+        int cachePeriodInDays = SECONDS_IN_HOUR * HOURS_IN_DAY * DAYS_TO_CACHE;
         registry.addResourceHandler("/index.html").addResourceLocations("/");
-        registry.addResourceHandler("/favicon.ico").addResourceLocations("/").setCachePeriod(cachePeriod);
-        registry.addResourceHandler("/robots.txt").addResourceLocations("/").setCachePeriod(cachePeriod);
+        registry.addResourceHandler("/favicon.ico").addResourceLocations("/").setCachePeriod(cachePeriodInDays);
+        registry.addResourceHandler("/robots.txt").addResourceLocations("/").setCachePeriod(cachePeriodInDays);
         registry.addResourceHandler("/bower_components/**").addResourceLocations("/bower_components/");
         registry.addResourceHandler("/app/**").addResourceLocations("/app/");
         registry.addResourceHandler("/components/**").addResourceLocations("/components/");
@@ -82,7 +86,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void extendMessageConverters(final List<HttpMessageConverter<?>> converters) {
-        for(HttpMessageConverter converter : converters) {
+        for (HttpMessageConverter converter : converters) {
             if (converter instanceof MappingJackson2HttpMessageConverter) {
                 MappingJackson2HttpMessageConverter jsonConverter = (MappingJackson2HttpMessageConverter) converter;
                 jsonConverter.setObjectMapper(new CustomObjectMapper());

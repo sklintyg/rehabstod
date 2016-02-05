@@ -23,6 +23,7 @@ package se.inera.intyg.rehabstod.web.model;
  */
 public class Diagnos {
 
+    private static final int HASH_SEED = 31;
     private String original;
     private String grupp;
     private String kod;
@@ -56,13 +57,20 @@ public class Diagnos {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Diagnos diagnos = (Diagnos) o;
 
-        if (!original.equals(diagnos.original)) return false;
-        if (!grupp.equals(diagnos.grupp)) return false;
+        if (!original.equals(diagnos.original)) {
+            return false;
+        }
+        if (!grupp.equals(diagnos.grupp)) {
+            return false;
+        }
         return kod.equals(diagnos.kod);
 
     }
@@ -70,8 +78,8 @@ public class Diagnos {
     @Override
     public int hashCode() {
         int result = original.hashCode();
-        result = 31 * result + grupp.hashCode();
-        result = 31 * result + kod.hashCode();
+        result = HASH_SEED * result + grupp.hashCode();
+        result = HASH_SEED * result + kod.hashCode();
         return result;
     }
 }

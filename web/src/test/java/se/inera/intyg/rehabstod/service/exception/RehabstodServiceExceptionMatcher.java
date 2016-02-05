@@ -27,7 +27,7 @@ import se.inera.intyg.rehabstod.common.exception.RehabstodServiceException;
 /**
  * Created by pebe on 2015-08-17.
  */
-public class RehabstodServiceExceptionMatcher extends TypeSafeMatcher<RehabstodServiceException> {
+public final class RehabstodServiceExceptionMatcher extends TypeSafeMatcher<RehabstodServiceException> {
 
     public static RehabstodServiceExceptionMatcher hasErrorCode(RehabstodErrorCodeEnum errorCode) {
         return new RehabstodServiceExceptionMatcher(errorCode);

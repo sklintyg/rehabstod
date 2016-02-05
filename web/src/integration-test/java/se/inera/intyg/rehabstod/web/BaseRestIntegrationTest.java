@@ -18,21 +18,21 @@
  */
 package se.inera.intyg.rehabstod.web;
 
-
-
 import static com.jayway.restassured.RestAssured.given;
 import static org.junit.Assert.assertNotNull;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.junit.Before;
+import org.springframework.http.HttpStatus;
+
+import se.inera.intyg.common.util.integration.integration.json.CustomObjectMapper;
+import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import org.junit.Before;
-import se.inera.intyg.common.util.integration.integration.json.CustomObjectMapper;
-import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
-
-import javax.servlet.http.HttpServletResponse;
-
 
 /**
  * Base class for "REST-ish" integrationTests using RestAssured.
@@ -44,12 +44,16 @@ public abstract class BaseRestIntegrationTest {
     private static final String USER_JSON_FORM_PARAMETER = "userJsonDisplay";
     private static final String FAKE_LOGIN_URI = "/fake";
 
-    protected static FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder("IFV1239877878-1049", "rest", "testman",
+    public static final int OK = HttpStatus.OK.value();
+    public static final int SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR.value();
+    public static final int FORBIDDEN = HttpStatus.FORBIDDEN.value();
+
+    protected static final FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder("IFV1239877878-1049", "rest", "testman",
             "IFV1239877878-1042").lakare(true).build();
     protected CustomObjectMapper objectMapper = new CustomObjectMapper();
 
     /**
-     * Common setup for all tests
+     * Common setup for all tests.
      */
     @Before
     public void setup() {
@@ -57,7 +61,6 @@ public abstract class BaseRestIntegrationTest {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.baseURI = System.getProperty("integration.tests.baseUrl");
     }
-
 
     /**
      * Log in to rehabstod using the supplied FakeCredentials.
@@ -86,4 +89,3 @@ public abstract class BaseRestIntegrationTest {
         return response.sessionId();
     }
 }
-

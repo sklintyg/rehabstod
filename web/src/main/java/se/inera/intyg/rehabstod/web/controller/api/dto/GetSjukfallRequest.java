@@ -38,7 +38,7 @@ public class GetSjukfallRequest {
 
     private String fritext;
 
-    /** The sole constructor **/
+    /** The sole constructor. **/
     public GetSjukfallRequest() {
     }
 

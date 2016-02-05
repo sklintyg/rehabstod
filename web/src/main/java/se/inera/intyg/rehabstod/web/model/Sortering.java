@@ -23,6 +23,7 @@ package se.inera.intyg.rehabstod.web.model;
  */
 public class Sortering {
 
+    private static final int HASH_SEED = 31;
     private String kolumn;
     private String order;
 
@@ -31,12 +32,18 @@ public class Sortering {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Sortering sortering = (Sortering) o;
 
-        if (!kolumn.equals(sortering.kolumn)) return false;
+        if (!kolumn.equals(sortering.kolumn)) {
+            return false;
+        }
         return order.equals(sortering.order);
 
     }
@@ -44,7 +51,7 @@ public class Sortering {
     @Override
     public int hashCode() {
         int result = kolumn.hashCode();
-        result = 31 * result + order.hashCode();
+        result = HASH_SEED * result + order.hashCode();
         return result;
     }
 }

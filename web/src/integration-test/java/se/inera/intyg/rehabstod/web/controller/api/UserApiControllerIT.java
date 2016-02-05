@@ -22,14 +22,16 @@ import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
 import org.junit.Test;
+
 import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeUrvalRequest;
+
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
 
 /**
  * Created by martin on 03/02/16.
@@ -43,7 +45,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
 
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
-        given().expect().statusCode(200).when().get(API_ENDPOINT).
+        given().expect().statusCode(OK).when().get(API_ENDPOINT).
                 then().
                 body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
                 body("hsaId", equalTo(DEFAULT_LAKARE.getHsaId())).
@@ -56,7 +58,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
 
         RestAssured.sessionId = null;
 
-        given().expect().statusCode(403).when().get(API_ENDPOINT);
+        given().expect().statusCode(FORBIDDEN).when().get(API_ENDPOINT);
     }
 
     @Test
@@ -66,7 +68,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
                 "IFV1239877878-104D").lakare(false).build();
         RestAssured.sessionId = getAuthSession(user);
 
-        //An improvement of this would be to call hsaStub rest api to add testa data as we want it to
+        // An improvement of this would be to call hsaStub rest api to add testa data as we want it to
         // avoid "magic" ids and the dependency to bootstrapped data?
         final String vardEnhetToChangeTo = "IFV1239877878-1045";
         ChangeSelectedUnitRequest changeRequest = new ChangeSelectedUnitRequest();
@@ -74,7 +76,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
 
         given().contentType(ContentType.JSON).and().body(changeRequest).when().post(API_ENDPOINT + "/andraenhet").
                 then().
-                statusCode(200).
+                statusCode(OK).
                 body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
                 body("valdVardenhet.id", equalTo(vardEnhetToChangeTo));
     }
@@ -90,14 +92,14 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
                 "IFV1239877878-1045").lakare(false).build();
         RestAssured.sessionId = getAuthSession(user);
 
-        //An improvement of this would be to call hsaStub rest api to add testa data as we want it to
+        // An improvement of this would be to call hsaStub rest api to add testa data as we want it to
         // avoid "magic" ids and the dependency to bootstrapped data?
         final String vardEnhetToChangeTo = "non-existing-vardenehet-id";
         ChangeSelectedUnitRequest changeRequest = new ChangeSelectedUnitRequest();
         changeRequest.setId(vardEnhetToChangeTo);
 
         given().contentType(ContentType.JSON).and().body(changeRequest).expect().
-                statusCode(500).when().post(API_ENDPOINT + "/andraenhet");
+                statusCode(SERVER_ERROR).when().post(API_ENDPOINT + "/andraenhet");
     }
 
     @Test
@@ -111,7 +113,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
 
         given().contentType(ContentType.JSON).and().body(changeRequest).when().post(API_ENDPOINT + "/urval").
                 then().
-                statusCode(200).
+                statusCode(OK).
                 body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
                 body("urval", equalTo(urval.toString()));
     }

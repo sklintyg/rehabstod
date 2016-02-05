@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Created by pebe on 2015-08-19.
  */
-public class Vardformer {
+public final class Vardformer {
 
     public static final String VARDFORM_NAME = "Vårdform";
     public static final String VARDFORM_OID = "1.2.752.129.2.2.1.13";

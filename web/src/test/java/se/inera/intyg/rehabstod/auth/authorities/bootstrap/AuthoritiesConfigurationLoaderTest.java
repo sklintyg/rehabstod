@@ -18,10 +18,14 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities.bootstrap;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +34,7 @@ import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConfiguration;
 import se.inera.intyg.rehabstod.auth.authorities.Privilege;
 import se.inera.intyg.rehabstod.auth.authorities.RequestOrigin;
@@ -37,19 +42,15 @@ import se.inera.intyg.rehabstod.auth.authorities.Role;
 import se.inera.intyg.rehabstod.auth.authorities.Title;
 import se.inera.intyg.rehabstod.auth.authorities.TitleCode;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-
+//CHECKSTYLE:OFF MagicNumber
 @RunWith(MockitoJUnitRunner.class)
 public class AuthoritiesConfigurationLoaderTest {
 
-    private static final String authoritiesConfigurationFile = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
-    private static final String authoritiesConfigurationOutputFile = "AuthoritiesConfigurationLoaderTest/authorities-output.txt";
+    private static final String AUTHORITIES_CONFIGURATION_TEST_FILE = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    private static final String AUTHORITIES_CONFIGURATION_OUTPUT_FILE = "AuthoritiesConfigurationLoaderTest/authorities-output.txt";
 
     @InjectMocks
-    AuthoritiesConfigurationLoader loader = new AuthoritiesConfigurationLoader(authoritiesConfigurationFile);
+    AuthoritiesConfigurationLoader loader = new AuthoritiesConfigurationLoader(AUTHORITIES_CONFIGURATION_TEST_FILE);
 
     @Before
     public void setupAuthoritiesConfiguration() {
@@ -87,12 +88,12 @@ public class AuthoritiesConfigurationLoaderTest {
     public void loadConfigurationAndAssertString() {
         AuthoritiesConfiguration configuration = loader.getConfiguration();
 
-        String actual = configuration.toString().replaceAll("\\s","").trim();
+        String actual = configuration.toString().replaceAll("\\s", "").trim();
         String expected = "";
 
         try {
-            Resource resource = getResource(authoritiesConfigurationOutputFile);
-            expected = new String(Files.readAllBytes(Paths.get(resource.getURI()))).replaceAll("\\s","").trim();
+            Resource resource = getResource(AUTHORITIES_CONFIGURATION_OUTPUT_FILE);
+            expected = new String(Files.readAllBytes(Paths.get(resource.getURI()))).replaceAll("\\s", "").trim();
         } catch (IOException e) {
             fail(e.getMessage());
         }
@@ -104,7 +105,6 @@ public class AuthoritiesConfigurationLoaderTest {
     public void loadConfigurationWithBadLocation() {
         AuthoritiesConfigurationLoader loader = new AuthoritiesConfigurationLoader(null);
     }
-
 
     // ~ Private scope
     // ======================================================================================================

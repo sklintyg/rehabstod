@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 /**
  * Created by eriklupander on 2016-02-01.
  */
+
 @Service
 public class SjukfallServiceImpl implements SjukfallService {
 
@@ -64,15 +65,17 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         List<IntygsData> intygsDataList = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
 
-        List<String> personNummer = intygsDataList.stream().map(e -> e.getPatient().getPersonId().getExtension()).distinct().collect(Collectors.toList());
+        List<String> personNummer = intygsDataList.stream().map(e -> e.getPatient().getPersonId().getExtension()).distinct()
+                .collect(Collectors.toList());
 
         int total = personNummer.size();
+        // CHECKSTYLE:OFF MagicNumber
         int menTotal = (int) personNummer.stream().filter(p -> p.substring(11, 12).matches("^\\d*[13579]$")).count();
         int womenTotal = total - menTotal;
 
-        double men = (menTotal*1.0/total)*100;
-        double women = (womenTotal*1.0/total)*100;
-
+        double men = (menTotal * 1.0 / total) * 100;
+        double women = (womenTotal * 1.0 / total) * 100;
+        // CHECKSTYLE:ON MagicNumber
         return new SjukfallSummary(total, men, women);
     }
 }

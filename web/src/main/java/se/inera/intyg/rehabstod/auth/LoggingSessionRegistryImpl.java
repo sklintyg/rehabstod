@@ -49,8 +49,6 @@ public class LoggingSessionRegistryImpl extends SessionRegistryImpl {
             Object principal = sessionInformation.getPrincipal();
 
             if (principal instanceof RehabstodUser) {
-                // TODO: We could log specifically that a session has expired. Is this something we want to do?
-                //       sessionInformation.isExpired()
                 RehabstodUser user = (RehabstodUser) principal;
                 monitoringService.logUserLogout(user.getHsaId(), user.getAuthenticationScheme());
             }

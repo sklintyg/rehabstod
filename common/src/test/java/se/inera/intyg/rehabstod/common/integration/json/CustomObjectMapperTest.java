@@ -32,6 +32,10 @@ import java.io.IOException;
  */
 public class CustomObjectMapperTest {
 
+    private static final int YEAR = 2016;
+    private static final int MONTH = 2;
+    private static final int DAY = 11;
+
     @Test
     public void testLocalDateSerializesIntoYYYYMMDD() throws JsonProcessingException {
         String serializedLocalDate = new CustomObjectMapper().writeValueAsString(LocalDate.parse("2016-02-11"));
@@ -41,9 +45,9 @@ public class CustomObjectMapperTest {
     @Test
     public void testLocalDateDeserializesFromYYYYMMDD() throws IOException {
         LocalDate localDate = new CustomObjectMapper().readValue("\"2016-02-11\"", LocalDate.class);
-        assertEquals(2016, localDate.getYear());
-        assertEquals(2, localDate.getMonthOfYear());
-        assertEquals(11, localDate.getDayOfMonth());
+        assertEquals(YEAR, localDate.getYear());
+        assertEquals(MONTH, localDate.getMonthOfYear());
+        assertEquals(DAY, localDate.getDayOfMonth());
     }
 
 }

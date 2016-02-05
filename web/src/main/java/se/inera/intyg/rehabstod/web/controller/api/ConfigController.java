@@ -36,10 +36,9 @@ public class ConfigController {
     private Environment env;
 
     @RequestMapping(value = "")
-    public GetConfigResponse getConfig()
-    {
+    public GetConfigResponse getConfig() {
         return new GetConfigResponse(
-            env.getProperty("webcert.host.url"),
-            env.getProperty("webcert.start.url"));
+                env.getProperty("webcert.host.url"),
+                env.getProperty("webcert.start.url"));
     }
 }

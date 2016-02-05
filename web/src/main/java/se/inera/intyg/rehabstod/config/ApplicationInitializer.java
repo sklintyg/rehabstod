@@ -36,9 +36,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
 
-
 // import se.inera.intyg.rehabstod.hsa.config.HsaConfiguration;
-
 
 public class ApplicationInitializer implements WebApplicationInitializer {
 
@@ -50,17 +48,17 @@ public class ApplicationInitializer implements WebApplicationInitializer {
                 ServiceConfig.class, IntygstjanstIntegrationConfiguration.class, IntygstjanstIntegrationStubConfiguration.class);
 
         servletContext.addListener(new ContextLoaderListener(appContext));
- 
+
         AnnotationConfigWebApplicationContext webConfig = new AnnotationConfigWebApplicationContext();
         webConfig.register(WebConfig.class);
         ServletRegistration.Dynamic servlet = servletContext.addServlet("dispatcher", new DispatcherServlet(webConfig));
         servlet.setLoadOnStartup(1);
         servlet.addMapping("/");
- 
+
         // Spring security filter
         FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
         springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
- 
+
         FilterRegistration.Dynamic hiddenHttpMethodFilter = servletContext.addFilter("hiddenHttpMethodFilter", HiddenHttpMethodFilter.class);
         hiddenHttpMethodFilter.addMappingForUrlPatterns(null, false, "/*");
 
@@ -80,6 +78,6 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         CharacterEncodingFilter cef = new CharacterEncodingFilter();
         cef.setForceEncoding(true);
         cef.setEncoding("UTF-8");
-        aContext.addFilter("characterEncodingFilter", cef).addMappingForUrlPatterns(null ,true, "/*");
+        aContext.addFilter("characterEncodingFilter", cef).addMappingForUrlPatterns(null, true, "/*");
     }
 }

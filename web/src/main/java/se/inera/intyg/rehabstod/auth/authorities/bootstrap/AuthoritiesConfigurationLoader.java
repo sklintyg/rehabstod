@@ -35,13 +35,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-
 /**
- *  The authorities configuration is read from a YAML file which is
- *  injected into the constructor upon creating an object of this class.
+ * The authorities configuration is read from a YAML file which is
+ * injected into the constructor upon creating an object of this class.
  *
- *  The YAML file is parsed and the resulting configuration can be fetched
- *  by calling the getConfiguration() method.
+ * The YAML file is parsed and the resulting configuration can be fetched
+ * by calling the getConfiguration() method.
  */
 @Component("AuthoritiesConfigurationLoader")
 public class AuthoritiesConfigurationLoader implements InitializingBean {
@@ -49,7 +48,6 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
     private String authoritiesConfigurationFile;
 
     private AuthoritiesConfiguration authoritiesConfiguration;
-
 
     /**
      * Constructor loading the default configuration file authorities.yaml from classpath.
@@ -62,10 +60,10 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
      * Constructor taking a path to the authorities configuration file.
      */
     public AuthoritiesConfigurationLoader(String authoritiesConfigurationFile) {
-        Assert.notNull(authoritiesConfigurationFile, "Illegal argument: authoritiesConfigurationFile cannot be null. Argument must resolve to a configuration file");
+        Assert.notNull(authoritiesConfigurationFile,
+                "Illegal argument: authoritiesConfigurationFile cannot be null. Argument must resolve to a configuration file");
         this.authoritiesConfigurationFile = authoritiesConfigurationFile;
     }
-
 
     // ~ Public scope
     // ======================================================================================================
@@ -73,12 +71,13 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
     /**
      * Invoked by a BeanFactory after it has set all bean properties supplied
      * (and satisfied BeanFactoryAware and ApplicationContextAware).
-     * <p>This method allows the bean instance to perform initialization only
-     * possible when all bean properties have been set and to throw an
-     * exception in the event of misconfiguration.
+     * <p>
+     * This method allows the bean instance to perform initialization only possible when all bean properties have been
+     * set and to throw an exception in the event of misconfiguration.
      *
-     * @throws Exception in the event of misconfiguration (such
-     *                   as failure to set an essential property) or if initialization fails.
+     * @throws Exception
+     *             in the event of misconfiguration (such
+     *             as failure to set an essential property) or if initialization fails.
      */
     @Override
     public void afterPropertiesSet() throws AuthoritiesException {
@@ -94,7 +93,7 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
             path = resource.getURI().getPath();
             authoritiesConfiguration = loadConfiguration(Paths.get(path));
         } catch (IOException ioe) {
-           throw new AuthoritiesException(format("Could not load authorities configuration file %s", path), ioe);
+            throw new AuthoritiesException(format("Could not load authorities configuration file %s", path), ioe);
         }
 
     }
@@ -105,7 +104,6 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
     public AuthoritiesConfiguration getConfiguration() {
         return this.authoritiesConfiguration;
     }
-
 
     // ~ Private scope
     // ======================================================================================================
@@ -123,4 +121,3 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
     }
 
 }
-

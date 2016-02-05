@@ -36,6 +36,7 @@ public class IntygstjanstIntegrationConfiguration {
 
     @Value("${it.service.url}")
     private String itWsUrl;
+
     //
     // @Autowired
     // private ApplicationContext applicationContext;
@@ -58,7 +59,7 @@ public class IntygstjanstIntegrationConfiguration {
     // }
 
     @Bean
-    @Profile(value = {"dev","rhs-it-stub","prod"})
+    @Profile(value = { "dev", "rhs-it-stub", "prod" })
     public ListActiveSickLeavesForCareUnitResponderInterface itIntegrationWebServiceClient() {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(itWsUrl);

@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Created by pebe on 2015-08-19.
  */
-public class Befattningar {
+public final class Befattningar {
 
     public static final String BEFATTNING_NAME = "Befattning HSA";
     public static final String BEFATTNING_OID = "1.2.752.129.2.2.1.4";

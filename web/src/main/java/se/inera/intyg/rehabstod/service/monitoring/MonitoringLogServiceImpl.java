@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.monitoring;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,6 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
     private static final Object SPACE = " ";
     private static final Logger LOG = LoggerFactory.getLogger(MonitoringLogService.class);
 
-
     @Override
     public void logUserLogin(String id, String authenticationScheme) {
         logEvent(MonitoringEvent.USER_LOGIN, HashUtility.hash(id), authenticationScheme);
@@ -42,8 +40,6 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
     public void logUserLogout(String id, String authenticationScheme) {
         logEvent(MonitoringEvent.USER_LOGOUT, HashUtility.hash(id), authenticationScheme);
     }
-
-
 
     private void logEvent(MonitoringEvent logEvent, Object... logMsgArgs) {
         LOG.info(LogMarkers.MONITORING, buildMessage(logEvent), logMsgArgs);
@@ -61,7 +57,7 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
 
         private String message;
 
-        private MonitoringEvent(String msg) {
+        MonitoringEvent(String msg) {
             this.message = msg;
         }
 

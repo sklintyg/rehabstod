@@ -36,7 +36,7 @@ import java.util.List;
 @Service
 public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrationService {
 
-    private static final Logger log = LoggerFactory.getLogger(IntygstjanstIntegrationServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IntygstjanstIntegrationServiceImpl.class);
 
     @Autowired
     private IntygstjanstClientService intygstjanstClientService;
@@ -47,7 +47,7 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
         if (responseType.getResultCode() == ResultCodeEnum.OK) {
             return responseType.getIntygsLista().getIntygsData();
         } else {
-            log.error("An error occured fetching sick leave certificates. Error type: {0}. Error msg: {1}", responseType.getResultCode().name(), responseType.getComment());
+            LOG.error("An error occured fetching sick leave certificates. Error type: {0}. Error msg: {1}", responseType.getResultCode().name(), responseType.getComment());
             throw new IntygstjanstIntegrationException();
         }
 

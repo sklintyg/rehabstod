@@ -40,18 +40,16 @@ import ch.qos.logback.core.Appender;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MonitoringLogServiceImplTest {
-    
+
     private static final String USER_ID = "USER_ID";
     private static final String AUTHENTICATION_SCHEME = "AUTHENTICATION_SCHEME";
-    private static final String HSA_ID = "HSA_ID";
-    private static final Long CONSENT_VERSION = 1L;
-    
+
     @Mock
     private Appender<ILoggingEvent> mockAppender;
 
     @Captor
     private ArgumentCaptor<LoggingEvent> captorLoggingEvent;
-    
+
     MonitoringLogService logService = new MonitoringLogServiceImpl();
 
     @Before
@@ -59,7 +57,7 @@ public class MonitoringLogServiceImplTest {
         final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         logger.addAppender(mockAppender);
     }
-    
+
     @After
     public void teardown() {
         final Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
@@ -69,16 +67,16 @@ public class MonitoringLogServiceImplTest {
     @Test
     public void shouldLogUserLogin() {
         logService.logUserLogin(USER_ID, AUTHENTICATION_SCHEME);
-        verifyLog(Level.INFO, "USER_LOGIN Login user 'e5bb97d1792ff76e360cd8e928b6b9b53bda3e4fe88b026e961c2facf963a361' using scheme 'AUTHENTICATION_SCHEME'");
+        verifyLog(Level.INFO,
+                "USER_LOGIN Login user 'e5bb97d1792ff76e360cd8e928b6b9b53bda3e4fe88b026e961c2facf963a361' using scheme 'AUTHENTICATION_SCHEME'");
     }
 
     @Test
     public void shouldLogUserLogout() {
         logService.logUserLogout(USER_ID, AUTHENTICATION_SCHEME);
-        verifyLog(Level.INFO, "USER_LOGOUT Logout user 'e5bb97d1792ff76e360cd8e928b6b9b53bda3e4fe88b026e961c2facf963a361' using scheme 'AUTHENTICATION_SCHEME'");
+        verifyLog(Level.INFO,
+                "USER_LOGOUT Logout user 'e5bb97d1792ff76e360cd8e928b6b9b53bda3e4fe88b026e961c2facf963a361' using scheme 'AUTHENTICATION_SCHEME'");
     }
-
-
 
     private void verifyLog(Level logLevel, String logMessage) {
         // Verify and capture logging interaction
@@ -87,7 +85,7 @@ public class MonitoringLogServiceImplTest {
 
         // Verify log
         assertThat(loggingEvent.getLevel(), equalTo(logLevel));
-        assertThat(loggingEvent.getFormattedMessage(), 
+        assertThat(loggingEvent.getFormattedMessage(),
                 equalTo(logMessage));
     }
 }

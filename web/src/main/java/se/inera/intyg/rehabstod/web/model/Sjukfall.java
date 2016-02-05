@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class Sjukfall {
 
+    private static final int HASH_SEED = 31;
     private Patient patient;
     private Diagnos diagnos;
 
@@ -41,10 +42,8 @@ public class Sjukfall {
 
     private String lakare;
 
-
     public Sjukfall() {
     }
-
 
     public Patient getPatient() {
         return patient;
@@ -128,20 +127,42 @@ public class Sjukfall {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Sjukfall sjukfall = (Sjukfall) o;
 
-        if (dagar != sjukfall.dagar) return false;
-        if (intyg != sjukfall.intyg) return false;
-        if (aktivGrad != sjukfall.aktivGrad) return false;
-        if (!patient.equals(sjukfall.patient)) return false;
-        if (!diagnos.equals(sjukfall.diagnos)) return false;
-        if (!startVG.equals(sjukfall.startVG)) return false;
-        if (!startVE.equals(sjukfall.startVE)) return false;
-        if (!slut.equals(sjukfall.slut)) return false;
-        if (!grader.equals(sjukfall.grader)) return false;
+        if (dagar != sjukfall.dagar) {
+            return false;
+        }
+        if (intyg != sjukfall.intyg) {
+            return false;
+        }
+        if (aktivGrad != sjukfall.aktivGrad) {
+            return false;
+        }
+        if (!patient.equals(sjukfall.patient)) {
+            return false;
+        }
+        if (!diagnos.equals(sjukfall.diagnos)) {
+            return false;
+        }
+        if (!startVG.equals(sjukfall.startVG)) {
+            return false;
+        }
+        if (!startVE.equals(sjukfall.startVE)) {
+            return false;
+        }
+        if (!slut.equals(sjukfall.slut)) {
+            return false;
+        }
+        if (!grader.equals(sjukfall.grader)) {
+            return false;
+        }
         return lakare.equals(sjukfall.lakare);
 
     }
@@ -149,15 +170,15 @@ public class Sjukfall {
     @Override
     public int hashCode() {
         int result = patient.hashCode();
-        result = 31 * result + diagnos.hashCode();
-        result = 31 * result + startVG.hashCode();
-        result = 31 * result + startVE.hashCode();
-        result = 31 * result + slut.hashCode();
-        result = 31 * result + dagar;
-        result = 31 * result + intyg;
-        result = 31 * result + grader.hashCode();
-        result = 31 * result + aktivGrad;
-        result = 31 * result + lakare.hashCode();
+        result = HASH_SEED * result + diagnos.hashCode();
+        result = HASH_SEED * result + startVG.hashCode();
+        result = HASH_SEED * result + startVE.hashCode();
+        result = HASH_SEED * result + slut.hashCode();
+        result = HASH_SEED * result + dagar;
+        result = HASH_SEED * result + intyg;
+        result = HASH_SEED * result + grader.hashCode();
+        result = HASH_SEED * result + aktivGrad;
+        result = HASH_SEED * result + lakare.hashCode();
         return result;
     }
 }

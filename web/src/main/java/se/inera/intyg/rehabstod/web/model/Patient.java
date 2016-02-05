@@ -23,6 +23,7 @@ package se.inera.intyg.rehabstod.web.model;
  */
 public class Patient {
 
+    private static final int HASH_SEED = 31;
     private String id;
     private String namn;
     private String kon;
@@ -66,13 +67,21 @@ public class Patient {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Patient patient = (Patient) o;
 
-        if (alder != patient.alder) return false;
-        if (!id.equals(patient.id)) return false;
+        if (alder != patient.alder) {
+            return false;
+        }
+        if (!id.equals(patient.id)) {
+            return false;
+        }
         return namn.equals(patient.namn);
 
     }
@@ -80,8 +89,8 @@ public class Patient {
     @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 31 * result + namn.hashCode();
-        result = 31 * result + alder;
+        result = HASH_SEED * result + namn.hashCode();
+        result = HASH_SEED * result + alder;
         return result;
     }
 }

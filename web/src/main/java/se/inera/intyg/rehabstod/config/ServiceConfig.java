@@ -60,7 +60,7 @@ public class ServiceConfig {
     public PingForConfigurationResponderImpl pingForConfigurationResponder() {
         return new PingForConfigurationResponderImpl();
     }
-    
+
     @Bean
     public EndpointImpl pingForConfigurationEndpoint() {
         Bus bus = (Bus) applicationContext.getBean(Bus.DEFAULT_BUS_ID);
@@ -69,6 +69,5 @@ public class ServiceConfig {
         endpoint.publish("/ping-for-configuration");
         return endpoint;
     }
-
 
 }
