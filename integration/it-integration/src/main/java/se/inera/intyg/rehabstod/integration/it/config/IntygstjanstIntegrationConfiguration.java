@@ -18,14 +18,9 @@
  */
 package se.inera.intyg.rehabstod.integration.it.config;
 
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.Profile;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 
 @Configuration
 @ComponentScan({
