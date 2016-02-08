@@ -1,7 +1,7 @@
 /**
  * Enable tooltips for other components than wcFields
  */
-angular.module('rehabstodApp').directive('ppTooltip',
+angular.module('rehabstodApp').directive('rhsTooltip',
     [ 'messageService',
         function(messageService) {
             'use strict';
@@ -17,6 +17,6 @@ angular.module('rehabstodApp').directive('ppTooltip',
                         return messageService.getProperty(key);
                     };
                 },
-                templateUrl: 'components/commonDirectives/ppTooltip/ppTooltip.directive.html'
+                templateUrl: 'components/commonDirectives/rhsTooltip/rhsTooltip.directive.html'
             };
         }]);

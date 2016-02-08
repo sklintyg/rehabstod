@@ -14,6 +14,11 @@
     color: #fff;
     padding: 7px 5px;
     font-weight: normal;
+    cursor: pointer;
+
+    span {
+      vertical-align: top;
+    }
   }
 
   .searchresult-table-row > td {
