@@ -16,15 +16,15 @@
     <thead>
     <tr>
       <th class="searchresult-table-head">#</th>
-      <th class="searchresult-table-head" st-sort="patient.id">Personnummer</th>
-      <th class="searchresult-table-head" st-sort="patient.namn">Namn</th>
-      <th class="searchresult-table-head" st-sort="diagnos.original">Diagnos</th>
-      <th class="searchresult-table-head" st-sort="vgstart">Startdatum vårdgivare</th>
-      <th class="searchresult-table-head" st-sort="vestart" st-sort-default="true">Startdatum vårdenhet</th>
-      <th class="searchresult-table-head" st-sort="slut">Slutdatum</th>
-      <th class="searchresult-table-head" st-sort="dagar">Sjukskrivningslängd</th>
-      <th class="searchresult-table-head" st-sort="aktivgrad">Grad</th>
-      <th class="searchresult-table-head" st-sort="lakare">Läkare</th>
+      <th class="searchresult-table-head" st-sort="patient.id"><span message key="label.table.column.pnr"></span></th>
+      <th class="searchresult-table-head" st-sort="patient.namn"><span message key="label.table.column.namn"></span></th>
+      <th class="searchresult-table-head" st-sort="diagnos.original"><span message key="label.table.column.diagnos"></span></th>
+      <th class="searchresult-table-head" st-sort="vgstart"><span message key="label.table.column.startvg"></span></th>
+      <th class="searchresult-table-head" st-sort="vestart" st-sort-default="true"><span message key="label.table.column.startve"></span></th>
+      <th class="searchresult-table-head" st-sort="slut"><span message key="label.table.column.slut"></span></th>
+      <th class="searchresult-table-head" st-sort="dagar"><span message key="label.table.column.langd"></span></th>
+      <th class="searchresult-table-head" st-sort="aktivgrad"><span message key="label.table.column.grad"></span></th>
+      <th class="searchresult-table-head" st-sort="lakare"><span message key="label.table.column.lakare"></span></th>
     </tr>
     </thead>
     <tbody>
@@ -49,7 +49,7 @@
     <tfoot>
     <tr>
       <td colspan="11" class="text-center">
-        <div st-pagination="" st-page-change="pageChangedFn(newPage)"  st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
+        <div st-pagination="" st-page-change="pageChangedFn(newPage)"  st-items-by-page="itemsByPage" st-displayed-pages="8" st-template="app/sjukfall/searchresults/searchresults.pagination.html"></div>
       </td>
     </tr>
     </tfoot>
