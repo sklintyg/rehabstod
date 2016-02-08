@@ -18,15 +18,18 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by mango on 19/11/15.
  */
-public class Role {
+public class Role implements Serializable {
+
+    private static final long serialVersionUID = 9169139275288751142L;
 
     @JsonProperty
     private String name;

@@ -20,10 +20,14 @@ package se.inera.intyg.rehabstod.auth.authorities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+
 /**
  * Created by Magnus Ekstrand on 19/11/15.
  */
-public class TitleCode {
+public class TitleCode implements Serializable {
+
+    private static final long serialVersionUID = -1634959365579825130L;
 
     @JsonProperty
     private String titleCode;

@@ -18,15 +18,18 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by Magnus Ekstrand on 19/11/15.
  */
-public class RequestOrigin {
+public class RequestOrigin implements Serializable {
+
+    private static final long serialVersionUID = -8806470396439602180L;
 
     @JsonProperty
     private String name;
