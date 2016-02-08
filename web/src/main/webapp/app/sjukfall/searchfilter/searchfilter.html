@@ -12,8 +12,7 @@
             <div class="form-group">
               <label for="lakare" class="control-label">Välj läkare</label>
 
-              <select id="lakare" class="form-control" name="lakare"
-                      ng-model="filter.lakare">
+              <select id="lakare" class="form-control" name="lakare" ng-model="filter.lakare">
                 <option value="">Alla valda</option>
                 <option ng-repeat="option in lakare | orderBy:''" value="{{option}}">{{option}}</option>
               </select>
@@ -22,12 +21,10 @@
 
           <div class="col-sm-5">
             <div class="form-group">
-              <label for="diagnos" class="control-label">Välj diagnoser</label>
-              <select id="diagnos" class="form-control" name="diagnos"
-                      ng-model="filter.diagnos">
-                <option value="">Alla valda</option>
-                <option ng-repeat="option in diagnos | orderBy:''" value="{{option}}">{{option}}</option>
-              </select>
+              <label class="control-label">Välj diagnoser</label>
+              <div>
+                <rhs-multi-select items-model="diagnosGruppModel" none-selected-title="Alla diagnoser"/>
+              </div>
             </div>
           </div>
         </div>
