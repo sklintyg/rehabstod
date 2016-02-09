@@ -1,11 +1,19 @@
-angular.module('rehabstodApp').factory('DiagnosGruppModel',
+angular.module('rehabstodApp').factory('DiagnosKapitelModel',
     function() {
         'use strict';
 
         var data = [];
 
-        function _reset() {
+        function _init() {
             data = [];
+            return data;
+        }
+
+        function _reset() {
+            angular.forEach(data, function(value) {
+                value.selected = false;
+                value.disabled = false;
+            });
             return data;
         }
 
@@ -13,10 +21,11 @@ angular.module('rehabstodApp').factory('DiagnosGruppModel',
 
             reset: _reset,
 
-            set: function(diagnosGrupper) {
-                _reset();
-                angular.forEach(diagnosGrupper, function(value) {
+            set: function(diagnosKapitel) {
+                _init();
+                angular.forEach(diagnosKapitel, function(value) {
                     data.push({
+                        _definition: value,
                         id: value.id,
                         displayValue: value.id + ': ' + value.name,
                         selected: false,
@@ -32,7 +41,7 @@ angular.module('rehabstodApp').factory('DiagnosGruppModel',
                 var selected = [];
                 angular.forEach(data, function(value) {
                     if (value.selected) {
-                        selected.push(value.id);
+                        selected.push(value);
                     }
                 });
                 return selected;

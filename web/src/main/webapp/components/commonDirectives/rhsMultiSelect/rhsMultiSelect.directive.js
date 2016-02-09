@@ -37,8 +37,10 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
                     var nrItemsSelected = $scope.itemsModel.getSelected().length;
                     if (nrItemsSelected === 0) {
                         return $scope.noneSelectedTitle;
+                    } else if (nrItemsSelected === 1) {
+                        return $scope.itemsModel.getSelected()[0].displayValue;
                     } else {
-                        return nrItemsSelected + ' ' + (nrItemsSelected > 1 ? 'valda' : 'vald');
+                        return nrItemsSelected + ' valda';
                     }
                 };
 

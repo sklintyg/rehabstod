@@ -16,23 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.web.controller.api.dto;
-
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-
-import java.util.List;
+package se.inera.intyg.rehabstod.service.diagnos.dto;
 
 /**
- * Created by marced on 2016-01-18.
+ * Created by marced on 08/02/16.
  */
-public class GetConfigResponse {
-    private List<DiagnosKapitel> diagnosKapitelList;
+class DiagnosKategori {
+    private char letter;
+    private int number;
 
-    public GetConfigResponse(List<DiagnosKapitel> diagnosKapitelList) {
-        this.diagnosKapitelList = diagnosKapitelList;
+    DiagnosKategori(char letter, int number) {
+        this.letter = letter;
+        this.number = number;
     }
 
-    public List<DiagnosKapitel> getDiagnosKapitelList() {
-        return diagnosKapitelList;
+    public char getLetter() {
+        return letter;
     }
+
+    public int getNumber() {
+        return number;
+    }
+
 }

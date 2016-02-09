@@ -1,5 +1,5 @@
 angular.module('rehabstodApp')
-    .controller('SearchFilterCtrl', function($scope, SjukfallFilterViewState, SjukfallModel, DiagnosGruppModel) {
+    .controller('SearchFilterCtrl', function($scope, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, APP_CONFIG) {
         'use strict';
 
         $scope.showSearchFilter = true;
@@ -9,15 +9,9 @@ angular.module('rehabstodApp')
             $scope.lakare = unigeValues(value, 'lakare');
         }, true);
 
-        var diagnosJsonTemp = [
-            {id: 'A00-B99', name: 'Vissa infektionssjukdomar och parasitsjukdomar'},
-            {id: 'C00-D48', name: 'Tumörer- disabled'},
-            {id: 'D50-D89', name: 'Sjukdomar i blod och blodbildande organ samt vissa rubbningar i immunsystemet'},
-            {id: 'E00-E90', name: 'Endokrina sjukdomar, nutritionsrubbningar och ämnesomsättningssjukdomar'}
-        ];
-        DiagnosGruppModel.set(diagnosJsonTemp);
+        DiagnosKapitelModel.set(APP_CONFIG.diagnosKapitelList);
+        $scope.diagnosKapitelModel =  DiagnosKapitelModel;
 
-        $scope.diagnosGruppModel =  DiagnosGruppModel;
         $scope.sjukskrivningslangd = [1, 366];
 
         $scope.filter = SjukfallFilterViewState;

@@ -7,29 +7,29 @@ describe('Directive: RhsMultiSelect', function() {
 
     var $compile;
     var $scope;
-    var DiagnosGruppModel;
+    var DiagnosKapitelModel;
     var testJsonData = [
-        {id: 'A00-B99', name: 'Vissa infektionssjukdomar och parasitsjukdomar'},
-        {id: 'C00-D48', name: 'Tumörer- disabled'}
+        {id: 'A00-B99', name: 'Namn 1', displayValue: 'displayValue1'},
+        {id: 'C00-D48', name: 'Namn 2', displayValue: 'displayValue2'}
     ];
     var element;
     var elementScope;
 
     // Store references to $rootScope and $compile
     // so they are available to all tests in this describe block
-    beforeEach(inject(function(_$compile_, _DiagnosGruppModel_, $rootScope) {
+    beforeEach(inject(function(_$compile_, _DiagnosKapitelModel_, $rootScope) {
         // The injector unwraps the underscores (_) from around the parameter names when matching
         $compile = _$compile_;
         $scope = $rootScope.$new();
-        DiagnosGruppModel = _DiagnosGruppModel_;
+        DiagnosKapitelModel = _DiagnosKapitelModel_;
 
         //Setup common prerequisites for all tests
-        DiagnosGruppModel.set(testJsonData);
+        DiagnosKapitelModel.set(testJsonData);
 
-        $scope.diagnosGruppModel = DiagnosGruppModel;
+        $scope.diagnosKapitelModel = DiagnosKapitelModel;
 
         element =
-            $compile(' <rhs-multi-select items-model="diagnosGruppModel" none-selected-title="inget-valt-titel"/>')(
+            $compile(' <rhs-multi-select items-model="diagnosKapitelModel" none-selected-title="inget-valt-titel"/>')(
                 $scope);
         $scope.$digest();
 
@@ -51,7 +51,7 @@ describe('Directive: RhsMultiSelect', function() {
         elementScope.toggleItem(elementScope.items[0]);
 
         //Assert
-        expect(elementScope.getTitle()).toEqual('1 vald');
+        expect(elementScope.getTitle()).toEqual(elementScope.items[0].displayValue);
 
     });
 
