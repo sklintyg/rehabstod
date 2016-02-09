@@ -26,13 +26,19 @@ var ppMessages = {
         'label.start.header': 'Rehabstöd startsida',
 
 
+
+        //
+        'label.gender.male': 'Man',
+        'label.gender.female': 'Kvinna',
+        'label.gender.undefined': '-',
+
         // Table
         'label.table.column.pnr': 'Personnummer',
         'label.table.column.namn': 'Namn',
+        'label.table.column.kon': 'Kön',
         'label.table.column.diagnos': 'Diagnos',
         'label.table.column.diagnos.help': 'Huvuddiagnosen i det intyg som är giltigt just nu. För muspekaren över koden för att se vilken diagnos den motsvarar.',
-        'label.table.column.startvg': 'Startdatum vårdgivare',
-        'label.table.column.startve': 'Startdatum vårdenhet',
+        'label.table.column.startve': 'Startdatum',
         'label.table.column.slut': 'Slutdatum',
         'label.table.column.slut.help': 'Slutdatum för det intyg som är giltigt just nu, dvs. det datum då sjukskrivningen beräknas avslutas om den inte förlängs.',
         'label.table.column.grad': 'Grad',
