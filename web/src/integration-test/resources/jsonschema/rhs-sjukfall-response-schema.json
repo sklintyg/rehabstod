@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Schema for sjukfall as resturned from e.g /sjukfall",
+
+  "items": {
+    "type" : "object",
+    "properties": {
+      "patient": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kon": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "alder": {
+            "type": "integer"
+          },
+          "namn": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "namn",
+          "alder",
+          "kon"
+        ],
+        "type": "object"
+      },
+      "diagnos": {
+        "additionalProperties": false,
+        "properties": {
+          "grupp": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "kod": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "original": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "grupp",
+          "original",
+          "kod"
+        ],
+        "type": "object"
+      },
+      "startVG": {
+        "type": "string"
+      },
+      "startVE": {
+        "type": "string"
+      },
+      "slut": {
+        "type": "string"
+      },
+      "dagar": {
+        "type": "integer"
+      },
+      "intyg": {
+        "type": "integer"
+      },
+      "grader": {
+        "minItems": 0,
+        "type": "array"
+      },
+      "aktivGrad": {
+        "type": "integer"
+      },
+      "lakare": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "patient",
+      "diagnos",
+      "startVG",
+      "startVE",
+      "slut",
+      "dagar",
+      "intyg",
+      "grader",
+      "aktivGrad",
+      "lakare"
+    ]
+  },
+  "type": "array",
+  "minItems": 0,
+  "additionalItems": false
+}
