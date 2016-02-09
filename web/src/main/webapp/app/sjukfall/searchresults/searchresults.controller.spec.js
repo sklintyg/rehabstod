@@ -31,25 +31,4 @@ describe('Controller: SearchResultsCtrl', function () {
             expect(scope.displayedCollection).toEqual(expectArray);
         });
     });
-
-    it('should update row number when table page changes', function($timeout) {
-        expect(scope.displayedCollection).toEqual([]);
-
-        SjukfallModel.set([{name: 'first'}, {name: 'next'}]);
-
-        scope.itemsByPage = 1;
-
-        var expectArray = [{name: 'first', number: 1}];
-
-        $timeout(function() {
-            expect(scope.displayedCollection).toEqual(expectArray);
-
-
-            scope.pageChangedFn(2);
-
-            expectArray = [{name: 'next', number: 2}];
-            expect(scope.displayedCollection).toEqual(expectArray);
-        });
-
-    });
 });

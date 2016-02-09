@@ -4,25 +4,14 @@ angular.module('rehabstodApp')
 
 
         $scope.filter = SjukfallFilterViewState;
-
         $scope.model = SjukfallModel;
-
-        $scope.itemsByPage = 50;
-
         $scope.displayedCollection = [].concat($scope.model.get());
 
-        $scope.currentPage = 1;
 
         $scope.$watchCollection('displayedCollection', updateRowNumber);
 
-        $scope.pageChangedFn = function(newPage) {
-            $scope.currentPage = newPage;
-
-            updateRowNumber();
-        };
-
         function updateRowNumber() {
-            var number = ($scope.currentPage - 1) * $scope.itemsByPage + 1;
+            var number = 1;
             angular.forEach($scope.displayedCollection, function(value) {
                 value.number = number++;
             });
