@@ -24,27 +24,30 @@ package se.inera.intyg.rehabstod.web.model;
 public class Diagnos {
 
     private static final int HASH_SEED = 31;
-    private String original;
-    private String grupp;
+
+    private String intygsVarde;
+    private String kapitel;
     private String kod;
+    private String beskrivning;
+
 
     public Diagnos() {
     }
 
-    public String getOriginal() {
-        return original;
+    public String getIntygsVarde() {
+        return intygsVarde;
     }
 
-    public void setOriginal(String original) {
-        this.original = original;
+    public void setIntygsVarde(String intygsVarde) {
+        this.intygsVarde = intygsVarde;
     }
 
-    public String getGrupp() {
-        return grupp;
+    public String getKapitel() {
+        return kapitel;
     }
 
-    public void setGrupp(String grupp) {
-        this.grupp = grupp;
+    public void setKapitel(String kapitel) {
+        this.kapitel = kapitel;
     }
 
     public String getKod() {
@@ -53,6 +56,14 @@ public class Diagnos {
 
     public void setKod(String kod) {
         this.kod = kod;
+    }
+
+    public String getBeskrivning() {
+        return beskrivning;
+    }
+
+    public void setBeskrivning(String beskrivning) {
+        this.beskrivning = beskrivning;
     }
 
     @Override
@@ -65,10 +76,10 @@ public class Diagnos {
         }
         Diagnos diagnos = (Diagnos) o;
 
-        if (!original.equals(diagnos.original)) {
+        if (!intygsVarde.equals(diagnos.intygsVarde)) {
             return false;
         }
-        if (!grupp.equals(diagnos.grupp)) {
+        if (!kapitel.equals(diagnos.kapitel)) {
             return false;
         }
         return kod.equals(diagnos.kod);
@@ -77,8 +88,8 @@ public class Diagnos {
 
     @Override
     public int hashCode() {
-        int result = original.hashCode();
-        result = HASH_SEED * result + grupp.hashCode();
+        int result = intygsVarde.hashCode();
+        result = HASH_SEED * result + kapitel.hashCode();
         result = HASH_SEED * result + kod.hashCode();
         return result;
     }

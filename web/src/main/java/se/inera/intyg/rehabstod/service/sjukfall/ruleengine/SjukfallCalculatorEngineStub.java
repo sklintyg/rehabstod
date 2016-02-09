@@ -76,8 +76,8 @@ public class SjukfallCalculatorEngineStub extends SjukfallCalculatorEngine {
 
                 // Diagnos
                 Diagnos diagnos = new Diagnos();
-                diagnos.setOriginal(intyg.getDiagnos().getKod());
-                diagnos.setGrupp(intyg.getDiagnos().getGrupp());
+                diagnos.setIntygsVarde(intyg.getDiagnos().getKod());
+                diagnos.setKapitel(intyg.getDiagnos().getGrupp());
                 diagnos.setKod(intyg.getDiagnos().getKod());
                 fall.setDiagnos(diagnos);
 
