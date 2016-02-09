@@ -73,6 +73,9 @@
         },
         "end": {
           "type": "null"
+        },
+        "vardgivareHsaId" : {
+          "type" : ["string", "null"]
         }
       },
       "type": "object"
