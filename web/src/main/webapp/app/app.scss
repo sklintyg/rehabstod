@@ -24,8 +24,10 @@ $font-size-h3: 16px;
 $blue-color: #008391;
 
 $icon-font-path: '../bower_components/bootstrap-sass/assets/fonts/bootstrap/';
+$fa-font-path: '../bower_components/font-awesome/fonts';
 
 @import '../bower_components/bootstrap-sass/assets/stylesheets/bootstrap.scss';
+@import '../bower_components/font-awesome/scss/font-awesome.scss';
 
 /**
  * App-wide Styles
