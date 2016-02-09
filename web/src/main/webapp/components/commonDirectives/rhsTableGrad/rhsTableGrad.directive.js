@@ -1,5 +1,5 @@
 angular.module('rehabstodApp').directive('rhsTableGrad',
-    ['$timeout',
+    [
         function() {
             'use strict';
 
