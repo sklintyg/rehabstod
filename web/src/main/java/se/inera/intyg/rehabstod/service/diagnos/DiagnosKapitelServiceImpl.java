@@ -24,6 +24,7 @@ package se.inera.intyg.rehabstod.service.diagnos;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -33,10 +34,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 
 @Component
 public class DiagnosKapitelServiceImpl implements DiagnosKapitelService {
     private static final Logger LOG = LoggerFactory.getLogger(DiagnosKapitelServiceImpl.class);
+
+
     private List<DiagnosKapitel> diagnosKapitelList;
 
     @Autowired
@@ -46,6 +50,7 @@ public class DiagnosKapitelServiceImpl implements DiagnosKapitelService {
     public void init() {
         try {
             diagnosKapitelList = diagnosKapitelLoader.loadDiagnosKapitel();
+            diagnosKapitelList.add(OGILTIGA_DIAGNOSKODER_KAPITEL);
         } catch (IOException e) {
             LOG.error("Failed to load diagnosKapitelList!");
             throw new RuntimeException(e);
@@ -54,8 +59,17 @@ public class DiagnosKapitelServiceImpl implements DiagnosKapitelService {
     }
 
     @Override
-    public List<DiagnosKapitel> getDiagnosKapitel() {
+    public List<DiagnosKapitel> getDiagnosKapitelList() {
         return diagnosKapitelList;
+    }
+
+    @Override
+    public DiagnosKapitel getDiagnosKapitel(String diagnosKod) {
+        return getDiagnosKapitelForDiagnosKategori(DiagnosKategori.extractFromString(diagnosKod));
+    }
+
+    private DiagnosKapitel getDiagnosKapitelForDiagnosKategori(Optional<DiagnosKategori> diagnosKategori) {
+        return this.diagnosKapitelList.stream().filter(dk -> dk.includes(diagnosKategori)).findFirst().orElse(OGILTIGA_DIAGNOSKODER_KAPITEL);
     }
 
 }

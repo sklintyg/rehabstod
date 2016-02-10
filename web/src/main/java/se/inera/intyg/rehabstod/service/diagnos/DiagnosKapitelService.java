@@ -18,14 +18,35 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-
 import java.util.List;
+
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 
 /**
  * Created by marced on 08/02/16.
  */
 
 public interface DiagnosKapitelService {
-    List<DiagnosKapitel> getDiagnosKapitel();
+    DiagnosKapitel OGILTIGA_DIAGNOSKODER_KAPITEL = new DiagnosKapitel(
+            new DiagnosKategori(' ', 0),
+            new DiagnosKategori(' ', 0),
+            "Utan giltig diagnoskod");
+
+    /**
+     * Get list of all defined {@link DiagnosKapitel}.
+     *
+     * @return
+     */
+    List<DiagnosKapitel> getDiagnosKapitelList();
+
+    /**
+     * Try to match a diagnoskod string to a DiagnosKapitel.
+     * Default to a unknown kapitel if no other match.
+     *
+     * @param diagnosKod
+     * @return
+     */
+    DiagnosKapitel getDiagnosKapitel(String diagnosKod);
+
 }

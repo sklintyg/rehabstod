@@ -17,6 +17,10 @@ angular.module('rehabstodApp').factory('DiagnosKapitelModel',
             return data;
         }
 
+        function _createDisplayValue(kapitel) {
+            return kapitel.id + ((kapitel.id !== '') ? ': ' : '') + kapitel.name;
+        }
+
         return {
 
             reset: _reset,
@@ -27,7 +31,7 @@ angular.module('rehabstodApp').factory('DiagnosKapitelModel',
                     data.push({
                         _definition: value,
                         id: value.id,
-                        displayValue: value.id + ': ' + value.name,
+                        displayValue: _createDisplayValue(value),
                         selected: false,
                         disabled: false
                     });

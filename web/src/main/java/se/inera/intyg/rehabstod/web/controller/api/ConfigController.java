@@ -37,6 +37,6 @@ public class ConfigController {
 
     @RequestMapping(value = "")
     public GetConfigResponse getConfig() {
-        return new GetConfigResponse(diagnosKapitelService.getDiagnosKapitel());
+        return new GetConfigResponse(diagnosKapitelService.getDiagnosKapitelList());
     }
 }
