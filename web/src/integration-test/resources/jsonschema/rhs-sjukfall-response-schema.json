@@ -35,7 +35,7 @@
       "diagnos": {
         "additionalProperties": false,
         "properties": {
-          "grupp": {
+          "kapitel": {
             "type": [
               "string",
               "null"
@@ -47,14 +47,21 @@
               "null"
             ]
           },
-          "original": {
+          "intygsVarde": {
             "type": "string"
+          },
+          "beskrivning": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "required": [
-          "grupp",
-          "original",
-          "kod"
+          "kapitel",
+          "intygsVarde",
+          "kod",
+          "beskrivning"
         ],
         "type": "object"
       },
