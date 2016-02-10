@@ -59,10 +59,12 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private Queue<Patient> seededPatients = new LinkedList<>();
 
     private Enhet enhet;
-    private HosPersonal hosPerson;
 
     private int currentDiagnosIndex = 0;
     private List<Diagnos> diagnosList = new ArrayList<>();
+
+    private int currentHosPersonIndex = 0;
+    private List<HosPersonal> hosPersonList = new ArrayList<>();
 
     @Autowired
     private PersonnummerLoader personnummerLoader;
@@ -96,6 +98,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         List<IntygsData> intygsDataList = new ArrayList<>();
         for (int a = 0; a < numberOfPatients; a++) {
             Patient patient = nextPatient();
+            HosPersonal hosPerson = nextHosPerson();
             for (int b = 0; b < intygPerPatient; b++) {
                 IntygsData intygsData = new IntygsData();
                 intygsData.setPatient(patient);
@@ -115,6 +118,12 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         return intygsDataList;
     }
 
+    private HosPersonal nextHosPerson() {
+        if (currentHosPersonIndex > hosPersonList.size() - 1) {
+            currentHosPersonIndex = 0;
+        }
+        return hosPersonList.get(currentHosPersonIndex++);
+    }
 
 
     private List<Formaga> getDefaultSjukskrivningsGrader() {
@@ -178,27 +187,22 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         Diagnos d1 = new Diagnos();
         d1.setKod("M16");
         d1.setText("Höftledsartros");
-        d1.setGrupp("Grupp 1");
+        d1.setGrupp("M00-M99");
 
         Diagnos d2 = new Diagnos();
         d2.setKod("J21");
         d2.setText("Akut bronkiolit (katarr i de små luftvägarna)");
-        d2.setGrupp("Grupp 2");
+        d2.setGrupp("J00-J99");
 
         Diagnos d3 = new Diagnos();
         d3.setKod("J11");
         d3.setText("Influensa, virus ej identifierat");
-        d3.setGrupp("Grupp 2");
-
-        Diagnos d4 = new Diagnos();
-        d4.setKod("A31");
-        d4.setText("Sjukdomar orsakade av andra mykobakterier");
-        d4.setGrupp("Grupp 3");
+        d3.setGrupp("J00-J99");
 
         diagnosList.add(d1);
         diagnosList.add(d2);
         diagnosList.add(d3);
-        diagnosList.add(d4);
+
     }
 
     private void initEnhet() {
@@ -210,11 +214,30 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     }
 
     private void initHoSPerson() {
-        hosPerson = new HosPersonal();
-        hosPerson.setEnhet(enhet);
-        hosPerson.setFullstandigtNamn("Jan Nilsson");
-        HsaId hsaId = new HsaId();
-        hsaId.setExtension("IFV1239877878-1049");
-        hosPerson.setPersonalId(hsaId);
+
+        HosPersonal hosPerson1 = new HosPersonal();
+        hosPerson1.setEnhet(enhet);
+        hosPerson1.setFullstandigtNamn("Jan Nilsson");
+        HsaId hsaId1 = new HsaId();
+        hsaId1.setExtension("IFV1239877878-1049");
+        hosPerson1.setPersonalId(hsaId1);
+
+        HosPersonal hosPerson2 = new HosPersonal();
+        hosPerson2.setEnhet(enhet);
+        hosPerson2.setFullstandigtNamn("Per Karlsson");
+        HsaId hsaId2 = new HsaId();
+        hsaId2.setExtension("IFV1239877878-1050");
+        hosPerson2.setPersonalId(hsaId2);
+
+        HosPersonal hosPerson3 = new HosPersonal();
+        hosPerson3.setEnhet(enhet);
+        hosPerson3.setFullstandigtNamn("Nina von Döbel");
+        HsaId hsaId3 = new HsaId();
+        hsaId3.setExtension("IFV1239877878-1050");
+        hosPerson3.setPersonalId(hsaId3);
+
+        hosPersonList.add(hosPerson1);
+        hosPersonList.add(hosPerson2);
+        hosPersonList.add(hosPerson3);
     }
 }
