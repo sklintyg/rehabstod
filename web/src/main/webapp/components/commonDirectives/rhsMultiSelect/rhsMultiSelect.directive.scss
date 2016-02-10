@@ -9,6 +9,9 @@
 
   a.rhs-multi-select-link {
     padding-left: 0px;
+    padding-right: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .rhs-multi-select-btn {
@@ -32,6 +35,24 @@
       right: 10px;
       top: 45%;
     }
+  }
+}
+
+@media (max-width: $screen-xs-max) {
+  .rhs-multi-select ul {
+    width: 100%;
+  }
+}
+
+@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+  .rhs-multi-select ul {
+    width: 200%;
+  }
+}
+
+@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
+  .rhs-multi-select ul {
+    width: 200%;
   }
 }
 
