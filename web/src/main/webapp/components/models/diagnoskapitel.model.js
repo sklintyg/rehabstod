@@ -49,6 +49,16 @@ angular.module('rehabstodApp').factory('DiagnosKapitelModel',
                     }
                 });
                 return selected;
+            },
+            setActivDiagnosKapitelIdlist: function(activeKapitelIds) {
+                if (activeKapitelIds.length > 0) {
+                    angular.forEach(data, function(kapitel) {
+                        kapitel.disabled = activeKapitelIds.indexOf(kapitel.id) === -1;
+                        if (kapitel.disabled) {
+                            kapitel.selected = false;
+                        }
+                    });
+                }
             }
         };
     }

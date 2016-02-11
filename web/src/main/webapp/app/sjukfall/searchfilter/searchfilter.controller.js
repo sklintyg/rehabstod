@@ -1,5 +1,5 @@
 angular.module('rehabstodApp')
-    .controller('SearchFilterCtrl', function($scope, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, APP_CONFIG) {
+    .controller('SearchFilterCtrl', function($scope, $filter, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, APP_CONFIG) {
         'use strict';
 
         $scope.showSearchFilter = true;
@@ -7,6 +7,9 @@ angular.module('rehabstodApp')
 
         $scope.$watch('model.get()', function(value) {
             $scope.lakare = unigeValues(value, 'lakare');
+            var uniqueKapitel = $filter('rhsUnique')(value, 'diagnos.kapitel');
+            $scope.diagnosKapitelModel.setActivDiagnosKapitelIdlist(uniqueKapitel);
+
         }, true);
 
         DiagnosKapitelModel.set(APP_CONFIG.diagnosKapitelList);
