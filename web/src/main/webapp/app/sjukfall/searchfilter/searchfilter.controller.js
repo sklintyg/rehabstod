@@ -1,19 +1,21 @@
 angular.module('rehabstodApp')
-    .controller('SearchFilterCtrl', function($scope, $filter, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, APP_CONFIG) {
+    .controller('SearchFilterCtrl', function($scope, $filter, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel, APP_CONFIG) {
         'use strict';
+
+        DiagnosKapitelModel.set(APP_CONFIG.diagnosKapitelList);
+        $scope.diagnosKapitelModel =  DiagnosKapitelModel;
+        $scope.lakareModel = LakareModel;
+
 
         $scope.showSearchFilter = true;
         $scope.model = SjukfallModel;
 
         $scope.$watch('model.get()', function(value) {
-            $scope.lakare = unigeValues(value, 'lakare');
-            var uniqueKapitel = $filter('rhsUnique')(value, 'diagnos.kapitel');
-            $scope.diagnosKapitelModel.setActivDiagnosKapitelIdlist(uniqueKapitel);
+            $scope.lakareModel.set($filter('rhsUnique')(value, 'lakare'));
+            $scope.diagnosKapitelModel.setActivDiagnosKapitelIdlist($filter('rhsUnique')(value, 'diagnos.kapitel'));
 
         }, true);
 
-        DiagnosKapitelModel.set(APP_CONFIG.diagnosKapitelList);
-        $scope.diagnosKapitelModel =  DiagnosKapitelModel;
 
         $scope.sjukskrivningslangd = [1, 366];
 
@@ -25,18 +27,6 @@ angular.module('rehabstodApp')
             $scope.filter.sjukskrivningslangd.high = val[1] < 366 ? val[1] : null;
 
         }, true);
-
-
-        function unigeValues(array, key) {
-            var values = array.map(function(obj) {
-                return obj[key];
-            });
-            values = values.filter(function(v, i) {
-                return values.indexOf(v) === i;
-            });
-
-            return values;
-        }
 
     });
 

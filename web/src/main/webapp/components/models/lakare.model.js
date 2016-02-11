@@ -1,4 +1,4 @@
-angular.module('rehabstodApp').factory('DiagnosKapitelModel',
+angular.module('rehabstodApp').factory('LakareModel',
     function() {
         'use strict';
 
@@ -9,6 +9,7 @@ angular.module('rehabstodApp').factory('DiagnosKapitelModel',
             return data;
         }
 
+        //resets selection/disabled states
         function _reset() {
             angular.forEach(data, function(value) {
                 value.selected = false;
@@ -17,30 +18,25 @@ angular.module('rehabstodApp').factory('DiagnosKapitelModel',
             return data;
         }
 
-        function _createDisplayValue(kapitel) {
-            return kapitel.id + ((kapitel.id !== '') ? ': ' : '') + kapitel.name;
-        }
-
         return {
 
             reset: _reset,
 
-            set: function(diagnosKapitel) {
+            set: function(lakareArray) {
                 _init();
-                angular.forEach(diagnosKapitel, function(value) {
+                angular.forEach(lakareArray, function(value) {
                     data.push({
-                        _definition: value,
-                        id: value.id,
-                        displayValue: _createDisplayValue(value),
+                        id: value,
+                        displayValue: value,
                         selected: false,
                         disabled: false
                     });
                 });
-
             },
             get: function() {
                 return data;
             },
+
             getSelected: function() {
                 var selected = [];
                 angular.forEach(data, function(value) {
@@ -49,16 +45,6 @@ angular.module('rehabstodApp').factory('DiagnosKapitelModel',
                     }
                 });
                 return selected;
-            },
-            setActivDiagnosKapitelIdlist: function(activeKapitelIds) {
-                if (activeKapitelIds.length > 0) {
-                    angular.forEach(data, function(kapitel) {
-                        kapitel.disabled = activeKapitelIds.indexOf(kapitel.id) === -1;
-                        if (kapitel.disabled) {
-                            kapitel.selected = false;
-                        }
-                    });
-                }
             }
         };
     }

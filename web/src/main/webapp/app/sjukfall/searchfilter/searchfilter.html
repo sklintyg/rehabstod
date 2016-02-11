@@ -10,12 +10,11 @@
         <div class="row">
           <div class="col-sm-4">
             <div class="form-group">
-              <label for="lakare" class="control-label">Välj läkare</label>
+              <label class="control-label">Välj läkare</label>
+              <div>
+                <rhs-multi-select items-model="lakareModel" none-selected-title="Alla valda" high-light-enabled="false"/>
+            </div>
 
-              <select id="lakare" class="form-control" name="lakare" ng-model="filter.lakare">
-                <option value="">Alla valda</option>
-                <option ng-repeat="option in lakare | orderBy:''" value="{{option}}">{{option}}</option>
-              </select>
             </div>
           </div>
 
@@ -23,7 +22,7 @@
             <div class="form-group">
               <label class="control-label">Välj nuvarande diagnos</label>
               <div>
-                <rhs-multi-select items-model="diagnosKapitelModel" none-selected-title="Alla valda"/>
+                <rhs-multi-select items-model="diagnosKapitelModel" none-selected-title="Alla valda" high-light-enabled="true"/>
               </div>
             </div>
           </div>
