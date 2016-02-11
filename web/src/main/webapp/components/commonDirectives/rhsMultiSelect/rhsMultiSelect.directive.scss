@@ -12,8 +12,12 @@
     padding-right: 0;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
 
+  }
+  .rhs-multi-select-link-enabled {
+    @extend .rhs-multi-select-link;
+    font-weight: bold;
+  }
   .rhs-multi-select-btn {
     width: 100%;
     text-align: left;

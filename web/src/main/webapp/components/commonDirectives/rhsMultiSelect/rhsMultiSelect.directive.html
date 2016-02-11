@@ -4,7 +4,7 @@
   </button>
   <ul uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
     <li ng-repeat='item in items' ng-class="{'disabled': item.disabled}">
-      <a ng-click='item.disabled || (toggleItem(item))' class="rhs-multi-select-link">
+      <a ng-click='item.disabled || (toggleItem(item))' class="rhs-multi-select-link" ng-class="{'rhs-multi-select-link-enabled': !item.disabled}">
         <i class="fa"  ng-class="{'fa-check': item.selected, 'fa-check-empty': !item.selected}"></i>
         {{item.displayValue}}
       </a>
