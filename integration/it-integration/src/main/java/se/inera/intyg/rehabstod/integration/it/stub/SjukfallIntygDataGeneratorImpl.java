@@ -185,17 +185,17 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
     private void initDiagnoser() {
         Diagnos d1 = new Diagnos();
-        d1.setKod("M16");
+        d1.setKod("M160");
         d1.setText("Höftledsartros");
         d1.setGrupp("M00-M99");
 
         Diagnos d2 = new Diagnos();
-        d2.setKod("J21");
+        d2.setKod("J210");
         d2.setText("Akut bronkiolit (katarr i de små luftvägarna)");
         d2.setGrupp("J00-J99");
 
         Diagnos d3 = new Diagnos();
-        d3.setKod("J11");
+        d3.setKod("J110");
         d3.setText("Influensa, virus ej identifierat");
         d3.setGrupp("J00-J99");
 

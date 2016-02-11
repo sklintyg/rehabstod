@@ -18,7 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -48,6 +50,9 @@ public class SjukfallCalculatorEngineStub extends SjukfallCalculatorEngine {
     public SjukfallCalculatorEngineStub() {
         super();
     }
+
+    @Autowired
+    private DiagnosBeskrivningService diagnosBeskrivningService;
 
     @Override
     public List<Sjukfall> calculate(List<IntygsData> intygsData, GetSjukfallRequest requestData) {
@@ -79,6 +84,7 @@ public class SjukfallCalculatorEngineStub extends SjukfallCalculatorEngine {
                 diagnos.setIntygsVarde(intyg.getDiagnos().getKod());
                 diagnos.setKapitel(intyg.getDiagnos().getGrupp());
                 diagnos.setKod(intyg.getDiagnos().getKod());
+                diagnos.setBeskrivning(diagnosBeskrivningService.getDiagnosBeskrivning(intyg.getDiagnos().getKod()));
                 fall.setDiagnos(diagnos);
 
                 fall.setDagar(ThreadLocalRandom.current().nextInt(1, 500 + 1));
