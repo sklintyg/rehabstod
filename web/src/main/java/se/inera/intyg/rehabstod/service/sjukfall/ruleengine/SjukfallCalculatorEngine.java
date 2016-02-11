@@ -18,7 +18,13 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKod;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
@@ -30,10 +36,31 @@ import java.util.List;
  */
 public class SjukfallCalculatorEngine {
 
+    @Autowired
+    private DiagnosBeskrivningService diagnosBeskrivningService;
+
+    @Autowired
+    private DiagnosKapitelService diagnosKapitelService;
+
+
     public SjukfallCalculatorEngine() {
     }
 
     public List<Sjukfall> calculate(List<IntygsData> intygsData, GetSjukfallRequest requestData) {
         return new ArrayList();
+    }
+
+    protected Diagnos getDiagnos(IntygsData intyg) {
+        String cleanedDiagnosKod = DiagnosKod.cleanKod(intyg.getDiagnos().getKod());
+        String description = diagnosBeskrivningService.getDiagnosBeskrivning(cleanedDiagnosKod);
+        DiagnosKapitel diagnosKaptiel = diagnosKapitelService.getDiagnosKapitel(cleanedDiagnosKod);
+
+        Diagnos diagnos = new Diagnos();
+        diagnos.setIntygsVarde(intyg.getDiagnos().getKod());
+        diagnos.setKapitel(diagnosKaptiel.getId());
+        diagnos.setKod(cleanedDiagnosKod);
+        diagnos.setBeskrivning(description);
+
+        return diagnos;
     }
 }

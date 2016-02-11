@@ -18,11 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
@@ -51,9 +48,6 @@ public class SjukfallCalculatorEngineStub extends SjukfallCalculatorEngine {
         super();
     }
 
-    @Autowired
-    private DiagnosBeskrivningService diagnosBeskrivningService;
-
     @Override
     public List<Sjukfall> calculate(List<IntygsData> intygsData, GetSjukfallRequest requestData) {
         return getSjukfall(intygsData, requestData);
@@ -80,12 +74,7 @@ public class SjukfallCalculatorEngineStub extends SjukfallCalculatorEngine {
                 fall.setPatient(patient);
 
                 // Diagnos
-                Diagnos diagnos = new Diagnos();
-                diagnos.setIntygsVarde(intyg.getDiagnos().getKod());
-                diagnos.setKapitel(intyg.getDiagnos().getGrupp());
-                diagnos.setKod(intyg.getDiagnos().getKod());
-                diagnos.setBeskrivning(diagnosBeskrivningService.getDiagnosBeskrivning(intyg.getDiagnos().getKod()));
-                fall.setDiagnos(diagnos);
+                fall.setDiagnos(getDiagnos(intyg));
 
                 fall.setDagar(ThreadLocalRandom.current().nextInt(1, 500 + 1));
                 fall.setStartVE(formatter.parse("2016-02-01"));
@@ -111,7 +100,7 @@ public class SjukfallCalculatorEngineStub extends SjukfallCalculatorEngine {
         return sjukfall;
     }
 
-    public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+    private <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
