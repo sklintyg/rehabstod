@@ -20,7 +20,6 @@ package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
 import org.springframework.stereotype.Component;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
@@ -67,11 +66,7 @@ public class SjukfallCalculatorEngineStub extends SjukfallCalculatorEngine {
                 Sjukfall fall = new Sjukfall();
 
                 // Patient
-                Patient patient = new Patient();
-                patient.setNamn(intyg.getPatient().getFornamn() + " " + intyg.getPatient().getEfternamn());
-                patient.setId(intyg.getPatient().getPersonId().getExtension());
-                patient.setAlder(ThreadLocalRandom.current().nextInt(20, 70 + 1));
-                fall.setPatient(patient);
+                fall.setPatient(getPatient(intyg));
 
                 // Diagnos
                 fall.setDiagnos(getDiagnos(intyg));
