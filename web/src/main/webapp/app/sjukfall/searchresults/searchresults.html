@@ -29,17 +29,17 @@
     </thead>
     <tbody>
     <tr ng-repeat="row in displayedCollection" class="searchresult-table-row">
-      <td>{{row.number}}</td>
-      <td>{{::row.patient.id}} (<strong>{{::row.patient.alder}} år</strong>)</td>
+      <td>{{$index + 1}}</td>
+      <td>{{::row.patient.id}} (<span class="age">{{::row.patient.alder}} år</span>)</td>
       <td>{{::row.patient.namn}}</td>
       <td>{{::row.patient.kon | rhsKon}}</td>
       <td>{{::row.diagnos.intygsVarde}}</td>
-      <td>{{::row.start}}</td>
-      <td>{{::row.slut}}</td>
+      <td class="start-date">{{::row.start}}</td>
+      <td class="end-date">{{::row.slut}}</td>
       <td>
-        <ng-pluralize count="row.dagar" when="{
+        <ng-pluralize count="{{::row.dagar}}" when="{
                      'one': '1 dag',
-                     'other': '{} dagar'}"></ng-pluralize>&nbsp;({{::row.intyg}} intyg)
+                     'other': '{} dagar'}"></ng-pluralize> ({{::row.intyg}}&nbsp;intyg)
       </td>
       <td><rhs-table-grad active="row.aktivGrad" grader="row.grader" /></td>
       <td>{{::row.lakare}}</td>
