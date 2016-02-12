@@ -22,11 +22,13 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
 
         return {
             restrict: 'E',
+            replace: true,
             scope: {
                 noneSelectedTitle: '@',
                 highLightEnabled: '=',
                 itemsModel: '='
             },
+
             templateUrl: 'components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.html',
             controller: function($scope) {
 
