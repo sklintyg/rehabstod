@@ -23,7 +23,7 @@
       <th class="searchresult-table-head" st-sort="start" st-sort-default="true"><span message key="label.table.column.startve"></span> <i class="fa fa-sort"></i></th>
       <th class="searchresult-table-head" st-sort="slut"><span message key="label.table.column.slut"></span> <i class="fa fa-sort"></i></th>
       <th class="searchresult-table-head" st-sort="dagar"><span message key="label.table.column.langd"></span> <i class="fa fa-sort"></i></th>
-      <th class="searchresult-table-head" st-sort="aktivGrad"><span message key="label.table.column.grad"></span> <i class="fa fa-sort"></i> <div style="display: inline-block" rhs-tooltip field-help-text="label.table.column.grad.help"></div></th>
+      <th class="searchresult-table-head" st-sort="aktivGrad"><span message key="label.table.column.grad"></span> <i class="fa fa-sort"></i><div class="aktiv-grad-tooltip" rhs-tooltip field-help-text="label.table.column.grad.help"></div></th>
       <th class="searchresult-table-head" st-sort="lakare"><span message key="label.table.column.lakare"></span> <i class="fa fa-sort"></i></th>
     </tr>
     </thead>
@@ -39,7 +39,7 @@
       <td>
         <ng-pluralize count="{{::row.dagar}}" when="{
                      'one': '1 dag',
-                     'other': '{} dagar'}"></ng-pluralize> ({{::row.intyg}}&nbsp;intyg)
+                     'other': '{} dagar'}"></ng-pluralize><span class="intyg">&nbsp;({{::row.intyg}}&nbsp;intyg)</span>
       </td>
       <td><rhs-table-grad active="row.aktivGrad" grader="row.grader" /></td>
       <td>{{::row.lakare}}</td>

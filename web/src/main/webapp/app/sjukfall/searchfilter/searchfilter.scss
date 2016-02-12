@@ -1,4 +1,4 @@
-@media (min-width: 768px ) {
+@media (min-width: $screen-sm-min) {
   .row-relative {
     position: relative;
   }
@@ -12,5 +12,23 @@
     .btn {
       margin-top: 5px;
     }
+  }
+}
+
+@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+  .search-filter-diagnos .rhs-multi-select ul {
+    width: 200%;
+  }
+}
+
+@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
+  .search-filter-diagnos .rhs-multi-select ul {
+    width: 200%;
+  }
+}
+
+@media (min-width: $screen-lg-min) {
+  .search-filter-diagnos .rhs-multi-select ul {
+    width: auto;
   }
 }

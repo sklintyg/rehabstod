@@ -42,22 +42,6 @@
   }
 }
 
-@media (max-width: $screen-xs-max) {
-  .rhs-multi-select ul {
-    width: 100%;
-  }
+.rhs-multi-select ul {
+  width: 100%;
 }
-
-@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
-  .rhs-multi-select ul {
-    width: 200%;
-  }
-}
-
-@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
-  .rhs-multi-select ul {
-    width: 200%;
-  }
-}
-
-

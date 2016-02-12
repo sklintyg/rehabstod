@@ -8,10 +8,6 @@ angular.module('rehabstodApp')
                     'content@app': {
                         templateUrl: 'app/start/start.page.html',
                         controller: 'StartPageCtrl'
-                    },
-                    'header@app.start': {
-                        templateUrl: 'app/start/header/startheader.html',
-                        controller: 'StartHeaderCtrl'
                     }
                 },
                 data: {
