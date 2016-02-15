@@ -39,7 +39,7 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                     _addQuickSearchContentFromProperty(item, 'patient.alder');
                     _addQuickSearchContent(item, angular.isDefined(item.patient)?_getKon(item.patient.kon):'');
                     _addQuickSearchContentFromProperty(item, 'diagnos.intygsVarde');
-                    _addQuickSearchContentFromProperty(item, 'startVE');
+                    _addQuickSearchContentFromProperty(item, 'start');
                     _addQuickSearchContentFromProperty(item, 'slut');
                     _addQuickSearchContentFromProperty(item, 'dagar');
                     _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join(',') : '');

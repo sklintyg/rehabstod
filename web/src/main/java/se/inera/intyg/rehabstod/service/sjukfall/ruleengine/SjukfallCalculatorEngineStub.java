@@ -23,9 +23,6 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,42 +52,35 @@ public class SjukfallCalculatorEngineStub extends SjukfallCalculatorEngine {
     private List<Sjukfall> getSjukfall(List<IntygsData> intygsData, GetSjukfallRequest requestData) {
         List<Sjukfall> sjukfall = new ArrayList();
 
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
         List<IntygsData> filteredIntyg = intygsData.stream()
                 .filter(distinctByKey(o -> o.getPatient().getPersonId().getExtension())).collect(Collectors.toList());
 
-        try {
-            // CHECKSTYLE:OFF MagicNumber
-            for (IntygsData intyg : filteredIntyg) {
-                Sjukfall fall = new Sjukfall();
+        // CHECKSTYLE:OFF MagicNumber
+        for (IntygsData intyg : filteredIntyg) {
+            Sjukfall fall = new Sjukfall();
 
-                // Patient
-                fall.setPatient(getPatient(intyg));
+            // Patient
+            fall.setPatient(getPatient(intyg));
 
-                // Diagnos
-                fall.setDiagnos(getDiagnos(intyg));
+            // Diagnos
+            fall.setDiagnos(getDiagnos(intyg));
 
-                fall.setDagar(ThreadLocalRandom.current().nextInt(1, 500 + 1));
-                fall.setStartVE(formatter.parse("2016-02-01"));
-                fall.setStartVG(formatter.parse("2016-01-01"));
-                fall.setSlut(formatter.parse("2016-03-01"));
+            fall.setDagar(ThreadLocalRandom.current().nextInt(1, 500 + 1));
+            fall.setStart(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum().toDate());
+            fall.setSlut(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum().toDate());
 
-                List<Integer> grader = new ArrayList<>();
-                grader.add(100);
-                grader.add(50);
-                fall.setGrader(grader);
-                fall.setAktivGrad(100);
-                fall.setIntyg(4);
+            List<Integer> grader = new ArrayList<>();
+            grader.add(100);
+            grader.add(50);
+            fall.setGrader(grader);
+            fall.setAktivGrad(100);
+            fall.setIntyg(4);
 
-                fall.setLakare(intyg.getSkapadAv().getFullstandigtNamn());
+            fall.setLakare(intyg.getSkapadAv().getFullstandigtNamn());
 
-                sjukfall.add(fall);
-            }
-            // CHECKSTYLE:ON MagicNumber
-        } catch (ParseException e) {
-            e.printStackTrace();
+            sjukfall.add(fall);
         }
+        // CHECKSTYLE:ON MagicNumber
 
         return sjukfall;
     }

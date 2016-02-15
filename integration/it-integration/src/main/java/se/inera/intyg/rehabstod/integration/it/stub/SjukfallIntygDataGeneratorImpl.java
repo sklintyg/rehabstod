@@ -26,22 +26,11 @@ import org.springframework.stereotype.Component;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Diagnos;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.*;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.*;
 
 /**
  * Can generate a suitable amount of intygsdata.
@@ -50,9 +39,9 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * Created by eriklupander on 2016-01-29.
  */
-//CHECKSTYLE:OFF MagicNumber
+// CHECKSTYLE:OFF MagicNumber
 @Component
-@Profile({"dev", "rhs-it-stub"})
+@Profile({ "dev", "rhs-it-stub" })
 public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
@@ -77,16 +66,15 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         initHoSPerson();
     }
 
-
     /**
      * Generate intygsdata for a given number of patients, with N intyg per patient.
      *
      * @param numberOfPatients
-     *                  Number of patients to base intyg data on.
+     *            Number of patients to base intyg data on.
      * @param intygPerPatient
-     *                  Number of intyg to generate intyg per patient on.
+     *            Number of intyg to generate intyg per patient on.
      * @return
-     *        List of all IntygsData
+     *         List of all IntygsData
      */
     public List<IntygsData> generateIntygsData(Integer numberOfPatients, Integer intygPerPatient) {
 
@@ -115,7 +103,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
                 intygsDataList.add(intygsData);
             }
         }
-        LOG.info("Generated {0} intygsData items for stub", intygsDataList.size());
+        LOG.info("Generated {} intygsData items for stub", intygsDataList.size());
         return intygsDataList;
     }
 
@@ -125,7 +113,6 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         }
         return hosPersonList.get(currentHosPersonIndex++);
     }
-
 
     private List<Formaga> getDefaultSjukskrivningsGrader() {
         List<Formaga> sjukskrivningsgradList = new ArrayList<>();
@@ -168,12 +155,10 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
             List<String> personNummer = personnummerLoader.readTestPersonnummer();
             int personNummerSize = personNummer.size();
+            int step = personNummerSize / numberOfPatients;
 
-            for (int a = 0; a < personNummer.size() && a < numberOfPatients; a++) {
-
-                int index = ThreadLocalRandom.current().nextInt(0, personNummerSize);
-
-                seededPatients.add(buildPerson(personNummer.get(index)));
+            for (int a = 0, i = 0; a < personNummerSize && i < numberOfPatients; i++, a += step) {
+                seededPatients.add(buildPerson(personNummer.get(a)));
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not bootstrap IntygsData: " + e.getMessage());

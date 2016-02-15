@@ -65,10 +65,7 @@
         ],
         "type": "object"
       },
-      "startVG": {
-        "type": "string"
-      },
-      "startVE": {
+      "start": {
         "type": "string"
       },
       "slut": {
@@ -95,8 +92,7 @@
     "required": [
       "patient",
       "diagnos",
-      "startVG",
-      "startVE",
+      "start",
       "slut",
       "dagar",
       "intyg",

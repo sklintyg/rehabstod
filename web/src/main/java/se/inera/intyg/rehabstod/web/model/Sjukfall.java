@@ -30,8 +30,7 @@ public class Sjukfall {
     private Patient patient;
     private Diagnos diagnos;
 
-    private Date startVG;
-    private Date startVE;
+    private Date start;
     private Date slut;
 
     private int dagar;
@@ -61,20 +60,12 @@ public class Sjukfall {
         this.diagnos = diagnos;
     }
 
-    public Date getStartVG() {
-        return startVG;
+    public Date getStart() {
+        return start;
     }
 
-    public void setStartVG(Date startVG) {
-        this.startVG = startVG;
-    }
-
-    public Date getStartVE() {
-        return startVE;
-    }
-
-    public void setStartVE(Date startVE) {
-        this.startVE = startVE;
+    public void setStart(Date start) {
+        this.start = start;
     }
 
     public Date getSlut() {
@@ -151,10 +142,7 @@ public class Sjukfall {
         if (!diagnos.equals(sjukfall.diagnos)) {
             return false;
         }
-        if (!startVG.equals(sjukfall.startVG)) {
-            return false;
-        }
-        if (!startVE.equals(sjukfall.startVE)) {
+        if (!start.equals(sjukfall.start)) {
             return false;
         }
         if (!slut.equals(sjukfall.slut)) {
@@ -171,8 +159,7 @@ public class Sjukfall {
     public int hashCode() {
         int result = patient.hashCode();
         result = HASH_SEED * result + diagnos.hashCode();
-        result = HASH_SEED * result + startVG.hashCode();
-        result = HASH_SEED * result + startVE.hashCode();
+        result = HASH_SEED * result + start.hashCode();
         result = HASH_SEED * result + slut.hashCode();
         result = HASH_SEED * result + dagar;
         result = HASH_SEED * result + intyg;
