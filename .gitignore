@@ -3,6 +3,7 @@ build/
 .settings/
 .project
 .classpath
+.gradletasknamecache
 
 bin
 out
