@@ -1,47 +1,48 @@
-<div class="panel panel-noborder">
-  <div class="panel-body">
-    <button class="btn btn-link btn-link-minimal" ng-click="showSearchFilter = !showSearchFilter"
-            ng-switch="showSearchFilter">
-      <span ng-switch-when="false">Visa sökfilter</span><span ng-switch-when="true">Dölj sökfilter</span>
-    </button>
+<div>
+  <h2 ng-if="user.urval === 'ISSUED_BY_ME'">
+    Visar dina sjukskrivningar
+  </h2>
 
-    <div class="box" ng-show="showSearchFilter">
-      <form>
-        <div class="row">
-          <div class="col-sm-4">
-            <div class="form-group">
-              <label class="control-label">Välj nuvarande läkare</label>
+  <div class="panel panel-noborder">
+    <div class="panel-body">
+      <button class="btn btn-link btn-link-minimal" ng-click="showSearchFilter = !showSearchFilter"
+              ng-switch="showSearchFilter">
+        <span ng-switch-when="false">Visa sökfilter</span><span ng-switch-when="true">Dölj sökfilter</span>
+      </button>
 
-              <div ng-if="user.urval === 'ISSUED_BY_ME'" class="btn-group rhs-multi-select dropdown" uib-tooltip="För att se sjukskrivningar för andra läkare - välj 'Visa Alla' på startsidan." tooltip-placement="top">
-                <button id="simple-btn-keyboard-nav" type="button" class="rhs-multi-select-btn btn btn-default dropdown-toggle disabled">
-                  <span class="text">{{::user.name}}</span> <span class="caret"></span>
-                </button>
+      <div class="box" ng-show="showSearchFilter">
+        <form>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group search-filter-diagnos">
+                <label class="control-label">Välj nuvarande diagnos</label>
+                <rhs-multi-select items-model="filterViewState.get().diagnosKapitelModel"
+                                  none-selected-title="Alla valda" high-light-enabled="true" />
               </div>
+            </div>
 
-                <rhs-multi-select ng-if="user.urval === 'ALL'" items-model="lakareModel" none-selected-title="Alla valda" high-light-enabled="false"/>
+            <div ng-if="user.urval === 'ALL'" class="col-sm-5">
+              <div class="form-group">
+                <label class="control-label">Välj nuvarande läkare</label>
+                <rhs-multi-select items-model="filterViewState.get().lakareModel" none-selected-title="Alla valda"
+                                  high-light-enabled="false" />
+              </div>
             </div>
           </div>
+          <div class="row row-relative">
+            <div class="col-sm-9">
+              <div class="form-group">
+                <label class="control-label">Välj sjukskrivningslängd</label>
+                <rhs-slider slider-model="filterViewState.get().sjukskrivningslangdModel" />
+              </div>
+            </div>
 
-          <div class="col-sm-5">
-            <div class="form-group search-filter-diagnos">
-              <label class="control-label">Välj nuvarande diagnos</label>
-              <rhs-multi-select items-model="diagnosKapitelModel" none-selected-title="Alla valda" high-light-enabled="true"/>
+            <div class="col-sm-3 bottom-align-text">
+              <button id="rhs-sjukfallPage-resetFilterBtn" type="reset" class="btn btn-default">Återställ</button>
             </div>
           </div>
-        </div>
-        <div class="row row-relative">
-          <div class="col-sm-9">
-            <div class="form-group">
-              <label class="control-label">Välj sjukskrivningslängd</label>
-              <rhs-slider slider-model="sjukskrivningslangd" />
-            </div>
-          </div>
-
-          <div class="col-sm-3 bottom-align-text">
-            <button id="rhs-sjukfallPage-resetFilterBtn" type="reset" class="btn btn-default">Återställ</button>
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 </div>

@@ -2,16 +2,25 @@ describe('Controller: SearchResultsCtrl', function () {
     'use strict';
 
     // load the controller's module
-    beforeEach(module('rehabstodApp'));
+    beforeEach(angular.mock.module('rehabstodApp', function($provide) {
+        $provide.value('APP_CONFIG', { });
+    }));
 
     var scope;
+    var SjukfallModel;
+    var SjukfallFilterViewState;
 
     // Initialize the controller and a mock scope
-    beforeEach(inject(function ($controller, $rootScope) {
+    beforeEach(inject(function ($controller, $rootScope, _SjukfallModel_, _SjukfallFilterViewState_) {
         scope = $rootScope.$new();
 
+        SjukfallModel = _SjukfallModel_;
+        SjukfallFilterViewState = _SjukfallFilterViewState_;
+
         $controller('SearchResultsCtrl', {
-            $scope: scope
+            $scope: scope,
+            SjukfallModel: _SjukfallModel_,
+            SjukfallFilterViewState: SjukfallFilterViewState
         });
     }));
 
