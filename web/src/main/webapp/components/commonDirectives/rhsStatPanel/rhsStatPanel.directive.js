@@ -17,6 +17,8 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                     function _loadData() {
                         SjukfallSummaryModel.reset();
                         SjukfallSummaryProxy.get().then(function(data) {
+                            data.women = Math.round(data.women * 10) / 10;
+                            data.men = Math.round(data.men * 10) / 10;
                             SjukfallSummaryModel.set(data);
                         });
                     }

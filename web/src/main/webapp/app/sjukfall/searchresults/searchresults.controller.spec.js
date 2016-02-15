@@ -5,30 +5,23 @@ describe('Controller: SearchResultsCtrl', function () {
     beforeEach(module('rehabstodApp'));
 
     var scope;
-    var SjukfallModel;
 
     // Initialize the controller and a mock scope
-    beforeEach(inject(function ($controller, $rootScope, _SjukfallModel_) {
+    beforeEach(inject(function ($controller, $rootScope) {
         scope = $rootScope.$new();
 
-        SjukfallModel = _SjukfallModel_;
-
         $controller('SearchResultsCtrl', {
-            $scope: scope,
-            SjukfallModel: _SjukfallModel_
+            $scope: scope
         });
     }));
 
 
-    it('should add row number to model', function($timeout) {
-        expect(scope.displayedCollection).toEqual([]);
+    it('should return toolTip', function() {
+        var diagnos = {
+            kod: 123,
+            beskrivning: 'Hej'
+        };
 
-        SjukfallModel.set([{name: 'first'}, {name: 'next'}]);
-
-        var expectArray = [{name: 'first', number: 1}, {name: 'next', number: 2}];
-
-        $timeout(function() {
-            expect(scope.displayedCollection).toEqual(expectArray);
-        });
+        expect(scope.getToolTip(diagnos)).toEqual('<b>' + diagnos.kod + '</b><br>' + diagnos.beskrivning);
     });
 });

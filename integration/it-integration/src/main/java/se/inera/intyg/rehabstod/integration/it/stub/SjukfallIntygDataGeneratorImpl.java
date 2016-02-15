@@ -41,6 +41,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Can generate a suitable amount of intygsdata.
@@ -164,9 +165,15 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
     private void seedPatients(Integer numberOfPatients) {
         try {
+
             List<String> personNummer = personnummerLoader.readTestPersonnummer();
+            int personNummerSize = personNummer.size();
+
             for (int a = 0; a < personNummer.size() && a < numberOfPatients; a++) {
-                seededPatients.add(buildPerson(personNummer.get(a)));
+
+                int index = ThreadLocalRandom.current().nextInt(0, personNummerSize);
+
+                seededPatients.add(buildPerson(personNummer.get(index)));
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not bootstrap IntygsData: " + e.getMessage());
@@ -185,7 +192,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
     private void initDiagnoser() {
         Diagnos d1 = new Diagnos();
-        d1.setKod("M160");
+        d1.setKod("M16.0");
         d1.setText("Höftledsartros");
         d1.setGrupp("M00-M99");
 
@@ -195,7 +202,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         d2.setGrupp("J00-J99");
 
         Diagnos d3 = new Diagnos();
-        d3.setKod("J110");
+        d3.setKod("J-110");
         d3.setText("Influensa, virus ej identifierat");
         d3.setGrupp("J00-J99");
 
