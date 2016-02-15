@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.service.diagnos;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKod;
 
@@ -35,10 +36,10 @@ import static org.junit.Assert.assertEquals;
  */
 public class DiagnosKoderFileTest {
 
-    private static final String KS97_KAT_FILE = "diagnoskoder/KSH97_KAT.ANS";
-    private static final String KS97_KOD_FILE = "diagnoskoder/KSH97_KOD.ANS";
-    private static final String KS97_KXX_FILE = "diagnoskoder/KSH97_KXX.ANS";
-    private static final String KS97P_KOD_FILE = "diagnoskoder/KSH97P_KOD.ANS";
+    private static final String KS97_KAT_FILE = "src/main/resources/diagnoskoder/KSH97_KAT.ANS";
+    private static final String KS97_KOD_FILE = "src/main/resources/diagnoskoder/KSH97_KOD.ANS";
+    private static final String KS97_KXX_FILE = "src/main/resources/diagnoskoder/KSH97_KXX.ANS";
+    private static final String KS97P_KOD_FILE = "src/main/resources/diagnoskoder/KSH97P_KOD.ANS";
 
 
     /**
@@ -46,6 +47,7 @@ public class DiagnosKoderFileTest {
      * @throws IOException
      */
     @Test
+    @Ignore
     public void testKodFormat() throws IOException {
 
         testFile(loadDiagnosFile(KS97P_KOD_FILE));
