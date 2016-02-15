@@ -25,6 +25,8 @@ var ppMessages = {
         // Start
         'label.start.header': 'Rehabstöd startsida',
 
+        //SearchFilter
+        'label.searchfilter.for.doctor.help': 'För att se sjukskrivningar för andra läkare - välj "Visa Alla" på startsidan.',
 
 
         //
