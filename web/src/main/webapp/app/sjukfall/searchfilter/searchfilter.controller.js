@@ -1,6 +1,6 @@
 angular.module('rehabstodApp')
     .controller('SearchFilterCtrl',
-        function($scope, $filter, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel, UserModel) {
+        function($scope, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel, UserModel) {
             'use strict';
 
             $scope.filterViewState = SjukfallFilterViewState;
@@ -18,6 +18,11 @@ angular.module('rehabstodApp')
                     $filter('rhsUnique')(value, 'diagnos.kapitel'));
 
             });
+
+            $scope.onResetFilterClick = function() {
+                $scope.filterViewState.reset();
+                $log.debug('reset filterViewState');
+            };
         });
 
 

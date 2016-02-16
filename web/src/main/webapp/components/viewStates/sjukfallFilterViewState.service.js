@@ -15,10 +15,10 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
 
 
         function _reset() {
-            //TODO:återställ till som när man kom in första gången
-            state.sjukskrivningslangdModel[0] = 1;
-            //diagnosKapitelModel.reset();
-            //lakareModel.reset();
+            state.diagnosKapitelModel.reset();
+            state.sjukskrivningslangdModel = [1, 366];
+            state.lakareModel.reset();
+            state.freeTextModel = '';
         }
 
         function _getCurrentFilterState() {
@@ -37,7 +37,7 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
                 lakare: selectedLakare,
                 sjukskrivningslangd: [state.sjukskrivningslangdModel[0],
                     state.sjukskrivningslangdModel[1] > 365 ? null : state.sjukskrivningslangdModel[1]],
-                freeText : state.freeTextModel
+                freeText: state.freeTextModel
 
             };
 
