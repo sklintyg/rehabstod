@@ -1,5 +1,5 @@
 angular.module('rehabstodApp').factory('SjukfallModel',
-    function($parse) {
+    function($parse, $filter) {
         'use strict';
 
         var data = [];
@@ -11,7 +11,7 @@ angular.module('rehabstodApp').factory('SjukfallModel',
 
         function _getKon(kon) {
             if (angular.isDefined(kon)) {
-                return (kon === 'M') ? 'Man' : 'Kvinna';
+                return $filter('rhsKon')(kon);
             }
             return '';
         }
@@ -22,6 +22,32 @@ angular.module('rehabstodApp').factory('SjukfallModel',
 
         function _addQuickSearchContent(item, content) {
             item.quickSearchString += content + ':';
+        }
+
+        function _getDagar(dagar) {
+            var suffix = ' dagar';
+            if (dagar === 1) {
+                suffix = ' dag';
+            }
+
+            return dagar + suffix;
+        }
+
+        function _getGradShow(aktivGrad, grader) {
+
+            var gradShow = { show: ''};
+
+            angular.forEach(grader, function(grad) {
+                if (grad === aktivGrad) {
+                    this.show += '<span class="rhs-table-grad-active">'+ grad +'% </span>';
+                }
+                else {
+                    this.show += grad + '% ';
+                }
+            },gradShow);
+
+
+            return gradShow.show;
         }
 
         return {
@@ -35,11 +61,14 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                 data = newData;
 
                 angular.forEach(data, function(item) {
+                    item.patient.konShow = _getKon(item.patient.kon);
+                    item.dagarShow = _getDagar(item.dagar);
+                    item.gradShow = _getGradShow(item.aktivGrad, item.grader);
                     item.quickSearchString = '';
                     _addQuickSearchContentFromProperty(item, 'patient.id');
                     _addQuickSearchContentFromProperty(item, 'patient.namn');
                     _addQuickSearchContentFromProperty(item, 'patient.alder');
-                    _addQuickSearchContent(item, angular.isDefined(item.patient) ? _getKon(item.patient.kon) : '');
+                    _addQuickSearchContentFromProperty(item, 'patient.konShow');
                     _addQuickSearchContentFromProperty(item, 'diagnos.intygsVarde');
                     _addQuickSearchContentFromProperty(item, 'start');
                     _addQuickSearchContentFromProperty(item, 'slut');
@@ -47,6 +76,9 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                     _addQuickSearchContentFromProperty(item, 'intyg');
                     _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join(',') : '');
                     _addQuickSearchContentFromProperty(item, 'lakare');
+
+
+
 
                 });
             },

@@ -41,6 +41,14 @@ describe('Model: SjukfallModel', function() {
             expect(SjukfallModel.get()[0].quickSearchString).toEqual(
                 '19360721-7068:Förnamn-3607 Efternamn-21-7068:79:Kvinna:M16.0:2016-02-01:2016-03-01:84:4:100,50:Jan Nilsson:');
         });
+
+        it('should decorate show properties when set', inject(function (messageService) {
+            SjukfallModel.set(testJsonData);
+            expect(SjukfallModel.get().length).toEqual(testJsonData.length);
+            expect(SjukfallModel.get()[0].dagarShow).toEqual('84 dagar');
+            expect(SjukfallModel.get()[0].gradShow).toEqual('<span class="rhs-table-grad-active">100% </span>50% ');
+            expect(SjukfallModel.get()[0].patient.konShow).toEqual(messageService.getProperty('label.gender.female'));
+        }));
     });
 
     describe('reset', function() {
