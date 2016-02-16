@@ -1,6 +1,7 @@
 <div>
   <h1 ng-if="user.urval === 'ISSUED_BY_ME'">
-    Visar sjukskrivningar där du utfärdat senaste intyget<div class="rhs-tooltip-headline" rhs-tooltip field-help-text="label.searchfilter.for.doctor.help"></div>
+    Visar sjukskrivningar där du utfärdat senaste intyget
+    <div class="rhs-tooltip-headline" rhs-tooltip field-help-text="label.searchfilter.for.doctor.help"></div>
   </h1>
 
   <div class="panel panel-noborder">
@@ -9,7 +10,6 @@
               ng-switch="showSearchFilter">
         <span ng-switch-when="false">Visa sökfilter</span><span ng-switch-when="true">Dölj sökfilter</span>
       </button>
-
       <div class="box" ng-show="showSearchFilter">
         <form>
           <div class="row">
@@ -30,14 +30,21 @@
             </div>
           </div>
           <div class="row row-relative">
-            <div class="col-sm-9">
+            <div class="col-sm-10">
               <div class="form-group">
                 <label class="control-label">Välj sjukskrivningslängd</label>
                 <rhs-slider slider-model="filterViewState.get().sjukskrivningslangdModel" />
               </div>
             </div>
-
-            <div class="col-sm-3 bottom-align-text">
+          </div>
+          <div class="row">
+            <div class="col-sm-5">
+              <div class="form-group">
+                <input ng-model="filterViewState.get().freeTextModel" placeholder="Sök" class="input-sm form-control"
+                       type="search" />
+              </div>
+            </div>
+            <div class="col-sm-5 bottom-align-text">
               <button id="rhs-sjukfallPage-resetFilterBtn" type="reset" class="btn btn-default">Återställ</button>
             </div>
           </div>

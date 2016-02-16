@@ -56,9 +56,10 @@ describe('Filter: RhsSearchFilter', function() {
             customSearch: {
                 diagnosKapitel: [],
                 lakare: [],
-                sjukskrivningslangd: [1, null]
-            },
-            $: ''
+                sjukskrivningslangd: [1, null],
+                freeText: ''
+            }
+
         };
 
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual(testJsonData);
@@ -70,9 +71,9 @@ describe('Filter: RhsSearchFilter', function() {
             customSearch: {
                 diagnosKapitel: ['M00-M99'],
                 lakare: [],
-                sjukskrivningslangd: [1, 366]
-            },
-            $: ''
+                sjukskrivningslangd: [1, 366],
+                freeText: ''
+            }
         };
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[0]]);
         filterParam.customSearch.diagnosKapitel.push('J00-J99');
@@ -84,9 +85,9 @@ describe('Filter: RhsSearchFilter', function() {
             customSearch: {
                 diagnosKapitel: [],
                 lakare: ['Dummy'],
-                sjukskrivningslangd: [1, 366]
-            },
-            $: ''
+                sjukskrivningslangd: [1, 366],
+                freeText: ''
+            }
         };
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([]);
 
@@ -101,9 +102,9 @@ describe('Filter: RhsSearchFilter', function() {
             customSearch: {
                 diagnosKapitel: [],
                 lakare: [],
-                sjukskrivningslangd: [1, 366]
-            },
-            $: ''
+                sjukskrivningslangd: [1, 366],
+                freeText: ''
+            }
         };
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual(testJsonData);
 
@@ -118,22 +119,22 @@ describe('Filter: RhsSearchFilter', function() {
             customSearch: {
                 diagnosKapitel: [],
                 lakare: [],
-                sjukskrivningslangd: [1, 366]
-            },
-            '$': 'son'
+                sjukskrivningslangd: [1, 366],
+                freeText: 'son'
+            }
         };
         SjukfallModel.set(testJsonData);
         var expected = SjukfallModel.get();
 
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual(expected);
 
-        filterParam.$ = '2222';
+        filterParam.customSearch.freeText = '2222';
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([expected[0]]);
 
-        filterParam.$ = 'XXX';
+        filterParam.customSearch.freeText = 'XXXX';
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([]);
 
-        filterParam.$ = 'Jan';
+        filterParam.customSearch.freeText = 'Jan';
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([expected[1]]);
     }));
 

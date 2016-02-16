@@ -8,7 +8,7 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
     };
 
     return function(array, expression) {
-        function customComparator(actual, filterParams, wildCard) {
+        function customComparator(actual, filterParams) {
 
             //DiagnosKapitel
             if (!matchAny(actual.diagnos.kapitel, filterParams.diagnosKapitel)) {
@@ -25,7 +25,7 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
                 return false;
             }
 
-            if (angular.isDefined(wildCard) && !(passWildCardSearch(actual, wildCard))) {
+            if (filterParams.freeText.length > 0 && !passWildCardSearch(actual, filterParams.freeText)) {
                 return false;
             }
 
@@ -75,7 +75,7 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
         function processItems(array, filterParam) {
             var filteredArray = [];
             angular.forEach(array, function(item) {
-                if (customComparator(item, filterParam.customSearch, filterParam.$)) {
+                if (customComparator(item, filterParam.customSearch)) {
                     filteredArray.push(item);
                 }
 
