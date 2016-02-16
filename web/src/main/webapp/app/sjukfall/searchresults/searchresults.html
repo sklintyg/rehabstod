@@ -1,6 +1,7 @@
-<div class="container" st-set-filter="rhsSearchfilter" st-table="displayedCollection" st-safe-src="model.get()">
+<div class="container" st-set-filter="rhsSearchfilter" st-table="displayedCollection" st-safe-src="model.get()" infinite-scroll="showMoreInTable()" infinite-scroll-distance="2">
 
   <rhs-st-table-search-connector></rhs-st-table-search-connector>
+  <rhs-reset-limit></rhs-reset-limit>
 
 
   <rhs-table-number-of-rows></rhs-table-number-of-rows>
@@ -21,7 +22,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="row in displayedCollection" class="searchresult-table-row">
+    <tr ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id" class="searchresult-table-row">
       <td>{{$index + 1}}</td>
       <td>{{::row.patient.id}} (<span class="age">{{::row.patient.alder}} år</span>)</td>
       <td>{{::row.patient.namn}}</td>

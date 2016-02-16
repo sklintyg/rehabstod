@@ -8,8 +8,9 @@ var app = angular.module('rehabstodApp', [
     'ui.router',
     'ui.bootstrap',
     'ui.bootstrap-slider',
-    'smart-table'
-]);
+    'smart-table',
+    'infinite-scroll'
+]).value('THROTTLE_MILLISECONDS', 300);
 
 deferredBootstrapper.bootstrap({
     element: document.body,
