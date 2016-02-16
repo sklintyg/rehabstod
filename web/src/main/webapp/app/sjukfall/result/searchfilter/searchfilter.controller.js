@@ -1,5 +1,5 @@
 angular.module('rehabstodApp')
-    .controller('SearchFilterCtrl',
+    .controller('SjukfallSearchFilterCtrl',
         function($scope, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel, UserModel) {
             'use strict';
 

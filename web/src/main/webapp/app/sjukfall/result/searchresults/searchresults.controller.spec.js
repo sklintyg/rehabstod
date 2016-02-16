@@ -17,7 +17,7 @@ describe('Controller: SearchResultsCtrl', function () {
         SjukfallModel = _SjukfallModel_;
         SjukfallFilterViewState = _SjukfallFilterViewState_;
 
-        $controller('SearchResultsCtrl', {
+        $controller('SjukfallSearchResultsCtrl', {
             $scope: scope,
             SjukfallModel: _SjukfallModel_,
             SjukfallFilterViewState: SjukfallFilterViewState

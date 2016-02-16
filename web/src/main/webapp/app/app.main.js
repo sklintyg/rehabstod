@@ -100,7 +100,7 @@ app.run(
                     if (result && result.to) {
                         event.preventDefault();
                         $log.debug(
-                            '$stateChangeStart to ' + toState.to + ' was overridden by a rule. new destination : ' +
+                            '$stateChangeStart to ' + toState.name + ' was overridden by a rule. new destination : ' +
                             result.to);
                         $state.go(result.to, result.params, result.options);
                     }

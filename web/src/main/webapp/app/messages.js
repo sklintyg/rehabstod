@@ -25,6 +25,13 @@ var ppMessages = {
         // Start
         'label.start.header': 'Rehabstöd startsida',
 
+        // Sjukfall Start
+        'label.sjukfall.start.header' : 'Sjukfall på enhet',
+
+        // Sjukfall Stat
+        'label.sjukfall.stat.ongoing' : 'Antalet pågående sjukfall på',
+        'label.sjukfall.stat.gender' : 'Könsfördelning',
+
         //SearchFilter
         'label.searchfilter.for.doctor.help': 'För att se sjukskrivningar för andra läkare - välj "Visa Alla" på startsidan.',
 

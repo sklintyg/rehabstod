@@ -1,9 +1,9 @@
 angular.module('rehabstodApp')
-    .controller('SjukfallPageCtrl',
+    .controller('SjukfallResultPageCtrl',
         function($scope, $state, $log, SjukfallModel, SjukfallService) {
             'use strict';
 
-            $log.debug('SjukfallPageCtrl init');
+            $log.debug('SjukfallResultPageCtrl init');
 
             SjukfallModel.reset();
             SjukfallService.loadSjukfall().then(function(successData) {

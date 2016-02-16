@@ -1,4 +1,4 @@
-describe('Controller: SjukfallPageCtrl', function () {
+describe('Controller: SjukfallResultPageCtrl', function () {
     'use strict';
 
     // load the controller's module
@@ -26,7 +26,7 @@ describe('Controller: SjukfallPageCtrl', function () {
             });
 
 
-            $controller('SjukfallPageCtrl', {
+            $controller('SjukfallResultPageCtrl', {
                 $scope: scope,
                 SjukfallModel: SjukfallModel,
                 SjukfallService: SjukfallService
@@ -61,7 +61,7 @@ describe('Controller: SjukfallPageCtrl', function () {
             });
 
 
-            $controller('SjukfallPageCtrl', {
+            $controller('SjukfallResultPageCtrl', {
                 $scope: scope,
                 SjukfallModel: SjukfallModel,
                 SjukfallService: SjukfallService

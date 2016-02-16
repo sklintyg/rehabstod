@@ -2,30 +2,30 @@ angular.module('rehabstodApp')
     .config(function($stateProvider) {
         'use strict';
         $stateProvider
-            .state('app.start', {
+            .state('app.sjukfall.start', {
                 url: '/',
                 views: {
                     'content@app': {
-                        templateUrl: 'app/start/start.page.html',
-                        controller: 'StartPageCtrl'
+                        templateUrl: 'app/sjukfall/start/start.page.html',
+                        controller: 'SjukfallStartPageCtrl'
                     }
                 },
                 data: {
                     rule: function(fromState, toState, UserModel) {
 
-                        if (toState.name !== 'app.start') {
+                        if (toState.name !== 'app.sjukfall.start') {
                             return;
                         }
 
                         if (UserModel.isLakare()) {
                             return {
-                                to: 'app.start.lakare',
+                                to: 'app.sjukfall.start.lakare',
                                 params: {},
                                 options: {location: 'replace'}
                             };
                         } else {
                             return {
-                                to: 'app.start.rehabkoordinator',
+                                to: 'app.sjukfall.start.rehabkoordinator',
                                 params: {},
                                 options: {location: 'replace'}
                             };
@@ -33,19 +33,19 @@ angular.module('rehabstodApp')
                     }
                 }
             })
-            .state('app.start.lakare', {
+            .state('app.sjukfall.start.lakare', {
                 views: {
-                    'selection@app.start': {
-                        templateUrl: 'app/start/selection/lakare.html',
-                        controller: 'SelectionCtrl'
+                    'selection@app.sjukfall.start': {
+                        templateUrl: 'app/sjukfall/start/selection/lakare.html',
+                        controller: 'SjukfallStartSelectionCtrl'
                     }
                 }
             })
-            .state('app.start.rehabkoordinator', {
+            .state('app.sjukfall.start.rehabkoordinator', {
                 views: {
-                    'selection@app.start': {
-                        templateUrl: 'app/start/selection/rehabkoordinator.html',
-                        controller: 'SelectionCtrl'
+                    'selection@app.sjukfall.start': {
+                        templateUrl: 'app/sjukfall/start/selection/rehabkoordinator.html',
+                        controller: 'SjukfallStartSelectionCtrl'
                     }
                 }
             });
