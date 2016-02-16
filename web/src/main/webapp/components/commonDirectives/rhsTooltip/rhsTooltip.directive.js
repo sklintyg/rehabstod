@@ -10,11 +10,12 @@ angular.module('rehabstodApp').directive('rhsTooltip',
                 restrict: 'A',
                 transclude: true,
                 scope: {
-                    fieldHelpText: '@'
+                    fieldHelpText: '@',
+                    msgParams: '='
                 },
                 controller: function($scope) {
-                    $scope.getMessage = function(key) {
-                        return messageService.getProperty(key);
+                    $scope.getMessage = function(key, msgParams) {
+                        return messageService.getProperty(key, msgParams);
                     };
                 },
                 templateUrl: 'components/commonDirectives/rhsTooltip/rhsTooltip.directive.html'

@@ -1,10 +1,12 @@
 angular.module('rehabstodApp')
-    .controller('SearchResultsCtrl', function($scope, SjukfallFilterViewState, SjukfallModel) {
+    .controller('SearchResultsCtrl', function($scope, SjukfallFilterViewState, SjukfallModel, UserModel) {
         'use strict';
 
 
         $scope.filter = SjukfallFilterViewState;
         $scope.model = SjukfallModel;
+        $scope.user = UserModel.get();
+
         $scope.displayedCollection = [].concat($scope.model.get());
 
         $scope.getToolTip = function(diagnos) {
