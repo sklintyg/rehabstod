@@ -37,31 +37,27 @@ public class SortableIntygsDataCreator {
     }
 
     public Map<String, List<SortableIntygsData>> create(List<IntygsData> intygsData, LocalDate aktivtDatum) {
-        Map<String, List<SortableIntygsData>> map = new HashMap();
 
-        for (IntygsData i : intygsData) {
-            String k = i.getPatient().getPersonId().getExtension();
-            if (map.get(k) == null) {
-                map.put(k, new ArrayList<SortableIntygsData>());
-            }
+        Map<String, List<SortableIntygsData>> unsortedMap = createMap(intygsData, aktivtDatum);
+        Map<String, List<SortableIntygsData>> sortedMap = sortValues(unsortedMap);
 
-            SortableIntygsData v = SortableIntygsData.createInstance(i, aktivtDatum);
-            map.get(k).add(v);
-        }
-
-        return sortValues(map);
+        return sortedMap;
     }
 
     Map<String, List<SortableIntygsData>> createMap(List<IntygsData> intygsData, LocalDate aktivtDatum) {
-        Map<String, List<SortableIntygsData>> map = new HashMap();
+        Map<String, List<SortableIntygsData>> map = new HashMap<>();
 
         for (IntygsData i : intygsData) {
-            String k = i.getPatient().getPersonId().getExtension();
+            String k = i.getPatient().getPersonId().getExtension().trim();
+
             if (map.get(k) == null) {
                 map.put(k, new ArrayList<>());
             }
 
-            map.get(k).add(SortableIntygsData.createInstance(i, aktivtDatum));
+            SortableIntygsData v = new SortableIntygsData.SortableIntygsDataBuilder(i, aktivtDatum).build();
+
+
+            map.get(k).add(v);
         }
 
         return map;

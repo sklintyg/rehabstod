@@ -23,7 +23,7 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.IIType;
 /**
  * Created by Magnus Ekstrand on 2016-02-10.
  */
-public class IdT extends IIType {
+public final class IdT extends IIType {
 
     public IdT() {
     }

@@ -29,7 +29,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
 /**
  * Created by Magnus Ekstrand on 2016-02-10.
  */
-public class IntygsDataT {
+public final class IntygsDataT {
 
     private IntygsDataT() {
     }

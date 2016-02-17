@@ -30,24 +30,24 @@ import java.util.List;
  */
 public class IntygsDataGenerator {
 
-    private final int LINES_TO_SKIP = 1;
+    private final int linesToSkip = 1;
 
-    private String location = "classpath:SjukfallResolverTest/intygsdata.csv";
-
+    private IntygsDataReader reader;
     private List<IntygsData> intygsData;
 
     public IntygsDataGenerator(String location) {
-        this.intygsData = new ArrayList();
-        this.location = location;
+        this.reader = new IntygsDataReader(location, linesToSkip);
+        this.intygsData = new ArrayList<>();
+    }
+
+    public IntygsDataGenerator generate() throws IOException {
+        List<String> csvlines = reader.read();
+        intygsData = IntygsDataLineMapper.map(csvlines);
+        return this;
     }
 
     public List<IntygsData> get() {
         return this.intygsData;
-    }
-
-    public void generate() throws IOException {
-        List<String> csvlines = IntygsDataReader.read(location, LINES_TO_SKIP);
-        intygsData = IntygsDataLineMapper.map(csvlines);
     }
 
 }

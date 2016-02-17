@@ -89,7 +89,8 @@ public class SjukfallResolver {
         sortedMap.entrySet().stream().forEach(e -> e.setValue(reduce(e.getValue(), maxIntygsGlapp)));
 
         // 3.
-        //mapper.map()
+        mapper.map(new ArrayList<>());
+
         return list;
     }
 

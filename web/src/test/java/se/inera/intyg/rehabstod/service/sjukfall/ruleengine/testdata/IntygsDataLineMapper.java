@@ -18,17 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine.testdata;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 import org.joda.time.LocalDate;
-
 import org.joda.time.LocalDateTime;
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.testdata.builders.ArbetsformagaT;
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.testdata.builders.EnhetT;
@@ -47,6 +37,13 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-11.
@@ -78,6 +75,7 @@ public class IntygsDataLineMapper {
         List<IntygsData> intygsData = new ArrayList();
         FormagaFieldSetMapper ffsm = new FormagaFieldSetMapper();
 
+        // CHECKSTYLE:OFF MagicNumber
         Iterator<String[]> iter = fields.iterator();
         while (iter.hasNext()) {
             String[] data = iter.next();
@@ -93,6 +91,7 @@ public class IntygsDataLineMapper {
             // Add to intygsData list
             intygsData.add(intygsData(data[0], patient, skapadAv, data[5], arbetsformaga, enkeltIntyg, signeringsTidpunkt));
         }
+        // CHECKSTYLE:ON MagicNumber
 
         return intygsData;
     }
@@ -163,7 +162,7 @@ public class IntygsDataLineMapper {
 
         public List<Formaga> map(String arbetsformaga) {
             List<Formaga> formagaList = new ArrayList();
-            String[] formagor = arbetsformaga.replace("[","").replace("]", "").split("\\|");
+            String[] formagor = arbetsformaga.replace("[", "").replace("]", "").split("\\|");
 
             for (String formaga : formagor) {
                 String[] fields = formaga.split(";");

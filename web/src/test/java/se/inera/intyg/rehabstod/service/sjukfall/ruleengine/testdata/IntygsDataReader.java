@@ -43,11 +43,9 @@ public class IntygsDataReader {
         this.linesToSkip = linesToSkip;
     }
 
-    public static List<String> read(String location, int linesToSkip) throws IOException {
-        IntygsDataReader reader = new IntygsDataReader(location, linesToSkip);
-        reader.loadData();
-
-        return reader.lines;
+    public List<String> read() throws IOException {
+        loadData();
+        return lines;
     }
 
     private void loadData() throws IOException {

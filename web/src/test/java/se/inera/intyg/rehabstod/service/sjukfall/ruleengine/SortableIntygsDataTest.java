@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2016 Inera AB (http://www.inera.se)
- * 
+ *
  * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
  *
  * rehabstod is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -42,34 +43,84 @@ public class SortableIntygsDataTest {
 
     private static List<IntygsData> intygsDataList;
 
-    private SortableIntygsData sortableIntygsData;
-
     private LocalDate activeDate = LocalDate.parse("2016-02-16");
 
     @BeforeClass
     public static void initTestData() throws IOException {
         IntygsDataGenerator generator = new IntygsDataGenerator(LOCATION_INTYGSDATA);
-        generator.generate();
+        intygsDataList = generator.generate().get();
 
-        intygsDataList = generator.get();
-        assertTrue("Expected 16 but was " + intygsDataList.size(), intygsDataList.size() == 16);
+        // CHECKSTYLE:OFF MagicNumber
+        assertTrue("Expected 6 but was " + intygsDataList.size(), intygsDataList.size() == 6);
+        // CHECKSTYLE:ON MagicNumber
     }
 
     @Before
     public void setup() {
-        //sortableIntygsData = new SortableIntygsData();
     }
 
     @Test
-    public void dummy() {
-        assertTrue(true);
+    public void testIntyg1() {
+        IntygsData intygsData = getIntygsData("intyg-1");
+        SortableIntygsData testee = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+
+        assertIntygsData(testee, "2016-02-01", "2016-02-10", false);
     }
 
-    static void assertStartDate(SortableIntygsData intygsData, String datum) {
-        assertTrue(intygsData.getStartDatum().equals(LocalDate.parse(datum)));
+    @Test
+    public void testIntyg2() {
+        IntygsData intygsData = getIntygsData("intyg-2");
+        SortableIntygsData testee = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+
+        assertIntygsData(testee, "2016-02-12", "2016-02-20", true);
     }
 
-    static void assertEndDate(SortableIntygsData intygsData, String datum) {
-        assertTrue(intygsData.getSlutDatum().equals(LocalDate.parse(datum)));
+    @Test
+    public void testIntyg3() {
+        IntygsData intygsData = getIntygsData("intyg-3");
+        SortableIntygsData testee = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+
+        assertIntygsData(testee, "2016-02-01", "2016-02-20", true);
     }
+
+    @Test
+    public void testIntyg4() {
+        IntygsData intygsData = getIntygsData("intyg-4");
+        SortableIntygsData testee = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+
+        assertIntygsData(testee, "2016-02-01", "2016-02-25", false);
+    }
+
+    @Test
+    public void testIntyg5() {
+        IntygsData intygsData = getIntygsData("intyg-5");
+        SortableIntygsData testee = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+
+        assertIntygsData(testee, "2016-02-01", "2016-02-28", true);
+    }
+
+    @Ignore
+    @Test
+    public void testIntyg6() {
+        IntygsData intygsData = getIntygsData("intyg-5");
+        SortableIntygsData testee1 = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+        SortableIntygsData testee2 = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, LocalDate.parse("2016-02-23")).build();
+
+        assertIntygsData(testee1, "2016-02-01", "2016-02-28", true);
+        assertIntygsData(testee2, "2016-02-01", "2016-02-28", false);
+    }
+
+    private IntygsData getIntygsData(String intygsId) {
+        return intygsDataList.stream()
+                .filter(e -> e.getIntygsId().equalsIgnoreCase(intygsId))
+                .findAny()
+                .get();
+    }
+
+    private static void assertIntygsData(SortableIntygsData obj, String startDatum, String slutDatum, boolean aktivtIntyg) {
+        assertTrue(obj.getStartDatum().equals(LocalDate.parse(startDatum)));
+        assertTrue(obj.getSlutDatum().equals(LocalDate.parse(slutDatum)));
+        assertTrue(obj.isAktivtIntyg() == aktivtIntyg);
+    }
+
 }

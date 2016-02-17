@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by Magnus Ekstrand on 2016-02-10.
  */
-public class ArbetsformagaT {
+public final class ArbetsformagaT {
 
     public ArbetsformagaT() {
     }

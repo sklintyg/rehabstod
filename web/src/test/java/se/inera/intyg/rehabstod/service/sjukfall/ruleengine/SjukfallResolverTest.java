@@ -38,8 +38,9 @@ import java.util.Map;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SjukfallResolverTest {
+    // CHECKSTYLE:OFF MagicNumber
 
-    private static final String LOCATION_INTYGSDATA = "classpath:SjukfallResolverTest/intygsdata.csv";
+    private static final String LOCATION_INTYGSDATA = "classpath:SjukfallResolverTest/intygsdata-resolver.csv";
 
     private static List<IntygsData> intygsDataList;
 
@@ -51,9 +52,8 @@ public class SjukfallResolverTest {
     @BeforeClass
     public static void initTestData() throws IOException {
         IntygsDataGenerator generator = new IntygsDataGenerator(LOCATION_INTYGSDATA);
-        generator.generate();
+        intygsDataList = generator.generate().get();
 
-        intygsDataList = generator.get();
         assertTrue(intygsDataList.size() == 16);
     }
 
@@ -63,6 +63,7 @@ public class SjukfallResolverTest {
         resolver = new SjukfallResolver(mapper);
 
         intygsDataMap = resolver.toMap(intygsDataList, LocalDate.now());
+
         assertTrue("Expected 9 but was " + intygsDataMap.size(), intygsDataMap.size() == 9);
     }
 
@@ -83,4 +84,5 @@ public class SjukfallResolverTest {
         assertTrue("Expected 9 but was " + sortedMap.size(), sortedMap.size() == 9);
     }
 
+    // CHECKSTYLE:ON MagicNumber
 }

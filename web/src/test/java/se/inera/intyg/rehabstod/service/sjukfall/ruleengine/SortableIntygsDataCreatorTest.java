@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2016 Inera AB (http://www.inera.se)
- * 
+ *
  * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
  *
  * rehabstod is free software: you can redistribute it and/or modify
@@ -39,8 +39,9 @@ import java.util.Map;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SortableIntygsDataCreatorTest {
+    // CHECKSTYLE:OFF MagicNumber
 
-    private static final String LOCATION_INTYGSDATA = "classpath:SortableIntygsDataCreatorTest/intygsdata.csv";
+    private static final String LOCATION_INTYGSDATA = "classpath:SortableIntygsDataCreatorTest/intygsdata-creator.csv";
 
     private static List<IntygsData> intygsDataList;
 
@@ -51,9 +52,8 @@ public class SortableIntygsDataCreatorTest {
     @BeforeClass
     public static void initTestData() throws IOException {
         IntygsDataGenerator generator = new IntygsDataGenerator(LOCATION_INTYGSDATA);
-        generator.generate();
+        intygsDataList = generator.generate().get();
 
-        intygsDataList = generator.get();
         assertTrue("Expected 16 but was " + intygsDataList.size(), intygsDataList.size() == 16);
     }
 
@@ -70,7 +70,8 @@ public class SortableIntygsDataCreatorTest {
 
     @Test
     public void testSortedMap() {
-        Map<String, List<SortableIntygsData>> sortedMap = creator.create(intygsDataList, activeDate);
+        Map<String, List<SortableIntygsData>> map = creator.createMap(intygsDataList, activeDate);
+        Map<String, List<SortableIntygsData>> sortedMap = creator.sortValues(map);
 
         for (Map.Entry<String, List<SortableIntygsData>> entry : sortedMap.entrySet()) {
             if (entry.getValue().size() > 1) {
@@ -109,4 +110,6 @@ public class SortableIntygsDataCreatorTest {
     static void assertEndDate(SortableIntygsData intygsData, String datum) {
         assertTrue(intygsData.getSlutDatum().equals(LocalDate.parse(datum)));
     }
+
+    // CHECKSTYLE:ON MagicNumber
 }

@@ -25,7 +25,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
 /**
  * Created by Magnus Ekstrand on 2016-02-10.
  */
-public class EnhetT {
+public final class EnhetT {
 
     public EnhetT() {
     }

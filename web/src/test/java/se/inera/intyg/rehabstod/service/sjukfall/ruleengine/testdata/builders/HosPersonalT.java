@@ -26,7 +26,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 /**
  * Created by Magnus Ekstrand on 2016-02-10.
  */
-public class HosPersonalT {
+public final class HosPersonalT {
 
     public HosPersonalT() {
     }

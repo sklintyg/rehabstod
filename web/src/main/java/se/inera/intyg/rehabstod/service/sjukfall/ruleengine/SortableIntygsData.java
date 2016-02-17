@@ -19,13 +19,11 @@
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
 
-import java.util.List;
-
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+
+import java.util.List;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-15.
@@ -36,41 +34,33 @@ public class SortableIntygsData extends IntygsData {
 
     private LocalDate startDatum;
     private LocalDate slutDatum;
-    private LocalDateTime signeringsTidpunkt;
 
     private boolean aktivtIntyg;
 
-
-    public SortableIntygsData() {
+    public SortableIntygsData(SortableIntygsDataBuilder builder) {
         super();
+
+        this.startDatum = builder.startDatum;
+        this.slutDatum = builder.slutDatum;
+        this.aktivtIntyg = builder.aktivtIntyg;
+
+        this.setIntygsId(builder.intygsData.getIntygsId());
+        this.setPatient(builder.intygsData.getPatient());
+        this.setSkapadAv(builder.intygsData.getSkapadAv());
+        this.setArbetsformaga(builder.intygsData.getArbetsformaga());
+        this.setDiagnoskod(builder.intygsData.getDiagnoskod());
+        this.setEnkeltIntyg(builder.intygsData.isEnkeltIntyg());
+        this.setSigneringsTidpunkt(builder.intygsData.getSigneringsTidpunkt());
     }
 
-    public static SortableIntygsData createInstance(IntygsData intygsData, LocalDate aktivtDatum) {
-        // Copy intygsData object
-        SortableIntygsData sortable = copy(intygsData);
-
-        // Calculate start and end dates and if it's active
-        sortable.setStartDatum(lookupStartDatum(intygsData.getArbetsformaga().getFormaga()));
-        sortable.setSlutDatum(lookupSlutDatum(intygsData.getArbetsformaga().getFormaga()));
-        sortable.setAktivtIntyg(hasAktivFormaga(intygsData.getArbetsformaga().getFormaga(), aktivtDatum));
-
-        return sortable;
-    }
+    // Getters and setters
 
     public LocalDate getStartDatum() {
         return startDatum;
     }
 
-    public void setStartDatum(LocalDate startDatum) {
-        this.startDatum = startDatum;
-    }
-
     public LocalDate getSlutDatum() {
         return slutDatum;
-    }
-
-    public void setSlutDatum(LocalDate slutDatum) {
-        this.slutDatum = slutDatum;
     }
 
     public boolean isAktivtIntyg() {
@@ -81,24 +71,22 @@ public class SortableIntygsData extends IntygsData {
         this.aktivtIntyg = aktivtIntyg;
     }
 
-    public LocalDateTime getSigneringsTidpunkt() {
-        return signeringsTidpunkt;
-    }
-
-    public void setSigneringsTidpunkt(LocalDateTime signeringsTidpunkt) {
-        this.signeringsTidpunkt = signeringsTidpunkt;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         SortableIntygsData that = (SortableIntygsData) o;
+        if (!startDatum.equals(that.startDatum)) {
+            return false;
+        }
 
-        if (!startDatum.equals(that.startDatum)) return false;
         return slutDatum.equals(that.slutDatum);
-
     }
 
     @Override
@@ -108,34 +96,49 @@ public class SortableIntygsData extends IntygsData {
         return result;
     }
 
-    static boolean hasAktivFormaga(List<Formaga> formagor, LocalDate aktivtDatum) {
-        return !formagor.stream()
-                .anyMatch(f -> f.getStartdatum().isBefore(aktivtDatum) || f.getSlutdatum().isAfter(aktivtDatum));
+    public static class SortableIntygsDataBuilder {
+
+        private final IntygsData intygsData;
+
+        private LocalDate startDatum;
+        private LocalDate slutDatum;
+
+        private boolean aktivtIntyg;
+
+        public SortableIntygsDataBuilder(IntygsData intygsData, LocalDate aktivtDatum) {
+            this.intygsData = intygsData;
+            this.startDatum = lookupStartDatum(intygsData.getArbetsformaga().getFormaga());
+            this.slutDatum = lookupSlutDatum(intygsData.getArbetsformaga().getFormaga());
+            this.aktivtIntyg = hasAktivFormaga(intygsData.getArbetsformaga().getFormaga(), aktivtDatum);
+        }
+
+        public SortableIntygsData build() {
+            return new SortableIntygsData(this);
+        }
+
+        boolean hasAktivFormaga(List<Formaga> formagor, LocalDate aktivtDatum) {
+            return formagor.stream()
+                    .anyMatch(f -> isAktivFormaga(aktivtDatum, f));
+        }
+
+        private boolean isAktivFormaga(LocalDate aktivtDatum, Formaga f) {
+            boolean start = f.getStartdatum().compareTo(aktivtDatum) < 1;
+            boolean end = f.getSlutdatum().compareTo(aktivtDatum) > -1;
+            return  start && end;
+        }
+
+        LocalDate lookupStartDatum(List<Formaga> formagor) {
+            Formaga formaga = formagor.stream()
+                    .min((o1, o2) -> o1.getStartdatum().compareTo(o2.getStartdatum())).get();
+            return formaga.getStartdatum();
+        }
+
+        LocalDate lookupSlutDatum(List<Formaga> formagor) {
+            Formaga formaga = formagor.stream()
+                    .max((o1, o2) -> o1.getSlutdatum().compareTo(o2.getSlutdatum())).get();
+            return formaga.getSlutdatum();
+        }
+
+
     }
-
-    static LocalDate lookupStartDatum(List<Formaga> formagor) {
-        Formaga formaga = formagor.stream()
-                .min((o1, o2) -> o1.getStartdatum().compareTo(o2.getStartdatum())).get();
-        return formaga.getStartdatum();
-    }
-
-    static LocalDate lookupSlutDatum(List<Formaga> formagor) {
-        Formaga formaga = formagor.stream()
-                .max((o1, o2) -> o1.getSlutdatum().compareTo(o2.getSlutdatum())).get();
-        return formaga.getSlutdatum();
-    }
-
-    private static SortableIntygsData copy(IntygsData intygsData) {
-        SortableIntygsData o = new SortableIntygsData();
-        o.setIntygsId(intygsData.getIntygsId());
-        o.setPatient(intygsData.getPatient());
-        o.setSkapadAv(intygsData.getSkapadAv());
-        o.setDiagnoskod(intygsData.getDiagnoskod());
-        o.setArbetsformaga(intygsData.getArbetsformaga());
-        o.setEnkeltIntyg(intygsData.isEnkeltIntyg());
-        o.setSigneringsTidpunkt(intygsData.getSigneringsTidpunkt());
-
-        return o;
-    }
-
 }

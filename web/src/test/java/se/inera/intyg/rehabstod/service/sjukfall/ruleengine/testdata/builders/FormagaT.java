@@ -24,7 +24,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 /**
  * Created by Magnus Ekstrand on 2016-02-10.
  */
-public class FormagaT {
+public final class FormagaT {
 
     public FormagaT() {
     }

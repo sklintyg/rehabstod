@@ -24,7 +24,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
 /**
  * Created by Magnus Ekstrand on 2016-02-10.
  */
-public class PatientT {
+public final class PatientT {
 
     private PatientT() {
     }
