@@ -8,14 +8,6 @@ angular.module('rehabstodApp')
                     'content@app': {
                         templateUrl: 'app/sjukfall/result/result.page.html',
                         controller: 'SjukfallResultPageCtrl'
-                    },
-                    'searchfilter@app.sjukfall.result': {
-                        templateUrl: 'app/sjukfall/result/searchfilter/searchfilter.html',
-                        controller: 'SjukfallSearchFilterCtrl'
-                    },
-                    'searchresults@app.sjukfall.result': {
-                        templateUrl: 'app/sjukfall/result/searchresults/searchresults.html',
-                        controller: 'SjukfallSearchResultsCtrl'
                     }
                 },
                 data: {

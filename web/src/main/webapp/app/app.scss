@@ -174,12 +174,12 @@ h5.inline-heading {
 @import 'error/error.scss';
 @import 'header/header.scss';
 @import 'print.scss';
-@import 'sjukfall/result/searchfilter/searchfilter.scss';
-@import 'sjukfall/result/searchresults/searchresults.scss';
 @import 'sjukfall/start/start.page.scss';
 @import 'vendor-override.scss';
+@import 'commonDirectives/rhsFilter/rhsFilter.scss';
 @import 'commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.scss';
 @import 'commonDirectives/rhsSlider/rhsSlider.scss';
 @import 'commonDirectives/rhsStatCircle/rhsStatCircle.scss';
 @import 'commonDirectives/rhsStatPanel/rhsStatPanel.scss';
+@import 'commonDirectives/rhsTable/rhsTable.scss';
 // endinjector
