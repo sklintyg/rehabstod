@@ -35,6 +35,12 @@ var ppMessages = {
         //SearchFilter
         'label.searchfilter.for.doctor.help': 'För att se sjukskrivningar för andra läkare - välj "Visa Alla" på startsidan.',
 
+        // Sjukfall Result Lakare
+        'label.sjukfall.result.lakare.header': 'Mina sjukfall',
+        'label.sjukfall.result.lakare.subheader': ' - Endast de sjukfall där jag utfärdat det aktiva intyget',
+
+        'label.sjukfall.result.all.header': 'Alla sjukfall',
+        'label.sjukfall.result.all.subheader': ' - Samtliga pågående fall på enheten',
 
         //
         'label.gender.male': 'Man',

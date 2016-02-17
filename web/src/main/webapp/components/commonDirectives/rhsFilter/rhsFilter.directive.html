@@ -7,7 +7,7 @@
     <div class="box" ng-show="showSearchFilter">
       <form>
         <div class="row">
-          <div class="col-sm-4">
+          <div class="col-sm-5">
             <div class="form-group search-filter-diagnos">
               <label class="control-label">Välj nuvarande diagnos</label>
               <rhs-multi-select items-model="filterViewState.get().diagnosKapitelModel"
@@ -15,7 +15,7 @@
             </div>
           </div>
 
-          <div ng-if="user.urval === 'ALL'" class="col-sm-5">
+          <div ng-if="user.urval === 'ALL'" class="col-sm-4">
             <div class="form-group">
               <label class="control-label">Välj nuvarande läkare</label>
               <rhs-multi-select items-model="filterViewState.get().lakareModel" none-selected-title="Alla valda"

@@ -1,0 +1,55 @@
+.result-sub-header {
+  border-bottom: 1px solid #eeeeee;
+}
+
+.result-backlink {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: transparent url(../assets/images/backlink-icon.png) center left no-repeat;
+  position: absolute;
+  left: -20px;
+  top: 35%;
+
+  &:hover {
+    background: transparent url(../assets/images/backlink-icon-hover.png) center left no-repeat;
+  }
+}
+
+.result-top {
+  margin: 0;
+  position: relative;
+  padding-top: 10px;
+
+  h1 {
+    padding-bottom: 5px;
+  }
+
+  h3 {
+    font-size: 14px;
+  }
+
+}
+
+.result-fixed-top {
+  position: fixed;
+  background: #fff;
+  top: 0;
+  z-index: 1000;
+  padding-top: 10px;
+}
+
+
+rhs-filter {
+  display: block;
+}
+
+@media (max-width: $screen-xs-max) {
+  .result-backlink {
+    left: 0;
+  }
+
+  .result-top {
+    padding-left: 35px;
+  }
+}
