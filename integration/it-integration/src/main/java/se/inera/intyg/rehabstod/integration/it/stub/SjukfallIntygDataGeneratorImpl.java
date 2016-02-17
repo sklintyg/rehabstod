@@ -25,12 +25,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.*;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -170,10 +169,9 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     }
 
     private void initDiagnoser() {
-        diagnosList.add("M16");
+        diagnosList.add("M16.0");
         diagnosList.add("J21");
-        diagnosList.add("J11");
-        diagnosList.add("A31");
+        diagnosList.add("J-110");
     }
 
     private void initEnhet() {
