@@ -1,0 +1,10 @@
+@startuml
+actor Rehabkoordinator
+Rehabkoordinator -> Rehabstöd: Utför urval i GUI
+Rehabstöd -> Intygstjänsten: SokSjukfall (TjK)
+Intygstjänsten -> HSA: Begär vårdenh. för överordnad vårdgiv.
+HSA -> Intygstjänsten: List av vårdenh. för överordnad vårdgiv.
+Intygstjänsten -> Intygstjänsten: Sammanställ sjukfall
+Intygstjänsten -> Rehabstöd: Lista av sjukfall (TjK)
+Rehabstöd -> Rehabkoordinator: Visa sjukfall i GUI
+@enduml

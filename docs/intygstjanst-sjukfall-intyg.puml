@@ -1,0 +1,7 @@
+@startuml
+Intygsproducent -> Intygstjänsten: Sjukintyg
+Intygstjänsten -> Intygstjänsten: Validera
+Intygstjänsten --> Databas: Lagra intyg i CERTIFICATE
+Intygstjänsten -> Intygstjänsten: Läs ut sjukfallsgrundande data
+Intygstjänsten --> Databas: Lagra sjukfallsgrundande data i SJUKFALL_INTYG
+@enduml
