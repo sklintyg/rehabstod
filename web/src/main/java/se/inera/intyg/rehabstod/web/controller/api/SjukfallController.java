@@ -18,21 +18,23 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
-
-import java.util.List;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -57,7 +59,9 @@ public class SjukfallController {
         }
 
         String enhetsId = user.getValdVardenhet().getId();
-        return sjukfallService.getSjukfall(enhetsId, request);
+        String hsaId = user.getHsaId();
+        Urval urval = user.getUrval();
+        return sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
     }
 
     @RequestMapping(value = "/summary", method = RequestMethod.GET)

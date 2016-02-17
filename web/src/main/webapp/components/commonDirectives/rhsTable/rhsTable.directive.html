@@ -17,7 +17,7 @@
       <th class="rhs-table-head" st-sort="slut"><span message key="label.table.column.slut"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.slut.help"></span></th>
       <th class="rhs-table-head" st-sort="dagar"><span message key="label.table.column.langd"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.langd.help"></span></th>
       <th class="rhs-table-head" st-sort="aktivGrad"><span message key="label.table.column.grad"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.grad.help"></span></th>
-      <th class="rhs-table-head" st-sort="lakare"><span message key="label.table.column.lakare"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.lakare.help"></span></th>
+      <th  ng-if="user.urval != 'ISSUED_BY_ME'" class="rhs-table-head" st-sort="lakare"><span message key="label.table.column.lakare"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.lakare.help"></span></th>
     </tr>
     </thead>
     <tbody>
@@ -36,7 +36,7 @@
         {{::row.dagarShow}}<span class="intyg">&nbsp;({{::row.intyg}}&nbsp;intyg)</span>
       </td>
       <td ng-bind-html="::row.gradShow"></td>
-      <td>{{::row.lakare}}</td>
+      <td ng-if="user.urval != 'ISSUED_BY_ME'">{{::row.lakare}}</td>
     </tr>
     </tbody>
   </table>

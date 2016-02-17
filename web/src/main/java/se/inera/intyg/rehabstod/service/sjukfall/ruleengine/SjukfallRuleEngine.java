@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
@@ -65,7 +66,7 @@ public class SjukfallRuleEngine {
         clock = Clock.system(ZoneId.of("Europe/Paris"));
     }
 
-    public List<Sjukfall> calculate(List<IntygsData> intygsData, GetSjukfallRequest requestData) {
+    public List<Sjukfall> calculate(List<IntygsData> intygsData, String hsaId, Urval urval, GetSjukfallRequest requestData) {
         return new ArrayList();
     }
 
