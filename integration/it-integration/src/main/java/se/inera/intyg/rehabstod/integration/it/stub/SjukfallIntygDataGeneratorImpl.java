@@ -185,6 +185,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         diagnosList.add("M16.0");
         diagnosList.add("J21");
         diagnosList.add("J-110");
+        diagnosList.add("A311");
+        diagnosList.add("H_01");
     }
 
     private void initEnhet() {

@@ -6,13 +6,16 @@ angular.module('rehabstodApp').directive('setClassWhenAtTop', function ($window)
         restrict: 'A',
         link: function (scope, element, attrs) {
             var topClass = attrs.setClassWhenAtTop, // get CSS class from directive's attribute value
-                offsetTop = element.offset().top; // get element's offset top relative to document
+                parent = element.parent();
 
             $win.on('scroll', function () {
+                var offsetTop = parent.offset().top;
                 if ($win.scrollTop() >= offsetTop) {
                     element.addClass(topClass);
+                    parent.height(element.height());
                 } else {
                     element.removeClass(topClass);
+                    parent.css('height', 'auto');
                 }
             });
 
