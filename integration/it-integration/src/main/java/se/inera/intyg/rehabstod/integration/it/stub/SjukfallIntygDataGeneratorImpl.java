@@ -31,14 +31,6 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.*;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.UUID;
-
 /**
  * Can generate a suitable amount of intygsdata.
  *
@@ -46,9 +38,9 @@ import java.util.UUID;
  *
  * Created by eriklupander on 2016-01-29.
  */
-//CHECKSTYLE:OFF MagicNumber
+// CHECKSTYLE:OFF MagicNumber
 @Component
-@Profile({"dev", "rhs-it-stub"})
+@Profile({ "dev", "rhs-it-stub" })
 public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
@@ -73,16 +65,15 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         initHoSPerson();
     }
 
-
     /**
      * Generate intygsdata for a given number of patients, with N intyg per patient.
      *
      * @param numberOfPatients
-     *                  Number of patients to base intyg data on.
+     *            Number of patients to base intyg data on.
      * @param intygPerPatient
-     *                  Number of intyg to generate intyg per patient on.
+     *            Number of intyg to generate intyg per patient on.
      * @return
-     *        List of all IntygsData
+     *         List of all IntygsData
      */
     public List<IntygsData> generateIntygsData(Integer numberOfPatients, Integer intygPerPatient) {
 
@@ -160,7 +151,6 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
             List<String> personNummer = personnummerLoader.readTestPersonnummer();
             int personNummerSize = personNummer.size();
             int step = personNummerSize / numberOfPatients;
-
 
             for (int a = 0, i = 0; a < personNummerSize && i < numberOfPatients; i++, a += step) {
                 seededPatients.add(buildPerson(personNummer.get(a)));

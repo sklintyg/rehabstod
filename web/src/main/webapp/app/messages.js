@@ -28,6 +28,13 @@ var ppMessages = {
 
         // Sjukfall Start
         'label.sjukfall.start.header' : 'Sjukfall på enhet',
+        'label.sjukfall.start.rehab.header' : 'Samtliga pågående fall på enheten',
+        'label.sjukfall.start.rehab.body.1' : 'Som rehabkoordinator tar du del av samtliga pågående sjukfall på enheten.',
+        'label.sjukfall.start.rehab.body.2' : 'När du går vidare och klickar på "Visa alla sjukfall" nedan, kommer du att få se alla pågående sjukfall för den aktuella enheten. ' +
+                                                'Om du sedan byter enhet kommer du att få se alla pågående sjukfall på den enheten istället.',
+        'label.sjukfall.start.rehab.button' : 'Visa alla sjukfall',
+
+
 
         // Sjukfall Stat
         'label.sjukfall.stat.ongoing' : 'Antalet pågående sjukfall på',

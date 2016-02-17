@@ -1,13 +1,19 @@
 <div class="row">
   <div class="col-md-8">
-    <h3>Som rehabkoordinator tar du del av samtliga pågående sjukskrivningar på enheten</h3>
-    <p>
-      Detta alternativ visar alla pågående sjukskrivningar på enheten som du även kan filtrera och sortera.
-      (info om hur detta kommer att pdl-loggas?) </p>
-    <div class="pull-right">
-      <a data-ng-click="onSelectUrval('ALL')">
-        <button id="rhs-startPage-allBtn" class="btn btn-primary">Visa alla sjukskrivningar</button>
-      </a>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{::'label.sjukfall.start.rehab.header' | message}}</h3>
+      </div>
+      <div class="panel-body">
+        <p>{{::'label.sjukfall.start.rehab.body.1' | message}}</p>
+        <p>{{::'label.sjukfall.start.rehab.body.2' | message}}</p>
+
+        <div class="pull-right">
+          <button data-ng-click="onSelectUrval('ALL')" id="rhs-startPage-allBtn" class="btn btn-primary">
+            {{::'label.sjukfall.start.rehab.button' | message}}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
