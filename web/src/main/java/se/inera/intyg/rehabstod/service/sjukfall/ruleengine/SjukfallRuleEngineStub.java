@@ -43,9 +43,9 @@ import java.util.stream.Collectors;
  * This is to be deleted. It's only purpose is to create stubbed data until the rule engine is in place.
  */
 @Component
-public class SjukfallCalculatorEngineStub extends SjukfallCalculatorEngine {
+public class SjukfallRuleEngineStub extends SjukfallRuleEngine {
 
-    public SjukfallCalculatorEngineStub() {
+    public SjukfallRuleEngineStub() {
         super();
     }
 
@@ -76,14 +76,13 @@ public class SjukfallCalculatorEngineStub extends SjukfallCalculatorEngine {
 
                 // Diagnos
                 Diagnos diagnos = new Diagnos();
-                diagnos.setIntygsVarde(intyg.getDiagnos().getKod());
-                diagnos.setKapitel(intyg.getDiagnos().getGrupp());
-                diagnos.setKod(intyg.getDiagnos().getKod());
+                diagnos.setIntygsVarde(intyg.getDiagnoskod());
+                //diagnos.setKapitel(intyg.getDiagnos().getGrupp());
+                //diagnos.setKod(intyg.getDiagnos().getKod());
                 fall.setDiagnos(diagnos);
 
                 fall.setDagar(ThreadLocalRandom.current().nextInt(1, 500 + 1));
-                fall.setStartVE(formatter.parse("2016-02-01"));
-                fall.setStartVG(formatter.parse("2016-01-01"));
+                fall.setStart(formatter.parse("2016-02-01"));
                 fall.setSlut(formatter.parse("2016-03-01"));
 
                 List<Integer> grader = new ArrayList<>();

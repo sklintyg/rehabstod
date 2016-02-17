@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
 /**
  * Basic test suite that verifies that the endpoint (/api/sjukfall-summary) is available and repond according to

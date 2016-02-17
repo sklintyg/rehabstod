@@ -65,7 +65,7 @@ public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitRespond
         Vardgivare vg = new Vardgivare();
         HsaId hsaId = new HsaId();
         hsaId.setExtension("IFV1239877878-1041");
-        vg.setVardgivareId(hsaId);
+        vg.setVardgivarId(hsaId);
         vg.setVardgivarnamn("WebCert-Vårdgivare1");
         return vg;
     }

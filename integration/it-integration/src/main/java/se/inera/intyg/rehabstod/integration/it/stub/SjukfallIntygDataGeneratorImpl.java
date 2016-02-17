@@ -18,29 +18,30 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Diagnos;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
-
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
+
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.IntygId;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
 
 /**
  * Can generate a suitable amount of intygsdata.
@@ -62,7 +63,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private HosPersonal hosPerson;
 
     private int currentDiagnosIndex = 0;
-    private List<Diagnos> diagnosList = new ArrayList<>();
+    private List<String> diagnosList = new ArrayList<>();
 
     @Autowired
     private PersonnummerLoader personnummerLoader;
@@ -100,9 +101,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
                 IntygsData intygsData = new IntygsData();
                 intygsData.setPatient(patient);
                 intygsData.setIntygsId(randomIntygId());
-                intygsData.setDiagnos(nextDiagnosis());
+                intygsData.setDiagnoskod(nextDiagnosis());
                 intygsData.setSkapadAv(hosPerson);
-                intygsData.setEnhet(enhet);
 
                 Arbetsformaga arbetsformaga = new Arbetsformaga();
                 arbetsformaga.getFormaga().addAll(getDefaultSjukskrivningsGrader());
@@ -136,17 +136,15 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         return sg2;
     }
 
-    private Diagnos nextDiagnosis() {
+    private String nextDiagnosis() {
         if (currentDiagnosIndex > diagnosList.size() - 1) {
             currentDiagnosIndex = 0;
         }
         return diagnosList.get(currentDiagnosIndex++);
     }
 
-    private IntygId randomIntygId() {
-        IntygId id = new IntygId();
-        id.setExtension(UUID.randomUUID().toString());
-        return id;
+    private String randomIntygId() {
+        return UUID.randomUUID().toString();
     }
 
     private Patient nextPatient() {
@@ -175,30 +173,10 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     }
 
     private void initDiagnoser() {
-        Diagnos d1 = new Diagnos();
-        d1.setKod("M16");
-        d1.setText("Höftledsartros");
-        d1.setGrupp("Grupp 1");
-
-        Diagnos d2 = new Diagnos();
-        d2.setKod("J21");
-        d2.setText("Akut bronkiolit (katarr i de små luftvägarna)");
-        d2.setGrupp("Grupp 2");
-
-        Diagnos d3 = new Diagnos();
-        d3.setKod("J11");
-        d3.setText("Influensa, virus ej identifierat");
-        d3.setGrupp("Grupp 2");
-
-        Diagnos d4 = new Diagnos();
-        d4.setKod("A31");
-        d4.setText("Sjukdomar orsakade av andra mykobakterier");
-        d4.setGrupp("Grupp 3");
-
-        diagnosList.add(d1);
-        diagnosList.add(d2);
-        diagnosList.add(d3);
-        diagnosList.add(d4);
+        diagnosList.add("M16");
+        diagnosList.add("J21");
+        diagnosList.add("J11");
+        diagnosList.add("A31");
     }
 
     private void initEnhet() {

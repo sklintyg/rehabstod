@@ -58,7 +58,7 @@ public class SjukfallIntygDataGeneratorTest {
         List<IntygsData> intygsData = testee.generateIntygsData(numberOfPatients, intygPerPatient);
         assertEquals(numberOfPatients * intygPerPatient, intygsData.size());
         assertEquals("19791110-9291", intygsData.get(0).getPatient().getPersonId().getExtension());
-        assertEquals("M16", intygsData.get(0).getDiagnos().getKod());
+        assertEquals("M16", intygsData.get(0).getDiagnoskod());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum());
     }

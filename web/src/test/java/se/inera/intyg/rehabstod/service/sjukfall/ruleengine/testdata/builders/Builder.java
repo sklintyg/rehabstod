@@ -16,24 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
-
-import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.util.ArrayList;
-import java.util.List;
+package se.inera.intyg.rehabstod.service.sjukfall.ruleengine.testdata.builders;
 
 /**
- * Created by Magnus Ekstrand on 03/02/16.
+ * Created by Magnus Ekstrand on 2016-02-10.
  */
-public class SjukfallCalculatorEngine {
-
-    public SjukfallCalculatorEngine() {
-    }
-
-    public List<Sjukfall> calculate(List<IntygsData> intygsData, GetSjukfallRequest requestData) {
-        return new ArrayList();
-    }
+public interface Builder<T> {
+    T build();
 }
