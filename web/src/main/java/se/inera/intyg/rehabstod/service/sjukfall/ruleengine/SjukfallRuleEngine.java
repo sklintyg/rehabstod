@@ -44,9 +44,9 @@ import java.util.List;
 /**
  * Created by Magnus Ekstrand on 03/02/16.
  */
-public class SjukfallCalculatorEngine {
+public class SjukfallRuleEngine {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SjukfallCalculatorEngine.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SjukfallRuleEngine.class);
 
     private static final int AGE_START = 0;
     private static final int AGE_END = 8;
@@ -61,7 +61,7 @@ public class SjukfallCalculatorEngine {
     @Autowired
     protected DiagnosKapitelService diagnosKapitelService;
 
-    public SjukfallCalculatorEngine() {
+    public SjukfallRuleEngine() {
         clock = Clock.system(ZoneId.of("Europe/Paris"));
     }
 
@@ -70,12 +70,12 @@ public class SjukfallCalculatorEngine {
     }
 
     protected Diagnos getDiagnos(IntygsData intyg) {
-        String cleanedDiagnosKod = DiagnosKod.cleanKod(intyg.getDiagnos().getKod());
+        String cleanedDiagnosKod = DiagnosKod.cleanKod(intyg.getDiagnoskod());
         String description = diagnosBeskrivningService.getDiagnosBeskrivning(cleanedDiagnosKod);
         DiagnosKapitel diagnosKaptiel = diagnosKapitelService.getDiagnosKapitel(cleanedDiagnosKod);
 
         Diagnos diagnos = new Diagnos();
-        diagnos.setIntygsVarde(intyg.getDiagnos().getKod());
+        diagnos.setIntygsVarde(intyg.getDiagnoskod());
         diagnos.setKapitel(diagnosKaptiel.getId());
         diagnos.setKod(cleanedDiagnosKod);
         diagnos.setBeskrivning(description);

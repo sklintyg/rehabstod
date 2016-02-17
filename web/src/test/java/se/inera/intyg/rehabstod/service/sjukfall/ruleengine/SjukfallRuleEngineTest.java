@@ -23,25 +23,23 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneId;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
+
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 
 /**
  * Created by martin on 11/02/16.
@@ -59,7 +57,7 @@ public class SjukfallRuleEngineTest {
     private DiagnosKapitelService diagnosKapitelService;
 
     @InjectMocks
-    private SjukfallCalculatorEngineTestImpl testee = new SjukfallCalculatorEngineTestImpl();
+    private SjukfallRuleEngineTestImpl testee = new SjukfallRuleEngineTestImpl();
 
     @Before
     public void init() {
@@ -157,26 +155,24 @@ public class SjukfallRuleEngineTest {
 
     private IntygsData getIntyg(String patientId, String fornamn, String efternamn, String mellanNamn) {
         IntygsData intyg = new IntygsData();
-        Patient patient = new Patient();
+
         PersonId personId = new PersonId();
         personId.setExtension(patientId);
+
+        Patient patient = new Patient();
         patient.setPersonId(personId);
         patient.setFornamn(fornamn);
         patient.setEfternamn(efternamn);
         patient.setMellannamn(mellanNamn);
 
         intyg.setPatient(patient);
-
-        Diagnos diagnos = new Diagnos();
-        diagnos.setKod(DIAGNOS_KOD);
-
-        intyg.setDiagnos(diagnos);
+        intyg.setDiagnoskod(DIAGNOS_KOD);
 
         return intyg;
     }
 
-    private class SjukfallCalculatorEngineTestImpl extends SjukfallRuleEngine {
-        public SjukfallCalculatorEngineTestImpl() {
+    private class SjukfallRuleEngineTestImpl extends SjukfallRuleEngine {
+        public SjukfallRuleEngineTestImpl() {
             super();
             // 2016-02-11
             final int date = 1455203622;

@@ -62,18 +62,9 @@ public class SjukfallRuleEngineStub extends SjukfallRuleEngine {
             // Patient
             fall.setPatient(getPatient(intyg));
 
-                // Diagnos
-                Diagnos diagnos = new Diagnos();
-                diagnos.setIntygsVarde(intyg.getDiagnoskod());
-                //diagnos.setKapitel(intyg.getDiagnos().getGrupp());
-                //diagnos.setKod(intyg.getDiagnos().getKod());
-                fall.setDiagnos(diagnos);
             // Diagnos
             fall.setDiagnos(getDiagnos(intyg));
 
-                fall.setDagar(ThreadLocalRandom.current().nextInt(1, 500 + 1));
-                fall.setStart(formatter.parse("2016-02-01"));
-                fall.setSlut(formatter.parse("2016-03-01"));
             fall.setDagar(ThreadLocalRandom.current().nextInt(1, 500 + 1));
             fall.setStart(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum().toDate());
             fall.setSlut(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum().toDate());
