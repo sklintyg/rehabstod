@@ -3,7 +3,7 @@ angular.module('rehabstodApp')
         'use strict';
         $stateProvider
             .state('app.sjukfall', {
-
+                url : '/',
                 data: {
                     rule: function(fromState, toState, UserModel) {
 

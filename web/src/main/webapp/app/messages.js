@@ -32,13 +32,17 @@ var ppMessages = {
         // Sjukfall Stat
         'label.sjukfall.stat.ongoing' : 'Antalet pågående sjukfall på',
         'label.sjukfall.stat.gender' : 'Könsfördelning',
+        'label.sjukfall.start.male' : 'Män',
+        'label.sjukfall.start.female' : 'Kvinnor',
 
-        // Sjukfall Result Lakare
+        // Sjukfall Result
         'label.sjukfall.result.lakare.header': 'Mina sjukfall',
         'label.sjukfall.result.lakare.subheader': ' - Endast de sjukfall där jag utfärdat det aktiva intyget',
 
         'label.sjukfall.result.all.header': 'Alla sjukfall',
         'label.sjukfall.result.all.subheader': ' - Samtliga pågående fall på enheten',
+
+        'label.sjukfall.result.back': 'Ändra urval',
 
         //
         'label.gender.male': 'Man',

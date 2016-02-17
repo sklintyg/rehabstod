@@ -6,8 +6,8 @@
     </div
     ><div class="rhs-stat-panel-gender">
       <rhs-stat-circle size="80px" background-color="#ea8034">{{model.women | rhsSuffix: '%' : '...'}}</rhs-stat-circle
-      ><img src="/assets/images/female_icon.png"
-      ><img src="/assets/images/male_icon.png"
+      ><img src="/assets/images/female_icon.png" alt="{{::'label.sjukfall.start.female' | message}}"
+      ><img src="/assets/images/male_icon.png"  alt="{{::'label.sjukfall.start.male' | message}}"
       ><rhs-stat-circle size="80px" background-color="#138391">{{model.men | rhsSuffix: '%' : '...'}}</rhs-stat-circle
       ><div class="rhs-stat-panel-circle-text-kon hidden-xs"><span message key="label.sjukfall.stat.gender"></span></div>
     </div>
