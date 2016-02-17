@@ -7,7 +7,7 @@ describe('Controller: SjukfallPageCtrl', function () {
     var scope;
     var SjukfallModel;
     var SjukfallService;
-    var sjukFallData = [{name: 'Hej'}];
+    var sjukFallData = [{patient: { namn: 'Hej', kon: null }}];
 
     describe('Load succeeded ', function () {
         // Initialize the controller and a mock scope

@@ -26,7 +26,7 @@ public class Patient {
     private static final int HASH_SEED = 31;
     private String id;
     private String namn;
-    private String kon;
+    private Gender kon;
 
     private int alder;
 
@@ -49,11 +49,11 @@ public class Patient {
         this.namn = namn;
     }
 
-    public String getKon() {
+    public Gender getKon() {
         return kon;
     }
 
-    public void setKon(String kon) {
+    public void setKon(Gender kon) {
         this.kon = kon;
     }
 

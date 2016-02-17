@@ -2,7 +2,7 @@
   display: inline-block;
 }
 
-.rhs-stat-panel-circle-text {
+.rhs-stat-panel-circle-text, .rhs-stat-panel-circle-text-kon {
   display: inline-block;
   width: 120px;
   vertical-align: middle;
@@ -10,11 +10,17 @@
   font-size: 80%;
 }
 
+.rhs-stat-panel-circle-text-kon {
+  width: auto;
+}
 
 .rhs-stat-panel-gender {
   display: inline-block;
-}
 
+  img {
+    margin: 0 3px;
+  }
+}
 
 @media (max-width: 548px) {
   .rhs-stat-panel-gender {

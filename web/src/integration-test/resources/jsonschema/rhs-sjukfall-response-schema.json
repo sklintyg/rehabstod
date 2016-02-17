@@ -35,7 +35,7 @@
       "diagnos": {
         "additionalProperties": false,
         "properties": {
-          "grupp": {
+          "kapitel": {
             "type": [
               "string",
               "null"
@@ -47,21 +47,25 @@
               "null"
             ]
           },
-          "original": {
+          "intygsVarde": {
             "type": "string"
+          },
+          "beskrivning": {
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "required": [
-          "grupp",
-          "original",
-          "kod"
+          "kapitel",
+          "intygsVarde",
+          "kod",
+          "beskrivning"
         ],
         "type": "object"
       },
-      "startVG": {
-        "type": "string"
-      },
-      "startVE": {
+      "start": {
         "type": "string"
       },
       "slut": {
@@ -88,8 +92,7 @@
     "required": [
       "patient",
       "diagnos",
-      "startVG",
-      "startVE",
+      "start",
       "slut",
       "dagar",
       "intyg",

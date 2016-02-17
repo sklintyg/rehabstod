@@ -1,0 +1,47 @@
+.fa-check-empty:before {
+  @extend .fa-check;
+  color: transparent !important;
+}
+
+.rhs-multi-select {
+
+  width: 100%;
+
+  a.rhs-multi-select-link {
+    padding-left: 0px;
+    padding-right: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+  }
+  .rhs-multi-select-link-enabled {
+    @extend .rhs-multi-select-link;
+    font-weight: bold;
+  }
+  .rhs-multi-select-btn {
+    width: 100%;
+    text-align: left;
+    float: none;
+    padding-top: 7px;
+    line-height: normal;
+
+    .text {
+      width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      display: inline-block;
+      padding-right: 10px;
+    }
+
+    .caret {
+      position: absolute;
+      right: 10px;
+      top: 45%;
+    }
+  }
+}
+
+.rhs-multi-select ul {
+  width: 100%;
+}

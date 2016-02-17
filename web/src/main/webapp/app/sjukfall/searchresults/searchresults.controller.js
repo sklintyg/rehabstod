@@ -1,30 +1,24 @@
 angular.module('rehabstodApp')
-    .controller('SearchResultsCtrl', function($scope, SjukfallFilterViewState, SjukfallModel) {
+    .controller('SearchResultsCtrl', function($scope, SjukfallFilterViewState, SjukfallModel, UserModel) {
         'use strict';
 
-
         $scope.filter = SjukfallFilterViewState;
-
         $scope.model = SjukfallModel;
-
-        $scope.itemsByPage = 50;
+        $scope.user = UserModel.get();
 
         $scope.displayedCollection = [].concat($scope.model.get());
 
-        $scope.currentPage = 1;
-
-        $scope.$watchCollection('displayedCollection', updateRowNumber);
-
-        $scope.pageChangedFn = function(newPage) {
-            $scope.currentPage = newPage;
-
-            updateRowNumber();
+        $scope.getToolTip = function(diagnos) {
+            return '<b>' + diagnos.kod + '</b><br>' + diagnos.beskrivning;
+        };
+        
+        $scope.showMoreInTable = function() {
+            $scope.limit += 50;
         };
 
-        function updateRowNumber() {
-            var number = ($scope.currentPage - 1) * $scope.itemsByPage + 1;
-            angular.forEach($scope.displayedCollection, function(value) {
-                value.number = number++;
-            });
-        }
+        $scope.resetLimit = function() {
+            $scope.limit = 100;
+        };
+
+        $scope.resetLimit();
     });

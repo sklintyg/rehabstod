@@ -5,6 +5,7 @@ angular.module('rehabstodApp')
 
             $log.debug('SjukfallPageCtrl init');
 
+            SjukfallModel.reset();
             SjukfallService.loadSjukfall().then(function(successData) {
                 SjukfallModel.set(successData);
             }, function(errorData) {

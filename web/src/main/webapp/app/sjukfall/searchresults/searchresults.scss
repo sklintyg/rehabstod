@@ -23,10 +23,34 @@
     span {
       vertical-align: top;
     }
+
+    .rhs-tooltip {
+      display: inline-block;
+      margin-left: 5px;
+    }
+
   }
 
   .searchresult-table-row > td {
     padding: 5px 5px;
   }
 
+  .start-date, .end-date {
+    white-space: nowrap;
+  }
+
+  .age {
+    white-space: nowrap;
+    font-weight: bold;
+  }
+
+  .rhs-table-tooltip {
+    cursor: pointer;
+  }
+
+  .rhs-table-grad-active {
+    font-weight: bold;
+  }
+
 }
+

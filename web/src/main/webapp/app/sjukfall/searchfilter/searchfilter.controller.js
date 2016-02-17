@@ -1,34 +1,28 @@
 angular.module('rehabstodApp')
-    .controller('SearchFilterCtrl', function($scope, SjukfallFilterViewState, SjukfallModel) {
-        'use strict';
+    .controller('SearchFilterCtrl',
+        function($scope, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel, UserModel) {
+            'use strict';
 
-        $scope.showSearchFilter = true;
-        $scope.model = SjukfallModel;
-
-        $scope.$watch('model.get()', function(value) {
-            $scope.lakare = unigeValues(value, 'lakare');
-            $scope.diagnos = unigeValues(value, 'diagnos.original');
-        }, true);
+            $scope.filterViewState = SjukfallFilterViewState;
+            $scope.user = UserModel.get();
 
 
-        $scope.sjukskrivningslangd = [1, 366];
+            $scope.showSearchFilter = true;
+            $scope.model = SjukfallModel;
 
-        $scope.filter = SjukfallFilterViewState;
+            $scope.$watchCollection('model.get()', function(value) {
+                //Update contents on those models of filtercomponents that depends on the searchresults contents, i.e
+                // uniqueness of lakare diagnoskapitel.
+                $scope.filterViewState.get().lakareModel.set($filter('rhsUnique')(value, 'lakare'));
+                $scope.filterViewState.get().diagnosKapitelModel.setActivDiagnosKapitelIdlist(
+                    $filter('rhsUnique')(value, 'diagnos.kapitel'));
 
-        $scope.$watch('sjukskrivningslangd', function(val) {
-            $scope.filter.sjukskrivningslangd.low = val[0];
-            $scope.filter.sjukskrivningslangd.high = val[1] < 366 ? val[1] : null;
+            });
 
-        }, true);
-
-
-        function unigeValues(array, key) {
-            var values = array.map(function(obj) { return obj[key]; });
-            values = values.filter(function(v,i) { return values.indexOf(v) === i; });
-
-            return values;
-        }
-
-    });
+            $scope.onResetFilterClick = function() {
+                $scope.filterViewState.reset();
+                $log.debug('reset filterViewState');
+            };
+        });
 
 

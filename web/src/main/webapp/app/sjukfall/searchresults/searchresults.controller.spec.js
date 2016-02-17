@@ -2,54 +2,35 @@ describe('Controller: SearchResultsCtrl', function () {
     'use strict';
 
     // load the controller's module
-    beforeEach(module('rehabstodApp'));
+    beforeEach(angular.mock.module('rehabstodApp', function($provide) {
+        $provide.value('APP_CONFIG', { });
+    }));
 
     var scope;
     var SjukfallModel;
+    var SjukfallFilterViewState;
 
     // Initialize the controller and a mock scope
-    beforeEach(inject(function ($controller, $rootScope, _SjukfallModel_) {
+    beforeEach(inject(function ($controller, $rootScope, _SjukfallModel_, _SjukfallFilterViewState_) {
         scope = $rootScope.$new();
 
         SjukfallModel = _SjukfallModel_;
+        SjukfallFilterViewState = _SjukfallFilterViewState_;
 
         $controller('SearchResultsCtrl', {
             $scope: scope,
-            SjukfallModel: _SjukfallModel_
+            SjukfallModel: _SjukfallModel_,
+            SjukfallFilterViewState: SjukfallFilterViewState
         });
     }));
 
 
-    it('should add row number to model', function($timeout) {
-        expect(scope.displayedCollection).toEqual([]);
+    it('should return toolTip', function() {
+        var diagnos = {
+            kod: 123,
+            beskrivning: 'Hej'
+        };
 
-        SjukfallModel.set([{name: 'first'}, {name: 'next'}]);
-
-        var expectArray = [{name: 'first', number: 1}, {name: 'next', number: 2}];
-
-        $timeout(function() {
-            expect(scope.displayedCollection).toEqual(expectArray);
-        });
-    });
-
-    it('should update row number when table page changes', function($timeout) {
-        expect(scope.displayedCollection).toEqual([]);
-
-        SjukfallModel.set([{name: 'first'}, {name: 'next'}]);
-
-        scope.itemsByPage = 1;
-
-        var expectArray = [{name: 'first', number: 1}];
-
-        $timeout(function() {
-            expect(scope.displayedCollection).toEqual(expectArray);
-
-
-            scope.pageChangedFn(2);
-
-            expectArray = [{name: 'next', number: 2}];
-            expect(scope.displayedCollection).toEqual(expectArray);
-        });
-
+        expect(scope.getToolTip(diagnos)).toEqual('<b>' + diagnos.kod + '</b><br>' + diagnos.beskrivning);
     });
 });

@@ -8,8 +8,9 @@ var app = angular.module('rehabstodApp', [
     'ui.router',
     'ui.bootstrap',
     'ui.bootstrap-slider',
-    'smart-table'
-]);
+    'smart-table',
+    'infinite-scroll'
+]).value('THROTTLE_MILLISECONDS', 300);
 
 deferredBootstrapper.bootstrap({
     element: document.body,
@@ -40,10 +41,7 @@ deferredBootstrapper.bootstrap({
 });
 
 app.value('networkConfig', {
-    defaultTimeout: 1000, // prod: 30000
-    regionTimeout: 1000, // prod: 30000
-    registerTimeout: 1000, // prod: 30000
-    hospTimeout: 1000 // prod: 30000
+    defaultTimeout: 15000
 });
 
 app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $tooltipProvider, $httpProvider,

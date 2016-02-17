@@ -20,14 +20,9 @@ package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
 import org.springframework.stereotype.Component;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.Diagnos;
-import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,22 +52,15 @@ public class SjukfallRuleEngineStub extends SjukfallRuleEngine {
     private List<Sjukfall> getSjukfall(List<IntygsData> intygsData, GetSjukfallRequest requestData) {
         List<Sjukfall> sjukfall = new ArrayList();
 
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
         List<IntygsData> filteredIntyg = intygsData.stream()
                 .filter(distinctByKey(o -> o.getPatient().getPersonId().getExtension())).collect(Collectors.toList());
 
-        try {
-            // CHECKSTYLE:OFF MagicNumber
-            for (IntygsData intyg : filteredIntyg) {
-                Sjukfall fall = new Sjukfall();
+        // CHECKSTYLE:OFF MagicNumber
+        for (IntygsData intyg : filteredIntyg) {
+            Sjukfall fall = new Sjukfall();
 
-                // Patient
-                Patient patient = new Patient();
-                patient.setNamn(intyg.getPatient().getFornamn() + " " + intyg.getPatient().getEfternamn());
-                patient.setId(intyg.getPatient().getPersonId().getExtension());
-                patient.setAlder(ThreadLocalRandom.current().nextInt(20, 70 + 1));
-                fall.setPatient(patient);
+            // Patient
+            fall.setPatient(getPatient(intyg));
 
                 // Diagnos
                 Diagnos diagnos = new Diagnos();
@@ -80,31 +68,33 @@ public class SjukfallRuleEngineStub extends SjukfallRuleEngine {
                 //diagnos.setKapitel(intyg.getDiagnos().getGrupp());
                 //diagnos.setKod(intyg.getDiagnos().getKod());
                 fall.setDiagnos(diagnos);
+            // Diagnos
+            fall.setDiagnos(getDiagnos(intyg));
 
                 fall.setDagar(ThreadLocalRandom.current().nextInt(1, 500 + 1));
                 fall.setStart(formatter.parse("2016-02-01"));
                 fall.setSlut(formatter.parse("2016-03-01"));
+            fall.setDagar(ThreadLocalRandom.current().nextInt(1, 500 + 1));
+            fall.setStart(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum().toDate());
+            fall.setSlut(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum().toDate());
 
-                List<Integer> grader = new ArrayList<>();
-                grader.add(100);
-                grader.add(50);
-                fall.setGrader(grader);
-                fall.setAktivGrad(100);
-                fall.setIntyg(4);
+            List<Integer> grader = new ArrayList<>();
+            grader.add(100);
+            grader.add(50);
+            fall.setGrader(grader);
+            fall.setAktivGrad(100);
+            fall.setIntyg(4);
 
-                fall.setLakare(intyg.getSkapadAv().getFullstandigtNamn());
+            fall.setLakare(intyg.getSkapadAv().getFullstandigtNamn());
 
-                sjukfall.add(fall);
-            }
-            // CHECKSTYLE:ON MagicNumber
-        } catch (ParseException e) {
-            e.printStackTrace();
+            sjukfall.add(fall);
         }
+        // CHECKSTYLE:ON MagicNumber
 
         return sjukfall;
     }
 
-    public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+    private <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }

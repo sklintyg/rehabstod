@@ -3,7 +3,7 @@ angular.module('rehabstodApp').factory('SjukfallSummaryProxy',
         ObjectHelper, networkConfig) {
         'use strict';
 
-        var timeout = networkConfig.registerTimeout;
+        var timeout = networkConfig.defaultTimeout;
 
         /*
          * Get statistic for selected Vardenhet

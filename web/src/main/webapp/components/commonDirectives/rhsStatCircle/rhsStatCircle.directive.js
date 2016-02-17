@@ -8,6 +8,7 @@ angular.module('rehabstodApp').directive('rhsStatCircle',
 
             return {
                 restrict: 'E',
+                replace: true,
                 transclude: true,
                 scope: {
                     size: '@',

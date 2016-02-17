@@ -1,0 +1,9 @@
+@startuml
+Rehabstöd -> Intygstjänsten: Sök sjukfall enl. urval (TjK)
+Intygstjänsten -> HSA: Hämta vårdenheter för överordnad vårdgivare
+HSA -> Intygstjänsten: Vårdenheter
+Intygstjänsten -> Databas: Läs ur SJUKFALL_INTYG för vårdenheter
+Databas -> Intygstjänsten: Intygsinformation
+Intygstjänsten -> Intygstjänsten: Sammanställ sjukfall utifrån sjukfallsgrundande data
+Intygstjänsten -> Rehabstöd: Svara med sjukfall (TjK)
+@enduml

@@ -1,31 +1,40 @@
-angular.module('rehabstodApp').filter('rhsSearchfilter', ['$filter', function($filter) {
+angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
     'use strict';
 
-    var filterFilter = $filter('filter');
+
     var standardComparator = function standardComparator(obj, text) {
         text = ('' + text).toLowerCase();
         return ('' + obj).toLowerCase().indexOf(text) > -1;
     };
 
-    return function (array, expression) {
-        function customComparator(actual, expected) {
+    return function(array, expression) {
+        function customComparator(actual, filterParams) {
 
-            if (angular.isObject(expected)) {
-
-                //matchAny
-                if (expected.matchAny) {
-                    return matchAny(actual, expected.matchAny);
-                }
-
-                if (expected.lower || expected.higher) {
-                    return range(actual, expected.lower, expected.higher);
-                }
-                //etc
-
-                return true;
-
+            //DiagnosKapitel
+            if (!matchAny(actual.diagnos.kapitel, filterParams.diagnosKapitel)) {
+                return false;
             }
-            return standardComparator(actual, expected);
+
+            //Lakare
+            if (!matchAny(actual.lakare, filterParams.lakare)) {
+                return false;
+            }
+
+            //Sjukskrivningslangd
+            if (!range(actual.dagar, filterParams.sjukskrivningslangd[0], filterParams.sjukskrivningslangd[1])) {
+                return false;
+            }
+
+            if (filterParams.freeText.length > 0 && !passWildCardSearch(actual, filterParams.freeText)) {
+                return false;
+            }
+
+
+            return true;
+        }
+
+        function passWildCardSearch(actual, wildCard) {
+            return standardComparator(actual.quickSearchString, wildCard);
         }
 
         function range(actual, lower, higher) {
@@ -46,16 +55,16 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', ['$filter', function($f
         }
 
         function matchAny(actual, matchAny) {
-            if (matchAny.all) {
+            if (angular.isUndefined(matchAny) || matchAny.length === 0) {
                 return true;
             }
 
-            if (!actual) {
+            if (angular.isUndefined(actual)) {
                 return false;
             }
 
-            for (var i = 0; i < matchAny.items.length; i++) {
-                if (actual.toLowerCase() === matchAny.items[i].toLowerCase()) {
+            for (var i = 0; i < matchAny.length; i++) {
+                if (actual.toLowerCase() === matchAny[i].toLowerCase()) {
                     return true;
                 }
             }
@@ -63,7 +72,20 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', ['$filter', function($f
             return false;
         }
 
-        var output = filterFilter(array, expression, customComparator);
-        return output;
+        function processItems(array, filterParam) {
+            var filteredArray = [];
+            angular.forEach(array, function(item) {
+                if (customComparator(item, filterParam.customSearch)) {
+                    filteredArray.push(item);
+                }
+
+            });
+
+            return filteredArray;
+        }
+
+
+        return processItems(array, expression);
     };
+
 }]);

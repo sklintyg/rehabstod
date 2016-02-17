@@ -18,27 +18,21 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+
+import java.util.List;
+
 /**
  * Created by marced on 2016-01-18.
  */
 public class GetConfigResponse {
-    private String webcertUrl;
-    private String webcertStartUrl;
+    private List<DiagnosKapitel> diagnosKapitelList;
 
-
-    public GetConfigResponse(String webcertUrl, String webcertStartUrl) {
-        this.webcertUrl = webcertUrl;
-        this.webcertStartUrl = webcertStartUrl;
-
+    public GetConfigResponse(List<DiagnosKapitel> diagnosKapitelList) {
+        this.diagnosKapitelList = diagnosKapitelList;
     }
 
-    public String getWebcertUrl() {
-        return webcertUrl;
+    public List<DiagnosKapitel> getDiagnosKapitelList() {
+        return diagnosKapitelList;
     }
-
-    public String getWebcertStartUrl() {
-        return webcertStartUrl;
-    }
-
-
 }
