@@ -1,16 +1,16 @@
-<div set-class-when-at-top="result-fixed-top" class="result-top container">
+<div set-class-when-at-top="result-fixed-top" class="result-top container" ng-switch="user.urval">
   <a ui-sref="app.sjukfall.start" class="result-backlink" title="Tillbaka"></a>
 
-  <div ng-if="user.urval === 'ALL'">
-    <h1><span message key="label.sjukfall.result.all.header"></span></h1>
-    <h3 class="result-sub-header"><span message key="label.sjukfall.result.all.subheader"></span></h3>
-  </div>
-
-  <div ng-if="user.urval === 'ISSUED_BY_ME'">
+  <div ng-switch-when="ISSUED_BY_ME">
     <h1><span message key="label.sjukfall.result.lakare.header"></span></h1>
     <h3 class="result-sub-header"><span message key="label.sjukfall.result.lakare.subheader"></span></h3>
+  </div>
+
+  <div ng-switch-default>
+    <h1><span message key="label.sjukfall.result.all.header"></span></h1>
+    <h3 class="result-sub-header"><span message key="label.sjukfall.result.all.subheader"></span></h3>
   </div>
 </div>
 
 <rhs-filter></rhs-filter>
-<rhs-table></rhs-table>
+<rhs-table class="container"></rhs-table>

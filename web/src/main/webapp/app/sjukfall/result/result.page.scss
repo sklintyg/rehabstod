@@ -6,20 +6,20 @@
   display: block;
   width: 24px;
   height: 24px;
-  background: transparent url(../assets/images/backlink-icon.png) center left no-repeat;
+  background: transparent url(/assets/images/backlink-icon.png) center left no-repeat;
   position: absolute;
   left: -20px;
   top: 35%;
 
   &:hover {
-    background: transparent url(../assets/images/backlink-icon-hover.png) center left no-repeat;
+    background: transparent url(/assets/images/backlink-icon-hover.png) center left no-repeat;
   }
 }
 
 .result-top {
   margin: 0;
   position: relative;
-  padding-top: 10px;
+  padding-top: 15px;
 
   h1 {
     padding-bottom: 5px;
@@ -36,12 +36,6 @@
   background: #fff;
   top: 0;
   z-index: 1000;
-  padding-top: 10px;
-}
-
-
-rhs-filter {
-  display: block;
 }
 
 @media (max-width: $screen-xs-max) {

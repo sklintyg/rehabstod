@@ -32,6 +32,7 @@ angular.module('rehabstodApp')
             return {
                 restrict: 'E',
                 scope: {},
+                replace: true,
                 controller: 'RhsFilterCtrl',
                 templateUrl: 'components/commonDirectives/rhsFilter/rhsFilter.directive.html'
             };

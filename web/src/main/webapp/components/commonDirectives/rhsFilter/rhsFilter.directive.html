@@ -2,23 +2,23 @@
   <div class="panel-body">
     <button class="btn btn-link btn-link-minimal" ng-click="showSearchFilter = !showSearchFilter"
             ng-switch="showSearchFilter">
-      <span ng-switch-when="false">Visa sökfilter</span><span ng-switch-when="true">Dölj sökfilter</span>
+      <span ng-switch-when="false" message key="label.filter.show"></span><span ng-switch-when="true" message key="label.filter.hide"></span>
     </button>
     <div class="box" ng-show="showSearchFilter">
       <form>
         <div class="row">
           <div class="col-sm-5">
             <div class="form-group search-filter-diagnos">
-              <label class="control-label">Välj nuvarande diagnos</label>
+              <label class="control-label"><span message key="label.filter.diagnos"></span></label>
               <rhs-multi-select items-model="filterViewState.get().diagnosKapitelModel"
-                                none-selected-title="Alla valda" high-light-enabled="true" />
+                                none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="true" />
             </div>
           </div>
 
           <div ng-if="user.urval === 'ALL'" class="col-sm-4">
             <div class="form-group">
-              <label class="control-label">Välj nuvarande läkare</label>
-              <rhs-multi-select items-model="filterViewState.get().lakareModel" none-selected-title="Alla valda"
+              <label class="control-label"><span message key="label.filter.lakare"></span></label>
+              <rhs-multi-select items-model="filterViewState.get().lakareModel" none-selected-title="{{::'label.filter.allselected' | message}}"
                                 high-light-enabled="false" />
             </div>
           </div>
@@ -26,7 +26,7 @@
         <div class="row row-relative">
           <div class="col-sm-10">
             <div class="form-group">
-              <label class="control-label">Välj sjukskrivningslängd</label>
+              <label class="control-label"><span message key="label.filter.langd"></span></label>
               <rhs-slider slider-model="filterViewState.get().sjukskrivningslangdModel" />
             </div>
           </div>
@@ -34,12 +34,14 @@
         <div class="row">
           <div class="col-sm-5">
             <div class="form-group">
-              <input ng-model="filterViewState.get().freeTextModel" placeholder="Sök" class="input-sm form-control"
+              <input ng-model="filterViewState.get().freeTextModel" placeholder="{{::'label.filter.filter' | message}}" class="input-sm form-control"
                      type="search" />
             </div>
           </div>
           <div class="col-sm-5 bottom-align-text">
-            <button id="rhs-sjukfallPage-resetFilterBtn" ng-click="onResetFilterClick()" class="btn btn-default">Återställ</button>
+            <button id="rhs-sjukfallPage-resetFilterBtn" ng-click="onResetFilterClick()" class="btn btn-default">
+              <span message key="common.reset"></span>
+            </button>
           </div>
         </div>
       </form>

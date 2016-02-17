@@ -8,12 +8,16 @@ angular.module('rehabstodApp').directive('setClassWhenAtTop', function ($window)
             var topClass = attrs.setClassWhenAtTop, // get CSS class from directive's attribute value
                 offsetTop = element.offset().top; // get element's offset top relative to document
 
-            $win.on('scroll', function (e) {
+            $win.on('scroll', function () {
                 if ($win.scrollTop() >= offsetTop) {
                     element.addClass(topClass);
                 } else {
                     element.removeClass(topClass);
                 }
+            });
+
+            scope.$on('$destroy', function() {
+                $win.unbind('scroll');
             });
         }
     };
