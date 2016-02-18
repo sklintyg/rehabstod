@@ -36,6 +36,11 @@
   background: #fff;
   top: 0;
   z-index: 1000;
+  box-shadow: 0px 8px 8px -6px #ccc;
+
+  .result-sub-header {
+    border-bottom: 0;
+  }
 }
 
 @media (max-width: $screen-xs-max) {
