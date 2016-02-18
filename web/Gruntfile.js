@@ -69,7 +69,7 @@ module.exports = function(grunt) {
         },
         open: {
             dev: {
-                url: 'http://localhost:9091'
+                url: 'http://localhost:9091/welcome.html'
             }
         },
         watch: {
