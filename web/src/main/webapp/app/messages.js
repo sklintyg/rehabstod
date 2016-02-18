@@ -35,12 +35,24 @@ var ppMessages = {
         'label.sjukfall.start.rehab.button' : 'Visa alla sjukfall',
 
 
+        // Sjukfall Start Läkare
+        'label.sjukfall.start.lakare.info.header' : 'Välj vilken information du har behov att ta del av',
+        'label.sjukfall.start.lakare.info.body' : 'Som läkare har du rätt att ta del av sjukskrivningar på alla enheter du har medarbetaruppdrag för. Dock är det viktigt att bara..... <br>' +
+                                                    'Gå vidare genom att välja vilken information du vill ta del av. ',
+
+        'label.sjukfall.start.lakare.mina.header' : 'Endast de sjulfall där jag är nuvarande läkare',
+        'label.sjukfall.start.lakare.mina.body' : 'Som läkare kan du välja att endast ta del av de sjukskrivningar där du själv är nuvarande läkare.',
+        'label.sjukfall.start.lakare.mina.button' : 'Visa mina sjukfall',
+
+        'label.sjukfall.start.lakare.alla.header' : 'Samtliga pågående fall på enheten',
+        'label.sjukfall.start.lakare.alla.body' : 'Välj dett alternativ om du har behov av att även se sjukfall där nuvarande läkare är andra läkare på vårdeneheten. För att ta del av dess skall du ha ett behov av det.',
+        'label.sjukfall.start.lakare.alla.button' : 'Visa alla sjukfall',
 
         // Sjukfall Stat
         'label.sjukfall.stat.ongoing' : 'Antalet pågående sjukfall på',
         'label.sjukfall.stat.gender' : 'Könsfördelning',
-        'label.sjukfall.start.male' : 'Män',
-        'label.sjukfall.start.female' : 'Kvinnor',
+        'label.sjukfall.stat.male' : 'Män',
+        'label.sjukfall.stat.female' : 'Kvinnor',
 
         // Sjukfall Result
         'label.sjukfall.result.lakare.header': 'Mina sjukfall',
