@@ -16,7 +16,7 @@ describe('Directive: RhsTableNumberOfRows', function () {
         $scope = $rootScope.$new();
     }));
 
-    it('should show the correct number of rows in table', function() {
+    it('should show the correct number of rows in table', inject(function (messageService) {
         // Arrange
 
         var tableCtrl = {
@@ -25,16 +25,19 @@ describe('Directive: RhsTableNumberOfRows', function () {
 
         spyOn(tableCtrl, 'getFilteredCollection').and.callThrough();
 
-        var element = angular.element('<rhs-table-number-of-rows></rhs-table-number-of-rows>');
+        var element = angular.element('<rhs-table-number-of-rows total-rows="3"></rhs-table-number-of-rows>');
         element.data('$stTableController', tableCtrl);
 
         var rowElement = $compile(element)($scope);
 
+        var html = messageService.getProperty('label.table.number.of.rows') + ' ' + 3 + ' ' + messageService.getProperty('label.table.number.of.rows.of') + ' ' + 3;
+
         // Act
         $scope.$digest();
 
+
         // Assert
-        expect(rowElement.html()).toContain('Antal poster: 3');
+        expect(rowElement.html()).toContain(html);
         expect(tableCtrl.getFilteredCollection).toHaveBeenCalled();
-    });
+    }));
 });

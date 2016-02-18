@@ -24,6 +24,7 @@ angular.module('rehabstodApp').directive('rhsTableNumberOfRows',
             restrict: 'E',
             require: '^stTable',
             scope: {
+                totalRows : '='
             },
             link: function ($scope, element, attr, table) {
                 $scope.rows = 0;

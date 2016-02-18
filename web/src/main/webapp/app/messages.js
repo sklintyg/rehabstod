@@ -85,7 +85,8 @@ var ppMessages = {
         'label.table.column.langd': 'Sjukskrivningslängd',
         'label.table.column.langd.help': 'Sjukskrivningens totala längd i dagar, från ”Startdatum vårdenhet” till ”Slutdatum”. Dagar då patienten inte haft något giltigt intyg räknas inte.',
 
-        'label.table.number.of.rows' : 'Antal poster:',
+        'label.table.number.of.rows' : 'Visar',
+        'label.table.number.of.rows.of' : 'av',
 
 
         // Filter
