@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
@@ -40,6 +41,7 @@ public class SjukfallResolverImpl implements SjukfallResolver {
 
     private SjukfallMapper mapper;
 
+    @Autowired
     public SjukfallResolverImpl(SjukfallMapper mapper) {
         this.mapper = mapper;
     }
