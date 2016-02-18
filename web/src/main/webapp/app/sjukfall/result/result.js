@@ -3,7 +3,7 @@ angular.module('rehabstodApp')
         'use strict';
         $stateProvider
             .state('app.sjukfall.result', {
-                url: '/sjukfall',
+                url: 'sjukfall',
                 views: {
                     'content@app': {
                         templateUrl: 'app/sjukfall/result/result.page.html',
