@@ -86,7 +86,12 @@ a {
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
-  padding-bottom: 10px; }
+  padding-bottom: 10px;
+
+  &.panel-title {
+    padding-bottom: 0;
+  }
+}
 
 h1 {
   color: $blue-color; }
@@ -174,12 +179,13 @@ h5.inline-heading {
 @import 'error/error.scss';
 @import 'header/header.scss';
 @import 'print.scss';
-@import 'sjukfall/searchfilter/searchfilter.scss';
-@import 'sjukfall/searchresults/searchresults.scss';
-@import 'start/start.page.scss';
+@import 'sjukfall/result/result.page.scss';
+@import 'sjukfall/start/start.page.scss';
 @import 'vendor-override.scss';
+@import 'commonDirectives/rhsFilter/rhsFilter.scss';
 @import 'commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.scss';
 @import 'commonDirectives/rhsSlider/rhsSlider.scss';
 @import 'commonDirectives/rhsStatCircle/rhsStatCircle.scss';
 @import 'commonDirectives/rhsStatPanel/rhsStatPanel.scss';
+@import 'commonDirectives/rhsTable/rhsTable.scss';
 // endinjector

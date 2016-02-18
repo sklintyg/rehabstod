@@ -10,10 +10,10 @@
   }
 }
 
-.searchresult-table {
+.rhs-table {
   font-size: 12px;
 
-  .searchresult-table-head {
+  .rhs-table-head {
     background-color: #465761;
     color: #fff;
     padding: 7px 5px;
@@ -31,7 +31,7 @@
 
   }
 
-  .searchresult-table-row > td {
+  .rhs-table-row > td {
     padding: 5px 5px;
   }
 
@@ -52,5 +52,9 @@
     font-weight: bold;
   }
 
+}
+
+rhs-table {
+  display: block;
 }
 

@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
 import org.springframework.stereotype.Component;
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
@@ -45,15 +46,19 @@ public class SjukfallEngineStub extends SjukfallEngine {
     }
 
     @Override
-    public List<Sjukfall> calculate(List<IntygsData> intygsData, GetSjukfallRequest requestData) {
-        return getSjukfall(intygsData, requestData);
+    public List<Sjukfall> calculate(List<IntygsData> intygsData, String hsaId, Urval urval, GetSjukfallRequest requestData) {
+        return getSjukfall(intygsData, hsaId, urval, requestData);
     }
 
-    private List<Sjukfall> getSjukfall(List<IntygsData> intygsData, GetSjukfallRequest requestData) {
+    private List<Sjukfall> getSjukfall(List<IntygsData> intygsData, String hsaId, Urval urval, GetSjukfallRequest requestData) {
         List<Sjukfall> sjukfall = new ArrayList();
 
         List<IntygsData> filteredIntyg = intygsData.stream()
                 .filter(distinctByKey(o -> o.getPatient().getPersonId().getExtension())).collect(Collectors.toList());
+
+        if (urval != null && urval.equals(Urval.ISSUED_BY_ME)) {
+            filteredIntyg = filteredIntyg.stream().filter(o -> o.getSkapadAv().getPersonalId().getExtension().equals(hsaId)).collect(Collectors.toList());
+        }
 
         // CHECKSTYLE:OFF MagicNumber
         for (IntygsData intyg : filteredIntyg) {

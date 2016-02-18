@@ -9,7 +9,8 @@ var app = angular.module('rehabstodApp', [
     'ui.bootstrap',
     'ui.bootstrap-slider',
     'smart-table',
-    'infinite-scroll'
+    'infinite-scroll',
+    'taiPlaceholder'
 ]).value('THROTTLE_MILLISECONDS', 300);
 
 deferredBootstrapper.bootstrap({
@@ -100,7 +101,7 @@ app.run(
                     if (result && result.to) {
                         event.preventDefault();
                         $log.debug(
-                            '$stateChangeStart to ' + toState.to + ' was overridden by a rule. new destination : ' +
+                            '$stateChangeStart to ' + toState.name + ' was overridden by a rule. new destination : ' +
                             result.to);
                         $state.go(result.to, result.params, result.options);
                     }

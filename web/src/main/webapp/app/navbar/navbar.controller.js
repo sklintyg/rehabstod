@@ -1,17 +1,10 @@
 angular.module('rehabstodApp')
-    .controller('NavbarCtrl', function($scope, $state, UserModel) {
+    .controller('NavbarCtrl', function($scope) {
         'use strict';
         $scope.menu = [
             {
-                title: 'Start',
-                link: 'app.start'
-            },
-            {
-                title: 'Pågående sjukskrivningar',
-                link: 'app.sjukfall',
-                disabled: function() {
-                    return !UserModel.isUrvalSet();
-                }
+                title: 'Pågående sjukfall',
+                link: 'app.sjukfall'
             },
             {
                 title: 'Om Rehabstöd',

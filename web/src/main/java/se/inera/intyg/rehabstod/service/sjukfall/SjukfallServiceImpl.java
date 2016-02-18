@@ -18,17 +18,19 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
-import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SjukfallEngine;
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
+import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SjukfallEngine;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -41,10 +43,10 @@ public class SjukfallServiceImpl implements SjukfallService {
     private IntygstjanstIntegrationService intygstjanstIntegrationService;
 
     @Autowired
-    private SjukfallEngine sjukfallCalculatorEngine;
+    private SjukfallEngine sjukfallEngine;
 
     @Override
-    public List<Sjukfall> getSjukfall(String enhetsId, GetSjukfallRequest request) {
+    public List<Sjukfall> getSjukfall(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request) {
 
         // 1; check the cache for data
 
@@ -52,7 +54,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
 
         // 2.1; Calculate sjukfall
-        List<Sjukfall> sjukfall = sjukfallCalculatorEngine.calculate(intygsData, request);
+        List<Sjukfall> sjukfall = sjukfallEngine.calculate(intygsData, hsaId, urval, request);
 
         // 2.2; update cache if necessary
 

@@ -25,20 +25,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.*;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Can generate a suitable amount of intygsdata.
@@ -47,9 +38,9 @@ import java.util.UUID;
  *
  * Created by eriklupander on 2016-01-29.
  */
-//CHECKSTYLE:OFF MagicNumber
+// CHECKSTYLE:OFF MagicNumber
 @Component
-@Profile({"dev", "rhs-it-stub"})
+@Profile({ "dev", "rhs-it-stub" })
 public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerator {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
@@ -57,10 +48,12 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private Queue<Patient> seededPatients = new LinkedList<>();
 
     private Enhet enhet;
-    private HosPersonal hosPerson;
 
     private int currentDiagnosIndex = 0;
     private List<String> diagnosList = new ArrayList<>();
+
+    private int currentHosPersonIndex = 0;
+    private List<HosPersonal> hosPersonList = new ArrayList<>();
 
     @Autowired
     private PersonnummerLoader personnummerLoader;
@@ -72,16 +65,15 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         initHoSPerson();
     }
 
-
     /**
      * Generate intygsdata for a given number of patients, with N intyg per patient.
      *
      * @param numberOfPatients
-     *                  Number of patients to base intyg data on.
+     *            Number of patients to base intyg data on.
      * @param intygPerPatient
-     *                  Number of intyg to generate intyg per patient on.
+     *            Number of intyg to generate intyg per patient on.
      * @return
-     *        List of all IntygsData
+     *         List of all IntygsData
      */
     public List<IntygsData> generateIntygsData(Integer numberOfPatients, Integer intygPerPatient) {
 
@@ -94,6 +86,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         List<IntygsData> intygsDataList = new ArrayList<>();
         for (int a = 0; a < numberOfPatients; a++) {
             Patient patient = nextPatient();
+            HosPersonal hosPerson = nextHosPerson();
             for (int b = 0; b < intygPerPatient; b++) {
                 IntygsData intygsData = new IntygsData();
                 intygsData.setPatient(patient);
@@ -112,7 +105,12 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         return intygsDataList;
     }
 
-
+    private HosPersonal nextHosPerson() {
+        if (currentHosPersonIndex > hosPersonList.size() - 1) {
+            currentHosPersonIndex = 0;
+        }
+        return hosPersonList.get(currentHosPersonIndex++);
+    }
 
     private List<Formaga> getDefaultSjukskrivningsGrader() {
         List<Formaga> sjukskrivningsgradList = new ArrayList<>();
@@ -151,9 +149,13 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private void seedPatients(Integer numberOfPatients) {
         try {
             List<String> personNummer = personnummerLoader.readTestPersonnummer();
-            for (int a = 0; a < personNummer.size() && a < numberOfPatients; a++) {
+            int personNummerSize = personNummer.size();
+            int step = personNummerSize / numberOfPatients;
+
+            for (int a = 0, i = 0; a < personNummerSize && i < numberOfPatients; i++, a += step) {
                 seededPatients.add(buildPerson(personNummer.get(a)));
             }
+
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not bootstrap IntygsData: " + e.getMessage());
         }
@@ -170,10 +172,11 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     }
 
     private void initDiagnoser() {
-        diagnosList.add("M16");
+        diagnosList.add("M16.0");
         diagnosList.add("J21");
-        diagnosList.add("J11");
-        diagnosList.add("A31");
+        diagnosList.add("J-110");
+        diagnosList.add("A311");
+        diagnosList.add("H_01");
     }
 
     private void initEnhet() {
@@ -185,11 +188,29 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     }
 
     private void initHoSPerson() {
-        hosPerson = new HosPersonal();
-        hosPerson.setEnhet(enhet);
-        hosPerson.setFullstandigtNamn("Jan Nilsson");
-        HsaId hsaId = new HsaId();
-        hsaId.setExtension("IFV1239877878-1049");
-        hosPerson.setPersonalId(hsaId);
+        HosPersonal hosPerson1 = new HosPersonal();
+        hosPerson1.setEnhet(enhet);
+        hosPerson1.setFullstandigtNamn("Jan Nilsson");
+        HsaId hsaId1 = new HsaId();
+        hsaId1.setExtension("IFV1239877878-1049");
+        hosPerson1.setPersonalId(hsaId1);
+
+        HosPersonal hosPerson2 = new HosPersonal();
+        hosPerson2.setEnhet(enhet);
+        hosPerson2.setFullstandigtNamn("Per Karlsson");
+        HsaId hsaId2 = new HsaId();
+        hsaId2.setExtension("IFV1239877878-1050");
+        hosPerson2.setPersonalId(hsaId2);
+
+        HosPersonal hosPerson3 = new HosPersonal();
+        hosPerson3.setEnhet(enhet);
+        hosPerson3.setFullstandigtNamn("Nina von Döbel");
+        HsaId hsaId3 = new HsaId();
+        hsaId3.setExtension("IFV1239877878-1050");
+        hosPerson3.setPersonalId(hsaId3);
+
+        hosPersonList.add(hosPerson1);
+        hosPersonList.add(hosPerson2);
+        hosPersonList.add(hosPerson3);
     }
 }

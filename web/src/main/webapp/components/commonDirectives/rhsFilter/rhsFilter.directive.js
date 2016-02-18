@@ -1,5 +1,5 @@
 angular.module('rehabstodApp')
-    .controller('SearchFilterCtrl',
+    .controller('RhsFilterCtrl',
         function($scope, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel, UserModel) {
             'use strict';
 
@@ -23,6 +23,17 @@ angular.module('rehabstodApp')
                 $scope.filterViewState.reset();
                 $log.debug('reset filterViewState');
             };
+        }
+    )
+    .directive('rhsFilter',
+        function() {
+            'use strict';
+
+            return {
+                restrict: 'E',
+                scope: {},
+                replace: true,
+                controller: 'RhsFilterCtrl',
+                templateUrl: 'components/commonDirectives/rhsFilter/rhsFilter.directive.html'
+            };
         });
-
-

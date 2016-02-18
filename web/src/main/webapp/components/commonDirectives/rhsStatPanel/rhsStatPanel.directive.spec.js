@@ -39,6 +39,7 @@ describe('Directive: RhsStatPanel', function() {
         expect(SjukfallSummaryModel.get).toHaveBeenCalled();
         expect(SjukfallSummaryProxy.get).not.toHaveBeenCalled();
         expect(elementScope.model).toBe(testData);
+        expect(elementScope.today).toBeDefined();
     });
 
 

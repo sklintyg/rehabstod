@@ -1,4 +1,4 @@
-describe('Controller: SelectionCtrl', function() {
+describe('Controller: SjukfallStartSelectionCtrl', function() {
     'use strict';
 
     // load the controller's module
@@ -16,7 +16,7 @@ describe('Controller: SelectionCtrl', function() {
         state = _$state_;
         userModel = _UserModel_;
         userProxy = _UserProxy_;
-        $controller('SelectionCtrl', {
+        $controller('SjukfallStartSelectionCtrl', {
             $scope: scope,
             UserModel: userModel,
             UserProxy: userProxy
@@ -46,7 +46,7 @@ describe('Controller: SelectionCtrl', function() {
 
         expect(userProxy.changeUrval).toHaveBeenCalledWith('ALL');
         expect(userModel.set).toHaveBeenCalledWith(user);
-        expect(state.go).toHaveBeenCalledWith('app.sjukfall');
+        expect(state.go).toHaveBeenCalledWith('app.sjukfall.result');
 
     });
 

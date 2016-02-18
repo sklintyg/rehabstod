@@ -14,8 +14,6 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
 
             var restPath = '/api/sjukfall';
             $http.post(restPath, query, {timeout: timeout}).success(function(data) {
-                $log.debug('sjukfall - got data:');
-                $log.debug(data);
                 if(!ObjectHelper.isDefined(data)) {
                     promise.reject({ errorCode: data, message: 'invalid data'});
                 } else {

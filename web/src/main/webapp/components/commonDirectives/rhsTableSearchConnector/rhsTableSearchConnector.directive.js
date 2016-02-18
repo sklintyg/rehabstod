@@ -1,4 +1,4 @@
-angular.module('rehabstodApp').directive('rhsStTableSearchConnector',
+angular.module('rehabstodApp').directive('rhsTableSearchConnector',
     ['$timeout', 'SjukfallFilterViewState',
         function($timeout, SjukfallFilterViewState) {
             'use strict';
