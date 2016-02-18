@@ -27,6 +27,13 @@ import org.springframework.context.annotation.Profile;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 
 /**
+ * Declares and bootstraps the Intygstjänst client for {@link ListActiveSickLeavesForCareUnitResponderInterface}
+ *
+ * Somewhat "hackish" use of profiles:
+ *
+ * Bean is only active when rhs-it-stub is NOT active. The underlying itIntegrationWebServiceClient() @Bean is
+ * active for either of dev,test,prod (which should be possible to replace with no @Profile at all)
+ *
  * Created by eriklupander on 2016-02-05.
  */
 @Configuration

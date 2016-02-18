@@ -110,10 +110,11 @@ grunt_build_no_minify.dependsOn bowerInstall
 
 gretty {
     httpPort = 8790
+    contextConfigFile = "${projectDir}/src/main/resources/jetty-web.xml"
     contextPath = '/'
     logbackConfigFile = "${projectDir}/src/main/resources/logback.xml"
     jvmArgs = [
-        '-Dspring.profiles.active=dev,rhs-it-stub',
+        '-Dspring.profiles.active=dev',
         '-Drehabstod.config.file=' + projectDir + '/src/main/resources/dev.properties',
         '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
         '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources',
@@ -132,6 +133,7 @@ gretty {
     fastReload = true
     inplaceMode = 'hard'
     scanInterval = 0
+    enableNaming = true
 }
 
 dependencies {
@@ -139,8 +141,10 @@ dependencies {
     compile project(":rehabstod-it-integration")
 
     compile "se.inera.intyg.common:hsa-integration:0-SNAPSHOT"
+    compile "se.inera.intyg.common:log-messages:0-SNAPSHOT"
     
     compile "org.springframework:spring-webmvc:${springContextVersion}"
+    compile "org.springframework:spring-jms:${springContextVersion}"
     compile "org.springframework.ws:spring-ws-core:2.2.2.RELEASE"
     compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
     compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
@@ -175,4 +179,7 @@ dependencies {
 
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
     providedCompile 'jstl:jstl:1.2'
+
+    gretty 'org.apache.activemq:activemq-client:5.9.1'
+   // gretty 'org.apache.activemq:activemq-spring:5.9.1'
 }
