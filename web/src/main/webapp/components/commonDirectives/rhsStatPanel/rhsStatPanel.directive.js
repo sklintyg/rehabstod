@@ -38,6 +38,8 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                     if ($scope.model.total === null) {
                         _loadData();
                     }
+
+                    $scope.today = new Date();
                 },
                 templateUrl: 'components/commonDirectives/rhsStatPanel/rhsStatPanel.directive.html'
             };

@@ -2,7 +2,7 @@
   <div class="panel-body">
     <rhs-stat-circle size="80px" background-color="#598341">{{model.total | rhsSuffix: 'st' : '...'}}</rhs-stat-circle
     ><div class="rhs-stat-panel-circle-text">
-      <span message key="label.sjukfall.stat.ongoing"></span> {{vardenhet.namn}}
+      <span message key="label.sjukfall.stat.ongoing"></span> {{vardenhet.namn}} {{today | date:"shortDate"}}
     </div
     ><div class="rhs-stat-panel-gender">
       <rhs-stat-circle size="80px" background-color="#ea8034">{{model.women | rhsSuffix: '%' : '...'}}</rhs-stat-circle
