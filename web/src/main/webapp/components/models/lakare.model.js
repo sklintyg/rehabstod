@@ -37,6 +37,16 @@ angular.module('rehabstodApp').factory('LakareModel',
                 return data;
             },
 
+            getNames: function() {
+                var names = [];
+
+                angular.forEach(data, function(value) {
+                    names.push(value.id);
+                });
+
+                return names;
+            },
+
             getSelected: function() {
                 var selected = [];
                 angular.forEach(data, function(value) {

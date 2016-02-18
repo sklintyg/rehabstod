@@ -4,7 +4,7 @@ describe('Controller: SjukfallStartSelectionCtrl', function() {
     // load the controller's module
     beforeEach(module('rehabstodApp'));
 
-    var scope, state, userModel, userProxy;
+    var scope, state, userModel, userProxy, sjukfallService;
     var succeed = true;
     var user = {};
     var error = {};
@@ -16,11 +16,13 @@ describe('Controller: SjukfallStartSelectionCtrl', function() {
         state = _$state_;
         userModel = _UserModel_;
         userProxy = _UserProxy_;
+        sjukfallService = {loadSjukfall: function(){}};
+
         $controller('SjukfallStartSelectionCtrl', {
             $scope: scope,
             UserModel: userModel,
-            UserProxy: userProxy
-
+            UserProxy: userProxy,
+            SjukfallService: sjukfallService
         });
     }));
 

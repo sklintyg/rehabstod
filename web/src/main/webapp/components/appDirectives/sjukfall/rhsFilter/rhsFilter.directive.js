@@ -13,7 +13,11 @@ angular.module('rehabstodApp')
             $scope.$watchCollection('model.get()', function(value) {
                 //Update contents on those models of filtercomponents that depends on the searchresults contents, i.e
                 // uniqueness of lakare diagnoskapitel.
-                $scope.filterViewState.get().lakareModel.set($filter('rhsUnique')(value, 'lakare'));
+                var lakare = $filter('rhsUnique')(value, 'lakare');
+                if (!angular.equals($scope.filterViewState.get().lakareModel.getNames(), lakare)) {
+                    $scope.filterViewState.get().lakareModel.set(lakare);
+                }
+
                 $scope.filterViewState.get().diagnosKapitelModel.setActivDiagnosKapitelIdlist(
                     $filter('rhsUnique')(value, 'diagnos.kapitel'));
 
