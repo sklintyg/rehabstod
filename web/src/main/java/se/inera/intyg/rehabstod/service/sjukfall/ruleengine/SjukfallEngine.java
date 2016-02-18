@@ -38,15 +38,14 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
  */
-public class SjukfallRuleEngine {
+public class SjukfallEngine {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SjukfallRuleEngine.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SjukfallEngine.class);
 
     private static final int AGE_START = 0;
     private static final int AGE_END = 8;
@@ -61,12 +60,16 @@ public class SjukfallRuleEngine {
     @Autowired
     protected DiagnosKapitelService diagnosKapitelService;
 
-    public SjukfallRuleEngine() {
+    public SjukfallEngine() {
         clock = Clock.system(ZoneId.of("Europe/Paris"));
     }
 
     public List<Sjukfall> calculate(List<IntygsData> intygsData, GetSjukfallRequest requestData) {
-        return new ArrayList();
+        // These should be outwired in some way
+        SjukfallMapper mapper = new SjukfallMapperImpl();
+        SjukfallResolver resolver = new SjukfallResolverImpl(mapper);
+
+        return resolver.resolve(intygsData, requestData.getMaxIntygsGlapp(), org.joda.time.LocalDate.now());
     }
 
     protected Diagnos getDiagnos(IntygsData intyg) {

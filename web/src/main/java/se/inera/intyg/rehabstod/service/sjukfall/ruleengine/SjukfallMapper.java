@@ -25,11 +25,8 @@ import java.util.List;
 /**
  * Created by Magnus Ekstrand on 2016-02-12.
  */
-public class SjukfallMapper {
+public interface SjukfallMapper {
 
-    public Sjukfall map(List<SortableIntygsData> sortableIntygsData) {
+    Sjukfall map(List<SortableIntygsData> sortableIntygsData);
 
-
-        return new Sjukfall();
-    }
 }

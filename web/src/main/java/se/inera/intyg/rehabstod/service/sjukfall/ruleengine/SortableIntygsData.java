@@ -116,24 +116,22 @@ public class SortableIntygsData extends IntygsData {
             return new SortableIntygsData(this);
         }
 
-        boolean hasAktivFormaga(List<Formaga> formagor, LocalDate aktivtDatum) {
+        private boolean hasAktivFormaga(List<Formaga> formagor, LocalDate aktivtDatum) {
             return formagor.stream()
                     .anyMatch(f -> isAktivFormaga(aktivtDatum, f));
         }
 
         private boolean isAktivFormaga(LocalDate aktivtDatum, Formaga f) {
-            boolean start = f.getStartdatum().compareTo(aktivtDatum) < 1;
-            boolean end = f.getSlutdatum().compareTo(aktivtDatum) > -1;
-            return  start && end;
+            return f.getStartdatum().compareTo(aktivtDatum) < 1 && f.getSlutdatum().compareTo(aktivtDatum) > -1;
         }
 
-        LocalDate lookupStartDatum(List<Formaga> formagor) {
+        private LocalDate lookupStartDatum(List<Formaga> formagor) {
             Formaga formaga = formagor.stream()
                     .min((o1, o2) -> o1.getStartdatum().compareTo(o2.getStartdatum())).get();
             return formaga.getStartdatum();
         }
 
-        LocalDate lookupSlutDatum(List<Formaga> formagor) {
+        private LocalDate lookupSlutDatum(List<Formaga> formagor) {
             Formaga formaga = formagor.stream()
                     .max((o1, o2) -> o1.getSlutdatum().compareTo(o2.getSlutdatum())).get();
             return formaga.getSlutdatum();

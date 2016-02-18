@@ -38,9 +38,9 @@ import java.util.stream.Collectors;
  * This is to be deleted. It's only purpose is to create stubbed data until the rule engine is in place.
  */
 @Component
-public class SjukfallRuleEngineStub extends SjukfallRuleEngine {
+public class SjukfallEngineStub extends SjukfallEngine {
 
-    public SjukfallRuleEngineStub() {
+    public SjukfallEngineStub() {
         super();
     }
 

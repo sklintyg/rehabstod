@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -99,15 +98,16 @@ public class SortableIntygsDataTest {
         assertIntygsData(testee, "2016-02-01", "2016-02-28", true);
     }
 
-    @Ignore
     @Test
     public void testIntyg6() {
-        IntygsData intygsData = getIntygsData("intyg-5");
+        IntygsData intygsData = getIntygsData("intyg-6");
         SortableIntygsData testee1 = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
-        SortableIntygsData testee2 = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, LocalDate.parse("2016-02-23")).build();
+        SortableIntygsData testee2 = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, LocalDate.parse("2016-02-22")).build();
+        SortableIntygsData testee3 = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, LocalDate.parse("2016-02-23")).build();
 
-        assertIntygsData(testee1, "2016-02-01", "2016-02-28", true);
-        assertIntygsData(testee2, "2016-02-01", "2016-02-28", false);
+        assertIntygsData(testee1, "2016-02-11", "2016-02-28", false);
+        assertIntygsData(testee2, "2016-02-11", "2016-02-28", true);
+        assertIntygsData(testee3, "2016-02-11", "2016-02-28", true);
     }
 
     private IntygsData getIntygsData(String intygsId) {

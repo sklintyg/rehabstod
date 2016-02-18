@@ -18,12 +18,13 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -69,6 +70,15 @@ public class SortableIntygsDataCreatorTest {
     }
 
     @Test
+    public void testReducedMap() {
+        Map<String, List<SortableIntygsData>> map = creator.createMap(intygsDataList, activeDate);
+        Map<String, List<SortableIntygsData>> reducedMap = creator.reduceMap(map);
+
+        // Map should be reduced with one entry
+        assertTrue("Expected 6 but was " + reducedMap.size(), reducedMap.size() == 6);
+    }
+
+    @Test
     public void testSortedMap() {
         Map<String, List<SortableIntygsData>> map = creator.createMap(intygsDataList, activeDate);
         Map<String, List<SortableIntygsData>> sortedMap = creator.sortValues(map);
@@ -84,12 +94,23 @@ public class SortableIntygsDataCreatorTest {
         }
     }
 
+    @Test
+    public void testSetActiveCertificate() {
+        Map<String, List<SortableIntygsData>> map = creator.createMap(intygsDataList, activeDate);
+        Map<String, List<SortableIntygsData>> activeMap = creator.setActive(map);
+
+        // It can only be zero or one active object
+        assertTrue(activeMap.entrySet().stream()
+                .allMatch(e -> e.getValue().stream()
+                        .filter(o -> o.isAktivtIntyg()).count() < 2));
+
+    }
+
     /*
      * Test methods below refers to specified cases in Sjukfall.xlsx.
      * https://inera-certificate.atlassian.net/wiki/pages/viewpage.action?pageId=39747618&preview=/39747618/39747617/Sjukfall.xlsx
      */
 
-    @Ignore
     @Test
     public void testFall1() {
         String key = "19791110-9291";
@@ -103,11 +124,87 @@ public class SortableIntygsDataCreatorTest {
         assertTrue(list.get(1).isAktivtIntyg());
     }
 
-    static void assertStartDate(SortableIntygsData intygsData, String datum) {
+    @Test
+    public void testFall2() {
+        String key = "19791123-9262";
+        Map<String, List<SortableIntygsData>> map = creator.create(intygsDataList, activeDate);
+
+        List<SortableIntygsData> list = map.get(key);
+
+        assertTrue("Expected 2 but was " + list.size(), list.size() == 2);
+        assertStartDate(list.get(0), "2016-02-01");
+        assertEndDate(list.get(1), "2016-02-20");
+        assertTrue(list.get(1).isAktivtIntyg());
+    }
+
+    @Test
+    public void testFall3() {
+        String key = "19791212-9280";
+        Map<String, List<SortableIntygsData>> map = creator.create(intygsDataList, activeDate);
+
+        List<SortableIntygsData> list = map.get(key);
+
+        assertTrue("Expected 3 but was " + list.size(), list.size() == 3);
+        assertStartDate(list.get(0), "2016-02-01");
+        assertEndDate(list.get(2), "2016-02-25");
+        assertTrue(list.get(1).isAktivtIntyg());
+    }
+
+    @Test
+    public void testFall4() {
+        String key = "19800113-9297";
+        Map<String, List<SortableIntygsData>> map = creator.create(intygsDataList, activeDate);
+
+        List<SortableIntygsData> list = map.get(key);
+
+        assertTrue("Expected 3 but was " + list.size(), list.size() == 3);
+        assertStartDate(list.get(0), "2016-02-01");
+        assertEndDate(list.get(2), "2016-02-25");
+        assertTrue(list.get(1).isAktivtIntyg());
+    }
+
+    @Test
+    public void testFall5() {
+        String key = "19800124-9286";
+        Map<String, List<SortableIntygsData>> map = creator.create(intygsDataList, activeDate);
+
+        List<SortableIntygsData> list = map.get(key);
+
+        assertTrue("Expected 2 but was " + list.size(), list.size() == 2);
+        assertStartDate(list.get(0), "2016-02-12");
+        assertEndDate(list.get(1), "2016-02-25");
+        assertTrue(list.get(0).isAktivtIntyg());
+        assertFalse(list.get(1).isAktivtIntyg());
+    }
+
+    @Test
+    public void testFall6() {
+        String key = "19800207-9294";
+        Map<String, List<SortableIntygsData>> map = creator.create(intygsDataList, activeDate);
+
+        List<SortableIntygsData> list = map.get(key);
+
+        assertTrue("Expected 2 but was " + list.size(), list.size() == 2);
+        assertStartDate(list.get(0), "2016-02-12");
+        assertEndDate(list.get(1), "2016-02-25");
+        assertFalse(list.get(0).isAktivtIntyg());
+        assertTrue(list.get(1).isAktivtIntyg());
+    }
+
+    @Test
+    public void testFall7() {
+        String key = "19800228-9224";
+        Map<String, List<SortableIntygsData>> map = creator.create(intygsDataList, activeDate);
+
+        assertNull(map.get(key));
+    }
+
+
+    private static void assertStartDate(SortableIntygsData intygsData, String datum) {
         assertTrue(intygsData.getStartDatum().equals(LocalDate.parse(datum)));
     }
 
-    static void assertEndDate(SortableIntygsData intygsData, String datum) {
+    private static void assertEndDate(SortableIntygsData intygsData, String datum) {
         assertTrue(intygsData.getSlutDatum().equals(LocalDate.parse(datum)));
     }
 

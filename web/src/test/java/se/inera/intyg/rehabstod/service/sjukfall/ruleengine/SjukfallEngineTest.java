@@ -45,7 +45,7 @@ import java.time.ZoneId;
  * Created by martin on 11/02/16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SjukfallRuleEngineTest {
+public class SjukfallEngineTest {
 
     private static final String DIAGNOS_KOD = "J1012";
     private static final String DIAGNOS_BESKRIVNING = "Beskrivning";
@@ -57,7 +57,7 @@ public class SjukfallRuleEngineTest {
     private DiagnosKapitelService diagnosKapitelService;
 
     @InjectMocks
-    private SjukfallRuleEngineTestImpl testee = new SjukfallRuleEngineTestImpl();
+    private SjukfallEngineTestImpl testee = new SjukfallEngineTestImpl();
 
     @Before
     public void init() {
@@ -171,8 +171,8 @@ public class SjukfallRuleEngineTest {
         return intyg;
     }
 
-    private class SjukfallRuleEngineTestImpl extends SjukfallRuleEngine {
-        public SjukfallRuleEngineTestImpl() {
+    private class SjukfallEngineTestImpl extends SjukfallEngine {
+        public SjukfallEngineTestImpl() {
             super();
             // 2016-02-11
             final int date = 1455203622;

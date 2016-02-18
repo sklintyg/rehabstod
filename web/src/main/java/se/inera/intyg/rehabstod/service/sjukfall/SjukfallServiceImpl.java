@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
-import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SjukfallRuleEngine;
+import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SjukfallEngine;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
@@ -41,7 +41,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     private IntygstjanstIntegrationService intygstjanstIntegrationService;
 
     @Autowired
-    private SjukfallRuleEngine sjukfallCalculatorEngine;
+    private SjukfallEngine sjukfallCalculatorEngine;
 
     @Override
     public List<Sjukfall> getSjukfall(String enhetsId, GetSjukfallRequest request) {

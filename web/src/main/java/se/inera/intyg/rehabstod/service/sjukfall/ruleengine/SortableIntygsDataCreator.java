@@ -19,12 +19,14 @@
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -37,11 +39,14 @@ public class SortableIntygsDataCreator {
     }
 
     public Map<String, List<SortableIntygsData>> create(List<IntygsData> intygsData, LocalDate aktivtDatum) {
+        Map<String, List<SortableIntygsData>> map = null;
 
-        Map<String, List<SortableIntygsData>> unsortedMap = createMap(intygsData, aktivtDatum);
-        Map<String, List<SortableIntygsData>> sortedMap = sortValues(unsortedMap);
+        map = createMap(intygsData, aktivtDatum);
+        map = reduceMap(map);
+        map = sortValues(map);
+        map = setActive(map);
 
-        return sortedMap;
+        return map;
     }
 
     Map<String, List<SortableIntygsData>> createMap(List<IntygsData> intygsData, LocalDate aktivtDatum) {
@@ -55,12 +60,20 @@ public class SortableIntygsDataCreator {
             }
 
             SortableIntygsData v = new SortableIntygsData.SortableIntygsDataBuilder(i, aktivtDatum).build();
-
-
             map.get(k).add(v);
         }
 
         return map;
+    }
+
+    Map<String, List<SortableIntygsData>> reduceMap(Map<String, List<SortableIntygsData>> map) {
+
+        Map<String, List<SortableIntygsData>> reducedMap = map.entrySet().stream()
+                .filter(e -> e.getValue().stream()
+                        .filter(o -> o.isAktivtIntyg()).count() > 0)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return reducedMap;
     }
 
     /**
@@ -84,5 +97,58 @@ public class SortableIntygsDataCreator {
         return sortedMap;
     }
 
+    Map<String, List<SortableIntygsData>> setActive(Map<String, List<SortableIntygsData>> map) {
+        return map.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.setValue(setActive(e.getValue())).stream()
+                                .collect(Collectors.toList())));
+    }
+
+    List<SortableIntygsData> setActive(List<SortableIntygsData> intygsDataList) {
+
+        List<SortableIntygsData> values = new ArrayList<>();
+
+        int aktivtIntygIndex = 0;
+        SortableIntygsData aktivtIntyg = null;
+
+        ListIterator<SortableIntygsData> iterator = intygsDataList.listIterator();
+        while (iterator.hasNext()) {
+            int currentIndex = iterator.nextIndex();
+            SortableIntygsData current = iterator.next();
+
+            // Add current object to new list
+            values.add(current);
+
+            if (current.isAktivtIntyg()) {
+
+                if (aktivtIntyg == null) {
+                    aktivtIntyg = current;
+                    aktivtIntygIndex = currentIndex;
+                    continue;
+                }
+
+                LocalDateTime dtAktivt = aktivtIntyg.getSigneringsTidpunkt();
+                LocalDateTime dtCurrent = current.getSigneringsTidpunkt();
+
+                if (dtAktivt.isBefore(dtCurrent)) {
+                    // Change active status
+                    aktivtIntyg.setAktivtIntyg(false);
+                    // Update new list
+                    values.set(aktivtIntygIndex, aktivtIntyg);
+                    // Swap
+                    aktivtIntyg = current;
+                    aktivtIntygIndex = currentIndex;
+                } else {
+                    // Change active status
+                    current.setAktivtIntyg(false);
+                    // Update new list
+                    values.set(currentIndex, current);
+                }
+            }
+        }
+
+        return values;
+    }
 
 }
