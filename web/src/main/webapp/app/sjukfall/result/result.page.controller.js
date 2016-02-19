@@ -1,6 +1,6 @@
 angular.module('rehabstodApp')
     .controller('SjukfallResultPageCtrl',
-        function($scope, $rootScope, SjukfallService, UserModel) {
+        function($scope, $state, $rootScope, SjukfallService, UserModel, UserProxy) {
             'use strict';
 
             $scope.user = UserModel.get();
@@ -13,4 +13,15 @@ angular.module('rehabstodApp')
             //rootscope on event listeners aren't unregistered automatically when 'this' directives
             //scope is destroyed, so let's take care of that.
             $scope.$on('$destroy', unregisterFn);
+
+            $scope.goBack = function() {
+                UserProxy.changeUrval(null).then(function(updatedUserModel) {
+                    UserModel.set(updatedUserModel);
+
+                    $state.go('app.sjukfall.start');
+
+                }, function() {
+                    //Handle errors
+                });
+            };
         });
