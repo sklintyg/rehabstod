@@ -32,7 +32,8 @@ var RehabstodBasePage = Class._extend({
     init: function() {
         this.at = null;
         this.doctor = element(by.css('.logged-in'));
-        this.header = element(by.id('wcHeader'));
+        // this.header = element(by.id('wcHeader'));
+        this.header = element(By.css('.headerbox-user-profile'));
     },
     isAt: function() {
         return this.at.isDisplayed();

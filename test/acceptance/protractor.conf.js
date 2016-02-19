@@ -17,9 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*global
-browser
-*/
+/*globals browser,global,exports,process*/
 'use strict';
 
 exports.config = {
@@ -45,6 +43,7 @@ exports.config = {
     },
     onPrepare: function() {
 
+        browser.ignoreSynchronization = false;
         //http://chaijs.com/
         global.chai = require('chai');
 
@@ -55,18 +54,20 @@ exports.config = {
         global.expect = global.chai.expect;
         global.should = global.chai.should();
 
-        var rehTestTools = require('rehabstod-testtools');
+        global.rhsTestTools = require('rehabstod-testtools');
 
-        global.rehTestTools = rehTestTools;
-        global.testdata = rehTestTools.testdata;
-        global.pages = rehTestTools.pages;
+        // global.testdata = rehTestTools.testdata;
+        // global.pages = rehTestTools.pages;
 
-        browser.ignoreSynchronization = false;
-        browser.baseUrl = process.env.WEBCERT_URL;
+        browser.baseUrl = process.env.REHABSTOD_URL;
 
         //Set window size
         browser.manage().window().setSize(1600, 1000);
         global.user = {};
+
+        // global.logg = function(text) {
+        //     console.log(text);
+        // };
         //Strunta i om servern inte kan bekräfta dess identitet
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     }

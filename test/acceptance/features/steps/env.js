@@ -17,27 +17,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* globals browser, logg */
 'use strict';
 
-var specHelper = rhsTestTools.helpers.spec;
-var _wp = rhsTestTools.pages.welcomePage;
-var rehabstodBase = rhsTestTools.pages.rehabstodBase;
+module.exports = function () {
+  this.setDefaultTimeout(200 * 1000);
 
-module.exports = function() {
+  //After scenario
+  this.After(function (scenario, callback) {
 
-    this.Given(/^jag är inloggad som läkare$/, function(callback) {
+    if (scenario.isFailed()) {
+      logg('scenario failed');
+      browser.takeScreenshot().then(function (png) {
+        //var base64Image = new Buffer(png, 'binary').toString('base64');
+        var decodedImage = new Buffer(png, 'base64').toString('binary');
+        scenario.attach(decodedImage, 'image/png', function (err) {
+          callback(err);
+        });
+      });
 
-        expect(element(By.css('.headerbox-user-profile')).getText()).to.eventually.contain(roleName + ' - ' + userObj.fornamn + ' ' + userObj.efternamn).then(function(val) {
-            logg('OK - Inloggad som läkare: ' + val);
-        }, function(reason) {
-            callback('FEL - inloggning ej korrekt: ' + reason);
-        }).then(callback);
+    } 
+  });
 
-    });
+  this.Before(function (scenario, callback) {
+    global.scenario = scenario;
+    callback();
+  });
 
-    this.Given(/^synns all innehåll$/, function(callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
-    });
+  global.logg = function (text) {
+    console.log(text);
+    if (global) {
+      global.scenario.attach(text);
+    }
+  };
 
 };

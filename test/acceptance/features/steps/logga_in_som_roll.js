@@ -22,8 +22,9 @@
 
 'use strict';
 
-// var webcertBasePage = pages.webcertBase;
-// var webcertBase = pages.webcertBase;
+// var specHelper = rhsTestTools.helpers.spec;
+var welcomePage = rhsTestTools.pages.welcomePage;
+var rehabstodBase = rhsTestTools.pages.rehabstodBase;
 
 module.exports = function() {
 
@@ -41,40 +42,19 @@ module.exports = function() {
 
 function logInAsUserRole(userObj, roleName, callback, newOrigin, newUserRole) {
     console.log('Loggar in som ' + userObj.fornamn + ' ' + userObj.efternamn + '..');
-    // Fattigmans-kloning av användar-hashen.
+
     global.user = JSON.parse(JSON.stringify(userObj));
-    global.user.role = newUserRole || roleName;
-    global.user.origin = newOrigin || 'NORMAL';
+
     browser.ignoreSynchronization = true;
-    pages.welcomePage.get();
-    pages.welcomePage.loginByJSON(JSON.stringify(userObj));
+    welcomePage.get();
+    welcomePage.loginByJSON(JSON.stringify(userObj));
 
     browser.ignoreSynchronization = false;
-    browser.sleep(2000);
-    // webcertBasePage.header.getText()
-    // expect(element(by.id('wcHeader')).getText()).to.eventually.contain(roleName + ' - ' + userObj.fornamn + ' ' + userObj.efternamn)
-    // expect(webcertBase.header.getText()).to.eventually.contain(roleName + ' - ' + userObj.fornamn+ ' ' + userObj.efternamn)
-    // .and.notify(callback);
-}
+    browser.sleep(3000);
+    expect(element(By.css('.headerbox-user-profile')).getText()).to.eventually.contain(roleName + ' - ' + userObj.fornamn + ' ' + userObj.efternamn).then(function(value){
+        logg('OK - hittade : ' + value);
+    }, function (reason) {
+        callback('FEL - err: '+reason);
+    }).then(callback);
 
-function checkUserRole() {
-    return performUserCheck('role');
-}
-
-function checkUserOrigin() {
-    return performUserCheck('origin');
-}
-
-function performUserCheck(userconfig) {
-    browser.ignoreSynchronization = true;
-    if (userconfig === 'role') {
-        browser.get('testability/user/role/');
-    } else if (userconfig === 'origin') {
-        browser.get('testability/user/origin/');
-    }
-    var attribute = element(by.css('pre')).getText();
-    browser.navigate().back();
-    browser.sleep(1000);
-    browser.ignoreSynchronization = false;
-    return attribute;
 }
