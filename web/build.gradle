@@ -142,6 +142,8 @@ dependencies {
 
     compile "se.inera.intyg.common:hsa-integration:0-SNAPSHOT"
     compile "se.inera.intyg.common:log-messages:0-SNAPSHOT"
+
+    compile "javax.jms:jms-api:1.1-rev-1"
     
     compile "org.springframework:spring-webmvc:${springContextVersion}"
     compile "org.springframework:spring-jms:${springContextVersion}"
