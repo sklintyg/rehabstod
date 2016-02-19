@@ -51,9 +51,8 @@ module.exports = function(grunt) {
             },
             acc: {
                 options: {
-                    configFile: './acceptance/protractor-conf.js',
-                    args: {
-                    }
+                    configFile: './acceptance/protractor.conf.js',
+                    args: {}
                 }
             }
         },
@@ -67,34 +66,20 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('default', function(environment, tags) {
-        if(!environment){
+        if (!environment) {
             var defaultEnv = 'dev';
-            grunt.log.subhead('Ingen miljö vald, använder '+defaultEnv+'-miljön..');
+            grunt.log.subhead('Ingen miljö vald, använder ' + defaultEnv + '-miljön..');
             environment = defaultEnv;
         }
-        grunt.task.run(['env:'+environment, 'protractor_webdriver', 'protractor:dev']);
+        grunt.task.run(['env:' + environment, 'protractor_webdriver', 'protractor:dev']);
     });
 
-
-    // Run: 'grunt acc:ip20:tags'
-    //grunt.task.registerTask('acc', 'Task för att köra acceptanstest', function(environment, tags) {
-    //
-    //    if(!environment){
-    //        var defaultEnv = 'ip30';
-    //        grunt.log.subhead('Ingen miljö vald, använder '+defaultEnv+'-miljön..');
-    //        environment = defaultEnv;
-    //    }
-    //    if(tags){
-    //        grunt.log.subhead('Kör tester taggade med: '+tags);
-    //        grunt.config.set('protractor.acc.options.args.cucumberOpts.tags', tags);
-    //    }
-    //    else{
-    //        grunt.config.set('protractor.acc.options.args.cucumberOpts.tags', ['~@notReady']);
-    //    }
-    //
-    //
-    //    grunt.task.run(['env:'+environment, 'protractor_webdriver', 'protractor:acc']);
-    //
-    //
-    //});
+    grunt.registerTask('acc-rehab', function(environment, tags) {
+        if (!environment) {
+            var defaultEnv = 'acc';
+            grunt.log.subhead('Ingen miljö vald, använder ' + defaultEnv + '-miljön..');
+            environment = defaultEnv;
+        }
+        grunt.task.run(['env:' + environment, 'protractor_webdriver', 'protractor:acc']);
+    });
 };

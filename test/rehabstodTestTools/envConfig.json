@@ -1,4 +1,8 @@
 {
+    "acc": {
+        "REHABSTOD_URL": "https://rehabstod.inera.nordicmedtest.se/",
+        "INTYGTJANST_URL": "https://rehabstod.inera.nordicmedtest.se/inera-certificate"
+    },
     "dev": {
         "REHABSTOD_URL": "http://localhost:8790/",
         "INTYGTJANST_URL": "http://localhost:8080/inera-certificate"
