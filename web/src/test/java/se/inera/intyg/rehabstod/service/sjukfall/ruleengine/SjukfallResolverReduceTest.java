@@ -38,10 +38,10 @@ import java.util.Map;
  * Created by Magnus Ekstrand on 10/02/16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SjukfallResolverReduceLeftTest {
+public class SjukfallResolverReduceTest {
     // CHECKSTYLE:OFF MagicNumber
 
-    private static final String LOCATION_INTYGSDATA = "classpath:SjukfallResolverTest/intygsdata-resolver-left.csv";
+    private static final String LOCATION_INTYGSDATA = "classpath:SjukfallResolverTest/intygsdata-resolver.csv";
 
     private static List<IntygsData> intygsDataList;
 
@@ -63,65 +63,72 @@ public class SjukfallResolverReduceLeftTest {
 
     @Test
     public void testFall1() {
-        List<SortableIntygsData> result = getTestData("fall-1-left", "2016-01-27", 5, "2016-02-08");
+        List<SortableIntygsData> result = getTestData("fall-1", "2016-02-10", 5);
         assertTrue("Expected 3 but was " + result.size(), result.size() == 3);
+        assertEquals("fall-1-intyg-1", result.get(0).getIntygsId());
+        assertEquals("fall-1-intyg-2", result.get(1).getIntygsId());
+        assertEquals("fall-1-intyg-3", result.get(2).getIntygsId());
     }
 
     @Test
     public void testFall2() {
-        List<SortableIntygsData> result = getTestData("fall-2-left", "2016-01-27", 5, "2016-02-08");
-        assertTrue("Expected 2 but was " + result.size(), result.size() == 2);
-        assertEquals("fall-2-intyg-2", result.get(0).getIntygsId());
-        assertEquals("fall-2-intyg-3", result.get(1).getIntygsId());
+        List<SortableIntygsData> result = getTestData("fall-2", "2016-02-10", 5);
+        assertTrue("Expected 4 but was " + result.size(), result.size() == 4);
+        assertEquals("fall-2-intyg-1", result.get(0).getIntygsId());
+        assertEquals("fall-2-intyg-2", result.get(1).getIntygsId());
+        assertEquals("fall-2-intyg-3", result.get(2).getIntygsId());
+        assertEquals("fall-2-intyg-4", result.get(3).getIntygsId());
     }
 
     @Test
     public void testFall3() {
-        List<SortableIntygsData> result = getTestData("fall-3-left", "2016-01-27", 5, "2016-02-08");
-        assertTrue("Expected 0 but was " + result.size(), result.size() == 0);
+        List<SortableIntygsData> result = getTestData("fall-3", "2016-02-10", 5);
+        assertTrue("Expected 3 but was " + result.size(), result.size() == 3);
+        assertEquals("fall-3-intyg-1", result.get(0).getIntygsId());
+        assertEquals("fall-3-intyg-2", result.get(1).getIntygsId());
+        assertEquals("fall-3-intyg-3", result.get(2).getIntygsId());
     }
 
     @Test
     public void testFall4() {
-        List<SortableIntygsData> result = getTestData("fall-4-left", "2016-01-27", 5, "2016-02-08");
+        List<SortableIntygsData> result = getTestData("fall-4", "2016-02-10", 5);
         assertTrue("Expected 3 but was " + result.size(), result.size() == 3);
         assertEquals("fall-4-intyg-1", result.get(0).getIntygsId());
-        assertEquals("fall-4-intyg-3", result.get(1).getIntygsId());
-        assertEquals("fall-4-intyg-2", result.get(2).getIntygsId());
+        assertEquals("fall-4-intyg-2", result.get(1).getIntygsId());
+        assertEquals("fall-4-intyg-3", result.get(2).getIntygsId());
     }
 
     @Test
     public void testFall5() {
-        List<SortableIntygsData> result = getTestData("fall-5-left", "2016-01-27", 5, "2016-02-08");
+        List<SortableIntygsData> result = getTestData("fall-5", "2016-02-10", 5);
         assertTrue("Expected 4 but was " + result.size(), result.size() == 4);
         assertEquals("fall-5-intyg-1", result.get(0).getIntygsId());
-        assertEquals("fall-5-intyg-2", result.get(1).getIntygsId());
-        assertEquals("fall-5-intyg-3", result.get(2).getIntygsId());
+        assertEquals("fall-5-intyg-3", result.get(1).getIntygsId());
+        assertEquals("fall-5-intyg-2", result.get(2).getIntygsId());
         assertEquals("fall-5-intyg-4", result.get(3).getIntygsId());
     }
 
     @Test
     public void testFall6() {
-        List<SortableIntygsData> result = getTestData("fall-6-left", "2016-01-27", 5, "2016-02-08");
-        assertTrue("Expected 2 but was " + result.size(), result.size() == 2);
-        assertEquals("fall-6-intyg-2", result.get(0).getIntygsId());
-        assertEquals("fall-6-intyg-1", result.get(1).getIntygsId());
+        List<SortableIntygsData> result = getTestData("fall-6", "2016-02-10", 5);
+        assertTrue("Expected 5 but was " + result.size(), result.size() == 5);
+        assertEquals("fall-6-intyg-1", result.get(0).getIntygsId());
+        assertEquals("fall-6-intyg-3", result.get(1).getIntygsId());
+        assertEquals("fall-6-intyg-2", result.get(2).getIntygsId());
+        assertEquals("fall-6-intyg-4", result.get(3).getIntygsId());
+        assertEquals("fall-6-intyg-5", result.get(4).getIntygsId());
     }
 
     @Test
     public void testFall7() {
-        List<SortableIntygsData> result = getTestData("fall-7-left", "2016-01-27", 5, "2016-02-08");
-        assertTrue("Expected 5 but was " + result.size(), result.size() == 5);
-        assertEquals("fall-7-intyg-1", result.get(0).getIntygsId());
-        assertEquals("fall-7-intyg-2", result.get(1).getIntygsId());
-        assertEquals("fall-7-intyg-3", result.get(2).getIntygsId());
-        assertEquals("fall-7-intyg-5", result.get(3).getIntygsId());
-        assertEquals("fall-7-intyg-4", result.get(4).getIntygsId());
+        List<SortableIntygsData> result = getTestData("fall-7", "2016-02-10", 5);
+        assertTrue("Expected 1 but was " + result.size(), result.size() == 1);
+        assertEquals("fall-7-intyg-2", result.get(0).getIntygsId());
     }
 
-    private List<SortableIntygsData> getTestData(String key, String aktivtDatum , int maxIntygsGlapp, String initialtDatum) {
+    private List<SortableIntygsData> getTestData(String key, String aktivtDatum , int maxIntygsGlapp) {
         Map<String, List<SortableIntygsData>> data = getTestData(aktivtDatum);
-        return resolver.reduceLeft(data.get(key), maxIntygsGlapp, LocalDate.parse(initialtDatum));
+        return resolver.reduceList(data.get(key), maxIntygsGlapp);
     }
 
     private Map<String, List<SortableIntygsData>> getTestData(String aktivtDatum) {
