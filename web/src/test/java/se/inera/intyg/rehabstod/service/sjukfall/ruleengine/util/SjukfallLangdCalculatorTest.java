@@ -48,7 +48,7 @@ public class SjukfallLangdCalculatorTest {
     }
 
     /**
-     * Test FALL1 from confluence document /Krav/Rehabstod/Berakning av sjukfall
+     * Test FALL1 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      * @throws Exception
      */
     @Test
@@ -63,7 +63,7 @@ public class SjukfallLangdCalculatorTest {
     }
 
     /**
-     * Test FALL3 from confluence document /Krav/Rehabstod/Berakning av sjukfall
+     * Test FALL3 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      * @throws Exception
      */
     @Test
@@ -79,7 +79,7 @@ public class SjukfallLangdCalculatorTest {
     }
 
     /**
-     * Test FALL5 from confluence document /Krav/Rehabstod/Berakning av sjukfall
+     * Test FALL5 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      * @throws Exception
      */
     @Test
@@ -94,7 +94,7 @@ public class SjukfallLangdCalculatorTest {
     }
 
     /**
-     * Test FALL6 from confluence document /Krav/Rehabstod/Berakning av sjukfall
+     * Test FALL6 from confluence document /Krav/Rehabstod/Berakning av sjukfall.
      * @throws Exception
      */
     @Test
@@ -153,16 +153,16 @@ public class SjukfallLangdCalculatorTest {
     public void testMergeIntervalsSimple() throws Exception {
 
         List<LocalDateInterval> intervals = new ArrayList<>();
-        final LocalDateInterval A = createInterval("2016-01-01", "2016-01-20");
-        final LocalDateInterval B = createInterval("2016-01-20", "2016-02-10");
-        intervals.add(A);
-        intervals.add(B);
+        final LocalDateInterval a = createInterval("2016-01-01", "2016-01-20");
+        final LocalDateInterval b = createInterval("2016-01-20", "2016-02-10");
+        intervals.add(a);
+        intervals.add(b);
 
         final List<LocalDateInterval> result = SjukfallLangdCalculator.mergeIntervals(intervals);
 
         assertEquals(1, result.size());
-        assertEquals(A.getStartDate(), result.get(0).getStartDate());
-        assertEquals(B.getEndDate(), result.get(0).getEndDate());
+        assertEquals(a.getStartDate(), result.get(0).getStartDate());
+        assertEquals(b.getEndDate(), result.get(0).getEndDate());
 
     }
 
@@ -170,16 +170,16 @@ public class SjukfallLangdCalculatorTest {
     public void testMergeIntervalsDontMergeDiscreteIntervals() throws Exception {
 
         List<LocalDateInterval> intervals = new ArrayList<>();
-        final LocalDateInterval A = createInterval("2016-01-01", "2016-01-20");
-        final LocalDateInterval B = createInterval("2016-01-21", "2016-02-10");
-        intervals.add(A);
-        intervals.add(B);
+        final LocalDateInterval a = createInterval("2016-01-01", "2016-01-20");
+        final LocalDateInterval b = createInterval("2016-01-21", "2016-02-10");
+        intervals.add(a);
+        intervals.add(b);
 
         final List<LocalDateInterval> result = SjukfallLangdCalculator.mergeIntervals(intervals);
 
         assertEquals(2, result.size());
-        assertTrue(result.contains(A));
-        assertTrue(result.contains(B));
+        assertTrue(result.contains(a));
+        assertTrue(result.contains(b));
 
     }
 
@@ -187,30 +187,30 @@ public class SjukfallLangdCalculatorTest {
     public void testMergeIntervalsComplex() throws Exception {
 
         // First add a simple intyg with a simple interval
-        LocalDateInterval A = createInterval("2016-01-20", "2016-02-10");
+        LocalDateInterval a = createInterval("2016-01-20", "2016-02-10");
 
         // Add one that should be "swallowed" entirely by the first and should therefore not effect the length
-        LocalDateInterval ACOPY = createInterval("2016-02-02", "2016-02-10");
+        LocalDateInterval aCopy = createInterval("2016-02-02", "2016-02-10");
 
         // Add another intyg where one of the intervals should overlap/extend the first (by 2 days) and adds  separate
         // interval of 20 days
-        LocalDateInterval B1 = createInterval("2016-01-25", "2016-02-12");
-        LocalDateInterval B2 = createInterval("2016-02-20", "2016-03-10");
+        final LocalDateInterval b1 = createInterval("2016-01-25", "2016-02-12");
+        final LocalDateInterval b2 = createInterval("2016-02-20", "2016-03-10");
 
         // add another that effectively encompasses all the previous ones except a few days of the last one
-        LocalDateInterval C = createInterval("2016-01-02", "2016-03-08");
+        final LocalDateInterval c = createInterval("2016-01-02", "2016-03-08");
 
         List<LocalDateInterval> intervals = new ArrayList<>();
-        intervals.add(A);
-        intervals.add(ACOPY);
-        intervals.add(B1);
-        intervals.add(B2);
-        intervals.add(C);
+        intervals.add(a);
+        intervals.add(aCopy);
+        intervals.add(b1);
+        intervals.add(b2);
+        intervals.add(c);
 
         final List<LocalDateInterval> result = SjukfallLangdCalculator.mergeIntervals(intervals);
         assertEquals(1, result.size());
-        assertEquals(C.getStartDate(), result.get(0).getStartDate());
-        assertEquals(B2.getEndDate(), result.get(0).getEndDate());
+        assertEquals(c.getStartDate(), result.get(0).getStartDate());
+        assertEquals(b2.getEndDate(), result.get(0).getEndDate());
     }
 
     private SortableIntygsData createIntyg(LocalDateInterval... intervals) {
