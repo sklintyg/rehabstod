@@ -1,5 +1,9 @@
 rhs-table {
   display: block;
+
+  @media (min-width: $screen-lg-min) {
+    padding: 0 !important;
+  }
 }
 
 .st-sort-ascent{
@@ -85,7 +89,7 @@ rhs-table {
     width: $container-md - $grid-gutter-width;
   }
   @media (min-width: $screen-lg-min) {
-    width: $container-lg - $grid-gutter-width;
+    width: $container-lg;
   }
 
   tr {
