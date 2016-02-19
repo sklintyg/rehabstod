@@ -23,7 +23,6 @@ import java.util.List;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
 /**
  * Created by eriklupander on 2016-02-18.

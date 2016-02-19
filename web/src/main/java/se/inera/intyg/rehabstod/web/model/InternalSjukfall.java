@@ -30,7 +30,9 @@ public class InternalSjukfall {
     private String vardGivareId;
     private String vardGivareNamn;
 
-    public InternalSjukfall() {}
+    public InternalSjukfall() {
+
+    }
 
     public String getVardEnhetId() {
         return vardEnhetId;

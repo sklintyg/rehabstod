@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,8 +46,6 @@ import se.inera.intyg.rehabstod.service.pdl.dto.LogRequest;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 
 /**
@@ -59,9 +57,6 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 public class LogServiceImpl implements LogService {
 
     private static final Logger LOG = LoggerFactory.getLogger(LogServiceImpl.class);
-
-    private static final String PRINTED_AS_PDF = "Intyget utskrivet som PDF";
-    private static final String PRINTED_AS_DRAFT = "Intyget utskrivet som utkast";
 
     @Autowired(required = false)
     @Qualifier("jmsPDLLogTemplate")
@@ -86,6 +81,7 @@ public class LogServiceImpl implements LogService {
     @Override
     public void logSjukfallData(List<InternalSjukfall> sjukfallList) {
         LogUser user = getLogUser(userService.getUser());
+
         List<AbstractLogMessage> logRequestList = sjukfallList.stream()
                 .map(LogRequestFactory::createLogRequestFromSjukfall)
                 .map(logRequest -> populateLogMessage(logRequest, new IntygDataLogMessage(logRequest.getIntygId()), user))
@@ -155,21 +151,21 @@ public class LogServiceImpl implements LogService {
 
         LOG.info("Logging {} of IntygsData items", logMsgs.size());
 
-        jmsTemplate.send(new MC((ArrayList<AbstractLogMessage>) logMsgs));
+        jmsTemplate.send(new MC(logMsgs));
     }
 
 
 
     private static final class MC implements MessageCreator {
-        private final ArrayList<AbstractLogMessage> logMsg;
+        private final List<AbstractLogMessage> logMsg;
 
-        private MC(ArrayList<AbstractLogMessage> log) {
+        private MC(List<AbstractLogMessage> log) {
             this.logMsg = log;
         }
 
         @Override
         public Message createMessage(Session session) throws JMSException {
-            return session.createObjectMessage(logMsg);
+            return session.createObjectMessage((Serializable) logMsg);
         }
     }
 }
