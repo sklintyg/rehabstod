@@ -196,3 +196,7 @@ configure (subprojects.findAll {
         }
     }
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.11' //version required
+}
