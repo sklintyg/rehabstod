@@ -1,12 +1,16 @@
 angular.module('rehabstodApp').directive('rhsResetLimit',
-        function() {
+        function($window) {
             'use strict';
+
+            var $win = angular.element($window);
 
             return {
                 restrict: 'E',
                 require: '^stTable',
                 scope: {
-                    onChange: '&'
+                    onChange: '&',
+                    scrollElement: '@',
+                    paddingTop: '@'
                 },
                 link: function($scope, element, attr, table) {
                     var changeLimit = function() {
@@ -15,7 +19,15 @@ angular.module('rehabstodApp').directive('rhsResetLimit',
 
                     $scope.table  = table;
                     $scope.$watch('table.tableState().search', changeLimit, true);
-                    $scope.$watch('table.tableState().sort', changeLimit, true);
+                    $scope.$watch('table.tableState().sort', function() {
+
+                        var position = $($scope.scrollElement).offset().top - $scope.paddingTop;
+                        if ($win.scrollTop() > position) {
+                            $('html, body').animate({scrollTop: position}, 200);
+                        }
+
+                        changeLimit();
+                    }, true);
                 }
             };
         });

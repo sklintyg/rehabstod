@@ -9,9 +9,6 @@ angular.module('rehabstodApp').directive('rhsTableFixedHeader', function ($windo
                 fixedHeader = element.find('#' + attrs.fixedHeader),
                 normalHeader = element.find('#' + attrs.normalHeader);
 
-
-
-
             var paddingTop = 0;
             if (attrs.paddingTop) {
                 paddingTop = parseInt(attrs.paddingTop, 10);
@@ -26,6 +23,7 @@ angular.module('rehabstodApp').directive('rhsTableFixedHeader', function ($windo
                 if ($win.scrollTop() >= offsetTop) {
                     if (!isFixed) {
                         fixedHeader.addClass(topClass);
+                        fixedHeader.removeClass('hidden');
                         fixedHeader.css('top', paddingTop);
                         fixedHeader.height(elementHeight);
                         setColumnWidths();
@@ -34,6 +32,7 @@ angular.module('rehabstodApp').directive('rhsTableFixedHeader', function ($windo
                 } else {
                     if (isFixed) {
                         fixedHeader.removeClass(topClass);
+                        fixedHeader.addClass('hidden');
                         isFixed = false;
                     }
                 }
