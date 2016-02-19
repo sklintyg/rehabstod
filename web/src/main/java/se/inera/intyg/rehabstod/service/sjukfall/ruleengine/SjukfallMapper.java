@@ -20,13 +20,11 @@ package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
-import java.util.List;
-
 /**
  * Created by Magnus Ekstrand on 2016-02-12.
  */
 public interface SjukfallMapper {
 
-    Sjukfall map(List<SortableIntygsData> sortableIntygsData);
+    Sjukfall map(SortableIntygsData sortableIntygsData);
 
 }

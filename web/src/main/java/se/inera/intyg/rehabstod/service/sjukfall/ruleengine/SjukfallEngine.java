@@ -18,18 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
-import java.time.Clock;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
@@ -41,6 +32,16 @@ import se.inera.intyg.rehabstod.web.model.Gender;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -71,7 +72,11 @@ public class SjukfallEngine {
         SjukfallMapper mapper = new SjukfallMapperImpl();
         SjukfallResolver resolver = new SjukfallResolverImpl(mapper);
 
-        return resolver.resolve(intygsData, requestData.getMaxIntygsGlapp(), org.joda.time.LocalDate.now());
+        Map<String, Sjukfall> map = resolver.resolve(intygsData, requestData.getMaxIntygsGlapp(), org.joda.time.LocalDate.now());
+
+        return map.entrySet().stream()
+                .map(e -> e.getValue())
+                .collect(Collectors.toList());
     }
 
     protected Diagnos getDiagnos(IntygsData intyg) {

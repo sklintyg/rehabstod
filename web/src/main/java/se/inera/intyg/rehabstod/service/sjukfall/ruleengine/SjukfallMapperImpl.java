@@ -38,7 +38,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-18.
@@ -66,7 +65,7 @@ public class SjukfallMapperImpl implements SjukfallMapper {
     }
 
     @Override
-    public Sjukfall map(List<SortableIntygsData> sortableIntygsData) {
+    public Sjukfall map(SortableIntygsData sortableIntygsData) {
         return null;
     }
 

@@ -50,41 +50,144 @@ public class SjukfallResolverImpl implements SjukfallResolver {
     // API
 
     @Override
-    public List<Sjukfall> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
+    public Map<String, Sjukfall> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
 
         if (intygsData == null || intygsData.size() == 0) {
             LOG.debug("There was no in-data! Returning empty list");
-            return new ArrayList<Sjukfall>();
+            return new HashMap<>();
         }
 
         if (maxIntygsGlapp < 0) {
             LOG.debug("Maximal days between certificates was {}. Value must be equal or greater than zero", maxIntygsGlapp);
-            return new ArrayList<Sjukfall>();
+            return new HashMap<>();
         }
 
         // Create an map with personnummer as key holding each person's intygsdata
-        Map<String, List<SortableIntygsData>> map = toMap(intygsData, aktivtDatum);
+        // The map's values are sorted by slutDatum with ascending order.
+        Map<String, List<SortableIntygsData>> intygsDataMap = toMap(intygsData, aktivtDatum);
 
-        // Create Sjukfall objects
-        List<Sjukfall> sjukfallList = assembleSjukfall(map, maxIntygsGlapp, aktivtDatum);
+        // Reduce list of SortableIntygsData
+        Map<String, List<SortableIntygsData>> reducedMap = reduceMap(intygsDataMap, maxIntygsGlapp);
 
-        return sjukfallList;
+        // Assemble Sjukfall objects
+        Map<String, Sjukfall> sjukfallMap = assembleSjukfall(reducedMap);
+
+        return sjukfallMap;
     }
-
 
     // Package scope
 
-    List<Sjukfall> assembleSjukfall(Map<String, List<SortableIntygsData>> map, int maxIntygsGlapp, LocalDate aktivtDatum) {
+    Map<String, List<SortableIntygsData>> reduceMap(Map<String, List<SortableIntygsData>> intygsDataMap, int maxIntygsGlapp) {
 
-        List<Sjukfall> list = new ArrayList<>();
+        Map<String, List<SortableIntygsData>> resultMap = new HashMap<>();
 
-        // 2. Remove intyg that is not within 'maxIntygsGlapp'
-        //sortedMap.entrySet().stream().forEach(e -> e.setValue(reduce(e.getValue(), maxIntygsGlapp)));
+        // For each entry in map, lookup "aktivtIntyg" within the list of SortableIntygsData
+        for (Map.Entry<String, List<SortableIntygsData>> entry : intygsDataMap.entrySet()) {
 
-        // 3.
-        mapper.map(new ArrayList<>());
+            List<SortableIntygsData> reducedList = reducedList(entry.getValue(), maxIntygsGlapp);
+            if (reducedList.size() > 0) {
+                resultMap.put(entry.getKey(), reducedList);
+            }
+        }
+
+        return resultMap;
+    }
+
+    List<SortableIntygsData> reducedList(List<SortableIntygsData> values, int maxIntygsGlapp)  {
+
+        // filter out "aktivtIntyg"
+        SortableIntygsData aktivtIntyg = values.stream().filter(e -> e.isAktivtIntyg()).findFirst().get();
+
+        // get position of the "aktivtIntyg"
+        int aktivtIndex = values.indexOf(aktivtIntyg);
+
+        // Slice "list of SortableIntygsData" into two lists, use "aktivtIntyg" as divider
+        List<SortableIntygsData> left = new ArrayList<>();
+        if (aktivtIndex > 0) {
+            left = values.subList(0, aktivtIndex - 1);
+        }
+
+        List<SortableIntygsData> right = new ArrayList<>();
+        if (aktivtIndex < values.size() - 1) {
+            right = values.subList(aktivtIndex, values.size() - 1);
+        }
+
+        // traverse (1) right and (2) left sub lists and add intyg fulfilling "maxIntygsGlapp"
+        right = reduceRight(right, maxIntygsGlapp, aktivtIntyg.getSlutDatum());
+
+        // assure we have the smallest date as initial compare date when we call reduceLeft method
+        SortableIntygsData intygsData = right.stream().min((o1, o2) -> o1.getStartDatum().compareTo(o2.getStartDatum())).orElse(aktivtIntyg);
+        left = reduceLeft(left, maxIntygsGlapp, intygsData.getStartDatum());
+
+        // concatenate the reduced list
+        List<SortableIntygsData> reducedList = new ArrayList<>();
+        reducedList.addAll(left);
+        reducedList.add(aktivtIntyg);
+        reducedList.addAll(right);
+
+        return reducedList;
+    }
+
+    List<SortableIntygsData> reduceRight(List<SortableIntygsData> right, int maxIntygsGlapp, LocalDate initialCompareDate) {
+        // ensure right list is sorted by startDatum ascending order
+        right.sort((o1, o2) -> o1.getStartDatum().compareTo(o2.getStartDatum()));
+
+        List<SortableIntygsData> list = new ArrayList<>();
+        LocalDate compareDate = initialCompareDate;
+
+        for (SortableIntygsData nextRight : right) {
+            LocalDate start = nextRight.getStartDatum();
+            LocalDate lastValidStartDate = compareDate.plusDays(maxIntygsGlapp);
+
+            if (lastValidStartDate.compareTo(start) > -1) {
+                list.add(nextRight);
+            } else {
+                break;
+            }
+
+            compareDate = nextRight.getSlutDatum();
+        }
 
         return list;
+    }
+
+    List<SortableIntygsData> reduceLeft(List<SortableIntygsData> left, int maxIntygsGlapp, LocalDate initialCompareDate) {
+        List<SortableIntygsData> list = new ArrayList<>();
+        LocalDate compareDate = initialCompareDate;
+
+        for (int i = left.size() - 1; i >= 0; i--) {
+            SortableIntygsData nextLeft = left.get(i);
+
+            LocalDate end = nextLeft.getSlutDatum();
+            LocalDate lastValidEndDate = compareDate.minusDays(maxIntygsGlapp);
+
+            if (lastValidEndDate.compareTo(end) < 1) {
+                list.add(0, nextLeft);
+            } else {
+                break;
+            }
+
+            compareDate = nextLeft.getStartDatum();
+        }
+
+        return list;
+    }
+
+    Map<String, Sjukfall> assembleSjukfall(Map<String, List<SortableIntygsData>> map) {
+
+        Map<String, Sjukfall> assemledMap = new HashMap<>();
+
+        // 1. Ta fram antal intyg
+
+        // 2. Ta fram effektiv sjukskrivningslängd
+
+        // 3. Start och slut
+
+        // 4. Allt övrigt från aktivt intyg
+
+        mapper.map(null);
+
+        return assemledMap;
     }
 
     /**

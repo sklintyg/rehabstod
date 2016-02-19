@@ -23,12 +23,13 @@ import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-18.
  */
 public interface SjukfallResolver {
 
-    List<Sjukfall> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum);
+    Map<String, Sjukfall> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum);
 
 }

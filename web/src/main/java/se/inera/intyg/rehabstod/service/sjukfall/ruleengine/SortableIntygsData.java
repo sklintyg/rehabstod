@@ -137,6 +137,5 @@ public class SortableIntygsData extends IntygsData {
             return formaga.getSlutdatum();
         }
 
-
     }
 }
