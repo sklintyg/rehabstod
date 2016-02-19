@@ -82,7 +82,7 @@ var ppMessages = {
         'label.table.column.grad.help': 'Sjukskrivningsgraden i det intyg som är giltigt just nu. Om det innehåller flera grader anges de ordnade i tidsföljd med den just nu gällande graden fetstilsmarkerad.',
         'label.table.column.lakare': 'Nuvarande läkare',
         'label.table.column.lakare.help': 'Läkaren som utfärdat det intyg som är giltigt just nu.',
-        'label.table.column.langd': 'Sjukskrivningslängd',
+        'label.table.column.langd': 'Sjukskrivnings&shy;längd',
         'label.table.column.langd.help': 'Sjukskrivningens totala längd i dagar, från ”Startdatum vårdenhet” till ”Slutdatum”. Dagar då patienten inte haft något giltigt intyg räknas inte.',
 
         'label.table.number.of.rows' : 'Visar',
