@@ -18,18 +18,19 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 /**
  * Created by Magnus Ekstrand on 10/02/16.
@@ -50,7 +51,7 @@ public class SjukfallResolverImpl implements SjukfallResolver {
     // API
 
     @Override
-    public Map<String, Sjukfall> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
+    public Map<String, InternalSjukfall> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
 
         if (intygsData == null || intygsData.size() == 0) {
             LOG.debug("There was no in-data! Returning empty list");
@@ -70,7 +71,7 @@ public class SjukfallResolverImpl implements SjukfallResolver {
         Map<String, List<SortableIntygsData>> reducedMap = reduceMap(intygsDataMap, maxIntygsGlapp);
 
         // Assemble Sjukfall objects
-        Map<String, Sjukfall> sjukfallMap = assembleSjukfall(reducedMap);
+        Map<String, InternalSjukfall> sjukfallMap = assembleSjukfall(reducedMap);
 
         return sjukfallMap;
     }
@@ -173,9 +174,9 @@ public class SjukfallResolverImpl implements SjukfallResolver {
         return list;
     }
 
-    Map<String, Sjukfall> assembleSjukfall(Map<String, List<SortableIntygsData>> map) {
+    Map<String, InternalSjukfall> assembleSjukfall(Map<String, List<SortableIntygsData>> map) {
 
-        Map<String, Sjukfall> assemledMap = new HashMap<>();
+        Map<String, InternalSjukfall> assemledMap = new HashMap<>();
 
         // 1. Ta fram antal intyg
 

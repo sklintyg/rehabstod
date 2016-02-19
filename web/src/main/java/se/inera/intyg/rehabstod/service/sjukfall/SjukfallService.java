@@ -18,19 +18,19 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.util.List;
+
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
-
-import java.util.List;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 
 /**
  * Created by eriklupander on 2016-02-01.
  */
 public interface SjukfallService {
 
-    List<Sjukfall> getSjukfall(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request);
+    List<InternalSjukfall> getSjukfall(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request);
 
     SjukfallSummary getSummary(String enhetsId);
 

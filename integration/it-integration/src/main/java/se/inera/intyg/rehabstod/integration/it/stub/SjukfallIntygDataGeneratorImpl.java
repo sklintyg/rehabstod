@@ -18,18 +18,30 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.UUID;
+
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.*;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.*;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
 
 /**
  * Can generate a suitable amount of intygsdata.
@@ -48,6 +60,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private Queue<Patient> seededPatients = new LinkedList<>();
 
     private Enhet enhet;
+    private Vardgivare vg;
 
     private int currentDiagnosIndex = 0;
     private List<String> diagnosList = new ArrayList<>();
@@ -61,7 +74,6 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     @PostConstruct
     public void init() {
         initDiagnoser();
-        initEnhet();
         initHoSPerson();
     }
 
@@ -93,6 +105,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
                 intygsData.setIntygsId(randomIntygId());
                 intygsData.setDiagnoskod(nextDiagnosis());
                 intygsData.setSkapadAv(hosPerson);
+
 
                 Arbetsformaga arbetsformaga = new Arbetsformaga();
                 arbetsformaga.getFormaga().addAll(getDefaultSjukskrivningsGrader());
@@ -180,14 +193,19 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     }
 
     private void initEnhet() {
+        initFakedVardgivare();
+
         enhet = new Enhet();
         HsaId hsaId = new HsaId();
         hsaId.setExtension("IFV1239877878-1042");
         enhet.setEnhetsId(hsaId);
         enhet.setEnhetsnamn("WebCert-Enhet1");
+        enhet.setVardgivare(vg);
     }
 
     private void initHoSPerson() {
+        initEnhet();
+
         HosPersonal hosPerson1 = new HosPersonal();
         hosPerson1.setEnhet(enhet);
         hosPerson1.setFullstandigtNamn("Jan Nilsson");
@@ -213,4 +231,14 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hosPersonList.add(hosPerson2);
         hosPersonList.add(hosPerson3);
     }
+
+    private void initFakedVardgivare() {
+        vg = new Vardgivare();
+        HsaId hsaId = new HsaId();
+        hsaId.setExtension("IFV1239877878-1041");
+        vg.setVardgivarId(hsaId);
+        vg.setVardgivarnamn("WebCert-Vårdgivare1");
+
+    }
+
 }

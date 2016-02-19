@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
@@ -46,12 +47,12 @@ public class SjukfallEngineStub extends SjukfallEngine {
     }
 
     @Override
-    public List<Sjukfall> calculate(List<IntygsData> intygsData, String hsaId, Urval urval, GetSjukfallRequest requestData) {
+    public List<InternalSjukfall> calculate(List<IntygsData> intygsData, String hsaId, Urval urval, GetSjukfallRequest requestData) {
         return getSjukfall(intygsData, hsaId, urval, requestData);
     }
 
-    private List<Sjukfall> getSjukfall(List<IntygsData> intygsData, String hsaId, Urval urval, GetSjukfallRequest requestData) {
-        List<Sjukfall> sjukfall = new ArrayList();
+    private List<InternalSjukfall> getSjukfall(List<IntygsData> intygsData, String hsaId, Urval urval, GetSjukfallRequest requestData) {
+        List<InternalSjukfall> sjukfall = new ArrayList();
 
         List<IntygsData> filteredIntyg = intygsData.stream()
                 .filter(distinctByKey(o -> o.getPatient().getPersonId().getExtension())).collect(Collectors.toList());
@@ -62,8 +63,8 @@ public class SjukfallEngineStub extends SjukfallEngine {
 
         // CHECKSTYLE:OFF MagicNumber
         for (IntygsData intyg : filteredIntyg) {
+            InternalSjukfall internalSjukfall = new InternalSjukfall();
             Sjukfall fall = new Sjukfall();
-
             // Patient
             fall.setPatient(getPatient(intyg));
 
@@ -82,8 +83,12 @@ public class SjukfallEngineStub extends SjukfallEngine {
             fall.setIntyg(4);
 
             fall.setLakare(intyg.getSkapadAv().getFullstandigtNamn());
-
-            sjukfall.add(fall);
+            internalSjukfall.setSjukfall(fall);
+            internalSjukfall.setVardEnhetId(intyg.getSkapadAv().getEnhet().getEnhetsId().getExtension());
+            internalSjukfall.setVardEnhetNamn(intyg.getSkapadAv().getEnhet().getEnhetsnamn());
+            internalSjukfall.setVardGivareId(intyg.getSkapadAv().getEnhet().getVardgivare().getVardgivarId().getExtension());
+            internalSjukfall.setVardGivareNamn(intyg.getSkapadAv().getEnhet().getVardgivare().getVardgivarnamn());
+            sjukfall.add(internalSjukfall);
         }
         // CHECKSTYLE:ON MagicNumber
 

@@ -44,6 +44,7 @@ public class Sjukfall {
     public Sjukfall() {
     }
 
+
     public Patient getPatient() {
         return patient;
     }
@@ -51,6 +52,7 @@ public class Sjukfall {
     public void setPatient(Patient patient) {
         this.patient = patient;
     }
+
 
     public Diagnos getDiagnos() {
         return diagnos;
@@ -60,6 +62,7 @@ public class Sjukfall {
         this.diagnos = diagnos;
     }
 
+
     public Date getStart() {
         return start;
     }
@@ -67,6 +70,7 @@ public class Sjukfall {
     public void setStart(Date start) {
         this.start = start;
     }
+
 
     public Date getSlut() {
         return slut;
@@ -76,6 +80,7 @@ public class Sjukfall {
         this.slut = slut;
     }
 
+
     public int getDagar() {
         return dagar;
     }
@@ -83,6 +88,7 @@ public class Sjukfall {
     public void setDagar(int dagar) {
         this.dagar = dagar;
     }
+
 
     public int getIntyg() {
         return intyg;
@@ -92,6 +98,7 @@ public class Sjukfall {
         this.intyg = intyg;
     }
 
+
     public List<Integer> getGrader() {
         return grader;
     }
@@ -99,6 +106,7 @@ public class Sjukfall {
     public void setGrader(List<Integer> grader) {
         this.grader = grader;
     }
+
 
     public int getAktivGrad() {
         return aktivGrad;
@@ -108,6 +116,7 @@ public class Sjukfall {
         this.aktivGrad = aktivGrad;
     }
 
+
     public String getLakare() {
         return lakare;
     }
@@ -116,7 +125,7 @@ public class Sjukfall {
         this.lakare = lakare;
     }
 
-    @Override
+
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -155,7 +164,7 @@ public class Sjukfall {
 
     }
 
-    @Override
+
     public int hashCode() {
         int result = patient.hashCode();
         result = HASH_SEED * result + diagnos.hashCode();

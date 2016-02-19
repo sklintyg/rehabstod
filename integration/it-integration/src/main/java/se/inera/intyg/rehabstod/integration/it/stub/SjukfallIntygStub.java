@@ -53,22 +53,11 @@ public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitRespond
     @Value("${rhs.sjukfall.stub.intygPerPatient}")
     private Integer intygPerPatient;
 
-    private Vardgivare fakedVardgivare;
-
     @PostConstruct
     public void init() {
-        fakedVardgivare = initFakedVardgivare();
         intygsData = sjukfallIntygDataGenerator.generateIntygsData(numberOfPatients, intygPerPatient);
     }
 
-    private Vardgivare initFakedVardgivare() {
-        Vardgivare vg = new Vardgivare();
-        HsaId hsaId = new HsaId();
-        hsaId.setExtension("IFV1239877878-1041");
-        vg.setVardgivarId(hsaId);
-        vg.setVardgivarnamn("WebCert-Vårdgivare1");
-        return vg;
-    }
 
 
     @Override
@@ -79,8 +68,6 @@ public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitRespond
         IntygsLista intygsLista = new IntygsLista();
         intygsLista.getIntygsData().addAll(intygsData);
         resp.setIntygsLista(intygsLista);
-
-        resp.setVardgivare(fakedVardgivare);
         return resp;
     }
 }

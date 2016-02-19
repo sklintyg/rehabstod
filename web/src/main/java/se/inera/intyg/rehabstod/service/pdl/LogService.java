@@ -18,17 +18,19 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
+import java.util.List;
+
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.service.pdl.dto.LogRequest;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
 /**
  * Created by eriklupander on 2016-02-18.
  */
 public interface LogService {
-    void logCreateIntyg(LogRequest logRequest);
 
-    void logCreateIntyg(LogRequest logRequest, LogUser user);
+    void logSjukfallData(List<InternalSjukfall> sjukfall);
 
     LogUser getLogUser(RehabstodUser user);
 }

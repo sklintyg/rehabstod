@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,21 +34,15 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -75,7 +77,7 @@ public class SjukfallControllerTest {
         GetSjukfallRequest request = new GetSjukfallRequest();
 
         // When
-        when(sjukfallService.getSjukfall(anyString(), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(new ArrayList<Sjukfall>());
+        when(sjukfallService.getSjukfall(anyString(), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(new ArrayList<InternalSjukfall>());
 
         // Then
         List<Sjukfall> response = sjukfallController.getSjukfallForCareUnit(request);

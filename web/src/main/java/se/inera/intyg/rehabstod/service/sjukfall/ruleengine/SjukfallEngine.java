@@ -29,8 +29,8 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKod;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Patient;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.time.Clock;
@@ -67,12 +67,12 @@ public class SjukfallEngine {
         clock = Clock.system(ZoneId.of("Europe/Paris"));
     }
 
-    public List<Sjukfall> calculate(List<IntygsData> intygsData, String hsaId, Urval urval, GetSjukfallRequest requestData) {
+    public List<InternalSjukfall> calculate(List<IntygsData> intygsData, String hsaId, Urval urval, GetSjukfallRequest requestData) {
         // These should be outwired in some way
         SjukfallMapper mapper = new SjukfallMapperImpl();
         SjukfallResolver resolver = new SjukfallResolverImpl(mapper);
 
-        Map<String, Sjukfall> map = resolver.resolve(intygsData, requestData.getMaxIntygsGlapp(), org.joda.time.LocalDate.now());
+        Map<String, InternalSjukfall> map = resolver.resolve(intygsData, requestData.getMaxIntygsGlapp(), org.joda.time.LocalDate.now());
 
         return map.entrySet().stream()
                 .map(e -> e.getValue())

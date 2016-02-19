@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -34,6 +35,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
 /**
@@ -61,7 +63,8 @@ public class SjukfallController {
         String enhetsId = user.getValdVardenhet().getId();
         String hsaId = user.getHsaId();
         Urval urval = user.getUrval();
-        return sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
+        List<InternalSjukfall> sjukfall = sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
+        return sjukfall.stream().map(sf -> sf.getSjukfall()).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/summary", method = RequestMethod.GET)

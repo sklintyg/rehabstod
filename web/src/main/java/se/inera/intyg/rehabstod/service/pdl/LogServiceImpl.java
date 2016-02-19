@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.annotation.PostConstruct;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -35,24 +39,26 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.common.logmessages.AbstractLogMessage;
 import se.inera.intyg.common.logmessages.Enhet;
-import se.inera.intyg.common.logmessages.IntygCreateMessage;
-
+import se.inera.intyg.common.logmessages.IntygDataLogMessage;
 import se.inera.intyg.common.logmessages.Patient;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogRequest;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.Sjukfall;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 
 /**
  * Implementation of service for logging user actions according to PDL requirements.
  *
- * @author nikpet
+ * @author eriklupander
  */
 @Service
 public class LogServiceImpl implements LogService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LogServiceImpl.class);
 
     private static final String PRINTED_AS_PDF = "Intyget utskrivet som PDF";
     private static final String PRINTED_AS_DRAFT = "Intyget utskrivet som utkast";
@@ -73,19 +79,21 @@ public class LogServiceImpl implements LogService {
     @PostConstruct
     public void checkJmsTemplate() {
         if (jmsTemplate == null) {
-            LOGGER.error("PDL logging is disabled!");
+            LOG.error("PDL logging is disabled!");
         }
     }
 
     @Override
-    public void logCreateIntyg(LogRequest logRequest) {
-        logCreateIntyg(logRequest, getLogUser(userService.getUser()));
+    public void logSjukfallData(List<InternalSjukfall> sjukfallList) {
+        LogUser user = getLogUser(userService.getUser());
+        List<AbstractLogMessage> logRequestList = sjukfallList.stream()
+                .map(LogRequestFactory::createLogRequestFromSjukfall)
+                .map(logRequest -> populateLogMessage(logRequest, new IntygDataLogMessage(logRequest.getIntygId()), user))
+                .collect(Collectors.toList());
+
+        send(logRequestList);
     }
 
-    @Override
-    public void logCreateIntyg(LogRequest logRequest, LogUser user) {
-        send(populateLogMessage(logRequest, new IntygCreateMessage(logRequest.getIntygId()), user));
-    }
 
     @Override
     public LogUser getLogUser(RehabstodUser user) {
@@ -137,22 +145,25 @@ public class LogServiceImpl implements LogService {
         logMsg.setUserCareUnit(vardenhet);
     }
 
-    private void send(AbstractLogMessage logMsg) {
+    private void send(List<AbstractLogMessage> logMsgs) {
 
         if (jmsTemplate == null) {
-            LOGGER.warn("Can not log {} of Intyg '{}' since PDL logging is disabled!", logMsg.getActivityType(), logMsg.getActivityLevel());
+            LOG.error("Could not log list of IntygsData, PDL logging is disabled!");
+            //LOG.warn("Can not log {} of Intyg '{}' since PDL logging is disabled!", logMsg.getActivityType(), logMsg.getActivityLevel());
             return;
         }
 
-        LOGGER.debug("Logging {} of Intyg {}", logMsg.getActivityType(), logMsg.getActivityLevel());
+        LOG.info("Logging {} of IntygsData items", logMsgs.size());
 
-        jmsTemplate.send(new MC(logMsg));
+        jmsTemplate.send(new MC((ArrayList<AbstractLogMessage>) logMsgs));
     }
 
-    private static final class MC implements MessageCreator {
-        private final AbstractLogMessage logMsg;
 
-        private MC(AbstractLogMessage log) {
+
+    private static final class MC implements MessageCreator {
+        private final ArrayList<AbstractLogMessage> logMsg;
+
+        private MC(ArrayList<AbstractLogMessage> log) {
             this.logMsg = log;
         }
 
