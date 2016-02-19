@@ -6,16 +6,30 @@ angular.module('rehabstodApp').directive('setClassWhenAtTop', function ($window)
         restrict: 'A',
         link: function (scope, element, attrs) {
             var topClass = attrs.setClassWhenAtTop, // get CSS class from directive's attribute value
-                parent = element.parent();
+                parent = element.parent(),
+                useHide = attrs.useHide === 'true';
+
+            var paddingTop = 0;
+            if (attrs.paddingTop) {
+                paddingTop = parseInt(attrs.paddingTop, 10);
+            }
 
             $win.on('scroll', function () {
-                var offsetTop = parent.offset().top;
+                var elementHeight = element.outerHeight();
+                var offsetTop = parent.offset().top - paddingTop;
+
                 if ($win.scrollTop() >= offsetTop) {
                     element.addClass(topClass);
-                    parent.height(element.height());
+                    element.css('top', paddingTop);
+
+                    if (!useHide) {
+                        parent.height(elementHeight);
+                    }
                 } else {
                     element.removeClass(topClass);
-                    parent.css('height', 'auto');
+                    if (!useHide) {
+                        parent.css('height', 'auto');
+                    }
                 }
             });
 

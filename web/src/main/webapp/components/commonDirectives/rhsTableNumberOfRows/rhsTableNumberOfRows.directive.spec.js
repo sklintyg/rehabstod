@@ -30,7 +30,8 @@ describe('Directive: RhsTableNumberOfRows', function () {
 
         var rowElement = $compile(element)($scope);
 
-        var html = messageService.getProperty('label.table.number.of.rows') + ' ' + 3 + ' ' + messageService.getProperty('label.table.number.of.rows.of') + ' ' + 3;
+        var html = messageService.getProperty('label.table.number.of.rows') + ' ' + 3 + ' ' +
+            messageService.getProperty('label.table.number.of.rows.of') + ' ' + 3;
 
         // Act
         $scope.$digest();

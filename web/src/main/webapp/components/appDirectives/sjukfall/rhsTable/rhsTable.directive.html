@@ -5,37 +5,51 @@
 
   <rhs-table-number-of-rows total-rows="model.get().length"></rhs-table-number-of-rows>
 
-  <table class="table table-striped">
-    <thead>
+  <table class="table table-striped" rhs-table-fixed-header="rhs-table-header-fixed-top" fixed-header="fixed-header" normal-header="normal-header"  padding-top="76">
+    <thead id="fixed-header">
     <tr>
-      <th class="rhs-table-head">#</th>
-      <th class="rhs-table-head" st-sort="patient.id"><span message key="label.table.column.pnr"></span> <i class="fa fa-sort"></i></th>
-      <th class="rhs-table-head" st-sort="patient.namn"><span message key="label.table.column.namn"></span> <i class="fa fa-sort"></i></th>
-      <th class="rhs-table-head" st-sort="patient.konShow"><span message key="label.table.column.kon"></span> <i class="fa fa-sort"></i></th>
-      <th class="rhs-table-head" st-sort="diagnos.intygsVarde"><span message key="label.table.column.diagnos"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.diagnos.help"></span></th>
-      <th class="rhs-table-head" st-sort="start" st-sort-default="true"><span message key="label.table.column.startve"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip msg-params="{enhet:user.valdVardenhet.namn, glapp:'xxx'}" field-help-text="label.table.column.startve.help"></span></th>
-      <th class="rhs-table-head" st-sort="slut"><span message key="label.table.column.slut"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.slut.help"></span></th>
-      <th class="rhs-table-head" st-sort="dagar"><span message key="label.table.column.langd"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.langd.help"></span></th>
-      <th class="rhs-table-head" st-sort="aktivGrad"><span message key="label.table.column.grad"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.grad.help"></span></th>
-      <th  ng-if="user.urval != 'ISSUED_BY_ME'" class="rhs-table-head" st-sort="lakare"><span message key="label.table.column.lakare"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.lakare.help"></span></th>
+      <th class="rhs-table-head column-number">#</th
+      ><th class="rhs-table-head column-patient-id" st-sort="patient.id"><span message key="label.table.column.pnr"></span> <i class="fa fa-sort"></i></th
+      ><th class="rhs-table-head column-patient-name" st-sort="patient.namn"><span message key="label.table.column.namn"></span> <i class="fa fa-sort"></i></th
+      ><th class="rhs-table-head column-patient-kon" st-sort="patient.konShow"><span message key="label.table.column.kon"></span> <i class="fa fa-sort"></i></th
+      ><th class="rhs-table-head column-diagnos" st-sort="diagnos.intygsVarde"><span message key="label.table.column.diagnos"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.diagnos.help"></span></th
+      ><th class="rhs-table-head column-start" st-sort="start" st-sort-default="true"><span message key="label.table.column.startve"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip msg-params="{enhet:user.valdVardenhet.namn, glapp:'xxx'}" field-help-text="label.table.column.startve.help"></span></th
+      ><th class="rhs-table-head column-slut" st-sort="slut"><span message key="label.table.column.slut"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.slut.help"></span></th
+      ><th class="rhs-table-head column-dagar" st-sort="dagar"><span message key="label.table.column.langd"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.langd.help"></span></th
+      ><th class="rhs-table-head column-grad" st-sort="aktivGrad"><span message key="label.table.column.grad"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.grad.help"></span></th
+      ><th ng-if="user.urval != 'ISSUED_BY_ME'" class="rhs-table-head" st-sort="lakare"><span message key="label.table.column.lakare"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip field-help-text="label.table.column.lakare.help"></span></th>
+    </tr>
+    </thead>
+    <thead id="normal-header">
+    <tr>
+      <th class="rhs-table-head column-number">#</th>
+      <th class="rhs-table-head column-patient-id" st-sort="patient.id"><span message key="label.table.column.pnr"></span> <i class="fa fa-sort"></i></th>
+      <th class="rhs-table-head column-patient-name" st-sort="patient.namn"><span message key="label.table.column.namn"></span> <i class="fa fa-sort"></i></th>
+      <th class="rhs-table-head column-patient-kon" st-sort="patient.konShow"><span message key="label.table.column.kon"></span> <i class="fa fa-sort"></i></th>
+      <th class="rhs-table-head column-diagnos" st-sort="diagnos.intygsVarde"><span message key="label.table.column.diagnos"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.diagnos.help"></span></th>
+      <th class="rhs-table-head column-start" st-sort="start" st-sort-default="true"><span message key="label.table.column.startve"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" msg-params="{enhet:user.valdVardenhet.namn, glapp:'xxx'}" field-help-text="label.table.column.startve.help"></span></th>
+      <th class="rhs-table-head column-slut" st-sort="slut"><span message key="label.table.column.slut"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.slut.help"></span></th>
+      <th class="rhs-table-head column-dagar" st-sort="dagar"><span message key="label.table.column.langd"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.langd.help"></span></th>
+      <th class="rhs-table-head column-grad" st-sort="aktivGrad"><span message key="label.table.column.grad"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.grad.help"></span></th>
+      <th ng-if="user.urval != 'ISSUED_BY_ME'" class="rhs-table-head" st-sort="lakare"><span message key="label.table.column.lakare"></span> <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.lakare.help"></span></th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id" class="rhs-table-row">
-      <td>{{$index + 1}}</td>
-      <td>{{::row.patient.id}} (<span class="age">{{::row.patient.alder}} år</span>)</td>
-      <td>{{::row.patient.namn}}</td>
-      <td>{{::row.patient.konShow}}</td>
-      <td>
+      <td class="column-number">{{$index + 1}}</td>
+      <td class="column-patient-id">{{::row.patient.id}} (<span class="age">{{::row.patient.alder}} år</span>)</td>
+      <td class="column-patient-name">{{::row.patient.namn}}</td>
+      <td class="column-patient-kon">{{::row.patient.konShow}}</td>
+      <td class="column-diagnos">
         <span ng-if="::row.diagnos.beskrivning" uib-tooltip-html="getToolTip(row.diagnos)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnos.intygsVarde}}</span>
         <span ng-if="::!row.diagnos.beskrivning">{{::row.diagnos.intygsVarde}}</span>
       </td>
-      <td class="start-date">{{::row.start}}</td>
-      <td class="end-date">{{::row.slut}}</td>
-      <td>
+      <td class="column-start start-date">{{::row.start}}</td>
+      <td class="column-slut end-date">{{::row.slut}}</td>
+      <td class="column-dagar">
         {{::row.dagarShow}}<span class="intyg">&nbsp;({{::row.intyg}}&nbsp;intyg)</span>
       </td>
-      <td ng-bind-html="::row.gradShow"></td>
+      <td  class="column-grad" ng-bind-html="::row.gradShow"></td>
       <td ng-if="user.urval != 'ISSUED_BY_ME'">{{::row.lakare}}</td>
     </tr>
     </tbody>

@@ -11,7 +11,8 @@ angular.module('rehabstodApp').directive('rhsTooltip',
                 transclude: true,
                 scope: {
                     fieldHelpText: '@',
-                    msgParams: '='
+                    msgParams: '=',
+                    tooltipClass: '@'
                 },
                 controller: function($scope) {
                     $scope.getMessage = function(key, msgParams) {

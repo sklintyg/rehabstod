@@ -41,6 +41,11 @@
   .result-sub-header {
     border-bottom: 0;
   }
+
+  @media (max-width: $screen-xs-max) {
+    width: 100%;
+  }
+
 }
 
 @media (max-width: $screen-xs-max) {
