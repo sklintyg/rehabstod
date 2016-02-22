@@ -1,6 +1,10 @@
 ---
 # file: roles/rehabstod-jarfiler/tasks/main.yml
 
+- name: Download activemq-client-5.9.1.jar
+  get_url: url=http://repo1.maven.org/maven2/org/apache/activemq/activemq-client/5.9.1/activemq-client-5.9.1.jar
+           dest={{ tomcat_lib }}/activemq-client-5.9.1.jar
+
 - name: Download slf4j-api-1.6.4.jar
   get_url: url=http://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.6.4/slf4j-api-1.6.4.jar
            dest={{ tomcat_lib }}/slf4j-api-1.6.4.jar
