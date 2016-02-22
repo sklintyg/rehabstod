@@ -1,16 +1,17 @@
 ---
 # file: roles/rehabstod-resurser/tasks/main.yml
 
-#- name: configure shared jdbc datasource for Rehabstöd
-#  lineinfile:
-#    dest="{{ tomcat_conf }}/server.xml"
-#    regexp="    <Resource name='sharedRehabstod'"
-#    insertbefore="  </GlobalNamingResources>"
-#    line="    <Resource name='sharedRehabstod' global='sharedRehabstod' type='javax.sql.DataSource' factory='org.apache.tomcat.jdbc.pool.DataSourceFactory' username='{{ database_username }}' password='{{ database_password }}' driverClassName='{{ database_driver }}' url='{{ database_url }}' maxActive='{{ database_pool_maxActive }}' maxIdle='{{ database_pool_maxIdle }}' minIdle='{{ database_pool_minIdle }}' initialSize='{{ database_pool_initialSize }}' validationQuery='SELECT 1' validationQueryTimeout='3' testWhileIdle='true' timeBetweenEvictionRunsMillis='300000' minEvictableIdleTimeMillis='60000' defaultAutocommit='false' logAbandoned='true'/>"
+- name: configure connection factory
+  lineinfile:
+    dest="{{ tomcat_conf }}/context.xml"
+    regexp="    <Resource name='jms/ConnectionFactory'"
+    insertbefore="</Context>"
+    line="    <Resource name='jms/ConnectionFactory' auth='Container' type='org.apache.activemq.ActiveMQConnectionFactory' description='JMS Connection Factory' factory='org.apache.activemq.jndi.JNDIReferenceFactory' brokerURL='{{ activemq_broker_url }}' userName='{{ activemq_username }}' password='{{ activemq_username }}' brokerName='ActiveMQBroker' useEmbeddedBroker='false' />"
 
-#- name: configure jdbc resource
-#  lineinfile:
-#    dest="{{ tomcat_conf }}/context.xml"
-#    regexp="    <ResourceLink name='jdbc/rehabstod'"
-#    insertbefore="</Context>"
-#    line="    <ResourceLink name='jdbc/rehabstod' global='sharedPRehabstod' type='javax.sql.DataSource'/>"
+- name: configure PDL logging queue
+  lineinfile:
+    dest="{{ tomcat_conf }}/context.xml"
+    regexp="    <Resource name='jms/Queue'"
+    insertbefore="</Context>"
+    line="    <Resource name='jms/Queue' auth='Container' type='org.apache.activemq.command.ActiveMQQueue' description='Rehabstod PDL Logging Queue' factory='org.apache.activemq.jndi.JNDIReferenceFactory' physicalName='{{ environment_name }}.rehabstod.log.queue' />"
+

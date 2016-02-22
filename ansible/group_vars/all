@@ -33,16 +33,7 @@ tomcat_lib:  "{{ tomcat_home }}/lib"
 inera_tomcat_folder: "/var/lib/{{ tomcat_service }}"
 webapps_folder: "{{ inera_tomcat_folder }}/webapps"
 
-
-# Database configuration
-#database_server: localhost
-#database_port: 3306
-#database_name: rehabstod
-#database_username: inera
-#database_password: inera
-#database_driver: com.mysql.jdbc.Driver
-#database_url: "jdbc:mysql://{{ database_server }}:{{ database_port }}/{{ database_name }}?useCompression=true"
-#database_pool_maxActive: 20
-#database_pool_maxIdle: 20
-#database_pool_minIdle: 10
-#database_pool_initialSize: 10
+# ActiveMQ configuration
+activemq_username: ""
+activemq_password: ""
+activemq_conf: "{{ inera_root }}/activemq/conf"

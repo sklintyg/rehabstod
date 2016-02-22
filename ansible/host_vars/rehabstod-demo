@@ -8,3 +8,6 @@ config_etc_folder: "{{ config_folder }}/{{ environment_name }}"
 # Tomcat
 tomcat_service: tomcat-rehabstod
 tomcat_home: "{{ inera_root }}/{{ tomcat_service }}"
+
+# ActiveMQ
+activemq_broker_url: "tcp://localhost:61616"
