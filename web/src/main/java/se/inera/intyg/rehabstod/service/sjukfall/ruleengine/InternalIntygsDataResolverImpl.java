@@ -33,18 +33,18 @@ import java.util.Map;
  * Created by Magnus Ekstrand on 10/02/16.
  */
 @Component
-public class SjukfallResolverImpl implements SjukfallResolver {
+public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolver {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SjukfallResolverImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InternalIntygsDataResolverImpl.class);
 
-    public SjukfallResolverImpl() {
+    public InternalIntygsDataResolverImpl() {
     }
 
 
     // - - -  API  - - -
 
     @Override
-    public Map<String, List<SortableIntygsData>> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
+    public Map<String, List<InternalIntygsData>> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
 
         if (intygsData == null || intygsData.size() == 0) {
             LOG.debug("There was no in-data! Returning empty list");
@@ -58,7 +58,7 @@ public class SjukfallResolverImpl implements SjukfallResolver {
 
         // Create an map with personnummer as key holding each person's intygsdata
         // The map's values are sorted by slutDatum with ascending order.
-        Map<String, List<SortableIntygsData>> intygsDataMap = toMap(intygsData, aktivtDatum);
+        Map<String, List<InternalIntygsData>> intygsDataMap = toMap(intygsData, aktivtDatum);
 
         // Reduce list of SortableIntygsData
         return reduceMap(intygsDataMap, maxIntygsGlapp);
@@ -67,14 +67,14 @@ public class SjukfallResolverImpl implements SjukfallResolver {
 
     // - - -  Package scope  - - -
 
-    Map<String, List<SortableIntygsData>> reduceMap(Map<String, List<SortableIntygsData>> intygsDataMap, int maxIntygsGlapp) {
+    Map<String, List<InternalIntygsData>> reduceMap(Map<String, List<InternalIntygsData>> intygsDataMap, int maxIntygsGlapp) {
 
-        Map<String, List<SortableIntygsData>> resultMap = new HashMap<>();
+        Map<String, List<InternalIntygsData>> resultMap = new HashMap<>();
 
         // For each entry in map, lookup "aktivtIntyg" within the list of SortableIntygsData
-        for (Map.Entry<String, List<SortableIntygsData>> entry : intygsDataMap.entrySet()) {
+        for (Map.Entry<String, List<InternalIntygsData>> entry : intygsDataMap.entrySet()) {
 
-            List<SortableIntygsData> reducedList = reduceList(entry.getValue(), maxIntygsGlapp);
+            List<InternalIntygsData> reducedList = reduceList(entry.getValue(), maxIntygsGlapp);
             if (reducedList.size() > 0) {
                 resultMap.put(entry.getKey(), reducedList);
             }
@@ -83,21 +83,21 @@ public class SjukfallResolverImpl implements SjukfallResolver {
         return resultMap;
     }
 
-    List<SortableIntygsData> reduceList(List<SortableIntygsData> values, int maxIntygsGlapp)  {
+    List<InternalIntygsData> reduceList(List<InternalIntygsData> values, int maxIntygsGlapp)  {
 
         // filter out "aktivtIntyg"
-        SortableIntygsData aktivtIntyg = values.stream().filter(e -> e.isAktivtIntyg()).findFirst().get();
+        InternalIntygsData aktivtIntyg = values.stream().filter(e -> e.isAktivtIntyg()).findFirst().get();
 
         // get position of the "aktivtIntyg"
         int aktivtIndex = values.indexOf(aktivtIntyg);
 
         // Slice "list of SortableIntygsData" into two lists, use "aktivtIntyg" as divider
-        List<SortableIntygsData> left = new ArrayList<>();
+        List<InternalIntygsData> left = new ArrayList<>();
         if (aktivtIndex > 0) {
             left = values.subList(0, aktivtIndex);
         }
 
-        List<SortableIntygsData> right = new ArrayList<>();
+        List<InternalIntygsData> right = new ArrayList<>();
         if (aktivtIndex < values.size() - 1) {
             right = values.subList(aktivtIndex + 1, values.size());
         }
@@ -109,7 +109,7 @@ public class SjukfallResolverImpl implements SjukfallResolver {
         left = reduceLeft(left, maxIntygsGlapp, getCompareDate(right, aktivtIntyg));
 
         // concatenate the reduced list
-        List<SortableIntygsData> reducedList = new ArrayList<>();
+        List<InternalIntygsData> reducedList = new ArrayList<>();
         reducedList.addAll(left);
         reducedList.add(aktivtIntyg);
         reducedList.addAll(right);
@@ -117,14 +117,14 @@ public class SjukfallResolverImpl implements SjukfallResolver {
         return reducedList;
     }
 
-    List<SortableIntygsData> reduceRight(List<SortableIntygsData> right, int maxIntygsGlapp, LocalDate initialCompareDate) {
+    List<InternalIntygsData> reduceRight(List<InternalIntygsData> right, int maxIntygsGlapp, LocalDate initialCompareDate) {
         // ensure right list is sorted by startDatum ascending order
         right.sort((o1, o2) -> o1.getStartDatum().compareTo(o2.getStartDatum()));
 
-        List<SortableIntygsData> list = new ArrayList<>();
+        List<InternalIntygsData> list = new ArrayList<>();
         LocalDate compareDate = initialCompareDate;
 
-        for (SortableIntygsData nextRight : right) {
+        for (InternalIntygsData nextRight : right) {
             LocalDate start = nextRight.getStartDatum();
             LocalDate lastValidStartDate = compareDate.plusDays(maxIntygsGlapp);
 
@@ -140,12 +140,12 @@ public class SjukfallResolverImpl implements SjukfallResolver {
         return list;
     }
 
-    List<SortableIntygsData> reduceLeft(List<SortableIntygsData> left, int maxIntygsGlapp, LocalDate initialCompareDate) {
-        List<SortableIntygsData> list = new ArrayList<>();
+    List<InternalIntygsData> reduceLeft(List<InternalIntygsData> left, int maxIntygsGlapp, LocalDate initialCompareDate) {
+        List<InternalIntygsData> list = new ArrayList<>();
         LocalDate compareDate = initialCompareDate;
 
         for (int i = left.size() - 1; i >= 0; i--) {
-            SortableIntygsData nextLeft = left.get(i);
+            InternalIntygsData nextLeft = left.get(i);
 
             LocalDate end = nextLeft.getSlutDatum();
             LocalDate lastValidEndDate = compareDate.minusDays(maxIntygsGlapp);
@@ -170,14 +170,14 @@ public class SjukfallResolverImpl implements SjukfallResolver {
      * @param aktivtDatum a date used for decision if a certificate is active or not
      * @return
      */
-    Map<String, List<SortableIntygsData>> toMap(List<IntygsData> intygsData, LocalDate aktivtDatum) {
-        Map<String, List<SortableIntygsData>> map = new HashMap();
+    Map<String, List<InternalIntygsData>> toMap(List<IntygsData> intygsData, LocalDate aktivtDatum) {
+        Map<String, List<InternalIntygsData>> map = new HashMap();
 
         if (intygsData == null || intygsData.size() == 0) {
             return map;
         }
 
-        SortableIntygsDataCreator creator = new SortableIntygsDataCreator();
+        InternalIntygsDataCreator creator = new InternalIntygsDataCreator();
         map = creator.create(intygsData, aktivtDatum);
 
         return map;
@@ -186,7 +186,7 @@ public class SjukfallResolverImpl implements SjukfallResolver {
 
     // - - -  Private scope  - - -
 
-    private LocalDate getCompareDate(List<SortableIntygsData> right, SortableIntygsData aktivtIntyg) {
+    private LocalDate getCompareDate(List<InternalIntygsData> right, InternalIntygsData aktivtIntyg) {
         LocalDate smallest = null;
 
         if (right == null || right.size() == 0) {

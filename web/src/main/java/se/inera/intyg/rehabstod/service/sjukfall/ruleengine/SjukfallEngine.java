@@ -26,6 +26,7 @@ import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKod;
+import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.util.SjukfallLangdCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
@@ -67,7 +68,7 @@ public class SjukfallEngine {
     protected DiagnosKapitelService diagnosKapitelService;
 
     @Autowired
-    SjukfallResolver resolver;
+    InternalIntygsDataResolver resolver;
 
     public SjukfallEngine() {
         clock = Clock.system(ZoneId.of("Europe/Paris"));
@@ -80,7 +81,7 @@ public class SjukfallEngine {
 
         org.joda.time.LocalDate aktivtDatum = org.joda.time.LocalDate.now();
 
-        Map<String, List<SortableIntygsData>> resolvedIntygsData =
+        Map<String, List<InternalIntygsData>> resolvedIntygsData =
                 resolver.resolve(intygsData, requestData.getMaxIntygsGlapp(), aktivtDatum);
 
         // Assemble Sjukfall objects
@@ -133,10 +134,10 @@ public class SjukfallEngine {
 
     // - - -  Package scope  - - -
 
-    InternalSjukfall toInternalSjukfall(List<SortableIntygsData> list, org.joda.time.LocalDate aktivtDatum) {
+    InternalSjukfall toInternalSjukfall(List<InternalIntygsData> list, org.joda.time.LocalDate aktivtDatum) {
 
         // Find the active object
-        SortableIntygsData aktivtIntyg = list.stream()
+        InternalIntygsData aktivtIntyg = list.stream()
                 .filter(o -> o.isAktivtIntyg())
                 .findFirst()
                 .orElseThrow(() -> new SjukfallEngineException("Unable to find a 'aktivt intyg'"));
@@ -151,7 +152,7 @@ public class SjukfallEngine {
 
     // - - -  Private scope  - - -
 
-    private InternalSjukfall buildInternalSjukfall(Sjukfall sjukfall, SortableIntygsData aktivtIntyg) {
+    private InternalSjukfall buildInternalSjukfall(Sjukfall sjukfall, InternalIntygsData aktivtIntyg) {
         Enhet ve = aktivtIntyg.getSkapadAv().getEnhet();
 
         InternalSjukfall internalSjukfall = new InternalSjukfall();
@@ -164,7 +165,7 @@ public class SjukfallEngine {
         return internalSjukfall;
     }
 
-    private Sjukfall buildSjukfall(List<SortableIntygsData> values, SortableIntygsData aktivtIntyg, org.joda.time.LocalDate aktivtDatum) {
+    private Sjukfall buildSjukfall(List<InternalIntygsData> values, InternalIntygsData aktivtIntyg, org.joda.time.LocalDate aktivtDatum) {
         Sjukfall sjukfall = new Sjukfall();
 
         sjukfall.setPatient(getPatient(aktivtIntyg));
@@ -172,7 +173,7 @@ public class SjukfallEngine {
 
         sjukfall.setStart(getMinimumDate(values));
         sjukfall.setSlut(getMaximumDate(values));
-        sjukfall.setDagar(0);
+        sjukfall.setDagar(SjukfallLangdCalculator.getEffectiveNumberOfSickDays(values));
         sjukfall.setIntyg(values.size());
 
         sjukfall.setGrader(getGrader(aktivtIntyg.getArbetsformaga().getFormaga()));
@@ -197,11 +198,11 @@ public class SjukfallEngine {
                 .map(f -> f.getNedsattning()).collect(Collectors.toList());
     }
 
-    private org.joda.time.LocalDate getMinimumDate(List<SortableIntygsData> list) {
+    private org.joda.time.LocalDate getMinimumDate(List<InternalIntygsData> list) {
         return list.stream().min((d1, d2) -> d1.getStartDatum().compareTo(d2.getStartDatum())).get().getStartDatum();
     }
 
-    private org.joda.time.LocalDate getMaximumDate(List<SortableIntygsData> list) {
+    private org.joda.time.LocalDate getMaximumDate(List<InternalIntygsData> list) {
         return list.stream().min((d1, d2) -> d1.getSlutDatum().compareTo(d2.getSlutDatum())).get().getSlutDatum();
     }
 

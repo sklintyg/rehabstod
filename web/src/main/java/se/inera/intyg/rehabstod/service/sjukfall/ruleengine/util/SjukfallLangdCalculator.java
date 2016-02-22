@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SortableIntygsData;
+import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.InternalIntygsData;
 
 /**
  * Calulates the effective length of all arbetsformaga intervals contained in the SortableIntygsData's, making sure to
@@ -34,7 +34,7 @@ public final class SjukfallLangdCalculator {
     private SjukfallLangdCalculator() {
     }
 
-    public static int getEffectiveNumberOfSickDays(List<SortableIntygsData> intygsUnderlag) {
+    public static int getEffectiveNumberOfSickDays(List<InternalIntygsData> intygsUnderlag) {
         // Sanity check
         if (intygsUnderlag == null || intygsUnderlag.isEmpty()) {
             return 0;

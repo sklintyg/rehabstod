@@ -38,14 +38,14 @@ import java.util.Map;
  * Created by Magnus Ekstrand on 10/02/16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SjukfallResolverReduceRightTest {
+public class InternalIntygsDataResolverReduceRightTest {
     // CHECKSTYLE:OFF MagicNumber
 
     private static final String LOCATION_INTYGSDATA = "classpath:SjukfallResolverTest/intygsdata-resolver-right.csv";
 
     private static List<IntygsData> intygsDataList;
 
-    private SjukfallResolverImpl resolver;
+    private InternalIntygsDataResolverImpl resolver;
 
 
     @BeforeClass
@@ -56,18 +56,18 @@ public class SjukfallResolverReduceRightTest {
 
     @Before
     public void setup() {
-        resolver = new SjukfallResolverImpl();
+        resolver = new InternalIntygsDataResolverImpl();
     }
 
     @Test
     public void testFall1() {
-        List<SortableIntygsData> result = getTestData("fall-1-right", "2016-02-10", 5, "2016-01-31");
+        List<InternalIntygsData> result = getTestData("fall-1-right", "2016-02-10", 5, "2016-01-31");
         assertTrue("Expected 3 but was " + result.size(), result.size() == 3);
     }
 
     @Test
     public void testFall2() {
-        List<SortableIntygsData> result = getTestData("fall-2-right", "2016-02-10", 5, "2016-01-31");
+        List<InternalIntygsData> result = getTestData("fall-2-right", "2016-02-10", 5, "2016-01-31");
         assertTrue("Expected 2 but was " + result.size(), result.size() == 2);
         assertEquals("fall-2-intyg-1", result.get(0).getIntygsId());
         assertEquals("fall-2-intyg-2", result.get(1).getIntygsId());
@@ -75,13 +75,13 @@ public class SjukfallResolverReduceRightTest {
 
     @Test
     public void testFall3() {
-        List<SortableIntygsData> result = getTestData("fall-3-right", "2016-02-10", 5, "2016-01-31");
+        List<InternalIntygsData> result = getTestData("fall-3-right", "2016-02-10", 5, "2016-01-31");
         assertTrue("Expected 0 but was " + result.size(), result.size() == 0);
     }
 
     @Test
     public void testFall4() {
-        List<SortableIntygsData> result = getTestData("fall-4-right", "2016-02-10", 5, "2016-01-31");
+        List<InternalIntygsData> result = getTestData("fall-4-right", "2016-02-10", 5, "2016-01-31");
         assertTrue("Expected 3 but was " + result.size(), result.size() == 3);
         assertEquals("fall-4-intyg-1", result.get(0).getIntygsId());
         assertEquals("fall-4-intyg-2", result.get(1).getIntygsId());
@@ -90,7 +90,7 @@ public class SjukfallResolverReduceRightTest {
 
     @Test
     public void testFall5() {
-        List<SortableIntygsData> result = getTestData("fall-5-right", "2016-02-10", 5, "2016-01-31");
+        List<InternalIntygsData> result = getTestData("fall-5-right", "2016-02-10", 5, "2016-01-31");
         assertTrue("Expected 3 but was " + result.size(), result.size() == 3);
         assertEquals("fall-5-intyg-4", result.get(0).getIntygsId());
         assertEquals("fall-5-intyg-1", result.get(1).getIntygsId());
@@ -99,20 +99,20 @@ public class SjukfallResolverReduceRightTest {
 
     @Test
     public void testFall6() {
-        List<SortableIntygsData> result = getTestData("fall-6-right", "2016-02-10", 5, "2016-01-31");
+        List<InternalIntygsData> result = getTestData("fall-6-right", "2016-02-10", 5, "2016-01-31");
         assertTrue("Expected 2 but was " + result.size(), result.size() == 2);
     }
 
-    private List<SortableIntygsData> getTestData(String key, String aktivtDatum , int maxIntygsGlapp, String initialtDatum) {
-        Map<String, List<SortableIntygsData>> data = getTestData(aktivtDatum);
+    private List<InternalIntygsData> getTestData(String key, String aktivtDatum , int maxIntygsGlapp, String initialtDatum) {
+        Map<String, List<InternalIntygsData>> data = getTestData(aktivtDatum);
         return resolver.reduceRight(data.get(key), maxIntygsGlapp, LocalDate.parse(initialtDatum));
     }
 
-    private Map<String, List<SortableIntygsData>> getTestData(String aktivtDatum) {
+    private Map<String, List<InternalIntygsData>> getTestData(String aktivtDatum) {
         return resolver.toMap(intygsDataList, LocalDate.parse(aktivtDatum));
     }
 
-    private Map<String, List<SortableIntygsData>> getTestData(LocalDate aktivtDatum) {
+    private Map<String, List<InternalIntygsData>> getTestData(LocalDate aktivtDatum) {
         return resolver.toMap(intygsDataList, aktivtDatum);
     }
 

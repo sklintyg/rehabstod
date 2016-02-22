@@ -33,13 +33,13 @@ import java.util.stream.Collectors;
 /**
  * Created by Magnus Ekstrand on 2016-02-15.
  */
-public class SortableIntygsDataCreator {
+public class InternalIntygsDataCreator {
 
-    public SortableIntygsDataCreator() {
+    public InternalIntygsDataCreator() {
     }
 
-    public Map<String, List<SortableIntygsData>> create(List<IntygsData> intygsData, LocalDate aktivtDatum) {
-        Map<String, List<SortableIntygsData>> map = null;
+    public Map<String, List<InternalIntygsData>> create(List<IntygsData> intygsData, LocalDate aktivtDatum) {
+        Map<String, List<InternalIntygsData>> map = null;
 
         map = createMap(intygsData, aktivtDatum);
         map = reduceMap(map);
@@ -49,8 +49,8 @@ public class SortableIntygsDataCreator {
         return map;
     }
 
-    Map<String, List<SortableIntygsData>> createMap(List<IntygsData> intygsData, LocalDate aktivtDatum) {
-        Map<String, List<SortableIntygsData>> map = new HashMap<>();
+    Map<String, List<InternalIntygsData>> createMap(List<IntygsData> intygsData, LocalDate aktivtDatum) {
+        Map<String, List<InternalIntygsData>> map = new HashMap<>();
 
         for (IntygsData i : intygsData) {
             String k = i.getPatient().getPersonId().getExtension().trim();
@@ -59,16 +59,16 @@ public class SortableIntygsDataCreator {
                 map.put(k, new ArrayList<>());
             }
 
-            SortableIntygsData v = new SortableIntygsData.SortableIntygsDataBuilder(i, aktivtDatum).build();
+            InternalIntygsData v = new InternalIntygsData.SortableIntygsDataBuilder(i, aktivtDatum).build();
             map.get(k).add(v);
         }
 
         return map;
     }
 
-    Map<String, List<SortableIntygsData>> reduceMap(Map<String, List<SortableIntygsData>> map) {
+    Map<String, List<InternalIntygsData>> reduceMap(Map<String, List<InternalIntygsData>> map) {
 
-        Map<String, List<SortableIntygsData>> reducedMap = map.entrySet().stream()
+        Map<String, List<InternalIntygsData>> reducedMap = map.entrySet().stream()
                 .filter(e -> e.getValue().stream()
                         .filter(o -> o.isAktivtIntyg()).count() > 0)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -84,11 +84,11 @@ public class SortableIntygsDataCreator {
      * @param unsortedMap
      * @return
      */
-    Map<String, List<SortableIntygsData>> sortValues(Map<String, List<SortableIntygsData>> unsortedMap) {
+    Map<String, List<InternalIntygsData>> sortValues(Map<String, List<InternalIntygsData>> unsortedMap) {
         // Lambda comparator
-        Comparator<SortableIntygsData> endDateComparator = (o1, o2) -> o1.getSlutDatum().compareTo(o2.getSlutDatum());
+        Comparator<InternalIntygsData> endDateComparator = (o1, o2) -> o1.getSlutDatum().compareTo(o2.getSlutDatum());
 
-        Map<String, List<SortableIntygsData>> sortedMap = unsortedMap.entrySet().stream()
+        Map<String, List<InternalIntygsData>> sortedMap = unsortedMap.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         e -> e.getValue().stream()
                                 .sorted(endDateComparator)
@@ -97,7 +97,7 @@ public class SortableIntygsDataCreator {
         return sortedMap;
     }
 
-    Map<String, List<SortableIntygsData>> setActive(Map<String, List<SortableIntygsData>> map) {
+    Map<String, List<InternalIntygsData>> setActive(Map<String, List<InternalIntygsData>> map) {
         return map.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
@@ -105,17 +105,17 @@ public class SortableIntygsDataCreator {
                                 .collect(Collectors.toList())));
     }
 
-    List<SortableIntygsData> setActive(List<SortableIntygsData> intygsDataList) {
+    List<InternalIntygsData> setActive(List<InternalIntygsData> intygsDataList) {
 
-        List<SortableIntygsData> values = new ArrayList<>();
+        List<InternalIntygsData> values = new ArrayList<>();
 
         int aktivtIntygIndex = 0;
-        SortableIntygsData aktivtIntyg = null;
+        InternalIntygsData aktivtIntyg = null;
 
-        ListIterator<SortableIntygsData> iterator = intygsDataList.listIterator();
+        ListIterator<InternalIntygsData> iterator = intygsDataList.listIterator();
         while (iterator.hasNext()) {
             int currentIndex = iterator.nextIndex();
-            SortableIntygsData current = iterator.next();
+            InternalIntygsData current = iterator.next();
 
             // Add current object to new list
             values.add(current);

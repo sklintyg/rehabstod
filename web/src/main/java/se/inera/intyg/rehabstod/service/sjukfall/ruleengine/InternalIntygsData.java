@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Created by Magnus Ekstrand on 2016-02-15.
  */
-public class SortableIntygsData extends IntygsData {
+public class InternalIntygsData extends IntygsData {
 
     private static final int HASH_SEED = 31;
 
@@ -37,7 +37,7 @@ public class SortableIntygsData extends IntygsData {
 
     private boolean aktivtIntyg;
 
-    public SortableIntygsData(SortableIntygsDataBuilder builder) {
+    public InternalIntygsData(SortableIntygsDataBuilder builder) {
         super();
 
         this.startDatum = builder.startDatum;
@@ -81,7 +81,7 @@ public class SortableIntygsData extends IntygsData {
             return false;
         }
 
-        SortableIntygsData that = (SortableIntygsData) o;
+        InternalIntygsData that = (InternalIntygsData) o;
         if (!startDatum.equals(that.startDatum)) {
             return false;
         }
@@ -112,8 +112,8 @@ public class SortableIntygsData extends IntygsData {
             this.aktivtIntyg = hasAktivFormaga(intygsData.getArbetsformaga().getFormaga(), aktivtDatum);
         }
 
-        public SortableIntygsData build() {
-            return new SortableIntygsData(this);
+        public InternalIntygsData build() {
+            return new InternalIntygsData(this);
         }
 
         private boolean hasAktivFormaga(List<Formaga> formagor, LocalDate aktivtDatum) {

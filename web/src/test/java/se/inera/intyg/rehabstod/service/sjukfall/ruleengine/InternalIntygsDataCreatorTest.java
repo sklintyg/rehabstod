@@ -39,14 +39,14 @@ import java.util.Map;
  * Created by Magnus Ekstrand on 2016-02-16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SortableIntygsDataCreatorTest {
+public class InternalIntygsDataCreatorTest {
     // CHECKSTYLE:OFF MagicNumber
 
     private static final String LOCATION_INTYGSDATA = "classpath:SortableIntygsDataCreatorTest/intygsdata-creator.csv";
 
     private static List<IntygsData> intygsDataList;
 
-    private SortableIntygsDataCreator creator;
+    private InternalIntygsDataCreator creator;
 
     private LocalDate activeDate = LocalDate.parse("2016-02-16");
 
@@ -60,19 +60,19 @@ public class SortableIntygsDataCreatorTest {
 
     @Before
     public void setup() {
-        creator = new SortableIntygsDataCreator();
+        creator = new InternalIntygsDataCreator();
     }
 
     @Test
     public void testCreatingMap() {
-        Map<String, List<SortableIntygsData>> map = creator.createMap(intygsDataList, activeDate);
+        Map<String, List<InternalIntygsData>> map = creator.createMap(intygsDataList, activeDate);
         assertTrue("Expected 7 but was " + map.size(), map.size() == 7);
     }
 
     @Test
     public void testReducedMap() {
-        Map<String, List<SortableIntygsData>> map = creator.createMap(intygsDataList, activeDate);
-        Map<String, List<SortableIntygsData>> reducedMap = creator.reduceMap(map);
+        Map<String, List<InternalIntygsData>> map = creator.createMap(intygsDataList, activeDate);
+        Map<String, List<InternalIntygsData>> reducedMap = creator.reduceMap(map);
 
         // Map should be reduced with one entry
         assertTrue("Expected 6 but was " + reducedMap.size(), reducedMap.size() == 6);
@@ -80,12 +80,12 @@ public class SortableIntygsDataCreatorTest {
 
     @Test
     public void testSortedMap() {
-        Map<String, List<SortableIntygsData>> map = creator.createMap(intygsDataList, activeDate);
-        Map<String, List<SortableIntygsData>> sortedMap = creator.sortValues(map);
+        Map<String, List<InternalIntygsData>> map = creator.createMap(intygsDataList, activeDate);
+        Map<String, List<InternalIntygsData>> sortedMap = creator.sortValues(map);
 
-        for (Map.Entry<String, List<SortableIntygsData>> entry : sortedMap.entrySet()) {
+        for (Map.Entry<String, List<InternalIntygsData>> entry : sortedMap.entrySet()) {
             if (entry.getValue().size() > 1) {
-                SortableIntygsData[] arr = entry.getValue().toArray(new SortableIntygsData[entry.getValue().size()]);
+                InternalIntygsData[] arr = entry.getValue().toArray(new InternalIntygsData[entry.getValue().size()]);
                 // Check sort order when list size is greater than one
                 for (int i = 0; i < arr.length - 1; i++) {
                     assertTrue(arr[i].getSlutDatum().isBefore(arr[i + 1].getSlutDatum()));
@@ -96,8 +96,8 @@ public class SortableIntygsDataCreatorTest {
 
     @Test
     public void testSetActiveCertificate() {
-        Map<String, List<SortableIntygsData>> map = creator.createMap(intygsDataList, activeDate);
-        Map<String, List<SortableIntygsData>> activeMap = creator.setActive(map);
+        Map<String, List<InternalIntygsData>> map = creator.createMap(intygsDataList, activeDate);
+        Map<String, List<InternalIntygsData>> activeMap = creator.setActive(map);
 
         // It can only be zero or one active object
         assertTrue(activeMap.entrySet().stream()
@@ -114,9 +114,9 @@ public class SortableIntygsDataCreatorTest {
     @Test
     public void testFall1() {
         String key = "19791110-9291";
-        Map<String, List<SortableIntygsData>> map = creator.create(intygsDataList, activeDate);
+        Map<String, List<InternalIntygsData>> map = creator.create(intygsDataList, activeDate);
 
-        List<SortableIntygsData> list = map.get(key);
+        List<InternalIntygsData> list = map.get(key);
 
         assertTrue("Expected 2 but was " + list.size(), list.size() == 2);
         assertStartDate(list.get(0), "2016-02-01");
@@ -127,9 +127,9 @@ public class SortableIntygsDataCreatorTest {
     @Test
     public void testFall2() {
         String key = "19791123-9262";
-        Map<String, List<SortableIntygsData>> map = creator.create(intygsDataList, activeDate);
+        Map<String, List<InternalIntygsData>> map = creator.create(intygsDataList, activeDate);
 
-        List<SortableIntygsData> list = map.get(key);
+        List<InternalIntygsData> list = map.get(key);
 
         assertTrue("Expected 2 but was " + list.size(), list.size() == 2);
         assertStartDate(list.get(0), "2016-02-01");
@@ -140,9 +140,9 @@ public class SortableIntygsDataCreatorTest {
     @Test
     public void testFall3() {
         String key = "19791212-9280";
-        Map<String, List<SortableIntygsData>> map = creator.create(intygsDataList, activeDate);
+        Map<String, List<InternalIntygsData>> map = creator.create(intygsDataList, activeDate);
 
-        List<SortableIntygsData> list = map.get(key);
+        List<InternalIntygsData> list = map.get(key);
 
         assertTrue("Expected 3 but was " + list.size(), list.size() == 3);
         assertStartDate(list.get(0), "2016-02-01");
@@ -153,9 +153,9 @@ public class SortableIntygsDataCreatorTest {
     @Test
     public void testFall4() {
         String key = "19800113-9297";
-        Map<String, List<SortableIntygsData>> map = creator.create(intygsDataList, activeDate);
+        Map<String, List<InternalIntygsData>> map = creator.create(intygsDataList, activeDate);
 
-        List<SortableIntygsData> list = map.get(key);
+        List<InternalIntygsData> list = map.get(key);
 
         assertTrue("Expected 3 but was " + list.size(), list.size() == 3);
         assertStartDate(list.get(0), "2016-02-01");
@@ -166,9 +166,9 @@ public class SortableIntygsDataCreatorTest {
     @Test
     public void testFall5() {
         String key = "19800124-9286";
-        Map<String, List<SortableIntygsData>> map = creator.create(intygsDataList, activeDate);
+        Map<String, List<InternalIntygsData>> map = creator.create(intygsDataList, activeDate);
 
-        List<SortableIntygsData> list = map.get(key);
+        List<InternalIntygsData> list = map.get(key);
 
         assertTrue("Expected 2 but was " + list.size(), list.size() == 2);
         assertStartDate(list.get(0), "2016-02-12");
@@ -180,9 +180,9 @@ public class SortableIntygsDataCreatorTest {
     @Test
     public void testFall6() {
         String key = "19800207-9294";
-        Map<String, List<SortableIntygsData>> map = creator.create(intygsDataList, activeDate);
+        Map<String, List<InternalIntygsData>> map = creator.create(intygsDataList, activeDate);
 
-        List<SortableIntygsData> list = map.get(key);
+        List<InternalIntygsData> list = map.get(key);
 
         assertTrue("Expected 2 but was " + list.size(), list.size() == 2);
         assertStartDate(list.get(0), "2016-02-12");
@@ -194,17 +194,17 @@ public class SortableIntygsDataCreatorTest {
     @Test
     public void testFall7() {
         String key = "19800228-9224";
-        Map<String, List<SortableIntygsData>> map = creator.create(intygsDataList, activeDate);
+        Map<String, List<InternalIntygsData>> map = creator.create(intygsDataList, activeDate);
 
         assertNull(map.get(key));
     }
 
 
-    private static void assertStartDate(SortableIntygsData intygsData, String datum) {
+    private static void assertStartDate(InternalIntygsData intygsData, String datum) {
         assertTrue(intygsData.getStartDatum().equals(LocalDate.parse(datum)));
     }
 
-    private static void assertEndDate(SortableIntygsData intygsData, String datum) {
+    private static void assertEndDate(InternalIntygsData intygsData, String datum) {
         assertTrue(intygsData.getSlutDatum().equals(LocalDate.parse(datum)));
     }
 

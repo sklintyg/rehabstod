@@ -27,8 +27,8 @@ import java.util.Map;
 /**
  * Created by Magnus Ekstrand on 2016-02-18.
  */
-public interface SjukfallResolver {
+public interface InternalIntygsDataResolver {
 
-    Map<String, List<SortableIntygsData>> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum);
+    Map<String, List<InternalIntygsData>> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum);
 
 }

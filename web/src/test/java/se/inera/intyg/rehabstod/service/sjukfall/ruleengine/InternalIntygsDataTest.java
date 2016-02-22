@@ -36,7 +36,7 @@ import java.util.List;
  * Created by Magnus Ekstrand on 2016-02-16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SortableIntygsDataTest {
+public class InternalIntygsDataTest {
 
     private static final String LOCATION_INTYGSDATA = "classpath:SortableIntygsDataTest/intygsdata.csv";
 
@@ -61,7 +61,7 @@ public class SortableIntygsDataTest {
     @Test
     public void testIntyg1() {
         IntygsData intygsData = getIntygsData("intyg-1");
-        SortableIntygsData testee = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+        InternalIntygsData testee = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-01", "2016-02-10", false);
     }
@@ -69,7 +69,7 @@ public class SortableIntygsDataTest {
     @Test
     public void testIntyg2() {
         IntygsData intygsData = getIntygsData("intyg-2");
-        SortableIntygsData testee = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+        InternalIntygsData testee = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-12", "2016-02-20", true);
     }
@@ -77,7 +77,7 @@ public class SortableIntygsDataTest {
     @Test
     public void testIntyg3() {
         IntygsData intygsData = getIntygsData("intyg-3");
-        SortableIntygsData testee = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+        InternalIntygsData testee = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-01", "2016-02-20", true);
     }
@@ -85,7 +85,7 @@ public class SortableIntygsDataTest {
     @Test
     public void testIntyg4() {
         IntygsData intygsData = getIntygsData("intyg-4");
-        SortableIntygsData testee = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+        InternalIntygsData testee = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-01", "2016-02-25", false);
     }
@@ -93,7 +93,7 @@ public class SortableIntygsDataTest {
     @Test
     public void testIntyg5() {
         IntygsData intygsData = getIntygsData("intyg-5");
-        SortableIntygsData testee = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+        InternalIntygsData testee = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-01", "2016-02-28", true);
     }
@@ -101,9 +101,9 @@ public class SortableIntygsDataTest {
     @Test
     public void testIntyg6() {
         IntygsData intygsData = getIntygsData("intyg-6");
-        SortableIntygsData testee1 = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
-        SortableIntygsData testee2 = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, LocalDate.parse("2016-02-22")).build();
-        SortableIntygsData testee3 = new SortableIntygsData.SortableIntygsDataBuilder(intygsData, LocalDate.parse("2016-02-23")).build();
+        InternalIntygsData testee1 = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+        InternalIntygsData testee2 = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, LocalDate.parse("2016-02-22")).build();
+        InternalIntygsData testee3 = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, LocalDate.parse("2016-02-23")).build();
 
         assertIntygsData(testee1, "2016-02-11", "2016-02-28", false);
         assertIntygsData(testee2, "2016-02-11", "2016-02-28", true);
@@ -117,7 +117,7 @@ public class SortableIntygsDataTest {
                 .get();
     }
 
-    private static void assertIntygsData(SortableIntygsData obj, String startDatum, String slutDatum, boolean aktivtIntyg) {
+    private static void assertIntygsData(InternalIntygsData obj, String startDatum, String slutDatum, boolean aktivtIntyg) {
         assertTrue(obj.getStartDatum().equals(LocalDate.parse(startDatum)));
         assertTrue(obj.getSlutDatum().equals(LocalDate.parse(slutDatum)));
         assertTrue(obj.isAktivtIntyg() == aktivtIntyg);
