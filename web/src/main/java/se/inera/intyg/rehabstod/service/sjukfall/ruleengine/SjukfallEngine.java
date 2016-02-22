@@ -79,7 +79,7 @@ public class SjukfallEngine {
 
     public List<InternalSjukfall> calculate(List<IntygsData> intygsData, String hsaId, Urval urval, GetSjukfallRequest requestData) {
 
-        org.joda.time.LocalDate aktivtDatum = org.joda.time.LocalDate.now();
+        org.joda.time.LocalDate aktivtDatum = getAktivtDatum();
 
         Map<String, List<InternalIntygsData>> resolvedIntygsData =
                 resolver.resolve(intygsData, requestData.getMaxIntygsGlapp(), aktivtDatum);
@@ -134,6 +134,10 @@ public class SjukfallEngine {
 
     // - - -  Package scope  - - -
 
+    org.joda.time.LocalDate getAktivtDatum() {
+        return org.joda.time.LocalDate.now();
+    }
+
     InternalSjukfall toInternalSjukfall(List<InternalIntygsData> list, org.joda.time.LocalDate aktivtDatum) {
 
         // Find the active object
@@ -149,10 +153,7 @@ public class SjukfallEngine {
         return buildInternalSjukfall(sjukfall, aktivtIntyg);
     }
 
-
-    // - - -  Private scope  - - -
-
-    private InternalSjukfall buildInternalSjukfall(Sjukfall sjukfall, InternalIntygsData aktivtIntyg) {
+    InternalSjukfall buildInternalSjukfall(Sjukfall sjukfall, InternalIntygsData aktivtIntyg) {
         Enhet ve = aktivtIntyg.getSkapadAv().getEnhet();
 
         InternalSjukfall internalSjukfall = new InternalSjukfall();
@@ -165,7 +166,7 @@ public class SjukfallEngine {
         return internalSjukfall;
     }
 
-    private Sjukfall buildSjukfall(List<InternalIntygsData> values, InternalIntygsData aktivtIntyg, org.joda.time.LocalDate aktivtDatum) {
+    Sjukfall buildSjukfall(List<InternalIntygsData> values, InternalIntygsData aktivtIntyg, org.joda.time.LocalDate aktivtDatum) {
         Sjukfall sjukfall = new Sjukfall();
 
         sjukfall.setPatient(getPatient(aktivtIntyg));
@@ -184,9 +185,12 @@ public class SjukfallEngine {
         return sjukfall;
     }
 
+
+    // - - -  Private scope  - - -
+
     private Integer getAktivGrad(List<Formaga> list, org.joda.time.LocalDate aktivtDatum) {
         return list.stream()
-                .filter(f -> f.getStartdatum().compareTo(aktivtDatum) > -1 && f.getSlutdatum().compareTo(aktivtDatum) < 1)
+                .filter(f -> f.getStartdatum().compareTo(aktivtDatum) < 1 && f.getSlutdatum().compareTo(aktivtDatum) > -1)
                 .findFirst()
                 .orElseThrow(() -> new SjukfallEngineException("Unable to find an active 'arbetsförmåga'"))
                 .getNedsattning();
@@ -203,7 +207,7 @@ public class SjukfallEngine {
     }
 
     private org.joda.time.LocalDate getMaximumDate(List<InternalIntygsData> list) {
-        return list.stream().min((d1, d2) -> d1.getSlutDatum().compareTo(d2.getSlutDatum())).get().getSlutDatum();
+        return list.stream().max((d1, d2) -> d1.getSlutDatum().compareTo(d2.getSlutDatum())).get().getSlutDatum();
     }
 
     private String getPatientName(se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient intygPatient) {

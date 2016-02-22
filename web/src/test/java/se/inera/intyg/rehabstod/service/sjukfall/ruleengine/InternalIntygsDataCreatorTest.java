@@ -42,7 +42,7 @@ import java.util.Map;
 public class InternalIntygsDataCreatorTest {
     // CHECKSTYLE:OFF MagicNumber
 
-    private static final String LOCATION_INTYGSDATA = "classpath:SortableIntygsDataCreatorTest/intygsdata-creator.csv";
+    private static final String LOCATION_INTYGSDATA = "classpath:InternalIntygsDataCreatorTest/intygsdata-creator.csv";
 
     private static List<IntygsData> intygsDataList;
 

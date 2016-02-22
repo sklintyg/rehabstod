@@ -37,7 +37,7 @@ public class InternalIntygsData extends IntygsData {
 
     private boolean aktivtIntyg;
 
-    public InternalIntygsData(SortableIntygsDataBuilder builder) {
+    public InternalIntygsData(InternalIntygsDataBuilder builder) {
         super();
 
         this.startDatum = builder.startDatum;
@@ -96,7 +96,7 @@ public class InternalIntygsData extends IntygsData {
         return result;
     }
 
-    public static class SortableIntygsDataBuilder {
+    public static class InternalIntygsDataBuilder {
 
         private final IntygsData intygsData;
 
@@ -105,7 +105,7 @@ public class InternalIntygsData extends IntygsData {
 
         private boolean aktivtIntyg;
 
-        public SortableIntygsDataBuilder(IntygsData intygsData, LocalDate aktivtDatum) {
+        public InternalIntygsDataBuilder(IntygsData intygsData, LocalDate aktivtDatum) {
             this.intygsData = intygsData;
             this.startDatum = lookupStartDatum(intygsData.getArbetsformaga().getFormaga());
             this.slutDatum = lookupSlutDatum(intygsData.getArbetsformaga().getFormaga());

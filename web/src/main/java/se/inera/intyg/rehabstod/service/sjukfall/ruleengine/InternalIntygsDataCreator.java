@@ -59,7 +59,7 @@ public class InternalIntygsDataCreator {
                 map.put(k, new ArrayList<>());
             }
 
-            InternalIntygsData v = new InternalIntygsData.SortableIntygsDataBuilder(i, aktivtDatum).build();
+            InternalIntygsData v = new InternalIntygsData.InternalIntygsDataBuilder(i, aktivtDatum).build();
             map.get(k).add(v);
         }
 

@@ -61,7 +61,9 @@ public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolve
         Map<String, List<InternalIntygsData>> intygsDataMap = toMap(intygsData, aktivtDatum);
 
         // Reduce list of SortableIntygsData
-        return reduceMap(intygsDataMap, maxIntygsGlapp);
+        Map<String, List<InternalIntygsData>> reducedMap = reduceMap(intygsDataMap, maxIntygsGlapp);
+
+        return reducedMap;
     }
 
 

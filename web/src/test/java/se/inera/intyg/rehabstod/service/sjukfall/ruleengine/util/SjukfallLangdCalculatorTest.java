@@ -225,7 +225,7 @@ public class SjukfallLangdCalculatorTest {
             formagas.add(enFormaga);
         }
         intygsData.setArbetsformaga(arbetsformaga);
-        InternalIntygsData.SortableIntygsDataBuilder builder = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, LocalDate.now());
+        InternalIntygsData.InternalIntygsDataBuilder builder = new InternalIntygsData.InternalIntygsDataBuilder(intygsData, LocalDate.now());
         return builder.build();
     }
 

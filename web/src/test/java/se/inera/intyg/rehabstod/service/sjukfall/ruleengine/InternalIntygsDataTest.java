@@ -38,7 +38,7 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class InternalIntygsDataTest {
 
-    private static final String LOCATION_INTYGSDATA = "classpath:SortableIntygsDataTest/intygsdata.csv";
+    private static final String LOCATION_INTYGSDATA = "classpath:InternalIntygsDataTest/intygsdata.csv";
 
     private static List<IntygsData> intygsDataList;
 
@@ -61,7 +61,7 @@ public class InternalIntygsDataTest {
     @Test
     public void testIntyg1() {
         IntygsData intygsData = getIntygsData("intyg-1");
-        InternalIntygsData testee = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+        InternalIntygsData testee = new InternalIntygsData.InternalIntygsDataBuilder(intygsData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-01", "2016-02-10", false);
     }
@@ -69,7 +69,7 @@ public class InternalIntygsDataTest {
     @Test
     public void testIntyg2() {
         IntygsData intygsData = getIntygsData("intyg-2");
-        InternalIntygsData testee = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+        InternalIntygsData testee = new InternalIntygsData.InternalIntygsDataBuilder(intygsData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-12", "2016-02-20", true);
     }
@@ -77,7 +77,7 @@ public class InternalIntygsDataTest {
     @Test
     public void testIntyg3() {
         IntygsData intygsData = getIntygsData("intyg-3");
-        InternalIntygsData testee = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+        InternalIntygsData testee = new InternalIntygsData.InternalIntygsDataBuilder(intygsData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-01", "2016-02-20", true);
     }
@@ -85,7 +85,7 @@ public class InternalIntygsDataTest {
     @Test
     public void testIntyg4() {
         IntygsData intygsData = getIntygsData("intyg-4");
-        InternalIntygsData testee = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+        InternalIntygsData testee = new InternalIntygsData.InternalIntygsDataBuilder(intygsData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-01", "2016-02-25", false);
     }
@@ -93,7 +93,7 @@ public class InternalIntygsDataTest {
     @Test
     public void testIntyg5() {
         IntygsData intygsData = getIntygsData("intyg-5");
-        InternalIntygsData testee = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
+        InternalIntygsData testee = new InternalIntygsData.InternalIntygsDataBuilder(intygsData, activeDate).build();
 
         assertIntygsData(testee, "2016-02-01", "2016-02-28", true);
     }
@@ -101,9 +101,9 @@ public class InternalIntygsDataTest {
     @Test
     public void testIntyg6() {
         IntygsData intygsData = getIntygsData("intyg-6");
-        InternalIntygsData testee1 = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, activeDate).build();
-        InternalIntygsData testee2 = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, LocalDate.parse("2016-02-22")).build();
-        InternalIntygsData testee3 = new InternalIntygsData.SortableIntygsDataBuilder(intygsData, LocalDate.parse("2016-02-23")).build();
+        InternalIntygsData testee1 = new InternalIntygsData.InternalIntygsDataBuilder(intygsData, activeDate).build();
+        InternalIntygsData testee2 = new InternalIntygsData.InternalIntygsDataBuilder(intygsData, LocalDate.parse("2016-02-22")).build();
+        InternalIntygsData testee3 = new InternalIntygsData.InternalIntygsDataBuilder(intygsData, LocalDate.parse("2016-02-23")).build();
 
         assertIntygsData(testee1, "2016-02-11", "2016-02-28", false);
         assertIntygsData(testee2, "2016-02-11", "2016-02-28", true);

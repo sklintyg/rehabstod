@@ -41,7 +41,7 @@ import java.util.Map;
 public class InternalIntygsDataResolverReduceTest {
     // CHECKSTYLE:OFF MagicNumber
 
-    private static final String LOCATION_INTYGSDATA = "classpath:SjukfallResolverTest/intygsdata-resolver.csv";
+    private static final String LOCATION_INTYGSDATA = "classpath:InternalIntygsDataResolverTest/intygsdata-resolver.csv";
 
     private static List<IntygsData> intygsDataList;
 

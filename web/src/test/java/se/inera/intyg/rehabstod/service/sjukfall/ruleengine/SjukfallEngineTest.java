@@ -20,53 +20,138 @@ package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.testdata.IntygsDataGenerator;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Gender;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
 
+import java.io.IOException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.List;
 
 /**
  * Created by martin on 11/02/16.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SjukfallEngineTest {
+    // CHECKSTYLE:OFF MagicNumber
+
+    private static final String LOCATION_INTYGSDATA = "classpath:SjukfallEngineTest/intygsdata-engine.csv";
 
     private static final String DIAGNOS_KOD = "J1012";
     private static final String DIAGNOS_BESKRIVNING = "Beskrivning";
     private static final String DIAGNOS_KAPITEL = "J00-J10";
 
+    private static List<IntygsData> intygsDataList;
+    private static List<InternalSjukfall> internalSjukfallList;
+
+    private LocalDate activeDate = LocalDate.parse("2016-02-16");
+
     @Mock
     private DiagnosBeskrivningService diagnosBeskrivningService;
     @Mock
     private DiagnosKapitelService diagnosKapitelService;
+    @Spy
+    private InternalIntygsDataResolverImpl resolver;
 
     @InjectMocks
     private SjukfallEngineTestImpl testee = new SjukfallEngineTestImpl();
 
     @Before
-    public void init() {
-        when(diagnosBeskrivningService.getDiagnosBeskrivning(DIAGNOS_KOD)).thenReturn(DIAGNOS_BESKRIVNING);
+    public void init() throws IOException {
         DiagnosKapitel kapitel = mock(DiagnosKapitel.class);
 
-        when(diagnosKapitelService.getDiagnosKapitel(DIAGNOS_KOD)).thenReturn(kapitel);
-
+        when(diagnosBeskrivningService.getDiagnosBeskrivning(anyString())).thenReturn(DIAGNOS_BESKRIVNING);
+        when(diagnosKapitelService.getDiagnosKapitel(anyString())).thenReturn(kapitel);
         when(kapitel.getId()).thenReturn(DIAGNOS_KAPITEL);
+
+        // Load test data
+        IntygsDataGenerator generator = new IntygsDataGenerator(LOCATION_INTYGSDATA);
+        intygsDataList = generator.generate().get();
+        assertTrue("Expected 16 but was + " + intygsDataList.size(), intygsDataList.size() == 16);
+
+        internalSjukfallList = testee.calculate(intygsDataList, "", null, getSjukfallRequest(5));
+        assertTrue("Expected 6 but was + " + internalSjukfallList.size(), internalSjukfallList.size() == 6);
+    }
+
+    private GetSjukfallRequest getSjukfallRequest(int maxIntygsGlapp) {
+        GetSjukfallRequest request = new GetSjukfallRequest();
+        request.setMaxIntygsGlapp(maxIntygsGlapp);
+        return request;
+    }
+
+    @Test
+    public void testCalculateSjukfall1() {
+        assertSjukfall("19791110-9291", "2016-02-01", "2016-02-20", 2, 19);
+    }
+
+    @Test
+    public void testCalculateSjukfall2() {
+        assertSjukfall("19791123-9262", "2016-02-01", "2016-02-20", 2, 19);
+    }
+
+    @Test
+    public void testCalculateSjukfall3() {
+        assertSjukfall("19791212-9280", "2016-02-01", "2016-02-25", 3, 24);
+    }
+
+    @Test
+    public void testCalculateSjukfall4() {
+        assertSjukfall("19800113-9297", "2016-02-01", "2016-02-25", 3, 24);
+    }
+
+    @Test
+    public void testCalculateSjukfall5() {
+        assertSjukfall("19800124-9286", "2016-02-12", "2016-02-25", 2, 14);
+    }
+
+    @Test
+    public void testCalculateSjukfall6() {
+        assertSjukfall("19800207-9294", "2016-02-12", "2016-02-25", 2, 14);
+    }
+
+    @Test
+    public void testCalculateSjukfall7() {
+        assertSjukfall("19800228-9224", "2016-02-01", "2016-02-25", 0, 0);
+    }
+
+    private void assertSjukfall(String patientId, String startDatum, String slutDatum, int antalIntyg, int effektivSjukskrivningslangd) {
+        InternalSjukfall internalSjukfall = internalSjukfallList.stream().
+                filter(o -> o.getSjukfall().getPatient().getId().equals(patientId)).findFirst().orElse(null);
+
+        if (antalIntyg == 0) {
+            assertNull(internalSjukfall);
+            return;
+        }
+
+        Sjukfall sjukfall = internalSjukfall.getSjukfall();
+
+        assertTrue(sjukfall.getStart().isEqual(LocalDate.parse(startDatum)));
+        assertTrue(sjukfall.getSlut().isEqual(LocalDate.parse(slutDatum)));
+        assertTrue(sjukfall.getIntyg() == antalIntyg);
+        assertTrue(sjukfall.getDagar() == effektivSjukskrivningslangd);
     }
 
     @Test
@@ -153,6 +238,9 @@ public class SjukfallEngineTest {
         assertEquals(id, sjukfallPatient.getId());
     }
 
+
+    // - - -  Private scope  - - -
+
     private IntygsData getIntyg(String patientId, String fornamn, String efternamn, String mellanNamn) {
         IntygsData intyg = new IntygsData();
 
@@ -178,5 +266,24 @@ public class SjukfallEngineTest {
             final int date = 1455203622;
             clock = Clock.fixed(Instant.ofEpochSecond(date), ZoneId.of("Europe/Paris"));
         }
+
+        @Override
+        LocalDate getAktivtDatum() {
+            return activeDate;
+        }
+
+        @Override
+        InternalSjukfall buildInternalSjukfall(Sjukfall sjukfall, InternalIntygsData aktivtIntyg) {
+            InternalSjukfall internalSjukfall = new InternalSjukfall();
+            internalSjukfall.setSjukfall(sjukfall);
+            internalSjukfall.setVardGivareId("IFV1239877878-0000");
+            internalSjukfall.setVardGivareNamn("Webcert-Vårdgivare1");
+            internalSjukfall.setVardEnhetId("IFV1239877878-1045");
+            internalSjukfall.setVardEnhetNamn("Webcert-Enhet2");
+
+            return internalSjukfall;
+        }
     }
+
+    // CHECKSTYLE:ON MagicNumber
 }
