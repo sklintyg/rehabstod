@@ -143,7 +143,7 @@ dependencies {
     compile "se.inera.intyg.common:hsa-integration:0-SNAPSHOT"
     compile "se.inera.intyg.common:log-messages:0-SNAPSHOT"
 
-    compile "javax.jms:jms-api:1.1-rev-1"
+
     
     compile "org.springframework:spring-webmvc:${springContextVersion}"
     compile "org.springframework:spring-jms:${springContextVersion}"
@@ -177,8 +177,7 @@ dependencies {
     testCompile "org.springframework:spring-test:${springContextVersion}"
     testCompile 'org.unitils:unitils-core:3.3'
 
-
-
+    providedCompile "javax.jms:jms-api:1.1-rev-1"
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
     providedCompile 'jstl:jstl:1.2'
 
