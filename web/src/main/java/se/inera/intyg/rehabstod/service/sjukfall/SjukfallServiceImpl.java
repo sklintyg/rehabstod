@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SjukfallEngine;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
@@ -44,8 +45,8 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Autowired
     private SjukfallEngine sjukfallEngine;
 
-    //@Autowired
-    //private LogService logService;
+    @Autowired
+    private LogService logService;
 
     @Override
     public List<InternalSjukfall> getSjukfall(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request) {
@@ -60,7 +61,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         List<InternalSjukfall> sjukfall = sjukfallEngine.calculate(intygsData, hsaId, urval, request);
 
         // 2.15 Temporary PDL-logging based on which sjukfall that was shown.
-        //logService.logSjukfallData(sjukfall);
+        logService.logSjukfallData(sjukfall);
 
         // 2.2; update cache if necessary
 
