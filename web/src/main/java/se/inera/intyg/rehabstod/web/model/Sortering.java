@@ -24,6 +24,7 @@ package se.inera.intyg.rehabstod.web.model;
 public class Sortering {
 
     private static final int HASH_SEED = 31;
+
     private String kolumn;
     private String order;
 

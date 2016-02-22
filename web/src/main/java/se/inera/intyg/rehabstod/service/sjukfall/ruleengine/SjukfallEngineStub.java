@@ -72,8 +72,8 @@ public class SjukfallEngineStub extends SjukfallEngine {
             fall.setDiagnos(getDiagnos(intyg));
 
             fall.setDagar(ThreadLocalRandom.current().nextInt(1, 500 + 1));
-            fall.setStart(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum().toDate());
-            fall.setSlut(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum().toDate());
+            fall.setStart(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum());
+            fall.setSlut(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum());
 
             List<Integer> grader = new ArrayList<>();
             grader.add(100);

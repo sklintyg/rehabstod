@@ -18,13 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
-import java.util.List;
-
 import org.joda.time.LocalDate;
-
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +29,6 @@ import java.util.Map;
  */
 public interface SjukfallResolver {
 
-    Map<String, InternalSjukfall> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum);
+    Map<String, List<SortableIntygsData>> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum);
 
 }

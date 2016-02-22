@@ -46,7 +46,6 @@ public class SjukfallResolverReduceTest {
     private static List<IntygsData> intygsDataList;
 
     private SjukfallResolverImpl resolver;
-    private SjukfallMapper mapper;
 
 
     @BeforeClass
@@ -57,8 +56,7 @@ public class SjukfallResolverReduceTest {
 
     @Before
     public void setup() {
-        mapper = new SjukfallMapperImpl();
-        resolver = new SjukfallResolverImpl(mapper);
+        resolver = new SjukfallResolverImpl();
     }
 
     @Test

@@ -31,6 +31,9 @@ import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Patient;
+import se.inera.intyg.rehabstod.web.model.Sjukfall;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.time.Clock;
@@ -63,21 +66,32 @@ public class SjukfallEngine {
     @Autowired
     protected DiagnosKapitelService diagnosKapitelService;
 
+    @Autowired
+    SjukfallResolver resolver;
+
     public SjukfallEngine() {
         clock = Clock.system(ZoneId.of("Europe/Paris"));
     }
 
+
+    // - - -  API  - - -
+
     public List<InternalSjukfall> calculate(List<IntygsData> intygsData, String hsaId, Urval urval, GetSjukfallRequest requestData) {
-        // These should be outwired in some way
-        SjukfallMapper mapper = new SjukfallMapperImpl();
-        SjukfallResolver resolver = new SjukfallResolverImpl(mapper);
 
-        Map<String, InternalSjukfall> map = resolver.resolve(intygsData, requestData.getMaxIntygsGlapp(), org.joda.time.LocalDate.now());
+        org.joda.time.LocalDate aktivtDatum = org.joda.time.LocalDate.now();
 
-        return map.entrySet().stream()
-                .map(e -> e.getValue())
+        Map<String, List<SortableIntygsData>> resolvedIntygsData =
+                resolver.resolve(intygsData, requestData.getMaxIntygsGlapp(), aktivtDatum);
+
+        // Assemble Sjukfall objects
+        return resolvedIntygsData.entrySet().stream()
+                .map(e -> toInternalSjukfall(e.getValue(), aktivtDatum))
                 .collect(Collectors.toList());
+
     }
+
+
+    // - - -  Protected scope  - - -
 
     protected Diagnos getDiagnos(IntygsData intyg) {
         String cleanedDiagnosKod = DiagnosKod.cleanKod(intyg.getDiagnoskod());
@@ -116,6 +130,81 @@ public class SjukfallEngine {
         return patient;
     }
 
+
+    // - - -  Package scope  - - -
+
+    InternalSjukfall toInternalSjukfall(List<SortableIntygsData> list, org.joda.time.LocalDate aktivtDatum) {
+
+        // Find the active object
+        SortableIntygsData aktivtIntyg = list.stream()
+                .filter(o -> o.isAktivtIntyg())
+                .findFirst()
+                .orElseThrow(() -> new SjukfallEngineException("Unable to find a 'aktivt intyg'"));
+
+        // Build Sjukfall object
+        Sjukfall sjukfall = buildSjukfall(list, aktivtIntyg, aktivtDatum);
+
+        // Build the internal Sjukfall object
+        return buildInternalSjukfall(sjukfall, aktivtIntyg);
+    }
+
+
+    // - - -  Private scope  - - -
+
+    private InternalSjukfall buildInternalSjukfall(Sjukfall sjukfall, SortableIntygsData aktivtIntyg) {
+        Enhet ve = aktivtIntyg.getSkapadAv().getEnhet();
+
+        InternalSjukfall internalSjukfall = new InternalSjukfall();
+        internalSjukfall.setSjukfall(sjukfall);
+        internalSjukfall.setVardGivareId(ve.getVardgivare().getVardgivarId().getExtension());
+        internalSjukfall.setVardGivareNamn(ve.getVardgivare().getVardgivarnamn());
+        internalSjukfall.setVardEnhetId(ve.getEnhetsId().getExtension());
+        internalSjukfall.setVardEnhetNamn(ve.getEnhetsnamn());
+
+        return internalSjukfall;
+    }
+
+    private Sjukfall buildSjukfall(List<SortableIntygsData> values, SortableIntygsData aktivtIntyg, org.joda.time.LocalDate aktivtDatum) {
+        Sjukfall sjukfall = new Sjukfall();
+
+        sjukfall.setPatient(getPatient(aktivtIntyg));
+        sjukfall.setDiagnos(getDiagnos(aktivtIntyg));
+
+        sjukfall.setStart(getMinimumDate(values));
+        sjukfall.setSlut(getMaximumDate(values));
+        sjukfall.setDagar(0);
+        sjukfall.setIntyg(values.size());
+
+        sjukfall.setGrader(getGrader(aktivtIntyg.getArbetsformaga().getFormaga()));
+        sjukfall.setAktivGrad(getAktivGrad(aktivtIntyg.getArbetsformaga().getFormaga(), aktivtDatum));
+
+        sjukfall.setLakare(aktivtIntyg.getSkapadAv().getFullstandigtNamn());
+
+        return sjukfall;
+    }
+
+    private Integer getAktivGrad(List<Formaga> list, org.joda.time.LocalDate aktivtDatum) {
+        return list.stream()
+                .filter(f -> f.getStartdatum().compareTo(aktivtDatum) > -1 && f.getSlutdatum().compareTo(aktivtDatum) < 1)
+                .findFirst()
+                .orElseThrow(() -> new SjukfallEngineException("Unable to find an active 'arbetsförmåga'"))
+                .getNedsattning();
+    }
+
+    private List<Integer> getGrader(List<Formaga> list) {
+        return list.stream()
+                .sorted((f1, f2) -> f1.getNedsattning() - f2.getNedsattning())
+                .map(f -> f.getNedsattning()).collect(Collectors.toList());
+    }
+
+    private org.joda.time.LocalDate getMinimumDate(List<SortableIntygsData> list) {
+        return list.stream().min((d1, d2) -> d1.getStartDatum().compareTo(d2.getStartDatum())).get().getStartDatum();
+    }
+
+    private org.joda.time.LocalDate getMaximumDate(List<SortableIntygsData> list) {
+        return list.stream().min((d1, d2) -> d1.getSlutDatum().compareTo(d2.getSlutDatum())).get().getSlutDatum();
+    }
+
     private String getPatientName(se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient intygPatient) {
         StringBuilder name = new StringBuilder();
         name.append(intygPatient.getFornamn()).append(" ");
@@ -141,4 +230,6 @@ public class SjukfallEngine {
 
         return (int) age;
     }
+
+
 }

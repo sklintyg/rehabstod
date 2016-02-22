@@ -21,9 +21,7 @@ package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.util.ArrayList;
@@ -39,18 +37,14 @@ public class SjukfallResolverImpl implements SjukfallResolver {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallResolverImpl.class);
 
-    private SjukfallMapper mapper;
-
-    @Autowired
-    public SjukfallResolverImpl(SjukfallMapper mapper) {
-        this.mapper = mapper;
+    public SjukfallResolverImpl() {
     }
 
 
-    // API
+    // - - -  API  - - -
 
     @Override
-    public Map<String, InternalSjukfall> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
+    public Map<String, List<SortableIntygsData>> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
 
         if (intygsData == null || intygsData.size() == 0) {
             LOG.debug("There was no in-data! Returning empty list");
@@ -67,15 +61,11 @@ public class SjukfallResolverImpl implements SjukfallResolver {
         Map<String, List<SortableIntygsData>> intygsDataMap = toMap(intygsData, aktivtDatum);
 
         // Reduce list of SortableIntygsData
-        Map<String, List<SortableIntygsData>> reducedMap = reduceMap(intygsDataMap, maxIntygsGlapp);
-
-        // Assemble Sjukfall objects
-        Map<String, InternalSjukfall> sjukfallMap = assembleSjukfall(reducedMap);
-
-        return sjukfallMap;
+        return reduceMap(intygsDataMap, maxIntygsGlapp);
     }
 
-    // Package scope
+
+    // - - -  Package scope  - - -
 
     Map<String, List<SortableIntygsData>> reduceMap(Map<String, List<SortableIntygsData>> intygsDataMap, int maxIntygsGlapp) {
 
@@ -172,23 +162,6 @@ public class SjukfallResolverImpl implements SjukfallResolver {
         return list;
     }
 
-    Map<String, InternalSjukfall> assembleSjukfall(Map<String, List<SortableIntygsData>> map) {
-
-        Map<String, InternalSjukfall> assemledMap = new HashMap<>();
-
-        // 1. Ta fram antal intyg
-
-        // 2. Ta fram effektiv sjukskrivningslängd
-
-        // 3. Start och slut
-
-        // 4. Allt övrigt från aktivt intyg
-
-        mapper.map(null);
-
-        return assemledMap;
-    }
-
     /**
      * Method returns a map with intermediate IntygsData objects.
      * Patient's personal-id is used as key.
@@ -210,6 +183,9 @@ public class SjukfallResolverImpl implements SjukfallResolver {
         return map;
     }
 
+
+    // - - -  Private scope  - - -
+
     private LocalDate getCompareDate(List<SortableIntygsData> right, SortableIntygsData aktivtIntyg) {
         LocalDate smallest = null;
 
@@ -219,7 +195,9 @@ public class SjukfallResolverImpl implements SjukfallResolver {
             smallest = right.stream().findFirst().get().getStartDatum();
         } else {
             smallest = right.stream()
-                    .min((o1, o2) -> o1.getStartDatum().compareTo(o2.getStartDatum())).get().getStartDatum();
+                    .min((o1, o2) -> o1.getStartDatum().compareTo(o2.getStartDatum()))
+                    .get()
+                    .getStartDatum();
         }
 
         if (smallest.isBefore(aktivtIntyg.getStartDatum())) {

@@ -18,7 +18,8 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
+
 import java.util.List;
 
 /**
@@ -27,11 +28,12 @@ import java.util.List;
 public class Sjukfall {
 
     private static final int HASH_SEED = 31;
+
     private Patient patient;
     private Diagnos diagnos;
 
-    private Date start;
-    private Date slut;
+    private LocalDate start;
+    private LocalDate slut;
 
     private int dagar;
     private int intyg;
@@ -63,20 +65,20 @@ public class Sjukfall {
     }
 
 
-    public Date getStart() {
+    public LocalDate getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(LocalDate start) {
         this.start = start;
     }
 
 
-    public Date getSlut() {
+    public LocalDate getSlut() {
         return slut;
     }
 
-    public void setSlut(Date slut) {
+    public void setSlut(LocalDate slut) {
         this.slut = slut;
     }
 
