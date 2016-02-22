@@ -168,6 +168,7 @@ dependencies {
 
     integrationTestCompile 'com.jayway.restassured:rest-assured:2.8.0'
     integrationTestCompile 'com.jayway.restassured:json-schema-validator:2.8.0'
+
     testCompile 'org.hamcrest:hamcrest-all:1.3'
     testCompile ('junit:junit:4.12') {
         exclude module : 'hamcrest'
@@ -182,4 +183,5 @@ dependencies {
     providedCompile 'jstl:jstl:1.2'
 
     gretty 'org.apache.activemq:activemq-client:5.9.1'
+    gretty 'org.apache.activemq:activemq-broker:5.9.1'
 }
