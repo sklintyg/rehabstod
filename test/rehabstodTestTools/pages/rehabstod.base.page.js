@@ -33,8 +33,10 @@ var RehabstodBasePage = Class._extend({
         this.at = null;
         this.doctor = element(by.css('.logged-in'));
         // this.header = element(by.id('wcHeader'));
-        this.header = element(By.css('.headerbox-user-profile'));
+        this.header = element(by.css('.headerbox-user-profile'));
         this.navBar = element(by.css('.navbar-header'));
+        this.allBtn = element(by.id('rhs-startPage-allBtn'));
+        this.myBtn = element(by.id('rhs-startPage-myBtn'));
     },
     isAt: function() {
         return this.at.isDisplayed();

@@ -44,30 +44,45 @@ module.exports = function() {
     });
 
     this.Given(/^jag byter till flik "([^"]*)"$/, function(arg1, callback) {
-        if (arg1 === 'Om Rehabstöd') {
-            logg('Byter flik till: ' + arg1);
-            element(by.css('.ng-binding.ng-scope')).sendKeys(protractor.Key.SPACE).then(callback);
-        } else {
-            logg('Byter flik till: ' + arg1);
-            element(by.css('.ng-scope')).sendKeys(protractor.Key.SPACE).then(callback);
-        }
+
+        element.all(by.css('.nav.navbar-nav li')).then(function(items) {
+            if (arg1 === 'Om Rehabstöd') {
+                logg('Byter flik till: ' + arg1);
+                items[1].click();
+            } else {
+                logg('Byter flik till: ' + arg1);
+                items[0].sendKeys(protractor.Key.SPACE);
+                items[0].click();
+            }
+        }).then(callback);
     });
 
     this.Given(/^elementen "([^"]*)" synns$/, function(arg1, callback) {
-        expect(element(by.css('.container.ng-scope'))).to.eventually.contain(arg1).then(function(elements) {
-            logg('OK - sidan innehåller :' + elements);
+
+        logg('Kontrollera att sidan innehåller :' + arg1);
+        expect(element(by.css('.container.ng-scope')).getText()).to.eventually.contain(arg1).then(function() {
+            logg('OK - sidan innehåller rätt text');
         }, function(reason) {
             callback('FEL - fel: ' + reason);
         }).then(callback);
     });
 
     this.Given(/^loggas jag ut$/, function(callback) {
-        expect(element(by.id('logoutLink'))).isPresent().to.become(true).then(function() {
+        expect(element(by.id('logoutLink')).isPresent()).to.become(true).then(function() {
             element(by.id('logoutLink')).sendKeys(protractor.Key.SPACE);
             logg('OK - Loggar ut');
         }, function(reason) {
             callback('FEL - fel: ' + reason);
         }).then(callback);
+    });
+
+    this.Given(/^jag väljer "([^"]*)"$/, function(arg1, callback) {
+
+        if (arg1 === 'Visa mina sjukfall') {
+            element(by.id('rhs-startPage-myBtn')).sendKeys(protractor.Key.SPACE).then(callback);
+        } else if (arg1 === 'Visa alla sjukfall') {
+            element(by.id('rhs-startPage-allBtn')).sendKeys(protractor.Key.SPACE).then(callback);
+        }
     });
 
 };
