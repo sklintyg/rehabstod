@@ -21,15 +21,15 @@
 'use strict';
 
 exports.config = {
-    // baseUrl: process.env.WEBCERT_URL,
-    allScriptsTimeout: 30000,
+    
+    allScriptsTimeout: 3000,
     // seleniumAddress: 'http://127.0.0.1:4444/wd/hub',
     framework: 'custom',
 
     // path relative to the current config file
     frameworkPath: require.resolve('protractor-cucumber-framework'),
     specs: [
-        'features/*.feature'
+        'features/*.feature' 
     ],
     capabilities: {
         browserName: 'firefox',
@@ -44,10 +44,9 @@ exports.config = {
     onPrepare: function() {
 
         browser.ignoreSynchronization = false;
-        //http://chaijs.com/
+
         global.chai = require('chai');
 
-        //https://github.com/domenic/chai-as-promised/
         global.chaiAsPromised = require('chai-as-promised');
         global.chai.use(global.chaiAsPromised);
 
@@ -56,19 +55,13 @@ exports.config = {
 
         global.rhsTestTools = require('rehabstod-testtools');
 
-        // global.testdata = rehTestTools.testdata;
-        // global.pages = rehTestTools.pages;
-
         browser.baseUrl = process.env.REHABSTOD_URL;
+        console.log('process.env.REHABSTOD_URL: ' +process.env.REHABSTOD_URL);
 
         //Set window size
         browser.manage().window().setSize(1600, 1000);
         global.user = {};
 
-        // global.logg = function(text) {
-        //     console.log(text);
-        // };
-        //Strunta i om servern inte kan bekräfta dess identitet
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     }
 };

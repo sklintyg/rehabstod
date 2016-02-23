@@ -37,6 +37,7 @@ module.exports = function () {
       });
 
     } 
+    callback();
   });
 
   this.Before(function (scenario, callback) {

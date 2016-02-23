@@ -25,19 +25,49 @@ var rehabstodBase = rhsTestTools.pages.rehabstodBase;
 
 module.exports = function() {
 
-    this.Given(/^jag är inloggad som läkare$/, function(callback) {
+    this.Given(/^synns all innehåll$/, function(callback) {
+        element(by.css('.navbar-header')).isPresent().then(function() {
+            // rehabstodBase.navBar.isPresent().then(function(val) {
+            logg('OK - Innehållet synns! : ');
+        }, function(reason) {
+            callback('FEL - Innehållet synns ej : ' + reason);
+        }).then(callback);
+    });
 
-        expect(element(By.css('.headerbox-user-profile')).getText()).to.eventually.contain(roleName + ' - ' + userObj.fornamn + ' ' + userObj.efternamn).then(function(val) {
-            logg('OK - Inloggad som läkare: ' + val);
+    this.Given(/^att jag är inloggad som "([^"]*)"$/, function(arg1, callback) {
+        // expect(rehabstodBase.header.getText()).to.eventually.contain(arg1).then(function(val) {
+        expect(element(By.css('.headerbox-user-profile')).getText()).to.eventually.contain(arg1).then(function(val) {
+            logg('OK - Inloggad som : ' + val);
         }, function(reason) {
             callback('FEL - inloggning ej korrekt: ' + reason);
         }).then(callback);
-
     });
 
-    this.Given(/^synns all innehåll$/, function(callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+    this.Given(/^jag byter till flik "([^"]*)"$/, function(arg1, callback) {
+        if (arg1 === 'Om Rehabstöd') {
+            logg('Byter flik till: ' + arg1);
+            element(by.css('.ng-binding.ng-scope')).sendKeys(protractor.Key.SPACE).then(callback);
+        } else {
+            logg('Byter flik till: ' + arg1);
+            element(by.css('.ng-scope')).sendKeys(protractor.Key.SPACE).then(callback);
+        }
+    });
+
+    this.Given(/^elementen "([^"]*)" synns$/, function(arg1, callback) {
+        expect(element(by.css('.container.ng-scope'))).to.eventually.contain(arg1).then(function(elements) {
+            logg('OK - sidan innehåller :' + elements);
+        }, function(reason) {
+            callback('FEL - fel: ' + reason);
+        }).then(callback);
+    });
+
+    this.Given(/^loggas jag ut$/, function(callback) {
+        expect(element(by.id('logoutLink'))).isPresent().to.become(true).then(function() {
+            element(by.id('logoutLink')).sendKeys(protractor.Key.SPACE);
+            logg('OK - Loggar ut');
+        }, function(reason) {
+            callback('FEL - fel: ' + reason);
+        }).then(callback);
     });
 
 };

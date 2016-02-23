@@ -28,7 +28,7 @@ var rehabstodBase = rhsTestTools.pages.rehabstodBase;
 
 module.exports = function() {
 
-    this.Given(/^att jag är inloggad som en användare$/, function(callback) {
+    this.Given(/^att jag är inloggad som en Läkare$/, function(callback) {
         var userObj = {
             fornamn: 'Jan',
             efternamn: 'Nilsson',
