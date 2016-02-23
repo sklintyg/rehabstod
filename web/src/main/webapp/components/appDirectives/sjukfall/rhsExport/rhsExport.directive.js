@@ -1,26 +1,32 @@
 angular.module('rehabstodApp')
-    .controller('RhsExportCtrl',
-        function($scope, SjukfallService) {
-            'use strict';
-
-            $scope.exportExcel = function() {
-                SjukfallService.exportResult('xlsx');
-            };
-
-            $scope.exportPDF = function() {
-                SjukfallService.exportResult('pdf');
-            };
-        }
-    )
     .directive('rhsExport',
-        function() {
+        function(SjukfallService) {
             'use strict';
 
             return {
                 restrict: 'E',
                 replace: true,
+                require: '^stTable',
                 scope: {},
-                controller: 'RhsExportCtrl',
+                link: function($scope, element, attr, table) {
+
+                    function getPersonnummer() {
+                        var data = [];
+                        angular.forEach(table.getFilteredCollection(), function(row) {
+                            data.push(row.patient.id);
+                        });
+
+                        return data;
+                    }
+
+                    $scope.exportExcel = function() {
+                        SjukfallService.exportResult('xlsx', getPersonnummer());
+                    };
+
+                    $scope.exportPDF = function() {
+                        SjukfallService.exportResult('pdf', getPersonnummer());
+                    };
+                },
                 templateUrl: 'components/appDirectives/sjukfall/rhsExport/rhsExport.directive.html'
             };
         });

@@ -35,9 +35,21 @@ angular.module('rehabstodApp').factory('SjukfallService', [
             }
         }
 
-        function _exportResult(type) {
+        function _exportResult(type, personnummer) {
 
             var filterState = SjukfallFilterViewState.get();
+
+            var lakare = [];
+            var diagnosGrupper = [];
+
+            angular.forEach(filterState.lakareModel.getSelected(), function(item) {
+                lakare.push(item.id);
+            })
+
+            angular.forEach(filterState.diagnosKapitelModel.getSelected(), function(item) {
+                diagnosGrupper.push(item.id);
+            })
+
 
             var query = {
                 maxIntygsGlapp: filterState.glapp,
@@ -46,9 +58,9 @@ angular.module('rehabstodApp').factory('SjukfallService', [
                     min: filterState.sjukskrivningslangdModel[0],
                     max: filterState.sjukskrivningslangdModel[1]
                 },
-                lakare: filterState.lakareModel.getSelected(),
-                diagnosGrupper: filterState.diagnosKapitelModel.getSelected(),
-                personnummer: []
+                lakare: lakare,
+                diagnosGrupper: diagnosGrupper,
+                personnummer: personnummer
             };
 
             return SjukfallProxy.exportResult(type, query);
