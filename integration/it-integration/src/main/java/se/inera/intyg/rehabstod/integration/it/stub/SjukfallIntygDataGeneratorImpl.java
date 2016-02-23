@@ -18,21 +18,12 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.UUID;
-
-import javax.annotation.PostConstruct;
-
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
@@ -42,6 +33,14 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.UUID;
 
 /**
  * Can generate a suitable amount of intygsdata.
@@ -67,6 +66,9 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
     private int currentHosPersonIndex = 0;
     private List<HosPersonal> hosPersonList = new ArrayList<>();
+
+    private final Integer startDatumOffset = -2;
+    private final Integer slutDatumOffset = -1;
 
     @Autowired
     private PersonnummerLoader personnummerLoader;
@@ -106,6 +108,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
                 intygsData.setDiagnoskod(nextDiagnosis());
                 intygsData.setSkapadAv(hosPerson);
 
+                LocalDateTime signeringsTidpunkt = LocalDateTime.now().plusWeeks(startDatumOffset).plusHours(10);
+                intygsData.setSigneringsTidpunkt(signeringsTidpunkt);
 
                 Arbetsformaga arbetsformaga = new Arbetsformaga();
                 arbetsformaga.getFormaga().addAll(getDefaultSjukskrivningsGrader());
@@ -128,8 +132,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private List<Formaga> getDefaultSjukskrivningsGrader() {
         List<Formaga> sjukskrivningsgradList = new ArrayList<>();
 
-        Formaga sg1 = buildSjukskrivningsGrad(100, -2, -1);
-        Formaga sg2 = buildSjukskrivningsGrad(75, -1, 2);
+        Formaga sg1 = buildSjukskrivningsGrad(100, startDatumOffset, slutDatumOffset);    // 100, -2, -1
+        Formaga sg2 = buildSjukskrivningsGrad(75, slutDatumOffset, slutDatumOffset + 3);  // 100, -1, 2
 
         sjukskrivningsgradList.add(sg1);
         sjukskrivningsgradList.add(sg2);

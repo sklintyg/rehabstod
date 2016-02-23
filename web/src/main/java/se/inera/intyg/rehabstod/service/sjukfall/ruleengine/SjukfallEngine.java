@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
@@ -50,6 +51,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Magnus Ekstrand on 03/02/16.
  */
+@Component
 public class SjukfallEngine {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallEngine.class);
@@ -177,7 +179,8 @@ public class SjukfallEngine {
         sjukfall.setDagar(SjukfallLangdCalculator.getEffectiveNumberOfSickDays(values));
         sjukfall.setIntyg(values.size());
 
-        sjukfall.setGrader(getGrader(aktivtIntyg.getArbetsformaga().getFormaga()));
+        List<Integer> grader = getGrader(aktivtIntyg.getArbetsformaga().getFormaga());
+        sjukfall.setGrader(grader);
         sjukfall.setAktivGrad(getAktivGrad(aktivtIntyg.getArbetsformaga().getFormaga(), aktivtDatum));
 
         sjukfall.setLakare(aktivtIntyg.getSkapadAv().getFullstandigtNamn());
@@ -198,7 +201,7 @@ public class SjukfallEngine {
 
     private List<Integer> getGrader(List<Formaga> list) {
         return list.stream()
-                .sorted((f1, f2) -> f1.getNedsattning() - f2.getNedsattning())
+                .sorted((f1, f2) -> f1.getStartdatum().compareTo(f2.getStartdatum()))
                 .map(f -> f.getNedsattning()).collect(Collectors.toList());
     }
 
@@ -212,14 +215,18 @@ public class SjukfallEngine {
 
     private String getPatientName(se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient intygPatient) {
         StringBuilder name = new StringBuilder();
-        name.append(intygPatient.getFornamn()).append(" ");
 
+        if (intygPatient.getFornamn() != null && !intygPatient.getFornamn().isEmpty()) {
+            name.append(intygPatient.getFornamn()).append(" ");
+        }
         if (intygPatient.getMellannamn() != null && !intygPatient.getMellannamn().isEmpty()) {
             name.append(intygPatient.getMellannamn()).append(" ");
         }
-        name.append(intygPatient.getEfternamn());
+        if (intygPatient.getEfternamn() != null && !intygPatient.getEfternamn().isEmpty()) {
+            name.append(intygPatient.getEfternamn()).append(" ");
+        }
 
-        return name.toString();
+        return name.toString().trim();
     }
 
     private int getPatientAge(String patientId) {

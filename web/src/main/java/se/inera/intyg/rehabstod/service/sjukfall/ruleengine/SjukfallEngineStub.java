@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
-import org.springframework.stereotype.Component;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
@@ -39,7 +38,7 @@ import java.util.stream.Collectors;
  *
  * This is to be deleted. It's only purpose is to create stubbed data until the rule engine is in place.
  */
-@Component
+
 public class SjukfallEngineStub extends SjukfallEngine {
 
     public SjukfallEngineStub() {
