@@ -69,10 +69,31 @@ public class SjukfallController {
         Urval urval = user.getUrval();
         List<InternalSjukfall> sjukfall = sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
 
-        // PDL-logging based on which sjukfall that are abou to be displayed to user.
-        List<InternalSjukfall> toLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, sjukfall, ActivityType.READ);
-        logService.logSjukfallData(toLog);
-        user.getPdlActivityStore().addActivitiesToStore(enhetsId, toLog, ActivityType.READ);
+        // PDL-logging based on which sjukfall that are about to be displayed to user.
+        List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, sjukfall, ActivityType.READ);
+        logService.logSjukfallData(sjukfallToLog, ActivityType.READ);
+        user.getPdlActivityStore().addActivitiesToStore(enhetsId, sjukfallToLog, ActivityType.READ);
+
+        return sjukfall.stream().map(sf -> sf.getSjukfall()).collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/pdf", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public List<Sjukfall> getSjukfallForCareUnitAsPDF(@RequestBody GetSjukfallRequest request) {
+
+        RehabstodUser user = userService.getUser();
+        if (user == null) {
+            throw new AuthoritiesException("No user in session");
+        }
+
+        String enhetsId = user.getValdVardenhet().getId();
+        String hsaId = user.getHsaId();
+        Urval urval = user.getUrval();
+        List<InternalSjukfall> sjukfall = sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
+
+        // PDL-logging based on which sjukfall that are about to be displayed to user.
+        List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, sjukfall, ActivityType.PRINT);
+        logService.logSjukfallData(sjukfallToLog, ActivityType.PRINT);
+        user.getPdlActivityStore().addActivitiesToStore(enhetsId, sjukfallToLog, ActivityType.PRINT);
 
         return sjukfall.stream().map(sf -> sf.getSjukfall()).collect(Collectors.toList());
     }

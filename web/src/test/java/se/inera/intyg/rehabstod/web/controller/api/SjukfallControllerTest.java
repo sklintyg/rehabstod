@@ -108,8 +108,35 @@ public class SjukfallControllerTest {
         verify(sjukfallService).getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
 
         verify(pdlStoreMock).getActivitiesNotInStore(eq(VARDENHETS_ID), eq(result), eq(ActivityType.READ));
-        verify(logserviceMock).logSjukfallData(eq(toLog));
+        verify(logserviceMock).logSjukfallData(eq(toLog), eq(ActivityType.READ));
         verify(pdlStoreMock).addActivitiesToStore(eq(VARDENHETS_ID), eq(toLog), eq(ActivityType.READ));
+
+    }
+
+    @Test
+    public void testGetSjukfallAsPDF() {
+        List<InternalSjukfall> result = new ArrayList<>();
+        result.add(createSjukFallForPatient("111"));
+        result.add(createSjukFallForPatient("222"));
+
+        List<InternalSjukfall> toLog = new ArrayList<>();
+        result.add(createSjukFallForPatient("333"));
+
+        // Given
+        GetSjukfallRequest request = new GetSjukfallRequest();
+
+        // When
+        when(sjukfallService.getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(result);
+        when(pdlStoreMock.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(result), eq(ActivityType.PRINT))).thenReturn(toLog);
+
+        // Then
+        List<Sjukfall> response = sjukfallController.getSjukfallForCareUnitAsPDF(request);
+
+        verify(sjukfallService).getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
+
+        verify(pdlStoreMock).getActivitiesNotInStore(eq(VARDENHETS_ID), eq(result), eq(ActivityType.PRINT));
+        verify(logserviceMock).logSjukfallData(eq(toLog), eq(ActivityType.PRINT));
+        verify(pdlStoreMock).addActivitiesToStore(eq(VARDENHETS_ID), eq(toLog), eq(ActivityType.PRINT));
 
     }
 

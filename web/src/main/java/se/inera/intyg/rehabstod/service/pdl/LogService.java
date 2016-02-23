@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.service.pdl;
 
 import java.util.List;
 
+import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
@@ -29,7 +30,7 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
  */
 public interface LogService {
 
-    void logSjukfallData(List<InternalSjukfall> sjukfall);
+    void logSjukfallData(List<InternalSjukfall> sjukfall, ActivityType activityType);
 
     LogUser getLogUser(RehabstodUser user);
 }

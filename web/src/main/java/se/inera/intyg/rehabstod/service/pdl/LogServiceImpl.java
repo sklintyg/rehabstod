@@ -38,8 +38,10 @@ import org.springframework.stereotype.Service;
 
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.common.logmessages.AbstractLogMessage;
+import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.common.logmessages.Enhet;
 import se.inera.intyg.common.logmessages.IntygDataLogMessage;
+import se.inera.intyg.common.logmessages.IntygDataPrintLogMessage;
 import se.inera.intyg.common.logmessages.Patient;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogRequest;
@@ -78,15 +80,26 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public void logSjukfallData(List<InternalSjukfall> sjukfallList) {
+    public void logSjukfallData(List<InternalSjukfall> sjukfallList, ActivityType activityType) {
         LogUser user = getLogUser(userService.getUser());
 
         List<AbstractLogMessage> logRequestList = sjukfallList.stream()
                 .map(LogRequestFactory::createLogRequestFromSjukfall)
-                .map(logRequest -> populateLogMessage(logRequest, new IntygDataLogMessage(logRequest.getIntygId()), user))
+                .map(logRequest -> populateLogMessage(logRequest, getLogMessageTypeForActivityType(logRequest.getIntygId(), activityType), user))
                 .collect(Collectors.toList());
 
-        send(logRequestList);
+        send(logRequestList, activityType);
+    }
+
+    private AbstractLogMessage getLogMessageTypeForActivityType(String intygId, ActivityType activityType) {
+        if (activityType.equals(ActivityType.READ)) {
+            return new IntygDataLogMessage(intygId);
+        } else if (activityType.equals(ActivityType.PRINT)) {
+            return new IntygDataPrintLogMessage(intygId);
+        }
+
+        throw new IllegalArgumentException("No LogMessage type for activityType " + activityType.name() + " defined");
+
     }
 
     @Override
@@ -138,7 +151,7 @@ public class LogServiceImpl implements LogService {
         logMsg.setUserCareUnit(vardenhet);
     }
 
-    private void send(List<AbstractLogMessage> logMsgs) {
+    private void send(List<AbstractLogMessage> logMsgs, ActivityType activityType) {
 
         if (jmsTemplate == null) {
             LOG.error("Could not log list of IntygsData, PDL logging is disabled!");
@@ -147,7 +160,7 @@ public class LogServiceImpl implements LogService {
             return;
         }
 
-        LOG.info("Logging {} of IntygsData items", logMsgs.size());
+        LOG.info("Logging {} of IntygsData items for activityType {}", logMsgs.size(), activityType.name());
         if (logMsgs.size() > 0) {
             jmsTemplate.send(new MC(logMsgs));
         }
