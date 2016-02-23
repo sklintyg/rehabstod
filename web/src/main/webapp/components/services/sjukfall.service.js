@@ -35,7 +35,27 @@ angular.module('rehabstodApp').factory('SjukfallService', [
             }
         }
 
+        function _exportResult(type) {
+
+            var filterState = SjukfallFilterViewState.get();
+
+            var query = {
+                maxIntygsGlapp: filterState.glapp,
+                fritext: filterState.fritext,
+                langdIntervall: {
+                    min: filterState.sjukskrivningslangdModel[0],
+                    max: filterState.sjukskrivningslangdModel[1]
+                },
+                lakare: filterState.lakareModel.getSelected(),
+                diagnosGrupper: filterState.diagnosKapitelModel.getSelected(),
+                personnummer: []
+            };
+
+            return SjukfallProxy.exportResult(type, query);
+        }
+
         return {
-            loadSjukfall: _loadSjukfall
+            loadSjukfall: _loadSjukfall,
+            exportResult: _exportResult
         };
     }]);

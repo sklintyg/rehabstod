@@ -13,7 +13,7 @@ app.value('networkConfig', {
     defaultTimeout: 15000
 });
 
-app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $tooltipProvider, $httpProvider,
+app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $uibTooltipProvider, $httpProvider,
     http403ResponseInterceptorProvider) {
     'use strict';
 
@@ -24,7 +24,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $too
     $locationProvider.html5Mode(false);
 
     // Tooltip config
-    $tooltipProvider.setTriggers({
+    $uibTooltipProvider.setTriggers({
         'show': 'hide'
     });
 
