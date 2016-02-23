@@ -28,9 +28,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -51,8 +53,10 @@ public class SjukfallController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private LogService logService;
 
-    @RequestMapping(value = "",  method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public List<Sjukfall> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
 
         RehabstodUser user = userService.getUser();
@@ -64,6 +68,12 @@ public class SjukfallController {
         String hsaId = user.getHsaId();
         Urval urval = user.getUrval();
         List<InternalSjukfall> sjukfall = sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
+
+        // PDL-logging based on which sjukfall that are abou to be displayed to user.
+        List<InternalSjukfall> toLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, sjukfall, ActivityType.READ);
+        logService.logSjukfallData(toLog);
+        user.getPdlActivityStore().addActivitiesToStore(enhetsId, toLog, ActivityType.READ);
+
         return sjukfall.stream().map(sf -> sf.getSjukfall()).collect(Collectors.toList());
     }
 

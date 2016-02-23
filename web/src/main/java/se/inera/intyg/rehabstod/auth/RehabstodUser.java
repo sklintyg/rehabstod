@@ -18,16 +18,18 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-import se.inera.intyg.rehabstod.auth.authorities.Privilege;
-import se.inera.intyg.rehabstod.auth.authorities.Role;
-import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
-import se.inera.intyg.common.integration.hsa.model.Vardgivare;
-import se.inera.intyg.rehabstod.service.Urval;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
+import se.inera.intyg.common.integration.hsa.model.Vardgivare;
+import se.inera.intyg.rehabstod.auth.authorities.Privilege;
+import se.inera.intyg.rehabstod.auth.authorities.Role;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStoreImpl;
+import se.inera.intyg.rehabstod.service.Urval;
 
 /**
  * Created by pebe on 2015-08-11.
@@ -57,6 +59,9 @@ public class RehabstodUser implements Serializable {
     private Map<String, Role> roles;
     private Map<String, Privilege> authorities;
     private String origin;
+
+    // Handles PDL logging state
+    private PDLActivityStore pdlActivityStore = new PDLActivityStoreImpl();
 
     public RehabstodUser(String hsaId, String namn) {
         this.hsaId = hsaId;
@@ -185,7 +190,7 @@ public class RehabstodUser implements Serializable {
     }
 
     public int getTotaltAntalVardenheter() {
-        //count all hasid's in the datastructure
+        // count all hasid's in the datastructure
         return (int) getVardgivare().stream().flatMap(vg -> vg.getHsaIds().stream()).count();
     }
 
@@ -219,5 +224,13 @@ public class RehabstodUser implements Serializable {
 
     public void setOrigin(String origin) {
         this.origin = origin;
+    }
+
+    public PDLActivityStore getPdlActivityStore() {
+        return pdlActivityStore;
+    }
+
+    public void setPdlActivityStore(PDLActivityStore pdlActivityStore) {
+        this.pdlActivityStore = pdlActivityStore;
     }
 }

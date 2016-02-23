@@ -47,7 +47,6 @@ import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 
-
 /**
  * Implementation of service for logging user actions according to PDL requirements.
  *
@@ -90,7 +89,6 @@ public class LogServiceImpl implements LogService {
         send(logRequestList);
     }
 
-
     @Override
     public LogUser getLogUser(RehabstodUser user) {
 
@@ -109,7 +107,6 @@ public class LogServiceImpl implements LogService {
 
         return logUser;
     }
-
 
     private AbstractLogMessage populateLogMessage(LogRequest logRequest, AbstractLogMessage logMsg, LogUser user) {
 
@@ -145,16 +142,16 @@ public class LogServiceImpl implements LogService {
 
         if (jmsTemplate == null) {
             LOG.error("Could not log list of IntygsData, PDL logging is disabled!");
-            //LOG.warn("Can not log {} of Intyg '{}' since PDL logging is disabled!", logMsg.getActivityType(), logMsg.getActivityLevel());
+            // LOG.warn("Can not log {} of Intyg '{}' since PDL logging is disabled!", logMsg.getActivityType(),
+            // logMsg.getActivityLevel());
             return;
         }
 
         LOG.info("Logging {} of IntygsData items", logMsgs.size());
-
-        jmsTemplate.send(new MC(logMsgs));
+        if (logMsgs.size() > 0) {
+            jmsTemplate.send(new MC(logMsgs));
+        }
     }
-
-
 
     private static final class MC implements MessageCreator {
         private final List<AbstractLogMessage> logMsg;
