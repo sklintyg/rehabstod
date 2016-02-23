@@ -6,8 +6,8 @@
   <rhs-table-number-of-rows total-rows="model.get().length"></rhs-table-number-of-rows>
 
   <table class="table table-striped" rhs-table-fixed-header="rhs-table-header-fixed-top" fixed-header="fixed-header" normal-header="normal-header"  padding-top="76">
-    <thead class="hidden" rhs-table-header id="fixed-header" user="user"></thead>
-    <thead rhs-table-header id="normal-header" user="user"></thead>
+    <thead class="hidden" rhs-table-header id="fixed-header" user="user" glapp="filter.get().glapp"></thead>
+    <thead rhs-table-header id="normal-header" user="user" glapp="filter.get().glapp"></thead>
     <tbody>
       <tr ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id" class="rhs-table-row">
         <td class="column-number">{{$index + 1}}</td>

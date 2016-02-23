@@ -11,6 +11,7 @@ var ppMessages = {
         'common.cancel': 'Avbryt',
         'common.goback': 'Tillbaka',
         'common.save': 'Spara',
+        'common.change': 'Ändra',
         'common.print': 'Skriv ut',
         'common.close': 'Stäng',
         'common.date': 'Datum',
@@ -96,7 +97,15 @@ var ppMessages = {
         'label.filter.show' : 'Visa sökfilter',
         'label.filter.hide' : 'Dölj sökfilter',
         'label.filter.filter' : 'Filter',
-        'label.filter.allselected' : 'Alla valda'
+        'label.filter.allselected' : 'Alla valda',
+
+        // Glapp
+        'label.settings.header' : 'Inställning',
+        'label.settings.help' : 'En hjälpande text...',
+        'label.settings.info' : 'Max antal dagar uppehåll mellan intyg är satt till:',
+
+        'label.settings.modal.body' : 'Sätt det intervall som du vill att maxantalet dagar mellan två intyg ska vara för att det ska räknas som ett sjukfall och inte två.',
+        'label.settings.modal.label' : 'Välj max antal dagars uppehåll mellan två intyg'
     },
     'en': {
         'common.ok': 'OK',

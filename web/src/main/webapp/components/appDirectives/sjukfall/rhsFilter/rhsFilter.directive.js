@@ -8,6 +8,7 @@ angular.module('rehabstodApp')
 
 
             $scope.showSearchFilter = true;
+            $scope.position = 'bottom';
             $scope.model = SjukfallModel;
 
             $scope.$watchCollection('model.get()', function(value) {
@@ -36,7 +37,6 @@ angular.module('rehabstodApp')
             return {
                 restrict: 'E',
                 scope: {},
-                replace: true,
                 controller: 'RhsFilterCtrl',
                 templateUrl: 'components/appDirectives/sjukfall/rhsFilter/rhsFilter.directive.html'
             };

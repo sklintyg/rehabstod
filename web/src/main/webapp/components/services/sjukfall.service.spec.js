@@ -4,7 +4,10 @@ describe('Service: SjukfallService', function () {
     // load the controller's module
     beforeEach(module('rehabstodApp', function($provide) {
         $provide.value('SjukfallFilterViewState', {
-            reset: function(){}
+            reset: function(){},
+            get: function(){
+                return {glapp: 0};
+            }
         });
     }));
 

@@ -6,7 +6,7 @@ angular.module('rehabstodApp').directive('rhsTableHeader',
             restrict: 'A',
             scope: {
                 user : '=',
-                elementId : '@'
+                glapp : '='
             },
             templateUrl: 'components/appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.directive.html'
         };

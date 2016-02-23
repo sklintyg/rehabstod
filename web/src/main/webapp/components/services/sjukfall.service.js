@@ -19,7 +19,7 @@ angular.module('rehabstodApp').factory('SjukfallService', [
                 SjukfallModel.reset();
 
                 var query = {
-                    maxIntygsGlapp: 0
+                    maxIntygsGlapp: SjukfallFilterViewState.get().glapp
                 };
 
                 return SjukfallProxy.get(query).then(function(successData) {

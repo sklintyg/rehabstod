@@ -8,7 +8,7 @@
     <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.diagnos.help"></span></span></th
   ><th class="rhs-table-head column-start" st-sort="start" st-sort-default="true">
     {{::'label.table.column.startve' | message}}
-    <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" msg-params="{enhet:user.valdVardenhet.namn, glapp:'xxx'}" field-help-text="label.table.column.startve.help"></span></span></th
+    <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" msg-params="{enhet:user.valdVardenhet.namn, glapp: glapp}" field-help-text="label.table.column.startve.help"></span></span></th
   ><th class="rhs-table-head column-slut" st-sort="slut">
     {{::'label.table.column.slut' | message}}
     <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.slut.help"></span></span></th
@@ -16,7 +16,8 @@
     <span message key="label.table.column.langd"></span>
     <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.langd.help"></span></span></th
   ><th class="rhs-table-head column-grad" st-sort="aktivGrad">
-    <span message key="label.table.column.grad"></span><span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.grad.help"></span></span></th
+    <span message key="label.table.column.grad"></span>
+    <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.grad.help"></span></span></th
   ><th ng-if="user.urval != 'ISSUED_BY_ME'" class="rhs-table-head" st-sort="lakare">
     {{::'label.table.column.lakare' | message}} <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.lakare.help"></span></span></th>
 </tr>
