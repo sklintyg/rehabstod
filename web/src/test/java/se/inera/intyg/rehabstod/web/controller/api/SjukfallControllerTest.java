@@ -46,6 +46,7 @@ import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -123,7 +124,7 @@ public class SjukfallControllerTest {
         result.add(createSjukFallForPatient("333"));
 
         // Given
-        GetSjukfallRequest request = new GetSjukfallRequest();
+        PrintSjukfallRequest request = new PrintSjukfallRequest();
 
         // When
         when(sjukfallService.getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(result);

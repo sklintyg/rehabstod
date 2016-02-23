@@ -165,6 +165,9 @@ dependencies {
     compile 'org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}'
     compile 'org.apache.cxf:cxf-rt-transports-http:${cxfVersion}'
 
+    compile 'org.apache.poi:poi:3.13'
+    compile 'org.apache.poi:poi-ooxml:3.13'
+
 
     integrationTestCompile 'com.jayway.restassured:rest-assured:2.8.0'
     integrationTestCompile 'com.jayway.restassured:json-schema-validator:2.8.0'

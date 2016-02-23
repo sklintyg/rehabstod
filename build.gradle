@@ -136,6 +136,7 @@ subprojects {
         springSecurityExtensionsVersion = "1.0.1.RELEASE"
         liquibaseVersion = "3.3.1"
         jaxb2Version = "0.9.5"
+        poiVersion = '3.13'
 
         setProperty("buildTime", getDate().toString())
         setProperty("buildNumber", System.env.BUILD_NUMBER ? System.env.BUILD_NUMBER : "SNAPSHOT")

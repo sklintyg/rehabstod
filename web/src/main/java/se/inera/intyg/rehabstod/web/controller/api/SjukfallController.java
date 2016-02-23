@@ -18,11 +18,20 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.IOUtils;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,13 +41,18 @@ import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.export.xlsx.XlsxExportService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.wsdl.Output;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -55,6 +69,9 @@ public class SjukfallController {
 
     @Autowired
     private LogService logService;
+
+    @Autowired
+    private XlsxExportService xlsxExportService;
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public List<Sjukfall> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
@@ -78,7 +95,7 @@ public class SjukfallController {
     }
 
     @RequestMapping(value = "/pdf", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<Sjukfall> getSjukfallForCareUnitAsPDF(@RequestBody GetSjukfallRequest request) {
+    public List<Sjukfall> getSjukfallForCareUnitAsPDF(@RequestBody PrintSjukfallRequest request) {
 
         RehabstodUser user = userService.getUser();
         if (user == null) {
@@ -96,6 +113,39 @@ public class SjukfallController {
         user.getPdlActivityStore().addActivitiesToStore(enhetsId, sjukfallToLog, ActivityType.PRINT);
 
         return sjukfall.stream().map(sf -> sf.getSjukfall()).collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/xlsx", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ByteArrayResource> getSjukfallForCareUnitAsXLSX(@RequestBody PrintSjukfallRequest request) {
+
+        RehabstodUser user = userService.getUser();
+        if (user == null) {
+            throw new AuthoritiesException("No user in session");
+        }
+
+        String enhetsId = user.getValdVardenhet().getId();
+        String hsaId = user.getHsaId();
+        Urval urval = user.getUrval();
+        List<InternalSjukfall> sjukfall = sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
+
+        // PDL-logging based on which sjukfall that are about to be displayed to user.
+        List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, sjukfall, ActivityType.PRINT);
+        logService.logSjukfallData(sjukfallToLog, ActivityType.PRINT);
+        user.getPdlActivityStore().addActivitiesToStore(enhetsId, sjukfallToLog, ActivityType.PRINT);
+
+        try {
+            byte[] data = xlsxExportService.export(sjukfallToLog, request);
+            HttpHeaders respHeaders = new HttpHeaders();
+            respHeaders.set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            respHeaders.setContentLength(data.length);
+            respHeaders.setContentDispositionFormData("attachment", "sjukskrivningar-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().toString("yyyy-MM-dd HH:mm") + ".xlsx");
+
+            ByteArrayResource bsr = new ByteArrayResource(data);
+            return new ResponseEntity<>(bsr, respHeaders, HttpStatus.OK);
+
+        } catch (IOException e) {
+            return new ResponseEntity<>(new ByteArrayResource(e.getMessage().getBytes()), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
