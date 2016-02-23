@@ -44,11 +44,11 @@ angular.module('rehabstodApp').factory('SjukfallService', [
 
             angular.forEach(filterState.lakareModel.getSelected(), function(item) {
                 lakare.push(item.id);
-            })
+            });
 
             angular.forEach(filterState.diagnosKapitelModel.getSelected(), function(item) {
                 diagnosGrupper.push(item.id);
-            })
+            });
 
 
             var query = {

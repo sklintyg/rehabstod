@@ -1,6 +1,6 @@
 angular.module('rehabstodApp').factory('SjukfallProxy',
     function($http, $log, $q,
-        ObjectHelper, networkConfig) {
+        ObjectHelper, networkConfig, $window) {
         'use strict';
 
         var timeout = networkConfig.defaultTimeout;
@@ -35,17 +35,17 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
         function _download(url, data) {
             if( url && data ){
                 //data can be string of parameters or array/object
-                data = typeof data == 'string' ? data : jQuery.param(data);
+                data = typeof data === 'string' ? data : $window.jQuery.param(data);
                 //split params into form inputs
                 var inputs = '';
-                jQuery.each(data.split('&'), function(){
+                $window.jQuery.each(data.split('&'), function(){
                     var pair = this.split('=');
                     inputs+='<input type="hidden" name="'+ pair[0] +'" value="'+ pair[1] +'" />';
                 });
                 //send request
-                jQuery('<form action="'+ url +'" method="post">'+inputs+'</form>')
+                $window.jQuery('<form action="'+ url +'" method="post">'+inputs+'</form>')
                     .appendTo('body').submit().remove();
-            };
+            }
         }
 
         function _exportResult(type, query) {
