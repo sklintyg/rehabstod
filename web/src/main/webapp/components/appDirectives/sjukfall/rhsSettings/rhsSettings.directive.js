@@ -1,6 +1,6 @@
 angular.module('rehabstodApp')
     .controller('RhsSettingsCtrl',
-        function($scope, $log, SjukfallFilterViewState, $uibModal, SjukfallService) {
+        function($scope, SjukfallFilterViewState, $uibModal, SjukfallService) {
             'use strict';
 
             $scope.filterViewState = SjukfallFilterViewState;
@@ -10,17 +10,16 @@ angular.module('rehabstodApp')
                     animation: true,
                     templateUrl: 'components/appDirectives/sjukfall/rhsSettings/rhsSettingsModal/rhsSettingsModal.html',
                     controller: 'RhsSettingsModalCtrl',
-                    size: 'lg'
+                    size: 'lg',
+                    backdrop: 'static'
                 });
 
                 modalInstance.result.then(function(value) {
                     SjukfallFilterViewState.get().glapp = value;
-                    $log.debug('Glapp changed');
                     SjukfallService.loadSjukfall(true);
                 }, function() {
 
                 });
-
             };
         }
     )
