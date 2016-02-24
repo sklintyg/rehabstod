@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.itextpdf.text.DocumentException;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -39,6 +40,7 @@ import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
 import se.inera.intyg.rehabstod.service.export.util.ExportUtil;
 import se.inera.intyg.rehabstod.service.export.xlsx.XlsxExportService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
@@ -69,6 +71,9 @@ public class SjukfallController {
     @Autowired
     private XlsxExportService xlsxExportService;
 
+    @Autowired
+    private PdfExportService pdfExportService;
+
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public List<Sjukfall> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
 
@@ -90,8 +95,8 @@ public class SjukfallController {
         return sjukfall.stream().map(sf -> sf.getSjukfall()).collect(Collectors.toList());
     }
 
-    @RequestMapping(value = "/pdf", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<Sjukfall> getSjukfallForCareUnitAsPDF(@RequestBody PrintSjukfallRequest request) {
+    @RequestMapping(value = "/pdf", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<ByteArrayResource> getSjukfallForCareUnitAsPdf(@ModelAttribute PrintSjukfallRequest request) {
 
         RehabstodUser user = userService.getUser();
         if (user == null) {
@@ -103,12 +108,28 @@ public class SjukfallController {
         Urval urval = user.getUrval();
         List<InternalSjukfall> sjukfall = sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
 
-        // PDL-logging based on which sjukfall that are about to be displayed to user.
-        List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, sjukfall, ActivityType.PRINT);
-        logService.logSjukfallData(sjukfallToLog, ActivityType.PRINT);
-        user.getPdlActivityStore().addActivitiesToStore(enhetsId, sjukfallToLog, ActivityType.PRINT);
+        List<InternalSjukfall> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
 
-        return sjukfall.stream().map(sf -> sf.getSjukfall()).collect(Collectors.toList());
+        try {
+            byte[] pdfData = pdfExportService.export(finalList, request, urval);
+
+            // PDL-logging based on which sjukfall that are about to be exported. Only perform if PDF export was OK.
+            List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, finalList, ActivityType.PRINT);
+            logService.logSjukfallData(sjukfallToLog, ActivityType.PRINT);
+            user.getPdlActivityStore().addActivitiesToStore(enhetsId, sjukfallToLog, ActivityType.PRINT);
+
+            HttpHeaders respHeaders = new HttpHeaders();
+            respHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
+            respHeaders.setContentLength(pdfData.length);
+            respHeaders.setContentDispositionFormData("attachment",
+                    "sjukskrivningar-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().toString("yyyy-MM-dd'T'HH:mm") + ".pdf");
+
+            return new ResponseEntity<>(new ByteArrayResource(pdfData), respHeaders, HttpStatus.OK);
+
+        } catch (DocumentException e) {
+            // This should be handled a bit better...
+            return new ResponseEntity<>(new ByteArrayResource(e.getMessage().getBytes()), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(value = "/xlsx", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -126,7 +147,6 @@ public class SjukfallController {
 
         List<InternalSjukfall> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
 
-
         try {
             byte[] data = xlsxExportService.export(finalList, request, urval);
 
@@ -138,7 +158,8 @@ public class SjukfallController {
             HttpHeaders respHeaders = new HttpHeaders();
             respHeaders.set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             respHeaders.setContentLength(data.length);
-            respHeaders.setContentDispositionFormData("attachment", "sjukskrivningar-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().toString("yyyy-MM-dd'T'HH:mm") + ".xlsx");
+            respHeaders.setContentDispositionFormData("attachment",
+                    "sjukskrivningar-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().toString("yyyy-MM-dd'T'HH:mm") + ".xlsx");
 
             return new ResponseEntity<>(new ByteArrayResource(data), respHeaders, HttpStatus.OK);
 
@@ -147,8 +168,6 @@ public class SjukfallController {
             return new ResponseEntity<>(new ByteArrayResource(e.getMessage().getBytes()), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     public SjukfallSummary getUnitCertificateSummary() {

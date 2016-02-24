@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import com.itextpdf.text.DocumentException;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,11 +28,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -43,8 +47,10 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -72,6 +78,9 @@ public class SjukfallControllerTest {
     LogService logserviceMock;
 
     @Mock
+    PdfExportService pdfExportService;
+
+    @Mock
     private SjukfallService sjukfallService;
 
     @InjectMocks
@@ -82,6 +91,7 @@ public class SjukfallControllerTest {
         when(userService.getUser()).thenReturn(rehabUserMock);
         when(rehabUserMock.getPdlActivityStore()).thenReturn(pdlStoreMock);
         when(rehabUserMock.getValdVardenhet()).thenReturn(new Vardenhet(VARDENHETS_ID, "enhet"));
+        when(rehabUserMock.getUrval()).thenReturn(Urval.ALL);
     }
 
     @Test
@@ -112,29 +122,35 @@ public class SjukfallControllerTest {
     }
 
     @Test
-    public void testGetSjukfallAsPDF() {
-        List<InternalSjukfall> result = new ArrayList<>();
-        result.add(createSjukFallForPatient("111"));
-        result.add(createSjukFallForPatient("222"));
+    public void testGetSjukfallAsPDF() throws DocumentException {
 
-        List<InternalSjukfall> toLog = new ArrayList<>();
-        result.add(createSjukFallForPatient("333"));
+        InternalSjukfall a = createSjukFallForPatient("111");
+        InternalSjukfall b = createSjukFallForPatient("222");
+        InternalSjukfall c = createSjukFallForPatient("333");
+
+        List<InternalSjukfall> allSjukFall = Arrays.asList(a, b, c);
+        List<InternalSjukfall> finalList = Arrays.asList(a, b);
+        List<InternalSjukfall> toLog = Arrays.asList(c);
 
         // Given
         PrintSjukfallRequest request = new PrintSjukfallRequest();
+        request.setPersonnummer(Arrays.asList("111", "222"));
 
         // When
-        when(sjukfallService.getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(result);
-        when(pdlStoreMock.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(result), eq(ActivityType.PRINT))).thenReturn(toLog);
+        when(sjukfallService.getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(allSjukFall);
+        when(pdfExportService.export(eq(finalList), eq(request), eq(Urval.ALL))).thenReturn(new byte[0]);
+        when(pdlStoreMock.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(finalList), eq(ActivityType.PRINT))).thenReturn(toLog);
+
 
         // Then
-        List<Sjukfall> response = sjukfallController.getSjukfallForCareUnitAsPDF(request);
+        ResponseEntity response = sjukfallController.getSjukfallForCareUnitAsPdf(request);
 
         verify(sjukfallService).getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
 
-        verify(pdlStoreMock).getActivitiesNotInStore(eq(VARDENHETS_ID), eq(result), eq(ActivityType.PRINT));
+        verify(pdlStoreMock).getActivitiesNotInStore(eq(VARDENHETS_ID), eq(finalList), eq(ActivityType.PRINT));
         verify(logserviceMock).logSjukfallData(eq(toLog), eq(ActivityType.PRINT));
         verify(pdlStoreMock).addActivitiesToStore(eq(VARDENHETS_ID), eq(toLog), eq(ActivityType.PRINT));
+        assertTrue(response.getStatusCode().equals(HttpStatus.OK));
 
     }
 

@@ -167,6 +167,7 @@ dependencies {
 
     compile 'org.apache.poi:poi:3.13'
     compile 'org.apache.poi:poi-ooxml:3.13'
+    compile "com.itextpdf:itextpdf:${itextVersion}"
 
 
     integrationTestCompile 'com.jayway.restassured:rest-assured:2.8.0'
