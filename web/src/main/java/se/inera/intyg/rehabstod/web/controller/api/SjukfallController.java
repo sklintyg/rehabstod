@@ -39,7 +39,7 @@ import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.service.Urval;
-import se.inera.intyg.rehabstod.service.export.util.ExportProcessorUtil;
+import se.inera.intyg.rehabstod.service.export.util.ExportUtil;
 import se.inera.intyg.rehabstod.service.export.xlsx.XlsxExportService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
@@ -124,11 +124,11 @@ public class SjukfallController {
         Urval urval = user.getUrval();
         List<InternalSjukfall> sjukfall = sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
 
-        List<InternalSjukfall> finalList = ExportProcessorUtil.processForExport(request.getPersonnummer(), sjukfall);
+        List<InternalSjukfall> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
 
 
         try {
-            byte[] data = xlsxExportService.export(finalList, request);
+            byte[] data = xlsxExportService.export(finalList, request, urval);
 
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if XLSX export was OK.
             List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, finalList, ActivityType.PRINT);

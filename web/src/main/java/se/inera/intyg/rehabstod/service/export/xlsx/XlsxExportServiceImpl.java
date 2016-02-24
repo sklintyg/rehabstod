@@ -31,6 +31,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
@@ -50,7 +51,7 @@ public class XlsxExportServiceImpl implements XlsxExportService {
 
 
     @Override
-    public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest) throws IOException {
+    public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, Urval urval) throws IOException {
 
         String sheetName = "Sjukskrivningar";
 
@@ -64,8 +65,8 @@ public class XlsxExportServiceImpl implements XlsxExportService {
             sheet.createRow(r);
         }
 
-        addHeaderRow(sheet, 4);
-        addDataRows(sheet, 5, sjukfallList);
+        addHeaderRow(sheet, 4, urval);
+        addDataRows(sheet, 5, sjukfallList, urval);
 
         // CHECKSTYLE:ON MagicNumber
 
@@ -74,17 +75,19 @@ public class XlsxExportServiceImpl implements XlsxExportService {
         return baos.toByteArray();
     }
 
-    private void addHeaderRow(XSSFSheet sheet, int rowIndex) {
+    private void addHeaderRow(XSSFSheet sheet, int rowIndex, Urval urval) {
 
         XSSFRow row = sheet.createRow(rowIndex);
 
         for (int a = 0; a < HEADERS.length; a++) {
-            createHeaderCell(row, a, HEADERS[a]);
+            if (!(urval == Urval.ISSUED_BY_ME && a == HEADERS.length - 1)) {
+                createHeaderCell(row, a, HEADERS[a]);
+            }
         }
 
     }
 
-    private void addDataRows(XSSFSheet sheet, int rowIndex, List<InternalSjukfall> sjukfallList) {
+    private void addDataRows(XSSFSheet sheet, int rowIndex, List<InternalSjukfall> sjukfallList, Urval urval) {
         for (int a = 0; a < sjukfallList.size(); a++) {
             XSSFRow row = sheet.createRow(rowIndex + a);
             Sjukfall sf = sjukfallList.get(a).getSjukfall();
@@ -99,7 +102,9 @@ public class XlsxExportServiceImpl implements XlsxExportService {
             createDataCell(row, colIndex++, sf.getSlut().toString("yyyy-MM-dd"));
             createDataCell(row, colIndex++, "" + sf.getDagar());
             createDataCell(row, colIndex++, "" + sf.getAktivGrad());
-            createDataCell(row, colIndex, sf.getLakare());
+            if (urval != Urval.ISSUED_BY_ME) {
+                createDataCell(row, colIndex, sf.getLakare());
+            }
         }
         for (int a = 0; a < HEADERS.length; a++) {
             sheet.autoSizeColumn(a);

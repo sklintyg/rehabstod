@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.service.export.xlsx;
 import java.io.IOException;
 import java.util.List;
 
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 
@@ -29,6 +30,6 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
  */
 public interface XlsxExportService {
 
-    byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest) throws IOException;
+    byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, Urval urval) throws IOException;
 
 }

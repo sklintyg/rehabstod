@@ -30,13 +30,13 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
  *
  * Created by eriklupander on 2016-02-24.
  */
-public final class ExportProcessorUtil {
+public final class ExportUtil {
 
-    private ExportProcessorUtil() {
+    private ExportUtil() {
 
     }
 
-    public static List<InternalSjukfall> processForExport(List<String> personnummer, List<InternalSjukfall> sjukfall) {
+    public static List<InternalSjukfall> sortForExport(List<String> personnummer, List<InternalSjukfall> sjukfall) {
 
         List<InternalSjukfall> finalList = new ArrayList<>();
 

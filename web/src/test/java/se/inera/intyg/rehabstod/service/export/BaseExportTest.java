@@ -18,7 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.export;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.joda.time.LocalDate;
+
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
@@ -28,14 +33,12 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
+ * Helper base class, provides data setup for tests.
+ *
  * Created by eriklupander on 2016-02-24.
  */
-public class BaseExportTest {
+public abstract class BaseExportTest {
 
     // CHECKSTYLE:OFF MagicNumber
 

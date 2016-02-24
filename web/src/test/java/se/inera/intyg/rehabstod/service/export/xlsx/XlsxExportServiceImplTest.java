@@ -25,6 +25,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import se.inera.intyg.rehabstod.service.Urval;
 
 /**
  * Created by eriklupander on 2016-02-24.
@@ -34,11 +35,19 @@ public class XlsxExportServiceImplTest extends BaseExportTest {
     private XlsxExportServiceImpl testee = new XlsxExportServiceImpl();
 
     @Test
-    public void testBuildXlsx() throws IOException {
-        byte[] data = testee.export(buildSjukfallList(2), buildPrintRequest());
+    public void testBuildXlsxForAll() throws IOException {
+        byte[] data = testee.export(buildSjukfallList(2), buildPrintRequest(), Urval.ALL);
         assertNotNull(data);
         assertTrue(data.length > 0);
-     //   IOUtils.write(data, new FileOutputStream(new File("/Users/eriklupander/intyg/dev.xlsx")));
+      //   IOUtils.write(data, new FileOutputStream(new File("/Users/eriklupander/intyg/dev.xlsx")));
+    }
+
+    @Test
+    public void testBuildXlsxForIssuedByMe() throws IOException {
+        byte[] data = testee.export(buildSjukfallList(2), buildPrintRequest(), Urval.ISSUED_BY_ME);
+        assertNotNull(data);
+        assertTrue(data.length > 0);
+     //   IOUtils.write(data, new FileOutputStream(new File("/Users/eriklupander/intyg/dev2.xlsx")));
     }
 
 }

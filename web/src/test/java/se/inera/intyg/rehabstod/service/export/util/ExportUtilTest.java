@@ -31,17 +31,17 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 /**
  * Created by eriklupander on 2016-02-24.
  */
-public class ExportProcessorUtilTest extends BaseExportTest {
+public class ExportUtilTest extends BaseExportTest {
     // CHECKSTYLE:OFF MagicNumber
     @Test
     public void testEmptyListReturnedForNoneMatching() {
-        List<InternalSjukfall> sjukfallList = ExportProcessorUtil.processForExport(Arrays.asList("pnr1", "pnr2", "pnr3"), buildNoneMatchingInternalSjukfall());
+        List<InternalSjukfall> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr2", "pnr3"), buildNoneMatchingInternalSjukfall());
         assertEquals(0, sjukfallList.size());
     }
 
     @Test
     public void testListReturnedInExpectedOrder() {
-        List<InternalSjukfall> sjukfallList = ExportProcessorUtil.processForExport(Arrays.asList("pnr1", "pnr2", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
+        List<InternalSjukfall> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr2", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
         assertEquals(3, sjukfallList.size());
         assertEquals("pnr1", sjukfallList.get(0).getSjukfall().getPatient().getId());
         assertEquals("pnr2", sjukfallList.get(1).getSjukfall().getPatient().getId());
@@ -50,7 +50,7 @@ public class ExportProcessorUtilTest extends BaseExportTest {
 
     @Test
     public void testListReturnedInExpectedOrderAndOneIsFilteredAway() {
-        List<InternalSjukfall> sjukfallList = ExportProcessorUtil.processForExport(Arrays.asList("pnr1", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
+        List<InternalSjukfall> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
         assertEquals(2, sjukfallList.size());
         assertEquals("pnr1", sjukfallList.get(0).getSjukfall().getPatient().getId());
         assertEquals("pnr3", sjukfallList.get(1).getSjukfall().getPatient().getId());
