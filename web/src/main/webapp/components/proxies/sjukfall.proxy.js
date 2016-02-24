@@ -1,6 +1,6 @@
 angular.module('rehabstodApp').factory('SjukfallProxy',
     function($http, $log, $q,
-        ObjectHelper, networkConfig, $window, $httpParamSerializerJQLike) {
+        ObjectHelper, networkConfig, $window, $httpParamSerializer) {
         'use strict';
 
         var timeout = networkConfig.defaultTimeout;
@@ -32,27 +32,29 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
             return promise.promise;
         }
 
-        function _download(url, data) {
-            if( url && data ){
-                //data can be string of parameters or array/object
-                data = typeof data === 'string' ? data : $httpParamSerializerJQLike(data);
-                //split params into form inputs
-                var inputs = '';
-                angular.forEach(data.split('&'), function(item){
-                    var pair = item.split('=');
-                    inputs+='<input type="hidden" name="'+ pair[0] +'" value="'+ pair[1] +'" />';
-                });
-                //send request
-                $window.jQuery('<form action="'+ url +'" target="_blank" method="post">'+inputs+'</form>')
-                    .appendTo('body').submit().remove();
-            }
-        }
-
         function _exportResult(type, query) {
 
             var restPath = '/api/sjukfall/' + type;
+            var inputs = '';
+            
+            inputs+='<input type="hidden" name="langdIntervall.max" value="' + query.langdIntervall.max + '" />';
+            inputs+='<input type="hidden" name="langdIntervall.min" value="' + query.langdIntervall.min + '" />';
+            inputs+='<input type="hidden" name="sortering.kolumn" value="' + query.sortering.kolumn + '" />';
+            inputs+='<input type="hidden" name="sortering.order" value="' + query.sortering.order + '" />';
+            delete query.langdIntervall;
+            delete query.sortering;
 
-            _download(restPath, query);
+            var data = $httpParamSerializer(query);
+            //split params into form inputs
+
+            angular.forEach(data.split('&'), function(item){
+                var pair = item.split('=');
+                inputs+='<input type="hidden" name="' + decodeURIComponent(pair[0]) + '" value="' + decodeURIComponent(pair[1]) + '" />';
+            });
+
+            //send request
+            $window.jQuery('<form action="'+ restPath +'" target="_blank" method="post">'+inputs+'</form>')
+                .appendTo('body').submit().remove();
         }
 
         // Return public API for the service
