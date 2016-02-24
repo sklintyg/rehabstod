@@ -99,13 +99,20 @@ var ppMessages = {
         'label.filter.filter' : 'Filter',
         'label.filter.allselected' : 'Alla valda',
 
-        // Glapp
+        // Settings
         'label.settings.header' : 'Inställning',
         'label.settings.help' : 'En hjälpande text...',
         'label.settings.info' : 'Max antal dagar uppehåll mellan intyg är satt till:',
 
         'label.settings.modal.body' : 'Sätt det intervall som du vill att maxantalet dagar mellan två intyg ska vara för att det ska räknas som ett sjukfall och inte två.',
-        'label.settings.modal.label' : 'Välj max antal dagars uppehåll mellan två intyg'
+        'label.settings.modal.label' : 'Välj max antal dagars uppehåll mellan två intyg',
+
+        // Export
+        'label.export.button' : 'Exportera',
+        'label.export.pdf' : 'Exportera sida till PDF',
+        'label.export.excel' : 'Exportera sida till Excel'
+
+
     },
     'en': {
         'common.ok': 'OK',

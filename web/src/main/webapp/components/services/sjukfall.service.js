@@ -35,7 +35,7 @@ angular.module('rehabstodApp').factory('SjukfallService', [
             }
         }
 
-        function _exportResult(type, personnummer) {
+        function _exportResult(type, personnummer, sort) {
 
             var filterState = SjukfallFilterViewState.get();
 
@@ -52,6 +52,7 @@ angular.module('rehabstodApp').factory('SjukfallService', [
 
 
             var query = {
+                sortering: sort,
                 maxIntygsGlapp: filterState.glapp,
                 fritext: filterState.fritext,
                 langdIntervall: {
