@@ -4,6 +4,8 @@ angular.module('rehabstodApp')
             'use strict';
 
             $scope.user = UserModel.get();
+            $scope.showSpinner = true;
+            $scope.sjukfallService = SjukfallService;
 
             SjukfallService.loadSjukfall();
 
@@ -24,4 +26,8 @@ angular.module('rehabstodApp')
                     //Handle errors
                 });
             };
+
+            $scope.$watch('sjukfallService.isLoading()', function(val)  {
+               $scope.showSpinner = val;
+            });
         });

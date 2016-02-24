@@ -14,7 +14,7 @@ angular.module('rehabstodApp').directive('setClassWhenAtTop', function ($window)
                 paddingTop = parseInt(attrs.paddingTop, 10);
             }
 
-            $win.on('scroll', function () {
+            var onScroll = function () {
                 var elementHeight = element.outerHeight();
                 var offsetTop = parent.offset().top - paddingTop;
 
@@ -31,10 +31,12 @@ angular.module('rehabstodApp').directive('setClassWhenAtTop', function ($window)
                         parent.css('height', 'auto');
                     }
                 }
-            });
+            };
+
+            $win.on('scroll', onScroll);
 
             scope.$on('$destroy', function() {
-                $win.unbind('scroll');
+                $win.unbind('scroll', onScroll);
             });
         }
     };

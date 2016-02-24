@@ -67,8 +67,13 @@ angular.module('rehabstodApp').factory('SjukfallService', [
             return SjukfallProxy.exportResult(type, query);
         }
 
+        function _isLoading() {
+            return loading;
+        }
+
         return {
             loadSjukfall: _loadSjukfall,
-            exportResult: _exportResult
+            exportResult: _exportResult,
+            isLoading: _isLoading
         };
     }]);

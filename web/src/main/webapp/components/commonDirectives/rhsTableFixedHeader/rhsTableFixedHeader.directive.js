@@ -16,7 +16,11 @@ angular.module('rehabstodApp').directive('rhsTableFixedHeader', function ($windo
 
             var isFixed =  false;
 
-            $win.on('scroll', function () {
+
+
+            var onScroll = function () {
+                fixedHeader = element.find('#' + attrs.fixedHeader);
+                normalHeader = element.find('#' + attrs.normalHeader);
                 var offsetTop = element.offset().top - paddingTop;
 
                 if ($win.scrollTop() >= offsetTop) {
@@ -31,14 +35,11 @@ angular.module('rehabstodApp').directive('rhsTableFixedHeader', function ($windo
                     if (isFixed) {
                         fixedHeader.removeClass(topClass);
                         fixedHeader.addClass('hidden');
-                        isFixed = false;
                     }
+                    isFixed = false;
                 }
-            });
+            };
 
-            $win.on('resize', function() {
-                setColumnWidths();
-            });
 
 
             var setColumnWidths = function() {
@@ -50,9 +51,12 @@ angular.module('rehabstodApp').directive('rhsTableFixedHeader', function ($windo
                 });
             };
 
+            $win.on('resize', setColumnWidths);
+            $win.on('scroll', onScroll);
+
             scope.$on('$destroy', function() {
-                $win.unbind('scroll');
-                $win.unbind('resize');
+                $win.unbind('scroll', onScroll);
+                $win.unbind('resize', setColumnWidths);
             });
         }
     };

@@ -1,11 +1,10 @@
 <div>
-  <div ng-show="showSpinner" class="wc-spinner">
+  <div ng-if="showSpinner" class="rhs-spinner">
     <img aria-labelledby="loading-message" src="assets/images/ajax-loader.gif" />
     <p id="loading-message">
       <strong><span message key="{{ label }}"></span></strong>
     </p>
   </div>
-  <div ng-show="!showSpinner">
-    <div ng-transclude></div>
+  <div ng-if="!showSpinner" ng-transclude>
   </div>
 </div>
