@@ -90,8 +90,7 @@ public class LogServiceImpl implements LogService {
         if (activityType.equals(ActivityType.READ)) {
             return new IntygDataLogMessage(intygId);
         } else if (activityType.equals(ActivityType.PRINT)) {
-            return new IntygDataLogMessage(intygId);
-            //return new IntygDataPrintLogMessage(intygId);
+            return new IntygDataPrintLogMessage(intygId);
         }
 
         throw new IllegalArgumentException("No LogMessage type for activityType " + activityType.name() + " defined");
