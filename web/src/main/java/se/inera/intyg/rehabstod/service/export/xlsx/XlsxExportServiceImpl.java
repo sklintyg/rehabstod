@@ -61,7 +61,7 @@ public class XlsxExportServiceImpl implements XlsxExportService {
         // CHECKSTYLE:OFF MagicNumber
         // Start with 3 empty rows to make space for filter
         for (int r = 0; r < 3; r++) {
-            XSSFRow row = sheet.createRow(r);
+            sheet.createRow(r);
         }
 
         addHeaderRow(sheet, 4);
@@ -87,7 +87,7 @@ public class XlsxExportServiceImpl implements XlsxExportService {
     private void addDataRows(XSSFSheet sheet, int rowIndex, List<InternalSjukfall> sjukfallList) {
         for (int a = 0; a < sjukfallList.size(); a++) {
             XSSFRow row = sheet.createRow(rowIndex + a);
-            Sjukfall sf = sjukfallList.get(0).getSjukfall();
+            Sjukfall sf = sjukfallList.get(a).getSjukfall();
 
             int colIndex = 0;
             createDataCell(row, colIndex++, "" + (a + 1));

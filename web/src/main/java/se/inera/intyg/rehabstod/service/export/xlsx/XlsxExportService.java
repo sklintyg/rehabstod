@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
-import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
-
 import java.io.IOException;
 import java.util.List;
+
+import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 
 /**
  * Created by eriklupander on 2016-02-23.

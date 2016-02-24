@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -25,11 +29,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.export.util.ExportProcessorUtil;
 import se.inera.intyg.rehabstod.service.export.xlsx.XlsxExportService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
@@ -39,10 +49,6 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -118,25 +124,31 @@ public class SjukfallController {
         Urval urval = user.getUrval();
         List<InternalSjukfall> sjukfall = sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
 
-        // PDL-logging based on which sjukfall that are about to be displayed to user.
-        List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, sjukfall, ActivityType.PRINT);
-        logService.logSjukfallData(sjukfallToLog, ActivityType.PRINT);
-        user.getPdlActivityStore().addActivitiesToStore(enhetsId, sjukfallToLog, ActivityType.PRINT);
+        List<InternalSjukfall> finalList = ExportProcessorUtil.processForExport(request.getPersonnummer(), sjukfall);
+
 
         try {
-            byte[] data = xlsxExportService.export(sjukfallToLog, request);
+            byte[] data = xlsxExportService.export(finalList, request);
+
+            // PDL-logging based on which sjukfall that are about to be exported. Only perform if XLSX export was OK.
+            List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, finalList, ActivityType.PRINT);
+            logService.logSjukfallData(sjukfallToLog, ActivityType.PRINT);
+            user.getPdlActivityStore().addActivitiesToStore(enhetsId, sjukfallToLog, ActivityType.PRINT);
+
             HttpHeaders respHeaders = new HttpHeaders();
             respHeaders.set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             respHeaders.setContentLength(data.length);
-            respHeaders.setContentDispositionFormData("attachment", "sjukskrivningar-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().toString("yyyy-MM-dd HH:mm") + ".xlsx");
+            respHeaders.setContentDispositionFormData("attachment", "sjukskrivningar-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().toString("yyyy-MM-dd'T'HH:mm") + ".xlsx");
 
-            ByteArrayResource bsr = new ByteArrayResource(data);
-            return new ResponseEntity<>(bsr, respHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(new ByteArrayResource(data), respHeaders, HttpStatus.OK);
 
         } catch (IOException e) {
+            // This should be handled a bit better...
             return new ResponseEntity<>(new ByteArrayResource(e.getMessage().getBytes()), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     public SjukfallSummary getUnitCertificateSummary() {
