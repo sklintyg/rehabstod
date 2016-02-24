@@ -17,10 +17,10 @@
       </div>
       <div class="headerbox-user pull-right">
         <div class="headerbox-user-profile">
-          <span id="logged-in-role">
-            {{::user.role.desc}}
+          <span id="logged-in-role" ng-if="showRoleDescription(user.role)">
+            {{::user.role.desc}} - 
           </span>
-          - <span class="logged-in">{{::user.name}}</span><br>
+          <span class="logged-in">{{::user.name}}</span><br>
           <span class="pull-right">
             <a id="logoutLink" href="{{::logoutLocation}}"><span message key="common.logout"></span></a>
           </span>

@@ -16,6 +16,10 @@ angular.module('rehabstodApp').controller('HeaderController',
 
         $scope.logoutLocation = UserModel.getLogoutLocation();
 
+        $scope.showRoleDescription = function(role) {
+            return role.name === 'LAKARE';
+        };
+
         $scope.openChangeCareUnitDialog = function() {
             var modalInstance = $uibModal.open({
                 animation: true,

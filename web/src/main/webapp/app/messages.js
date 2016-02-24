@@ -1,5 +1,5 @@
 /* jshint maxlen: false, unused: false */
-var ppMessages = {
+var rhsMessages = {
     'sv': {
 
         'common.logout': 'Logga ut',

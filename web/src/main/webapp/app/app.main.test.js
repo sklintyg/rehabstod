@@ -81,7 +81,7 @@ app.run(
         $rootScope.DEFAULT_LANG = 'sv';
 
         /* jshint -W117 */
-        messageService.addResources(ppMessages);// jshint ignore:line
+        messageService.addResources(rhsMessages);// jshint ignore:line
 
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState/*, fromParams*/) {
