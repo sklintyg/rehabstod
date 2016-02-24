@@ -18,21 +18,18 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import se.inera.intyg.rehabstod.service.export.BaseExportTest;
 
 import java.io.IOException;
 
-import org.junit.Test;
-
-import se.inera.intyg.rehabstod.service.export.BaseExportTest;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by eriklupander on 2016-02-24.
  */
 public class XlsxExportServiceImplTest extends BaseExportTest {
-
-    // CHECKSTYLE:OFF MagicNumber
 
     private XlsxExportServiceImpl testee = new XlsxExportServiceImpl();
 
@@ -44,7 +41,4 @@ public class XlsxExportServiceImplTest extends BaseExportTest {
      //   IOUtils.write(data, new FileOutputStream(new File("/Users/eriklupander/intyg/dev.xlsx")));
     }
 
-
-
-    // CHECKSTYLE:ON MagicNumber
 }

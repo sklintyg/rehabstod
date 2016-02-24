@@ -26,7 +26,6 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by marced on 19/02/16.
  */
-// CHECKSTYLE:OFF MagicNumber
 public class LocalDateIntervalTest {
 
     @Test

@@ -18,24 +18,22 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine.util;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.junit.Test;
-
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.InternalIntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+
 /**
  * Created by marced on 19/02/16.
  */
-// CHECKSTYLE:OFF MagicNumber
 public class SjukfallLangdCalculatorTest {
 
     @Test

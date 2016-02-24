@@ -18,21 +18,20 @@
  */
 package se.inera.intyg.rehabstod.auth.pdl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.junit.Test;
-
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by marced on 22/02/16.
@@ -110,7 +109,6 @@ public class PDLActivityEntryStoreImplTest {
     }
 
     private static InternalSjukfall createSjukFallForPatient(String patientId) {
-        // CHECKSTYLE:OFF MagicNumber
         Sjukfall sjukfall = new Sjukfall();
         Patient patient = new Patient();
         patient.setId(patientId);

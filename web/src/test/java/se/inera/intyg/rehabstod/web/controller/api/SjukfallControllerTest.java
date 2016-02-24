@@ -18,15 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,7 +27,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -51,6 +41,13 @@ import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -142,7 +139,6 @@ public class SjukfallControllerTest {
     }
 
     private static InternalSjukfall createSjukFallForPatient(String personNummer) {
-        // CHECKSTYLE:OFF MagicNumber
         Sjukfall sjukfall = new Sjukfall();
         Patient patient = new Patient();
         patient.setId(personNummer);

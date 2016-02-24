@@ -130,4 +130,9 @@
     <property name="onCommentFormat" value="CHECKSTYLE\:ON ([\w\|]+)"/>
     <property name="checkFormat" value="$1"/>
   </module>
+
+  <module name="SuppressionFilter">
+    <property name="file" value="tools/codeQuality/checkstyleSuppressions.xml"/>
+  </module>
+
 </module>

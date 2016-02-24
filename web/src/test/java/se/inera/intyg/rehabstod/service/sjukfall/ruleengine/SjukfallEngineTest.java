@@ -18,13 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,13 +44,16 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
 
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 /**
  * Created by martin on 11/02/16.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SjukfallEngineTest {
-    // CHECKSTYLE:OFF MagicNumber
-
     private static final String LOCATION_INTYGSDATA = "classpath:SjukfallEngineTest/intygsdata-engine.csv";
 
     private static final String DIAGNOS_KOD = "J1012";
@@ -284,6 +280,4 @@ public class SjukfallEngineTest {
             return internalSjukfall;
         }
     }
-
-    // CHECKSTYLE:ON MagicNumber
 }

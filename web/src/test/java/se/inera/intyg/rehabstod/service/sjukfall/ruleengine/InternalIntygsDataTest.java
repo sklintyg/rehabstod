@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
-import static org.junit.Assert.assertTrue;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -31,6 +29,8 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.io.IOException;
 import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-16.
@@ -49,9 +49,7 @@ public class InternalIntygsDataTest {
         IntygsDataGenerator generator = new IntygsDataGenerator(LOCATION_INTYGSDATA);
         intygsDataList = generator.generate().get();
 
-        // CHECKSTYLE:OFF MagicNumber
         assertTrue("Expected 6 but was " + intygsDataList.size(), intygsDataList.size() == 6);
-        // CHECKSTYLE:ON MagicNumber
     }
 
     @Before

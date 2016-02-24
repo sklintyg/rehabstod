@@ -18,9 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -34,12 +31,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by Magnus Ekstrand on 10/02/16.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class InternalIntygsDataResolverReduceLeftTest {
-    // CHECKSTYLE:OFF MagicNumber
 
     private static final String LOCATION_INTYGSDATA = "classpath:InternalIntygsDataResolverTest/intygsdata-resolver-left.csv";
 
@@ -129,6 +128,4 @@ public class InternalIntygsDataResolverReduceLeftTest {
     private Map<String, List<InternalIntygsData>> getTestData(LocalDate aktivtDatum) {
         return resolver.toMap(intygsDataList, aktivtDatum);
     }
-
-    // CHECKSTYLE:ON  MagicNumber
 }
