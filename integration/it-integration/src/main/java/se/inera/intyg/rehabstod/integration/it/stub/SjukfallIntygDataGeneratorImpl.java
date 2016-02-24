@@ -149,6 +149,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
                 startOffset = ThreadLocalRandom.current().nextInt(-15, -10);
                 slutOffset = ThreadLocalRandom.current().nextInt(-4, -2);
                 break;
+            default:
         }
 
 
