@@ -18,11 +18,16 @@
  */
 package se.inera.intyg.rehabstod.auth.pdl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.joda.time.LocalDate;
 import org.junit.Test;
+
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
@@ -30,13 +35,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 /**
  * Created by marced on 22/02/16.
  */
 public class PDLActivityEntryStoreImplTest {
+    // CHECKSTYLE:OFF MagicNumber
 
     private static final InternalSjukfall SJUKFALL_1 = createSjukFallForPatient("111");
     private static final InternalSjukfall SJUKFALL_2 = createSjukFallForPatient("222");
@@ -81,7 +84,6 @@ public class PDLActivityEntryStoreImplTest {
 
         // ..but if we ask for the same list sjukfall - but with another actionType - we should get them back
         assertEquals(sjukfallList1, store.getActivitiesNotInStore(VARDENHET_1, sjukfallList1, ActivityType.PRINT));
-
     }
 
     @Test
@@ -105,11 +107,11 @@ public class PDLActivityEntryStoreImplTest {
 
         // ..unless we change vardenehet, in which case we should get all again
         assertEquals(sjukfallList1, store.getActivitiesNotInStore(VARDENHET_2, sjukfallList1, ActivityType.PRINT));
-
     }
 
     private static InternalSjukfall createSjukFallForPatient(String patientId) {
         Sjukfall sjukfall = new Sjukfall();
+
         Patient patient = new Patient();
         patient.setId(patientId);
         patient.setAlder(50);
@@ -129,9 +131,15 @@ public class PDLActivityEntryStoreImplTest {
         sjukfall.setIntyg(1);
         sjukfall.setGrader(new ArrayList<>());
         sjukfall.setAktivGrad(50);
-        sjukfall.setLakare("Hr Doktor");
+
+        Lakare lakare = new Lakare();
+        lakare.setHsaId("123456-7890");
+        lakare.setNamn("Hr Doktor");
+        sjukfall.setLakare(lakare);
+
         InternalSjukfall is = new InternalSjukfall();
         is.setSjukfall(sjukfall);
+
         return is;
     }
 }

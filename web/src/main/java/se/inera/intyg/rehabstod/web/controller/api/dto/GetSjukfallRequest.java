@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
+import org.joda.time.LocalDate;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
@@ -32,6 +33,7 @@ public class GetSjukfallRequest {
     private LangdIntervall langdIntervall;
 
     private int maxIntygsGlapp;
+    private LocalDate aktivtDatum;
 
     private List<String> lakare;
     private List<String> diagnosGrupper;
@@ -40,6 +42,7 @@ public class GetSjukfallRequest {
 
     /** The sole constructor. **/
     public GetSjukfallRequest() {
+        aktivtDatum = new LocalDate().now();
     }
 
     public Sortering getSortering() {
@@ -64,6 +67,14 @@ public class GetSjukfallRequest {
 
     public void setMaxIntygsGlapp(int maxIntygsGlapp) {
         this.maxIntygsGlapp = maxIntygsGlapp;
+    }
+
+    public LocalDate getAktivtDatum() {
+        return aktivtDatum;
+    }
+
+    public void setAktivtDatum(LocalDate aktivtDatum) {
+        this.aktivtDatum = aktivtDatum;
     }
 
     public List<String> getLakare() {

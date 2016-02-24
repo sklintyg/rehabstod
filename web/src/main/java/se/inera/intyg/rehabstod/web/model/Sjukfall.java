@@ -29,6 +29,7 @@ public class Sjukfall {
 
     private static final int HASH_SEED = 31;
 
+    private Lakare lakare;
     private Patient patient;
     private Diagnos diagnos;
 
@@ -41,11 +42,18 @@ public class Sjukfall {
     private List<Integer> grader;
     private int aktivGrad;
 
-    private String lakare;
-
     public Sjukfall() {
     }
 
+    // getters and setters
+
+    public Lakare getLakare() {
+        return lakare;
+    }
+
+    public void setLakare(Lakare lakare) {
+        this.lakare = lakare;
+    }
 
     public Patient getPatient() {
         return patient;
@@ -55,7 +63,6 @@ public class Sjukfall {
         this.patient = patient;
     }
 
-
     public Diagnos getDiagnos() {
         return diagnos;
     }
@@ -63,7 +70,6 @@ public class Sjukfall {
     public void setDiagnos(Diagnos diagnos) {
         this.diagnos = diagnos;
     }
-
 
     public LocalDate getStart() {
         return start;
@@ -73,7 +79,6 @@ public class Sjukfall {
         this.start = start;
     }
 
-
     public LocalDate getSlut() {
         return slut;
     }
@@ -81,7 +86,6 @@ public class Sjukfall {
     public void setSlut(LocalDate slut) {
         this.slut = slut;
     }
-
 
     public int getDagar() {
         return dagar;
@@ -91,7 +95,6 @@ public class Sjukfall {
         this.dagar = dagar;
     }
 
-
     public int getIntyg() {
         return intyg;
     }
@@ -99,7 +102,6 @@ public class Sjukfall {
     public void setIntyg(int intyg) {
         this.intyg = intyg;
     }
-
 
     public List<Integer> getGrader() {
         return grader;
@@ -109,7 +111,6 @@ public class Sjukfall {
         this.grader = grader;
     }
 
-
     public int getAktivGrad() {
         return aktivGrad;
     }
@@ -117,16 +118,6 @@ public class Sjukfall {
     public void setAktivGrad(int aktivGrad) {
         this.aktivGrad = aktivGrad;
     }
-
-
-    public String getLakare() {
-        return lakare;
-    }
-
-    public void setLakare(String lakare) {
-        this.lakare = lakare;
-    }
-
 
     public boolean equals(Object o) {
         if (this == o) {
@@ -163,7 +154,6 @@ public class Sjukfall {
             return false;
         }
         return lakare.equals(sjukfall.lakare);
-
     }
 
 

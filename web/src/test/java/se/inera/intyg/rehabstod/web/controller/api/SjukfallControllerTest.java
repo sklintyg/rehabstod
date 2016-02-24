@@ -18,6 +18,13 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.itextpdf.text.DocumentException;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -43,6 +50,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
@@ -50,10 +58,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -62,6 +66,7 @@ import static org.mockito.Mockito.when;
 public class SjukfallControllerTest {
 
     private static final String VARDENHETS_ID = "123";
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -155,7 +160,9 @@ public class SjukfallControllerTest {
     }
 
     private static InternalSjukfall createSjukFallForPatient(String personNummer) {
+        // CHECKSTYLE:OFF MagicNumber
         Sjukfall sjukfall = new Sjukfall();
+
         Patient patient = new Patient();
         patient.setId(personNummer);
         patient.setNamn("patient " + personNummer);
@@ -175,9 +182,15 @@ public class SjukfallControllerTest {
         sjukfall.setIntyg(1);
         sjukfall.setGrader(new ArrayList<>());
         sjukfall.setAktivGrad(50);
-        sjukfall.setLakare("Hr Doktor");
+
+        Lakare lakare = new Lakare();
+        lakare.setHsaId("123456-7890");
+        lakare.setNamn("Hr Doktor");
+        sjukfall.setLakare(lakare);
+
         InternalSjukfall is = new InternalSjukfall();
         is.setSjukfall(sjukfall);
+
         return is;
     }
 

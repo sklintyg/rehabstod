@@ -34,7 +34,9 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Gender;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
 
@@ -67,8 +69,10 @@ public class SjukfallEngineTest {
 
     @Mock
     private DiagnosBeskrivningService diagnosBeskrivningService;
+
     @Mock
     private DiagnosKapitelService diagnosKapitelService;
+
     @Spy
     private InternalIntygsDataResolverImpl resolver;
 
@@ -88,14 +92,8 @@ public class SjukfallEngineTest {
         intygsDataList = generator.generate().get();
         assertTrue("Expected 16 but was + " + intygsDataList.size(), intygsDataList.size() == 16);
 
-        internalSjukfallList = testee.calculate(intygsDataList, "", null, getSjukfallRequest(5));
+        internalSjukfallList = testee.calculate(intygsDataList, getSjukfallRequest(5, activeDate));
         assertTrue("Expected 6 but was + " + internalSjukfallList.size(), internalSjukfallList.size() == 6);
-    }
-
-    private GetSjukfallRequest getSjukfallRequest(int maxIntygsGlapp) {
-        GetSjukfallRequest request = new GetSjukfallRequest();
-        request.setMaxIntygsGlapp(maxIntygsGlapp);
-        return request;
     }
 
     @Test
@@ -164,6 +162,19 @@ public class SjukfallEngineTest {
         assertEquals(DIAGNOS_KOD, diagnos.getKod());
         assertEquals(DIAGNOS_BESKRIVNING, diagnos.getBeskrivning());
         assertEquals(DIAGNOS_KAPITEL, diagnos.getKapitel());
+    }
+
+    @Test
+    public void testLakare() {
+        String fullstandigtNamn = "Jan Nilsson";
+        String hsaId = "IFV1239877878-1049";
+
+        IntygsData intyg = getIntyg(hsaId, fullstandigtNamn);
+
+        se.inera.intyg.rehabstod.web.model.Lakare sjukfallLakare = testee.getLakare(intyg);
+
+        assertEquals(fullstandigtNamn, sjukfallLakare.getNamn());
+        assertEquals(hsaId, sjukfallLakare.getHsaId());
     }
 
     @Test
@@ -237,6 +248,27 @@ public class SjukfallEngineTest {
 
     // - - -  Private scope  - - -
 
+    private GetSjukfallRequest getSjukfallRequest(int maxIntygsGlapp, LocalDate aktivtDatum) {
+        GetSjukfallRequest request = new GetSjukfallRequest();
+        request.setMaxIntygsGlapp(maxIntygsGlapp);
+        request.setAktivtDatum(aktivtDatum);
+        return request;
+    }
+
+    private IntygsData getIntyg(String lakareId, String fullstandigtNamn) {
+        HsaId hsaId = new HsaId();
+        hsaId.setExtension(lakareId);
+
+        HosPersonal hosPersonal = new HosPersonal();
+        hosPersonal.setPersonalId(hsaId);
+        hosPersonal.setFullstandigtNamn(fullstandigtNamn);
+
+        IntygsData intyg = new IntygsData();
+        intyg.setSkapadAv(hosPersonal);
+
+        return intyg;
+    }
+
     private IntygsData getIntyg(String patientId, String fornamn, String efternamn, String mellanNamn) {
         IntygsData intyg = new IntygsData();
 
@@ -255,17 +287,12 @@ public class SjukfallEngineTest {
         return intyg;
     }
 
-    private class SjukfallEngineTestImpl extends SjukfallEngine {
+    private class SjukfallEngineTestImpl extends SjukfallEngineImpl {
         public SjukfallEngineTestImpl() {
             super();
             // 2016-02-11
             final int date = 1455203622;
             clock = Clock.fixed(Instant.ofEpochSecond(date), ZoneId.of("Europe/Paris"));
-        }
-
-        @Override
-        LocalDate getAktivtDatum() {
-            return activeDate;
         }
 
         @Override

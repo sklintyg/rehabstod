@@ -20,12 +20,10 @@ package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
 
 import org.joda.time.LocalDate;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-15.
@@ -49,7 +47,6 @@ public class InternalIntygsData extends IntygsData {
         this.setIntygsId(builder.intygsData.getIntygsId());
         this.setPatient(builder.intygsData.getPatient());
         this.setSkapadAv(builder.intygsData.getSkapadAv());
-        //this.setArbetsformaga(sortArbetsformoga(builder.intygsData.getArbetsformaga()));
         this.setArbetsformaga(builder.intygsData.getArbetsformaga());
         this.setDiagnoskod(builder.intygsData.getDiagnoskod());
         this.setEnkeltIntyg(builder.intygsData.isEnkeltIntyg());
@@ -97,17 +94,6 @@ public class InternalIntygsData extends IntygsData {
         int result = startDatum.hashCode();
         result = HASH_SEED * result + slutDatum.hashCode();
         return result;
-    }
-
-    Arbetsformaga sortArbetsformoga(final Arbetsformaga arbetsformaga) {
-        List<Formaga> sortedList = arbetsformaga.getFormaga().stream()
-                .sorted((f1, f2) -> f2.getStartdatum().compareTo(f1.getStartdatum()))
-                .collect(Collectors.toList());
-
-        arbetsformaga.getFormaga().clear();
-        arbetsformaga.getFormaga().addAll(sortedList);
-
-        return arbetsformaga;
     }
 
     public static class InternalIntygsDataBuilder {
