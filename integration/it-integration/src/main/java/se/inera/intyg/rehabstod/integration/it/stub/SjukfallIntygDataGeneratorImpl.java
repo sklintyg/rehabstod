@@ -41,6 +41,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Can generate a suitable amount of intygsdata.
@@ -112,7 +113,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
                 intygsData.setSigneringsTidpunkt(signeringsTidpunkt);
 
                 Arbetsformaga arbetsformaga = new Arbetsformaga();
-                arbetsformaga.getFormaga().addAll(getDefaultSjukskrivningsGrader());
+                arbetsformaga.getFormaga().addAll(getDefaultSjukskrivningsGrader(b));
                 intygsData.setArbetsformaga(arbetsformaga);
 
                 intygsDataList.add(intygsData);
@@ -129,14 +130,35 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         return hosPersonList.get(currentHosPersonIndex++);
     }
 
-    private List<Formaga> getDefaultSjukskrivningsGrader() {
+    private List<Formaga> getDefaultSjukskrivningsGrader(int number) {
         List<Formaga> sjukskrivningsgradList = new ArrayList<>();
 
-        Formaga sg1 = buildSjukskrivningsGrad(100, startDatumOffset, slutDatumOffset);    // 100, -2, -1
-        Formaga sg2 = buildSjukskrivningsGrad(75, slutDatumOffset, slutDatumOffset + 3);  // 100, -1, 2
+        int startOffset = startDatumOffset;
+        int slutOffset = slutDatumOffset;
 
+        switch (number) {
+            case 0:
+                startOffset = ThreadLocalRandom.current().nextInt(-20, -18);
+                slutOffset = ThreadLocalRandom.current().nextInt(-18, -17);
+                break;
+            case 1:
+                startOffset = ThreadLocalRandom.current().nextInt(-17, -15);
+                slutOffset = ThreadLocalRandom.current().nextInt(-15, -14);
+                break;
+            case 2:
+                startOffset = ThreadLocalRandom.current().nextInt(-15, -10);
+                slutOffset = ThreadLocalRandom.current().nextInt(-4, -2);
+                break;
+        }
+
+
+        Formaga sg1 = buildSjukskrivningsGrad(100, startOffset, slutOffset);    // 100, -2, -1
+        Formaga sg2 = buildSjukskrivningsGrad(75, slutOffset, slutOffset + 3);  // 100, -1, 2
         sjukskrivningsgradList.add(sg1);
         sjukskrivningsgradList.add(sg2);
+
+
+
         return sjukskrivningsgradList;
     }
 
