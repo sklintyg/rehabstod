@@ -31,6 +31,22 @@ public class Sortering {
     public Sortering() {
     }
 
+    public String getKolumn() {
+        return kolumn;
+    }
+
+    public void setKolumn(String kolumn) {
+        this.kolumn = kolumn;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

@@ -18,17 +18,22 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
+import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
 /**
  * Created by eriklupander on 2016-02-23.
@@ -36,32 +41,95 @@ import java.util.List;
 @Service
 public class XlsxExportServiceImpl implements XlsxExportService {
 
+    public static final int DEFAULT_FONT_SIZE = 11;
+    private XSSFCellStyle defaultStyle;
+    private XSSFCellStyle boldStyle;
+
+    private static final String[] HEADERS = new String[] { "#", "Person­nummer", "Namn", "Kön", "Nuvarande diagnos", "Startdatum", "Slutdatum", "Sjukskrivnings­längd",
+            "Sjukskrivnings­grad", "Nuvarande läkare" };
+
+
     @Override
     public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest) throws IOException {
 
         String sheetName = "Sjukskrivningar";
 
         XSSFWorkbook wb = new XSSFWorkbook();
+        setupFonts(wb);
         XSSFSheet sheet = wb.createSheet(sheetName);
 
         // CHECKSTYLE:OFF MagicNumber
-        // iterating r number of rows
-        for (int r = 0; r < 5; r++) {
+        // Start with 3 empty rows to make space for filter
+        for (int r = 0; r < 3; r++) {
             XSSFRow row = sheet.createRow(r);
-
-            // iterating c number of columns
-            for (int c = 0; c < 5; c++) {
-                XSSFCell cell = row.createCell(c);
-
-                cell.setCellValue("Cell " + r + " " + c);
-            }
         }
+
+        addHeaderRow(sheet, 4);
+        addDataRows(sheet, 5, sjukfallList);
 
         // CHECKSTYLE:ON MagicNumber
 
-        // wb.write(fileOut);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         wb.write(baos);
         return baos.toByteArray();
+    }
+
+    private void addHeaderRow(XSSFSheet sheet, int rowIndex) {
+
+        XSSFRow row = sheet.createRow(rowIndex);
+
+        for (int a = 0; a < HEADERS.length; a++) {
+            createHeaderCell(row, a, HEADERS[a]);
+        }
+
+    }
+
+    private void addDataRows(XSSFSheet sheet, int rowIndex, List<InternalSjukfall> sjukfallList) {
+        for (int a = 0; a < sjukfallList.size(); a++) {
+            XSSFRow row = sheet.createRow(rowIndex + a);
+            Sjukfall sf = sjukfallList.get(0).getSjukfall();
+
+            int colIndex = 0;
+            createDataCell(row, colIndex++, "" + (a + 1));
+            createDataCell(row, colIndex++, sf.getPatient().getId());
+            createDataCell(row, colIndex++, sf.getPatient().getNamn());
+            createDataCell(row, colIndex++, sf.getPatient().getKon().name());
+            createDataCell(row, colIndex++, sf.getDiagnos().getKod());
+            createDataCell(row, colIndex++, sf.getStart().toString("yyyy-MM-dd"));
+            createDataCell(row, colIndex++, sf.getSlut().toString("yyyy-MM-dd"));
+            createDataCell(row, colIndex++, "" + sf.getDagar());
+            createDataCell(row, colIndex++, "" + sf.getAktivGrad());
+            createDataCell(row, colIndex, sf.getLakare());
+        }
+        for (int a = 0; a < HEADERS.length; a++) {
+            sheet.autoSizeColumn(a);
+        }
+    }
+
+    private void createDataCell(XSSFRow row, int colIndex, String value) {
+        XSSFCell cell = row.createCell(colIndex);
+        cell.setCellValue(value);
+        cell.setCellStyle(defaultStyle);
+    }
+
+    private void createHeaderCell(XSSFRow row, int colIndex, String value) {
+        XSSFCell cell = row.createCell(colIndex);
+        cell.setCellValue(value);
+        cell.setCellStyle(boldStyle);
+    }
+
+    private void setupFonts(XSSFWorkbook wb) {
+
+        Font fondBold = wb.createFont();
+        fondBold.setFontHeightInPoints((short) DEFAULT_FONT_SIZE);
+        fondBold.setFontName("Arial");
+        fondBold.setColor(IndexedColors.BLACK.getIndex());
+        fondBold.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        fondBold.setBold(true);
+
+        boldStyle = wb.createCellStyle();
+        boldStyle.setFont(fondBold);
+
+        defaultStyle = wb.createCellStyle();
     }
 }
