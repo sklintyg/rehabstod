@@ -85,7 +85,23 @@
         "type": "integer"
       },
       "lakare": {
-        "type": "string"
+        "additionalProperties": false,
+        "properties": {
+          "hsaId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "namn": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "hsaId",
+          "namn"
+        ],
+        "type": "object"
       }
     },
     "additionalProperties": false,

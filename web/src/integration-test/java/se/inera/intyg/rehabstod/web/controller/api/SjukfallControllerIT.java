@@ -28,8 +28,8 @@ import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 
 /**
- * Basic test suite that verifies that the endpoint (/api/sjukfall-summary) is available and repond according to
- * specification.
+ * Basic test suite that verifies that the endpoint (/api/sjukfall) is available
+ * and respond according to specification.
  *
  * Created by martin on 02/02/16.
  */
@@ -64,5 +64,6 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
 
         given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT).then().
                 body(matchesJsonSchemaInClasspath("jsonschema/rhs-sjukfall-response-schema.json"));
+
     }
 }
