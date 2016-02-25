@@ -1,26 +1,11 @@
-apply plugin: 'findbugs'
-apply plugin: 'pmd'
 apply plugin: 'checkstyle'
+apply plugin: 'pmd'
 
-findbugs {
+checkstyle {
+    configFile = rootProject.file('tools/codeQuality/checkstyle.xml')
+    configProperties.checkstyleConfigDir = file("$rootProject.projectDir/tools/codeQuality")
     ignoreFailures = false
-    effort = "max"
-    reportLevel = "low"
-    includeFilter = rootProject.file("tools/codeQuality/findbugsIncludeFilter.xml")
-    sourceSets = [ sourceSets.main ]
-}
-
-tasks.withType(FindBugs) {
-    reports {
-        if (project.properties['findBugsHtmlOutput'] == "true") {
-            xml.enabled = false
-            html.enabled = true
-        }
-        else {
-            xml.enabled = true
-            html.enabled = false
-        }
-    }
+    showViolations = true
 }
 
 pmd {
@@ -31,9 +16,32 @@ pmd {
 }
 pmdMain.source = fileTree('src/main/java')
 
+if (project.hasProperty('codeQuality')) {
+    apply plugin: 'findbugs'
 
-checkstyle {
-    configFile = rootProject.file('tools/codeQuality/checkstyle.xml')
-    ignoreFailures = false
-    showViolations = true
+
+    findbugs {
+        ignoreFailures = false
+        effort = "max"
+        reportLevel = "low"
+        includeFilter = rootProject.file("tools/codeQuality/findbugsIncludeFilter.xml")
+        sourceSets = [ sourceSets.main ]
+    }
+
+    tasks.withType(FindBugs) {
+        reports {
+            if (project.properties['findBugsHtmlOutput'] == "true") {
+                xml.enabled = false
+                html.enabled = true
+            }
+            else {
+                xml.enabled = true
+                html.enabled = false
+            }
+        }
+    }
+
+
 }
+
+

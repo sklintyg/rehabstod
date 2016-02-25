@@ -132,7 +132,7 @@
   </module>
 
   <module name="SuppressionFilter">
-    <property name="file" value="tools/codeQuality/checkstyleSuppressions.xml"/>
+    <property name="file" value="${checkstyleConfigDir}/checkstyleSuppressions.xml"/>
   </module>
 
 </module>
