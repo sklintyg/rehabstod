@@ -18,9 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import se.inera.intyg.rehabstod.service.export.BaseExportTest;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.assertNotNull;
@@ -39,7 +42,7 @@ public class XlsxExportServiceImplTest extends BaseExportTest {
         byte[] data = testee.export(buildSjukfallList(2), buildPrintRequest(), Urval.ALL);
         assertNotNull(data);
         assertTrue(data.length > 0);
-      //   IOUtils.write(data, new FileOutputStream(new File("/Users/eriklupander/intyg/dev.xlsx")));
+        IOUtils.write(data, new FileOutputStream(new File("/Users/eriklupander/intyg/dev.xlsx")));
     }
 
     @Test
