@@ -26,7 +26,9 @@ describe('Model: SjukfallModel', function() {
         'intyg': 4,
         'grader': [100, 50],
         'aktivGrad': 100,
-        'lakare': 'Jan Nilsson'
+        'lakare': {
+            namn: 'Jan Nilsson'
+        }
     }];
 
     // Initialize the controller and a mock scope

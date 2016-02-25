@@ -16,7 +16,7 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
             }
 
             //Lakare
-            if (!matchAny(actual.lakare, filterParams.lakare)) {
+            if (!matchAny(actual.lakare.namn, filterParams.lakare)) {
                 return false;
             }
 

@@ -20,7 +20,9 @@ describe('Filter: RhsSearchFilter', function() {
             'intyg': 4,
             'grader': [100, 50],
             'aktivGrad': 100,
-            'lakare': 'Per Hansson'
+            'lakare': {
+                'namn': 'Per Hansson'
+            }
         },
         {
             'patient': {
@@ -40,7 +42,9 @@ describe('Filter: RhsSearchFilter', function() {
             'intyg': 3,
             'grader': [25, 50],
             'aktivGrad': 25,
-            'lakare': 'Jan Nilsson'
+            'lakare': {
+                'namn': 'Jan Nilsson'
+            }
         }];
 
 

@@ -26,7 +26,7 @@
             <span class="text-nowrap">{{::row.dagarShow}}</span><span class="intyg"> ({{::row.intyg}}&nbsp;intyg)</span>
           </td>
           <td  class="column-grad" ng-bind-html="::row.gradShow"></td>
-          <td ng-if="user.urval != 'ISSUED_BY_ME'">{{::row.lakare}}</td>
+          <td ng-if="user.urval != 'ISSUED_BY_ME'">{{::row.lakare.namn}}</td>
         </tr>
       </tbody>
     </table>

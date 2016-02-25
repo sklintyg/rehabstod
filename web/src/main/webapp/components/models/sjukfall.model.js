@@ -75,7 +75,7 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                     _addQuickSearchContentFromProperty(item, 'dagar');
                     _addQuickSearchContentFromProperty(item, 'intyg');
                     _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join(',') : '');
-                    _addQuickSearchContentFromProperty(item, 'lakare');
+                    _addQuickSearchContentFromProperty(item, 'lakare.namn');
                 });
             },
             get: function() {
