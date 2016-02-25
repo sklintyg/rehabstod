@@ -20,32 +20,32 @@ package se.inera.intyg.rehabstod.service.export.pdf;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
-
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by marced on 24/02/16.
  */
 public class PdfExportServiceImplTest {
+    // CHECKSTYLE:OFF MagicNumber
 
     @Before
     public void setUp() throws Exception {
-
     }
 
     @Test
@@ -90,6 +90,7 @@ public class PdfExportServiceImplTest {
 
     private static InternalSjukfall createSjukFall(int index, String personNummer) {
         Sjukfall sjukfall = new Sjukfall();
+
         Patient patient = new Patient();
         patient.setId(personNummer);
         patient.setAlder(50 + index / 2);
@@ -110,10 +111,14 @@ public class PdfExportServiceImplTest {
         sjukfall.setIntyg(1);
         sjukfall.setGrader(index % 3 == 0 ? Arrays.asList(25, 50) : Arrays.asList(50, 75));
         sjukfall.setAktivGrad(50);
-        sjukfall.setLakare("Doktor Glas");
+
+        Lakare lakare = new Lakare();
+        lakare.setNamn("Doktor Glas");
+        sjukfall.setLakare(lakare);
 
         InternalSjukfall is = new InternalSjukfall();
         is.setSjukfall(sjukfall);
+
         return is;
     }
 }

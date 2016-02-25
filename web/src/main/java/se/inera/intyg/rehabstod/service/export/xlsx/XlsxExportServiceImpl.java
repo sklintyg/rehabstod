@@ -18,10 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
-
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -30,11 +26,14 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by eriklupander on 2016-02-23.
@@ -103,7 +102,7 @@ public class XlsxExportServiceImpl implements XlsxExportService {
             createDataCell(row, colIndex++, "" + sf.getDagar());
             createDataCell(row, colIndex++, "" + sf.getAktivGrad());
             if (urval != Urval.ISSUED_BY_ME) {
-                createDataCell(row, colIndex, sf.getLakare());
+                createDataCell(row, colIndex, sf.getLakare().getNamn());
             }
         }
         for (int a = 0; a < HEADERS.length; a++) {

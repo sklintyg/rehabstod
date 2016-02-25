@@ -18,20 +18,21 @@
  */
 package se.inera.intyg.rehabstod.service.export;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.joda.time.LocalDate;
-
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Helper base class, provides data setup for tests.
@@ -68,10 +69,11 @@ public abstract class BaseExportTest {
     }
 
     protected List<String> buildLakare() {
-        List<String> lakare = new ArrayList<>();
-        lakare.add("Jan Nilsson");
-        lakare.add("Ove Mört");
-        return lakare;
+        List<Lakare> lakare = new ArrayList<>();
+        lakare.add(createLakare("IFV1239877878-1049", "Jan Nilsson"));
+        lakare.add(createLakare("IFV1239877878-1255", "Ove Mört"));
+
+        return lakare.stream().map(l -> l.getNamn()).collect(Collectors.toList());
     }
 
     protected List<String> buildDiagnosGrupper() {
@@ -104,15 +106,18 @@ public abstract class BaseExportTest {
 
     protected Sjukfall buildSjukfall() {
         Sjukfall sjukfall = new Sjukfall();
+
         sjukfall.setAktivGrad(75);
         sjukfall.setDagar(65);
         sjukfall.setDiagnos(buildDiagnos());
         sjukfall.setGrader(buildGrader());
         sjukfall.setIntyg(2);
-        sjukfall.setLakare("Jan Nilsson");
+
+        sjukfall.setLakare(createLakare("IFV1239877878-1049", "Jan Nilsson"));
         sjukfall.setPatient(buildPatient());
         sjukfall.setStart(LocalDate.now().minusMonths(2));
         sjukfall.setSlut(LocalDate.now().plusWeeks(2));
+
         return sjukfall;
     }
 
@@ -134,6 +139,14 @@ public abstract class BaseExportTest {
         diagnos.setKod("J22");
         return diagnos;
     }
+
+    private Lakare createLakare(String hsaId, String namn) {
+        Lakare lakare = new Lakare();
+        lakare.setHsaId(hsaId);
+        lakare.setNamn(namn);
+        return lakare;
+    }
+
 
     // CHECKSTYLE:ON MagicNumber
 }

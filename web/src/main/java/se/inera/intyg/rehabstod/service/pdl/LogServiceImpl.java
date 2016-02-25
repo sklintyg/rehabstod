@@ -27,7 +27,12 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
-import se.inera.intyg.common.logmessages.*;
+import se.inera.intyg.common.logmessages.AbstractLogMessage;
+import se.inera.intyg.common.logmessages.ActivityType;
+import se.inera.intyg.common.logmessages.Enhet;
+import se.inera.intyg.common.logmessages.IntygDataLogMessage;
+import se.inera.intyg.common.logmessages.IntygDataPrintLogMessage;
+import se.inera.intyg.common.logmessages.Patient;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogRequest;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
@@ -42,7 +47,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//import se.inera.intyg.common.logmessages.IntygDataPrintLogMessage;
 
 /**
  * Implementation of service for logging user actions according to PDL requirements.

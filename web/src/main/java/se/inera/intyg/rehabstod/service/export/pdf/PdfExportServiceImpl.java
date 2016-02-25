@@ -18,18 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import java.io.ByteArrayOutputStream;
-import java.util.List;
-
-import org.joda.time.format.ISODateTimeFormat;
-import org.springframework.stereotype.Service;
-
-import se.inera.intyg.rehabstod.service.Urval;
-import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.Gender;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
-
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -47,6 +35,16 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfTemplate;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.joda.time.format.ISODateTimeFormat;
+import org.springframework.stereotype.Service;
+import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.Gender;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.Sjukfall;
+
+import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 /**
  * Created by marced on 24/02/16.
@@ -140,7 +138,7 @@ public class PdfExportServiceImpl implements PdfExportService {
             addCell(table, getlangdText(s));
             addCell(table, getGrader(s));
             if (Urval.ALL.equals(urval)) {
-                addCell(table, s.getLakare());
+                addCell(table, s.getLakare().getNamn());
             }
             rowNumber++;
         }
