@@ -58,7 +58,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         // 4; update cache if necessary
 
         // 5; filter response
-        if (urval.equals(Urval.ISSUED_BY_ME)) {
+        if (urval != null && urval.equals(Urval.ISSUED_BY_ME)) {
             internalSjukfall = internalSjukfall.stream()
                     .filter(o -> o.getSjukfall().getLakare().getHsaId().equals(hsaId))
                     .collect(Collectors.toList());
