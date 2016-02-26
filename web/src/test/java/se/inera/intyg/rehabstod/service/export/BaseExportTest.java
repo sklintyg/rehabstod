@@ -63,8 +63,8 @@ public abstract class BaseExportTest {
 
     protected LangdIntervall buildLangdIntervall() {
         LangdIntervall langdIntervall = new LangdIntervall();
-        langdIntervall.setMax(90);
-        langdIntervall.setMin(30);
+        langdIntervall.setMax("90");
+        langdIntervall.setMin("30");
         return langdIntervall;
     }
 

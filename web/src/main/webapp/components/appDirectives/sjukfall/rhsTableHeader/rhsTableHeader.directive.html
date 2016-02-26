@@ -1,23 +1,23 @@
 <tr>
   <th class="rhs-table-head column-number">#</th
-  ><th class="rhs-table-head column-patient-id" st-sort="patient.id"><span message key="label.table.column.pnr"></span> <i class="fa fa-sort"></i></th
-  ><th class="rhs-table-head column-patient-name" st-sort="patient.namn">{{::'label.table.column.namn' | message}} <i class="fa fa-sort"></i></th
-  ><th class="rhs-table-head column-patient-kon" st-sort="patient.konShow">{{::'label.table.column.kon' | message}} <i class="fa fa-sort"></i></th
+  ><th class="rhs-table-head column-patient-id" st-sort="patient.id"><span message key="label.table.column.patient.id"></span> <i class="fa fa-sort"></i></th
+  ><th class="rhs-table-head column-patient-name" st-sort="patient.namn">{{::'label.table.column.patient.namn' | message}} <i class="fa fa-sort"></i></th
+  ><th class="rhs-table-head column-patient-kon" st-sort="patient.konShow">{{::'label.table.column.patient.konShow' | message}} <i class="fa fa-sort"></i></th
   ><th class="rhs-table-head column-diagnos" st-sort="diagnos.intygsVarde">
-    {{::'label.table.column.diagnos' | message}}
+    {{::'label.table.column.diagnos.intygsVarde' | message}}
     <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.diagnos.help"></span></span></th
   ><th class="rhs-table-head column-start" st-sort="start" st-sort-default="true" st-descending-first="true">
-    {{::'label.table.column.startve' | message}}
-    <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" msg-params="{enhet:user.valdVardenhet.namn, glapp: glapp}" field-help-text="label.table.column.startve.help"></span></span></th
+    {{::'label.table.column.start' | message}}
+    <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" msg-params="{enhet:user.valdVardenhet.namn, glapp: glapp}" field-help-text="label.table.column.start.help"></span></span></th
   ><th class="rhs-table-head column-slut" st-sort="slut">
     {{::'label.table.column.slut' | message}}
     <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.slut.help"></span></span></th
   ><th class="rhs-table-head column-dagar" st-sort="dagar">
-    <span message key="label.table.column.langd"></span>
-    <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.langd.help"></span></span></th
+    <span message key="label.table.column.dagar"></span>
+    <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.dagar.help"></span></span></th
   ><th class="rhs-table-head column-grad" st-sort="aktivGrad">
-    <span message key="label.table.column.grad"></span>
-    <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.grad.help"></span></span></th
+    <span message key="label.table.column.aktivGrad"></span>
+    <span class="text-nowrap"><i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.aktivGrad.help"></span></span></th
   ><th ng-if="user.urval != 'ISSUED_BY_ME'" class="rhs-table-head" st-sort="lakare.namn">
-    {{::'label.table.column.lakare' | message}} <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.lakare.help"></span></span></th>
+    {{::'label.table.column.lakare.namn' | message}} <i class="fa fa-sort"></i><span class="rhs-tooltip" rhs-tooltip tooltip-class="rhs-table-header-tooltip" field-help-text="label.table.column.lakare.namn.help"></span></span></th>
 </tr>

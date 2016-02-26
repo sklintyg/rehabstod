@@ -1,6 +1,6 @@
 angular.module('rehabstodApp').factory('SjukfallService', [
-    '$log','SjukfallProxy', 'SjukfallModel', 'SjukfallFilterViewState',
-    function($log, SjukfallProxy, SjukfallModel, SjukfallFilterViewState) {
+    '$log', 'StringHelper', 'messageService', 'SjukfallProxy', 'SjukfallModel', 'SjukfallFilterViewState',
+    function($log, StringHelper, messageService, SjukfallProxy, SjukfallModel, SjukfallFilterViewState) {
         'use strict';
 
         var loading = false;
@@ -37,32 +37,28 @@ angular.module('rehabstodApp').factory('SjukfallService', [
             }
         }
 
-        function _exportResult(type, personnummer, sort) {
+        function _stripHtmlEntities(html) {
+            return StringHelper.replaceAll(html,'&shy;','');
+        }
 
-            var filterState = SjukfallFilterViewState.get();
+        function _exportResult(type, personnummer, sortState) {
+            var sort = {
+                kolumn: _stripHtmlEntities(messageService.getProperty('label.table.column.' + angular.lowercase(sortState.kolumn))),
+                order: messageService.getProperty('label.table.column.sort.' + sortState.order)
+            };
 
-            var lakare = [];
-            var diagnosGrupper = [];
-
-            angular.forEach(filterState.lakareModel.getSelected(), function(item) {
-                lakare.push(item.id);
-            });
-
-            angular.forEach(filterState.diagnosKapitelModel.getSelected(), function(item) {
-                diagnosGrupper.push(item.id);
-            });
-
+            var filterState = SjukfallFilterViewState.getCurrentFilterState();
 
             var query = {
                 sortering: sort,
                 maxIntygsGlapp: filterState.glapp,
-                fritext: filterState.fritext,
+                fritext: filterState.freeText,
                 langdIntervall: {
-                    min: filterState.sjukskrivningslangdModel[0],
-                    max: filterState.sjukskrivningslangdModel[1]
+                    min: '' + filterState.sjukskrivningslangd[0],
+                    max: '' + (filterState.sjukskrivningslangd[1] === null? '365+' : filterState.sjukskrivningslangd[1])
                 },
-                lakare: lakare,
-                diagnosGrupper: diagnosGrupper,
+                lakare: filterState.lakare,
+                diagnosGrupper: filterState.diagnosKapitel,
                 personnummer: personnummer
             };
 

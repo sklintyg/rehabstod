@@ -1,13 +1,15 @@
-describe('Service: SjukfallService', function () {
+describe('Service: SjukfallService', function() {
     'use strict';
 
     // load the controller's module
-    beforeEach(module('rehabstodApp', function($provide) {
-        $provide.value('SjukfallFilterViewState', {
-            reset: function(){},
-            get: function(){
-                return {glapp: 0};
-            }
+    beforeEach(angular.mock.module('rehabstodApp', function($provide) {
+        $provide.value('APP_CONFIG', {
+            diagnosKapitelList: [{
+                'from': {'letter': 'A', 'number': 0, 'id': 'A00'},
+                'to': {'letter': 'B', 'number': 99, 'id': 'B99'},
+                'name': 'Vissa infektionssjukdomar och parasitsjukdomar',
+                'id': 'A00-B99'
+            }]
         });
     }));
 
@@ -15,22 +17,24 @@ describe('Service: SjukfallService', function () {
     var SjukfallModel;
     var SjukfallService;
     var SjukfallProxy;
-    var sjukFallData = [{patient: { namn: 'Hej', kon: null }}];
+    var sjukFallData = [{patient: {namn: 'Hej', kon: null}}];
+    var messageService;
 
-    describe('Test load of Sjukfall', function () {
+    describe('Test Sjukfall', function() {
         // Initialize the controller and a mock scope
-        beforeEach(inject(function(_SjukfallModel_, _SjukfallService_, _SjukfallProxy_, _SjukfallFilterViewState_) {
-            SjukfallService = _SjukfallService_;
-            SjukfallProxy = _SjukfallProxy_;
-            SjukfallModel = _SjukfallModel_;
-            SjukfallFilterViewState = _SjukfallFilterViewState_;
-        }));
-
+        beforeEach(inject(
+            function(_SjukfallModel_, _messageService_, _SjukfallService_, _SjukfallProxy_, _SjukfallFilterViewState_) {
+                SjukfallService = _SjukfallService_;
+                SjukfallProxy = _SjukfallProxy_;
+                SjukfallModel = _SjukfallModel_;
+                SjukfallFilterViewState = _SjukfallFilterViewState_;
+                messageService = _messageService_;
+            }));
 
         it('Success', function() {
             spyOn(SjukfallProxy, 'get').and.callFake(function() {
                 return {
-                    then : function(success) {
+                    then: function(success) {
                         success(sjukFallData);
                     }
                 };
@@ -44,10 +48,46 @@ describe('Service: SjukfallService', function () {
             expect(SjukfallModel.get()).toEqual(sjukFallData);
         });
 
+        it('should give correct export parameters', function() {
+
+            spyOn(SjukfallProxy, 'exportResult');
+
+            SjukfallFilterViewState.reset();
+            var cfs = SjukfallFilterViewState.getCurrentFilterState();
+
+            var type = 'pdf';
+            var personnummer = ['1', '2'];
+            var sortState = {
+                kolumn: 'patient.namn',
+                order: 'desc'
+            };
+
+            var expectedQuery = {
+                sortering: {
+                    kolumn: messageService.getProperty('label.table.column.' + sortState.kolumn),
+                    order: messageService.getProperty('label.table.column.sort.' + sortState.order)
+                },
+                maxIntygsGlapp: cfs.glapp,
+                fritext: cfs.freeText,
+                langdIntervall: {
+                    min: '1',
+                    max: '365+'
+                },
+                lakare: cfs.lakare,
+                diagnosGrupper: cfs.diagnosKapitel,
+                personnummer: personnummer
+            };
+
+            SjukfallService.exportResult(type, personnummer, sortState);
+
+            expect(SjukfallProxy.exportResult.calls.count()).toEqual(1);
+            expect(SjukfallProxy.exportResult).toHaveBeenCalledWith(type, expectedQuery);
+        });
+
         it('Failed', function() {
             spyOn(SjukfallProxy, 'get').and.callFake(function() {
                 return {
-                    then : function(success, error) {
+                    then: function(success, error) {
                         error({error: 401});
                     }
                 };
@@ -58,11 +98,11 @@ describe('Service: SjukfallService', function () {
             expect(SjukfallModel.get()).toEqual([]);
         });
 
-        describe('Test reload of sjukfall', function () {
+        describe('Test reload of sjukfall', function() {
             beforeEach(inject(function() {
                 spyOn(SjukfallProxy, 'get').and.callFake(function() {
                     return {
-                        then : function(success) {
+                        then: function(success) {
                             success(sjukFallData);
                         }
                     };

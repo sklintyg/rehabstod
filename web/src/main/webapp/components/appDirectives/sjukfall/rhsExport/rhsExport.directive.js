@@ -19,7 +19,7 @@ angular.module('rehabstodApp')
                 var sortOrder = null;
                 var column = state.sort.predicate;
                 if (column) {
-                    sortOrder = state.sort.reverse ? 'DESC' : 'ASC';
+                    sortOrder = state.sort.reverse ? 'desc' : 'asc';
                 }
 
                 return {

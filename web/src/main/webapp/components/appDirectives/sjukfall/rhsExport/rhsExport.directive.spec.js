@@ -42,7 +42,7 @@ describe('Directive: rhsExport', function () {
 
         // Assert
         var expextedColumn = 'start';
-        var expectedOrder = 'ASC';
+        var expectedOrder = 'asc';
         var expextedPatient = ['123', '234'];
         expect(SjukfallService.exportResult).toHaveBeenCalledWith('xlsx', expextedPatient, {kolumn: expextedColumn, order: expectedOrder});
     });
@@ -67,7 +67,7 @@ describe('Directive: rhsExport', function () {
 
         // Assert
         var expextedColumn = 'patient.id';
-        var expectedOrder = 'DESC';
+        var expectedOrder = 'desc';
         var expextedPatient = ['123', '234'];
         expect(SjukfallService.exportResult).toHaveBeenCalledWith('xlsx', expextedPatient, {kolumn: expextedColumn, order: expectedOrder});
     });

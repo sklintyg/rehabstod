@@ -69,25 +69,27 @@ var rhsMessages = {
         'label.gender.female': 'Kvinna',
         'label.gender.undefined': '-',
 
-        // Table
-        'label.table.column.pnr': 'Person&shy;nummer',
-        'label.table.column.namn': 'Namn',
-        'label.table.column.kon': 'Kön',
-        'label.table.column.diagnos': 'Nuvarande diagnos',
+        // Table (NOTE: the parts after label.table.column must match sjukfallmodels json, as we use this to get sortorder descriptions)
+        'label.table.column.patient.id': 'Person&shy;nummer',
+        'label.table.column.patient.namn': 'Namn',
+        'label.table.column.patient.konShow': 'Kön',
+        'label.table.column.diagnos.intygsVarde': 'Nuvarande diagnos',
         'label.table.column.diagnos.help': 'Huvuddiagnosen i det intyg som är giltigt just nu. För muspekaren över koden för att se vilken diagnos den motsvarar.',
-        'label.table.column.startve': 'Startdatum',
-        'label.table.column.startve.help': 'Datum då sjukskrivningen började på ${enhet}. Alla intyg för samma patient som följer på varandra med max ${glapp} dagars uppehåll räknas till samma sjukskrivning. Max antal dagars uppehåll mellan intyg kan ställas in i filter.',
+        'label.table.column.start': 'Startdatum',
+        'label.table.column.start.help': 'Datum då sjukskrivningen började på ${enhet}. Alla intyg för samma patient som följer på varandra med max ${glapp} dagars uppehåll räknas till samma sjukskrivning. Max antal dagars uppehåll mellan intyg kan ställas in i filter.',
         'label.table.column.slut': 'Slutdatum',
         'label.table.column.slut.help': 'Slutdatum för det intyg som är giltigt just nu, dvs. det datum då sjukskrivningen beräknas avslutas om den inte förlängs.',
-        'label.table.column.grad': 'Sjukskrivnings&shy;grad',
-        'label.table.column.grad.help': 'Sjukskrivningsgraden i det intyg som är giltigt just nu. Om det innehåller flera grader anges de ordnade i tidsföljd med den just nu gällande graden fetstilsmarkerad.',
-        'label.table.column.lakare': 'Nuvarande läkare',
-        'label.table.column.lakare.help': 'Läkaren som utfärdat det intyg som är giltigt just nu.',
-        'label.table.column.langd': 'Sjukskrivnings&shy;längd',
-        'label.table.column.langd.help': 'Sjukskrivningens totala längd i dagar, från ”Startdatum vårdenhet” till ”Slutdatum”. Dagar då patienten inte haft något giltigt intyg räknas inte.',
+        'label.table.column.aktivgrad': 'Sjukskrivnings&shy;grad',
+        'label.table.column.aktivgrad.help': 'Sjukskrivningsgraden i det intyg som är giltigt just nu. Om det innehåller flera grader anges de ordnade i tidsföljd med den just nu gällande graden fetstilsmarkerad.',
+        'label.table.column.lakare.namn': 'Nuvarande läkare',
+        'label.table.column.lakare.namn.help': 'Läkaren som utfärdat det intyg som är giltigt just nu.',
+        'label.table.column.dagar': 'Sjukskrivnings&shy;längd',
+        'label.table.column.dagar.help': 'Sjukskrivningens totala längd i dagar, från ”Startdatum vårdenhet” till ”Slutdatum”. Dagar då patienten inte haft något giltigt intyg räknas inte.',
 
         'label.table.number.of.rows' : 'Visar',
         'label.table.number.of.rows.of' : 'av',
+        'label.table.column.sort.desc': 'Fallande',
+        'label.table.column.sort.asc': 'Stigande',
 
 
         // Filter

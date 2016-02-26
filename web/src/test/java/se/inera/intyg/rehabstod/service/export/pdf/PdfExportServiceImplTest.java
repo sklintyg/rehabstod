@@ -96,8 +96,8 @@ public class PdfExportServiceImplTest {
         r.setLakare(Arrays.asList("Per Karlsson", "Johan Nilsson"));
         LangdIntervall langdIntervall = new LangdIntervall();
 
-        langdIntervall.setMin(1);
-        langdIntervall.setMax(366);
+        langdIntervall.setMin("1");
+        langdIntervall.setMax("365+");
         r.setLangdIntervall(langdIntervall);
         r.setMaxIntygsGlapp(30);
         final Sortering sortering = new Sortering();

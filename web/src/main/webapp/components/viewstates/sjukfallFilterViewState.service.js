@@ -38,7 +38,8 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
                 lakare: selectedLakare,
                 sjukskrivningslangd: [state.sjukskrivningslangdModel[0],
                     state.sjukskrivningslangdModel[1] > 365 ? null : state.sjukskrivningslangdModel[1]],
-                freeText: state.freeTextModel
+                freeText: state.freeTextModel,
+                glapp: state.glapp
 
             };
 

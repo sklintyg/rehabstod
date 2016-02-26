@@ -18,31 +18,33 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
+import java.util.Objects;
+
 /**
  * Created by mango on 03/02/16.
  */
 public class LangdIntervall {
 
     private static final int HASH_SEED = 31;
-    private int min;
-    private int max;
+    private String min;
+    private String max;
 
     public LangdIntervall() {
     }
 
-    public int getMin() {
+    public String getMin() {
         return min;
     }
 
-    public void setMin(int min) {
+    public void setMin(String min) {
         this.min = min;
     }
 
-    public int getMax() {
+    public String getMax() {
         return max;
     }
 
-    public void setMax(int max) {
+    public void setMax(String max) {
         this.max = max;
     }
 
@@ -54,20 +56,12 @@ public class LangdIntervall {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         LangdIntervall that = (LangdIntervall) o;
-
-        if (min != that.min) {
-            return false;
-        }
-        return max == that.max;
-
+        return Objects.equals(min, that.min) && Objects.equals(max, that.max);
     }
 
     @Override
     public int hashCode() {
-        int result = min;
-        result = HASH_SEED * result + max;
-        return result;
+        return Objects.hash(min, max);
     }
 }

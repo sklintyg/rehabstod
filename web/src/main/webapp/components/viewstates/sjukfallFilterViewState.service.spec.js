@@ -42,13 +42,15 @@ describe('Viewstate: SjukfallFilterViewState', function() {
             LakareModel.get()[0].selected = true;
             SjukfallFilterViewState.get().freeTextModel = 'anything';
             SjukfallFilterViewState.get().sjukskrivningslangdModel = [22, 77];
+            SjukfallFilterViewState.get().glapp = 55;
 
 
             var expectedFilter = {
                 diagnosKapitel: [DiagnosKapitelModel.get()[0].id],
                 lakare: [LakareModel.get()[0].id],
                 sjukskrivningslangd: SjukfallFilterViewState.get().sjukskrivningslangdModel,
-                freeText: SjukfallFilterViewState.get().freeTextModel
+                freeText: SjukfallFilterViewState.get().freeTextModel,
+                glapp: 55
             };
             //Verify
 
@@ -64,12 +66,14 @@ describe('Viewstate: SjukfallFilterViewState', function() {
             LakareModel.get()[0].selected = true;
             SjukfallFilterViewState.get().freeTextModel = 'anything';
             SjukfallFilterViewState.get().sjukskrivningslangdModel = [22, 77];
+            SjukfallFilterViewState.get().glapp = 55;
 
             var expectedFilter = {
                 diagnosKapitel: [],
                 lakare: [],
                 sjukskrivningslangd: [1, null],
-                freeText: ''
+                freeText: '',
+                glapp: 55
             };
 
             //Act
