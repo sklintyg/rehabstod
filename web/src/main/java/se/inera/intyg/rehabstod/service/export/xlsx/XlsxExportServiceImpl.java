@@ -18,44 +18,57 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.export.BaseExportService;
+import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by eriklupander on 2016-02-23.
  */
 @Service
-public class XlsxExportServiceImpl implements XlsxExportService {
+public class XlsxExportServiceImpl extends BaseExportService implements XlsxExportService {
 
-    public static final int DEFAULT_FONT_SIZE = 11;
-    private XSSFCellStyle defaultStyle;
+    private static final int DEFAULT_FONT_SIZE = 11;
+
     private XSSFCellStyle boldStyle;
     private XSSFCellStyle filterMainHeaderStyle;
     private XSSFCellStyle filterHeaderStyle;
     private XSSFCellStyle filterTextStyle;
 
-    private static final String[] HEADERS = new String[] { "#", "Person­nummer", "Namn", "Kön", "Nuvarande diagnos", "Startdatum", "Slutdatum", "Sjukskrivnings­längd",
-            "Sjukskrivnings­grad", "Nuvarande läkare" };
+    private XSSFCellStyle stripedDarker;
+    private XSSFCellStyle stripedLighter;
+
+    private XSSFFont defaultFont;
+    private XSSFFont boldFont;
+
+    private static final String[] HEADERS = new String[] { "#", "Personnummer", "Namn", "Kön", "Nuvarande diagnos",
+            "Startdatum", "Slutdatum", "Sjukskrivningslängd", "Sjukskrivningsgrad", "Nuvarande läkare" };
 
 
+    @Autowired
+    UserService userService;
 
     @Override
     public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest req, Urval urval) throws IOException {
@@ -66,45 +79,75 @@ public class XlsxExportServiceImpl implements XlsxExportService {
         setupFonts(wb);
         XSSFSheet sheet = wb.createSheet(sheetName);
 
+        int rowNumber = 0;
+
         // CHECKSTYLE:OFF MagicNumber
         // Start with 2 empty rows to make space for filter
-        for (int r = 0; r < 2; r++) {
-            sheet.createRow(r);
+        for (; rowNumber < 2; rowNumber++) {
+            sheet.createRow(rowNumber);
         }
 
-        addFilterMainHeader(sheet, 3, "Valda filter");
-        addFilterHeader(sheet, 4, "Sjukskrivningslängd", req.getLangdIntervall().getMin() + "-" + req.getLangdIntervall().getMax() + " dagar");
-        addFilterHeader(sheet, 5, "Läkare", toBulletList(req.getLakare()));
-        addFilterHeader(sheet, 6, "Diagnoskapitel", toBulletList(req.getDiagnosGrupper()));
-        addFilterHeader(sheet, 7, "Sökfilter", req.getFritext());
-
-        addFilterMainHeader(sheet, 10, "Sjukfallsinställning");
-        addFilterHeader(sheet, 11, "Max dagar mellan intyg", req.getMaxIntygsGlapp() + " dagar");
-
-        addFilterMainHeader(sheet, 14, "Vald sortering");
-        addFilterHeader(sheet, 15, "Kolumn", req.getSortering().getKolumn());
-        addFilterHeader(sheet, 16, "Riktning", req.getSortering().getOrder());
-
-        addFilterMainHeader(sheet, 19, "Sjukfallstabellen");
-        addHeaderRow(sheet, 20, urval);
-        addDataRows(sheet, 21, sjukfallList, urval);
-
-
+        addFilterMainHeader(sheet, rowNumber++, "Valda filter");
+        addFilterHeader(sheet, rowNumber++, "Sjukskrivningslängd", req.getLangdIntervall().getMin() + "-" + req.getLangdIntervall().getMax() + " dagar");
+        addFilterHeader(sheet, rowNumber++, "Läkare", urval == Urval.ALL ? toBulletList(req.getLakare()) : userService.getUser().getNamn());
+        addFilterHeaderWithRichTextValue(sheet, rowNumber++, "Diagnoskapitel", diagnosKapitelFormat(req.getDiagnosGrupper()));
+        addFilterHeader(sheet, rowNumber++, "Sökfilter", notEmpty(req) ? req.getFritext() : "-");
+        rowNumber += 3;
+        addFilterMainHeader(sheet, rowNumber++, "Sjukfallsinställning");
+        addFilterHeader(sheet, rowNumber++, "Max dagar mellan intyg", req.getMaxIntygsGlapp() + " dagar");
+        rowNumber += 3;
+        addFilterMainHeader(sheet, rowNumber++, "Vald sortering");
+        addFilterHeader(sheet, rowNumber++, "Kolumn", req.getSortering().getKolumn());
+        addFilterHeader(sheet, rowNumber++, "Riktning", sortOrderToHumanReadable(req));
+        rowNumber += 3;
+        addFilterMainHeader(sheet, rowNumber++, "Sjukfallstabellen");
+        addHeaderRow(sheet, rowNumber++, urval);
+        addDataRows(sheet, rowNumber, sjukfallList, urval);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         wb.write(baos);
         return baos.toByteArray();
     }
 
-    private String toBulletList(List<String> lakare) {
-        return lakare.stream().map(s -> "* " + s + "\n").collect(Collectors.joining());
+    private XSSFRichTextString diagnosKapitelFormat(List<String> diagnosGrupper) {
+        StringBuilder buf = new StringBuilder();
+        List<Pair> boldIndicies = new ArrayList<>();
+        int currentIndex = 0;
+        for (String diagnosKapitel : diagnosGrupper) {
+            boldIndicies.add(new Pair(currentIndex, currentIndex + diagnosKapitel.length() + 3));
+            buf.append("* ").append(diagnosKapitel).append(": ");
+            buf.append(diagnosKapitelService.getDiagnosKapitel(diagnosKapitel).getName());
+            buf.append("\n");
+            currentIndex = buf.length();
+        }
+
+        XSSFRichTextString richTextString = new XSSFRichTextString();
+        richTextString.setString(buf.toString());
+        richTextString.applyFont(defaultFont);
+
+        // Apply bold text for the text between boldIndicies values.
+        boldIndicies.stream().forEach(pair -> richTextString.applyFont(pair.i1, pair.i2, boldFont));
+        return richTextString;
     }
 
     private void addFilterHeader(XSSFSheet sheet, int rowIndex, String key, String value) {
+        XSSFRow row = buildFilterTitleCell(sheet, rowIndex, key);
+
+        XSSFCell cell2 = row.createCell(2);
+        cell2.setCellValue(value);
+        cell2.setCellStyle(filterTextStyle);
+    }
+
+    private XSSFRow buildFilterTitleCell(XSSFSheet sheet, int rowIndex, String key) {
         XSSFRow row = sheet.createRow(rowIndex);
         XSSFCell cell = row.createCell(1);
         cell.setCellValue(key);
         cell.setCellStyle(filterHeaderStyle);
+        return row;
+    }
+
+    private void addFilterHeaderWithRichTextValue(XSSFSheet sheet, int rowIndex, String key, XSSFRichTextString value) {
+        XSSFRow row = buildFilterTitleCell(sheet, rowIndex, key);
 
         XSSFCell cell2 = row.createCell(2);
         cell2.setCellValue(value);
@@ -140,14 +183,14 @@ public class XlsxExportServiceImpl implements XlsxExportService {
 
             int colIndex = 0;
             createDataCell(row, colIndex++, "" + (a + 1));
-            createDataCell(row, colIndex++, sf.getPatient().getId());
+            createRichTextDataCell(row, colIndex++, buildPersonnummerAndAgeRichText(sf.getPatient()));
             createDataCell(row, colIndex++, sf.getPatient().getNamn());
-            createDataCell(row, colIndex++, sf.getPatient().getKon().name());
+            createDataCell(row, colIndex++, buildKonName(sf.getPatient().getKon().name()));
             createDataCell(row, colIndex++, sf.getDiagnos().getKod());
             createDataCell(row, colIndex++, sf.getStart().toString("yyyy-MM-dd"));
             createDataCell(row, colIndex++, sf.getSlut().toString("yyyy-MM-dd"));
-            createDataCell(row, colIndex++, "" + sf.getDagar());
-            createDataCell(row, colIndex++, "" + sf.getAktivGrad());
+            createDataCell(row, colIndex++, "" + sf.getDagar() + " dagar (" + sf.getIntyg() + " intyg)");
+            createRichTextDataCell(row, colIndex++, buildGraderRichText(sf));
             if (urval != Urval.ISSUED_BY_ME) {
                 createDataCell(row, colIndex, sf.getLakare().getNamn());
             }
@@ -155,12 +198,58 @@ public class XlsxExportServiceImpl implements XlsxExportService {
         for (int a = 0; a < HEADERS.length; a++) {
             sheet.autoSizeColumn(a);
         }
+        // Makes sure the "namn" column isn't excessively wide due to the filter.
+        sheet.setColumnWidth(2, 7000);
+    }
+
+
+
+    private XSSFRichTextString buildPersonnummerAndAgeRichText(Patient patient) {
+        String value = patient.getId() + " (" + patient.getAlder() + " år)";
+        XSSFRichTextString richTextString = new XSSFRichTextString();
+        richTextString.setString(value);
+        richTextString.applyFont(defaultFont);
+        richTextString.applyFont(value.indexOf("(") + 1, value.lastIndexOf(")"), boldFont);
+        return richTextString;
+    }
+
+    private XSSFRichTextString buildGraderRichText(Sjukfall sf) {
+
+        if (sf.getGrader() == null || sf.getGrader().size() == 0) {
+            return new XSSFRichTextString();
+        }
+
+        StringBuilder buf = new StringBuilder();
+        Pair aktivIndicies = null;
+        int currentIndex = 0;
+        for (Integer grad : sf.getGrader()) {
+            if (grad == sf.getAktivGrad()) {
+                aktivIndicies = new Pair(currentIndex, currentIndex + ("" + grad + "%").length());
+            }
+            buf.append("").append(grad).append("% ");
+            currentIndex = buf.length();
+        }
+        buf.setLength(buf.length() - 1);
+
+        XSSFRichTextString richTextString = new XSSFRichTextString();
+        richTextString.setString(buf.toString());
+        richTextString.applyFont(defaultFont);
+        if (aktivIndicies != null) {
+            richTextString.applyFont(aktivIndicies.i1, aktivIndicies.i2, boldFont);
+        }
+        return richTextString;
     }
 
     private void createDataCell(XSSFRow row, int colIndex, String value) {
         XSSFCell cell = row.createCell(colIndex);
         cell.setCellValue(value);
-        cell.setCellStyle(defaultStyle);
+        cell.setCellStyle(row.getRowNum() % 2 == 0 ? stripedDarker : stripedLighter);
+    }
+
+    private void createRichTextDataCell(XSSFRow row, int colIndex, XSSFRichTextString value) {
+        XSSFCell cell = row.createCell(colIndex);
+        cell.setCellValue(value);
+        cell.setCellStyle(row.getRowNum() % 2 == 0 ? stripedDarker : stripedLighter);
     }
 
     private void createHeaderCell(XSSFRow row, int colIndex, String value) {
@@ -183,24 +272,43 @@ public class XlsxExportServiceImpl implements XlsxExportService {
         boldStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(40, 180, 196)));
         boldStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 
-        defaultStyle = wb.createCellStyle();
+        stripedDarker = wb.createCellStyle();
+        stripedDarker.setFillForegroundColor(new XSSFColor(new java.awt.Color(230, 230, 230)));
+        stripedDarker.setFillPattern(CellStyle.SOLID_FOREGROUND);
 
-
+        stripedLighter = wb.createCellStyle();
+        stripedLighter.setFillForegroundColor(new XSSFColor(new java.awt.Color(244, 244, 244)));
+        stripedLighter.setFillPattern(CellStyle.SOLID_FOREGROUND);
 
         filterTextStyle = wb.createCellStyle();
         filterTextStyle.setFont(buildFont(wb, 12, "Arial", false, false));
         filterTextStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(240, 240, 240)));
         filterTextStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        filterTextStyle.setBorderBottom(CellStyle.BORDER_THIN);
+        filterTextStyle.setBottomBorderColor(IndexedColors.WHITE.getIndex());
+        filterTextStyle.setWrapText(true);
 
         filterHeaderStyle = wb.createCellStyle();
         filterHeaderStyle.setFont(buildFont(wb, 12, "Arial", true, false));
         filterHeaderStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(240, 240, 240)));
         filterHeaderStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        filterHeaderStyle.setBorderBottom(CellStyle.BORDER_THIN);
+        filterHeaderStyle.setBottomBorderColor(IndexedColors.WHITE.getIndex());
+        filterHeaderStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
 
         filterMainHeaderStyle = wb.createCellStyle();
         filterMainHeaderStyle.setFont(buildFont(wb, 16, "Arial", true, true));
         filterMainHeaderStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(240, 240, 240)));
         filterMainHeaderStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        filterMainHeaderStyle.setBorderBottom(CellStyle.BORDER_THIN);
+        filterMainHeaderStyle.setBottomBorderColor(IndexedColors.WHITE.getIndex());
+
+        boldFont = wb.createFont();
+        boldFont.setBold(true);
+        boldFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+        boldFont.setItalic(true);
+
+        defaultFont = wb.createFont();
     }
 
     private Font buildFont(XSSFWorkbook wb, int heightInPoints, String fontName, boolean bold, boolean underline) {
@@ -209,9 +317,10 @@ public class XlsxExportServiceImpl implements XlsxExportService {
         font.setFontName(fontName);
         font.setColor(IndexedColors.BLACK.getIndex());
         font.setBold(bold);
-      //  font.setUnderline(underline);
+        font.setUnderline(underline ? XSSFFont.U_SINGLE : XSSFFont.U_NONE);
         return font;
     }
 
     // CHECKSTYLE:ON MagicNumber
+
 }

@@ -18,22 +18,52 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.export.BaseExportTest;
+import se.inera.intyg.rehabstod.service.user.UserService;
 
 import java.io.IOException;
 
-import org.junit.Test;
-
-import se.inera.intyg.rehabstod.service.Urval;
-import se.inera.intyg.rehabstod.service.export.BaseExportTest;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by eriklupander on 2016-02-24.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class XlsxExportServiceImplTest extends BaseExportTest {
 
+    @Mock
+    private DiagnosKapitelService diagnosKapitelService;
+
+    @Mock
+    private UserService userService;
+
+    @InjectMocks
     private XlsxExportServiceImpl testee = new XlsxExportServiceImpl();
+
+    @Before
+    public void setup() {
+        DiagnosKapitel diagnosKapitel = mock(DiagnosKapitel.class);
+        when(diagnosKapitel.getName()).thenReturn("Diagnoskapitlets namn");
+        when(diagnosKapitelService.getDiagnosKapitel(anyString())).thenReturn(diagnosKapitel);
+
+        RehabstodUser user = mock(RehabstodUser.class);
+        when(user.getNamn()).thenReturn("Läkare Läkarsson");
+        when(userService.getUser()).thenReturn(user);
+    }
 
     @Test
     public void testBuildXlsxForAll() throws IOException {
