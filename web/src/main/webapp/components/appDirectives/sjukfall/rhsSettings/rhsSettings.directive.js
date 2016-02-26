@@ -16,7 +16,7 @@ angular.module('rehabstodApp')
 
                 modalInstance.result.then(function(value) {
                     SjukfallFilterViewState.get().glapp = value;
-                    SjukfallService.loadSjukfall(true);
+                    SjukfallService.loadSjukfall(true, true);
                 }, function() {
 
                 });

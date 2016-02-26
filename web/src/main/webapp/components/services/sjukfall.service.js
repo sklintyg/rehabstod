@@ -5,7 +5,7 @@ angular.module('rehabstodApp').factory('SjukfallService', [
 
         var loading = false;
 
-        function _loadSjukfall(force) {
+        function _loadSjukfall(force, skipReset) {
 
             if (loading) {
                 return;
@@ -15,8 +15,10 @@ angular.module('rehabstodApp').factory('SjukfallService', [
 
             if (force || empty) {
                 loading = true;
-                SjukfallFilterViewState.reset();
-                SjukfallModel.reset();
+                if (!skipReset) {
+                    SjukfallFilterViewState.reset();
+                    SjukfallModel.reset();
+                }
 
                 var query = {
                     maxIntygsGlapp: SjukfallFilterViewState.get().glapp
