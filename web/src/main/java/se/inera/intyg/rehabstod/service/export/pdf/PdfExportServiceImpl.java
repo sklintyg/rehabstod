@@ -64,6 +64,9 @@ public class PdfExportServiceImpl implements PdfExportService {
 
     private PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
     private static final BaseColor TABLE_HEADER_BASE_COLOR = new BaseColor(70, 87, 97);
+    private static final BaseColor TABLE_EVEN_ROW_COLOR = BaseColor.WHITE;
+    private static final BaseColor TABLE_ODD_ROW_COLOR = new BaseColor(220, 220, 220);
+
 
     @Override
     public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user)
@@ -254,6 +257,11 @@ public class PdfExportServiceImpl implements PdfExportService {
         table.setHeaderRows(1);
         int rowNumber = 1;
         for (InternalSjukfall is : sjukfallList) {
+            if (rowNumber % 2 == 0) {
+                table.getDefaultCell().setBackgroundColor(TABLE_EVEN_ROW_COLOR);
+            } else {
+                table.getDefaultCell().setBackgroundColor(TABLE_ODD_ROW_COLOR);
+            }
             Sjukfall s = is.getSjukfall();
 
             addCell(table, String.valueOf(rowNumber));
