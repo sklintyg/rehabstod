@@ -1,4 +1,4 @@
-<button class="btn btn-link btn-link-minimal" ng-click="showSearchFilter = !showSearchFilter"
+<button class="btn btn-link btn-link-minimal" id="rhs-filter-hide-btn" ng-click="showSearchFilter = !showSearchFilter"
         ng-switch="showSearchFilter">
   <span ng-switch-when="false" message key="label.filter.show"></span><span ng-switch-when="true" message key="label.filter.hide"></span>
 </button>
@@ -35,7 +35,7 @@
         <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
-              <input ng-model="filterViewState.get().freeTextModel" placeholder="{{::'label.filter.filter' | message}}" class="input-sm form-control"
+              <input id="rhs-filter-free-text-input" ng-model="filterViewState.get().freeTextModel" placeholder="{{::'label.filter.filter' | message}}" class="input-sm form-control"
                      type="search" />
             </div>
           </div>

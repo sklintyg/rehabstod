@@ -38,8 +38,20 @@ var RehabstodSjukfallPage = RehabstodBasePage._extend({
     isAt: function isAt() {
         return isAt._super.call(this);
     },
+    resetButton: function() {
+        return element(by.id('rhs-filter-reset-btn'));
+    },
+    settingsButton: function() {
+        return element(by.id('rhs-settings-change-btn'));
+    },
+    freeTextInput: function() {
+        return element(by.id('rhs-filter-free-text-input'));
+    },
     clickResetFilter: function() {
-        element(by.id('rhs-filter-reset-btn')).click();
+        this.resetButton().click();
+    },
+    clickHideFilter: function() {
+        element(by.id('rhs-filter-hide-btn')).click();
     }
 });
 
