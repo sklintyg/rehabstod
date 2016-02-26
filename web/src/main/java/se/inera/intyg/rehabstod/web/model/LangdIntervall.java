@@ -25,7 +25,6 @@ import java.util.Objects;
  */
 public class LangdIntervall {
 
-    private static final int HASH_SEED = 31;
     private String min;
     private String max;
 
