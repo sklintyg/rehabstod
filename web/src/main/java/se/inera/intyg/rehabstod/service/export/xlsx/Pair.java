@@ -22,11 +22,19 @@ package se.inera.intyg.rehabstod.service.export.xlsx;
  * Created by eriklupander on 2016-02-26.
  */
 public  class Pair {
-    public Integer i1;
-    public Integer i2;
+    private Integer i1;
+    private Integer i2;
 
     Pair(Integer i1, Integer i2) {
         this.i1 = i1;
         this.i2 = i2;
+    }
+
+    public Integer getI1() {
+        return i1;
+    }
+
+    public Integer getI2() {
+        return i2;
     }
 }

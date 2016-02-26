@@ -110,6 +110,11 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     }
 
     private XSSFRichTextString diagnosKapitelFormat(List<String> diagnosGrupper) {
+
+        if (diagnosGrupper == null || diagnosGrupper.size() == 0) {
+            return new XSSFRichTextString("Alla");
+        }
+
         StringBuilder buf = new StringBuilder();
         List<Pair> boldIndicies = new ArrayList<>();
         int currentIndex = 0;
@@ -126,7 +131,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         richTextString.applyFont(defaultFont);
 
         // Apply bold text for the text between boldIndicies values.
-        boldIndicies.stream().forEach(pair -> richTextString.applyFont(pair.i1, pair.i2, boldFont));
+        boldIndicies.stream().forEach(pair -> richTextString.applyFont(pair.getI1(), pair.getI2(), boldFont));
         return richTextString;
     }
 
@@ -235,7 +240,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         richTextString.setString(buf.toString());
         richTextString.applyFont(defaultFont);
         if (aktivIndicies != null) {
-            richTextString.applyFont(aktivIndicies.i1, aktivIndicies.i2, boldFont);
+            richTextString.applyFont(aktivIndicies.getI1(), aktivIndicies.getI2(), boldFont);
         }
         return richTextString;
     }

@@ -135,7 +135,7 @@ subprojects {
         springSecurityExtensionsVersion = "1.0.1.RELEASE"
         liquibaseVersion = "3.3.1"
         jaxb2Version = "0.9.5"
-        poiVersion = '3.13'
+        poiVersion = "3.13"
         itextVersion = "5.5.8"
 
         setProperty("buildTime", getDate().toString())
