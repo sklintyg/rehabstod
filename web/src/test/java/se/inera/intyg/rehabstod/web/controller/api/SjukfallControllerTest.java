@@ -25,7 +25,11 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.itextpdf.text.DocumentException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,6 +41,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -54,10 +59,7 @@ import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.itextpdf.text.DocumentException;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -127,7 +129,7 @@ public class SjukfallControllerTest {
     }
 
     @Test
-    public void testGetSjukfallAsPDF() throws DocumentException {
+    public void testGetSjukfallAsPDF() throws DocumentException, IOException {
 
         InternalSjukfall a = createSjukFallForPatient("111");
         InternalSjukfall b = createSjukFallForPatient("222");
@@ -143,9 +145,8 @@ public class SjukfallControllerTest {
 
         // When
         when(sjukfallService.getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(allSjukFall);
-        when(pdfExportService.export(eq(finalList), eq(request), eq(Urval.ALL))).thenReturn(new byte[0]);
+        when(pdfExportService.export(eq(finalList), eq(request), eq(rehabUserMock))).thenReturn(new byte[0]);
         when(pdlStoreMock.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(finalList), eq(ActivityType.PRINT))).thenReturn(toLog);
-
 
         // Then
         ResponseEntity response = sjukfallController.getSjukfallForCareUnitAsPdf(request);

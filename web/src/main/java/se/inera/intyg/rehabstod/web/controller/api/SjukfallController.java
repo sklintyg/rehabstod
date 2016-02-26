@@ -22,8 +22,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.itextpdf.text.DocumentException;
 import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -52,6 +53,8 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
+import com.itextpdf.text.DocumentException;
+
 /**
  * Created by Magnus Ekstrand on 03/02/16.
  */
@@ -59,6 +62,7 @@ import se.inera.intyg.rehabstod.web.model.Sjukfall;
 @RequestMapping("/api/sjukfall")
 public class SjukfallController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SjukfallController.class);
     @Autowired
     private SjukfallService sjukfallService;
 
@@ -111,7 +115,7 @@ public class SjukfallController {
         List<InternalSjukfall> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
 
         try {
-            byte[] pdfData = pdfExportService.export(finalList, request, urval);
+            byte[] pdfData = pdfExportService.export(finalList, request, user);
 
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if PDF export was OK.
             List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, finalList, ActivityType.PRINT);
@@ -126,8 +130,9 @@ public class SjukfallController {
 
             return new ResponseEntity<>(new ByteArrayResource(pdfData), respHeaders, HttpStatus.OK);
 
-        } catch (DocumentException e) {
-            // This should be handled a bit better...
+        } catch (DocumentException | IOException e) {
+            LOG.error("Failed to create PDF export", e);
+            // Would it be better if we could redirect to error.jsp in this case?
             return new ResponseEntity<>(new ByteArrayResource(e.getMessage().getBytes()), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

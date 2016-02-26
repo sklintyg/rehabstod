@@ -18,105 +18,234 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.ExceptionConverter;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.ColumnText;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfPageEventHelper;
-import com.itextpdf.text.pdf.PdfTemplate;
-import com.itextpdf.text.pdf.PdfWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.commons.io.IOUtils;
 import org.joda.time.format.ISODateTimeFormat;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
+
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Gender;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
+import se.inera.intyg.rehabstod.web.model.Sortering;
 
-import java.io.ByteArrayOutputStream;
-import java.util.List;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 
 /**
  * Created by marced on 24/02/16.
  */
+
+// Because of a lot of tinkering with margins and absolute positioning of elements we actually DO use a lot of magic
+// numbers!
+// CHECKSTYLE:OFF MagicNumber
 @Service
 public class PdfExportServiceImpl implements PdfExportService {
-    /**
-     * A font that will be used in our PDF.
-     */
-    public static final Font HEADER_FONT = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.WHITE);
-    public static final Font BOLD = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
-    public static final Font NORMAL = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL);
-    public static final Font SMALL = new Font(Font.FontFamily.HELVETICA, 7, Font.NORMAL);
-    private static final float TABLE_WIDTH = 100.0f;
-    private static final float HEADER_PADDING = 3f;
+
+    private static final String LOGO_PATH = "classpath:pdf-assets/rehab_pdf_logo.png";
+
+    private PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+    private static final BaseColor TABLE_HEADER_BASE_COLOR = new BaseColor(70, 87, 97);
 
     @Override
-    public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, Urval urval) throws DocumentException {
+    public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user)
+            throws DocumentException, IOException {
+
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         Document document = new Document();
 
-        document.setPageSize(PageSize.A4.rotate());
+        document.setPageSize(PageSize.A4);
+        document.setMargins(20, 20, 70, 20);
 
         PdfWriter writer = PdfWriter.getInstance(document, bos);
+        // Add handlers for page events
+
+        writer.setPageEvent(new HeaderEventHandler(
+                Image.getInstance(IOUtils.toByteArray(resourcePatternResolver.getResource(LOGO_PATH).getInputStream())),
+                user.getNamn()));
         writer.setPageEvent(new PageNumberingEventHandler());
+
         document.open();
 
-        // document.addheader?
-        document.add(createTable(sjukfallList, urval));
+        // Add the front page with meta info
+        document.add(createFrontPage(printSjukfallRequest, user));
 
-        // step 5
+        // Switch to landscape mode
+        document.setPageSize(PageSize.A4.rotate());
+        document.newPage();
+
+        // Add table with all sjukfall (could span several pages)
+        document.add(createSjukfallTable(sjukfallList, user.getUrval()));
+
+        // Finish off by closing the document (will invoke the event handlers)
         document.close();
 
         return bos.toByteArray();
 
     }
 
-    private PdfPTable createTable(List<InternalSjukfall> sjukfallList, Urval urval) throws DocumentException {
-        // CHECKSTYLE:OFF MagicNumber
+    private Element createFrontPage(PrintSjukfallRequest printRequest, RehabstodUser user) {
+        Paragraph sida = new Paragraph();
+
+        sida.add(getUrvalDesc(user));
+        sida.add(new Chunk(new LineSeparator()));
+        sida.add(getFilterDesc(printRequest));
+        sida.add(getSjukfallsDefDesc(printRequest));
+        sida.add(getSorteringDesc(printRequest.getSortering()));
+
+        return sida;
+
+    }
+
+    private Paragraph getUrvalDesc(RehabstodUser user) {
+        Paragraph urvalsRubrik = new Paragraph();
+        if (Urval.ISSUED_BY_ME == user.getUrval()) {
+            urvalsRubrik.add(new Paragraph("Mina sjukfall", FRONTPAGE_H1));
+            urvalsRubrik.add(new Paragraph("- Endast de sjukfall där jag utfärdat det aktiva intyget", FRONTPAGE_H2));
+        } else {
+            urvalsRubrik.add(new Paragraph("Alla sjukfall", FRONTPAGE_H1));
+            urvalsRubrik.add(new Paragraph("- Samtliga pågående fall på enheten \"" + user.getValdVardenhet().getNamn() + "\"", FRONTPAGE_H2));
+        }
+        return urvalsRubrik;
+    }
+
+    private Element getFilterDesc(PrintSjukfallRequest printRequest) {
+
+        // Diagnoser
+        Paragraph valdaDiagnoser = new Paragraph("Valda diagnoser", FRONTPAGE_H3);
+        if (printRequest.getDiagnosGrupper() != null) {
+            com.itextpdf.text.List diagnosLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+            printRequest.getDiagnosGrupper().forEach(dg -> diagnosLista.add(dg));
+            valdaDiagnoser.add(diagnosLista);
+        } else {
+            valdaDiagnoser.add(new Paragraph("Alla", FRONTPAGE_NORMAL));
+        }
+
+        // Lakare
+        Paragraph valdaLakare = new Paragraph("Valda läkare", FRONTPAGE_H3);
+        if (printRequest.getLakare() != null) {
+            com.itextpdf.text.List lakarLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+            printRequest.getLakare().forEach(dg -> lakarLista.add(dg));
+            valdaLakare.add(lakarLista);
+        } else {
+            valdaLakare.add(new Paragraph("Alla", FRONTPAGE_NORMAL));
+        }
+
+        // Sjukskrivningslangd
+        Paragraph valdSjukskrivninglangd = new Paragraph("Vald sjukskrivningslängd", FRONTPAGE_H3);
+        Paragraph sjukskrivningslangdVarden = new Paragraph();
+        sjukskrivningslangdVarden.add(new Chunk("Mellan ", FRONTPAGE_NORMAL));
+        sjukskrivningslangdVarden.add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMin()), FRONTPAGE_NORMAL_BOLD));
+        sjukskrivningslangdVarden.add(new Chunk(" och ", FRONTPAGE_NORMAL));
+        sjukskrivningslangdVarden.add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMax()), FRONTPAGE_NORMAL_BOLD));
+        sjukskrivningslangdVarden.add(new Chunk(" dagar.", FRONTPAGE_NORMAL));
+        valdSjukskrivninglangd.add(sjukskrivningslangdVarden);
+
+        // Fritext
+        Paragraph valdFritext = new Paragraph("Fritextfilter", FRONTPAGE_H3);
+        valdFritext.add(new Paragraph(StringUtil.isNullOrEmpty(printRequest.getFritext()) ? "-" : printRequest.getFritext(), FRONTPAGE_NORMAL));
+
+        // Lagg ihop undergrupperna till filter
+        Paragraph filter = new Paragraph("Valda filter", FRONTPAGE_H2);
+        filter.add(valdaDiagnoser);
+        filter.add(valdaLakare);
+        filter.add(valdSjukskrivninglangd);
+        filter.add(valdFritext);
+
+        return filter;
+    }
+
+    private Element getSjukfallsDefDesc(PrintSjukfallRequest printRequest) {
+        Paragraph def = new Paragraph();
+        def.add(new Paragraph("Sjukfallsinställning", FRONTPAGE_H2));
+        def.add(new Paragraph("Sjukfallsdefinition", FRONTPAGE_H3));
+        def.add(new Phrase("Maxantal dagar uppehåll mellan intyg: ", FRONTPAGE_NORMAL));
+        def.add(new Phrase(printRequest.getMaxIntygsGlapp() + " dagar", FRONTPAGE_NORMAL_BOLD));
+        return def;
+    }
+
+    private Element getSorteringDesc(Sortering sortering) {
+        Paragraph def = new Paragraph();
+        def.add(new Paragraph("Vald sortering på tabellen", FRONTPAGE_H2));
+
+        PdfPTable table = new PdfPTable(2);
+
+        table.setWidthPercentage(40f);
+        table.setSpacingBefore(10f);
+        table.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+        table.getDefaultCell().setBackgroundColor(TABLE_HEADER_BASE_COLOR);
+        table.getDefaultCell().setBorderColor(TABLE_HEADER_BASE_COLOR);
+
+        table.addCell(new Phrase("Kolumn", TABLE_HEADER_FONT));
+        table.addCell(new Phrase("Riktning", TABLE_HEADER_FONT));
+
+        table.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+        if (sortering == null || StringUtil.isNullOrEmpty(sortering.getKolumn())) {
+            table.addCell(new Phrase("Ingen", TABLE_CELL_NORMAL));
+            table.addCell(new Phrase("-", TABLE_CELL_NORMAL));
+        } else {
+            table.addCell(new Phrase(sortering.getKolumn(), TABLE_CELL_NORMAL));
+            table.addCell(new Phrase(sortering.getOrder(), TABLE_CELL_NORMAL));
+        }
+
+        def.add(table);
+        return def;
+
+    }
+
+    private PdfPTable createSjukfallTable(List<InternalSjukfall> sjukfallList, Urval urval) throws DocumentException {
+
         PdfPTable table;
 
+        // Setup column widths (relative to each other)
         if (Urval.ALL.equals(urval)) {
-            table = new PdfPTable(new float[]{0.8f, 2.5f, 3, 1, 2, 1.5f, 1.5f, 2, 2, 2});
+            table = new PdfPTable(new float[] { 0.8f, 2.5f, 3, 1, 2, 1.5f, 1.5f, 2, 2, 2 });
         } else {
-            table = new PdfPTable(new float[]{0.8f, 2.5f, 3, 1, 2, 1.5f, 1.5f, 2, 2});
+            table = new PdfPTable(new float[] { 0.8f, 2.5f, 3, 1, 2, 1.5f, 1.5f, 2, 2 });
         }
 
-        final BaseColor baseColor = new BaseColor(70, 87, 97);
-        // CHECKSTYLE:ON MagicNumber
+        table.setWidthPercentage(100.0f);
 
-        table.setWidthPercentage(TABLE_WIDTH);
-
-        table.getDefaultCell().setBackgroundColor(baseColor);
-        table.getDefaultCell().setBorderColor(baseColor);
+        table.getDefaultCell().setBackgroundColor(TABLE_HEADER_BASE_COLOR);
+        table.getDefaultCell().setBorderColor(TABLE_HEADER_BASE_COLOR);
         table.getDefaultCell().setNoWrap(true);
-        table.getDefaultCell().setPadding(HEADER_PADDING);
+        table.getDefaultCell().setPadding(3f);
         table.getDefaultCell().setPaddingLeft(2f);
 
-        addCell(table, "#", HEADER_FONT);
-        addCell(table, "Personnummer", HEADER_FONT);
-        addCell(table, "Namn", HEADER_FONT);
-        addCell(table, "Kön", HEADER_FONT);
-        addCell(table, "Nuvarande diagnos", HEADER_FONT);
-        addCell(table, "Startdatum", HEADER_FONT);
-        addCell(table, "Slutdatum", HEADER_FONT);
-        addCell(table, "Sjukskrivningslängd", HEADER_FONT);
-        addCell(table, "Sjukskrivningsgrad", HEADER_FONT);
+        addCell(table, "#", TABLE_HEADER_FONT);
+        addCell(table, "Personnummer", TABLE_HEADER_FONT);
+        addCell(table, "Namn", TABLE_HEADER_FONT);
+        addCell(table, "Kön", TABLE_HEADER_FONT);
+        addCell(table, "Nuvarande diagnos", TABLE_HEADER_FONT);
+        addCell(table, "Startdatum", TABLE_HEADER_FONT);
+        addCell(table, "Slutdatum", TABLE_HEADER_FONT);
+        addCell(table, "Sjukskrivningslängd", TABLE_HEADER_FONT);
+        addCell(table, "Sjukskrivningsgrad", TABLE_HEADER_FONT);
         if (Urval.ALL.equals(urval)) {
-            addCell(table, "Nuvarande läkare", HEADER_FONT);
+            addCell(table, "Nuvarande läkare", TABLE_HEADER_FONT);
         }
 
+        // Set cell styles for the non-header cells following hereafter
         table.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
         table.getDefaultCell().setBorderColor(BaseColor.LIGHT_GRAY);
         table.getDefaultCell().setNoWrap(false);
@@ -152,7 +281,7 @@ public class PdfExportServiceImpl implements PdfExportService {
     }
 
     private void addCell(PdfPTable table, String s) {
-        addCell(table, s, NORMAL);
+        addCell(table, s, TABLE_CELL_NORMAL);
     }
 
     private void addCell(PdfPTable table, String s, Font font) {
@@ -163,9 +292,9 @@ public class PdfExportServiceImpl implements PdfExportService {
         Phrase grader = new Phrase();
         for (Integer grad : s.getGrader()) {
             if (grad == s.getAktivGrad()) {
-                grader.add(new Chunk(grad.toString() + "% ", BOLD));
+                grader.add(new Chunk(grad.toString() + "% ", TABLE_CELL_BOLD));
             } else {
-                grader.add(new Chunk(grad.toString() + "% ", NORMAL));
+                grader.add(new Chunk(grad.toString() + "% ", TABLE_CELL_NORMAL));
             }
         }
         return grader;
@@ -173,15 +302,15 @@ public class PdfExportServiceImpl implements PdfExportService {
 
     private Phrase getPersonnummerColumn(Sjukfall s) {
         Phrase p = new Phrase();
-        p.add(new Chunk(s.getPatient().getId() != null ? s.getPatient().getId() : "", NORMAL));
-        p.add(new Chunk(String.format(" (%d år)", s.getPatient().getAlder()), BOLD));
+        p.add(new Chunk(s.getPatient().getId() != null ? s.getPatient().getId() : "", TABLE_CELL_NORMAL));
+        p.add(new Chunk(String.format(" (%d år)", s.getPatient().getAlder()), TABLE_CELL_BOLD));
         return p;
     }
 
     private Phrase getlangdText(Sjukfall s) {
         Phrase p = new Phrase();
-        p.add(new Chunk(String.format("%d dagar", s.getDagar()), NORMAL));
-        p.add(new Chunk(String.format(" (%d intyg)", s.getIntyg()), SMALL));
+        p.add(new Chunk(String.format("%d dagar", s.getDagar()), TABLE_CELL_NORMAL));
+        p.add(new Chunk(String.format(" (%d intyg)", s.getIntyg()), TABLE_CELL_SMALL));
         return p;
     }
 
@@ -195,58 +324,4 @@ public class PdfExportServiceImpl implements PdfExportService {
         return "Okänt";
     }
 
-    class PageNumberingEventHandler extends PdfPageEventHelper {
-
-        private static final int WIDTH = 30;
-        private static final int HEIGHT = 16;
-        private static final float TOTAL_WIDTH = 100f;
-        /**
-         * The template with the total number of pages.
-         */
-        PdfTemplate total;
-
-        /**
-         * Creates the PdfTemplate that will hold the total number of pages.
-         * @see com.itextpdf.text.pdf.PdfPageEventHelper#onOpenDocument(com.itextpdf.text.pdf.PdfWriter,
-         * com.itextpdf.text.Document)
-         */
-        public void onOpenDocument(PdfWriter writer, Document document) {
-            total = writer.getDirectContent().createTemplate(WIDTH, HEIGHT);
-        }
-
-        /**
-         * Adds a header to every page.
-         * @see com.itextpdf.text.pdf.PdfPageEventHelper#onEndPage(com.itextpdf.text.pdf.PdfWriter,
-         * com.itextpdf.text.Document)
-         */
-        public void onEndPage(PdfWriter writer, Document document) {
-            PdfPTable table = new PdfPTable(2);
-            try {
-                table.setWidths(new int[]{2, 1});
-                table.setTotalWidth(TOTAL_WIDTH);
-
-                table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
-                table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-
-                table.addCell(new Phrase(String.format("Sida %d av ", writer.getPageNumber()), NORMAL));
-                PdfPCell cell = new PdfPCell(Image.getInstance(total));
-                cell.setBorder(Rectangle.NO_BORDER);
-                table.addCell(cell);
-                table.writeSelectedRows(0, -1, document.right() - WIDTH * 2, document.bottom() - document.bottomMargin() / 2 + HEIGHT,
-                        writer.getDirectContent());
-            } catch (DocumentException de) {
-                throw new ExceptionConverter(de);
-            }
-        }
-
-        /**
-         * Fills out the total number of pages before the document is closed.
-         * @see com.itextpdf.text.pdf.PdfPageEventHelper#onCloseDocument(com.itextpdf.text.pdf.PdfWriter,
-         * com.itextpdf.text.Document)
-         */
-        public void onCloseDocument(PdfWriter writer, Document document) {
-            // CHECKSTYLE:OFF MagicNumber
-            ColumnText.showTextAligned(total, Element.ALIGN_LEFT, new Phrase(String.valueOf(writer.getPageNumber()), NORMAL), 1, 4, 0);
-        }
-    }
 }

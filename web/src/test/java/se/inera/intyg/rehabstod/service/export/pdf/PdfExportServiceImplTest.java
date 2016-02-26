@@ -20,9 +20,16 @@ package se.inera.intyg.rehabstod.service.export.pdf;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+
+import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
@@ -34,24 +41,39 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Created by marced on 24/02/16.
  */
+
 public class PdfExportServiceImplTest {
-    // CHECKSTYLE:OFF MagicNumber
+    RehabstodUser user;
 
     @Before
     public void setUp() throws Exception {
+        user = new RehabstodUser("HSA1111", "Johannes Nielsen-Kornbach");
+        user.setValdVardenhet(new SelectableVardenhet() {
+            @Override
+            public String getId() {
+                return "1111";
+            }
+
+            @Override
+            public String getNamn() {
+                return "Gläntans vårdcentral";
+            }
+
+            @Override
+            public List<String> getHsaIds() {
+                return null;
+            }
+        });
     }
 
     @Test
     public void testExportIssuedByMe() throws Exception {
         PdfExportService exporter = new PdfExportServiceImpl();
-        final byte[] export = exporter.export(createSjukFallList(), createPrintRequest(), Urval.ISSUED_BY_ME);
+        user.setUrval(Urval.ISSUED_BY_ME);
+        final byte[] export = exporter.export(createSjukFallList(), createPrintRequest(), user);
         assertTrue(export.length > 0);
         // Files.write(Paths.get("./test_issued_by_me.pdf"), export);
     }
@@ -59,8 +81,10 @@ public class PdfExportServiceImplTest {
     @Test
     public void testExportAll() throws Exception {
         PdfExportService exporter = new PdfExportServiceImpl();
-        final byte[] export = exporter.export(createSjukFallList(), createPrintRequest(), Urval.ALL);
+        user.setUrval(Urval.ALL);
+        final byte[] export = exporter.export(createSjukFallList(), createPrintRequest(), user);
         assertTrue(export.length > 0);
+
         // Files.write(Paths.get("./test_all.pdf"), export);
     }
 
@@ -76,7 +100,10 @@ public class PdfExportServiceImplTest {
         langdIntervall.setMax(366);
         r.setLangdIntervall(langdIntervall);
         r.setMaxIntygsGlapp(30);
-        r.setSortering(new Sortering());
+        final Sortering sortering = new Sortering();
+        sortering.setKolumn("Personnummer");
+        sortering.setOrder("Stigande");
+        r.setSortering(sortering);
         return r;
     }
 
