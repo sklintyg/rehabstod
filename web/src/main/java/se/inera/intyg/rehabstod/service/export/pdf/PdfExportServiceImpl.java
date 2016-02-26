@@ -43,6 +43,7 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
+import com.itextpdf.text.ListItem;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
@@ -66,7 +67,6 @@ public class PdfExportServiceImpl implements PdfExportService {
     private static final BaseColor TABLE_HEADER_BASE_COLOR = new BaseColor(70, 87, 97);
     private static final BaseColor TABLE_EVEN_ROW_COLOR = BaseColor.WHITE;
     private static final BaseColor TABLE_ODD_ROW_COLOR = new BaseColor(220, 220, 220);
-
 
     @Override
     public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user)
@@ -137,7 +137,7 @@ public class PdfExportServiceImpl implements PdfExportService {
         Paragraph valdaDiagnoser = new Paragraph("Valda diagnoser", FRONTPAGE_H3);
         if (printRequest.getDiagnosGrupper() != null) {
             com.itextpdf.text.List diagnosLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
-            printRequest.getDiagnosGrupper().forEach(dg -> diagnosLista.add(dg));
+            printRequest.getDiagnosGrupper().forEach(dg -> diagnosLista.add(new ListItem(dg, FRONTPAGE_NORMAL)));
             valdaDiagnoser.add(diagnosLista);
         } else {
             valdaDiagnoser.add(new Paragraph("Alla", FRONTPAGE_NORMAL));
@@ -147,7 +147,7 @@ public class PdfExportServiceImpl implements PdfExportService {
         Paragraph valdaLakare = new Paragraph("Valda läkare", FRONTPAGE_H3);
         if (printRequest.getLakare() != null) {
             com.itextpdf.text.List lakarLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
-            printRequest.getLakare().forEach(dg -> lakarLista.add(dg));
+            printRequest.getLakare().forEach(dg -> lakarLista.add(new ListItem(dg, FRONTPAGE_NORMAL)));
             valdaLakare.add(lakarLista);
         } else {
             valdaLakare.add(new Paragraph("Alla", FRONTPAGE_NORMAL));
