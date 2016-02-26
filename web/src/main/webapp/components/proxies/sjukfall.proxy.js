@@ -1,6 +1,6 @@
 angular.module('rehabstodApp').factory('SjukfallProxy',
     function($http, $log, $q,
-        ObjectHelper, networkConfig, $window, $httpParamSerializer) {
+        ObjectHelper, networkConfig, $window, $httpParamSerializer, StringHelper) {
         'use strict';
 
         var timeout = networkConfig.defaultTimeout;
@@ -49,7 +49,8 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
 
             angular.forEach(data.split('&'), function(item){
                 var pair = item.split('=');
-                inputs+='<input type="hidden" name="' + decodeURIComponent(pair[0]) + '" value="' + decodeURIComponent(pair[1]) + '" />';
+                inputs+='<input type="hidden" name="' + decodeURIComponent(pair[0]) + '" value="' +
+                    StringHelper.replaceAll(decodeURIComponent(pair[1]), '+', ' ') + '" />';
             });
 
             //send request
