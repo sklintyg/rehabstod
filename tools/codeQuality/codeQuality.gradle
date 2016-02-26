@@ -9,6 +9,7 @@ checkstyle {
 }
 
 pmd {
+    toolVersion = '5.4.1';
     ignoreFailures = false
     ruleSetFiles = rootProject.files("tools/codeQuality/pmdRuleSet.xml")
     ruleSets = []

@@ -18,11 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities;
 
-import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.ROLE_KOORDINATOR;
-import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.ROLE_LAKARE;
-import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.TITLECODE_AT_LAKARE;
-import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.TITLE_LAKARE;
-
 import org.opensaml.saml2.core.Assertion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
 import se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion;
 import se.inera.intyg.rehabstod.auth.authorities.bootstrap.AuthoritiesConfigurationLoader;
 import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
-import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +40,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.*;
 
 /**
  * Created by Magnus Ekstrand on 21/01/16.
@@ -72,8 +69,7 @@ public class AuthoritiesResolver {
         SakerhetstjanstAssertion sa = getAssertion(credential.getAuthenticationAssertion());
         List<PersonInformationType> personInfo = getPersonInfo(sa.getHsaId());
 
-        Role role = lookupUserRole(sa, personInfo);
-        return role;
+        return lookupUserRole(sa, personInfo);
     }
 
     /**
@@ -323,10 +319,6 @@ public class AuthoritiesResolver {
         return r -> r.getName() != null && r.getName().equalsIgnoreCase(name);
     }
 
-    private Predicate<Title> isTitle(String title) {
-        return t -> t.getTitle() != null && t.getTitle().equalsIgnoreCase(title);
-    }
-
     private Predicate<TitleCode> isTitleCode(String titleCode) {
         return tc -> tc.getTitleCode() != null && tc.getTitleCode().equalsIgnoreCase(titleCode);
     }
@@ -345,13 +337,6 @@ public class AuthoritiesResolver {
     private Function<String, Role> fnRole = (name) -> {
         return getRoles().stream()
                 .filter(isRole(name))
-                .findFirst()
-                .orElse(null);
-    };
-
-    private Function<String, Title> fnTitle = (title) -> {
-        return getTitles().stream()
-                .filter(isTitle(title))
                 .findFirst()
                 .orElse(null);
     };
