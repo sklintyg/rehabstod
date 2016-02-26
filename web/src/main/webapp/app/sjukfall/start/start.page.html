@@ -1,9 +1,9 @@
-<div id="startPage" class="container center-block">
-  <h1 id="rhs-startPage-header" class="page-header">
+<div id="rhs-start-page" class="container center-block">
+  <h1 id="rhs-start-page-header" class="page-header">
     <span message key="label.sjukfall.start.header"></span> {{user.valdVardgivare.namn}} - {{user.valdVardenhet.namn}}
   </h1>
 
-  <rhs-stat-panel vardenhet="user.valdVardenhet"></rhs-stat-panel>
+  <rhs-stat-panel vardenhet="user.valdVardenhet" id="rhs-start-stat-panel"></rhs-stat-panel>
 
   <div ui-view="selection"></div>
 </div>

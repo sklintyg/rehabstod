@@ -4,11 +4,13 @@ angular.module('rehabstodApp')
         $scope.menu = [
             {
                 title: 'Pågående sjukfall',
-                link: 'app.sjukfall'
+                link: 'app.sjukfall',
+                id: 'navbar-link-sjukfall'
             },
             {
                 title: 'Om Rehabstöd',
-                link: 'app.about'
+                link: 'app.about',
+                id: 'navbar-link-about'
             }
         ];
 

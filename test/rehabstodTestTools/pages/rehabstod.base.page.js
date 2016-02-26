@@ -38,6 +38,12 @@ var RehabstodBasePage = Class._extend({
     },
     isAt: function() {
         return this.at.isDisplayed();
+    },
+    getPage: function(page) {
+        browser.get('app.html/#/' + page);
+    },
+    clickBytVardenhet: function() {
+        element(by.id('rhs-header-other-locations')).click();
     }
 });
 

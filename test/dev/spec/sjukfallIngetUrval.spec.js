@@ -17,33 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals browser */
-
-/**
- * Created by erik
- */
-
+/*globals pages */
+/*globals describe,it,helpers */
 'use strict';
 
-var RehabstodBasePage = require('./rehabstod.base.page.js');
+var specHelper = rhsTestTools.helpers.spec;
 
-var RehabstodStartPageBase = RehabstodBasePage._extend({
-    init: function init() {
-        init._super.call(this);
-        this.at = element(by.id('rhs-start-page'));
-    },
-    get: function () {
-        this.getPage('start');
-    },
-    isAt: function isAt() {
-        return isAt._super.call(this);
-    },
-    clickFullUnit: function() {
-        element(by.id('rhs-start-page-all-btn')).click();
-    },
-    clickMyUnit: function() {
-        element(by.id('rhs-start-page-my-btn')).click();
-    }
+var startPage = rhsTestTools.pages.startPage;
+var sjukfallPage = rhsTestTools.pages.sjukfallPage;
+
+describe('Försök gå till sjukfalls listan utan urval', function() {
+
+    describe('Login through the welcome page, go to sjukfall page.', function() {
+        it('with user', function() {
+            browser.ignoreSynchronization = false;
+            specHelper.login();
+            sjukfallPage.get();
+            expect(startPage.isAt()).toBe(true);
+            specHelper.logout();
+        });
+    });
+
 });
-
-module.exports = new RehabstodStartPageBase();

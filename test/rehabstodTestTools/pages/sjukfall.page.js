@@ -30,16 +30,16 @@ var RehabstodBasePage = require('./rehabstod.base.page.js');
 var RehabstodSjukfallPage = RehabstodBasePage._extend({
     init: function init() {
         init._super.call(this);
-        this.at = element(by.id('sjukfallPage'));
+        this.at = element(by.id('rhs-sjukfall-page'));
     },
     get: function () {
-        browser.get('#/sjukfall');
+        this.getPage('sjukfall');
     },
     isAt: function isAt() {
         return isAt._super.call(this);
     },
     clickResetFilter: function() {
-        element(by.id('rhs-sjukfallPage-resetFilterBtn')).click();
+        element(by.id('rhs-filter-reset-btn')).click();
     }
 });
 

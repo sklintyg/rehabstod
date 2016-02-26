@@ -1,6 +1,6 @@
-<div>
+<div id="rhs-sjukfall-page">
   <div set-class-when-at-top="result-fixed-top" class="result-top container" ng-switch="user.urval">
-    <a ng-click="goBack()" href class="result-backlink" title="{{::'label.sjukfall.result.back' | message}}"></a>
+    <a ng-click="goBack()" id="rhs-sjukfall-page-go-back" href class="result-backlink" title="{{::'label.sjukfall.result.back' | message}}"></a>
 
     <div ng-switch-when="ISSUED_BY_ME">
       <h1><span message key="label.sjukfall.result.lakare.header"></span></h1>
