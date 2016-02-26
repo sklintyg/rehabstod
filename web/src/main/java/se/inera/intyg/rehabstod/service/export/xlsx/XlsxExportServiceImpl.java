@@ -88,7 +88,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         }
 
         addFilterMainHeader(sheet, rowNumber++, "Valda filter");
-        addFilterHeader(sheet, rowNumber++, "Sjukskrivningslängd", req.getLangdIntervall().getMin() + "-" + req.getLangdIntervall().getMax() + " dagar");
+        addFilterHeader(sheet, rowNumber++, "Sjukskrivningslängd", req.getLangdIntervall().getMin() + " - " + req.getLangdIntervall().getMax() + " dagar");
         addFilterHeader(sheet, rowNumber++, "Läkare", urval == Urval.ALL ? toBulletList(req.getLakare()) : userService.getUser().getNamn());
         addFilterHeaderWithRichTextValue(sheet, rowNumber++, "Diagnoskapitel", diagnosKapitelFormat(req.getDiagnosGrupper()));
         addFilterHeader(sheet, rowNumber++, "Sökfilter", notEmpty(req) ? req.getFritext() : "-");
@@ -267,7 +267,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
         Font fondBold = wb.createFont();
         fondBold.setFontHeightInPoints((short) DEFAULT_FONT_SIZE);
-        fondBold.setFontName("Arial");
+        fondBold.setFontName("Helvetica");
         fondBold.setColor(IndexedColors.BLACK.getIndex());
         fondBold.setBoldweight(Font.BOLDWEIGHT_BOLD);
         fondBold.setBold(true);
@@ -286,7 +286,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         stripedLighter.setFillPattern(CellStyle.SOLID_FOREGROUND);
 
         filterTextStyle = wb.createCellStyle();
-        filterTextStyle.setFont(buildFont(wb, 12, "Arial", false, false));
+        filterTextStyle.setFont(buildFont(wb, 12, "Helvetica", false, false));
         filterTextStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(240, 240, 240)));
         filterTextStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
         filterTextStyle.setBorderBottom(CellStyle.BORDER_THIN);
@@ -294,7 +294,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         filterTextStyle.setWrapText(true);
 
         filterHeaderStyle = wb.createCellStyle();
-        filterHeaderStyle.setFont(buildFont(wb, 12, "Arial", true, false));
+        filterHeaderStyle.setFont(buildFont(wb, 12, "Helvetica", true, false));
         filterHeaderStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(240, 240, 240)));
         filterHeaderStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
         filterHeaderStyle.setBorderBottom(CellStyle.BORDER_THIN);
@@ -302,18 +302,22 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         filterHeaderStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
 
         filterMainHeaderStyle = wb.createCellStyle();
-        filterMainHeaderStyle.setFont(buildFont(wb, 16, "Arial", true, true));
+        filterMainHeaderStyle.setFont(buildFont(wb, 16, "Helvetica", true, true));
         filterMainHeaderStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(240, 240, 240)));
         filterMainHeaderStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
         filterMainHeaderStyle.setBorderBottom(CellStyle.BORDER_THIN);
         filterMainHeaderStyle.setBottomBorderColor(IndexedColors.WHITE.getIndex());
 
         boldFont = wb.createFont();
+        boldFont.setFontName("Helvetica");
+        boldFont.setFontHeightInPoints((short) 12);
         boldFont.setBold(true);
         boldFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
         boldFont.setItalic(true);
 
         defaultFont = wb.createFont();
+        defaultFont.setFontName("Helvetica");
+        defaultFont.setFontHeightInPoints((short) 12);
     }
 
     private Font buildFont(XSSFWorkbook wb, int heightInPoints, String fontName, boolean bold, boolean underline) {
