@@ -50,8 +50,6 @@ import java.util.List;
 @Service
 public class XlsxExportServiceImpl extends BaseExportService implements XlsxExportService {
 
-    private static final int DEFAULT_FONT_SIZE = 11;
-
     private XSSFCellStyle boldStyle;
     private XSSFCellStyle filterMainHeaderStyle;
     private XSSFCellStyle filterHeaderStyle;
@@ -60,8 +58,11 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     private XSSFCellStyle stripedDarker;
     private XSSFCellStyle stripedLighter;
 
-    private XSSFFont defaultFont;
-    private XSSFFont boldFont;
+    private XSSFFont boldFont16;
+    private XSSFFont defaultFont12;
+    private XSSFFont boldFont12;
+    private XSSFFont defaultFont11;
+    private XSSFFont boldFont11;
 
     private static final String[] HEADERS = new String[] { "#", "Personnummer", "Namn", "Kön", "Nuvarande diagnos",
             "Startdatum", "Slutdatum", "Sjukskrivningslängd", "Sjukskrivningsgrad", "Nuvarande läkare" };
@@ -128,10 +129,10 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
         XSSFRichTextString richTextString = new XSSFRichTextString();
         richTextString.setString(buf.toString());
-        richTextString.applyFont(defaultFont);
+        richTextString.applyFont(defaultFont12);
 
         // Apply bold text for the text between boldIndicies values.
-        boldIndicies.stream().forEach(pair -> richTextString.applyFont(pair.getI1(), pair.getI2(), boldFont));
+        boldIndicies.stream().forEach(pair -> richTextString.applyFont(pair.getI1(), pair.getI2(), defaultFont12));
         return richTextString;
     }
 
@@ -213,8 +214,8 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         String value = patient.getId() + " (" + patient.getAlder() + " år)";
         XSSFRichTextString richTextString = new XSSFRichTextString();
         richTextString.setString(value);
-        richTextString.applyFont(defaultFont);
-        richTextString.applyFont(value.indexOf("(") + 1, value.lastIndexOf(")"), boldFont);
+        richTextString.applyFont(defaultFont11);
+        richTextString.applyFont(value.indexOf("(") + 1, value.lastIndexOf(")"), boldFont11);
         return richTextString;
     }
 
@@ -238,9 +239,9 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
         XSSFRichTextString richTextString = new XSSFRichTextString();
         richTextString.setString(buf.toString());
-        richTextString.applyFont(defaultFont);
+        richTextString.applyFont(defaultFont11);
         if (aktivIndicies != null) {
-            richTextString.applyFont(aktivIndicies.getI1(), aktivIndicies.getI2(), boldFont);
+            richTextString.applyFont(aktivIndicies.getI1(), aktivIndicies.getI2(), boldFont11);
         }
         return richTextString;
     }
@@ -264,16 +265,14 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     }
 
     private void setupFonts(XSSFWorkbook wb) {
-
-        Font fondBold = wb.createFont();
-        fondBold.setFontHeightInPoints((short) DEFAULT_FONT_SIZE);
-        fondBold.setFontName("Helvetica");
-        fondBold.setColor(IndexedColors.BLACK.getIndex());
-        fondBold.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        fondBold.setBold(true);
+        boldFont16 = buildFont(wb, 16, "Helvetica", true, true);
+        boldFont12 = buildFont(wb, 12, "Helvetica", true, false);
+        defaultFont12 = buildFont(wb, 12, "Helvetica", false, false);
+        boldFont11 = buildFont(wb, 11, "Helvetica", true, false);
+        defaultFont11 = buildFont(wb, 11, "Helvetica", false, false);
 
         boldStyle = wb.createCellStyle();
-        boldStyle.setFont(fondBold);
+        boldStyle.setFont(boldFont11);
         boldStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(40, 180, 196)));
         boldStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 
@@ -286,7 +285,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         stripedLighter.setFillPattern(CellStyle.SOLID_FOREGROUND);
 
         filterTextStyle = wb.createCellStyle();
-        filterTextStyle.setFont(buildFont(wb, 12, "Helvetica", false, false));
+        filterTextStyle.setFont(defaultFont12);
         filterTextStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(240, 240, 240)));
         filterTextStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
         filterTextStyle.setBorderBottom(CellStyle.BORDER_THIN);
@@ -294,7 +293,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         filterTextStyle.setWrapText(true);
 
         filterHeaderStyle = wb.createCellStyle();
-        filterHeaderStyle.setFont(buildFont(wb, 12, "Helvetica", true, false));
+        filterHeaderStyle.setFont(boldFont12);
         filterHeaderStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(240, 240, 240)));
         filterHeaderStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
         filterHeaderStyle.setBorderBottom(CellStyle.BORDER_THIN);
@@ -302,30 +301,22 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         filterHeaderStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
 
         filterMainHeaderStyle = wb.createCellStyle();
-        filterMainHeaderStyle.setFont(buildFont(wb, 16, "Helvetica", true, true));
+        filterMainHeaderStyle.setFont(boldFont16);
         filterMainHeaderStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(240, 240, 240)));
         filterMainHeaderStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
         filterMainHeaderStyle.setBorderBottom(CellStyle.BORDER_THIN);
         filterMainHeaderStyle.setBottomBorderColor(IndexedColors.WHITE.getIndex());
 
-        boldFont = wb.createFont();
-        boldFont.setFontName("Helvetica");
-        boldFont.setFontHeightInPoints((short) 12);
-        boldFont.setBold(true);
-        boldFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
-        boldFont.setItalic(true);
 
-        defaultFont = wb.createFont();
-        defaultFont.setFontName("Helvetica");
-        defaultFont.setFontHeightInPoints((short) 12);
     }
 
-    private Font buildFont(XSSFWorkbook wb, int heightInPoints, String fontName, boolean bold, boolean underline) {
-        Font font = wb.createFont();
+    private XSSFFont buildFont(XSSFWorkbook wb, int heightInPoints, String fontName, boolean bold, boolean underline) {
+        XSSFFont font = wb.createFont();
         font.setFontHeightInPoints((short) heightInPoints);
         font.setFontName(fontName);
         font.setColor(IndexedColors.BLACK.getIndex());
         font.setBold(bold);
+        font.setBoldweight(bold ? Font.BOLDWEIGHT_BOLD : Font.BOLDWEIGHT_NORMAL);
         font.setUnderline(underline ? XSSFFont.U_SINGLE : XSSFFont.U_NONE);
         return font;
     }
