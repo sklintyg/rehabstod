@@ -1,6 +1,6 @@
 angular.module('rehabstodApp').factory('SjukfallProxy',
     function($http, $log, $q,
-        ObjectHelper, networkConfig, $window, $httpParamSerializer, StringHelper) {
+        ObjectHelper, networkConfig, $window) {
         'use strict';
 
         var timeout = networkConfig.defaultTimeout;
@@ -36,26 +36,37 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
 
             var restPath = '/api/sjukfall/' + type;
             var inputs = '';
-            
-            inputs+='<input type="hidden" name="langdIntervall.max" value="' + query.langdIntervall.max + '" />';
-            inputs+='<input type="hidden" name="langdIntervall.min" value="' + query.langdIntervall.min + '" />';
-            inputs+='<input type="hidden" name="sortering.kolumn" value="' + query.sortering.kolumn + '" />';
-            inputs+='<input type="hidden" name="sortering.order" value="' + query.sortering.order + '" />';
-            delete query.langdIntervall;
-            delete query.sortering;
 
-            var data = $httpParamSerializer(query);
-            //split params into form inputs
+            inputs += _addInput('langdIntervall.max', query.langdIntervall.max);
+            inputs += _addInput('langdIntervall.min', query.langdIntervall.min);
+            inputs += _addInput('sortering.kolumn', query.sortering.kolumn);
+            inputs += _addInput('sortering.order', query.sortering.order);
+            inputs += _addInput('fritext', query.fritext);
+            inputs += _addInput('maxIntygsGlapp', query.maxIntygsGlapp);
 
-            angular.forEach(data.split('&'), function(item){
-                var pair = item.split('=');
-                inputs+='<input type="hidden" name="' + decodeURIComponent(pair[0]) + '" value="' +
-                    StringHelper.replaceAll(decodeURIComponent(pair[1]), '+', ' ') + '" />';
+            angular.forEach(query.lakare, function(item) {
+                inputs += _addInput('lakare', item);
+            });
+
+            angular.forEach(query.diagnosGrupper, function(item) {
+                inputs += _addInput('diagnosGrupper', item);
+            });
+
+            angular.forEach(query.personnummer, function(item) {
+                inputs += _addInput('personnummer', item);
             });
 
             //send request
             $window.jQuery('<form action="'+ restPath +'" target="_blank" method="post">'+inputs+'</form>')
                 .appendTo('body').submit().remove();
+        }
+
+        function _addInput(name, item) {
+            if (item) {
+                 return '<input type="hidden" name="' + name + '" value="' + item + '" />';
+            }
+
+            return '';
         }
 
         // Return public API for the service
