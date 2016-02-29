@@ -22,19 +22,51 @@
 'use strict';
 
 var specHelper = rhsTestTools.helpers.spec;
+var startPage = rhsTestTools.pages.startPage;
 
-describe('Logga in som Jan Nilsson', function() {
+describe('Logga in', function() {
 
-    var utkastId = null;
-
-    describe('Login through the welcome page, make sure we end up oj', function() {
+    describe('Logga in som Jan Nilsson', function() {
         it('with user', function() {
             browser.ignoreSynchronization = false;
             specHelper.login();
             specHelper.logout();
-            //SokSkrivIntygPage.selectPersonnummer('191212121212');
-            //expect(SokSkrivValjUtkastType.isAt()).toBe(true);
         });
+    });
+
+    describe('Logga in som Lena Karlsson', function() {
+
+        beforeEach(function() {
+            browser.ignoreSynchronization = false;
+            specHelper.login('IFV1239877878-104N_IFV1239877878-1045');
+
+        });
+
+        it('with user open and close select care unit', function() {
+            browser.ignoreSynchronization = false;
+            startPage.clickBytVardenhet();
+
+            expect(startPage.closeBytVardenhet.isPresent()).toBeTruthy();
+
+            startPage.clickCloseBytVardenhet();
+        });
+
+        it('with user open and change care unit', function() {
+            browser.ignoreSynchronization = false;
+
+            var today = new Date().toISOString().split('T')[0];
+
+            expect(element(by.id('location')).getText()).toBe(today + ' - WebCert-Vårdgivare2 - WebCert-Enhet2');
+
+            startPage.clickBytVardenhet();
+            element(by.id('select-active-unit-IFV1239877878-104D-modal')).click();
+
+            expect(element(by.id('location')).getText()).toBe(today + ' - WebCert-Vårdgivare2 - WebCert-Enhet3');
+        });
+
+        afterEach(function() {
+            specHelper.logout();
+        })
     });
 
 });

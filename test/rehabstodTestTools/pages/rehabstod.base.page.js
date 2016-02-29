@@ -35,8 +35,7 @@ var RehabstodBasePage = Class._extend({
         // this.header = element(by.id('wcHeader'));
         this.header = element(by.css('.headerbox-user-profile'));
         this.navBar = element(by.css('.navbar-header'));
-        this.allBtn = element(by.id('rhs-startPage-allBtn'));
-        this.myBtn = element(by.id('rhs-startPage-myBtn'));
+        this.closeBytVardenhet = element(by.id('select-care-unit-close'));
     },
     isAt: function() {
         return this.at.isDisplayed();
@@ -46,6 +45,9 @@ var RehabstodBasePage = Class._extend({
     },
     clickBytVardenhet: function() {
         element(by.id('rhs-header-other-locations')).click();
+    },
+    clickCloseBytVardenhet: function() {
+        this.closeBytVardenhet.click();
     }
 });
 
