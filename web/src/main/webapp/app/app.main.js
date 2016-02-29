@@ -11,7 +11,11 @@ var app = angular.module('rehabstodApp', [
     'smart-table',
     'infinite-scroll',
     'taiPlaceholder'
-]).value('THROTTLE_MILLISECONDS', 300);
+]).value('THROTTLE_MILLISECONDS', 300).config(function(stConfig) {
+    'use strict';
+
+    stConfig.sort.skipNatural = true;
+});
 
 deferredBootstrapper.bootstrap({
     element: document.body,
