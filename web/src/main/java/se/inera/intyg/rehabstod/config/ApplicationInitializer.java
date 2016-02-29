@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.config;
 
 import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
@@ -33,11 +32,10 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
+
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
-
-// import se.inera.intyg.rehabstod.hsa.config.HsaConfiguration;
 
 public class ApplicationInitializer implements WebApplicationInitializer {
 
@@ -63,10 +61,16 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
         springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
 
+        FilterRegistration.Dynamic characterEncodingFilter = servletContext.addFilter("characterEncodingFilter", CharacterEncodingFilter.class);
+        characterEncodingFilter.addMappingForUrlPatterns(null, false, "/*");
+        characterEncodingFilter.setInitParameter("encoding", "UTF-8");
+        characterEncodingFilter.setInitParameter("forceEncoding", "true");
+
+        // NOTE: The characterEncoding filter must run before the hiddenHttpMethodFilter, otherwise the setEncoding will
+        // be done to late, as the hiddenHttpMethodFilter internally uses request.getParameter which will parse the
+        // parameters using a default encoding which may not be UTF-8 in e.g in tomcat it's ISO-8859-1.
         FilterRegistration.Dynamic hiddenHttpMethodFilter = servletContext.addFilter("hiddenHttpMethodFilter", HiddenHttpMethodFilter.class);
         hiddenHttpMethodFilter.addMappingForUrlPatterns(null, false, "/*");
-
-        registerCharachterEncodingFilter(servletContext);
 
         // CXF services filter
         ServletRegistration.Dynamic cxfServlet = servletContext.addServlet("services", new CXFServlet());
@@ -78,10 +82,4 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         servletContext.addListener(new RequestContextListener());
     }
 
-    private void registerCharachterEncodingFilter(ServletContext aContext) {
-        CharacterEncodingFilter cef = new CharacterEncodingFilter();
-        cef.setForceEncoding(true);
-        cef.setEncoding("UTF-8");
-        aContext.addFilter("characterEncodingFilter", cef).addMappingForUrlPatterns(null, true, "/*");
-    }
 }
