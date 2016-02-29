@@ -19,12 +19,12 @@ angular.module('rehabstodApp').directive('setClassWhenAtTop', function ($window)
                 var offsetTop = parent.offset().top - paddingTop;
 
                 if ($win.scrollTop() >= offsetTop) {
-                    element.addClass(topClass);
-                    element.css('top', paddingTop);
-
                     if (!useHide) {
                         parent.height(elementHeight);
                     }
+
+                    element.css('top', paddingTop);
+                    element.addClass(topClass);
                 } else {
                     element.removeClass(topClass);
                     if (!useHide) {
