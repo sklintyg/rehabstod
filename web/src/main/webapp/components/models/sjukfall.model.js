@@ -35,16 +35,16 @@ angular.module('rehabstodApp').factory('SjukfallModel',
 
         function _getGradShow(aktivGrad, grader) {
 
-            var gradShow = { show: ''};
+            var gradShow = {show: ''};
 
             angular.forEach(grader, function(grad) {
                 if (grad === aktivGrad) {
-                    this.show += '<span class="rhs-table-grad-active">'+ grad +'% </span>';
+                    this.show += '<span class="rhs-table-grad-active">' + grad + '% </span>';
                 }
                 else {
                     this.show += grad + '% ';
                 }
-            },gradShow);
+            }, gradShow);
 
 
             return gradShow.show;
@@ -67,14 +67,14 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                     item.quickSearchString = '';
                     _addQuickSearchContentFromProperty(item, 'patient.id');
                     _addQuickSearchContentFromProperty(item, 'patient.namn');
-                    _addQuickSearchContentFromProperty(item, 'patient.alder');
+                    _addQuickSearchContent(item, '(' + item.patient.alder + ' år)');
                     _addQuickSearchContentFromProperty(item, 'patient.konShow');
                     _addQuickSearchContentFromProperty(item, 'diagnos.intygsVarde');
                     _addQuickSearchContentFromProperty(item, 'start');
                     _addQuickSearchContentFromProperty(item, 'slut');
-                    _addQuickSearchContentFromProperty(item, 'dagar');
+                    _addQuickSearchContent(item, item.dagarShow + '(' + item.intyg + ' intyg)');
                     _addQuickSearchContentFromProperty(item, 'intyg');
-                    _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join(',') : '');
+                    _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join('%,') + '%' : '');
                     _addQuickSearchContentFromProperty(item, 'lakare.namn');
                 });
             },
