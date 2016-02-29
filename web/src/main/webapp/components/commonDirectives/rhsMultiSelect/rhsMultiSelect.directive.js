@@ -17,8 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsMultiSelect',
-    function() {
+    function($window) {
         'use strict';
+
+        var $win = angular.element($window);
 
         return {
             restrict: 'E',
@@ -30,7 +32,9 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
             },
 
             templateUrl: 'components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.html',
-            controller: function($scope) {
+            link: function($scope, element) {
+
+                var dropdownOpen = false;
 
                 //Template just need access to the array
                 $scope.items = $scope.itemsModel.get();
@@ -51,6 +55,29 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
                     item.selected = !item.selected;
                 };
 
+                $scope.dropdownToggle = function(open) {
+                    dropdownOpen = open;
+
+                    calculateDropdownHeight();
+                };
+
+                var calculateDropdownHeight = function() {
+                    if (dropdownOpen) {
+                        var dropdown = element.find('.dropdown-menu');
+
+                        var offsetTop = dropdown.offset().top - $win.scrollTop();
+
+                        var height = $window.innerHeight - offsetTop - 20;
+
+                        dropdown.css('max-height', Math.max(height, 100));
+                    }
+                };
+
+                $win.on('resize', calculateDropdownHeight);
+
+                $scope.$on('$destroy', function() {
+                    $win.unbind('resize', calculateDropdownHeight);
+                });
             }
         };
     });

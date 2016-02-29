@@ -12,7 +12,11 @@
     padding-right: 0;
     overflow: hidden;
     text-overflow: ellipsis;
-
+    white-space: nowrap;
+    
+    &:before {
+      content: ''; /* IE9 ellipsis fix */
+    }
   }
   .rhs-multi-select-link-enabled {
     @extend .rhs-multi-select-link;
@@ -44,4 +48,8 @@
 
 .rhs-multi-select ul {
   width: 100%;
+}
+
+.rhs-multi-select-dropdown-menu {
+  overflow-y: auto;
 }
