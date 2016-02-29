@@ -21,7 +21,7 @@
 'use strict';
 
 exports.config = {
-    
+
     allScriptsTimeout: 3000,
     // seleniumAddress: 'http://127.0.0.1:4444/wd/hub',
     framework: 'custom',
@@ -29,7 +29,7 @@ exports.config = {
     // path relative to the current config file
     frameworkPath: require.resolve('protractor-cucumber-framework'),
     specs: [
-        'features/*.feature' 
+        'features/*.feature'
     ],
     capabilities: {
         browserName: 'firefox',
@@ -56,11 +56,24 @@ exports.config = {
         global.rhsTestTools = require('rehabstod-testtools');
 
         browser.baseUrl = process.env.REHABSTOD_URL;
-        console.log('process.env.REHABSTOD_URL: ' +process.env.REHABSTOD_URL);
+        console.log('process.env.REHABSTOD_URL: ' + process.env.REHABSTOD_URL);
 
         //Set window size
         browser.manage().window().setSize(1600, 1000);
         global.user = {};
+        global.logger = new(winston.Logger)({
+            transports: [
+                new(winston.transports.Console)({
+                    colorize: true,
+                    timestamp: formatLocalDate,
+                    formatter: function(options) {
+                        // Return string will be passed to logger.
+                        return options.timestamp() + ' ' + options.level.toUpperCase() + ' ' + (undefined !== options.message ? options.message : '') +
+                            (options.meta && Object.keys(options.meta).length ? '\n\t' + JSON.stringify(options.meta) : '');
+                    }
+                })
+            ]
+        });
 
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     }

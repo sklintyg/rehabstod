@@ -18,7 +18,7 @@
  */
 
 /* globals pages*/
-/* globals logg, browser, JSON */
+/* globals logger, browser, JSON */
 
 'use strict';
 
@@ -28,7 +28,7 @@ var rehabstodBase = rhsTestTools.pages.rehabstodBase;
 
 module.exports = function() {
 
-    this.Given(/^att jag är inloggad som en Läkare$/, function(callback) {
+    this.Given(/^att jag är inloggad som Läkare$/, function(callback) {
         var userObj = {
             fornamn: 'Jan',
             efternamn: 'Nilsson',
@@ -51,10 +51,10 @@ function logInAsUserRole(userObj, roleName, callback, newOrigin, newUserRole) {
 
     browser.ignoreSynchronization = false;
     browser.sleep(3000);
-    expect(element(By.css('.headerbox-user-profile')).getText()).to.eventually.contain(roleName + ' - ' + userObj.fornamn + ' ' + userObj.efternamn).then(function(value){
-        logg('OK - hittade : ' + value);
-    }, function (reason) {
-        callback('FEL - err: '+reason);
+    expect(element(By.css('.headerbox-user-profile')).getText()).to.eventually.contain(roleName + ' - ' + userObj.fornamn + ' ' + userObj.efternamn).then(function(value) {
+        logger.info('OK - hittade : ' + value);
+    }, function(reason) {
+        callback('FEL - err: ' + reason);
     }).then(callback);
 
 }

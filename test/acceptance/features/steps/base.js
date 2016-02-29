@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+/*globals logger*/
 'use strict';
 
 var specHelper = rhsTestTools.helpers.spec;
@@ -27,52 +27,56 @@ module.exports = function() {
 
     this.Given(/^synns all innehåll$/, function(callback) {
         element(by.css('.navbar-header')).isPresent().then(function() {
-            // rehabstodBase.navBar.isPresent().then(function(val) {
-            logg('OK - Innehållet synns! : ');
+            logger.info('OK - Innehållet synns! : ');
         }, function(reason) {
             callback('FEL - Innehållet synns ej : ' + reason);
         }).then(callback);
     });
 
-    this.Given(/^att jag är inloggad som "([^"]*)"$/, function(arg1, callback) {
-        // expect(rehabstodBase.header.getText()).to.eventually.contain(arg1).then(function(val) {
-        expect(element(By.css('.headerbox-user-profile')).getText()).to.eventually.contain(arg1).then(function(val) {
-            logg('OK - Inloggad som : ' + val);
-        }, function(reason) {
-            callback('FEL - inloggning ej korrekt: ' + reason);
-        }).then(callback);
-    });
+
 
     this.Given(/^jag byter till flik "([^"]*)"$/, function(arg1, callback) {
-
+        logger.info('Jag byter flik till: ' + arg1);
+        // element(by.cssContainingText('.ng-binding.ng-scope', arg1)).sendKeys(protractor.Key.SPACE).then(callback);
+        // element(by.cssContainingText('.nav.navbar-nav', arg1)).click().then(callback);
+        // element(by.cssContainingText('.ng-binding.ng-scope', arg1)).click().then(callback);
         element.all(by.css('.nav.navbar-nav li')).then(function(items) {
             if (arg1 === 'Om Rehabstöd') {
-                logg('Byter flik till: ' + arg1);
+                logger.info('Byter flik till: Om Rehabstöd');
                 items[1].click();
-            } else {
-                logg('Byter flik till: ' + arg1);
-                items[0].sendKeys(protractor.Key.SPACE);
+            } else if (arg1 === 'Pågående sjukfall') {
+                logger.info('Byter flik till: Pågående sjukfall');
                 items[0].click();
             }
         }).then(callback);
     });
 
     this.Given(/^elementen "([^"]*)" synns$/, function(arg1, callback) {
+        if (arg1 === 'Om Rehabstöd') {
+            logger.info('Kontrollera att sidan innehåller : Om Rehabstöd (' + arg1 + ')');
+            expect(element(by.cssContainingText('.container.ng-scope', arg1)).getText()).to.eventually.contain(arg1).then(function() {
+                logger.info('OK - sidan innehåller rätt text');
+            }, function(reason) {
+                callback('FEL - fel Kontrollera att sidan innehåller: ' + reason);
+            }).then(callback);
+        } else if (arg1 === 'Pågående sjukfall') {
+            logger.info('Kontrollera att sidan innehåller : Pågående sjukfall (' + arg1 + ')');
+            expect(element(by.id('startPage')).getText()).to.eventually.contain(arg1).then(function() {
+                logger.info('OK - sidan innehåller rätt text');
+            }, function(reason) {
+                callback('FEL - fel Kontrollera att sidan innehåller: ' + reason);
+            }).then(callback);
+        }
 
-        logg('Kontrollera att sidan innehåller :' + arg1);
-        expect(element(by.css('.container.ng-scope')).getText()).to.eventually.contain(arg1).then(function() {
-            logg('OK - sidan innehåller rätt text');
-        }, function(reason) {
-            callback('FEL - fel: ' + reason);
-        }).then(callback);
+
     });
 
     this.Given(/^loggas jag ut$/, function(callback) {
         expect(element(by.id('logoutLink')).isPresent()).to.become(true).then(function() {
             element(by.id('logoutLink')).sendKeys(protractor.Key.SPACE);
-            logg('OK - Loggar ut');
+            logger.info('OK - Loggar ut');
         }, function(reason) {
-            callback('FEL - fel: ' + reason);
+            callback('FEL - fel Logga ut: ' + reason);
         }).then(callback);
     });
 
