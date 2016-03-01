@@ -1,16 +1,23 @@
-<div class="row" id="rhs-start-page-rehabkoordinator">
+<h1 id="rhs-start-page-header" class="page-header">
+  <span message key="label.sjukfall.start.rehab.header" params="[user.valdVardgivare.namn +' - ' + user.valdVardenhet.namn]"></span>
+</h1>
+
+<h2><span message key="label.sjukfall.start.rehab.statheader"></span></h2>
+<rhs-stat-panel vardenhet="user.valdVardenhet" id="rhs-start-stat-panel"></rhs-stat-panel>
+
+
+<div class="row" id="rhs-start-page-rehab">
   <div class="col-md-8">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title">{{::'label.sjukfall.start.rehab.header' | message}}</h3>
+        <h3 class="panel-title">{{::'label.sjukfall.start.rehab.selectionpanel.header' | message}}</h3>
       </div>
       <div class="panel-body">
-        <p>{{::'label.sjukfall.start.rehab.body.1' | message}}</p>
-        <p>{{::'label.sjukfall.start.rehab.body.2' | message}}</p>
+        <p>{{::'label.sjukfall.start.rehab.selectionpanel.body' | message}}</p>
 
         <div class="pull-right">
           <button data-ng-click="onSelectUrval('ALL')" id="rhs-start-page-all-btn" class="btn btn-primary">
-            {{::'label.sjukfall.start.rehab.button' | message}}
+            {{::'label.sjukfall.start.rehab.selectionpanel.urval.button' | message}}
           </button>
         </div>
       </div>

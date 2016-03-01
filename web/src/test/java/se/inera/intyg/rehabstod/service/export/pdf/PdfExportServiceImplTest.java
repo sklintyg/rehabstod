@@ -72,7 +72,7 @@ public class PdfExportServiceImplTest {
     @Test
     public void testExportIssuedByMe() throws Exception {
         PdfExportService exporter = new PdfExportServiceImpl();
-        user.setUrval(Urval.ISSUED_BY_ME);
+        user.changeSelectedUrval(Urval.ISSUED_BY_ME);
         final byte[] export = exporter.export(createSjukFallList(), createPrintRequest(), user);
         assertTrue(export.length > 0);
         // Files.write(Paths.get("./test_issued_by_me.pdf"), export);
@@ -81,7 +81,7 @@ public class PdfExportServiceImplTest {
     @Test
     public void testExportAll() throws Exception {
         PdfExportService exporter = new PdfExportServiceImpl();
-        user.setUrval(Urval.ALL);
+        user.changeSelectedUrval(Urval.ALL);
         final byte[] export = exporter.export(createSjukFallList(), createPrintRequest(), user);
         assertTrue(export.length > 0);
 

@@ -28,26 +28,25 @@ var rhsMessages = {
         'label.start.header': 'Rehabstöd startsida',
 
         // Sjukfall Start
-        'label.sjukfall.start.header' : 'Sjukfall på enhet',
-        'label.sjukfall.start.rehab.header' : 'Samtliga pågående fall på enheten',
-        'label.sjukfall.start.rehab.body.1' : 'Som rehabkoordinator tar du del av samtliga pågående sjukfall på enheten.',
-        'label.sjukfall.start.rehab.body.2' : 'När du går vidare och klickar på "Visa alla sjukfall" nedan, kommer du att få se alla pågående sjukfall för den aktuella enheten. ' +
-                                                'Om du sedan byter enhet kommer du att få se alla pågående sjukfall på den enheten istället.',
-        'label.sjukfall.start.rehab.button' : 'Visa alla sjukfall',
-
-
         // Sjukfall Start Läkare
-        'label.sjukfall.start.lakare.info.header' : 'Välj vilken information du har behov att ta del av',
-        'label.sjukfall.start.lakare.info.body' : 'Som läkare har du rätt att ta del av sjukskrivningar på alla enheter du har medarbetaruppdrag för. Dock är det viktigt att bara..... <br>' +
-                                                    'Gå vidare genom att välja vilken information du vill ta del av. ',
+        'label.sjukfall.start.lakare.header' : 'Dina sjukfall på enhet %0',
+        'label.sjukfall.start.lakare.statheader' : 'Översikt - alla dina pågående sjukfall på enheten',
+        'label.sjukfall.start.lakare.selectionpanel.header' : 'Endast de sjukfall där jag utfärdat det aktiva intyget',
+        'label.sjukfall.start.lakare.selectionpanel.body' : 'Som läkare kan du ta del av de sjukskrivningar där du själv utfärdat det senaste intyget.' +
+                                                    'När du går vidare och klickar på "Visa mina sjukfall" nedan kommer du att få se de pågående sjukfall där du har utfärdat det senaste intyget för den aktuella enheten. ' +
+                                                    'Om du sedan byter enhet kommer du få se dina pågående sjukfall för den enheten istället.',
+        'label.sjukfall.start.lakare.selectionpanel.urval.button' : 'Visa mina sjukfall',
 
-        'label.sjukfall.start.lakare.mina.header' : 'Endast de sjukfall där jag utfärdat det aktiva intyget',
-        'label.sjukfall.start.lakare.mina.body' : 'Som läkare kan du välja att endast ta del av de sjukfall där du själv utfärdat det aktiva intyget',
-        'label.sjukfall.start.lakare.mina.button' : 'Visa mina sjukfall',
+        // Sjukfall Start Rehab
+        'label.sjukfall.start.rehab.header' : 'Sjukfall på enhet %0',
+        'label.sjukfall.start.rehab.statheader' : 'Översikt - alla pågående sjukfall på enheten',
+        'label.sjukfall.start.rehab.selectionpanel.header' : 'Alla pågående sjukfall på enheten',
+        'label.sjukfall.start.rehab.selectionpanel.body' : 'Som rehabkoordinator tar du del av alla pågående sjukskrivningar på enheten.' +
+        'När du går vidare och klickar på "Visa alla sjukfall" nedan kommer du att få se alla pågående sjukfall för den aktuella enheten. ' +
+        'Om du sedan byter enhet kommer du få se alla pågående sjukfall för den enheten istället.',
+        'label.sjukfall.start.rehab.selectionpanel.urval.button' : 'Visa alla sjukfall',
 
-        'label.sjukfall.start.lakare.alla.header' : 'Samtliga pågående fall på enheten',
-        'label.sjukfall.start.lakare.alla.body' : 'Välj detta alternativ om du har behov av att även se sjukfall där nuvarande läkare är andra läkare på vårdenheten. För att ta del av dess skall du ha ett behov av det.',
-        'label.sjukfall.start.lakare.alla.button' : 'Visa alla sjukfall',
+
 
         // Sjukfall Stat
         'label.sjukfall.stat.ongoing' : 'Antalet pågående sjukfall på',
@@ -56,11 +55,11 @@ var rhsMessages = {
         'label.sjukfall.stat.female' : 'Kvinnor',
 
         // Sjukfall Result
-        'label.sjukfall.result.lakare.header': 'Mina sjukfall',
-        'label.sjukfall.result.lakare.subheader': ' - Endast de sjukfall där jag utfärdat det aktiva intyget',
+        'label.sjukfall.result.lakare.header': 'Lista på mina pågående sjukfall',
+        'label.sjukfall.result.lakare.subheader': ' - En lista över de sjukfall där du utfärdat det senaste intyget',
 
-        'label.sjukfall.result.all.header': 'Alla sjukfall',
-        'label.sjukfall.result.all.subheader': ' - Samtliga pågående fall på enheten',
+        'label.sjukfall.result.rehab.header': 'Lista på alla pågående sjukfall',
+        'label.sjukfall.result.rehab.subheader': ' - En lista över alla enhetens pågående sjukfall',
 
         'label.sjukfall.result.back': 'Ändra urval',
 

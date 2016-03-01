@@ -1,32 +1,24 @@
-<h2>{{::'label.sjukfall.start.lakare.info.header' | message}}</h2>
+<h1 id="rhs-start-page-header" class="page-header">
+  <span message key="label.sjukfall.start.lakare.header" params="[user.valdVardgivare.namn +' - ' + user.valdVardenhet.namn]"></span>
+</h1>
 
-<p><span message key="label.sjukfall.start.lakare.info.body"></span></p>
-<br>
+<h2><span message key="label.sjukfall.start.lakare.statheader"></span></h2>
+<rhs-stat-panel vardenhet="user.valdVardenhet" id="rhs-start-stat-panel"></rhs-stat-panel>
+
 
 <div class="row" id="rhs-start-page-lakare">
-  <div class="col-md-6">
+  <div class="col-md-8">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title">{{::'label.sjukfall.start.lakare.mina.header' | message}}</h3>
+        <h3 class="panel-title">{{::'label.sjukfall.start.lakare.selectionpanel.header' | message}}</h3>
       </div>
       <div class="panel-body">
-        <p>{{::'label.sjukfall.start.lakare.mina.body' | message}}</p>
-        <div class="pull-right">
-          <button data-ng-click="onSelectUrval('ISSUED_BY_ME')" id="rhs-start-page-my-btn" class="btn btn-primary">{{::'label.sjukfall.start.lakare.mina.button' | message}}</button>
-        </div>
-      </div>
-    </div>
-  </div>
+        <p>{{::'label.sjukfall.start.lakare.selectionpanel.body' | message}}</p>
 
-  <div class="col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">{{::'label.sjukfall.start.lakare.alla.header' | message}}</h3>
-      </div>
-      <div class="panel-body">
-        <p>{{::'label.sjukfall.start.lakare.alla.body' | message}}</p>
         <div class="pull-right">
-          <button data-ng-click="onSelectUrval('ALL')" id="rhs-start-page-all-btn" class="btn btn-default">{{::'label.sjukfall.start.lakare.alla.button' | message}}</button>
+          <button data-ng-click="onSelectUrval('ISSUED_BY_ME')" id="rhs-start-page-mine-btn" class="btn btn-primary">
+            {{::'label.sjukfall.start.lakare.selectionpanel.urval.button' | message}}
+          </button>
         </div>
       </div>
     </div>

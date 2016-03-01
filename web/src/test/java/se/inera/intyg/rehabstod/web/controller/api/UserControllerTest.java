@@ -100,12 +100,25 @@ public class UserControllerTest {
     @Test
     public void testChangeUrvalSuccess() {
         ChangeUrvalRequest req = new ChangeUrvalRequest(Urval.ISSUED_BY_ME);
-
+        when(rehabUserMock.changeSelectedUrval(eq(req.getUrval()))).thenReturn(true);
 
         userController.changeSelectedUrvalOnUser(req);
 
         verify(userService).getUser();
-        verify(rehabUserMock).setUrval(eq(req.getUrval()));
+        verify(rehabUserMock).changeSelectedUrval(eq(req.getUrval()));
+
+    }
+
+    @Test
+    public void testChangeUrvalFails() {
+        ChangeUrvalRequest req = new ChangeUrvalRequest(Urval.ISSUED_BY_ME);
+        when(rehabUserMock.changeSelectedUrval(eq(req.getUrval()))).thenReturn(false);
+
+        thrown.expect(AuthoritiesException.class);
+        userController.changeSelectedUrvalOnUser(req);
+
+        verify(userService).getUser();
+        verify(rehabUserMock).changeSelectedUrval(eq(req.getUrval()));
 
     }
 }

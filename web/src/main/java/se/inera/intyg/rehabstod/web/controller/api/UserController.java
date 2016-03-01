@@ -90,9 +90,13 @@ public class UserController {
         if (user == null) {
             throw new AuthoritiesException("No user in session");
         }
-        user.setUrval(changeUrvalRequest.getUrval());
+        boolean changeSuccess = user.changeSelectedUrval(changeUrvalRequest.getUrval());
+        if (!changeSuccess) {
+            throw new AuthoritiesException(String.format("User %s was not allowed to change urval to %s",
+                    user.getHsaId(), changeUrvalRequest.getUrval()));
+        }
 
-        LOG.debug("Selected urval is now '{}'", user.getUrval());
+        LOG.debug(String.format("Selected urval for user %s is now '%s' ", user.getHsaId(), user.getUrval()));
 
         return new GetUserResponse(user);
     }
