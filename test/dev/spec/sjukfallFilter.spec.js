@@ -32,11 +32,11 @@ describe('Hantera filtret', function() {
     beforeEach(function() {
         browser.ignoreSynchronization = false;
         specHelper.login();
-        startPage.clickFullUnit();
+        startPage.clickMyUnit();
         expect(sjukfallPage.isAt()).toBe(true);
     });
 
-    it('Hide filter', function() {
+    it('Göm filtret', function() {
         expect(sjukfallPage.resetButton().isPresent()).toBeTruthy();
         expect(sjukfallPage.settingsButton().isPresent()).toBeTruthy();
 
@@ -46,7 +46,7 @@ describe('Hantera filtret', function() {
         expect(sjukfallPage.settingsButton().isPresent()).toBeFalsy();
     });
 
-    it('Reset filter', function() {
+    it('Återställ filtret', function() {
         var freeTextValue = 'Hej';
 
         sjukfallPage.freeTextInput().sendKeys(freeTextValue);

@@ -27,9 +27,7 @@ var startPage = rhsTestTools.pages.startPage;
 var aboutPage = rhsTestTools.pages.aboutPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
-describe('Logga in som Lena Karlsson', function() {
-
-
+describe('Logga in som Lena Karlsson ', function() {
 
     beforeEach(function() {
         browser.ignoreSynchronization = false;
@@ -37,19 +35,21 @@ describe('Logga in som Lena Karlsson', function() {
 
     });
 
-    it('with user open and close select care unit', function() {
+    it('Öppna och stäng byt enhetsdialogen', function() {
         startPage.clickBytVardenhet();
 
         expect(startPage.closeBytVardenhet.isPresent()).toBeTruthy();
 
         startPage.clickCloseBytVardenhet();
+
+        expect(startPage.closeBytVardenhet.isPresent()).toBeFalsy();
     });
 
-    it(' byta enhet på startsidan', function() {
+    it('Byt enhet på startsidan', function() {
         bytEnhet();
     });
 
-    it(' byt enhet på om sidan', function() {
+    it('Byt enhet på om sidan', function() {
         navigationHelper.goToAbout();
 
         bytEnhet();
@@ -57,7 +57,7 @@ describe('Logga in som Lena Karlsson', function() {
         expect(aboutPage.isAt()).toBeTruthy();
     });
 
-    it(' byt enhet på sjukfalls sidan', function() {
+    it('Byt enhet på sjukfallssidan', function() {
         startPage.clickFullUnit();
         expect(sjukfallPage.isAt()).toBeTruthy();
 

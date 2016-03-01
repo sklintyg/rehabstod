@@ -35,28 +35,24 @@ describe('Flöde som läkare', function() {
         specHelper.login();
     });
 
+    it('Bara se knappen mina sjukfall', function() {
+        expect(startPage.fullUnit.isPresent()).toBeFalsy();
+        expect(startPage.myUnit.isPresent()).toBeTruthy();
+    });
 
-    describe('Välja att se bara mina sjukfall', function() {
+    it('Gå till om rehab', function() {
+        navigationHelper.goToAbout();
+    });
 
-        it('Bara se knappen mina sjukfall', function() {
-            expect(startPage.fullUnit.isPresent()).toBeFalsy();
-            expect(startPage.myUnit.isPresent()).toBeTruthy();
-        });
+    describe('gör urval', function() {
 
-        it('Välja mina och komma till sjukfallssidan', function() {
+        beforeEach(function() {
             startPage.clickMyUnit();
             expect(sjukfallPage.isAt()).toBeTruthy();
+            expect(sjukfallPage.lakareFilter.isPresent()).toBeFalsy();
         });
 
-        it('gå till om rehab', function() {
-            navigationHelper.goToAbout();
-        });
-
-        it('gå till om rehab och gå tillbaka till sjukfall', function() {
-            // Gär urval
-            startPage.clickMyUnit();
-            expect(sjukfallPage.isAt()).toBeTruthy();
-
+        it('Gå till om rehab och gå tillbaka till sjukfallssidan', function() {
             // Gå till about
             navigationHelper.goToAbout();
 
@@ -65,7 +61,7 @@ describe('Flöde som läkare', function() {
         });
     });
 
-    describe('Gå till sjukfall utan urval', function() {
+    describe('inget urval', function() {
         it('Gå direkt till sjukfall', function() {
             sjukfallPage.get();
             expect(startPage.isAt()).toBeTruthy();
@@ -80,29 +76,23 @@ describe('Flöde som läkare', function() {
         });
     });
 
-    describe('Gör urval och går tillbaka till start', function() {
+    describe('gör urval och går tillbaka till start', function() {
 
         // Gör urval
         beforeEach(function() {
             startPage.clickMyUnit();
             expect(sjukfallPage.isAt()).toBeTruthy();
-        });
 
-        it('Gå tillbaka till start', function() {
             navigationHelper.goBackToStart();
         });
 
         it('Gå tillbaka till start och sedan försöka gå in igen utan att göra ett urval', function() {
-            navigationHelper.goBackToStart();
-
             // Gå till sjukfall
             sjukfallPage.get();
             expect(startPage.isAt()).toBeTruthy();
         });
 
         it('Gå tillbaka till start och sedan about och tillbaka och hamna på start.', function() {
-            navigationHelper.goBackToStart();
-
             // Gå till about
             navigationHelper.goToAbout();
 

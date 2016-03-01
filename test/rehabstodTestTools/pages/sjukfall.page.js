@@ -32,6 +32,7 @@ var RehabstodSjukfallPage = RehabstodBasePage._extend({
         init._super.call(this);
         this.at = element(by.id('rhs-sjukfall-page'));
         this.backBtn = element(by.id('rhs-sjukfall-page-go-back'));
+        this.lakareFilter = element(by.id('rhs-filter-lakare'));
     },
     get: function () {
         this.getPage('sjukfall');

@@ -2,6 +2,9 @@ plugins {
     id "com.github.hierynomus.license" version "0.12.1"
 }
 
+apply plugin: 'idea'
+
+
 // Load environment specific settings, if the -Penv=xxx parameter is given on invocation
 task loadConfiguration {
     def environment = null
@@ -195,6 +198,13 @@ configure (subprojects.findAll {
                 uniqueVersion = false
             }
         }
+    }
+}
+
+idea {
+    module {
+        excludeDirs += file('test/node_modules')
+        excludeDirs += file('test/dev/report')
     }
 }
 
