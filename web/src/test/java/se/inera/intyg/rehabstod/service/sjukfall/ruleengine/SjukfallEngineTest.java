@@ -18,6 +18,13 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,11 +52,6 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by martin on 11/02/16.
@@ -90,11 +92,16 @@ public class SjukfallEngineTest {
         // Load test data
         IntygsDataGenerator generator = new IntygsDataGenerator(LOCATION_INTYGSDATA);
         intygsDataList = generator.generate().get();
-        assertTrue("Expected 16 but was + " + intygsDataList.size(), intygsDataList.size() == 16);
+        assertInit(intygsDataList, 33);
 
         internalSjukfallList = testee.calculate(intygsDataList, getSjukfallRequest(5, activeDate));
-        assertTrue("Expected 6 but was + " + internalSjukfallList.size(), internalSjukfallList.size() == 6);
+        assertInit(internalSjukfallList, 11);
     }
+
+    // ~ ======================================================================================================== ~
+    // ~ Specification för test av sjukfall #1 - #12 finns på URL:
+    // ~ https://inera-certificate.atlassian.net/wiki/pages/viewpage.action?pageId=39747618
+    // ~ ======================================================================================================== ~
 
     @Test
     public void testCalculateSjukfall1() {
@@ -131,21 +138,29 @@ public class SjukfallEngineTest {
         assertSjukfall("19800228-9224", "2016-02-01", "2016-02-25", 0, 0);
     }
 
-    private void assertSjukfall(String patientId, String startDatum, String slutDatum, int antalIntyg, int effektivSjukskrivningslangd) {
-        InternalSjukfall internalSjukfall = internalSjukfallList.stream().
-                filter(o -> o.getSjukfall().getPatient().getId().equals(patientId)).findFirst().orElse(null);
+    @Test
+    public void testCalculateSjukfall8() {
+        assertSjukfall("19961110-2394", "2016-02-01", "2016-02-19", 3, 15);
+    }
 
-        if (antalIntyg == 0) {
-            assertNull(internalSjukfall);
-            return;
-        }
+    @Test
+    public void testCalculateSjukfall9() {
+        assertSjukfall("19961111-2385", "2016-02-15", "2016-03-04", 3, 15);
+    }
 
-        Sjukfall sjukfall = internalSjukfall.getSjukfall();
+    @Test
+    public void testCalculateSjukfall10() {
+        assertSjukfall("19571109-2642", "2016-02-15", "2016-02-19", 1, 5);
+    }
 
-        assertTrue(sjukfall.getStart().isEqual(LocalDate.parse(startDatum)));
-        assertTrue(sjukfall.getSlut().isEqual(LocalDate.parse(slutDatum)));
-        assertTrue(sjukfall.getIntyg() == antalIntyg);
-        assertTrue(sjukfall.getDagar() == effektivSjukskrivningslangd);
+    @Test
+    public void testCalculateSjukfall11() {
+        assertSjukfall("19630206-2846", "2016-02-01", "2016-03-04", 4, 29);
+    }
+
+    @Test
+    public void testCalculateSjukfall12() {
+        assertSjukfall("19710301-1032", "2016-02-15", "2016-03-04", 3, 19);
     }
 
     @Test
@@ -247,6 +262,27 @@ public class SjukfallEngineTest {
 
 
     // - - -  Private scope  - - -
+
+    private static void assertInit(List<?> list, int expectedListSize) {
+        assertTrue("Expected " + expectedListSize + " but was + " + list.size(), list.size() == expectedListSize);
+    }
+
+    private static void assertSjukfall(String patientId, String startDatum, String slutDatum, int antalIntyg, int effektivSjukskrivningslangd) {
+        InternalSjukfall internalSjukfall = internalSjukfallList.stream().
+                filter(o -> o.getSjukfall().getPatient().getId().equals(patientId)).findFirst().orElse(null);
+
+        if (antalIntyg == 0) {
+            assertNull(internalSjukfall);
+            return;
+        }
+
+        Sjukfall sjukfall = internalSjukfall.getSjukfall();
+
+        assertTrue(sjukfall.getStart().isEqual(LocalDate.parse(startDatum)));
+        assertTrue(sjukfall.getSlut().isEqual(LocalDate.parse(slutDatum)));
+        assertTrue(sjukfall.getIntyg() == antalIntyg);
+        assertTrue(sjukfall.getDagar() == effektivSjukskrivningslangd);
+    }
 
     private GetSjukfallRequest getSjukfallRequest(int maxIntygsGlapp, LocalDate aktivtDatum) {
         GetSjukfallRequest request = new GetSjukfallRequest();
