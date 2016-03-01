@@ -179,6 +179,7 @@ public class RehabstodUser implements Serializable {
 
     }
 
+    @SuppressWarnings("PMD.SimplifyBooleanReturns")
     private boolean isValidUrvalChange(Urval urval) {
         // Unset is always allowed
         if (urval == null) {
