@@ -43,6 +43,8 @@ idea {
     module {
         //and some extra test source dirs
         scopes.TEST.plus += [ configurations.integrationTestCompile, configurations.integrationTestRuntime ]
+        excludeDirs += file('node_modules')
+        excludeDirs += file('src/main/webapp/bower_components')
     }
 }
 
