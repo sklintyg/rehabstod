@@ -59,6 +59,12 @@ describe('Flöde som läkare', function() {
             // Gå till sjukfall
             navigationHelper.goToSjukfall();
         });
+
+        it('Ladda om sidan och var kvar på sjukfallssidan', function() {
+            browser.refresh();
+
+            expect(sjukfallPage.isAt()).toBeTruthy();
+        })
     });
 
     describe('inget urval', function() {

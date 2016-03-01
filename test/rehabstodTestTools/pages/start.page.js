@@ -32,7 +32,7 @@ var RehabstodStartPageBase = RehabstodBasePage._extend({
         init._super.call(this);
         this.at = element(by.id('rhs-start-page'));
         this.fullUnit = element(by.id('rhs-start-page-all-btn'));
-        this.myUnit = element(by.id('rhs-start-page-my-btn'));
+        this.myUnit = element(by.id('rhs-start-page-mine-btn'));
     },
     get: function () {
         this.getPage('start');

@@ -70,12 +70,12 @@ describe('Logga in som Lena Karlsson ', function() {
     function bytEnhet() {
         var today = new Date().toISOString().split('T')[0];
 
-        expect(element(by.id('location')).getText()).toBe(today + ' - WebCert-Vårdgivare2 - WebCert-Enhet2');
+        expect(startPage.navbarLocation.getText()).toBe(today + ' - WebCert-Vårdgivare2 - WebCert-Enhet2');
 
         startPage.clickBytVardenhet();
         element(by.id('select-active-unit-IFV1239877878-104D-modal')).click();
 
-        expect(element(by.id('location')).getText()).toBe(today + ' - WebCert-Vårdgivare2 - WebCert-Enhet3');
+        expect(startPage.navbarLocation.getText()).toBe(today + ' - WebCert-Vårdgivare2 - WebCert-Enhet3');
     }
 
 

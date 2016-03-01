@@ -38,6 +38,7 @@ var RehabstodBasePage = Class._extend({
         this.closeBytVardenhet = element(by.id('select-care-unit-close'));
         this.navbarAbout = element(by.id('navbar-link-about'));
         this.navbarSjukfall = element(by.id('navbar-link-sjukfall'));
+        this.navbarLocation = element(by.id('location'));
     },
     isAt: function() {
         return this.at.isDisplayed();
