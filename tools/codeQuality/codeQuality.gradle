@@ -1,5 +1,5 @@
 apply plugin: 'checkstyle'
-
+apply plugin: 'pmd'
 
 checkstyle {
     configFile = rootProject.file('tools/codeQuality/checkstyle.xml')
@@ -8,20 +8,19 @@ checkstyle {
     showViolations = true
 }
 
+pmd {
+    toolVersion = '5.4.1';
+    ignoreFailures = false
+    ruleSetFiles = rootProject.files("tools/codeQuality/pmdRuleSet.xml")
+    ruleSets = []
+    sourceSets = [ sourceSets.main ]
+}
+pmdMain.source = fileTree('src/main/java')
 
 
 if (project.hasProperty('codeQuality')) {
     apply plugin: 'findbugs'
-    apply plugin: 'pmd'
 
-    pmd {
-    toolVersion = '5.4.1';
-        ignoreFailures = false
-        ruleSetFiles = rootProject.files("tools/codeQuality/pmdRuleSet.xml")
-        ruleSets = []
-        sourceSets = [ sourceSets.main ]
-    }
-    pmdMain.source = fileTree('src/main/java')
 
     findbugs {
         ignoreFailures = false
