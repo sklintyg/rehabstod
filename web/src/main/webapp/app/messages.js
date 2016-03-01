@@ -32,7 +32,7 @@ var rhsMessages = {
         'label.sjukfall.start.lakare.header' : 'Dina sjukfall på enhet %0',
         'label.sjukfall.start.lakare.statheader' : 'Översikt - alla dina pågående sjukfall på enheten',
         'label.sjukfall.start.lakare.selectionpanel.header' : 'Endast de sjukfall där jag utfärdat det aktiva intyget',
-        'label.sjukfall.start.lakare.selectionpanel.body' : 'Som läkare kan du ta del av de sjukskrivningar där du själv utfärdat det senaste intyget.' +
+        'label.sjukfall.start.lakare.selectionpanel.body' : 'Som läkare kan du ta del av de sjukskrivningar där du själv utfärdat det senaste intyget.<br><br>' +
                                                     'När du går vidare och klickar på "Visa mina sjukfall" nedan kommer du att få se de pågående sjukfall där du har utfärdat det senaste intyget för den aktuella enheten. ' +
                                                     'Om du sedan byter enhet kommer du få se dina pågående sjukfall för den enheten istället.',
         'label.sjukfall.start.lakare.selectionpanel.urval.button' : 'Visa mina sjukfall',
@@ -41,7 +41,7 @@ var rhsMessages = {
         'label.sjukfall.start.rehab.header' : 'Sjukfall på enhet %0',
         'label.sjukfall.start.rehab.statheader' : 'Översikt - alla pågående sjukfall på enheten',
         'label.sjukfall.start.rehab.selectionpanel.header' : 'Alla pågående sjukfall på enheten',
-        'label.sjukfall.start.rehab.selectionpanel.body' : 'Som rehabkoordinator tar du del av alla pågående sjukskrivningar på enheten.' +
+        'label.sjukfall.start.rehab.selectionpanel.body' : 'Som rehabkoordinator tar du del av alla pågående sjukskrivningar på enheten.<br><br>' +
         'När du går vidare och klickar på "Visa alla sjukfall" nedan kommer du att få se alla pågående sjukfall för den aktuella enheten. ' +
         'Om du sedan byter enhet kommer du få se alla pågående sjukfall för den enheten istället.',
         'label.sjukfall.start.rehab.selectionpanel.urval.button' : 'Visa alla sjukfall',
