@@ -58,6 +58,24 @@ describe('Hantera filtret', function() {
         expect(sjukfallPage.freeTextInput().getAttribute('value')).toEqual('');
     });
 
+    it('Ändra glapp', function() {
+        sjukfallPage.settingsButton().click();
+
+        // TODO: Ändra glapp
+
+        sjukfallPage.settingsSaveBtn.click();
+    });
+
+    it('Öppna och stäng inställningar', function() {
+        sjukfallPage.settingsButton().click();
+
+        expect(sjukfallPage.settingsSaveBtn.isPresent()).toBeTruthy();
+
+        sjukfallPage.settingsCloseBtn.click();
+
+        expect(sjukfallPage.settingsSaveBtn.isPresent()).toBeFalsy();
+    });
+
     afterEach(function() {
         specHelper.logout();
     })
