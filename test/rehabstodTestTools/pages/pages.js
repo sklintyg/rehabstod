@@ -29,10 +29,12 @@ var rehabstodBase = require('./rehabstod.base.page.js');
 var welcomePage = require('./welcome.page.js');
 var startPage = require('./start.page.js');
 var sjukfallPage = require('./sjukfall.page.js');
+var aboutPage = require('./about.page.js');
 
 module.exports = {
     'rehabstodBase': rehabstodBase,
     'welcomePage': welcomePage,
     'startPage': startPage,
-    'sjukfallPage': sjukfallPage
+    'sjukfallPage': sjukfallPage,
+    'aboutPage': aboutPage
 };

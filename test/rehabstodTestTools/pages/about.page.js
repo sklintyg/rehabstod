@@ -27,36 +27,17 @@
 
 var RehabstodBasePage = require('./rehabstod.base.page.js');
 
-var RehabstodSjukfallPage = RehabstodBasePage._extend({
+var RehabstodStartPageBase = RehabstodBasePage._extend({
     init: function init() {
         init._super.call(this);
-        this.at = element(by.id('rhs-sjukfall-page'));
-        this.backBtn = element(by.id('rhs-sjukfall-page-go-back'));
+        this.at = element(by.id('rhs-about-page'));
     },
     get: function () {
-        this.getPage('sjukfall');
+        this.getPage('about');
     },
     isAt: function isAt() {
         return isAt._super.call(this);
-    },
-    resetButton: function() {
-        return element(by.id('rhs-filter-reset-btn'));
-    },
-    settingsButton: function() {
-        return element(by.id('rhs-settings-change-btn'));
-    },
-    freeTextInput: function() {
-        return element(by.id('rhs-filter-free-text-input'));
-    },
-    clickResetFilter: function() {
-        this.resetButton().click();
-    },
-    clickHideFilter: function() {
-        element(by.id('rhs-filter-hide-btn')).click();
-    },
-    clickGoBack: function() {
-        this.backBtn.click();
     }
 });
 
-module.exports = new RehabstodSjukfallPage();
+module.exports = new RehabstodStartPageBase();

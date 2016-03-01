@@ -82,18 +82,7 @@ module.exports = {
             }
         });
     },
-    //createUtkastForPatient: function(patientId, intygType) {
-    //    SokSkrivIntygPage.selectPersonnummer(patientId);
-    //    SokSkrivValjUtkastType.selectIntygTypeByLabel(intygType);
-    //    SokSkrivValjUtkastType.intygTypeButton.click();
-    //    var utkastPage;
-    //
-    //    if(intygType === 'Läkarintyg FK 7263'){
-    //     utkastPage = pages.intyg.fk['7263'].utkast;
-    //    }
-    //
-    //    expect(utkastPage.isAt()).toBe(true);
-    //},
+
     generateTestGuid: function(){
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)

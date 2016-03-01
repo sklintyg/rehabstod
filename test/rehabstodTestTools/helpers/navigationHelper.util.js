@@ -17,35 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals browser */
-
-/**
- * Created by erik
- */
-
+/*globals pages */
+/*globals describe,it,helpers */
 'use strict';
 
-var RehabstodBasePage = require('./rehabstod.base.page.js');
+var pages = require('./../pages/pages.js');
+var startPage = pages.startPage;
+var sjukfallPage = pages.sjukfallPage;
+var aboutPage = pages.aboutPage;
 
-var RehabstodStartPageBase = RehabstodBasePage._extend({
-    init: function init() {
-        init._super.call(this);
-        this.at = element(by.id('rhs-start-page'));
-        this.fullUnit = element(by.id('rhs-start-page-all-btn'));
-        this.myUnit = element(by.id('rhs-start-page-my-btn'));
+module.exports = {
+
+    goToAbout: function(success) {
+        startPage.clickAbout();
+        expect(aboutPage.isAt()).toBe(success || true);
     },
-    get: function () {
-        this.getPage('start');
+
+    goToStart: function(success) {
+        startPage.clickSjukfall();
+        expect(startPage.isAt()).toBe(success || true);
     },
-    isAt: function isAt() {
-        return isAt._super.call(this);
+
+    goToSjukfall: function(success) {
+        startPage.clickSjukfall();
+        expect(sjukfallPage.isAt()).toBe(success || true);
     },
-    clickFullUnit: function() {
-        this.fullUnit.click();
-    },
-    clickMyUnit: function() {
-        this.myUnit.click();
+
+    goBackToStart: function(success) {
+        sjukfallPage.clickGoBack();
+        expect(startPage.isAt()).toBe(success || true);
     }
-});
-
-module.exports = new RehabstodStartPageBase();
+};

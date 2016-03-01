@@ -36,6 +36,8 @@ var RehabstodBasePage = Class._extend({
         this.header = element(by.css('.headerbox-user-profile'));
         this.navBar = element(by.css('.navbar-header'));
         this.closeBytVardenhet = element(by.id('select-care-unit-close'));
+        this.navbarAbout = element(by.id('navbar-link-about'));
+        this.navbarSjukfall = element(by.id('navbar-link-sjukfall'));
     },
     isAt: function() {
         return this.at.isDisplayed();
@@ -48,6 +50,12 @@ var RehabstodBasePage = Class._extend({
     },
     clickCloseBytVardenhet: function() {
         this.closeBytVardenhet.click();
+    },
+    clickAbout: function() {
+        this.navbarAbout.click();
+    },
+    clickSjukfall: function() {
+        this.navbarSjukfall.click();
     }
 });
 
