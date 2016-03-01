@@ -111,7 +111,7 @@ public class PdfExportServiceImpl implements PdfExportService {
 
         sida.add(getUrvalDesc(user));
         sida.add(new Chunk(new LineSeparator()));
-        sida.add(getFilterDesc(printRequest));
+        sida.add(getFilterDesc(printRequest, user));
         sida.add(getSjukfallsDefDesc(printRequest));
         sida.add(getSorteringDesc(printRequest.getSortering()));
 
@@ -131,27 +131,29 @@ public class PdfExportServiceImpl implements PdfExportService {
         return urvalsRubrik;
     }
 
-    private Element getFilterDesc(PrintSjukfallRequest printRequest) {
+    private Element getFilterDesc(PrintSjukfallRequest printRequest, RehabstodUser user) {
 
         // Diagnoser
         Paragraph valdaDiagnoser = new Paragraph("Valda diagnoser", FRONTPAGE_H3);
+        com.itextpdf.text.List diagnosLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
         if (printRequest.getDiagnosGrupper() != null) {
-            com.itextpdf.text.List diagnosLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
             printRequest.getDiagnosGrupper().forEach(dg -> diagnosLista.add(new ListItem(dg, FRONTPAGE_NORMAL)));
-            valdaDiagnoser.add(diagnosLista);
         } else {
-            valdaDiagnoser.add(new Paragraph("Alla", FRONTPAGE_NORMAL));
+            diagnosLista.add(new ListItem("Alla", FRONTPAGE_NORMAL));
         }
+        valdaDiagnoser.add(diagnosLista);
 
         // Lakare
         Paragraph valdaLakare = new Paragraph("Valda läkare", FRONTPAGE_H3);
+        com.itextpdf.text.List lakarLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
         if (printRequest.getLakare() != null) {
-            com.itextpdf.text.List lakarLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+
             printRequest.getLakare().forEach(dg -> lakarLista.add(new ListItem(dg, FRONTPAGE_NORMAL)));
-            valdaLakare.add(lakarLista);
         } else {
-            valdaLakare.add(new Paragraph("Alla", FRONTPAGE_NORMAL));
+            lakarLista.add(new ListItem(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn(): "Alla", FRONTPAGE_NORMAL));
         }
+        valdaLakare.add(lakarLista);
+
 
         // Sjukskrivningslangd
         Paragraph valdSjukskrivninglangd = new Paragraph("Vald sjukskrivningslängd", FRONTPAGE_H3);
