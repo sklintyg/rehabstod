@@ -150,10 +150,9 @@ public class PdfExportServiceImpl implements PdfExportService {
 
             printRequest.getLakare().forEach(dg -> lakarLista.add(new ListItem(dg, FRONTPAGE_NORMAL)));
         } else {
-            lakarLista.add(new ListItem(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn(): "Alla", FRONTPAGE_NORMAL));
+            lakarLista.add(new ListItem(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : "Alla", FRONTPAGE_NORMAL));
         }
         valdaLakare.add(lakarLista);
-
 
         // Sjukskrivningslangd
         Paragraph valdSjukskrivninglangd = new Paragraph("Vald sjukskrivningslängd", FRONTPAGE_H3);
