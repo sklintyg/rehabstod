@@ -2,6 +2,8 @@ angular.module('rehabstodApp')
     .controller('SjukfallStartSelectionCtrl', function($scope, $state, UserModel, UserProxy, SjukfallService) {
         'use strict';
 
+        $scope.user = UserModel.get();
+
         $scope.onSelectUrval = function(urval) {
             UserProxy.changeUrval(urval).then(function(updatedUserModel) {
                 UserModel.set(updatedUserModel);

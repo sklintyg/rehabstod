@@ -4,12 +4,6 @@ angular.module('rehabstodApp')
         $stateProvider
             .state('app.sjukfall.start', {
                 url: 'start',
-                views: {
-                    'content@app': {
-                        templateUrl: 'app/sjukfall/start/start.page.html',
-                        controller: 'SjukfallStartPageCtrl'
-                    }
-                },
                 data: {
                     rule: function(fromState, toState, UserModel) {
 
@@ -35,7 +29,7 @@ angular.module('rehabstodApp')
             })
             .state('app.sjukfall.start.lakare', {
                 views: {
-                    'selection@app.sjukfall.start': {
+                    'content@app': {
                         templateUrl: 'app/sjukfall/start/selection/lakare.html',
                         controller: 'SjukfallStartSelectionCtrl'
                     }
@@ -43,7 +37,7 @@ angular.module('rehabstodApp')
             })
             .state('app.sjukfall.start.rehabkoordinator', {
                 views: {
-                    'selection@app.sjukfall.start': {
+                    'content@app': {
                         templateUrl: 'app/sjukfall/start/selection/rehabkoordinator.html',
                         controller: 'SjukfallStartSelectionCtrl'
                     }
