@@ -26,13 +26,20 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationServiceImpl;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SjukfallEngineImpl;
@@ -41,10 +48,6 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-24.
@@ -72,10 +75,19 @@ public class SjukfallServiceTest {
     @InjectMocks
     private SjukfallService testee = new SjukfallServiceImpl();
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Before
     public void init() throws IOException {
         when(integrationService.getIntygsDataForCareUnit(anyString())).thenReturn(new ArrayList<IntygsData>());
         when(engine.calculate(anyListOf(IntygsData.class), any(GetSjukfallRequest.class))).thenReturn(createInternalSjukfallList());
+    }
+
+    @Test
+    public void testWhenNoUrvalSet() {
+        thrown.expect(IllegalArgumentException.class);
+        testee.getSjukfall(enhetsId, "", null, getSjukfallRequest(intygsGlapp, activeDate));
     }
 
     @Test

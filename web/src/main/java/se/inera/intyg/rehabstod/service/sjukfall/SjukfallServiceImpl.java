@@ -18,8 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
@@ -27,9 +31,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SjukfallEngineImpl;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -46,6 +47,10 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     @Override
     public List<InternalSjukfall> getSjukfall(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request) {
+        // 0 Sanity check
+        if (urval == null) {
+            throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");
+        }
 
         // 1; check the cache for data
 
@@ -57,8 +62,8 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         // 4; update cache if necessary
 
-        // 5; filter response
-        if (urval != null && urval.equals(Urval.ISSUED_BY_ME)) {
+        // 5; filter response ?
+        if (urval.equals(Urval.ISSUED_BY_ME)) {
             internalSjukfall = internalSjukfall.stream()
                     .filter(o -> o.getSjukfall().getLakare().getHsaId().equals(hsaId))
                     .collect(Collectors.toList());
@@ -84,8 +89,8 @@ public class SjukfallServiceImpl implements SjukfallService {
         double women = 0;
 
         if (total > 0) {
-             men = (menTotal * 1.0 / total) * 100;
-             women = (womenTotal * 1.0 / total) * 100;
+            men = (menTotal * 1.0 / total) * 100;
+            women = (womenTotal * 1.0 / total) * 100;
         }
         // CHECKSTYLE:ON MagicNumber
 

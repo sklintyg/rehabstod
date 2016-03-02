@@ -191,12 +191,12 @@ public class RehabstodUser implements Serializable {
             return false;
         }
 
-        // Case 1: Lakare can change to ISSUED_BY_ME
+        // Case 1: Lakare is only allowed to set ISSUED_BY_ME
         if (urval == Urval.ISSUED_BY_ME && roles.containsKey(AuthoritiesConstants.ROLE_LAKARE)) {
             return true;
         }
 
-        // Case 1: Lakare can change to ISSUED_BY_ME
+        // Case 2: Koordinator is only allowed to set ALL
         if (urval == Urval.ALL && roles.containsKey(AuthoritiesConstants.ROLE_KOORDINATOR)) {
             return true;
         }
