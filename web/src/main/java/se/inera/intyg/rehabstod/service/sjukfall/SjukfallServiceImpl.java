@@ -70,7 +70,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         // 5; filter response
         LOG.debug("Filtering response - a doctor shall only see patients 'sjukfall' he/she has issued certificates.");
-        if (urval != null && urval.equals(Urval.ISSUED_BY_ME)) {
+        if (urval.equals(Urval.ISSUED_BY_ME)) {
             internalSjukfall = internalSjukfall.stream()
                     .filter(o -> o.getSjukfall().getLakare().getHsaId().equals(hsaId))
                     .collect(Collectors.toList());
