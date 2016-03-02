@@ -24,6 +24,7 @@ import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonS
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import org.junit.Test;
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 
@@ -50,20 +51,21 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
 
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
-        given().expect().statusCode(OK).when().get(API_ENDPOINT + "/summary").then().
-                body(matchesJsonSchemaInClasspath("jsonschema/rhs-sjukfallsummary-response-schema.json"));
+        given().expect().statusCode(OK).when().get(API_ENDPOINT + "/summary").then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/rhs-sjukfallsummary-response-schema.json"));
     }
 
     @Test
     public void testGetSjukfall() {
 
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
+        changeUrvalTo(Urval.ISSUED_BY_ME);
 
         GetSjukfallRequest request = new GetSjukfallRequest();
         request.setMaxIntygsGlapp(0);
 
-        given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT).then().
-                body(matchesJsonSchemaInClasspath("jsonschema/rhs-sjukfall-response-schema.json"));
+        given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT).then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/rhs-sjukfall-response-schema.json"));
 
     }
 }

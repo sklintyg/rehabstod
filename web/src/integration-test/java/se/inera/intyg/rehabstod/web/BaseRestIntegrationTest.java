@@ -19,6 +19,8 @@
 package se.inera.intyg.rehabstod.web;
 
 import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNotNull;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +30,8 @@ import org.springframework.http.HttpStatus;
 
 import se.inera.intyg.common.util.integration.integration.json.CustomObjectMapper;
 import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
+import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeUrvalRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.RestAssured;
@@ -51,6 +55,8 @@ public abstract class BaseRestIntegrationTest {
     protected static final FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder("IFV1239877878-1049", "rest", "testman",
             "IFV1239877878-1042").lakare(true).build();
     protected CustomObjectMapper objectMapper = new CustomObjectMapper();
+
+    protected static final String USER_API_ENDPOINT = "api/user";
 
     /**
      * Common setup for all tests.
@@ -87,5 +93,18 @@ public abstract class BaseRestIntegrationTest {
 
         assertNotNull(response.sessionId());
         return response.sessionId();
+    }
+
+
+    public void changeUrvalTo(Urval urval) {
+
+        ChangeUrvalRequest changeRequest = new ChangeUrvalRequest();
+        changeRequest.setUrval(urval);
+
+        given().contentType(ContentType.JSON).and().body(changeRequest).when().post(USER_API_ENDPOINT + "/urval").
+                then().
+                statusCode(OK).
+                body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
+                body("urval", equalTo(urval.toString()));
     }
 }

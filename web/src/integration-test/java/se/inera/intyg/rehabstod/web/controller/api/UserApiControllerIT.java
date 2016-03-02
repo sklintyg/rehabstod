@@ -28,7 +28,6 @@ import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeUrvalRequest;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
@@ -38,14 +37,14 @@ import com.jayway.restassured.http.ContentType;
  */
 public class UserApiControllerIT extends BaseRestIntegrationTest {
 
-    private static final String API_ENDPOINT = "api/user";
+
 
     @Test
     public void testGetAnvandare() {
 
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
-        given().expect().statusCode(OK).when().get(API_ENDPOINT).
+        given().expect().statusCode(OK).when().get(USER_API_ENDPOINT).
                 then().
                 body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
                 body("hsaId", equalTo(DEFAULT_LAKARE.getHsaId())).
@@ -58,7 +57,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
 
         RestAssured.sessionId = null;
 
-        given().expect().statusCode(FORBIDDEN).when().get(API_ENDPOINT);
+        given().expect().statusCode(FORBIDDEN).when().get(USER_API_ENDPOINT);
     }
 
     @Test
@@ -74,7 +73,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
         ChangeSelectedUnitRequest changeRequest = new ChangeSelectedUnitRequest();
         changeRequest.setId(vardEnhetToChangeTo);
 
-        given().contentType(ContentType.JSON).and().body(changeRequest).when().post(API_ENDPOINT + "/andraenhet").
+        given().contentType(ContentType.JSON).and().body(changeRequest).when().post(USER_API_ENDPOINT + "/andraenhet").
                 then().
                 statusCode(OK).
                 body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
@@ -99,23 +98,14 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
         changeRequest.setId(vardEnhetToChangeTo);
 
         given().contentType(ContentType.JSON).and().body(changeRequest).expect().
-                statusCode(SERVER_ERROR).when().post(API_ENDPOINT + "/andraenhet");
+                statusCode(SERVER_ERROR).when().post(USER_API_ENDPOINT + "/andraenhet");
     }
 
     @Test
     public void testAndraUrval() {
-
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
-        final Urval urval = Urval.ALL;
-        ChangeUrvalRequest changeRequest = new ChangeUrvalRequest();
-        changeRequest.setUrval(urval);
-
-        given().contentType(ContentType.JSON).and().body(changeRequest).when().post(API_ENDPOINT + "/urval").
-                then().
-                statusCode(OK).
-                body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
-                body("urval", equalTo(urval.toString()));
+        changeUrvalTo(Urval.ISSUED_BY_ME);
     }
 
 }
