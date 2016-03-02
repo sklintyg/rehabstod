@@ -18,9 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,12 +31,17 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Created by eriklupander on 2016-02-01.
  */
 
 @Service
 public class SjukfallServiceImpl implements SjukfallService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SjukfallServiceImpl.class);
 
     @Autowired
     private IntygstjanstIntegrationService intygstjanstIntegrationService;
@@ -47,7 +51,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     @Override
     public List<InternalSjukfall> getSjukfall(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request) {
-        // 0 Sanity check
+        // 0. Sanity check
         if (urval == null) {
             throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");
         }
@@ -55,15 +59,18 @@ public class SjukfallServiceImpl implements SjukfallService {
         // 1; check the cache for data
 
         // 2; fetch data from backend if cache was invalidated
+        LOG.debug("Calling Intygstjänsten - fetching certificate information.");
         List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
 
         // 3; Calculate sjukfall
+        LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall'.");
         List<InternalSjukfall> internalSjukfall = sjukfallEngine.calculate(intygsData, request);
 
         // 4; update cache if necessary
 
-        // 5; filter response ?
-        if (urval.equals(Urval.ISSUED_BY_ME)) {
+        // 5; filter response
+        LOG.debug("Filtering response - a doctor shall only see patients 'sjukfall' he/she has issued certificates.");
+        if (urval != null && urval.equals(Urval.ISSUED_BY_ME)) {
             internalSjukfall = internalSjukfall.stream()
                     .filter(o -> o.getSjukfall().getLakare().getHsaId().equals(hsaId))
                     .collect(Collectors.toList());

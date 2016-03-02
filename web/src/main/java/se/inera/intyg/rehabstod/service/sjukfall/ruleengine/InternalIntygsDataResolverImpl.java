@@ -37,6 +37,7 @@ public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolve
 
     private static final Logger LOG = LoggerFactory.getLogger(InternalIntygsDataResolverImpl.class);
 
+    /* The sole constructor */
     public InternalIntygsDataResolverImpl() {
     }
 
@@ -45,6 +46,9 @@ public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolve
 
     @Override
     public Map<String, List<InternalIntygsData>> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum) {
+
+        LOG.debug("Start resolving certificate information...");
+        LOG.debug("  - max days between certificates: {}, active date: {}", maxIntygsGlapp, aktivtDatum);
 
         if (intygsData == null || intygsData.size() == 0) {
             LOG.debug("There was no in-data! Returning empty list");
@@ -60,9 +64,10 @@ public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolve
         // The map's values are sorted by slutDatum with ascending order.
         Map<String, List<InternalIntygsData>> intygsDataMap = toMap(intygsData, aktivtDatum);
 
-        // Reduce list of SortableIntygsData
+        // Reduce list of IntygsData
         Map<String, List<InternalIntygsData>> reducedMap = reduceMap(intygsDataMap, maxIntygsGlapp);
 
+        LOG.debug("...stop resolving certificate information.");
         return reducedMap;
     }
 
@@ -71,9 +76,11 @@ public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolve
 
     Map<String, List<InternalIntygsData>> reduceMap(Map<String, List<InternalIntygsData>> intygsDataMap, int maxIntygsGlapp) {
 
+        LOG.debug("  - Reduce certificates. Only certificates fulfilling request parameter 'maxIntygsGlapp' will be concerned.");
+
         Map<String, List<InternalIntygsData>> resultMap = new HashMap<>();
 
-        // For each entry in map, lookup "aktivtIntyg" within the list of SortableIntygsData
+        // For each entry in map, lookup "aktivtIntyg" within the list of IntygsData
         for (Map.Entry<String, List<InternalIntygsData>> entry : intygsDataMap.entrySet()) {
 
             List<InternalIntygsData> reducedList = reduceList(entry.getValue(), maxIntygsGlapp);

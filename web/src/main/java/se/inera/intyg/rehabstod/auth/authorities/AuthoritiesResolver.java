@@ -18,6 +18,11 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities;
 
+import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.ROLE_KOORDINATOR;
+import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.ROLE_LAKARE;
+import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.TITLECODE_AT_LAKARE;
+import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.TITLE_LAKARE;
+
 import org.opensaml.saml2.core.Assertion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +45,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import static se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants.*;
 
 /**
  * Created by Magnus Ekstrand on 21/01/16.
@@ -188,7 +191,7 @@ public class AuthoritiesResolver {
             return role;
         }
 
-        // 6. Användaren är en vårdadministratör inom landstinget
+        // 6. Användaren är en rehabkoordinator inom landstinget
         return fnRole.apply(ROLE_KOORDINATOR);
     }
 

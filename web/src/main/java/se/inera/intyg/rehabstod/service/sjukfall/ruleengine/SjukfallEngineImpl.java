@@ -80,6 +80,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
     // - - -  API  - - -
 
     public List<InternalSjukfall> calculate(List<IntygsData> intygsData, GetSjukfallRequest requestData) {
+        LOG.debug("Start calculation of sjukfall...");
 
         int maxIntygsGlapp = requestData.getMaxIntygsGlapp();
         org.joda.time.LocalDate activeDate = requestData.getAktivtDatum();
@@ -88,7 +89,10 @@ public class SjukfallEngineImpl implements SjukfallEngine {
                 resolver.resolve(intygsData, maxIntygsGlapp, activeDate);
 
         // Assemble Sjukfall objects
-        return assemble(resolvedIntygsData, requestData);
+        List<InternalSjukfall> result = assemble(resolvedIntygsData, requestData);
+
+        LOG.debug("...stop calculation of sjukfall.");
+        return result;
     }
 
 
@@ -143,13 +147,14 @@ public class SjukfallEngineImpl implements SjukfallEngine {
     // - - -  Package scope  - - -
 
     List<InternalSjukfall> assemble(Map<String, List<InternalIntygsData>> resolvedIntygsData, GetSjukfallRequest requestData) {
+        LOG.debug("  - Assembling 'sjukfall'");
+
         return resolvedIntygsData.entrySet().stream()
                 .map(e -> toInternalSjukfall(e.getValue(), requestData.getAktivtDatum()))
                 .collect(Collectors.toList());
     }
 
     InternalSjukfall toInternalSjukfall(List<InternalIntygsData> list, org.joda.time.LocalDate aktivtDatum) {
-
         // Find the active object
         InternalIntygsData aktivtIntyg = list.stream()
                 .filter(o -> o.isAktivtIntyg())
@@ -200,6 +205,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
     // - - -  Private scope  - - -
 
     private Integer getAktivGrad(List<Formaga> list, org.joda.time.LocalDate aktivtDatum) {
+        LOG.debug("  - Lookup 'aktiv grad'");
         return list.stream()
                 .filter(f -> f.getStartdatum().compareTo(aktivtDatum) < 1 && f.getSlutdatum().compareTo(aktivtDatum) > -1)
                 .findFirst()
@@ -208,6 +214,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
     }
 
     private List<Integer> getGrader(List<Formaga> list) {
+        LOG.debug("  - Lookup all 'aktiva grader'");
         return list.stream()
                 .sorted((f1, f2) -> f1.getStartdatum().compareTo(f2.getStartdatum()))
                 .map(f -> f.getNedsattning()).collect(Collectors.toList());

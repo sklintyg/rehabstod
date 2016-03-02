@@ -20,6 +20,8 @@ package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.util.ArrayList;
@@ -35,10 +37,14 @@ import java.util.stream.Collectors;
  */
 public class InternalIntygsDataCreator {
 
+    private static final Logger LOG = LoggerFactory.getLogger(InternalIntygsDataCreator.class);
+
     public InternalIntygsDataCreator() {
     }
 
     public Map<String, List<InternalIntygsData>> create(List<IntygsData> intygsData, LocalDate aktivtDatum) {
+        LOG.debug("Start creating a map with storing application specific certificate information...");
+
         Map<String, List<InternalIntygsData>> map = null;
 
         map = createMap(intygsData, aktivtDatum);
@@ -46,10 +52,16 @@ public class InternalIntygsDataCreator {
         map = sortValues(map);
         map = setActive(map);
 
+        LOG.debug("...stop creating a map with storing application specific certificate information.");
         return map;
     }
 
+
+    // - - - Package scope - - -
+
     Map<String, List<InternalIntygsData>> createMap(List<IntygsData> intygsData, LocalDate aktivtDatum) {
+        LOG.debug("  1. Create the map");
+
         Map<String, List<InternalIntygsData>> map = new HashMap<>();
 
         for (IntygsData i : intygsData) {
@@ -67,6 +79,7 @@ public class InternalIntygsDataCreator {
     }
 
     Map<String, List<InternalIntygsData>> reduceMap(Map<String, List<InternalIntygsData>> map) {
+        LOG.debug("  2. Reduce map - filter out each entry where there is no active certificate.");
 
         Map<String, List<InternalIntygsData>> reducedMap = map.entrySet().stream()
                 .filter(e -> e.getValue().stream()
@@ -85,6 +98,8 @@ public class InternalIntygsDataCreator {
      * @return
      */
     Map<String, List<InternalIntygsData>> sortValues(Map<String, List<InternalIntygsData>> unsortedMap) {
+        LOG.debug("  3. Sort map - sort each entry by its end date using ascending order.");
+
         // Lambda comparator
         Comparator<InternalIntygsData> endDateComparator = (o1, o2) -> o1.getSlutDatum().compareTo(o2.getSlutDatum());
 
@@ -98,6 +113,8 @@ public class InternalIntygsDataCreator {
     }
 
     Map<String, List<InternalIntygsData>> setActive(Map<String, List<InternalIntygsData>> map) {
+        LOG.debug("  4. Set the active certificate - there can be only one active certificate, find it and make it active.");
+
         return map.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
@@ -106,7 +123,6 @@ public class InternalIntygsDataCreator {
     }
 
     List<InternalIntygsData> setActive(List<InternalIntygsData> intygsDataList) {
-
         List<InternalIntygsData> values = new ArrayList<>();
 
         int aktivtIntygIndex = 0;

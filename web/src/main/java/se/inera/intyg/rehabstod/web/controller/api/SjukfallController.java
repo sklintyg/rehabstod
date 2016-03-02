@@ -57,6 +57,7 @@ import java.util.stream.Collectors;
 public class SjukfallController {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallController.class);
+
     @Autowired
     private SjukfallService sjukfallService;
 
@@ -75,20 +76,15 @@ public class SjukfallController {
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public List<Sjukfall> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
 
-        RehabstodUser user = userService.getUser();
-        if (user == null) {
-            throw new AuthoritiesException("No user in session");
-        }
+        // Get user from session
+        RehabstodUser user = getRehabstodUser();
 
-        String enhetsId = user.getValdVardenhet().getId();
-        String hsaId = user.getHsaId();
-        Urval urval = user.getUrval();
-        List<InternalSjukfall> sjukfall = sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
+        // Fetch sjukfall
+        List<InternalSjukfall> sjukfall = getSjukfall(user, request);
 
         // PDL-logging based on which sjukfall that are about to be displayed to user.
-        List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, sjukfall, ActivityType.READ);
-        logService.logSjukfallData(sjukfallToLog, ActivityType.READ);
-        user.getPdlActivityStore().addActivitiesToStore(enhetsId, sjukfallToLog, ActivityType.READ);
+        LOG.debug("PDL logging - log which 'sjukfall' that are going to be displayed to the user.");
+        logSjukfallData(user, sjukfall, ActivityType.READ);
 
         return sjukfall.stream().map(sf -> sf.getSjukfall()).sorted((f1, f2) -> f2.getStart().compareTo(f1.getStart())).collect(Collectors.toList());
     }
@@ -96,25 +92,19 @@ public class SjukfallController {
     @RequestMapping(value = "/pdf", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<ByteArrayResource> getSjukfallForCareUnitAsPdf(@ModelAttribute PrintSjukfallRequest request) {
 
-        RehabstodUser user = userService.getUser();
-        if (user == null) {
-            throw new AuthoritiesException("No user in session");
-        }
+        // Get user from session
+        RehabstodUser user = getRehabstodUser();
 
-        String enhetsId = user.getValdVardenhet().getId();
-        String hsaId = user.getHsaId();
-        Urval urval = user.getUrval();
-        List<InternalSjukfall> sjukfall = sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
-
+        // Fetch sjukfall
+        List<InternalSjukfall> sjukfall = getSjukfall(user, request);
         List<InternalSjukfall> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
 
         try {
             byte[] pdfData = pdfExportService.export(finalList, request, user);
 
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if PDF export was OK.
-            List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, finalList, ActivityType.PRINT);
-            logService.logSjukfallData(sjukfallToLog, ActivityType.PRINT);
-            user.getPdlActivityStore().addActivitiesToStore(enhetsId, sjukfallToLog, ActivityType.PRINT);
+            LOG.debug("PDL logging - log which 'sjukfall' that are about to be exported in PDF format.");
+            logSjukfallData(user, finalList, ActivityType.PRINT);
 
             HttpHeaders respHeaders = new HttpHeaders();
             respHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
@@ -134,25 +124,19 @@ public class SjukfallController {
     @RequestMapping(value = "/xlsx", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<ByteArrayResource> getSjukfallForCareUnitAsXLSX(@ModelAttribute PrintSjukfallRequest request) {
 
-        RehabstodUser user = userService.getUser();
-        if (user == null) {
-            throw new AuthoritiesException("No user in session");
-        }
+        // Get user from session
+        RehabstodUser user = getRehabstodUser();
 
-        String enhetsId = user.getValdVardenhet().getId();
-        String hsaId = user.getHsaId();
-        Urval urval = user.getUrval();
-        List<InternalSjukfall> sjukfall = sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
-
+        // Fetch sjukfall
+        List<InternalSjukfall> sjukfall = getSjukfall(user, request);
         List<InternalSjukfall> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
 
         try {
-            byte[] data = xlsxExportService.export(finalList, request, urval);
+            byte[] data = xlsxExportService.export(finalList, request, user.getUrval());
 
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if XLSX export was OK.
-            List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(enhetsId, finalList, ActivityType.PRINT);
-            logService.logSjukfallData(sjukfallToLog, ActivityType.PRINT);
-            user.getPdlActivityStore().addActivitiesToStore(enhetsId, sjukfallToLog, ActivityType.PRINT);
+            LOG.debug("PDL logging - log which 'sjukfall' that are about to be exported in XLSX format.");
+            logSjukfallData(user, finalList, ActivityType.PRINT);
 
             HttpHeaders respHeaders = new HttpHeaders();
             respHeaders.set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -170,13 +154,39 @@ public class SjukfallController {
 
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     public SjukfallSummary getUnitCertificateSummary() {
+        // Get user from session
+        RehabstodUser user = getRehabstodUser();
+        return sjukfallService.getSummary(getEnhetsId(user));
+    }
+
+
+    // - - - Private scope - - -
+
+    private String getEnhetsId(RehabstodUser user) {
+        return user.getValdVardenhet().getId();
+    }
+
+    private RehabstodUser getRehabstodUser() {
         RehabstodUser user = userService.getUser();
         if (user == null) {
             throw new AuthoritiesException("No user in session");
         }
+        return user;
+    }
 
-        String enhetsId = user.getValdVardenhet().getId();
-        return sjukfallService.getSummary(enhetsId);
+    private List<InternalSjukfall> getSjukfall(RehabstodUser user, GetSjukfallRequest request) {
+        String enhetsId = getEnhetsId(user);
+        String hsaId = user.getHsaId();
+        Urval urval = user.getUrval();
+
+        LOG.debug("Calling the 'sjukfall' service to get a list of 'sjukfall' from care unit {}.", enhetsId);
+        return sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
+    }
+
+    private void logSjukfallData(RehabstodUser user, List<InternalSjukfall> sjukfallList, ActivityType activityType) {
+        List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(getEnhetsId(user), sjukfallList, activityType);
+        logService.logSjukfallData(sjukfallToLog, activityType);
+        user.getPdlActivityStore().addActivitiesToStore(getEnhetsId(user), sjukfallToLog, activityType);
     }
 
 }
