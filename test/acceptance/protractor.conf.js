@@ -19,11 +19,12 @@
 
 /*globals browser,global,exports,process*/
 'use strict';
+var winston = require('winston');
 
 exports.config = {
 
     allScriptsTimeout: 3000,
-    // seleniumAddress: 'http://127.0.0.1:4444/wd/hub',
+    seleniumAddress: 'http://selenium1.nordicmedtest.se:4444/wd/hub',
     framework: 'custom',
 
     // path relative to the current config file

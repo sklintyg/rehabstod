@@ -16,8 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-/*globals logger*/
+ 
 'use strict';
 
 module.exports = function() {
@@ -29,20 +28,16 @@ module.exports = function() {
 
     this.Given(/^ska det endast visas rader med '(\d+)' i texten$/, function(fritext, callback) {
 
-        logger.debug('TODO: Vi bör fånga varje rad-text istället fär hela tabellen');
+        var tabs = element.all(by.css('tr.rhs-table-row')).map(function(elm) {
+            return elm.getText();
+        });
 
-        element(by.css('rhs-table')).getText().then(function(tableText) {
-            var tableRows = tableText.split('\n')
-            
-            for (var i = 3; i < tableRows.length; i++) {
-            	logger.info('rad: '+i+' : ' + tableRows[i] )
-                expect(tableRows[i]).to.contain(fritext);
+        tabs.then(function(result) {
+            for (var i = 0; i < result.length; i++) {
+                expect(result[i]).to.contain(fritext);
             }
             callback();
         });
-
-
-
     });
 
 };
