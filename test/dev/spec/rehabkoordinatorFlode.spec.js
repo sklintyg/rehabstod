@@ -106,8 +106,8 @@ describe('Flöde som rehabkoordinator', function() {
 
 
     // Logga ut
-    afterEach(function() {
+    /*afterEach(function() {
         specHelper.logout();
-    });
+    });*/
 
 });

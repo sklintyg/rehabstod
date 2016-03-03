@@ -112,8 +112,8 @@ describe('Flöde som läkare', function() {
 
 
     // Logga ut
-    afterEach(function() {
+    /*afterEach(function() {
         specHelper.logout();
-    });
+    });*/
 
 });

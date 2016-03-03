@@ -77,8 +77,8 @@ describe('Hantera filtret', function() {
         expect(sjukfallPage.settingsSaveBtn.isPresent()).toBeFalsy();
     });
 
-    afterEach(function() {
+    /*afterEach(function() {
         specHelper.logout();
-    })
+    })*/
 
 });

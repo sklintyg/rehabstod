@@ -56,8 +56,8 @@ describe('Hantera tabellen', function() {
     });
 
 
-    afterEach(function() {
+    /*afterEach(function() {
         specHelper.logout();
-    })
+    })*/
 
 });
