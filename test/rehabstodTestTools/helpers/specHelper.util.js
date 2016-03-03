@@ -27,7 +27,6 @@
 var pages = require('./../pages/pages.js');
 var WelcomePage = pages.welcomePage;
 var RehabstodStartPage = pages.startPage;
-var RehabstodSjukfallPage = pages.sjukfallPage;
 
 module.exports = {
     login: function(userOptional) {
@@ -43,8 +42,12 @@ module.exports = {
     },
 
     logout: function() {
+        console.log('click-link');
         element(by.id('logoutLink')).click();
+        console.log('logged out');
         expect(WelcomePage.isAt()).toBe(true);
+
+        console.log('done-logout');
     },
 
     waitForAngularTestability: function() {
