@@ -31,10 +31,15 @@ var RehabstodSjukfallPage = pages.sjukfallPage;
 
 module.exports = {
     login: function(userOptional) {
+        console.log('Init');
         WelcomePage.get();
+        console.log('On login page.');
         WelcomePage.login(userOptional || 'IFV1239877878-1049_IFV1239877878-1042');
+        console.log('Login');
         this.waitForAngularTestability();
         expect(RehabstodStartPage.isAt()).toBe(true);
+
+        console.log('On startpage');
     },
 
     logout: function() {
