@@ -31,6 +31,7 @@ var RehabstodStartPage = pages.startPage;
 module.exports = {
     login: function(userOptional) {
         WelcomePage.get();
+        this.waitForAngularTestability();
         WelcomePage.login(userOptional || 'IFV1239877878-1049_IFV1239877878-1042');
         this.waitForAngularTestability();
         expect(RehabstodStartPage.isAt()).toBe(true);
