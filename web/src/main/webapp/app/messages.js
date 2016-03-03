@@ -48,7 +48,7 @@ var rhsMessages = {
 
         // Sjukfall Start
         // Sjukfall Start Läkare
-        'label.sjukfall.start.lakare.header' : 'Dina sjukfall på enhet %0',
+        'label.sjukfall.start.lakare.header' : 'Dina sjukfall på enhet ',
         'label.sjukfall.start.lakare.statheader' : 'Översikt - alla dina pågående sjukfall på enheten',
         'label.sjukfall.start.lakare.selectionpanel.header' : 'Endast de sjukfall där jag utfärdat det aktiva intyget',
         'label.sjukfall.start.lakare.selectionpanel.body' : 'Som läkare kan du ta del av de sjukskrivningar där du själv utfärdat det senaste intyget.<br><br>' +
@@ -57,7 +57,7 @@ var rhsMessages = {
         'label.sjukfall.start.lakare.selectionpanel.urval.button' : 'Visa mina sjukfall',
 
         // Sjukfall Start Rehab
-        'label.sjukfall.start.rehab.header' : 'Sjukfall på enhet %0',
+        'label.sjukfall.start.rehab.header' : 'Sjukfall på enhet ',
         'label.sjukfall.start.rehab.statheader' : 'Översikt - alla pågående sjukfall på enheten',
         'label.sjukfall.start.rehab.selectionpanel.header' : 'Alla pågående sjukfall på enheten',
         'label.sjukfall.start.rehab.selectionpanel.body' : 'Som rehabkoordinator tar du del av alla pågående sjukskrivningar på enheten.<br><br>' +
