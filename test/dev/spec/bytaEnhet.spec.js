@@ -86,8 +86,8 @@ describe('Logga in som Lena Karlsson ', function() {
     }
 
 
-    afterEach(function() {
+   /* afterEach(function() {
         console.log('logout');
         specHelper.logout();
-    })
+    })*/
 });
