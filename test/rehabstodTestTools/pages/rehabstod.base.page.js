@@ -48,7 +48,7 @@ var RehabstodBasePage = Class._extend({
     clickCloseBytVardenhet: function() {
         this.closeBytVardenhet().click();
     },
-    clickAbout: function() {
+    clickTestAbout: function() {
         this.navbarAbout().click();
     },
     clickSjukfall: function() {

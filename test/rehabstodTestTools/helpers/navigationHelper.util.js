@@ -29,7 +29,7 @@ var aboutPage = pages.aboutPage;
 module.exports = {
 
     goToAbout: function(success) {
-        startPage.clickAbout();
+        startPage.clickTestAbout();
         expect(aboutPage.isAt()).toBe(success || true);
     },
 

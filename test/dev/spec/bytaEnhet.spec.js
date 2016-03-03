@@ -33,24 +33,16 @@ describe('Logga in som Lena Karlsson ', function() {
     beforeEach(function() {
         browser.ignoreSynchronization = false;
         specHelper.login('IFV1239877878-104N_IFV1239877878-1045');
-
-        console.log('beforeEach');
     });
 
     it('Öppna och stäng byt enhetsdialogen', function() {
-        console.log('Steg 1');
         startPage.clickBytVardenhet();
 
-        console.log('Öppnat vårdenehet');
         expect(startPage.closeBytVardenhet().isPresent()).toBeTruthy();
 
-        console.log('expect');
         startPage.clickCloseBytVardenhet();
 
-        console.log('close');
         expect(startPage.closeBytVardenhet().isPresent()).toBeFalsy();
-
-        console.log('done');
     });
 
     it('Byt enhet på startsidan', function() {
