@@ -40,7 +40,7 @@ var RehabstodBasePage = Class._extend({
         return this.at.isDisplayed();
     },
     getPage: function(page) {
-        browser.get('app.html/#/' + page);
+        browser.setLocation(page);
     },
     clickBytVardenhet: function() {
         element(by.id('rhs-header-other-locations')).click();
