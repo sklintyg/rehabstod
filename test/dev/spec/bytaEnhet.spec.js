@@ -41,13 +41,13 @@ describe('Logga in som Lena Karlsson ', function() {
         startPage.clickBytVardenhet();
 
         console.log('Öppnat vårdenehet');
-        expect(startPage.closeBytVardenhetBtn().isPresent()).toBeTruthy();
+        expect(startPage.closeBytVardenhet().isPresent()).toBeTruthy();
 
         console.log('expect');
         startPage.clickCloseBytVardenhet();
 
         console.log('close');
-        expect(startPage.closeBytVardenhetBtn().isPresent()).toBeFalsy();
+        expect(startPage.closeBytVardenhet().isPresent()).toBeFalsy();
 
         console.log('done');
     });
