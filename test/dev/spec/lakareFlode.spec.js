@@ -71,6 +71,7 @@ describe('Flöde som läkare', function() {
     describe('inget urval', function() {
         it('Gå direkt till sjukfall', function() {
             sjukfallPage.get();
+            specHelper.waitForAngularTestability();
             expect(startPage.isAt()).toBeTruthy();
         });
 
@@ -96,6 +97,7 @@ describe('Flöde som läkare', function() {
         it('Gå tillbaka till start och sedan försöka gå in igen utan att göra ett urval', function() {
             // Gå till sjukfall
             sjukfallPage.get();
+            specHelper.waitForAngularTestability();
             expect(startPage.isAt()).toBeTruthy();
         });
 
