@@ -4,7 +4,8 @@
         "INTYGTJANST_URL": "https://rehabstod.inera.nordicmedtest.se/inera-certificate"
     },
     "build-server": {
-        "REHABSTOD_URL": "https://rehabstod.inera.nordicmedtest.se/"
+        "REHABSTOD_URL": "https://rehabstod.inera.nordicmedtest.se/",
+        "INTYGTJANST_URL": "https://rehabstod.inera.nordicmedtest.se/inera-certificate"
     },
     "dev": {
         "REHABSTOD_URL": "http://localhost:8790/",
