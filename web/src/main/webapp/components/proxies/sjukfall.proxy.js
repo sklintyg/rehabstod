@@ -33,15 +33,15 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
 
             var restPath = '/api/sjukfall';
             $http.post(restPath, query, {timeout: timeout}).success(function(data) {
-                if(!ObjectHelper.isDefined(data)) {
-                    promise.reject({ errorCode: data, message: 'invalid data'});
+                if (!ObjectHelper.isDefined(data)) {
+                    promise.reject({errorCode: data, message: 'invalid data'});
                 } else {
                     promise.resolve(data);
                 }
             }).error(function(data, status) {
                 $log.error('error ' + status);
                 // Let calling code handle the error of no data response
-                if(data === null) {
+                if (data === null) {
                     promise.reject({errorCode: data, message: 'no response'});
                 } else {
                     promise.reject(data);
@@ -76,16 +76,12 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
             });
 
             //send request
-            $window.jQuery('<form action="'+ restPath +'" target="_blank" method="post">'+inputs+'</form>')
+            $window.jQuery('<form action="' + restPath + '" target="_blank" method="post">' + inputs + '</form>')
                 .appendTo('body').submit().remove();
         }
 
         function _addInput(name, item) {
-            if (item) {
-                 return '<input type="hidden" name="' + name + '" value="' + item + '" />';
-            }
-
-            return '';
+            return '<input type="hidden" name="' + name + '" value="' + item + '" />';
         }
 
         // Return public API for the service

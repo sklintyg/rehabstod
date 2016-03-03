@@ -90,8 +90,8 @@ var rhsMessages = {
         // Table (NOTE: the parts after label.table.column must match sjukfallmodels json, as we use this to get sortorder descriptions)
         'label.table.column.patient.id': 'Person&shy;nummer',
         'label.table.column.patient.namn': 'Namn',
-        'label.table.column.patient.konShow': 'Kön',
-        'label.table.column.diagnos.intygsVarde': 'Nuvarande diagnos',
+        'label.table.column.patient.konshow': 'Kön',
+        'label.table.column.diagnos.intygsvarde': 'Nuvarande diagnos',
         'label.table.column.diagnos.help': 'Huvuddiagnosen i det intyg som är giltigt just nu. För muspekaren över koden för att se vilken diagnos den motsvarar.',
         'label.table.column.start': 'Startdatum',
         'label.table.column.start.help': 'Datum då sjukskrivningen började på ${enhet}. Alla intyg för samma patient som följer på varandra med max ${glapp} dagars uppehåll räknas till samma sjukskrivning. Max antal dagars uppehåll mellan intyg kan ställas in i filter.',

@@ -19,11 +19,9 @@
 package se.inera.intyg.rehabstod.service.export;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-26.
@@ -33,29 +31,18 @@ public abstract class BaseExportService {
     @Autowired
     protected DiagnosKapitelService diagnosKapitelService;
 
-    protected String sortOrderToHumanReadable(PrintSjukfallRequest req) {
-        return req.getSortering().getOrder().equals("ASC") ? "Stigande" : "Fallande";
-    }
-
     protected boolean notEmpty(PrintSjukfallRequest req) {
         return req.getFritext() != null && req.getFritext().trim().length() > 0;
     }
 
-    protected String toBulletList(List<String> stringList) {
-        if (stringList == null || stringList.size() == 0) {
-            return "Alla";
-        }
-        return stringList.stream().map(s -> "* " + s + "\n").collect(Collectors.joining());
-    }
-
     protected String buildKonName(String konKod) {
         switch (konKod) {
-            case "M":
-                return "Man";
-            case "F":
-                return "Kvinna";
-            default:
-                return "Okänd";
+        case "M":
+            return "Man";
+        case "F":
+            return "Kvinna";
+        default:
+            return "Okänd";
         }
     }
 

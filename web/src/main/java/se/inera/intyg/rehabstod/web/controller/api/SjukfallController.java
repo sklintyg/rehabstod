@@ -100,7 +100,7 @@ public class SjukfallController {
         List<InternalSjukfall> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
 
         try {
-            byte[] pdfData = pdfExportService.export(finalList, request, user);
+            byte[] pdfData = pdfExportService.export(finalList, request, user, sjukfall.size());
 
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if PDF export was OK.
             LOG.debug("PDL logging - log which 'sjukfall' that are about to be exported in PDF format.");
@@ -109,8 +109,7 @@ public class SjukfallController {
             HttpHeaders respHeaders = new HttpHeaders();
             respHeaders.setContentType(MediaType.parseMediaType("application/pdf"));
             respHeaders.setContentLength(pdfData.length);
-            respHeaders.setContentDispositionFormData("attachment",
-                    "sjukskrivningar-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().toString("yyyy-MM-dd'T'HH:mm") + ".pdf");
+            respHeaders.setContentDispositionFormData("attachment", getAttachmentFilename(user, ".pdf"));
 
             return new ResponseEntity<>(new ByteArrayResource(pdfData), respHeaders, HttpStatus.OK);
 
@@ -132,7 +131,7 @@ public class SjukfallController {
         List<InternalSjukfall> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
 
         try {
-            byte[] data = xlsxExportService.export(finalList, request, user.getUrval());
+            byte[] data = xlsxExportService.export(finalList, request, user.getUrval(), sjukfall.size());
 
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if XLSX export was OK.
             LOG.debug("PDL logging - log which 'sjukfall' that are about to be exported in XLSX format.");
@@ -141,8 +140,7 @@ public class SjukfallController {
             HttpHeaders respHeaders = new HttpHeaders();
             respHeaders.set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             respHeaders.setContentLength(data.length);
-            respHeaders.setContentDispositionFormData("attachment",
-                    "sjukskrivningar-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().toString("yyyy-MM-dd'T'HH:mm") + ".xlsx");
+            respHeaders.setContentDispositionFormData("attachment", getAttachmentFilename(user, ".xlsx"));
 
             return new ResponseEntity<>(new ByteArrayResource(data), respHeaders, HttpStatus.OK);
 
@@ -150,6 +148,10 @@ public class SjukfallController {
             // This should be handled a bit better...
             return new ResponseEntity<>(new ByteArrayResource(e.getMessage().getBytes()), null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    protected String getAttachmentFilename(RehabstodUser user, String extension) {
+        return "sjukfall-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().toString("yyyy-MM-dd'T'HH:mm") + extension;
     }
 
     @RequestMapping(value = "/summary", method = RequestMethod.GET)

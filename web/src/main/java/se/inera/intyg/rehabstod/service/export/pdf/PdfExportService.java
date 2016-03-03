@@ -48,6 +48,6 @@ public interface PdfExportService {
     Font FRONTPAGE_NORMAL = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL);
     Font FRONTPAGE_NORMAL_BOLD = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
 
-    byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user)
+    byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total)
             throws DocumentException, IOException;
 }

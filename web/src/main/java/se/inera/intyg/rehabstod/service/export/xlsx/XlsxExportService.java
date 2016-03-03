@@ -30,6 +30,6 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
  */
 public interface XlsxExportService {
 
-    byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, Urval urval) throws IOException;
+    byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, Urval urval, int total) throws IOException;
 
 }

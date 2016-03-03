@@ -145,7 +145,7 @@ public class SjukfallControllerTest {
 
         // When
         when(sjukfallService.getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(allSjukFall);
-        when(pdfExportService.export(eq(finalList), eq(request), eq(rehabUserMock))).thenReturn(new byte[0]);
+        when(pdfExportService.export(eq(finalList), eq(request), eq(rehabUserMock), eq(allSjukFall.size()))).thenReturn(new byte[0]);
         when(pdlStoreMock.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(finalList), eq(ActivityType.PRINT))).thenReturn(toLog);
 
         // Then

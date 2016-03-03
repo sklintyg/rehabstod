@@ -30,8 +30,8 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.Gender;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
@@ -59,7 +59,7 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 // numbers!
 // CHECKSTYLE:OFF MagicNumber
 @Service
-public class PdfExportServiceImpl implements PdfExportService {
+public class PdfExportServiceImpl extends BaseExportService implements PdfExportService {
 
     private static final String LOGO_PATH = "classpath:pdf-assets/rehab_pdf_logo.png";
 
@@ -69,7 +69,7 @@ public class PdfExportServiceImpl implements PdfExportService {
     private static final BaseColor TABLE_ODD_ROW_COLOR = new BaseColor(220, 220, 220);
 
     @Override
-    public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user)
+    public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total)
             throws DocumentException, IOException {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -90,7 +90,7 @@ public class PdfExportServiceImpl implements PdfExportService {
         document.open();
 
         // Add the front page with meta info
-        document.add(createFrontPage(printSjukfallRequest, user));
+        document.add(createFrontPage(printSjukfallRequest, user, sjukfallList.size(), total));
 
         // Switch to landscape mode
         document.setPageSize(PageSize.A4.rotate());
@@ -106,7 +106,7 @@ public class PdfExportServiceImpl implements PdfExportService {
 
     }
 
-    private Element createFrontPage(PrintSjukfallRequest printRequest, RehabstodUser user) {
+    private Element createFrontPage(PrintSjukfallRequest printRequest, RehabstodUser user, int showing, int total) {
         Paragraph sida = new Paragraph();
 
         sida.add(getUrvalDesc(user));
@@ -114,6 +114,7 @@ public class PdfExportServiceImpl implements PdfExportService {
         sida.add(getFilterDesc(printRequest, user));
         sida.add(getSjukfallsDefDesc(printRequest));
         sida.add(getSorteringDesc(printRequest.getSortering()));
+        sida.add(getAntalDesc(user.getUrval(), showing, total));
 
         return sida;
 
@@ -121,12 +122,13 @@ public class PdfExportServiceImpl implements PdfExportService {
 
     private Paragraph getUrvalDesc(RehabstodUser user) {
         Paragraph urvalsRubrik = new Paragraph();
+        String unitContextString = "\"" + user.getValdVardgivare().getNamn() + "-" + user.getValdVardenhet().getNamn() + "\"";
         if (Urval.ISSUED_BY_ME == user.getUrval()) {
-            urvalsRubrik.add(new Paragraph("Mina sjukfall", FRONTPAGE_H1));
-            urvalsRubrik.add(new Paragraph("- Endast de sjukfall där jag utfärdat det aktiva intyget", FRONTPAGE_H2));
+            urvalsRubrik.add(new Paragraph("Mina pågående sjukfall", FRONTPAGE_H1));
+            urvalsRubrik.add(new Paragraph("- På enheten " + unitContextString, FRONTPAGE_H2));
         } else {
             urvalsRubrik.add(new Paragraph("Alla sjukfall", FRONTPAGE_H1));
-            urvalsRubrik.add(new Paragraph("- Samtliga pågående fall på enheten \"" + user.getValdVardenhet().getNamn() + "\"", FRONTPAGE_H2));
+            urvalsRubrik.add(new Paragraph("- Samtliga pågående fall på enheten " + unitContextString, FRONTPAGE_H2));
         }
         return urvalsRubrik;
     }
@@ -137,7 +139,7 @@ public class PdfExportServiceImpl implements PdfExportService {
         Paragraph valdaDiagnoser = new Paragraph("Valda diagnoser", FRONTPAGE_H3);
         com.itextpdf.text.List diagnosLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
         if (printRequest.getDiagnosGrupper() != null) {
-            printRequest.getDiagnosGrupper().forEach(dg -> diagnosLista.add(new ListItem(dg, FRONTPAGE_NORMAL)));
+            printRequest.getDiagnosGrupper().forEach(dg -> diagnosLista.add(new ListItem(getDiagnosKapitelDisplayValue(dg), FRONTPAGE_NORMAL)));
         } else {
             diagnosLista.add(new ListItem("Alla", FRONTPAGE_NORMAL));
         }
@@ -178,6 +180,15 @@ public class PdfExportServiceImpl implements PdfExportService {
         return filter;
     }
 
+    private String getDiagnosKapitelDisplayValue(String diagnosKapitel) {
+        StringBuilder b = new StringBuilder(diagnosKapitel);
+        if (b.length() > 0) {
+            b.append(": ");
+        }
+        b.append(diagnosKapitelService.getDiagnosKapitel(diagnosKapitel).getName());
+        return b.toString();
+    }
+
     private Element getSjukfallsDefDesc(PrintSjukfallRequest printRequest) {
         Paragraph def = new Paragraph();
         def.add(new Paragraph("Sjukfallsinställning", FRONTPAGE_H2));
@@ -188,31 +199,40 @@ public class PdfExportServiceImpl implements PdfExportService {
     }
 
     private Element getSorteringDesc(Sortering sortering) {
-        Paragraph def = new Paragraph();
-        def.add(new Paragraph("Vald sortering på tabellen", FRONTPAGE_H2));
+        Paragraph def = new Paragraph("Vald sortering på tabellen", FRONTPAGE_H2);
 
-        PdfPTable table = new PdfPTable(2);
+        Paragraph kolumn = new Paragraph();
+        kolumn.add(new Chunk("Kolumn: ", FRONTPAGE_NORMAL_BOLD));
 
-        table.setWidthPercentage(40f);
-        table.setSpacingBefore(10f);
-        table.setHorizontalAlignment(Element.ALIGN_LEFT);
+        Paragraph riktning = new Paragraph();
+        riktning.add(new Chunk("Riktning: ", FRONTPAGE_NORMAL_BOLD));
 
-        table.getDefaultCell().setBackgroundColor(TABLE_HEADER_BASE_COLOR);
-        table.getDefaultCell().setBorderColor(TABLE_HEADER_BASE_COLOR);
-
-        table.addCell(new Phrase("Kolumn", TABLE_HEADER_FONT));
-        table.addCell(new Phrase("Riktning", TABLE_HEADER_FONT));
-
-        table.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
         if (sortering == null || StringUtil.isNullOrEmpty(sortering.getKolumn())) {
-            table.addCell(new Phrase("Ingen", TABLE_CELL_NORMAL));
-            table.addCell(new Phrase("-", TABLE_CELL_NORMAL));
+            kolumn.add(new Chunk("Ingen", FRONTPAGE_NORMAL));
+            riktning.add(new Chunk("-", FRONTPAGE_NORMAL));
         } else {
-            table.addCell(new Phrase(sortering.getKolumn(), TABLE_CELL_NORMAL));
-            table.addCell(new Phrase(sortering.getOrder(), TABLE_CELL_NORMAL));
+            kolumn.add(new Phrase(sortering.getKolumn(), FRONTPAGE_NORMAL));
+            riktning.add(new Chunk(sortering.getOrder(), FRONTPAGE_NORMAL));
         }
+        def.add(kolumn);
+        def.add(riktning);
+        return def;
 
-        def.add(table);
+    }
+
+    private Element getAntalDesc(Urval urval, int showing, int total) {
+        Paragraph def = new Paragraph("Visar antal pågående sjukfall", FRONTPAGE_H2);
+
+        Paragraph kolumn = new Paragraph();
+        kolumn.add(new Chunk("Exporten visar: ", FRONTPAGE_NORMAL_BOLD));
+        kolumn.add(new Phrase(String.valueOf(showing), FRONTPAGE_NORMAL));
+
+        Paragraph riktning = new Paragraph();
+        riktning.add(new Chunk(urval == Urval.ISSUED_BY_ME ? "Totalt: " : "Totalt på enheten: ", FRONTPAGE_NORMAL_BOLD));
+        riktning.add(new Chunk(String.valueOf(total), FRONTPAGE_NORMAL));
+
+        def.add(kolumn);
+        def.add(riktning);
         return def;
 
     }
@@ -268,7 +288,7 @@ public class PdfExportServiceImpl implements PdfExportService {
             addCell(table, String.valueOf(rowNumber));
             addCell(table, getPersonnummerColumn(s));
             addCell(table, s.getPatient().getNamn());
-            addCell(table, getKonDesc(s.getPatient().getKon()));
+            addCell(table, buildKonName(s.getPatient().getKon().name()));
             addCell(table, s.getDiagnos().getIntygsVarde());
 
             addCell(table, s.getStart() != null ? ISODateTimeFormat.yearMonthDay().print(s.getStart()) : "?");
@@ -321,16 +341,6 @@ public class PdfExportServiceImpl implements PdfExportService {
         p.add(new Chunk(String.format("%d dagar", s.getDagar()), TABLE_CELL_NORMAL));
         p.add(new Chunk(String.format(" (%d intyg)", s.getIntyg()), TABLE_CELL_SMALL));
         return p;
-    }
-
-    private String getKonDesc(Gender kon) {
-        if (Gender.F.equals(kon)) {
-            return "Kvinna";
-
-        } else if (Gender.M.equals(kon)) {
-            return "Man";
-        }
-        return "Okänt";
     }
 
 }

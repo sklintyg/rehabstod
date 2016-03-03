@@ -19,6 +19,9 @@
 package se.inera.intyg.rehabstod.service.export.pdf;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,10 +30,16 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
@@ -44,12 +53,19 @@ import se.inera.intyg.rehabstod.web.model.Sortering;
 /**
  * Created by marced on 24/02/16.
  */
-
+@RunWith(MockitoJUnitRunner.class)
 public class PdfExportServiceImplTest {
     RehabstodUser user;
 
+    @Mock
+    private DiagnosKapitelService diagnosKapitelService;
+
+    @InjectMocks
+    private PdfExportService testee = new PdfExportServiceImpl();
+
     @Before
     public void setUp() throws Exception {
+
         user = new RehabstodUser("HSA1111", "Johannes Nielsen-Kornbach");
         user.setValdVardenhet(new SelectableVardenhet() {
             @Override
@@ -67,22 +83,40 @@ public class PdfExportServiceImplTest {
                 return null;
             }
         });
+        user.setValdVardgivare(new SelectableVardenhet() {
+            @Override
+            public String getId() {
+                return "VG1";
+            }
+
+            @Override
+            public String getNamn() {
+                return "Vardgivare1";
+            }
+
+            @Override
+            public List<String> getHsaIds() {
+                return null;
+            }
+        });
+
+        DiagnosKapitel diagnosKapitel = mock(DiagnosKapitel.class);
+        when(diagnosKapitel.getName()).thenReturn("Diagnoskapitlets namn");
+        when(diagnosKapitelService.getDiagnosKapitel(anyString())).thenReturn(diagnosKapitel);
     }
 
     @Test
     public void testExportIssuedByMe() throws Exception {
-        PdfExportService exporter = new PdfExportServiceImpl();
         user.changeSelectedUrval(Urval.ISSUED_BY_ME);
-        final byte[] export = exporter.export(createSjukFallList(), createPrintRequest(), user);
+        final byte[] export = testee.export(createSjukFallList(), createPrintRequest(), user, 3);
         assertTrue(export.length > 0);
         // Files.write(Paths.get("./test_issued_by_me.pdf"), export);
     }
 
     @Test
     public void testExportAll() throws Exception {
-        PdfExportService exporter = new PdfExportServiceImpl();
         user.changeSelectedUrval(Urval.ALL);
-        final byte[] export = exporter.export(createSjukFallList(), createPrintRequest(), user);
+        final byte[] export = testee.export(createSjukFallList(), createPrintRequest(), user, 3);
         assertTrue(export.length > 0);
 
         // Files.write(Paths.get("./test_all.pdf"), export);

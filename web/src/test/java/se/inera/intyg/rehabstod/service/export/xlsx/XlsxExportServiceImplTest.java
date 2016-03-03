@@ -67,7 +67,7 @@ public class XlsxExportServiceImplTest extends BaseExportTest {
 
     @Test
     public void testBuildXlsxForAll() throws IOException {
-        byte[] data = testee.export(buildSjukfallList(2), buildPrintRequest(), Urval.ALL);
+        byte[] data = testee.export(buildSjukfallList(2), buildPrintRequest(), Urval.ALL, 2);
         assertNotNull(data);
         assertTrue(data.length > 0);
         //IOUtils.write(data, new FileOutputStream(new File("/Users/eriklupander/intyg/dev.xlsx")));
@@ -75,7 +75,7 @@ public class XlsxExportServiceImplTest extends BaseExportTest {
 
     @Test
     public void testBuildXlsxForIssuedByMe() throws IOException {
-        byte[] data = testee.export(buildSjukfallList(2), buildPrintRequest(), Urval.ISSUED_BY_ME);
+        byte[] data = testee.export(buildSjukfallList(2), buildPrintRequest(), Urval.ISSUED_BY_ME, 2);
         assertNotNull(data);
         assertTrue(data.length > 0);
      //   IOUtils.write(data, new FileOutputStream(new File("/Users/eriklupander/intyg/dev2.xlsx")));
