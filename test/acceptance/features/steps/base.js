@@ -83,7 +83,7 @@ module.exports = function() {
     this.Given(/^jag väljer "([^"]*)"$/, function(arg1, callback) {
 
         if (arg1 === 'Visa mina sjukfall') {
-            element(by.id('rhs-startPage-myBtn')).sendKeys(protractor.Key.SPACE).then(callback);
+            element(by.id('rhs-start-page-mine-btn')).sendKeys(protractor.Key.SPACE).then(callback);
         } else if (arg1 === 'Visa alla sjukfall') {
             element(by.id('rhs-startPage-allBtn')).sendKeys(protractor.Key.SPACE).then(callback);
         }
