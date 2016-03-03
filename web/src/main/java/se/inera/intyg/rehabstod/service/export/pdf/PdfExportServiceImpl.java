@@ -124,11 +124,11 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         Paragraph urvalsRubrik = new Paragraph();
         String unitContextString = "\"" + user.getValdVardgivare().getNamn() + "-" + user.getValdVardenhet().getNamn() + "\"";
         if (Urval.ISSUED_BY_ME == user.getUrval()) {
-            urvalsRubrik.add(new Paragraph("Mina pågående sjukfall", FRONTPAGE_H1));
-            urvalsRubrik.add(new Paragraph("- På enheten " + unitContextString, FRONTPAGE_H2));
+            urvalsRubrik.add(new Paragraph(MINA_PAGAENDE_SJUKFALL, FRONTPAGE_H1));
+            urvalsRubrik.add(new Paragraph(PA_ENHETEN + unitContextString, FRONTPAGE_H2));
         } else {
-            urvalsRubrik.add(new Paragraph("Alla sjukfall", FRONTPAGE_H1));
-            urvalsRubrik.add(new Paragraph("- Samtliga pågående fall på enheten " + unitContextString, FRONTPAGE_H2));
+            urvalsRubrik.add(new Paragraph(ALLA_SJUKFALL, FRONTPAGE_H1));
+            urvalsRubrik.add(new Paragraph(SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN + unitContextString, FRONTPAGE_H2));
         }
         return urvalsRubrik;
     }
@@ -136,28 +136,28 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     private Element getFilterDesc(PrintSjukfallRequest printRequest, RehabstodUser user) {
 
         // Diagnoser
-        Paragraph valdaDiagnoser = new Paragraph("Valda diagnoser", FRONTPAGE_H3);
+        Paragraph valdaDiagnoser = new Paragraph(FILTER_TITLE_VALDA_DIAGNOSER, FRONTPAGE_H3);
         com.itextpdf.text.List diagnosLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
         if (printRequest.getDiagnosGrupper() != null) {
             printRequest.getDiagnosGrupper().forEach(dg -> diagnosLista.add(new ListItem(getDiagnosKapitelDisplayValue(dg), FRONTPAGE_NORMAL)));
         } else {
-            diagnosLista.add(new ListItem("Alla", FRONTPAGE_NORMAL));
+            diagnosLista.add(new ListItem(SELECTION_VALUE_ALLA, FRONTPAGE_NORMAL));
         }
         valdaDiagnoser.add(diagnosLista);
 
         // Lakare
-        Paragraph valdaLakare = new Paragraph("Valda läkare", FRONTPAGE_H3);
+        Paragraph valdaLakare = new Paragraph(FILTER_TITLE_VALDA_LAKARE, FRONTPAGE_H3);
         com.itextpdf.text.List lakarLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
         if (printRequest.getLakare() != null) {
 
             printRequest.getLakare().forEach(dg -> lakarLista.add(new ListItem(dg, FRONTPAGE_NORMAL)));
         } else {
-            lakarLista.add(new ListItem(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : "Alla", FRONTPAGE_NORMAL));
+            lakarLista.add(new ListItem(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : SELECTION_VALUE_ALLA, FRONTPAGE_NORMAL));
         }
         valdaLakare.add(lakarLista);
 
         // Sjukskrivningslangd
-        Paragraph valdSjukskrivninglangd = new Paragraph("Vald sjukskrivningslängd", FRONTPAGE_H3);
+        Paragraph valdSjukskrivninglangd = new Paragraph(FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD, FRONTPAGE_H3);
         Paragraph sjukskrivningslangdVarden = new Paragraph();
         sjukskrivningslangdVarden.add(new Chunk("Mellan ", FRONTPAGE_NORMAL));
         sjukskrivningslangdVarden.add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMin()), FRONTPAGE_NORMAL_BOLD));
@@ -167,11 +167,11 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         valdSjukskrivninglangd.add(sjukskrivningslangdVarden);
 
         // Fritext
-        Paragraph valdFritext = new Paragraph("Fritextfilter", FRONTPAGE_H3);
+        Paragraph valdFritext = new Paragraph(FILTER_TITLE_FRITEXTFILTER, FRONTPAGE_H3);
         valdFritext.add(new Paragraph(StringUtil.isNullOrEmpty(printRequest.getFritext()) ? "-" : printRequest.getFritext(), FRONTPAGE_NORMAL));
 
         // Lagg ihop undergrupperna till filter
-        Paragraph filter = new Paragraph("Valda filter", FRONTPAGE_H2);
+        Paragraph filter = new Paragraph(VALDA_FILTER, FRONTPAGE_H2);
         filter.add(valdaDiagnoser);
         filter.add(valdaLakare);
         filter.add(valdSjukskrivninglangd);
@@ -191,24 +191,24 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     private Element getSjukfallsDefDesc(PrintSjukfallRequest printRequest) {
         Paragraph def = new Paragraph();
-        def.add(new Paragraph("Sjukfallsinställning", FRONTPAGE_H2));
-        def.add(new Paragraph("Sjukfallsdefinition", FRONTPAGE_H3));
-        def.add(new Phrase("Maxantal dagar uppehåll mellan intyg: ", FRONTPAGE_NORMAL));
+        def.add(new Paragraph(H2_SJUKFALLSINSTALLNING, FRONTPAGE_H2));
+        def.add(new Paragraph(H3_SJUKFALLSDEFINITION, FRONTPAGE_H3));
+        def.add(new Phrase(MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG, FRONTPAGE_NORMAL));
         def.add(new Phrase(printRequest.getMaxIntygsGlapp() + " dagar", FRONTPAGE_NORMAL_BOLD));
         return def;
     }
 
     private Element getSorteringDesc(Sortering sortering) {
-        Paragraph def = new Paragraph("Vald sortering på tabellen", FRONTPAGE_H2);
+        Paragraph def = new Paragraph(VALD_SORTERING_PA_TABELLEN, FRONTPAGE_H2);
 
         Paragraph kolumn = new Paragraph();
-        kolumn.add(new Chunk("Kolumn: ", FRONTPAGE_NORMAL_BOLD));
+        kolumn.add(new Chunk(SORTERING_KOLUMN, FRONTPAGE_NORMAL_BOLD));
 
         Paragraph riktning = new Paragraph();
-        riktning.add(new Chunk("Riktning: ", FRONTPAGE_NORMAL_BOLD));
+        riktning.add(new Chunk(SORTERING_RIKTNING, FRONTPAGE_NORMAL_BOLD));
 
         if (sortering == null || StringUtil.isNullOrEmpty(sortering.getKolumn())) {
-            kolumn.add(new Chunk("Ingen", FRONTPAGE_NORMAL));
+            kolumn.add(new Chunk(SORTERING_INGEN, FRONTPAGE_NORMAL));
             riktning.add(new Chunk("-", FRONTPAGE_NORMAL));
         } else {
             kolumn.add(new Phrase(sortering.getKolumn(), FRONTPAGE_NORMAL));
@@ -221,14 +221,14 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     }
 
     private Element getAntalDesc(Urval urval, int showing, int total) {
-        Paragraph def = new Paragraph("Visar antal pågående sjukfall", FRONTPAGE_H2);
+        Paragraph def = new Paragraph(ANTAL_VISAR_ANTAL_PAGAENDE_SJUKFALL, FRONTPAGE_H2);
 
         Paragraph kolumn = new Paragraph();
-        kolumn.add(new Chunk("Exporten visar: ", FRONTPAGE_NORMAL_BOLD));
+        kolumn.add(new Chunk(ANTAL_EXPORTEN_VISAR, FRONTPAGE_NORMAL_BOLD));
         kolumn.add(new Phrase(String.valueOf(showing), FRONTPAGE_NORMAL));
 
         Paragraph riktning = new Paragraph();
-        riktning.add(new Chunk(urval == Urval.ISSUED_BY_ME ? "Totalt: " : "Totalt på enheten: ", FRONTPAGE_NORMAL_BOLD));
+        riktning.add(new Chunk(urval == Urval.ISSUED_BY_ME ? ANTAL_TOTALT_MINA : ANTAL_TOTALT_PA_ENHETEN, FRONTPAGE_NORMAL_BOLD));
         riktning.add(new Chunk(String.valueOf(total), FRONTPAGE_NORMAL));
 
         def.add(kolumn);
@@ -256,17 +256,17 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         table.getDefaultCell().setPadding(3f);
         table.getDefaultCell().setPaddingLeft(2f);
 
-        addCell(table, "#", TABLE_HEADER_FONT);
-        addCell(table, "Personnummer", TABLE_HEADER_FONT);
-        addCell(table, "Namn", TABLE_HEADER_FONT);
-        addCell(table, "Kön", TABLE_HEADER_FONT);
-        addCell(table, "Nuvarande diagnos", TABLE_HEADER_FONT);
-        addCell(table, "Startdatum", TABLE_HEADER_FONT);
-        addCell(table, "Slutdatum", TABLE_HEADER_FONT);
-        addCell(table, "Sjukskrivningslängd", TABLE_HEADER_FONT);
-        addCell(table, "Sjukskrivningsgrad", TABLE_HEADER_FONT);
+        addCell(table, TABLEHEADER_NR, TABLE_HEADER_FONT);
+        addCell(table, TABLEHEADER_PERSONNUMMER, TABLE_HEADER_FONT);
+        addCell(table, TABLEHEADER_NAMN, TABLE_HEADER_FONT);
+        addCell(table, TABLEHEADER_KON, TABLE_HEADER_FONT);
+        addCell(table, TABLEHEADER_NUVARANDE_DIAGNOS, TABLE_HEADER_FONT);
+        addCell(table, TABLEHEADER_STARTDATUM, TABLE_HEADER_FONT);
+        addCell(table, TABLEHEADER_SLUTDATUM, TABLE_HEADER_FONT);
+        addCell(table, TABLEHEADER_SJUKSKRIVNINGSLANGD, TABLE_HEADER_FONT);
+        addCell(table, TABLEHEADER_SJUKSKRIVNINGSGRAD, TABLE_HEADER_FONT);
         if (Urval.ALL.equals(urval)) {
-            addCell(table, "Nuvarande läkare", TABLE_HEADER_FONT);
+            addCell(table, TABLEHEADER_NUVARANDE_LAKARE, TABLE_HEADER_FONT);
         }
 
         // Set cell styles for the non-header cells following hereafter
@@ -288,7 +288,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             addCell(table, String.valueOf(rowNumber));
             addCell(table, getPersonnummerColumn(s));
             addCell(table, s.getPatient().getNamn());
-            addCell(table, buildKonName(s.getPatient().getKon().name()));
+            addCell(table, s.getPatient().getKon().getDescription());
             addCell(table, s.getDiagnos().getIntygsVarde());
 
             addCell(table, s.getStart() != null ? ISODateTimeFormat.yearMonthDay().print(s.getStart()) : "?");
@@ -332,14 +332,14 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     private Phrase getPersonnummerColumn(Sjukfall s) {
         Phrase p = new Phrase();
         p.add(new Chunk(s.getPatient().getId() != null ? s.getPatient().getId() : "", TABLE_CELL_NORMAL));
-        p.add(new Chunk(String.format(" (%d år)", s.getPatient().getAlder()), TABLE_CELL_BOLD));
+        p.add(new Chunk(String.format(FORMAT_ALDER_PARANTESER, s.getPatient().getAlder()), TABLE_CELL_BOLD));
         return p;
     }
 
     private Phrase getlangdText(Sjukfall s) {
         Phrase p = new Phrase();
-        p.add(new Chunk(String.format("%d dagar", s.getDagar()), TABLE_CELL_NORMAL));
-        p.add(new Chunk(String.format(" (%d intyg)", s.getIntyg()), TABLE_CELL_SMALL));
+        p.add(new Chunk(String.format(FORMAT_ANTALA_DAGAR, s.getDagar()), TABLE_CELL_NORMAL));
+        p.add(new Chunk(String.format(FORMAT_ANTAL_INTYG, s.getIntyg()), TABLE_CELL_SMALL));
         return p;
     }
 

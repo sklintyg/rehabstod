@@ -22,7 +22,17 @@ package se.inera.intyg.rehabstod.web.model;
  * Created by martin on 11/02/16.
  */
 public enum Gender {
-    F, M;
+    F("Kvinna"), M("Man"), UNKNOWN("Okänt");
+
+    String desc;
+
+    Gender(String desc) {
+        this.desc = desc;
+    }
+
+    public String getDescription() {
+        return this.desc;
+    }
 
     public static Gender getGenderFromString(String genderString) {
 
@@ -34,6 +44,6 @@ public enum Gender {
             }
         }
 
-        return null;
+        return UNKNOWN;
     }
 }

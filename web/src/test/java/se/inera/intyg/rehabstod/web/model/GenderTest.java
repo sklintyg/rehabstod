@@ -18,16 +18,14 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+
+import org.junit.Test;
 
 /**
  * Created by martin on 11/02/16.
  */
 public class GenderTest {
-
 
     @Test
     public void testGetMale() {
@@ -48,11 +46,11 @@ public class GenderTest {
     }
 
     @Test
-    public void testGetNull() {
-        assertNull(Gender.getGenderFromString("A"));
-        assertNull(Gender.getGenderFromString(""));
-        assertNull(Gender.getGenderFromString(null));
-        assertNull(Gender.getGenderFromString("+"));
-        assertNull(Gender.getGenderFromString("12"));
+    public void testGetUnknown() {
+        assertEquals(Gender.UNKNOWN, Gender.getGenderFromString("A"));
+        assertEquals(Gender.UNKNOWN, Gender.getGenderFromString(""));
+        assertEquals(Gender.UNKNOWN, Gender.getGenderFromString(null));
+        assertEquals(Gender.UNKNOWN, Gender.getGenderFromString("+"));
+        assertEquals(Gender.UNKNOWN, Gender.getGenderFromString("12"));
     }
 }

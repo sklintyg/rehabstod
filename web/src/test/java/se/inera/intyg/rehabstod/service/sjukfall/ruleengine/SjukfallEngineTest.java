@@ -255,7 +255,7 @@ public class SjukfallEngineTest {
         se.inera.intyg.rehabstod.web.model.Patient sjukfallPatient = testee.getPatient(intyg);
 
         assertEquals(fornamn + " " + efternamn, sjukfallPatient.getNamn());
-        assertNull(sjukfallPatient.getKon());
+        assertEquals(Gender.UNKNOWN, sjukfallPatient.getKon());
         assertEquals(0, sjukfallPatient.getAlder());
         assertEquals(id, sjukfallPatient.getId());
     }
