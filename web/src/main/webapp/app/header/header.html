@@ -6,7 +6,7 @@
       <span class="headerbox-date pull-left">
         <span id="location" class="location">{{today | date:"shortDate"}} - {{user.valdVardgivare.namn}} - {{user.valdVardenhet.namn}}</span>
         <br>
-        <a id="rhs-header-other-locations" class="otherLocations" ng-show="user.totaltAntalVardenheter > 1" data-ng-click="openChangeCareUnitDialog()">Byt vårdenhet</a>
+        <a id="rhs-header-other-locations" href="javascript:void(0)" class="otherLocations" ng-show="user.totaltAntalVardenheter > 1" data-ng-click="openChangeCareUnitDialog()">Byt vårdenhet</a>
 
       </span>
     </div>
