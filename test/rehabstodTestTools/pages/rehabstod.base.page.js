@@ -35,10 +35,6 @@ var RehabstodBasePage = Class._extend({
         // this.header = element(by.id('wcHeader'));
         this.header = element(by.css('.headerbox-user-profile'));
         this.navBar = element(by.css('.navbar-header'));
-        this.closeBytVardenhet = element(by.id('select-care-unit-close'));
-        this.navbarAbout = element(by.id('navbar-link-about'));
-        this.navbarSjukfall = element(by.id('navbar-link-sjukfall'));
-        this.navbarLocation = element(by.id('location'));
     },
     isAt: function() {
         return this.at.isDisplayed();
@@ -50,13 +46,25 @@ var RehabstodBasePage = Class._extend({
         element(by.id('rhs-header-other-locations')).click();
     },
     clickCloseBytVardenhet: function() {
-        this.closeBytVardenhet.click();
+        this.closeBytVardenhet().click();
     },
     clickAbout: function() {
-        this.navbarAbout.click();
+        this.navbarAbout().click();
     },
     clickSjukfall: function() {
-        this.navbarSjukfall.click();
+        this.navbarSjukfall().click();
+    },
+    navbarLocation: function() {
+        return element(by.id('location'));
+    },
+    navbarAbout: function() {
+        return element(by.id('navbar-link-about'));
+    },
+    closeBytVardenhet: function() {
+      return element(by.id('select-care-unit-close'));
+    },
+    navbarSjukfall: function() {
+        return element(by.id('navbar-link-sjukfall'));
     }
 });
 

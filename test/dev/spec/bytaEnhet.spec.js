@@ -41,13 +41,13 @@ describe('Logga in som Lena Karlsson ', function() {
         startPage.clickBytVardenhet();
 
         console.log('Öppnat vårdenehet');
-        expect(startPage.closeBytVardenhet.isPresent()).toBeTruthy();
+        expect(startPage.closeBytVardenhetBtn().isPresent()).toBeTruthy();
 
         console.log('expect');
         startPage.clickCloseBytVardenhet();
 
         console.log('close');
-        expect(startPage.closeBytVardenhet.isPresent()).toBeFalsy();
+        expect(startPage.closeBytVardenhetBtn().isPresent()).toBeFalsy();
 
         console.log('done');
     });
@@ -77,12 +77,12 @@ describe('Logga in som Lena Karlsson ', function() {
     function bytEnhet() {
         var today = new Date().toISOString().split('T')[0];
 
-        expect(startPage.navbarLocation.getText()).toBe(today + ' - WebCert-Vårdgivare2 - WebCert-Enhet2');
+        expect(startPage.navbarLocation().getText()).toBe(today + ' - WebCert-Vårdgivare2 - WebCert-Enhet2');
 
         startPage.clickBytVardenhet();
         element(by.id('select-active-unit-IFV1239877878-104D-modal')).click();
 
-        expect(startPage.navbarLocation.getText()).toBe(today + ' - WebCert-Vårdgivare2 - WebCert-Enhet3');
+        expect(startPage.navbarLocation().getText()).toBe(today + ' - WebCert-Vårdgivare2 - WebCert-Enhet3');
     }
 
 
