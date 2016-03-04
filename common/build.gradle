@@ -4,6 +4,8 @@ apply plugin: 'java'
 
 dependencies {
 
+    compile "se.inera.intyg.common:log-messages:0-SNAPSHOT"
+
     compile 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.5.1'
     compile 'joda-time:joda-time:2.5'

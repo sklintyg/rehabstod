@@ -16,9 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.export;
+package se.inera.intyg.rehabstod.testutil;
 
 import org.joda.time.LocalDate;
+import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
+import se.inera.intyg.common.integration.hsa.model.Vardenhet;
+import se.inera.intyg.common.integration.hsa.model.Vardgivare;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
@@ -39,11 +43,21 @@ import java.util.stream.Collectors;
  *
  * Created by eriklupander on 2016-02-24.
  */
-public abstract class BaseExportTest {
+public final class TestDataGen {
+    private static final String USER_HSA_ID = "user-1";
+    private static final String USER_NAME = "Läkar Läkarsson";
+    private static final String CAREUNIT_ID = "careunit-1";
+    private static final String CAREUNIT_NAME = "Vårdenhet 1";
+    private static final String CAREGIVER_ID = "caregiver-1";
+    private static final String CAREGIVER_NAME = "Vårdgivare 1";
+
+    private TestDataGen() {
+
+    }
 
     // CHECKSTYLE:OFF MagicNumber
 
-    protected PrintSjukfallRequest buildPrintRequest() {
+    public static PrintSjukfallRequest buildPrintRequest() {
         PrintSjukfallRequest req = new PrintSjukfallRequest();
         req.setPersonnummer(buildPersonnummerList());
         req.setDiagnosGrupper(buildDiagnosGrupper());
@@ -54,21 +68,21 @@ public abstract class BaseExportTest {
         return req;
     }
 
-    protected Sortering buildSortering() {
+    public static Sortering buildSortering() {
         Sortering sortering = new Sortering();
         sortering.setKolumn("Namn");
         sortering.setOrder("ASC");
         return sortering;
     }
 
-    protected LangdIntervall buildLangdIntervall() {
+    public static LangdIntervall buildLangdIntervall() {
         LangdIntervall langdIntervall = new LangdIntervall();
         langdIntervall.setMax("90");
         langdIntervall.setMin("30");
         return langdIntervall;
     }
 
-    protected List<String> buildLakare() {
+    public static List<String> buildLakare() {
         List<Lakare> lakare = new ArrayList<>();
         lakare.add(createLakare("IFV1239877878-1049", "Jan Nilsson"));
         lakare.add(createLakare("IFV1239877878-1255", "Ove Mört"));
@@ -76,7 +90,7 @@ public abstract class BaseExportTest {
         return lakare.stream().map(l -> l.getNamn()).collect(Collectors.toList());
     }
 
-    protected List<String> buildDiagnosGrupper() {
+    public static List<String> buildDiagnosGrupper() {
         List<String> diagnosGrupper = new ArrayList<>();
         diagnosGrupper.add("H00-H59: Sjukdomar i ögat och närliggande organ");
         diagnosGrupper.add("J00-J99: Andningsorganens sjukdomar");
@@ -84,13 +98,13 @@ public abstract class BaseExportTest {
         return diagnosGrupper;
     }
 
-    protected List<String> buildPersonnummerList() {
+    public static List<String> buildPersonnummerList() {
         List<String> personnummerList = new ArrayList<>();
         personnummerList.add("19121212-1212");
         return personnummerList;
     }
 
-    protected List<InternalSjukfall> buildSjukfallList(int num) {
+    public static List<InternalSjukfall> buildSjukfallList(int num) {
         List<InternalSjukfall> sjukfallList = new ArrayList<>();
         for (int a = 0; a < num; a++) {
             sjukfallList.add(buildInternalSjukfall());
@@ -98,13 +112,13 @@ public abstract class BaseExportTest {
         return sjukfallList;
     }
 
-    protected InternalSjukfall buildInternalSjukfall() {
+    public static InternalSjukfall buildInternalSjukfall() {
         InternalSjukfall sjukfall = new InternalSjukfall();
         sjukfall.setSjukfall(buildSjukfall());
         return sjukfall;
     }
 
-    protected Sjukfall buildSjukfall() {
+    public static Sjukfall buildSjukfall() {
         Sjukfall sjukfall = new Sjukfall();
 
         sjukfall.setAktivGrad(75);
@@ -121,7 +135,7 @@ public abstract class BaseExportTest {
         return sjukfall;
     }
 
-    protected Patient buildPatient() {
+    public static Patient buildPatient() {
         Patient patient = new Patient();
         patient.setAlder(54);
         patient.setId("19121212-1212");
@@ -130,21 +144,38 @@ public abstract class BaseExportTest {
         return patient;
     }
 
-    protected List<Integer> buildGrader() {
+    public static List<Integer> buildGrader() {
         return Arrays.asList(50, 75);
     }
 
-    protected Diagnos buildDiagnos() {
+    public static Diagnos buildDiagnos() {
         Diagnos diagnos = new Diagnos();
         diagnos.setKod("J22");
         return diagnos;
     }
 
-    private Lakare createLakare(String hsaId, String namn) {
+    private static Lakare createLakare(String hsaId, String namn) {
         Lakare lakare = new Lakare();
         lakare.setHsaId(hsaId);
         lakare.setNamn(namn);
         return lakare;
+    }
+
+    public static RehabstodUser buildRehabStodUser() {
+        RehabstodUser user = new RehabstodUser(USER_HSA_ID, USER_NAME);
+        user.setValdVardenhet(buildValdVardenhet(CAREUNIT_ID, CAREUNIT_NAME));
+        user.setValdVardgivare(buildValdGivare(CAREGIVER_ID, CAREGIVER_NAME));
+        return user;
+    }
+
+    private static SelectableVardenhet buildValdGivare(String hsaId, String namn) {
+        SelectableVardenhet vardgivare = new Vardgivare(hsaId, namn);
+        return vardgivare;
+    }
+
+    private static SelectableVardenhet buildValdVardenhet(String hsaId, String namn) {
+        SelectableVardenhet vardenhet = new Vardenhet(hsaId, namn);
+        return vardenhet;
     }
 
 

@@ -28,8 +28,8 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.service.export.BaseExportTest;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.testutil.TestDataGen;
 
 import java.io.IOException;
 
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.when;
  * Created by eriklupander on 2016-02-24.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class XlsxExportServiceImplTest extends BaseExportTest {
+public class XlsxExportServiceImplTest {
 
     @Mock
     private DiagnosKapitelService diagnosKapitelService;
@@ -67,7 +67,7 @@ public class XlsxExportServiceImplTest extends BaseExportTest {
 
     @Test
     public void testBuildXlsxForAll() throws IOException {
-        byte[] data = testee.export(buildSjukfallList(2), buildPrintRequest(), Urval.ALL, 2);
+        byte[] data = testee.export(TestDataGen.buildSjukfallList(2), TestDataGen.buildPrintRequest(), Urval.ALL, 2);
         assertNotNull(data);
         assertTrue(data.length > 0);
         //IOUtils.write(data, new FileOutputStream(new File("/Users/eriklupander/intyg/dev.xlsx")));
@@ -75,7 +75,7 @@ public class XlsxExportServiceImplTest extends BaseExportTest {
 
     @Test
     public void testBuildXlsxForIssuedByMe() throws IOException {
-        byte[] data = testee.export(buildSjukfallList(2), buildPrintRequest(), Urval.ISSUED_BY_ME, 2);
+        byte[] data = testee.export(TestDataGen.buildSjukfallList(2), TestDataGen.buildPrintRequest(), Urval.ISSUED_BY_ME, 2);
         assertNotNull(data);
         assertTrue(data.length > 0);
      //   IOUtils.write(data, new FileOutputStream(new File("/Users/eriklupander/intyg/dev2.xlsx")));

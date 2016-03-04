@@ -18,20 +18,19 @@
  */
 package se.inera.intyg.rehabstod.service.export.util;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import se.inera.intyg.rehabstod.testutil.TestDataGen;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
-
-import se.inera.intyg.rehabstod.service.export.BaseExportTest;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by eriklupander on 2016-02-24.
  */
-public class ExportUtilTest extends BaseExportTest {
+public class ExportUtilTest {
     // CHECKSTYLE:OFF MagicNumber
     @Test
     public void testEmptyListReturnedForNoneMatching() {
@@ -57,7 +56,7 @@ public class ExportUtilTest extends BaseExportTest {
     }
 
     private List<InternalSjukfall> buildMatchingInternalSjukfallInOtherOrder() {
-        List<InternalSjukfall> sjukfallList = buildSjukfallList(3);
+        List<InternalSjukfall> sjukfallList = TestDataGen.buildSjukfallList(3);
 
         sjukfallList.get(0).getSjukfall().getPatient().setId("pnr2");
         sjukfallList.get(1).getSjukfall().getPatient().setId("pnr3");
@@ -69,7 +68,7 @@ public class ExportUtilTest extends BaseExportTest {
 
     private List<InternalSjukfall> buildNoneMatchingInternalSjukfall() {
 
-        List<InternalSjukfall> sjukfallList = buildSjukfallList(2);
+        List<InternalSjukfall> sjukfallList = TestDataGen.buildSjukfallList(2);
         for (InternalSjukfall internalSjukfall : sjukfallList) {
             internalSjukfall.getSjukfall().getPatient().setId("other-pnr");
         }

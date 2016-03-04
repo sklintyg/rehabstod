@@ -19,13 +19,15 @@
 package se.inera.intyg.rehabstod.service.pdl;
 
 import se.inera.intyg.common.logmessages.ActivityType;
+import se.inera.intyg.common.logmessages.PdlLogMessage;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 
 import java.util.List;
 
 /**
- * Created by eriklupander on 2016-02-18.
+ * Created by eriklupander on 2016-03-03.
  */
-public interface LogService {
-    void logSjukfallData(List<InternalSjukfall> sjukfall, ActivityType activityType);
+public interface PdlLogMessageFactory {
+    PdlLogMessage buildLogMessage(List<InternalSjukfall> sjukfallList, ActivityType activityType, RehabstodUser rehabstodUser);
 }

@@ -16,16 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.pdl;
+package se.inera.intyg.rehabstod.common.logging.pdl;
 
+import se.inera.intyg.common.logmessages.ActivityPurpose;
 import se.inera.intyg.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
-
-import java.util.List;
+import se.inera.intyg.common.logmessages.PdlLogMessage;
 
 /**
- * Created by eriklupander on 2016-02-18.
+ * Created by marced on 2016-02-19.
  */
-public interface LogService {
-    void logSjukfallData(List<InternalSjukfall> sjukfall, ActivityType activityType);
+public abstract class SjukfallDataPrintLogMessage {
+
+    private SjukfallDataPrintLogMessage() {
+
+    }
+
+    public static PdlLogMessage build() {
+        return new PdlLogMessage(ActivityType.PRINT, ActivityPurpose.CARE_TREATMENT);
+    }
 }

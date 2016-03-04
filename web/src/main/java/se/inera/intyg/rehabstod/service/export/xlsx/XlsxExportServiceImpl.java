@@ -54,6 +54,8 @@ import se.inera.intyg.rehabstod.web.model.Sjukfall;
 public class XlsxExportServiceImpl extends BaseExportService implements XlsxExportService {
 
     private static final String SHEET_TITLE_SJUKFALL = "Sjukfall";
+    private static final int FILTER_SPACING = 3;
+
     private XSSFCellStyle boldStyle;
     private XSSFCellStyle filterMainHeaderStyle;
     private XSSFCellStyle filterHeaderStyle;
@@ -101,14 +103,13 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         rowNumber = addLakareList(sheet, rowNumber++, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), urval);
         rowNumber = addDiagnosKapitel(sheet, rowNumber++, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper());
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_FRITEXTFILTER, notEmpty(req) ? req.getFritext() : "-");
-        rowNumber += 3;
         addFilterMainHeader(sheet, rowNumber++, H2_SJUKFALLSINSTALLNING);
         addFilterHeader(sheet, rowNumber++, MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG, req.getMaxIntygsGlapp() + " dagar");
-        rowNumber += 3;
+        rowNumber += FILTER_SPACING;
         addFilterMainHeader(sheet, rowNumber++, VALD_SORTERING_PA_TABELLEN);
         addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, req.getSortering().getKolumn());
         addFilterHeader(sheet, rowNumber++, SORTERING_RIKTNING, req.getSortering().getOrder());
-        rowNumber += 3;
+        rowNumber += FILTER_SPACING;
         addFilterMainHeader(sheet, rowNumber++, ANTAL_VISAR_ANTAL_PAGAENDE_SJUKFALL);
         addFilterHeader(sheet, rowNumber++, ANTAL_EXPORTEN_VISAR, String.valueOf(sjukfallList.size()));
         addFilterHeader(sheet, rowNumber++, urval == Urval.ISSUED_BY_ME ? ANTAL_TOTALT_MINA : ANTAL_TOTALT_PA_ENHETEN, String.valueOf(total));
@@ -235,11 +236,11 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         XSSFRow row = sheet.createRow(rowIndex);
 
         for (int a = 0; a < HEADERS.length; a++) {
+            // Not too elegant, but if we have ISSUED_BY_ME urval, we don't render the last column.
             if (!(urval == Urval.ISSUED_BY_ME && a == HEADERS.length - 1)) {
                 createHeaderCell(row, a, HEADERS[a]);
             }
         }
-
     }
 
     private void addDataRows(XSSFSheet sheet, int rowIndex, List<InternalSjukfall> sjukfallList, Urval urval) {
@@ -273,6 +274,8 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         XSSFRichTextString richTextString = new XSSFRichTextString();
         richTextString.setString(value);
         richTextString.applyFont(defaultFont11);
+
+        // Make the text within () bold, e.g. "år"
         richTextString.applyFont(value.indexOf("(") + 1, value.lastIndexOf(")"), boldFont11);
         return richTextString;
     }
@@ -287,6 +290,8 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         Pair aktivIndicies = null;
         int currentIndex = 0;
         for (Integer grad : sf.getGrader()) {
+
+            // Store indicies for the aktiv grad so we can make its text bold later.
             if (grad == sf.getAktivGrad()) {
                 aktivIndicies = new Pair(currentIndex, currentIndex + ("" + grad + "%").length());
             }
@@ -298,6 +303,8 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         XSSFRichTextString richTextString = new XSSFRichTextString();
         richTextString.setString(buf.toString());
         richTextString.applyFont(defaultFont11);
+
+        // Uses stored indicies to make the correct part of the rich string bold.
         if (aktivIndicies != null) {
             richTextString.applyFont(aktivIndicies.getI1(), aktivIndicies.getI2(), boldFont11);
         }
@@ -322,6 +329,9 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         cell.setCellStyle(boldStyle);
     }
 
+    /**
+     * Sets up all fonts and cell styles used in the document.
+     */
     private void setupFonts(XSSFWorkbook wb) {
         boldFont16 = buildFont(wb, 16, "Helvetica", true, true);
         boldFont12 = buildFont(wb, 12, "Helvetica", true, false);

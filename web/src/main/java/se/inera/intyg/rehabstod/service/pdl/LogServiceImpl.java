@@ -18,24 +18,18 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
-import se.inera.intyg.common.logmessages.AbstractLogMessage;
 import se.inera.intyg.common.logmessages.ActivityType;
-import se.inera.intyg.common.logmessages.Enhet;
-import se.inera.intyg.common.logmessages.IntygDataLogMessage;
-import se.inera.intyg.common.logmessages.IntygDataPrintLogMessage;
-import se.inera.intyg.common.logmessages.Patient;
-import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.service.pdl.dto.LogRequest;
-import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
+import se.inera.intyg.common.logmessages.PdlLogMessage;
+import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 
@@ -43,13 +37,13 @@ import javax.annotation.PostConstruct;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
-import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
  * Implementation of service for logging user actions according to PDL requirements.
+ *
+ * ResourceType: "Översikt sjukskrivning (diagnos, till- och fråndatum, sjukskrivningsgrad, läkare)"
  *
  * @author eriklupander
  */
@@ -62,11 +56,8 @@ public class LogServiceImpl implements LogService {
     @Qualifier("jmsPDLLogTemplate")
     private JmsTemplate jmsTemplate;
 
-    @Value("${pdlLogging.systemId}")
-    private String systemId;
-
-    @Value("${pdlLogging.systemName}")
-    private String systemName;
+    @Autowired
+    PdlLogMessageFactory pdlLogMessageFactory;
 
     @Autowired
     private UserService userService;
@@ -80,101 +71,38 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public void logSjukfallData(List<InternalSjukfall> sjukfallList, ActivityType activityType) {
-        LogUser user = getLogUser(userService.getUser());
-
-        List<AbstractLogMessage> logRequestList = sjukfallList.stream()
-                .map(LogRequestFactory::createLogRequestFromSjukfall)
-                .map(logRequest -> populateLogMessage(logRequest, getLogMessageTypeForActivityType(logRequest.getIntygId(), activityType), user))
-                .collect(Collectors.toList());
-
-        send(logRequestList, activityType);
+        PdlLogMessage pdlLogMessage = pdlLogMessageFactory.buildLogMessage(sjukfallList, activityType, userService.getUser());
+        send(pdlLogMessage);
     }
 
-    private AbstractLogMessage getLogMessageTypeForActivityType(String intygId, ActivityType activityType) {
-        if (activityType.equals(ActivityType.READ)) {
-            return new IntygDataLogMessage(intygId);
-        } else if (activityType.equals(ActivityType.PRINT)) {
-            return new IntygDataPrintLogMessage(intygId);
-        }
-
-        throw new IllegalArgumentException("No LogMessage type for activityType " + activityType.name() + " defined");
-
-    }
-
-    @Override
-    public LogUser getLogUser(RehabstodUser user) {
-
-        LogUser logUser = new LogUser();
-
-        logUser.setUserId(user.getHsaId());
-        logUser.setUserName(user.getNamn());
-
-        SelectableVardenhet valdVardenhet = user.getValdVardenhet();
-        logUser.setEnhetsId(valdVardenhet.getId());
-        logUser.setEnhetsNamn(valdVardenhet.getNamn());
-
-        SelectableVardenhet valdVardgivare = user.getValdVardgivare();
-        logUser.setVardgivareId(valdVardgivare.getId());
-        logUser.setVardgivareNamn(valdVardgivare.getNamn());
-
-        return logUser;
-    }
-
-    private AbstractLogMessage populateLogMessage(LogRequest logRequest, AbstractLogMessage logMsg, LogUser user) {
-
-        populateWithCurrentUserAndCareUnit(logMsg, user);
-
-        Patient patient = new Patient(logRequest.getPatientId(), logRequest.getPatientName());
-        logMsg.setPatient(patient);
-
-        String careUnitId = logRequest.getIntygCareUnitId();
-        String careUnitName = logRequest.getIntygCareUnitName();
-
-        String careGiverId = logRequest.getIntygCareGiverId();
-        String careGiverName = logRequest.getIntygCareGiverName();
-
-        Enhet resourceOwner = new Enhet(careUnitId, careUnitName, careGiverId, careGiverName);
-        logMsg.setResourceOwner(resourceOwner);
-
-        logMsg.setSystemId(systemId);
-        logMsg.setSystemName(systemName);
-
-        return logMsg;
-    }
-
-    private void populateWithCurrentUserAndCareUnit(AbstractLogMessage logMsg, LogUser user) {
-        logMsg.setUserId(user.getUserId());
-        logMsg.setUserName(user.getUserName());
-
-        Enhet vardenhet = new Enhet(user.getEnhetsId(), user.getEnhetsNamn(), user.getVardgivareId(), user.getVardgivareNamn());
-        logMsg.setUserCareUnit(vardenhet);
-    }
-
-    private void send(List<AbstractLogMessage> logMsgs, ActivityType activityType) {
+    private void send(PdlLogMessage pdlLogMessage) {
 
         if (jmsTemplate == null) {
-            LOG.error("Could not log list of IntygsData, PDL logging is disabled!");
-            // LOG.warn("Can not log {} of Intyg '{}' since PDL logging is disabled!", logMsg.getActivityType(),
-            // logMsg.getActivityLevel());
+            LOG.error("Could not log list of IntygsData, PDL logging is disabled or JMS sender template is null.");
             return;
         }
 
-        LOG.info("Logging {} of IntygsData items for activityType {}", logMsgs.size(), activityType.name());
-        if (logMsgs.size() > 0) {
-            jmsTemplate.send(new MC(logMsgs));
-        }
+        LOG.info("Logging SjukfallIntygsData for activityType {} having { resources}", pdlLogMessage.getActivityType().name(), pdlLogMessage.getPdlResourceList().size());
+        jmsTemplate.send(new MC(pdlLogMessage));
+
     }
 
     private static final class MC implements MessageCreator {
-        private final List<AbstractLogMessage> logMsg;
+        private final PdlLogMessage logMsg;
 
-        private MC(List<AbstractLogMessage> log) {
-            this.logMsg = log;
+        private final ObjectMapper objectMapper = new CustomObjectMapper();
+
+        private MC(PdlLogMessage logMsg) {
+            this.logMsg = logMsg;
         }
 
         @Override
         public Message createMessage(Session session) throws JMSException {
-            return session.createObjectMessage((Serializable) logMsg);
+            try {
+                return session.createTextMessage(objectMapper.writeValueAsString(this.logMsg));
+            } catch (JsonProcessingException e) {
+                throw new IllegalArgumentException("Could not serialize log message of type '" + logMsg.getClass().getName() + "' into JSON, message: " + e.getMessage());
+            }
         }
     }
 }
