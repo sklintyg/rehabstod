@@ -158,7 +158,15 @@ public class SjukfallController {
     public SjukfallSummary getUnitCertificateSummary() {
         // Get user from session
         RehabstodUser user = getRehabstodUser();
-        return sjukfallService.getSummary(getEnhetsId(user));
+
+        String enhetsId = getEnhetsId(user);
+        String hsaId = user.getHsaId();
+        Urval urval = user.getDefaultUrval();
+
+        GetSjukfallRequest request = new GetSjukfallRequest();
+        request.setMaxIntygsGlapp(0);
+
+        return sjukfallService.getSummary(enhetsId, hsaId, urval, request);
     }
 
 

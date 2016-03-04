@@ -169,6 +169,10 @@ public class RehabstodUser implements Serializable {
         return urval;
     }
 
+    public Urval getDefaultUrval() {
+        return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE) ? Urval.ISSUED_BY_ME : Urval.ALL;
+    }
+
     public boolean changeSelectedUrval(Urval urval) {
         if (isValidUrvalChange(urval)) {
             this.urval = urval;

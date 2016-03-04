@@ -75,6 +75,20 @@ public class RehabstodUserTest {
     }
 
     @Test
+    public void testGetDefaultUrvalRehabKoordinator() throws Exception {
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+        user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_KOORDINATOR, new Role()));
+        assertEquals(Urval.ALL, user.getDefaultUrval());
+    }
+
+    @Test
+    public void testGetDefaultUrvalLakare() throws Exception {
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+        user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_LAKARE, new Role()));
+        assertEquals(Urval.ISSUED_BY_ME, user.getDefaultUrval());
+    }
+
+    @Test
     public void testChangeValdVardenhet() throws Exception {
         RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
 

@@ -18,6 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +30,10 @@ import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationSe
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SjukfallEngineImpl;
+import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -49,58 +50,39 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Autowired
     private SjukfallEngineImpl sjukfallEngine;
 
+    @Autowired
+    private StatisticsCalculator statisticsCalculator;
+
     @Override
     public List<InternalSjukfall> getSjukfall(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request) {
-        // 0. Sanity check
+        return getFilteredSjukfallList(enhetsId, hsaId, urval, request);
+    }
+
+    @Override
+    public SjukfallSummary getSummary(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request) {
+
+        return statisticsCalculator.getSjukfallSummary(getFilteredSjukfallList(enhetsId, hsaId, urval, request));
+    }
+
+    private List<InternalSjukfall> getFilteredSjukfallList(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request) {
+
         if (urval == null) {
             throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");
         }
 
-        // 1; check the cache for data
-
-        // 2; fetch data from backend if cache was invalidated
         LOG.debug("Calling Intygstjänsten - fetching certificate information.");
         List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
 
-        // 3; Calculate sjukfall
         LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall'.");
         List<InternalSjukfall> internalSjukfall = sjukfallEngine.calculate(intygsData, request);
 
-        // 4; update cache if necessary
-
-        // 5; filter response
-        LOG.debug("Filtering response - a doctor shall only see patients 'sjukfall' he/she has issued certificates.");
         if (urval.equals(Urval.ISSUED_BY_ME)) {
+            LOG.debug("Filtering response - a doctor shall only see patients 'sjukfall' he/she has issued certificates.");
             internalSjukfall = internalSjukfall.stream()
                     .filter(o -> o.getSjukfall().getLakare().getHsaId().equals(hsaId))
                     .collect(Collectors.toList());
         }
 
         return internalSjukfall;
-    }
-
-    @Override
-    public SjukfallSummary getSummary(String enhetsId) {
-
-        List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
-
-        List<String> personNummer = intygsData.stream().map(e -> e.getPatient().getPersonId().getExtension()).distinct()
-                .collect(Collectors.toList());
-
-        int total = personNummer.size();
-        // CHECKSTYLE:OFF MagicNumber
-        int menTotal = (int) personNummer.stream().filter(p -> p.substring(11, 12).matches("^\\d*[13579]$")).count();
-        int womenTotal = total - menTotal;
-
-        double men = 0;
-        double women = 0;
-
-        if (total > 0) {
-            men = (menTotal * 1.0 / total) * 100;
-            women = (womenTotal * 1.0 / total) * 100;
-        }
-        // CHECKSTYLE:ON MagicNumber
-
-        return new SjukfallSummary(total, men, women);
     }
 }

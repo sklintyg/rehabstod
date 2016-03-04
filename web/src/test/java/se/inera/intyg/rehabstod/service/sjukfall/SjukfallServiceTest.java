@@ -42,7 +42,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationServiceImpl;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SjukfallEngineImpl;
+import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Lakare;
@@ -62,7 +64,6 @@ public class SjukfallServiceTest {
     private final String lakareId2 = "IFV1239877878-104B";
     private final String lakareNamn2 = "Åsa Andersson";
 
-
     private Integer intygsGlapp = 5;
     private LocalDate activeDate = LocalDate.parse("2016-02-16");
 
@@ -71,6 +72,9 @@ public class SjukfallServiceTest {
 
     @Mock
     private SjukfallEngineImpl engine;
+
+    @Mock
+    private StatisticsCalculator statisticsCalculator;
 
     @InjectMocks
     private SjukfallService testee = new SjukfallServiceImpl();
@@ -82,6 +86,7 @@ public class SjukfallServiceTest {
     public void init() throws IOException {
         when(integrationService.getIntygsDataForCareUnit(anyString())).thenReturn(new ArrayList<IntygsData>());
         when(engine.calculate(anyListOf(IntygsData.class), any(GetSjukfallRequest.class))).thenReturn(createInternalSjukfallList());
+        when(statisticsCalculator.getSjukfallSummary(anyListOf(InternalSjukfall.class))).thenReturn(new SjukfallSummary(0, 0, 0));
     }
 
     @Test
@@ -101,7 +106,8 @@ public class SjukfallServiceTest {
 
     @Test
     public void testWhenUrvalIsIssuedByMe() {
-        List<InternalSjukfall> internalSjukfallList = testee.getSjukfall(enhetsId, lakareId1, Urval.ISSUED_BY_ME, getSjukfallRequest(intygsGlapp, activeDate));
+        List<InternalSjukfall> internalSjukfallList = testee.getSjukfall(enhetsId, lakareId1, Urval.ISSUED_BY_ME,
+                getSjukfallRequest(intygsGlapp, activeDate));
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
@@ -114,7 +120,15 @@ public class SjukfallServiceTest {
         }
     }
 
-    // - - -  Private scope  - - -
+    @Test
+    public void testGetSjukfallSummary() {
+        testee.getSummary(enhetsId, lakareId1, Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
+
+        verify(integrationService).getIntygsDataForCareUnit(enhetsId);
+        verify(statisticsCalculator).getSjukfallSummary(anyListOf(InternalSjukfall.class));
+
+    }
+    // - - - Private scope - - -
 
     private GetSjukfallRequest getSjukfallRequest(int maxIntygsGlapp, LocalDate aktivtDatum) {
         GetSjukfallRequest request = new GetSjukfallRequest();
@@ -158,7 +172,5 @@ public class SjukfallServiceTest {
 
         return internalSjukfall;
     }
-
-
 
 }

@@ -16,22 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.sjukfall;
+package se.inera.intyg.rehabstod.service.sjukfall.ruleengine.statistics;
 
 import java.util.List;
 
-import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
-import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 
 /**
- * Created by eriklupander on 2016-02-01.
+ * Created by marced on 04/03/16.
  */
-public interface SjukfallService {
-
-    List<InternalSjukfall> getSjukfall(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request);
-
-    SjukfallSummary getSummary(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request);
-
+public interface StatisticsCalculator {
+    SjukfallSummary getSjukfallSummary(List<InternalSjukfall> sjukfall);
 }
