@@ -18,8 +18,8 @@
  */
 
 angular.module('rehabstodApp').directive('rhsStatPanel',
-    ['SjukfallSummaryModel', 'SjukfallSummaryProxy', '$rootScope',
-        function(SjukfallSummaryModel, SjukfallSummaryProxy, $rootScope) {
+    ['SjukfallSummaryModel', 'SjukfallSummaryProxy', 'UserModel', '$rootScope',
+        function(SjukfallSummaryModel, SjukfallSummaryProxy, UserModel, $rootScope) {
             'use strict';
 
             return {
@@ -58,7 +58,8 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         _loadData();
                     }
 
-                    $scope.today = new Date();
+                    $scope.isLakare = UserModel.get().isLakare;
+
                 },
                 templateUrl: 'components/commonDirectives/rhsStatPanel/rhsStatPanel.directive.html'
             };

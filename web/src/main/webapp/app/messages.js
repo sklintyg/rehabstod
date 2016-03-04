@@ -68,8 +68,10 @@ var rhsMessages = {
 
 
         // Sjukfall Stat
-        'label.sjukfall.stat.ongoing' : 'Antalet pågående sjukfall på',
-        'label.sjukfall.stat.gender' : 'Könsfördelning',
+        'label.sjukfall.stat.ongoing.lakare' : 'Antal pågående sjukfall för dina patienter för enhet ',
+        'label.sjukfall.stat.gender.lakare' : 'Könsfördelning över dina patienter',
+        'label.sjukfall.stat.ongoing.rehab' : 'Antalet pågående sjukfall på',
+        'label.sjukfall.stat.gender.rehab' : 'Könsfördelning',
         'label.sjukfall.stat.male' : 'Män',
         'label.sjukfall.stat.female' : 'Kvinnor',
 

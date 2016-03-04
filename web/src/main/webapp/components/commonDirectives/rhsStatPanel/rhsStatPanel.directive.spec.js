@@ -27,16 +27,19 @@ describe('Directive: RhsStatPanel', function() {
     var scope, compile;
     var SjukfallSummaryModel;
     var SjukfallSummaryProxy;
+    var UserModel;
     var testData = {total: 100, men: 0, women: 100};
 
 
 
+
     // Initialize the controller and a mock scope
-    beforeEach(inject(function($compile, $rootScope, _SjukfallSummaryModel_, _SjukfallSummaryProxy_) {
+    beforeEach(inject(function($compile, $rootScope, _SjukfallSummaryModel_, _SjukfallSummaryProxy_, _UserModel_) {
         compile = $compile;
         scope = $rootScope.$new();
         SjukfallSummaryModel = _SjukfallSummaryModel_;
         SjukfallSummaryProxy = _SjukfallSummaryProxy_;
+        UserModel = _UserModel_;
     }));
 
 
@@ -46,6 +49,12 @@ describe('Directive: RhsStatPanel', function() {
         spyOn(SjukfallSummaryModel, 'get').and.callFake(function() {
             return testData;
         });
+
+        spyOn(UserModel, 'get').and.callFake(function() {
+            return { isLakare: true };
+        });
+
+
         spyOn(SjukfallSummaryProxy, 'get');
 
         // Act
@@ -58,7 +67,7 @@ describe('Directive: RhsStatPanel', function() {
         expect(SjukfallSummaryModel.get).toHaveBeenCalled();
         expect(SjukfallSummaryProxy.get).not.toHaveBeenCalled();
         expect(elementScope.model).toBe(testData);
-        expect(elementScope.today).toBeDefined();
+        expect(elementScope.isLakare).toBeTruthy();
     });
 
 
