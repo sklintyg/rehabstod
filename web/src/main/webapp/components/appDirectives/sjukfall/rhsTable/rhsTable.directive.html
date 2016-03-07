@@ -28,7 +28,18 @@
           <td  class="column-grad" ng-bind-html="::row.gradShow"></td>
           <td ng-if="user.urval != 'ISSUED_BY_ME'">{{::row.lakare.namn}}</td>
         </tr>
+        <tr ng-if="!displayedCollection.length">
+          <td colspan="9" class="rhs-table-no-result">
+            <span ng-if="!model.get().length">
+              {{::'label.table.no-result' | message}}
+            </span>
+            <span ng-if="model.get().length">
+              {{::'label.table.no-filter-result' | message}}
+            </span>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
+
 </div>

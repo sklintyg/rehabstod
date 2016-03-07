@@ -111,6 +111,8 @@ var rhsMessages = {
         'label.table.column.sort.desc': 'Fallande',
         'label.table.column.sort.asc': 'Stigande',
 
+        'label.table.no-result': 'Det finns inga pågående sjukfall.',
+        'label.table.no-filter-result': 'Filtrering matchade inga sjukfall. Försök med någon annat.',
 
         // Filter
         'label.filter.diagnos' : 'Välj nuvarande diagnos',

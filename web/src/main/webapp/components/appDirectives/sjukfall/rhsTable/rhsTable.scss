@@ -71,6 +71,11 @@ rhs-table {
   .tooltip {
     @extend .rhs-table-header-tooltip;
   }
+
+  .rhs-table-no-result {
+    font-size: 16px;
+    padding: 20px;
+  }
 }
 
 .rhs-table-header-fixed-top {
