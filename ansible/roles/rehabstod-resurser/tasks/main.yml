@@ -8,10 +8,11 @@
     insertbefore="</Context>"
     line="    <Resource name='jms/ConnectionFactory' auth='Container' type='org.apache.activemq.ActiveMQConnectionFactory' description='JMS Connection Factory' factory='org.apache.activemq.jndi.JNDIReferenceFactory' brokerURL='{{ activemq_broker_url }}' userName='{{ activemq_username }}' password='{{ activemq_username }}' brokerName='ActiveMQBroker' useEmbeddedBroker='false' />"
 
+# Note that we use 'webcert.log.queue' since both applications submits PDL log messages to the same queue.
 - name: configure PDL logging queue
   lineinfile:
     dest="{{ tomcat_conf }}/context.xml"
     regexp="    <Resource name='jms/Queue'"
     insertbefore="</Context>"
-    line="    <Resource name='jms/Queue' auth='Container' type='org.apache.activemq.command.ActiveMQQueue' description='Rehabstod PDL Logging Queue' factory='org.apache.activemq.jndi.JNDIReferenceFactory' physicalName='{{ environment_name }}.rehabstod.log.queue' />"
+    line="    <Resource name='jms/Queue' auth='Container' type='org.apache.activemq.command.ActiveMQQueue' description='Rehabstod PDL Logging Queue' factory='org.apache.activemq.jndi.JNDIReferenceFactory' physicalName='{{ environment_name }}.webcert.log.queue' />"
 
