@@ -66,6 +66,22 @@ describe('Logga in som Lena Karlsson ', function() {
         expect(sjukfallPage.isAt()).toBeTruthy();
     });
 
+    it('Byt enhet på sjukfallssidan filtertåterställs', function() {
+        startPage.clickFullUnit();
+        expect(sjukfallPage.isAt()).toBeTruthy();
+
+        var freeTextValue = 'Hej';
+
+        sjukfallPage.freeTextInput().sendKeys(freeTextValue);
+
+        expect(sjukfallPage.freeTextInput().getAttribute('value')).toEqual(freeTextValue);
+        
+        bytEnhet();
+
+        expect(sjukfallPage.isAt()).toBeTruthy();
+        expect(sjukfallPage.freeTextInput().getAttribute('value')).toEqual('');
+    });
+
 
     function bytEnhet() {
         var today = new Date().toISOString().split('T')[0];
