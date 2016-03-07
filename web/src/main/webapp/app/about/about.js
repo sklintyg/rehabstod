@@ -27,7 +27,7 @@ angular.module('rehabstodApp')
                     'content@app': {templateUrl: 'app/about/about.page.html', controller: 'AboutPageCtrl'}
                 },
                 data: {
-                    rule: function(fromState, toState, UserModel) {
+                    rule: function(fromState, toState) {
 
                         if (toState.name !== 'app.about') {
                             return;
