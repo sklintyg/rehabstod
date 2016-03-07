@@ -44,7 +44,8 @@ angular.module('rehabstodApp').controller('HeaderController',
                 animation: true,
                 templateUrl: 'app/header/careunit/select-care-unit-dialog.html',
                 controller: 'SelectCareUnitCtrl',
-                size: 'md'
+                size: 'md',
+                windowClass: 'select-care-unit-modal'
             });
 
             modalInstance.result.then(function(enhet) {
