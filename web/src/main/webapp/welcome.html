@@ -41,6 +41,35 @@
       "hsaId": "IFV1239877878-104N",
       "enhetId": "IFV1239877878-1045",
       "lakare": false
+    },
+
+    // NMT testperson, finns i test-HSA
+    {
+      "fornamn": "Leonie",
+      "efternamn": "Koehl",
+      "hsaId": "TSTNMT2321000156-103F",
+      "enhetId": "TSTNMT2321000156-1039",
+      "lakare": true,
+      "forskrivarKod": "9300005"
+    },
+    // NMT test-läkare
+    {
+      "fornamn": "Erik",
+      "efternamn": "Nilsson",
+      "hsaId": "TSTNMT2321000156-105H",
+      "enhetId": "TSTNMT2321000156-105F",
+      "lakare" : true,
+      "forskrivarKod": "9300005",
+      "befattningsKod": "204090"
+    },
+
+    {
+      "fornamn": "Susanne",
+      "efternamn": "Karlsson",
+      "hsaId": "TSTNMT2321000156-105J",
+      "enhetId": "TSTNMT2321000156-105F",
+      "lakare" : false,
+      "forskrivarKod": "9300005"
     }
   ];
 
@@ -93,6 +122,9 @@
             <select id="jsonSelect" name="jsonSelect" ng-model="selectedIndex" size="15" style="width: 100%;max-width:100%" class="form-control">
               <option value="0" id="IFV1239877878-1049_IFV1239877878-1042">Jan Nilsson (Läkare / Vård och Behandling + Admin)</option>
               <option value="1" id="IFV1239877878-104N_IFV1239877878-1045">Lena Karlsson (Vårdadmin / Vård och Behandling)</option>
+              <option value="2" id="TSTNMT2321000156-103F_TSTNMT2321000156-1039">Leonie Koehl (Läkare EU/ESS/Schweiz)</option>
+              <option value="3" id="TSTNMT2321000156-105H_TSTNMT2321000156-105F">Erik Nilsson (NMT Läkare / Vård och Behandling)</option>
+              <option value="4" id="TSTNMT2321000156-105J_TSTNMT2321000156-105F">Susanne Karlsson (NMT Administratör / Vård och Behandling)</option>
 
             </select>
             <input id="loginBtn" type="submit" value="Logga in" class="btn btn-primary"

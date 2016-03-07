@@ -29,6 +29,8 @@ import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 
+import java.util.ArrayList;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -68,5 +70,12 @@ public class LogServiceImplTest {
         } finally {
             verify(template, times(0)).send(any());
         }
+    }
+
+    @Test
+    public void testNoLogMessageSentWhenSjukfallListIsEmpty() {
+        when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser());
+        testee.logSjukfallData(new ArrayList<>(), ActivityType.READ);
+        verify(template, times(0)).send(any());
     }
 }

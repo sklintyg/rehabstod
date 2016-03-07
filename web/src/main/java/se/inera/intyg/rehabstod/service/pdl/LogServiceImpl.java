@@ -71,6 +71,10 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public void logSjukfallData(List<InternalSjukfall> sjukfallList, ActivityType activityType) {
+        if (sjukfallList.size() == 0) {
+            LOG.debug("No sjukfall in resource list for PDL logging, not logging.");
+            return;
+        }
         PdlLogMessage pdlLogMessage = pdlLogMessageFactory.buildLogMessage(sjukfallList, activityType, userService.getUser());
         send(pdlLogMessage);
     }
@@ -82,7 +86,7 @@ public class LogServiceImpl implements LogService {
             return;
         }
 
-        LOG.info("Logging SjukfallIntygsData for activityType {} having { resources}", pdlLogMessage.getActivityType().name(), pdlLogMessage.getPdlResourceList().size());
+        LOG.info("Logging SjukfallIntygsData for activityType {} having {}", pdlLogMessage.getActivityType().name(), pdlLogMessage.getPdlResourceList().size());
         jmsTemplate.send(new MC(pdlLogMessage));
 
     }
