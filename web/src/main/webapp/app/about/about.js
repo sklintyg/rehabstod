@@ -24,7 +24,55 @@ angular.module('rehabstodApp')
             .state('app.about', {
                 url: '/about',
                 views: {
-                    'content@app': {templateUrl: 'app/about/about.page.html'}
+                    'content@app': {templateUrl: 'app/about/about.page.html', controller: 'AboutPageCtrl'}
+                },
+                data: {
+                    rule: function(fromState, toState, UserModel) {
+
+                        if (toState.name !== 'app.about') {
+                            return;
+                        }
+
+                        var to = 'app.about.rehabstod';
+
+                        return {
+                            to: to,
+                            params: {},
+                            options: {location: 'replace'}
+                        };
+                    }
+                }
+            })
+            .state('app.about.rehabstod', {
+                url: '/rehabstod',
+                views: {
+                    'content@app.about': {
+                        templateUrl: 'app/about/subpages/rehabstod.html'
+                    }
+                }
+            })
+            .state('app.about.faq', {
+                url: '/faq',
+                views: {
+                    'content@app.about': {
+                        templateUrl: 'app/about/subpages/faq.html'
+                    }
+                }
+            })
+            .state('app.about.support', {
+                url: '/support',
+                views: {
+                    'content@app.about': {
+                        templateUrl: 'app/about/subpages/support.html'
+                    }
+                }
+            })
+            .state('app.about.cookies', {
+                url: '/cookies',
+                views: {
+                    'content@app.about': {
+                        templateUrl: 'app/about/subpages/cookies.html'
+                    }
                 }
             });
     });

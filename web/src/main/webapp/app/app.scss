@@ -195,6 +195,7 @@ h5.inline-heading {
 
 // Component styles are injected through grunt
 // injector
+@import 'about/about.scss';
 @import 'error/error.scss';
 @import 'header/header.scss';
 @import 'print.scss';
