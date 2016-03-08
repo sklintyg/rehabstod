@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="sv" id="rhsErrorApp" ng-app="rhsErrorApp">
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -22,8 +22,20 @@
     color: #008391;
   }
 </style>
+
+<!-- Angular stuff only for making Protractor behave -->
+<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+<script type="text/javascript">
+  angular.module('rhsErrorApp', [
+    'rhsErrorApp.controllers'
+  ]);
+  angular.module('rhsErrorApp.controllers', []).
+  controller('errorController', function($scope) {
+
+  });
+</script>
 </head>
-<body>
+<body ng-controller="errorController">
   <div class="container">
     <div class="row">
       <div class="content">
@@ -47,6 +59,18 @@
             <h1 class="page-header">Rehabstöd</h1>
             <div class="alert alert-danger">Sidan finns inte. Gå tillbaka till <a href="/">startsidan</a>.</div>
           </c:when>
+
+          <c:when test="${param.reason eq \"login.medarbetaruppdrag\"}">
+            <h1 class="page-header">Rehabstöd - medarbetaruppdrag saknas</h1>
+            <div id="error-medarbetaruppdrag-saknas" class="alert alert-danger">Det krävs minst ett giltigt medarbetaruppdrag med ändamål 'Vård och behandling' för att använda Rehabstöd.</div>
+          </c:when>
+
+          <c:when test="${param.reason eq \"login.hsaerror\"}">
+            <h1 class="page-header">Rehabstöd - tekniskt fel</h1>
+            <div id="error-tekniskt-fel" class="alert alert-danger">Tyvärr har ett tekniskt problem uppstått i Rehabstöd. <a href="/index.html">Försök gärna igen</a> för att se om felet är tillfälligt. Kontakta annars i första hand din lokala IT-avdelning och i andra hand <a href="http://www.inera.se/felanmalan" target="_blank">Ineras Nationell kundservice</a>.
+            </div>
+          </c:when>
+
 
           <c:otherwise>
             <h1 class="page-header">Rehabstöd</h1>

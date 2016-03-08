@@ -17,26 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* globals browser */
+
 /**
- * Created by BESA on 2015-11-17.
- * Holds paths to page files for easy inclusion and intellisense support in specs.
+ * Created by eriklupander on 08/03/16.
  */
 'use strict';
 
-//var intygPath = './intyg/'; // should point to intyg folder
-
-var rehabstodBase = require('./rehabstod.base.page.js');
-var welcomePage = require('./welcome.page.js');
-var startPage = require('./start.page.js');
-var sjukfallPage = require('./sjukfall.page.js');
-var aboutPage = require('./about.page.js');
-var errorPage = require('./error.page.js');
-
 module.exports = {
-    'rehabstodBase': rehabstodBase,
-    'welcomePage': welcomePage,
-    'startPage': startPage,
-    'sjukfallPage': sjukfallPage,
-    'aboutPage': aboutPage,
-    'errorPage': errorPage
+    isAt: function isAt() {
+        return element(by.id('rhsErrorApp')).isPresent();
+        //return true;
+    },
+
+    isMedarbetaruppdragSaknasShowing: function isMedarbetaruppdragSaknasShowing() {
+        return element(by.id('error-medarbetaruppdrag-saknas')).isPresent();
+    },
+
+    isTeknisktFelShowing: function isTeknisktFelShowing() {
+        return element(by.id('error-tekniskt-fel')).isPresent();
+    }
 };

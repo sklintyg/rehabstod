@@ -18,16 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import javax.xml.transform.stream.StreamSource;
-
 import org.apache.cxf.staxutils.StaxUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -48,7 +38,6 @@ import org.springframework.security.saml.SAMLCredential;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
-
 import se.inera.intyg.common.integration.hsa.model.Mottagning;
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
@@ -58,6 +47,18 @@ import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.authorities.bootstrap.AuthoritiesConfigurationLoader;
 import se.inera.intyg.rehabstod.auth.authorities.validation.AuthoritiesValidator;
+import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
+import se.inera.intyg.rehabstod.auth.exceptions.MissingMedarbetaruppdragException;
+
+import javax.xml.transform.stream.StreamSource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by marced on 29/01/16.
@@ -124,6 +125,47 @@ public class RehabstodUserDetailsServiceTest {
         AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_LAKARE).orThrow();
         assertEquals("The hsaId defined in credentials should have been selected as default vardenhet", ENHET_HSAID_1, rehabstodUser
                 .getValdVardenhet().getId());
+    }
+
+    @Test(expected = HsaServiceException.class)
+    public void testHsaServiceExceptionIsThrownWhenHsaGetPersonThrowsUncheckedException() throws Exception {
+        // given
+        when(hsaPersonService.getHsaPersonInfo(anyString())).thenThrow(new RuntimeException("some-exception"));
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-title-lakare.xml");
+        setupCallToAuthorizedEnheterForHosPerson();
+
+        // then
+        userDetailsService.loadUserBySAML(samlCredential);
+    }
+
+    @Test(expected = HsaServiceException.class)
+    public void testHsaServiceExceptionIsThrownWhenHsaThrowsException() throws Exception {
+        // given
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenThrow(new RuntimeException("some-hsa-exception"));
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-title-lakare.xml");
+
+        // then
+        userDetailsService.loadUserBySAML(samlCredential);
+    }
+
+    @Test(expected = MissingMedarbetaruppdragException.class)
+    public void testMissingMedarbetaruppdragExceptionIsThrownWhenEmployeeHasNoVardgivare() throws Exception {
+        // given
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new ArrayList<>());
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-title-lakare.xml");
+
+        // then
+        userDetailsService.loadUserBySAML(samlCredential);
+    }
+
+    @Test(expected = MissingMedarbetaruppdragException.class)
+    public void testMissingMedarbetaruppdragExceptionIsThrownWhenEmployeeHasNoMIUOnSAMLTicket() throws Exception {
+        // given
+        setupCallToAuthorizedEnheterForHosPerson();
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-other-mui.xml");
+
+        // then
+        userDetailsService.loadUserBySAML(samlCredential);
     }
 
     private SAMLCredential createSamlCredential(String filename) throws Exception {

@@ -17,26 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Created by BESA on 2015-11-17.
- * Holds paths to page files for easy inclusion and intellisense support in specs.
- */
+/*globals browser */
+/*globals pages */
+/*globals describe,it,helpers */
 'use strict';
 
-//var intygPath = './intyg/'; // should point to intyg folder
+var errorPage = rhsTestTools.pages.errorPage;
+var specHelper = rhsTestTools.helpers.spec;
+var startPage = rhsTestTools.pages.startPage;
+var WelcomePage = rhsTestTools.pages.welcomePage;
 
-var rehabstodBase = require('./rehabstod.base.page.js');
-var welcomePage = require('./welcome.page.js');
-var startPage = require('./start.page.js');
-var sjukfallPage = require('./sjukfall.page.js');
-var aboutPage = require('./about.page.js');
-var errorPage = require('./error.page.js');
+fdescribe('Logga in som Pelle Uppdragslös ', function() {
 
-module.exports = {
-    'rehabstodBase': rehabstodBase,
-    'welcomePage': welcomePage,
-    'startPage': startPage,
-    'sjukfallPage': sjukfallPage,
-    'aboutPage': aboutPage,
-    'errorPage': errorPage
-};
+    beforeEach(function() {
+        browser.ignoreSynchronization = false;
+    });
+
+    it('Öppna och stäng byt enhetsdialogen', function() {
+        WelcomePage.get();
+        specHelper.waitForAngularTestability();
+        WelcomePage.login('pelle-uppdragslos_');
+        specHelper.waitForAngularTestability();
+        expect(errorPage.isAt()).toBeTruthy();
+        expect(errorPage.isMedarbetaruppdragSaknasShowing()).toBeTruthy();
+    });
+
+});

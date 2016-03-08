@@ -77,9 +77,9 @@
                     NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
       <saml:AttributeValue>urn:sambi:names:ac:classes:LoA3</saml:AttributeValue>
     </saml:Attribute>
-    <saml:Attribute FriendlyName="titleCode" Name="urn:sambi:names:attribute:titleCode"
+    <saml:Attribute FriendlyName="title" Name="urn:sambi:names:attribute:title"
                     NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
-      <saml:AttributeValue>204010</saml:AttributeValue>
+      <saml:AttributeValue>Läkare</saml:AttributeValue>
     </saml:Attribute>
     <saml:Attribute FriendlyName="careProviderHsaId" Name="urn:sambi:names:attribute:careProviderHsaId"
                     NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
@@ -91,7 +91,7 @@
     </saml:Attribute>
     <saml:Attribute FriendlyName="commissionPurpose" Name="urn:sambi:names:attribute:commissionPurpose"
                     NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
-      <saml:AttributeValue>Vård och behandling</saml:AttributeValue>
+      <saml:AttributeValue>Någonting helt annat</saml:AttributeValue>
     </saml:Attribute>
     <saml:Attribute FriendlyName="careUnitName" Name="urn:sambi:names:attribute:careUnitName"
                     NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
@@ -164,7 +164,7 @@
     </saml:Attribute>
     <saml:Attribute Name="http://www.carelink.se/names/subject#syftesbeskrivning"
                     NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
-      <saml:AttributeValue>Vård och behandling</saml:AttributeValue>
+      <saml:AttributeValue>Någonting helt annat</saml:AttributeValue>
     </saml:Attribute>
     <saml:Attribute Name="http://www.carelink.se/names/subject#vårdenhetsnamn"
                     NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
