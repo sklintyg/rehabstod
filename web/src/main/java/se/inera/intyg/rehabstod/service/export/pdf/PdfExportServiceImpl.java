@@ -18,15 +18,14 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
-
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import org.apache.commons.io.IOUtils;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.service.Urval;
@@ -36,20 +35,9 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.ListItem;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.draw.LineSeparator;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by marced on 24/02/16.
@@ -332,7 +320,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     private Phrase getPersonnummerColumn(Sjukfall s) {
         Phrase p = new Phrase();
         p.add(new Chunk(s.getPatient().getId() != null ? s.getPatient().getId() : "", TABLE_CELL_NORMAL));
-        p.add(new Chunk(String.format(FORMAT_ALDER_PARANTESER, s.getPatient().getAlder()), TABLE_CELL_BOLD));
+        p.add(new Chunk(String.format(FORMAT_ALDER_PARANTESER, s.getPatient().getAlder()), TABLE_CELL_NORMAL));
         return p;
     }
 
