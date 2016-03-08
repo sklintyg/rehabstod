@@ -18,12 +18,12 @@
  */
 
 angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope', function($scope) {
-
+    'use strict';
     //Initialize internal model
     _updateInputModel();
 
     //Store originalMaxValue in case we need to set it
-    var originalMaxValue = parseInt($scope.max);
+    var originalMaxValue = parseInt($scope.max, 10);
 
     var isNumberPattern = /^\d+$/;
 
@@ -39,11 +39,11 @@ angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope',
 
     function _parseEnteredValue() {
         //Handle input of maxreplacevalue such as 366 => '365+'
-        if ($scope.inputModel == $scope.displayMaxValueAs) {
+        if ($scope.inputModel === $scope.displayMaxValueAs) {
             $scope.inputModel = $scope.originalMaxValue;
         } else if (isNumberPattern.test($scope.inputModel)) {
             //It's a number, is is in valid range
-            var newValue = parseInt($scope.inputModel);
+            var newValue = parseInt($scope.inputModel, 10);
             if (newValue >= $scope.min && newValue <= $scope.max) {
                 $scope.externalModel = newValue;
                 return;
@@ -54,7 +54,7 @@ angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope',
     }
 
     $scope.onManualChange = function() {
-        _parseEnteredValue()
+        _parseEnteredValue();
     };
 
 
@@ -83,6 +83,7 @@ angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope',
 
 
 }]).directive('rhsNumericRangeInput', function() {
+    'use strict';
     return {
         restrict: 'E',
         replace: true,
@@ -93,11 +94,6 @@ angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope',
             'min': '=',
             'max': '=',
             'displayMaxValueAs': '@'
-        },
-
-        link: function(scope, elem, attrs) {
-
         }
-    }
-})
-;
+    };
+});
