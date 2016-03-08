@@ -6,48 +6,46 @@
 <div class="row" ng-if="showSearchFilter">
   <div class="col-md-9">
     <div class="box">
-      <form>
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="form-group search-filter-diagnos">
-              <label class="control-label"><span message key="label.filter.diagnos"></span></label>
-              <rhs-multi-select items-model="filterViewState.get().diagnosKapitelModel"
-                                none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="true" />
-            </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group search-filter-diagnos">
+            <label class="control-label"><span message key="label.filter.diagnos"></span></label>
+            <rhs-multi-select items-model="filterViewState.get().diagnosKapitelModel"
+                              none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="true" />
           </div>
+        </div>
 
-          <div ng-if="user.urval === 'ALL'" class="col-sm-6">
-            <div class="form-group">
-              <label class="control-label"><span message key="label.filter.lakare"></span></label>
-              <rhs-multi-select id="rhs-filter-lakare" items-model="filterViewState.get().lakareModel" none-selected-title="{{::'label.filter.allselected' | message}}"
-                                high-light-enabled="false" />
-            </div>
+        <div ng-if="user.urval === 'ALL'" class="col-sm-6">
+          <div class="form-group">
+            <label class="control-label"><span message key="label.filter.lakare"></span></label>
+            <rhs-multi-select id="rhs-filter-lakare" items-model="filterViewState.get().lakareModel" none-selected-title="{{::'label.filter.allselected' | message}}"
+                              high-light-enabled="false" />
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-12 rhs-filter-slider">
-            <div class="form-group">
-              <label class="control-label"><span message key="label.filter.langd"></span></label>
-              <rhs-slider slider-model="filterViewState.get().sjukskrivningslangdModel" range="true" min="1" max="366" position="position" />
-            </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 rhs-filter-slider">
+          <div class="form-group">
+            <label class="control-label"><span message key="label.filter.langd"></span></label>
+            <rhs-slider slider-model="filterViewState.get().sjukskrivningslangdModel" range="true" min="1" max="366" position="position" />
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="form-group">
-              <label class="control-label" for="rhs-filter-free-text-input"><span message key="label.filter.filter"></span></label>
-              <input id="rhs-filter-free-text-input" ng-model="filterViewState.get().freeTextModel" placeholder="&#61442; {{::'label.filter.filter.placeholder' | message}}" class="input-sm form-control rhs-filter-filter-input"
-                       type="search" maxlength="100"/>
-            </div>
-          </div>
-          <div class="col-sm-6 bottom-align-text">
-            <label class="control-label">&nbsp;</label><br>
-            <button id="rhs-filter-reset-btn" ng-click="onResetFilterClick()" class="btn btn-default">
-              <span message key="common.reset"></span>
-            </button>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label class="control-label" for="rhs-filter-free-text-input"><span message key="label.filter.filter"></span></label>
+            <input id="rhs-filter-free-text-input" ng-model="filterViewState.get().freeTextModel" placeholder="&#61442; {{::'label.filter.filter.placeholder' | message}}" class="form-control rhs-filter-filter-input"
+                     type="search" maxlength="100"/>
           </div>
         </div>
-      </form>
+        <div class="col-sm-6 bottom-align-text">
+          <label class="control-label">&nbsp;</label><br>
+          <button id="rhs-filter-reset-btn" ng-click="onResetFilterClick()" class="btn btn-default">
+            <span message key="common.reset"></span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
   <div class="col-md-3">
