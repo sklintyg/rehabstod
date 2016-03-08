@@ -4,9 +4,9 @@
 - name: configure connection factory
   lineinfile:
     dest="{{ tomcat_conf }}/context.xml"
-    regexp="    <Resource name='jms/ConnectionFactory'"
+    regexp="    <Resource name='jms/AsyncConnectionFactory'"
     insertbefore="</Context>"
-    line="    <Resource name='jms/ConnectionFactory' auth='Container' type='org.apache.activemq.ActiveMQConnectionFactory' description='JMS Connection Factory' factory='org.apache.activemq.jndi.JNDIReferenceFactory' brokerURL='{{ activemq_broker_url }}' userName='{{ activemq_username }}' password='{{ activemq_username }}' brokerName='ActiveMQBroker' useEmbeddedBroker='false' />"
+    line="    <Resource name='jms/AsyncConnectionFactory' auth='Container' type='org.apache.activemq.ActiveMQConnectionFactory' description='JMS Connection Factory' factory='org.apache.activemq.jndi.JNDIReferenceFactory' brokerURL='{{ activemq_broker_url }}' userName='{{ activemq_username }}' password='{{ activemq_username }}' brokerName='ActiveMQBroker' useEmbeddedBroker='false' />"
 
 # Note that we use 'webcert.log.queue' since both applications submits PDL log messages to the same queue.
 - name: configure PDL logging queue
