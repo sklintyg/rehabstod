@@ -23,7 +23,7 @@
           <td class="column-start start-date">{{::row.start}}</td>
           <td class="column-slut end-date">{{::row.slut}}</td>
           <td class="column-dagar">
-            <span class="text-nowrap">{{::row.dagarShow}}</span><span class="intyg"> ({{::row.intyg}}&nbsp;intyg)</span>
+            <span class="text-nowrap dagar">{{::row.dagarShow}}</span><wbr>({{::row.intyg}}&nbsp;intyg)
           </td>
           <td  class="column-grad" ng-bind-html="::row.gradShow"></td>
           <td ng-if="user.urval != 'ISSUED_BY_ME'">{{::row.lakare.namn}}</td>
