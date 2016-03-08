@@ -120,7 +120,8 @@ var rhsMessages = {
         'label.filter.langd' : 'Välj sjukskrivningslängd',
         'label.filter.show' : 'Visa sökfilter',
         'label.filter.hide' : 'Dölj sökfilter',
-        'label.filter.filter' : 'Filter',
+        'label.filter.filter' : 'Fritextfilter',
+        'label.filter.filter.placeholder' : 'Hitta sjukfall som innehåller...',
         'label.filter.allselected' : 'Alla valda',
 
         // Settings

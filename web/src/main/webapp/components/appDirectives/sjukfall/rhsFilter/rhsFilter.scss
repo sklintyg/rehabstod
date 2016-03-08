@@ -4,12 +4,7 @@
   }
 
   .bottom-align-text {
-
     text-align: right;
-
-    .btn {
-      margin-top: 5px;
-    }
   }
 }
 
@@ -44,4 +39,8 @@ rhs-filter {
 
 .rhs-filter-slider {
   padding-right: 30px;
+}
+
+.rhs-filter-filter-input {
+  font-family: 'FontAwesome', $font-family-base;
 }
