@@ -31,6 +31,33 @@
           </div>
         </div>
       </div>
+
+      <div class="row">
+        <div class="col-sm-12 form-inline rhs-numeric-range-input">
+          <div class="form-group">
+            <span class="control-label">Från</span>
+            <rhs-numeric-range-input external-model="sjukfallsLangder[0]"
+                                     min="1"
+                                     max="filterViewState.get().sjukskrivningslangdModel[1]"
+                                     display-max-value-as="365+">
+
+            </rhs-numeric-range-input>
+            <span class="control-label">dagar</span>
+          </div>
+
+          <div class="form-group">
+            <span class="control-label">Till</span>
+            <rhs-numeric-range-input external-model="sjukfallsLangder[1]"
+                                     min="filterViewState.get().sjukskrivningslangdModel[0]"
+                                     max="366"
+                                     display-max-value-as="365+">
+
+            </rhs-numeric-range-input>
+            <span class="control-label">dagar</span>
+          </div>
+        </div>
+      </div>
+
       <div class="row">
         <div class="col-sm-6">
           <div class="form-group">

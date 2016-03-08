@@ -1,0 +1,11 @@
+<div class="input-group rhs-numeric-range-input">
+  <input ng-model="inputModel" type="text" ng-change="onManualChange()" ng-click="onfocus($event)" ng-model-options="{updateOn: 'blur'}" maxlength="4" class="form-control">
+  <span class="input-group-btn-vertical">
+    <button class="btn btn-default rhs-numeric-range-input-up" type="button" ng-click="onClickUp()">
+      <i class="glyphicon glyphicon-chevron-up"></i>
+    </button>
+    <button class="btn btn-default rhs-numeric-range-input-down" type="button" ng-click="onClickDown()">
+      <i class="glyphicon glyphicon-chevron-down"></i>
+    </button>
+  </span>
+</div>

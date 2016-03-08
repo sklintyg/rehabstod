@@ -44,3 +44,10 @@ rhs-filter {
 .rhs-filter-filter-input {
   font-family: 'FontAwesome', $font-family-base;
 }
+
+.rhs-numeric-range-input {
+  .input-group {
+    width: 80px;
+  }
+  margin-bottom: 10px;
+}
