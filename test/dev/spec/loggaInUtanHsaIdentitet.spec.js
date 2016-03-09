@@ -27,7 +27,7 @@ var specHelper = rhsTestTools.helpers.spec;
 var startPage = rhsTestTools.pages.startPage;
 var WelcomePage = rhsTestTools.pages.welcomePage;
 
-fdescribe('Logga in som Hans Hosplösa ', function() {
+describe('Logga in som Hans Hosplösa ', function() {
 
     beforeEach(function() {
         browser.ignoreSynchronization = false;
