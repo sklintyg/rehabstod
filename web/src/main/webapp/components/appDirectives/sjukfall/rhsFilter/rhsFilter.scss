@@ -31,7 +31,6 @@ h1 .rhs-tooltip-headline {
   margin-left: 5px;
 }
 
-
 rhs-filter {
   display: block;
   margin: 20px 0 20px 20px;
@@ -45,9 +44,11 @@ rhs-filter {
   font-family: 'FontAwesome', $font-family-base;
 }
 
-.rhs-numeric-range-input {
-  .input-group {
+.rhs-filter {
+  .rhs-numeric-range-input {
     width: 80px;
   }
-  margin-bottom: 10px;
+  .rhs-filter-numeric-input-controls {
+    margin-bottom: 10px;
+  }
 }

@@ -3,7 +3,7 @@
   <span ng-switch-when="false" message key="label.filter.show"></span><span ng-switch-when="true" message key="label.filter.hide"></span>
 </button>
 
-<div class="row" ng-if="showSearchFilter">
+<div class="row rhs-filter" ng-if="showSearchFilter">
   <div class="col-md-9">
     <div class="box">
       <div class="row">
@@ -33,7 +33,7 @@
       </div>
 
       <div class="row">
-        <div class="col-sm-12 form-inline rhs-numeric-range-input">
+        <div class="col-sm-12 form-inline rhs-filter-numeric-input-controls">
           <div class="form-group">
             <span class="control-label">Från</span>
             <rhs-numeric-range-input external-model="sjukfallsLangder[0]"

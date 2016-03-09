@@ -2,12 +2,14 @@
   <button class="close" data-dismiss="modal" data-ng-click="cancel()">×</button>
   <h4 class="modal-title">{{::'label.settings.header' | message}}</h4>
 </div>
-<div class="modal-body">
+<div class="modal-body rhs-settings-modal">
   <p>{{::'label.settings.modal.body' | message}}</p>
 
     <div class="form-group" style="margin: 0 25px;">
       <label class="control-label">{{::'label.settings.modal.label' | message}}</label>
-      <rhs-slider slider-model="glapp" range="false" min="0" max="90" ticks="ticks" slider-tooltip-position="top" ticks-labels="ticksLabels" ticks-positions="ticksPositions" />
+      <rhs-numeric-range-input external-model="glapp"
+                               min="0"
+                               max="90"> (0 - 90 dagar)
     </div>
 
 </div>
