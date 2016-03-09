@@ -30,6 +30,10 @@ Nu går det att öppna en webbläsare och surfa till
 
 Observera jetty körs i gradleprocessen, så gradle "blir inte klar" förrän du stoppar servern med ^c, och applikationen är bara igång fram till dess.
 
+För att testa applikationen i ett mer prodlikt läge kan man även starta med en flagga för att köra i minifierat läge då css/js är packade och sammanslagna genom att starta:
+
+`gradle clean appRunWar -Prehabstod.useMinifiedJavaScript`
+
 ## Köra Integrationstester
 Vi har integrationstester skrivna med [REST-Assured](https://github.com/jayway/rest-assured)
 

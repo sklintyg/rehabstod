@@ -21,14 +21,14 @@ module.exports = function(grunt) {
     // connect middleware for enabling post requests through
     function enablePost(req, res, next) {
 
-/*        console.log(req.method);
-        console.log(req.url);
-        console.log(req.headers);
-        console.log('Setting full access control.');
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-*/
+        /*        console.log(req.method);
+         console.log(req.url);
+         console.log(req.headers);
+         console.log('Setting full access control.');
+         res.setHeader('Access-Control-Allow-Origin', '*');
+         res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+         res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+         */
         return next();
     }
 
@@ -244,7 +244,7 @@ module.exports = function(grunt) {
 
         // Performs rewrites based on rev and the useminPrepare configuration
         usemin: {
-            html: ['<%= config.dist %>/{,*/}*.html'],
+            html: ['<%= config.dist %>/{,*/}*.html', '<%= config.dist %>/{,*/}*.jsp'],
             css: ['<%= config.dist %>/{,*/}*.css'],
             js: ['<%= config.dist %>/{,*/}*.js'],
             options: {
@@ -357,8 +357,6 @@ module.exports = function(grunt) {
                 }
             }
         },
-
-
 
 
         // Compiles Sass to CSS

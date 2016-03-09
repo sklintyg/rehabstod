@@ -9,9 +9,16 @@
 <meta name="ROBOTS" content="nofollow, noindex" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
   
-<title>Version</title>
+<title>Rehabstöd Version</title>
+
+<!-- build:css({build/.tmp,src/main/webapp}) app/app.css -->
+<!-- injector:css -->
+<link rel="stylesheet" href="app/app.css">
+<!-- endinjector -->
+<!-- endbuild -->
+
 </head>
-<body>
+<body style="padding: 10px;">
     <div class="page-header" style="margin-top: 0;">
       <h3>Version</h3>
     </div>
