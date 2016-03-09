@@ -22,35 +22,44 @@ angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope',
     //Initialize internal model
     _updateInputModel();
 
-    //Store originalMaxValue in case we need to set it
-    var originalMaxValue = parseInt($scope.max, 10);
+    var isNumberPattern = /^[0-9]+$/;
 
-    var isNumberPattern = /^\d+$/;
+    //Store originalMaxValue in case we need to set it
+    $scope.originalMaxValue = parseInt($scope.max, 10);
+
 
     function _updateInputModel() {
         $scope.inputModel = $scope.externalModel;
 
-        //handle case when we should show a preconfigured value instead of actual maxvalue
-        if (angular.isDefined($scope.displayMaxValueAs) && $scope.inputModel >= originalMaxValue) {
+        //handle case when we should show a preconfigured (displayMaxValueAs) value instead of actual maxvalue
+        if (angular.isDefined($scope.displayMaxValueAs) && $scope.inputModel >= $scope.originalMaxValue) {
             $scope.inputModel = $scope.displayMaxValueAs;
         }
     }
 
+    function withinRangeNow(enteredValue) {
+        return (enteredValue >= $scope.min && enteredValue <= $scope.max);
+    }
 
     function _parseEnteredValue() {
-        //Handle input of maxreplacevalue such as 366 => '365+'
+        //Handle input of displayMaxValueAs (inversed) such as '365+' => 366
         if ($scope.inputModel === $scope.displayMaxValueAs) {
             $scope.inputModel = $scope.originalMaxValue;
+            if (withinRangeNow($scope.inputModel)) {
+                $scope.externalModel = $scope.inputModel;
+
+            }
+
         } else if (isNumberPattern.test($scope.inputModel)) {
-            //It's a number, is is in valid range
-            var newValue = parseInt($scope.inputModel, 10);
-            if (newValue >= $scope.min && newValue <= $scope.max) {
-                $scope.externalModel = newValue;
-                return;
+            //convert to a number
+            $scope.inputModel = parseInt($scope.inputModel, 10);
+            if (withinRangeNow($scope.inputModel)) {
+                $scope.externalModel = $scope.inputModel;
             }
         }
-        //could not parse the value, or was out of range - revert to old
+        //always refresh
         _updateInputModel();
+
     }
 
     $scope.onManualChange = function() {
