@@ -46,6 +46,7 @@
   <security:http security="none" pattern="/api/monitoring/**"/>
   <security:http security="none" pattern="/favicon.ico"/>
   <security:http security="none" pattern="/error.jsp"/>
+  <security:http security="none" create-session="never" pattern="/api/session-auth-check/**"/>
 
   <!-- Logger for SAML messages and events -->
   <bean id="samlLogger" class="org.springframework.security.saml.log.SAMLDefaultLogger">

@@ -36,6 +36,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
+import se.inera.intyg.rehabstod.web.controller.api.SessionStatusController;
+import se.inera.intyg.rehabstod.web.filters.SessionTimeoutFilter;
 
 public class ApplicationInitializer implements WebApplicationInitializer {
 
@@ -56,6 +58,11 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         ServletRegistration.Dynamic servlet = servletContext.addServlet("dispatcher", new DispatcherServlet(webConfig));
         servlet.setLoadOnStartup(1);
         servlet.addMapping("/");
+
+        // Session Timeout filter
+        FilterRegistration.Dynamic sessionTimeoutFilter = servletContext.addFilter("sessionTimeoutFilter", SessionTimeoutFilter.class);
+        sessionTimeoutFilter.addMappingForUrlPatterns(null, false, "/*");
+        sessionTimeoutFilter.setInitParameter("getSessionStatusUri", SessionStatusController.SESSION_STATUS_CHECK_URI);
 
         // Spring security filter
         FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
