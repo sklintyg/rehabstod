@@ -206,8 +206,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         PersonId personId = new PersonId();
         personId.setExtension(pnr);
         patient.setPersonId(personId);
-        patient.setFornamn("Förnamn-" + pnr.substring(2, 6));
-        patient.setEfternamn("Efternamn-" + pnr.substring(6));
+        patient.setFullstandigtNamn("Förnamn-" + pnr.substring(2, 6) + " Efternamn-" + pnr.substring(6));
         return patient;
     }
 

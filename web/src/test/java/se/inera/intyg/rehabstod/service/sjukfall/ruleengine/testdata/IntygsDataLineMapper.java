@@ -135,7 +135,25 @@ public class IntygsDataLineMapper {
     }
 
     private Patient patient(String pid, String fnamn, String mnamn, String enamn) {
-        return new PatientT.PatientBuilder().personId(personId(id(pid))).fornamn(fnamn).mellannamn(mnamn).efternamn(enamn).build();
+        String pnamn = "";
+
+        if (fnamn != null) {
+            pnamn = fnamn;
+        }
+
+        if (mnamn != null) {
+            pnamn = pnamn.isEmpty() ? mnamn : pnamn + " " + mnamn;
+        }
+
+        if (enamn != null) {
+            pnamn = pnamn.isEmpty() ? enamn : pnamn + " " + enamn;
+        }
+
+        return patient(pid, pnamn);
+    }
+
+    private Patient patient(String pid, String pnamn) {
+        return new PatientT.PatientBuilder().personId(personId(id(pid))).namn(pnamn).build();
     }
 
     private Enhet enhet(String eid, String namn) {

@@ -32,9 +32,7 @@ public final class PatientT {
     public static class PatientBuilder implements Builder<Patient> {
 
         private PersonId personId;
-        private String fornamn;
-        private String efternamn;
-        private String mellannamn;
+        private String fullstandigtNamn;
 
         public PatientBuilder() {
         }
@@ -44,18 +42,8 @@ public final class PatientT {
             return this;
         }
 
-        public PatientBuilder fornamn(String fornamn) {
-            this.fornamn = fornamn;
-            return this;
-        }
-
-        public PatientBuilder efternamn(String efternamn) {
-            this.efternamn = efternamn;
-            return this;
-        }
-
-        public PatientBuilder mellannamn(String mellannamn) {
-            this.mellannamn = mellannamn;
+        public PatientBuilder namn(String namn) {
+            this.fullstandigtNamn = namn;
             return this;
         }
 
@@ -63,9 +51,7 @@ public final class PatientT {
         public Patient build() {
             Patient patient = new Patient();
             patient.setPersonId(personId);
-            patient.setFornamn(fornamn);
-            patient.setEfternamn(efternamn);
-            patient.setMellannamn(mellannamn);
+            patient.setFullstandigtNamn(fullstandigtNamn);
 
             return patient;
         }

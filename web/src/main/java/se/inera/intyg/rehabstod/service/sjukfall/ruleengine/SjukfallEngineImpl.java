@@ -137,7 +137,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
         Patient patient = new Patient();
         patient.setAlder(age);
         patient.setId(id);
-        patient.setNamn(getPatientName(intygPatient));
+        patient.setNamn(intygPatient.getFullstandigtNamn());
         patient.setKon(gender);
 
         return patient;
@@ -226,22 +226,6 @@ public class SjukfallEngineImpl implements SjukfallEngine {
 
     private org.joda.time.LocalDate getMaximumDate(List<InternalIntygsData> list) {
         return list.stream().max((d1, d2) -> d1.getSlutDatum().compareTo(d2.getSlutDatum())).get().getSlutDatum();
-    }
-
-    private String getPatientName(se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient intygPatient) {
-        StringBuilder name = new StringBuilder();
-
-        if (intygPatient.getFornamn() != null && !intygPatient.getFornamn().isEmpty()) {
-            name.append(intygPatient.getFornamn()).append(" ");
-        }
-        if (intygPatient.getMellannamn() != null && !intygPatient.getMellannamn().isEmpty()) {
-            name.append(intygPatient.getMellannamn()).append(" ");
-        }
-        if (intygPatient.getEfternamn() != null && !intygPatient.getEfternamn().isEmpty()) {
-            name.append(intygPatient.getEfternamn()).append(" ");
-        }
-
-        return name.toString().trim();
     }
 
     private int getPatientAge(String patientId) {

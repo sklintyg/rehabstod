@@ -135,7 +135,7 @@ public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolve
 
         for (InternalIntygsData nextRight : right) {
             LocalDate start = nextRight.getStartDatum();
-            LocalDate lastValidStartDate = compareDate.plusDays(maxIntygsGlapp);
+            LocalDate lastValidStartDate = compareDate.plusDays(maxIntygsGlapp + 1);
 
             if (lastValidStartDate.compareTo(start) > -1) {
                 list.add(nextRight);
@@ -157,7 +157,7 @@ public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolve
             InternalIntygsData nextLeft = left.get(i);
 
             LocalDate end = nextLeft.getSlutDatum();
-            LocalDate lastValidEndDate = compareDate.minusDays(maxIntygsGlapp);
+            LocalDate lastValidEndDate = compareDate.minusDays(maxIntygsGlapp + 1);
 
             if (lastValidEndDate.compareTo(end) < 1) {
                 list.add(0, nextLeft);
