@@ -5,7 +5,7 @@ apply plugin: 'java'
 dependencies {
     compile project(":rehabstod-common")
 
-    compile 'se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:0-SNAPSHOT'
+    compile 'se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:1.0.0'
 
     compile "org.springframework:spring-beans:${springContextVersion}"
     compile "org.springframework:spring-context:${springContextVersion}"
