@@ -165,11 +165,10 @@ public class SjukfallEngineTest {
 
     @Test
     public void testDiagnos() {
-        String fornamn = "Anders";
-        String efternamn = "Andersson";
+        String fullstandigtNamn = "Anders Andersson";
         String id = "19121212-1212";
 
-        IntygsData intyg = getIntyg(id, fornamn, efternamn, "");
+        IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
 
         se.inera.intyg.rehabstod.web.model.Diagnos diagnos = testee.getDiagnos(intyg);
 
@@ -184,7 +183,7 @@ public class SjukfallEngineTest {
         String fullstandigtNamn = "Jan Nilsson";
         String hsaId = "IFV1239877878-1049";
 
-        IntygsData intyg = getIntyg(hsaId, fullstandigtNamn);
+        IntygsData intyg = getIntygWithLakare(hsaId, fullstandigtNamn);
 
         se.inera.intyg.rehabstod.web.model.Lakare sjukfallLakare = testee.getLakare(intyg);
 
@@ -194,16 +193,15 @@ public class SjukfallEngineTest {
 
     @Test
     public void testPatient() {
-        String fornamn = "Anders";
-        String efternamn = "Andersson";
+        String fullstandigtNamn = "Anders Andersson";
         String id = "19121212-1212";
         final int expectedYear = 103;
 
-        IntygsData intyg = getIntyg(id, fornamn, efternamn, "");
+        IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
 
         se.inera.intyg.rehabstod.web.model.Patient sjukfallPatient = testee.getPatient(intyg);
 
-        assertEquals(fornamn + " " + efternamn, sjukfallPatient.getNamn());
+        assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
         assertEquals(Gender.M, sjukfallPatient.getKon());
         assertEquals(expectedYear, sjukfallPatient.getAlder());
         assertEquals(id, sjukfallPatient.getId());
@@ -211,17 +209,15 @@ public class SjukfallEngineTest {
 
     @Test
     public void testPatientMellanNamn() {
-        String fornamn = "Anders";
-        String efternamn = "Andersson";
+        String fullstandigtNamn = "Anders Andersson";
         String id = "19121212-1212";
-        String mellanNamn = "Erik";
         final int expectedYear = 103;
 
-        IntygsData intyg = getIntyg(id, fornamn, efternamn, mellanNamn);
+        IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
 
         se.inera.intyg.rehabstod.web.model.Patient sjukfallPatient = testee.getPatient(intyg);
 
-        assertEquals(fornamn + " " + mellanNamn + " " + efternamn, sjukfallPatient.getNamn());
+        assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
         assertEquals(Gender.M, sjukfallPatient.getKon());
         assertEquals(expectedYear, sjukfallPatient.getAlder());
         assertEquals(id, sjukfallPatient.getId());
@@ -229,16 +225,15 @@ public class SjukfallEngineTest {
 
     @Test
     public void testPatientShortId() {
-        String fornamn = "Anders";
-        String efternamn = "Andersson";
+        String fullstandigtNamn = "Anders Andersson";
         String id = "19121212";
         final int expectedYear = 103;
 
-        IntygsData intyg = getIntyg(id, fornamn, efternamn, "");
+        IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
 
         se.inera.intyg.rehabstod.web.model.Patient sjukfallPatient = testee.getPatient(intyg);
 
-        assertEquals(fornamn + " " + efternamn, sjukfallPatient.getNamn());
+        assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
         assertNull(sjukfallPatient.getKon());
         assertEquals(expectedYear, sjukfallPatient.getAlder());
         assertEquals(id, sjukfallPatient.getId());
@@ -246,15 +241,14 @@ public class SjukfallEngineTest {
 
     @Test
     public void testPatientBadId() {
-        String fornamn = "Anders";
-        String efternamn = "Andersson";
+        String fullstandigtNamn = "Anders Andersson";
         String id = "191212AB-ABCD";
 
-        IntygsData intyg = getIntyg(id, fornamn, efternamn, null);
+        IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
 
         se.inera.intyg.rehabstod.web.model.Patient sjukfallPatient = testee.getPatient(intyg);
 
-        assertEquals(fornamn + " " + efternamn, sjukfallPatient.getNamn());
+        assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
         assertEquals(Gender.UNKNOWN, sjukfallPatient.getKon());
         assertEquals(0, sjukfallPatient.getAlder());
         assertEquals(id, sjukfallPatient.getId());
@@ -291,7 +285,7 @@ public class SjukfallEngineTest {
         return request;
     }
 
-    private IntygsData getIntyg(String lakareId, String fullstandigtNamn) {
+    private IntygsData getIntygWithLakare(String lakareId, String fullstandigtNamn) {
         HsaId hsaId = new HsaId();
         hsaId.setExtension(lakareId);
 
@@ -305,7 +299,7 @@ public class SjukfallEngineTest {
         return intyg;
     }
 
-    private IntygsData getIntyg(String patientId, String fornamn, String efternamn, String mellanNamn) {
+    private IntygsData getIntygWithPatient(String patientId, String fullstandigtNamn) {
         IntygsData intyg = new IntygsData();
 
         PersonId personId = new PersonId();
@@ -313,9 +307,7 @@ public class SjukfallEngineTest {
 
         Patient patient = new Patient();
         patient.setPersonId(personId);
-        patient.setFornamn(fornamn);
-        patient.setEfternamn(efternamn);
-        patient.setMellannamn(mellanNamn);
+        patient.setFullstandigtNamn(fullstandigtNamn);
 
         intyg.setPatient(patient);
         intyg.setDiagnoskod(DIAGNOS_KOD);
