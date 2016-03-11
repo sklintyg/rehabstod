@@ -192,6 +192,9 @@ configure (subprojects.findAll {
                 repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases") {
                     authentication(userName: nexusUsername, password: nexusPassword)
                 }
+                nightlyRepository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/nightly") {
+                    authentication(userName: nexusUsername, password: nexusPassword)
+                }
                 snapshotRepository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/snapshots") {
                     authentication(userName: nexusUsername, password: nexusPassword)
                 }
