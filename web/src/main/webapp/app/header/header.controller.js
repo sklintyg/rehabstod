@@ -18,12 +18,14 @@
  */
 
 angular.module('rehabstodApp').controller('HeaderController',
-    function($scope, $window, $state, $log, UserProxy, UserModel, $uibModal) {
+    function($scope, $window, $state, $log, UserProxy, UserModel, $uibModal, sessionCheckService) {
         'use strict';
 
         //Expose 'now' as a model property for the template to render as todays date
         $scope.today = new Date();
         $scope.user = UserModel.get();
+
+        sessionCheckService.startPolling();
 
         /**
          * Private functions

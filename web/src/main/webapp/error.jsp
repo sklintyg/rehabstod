@@ -24,7 +24,7 @@
 </style>
 
 <!-- Angular stuff only for making Protractor behave -->
-<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="/bower_components/angular/angular.min.js"></script>
 <script type="text/javascript">
   angular.module('rhsErrorApp', [
     'rhsErrorApp.controllers'
@@ -48,6 +48,11 @@
           <c:when test="${param.reason eq \"login.failed\"}">
             <h1 class="page-header">Rehabstöd</h1>
             <div class="alert alert-danger">Inloggningen misslyckades. Gå tillbaka till <a href="/">startsidan</a>.</div>
+          </c:when>
+
+          <c:when test="${param.reason eq \"inactivity-timeout\"}">
+            <h1 class="page-header">Rehabstöd</h1>
+            <div class="alert alert-warning">Du har blivit automatiskt utloggad eftersom du varit inaktiv en längre tid. Gå tillbaka till <a href="/">startsidan</a> för att logga in igen.</div>
           </c:when>
 
           <c:when test="${param.reason eq \"denied\"}">
