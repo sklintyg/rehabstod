@@ -1,13 +1,13 @@
 ---
 # file: roles/rehabstod-jarfiler/tasks/main.yml
 
-- name: Download activemq-client-5.9.1.jar
-  get_url: url=http://repo1.maven.org/maven2/org/apache/activemq/activemq-client/5.9.1/activemq-client-5.9.1.jar
-           dest={{ tomcat_lib }}/activemq-client-5.9.1.jar
+- name: Download activemq-client-{{ activemq_version }}.jar
+  get_url: url=http://repo1.maven.org/maven2/org/apache/activemq/activemq-client/{{ activemq_version }}/activemq-client-{{ activemq_version }}.jar
+           dest={{ tomcat_lib }}/activemq-client-{{ activemq_version }}.jar
 
-- name: Download activemq-broker-5.9.1.jar for test env.
-  get_url: url=http://repo1.maven.org/maven2/org/apache/activemq/activemq-broker/5.9.1/activemq-broker-5.9.1.jar
-           dest={{ tomcat_lib }}/activemq-broker-5.9.1.jar
+- name: Download activemq-broker-{{ activemq_version }}.jar for test env.
+  get_url: url=http://repo1.maven.org/maven2/org/apache/activemq/activemq-broker/{{ activemq_version }}/activemq-broker-{{ activemq_version }}.jar
+           dest={{ tomcat_lib }}/activemq-broker-{{ activemq_version }}.jar
   when: environment_name == "test"
 
 - name: Download slf4j-api-1.6.4.jar

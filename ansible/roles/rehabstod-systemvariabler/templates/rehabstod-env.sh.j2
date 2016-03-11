@@ -4,4 +4,5 @@ REHABSTOD_CFG="-Drehabstod.config.folder={{ config_etc_folder }} -Drehabstod.con
 REHABSTOD_RESOURCES="-Drehabstod.resources.folder={{ app_resources_folder }}"
 CREDENTIALS_CFG="-Dcredentials.file={{ config_etc_folder }}/credentials.properties"
 LOGSENDER_CFG="-Dlogsender.config.folder={{ config_etc_folder }} -Dlogsender.config.file={{ config_etc_folder }}/logsender.properties -Dlogsender.logback.file={{ config_etc_folder }}/logsender-logback.xml"
-export JAVA_OPTS="$JAVA_OPTS $ENV_CFG $JVM_CFG $REHABSTOD_CFG $REHABSTOD_RESOURCES $CREDENTIALS_CFG $LOGSENDER_CFG"
+AMQ_CFG="-Dorg.apache.activemq.SERIALIZABLE_PACKAGES=\\\"*\\\""
+export JAVA_OPTS="$JAVA_OPTS $ENV_CFG $JVM_CFG $REHABSTOD_CFG $REHABSTOD_RESOURCES $CREDENTIALS_CFG $LOGSENDER_CFG $AMQ_CFG"
