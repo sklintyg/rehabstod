@@ -72,7 +72,7 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
             if (msUntilExpire <= 0) {
                 LOG.info("Session expired " + msUntilExpire + " ms ago. Invalidating it now!");
                 session.invalidate();
-            } else if (!isSessionStatusRequest) {
+            } else if (!isSessionStatusRequest || lastAccess == null) {
                 // Update lastaccessed for ALL requests except status requests
                 session.setAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME, System.currentTimeMillis());
             }

@@ -20,18 +20,21 @@ package se.inera.intyg.rehabstod.web.controller.api;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSessionStatusResponse;
 
 /**
@@ -41,24 +44,46 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetSessionStatusResponse;
 public class SessionStatusControllerTest {
 
     @Mock
-    SecurityContextRepository repository;
+    HttpServletRequest request;
 
     @Mock
-    HttpServletRequest request;
+    SecurityContext context;
+
+    @Mock
+    Authentication authentication;
+
+    @Mock
+    HttpSession session;
 
     @InjectMocks
     private SessionStatusController controller = new SessionStatusController();
 
     @Test
-    public void testGetSessionStatus() throws Exception {
+    public void testGetSessionStatusOk() throws Exception {
         // Arrange
-        when(repository.containsContext(eq(request))).thenReturn(true);
+        when(request.getSession((false))).thenReturn(session);
+        when(session.getAttribute(anyString())).thenReturn(context);
+        when(context.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(new RehabstodUser("test", "test"));
+
+        // Act
+        final GetSessionStatusResponse sessionStatus = controller.getSessionStatus(request);
+
+        // Assert
+        assertTrue(sessionStatus.isHasSession());
+        assertTrue(sessionStatus.isAuthenticated());
+    }
+
+    @Test
+    public void testGetSessionStatusNoSession() throws Exception {
+        // Arrange
+        when(request.getSession((false))).thenReturn(null);
 
         // Act
         final GetSessionStatusResponse sessionStatus = controller.getSessionStatus(request);
 
         // Assert
         assertFalse(sessionStatus.isHasSession());
-        assertTrue(sessionStatus.isAuthenticated());
+        assertFalse(sessionStatus.isAuthenticated());
     }
 }

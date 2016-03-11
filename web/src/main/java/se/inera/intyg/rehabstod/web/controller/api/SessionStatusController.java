@@ -21,8 +21,8 @@ package se.inera.intyg.rehabstod.web.controller.api;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,14 +50,25 @@ public class SessionStatusController {
 
     public static final String SESSION_STATUS_CHECK_URI = CONTROLLER_REQUEST_MAPPING + METHOD_REQUEST_MAPPING;
 
-    @Autowired
-    SecurityContextRepository repository;
-
     @RequestMapping(value = SessionStatusController.METHOD_REQUEST_MAPPING, method = RequestMethod.GET)
     public GetSessionStatusResponse getSessionStatus(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-         // The sessionTimeoutFilter should have put a secondsLeft attribute in the request for us to use.
+        // The sessionTimeoutFilter should have put a secondsLeft attribute in the request for us to use.
         Long secondsLeft = (Long) request.getAttribute(SessionTimeoutFilter.SECONDS_UNTIL_SESSIONEXPIRE_ATTRIBUTE_KEY);
-        return new GetSessionStatusResponse(session != null, repository.containsContext(request), secondsLeft == null ? 0 : secondsLeft);
+
+        return new GetSessionStatusResponse(session != null, hasAuthenticatedPrincipalSession(session), secondsLeft == null ? 0 : secondsLeft);
     }
+
+    private boolean hasAuthenticatedPrincipalSession(HttpSession session) {
+        if (session != null) {
+            final Object context = session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+            if (context != null && context instanceof SecurityContext) {
+                SecurityContext securityContext = (SecurityContext) context;
+                return securityContext.getAuthentication() != null && securityContext.getAuthentication().getPrincipal() != null;
+            }
+
+        }
+        return false;
+    }
+
 }
