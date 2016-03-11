@@ -32,8 +32,11 @@ import se.inera.intyg.rehabstod.web.filters.SessionTimeoutFilter;
 
 /**
  * Reports basic information about the current session status.
- * This controller works in cooperation with a SessionTimeoutFilter that makes sure that requests to this controller
- * does not prolong the session.
+ * This controller works in cooperation with SessionTimeoutFilter that makes sure that requests to:
+ * <ul>
+ * <li>getSessionStatus does NOT extend the session</li>
+ * <li>getExtendSession does extend the session.</li>
+ * </ul>
  *
  * @see SessionTimeoutFilter
  * @see org.springframework.security.web.context.SecurityContextRepository SecurityContextRepository
@@ -47,11 +50,21 @@ public class SessionStatusController {
 
     static final String CONTROLLER_REQUEST_MAPPING = "/api/session-auth-check";
     static final String METHOD_REQUEST_MAPPING = "/ping";
+    static final String PROLONG_SESSION_METHOD_REQUEST_MAPPING = "/extend";
 
     public static final String SESSION_STATUS_CHECK_URI = CONTROLLER_REQUEST_MAPPING + METHOD_REQUEST_MAPPING;
 
     @RequestMapping(value = SessionStatusController.METHOD_REQUEST_MAPPING, method = RequestMethod.GET)
     public GetSessionStatusResponse getSessionStatus(HttpServletRequest request) {
+        return createStatusResponse(request);
+    }
+
+    @RequestMapping(value = SessionStatusController.PROLONG_SESSION_METHOD_REQUEST_MAPPING, method = RequestMethod.GET)
+    public GetSessionStatusResponse getExtendSession(HttpServletRequest request) {
+        return createStatusResponse(request);
+    }
+
+    private GetSessionStatusResponse createStatusResponse(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         // The sessionTimeoutFilter should have put a secondsLeft attribute in the request for us to use.
         Long secondsLeft = (Long) request.getAttribute(SessionTimeoutFilter.SECONDS_UNTIL_SESSIONEXPIRE_ATTRIBUTE_KEY);

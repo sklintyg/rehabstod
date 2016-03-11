@@ -18,8 +18,8 @@
  */
 
 angular.module('rehabstodApp').directive('rhsTableSearchConnector',
-    ['$timeout', 'SjukfallFilterViewState',
-        function($timeout, SjukfallFilterViewState) {
+    ['$timeout', 'SjukfallFilterViewState', 'sessionCheckService',
+        function($timeout, SjukfallFilterViewState, sessionCheckService) {
             'use strict';
 
             return {
@@ -31,11 +31,20 @@ angular.module('rehabstodApp').directive('rhsTableSearchConnector',
                         $timeout(function() {
                             table.search(newFilterParameters, 'customSearch');
                         });
+                        //Indicate that the user has interacted with the filter
+                        sessionCheckService.registerUserAction();
 
                     };
+
                     //Watch for changes in current filter state
                     $scope.filterViewState = SjukfallFilterViewState;
                     $scope.$watch('filterViewState.getCurrentFilterState()', onFilterstateUpdated, true);
+
+                    $scope.table = table;
+                    $scope.$watch('table.getFilteredCollection()', function() {
+                        //Indicate that the user has interacted with the table, either by chaing filter that triggered new content, or by sorting it
+                        sessionCheckService.registerUserAction();
+                    }, true);
 
 
                 }

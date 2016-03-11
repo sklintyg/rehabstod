@@ -21,17 +21,21 @@ angular.module('rehabstodApp').factory('sessionCheckService',
     ['$http', '$log', '$interval', '$window', function($http, $log, $interval, $window) {
         'use strict';
 
-        var timeOutPromise;
+        var pollPromise;
+        var extendSessionPromise;
 
         //one every minute
         var msPollingInterval = 60 * 1000;
+
+        //(Max) how often should session prolong request be sent
+        var msMinExtendSessionRequestInterval = 60 * 1000;
 
         /*
          * stop regular polling
          */
         function _stopPolling() {
-            if (timeOutPromise) {
-                $interval.cancel(timeOutPromise);
+            if (pollPromise) {
+                $interval.cancel(pollPromise);
             }
         }
 
@@ -55,13 +59,13 @@ angular.module('rehabstodApp').factory('sessionCheckService',
 
                 //Schedule new polling
                 _stopPolling();
-                timeOutPromise = $interval(_getSessionInfo, msPollingInterval);
+                pollPromise = $interval(_getSessionInfo, msPollingInterval);
             }).error(function(data, status) {
                 $log.error('_getSessionInfo error ' + status);
 
                 _stopPolling();
                 //Schedule a new check
-                timeOutPromise = $interval(_getSessionInfo, msPollingInterval);
+                pollPromise = $interval(_getSessionInfo, msPollingInterval);
             });
         }
 
@@ -73,9 +77,38 @@ angular.module('rehabstodApp').factory('sessionCheckService',
             _getSessionInfo();
         }
 
+
+        /*
+         * Extending session by making a request to server
+         */
+        function _executeExtendSessionRequest() {
+            $log.debug('_executeExtendSessionRequest sending request now =>');
+            $http.get('/api/session-auth-check/extend').success(function(data) {
+                $log.debug('<= _executeExtendSessionRequest success:' + data);
+            }).error(function(data, status) {
+                $log.error('<= _executeExtendSessionRequest failed: ' + status);
+            }).finally(function() { // jshint ignore:line
+                //clear interval no matter the outcome of the request
+                if (extendSessionPromise) {
+                    $interval.cancel(extendSessionPromise);
+                    extendSessionPromise = undefined;
+                }
+            });
+        }
+
+
+        function _registerUserAction() {
+            if (!extendSessionPromise) {
+                extendSessionPromise = $interval(_executeExtendSessionRequest, msMinExtendSessionRequestInterval);
+                $log.debug('Extend session request scheduled.');
+            }
+        }
+
+
         // Return public API for the service
         return {
             startPolling: _startPolling,
-            stopPolling: _stopPolling
+            stopPolling: _stopPolling,
+            registerUserAction: _registerUserAction
         };
     }]);

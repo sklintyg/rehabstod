@@ -63,20 +63,28 @@ public class SessionTimeoutFilter extends OncePerRequestFilter {
         if (session != null) {
             Long lastAccess = (Long) session.getAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME);
 
-            long inactiveTime = (lastAccess == null) ? 0 : (System.currentTimeMillis() - lastAccess);
-            long maxInactiveTime = session.getMaxInactiveInterval() * MILLISECONDS_PER_SECONDS;
-            Long msUntilExpire = maxInactiveTime - inactiveTime;
-
             // Set an request attribute that other parties further down the request chaing can use.
-            request.setAttribute(SECONDS_UNTIL_SESSIONEXPIRE_ATTRIBUTE_KEY, msUntilExpire / MILLISECONDS_PER_SECONDS);
+            Long msUntilExpire = updateTimeLeft(request, session);
+
             if (msUntilExpire <= 0) {
                 LOG.info("Session expired " + msUntilExpire + " ms ago. Invalidating it now!");
                 session.invalidate();
             } else if (!isSessionStatusRequest || lastAccess == null) {
                 // Update lastaccessed for ALL requests except status requests
                 session.setAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME, System.currentTimeMillis());
+                updateTimeLeft(request, session);
             }
         }
+    }
+
+    private Long updateTimeLeft(HttpServletRequest request, HttpSession session) {
+        Long lastAccess = (Long) session.getAttribute(LAST_ACCESS_TIME_ATTRIBUTE_NAME);
+        long inactiveTime = (lastAccess == null) ? 0 : (System.currentTimeMillis() - lastAccess);
+        long maxInactiveTime = session.getMaxInactiveInterval() * MILLISECONDS_PER_SECONDS;
+
+        long msUntilExpire = maxInactiveTime - inactiveTime;
+        request.setAttribute(SECONDS_UNTIL_SESSIONEXPIRE_ATTRIBUTE_KEY, msUntilExpire / MILLISECONDS_PER_SECONDS);
+        return msUntilExpire;
     }
 
     public String getGetSessionStatusUri() {
