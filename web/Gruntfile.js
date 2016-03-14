@@ -318,6 +318,7 @@ module.exports = function(grunt) {
                         src: [
                             'assets/**/*',
                             'bower_components/**/*',
+                            'pubapp/**/*',
                             'WEB-INF/**/*',
                             '*.*'
                         ]
