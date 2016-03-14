@@ -25,6 +25,7 @@ angular.module('rehabstodApp')
             $scope.filter = SjukfallFilterViewState;
             $scope.model = SjukfallModel;
             $scope.user = UserModel.get();
+            $scope.noResultColspan = ($scope.user.urval !== 'ISSUED_BY_ME') ? 10 : 9;
 
             $scope.displayedCollection = [].concat($scope.model.get());
 

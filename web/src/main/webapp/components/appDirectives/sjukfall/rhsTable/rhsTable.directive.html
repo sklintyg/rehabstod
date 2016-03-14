@@ -29,7 +29,7 @@
           <td ng-if="user.urval != 'ISSUED_BY_ME'">{{::row.lakare.namn}}</td>
         </tr>
         <tr ng-if="!displayedCollection.length">
-          <td colspan="9" class="rhs-table-no-result">
+          <td colspan="{{noResultColspan}}" class="rhs-table-no-result">
             <span ng-if="!model.get().length">
               {{::'label.table.no-result' | message}}
             </span>
