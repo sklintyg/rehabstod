@@ -28,25 +28,25 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
  */
 public abstract class BaseExportService {
 
-    protected static final String MINA_PAGAENDE_SJUKFALL = "Mina pågående sjukfall";
-    protected static final String PA_ENHETEN = "- På enheten ";
+    protected static final String MINA_PAGAENDE_SJUKFALL = "Mina sjukfall";
+    protected static final String PA_ENHETEN = "- Endast de pågående sjukfall där jag utfärdat det nuvarande intyget";
     protected static final String ALLA_SJUKFALL = "Alla sjukfall";
-    protected static final String SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN = "- Samtliga pågående fall på enheten ";
+    protected static final String SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN = "- Samtliga pågående sjukfall på enheten";
     protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Valda diagnoser";
     protected static final String SELECTION_VALUE_ALLA = "Alla";
     protected static final String FILTER_TITLE_VALDA_LAKARE = "Valda läkare";
-    protected static final String FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD = "Vald sjukskrivningslängd";
+    protected static final String FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
     protected static final String FILTER_TITLE_FRITEXTFILTER = "Fritextfilter";
     protected static final String VALDA_FILTER = "Valda filter";
     protected static final String H2_SJUKFALLSINSTALLNING = "Sjukfallsinställning";
     protected static final String H3_SJUKFALLSDEFINITION = "Sjukfallsdefinition";
-    protected static final String MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG = "Maxantal dagar uppehåll mellan intyg: ";
-    protected static final String VALD_SORTERING_PA_TABELLEN = "Vald sortering på tabellen";
+    protected static final String MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG = "Max dagar mellan intyg\t: ";
+    protected static final String VALD_SORTERING_PA_TABELLEN = "Vald sortering";
     protected static final String SORTERING_KOLUMN = "Kolumn: ";
     protected static final String SORTERING_RIKTNING = "Riktning: ";
     protected static final String SORTERING_INGEN = "Ingen";
-    protected static final String ANTAL_VISAR_ANTAL_PAGAENDE_SJUKFALL = "Visar antal pågående sjukfall";
-    protected static final String ANTAL_EXPORTEN_VISAR = "Exporten visar: ";
+    protected static final String ANTAL_VISAR_ANTAL_PAGAENDE_SJUKFALL = "\tAntal pågående sjukfall";
+    protected static final String ANTAL_EXPORTEN_VISAR = "Tabellen visar: ";
     protected static final String ANTAL_TOTALT_MINA = "Totalt: ";
     protected static final String ANTAL_TOTALT_PA_ENHETEN = "Totalt på enheten: ";
 
@@ -54,12 +54,12 @@ public abstract class BaseExportService {
     protected static final String TABLEHEADER_PERSONNUMMER = "Personnummer";
     protected static final String TABLEHEADER_NAMN = "Namn";
     protected static final String TABLEHEADER_KON = "Kön";
-    protected static final String TABLEHEADER_NUVARANDE_DIAGNOS = "Nuvarande diagnos";
+    protected static final String TABLEHEADER_NUVARANDE_DIAGNOS = "Diagnos";
     protected static final String TABLEHEADER_STARTDATUM = "Startdatum";
     protected static final String TABLEHEADER_SLUTDATUM = "Slutdatum";
     protected static final String TABLEHEADER_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
     protected static final String TABLEHEADER_SJUKSKRIVNINGSGRAD = "Sjukskrivningsgrad";
-    protected static final String TABLEHEADER_NUVARANDE_LAKARE = "Nuvarande läkare";
+    protected static final String TABLEHEADER_NUVARANDE_LAKARE = "Läkare";
 
     protected static final String FORMAT_ALDER_PARANTESER = " (%d år)";
     protected static final String FORMAT_ANTALA_DAGAR = "%d dagar";

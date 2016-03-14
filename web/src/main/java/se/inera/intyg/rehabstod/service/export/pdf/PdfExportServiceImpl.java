@@ -110,13 +110,13 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     private Paragraph getUrvalDesc(RehabstodUser user) {
         Paragraph urvalsRubrik = new Paragraph();
-        String unitContextString = "\"" + user.getValdVardgivare().getNamn() + "-" + user.getValdVardenhet().getNamn() + "\"";
+
         if (Urval.ISSUED_BY_ME == user.getUrval()) {
             urvalsRubrik.add(new Paragraph(MINA_PAGAENDE_SJUKFALL, FRONTPAGE_H1));
-            urvalsRubrik.add(new Paragraph(PA_ENHETEN + unitContextString, FRONTPAGE_H2));
+            urvalsRubrik.add(new Paragraph(PA_ENHETEN, FRONTPAGE_H2));
         } else {
             urvalsRubrik.add(new Paragraph(ALLA_SJUKFALL, FRONTPAGE_H1));
-            urvalsRubrik.add(new Paragraph(SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN + unitContextString, FRONTPAGE_H2));
+            urvalsRubrik.add(new Paragraph(SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN, FRONTPAGE_H2));
         }
         return urvalsRubrik;
     }
@@ -231,9 +231,9 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
         // Setup column widths (relative to each other)
         if (Urval.ALL.equals(urval)) {
-            table = new PdfPTable(new float[] { 0.8f, 2.5f, 3, 1, 2, 1.5f, 1.5f, 2, 2, 2 });
+            table = new PdfPTable(new float[] { 0.8f, 2.5f, 4, 1, 1, 1.5f, 1.5f, 2, 2, 2 });
         } else {
-            table = new PdfPTable(new float[] { 0.8f, 2.5f, 3, 1, 2, 1.5f, 1.5f, 2, 2 });
+            table = new PdfPTable(new float[] { 0.8f, 2.5f, 4, 1, 1, 1.5f, 1.5f, 2, 2 });
         }
 
         table.setWidthPercentage(100.0f);
