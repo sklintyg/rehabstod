@@ -181,6 +181,7 @@ module.exports = function(grunt) {
             target: {
                 src: [
                     '<%= config.client %>/app.html',
+                    '<%= config.client %>/index.html',
                     'karma.conf.ci.js'
                 ],
                 ignorePath: '<%= config.client %>/',

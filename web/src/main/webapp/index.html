@@ -1,21 +1,19 @@
-<!doctype html><!--[if lt IE 7]>
-<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]--><!--[if IE 7]>
-<html class="no-js lt-ie9 lt-ie8"> <![endif]--><!--[if IE 8]>
-<html class="no-js lt-ie9"> <![endif]--><!--[if gt IE 8]><!-->
-<html class="no-js"> <!--<![endif]-->
+<!DOCTYPE html>
+<html lang="sv" id="ng-app" ng-app="rhsIndexApp">
+
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<base href="/">
-<title>Rehabstöd</title>
-<meta name="description" content="">
-<meta name="viewport" content="width=device-width">
-<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-<!-- build:css({build/.tmp,src/main/webapp}) app/app.css -->
-<!-- injector:css -->
-<link rel="stylesheet" href="app/app.css">
-<!-- endinjector -->
-<!-- endbuild -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width">
+
+  <base href="/">
+  <title>Rehabstöd</title>
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css({build/.tmp,src/main/webapp}) app/app.css -->
+  <!-- injector:css -->
+  <link rel="stylesheet" href="app/app.css">
+  <!-- endinjector -->
+  <!-- endbuild -->
 </head>
 <style>
   html, body {
@@ -67,7 +65,7 @@
 
 
 </style>
-<body class="index-page">
+<body class="index-page"  ng-controller="IndexController">
   <!--[if lt IE 9]>
   <p class="browsehappy">Du använder en <strong>omodern</strong> webbläsare. Var vänlig <a
       href="http://browsehappy.com/">uppgradera
@@ -116,7 +114,7 @@
           <br>
           <p>
             Problem med inloggning mde SITHS-kort?<br />
-            <a href="#">Läs mer om hur du kan felsöka</a>
+            <a href="#" data-ng-click="open('pubapp/siths.help.html')">Läs mer om hur du kan felsöka</a>
           </p>
         </div>
       </div>
@@ -139,8 +137,8 @@
   <div class="footer">
     <div class="container">
     <div class="content-footer col-sm-12">
-      <p>Denna tjänst använder kakor. <a id="toggleCookieInfo" href="#">Läs mer om Kakor (cookies)</a></p>
-      <div id="cookieInfoText" class="bluebox" style="display: none">
+      <p>Denna tjänst använder kakor. <a ng-click="showCookieInfo = !showCookieInfo" ng-switch="showCookieInfo" href="#">Läs mer om Kakor (cookies)</a></p>
+      <div class="bluebox" ng-if="showCookieInfo">
         <h4>Om Kakor (cookies)</h4>
         <p>
           Så kallade kakor (cookies) används för att underlätta för besökaren på webbplatsen. En kaka är en textfil som
@@ -156,7 +154,7 @@
           Allmän information om kakor (cookies) och lagen om elektronisk kommunikation finns på Post- och telestyrelsens
           webbplats.</p>
         <p>
-          <a href='http://www.pts.se/sv/Privat/Internet/Integritet1/Fragor-och-svar-om-kakor-for-anvandare/'
+          <a href='http://www.pts.se/sv/Privat/Internet/Integritet1/Fragor-och-svar-om-kakor-for-anvandare2/'
              target='_blank'>Mer om kakor (cookies) på Post- och telestyrelsens webbplats</a>
         </p>
       </div>
@@ -167,15 +165,25 @@
   <!-- build:js({src/main/webapp,node_modules}) app/vendor.js -->
   <!-- bower:js -->
   <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+  <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+  <script src="bower_components/angular-messages/angular-messages.js"></script>
+  <script src="bower_components/angular-i18n/angular-locale_sv-se.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="bower_components/angular-deferred-bootstrap/angular-deferred-bootstrap.js"></script>
+  <script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
+  <script src="bower_components/angular-bootstrap-slider/slider.js"></script>
+  <script src="bower_components/angular-smart-table/dist/smart-table.js"></script>
+  <script src="bower_components/ngstorage/ngStorage.js"></script>
+  <script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+  <script src="bower_components/angular-placeholder-tai/lib/tai-placeholder.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
-  <script>
-    $(document).ready(function() {
-      $('#toggleCookieInfo').click(function(event) {
-        event.preventDefault();
-        $('#cookieInfoText').slideToggle('fast');
-      });
-    });
-  </script>
+
+  <script type="text/javascript" src="/pubapp/index.controller.js"></script>
 </body>
 </html>

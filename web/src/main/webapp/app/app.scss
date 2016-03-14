@@ -76,6 +76,9 @@ html, body, .container-fluid {
 
 body {
   padding-bottom: 30px;
+}
+
+.rhs-body {
   overflow-y:scroll;
 }
 
@@ -197,6 +200,25 @@ h5.inline-heading {
 .panel.panel-noborder {
   border: none;
   box-shadow: none;
+}
+
+
+.index-page {
+  .modal-content {
+    h1, h2, h3, h4 {
+      color: $link-color;
+    }
+
+    h3 {
+      padding: 5px 0 5px 0;
+    }
+
+    h4 {
+      padding: 5px 0 10px;
+      font-size: 14px;
+      line-height: 18px;
+    }
+  }
 }
 
 // Component styles are injected through grunt
