@@ -16,37 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.sjukfall.dto;
+package se.inera.intyg.rehabstod.service.diagnos;
 
+import java.io.IOException;
 import java.util.List;
 
-public class SjukfallSummary {
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
 
-    private int total;
-    private double men;
-    private double women;
-    private List<DiagnosGruppStat> groups;
-
-    public SjukfallSummary(int total, double men, double women, List<DiagnosGruppStat> groups) {
-        this.total = total;
-        this.men = men;
-        this.women = women;
-        this.groups = groups;
-    }
-
-    public int getTotal() {
-        return total;
-    }
-
-    public double getMen() {
-        return men;
-    }
-
-    public double getWomen() {
-        return women;
-    }
-
-    public List<DiagnosGruppStat> getGroups() {
-        return groups;
-    }
+/**
+ * Created by marced on 14/03/16.
+ */
+public interface DiagnosGruppLoader {
+    List<DiagnosGrupp> loadDiagnosGrupper() throws IOException;
 }

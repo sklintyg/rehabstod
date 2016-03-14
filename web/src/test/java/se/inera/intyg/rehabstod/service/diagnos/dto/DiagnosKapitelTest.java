@@ -22,11 +22,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Optional;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.util.Optional;
 
 /**
  * Created by marced on 08/02/16.
@@ -40,6 +40,19 @@ public class DiagnosKapitelTest {
     public void testConstructor() {
         DiagnosKapitel interval = new DiagnosKapitel("A00-D88En grupp av diagnoser");
         assertEquals("En grupp av diagnoser", interval.getName());
+        assertEquals("A", String.valueOf(interval.getFrom().getLetter()));
+        final int expectedFrom = 0;
+        assertEquals(expectedFrom, interval.getFrom().getNumber());
+        assertEquals("D", String.valueOf(interval.getTo().getLetter()));
+        final int expectedTo = 88;
+        assertEquals(expectedTo, interval.getTo().getNumber());
+        assertEquals("A00-D88", interval.getId());
+
+    }
+    @Test
+    public void testConstructorWithoutName() {
+        DiagnosKapitel interval = new DiagnosKapitel("A00-D88");
+        assertTrue(interval.getName().isEmpty());
         assertEquals("A", String.valueOf(interval.getFrom().getLetter()));
         final int expectedFrom = 0;
         assertEquals(expectedFrom, interval.getFrom().getNumber());

@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  * Created by marced on 08/02/16.^
  */
 public class DiagnosKapitel {
-    public static final Pattern VALID_DIAGNOSKAPITEL_ROW_FORMAT = Pattern.compile("^([A-Z]{1})([0-9]{2})-([A-Z]{1})([0-9]{2})(.+)");
+    public static final Pattern VALID_DIAGNOSKAPITEL_ROW_FORMAT = Pattern.compile("^([A-Z]{1})([0-9]{2})-([A-Z]{1})([0-9]{2})(.*)");
     private static final int FROM_CHAR = 1;
     private static final int FROM_NUMBER = 2;
     private static final int TO_CHAR = 3;

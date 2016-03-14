@@ -86,7 +86,7 @@ public class SjukfallServiceTest {
     public void init() throws IOException {
         when(integrationService.getIntygsDataForCareUnit(anyString())).thenReturn(new ArrayList<IntygsData>());
         when(engine.calculate(anyListOf(IntygsData.class), any(GetSjukfallRequest.class))).thenReturn(createInternalSjukfallList());
-        when(statisticsCalculator.getSjukfallSummary(anyListOf(InternalSjukfall.class))).thenReturn(new SjukfallSummary(0, 0, 0));
+        when(statisticsCalculator.getSjukfallSummary(anyListOf(InternalSjukfall.class))).thenReturn(new SjukfallSummary(0, 0, 0, new ArrayList<>()));
     }
 
     @Test
