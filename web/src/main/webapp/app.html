@@ -53,9 +53,11 @@
 
   <!-- Site content here -->
   <div ui-view="dialogs"></div>
-  <div ui-view="header"></div>
-  <div ui-view="navbar"></div>
-  <div ui-view="app"></div>
+  <div class="content-wrapper">
+    <div ui-view="header"></div>
+    <div ui-view="navbar"></div>
+    <div ui-view="app"></div>
+  </div>
 
   <!--[if lt IE 9]>
   <script src="bower_components/es5-shim/es5-shim.js"></script>

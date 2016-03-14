@@ -75,7 +75,13 @@ html, body, .container-fluid {
   text-align: left; }
 
 body {
-  padding-bottom: 30px; }
+  padding-bottom: 30px;
+  overflow-y:scroll;
+}
+
+.modal-open .content-wrapper {
+  overflow-y:scroll;
+}
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   font-weight: bold; }
