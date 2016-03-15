@@ -20,3 +20,5 @@ web/.sass-cache/
 *.DS_Store
 web/catalina.base_IS_UNDEFINED/
 test/node_modules
+
+tools/soapUI/logs/soapui-rehabstod-logfile.txt
