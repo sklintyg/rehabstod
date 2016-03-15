@@ -193,7 +193,7 @@ configure (subprojects.findAll {
         repositories {
             mavenDeployer {
                 configuration = configurations.deployerJars
-                if (project.getProperty('buildVersion') ==~ /.+-a\d+$/) {
+                if (project.ext.get("buildVersion") ==~ /.+-a\d+$/) {
                     repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/nightly") {
                         authentication(userName: nexusUsername, password: nexusPassword)
                     }
