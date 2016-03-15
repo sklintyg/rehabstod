@@ -182,7 +182,7 @@ module.exports = function(grunt) {
                 src: [
                     '<%= config.client %>/app.html',
                     '<%= config.client %>/index.html',
-                    'karma.conf.ci.js'
+                    'karma.conf.js'
                 ],
                 ignorePath: '<%= config.client %>/',
                 exclude: [/bootstrap-sass-official/, '/bootstrap.js', '/json3/', '/es5-shim/'],

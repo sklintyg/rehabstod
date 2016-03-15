@@ -27,9 +27,9 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
  */
 public class DiagnosGruppStat {
     private DiagnosGrupp grupp;
-    private long count;
+    private Long count;
 
-    public DiagnosGruppStat(DiagnosGrupp grupp, long count) {
+    public DiagnosGruppStat(DiagnosGrupp grupp, Long count) {
         this.grupp = grupp;
         this.count = count;
     }
@@ -42,11 +42,11 @@ public class DiagnosGruppStat {
         this.grupp = grupp;
     }
 
-    public long getCount() {
+    public Long getCount() {
         return count;
     }
 
-    public void setCount(long count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 
@@ -59,7 +59,7 @@ public class DiagnosGruppStat {
             return false;
         }
         DiagnosGruppStat that = (DiagnosGruppStat) o;
-        return count == that.count && Objects.equals(grupp, that.grupp);
+        return Objects.equals(grupp, that.grupp) && Objects.equals(count, that.count);
     }
 
     @Override

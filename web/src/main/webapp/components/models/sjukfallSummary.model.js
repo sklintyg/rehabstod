@@ -29,6 +29,7 @@ angular.module('rehabstodApp').factory('SjukfallSummaryModel',
             data.total = null;
             data.men = null;
             data.women = null;
+            data.groups = null;
 
             return data;
         }
@@ -37,6 +38,17 @@ angular.module('rehabstodApp').factory('SjukfallSummaryModel',
             data.total = newData.total;
             data.men = newData.men;
             data.women = newData.women;
+            data.groups = newData.groups;
+            data.diagnoseGroupData = [];
+
+            angular.forEach(data.groups, function(group) {
+                data.diagnoseGroupData.push(
+                    {
+                        id: group.grupp.id,
+                        name: group.grupp.name,
+                        y: group.count
+                    } );
+            });
         }
 
         function _get() {

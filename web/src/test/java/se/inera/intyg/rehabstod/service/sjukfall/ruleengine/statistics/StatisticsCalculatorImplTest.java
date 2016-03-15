@@ -107,9 +107,9 @@ public class StatisticsCalculatorImplTest {
         final List<DiagnosGruppStat> returnedGroups = summary.getGroups();
 
         final List<DiagnosGruppStat> expectedGroups = new ArrayList<>();
-        expectedGroups.add(new DiagnosGruppStat(GRUPP1, 3));
-        expectedGroups.add(new DiagnosGruppStat(GRUPP2, 1));
-        expectedGroups.add(new DiagnosGruppStat(DIAGNOS_GRUPP_UNKNOWN, 2));
+        expectedGroups.add(new DiagnosGruppStat(GRUPP1, 3L));
+        expectedGroups.add(new DiagnosGruppStat(DIAGNOS_GRUPP_UNKNOWN, 2L));
+        expectedGroups.add(new DiagnosGruppStat(GRUPP2, 1L));
         assertEquals(expectedGroups, returnedGroups);
     }
 

@@ -108,7 +108,9 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
             stats.add(new DiagnosGruppStat(NON_MATCHING_GROUP, sjukFallWithUnassignedCodeCount));
         }
 
-        return stats;
+        // Finally sort the stats in falling order
+        return stats.stream().sorted((s1, s2) -> s2.getCount().compareTo(s1.getCount())).collect(Collectors.toList());
+
     }
 
     private long getAntalSjukfallPerDiagnosGrupp(DiagnosGrupp grupp, List<InternalSjukfall> sjukfall) {

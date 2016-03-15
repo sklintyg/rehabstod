@@ -28,7 +28,7 @@ describe('Directive: RhsStatPanel', function() {
     var SjukfallSummaryModel;
     var SjukfallSummaryProxy;
     var UserModel;
-    var testData = {total: 100, men: 0, women: 100};
+    var testData = {total: 100, men: 0, women: 100, groups: [], diagnoseGroupData: [] };
 
 
 

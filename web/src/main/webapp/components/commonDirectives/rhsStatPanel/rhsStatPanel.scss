@@ -22,9 +22,14 @@
   }
 }
 
+
 @media (max-width: 548px) {
   .rhs-stat-panel-gender {
     display: inline-block;
     margin-top: 5px;
   }
+}
+
+.rhs-stat-panel-groups {
+  display: inline-block;
 }
