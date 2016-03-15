@@ -27,7 +27,7 @@ angular.module('rehabstodApp')
             $scope.menuItems.push({
                 id: 'about-rehabstod',
                 link: 'app.about.rehabstod',
-                label: 'Om rehabstöd'
+                label: 'Om Rehabstöd'
             });
             $scope.menuItems.push({
                 id: 'about-faq',
