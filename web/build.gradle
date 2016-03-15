@@ -72,11 +72,10 @@ else {
 task assembleManifestClasspath() << {
     war {
         manifest {
-            def buildNumber = System.env.BUILD_NUMBER != null ? System.env.BUILD_NUMBER : '1.0.0-SNAPSHOT'
-            attributes("Build": buildNumber)
+            attributes("Build": project.ext.buildVersion)
+            attributes("Build-Time": project.ext.buildTime)
             def gitRevision = System.env.GIT_COMMIT != null ? System.env.GIT_COMMIT : 'Local-build'
             attributes("Git-revision" : gitRevision)
-            attributes("Build-Time": new Date())
         }
     }
 }
@@ -145,16 +144,16 @@ dependencies {
     compile "se.inera.intyg.common:hsa-integration:0-SNAPSHOT"
     compile "se.inera.intyg.common:log-messages:0-SNAPSHOT"
 
-
-    
     compile "org.springframework:spring-webmvc:${springContextVersion}"
     compile "org.springframework:spring-jms:${springContextVersion}"
     compile "org.springframework.ws:spring-ws-core:2.2.2.RELEASE"
     compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
     compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
     compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
+
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.4'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.4'
+    
     compile 'com.googlecode.json-simple:json-simple:1.1.1'
     compile 'org.slf4j:slf4j-api:1.7.10'
     compile 'ch.qos.logback:logback-classic:1.0.13'

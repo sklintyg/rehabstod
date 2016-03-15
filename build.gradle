@@ -4,7 +4,6 @@ plugins {
 
 apply plugin: 'idea'
 
-
 // Load environment specific settings, if the -Penv=xxx parameter is given on invocation
 task loadConfiguration {
     def environment = null
@@ -17,31 +16,35 @@ task loadConfiguration {
     addProjectPropertiesFromFile(file("$rootDir/env-properties/${environment}/settings.properties"))
 }
 
-def getDate() {
-    def date = new Date()
-    def formattedDate = date.format('yyyy-MM-dd HH:mm:ss')
-    return formattedDate
-}
-
 allprojects {
-    group = 'se.inera.intyg.rehabstod'
+    def version = '1.0.0'
 
     if (System.env.BUILD_VERSION && System.env.BUILD_NUMBER) {
         if (System.env.BRANCH == 'develop' || System.env.BRANCH.contains('feature')) {
+            // We are building a beta-artifact typically used for the demo enivronment
             version = "$System.env.BUILD_VERSION-b$System.env.BUILD_NUMBER"
-        } else if (System.env.BRANCH.contains('release')) {
+        } else if (System.env.BRANCH.contains('release') || System.env.BRANCH.contains('master')) {
+            // We are building a final release or a release candidate
             version = "$System.env.BUILD_VERSION"
         } else {
-            throw new GradleScriptException("git branch '$System.env.BRANCH' is not known as a buildable branch. Builds must be performed from develop, release/ or feature/ branches.", null)
+            throw new GradleScriptException("git branch '$System.env.BRANCH' is not known as a buildable branch. Builds must be performed from develop, feature/, release/ or master branches.", null)
         }
+    } else if (project.hasProperty('alpha') && System.env.BUILD_NUMBER) {
+        // We are building a nightly alpha-artifact
+        version = "$version-a$System.env.BUILD_NUMBER"
     } else {
-        version = '1.0.0-SNAPSHOT'
+        // continous builds
+        version = "$version-SNAPSHOT"
     }
+
+    project.ext.group = 'se.inera.intyg.rehabstod'
+    project.ext.version = version
 
     repositories {
         mavenLocal()
         mavenCentral()
         maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases/" }
+        maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/nightly/" }
         maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/snapshots/" }
         maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/thirdparty/" }
         maven { url "https://repository.jboss.org/nexus/content/repositories/releases" }
@@ -133,17 +136,22 @@ subprojects {
 
     ext {
         cxfVersion = '3.1.3'
+
         springContextVersion = "4.2.2.RELEASE"
         springSecurityVersion = "4.0.3.RELEASE"
         springSecurityExtensionsVersion = "1.0.1.RELEASE"
+
         liquibaseVersion = "3.3.1"
+
         jaxb2Version = "0.9.5"
+
         poiVersion = "3.13"
+
         itextVersion = "5.5.8"
 
         setProperty("buildTime", getDate().toString())
         setProperty("buildNumber", System.env.BUILD_NUMBER ? System.env.BUILD_NUMBER : "SNAPSHOT")
-        setProperty("buildVersion", System.env.BUILD_VERSION ? System.env.BUILD_VERSION : "1.0.0-SNAPSHOT")
+        setProperty("buildVersion", project.ext.version)
     }
 
     license {
@@ -155,20 +163,6 @@ subprojects {
         includes(["**/*.xml", "**/se/inera/**/*.java"])
     }
 
-}
-
-private void addProjectPropertiesFromFile(propfile) {
-    if (propfile.exists()) {
-        def props = new Properties();
-        propfile.withInputStream { props.load(it) }
-        allprojects { subproject ->
-            props.each { key, value ->
-                subproject.ext.setProperty(key, value.toString())
-            }
-        }
-    } else {
-        throw new GradleScriptException("File '${propfile.path}' does not exist.", null)
-    }
 }
 
 configure (subprojects.findAll {
@@ -189,11 +183,14 @@ configure (subprojects.findAll {
         repositories {
             mavenDeployer {
                 configuration = configurations.deployerJars
-                repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases") {
-                    authentication(userName: nexusUsername, password: nexusPassword)
-                }
-                nightlyRepository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/nightly") {
-                    authentication(userName: nexusUsername, password: nexusPassword)
+                if (project.ext.version ==~ /.+-a\d+\u0024/) {
+                    repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/nightly") {
+                        authentication(userName: nexusUsername, password: nexusPassword)
+                    }
+                } else {
+                    repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases") {
+                        authentication(userName: nexusUsername, password: nexusPassword)
+                    }
                 }
                 snapshotRepository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/snapshots") {
                     authentication(userName: nexusUsername, password: nexusPassword)
@@ -214,3 +211,25 @@ idea {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.11' //version required
 }
+
+
+def addProjectPropertiesFromFile(propfile) {
+    if (propfile.exists()) {
+        def props = new Properties();
+        propfile.withInputStream { props.load(it) }
+        allprojects { subproject ->
+            props.each { key, value ->
+                subproject.ext.setProperty(key, value.toString())
+            }
+        }
+    } else {
+        throw new GradleScriptException("File '${propfile.path}' does not exist.", null)
+    }
+}
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyy-MM-dd HH:mm:ss')
+    return formattedDate
+}
+
