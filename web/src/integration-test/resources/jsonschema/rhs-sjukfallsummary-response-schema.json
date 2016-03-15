@@ -11,12 +11,43 @@
     },
     "women": {
       "type": "number"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "grupp": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kapitelList": {
+                "type": "array",
+                "items": {},
+                "additionalItems": false
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false
+      },
+      "additionalItems": false
     }
   },
   "additionalProperties": false,
   "required": [
     "total",
     "men",
-    "women"
+    "women",
+    "groups"
   ]
 }
