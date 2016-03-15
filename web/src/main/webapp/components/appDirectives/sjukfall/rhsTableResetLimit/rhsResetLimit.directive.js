@@ -47,6 +47,10 @@ angular.module('rehabstodApp').directive('rhsResetLimit',
 
                         changeLimit();
                     }, true);
+
+                    $scope.$watchCollection('table.getFilteredCollection()', function() {
+                        $('body, thead *').css('cursor', '');
+                    });
                 }
             };
         });

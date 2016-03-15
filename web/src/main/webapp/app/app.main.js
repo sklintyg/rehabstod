@@ -34,6 +34,7 @@ var app = angular.module('rehabstodApp', [
     'use strict';
 
     stConfig.sort.skipNatural = true;
+    stConfig.sort.delay = 100;
 });
 
 deferredBootstrapper.bootstrap({
