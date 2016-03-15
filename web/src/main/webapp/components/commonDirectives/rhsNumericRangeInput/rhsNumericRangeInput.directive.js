@@ -87,7 +87,6 @@ angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope',
         }
     };
 
-
     $scope.onClickUp = function() {
         if ($scope.externalModel < $scope.max) {
             $scope.externalModel++;
