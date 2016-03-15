@@ -12,6 +12,7 @@ task loadConfiguration {
     } else {
         environment = "local"
     }
+
     logger.quiet "Loading configuration for environment '$environment'."
     addProjectPropertiesFromFile(file("$rootDir/env-properties/${environment}/settings.properties"))
 }
@@ -19,26 +20,35 @@ task loadConfiguration {
 allprojects {
     def version = '1.0.0'
 
-    if (System.env.BUILD_VERSION && System.env.BUILD_NUMBER) {
-        if (System.env.BRANCH == 'develop' || System.env.BRANCH.contains('feature')) {
-            // We are building a beta-artifact typically used for the demo enivronment
-            version = "$System.env.BUILD_VERSION-b$System.env.BUILD_NUMBER"
-        } else if (System.env.BRANCH.contains('release') || System.env.BRANCH.contains('master')) {
-            // We are building a final release or a release candidate
-            version = "$System.env.BUILD_VERSION"
-        } else {
-            throw new GradleScriptException("git branch '$System.env.BRANCH' is not known as a buildable branch. Builds must be performed from develop, feature/, release/ or master branches.", null)
-        }
-    } else if (project.hasProperty('alpha') && System.env.BUILD_NUMBER) {
-        // We are building a nightly alpha-artifact
-        version = "$version-a$System.env.BUILD_NUMBER"
+    if (project.hasProperty("buildVersion")) {
+        project.ext.set("buildVersion", project.getProperty("buildVersion"))
     } else {
-        // continous builds
-        version = "$version-SNAPSHOT"
+        project.ext.set("buildVersion", "$version-SNAPSHOT")
     }
 
-    project.ext.group = 'se.inera.intyg.rehabstod'
-    project.ext.version = version
+//    if (System.env.BUILD_VERSION && System.env.BUILD_NUMBER) {
+//        if (System.env.BRANCH == 'develop' || System.env.BRANCH.contains('feature')) {
+//            // We are building a beta-artifact typically used for the demo enivronment
+//            version = "$System.env.BUILD_VERSION-b$System.env.BUILD_NUMBER"
+//        } else if (System.env.BRANCH.contains('release') || System.env.BRANCH.contains('master')) {
+//            // We are building a final release or a release candidate
+//            version = "$System.env.BUILD_VERSION"
+//        } else {
+//            throw new GradleScriptException("git branch '$System.env.BRANCH' is not known as a buildable branch. Builds must be performed from develop, feature/, release/ or master branches.", null)
+//        }
+//    } else if (project.hasProperty('alpha') && System.env.BUILD_NUMBER) {
+//        // We are building a nightly alpha-artifact
+//        version = "$version-a$System.env.BUILD_NUMBER"
+//    } else {
+//        // continous builds
+//        version = "$version-SNAPSHOT"
+//    }
+//
+//    ext.group = 'se.inera.intyg.rehabstod'
+//    project.ext.version = version
+
+    version = project.ext.get("buildVersion")
+    logger.quiet "Version set to '$version'"
 
     repositories {
         mavenLocal()
@@ -151,7 +161,7 @@ subprojects {
 
         setProperty("buildTime", getDate().toString())
         setProperty("buildNumber", System.env.BUILD_NUMBER ? System.env.BUILD_NUMBER : "SNAPSHOT")
-        setProperty("buildVersion", project.ext.version)
+        setProperty("buildVersion", project.ext.get("buildVersion"))
     }
 
     license {
@@ -183,7 +193,7 @@ configure (subprojects.findAll {
         repositories {
             mavenDeployer {
                 configuration = configurations.deployerJars
-                if (project.ext.version ==~ /.+-a\d+\u0024/) {
+                if (project.getProperty('buildVersion') ==~ /.+-a\d+$/) {
                     repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/nightly") {
                         authentication(userName: nexusUsername, password: nexusPassword)
                     }

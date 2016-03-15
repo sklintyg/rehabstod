@@ -72,8 +72,8 @@ else {
 task assembleManifestClasspath() << {
     war {
         manifest {
-            attributes("Build": project.ext.buildVersion)
-            attributes("Build-Time": project.ext.buildTime)
+            attributes("Build": buildVersion)
+            attributes("Build-Time": buildTime)
             def gitRevision = System.env.GIT_COMMIT != null ? System.env.GIT_COMMIT : 'Local-build'
             attributes("Git-revision" : gitRevision)
         }
