@@ -122,6 +122,7 @@ describe('Directive: RhsNumericRangeInput', function() {
         //Arrange
         elementScope.min = 0;
         elementScope.externalModel = 5;
+        elementScope.displayMaxValueAs = 'Mer';
         elementScope.max = 10;
 
 
@@ -131,8 +132,8 @@ describe('Directive: RhsNumericRangeInput', function() {
         $scope.$digest();
 
         // Assert
-        expect(elementScope.inputModel).toEqual(5);
-        expect(elementScope.externalModel).toEqual(5);
+        expect(elementScope.inputModel).toEqual('Mer');
+        expect(elementScope.externalModel).toEqual(10);
     });
 
     it('should handle showmaxreplace value as MAX update when manually entering', function() {

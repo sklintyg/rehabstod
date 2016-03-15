@@ -1,4 +1,4 @@
-<div class="input-group rhs-numeric-range-input">
+<div class="input-group rhs-numeric-range-input" data-ng-class="{'has-error':error}">
   <input ng-model="inputModel" type="text" ng-change="onManualChange()" ng-click="onfocus($event)" ng-model-options="{updateOn: 'blur'}" rhs-blur-on-enter maxlength="4" class="form-control">
   <span class="input-group-btn-vertical">
     <button class="btn btn-default rhs-numeric-range-input-up" type="button" ng-click="onClickUp()">

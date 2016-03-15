@@ -42,24 +42,34 @@ angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope',
     }
 
     function _parseEnteredValue() {
+        $scope.error = false;
+
         //Handle input of displayMaxValueAs (inversed) such as '365+' => 366
         if ($scope.inputModel === $scope.displayMaxValueAs) {
             $scope.inputModel = $scope.originalMaxValue;
             if (withinRangeNow($scope.inputModel)) {
                 $scope.externalModel = $scope.inputModel;
-
             }
-
         } else if (isNumberPattern.test($scope.inputModel)) {
             //convert to a number
             $scope.inputModel = parseInt($scope.inputModel, 10);
-            if (withinRangeNow($scope.inputModel)) {
-                $scope.externalModel = $scope.inputModel;
-            }
-        }
-        //always refresh
-        _updateInputModel();
 
+            if ($scope.inputModel < $scope.min) {
+                $scope.inputModel = $scope.min;
+            }
+            else if ($scope.inputModel > $scope.max) {
+                $scope.inputModel = $scope.max;
+            }
+
+            $scope.externalModel = $scope.inputModel;
+
+        } else if ($scope.inputModel) {
+            $scope.error = true;
+        }
+
+        if (!$scope.error) {
+            _updateInputModel();
+        }
     }
 
     $scope.onManualChange = function() {
