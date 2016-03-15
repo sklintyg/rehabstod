@@ -118,7 +118,7 @@ describe('Directive: RhsNumericRangeInput', function() {
         expect(elementScope.externalModel).toEqual(8);
     });
 
-    it('should NOT update when manually entering a invalid range value', function() {
+    it('should set max value when a value above max is entered', function() {
         //Arrange
         elementScope.min = 0;
         elementScope.externalModel = 5;
@@ -134,6 +134,41 @@ describe('Directive: RhsNumericRangeInput', function() {
         // Assert
         expect(elementScope.inputModel).toEqual('Mer');
         expect(elementScope.externalModel).toEqual(10);
+    });
+
+    it('should set min value when a value below min is entered', function() {
+        //Arrange
+        elementScope.min = 0;
+        elementScope.externalModel = 5;
+        elementScope.displayMaxValueAs = 'Mer';
+        elementScope.max = 10;
+
+
+        //Act
+        elementScope.inputModel = '-100';
+        elementScope.onManualChange();
+        $scope.$digest();
+
+        // Assert
+        expect(elementScope.inputModel).toEqual(0);
+        expect(elementScope.externalModel).toEqual(0);
+    });
+
+    it('remove non numeric values in input', function() {
+        //Arrange
+        elementScope.min = 0;
+        elementScope.externalModel = 5;
+        elementScope.max = 10;
+
+
+        //Act
+        elementScope.inputModel = 'osk';
+        elementScope.onManualChange();
+        $scope.$digest();
+
+        // Assert
+        expect(elementScope.inputModel).toEqual(5);
+        expect(elementScope.externalModel).toEqual(5);
     });
 
     it('should handle showmaxreplace value as MAX update when manually entering', function() {
