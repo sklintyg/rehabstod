@@ -61,11 +61,9 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
 
 
                     $scope.totalPaEnhetStatConfig = angular.merge(angular.copy(pieChartBaseConfig), {
-                        chart: {
-                            height: 200
-                        },
+
                         title: {
-                            text: messageService.getProperty('label.sjukfall.stat.totalt')
+                            text: null
                         },
                         colors: ['#57843B'],
                         tooltip: {
@@ -74,13 +72,11 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         legend: {
                             labelFormat: '{y} st',
                             symbolWidth: 0,
-
                             align: 'center',
                             verticalAlign: 'middle',
                             itemStyle: {
                                 'color': '#FFFFFF',
-                                'cursor': 'pointer',
-                                'fontSize': '1.8em',
+                                'fontSize': '1.6em',
                                 'fontWeight': 'bold'
                             },
                             floating: true
@@ -89,8 +85,7 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                             pie: {
                                 borderColor: null,
                                 borderWidth: 0,
-                                size: 100,
-                                center: ['50%', '30%'],
+
                                 allowPointSelect: false
                             }
                         }
@@ -108,11 +103,9 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
 
                     //Gender stat config
                     $scope.genderStatConfig = angular.merge(angular.copy(pieChartBaseConfig), {
-                        chart: {
-                            height: 200
-                        },
+
                         title: {
-                            text: messageService.getProperty('label.sjukfall.stat.gender')
+                            text: null
                         },
                         colors: ['#EA8034', '#138391'],
                         tooltip: {
@@ -125,24 +118,17 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         },
                         legend: {
                             labelFormatter: function() {
-                                return _getGender(this.name, false) + ' ' + this.percentage.toFixed(1) + '% (' + this.y + ' st)';
+                                return _getGender(this.name, false) + ' <b>(' + this.y + ' st)</b>';
                             },
-                            useHTML: true
-                        },
-                        plotOptions: {
-                            pie: {
-                                size: 100
-                            }
+                            enabled: false
                         }
                     });
 
                     //Diagnose group stat config ------------------------------------------------
                     $scope.diagnoseStatConfig = angular.merge(angular.copy(pieChartBaseConfig), {
-                        chart: {
-                            height: 240
-                        },
+
                         title: {
-                            text: messageService.getProperty('label.sjukfall.stat.diagnoses')
+                            text: null
                         },
                         tooltip: {
                             pointFormat: '{point.percentage:.1f}% <b>({point.y} st)</b> av alla<br/>' +
@@ -153,15 +139,11 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                                 var truncateAfter = 30;
                                 var name = (this.name.length > truncateAfter) ?
                                 this.name.substr(0, truncateAfter - 1) + '&hellip;' : this.name;
-                                return this.id + ' ' + name + ' ' + this.y + ' st';
+                                return this.id + (this.id === '' ? '' : ' ') + name + '&nbsp;<b>' + this.y +
+                                    '</b>&nbsp;st';
                             },
-                            useHTML: true
-                        },
-                        plotOptions: {
-                            pie: {
-                                size: 100,
-                                center: ['50%', '30%']
-                            }
+                            enabled: false
+
                         }
                     });
 

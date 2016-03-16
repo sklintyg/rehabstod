@@ -240,8 +240,10 @@ h5.inline-heading {
 @import 'appDirectives/sjukfall/rhsSettings/rhsSettings.scss';
 @import 'appDirectives/sjukfall/rhsSettings/rhsSettingsModal/rhsSettingsModal.scss';
 @import 'appDirectives/sjukfall/rhsTable/rhsTable.scss';
+@import 'commonDirectives/rhsChartLegend/rhsChartLegend.directive.scss';
 @import 'commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.scss';
 @import 'commonDirectives/rhsNumericRangeInput/rhsNumericRangeInput.directive.scss';
+@import 'commonDirectives/rhsPieChart/rhsPieChart.directive.scss';
 @import 'commonDirectives/rhsSlider/rhsSlider.scss';
 @import 'commonDirectives/rhsSpinner/rhsSpinner.scss';
 @import 'commonDirectives/rhsStatCircle/rhsStatCircle.scss';

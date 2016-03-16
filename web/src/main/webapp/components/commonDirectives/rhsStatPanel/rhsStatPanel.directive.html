@@ -1,16 +1,21 @@
-<div class="row">
+<div class="row rhs-stat-panel">
   <div ng-if="model.total>0">
     <div class="col-md-3 col-sm-6">
+      <h3>{{::'label.sjukfall.stat.totalt' | message}}</h3>
       <rhs-pie-chart data="model.totalData" config="totalPaEnhetStatConfig"></rhs-pie-chart>
 
     </div>
 
-    <div class="col-md-3 col-sm-6">
+    <div class="col-md-4 col-sm-6">
+      <h3>{{::'label.sjukfall.stat.gender' | message}}</h3>
       <rhs-pie-chart data="model.genderData" config="genderStatConfig"></rhs-pie-chart>
+      <rhs-chart-legend data="model.genderData" config="genderStatConfig"></rhs-chart-legend>
     </div>
 
-    <div class="col-md-6 col-sm-6">
+    <div class="col-md-5 col-sm-6">
+      <h3>{{::'label.sjukfall.stat.diagnoses' | message}}</h3>
       <rhs-pie-chart data="model.diagnoseGroupData" config="diagnoseStatConfig"></rhs-pie-chart>
+      <rhs-chart-legend data="model.diagnoseGroupData" config="diagnoseStatConfig"></rhs-chart-legend>
     </div>
   </div>
   <div ng-if="model.total === 0">

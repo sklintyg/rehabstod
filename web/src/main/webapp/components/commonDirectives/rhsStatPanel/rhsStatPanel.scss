@@ -1,35 +1,7 @@
 .rhs-stat-panel {
   display: inline-block;
-}
-
-.rhs-stat-panel-circle-text, .rhs-stat-panel-circle-text-kon {
-  display: inline-block;
-  width: 120px;
-  vertical-align: middle;
-  padding-left: 10px;
-  font-size: 80%;
-}
-
-.rhs-stat-panel-circle-text-kon {
-  width: auto;
-}
-
-.rhs-stat-panel-gender {
-  display: inline-block;
-
-  img {
-    margin: 0 3px;
+  padding-bottom: 20px;
+  h3 {
+    text-align: center;
   }
-}
-
-
-@media (max-width: 548px) {
-  .rhs-stat-panel-gender {
-    display: inline-block;
-    margin-top: 5px;
-  }
-}
-
-.rhs-stat-panel-groups {
-  display: inline-block;
 }

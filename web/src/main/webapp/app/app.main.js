@@ -103,7 +103,10 @@ app.value('pieChartBaseConfig', {
             showInLegend: true,
             dataLabels: {
                 enabled: false
-            }
+            },
+            size: 100,
+            center: ['50%', '50%']
+
         }
     },
     series: [{
