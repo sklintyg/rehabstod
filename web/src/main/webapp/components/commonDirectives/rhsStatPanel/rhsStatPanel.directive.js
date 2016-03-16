@@ -19,7 +19,8 @@
 
 angular.module('rehabstodApp').directive('rhsStatPanel',
     ['SjukfallSummaryModel', 'SjukfallSummaryProxy', 'UserModel', '$rootScope', 'pieChartBaseConfig', 'messageService',
-        function(SjukfallSummaryModel, SjukfallSummaryProxy, UserModel, $rootScope, pieChartBaseConfig, messageService) {
+        function(SjukfallSummaryModel, SjukfallSummaryProxy, UserModel, $rootScope, pieChartBaseConfig,
+            messageService) {
             'use strict';
 
             return {
@@ -59,8 +60,6 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                     $scope.isLakare = UserModel.get().isLakare;
 
 
-
-
                     $scope.totalPaEnhetStatConfig = angular.merge(angular.copy(pieChartBaseConfig), {
                         chart: {
                             height: 200
@@ -91,11 +90,21 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                                 borderColor: null,
                                 borderWidth: 0,
                                 size: 100,
-                                center: ['50%','30%'],
+                                center: ['50%', '30%'],
                                 allowPointSelect: false
                             }
                         }
                     });
+
+                    var _getGender = function(code, toLower) {
+                        var gender = '';
+                        if (code === 'F') {
+                            gender = messageService.getProperty('label.gender.female.plural');
+                        } else {
+                            gender = messageService.getProperty('label.gender.male.plural');
+                        }
+                        return toLower ? gender.toLocaleLowerCase() : gender;
+                    };
 
                     //Gender stat config
                     $scope.genderStatConfig = angular.merge(angular.copy(pieChartBaseConfig), {
@@ -108,14 +117,15 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         colors: ['#EA8034', '#138391'],
                         tooltip: {
                             pointFormatter: function() {
-                                return this.percentage.toFixed(1) + '% <b>(' + this.y + ' st)</b> av patienterna <br/>' +
-                                'i sjukfallen är '  + this.name.toLocaleLowerCase() + '.';
+                                return this.percentage.toFixed(1) + '% <b>(' + this.y +
+                                    ' st)</b> av patienterna <br/>' +
+                                    'i sjukfallen är ' + _getGender(this.name, true) + '.';
                             }
 
                         },
                         legend: {
                             labelFormatter: function() {
-                                return this.name + ' ' + this.percentage.toFixed(1) + '% (' + this.y + ' st)';
+                                return _getGender(this.name, false) + ' ' + this.percentage.toFixed(1) + '% (' + this.y + ' st)';
                             },
                             useHTML: true
                         },
@@ -150,7 +160,7 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         plotOptions: {
                             pie: {
                                 size: 100,
-                                center: ['50%','30%']
+                                center: ['50%', '30%']
                             }
                         }
                     });

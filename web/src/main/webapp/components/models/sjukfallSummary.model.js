@@ -59,7 +59,7 @@ angular.module('rehabstodApp').factory('SjukfallSummaryModel',
                 data.genderData.push(
                     {
                         id: genderStat.gender,
-                        name: genderStat.gender === 'F' ? 'Kvinnor' : 'Män',
+                        name: genderStat.gender,
                         y: genderStat.count
                     });
             });

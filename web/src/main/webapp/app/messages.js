@@ -108,7 +108,9 @@ var rhsMessages = {
 
         //
         'label.gender.male': 'Man',
+        'label.gender.male.plural': 'Män',
         'label.gender.female': 'Kvinna',
+        'label.gender.female.plural': 'Kvinnor',
         'label.gender.undefined': '-',
 
         // Table (NOTE: the parts after label.table.column must match sjukfallmodels json, as we use this to get sortorder descriptions)
