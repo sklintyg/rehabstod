@@ -25,24 +25,6 @@
   //Lägg till fler templates i arrayen + i options för att utöka antalet inloggingar
 
   var loginArr = [
-    {
-      "fornamn": "Jan",
-      "efternamn": "Nilsson",
-      "hsaId": "IFV1239877878-1049",
-      "enhetId": "IFV1239877878-1042",
-      "lakare": true,
-      "forskrivarKod": "2481632"
-    },
-
-    // Vårdadmin 1
-    {
-      "fornamn": "Lena",
-      "efternamn": "Karlsson",
-      "hsaId": "IFV1239877878-104N",
-      "enhetId": "IFV1239877878-1045",
-      "lakare": false
-    },
-
     // NMT testperson, finns i test-HSA
     {
       "fornamn": "Leonie",
@@ -88,6 +70,57 @@
       "enhetId": "TSTNMT2321000156-105F",
       "lakare" : false,
       "forskrivarKod": "9300005"
+    },
+
+    // Användare för Rehabstöd som ska finnas i:
+    // - Test HSA
+    // - Rehabstöd
+    // - Webcert
+    // - Intygstjänsten
+
+    // Läkare 1
+    {
+      "fornamn": "Emma",
+      "efternamn": "Nilsson",
+      "hsaId": "TSTNMT2321000156-105R",
+      "enhetId": "TSTNMT2321000156-105N",
+      "lakare" : true
+    },
+
+    // Läkare 2
+    {
+      "fornamn": "Anders",
+      "efternamn": "Karlsson",
+      "hsaId": "TSTNMT2321000156-105S",
+      "enhetId": "TSTNMT2321000156-105N",
+      "lakare" : true
+    },
+
+    // Läkare 3
+    {
+      "fornamn": "Ingrid",
+      "efternamn": "Nilsson Olsson",
+      "hsaId": "TSTNMT2321000156-105T",
+      "enhetId": "TSTNMT2321000156-105P",
+      "lakare" : true
+    },
+
+    // Vårdadmin 1
+    {
+      "fornamn": "Nils",
+      "efternamn": "Ericsson",
+      "hsaId": "TSTNMT2321000156-105V",
+      "enhetId": "TSTNMT2321000156-105N",
+      "lakare" : false
+    },
+
+    // Vårdadmin 2
+    {
+      "fornamn": "Kerstin",
+      "efternamn": "Johansson",
+      "hsaId": "TSTNMT2321000156-105W",
+      "enhetId": "TSTNMT2321000156-105P",
+      "lakare" : false
     }
   ];
 
@@ -138,13 +171,16 @@
 
             <h4>Mallar</h4>
             <select id="jsonSelect" name="jsonSelect" ng-model="selectedIndex" size="15" style="width: 100%;max-width:100%" class="form-control">
-              <option value="0" id="IFV1239877878-1049_IFV1239877878-1042">Jan Nilsson (Läkare / Vård och Behandling + Admin)</option>
-              <option value="1" id="IFV1239877878-104N_IFV1239877878-1045">Lena Karlsson (Vårdadmin / Vård och Behandling)</option>
-              <option value="2" id="TSTNMT2321000156-103F_TSTNMT2321000156-1039">Leonie Koehl (Läkare EU/ESS/Schweiz)</option>
-              <option value="3" id="TSTNMT2321000156-105H_TSTNMT2321000156-105F">Erik Nilsson (NMT Läkare / Vård och Behandling)</option>
-              <option value="4" id="TSTNMT2321000156-105J_TSTNMT2321000156-105F">Susanne Karlsson (NMT Administratör / Vård och Behandling)</option>
-              <option value="5" id="pelle-uppdragslos_">Pelle Uppdragslös (Saknar medarbetaruppdrag)</option>
-              <option value="6" id="hans-hosplosa_">Hans Hosplösa (Finns ej i HSA-stubben)</option>
+              <option value="0" id="TSTNMT2321000156-103F_TSTNMT2321000156-1039">Leonie Koehl (Läkare EU/ESS/Schweiz)</option>
+              <option value="1" id="TSTNMT2321000156-105H_TSTNMT2321000156-105F">Erik Nilsson (NMT Läkare / Vård och Behandling)</option>
+              <option value="2" id="TSTNMT2321000156-105J_TSTNMT2321000156-105F">Susanne Karlsson (NMT Administratör / Vård och Behandling)</option>
+              <option value="3" id="pelle-uppdragslos_">Pelle Uppdragslös (Saknar medarbetaruppdrag)</option>
+              <option value="4" id="hans-hosplosa_">Hans Hosplösa (Finns ej i HSA-stubben)</option>
+              <option value="5" id="TSTNMT2321000156-105R_TSTNMT2321000156-105N">Emma Nilsson (Rehabstöd/Läkare 1/Vård och Behandling)</option>
+              <option value="6" id="TSTNMT2321000156-105S_TSTNMT2321000156-105N">Anders Karlsson (Rehabstöd/Läkare 2/Vård och Behandling)</option>
+              <option value="7" id="TSTNMT2321000156-105T_TSTNMT2321000156-105P">Ingrid Nilsson Olsson (Rehabstöd/Läkare 3/Vård och Behandling)</option>
+              <option value="8" id="TSTNMT2321000156-105V_TSTNMT2321000156-105N">Nils Ericsson (Rehabstöd/Vårdadmin 1/Vård och Behandling)</option>
+              <option value="8" id="TSTNMT2321000156-105W_TSTNMT2321000156-105P">Kerstin Johansson (Rehabstöd/Vårdadmin 2/Vård och Behandling)</option>
             </select>
             <input id="loginBtn" type="submit" value="Logga in" class="btn btn-primary"
                    style="margin-top: 20px;width: 100%">

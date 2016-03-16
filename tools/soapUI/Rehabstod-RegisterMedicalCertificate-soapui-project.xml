@@ -1044,13 +1044,13 @@ Collections.shuffle(context.pnrLines)
 
 // Setup vårdgivare
 context.careGiverId = 'IFV1239877878-1041'
-context.careGiverName = 'Rehabstöd-Vardgivare1'
+context.careGiverName = 'Rehabstöd Vardgivare 1'
 
 // Setup enheter
-context.careUnits = ['IFV1239877878-1042':'Rehabstöd-Enhet1', 'IFV1239877878-1045':'Rehabstöd-Enhet2', 'IFV1239877878-104D':'Rehabstöd-Enhet3']
+context.careUnits = ['TSTNMT2321000156-105N':'Rehabstöd Enhet 1', 'TSTNMT2321000156-105P':'Rehabstöd Enhet 2', 'TSTNMT2321000156-105Q':'Rehabstöd Enhet 3']
 
 // Setup läkare
-context.doctors = ['IFV1239877878-1049':'Jan Nilsson', 'IFV1239877878-104B':'Åsa Andersson', 'IFV1239877878-104M':'Anders Larsson']
+context.doctors = ['TSTNMT2321000156-105R':'Emma Nilsson', 'TSTNMT2321000156-105S':'Anders Karlsson', 'TSTNMT2321000156-105T':'Ingrid Nilsson Olsson']
 
 // Setup diagnoskoder
 context.tillstandskodsystemnamn = 'ICD-10'

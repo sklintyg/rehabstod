@@ -136,12 +136,9 @@ subprojects {
 
         itextVersion = "5.5.8"
 
-        logger.quiet "1. ---------------------------------------"
-        logger.quiet "Version set to '$version'"
-
         setProperty("buildTime", getDate().toString())
         setProperty("buildNumber", System.env.BUILD_NUMBER ? System.env.BUILD_NUMBER : "SNAPSHOT")
-        setProperty("buildVersion", project.ext.get("buildVersion"))
+        setProperty("buildVersion", version)
     }
 
     license {
