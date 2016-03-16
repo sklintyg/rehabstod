@@ -1,45 +1,22 @@
-<div class="panel panel-default rhs-stat-panel">
-  <div class="panel-body">
-
-    <div class="row">
-      <div class="col-xs-2">
-        <rhs-stat-circle size="80px" background-color="#598341">{{model.total | rhsSuffix: 'st' : '...'}}
-        </rhs-stat-circle>
-        <div class="rhs-stat-panel-circle-text">
-          <span ng-if="isLakare">
-            <span message key="label.sjukfall.stat.ongoing.lakare"></span>
-          </span>
-          <span ng-if="!isLakare">
-            <span message key="label.sjukfall.stat.ongoing.rehab"></span>
-          </span>
-        </div>
-      </div>
-      <div class="col-xs-3">
-
-        <div class="rhs-stat-panel-gender">
-          <rhs-stat-circle size="80px" background-color="#ea8034">{{model.women | rhsSuffix: '%' : '...'}}
-          </rhs-stat-circle>
-          <img src="/assets/images/female_icon.png" alt="{{::'label.sjukfall.stat.female' | message}}"><img
-            src="/assets/images/male_icon.png" alt="{{::'label.sjukfall.stat.male' | message}}">
-          <rhs-stat-circle size="80px" background-color="#138391">{{model.men | rhsSuffix: '%' : '...'}}
-          </rhs-stat-circle>
-          <div class="rhs-stat-panel-circle-text-kon hidden-xs">
-         <span ng-if="isLakare">
-            <span message key="label.sjukfall.stat.gender.lakare"></span>
-          </span>
-          <span ng-if="!isLakare">
-            <span message key="label.sjukfall.stat.gender.rehab"></span>
-          </span>
-          </div>
-        </div>
-      </div>
-      <div class="col-xs-7 rhs-stat-panel-groups">
-        <rhs-stat-diagnose-groups data="model.diagnoseGroupData" title="Diagnosfördelning"></rhs-stat-diagnose-groups>
-      </div>
+<div class="row">
+  <div ng-if="model.total>0">
+    <div class="col-md-3 col-sm-6">
+      <rhs-pie-chart data="model.totalData" config="totalPaEnhetStatConfig"></rhs-pie-chart>
 
     </div>
 
+    <div class="col-md-3 col-sm-6">
+      <rhs-pie-chart data="model.genderData" config="genderStatConfig"></rhs-pie-chart>
+    </div>
+
+    <div class="col-md-6 col-sm-6">
+      <rhs-pie-chart data="model.diagnoseGroupData" config="diagnoseStatConfig"></rhs-pie-chart>
+    </div>
+  </div>
+  <div ng-if="model.total === 0">
+    <div class="col-xs-12 well">{{::'label.stat.nosjukfall' | message}}</div>
   </div>
 </div>
+
 
 

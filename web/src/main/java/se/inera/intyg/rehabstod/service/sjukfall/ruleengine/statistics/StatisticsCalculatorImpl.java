@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.service.sjukfall.ruleengine.statistics;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ import org.springframework.stereotype.Component;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosGruppLoader;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.DiagnosGruppStat;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.GenderStat;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.model.Gender;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
@@ -45,8 +47,6 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 @Component
 public class StatisticsCalculatorImpl implements StatisticsCalculator {
     private static final Logger LOG = LoggerFactory.getLogger(StatisticsCalculatorImpl.class);
-
-    private static final int PERCENTAGE_FACTOR = 100;
 
     public static final DiagnosGrupp NON_MATCHING_GROUP = new DiagnosGrupp("", new ArrayList<>(), "Utan giltig diagnoskod");
 
@@ -71,23 +71,21 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
 
         int total = sjukfall.size();
 
+        // Note: Some of the items may have Gender.UNKNOWN, but the men/women stats are correct anyway
+        List<GenderStat> genderStat = calculateGenderStat(sjukfall);
+
+        List<DiagnosGruppStat> grupper = calculateGroupStatistics(sjukfall);
+        return new SjukfallSummary(total, genderStat, grupper);
+
+    }
+
+    private List<GenderStat> calculateGenderStat(List<InternalSjukfall> sjukfall) {
         Map<Gender, List<InternalSjukfall>> byGender = sjukfall.stream().collect(Collectors.groupingBy(s -> s.getSjukfall().getPatient().getKon()));
 
-        int menTotal = byGender.getOrDefault(Gender.M, Arrays.asList()).size();
-        int womenTotal = byGender.getOrDefault(Gender.F, Arrays.asList()).size();
+        int menTotal = byGender.getOrDefault(Gender.M, Collections.emptyList()).size();
+        int womenTotal = byGender.getOrDefault(Gender.F, Collections.emptyList()).size();
 
-        // Note: Some of the items may have Gender.UNKNOWN, but the men/women stats are correct anyway
-        double menPercentage = 0;
-        double womenPercentage = 0;
-
-        // calculate percentages
-        if (total > 0) {
-            menPercentage = (menTotal * 1.0 / total) * PERCENTAGE_FACTOR;
-            womenPercentage = (womenTotal * 1.0 / total) * PERCENTAGE_FACTOR;
-        }
-        List<DiagnosGruppStat> grupper = calculateGroupStatistics(sjukfall);
-        return new SjukfallSummary(total, menPercentage, womenPercentage, grupper);
-
+        return Arrays.asList(new GenderStat(Gender.F, womenTotal), new GenderStat(Gender.M, menTotal));
     }
 
     private List<DiagnosGruppStat> calculateGroupStatistics(List<InternalSjukfall> sjukfall) {

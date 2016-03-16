@@ -1,0 +1,51 @@
+/*
+ * Copyright (C) 2016 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/* globals Highcharts */
+angular.module('rehabstodApp').directive('rhsPieChart',
+    [
+        function() {
+            'use strict';
+
+            return {
+                restrict: 'E',
+                replace: true,
+                scope: {
+                    data: '=',
+                    config: '='
+                },
+                templateUrl: 'components/commonDirectives/rhsPieChart/rhsPieChart.directive.html',
+                link: function(scope, element) {
+
+                    var chart = Highcharts.chart(element[0], scope.config);
+
+                    chart.showLoading();
+
+                    //Wait for data
+                    scope.$watchCollection('data', function(newData) {
+                        if (newData) {
+                            chart.hideLoading();
+                            if (chart.series[0]) {
+                                chart.series[0].setData(newData);
+                            }
+                            chart.reflow();
+                        }
+                    });
+                }
+            };
+        }]);

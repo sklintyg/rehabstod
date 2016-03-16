@@ -1,16 +1,27 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Schema for sjukfall-summary as resturned from e.g /sjukfall-summary",
+  "id": "/",
   "type": "object",
   "properties": {
     "total": {
       "type": "integer"
     },
-    "men": {
-      "type": "number"
-    },
-    "women": {
-      "type": "number"
+    "genders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gender": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false
+      },
+      "additionalItems": false
     },
     "groups": {
       "type": "array",
@@ -46,8 +57,7 @@
   "additionalProperties": false,
   "required": [
     "total",
-    "men",
-    "women",
+    "genders",
     "groups"
   ]
 }

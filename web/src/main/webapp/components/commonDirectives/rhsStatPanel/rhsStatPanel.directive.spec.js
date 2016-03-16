@@ -21,25 +21,36 @@ describe('Directive: RhsStatPanel', function() {
     'use strict';
 
     // load the controller's module
-    beforeEach(module('rehabstodApp'));
+    beforeEach(angular.mock.module('rehabstodApp', function($provide) {
+        $provide.value('pieChartBaseConfig', {});
+    }));
     beforeEach(module('htmlTemplates'));
 
     var scope, compile;
     var SjukfallSummaryModel;
     var SjukfallSummaryProxy;
     var UserModel;
-    var testData = {total: 100, men: 0, women: 100, groups: [], diagnoseGroupData: [] };
-
-
+    var pieChartBaseConfig;
+    var messageService;
+    var testData = {
+        total: 100, genders: [], groups: [], diagnoseGroupData: [], genderData: [], totalData: [{
+            name: '',
+            y: 100
+        }]
+    };
 
 
     // Initialize the controller and a mock scope
-    beforeEach(inject(function($compile, $rootScope, _SjukfallSummaryModel_, _SjukfallSummaryProxy_, _UserModel_) {
+    beforeEach(inject(function($compile, $rootScope, _SjukfallSummaryModel_, _SjukfallSummaryProxy_, _UserModel_,
+        _pieChartBaseConfig_, _messageService_) {
         compile = $compile;
         scope = $rootScope.$new();
         SjukfallSummaryModel = _SjukfallSummaryModel_;
         SjukfallSummaryProxy = _SjukfallSummaryProxy_;
         UserModel = _UserModel_;
+        pieChartBaseConfig = _pieChartBaseConfig_;
+        messageService = _messageService_;
+
     }));
 
 
@@ -51,7 +62,7 @@ describe('Directive: RhsStatPanel', function() {
         });
 
         spyOn(UserModel, 'get').and.callFake(function() {
-            return { isLakare: true };
+            return {isLakare: true};
         });
 
 
@@ -80,7 +91,7 @@ describe('Directive: RhsStatPanel', function() {
             spyOn(SjukfallSummaryModel, 'set').and.callThrough();
             spyOn(SjukfallSummaryProxy, 'get').and.callFake(function() {
                 return {
-                    then : function(onSuccess) {
+                    then: function(onSuccess) {
                         onSuccess(testData);
                     }
                 };

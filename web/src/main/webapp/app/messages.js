@@ -48,7 +48,7 @@ var rhsMessages = {
 
         // Sjukfall Start
         // Sjukfall Start Läkare
-        'label.sjukfall.start.lakare.header' : 'Pågående sjukfall på ',
+        'label.sjukfall.start.lakare.header' : 'Mina pågående sjukfall på ',
         'label.sjukfall.start.lakare.selectionpanel.header' : 'Mina pågående sjukfall på ',
         'label.sjukfall.start.lakare.selectionpanel.body' : 'Som läkare kan du ta del av de sjukfall där du själv utfärdat det nuvarande intyget.<br><br>' +
                                                     'När du klickar på "Visa mina sjukfall" nedan kommer du att få se dina pågående sjukfall för den vårdenhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid och sjukskrivningsgrad. ' +
@@ -57,7 +57,7 @@ var rhsMessages = {
         'label.sjukfall.start.lakare.selectionpanel.urval.button' : 'Visa mina sjukfall',
 
         // Sjukfall Start Rehab
-        'label.sjukfall.start.rehab.header' : 'Pågående sjukfall på ',
+        'label.sjukfall.start.rehab.header' : 'Samtliga pågående sjukfall på ',
         'label.sjukfall.start.rehab.selectionpanel.header' : 'Samtliga pågående sjukfall på ',
         'label.sjukfall.start.rehab.selectionpanel.body' : 'Som rehabkoordinator kan du ta del av samtliga pågående sjukfall på vårdenheten.<br><br>' +
                                                     'När du klickar på "Visa alla sjukfall" nedan kommer du att få se alla pågående sjukfall för den vårdenhet du har loggat in på. ' +
@@ -69,15 +69,13 @@ var rhsMessages = {
 
 
         // Sjukfall Stat
-        'label.sjukfall.start.lakare.statheader' : 'Översikt - mina pågående sjukfall på ',
-        'label.sjukfall.start.rehab.statheader' : 'Översikt - alla pågående sjukfall på ',
-
-        'label.sjukfall.stat.ongoing.lakare' : 'Antal pågående sjukfall på enheten',
+        'label.sjukfall.stat.totalt' : 'Antal sjukfall',
+        'label.sjukfall.stat.gender' : 'Fördelning mellan kön',
         'label.sjukfall.stat.gender.lakare' : 'Könsfördelning',
-        'label.sjukfall.stat.ongoing.rehab' : 'Antal pågående sjukfall på enheten',
-        'label.sjukfall.stat.gender.rehab' : 'Könsfördelning',
-        'label.sjukfall.stat.male' : 'Män',
-        'label.sjukfall.stat.female' : 'Kvinnor',
+        'label.sjukfall.stat.diagnoses' : 'Fördelning av diagnoser',
+        'label.stat.nosjukfall' : 'Det finns inga pågående sjukfall på enheten',
+
+
 
         // Sjukfall Result
         'label.sjukfall.result.lakare.header': 'Mina sjukfall',

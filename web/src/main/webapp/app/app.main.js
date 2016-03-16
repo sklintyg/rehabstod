@@ -69,6 +69,50 @@ app.value('networkConfig', {
     defaultTimeout: 15000
 });
 
+/*
+ * Base config for all pice chars rendered in the app. Can be overridden and extended.
+ */
+app.value('pieChartBaseConfig', {
+
+    colors: ['#E11964',
+        '#032C53',
+        '#FFBA3E',
+        '#799745',
+        '#3CA3FF',
+        '#C37EB2',
+        '#2A5152',
+        '#FB7F4D',
+        '#5CC2BC',
+        '#704F38'],
+    chart: {
+        type: 'pie'
+    },
+    exporting: {
+        enabled: false
+    },
+    credits: {
+        enabled: false
+    },
+    tooltip: {
+        headerFormat: ''
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            showInLegend: true,
+            dataLabels: {
+                enabled: false
+            }
+        }
+    },
+    series: [{
+        data: []
+    }]
+
+});
+
+
 app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $uibTooltipProvider, $httpProvider,
     http403ResponseInterceptorProvider) {
     'use strict';

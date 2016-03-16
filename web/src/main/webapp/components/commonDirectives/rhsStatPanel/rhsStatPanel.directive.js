@@ -18,8 +18,8 @@
  */
 
 angular.module('rehabstodApp').directive('rhsStatPanel',
-    ['SjukfallSummaryModel', 'SjukfallSummaryProxy', 'UserModel', '$rootScope',
-        function(SjukfallSummaryModel, SjukfallSummaryProxy, UserModel, $rootScope) {
+    ['SjukfallSummaryModel', 'SjukfallSummaryProxy', 'UserModel', '$rootScope', 'pieChartBaseConfig', 'messageService',
+        function(SjukfallSummaryModel, SjukfallSummaryProxy, UserModel, $rootScope, pieChartBaseConfig, messageService) {
             'use strict';
 
             return {
@@ -36,8 +36,6 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                     function _loadData() {
                         SjukfallSummaryModel.reset();
                         SjukfallSummaryProxy.get().then(function(data) {
-                            data.women = Math.round(data.women * 10) / 10;
-                            data.men = Math.round(data.men * 10) / 10;
                             SjukfallSummaryModel.set(data);
                         });
                     }
@@ -59,6 +57,104 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                     }
 
                     $scope.isLakare = UserModel.get().isLakare;
+
+
+
+
+                    $scope.totalPaEnhetStatConfig = angular.merge(angular.copy(pieChartBaseConfig), {
+                        chart: {
+                            height: 200
+                        },
+                        title: {
+                            text: messageService.getProperty('label.sjukfall.stat.totalt')
+                        },
+                        colors: ['#57843B'],
+                        tooltip: {
+                            pointFormat: '{point.y} st'
+                        },
+                        legend: {
+                            labelFormat: '{y} st',
+                            symbolWidth: 0,
+
+                            align: 'center',
+                            verticalAlign: 'middle',
+                            itemStyle: {
+                                'color': '#FFFFFF',
+                                'cursor': 'pointer',
+                                'fontSize': '1.8em',
+                                'fontWeight': 'bold'
+                            },
+                            floating: true
+                        },
+                        plotOptions: {
+                            pie: {
+                                borderColor: null,
+                                borderWidth: 0,
+                                size: 100,
+                                center: ['50%','30%'],
+                                allowPointSelect: false
+                            }
+                        }
+                    });
+
+                    //Gender stat config
+                    $scope.genderStatConfig = angular.merge(angular.copy(pieChartBaseConfig), {
+                        chart: {
+                            height: 200
+                        },
+                        title: {
+                            text: messageService.getProperty('label.sjukfall.stat.gender')
+                        },
+                        colors: ['#EA8034', '#138391'],
+                        tooltip: {
+                            pointFormatter: function() {
+                                return this.percentage.toFixed(1) + '% <b>(' + this.y + ' st)</b> av patienterna <br/>' +
+                                'i sjukfallen är '  + this.name.toLocaleLowerCase() + '.';
+                            }
+
+                        },
+                        legend: {
+                            labelFormatter: function() {
+                                return this.name + ' ' + this.percentage.toFixed(1) + '% (' + this.y + ' st)';
+                            },
+                            useHTML: true
+                        },
+                        plotOptions: {
+                            pie: {
+                                size: 100
+                            }
+                        }
+                    });
+
+                    //Diagnose group stat config ------------------------------------------------
+                    $scope.diagnoseStatConfig = angular.merge(angular.copy(pieChartBaseConfig), {
+                        chart: {
+                            height: 240
+                        },
+                        title: {
+                            text: messageService.getProperty('label.sjukfall.stat.diagnoses')
+                        },
+                        tooltip: {
+                            pointFormat: '{point.percentage:.1f}% <b>({point.y} st)</b> av alla<br/>' +
+                            'pågående sjukfall tillhör diagnosgrupp<br/>{point.name}.'
+                        },
+                        legend: {
+                            labelFormatter: function() {
+                                var truncateAfter = 30;
+                                var name = (this.name.length > truncateAfter) ?
+                                this.name.substr(0, truncateAfter - 1) + '&hellip;' : this.name;
+                                return this.id + ' ' + name + ' ' + this.y + ' st';
+                            },
+                            useHTML: true
+                        },
+                        plotOptions: {
+                            pie: {
+                                size: 100,
+                                center: ['50%','30%']
+                            }
+                        }
+                    });
+
 
                 },
                 templateUrl: 'components/commonDirectives/rhsStatPanel/rhsStatPanel.directive.html'

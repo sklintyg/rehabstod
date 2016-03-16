@@ -27,27 +27,41 @@ angular.module('rehabstodApp').factory('SjukfallSummaryModel',
 
         function _reset() {
             data.total = null;
-            data.men = null;
-            data.women = null;
-            data.groups = null;
-
+            data.genders = null;
+            data.groups = [];
+            data.diagnoseGroupData = [];
+            data.genderData = [];
             return data;
         }
 
         function _set(newData) {
+            //reformat for charting purposes
             data.total = newData.total;
-            data.men = newData.men;
-            data.women = newData.women;
+            data.genders = newData.genders;
             data.groups = newData.groups;
-            data.diagnoseGroupData = [];
 
+            data.totalData = [{
+                name: '',
+                y: newData.total
+            }];
+            data.diagnoseGroupData = [];
             angular.forEach(data.groups, function(group) {
                 data.diagnoseGroupData.push(
                     {
                         id: group.grupp.id,
                         name: group.grupp.name,
                         y: group.count
-                    } );
+                    });
+            });
+
+            data.genderData = [];
+            angular.forEach(data.genders, function(genderStat) {
+                data.genderData.push(
+                    {
+                        id: genderStat.gender,
+                        name: genderStat.gender === 'F' ? 'Kvinnor' : 'Män',
+                        y: genderStat.count
+                    });
             });
         }
 

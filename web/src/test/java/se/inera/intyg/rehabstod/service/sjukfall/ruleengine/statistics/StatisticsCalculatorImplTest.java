@@ -35,6 +35,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosGruppLoader;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.DiagnosGruppStat;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.GenderStat;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
@@ -83,8 +84,8 @@ public class StatisticsCalculatorImplTest {
 
         final SjukfallSummary summary = testee.getSjukfallSummary(internalSjukfallList);
         assertEquals(0, summary.getTotal());
-        assertEquals(0.0, summary.getWomen(), 0);
-        assertEquals(0, summary.getMen(), 0);
+        assertEquals(0, getGenderItem(Gender.F, summary.getGenders()).getCount());
+        assertEquals(0, getGenderItem(Gender.M, summary.getGenders()).getCount());
     }
 
     @Test
@@ -102,8 +103,9 @@ public class StatisticsCalculatorImplTest {
 
         final SjukfallSummary summary = testee.getSjukfallSummary(internalSjukfallList);
         assertEquals(6, summary.getTotal());
-        assertEquals(50.0, summary.getWomen(), 0);
-        assertEquals(50.0, summary.getMen(), 0);
+        assertEquals(3, getGenderItem(Gender.F, summary.getGenders()).getCount());
+        assertEquals(3, getGenderItem(Gender.M, summary.getGenders()).getCount());
+
         final List<DiagnosGruppStat> returnedGroups = summary.getGroups();
 
         final List<DiagnosGruppStat> expectedGroups = new ArrayList<>();
@@ -111,6 +113,10 @@ public class StatisticsCalculatorImplTest {
         expectedGroups.add(new DiagnosGruppStat(DIAGNOS_GRUPP_UNKNOWN, 2L));
         expectedGroups.add(new DiagnosGruppStat(GRUPP2, 1L));
         assertEquals(expectedGroups, returnedGroups);
+    }
+
+    private GenderStat getGenderItem(Gender g, List<GenderStat> genders) {
+        return genders.stream().filter(gs -> gs.getGender().equals(g)).findFirst().get();
     }
 
     @Test
@@ -125,8 +131,8 @@ public class StatisticsCalculatorImplTest {
 
         final SjukfallSummary summary = testee.getSjukfallSummary(internalSjukfallList);
         assertEquals(4, summary.getTotal());
-        assertEquals(100.0, summary.getWomen(), 0);
-        assertEquals(0.0, summary.getMen(), 0);
+        assertEquals(4, getGenderItem(Gender.F, summary.getGenders()).getCount());
+        assertEquals(0, getGenderItem(Gender.M, summary.getGenders()).getCount());
 
     }
 

@@ -18,41 +18,33 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
-import java.util.List;
+import se.inera.intyg.rehabstod.web.model.Gender;
 
-public class SjukfallSummary {
+/**
+ * Created by marced on 15/03/16.
+ */
+public class GenderStat {
+    private Gender gender;
+    private int count;
 
-    private int total;
-    private List<GenderStat> genders;
-    private List<DiagnosGruppStat> groups;
-
-    public SjukfallSummary(int total, List<GenderStat> genders, List<DiagnosGruppStat> groups) {
-        this.total = total;
-        this.genders = genders;
-        this.groups = groups;
+    public GenderStat(Gender gender, int count) {
+        this.gender = gender;
+        this.count = count;
     }
 
-    public int getTotal() {
-        return total;
+    public Gender getGender() {
+        return gender;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
-    public List<GenderStat> getGenders() {
-        return genders;
+    public int getCount() {
+        return count;
     }
 
-    public void setGenders(List<GenderStat> genders) {
-        this.genders = genders;
-    }
-
-    public List<DiagnosGruppStat> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(List<DiagnosGruppStat> groups) {
-        this.groups = groups;
+    public void setCount(int count) {
+        this.count = count;
     }
 }
