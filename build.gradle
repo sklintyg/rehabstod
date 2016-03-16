@@ -18,12 +18,11 @@ task loadConfiguration {
 }
 
 allprojects {
-    def version = '1.0.0'
+    group = 'se.inera.intyg.rehabstod'
+    version = '0-SNAPSHOT'
 
     if (project.hasProperty("buildVersion")) {
-        project.ext.set("buildVersion", project.getProperty("buildVersion"))
-    } else {
-        project.ext.set("buildVersion", "$version-SNAPSHOT")
+        version = project.getProperty("buildVersion")
     }
 
 //    if (System.env.BUILD_VERSION && System.env.BUILD_NUMBER) {
@@ -47,7 +46,7 @@ allprojects {
 //    ext.group = 'se.inera.intyg.rehabstod'
 //    project.ext.version = version
 
-    version = project.ext.get("buildVersion")
+    project.ext.set("buildVersion", version)
     logger.quiet "Version set to '$version'"
 
     repositories {
@@ -159,6 +158,9 @@ subprojects {
 
         itextVersion = "5.5.8"
 
+        logger.quiet "1. ---------------------------------------"
+        logger.quiet "Version set to '$version'"
+
         setProperty("buildTime", getDate().toString())
         setProperty("buildNumber", System.env.BUILD_NUMBER ? System.env.BUILD_NUMBER : "SNAPSHOT")
         setProperty("buildVersion", project.ext.get("buildVersion"))
@@ -193,7 +195,9 @@ configure (subprojects.findAll {
         repositories {
             mavenDeployer {
                 configuration = configurations.deployerJars
-                if (project.ext.get("buildVersion") ==~ /.+-a\d+$/) {
+                logger.quiet "2. ---------------------------------------"
+                logger.quiet "Version set to '$version'"
+                if (version ==~ /.+-a\d+$/) {
                     repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/nightly") {
                         authentication(userName: nexusUsername, password: nexusPassword)
                     }
