@@ -19,35 +19,13 @@ task loadConfiguration {
 
 allprojects {
     group = 'se.inera.intyg.rehabstod'
-    version = '0-SNAPSHOT'
+    version = '0-SNAPSHOT'  // This is the version used for continuous builds
 
     if (project.hasProperty("buildVersion")) {
         version = project.getProperty("buildVersion")
     }
 
-//    if (System.env.BUILD_VERSION && System.env.BUILD_NUMBER) {
-//        if (System.env.BRANCH == 'develop' || System.env.BRANCH.contains('feature')) {
-//            // We are building a beta-artifact typically used for the demo enivronment
-//            version = "$System.env.BUILD_VERSION-b$System.env.BUILD_NUMBER"
-//        } else if (System.env.BRANCH.contains('release') || System.env.BRANCH.contains('master')) {
-//            // We are building a final release or a release candidate
-//            version = "$System.env.BUILD_VERSION"
-//        } else {
-//            throw new GradleScriptException("git branch '$System.env.BRANCH' is not known as a buildable branch. Builds must be performed from develop, feature/, release/ or master branches.", null)
-//        }
-//    } else if (project.hasProperty('alpha') && System.env.BUILD_NUMBER) {
-//        // We are building a nightly alpha-artifact
-//        version = "$version-a$System.env.BUILD_NUMBER"
-//    } else {
-//        // continous builds
-//        version = "$version-SNAPSHOT"
-//    }
-//
-//    ext.group = 'se.inera.intyg.rehabstod'
-//    project.ext.version = version
-
     project.ext.set("buildVersion", version)
-    logger.quiet "Version set to '$version'"
 
     repositories {
         mavenLocal()
@@ -195,8 +173,6 @@ configure (subprojects.findAll {
         repositories {
             mavenDeployer {
                 configuration = configurations.deployerJars
-                logger.quiet "2. ---------------------------------------"
-                logger.quiet "Version set to '$version'"
                 if (version ==~ /.+-a\d+$/) {
                     repository(url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/nightly") {
                         authentication(userName: nexusUsername, password: nexusPassword)
