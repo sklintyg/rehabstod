@@ -323,3 +323,19 @@ UI-bootstrap
 .alert-dismissable .close, .alert-dismissible .close {
     right: -6px;
 }
+
+
+.btn-default {
+    &:active,
+    &.active {
+        &:focus,
+        &.focus {
+            background-color: darken($btn-default-bg, 10%);
+        }
+    }
+
+    &:focus,
+    &.focus {
+        background-color: $btn-default-bg;
+    }
+}
