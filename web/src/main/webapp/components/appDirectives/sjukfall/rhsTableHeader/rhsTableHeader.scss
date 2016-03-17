@@ -1,0 +1,21 @@
+.rhs-table {
+  .rhs-table-head {
+    color: #fff;
+    padding: 7px 5px;
+    font-weight: normal;
+    cursor: pointer;
+
+    span {
+      vertical-align: top;
+    }
+
+    .rhs-tooltip {
+      display: inline-block;
+      margin-left: 5px;
+    }
+
+    &.column-number {
+      cursor: default;
+    }
+  }
+}
