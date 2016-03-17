@@ -156,6 +156,7 @@ form {
 .nav-pills.nav-stacked > li > a {
     border: 1px solid #ddd;
     border-radius: 0;
+    padding-right: 20px;
 }
 
 .nav-pills.nav-stacked > li:last-child > a {
@@ -188,10 +189,12 @@ form {
 
 .nav-stacked .glyphicon-chevron-right {
     color: #333;
-    float: right;
     margin-top: 2px;
     margin-right: -6px;
     opacity: .25;
+    position: absolute;
+    top: 25%;
+    right: 15px;
 }
 
 .glyphicon-question-sign {
