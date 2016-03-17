@@ -135,6 +135,9 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $uibT
     http403ResponseInterceptorProvider.setRedirectUrl('/');
     $httpProvider.interceptors.push('http403ResponseInterceptor');
 
+    // Configure restErrorResponseInterceptorProvider interceptor provider
+    $httpProvider.interceptors.push('restErrorResponseInterceptor');
+
     // Add replaceAll function to all strings.
     String.prototype.replaceAll = function(f, r) { // jshint ignore:line
         return this.split(f).join(r);

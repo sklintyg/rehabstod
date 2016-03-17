@@ -22,17 +22,22 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
         ObjectHelper, networkConfig, $window) {
         'use strict';
 
-        var timeout = networkConfig.defaultTimeout;
-
         /*
-         * Get statistic for selected Vardenhet
+         * Get sjukfall for selected Vardenhet
          */
         function _get(query) {
 
             var promise = $q.defer();
 
             var restPath = '/api/sjukfall';
-            $http.post(restPath, query, {timeout: timeout}).success(function(data) {
+            var config =  {
+                errorMessageConfig: {
+                    errorTitleKey: 'server.error.getsjukfall.title',
+                    errorTextKey: 'server.error.default.text'
+                },
+                timeout: networkConfig.defaultTimeout
+            };
+            $http.post(restPath, query, config).success(function(data) {
                 if (!ObjectHelper.isDefined(data)) {
                     promise.reject({errorCode: data, message: 'invalid data'});
                 } else {

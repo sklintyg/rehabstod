@@ -1,0 +1,10 @@
+<div class="modal-header rest-error-modal-dialog">
+  <button class="close" data-dismiss="modal" data-ng-click="$dismiss()">×</button>
+  <h4 class="modal-title"><i class="glyphicon glyphicon-exclamation-sign"></i>&nbsp;<span ng-bind-html="msgConfig.title"></span></h4>
+</div>
+<div class="modal-body">
+  <p ng-bind-html="msgConfig.body"></p>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" id="rhs-settings-modal-save-btn" data-ng-click="$dismiss()">{{::'common.ok' | message}}</button>
+</div>

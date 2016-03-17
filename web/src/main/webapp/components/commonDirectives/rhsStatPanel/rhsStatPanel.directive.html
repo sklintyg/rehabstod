@@ -21,6 +21,9 @@
   <div ng-if="model.total === 0">
     <div class="col-xs-12 well">{{::'label.stat.nosjukfall' | message}}</div>
   </div>
+  <div ng-if="errorMessageConfig !=null" class="rhs-stat-panel-error">
+    <div class="alert alert-danger"><span message key="{{errorMessageConfig.textKey}}"></span></div>
+  </div>
 </div>
 
 

@@ -35,10 +35,17 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                      * Private functions
                      */
                     function _loadData() {
+                        $scope.errorMessageConfig = null;
                         SjukfallSummaryModel.reset();
-                        SjukfallSummaryProxy.get().then(function(data) {
-                            SjukfallSummaryModel.set(data);
-                        });
+                        SjukfallSummaryProxy.get().then(
+                            function(data) {
+                                SjukfallSummaryModel.set(data);
+                            }, function() {
+                                //for some reason, we failed to get sjukfallSummary
+                                $scope.errorMessageConfig = {
+                                    textKey: 'server.error.getsummary.text'
+                                };
+                            });
                     }
 
                     var unregisterFn = $rootScope.$on('SelectedUnitChanged', function(/*event, value*/) {
@@ -51,6 +58,8 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                     /**
                      * Exposed scope properties
                      */
+
+
                     $scope.model = SjukfallSummaryModel.get();
 
                     if ($scope.model.total === null) {

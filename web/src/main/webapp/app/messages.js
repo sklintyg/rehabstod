@@ -144,7 +144,17 @@ var rhsMessages = {
         // Export
         'label.export.button' : 'Exportera',
         'label.export.pdf' : 'Exportera sida till PDF',
-        'label.export.excel' : 'Exportera sida till Excel'
+        'label.export.excel' : 'Exportera sida till Excel',
+
+        //Rest 500 exception error messages:
+        'server.error.default.title' : 'Ett fel uppstod',
+        'server.error.default.text': 'Tyvärr har ett tekniskt problem uppstått i tjänsten. Kontakta i första hand din lokala IT-avdelning och i andra hand <a href=\"http://www.inera.se/felanmalan\" target=\"_blank\">Ineras Nationell kundservice.</a>',
+
+        'server.error.getsjukfall.title' : 'Sjukfall för enheten kunde inte hämtas',
+        'server.error.changeunit.title' : 'Byte av enhet misslyckades',
+        'server.error.changeurval.title' : 'Kunde inte visa sjukfall',
+        'server.error.getsummary.text': 'Statistik för enheten kan inte visas'
+
 
 
     },

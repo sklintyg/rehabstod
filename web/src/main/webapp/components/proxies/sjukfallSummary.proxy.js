@@ -22,8 +22,6 @@ angular.module('rehabstodApp').factory('SjukfallSummaryProxy',
         ObjectHelper, networkConfig) {
         'use strict';
 
-        var timeout = networkConfig.defaultTimeout;
-
         /*
          * Get statistic for selected Vardenhet
          */
@@ -32,7 +30,11 @@ angular.module('rehabstodApp').factory('SjukfallSummaryProxy',
             var promise = $q.defer();
 
             var restPath = '/api/sjukfall/summary';
-            $http.get(restPath, {timeout: timeout}).success(function(data) {
+            //No error keys defined, we handle errors here insted of in the interceptor
+            var config =  {
+                timeout: networkConfig.defaultTimeout
+            };
+            $http.get(restPath, config).success(function(data) {
                 $log.debug('unit statistic - got data:');
                 $log.debug(data);
                 if(!ObjectHelper.isDefined(data)) {

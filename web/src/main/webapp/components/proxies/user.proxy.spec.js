@@ -37,23 +37,6 @@ describe('Proxy: UserProxy', function() {
         mockResponse = _mockResponse_;
     }));
 
-    describe('UserProxy', function() {
-        it('should get the logged in user', function() {
-
-            var onSuccess = jasmine.createSpy('onSuccess');
-            var onError = jasmine.createSpy('onError');
-
-            $httpBackend.expectGET('/api/user').respond(mockResponse.userModel);
-
-            UserProxy.getUser().then(onSuccess, onError);
-            $httpBackend.flush();
-            // promises are resolved/dispatched only on next $digest cycle
-            $rootScope.$apply();
-
-            expect(onSuccess).toHaveBeenCalledWith(mockResponse.userModel);
-            expect(onError).not.toHaveBeenCalled();
-        });
-    });
 
     describe('UserProxy', function() {
         it('should return user when change selected unit', function() {
@@ -64,6 +47,24 @@ describe('Proxy: UserProxy', function() {
             $httpBackend.expectPOST('/api/user/andraenhet').respond(mockResponse.userModel);
 
             UserProxy.changeSelectedUnit('123').then(onSuccess, onError);
+            $httpBackend.flush();
+            // promises are resolved/dispatched only on next $digest cycle
+            $rootScope.$apply();
+
+            expect(onSuccess).toHaveBeenCalledWith(mockResponse.userModel);
+            expect(onError).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('UserProxy', function() {
+        it('should return user when change urval', function() {
+
+            var onSuccess = jasmine.createSpy('onSuccess');
+            var onError = jasmine.createSpy('onError');
+
+            $httpBackend.expectPOST('/api/user/urval').respond(mockResponse.userModel);
+
+            UserProxy.changeUrval('ALL').then(onSuccess, onError);
             $httpBackend.flush();
             // promises are resolved/dispatched only on next $digest cycle
             $rootScope.$apply();
