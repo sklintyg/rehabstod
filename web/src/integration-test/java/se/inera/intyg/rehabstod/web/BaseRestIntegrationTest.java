@@ -23,20 +23,18 @@ import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonS
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNotNull;
 
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
+import com.jayway.restassured.response.Response;
 import org.junit.Before;
 import org.springframework.http.HttpStatus;
-
 import se.inera.intyg.common.util.integration.integration.json.CustomObjectMapper;
 import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeUrvalRequest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.response.Response;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Base class for "REST-ish" integrationTests using RestAssured.
@@ -52,8 +50,8 @@ public abstract class BaseRestIntegrationTest {
     public static final int SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR.value();
     public static final int FORBIDDEN = HttpStatus.FORBIDDEN.value();
 
-    protected static final FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder("IFV1239877878-1049", "rest", "testman",
-            "IFV1239877878-1042").lakare(true).build();
+    protected static final FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105R", "rest", "testman",
+            "TSTNMT2321000156-105N").lakare(true).build();
     protected CustomObjectMapper objectMapper = new CustomObjectMapper();
 
     protected static final String USER_API_ENDPOINT = "api/user";

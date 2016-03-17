@@ -223,9 +223,9 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
         enhet = new Enhet();
         HsaId hsaId = new HsaId();
-        hsaId.setExtension("IFV1239877878-1042");
+        hsaId.setExtension("TSTNMT2321000156-105N");
         enhet.setEnhetsId(hsaId);
-        enhet.setEnhetsnamn("WebCert-Enhet1");
+        enhet.setEnhetsnamn("Rehabstöd Enhet ");
         enhet.setVardgivare(vg);
     }
 
@@ -234,23 +234,23 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
         HosPersonal hosPerson1 = new HosPersonal();
         hosPerson1.setEnhet(enhet);
-        hosPerson1.setFullstandigtNamn("Jan Nilsson");
+        hosPerson1.setFullstandigtNamn("Emma Nilsson");
         HsaId hsaId1 = new HsaId();
-        hsaId1.setExtension("IFV1239877878-1049");
+        hsaId1.setExtension("TSTNMT2321000156-105R");
         hosPerson1.setPersonalId(hsaId1);
 
         HosPersonal hosPerson2 = new HosPersonal();
         hosPerson2.setEnhet(enhet);
-        hosPerson2.setFullstandigtNamn("Per Karlsson");
+        hosPerson2.setFullstandigtNamn("Anders Karlsson");
         HsaId hsaId2 = new HsaId();
-        hsaId2.setExtension("IFV1239877878-1050");
+        hsaId2.setExtension("TSTNMT2321000156-105S");
         hosPerson2.setPersonalId(hsaId2);
 
         HosPersonal hosPerson3 = new HosPersonal();
         hosPerson3.setEnhet(enhet);
-        hosPerson3.setFullstandigtNamn("Nina von Döbel");
+        hosPerson3.setFullstandigtNamn("Ingrid Nilsson Olsson");
         HsaId hsaId3 = new HsaId();
-        hsaId3.setExtension("IFV1239877878-1050");
+        hsaId3.setExtension("TSTNMT2321000156-105T");
         hosPerson3.setPersonalId(hsaId3);
 
         hosPersonList.add(hosPerson1);
@@ -261,9 +261,9 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private void initFakedVardgivare() {
         vg = new Vardgivare();
         HsaId hsaId = new HsaId();
-        hsaId.setExtension("IFV1239877878-1041");
+        hsaId.setExtension("TSTNMT2321000156-105M");
         vg.setVardgivarId(hsaId);
-        vg.setVardgivarnamn("WebCert-Vårdgivare1");
+        vg.setVardgivarnamn("Rehabstöd Vårdgivare 1");
 
     }
 

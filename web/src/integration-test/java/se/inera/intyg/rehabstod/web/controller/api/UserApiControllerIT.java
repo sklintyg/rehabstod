@@ -41,9 +41,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testGetAnvandare() {
-
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-
         given().expect().statusCode(OK).when().get(USER_API_ENDPOINT).
                 then().
                 body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
@@ -54,22 +52,21 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testGetAnvandareNotLoggedIn() {
-
         RestAssured.sessionId = null;
-
         given().expect().statusCode(FORBIDDEN).when().get(USER_API_ENDPOINT);
     }
 
     @Test
     public void testAndraValdEnhet() {
+
         // Log in as user having medarbetaruppdrag at several vardenheter.
-        FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("IFV1239877878-104N", "Åsa", "Multi-vardenheter",
-                "IFV1239877878-104D").lakare(false).build();
+        FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105S", "Anders", "Multi-vardenheter",
+                "TSTNMT2321000156-105N").lakare(false).build();
         RestAssured.sessionId = getAuthSession(user);
 
         // An improvement of this would be to call hsaStub rest api to add testa data as we want it to
         // avoid "magic" ids and the dependency to bootstrapped data?
-        final String vardEnhetToChangeTo = "IFV1239877878-1045";
+        final String vardEnhetToChangeTo = "TSTNMT2321000156-105P";
         ChangeSelectedUnitRequest changeRequest = new ChangeSelectedUnitRequest();
         changeRequest.setId(vardEnhetToChangeTo);
 
@@ -87,8 +84,8 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
     public void testAndraValdEnhetMedOgiltigEnhetsId() {
 
         // Log in as user having medarbetaruppdrag at several vardenheter.
-        FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("IFV1239877878-104N", "Åsa", "Multi-vardenheter",
-                "IFV1239877878-1045").lakare(false).build();
+        FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105S", "Anders", "Multi-vardenheter",
+                "TSTNMT2321000156-105N").lakare(false).build();
         RestAssured.sessionId = getAuthSession(user);
 
         // An improvement of this would be to call hsaStub rest api to add testa data as we want it to
