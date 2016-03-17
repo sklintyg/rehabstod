@@ -29,11 +29,14 @@
         </tr>
         <tr ng-if="!displayedCollection.length">
           <td colspan="{{noResultColspan}}" class="rhs-table-no-result">
-            <span ng-if="!model.get().length">
+            <span ng-if="!model.get().length && !model.hasError()">
               {{::'label.table.no-result' | message}} {{user.valdVardgivare.namn}} - {{user.valdVardenhet.namn}}
             </span>
             <span ng-if="model.get().length">
               {{::'label.table.no-filter-result' | message}}
+            </span>
+            <span ng-if="model.hasError()">
+              {{::'server.error.getsjukfall.title' | message}}
             </span>
           </td>
         </tr>

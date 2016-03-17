@@ -50,7 +50,7 @@ angular.module('rehabstodApp').factory('SjukfallService', [
                     $log.debug('Failed to get sjukfall.');
                     $log.debug(errorData);
 
-                    SjukfallModel.reset();
+                    SjukfallModel.setError();
                     loading = false;
                 });
             }

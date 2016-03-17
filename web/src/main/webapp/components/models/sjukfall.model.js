@@ -22,9 +22,11 @@ angular.module('rehabstodApp').factory('SjukfallModel',
         'use strict';
 
         var data = [];
+        var hasError = false;
 
         function _reset() {
             data = [];
+            hasError = false;
             return data;
         }
 
@@ -77,6 +79,7 @@ angular.module('rehabstodApp').factory('SjukfallModel',
             },
 
             set: function(newData) {
+                hasError = false;
                 data = newData;
 
                 angular.forEach(data, function(item) {
@@ -99,6 +102,13 @@ angular.module('rehabstodApp').factory('SjukfallModel',
             },
             get: function() {
                 return data;
+            },
+            setError: function(){
+                _reset();
+                hasError = true;
+            },
+            hasError: function() {
+                return hasError;
             }
         };
     }

@@ -69,6 +69,7 @@ describe('Model: SjukfallModel', function() {
             expect(SjukfallModel.get()[0].dagarShow).toEqual('84 dagar');
             expect(SjukfallModel.get()[0].gradShow).toEqual('<span class="rhs-table-grad-active">100% </span>50% ');
             expect(SjukfallModel.get()[0].patient.konShow).toEqual(messageService.getProperty('label.gender.female'));
+            expect(SjukfallModel.hasError()).toBeFalsy();
         }));
     });
 
@@ -79,6 +80,15 @@ describe('Model: SjukfallModel', function() {
             expect(SjukfallModel.get().length).toEqual(testJsonData.length);
             SjukfallModel.reset();
             expect(SjukfallModel.get().length).toEqual(0);
+            expect(SjukfallModel.hasError()).toBeFalsy();
+
+        });
+    });
+
+    describe('setError', function() {
+        it('should indicate error when set', function() {
+            SjukfallModel.setError();
+            expect(SjukfallModel.hasError()).toBeTruthy();
 
         });
     });
