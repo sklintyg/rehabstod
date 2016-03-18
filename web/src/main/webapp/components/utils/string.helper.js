@@ -20,15 +20,38 @@
 angular.module('rehabstodApp').factory('StringHelper',
     function() {
         'use strict';
+        var swedishAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖabcedefghijklmnopqrstuvwxyzåäö';
 
         function escapeRegExp(str) {
             return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
         }
 
+        function swedishStringSorter(dir, caseSensitive) {
+            return function(a, b) {
+                var pos = 0,
+                    min = Math.min(a.length, b.length);
+                dir = dir || 1;
+                caseSensitive = caseSensitive || false;
+                if (!caseSensitive) {
+                    a = a.toLowerCase();
+                    b = b.toLowerCase();
+                }
+                while (a.charAt(pos) === b.charAt(pos) && pos < min) {
+                    pos++;
+                }
+                return swedishAlphabet.indexOf(a.charAt(pos)) > swedishAlphabet.indexOf(b.charAt(pos)) ?
+                    dir : -dir;
+            };
+        }
+        
         return {
             replaceAll: function(str, search, replacement) {
                 return str.replace(new RegExp(escapeRegExp(search), 'g'), replacement);
+            },
+            swedishStringSortImpl: function(asc, caseSensitive) {
+                return swedishStringSorter(asc === true ? 1 : -1, caseSensitive);
             }
         };
+
     }
 );

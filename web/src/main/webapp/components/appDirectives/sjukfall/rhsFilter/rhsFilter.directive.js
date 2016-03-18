@@ -20,7 +20,7 @@
 angular.module('rehabstodApp')
     .controller('RhsFilterCtrl',
         function($scope, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel,
-            UserModel) {
+            UserModel, StringHelper) {
             'use strict';
 
             $scope.filterViewState = SjukfallFilterViewState;
@@ -53,7 +53,7 @@ angular.module('rehabstodApp')
                 // uniqueness of lakare diagnoskapitel.
                 var lakare = $filter('rhsUnique')(value, 'lakare.namn');
                 if (!angular.equals($scope.filterViewState.get().lakareModel.getNames(), lakare)) {
-                    $scope.filterViewState.get().lakareModel.set(lakare);
+                    $scope.filterViewState.get().lakareModel.set(lakare.sort(StringHelper.swedishStringSortImpl(true, false)));
                 }
 
                 $scope.filterViewState.get().diagnosKapitelModel.setActivDiagnosKapitelIdlist(
