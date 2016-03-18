@@ -1,0 +1,14 @@
+<div id="rhs-start-page">
+  <h1 id="rhs-start-page-header" class="page-header">
+    <span ng-if="user.isLakare" message key="label.sjukfall.start.lakare.header"></span>
+    <span ng-if="!user.isLakare" message key="label.sjukfall.start.rehab.header"></span>
+    {{user.valdVardgivare.namn}} -
+    {{user.valdVardenhet.namn}} </h1>
+
+
+  <div class="alert alert-info">
+    <span message key="label.stat.nosjukfall"></span>
+    <a id="rhs-nodata-change-unit-link" href="javascript:void(0)" ng-show="user.totaltAntalVardenheter > 1" ng-click="openChangeCareUnitDialog()">Byt vårdenhet</a>
+  </div>
+
+</div>

@@ -1,5 +1,5 @@
 <div class="row rhs-stat-panel">
-  <div ng-if="model.total>0">
+  <div ng-if="model.total>0 && !model.hasError">
     <div class="col-md-3 col-sm-6">
       <h3>{{::'label.sjukfall.stat.totalt' | message}}</h3>
       <rhs-pie-chart data="model.totalData" config="totalPaEnhetStatConfig"></rhs-pie-chart>
@@ -18,11 +18,9 @@
       <rhs-chart-legend data="model.diagnoseGroupData" config="diagnoseStatConfig"></rhs-chart-legend>
     </div>
   </div>
-  <div ng-if="model.total === 0">
-    <div class="col-xs-12 well">{{::'label.stat.nosjukfall' | message}}</div>
-  </div>
-  <div ng-if="errorMessageConfig !=null" class="rhs-stat-panel-error">
-    <div class="alert alert-danger"><span message key="{{errorMessageConfig.textKey}}"></span></div>
+
+  <div ng-if="model.hasError" class="rhs-stat-panel-error">
+    <div class="alert alert-danger"><span message key="server.error.getsummary.text"></span></div>
   </div>
 </div>
 

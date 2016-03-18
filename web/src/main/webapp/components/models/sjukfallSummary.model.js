@@ -31,10 +31,12 @@ angular.module('rehabstodApp').factory('SjukfallSummaryModel',
             data.groups = [];
             data.diagnoseGroupData = [];
             data.genderData = [];
+            data.hasError = false;
             return data;
         }
 
         function _set(newData) {
+            data.hasError = false;
             //reformat for charting purposes
             data.total = newData.total;
             data.genders = newData.genders;
@@ -72,7 +74,12 @@ angular.module('rehabstodApp').factory('SjukfallSummaryModel',
         return {
             reset: _reset,
             set: _set,
-            get: _get
+            get: _get,
+
+            setError: function() {
+                _reset();
+                data.hasError = true;
+            }
         };
     }
 );

@@ -34,40 +34,7 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                     /**
                      * Private functions
                      */
-                    function _loadData() {
-                        $scope.errorMessageConfig = null;
-                        SjukfallSummaryModel.reset();
-                        SjukfallSummaryProxy.get().then(
-                            function(data) {
-                                SjukfallSummaryModel.set(data);
-                            }, function() {
-                                //for some reason, we failed to get sjukfallSummary
-                                $scope.errorMessageConfig = {
-                                    textKey: 'server.error.getsummary.text'
-                                };
-                            });
-                    }
-
-                    var unregisterFn = $rootScope.$on('SelectedUnitChanged', function(/*event, value*/) {
-                        _loadData();
-                    });
-                    //rootscope on event listeners aren't unregistered automatically when 'this' directives
-                    //scope is destroyed, so let's take care of that.
-                    $scope.$on('$destroy', unregisterFn);
-
-                    /**
-                     * Exposed scope properties
-                     */
-
-
                     $scope.model = SjukfallSummaryModel.get();
-
-                    if ($scope.model.total === null) {
-                        _loadData();
-                    }
-
-                    $scope.isLakare = UserModel.get().isLakare;
-
 
                     $scope.totalPaEnhetStatConfig = angular.merge(angular.copy(pieChartBaseConfig), {
 

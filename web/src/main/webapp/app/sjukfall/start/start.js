@@ -4,26 +4,17 @@ angular.module('rehabstodApp')
         $stateProvider
             .state('app.sjukfall.start', {
                 url: 'start',
-                data: {
-                    rule: function(fromState, toState, UserModel) {
-
-                        if (toState.name !== 'app.sjukfall.start') {
-                            return;
-                        }
-
-                        if (UserModel.isLakare()) {
-                            return {
-                                to: 'app.sjukfall.start.lakare',
-                                params: {},
-                                options: {location: 'replace'}
-                            };
-                        } else {
-                            return {
-                                to: 'app.sjukfall.start.rehabkoordinator',
-                                params: {},
-                                options: {location: 'replace'}
-                            };
-                        }
+                views: {
+                    'content@app': {
+                        templateUrl: 'app/sjukfall/start/start.html',
+                        controller: 'SjukfallStartCtrl'
+                    }
+                }
+            }).state('app.sjukfall.start.nodata', {
+                views: {
+                    'content@app': {
+                        templateUrl: 'app/sjukfall/start/selection/nodata.html',
+                        controller: 'NoDataCtrl'
                     }
                 }
             })

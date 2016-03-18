@@ -47,6 +47,7 @@ var rhsMessages = {
         'label.start.header': 'Rehabstöd startsida',
 
         // Sjukfall Start
+        'label.loading.sjukfallssummary' : 'Hämtar sjukfallsöversikt...',
         // Sjukfall Start Läkare
         'label.sjukfall.start.lakare.header' : 'Mina pågående sjukfall på ',
         'label.sjukfall.start.lakare.selectionpanel.header' : 'Mina pågående sjukfall på ',
@@ -73,7 +74,7 @@ var rhsMessages = {
         'label.sjukfall.stat.gender' : 'Fördelning mellan kön',
         'label.sjukfall.stat.gender.lakare' : 'Könsfördelning',
         'label.sjukfall.stat.diagnoses' : 'Fördelning av diagnoser',
-        'label.stat.nosjukfall' : 'Det finns inga pågående sjukfall på enheten',
+        'label.stat.nosjukfall' : 'Det finns inga pågående sjukfall på enheten.',
 
 
 
