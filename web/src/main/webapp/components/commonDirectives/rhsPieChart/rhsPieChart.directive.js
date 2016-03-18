@@ -34,12 +34,9 @@ angular.module('rehabstodApp').directive('rhsPieChart',
 
                     var chart = Highcharts.chart(element[0], scope.config);
 
-                    chart.showLoading();
-
                     //Wait for data
                     scope.$watchCollection('data', function(newData) {
                         if (newData) {
-                            chart.hideLoading();
                             if (chart.series[0]) {
                                 chart.series[0].setData(newData);
                             }

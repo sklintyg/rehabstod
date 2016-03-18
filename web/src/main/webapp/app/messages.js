@@ -70,7 +70,7 @@ var rhsMessages = {
 
 
         // Sjukfall Stat
-        'label.sjukfall.stat.totalt' : 'Antal pågående sjukfall',
+        'label.sjukfall.stat.totalt' : 'Antal sjukfall',
         'label.sjukfall.stat.gender' : 'Könsfördelning',
         'label.sjukfall.stat.diagnoses' : 'Diagnosfördelning',
         'label.stat.nosjukfall' : 'Det finns inga pågående sjukfall på enheten.',
