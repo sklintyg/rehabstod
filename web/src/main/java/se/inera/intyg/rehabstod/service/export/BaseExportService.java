@@ -29,9 +29,9 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 public abstract class BaseExportService {
 
     protected static final String MINA_PAGAENDE_SJUKFALL = "Mina sjukfall";
-    protected static final String PA_ENHETEN = "- Endast de pågående sjukfall där jag utfärdat det nuvarande intyget";
+    protected static final String PA_ENHETEN = "- De pågående sjukfall där jag utfärdat det nuvarande intyget";
     protected static final String ALLA_SJUKFALL = "Alla sjukfall";
-    protected static final String SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN = "- Samtliga pågående sjukfall på enheten";
+    protected static final String SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN = "- Alla pågående sjukfall på enheten";
     protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Valda diagnoser";
     protected static final String SELECTION_VALUE_ALLA = "Alla";
     protected static final String FILTER_TITLE_VALDA_LAKARE = "Valda läkare";

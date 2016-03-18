@@ -50,7 +50,7 @@ var rhsMessages = {
         'label.loading.sjukfallssummary' : 'Hämtar sjukfallsöversikt...',
         // Sjukfall Start Läkare
         'label.sjukfall.start.lakare.header' : 'Mina pågående sjukfall på ',
-        'label.sjukfall.start.lakare.selectionpanel.header' : 'Mina pågående sjukfall på ',
+        'label.sjukfall.start.lakare.selectionpanel.header' : 'Vad kan jag se i Rehabstöd?',
         'label.sjukfall.start.lakare.selectionpanel.body' : 'Som läkare kan du ta del av de sjukfall där du själv utfärdat det nuvarande intyget.<br><br>' +
                                                     'När du klickar på "Visa mina sjukfall" nedan kommer du att få se dina pågående sjukfall för den vårdenhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid och sjukskrivningsgrad. ' +
                                                     'Om du har tillgång till flera vårdenheter kan du se dina pågående sjukfall för en annan vårdenhet genom att byta vårdenhet i sidhuvudet. ' +
@@ -58,9 +58,9 @@ var rhsMessages = {
         'label.sjukfall.start.lakare.selectionpanel.urval.button' : 'Visa mina sjukfall',
 
         // Sjukfall Start Rehab
-        'label.sjukfall.start.rehab.header' : 'Samtliga pågående sjukfall på ',
-        'label.sjukfall.start.rehab.selectionpanel.header' : 'Samtliga pågående sjukfall på ',
-        'label.sjukfall.start.rehab.selectionpanel.body' : 'Som rehabkoordinator kan du ta del av samtliga pågående sjukfall på vårdenheten.<br><br>' +
+        'label.sjukfall.start.rehab.header' : 'Alla pågående sjukfall på ',
+        'label.sjukfall.start.rehab.selectionpanel.header' : 'Vad kan jag se i Rehabstöd?',
+        'label.sjukfall.start.rehab.selectionpanel.body' : 'Som rehabkoordinator kan du ta del av alla pågående sjukfall på vårdenheten.<br><br>' +
                                                     'När du klickar på "Visa alla sjukfall" nedan kommer du att få se alla pågående sjukfall för den vårdenhet du har loggat in på. ' +
                                                     'För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad och läkare. ' +
                                                     'Om du har tillgång till flera vårdenheter kan du se pågående sjukfall för en annan vårdenhet genom att byta vårdenhet i sidhuvudet.' +
@@ -70,20 +70,19 @@ var rhsMessages = {
 
 
         // Sjukfall Stat
-        'label.sjukfall.stat.totalt' : 'Antal sjukfall',
-        'label.sjukfall.stat.gender' : 'Fördelning mellan kön',
-        'label.sjukfall.stat.gender.lakare' : 'Könsfördelning',
-        'label.sjukfall.stat.diagnoses' : 'Fördelning av diagnoser',
+        'label.sjukfall.stat.totalt' : 'Antal pågående sjukfall',
+        'label.sjukfall.stat.gender' : 'Könsfördelning',
+        'label.sjukfall.stat.diagnoses' : 'Diagnosfördelning',
         'label.stat.nosjukfall' : 'Det finns inga pågående sjukfall på enheten.',
 
 
 
         // Sjukfall Result
         'label.sjukfall.result.lakare.header': 'Mina sjukfall',
-        'label.sjukfall.result.lakare.subheader': ' - Endast de pågående sjukfall där jag utfärdat det nuvarande intyget',
+        'label.sjukfall.result.lakare.subheader': ' - De pågående sjukfall där jag utfärdat det nuvarande intyget',
 
         'label.sjukfall.result.rehab.header': 'Alla sjukfall',
-        'label.sjukfall.result.rehab.subheader': ' - Samtliga pågående sjukfall på enheten ',
+        'label.sjukfall.result.rehab.subheader': ' - Alla pågående sjukfall på enheten ',
 
         'label.sjukfall.result.back': 'Tillbaka till översiktssidan',
 
