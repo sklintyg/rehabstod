@@ -112,6 +112,7 @@ app.value('pieChartBaseConfig', {
             point: {
                 events: {
                     legendItemClick: function(event) {
+                        'use strict';
                         event.preventDefault();
                         return false;
                     }
