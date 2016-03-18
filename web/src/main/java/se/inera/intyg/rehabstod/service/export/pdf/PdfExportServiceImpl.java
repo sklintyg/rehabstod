@@ -18,14 +18,15 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.draw.LineSeparator;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.service.Urval;
@@ -35,9 +36,20 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.ListItem;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 
 /**
  * Created by marced on 24/02/16.
@@ -72,7 +84,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
         writer.setPageEvent(new HeaderEventHandler(
                 Image.getInstance(IOUtils.toByteArray(resourcePatternResolver.getResource(LOGO_PATH).getInputStream())),
-                user.getNamn()));
+                user.getNamn(), user.getValdVardenhet().getNamn()));
         writer.setPageEvent(new PageNumberingEventHandler());
 
         document.open();

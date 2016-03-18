@@ -39,11 +39,13 @@ import com.itextpdf.text.pdf.PdfWriter;
 public class HeaderEventHandler extends PdfPageEventHelper {
     private static final int TOP_MARGIN_TO_HEADER = 10;
     private String userName;
+    private String enhetsNamn;
     private Image logo;
 
-    public HeaderEventHandler(Image logo, String userName) {
+    public HeaderEventHandler(Image logo, String userName, String enhetsNamn) {
         this.logo = logo;
         this.userName = userName;
+        this.enhetsNamn = enhetsNamn;
     }
 
     public void onEndPage(PdfWriter writer, Document document) {
@@ -54,7 +56,7 @@ public class HeaderEventHandler extends PdfPageEventHelper {
 
         // Add out 2 cells
         table.addCell(getLogoCell());
-        table.addCell(printedBy(userName));
+        table.addCell(printedBy(userName, enhetsNamn));
 
         // write the table
         table.writeSelectedRows(0, -1, document.leftMargin(), document.getPageSize().getTop() - TOP_MARGIN_TO_HEADER, writer.getDirectContent());
@@ -67,11 +69,13 @@ public class HeaderEventHandler extends PdfPageEventHelper {
         return imageCell;
     }
 
-    private PdfPCell printedBy(String userName) {
+    private PdfPCell printedBy(String userName, String enhetsNamn) {
         LocalDateTime now = new LocalDateTime();
 
         Phrase printedBy = new Phrase("", PdfExportService.TABLE_CELL_NORMAL);
         printedBy.add(new Chunk("Utskrift av " + userName));
+        printedBy.add(Chunk.NEWLINE);
+        printedBy.add(new Chunk(enhetsNamn));
         printedBy.add(Chunk.NEWLINE);
         printedBy.add(new Chunk(ISODateTimeFormat.yearMonthDay().print(now)));
         printedBy.add(new Chunk(" - "));
