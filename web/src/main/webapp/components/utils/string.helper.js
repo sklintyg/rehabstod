@@ -44,8 +44,26 @@ angular.module('rehabstodApp').factory('StringHelper',
             while (a.charAt(pos) === b.charAt(pos) && pos < min) {
                 pos++;
             }
-            return swedishAlphabet.indexOf(a.charAt(pos)) > swedishAlphabet.indexOf(b.charAt(pos)) ?
-                dir : -dir;
+
+            var charA = a.charAt(pos);
+            var charB = b.charAt(pos);
+
+            var indexA = swedishAlphabet.indexOf(charA);
+            var indexB = swedishAlphabet.indexOf(charB);
+
+            if (indexA === -1 && indexB === -1) {
+                return charA > charB ? dir : -dir;
+            }
+
+            if (indexA === -1) {
+                indexA = swedishAlphabet.length + 1;
+            }
+
+            if (indexB === -1) {
+                indexB = swedishAlphabet.length + 1;
+            }
+
+            return indexA > indexB ? dir : -dir;
         }
         
         return {

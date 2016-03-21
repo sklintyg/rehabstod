@@ -65,6 +65,15 @@ describe('Helper: StringHelper', function() {
         expect(arr[2]).toEqual('Börje');
         expect(arr[1]).toEqual('David');
         expect(arr[0]).toEqual('Åsa');
+    });
 
+    it('sort unknown characters last - asc', function() {
+
+        var arr = ['?', '_', 'é', 'e'];
+        arr.sort(StringHelper.swedishStringSortImpl(true, false));
+        expect(arr[0]).toEqual('e');
+        expect(arr[1]).toEqual('?');
+        expect(arr[2]).toEqual('_');
+        expect(arr[3]).toEqual('é');
     });
 });
