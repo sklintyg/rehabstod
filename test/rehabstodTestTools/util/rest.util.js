@@ -28,12 +28,12 @@ var env = require('./../environment.js').envConfig;
 module.exports = {
     login: function(userJson) {
 
-        // login with doctor Jan Nilsson if noone else is specified
+        // login with doctor Jan Nilsson if none else is specified
         var user = userJson || {
-            'fornamn': 'Jan',
+            'fornamn': 'Emma',
             'efternamn': 'Nilsson',
-            'hsaId': 'IFV1239877878-1049',
-            'enhetId': 'IFV1239877878-1042',
+            'hsaId': 'TSTNMT2321000156-105R',
+            'enhetId': 'TSTNMT2321000156-105N',
             'lakare': true,
             'forskrivarKod': '2481632'
         }; 

@@ -28,11 +28,11 @@ var startPage = rhsTestTools.pages.startPage;
 var aboutPage = rhsTestTools.pages.aboutPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
-describe('Logga in som Lena Karlsson ', function() {
+describe('Logga in som Kerstin Johansson', function() {
 
     beforeEach(function() {
         browser.ignoreSynchronization = false;
-        specHelper.login('IFV1239877878-104N_IFV1239877878-1045');
+        specHelper.login('TSTNMT2321000156-105W_TSTNMT2321000156-105P');
     });
 
     it('Öppna och stäng byt enhetsdialogen', function() {
@@ -86,12 +86,12 @@ describe('Logga in som Lena Karlsson ', function() {
     function bytEnhet() {
         var today = new Date().toISOString().split('T')[0];
 
-        expect(startPage.navbarLocation().getText()).toBe(today + ' - WebCert-Vårdgivare2 - WebCert-Enhet2');
+        expect(startPage.navbarLocation().getText()).toBe(today + ' - Rehabstöd Vårdgivare 1 - Rehabstöd Enhet 2');
 
         startPage.clickBytVardenhet();
-        element(by.id('select-active-unit-IFV1239877878-104D-modal')).click();
+        element(by.id('select-active-unit-TSTNMT2321000156-105Q-modal')).click();
 
-        expect(startPage.navbarLocation().getText()).toBe(today + ' - WebCert-Vårdgivare2 - WebCert-Enhet3');
+        expect(startPage.navbarLocation().getText()).toBe(today + ' - Rehabstöd Vårdgivare 1 - Rehabstöd Enhet 3');
     }
 
 

@@ -33,7 +33,7 @@ describe('Flöde som rehabkoordinator', function() {
     // Logga in
     beforeEach(function() {
         browser.ignoreSynchronization = false;
-        specHelper.login('IFV1239877878-104N_IFV1239877878-1045');
+        specHelper.login('TSTNMT2321000156-105W_TSTNMT2321000156-105P');  // Kerstin Johansson
     });
 
     it('Bara se knappen alla sjukfall', function() {

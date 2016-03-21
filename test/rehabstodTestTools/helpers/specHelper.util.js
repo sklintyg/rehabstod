@@ -32,7 +32,7 @@ module.exports = {
     login: function(userOptional) {
         WelcomePage.get();
         this.waitForAngularTestability();
-        WelcomePage.login(userOptional || 'IFV1239877878-1049_IFV1239877878-1042');
+        WelcomePage.login(userOptional || 'TSTNMT2321000156-105R_TSTNMT2321000156-105N');
         this.waitForAngularTestability();
         expect(RehabstodStartPage.isAt()).toBe(true);
     },
