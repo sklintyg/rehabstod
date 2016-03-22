@@ -1,8 +1,15 @@
 angular.module('rehabstodApp')
-    .controller('NoDataCtrl', function($scope, $uibModal, $state, UserModel, UserProxy) {
+    .controller('NoDataCtrl', function($scope, $rootScope, $uibModal, $state, UserModel, UserProxy) {
         'use strict';
 
         $scope.user = UserModel.get();
+
+        var unregisterFn = $rootScope.$on('SelectedUnitChanged', function(/*event, value*/) {
+            $state.go('app.sjukfall.start');
+        });
+        //rootscope on event listeners aren't unregistered automatically when 'this' directives
+        //scope is destroyed, so let's take care of that.
+        $scope.$on('$destroy', unregisterFn);
 
         $scope.openChangeCareUnitDialog = function() {
             var modalInstance = $uibModal.open({
