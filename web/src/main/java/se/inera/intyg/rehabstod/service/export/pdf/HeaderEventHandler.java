@@ -37,7 +37,8 @@ import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class HeaderEventHandler extends PdfPageEventHelper {
-    private static final int TOP_MARGIN_TO_HEADER = 10;
+    private static final int TOP_MARGIN_TO_HEADER = 20;
+    private static final float LOGO_SCALE_FACTOR = 30.0f;
     private String userName;
     private String enhetsNamn;
     private Image logo;
@@ -64,6 +65,8 @@ public class HeaderEventHandler extends PdfPageEventHelper {
     }
 
     private PdfPCell getLogoCell() {
+        float scalePercentage = LOGO_SCALE_FACTOR;
+        logo.scalePercent(scalePercentage);
         PdfPCell imageCell = new PdfPCell(logo, false);
         imageCell.setBorder(Rectangle.NO_BORDER);
         return imageCell;

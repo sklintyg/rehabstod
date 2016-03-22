@@ -77,7 +77,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         Document document = new Document();
 
         document.setPageSize(PageSize.A4);
-        document.setMargins(20, 20, 70, 20);
+        document.setMargins(20, 20, 60, 20);
 
         PdfWriter writer = PdfWriter.getInstance(document, bos);
         // Add handlers for page events
@@ -243,7 +243,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
         // Setup column widths (relative to each other)
         if (Urval.ALL.equals(urval)) {
-            table = new PdfPTable(new float[] { 0.8f, 2.5f, 4, 1, 1, 1.5f, 1.5f, 2, 2, 2 });
+            table = new PdfPTable(new float[] { 0.8f, 2.5f, 4, 1, 1, 1.2f, 1.2f, 2, 2, 2.5f });
         } else {
             table = new PdfPTable(new float[] { 0.8f, 2.5f, 4, 1, 1, 1.5f, 1.5f, 2, 2 });
         }
