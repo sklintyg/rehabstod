@@ -35,7 +35,8 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
             templateUrl: 'components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.html',
             link: function($scope, element) {
 
-                var dropdownOpen = false;
+
+                $scope.isOpen = false;
 
                 //Template just need access to the array
                 $scope.items = $scope.itemsModel.get();
@@ -57,13 +58,13 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
                 };
 
                 $scope.dropdownToggle = function(open) {
-                    dropdownOpen = open;
-
+                    $scope.isOpen = open;
                     calculateDropdownHeight();
                 };
 
+
                 var calculateDropdownHeight = function() {
-                    if (dropdownOpen) {
+                    if ($scope.isOpen) {
                         var dropdown = element.find('.dropdown-menu');
 
                         var offsetTop = dropdown.offset().top - $win.scrollTop();
@@ -78,6 +79,18 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
 
                 $scope.$on('$destroy', function() {
                     $win.unbind('resize', calculateDropdownHeight);
+                });
+
+                //Listen to focusout events, that will bubble to this directives root element.
+                //If the element receiveing the focus (event.relatedTarget) is not structurally under this directive
+                //root node, we have for example tabbed to another component. In that case, we should close the dropdown.
+                element.on('focusout', function(event) {
+                    if (!element[0].contains(event.relatedTarget)) {
+                        $scope.isOpen = false;
+                        //Wer'e not in angular land here(i.e within a digest loop) - so we need to inform
+                        //angular of this change.
+                        $scope.$apply();
+                    }
                 });
             }
         };
