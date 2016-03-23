@@ -2,18 +2,18 @@
 <html lang="sv" id="ng-app" ng-app="rhsIndexApp">
 
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width">
 
-  <base href="/">
-  <title>Rehabstöd</title>
-  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-  <!-- build:css({build/.tmp,src/main/webapp}) app/app.css -->
-  <!-- injector:css -->
-  <link rel="stylesheet" href="app/app.css">
-  <!-- endinjector -->
-  <!-- endbuild -->
+<base href="/">
+<title>Rehabstöd</title>
+<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+<!-- build:css({build/.tmp,src/main/webapp}) app/app.css -->
+<!-- injector:css -->
+<link rel="stylesheet" href="app/app.css">
+<!-- endinjector -->
+<!-- endbuild -->
 </head>
 <style>
   html, body {
@@ -21,147 +21,85 @@
     margin: 0;
     padding: 0;
   }
-  /* styles specific for this page only */
-
-  #main-wrapper {
-    min-height: 100%;
-    padding: 0 0 70px;
-    position: relative;
-  }
-
-  .footer {
-    bottom: 0;
-    height: 70px;
-    left: 0;
-    position: absolute;
-    width: 100%;
-  }
-
-  span.headerbox-logo {
-    border: 0;
-  }
-
-  .index-page {
-    background-color: #28b4c4;
-  }
-
-  .index-box{
-    border-radius: 20px;
-    background: #fff;
-    padding: 30px;
-    margin-top: 40px;
-  }
-
-  .content-footer {
-    color: #fff;
-    margin: 0 auto;
-    padding-top: 20px;
-  }
-
-  .content-footer a {
-    text-decoration: underline;
-    color: #fff;
-  }
-
 
 </style>
-<body class="index-page"  ng-controller="IndexController">
+
+<body class="index-page" ng-controller="IndexController">
   <!--[if lt IE 9]>
   <p class="browsehappy">Du använder en <strong>omodern</strong> webbläsare. Var vänlig <a
       href="http://browsehappy.com/">uppgradera
     din webbläsare</a> för att få bästa upplevelse av denna webbplats.</p>
   <![endif]-->
+  <div class="index-content-container">
 
 
-  <div id="main-wrapper">
-    <div class="header clearfix">
-      <div class="headerbox">
-      <span class="headerbox-logo pull-left">
-        <img alt="Logo" src="assets/images/logo.png" /></span>
-      </div>
-    </div>
+    <!-- header part -->
+    <div class="index-header-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 vertical-col-middle">
+            <img class="hidden-sm hidden-md hidden-lg"
+                 src="/assets/images/rehab_big_logo.png" width="192" height="40">
+            <h1>Välkommen</h1>
+            <p>
+              Rehabstöd är ett verktyg för dig som arbetar med att koordinera rehabiliterings&shy;insatser för
+              sjukskrivna
+              patienter. Tjänsten ger en samlad bild över pågående sjukfall på en vårdenhet. </p>
+            <p>
+              När du loggat in får du se en sammanställning över pågående sjukfall på den valda vårdenheten.
+              Du kan sedan filtrera informationen på bland annat diagnos och sjukskrivningslängd.
+              Om du är läkare kan du endast se pågående sjukfall där du skrivit intyget. </p>
 
-
-  <div class="container">
-    <div class="col-sm-6 index-box">
-      <h1><i class="fa fa-user"></i> Välkommen till Rehabstöd</h1>
-      <p>
-        Rehabstöd är ett verktyg för dig som arbetar med att koordinera rehabiliteringsinsatser för sjukskrivna patienter.
-        Tjänsten ger en samlad bild över pågående sjukfall på en vårdenhet.
-      </p>
-      <p>
-        När du loggat in får du se en sammanställning över pågående sjukfall på den valda vårdenheten.
-        Du kan sedan filtrera informationen på bland annat diagnos och sjukskrivningslängd.
-      </p>
-      <p>
-        Om du är läkare kan du endast se pågående sjukfall där du skrivit intyget.
-      </p>
-    </div>
-
-    <div class="col-sm-1">&nbsp;</div>
-
-    <div class="col-sm-5">
-      <div class="row">
-        <div class="col-sm-12 index-box">
-          <h1><i class="fa fa-sign-in"></i> Logga in</h1>
-          <p>
-            För att logga in behöver du ett SITHS-kort samt medarbetaruppdraget "Vård och behandling" i HSA-katalogen.
-          </p>
-          <div>
-            <a href="/saml/login/alias/defaultAlias" class="btn btn-success" id="loginBtn">Logga in</a>
+          </div>
+          <div class="col-sm-6 hidden-xs text-right vertical-col-middle" style="width:49%">
+            <img src="/assets/images/rehab_big_logo.png" >
           </div>
 
-          <br>
-          <p>
-            Problem med inloggning med SITHS-kort?<br />
-            <a href="#" data-ng-click="open('pubapp/siths.help.html')">Läs mer om hur du kan felsöka</a>
-          </p>
         </div>
-      </div>
+      </div><!-- end header container -->
+    </div>
 
-      <div class="row">
-        <div class="col-sm-12 index-box">
-          <h1><i class="fa fa-files-o"></i> Statistiktjänsten</h1>
-          <p>
-            Statistiktjänsten för ordinerad sjukskrivning är en webbtjänst som visar samlad statistik för
-            sjukskrivning som ordinerats i elektroniska läkarintyg. Statistiktjänsten visar utvecklingen av
-            sjukskrivning över tid och innehåller inga personuppgifter.
-          </p>
 
-          <p><a target="_blank" href="https://statistik.intygstjanster.sjunet.org/">Till Statistiktjänsten</a></p>
+    <!-- middle part -->
+    <div class="index-body-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6">
+
+            <h2>Inloggning <i class="fa fa-sign-in"></i></h2>
+            <p>
+              För att logga in behöver du ett SITHS-kort samt medarbetaruppdraget "Vård och behandling" i
+              HSA-katalogen. </p>
+            <div>
+              <a href="/saml/login/alias/defaultAlias" class="btn btn-success" id="loginBtn">SITHS-kort</a>
+            </div>
+
+            <br>
+            <p>
+              <a href="#" data-ng-click="open('pubapp/siths.help.html')" class="body-link">Problem med inloggning?</a>
+            </p>
+          </div>
         </div>
-      </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <h2 class="underlined-header">Se också</h2>
+          </div>
+        </div>
+        <div class="row body-footer">
+          <div class="col-sm-9">
+
+            Statistiktjänsten för ordinerad sjukskrivning är en webbtjänst som visar samlad statistik för sjukskrivning
+            som ordinerats i elektroniska läkarintyg. Statistiktjänsten visar utvecklingen av sjukskrivning över tid och
+            innehåller inga personuppgifter.
+
+          </div>
+          <div class="col-sm-3 text-right">
+            <a target="_blank" href="https://statistik.intygstjanster.sjunet.org/"><img src="/assets/images/statistiktj_logo.svg" width="141" height="26">  <i class="fa fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div><!-- end header container -->
     </div>
   </div>
-
-  <div class="footer">
-    <div class="container">
-    <div class="content-footer col-sm-12">
-      <p>Denna tjänst använder kakor. <a ng-click="showCookieInfo = !showCookieInfo" ng-switch="showCookieInfo" href="#">Läs mer om Kakor (cookies)</a></p>
-      <div class="bluebox" ng-if="showCookieInfo">
-        <h4>Om Kakor (cookies)</h4>
-        <p>
-          Så kallade kakor (cookies) används för att underlätta för besökaren på webbplatsen. En kaka är en textfil som
-          lagras på din dator och som innehåller information. Denna webbplats använder så kallade sessionskakor.
-          Sessionskakor lagras temporärt i din dators minne under tiden du är inne på en webbsida. Sessionskakor
-          försvinner när du stänger din webbläsare. Ingen personlig information om dig sparas vid användning av
-          sessionskakor. Om du inte accepterar användandet av kakor kan du stänga av det via din webbläsares
-          säkerhetsinställningar. Du kan även ställa in webbläsaren så att du får en varning varje gång webbplatsen
-          försöker sätta en kaka på din dator.</p>
-        <p>
-          <strong>Observera!</strong> Om du stänger av kakor i din webbläsare kan du inte logga in i tjänsten.</p>
-        <p>
-          Allmän information om kakor (cookies) och lagen om elektronisk kommunikation finns på Post- och telestyrelsens
-          webbplats.</p>
-        <p>
-          <a href='http://www.pts.se/sv/Privat/Internet/Integritet1/Fragor-och-svar-om-kakor-for-anvandare2/'
-             target='_blank'>Mer om kakor (cookies) på Post- och telestyrelsens webbplats</a>
-        </p>
-      </div>
-    </div>
-    </div>
-  </div>
-</div>
   <!-- build:js({src/main/webapp,node_modules}) app/vendor.js -->
   <!-- bower:js -->
   <script src="bower_components/jquery/dist/jquery.js"></script>

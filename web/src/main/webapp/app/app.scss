@@ -55,59 +55,68 @@ $fa-font-path: '../bower_components/font-awesome/fonts';
   margin: 0.2em 0;
   background: #ccc;
   color: #000;
-  padding: 0.2em 0; }
+  padding: 0.2em 0;
+}
 
 .locked {
-  color: #777; }
+  color: #777;
+}
 
 .table-label-col {
   min-width: 300px;
-  font-weight: bold; }
+  font-weight: bold;
+}
 
 .modal-terms .modal-body {
   max-height: 450px;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+}
 
 /*****************************
 App-wide special styles
 *******************************/
 html, body, .container-fluid {
-  text-align: left; }
+  text-align: left;
+}
 
 body {
   padding-bottom: 30px;
 }
 
 .rhs-body {
-  overflow-y:scroll;
+  overflow-y: scroll;
 }
 
 .modal-open {
   &.rhs-body {
     overflow: hidden;
   }
-  
+
   .content-wrapper {
     overflow-y: scroll;
   }
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-  font-weight: bold; }
+  font-weight: bold;
+}
 
 /*input, textarea, .uneditable-input {
   max-width: 206px; }
 */
 
 select {
-  max-width: 340px; }
+  max-width: 340px;
+}
 
 .form-control {
-  padding: 4px 6px; }
+  padding: 4px 6px;
+}
 
 p {
   margin: 0;
-  padding: 0 0 10px; }
+  padding: 0 0 10px;
+}
 
 p.leading-number {
   padding-left: 35px;
@@ -128,67 +137,82 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  color: $blue-color; }
+  color: $blue-color;
+}
 
 h1.backlink-heading {
   display: inline-block;
   margin-right: 20px;
-  line-height: 29px; }
+  line-height: 29px;
+}
 
 h2 {
   line-height: 20px;
-  padding-top: 30px; }
+  padding-top: 30px;
+}
 
 h2.less-top-padding {
   /* useful if h2 is placed immediately after h1 */
-  padding-top: 10px; }
+  padding-top: 10px;
+}
 
 .col-head {
   font-size: 20px;
   color: $blue-color;
-  padding-bottom: 10px; }
+  padding-bottom: 10px;
+}
 
 h3 {
   font-weight: bold;
-  line-height: 20px; }
+  line-height: 20px;
+}
 
 h5.inline-heading {
-  padding: 20px 0 5px 0; }
+  padding: 20px 0 5px 0;
+}
 
 .italic {
   font-style: italic;
 }
 
 .multiline {
-  white-space: pre-line; }
+  white-space: pre-line;
+}
 
 .bluebox {
   background-color: $blue-color;
   border-radius: 8px 8px 8px 8px;
   color: #fff;
   padding: 20px;
-  margin-bottom: 10px; }
+  margin-bottom: 10px;
+}
 
 .box {
   display: block;
   padding: 20px 40px 15px 40px;
   background-color: #e5e5e5;
-  border-radius: 4px 4px 4px 4px; }
+  border-radius: 4px 4px 4px 4px;
+}
 
 .buttonbar .btn {
-  margin: 5px 5px 0 0; }
+  margin: 5px 5px 0 0;
+}
 
 .buttonbar .btn-info, .buttonbar .btn-inverse {
-  padding: 7px 15px; }
+  padding: 7px 15px;
+}
 
 .top-pad {
-  padding-top: 30px; }
+  padding-top: 30px;
+}
 
 .top-pad-1 {
-  padding-top: 5px; }
+  padding-top: 5px;
+}
 
 .font-bold, label.font-bold {
-  font-weight: bold; }
+  font-weight: bold;
+}
 
 .section-line {
   border-top: 1px solid #eeeeee;
@@ -208,14 +232,81 @@ h5.inline-heading {
   box-shadow: none;
 }
 
-
+// Index page --
 .index-page {
+  background-color: $link-color;
+  font-size: 12px;
+
+  h1 {
+    color: $link-color;
+    padding-bottom: 15px;
+
+  }
+  .page-section {
+    padding: 2em 4em 1em 4em;
+  }
+
+  .vertical-col-middle {
+    display: inline-block;
+    float: none;
+    vertical-align: middle;
+  }
+
+  .index-content-container {
+    box-shadow: #323232 0 -5px 30px;
+  }
+
+  .index-header-section {
+    @extend .page-section;
+    background-color: #EFEFEF;
+
+    img {
+      margin-bottom: 20px;
+    }
+  }
+
+  .index-body-section {
+    @extend .page-section;
+
+    background-color: #FFFFFF;
+    padding-bottom: 25px;
+
+    .row {
+      padding-top: 10px;
+    }
+    .body-footer {
+      font-size: 11px;
+      color: #666;
+      a {
+        color: #008391;
+        text-decoration: none;
+      }
+    }
+    .body-link {
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    h2.underlined-header {
+      font-size: 14px;
+      color: #6C7B8C;
+      border-bottom: 2px #eee solid;
+      padding-bottom: 5px;
+      padding-top: 30px;
+    }
+    .fa-sign-in {
+      font-size: x-large;
+      vertical-align: middle;
+    }
+
+  }
+
   .modal-content {
     h1, h2, h3, h4 {
       color: $link-color;
     }
 
-    h3 {
+    h2, h3 {
       padding: 5px 0 5px 0;
     }
 
