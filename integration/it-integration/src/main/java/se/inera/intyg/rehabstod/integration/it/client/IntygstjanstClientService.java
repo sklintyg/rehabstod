@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.integration.it.client;
 
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
+import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 
 /**
  * Created by eriklupander on 2016-01-29.
@@ -26,4 +27,6 @@ import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickle
 public interface IntygstjanstClientService {
 
     ListActiveSickLeavesForCareUnitResponseType getSjukfall(String unitHsaId);
+
+    PingForConfigurationResponseType pingForConfiguration();
 }

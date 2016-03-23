@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.integration.it.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,9 @@ import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickle
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitType;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
+import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
+import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
+import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
 
 /**
  * Created by eriklupander on 2016-01-29.
@@ -35,6 +39,10 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
 
     @Autowired
     private ListActiveSickLeavesForCareUnitResponderInterface service;
+
+    @Autowired
+    @Qualifier("itPingForConfigurationWebServiceClient")
+    private PingForConfigurationResponderInterface pingService;
 
     @Value("${it.service.logicalAddress}")
     private String logicalAddress;
@@ -47,4 +55,12 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
         params.setEnhetsId(hsaId);
         return service.listActiveSickLeavesForCareUnit(logicalAddress, params);
     }
+
+    @Override
+    public PingForConfigurationResponseType pingForConfiguration() {
+        PingForConfigurationType reqType = new PingForConfigurationType();
+        reqType.setLogicalAddress(logicalAddress);
+        return pingService.pingForConfiguration(logicalAddress, reqType);
+    }
+
 }

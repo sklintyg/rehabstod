@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
+import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 
 /**
  * Declares and bootstraps the Intygstjänst client for {@link ListActiveSickLeavesForCareUnitResponderInterface}
@@ -43,6 +44,10 @@ public class IntygstjanstIntegrationClientConfiguration {
     @Value("${it.service.url}")
     private String itWsUrl;
 
+    @Value("${it.ping.url}")
+    private String itWsPingUrl;
+
+
     @Bean
     @Profile(value = {"dev", "test", "prod"})
     public ListActiveSickLeavesForCareUnitResponderInterface itIntegrationWebServiceClient() {
@@ -51,4 +56,18 @@ public class IntygstjanstIntegrationClientConfiguration {
         proxyFactoryBean.setServiceClass(ListActiveSickLeavesForCareUnitResponderInterface.class);
         return (ListActiveSickLeavesForCareUnitResponderInterface) proxyFactoryBean.create();
     }
+
+    @Bean
+    @Profile(value = {"dev", "test", "prod"})
+    public PingForConfigurationResponderInterface itPingForConfigurationWebServiceClient() {
+        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
+        proxyFactoryBean.setAddress(itWsPingUrl);
+        proxyFactoryBean.setServiceClass(PingForConfigurationResponderInterface.class);
+        return (PingForConfigurationResponderInterface) proxyFactoryBean.create();
+    }
 }
+      /*
+      <jaxws:client id="pingIntygstjanstForConfigurationClient"
+      serviceClass="se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface"
+      address="${intygstjanst.pingforconfiguration.endpoint.url}" />
+       */

@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html lang="sv">
 <head>
-<title>Rehanstöd - Health Check</title>
+<title>Rehabstöd - Health Check</title>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 <meta name="ROBOTS" content="nofollow, noindex" />
@@ -17,11 +17,14 @@
 			<h1>Rehabstöd - HealthCheck</h1>
 		</div>
 
-		<c:set var="dbStatus" value="${healthcheck.checkDB()}" />
 		<c:set var="hsaStatus" value="${healthcheck.checkHSA()}" />
+		<c:set var="amqStatus" value="${healthcheck.checkActiveMQ()}" />
+		<c:set var="logQueueStatus" value="${healthcheck.checkPdlLogQueue()}" />
+		<c:set var="logAggregatedQueueStatus" value="${healthcheck.checkPdlAggregatedLogQueue()}" />
+		<c:set var="itStatus" value="${healthcheck.checkIntygstjansten()}" />
 		<c:set var="uptime" value="${healthcheck.checkUptimeAsString()}" />
 		<c:set var="nbrUsers" value="${healthcheck.checkNbrOfUsers()}" />
-		<c:set var="nbrUsedHsaId" value="${healthcheck.checkNbrOfUsedHsaId()}" />
+
 
 		<div class="table-responsive">
 			<table class="table table-bordered table-striped">
@@ -34,22 +37,33 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>Koppling databas</td>
-						<td id="dbMeasurement">${dbStatus.measurement}ms</td>
-						<td id="dbStatus" class="${dbStatus.ok ? "text-success" : "text-danger"}">${dbStatus.ok ? "OK" : "FAIL"}</td>
+						<td>Koppling HSA</td>
+						<td>Ej implementerat</td>
+						<!--	<td id="hsaMeasurement">${hsaStatus.measurement}ms</td>
+						<td id="hsaStatus" class="${hsaStatus.ok ? "text-success" : "text-danger"}">${hsaStatus.ok ? "OK" : "FAIL"}</td>    -->
 					</tr>
 					<tr>
-						<td>Koppling HSA</td>
-						<td id="hsaMeasurement">${hsaStatus.measurement}ms</td>
-						<td id="hsaStatus" class="${hsaStatus.ok ? "text-success" : "text-danger"}">${hsaStatus.ok ? "OK" : "FAIL"}</td>
+						<td>Koppling Intygstjänsten</td>
+						<td id="itMeasurement">${itStatus.measurement}ms</td>
+						<td id="itStatus" class="${itStatus.ok ? "text-success" : "text-danger"}">${itStatus.ok ? "OK" : "FAIL"}</td>
 					</tr>
+					<tr>
+						<td>Koppling ActiveMQ</td>
+						<td id="amqMeasurement">${amqStatus.measurement}ms</td>
+						<td id="amqStatus" class="${amqStatus.ok ? "text-success" : "text-danger"}">${amqStatus.ok ? "OK" : "FAIL"}</td>
+					</tr>
+					<tr>
+						<td>Köstatus logging.queue</td>
+						<td id="logQueueMeasurement" colspan="2">${logQueueStatus.measurement} st</td>
+					</tr>
+					<tr>
+						<td>Köstatus aggregated.logging.queue</td>
+						<td id="logAggregatedQueueMeasurement" colspan="2">${logAggregatedQueueStatus.measurement} st</td>
+					</tr>
+
 					<tr>
 						<td>Antal inloggade användare:</td>
 						<td id="nbrUsersMeasurement" colspan="2">${nbrUsers.measurement}</td>
-					</tr>
-					<tr>
-						<td>Antal använda HSA-id</td>
-						<td id="nbrUsedHsaId" colspan="2">${nbrUsedHsaId.measurement}</td>
 					</tr>
 					<tr>
 						<td>Applikationens upptid</td>

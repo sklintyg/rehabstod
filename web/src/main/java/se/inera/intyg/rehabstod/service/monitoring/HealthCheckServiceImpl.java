@@ -19,13 +19,22 @@
 package se.inera.intyg.rehabstod.service.monitoring;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
+import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -39,10 +48,88 @@ public class HealthCheckServiceImpl implements HealthCheckService {
 
     private static final long START_TIME = System.currentTimeMillis();
 
+
+    // JMS
+    @Autowired
+    @Qualifier("jmsPDLLogTemplate")
+    private JmsTemplate jmsPDLLogTemplate;
+
+    // JMS
+    @Autowired
+    @Qualifier("jmsAggregatedPDLLogTemplate")
+    private JmsTemplate jmsAggregatedPDLLogTemplate;
+
+    @Autowired
+    @Qualifier("jmsFactory")
+    private ConnectionFactory connectionFactory;
+
+
+    // User count
     @Autowired
     private SessionRegistry sessionRegistry;
 
 
+    // Pings
+    @Autowired
+    private IntygstjanstClientService intygstjanstClientService;
+
+//    @Autowired
+//    @Qualifier("pingForConfigurationResponderInterfaceAuthorizationmanagement")
+//    private PingForConfigurationResponderInterface pingForConfigurationResponderInterfaceAuthorizationmanagement;
+//
+//    @Value("${infrastructure.directory.logicalAddress}")
+//    private String infrastructureDirectoryLogicalAddress;
+
+
+
+
+
+
+
+    @Override
+    public HealthStatus checkPdlLogQueue() {
+        int queueDepth = jmsPDLLogTemplate.browse((session, browser) -> {
+            Enumeration<?> enumeration = browser.getEnumeration();
+            int qd = 0;
+            while (enumeration.hasMoreElements()) {
+                enumeration.nextElement();
+                qd++;
+            }
+            return qd;
+        });
+        LOG.info("Operation checkPdlLogQueue completed with queue size {}", queueDepth);
+        return new HealthStatus(queueDepth, true);
+    }
+
+    @Override
+    public HealthStatus checkPdlAggregatedLogQueue() {
+        int queueDepth = jmsAggregatedPDLLogTemplate.browse((session, browser) -> {
+            Enumeration<?> enumeration = browser.getEnumeration();
+            int qd = 0;
+            while (enumeration.hasMoreElements()) {
+                enumeration.nextElement();
+                qd++;
+            }
+            return qd;
+        });
+        LOG.info("Operation checkPdlAggregatedLogQueue completed with queue size {}", queueDepth);
+        return new HealthStatus(queueDepth, true);
+    }
+
+
+    @Override
+    public HealthStatus checkActiveMQ() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        boolean ok = checkJmsConnection();
+        stopWatch.stop();
+        HealthStatus status = createStatusWithTiming(ok, stopWatch);
+        logStatus("checkActiveMQ", status);
+        return status;
+    }
+
+
+    @Override
     public HealthStatus checkNbrOfUsers() {
         boolean ok;
         long size = -1;
@@ -60,15 +147,79 @@ public class HealthCheckServiceImpl implements HealthCheckService {
         return new HealthStatus(size, ok);
     }
 
+
+
+    @Override
+    public HealthStatus checkHSA() {
+        boolean ok = true;
+//        PingForConfigurationType req = new PingForConfigurationType();
+//        req.setLogicalAddress(infrastructureDirectoryLogicalAddress);
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+//        try {
+//            PingForConfigurationResponseType pingResponse = pingForConfigurationResponderInterfaceAuthorizationmanagement.pingForConfiguration(infrastructureDirectoryLogicalAddress, req);
+//            ok = pingResponse !=  null && pingResponse.getPingDateTime() !=  null;
+//        } catch (Exception e) {
+//            ok = false;
+//        }
+
+        stopWatch.stop();
+        HealthStatus status = createStatusWithTiming(ok, stopWatch);
+        logStatus("checkHSA", status);
+        return status;
+    }
+
+    @Override
+    public HealthStatus checkIntygstjansten() {
+        boolean ok;
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        try {
+            PingForConfigurationResponseType pingResponse = intygstjanstClientService.pingForConfiguration();
+            ok = pingResponse !=  null && pingResponse.getPingDateTime() !=  null;
+        } catch (Exception e) {
+            ok = false;
+        }
+
+        stopWatch.stop();
+        HealthStatus status = createStatusWithTiming(ok, stopWatch);
+        logStatus("checkIntygstjansten", status);
+        return status;
+    }
+
+    @Override
     public HealthStatus checkUptime() {
         long uptime = System.currentTimeMillis() - START_TIME;
         LOG.info("Current system uptime is {}", DurationFormatUtils.formatDurationWords(uptime, true, true));
         return new HealthStatus(uptime, true);
     }
 
+    @Override
     public String checkUptimeAsString() {
         HealthStatus uptime = checkUptime();
         return DurationFormatUtils.formatDurationWords(uptime.getMeasurement(), true, true);
+    }
+
+    private void logStatus(String operation, HealthStatus status) {
+        String result = status.isOk() ? "OK" : "FAIL";
+        LOG.info("Operation {} completed with result {} in {} ms", operation, result, status.getMeasurement());
+    }
+
+    private HealthStatus createStatusWithTiming(boolean ok, StopWatch stopWatch) {
+        return new HealthStatus(stopWatch.getTime(), ok);
+    }
+
+    private boolean checkJmsConnection() {
+        try {
+            Connection connection = connectionFactory.createConnection();
+            connection.close();
+        } catch (JMSException e) {
+            LOG.error("checkJmsConnection failed with exception: " + e.getMessage());
+            return false;
+        }
+        return true;
     }
 
 }

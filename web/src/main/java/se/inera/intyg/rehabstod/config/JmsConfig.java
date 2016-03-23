@@ -41,6 +41,13 @@ public class JmsConfig {
     }
 
     @Bean
+    public JndiObjectFactoryBean aggregatedQueue() {
+        JndiObjectFactoryBean jndiObjectFactoryBean = new JndiObjectFactoryBean();
+        jndiObjectFactoryBean.setJndiName("java:comp/env/jms/AggregatedLogSenderQueue");
+        return jndiObjectFactoryBean;
+    }
+
+    @Bean
     public JndiObjectFactoryBean jmsFactory() {
         JndiObjectFactoryBean jndiObjectFactoryBean = new JndiObjectFactoryBean();
         jndiObjectFactoryBean.setJndiName("java:comp/env/jms/AsyncConnectionFactory");
@@ -51,6 +58,14 @@ public class JmsConfig {
     public JmsTemplate jmsPDLLogTemplate() {
         JmsTemplate jmsTemplate = new JmsTemplate();
         jmsTemplate.setDefaultDestination((Destination) queue().getObject());
+        jmsTemplate.setConnectionFactory(connectionFactory());
+        return jmsTemplate;
+    }
+
+    @Bean
+    public JmsTemplate jmsAggregatedPDLLogTemplate() {
+        JmsTemplate jmsTemplate = new JmsTemplate();
+        jmsTemplate.setDefaultDestination((Destination) aggregatedQueue().getObject());
         jmsTemplate.setConnectionFactory(connectionFactory());
         return jmsTemplate;
     }

@@ -29,7 +29,13 @@ import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
 public interface HealthCheckService {
 
 
+    HealthStatus checkPdlAggregatedLogQueue();
 
+    HealthStatus checkActiveMQ();
+
+    HealthStatus checkHSA();
+
+    HealthStatus checkIntygstjansten();
 
     /**
      * Returns the applications uptime.
@@ -52,4 +58,5 @@ public interface HealthCheckService {
      */
     HealthStatus checkNbrOfUsers();
 
+    HealthStatus checkPdlLogQueue();
 }

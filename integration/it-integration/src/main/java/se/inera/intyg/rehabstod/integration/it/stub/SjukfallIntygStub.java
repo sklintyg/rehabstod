@@ -18,29 +18,31 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
+import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
+import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
+import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by eriklupander on 2016-01-29.
  */
 @Service
 @Profile({"rhs-it-stub"})
-public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitResponderInterface {
+public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitResponderInterface, PingForConfigurationResponderInterface {
 
     private List<IntygsData> intygsData = new ArrayList<>();
 
@@ -58,8 +60,6 @@ public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitRespond
         intygsData = sjukfallIntygDataGenerator.generateIntygsData(numberOfPatients, intygPerPatient);
     }
 
-
-
     @Override
     public ListActiveSickLeavesForCareUnitResponseType listActiveSickLeavesForCareUnit(String logicalAddress, ListActiveSickLeavesForCareUnitType parameters) {
         ListActiveSickLeavesForCareUnitResponseType resp = new ListActiveSickLeavesForCareUnitResponseType();
@@ -69,5 +69,13 @@ public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitRespond
         intygsLista.getIntygsData().addAll(intygsData);
         resp.setIntygsLista(intygsLista);
         return resp;
+    }
+
+    @Override
+    public PingForConfigurationResponseType pingForConfiguration(String s, PingForConfigurationType pingForConfigurationType) {
+        PingForConfigurationResponseType responseType = new PingForConfigurationResponseType();
+        responseType.setVersion("stubbed-version");
+        responseType.setPingDateTime(LocalDateTime.now().toString());
+        return responseType;
     }
 }
