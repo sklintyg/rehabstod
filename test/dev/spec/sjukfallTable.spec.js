@@ -27,9 +27,8 @@ var specHelper = rhsTestTools.helpers.spec;
 var startPage = rhsTestTools.pages.startPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
-fdescribe('Hantera tabellen', function() {
-
-
+describe('Hantera tabellen', function() {
+    
     beforeEach(function() {
         browser.ignoreSynchronization = false;
         specHelper.login();
