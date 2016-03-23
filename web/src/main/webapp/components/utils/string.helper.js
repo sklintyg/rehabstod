@@ -48,6 +48,14 @@ angular.module('rehabstodApp').factory('StringHelper',
             var charA = a.charAt(pos);
             var charB = b.charAt(pos);
 
+            if (charA === charB) {
+                return 0;
+            }
+
+            return _compareChars(charA, charB, dir);
+        }
+
+        function _compareChars(charA, charB, dir) {
             var indexA = swedishAlphabet.indexOf(charA);
             var indexB = swedishAlphabet.indexOf(charB);
 

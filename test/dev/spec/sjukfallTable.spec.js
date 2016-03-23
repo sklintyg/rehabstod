@@ -27,7 +27,7 @@ var specHelper = rhsTestTools.helpers.spec;
 var startPage = rhsTestTools.pages.startPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
-describe('Hantera tabellen', function() {
+fdescribe('Hantera tabellen', function() {
 
 
     beforeEach(function() {
@@ -38,7 +38,7 @@ describe('Hantera tabellen', function() {
     });
 
     it('Sortera på personnummer', function() {
-        sjukfallPage.tableHeader.element(by.css('th.column-patient-id')).click();
+        sjukfallPage.tableHeader.all(by.css('th.column-patient-id')).first().click();
 
         var columnPatientValue = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
         var columnNumberValue = sjukfallPage.tableBody.all(by.css('.column-number')).first().getText();
@@ -46,7 +46,7 @@ describe('Hantera tabellen', function() {
         expect(columnPatientValue).toBe('19000207-9812 (116 år)');
         expect(columnNumberValue).toBe('1');
 
-        sjukfallPage.tableHeader.element(by.css('th.column-patient-id')).click();
+        sjukfallPage.tableHeader.all(by.css('th.column-patient-id')).first().click();
 
         columnPatientValue = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
         columnNumberValue = sjukfallPage.tableBody.all(by.css('.column-number')).first().getText();
