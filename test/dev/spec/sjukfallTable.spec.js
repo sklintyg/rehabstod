@@ -38,7 +38,7 @@ fdescribe('Hantera tabellen', function() {
     });
 
     it('Sortera på personnummer', function() {
-        element.all(by.css('.rhs-table thead:not(.hidden) th.column-patient-id')).first().click();
+        sjukfallPage.tableHeader.element(by.css('th.column-patient-id')).click();
 
         var columnPatientValue = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
         var columnNumberValue = sjukfallPage.tableBody.all(by.css('.column-number')).first().getText();
@@ -46,13 +46,17 @@ fdescribe('Hantera tabellen', function() {
         expect(columnPatientValue).toBe('19000207-9812 (116 år)');
         expect(columnNumberValue).toBe('1');
 
-        element.all(by.css('.rhs-table thead:not(.hidden) th.column-patient-id')).click();
+        browser.executeScript('window.scrollTo(0,0);').then(function () {
+            sjukfallPage.tableHeader.element(by.css('th.column-patient-id')).click();
 
-        columnPatientValue = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
-        columnNumberValue = sjukfallPage.tableBody.all(by.css('.column-number')).first().getText();
+            columnPatientValue = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
+            columnNumberValue = sjukfallPage.tableBody.all(by.css('.column-number')).first().getText();
 
-        expect(columnPatientValue).toBe('20050415-2398 (10 år)');
-        expect(columnNumberValue).toBe('1');
+            expect(columnPatientValue).toBe('20050415-2398 (10 år)');
+            expect(columnNumberValue).toBe('1');
+        })
+
+
     });
 
 });
