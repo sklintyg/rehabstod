@@ -1,0 +1,121 @@
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>se.inera.intyg.rehabstod.tools</groupId>
+  <artifactId>rehabstod-registermedicalcertificate</artifactId>
+  <version>0-SNAPSHOT</version>
+
+  <!-- Instructions based on http://www.soapui.org/Test-Automation/maven-2x.html -->
+  <!-- if necessary, filter for Jenkins report matching is: **/target/surefire-reports/*.xml  -->
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>smartbear-sweden-plugin-repository</id>
+      <url>http://www.soapui.org/repository/maven2/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${project.basedir}</directory>
+              <includes>
+                <include>*.log</include>
+              </includes>
+              <followSymlinks>false</followSymlinks>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.smartbear.soapui</groupId>
+        <artifactId>soapui-maven-plugin</artifactId>
+        <version>5.1.3</version>
+        <dependencies>
+          <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.2</version>
+          </dependency>
+          <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.9-RC1</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.10-FINAL</version>
+          </dependency>
+          <dependency>
+            <groupId>eviware</groupId>
+            <artifactId>soapui</artifactId>
+            <version>4.5.1</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <projectFile>${basedir}/rehabstod-registermedicalcertificate-soapui-project.xml</projectFile>
+          <testSuite>TestSuite - RMC</testSuite>
+          <testCase>TestCase - RMC</testCase>
+          <endpoint>http://${host.port}/inera-certificate/register-certificate/v3.0</endpoint>
+          <host>http://${host.port}</host>
+          <printReport>true</printReport>
+          <outputFolder>${project.build.directory}/soapui-reports/</outputFolder>
+          <junitReport>true</junitReport>
+          <exportAll>true</exportAll>
+          <settingsFile>${user.home}/soapui-settings.xml</settingsFile>
+          <testFailIgnore>true</testFailIgnore>
+          <globalProperties>
+            <value>numberOfPatients=${numberOfPatients}</value>
+            <value>maxIntygsGlapp=${maxIntygsGlapp}</value>
+            <value>debug=${debug}</value>
+          </globalProperties>
+          <soapuiProperties>
+            <property>
+              <name>soapui.logroot</name>
+              <value>${project.build.directory}/soapui-logs/</value>
+            </property>
+          </soapuiProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- Profiles start here.  Select a profile by passing -Pprofilename as an arg to Maven -->
+  <profiles>
+
+    <profile>
+      <id>suite-localhost</id>
+      <properties>
+        <host.port>127.0.0.1:8080</host.port>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>suite-demo</id>
+      <properties>
+        <host.port>10.250.34.20:8080</host.port>
+      </properties>
+    </profile>
+
+  </profiles>
+
+</project>
+
