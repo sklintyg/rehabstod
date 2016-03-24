@@ -108,7 +108,7 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         },
                         tooltip: {
                             pointFormat: '{point.percentage:.1f}% <b>({point.y} st)</b> av alla<br/>' +
-                            'pågående sjukfall tillhör diagnoskapitlet<br/>{point.id} {point.name}.'
+                            'pågående sjukfall tillhör {point.name}.'
                         },
                         legend: {
                             labelFormatter: function() {
