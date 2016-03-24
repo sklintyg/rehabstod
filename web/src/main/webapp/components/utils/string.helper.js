@@ -20,7 +20,7 @@
 angular.module('rehabstodApp').factory('StringHelper',
     function() {
         'use strict';
-        var swedishAlphabet = '-.()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖabcedefghijklmnopqrstuvwxyzåäö';
+        var swedishAlphabet = '-.()0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÅåÄäÖö';
 
         function escapeRegExp(str) {
             return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
@@ -64,11 +64,11 @@ angular.module('rehabstodApp').factory('StringHelper',
             }
 
             if (indexA === -1) {
-                indexA = swedishAlphabet.length + 1;
+                indexA = swedishAlphabet.length;
             }
 
             if (indexB === -1) {
-                indexB = swedishAlphabet.length + 1;
+                indexB = swedishAlphabet.length;
             }
 
             return indexA > indexB ? dir : -dir;

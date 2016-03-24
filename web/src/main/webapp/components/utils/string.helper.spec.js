@@ -76,4 +76,14 @@ describe('Helper: StringHelper', function() {
         expect(arr[2]).toEqual('_');
         expect(arr[3]).toEqual('é');
     });
+
+    it('sort case sensitive', function () {
+
+        var arr = ['a', 'ö', 'A', 'Ö'];
+        arr.sort(StringHelper.swedishStringSortImpl(true, true));
+        expect(arr[0]).toEqual('A');
+        expect(arr[1]).toEqual('a');
+        expect(arr[2]).toEqual('Ö');
+        expect(arr[3]).toEqual('ö');
+    });
 });
