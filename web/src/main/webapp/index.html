@@ -8,7 +8,6 @@
 
 <base href="/">
 <title>Rehabstöd</title>
-<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 <!-- build:css({build/.tmp,src/main/webapp}) app/app.css -->
 <!-- injector:css -->
 <link rel="stylesheet" href="app/app.css">
@@ -30,8 +29,11 @@
       href="http://browsehappy.com/">uppgradera
     din webbläsare</a> för att få bästa upplevelse av denna webbplats.</p>
   <![endif]-->
-  <div class="index-content-container">
 
+
+  <rhs-cookie-banner></rhs-cookie-banner>
+
+  <div class="index-content-container">
 
     <!-- header part -->
     <div class="index-header-section">
@@ -123,6 +125,6 @@
   <!-- endbower -->
   <!-- endbuild -->
 
-  <script type="text/javascript" src="/pubapp/index.controller.js"></script>
+  <script type="text/javascript" src="/pubapp/index-app.main.js"></script>
 </body>
 </html>

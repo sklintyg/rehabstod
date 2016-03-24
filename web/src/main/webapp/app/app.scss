@@ -235,11 +235,31 @@ h5.inline-heading {
 // Index page --
 .index-page {
   background-color: $link-color;
-  font-size: 12px;
+
+  .rhs-cookie-banner {
+
+    margin: 0;
+    top: 0;
+    position: fixed;
+    right: 0;
+    left: 0;
+    border: none;
+    z-index: 10;
+
+    .alert {
+      max-width: inherit;
+      border-radius: 0;
+    }
+    .container-fluid {
+      padding: 0;
+    }
+
+  }
 
   h1 {
     color: $link-color;
     padding-bottom: 15px;
+    padding-top: 10px;
 
   }
   .page-section {
@@ -260,9 +280,6 @@ h5.inline-heading {
     @extend .page-section;
     background-color: #EFEFEF;
 
-    img {
-      margin-bottom: 20px;
-    }
   }
 
   .index-body-section {

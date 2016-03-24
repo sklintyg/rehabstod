@@ -132,7 +132,7 @@ module.exports = function(grunt) {
                 force: false
             },
             all: [
-                '<%= config.client %>/{app,components}/**/*.js',
+                '<%= config.client %>/{app,pubapp,components}/**/*.js',
                 '!<%= config.client %>/{app,components}/**/*.spec.js',
                 '!<%= config.client %>/{app,components}/**/*.mock.js'
             ],
