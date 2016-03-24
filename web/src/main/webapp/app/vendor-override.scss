@@ -342,3 +342,7 @@ UI-bootstrap
         background-color: $btn-default-bg;
     }
 }
+
+.dropdown-toggle:focus {
+    @include tab-focus;
+}
