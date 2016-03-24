@@ -1,0 +1,47 @@
+@startuml
+actor User
+participant "Browser" as B
+box "Rehabstöd\n"
+    participant "Sjukfall\nController" as SC
+    participant "Sjukfall\nService" as SS
+    participant "Sjukfall\nEngine" as SE
+    participant "Diagnos\nKapitel\nService" as DKS
+    participant "Diagnos\nBeskrivning\nService" as DBS
+    participant "Internal\nIntygsData\nResolver" as R
+    participant "Internal\nIntygsData\nCreator" as C
+    participant "Log\nService" as LS
+end box
+participant "Intygstjänsten" as IT
+
+User -> B: Utför urval i GUI
+B -> SC: Anropa REST-api
+SC -> SS: Hämta sjukfall
+SS -> IT: SokSjukfall (TjK)
+IT --> SS: Lista av sjukfall (TjK)
+SS -> SE: Beräkna sjukfall
+SE -> R: Bearbeta intygsdata
+R -> C: Skapa intygsdata
+C -> C: Skapa data
+C -> C: Reducera data
+C -> C: Sortera data
+C -> C: Sätt aktivt intyg
+C --> R: Returnera mapp med intygsdata
+R -> R: Reducera data med hänsyn\ntill maximalt intygsglapp
+R --> SE: Returnera lista med intygsdata
+SE -> SE: Bygg lista med sjukfall
+activate SE
+SE -> DKS: Hämta diagnos
+DKS -> DBS: Hämta diagnosbeskrivning
+DBS --> DKS
+DKS --> SE
+deactivate SE
+SE --> SS: Returnera lista med sjukfall
+alt Om läkare
+SS -> SS: Filtrera lista
+end
+SS --> SC: Returnera lista med sjukfall
+SC -> LS: PDL-loggning
+SC -> SC: Sortera lista efter startdatum
+SC --> B: Returnera lista med sjukfall
+B -> User: Visa sjukfall i GUI
+@enduml
