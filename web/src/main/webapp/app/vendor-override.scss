@@ -302,6 +302,9 @@ UI-bootstrap
 .alert {
     padding-right: 22px;
     max-width: 600px;
+    a {
+        text-decoration: underline;
+    }
 }
 
 .alert-danger a {
