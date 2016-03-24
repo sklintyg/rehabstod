@@ -1,8 +1,8 @@
 @startuml
 actor User
 User -> Browser: I want to login
-Browser -> Webcert: Login request
-Webcert --> Browser: Redirect to Säkerhetstjänsten
+Browser -> Rehabstöd: Login request
+Rehabstöd --> Browser: Redirect to Säkerhetstjänsten
 
 Browser -> Säkerhetstjänsten: SAML Authentication Request
 Säkerhetstjänsten --> Browser: (asks browser to start NetID plugin)
@@ -22,11 +22,11 @@ User -> Browser: Väljer medarbetaruppdrag
 Browser -> Säkerhetstjänsten: Medarb. uppdr. valt
 
 Browser <-- Säkerhetstjänsten: SAML Authentication Response
-Browser -> Webcert: SAML Ticket
-Webcert -> Webcert: Parse SAML ticket
-Webcert -> HSA:
-HSA --> Webcert: HSA-information
-Webcert <-> Webcert: Skapar session
-Webcert --> Browser: Requested resource
+Browser -> Rehabstöd: SAML Ticket
+Rehabstöd -> Rehabstöd: Parse SAML ticket
+Rehabstöd -> HSA:
+HSA --> Rehabstöd: HSA-information
+Rehabstöd <-> Rehabstöd: Skapar session
+Rehabstöd --> Browser: Requested resource
 User -> Browser: Börjar arbeta
 @enduml
