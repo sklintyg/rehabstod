@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -29,9 +28,6 @@ import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickle
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
-import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
-import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
-import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -42,7 +38,7 @@ import java.util.List;
  */
 @Service
 @Profile({"rhs-it-stub"})
-public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitResponderInterface, PingForConfigurationResponderInterface {
+public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitResponderInterface {
 
     private List<IntygsData> intygsData = new ArrayList<>();
 
@@ -71,11 +67,4 @@ public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitRespond
         return resp;
     }
 
-    @Override
-    public PingForConfigurationResponseType pingForConfiguration(String s, PingForConfigurationType pingForConfigurationType) {
-        PingForConfigurationResponseType responseType = new PingForConfigurationResponseType();
-        responseType.setVersion("stubbed-version");
-        responseType.setPingDateTime(LocalDateTime.now().toString());
-        return responseType;
-    }
 }

@@ -22,35 +22,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
+/**
+ * Just a placeholder class to configure by @ComponentScan and @ImportResource.
+ */
 @Configuration
 @ComponentScan({
         "se.inera.intyg.rehabstod.integration.it.client",
         "se.inera.intyg.rehabstod.integration.it.service" })
 @ImportResource("classpath:it-services.xml")
 public class IntygstjanstIntegrationConfiguration {
-
-
-
-    //
-    // @Autowired
-    // private ApplicationContext applicationContext;
-    //
-    // @Autowired
-    // private SjukfallIntygStub sjukfallIntygStub;
-    //
-    // @Bean
-    // public ObjectMapper objectMapper() {
-    // return new ObjectMapper();
-    // }
-    //
-    // @Bean
-    // public EndpointImpl intygstjanstResponder() {
-    // Bus bus = (Bus) applicationContext.getBean(Bus.DEFAULT_BUS_ID);
-    // Object implementor = sjukfallIntygStub;
-    // EndpointImpl endpoint = new EndpointImpl(bus, implementor);
-    // endpoint.publish("/get-active-sickleaves-for-careunit/v1.0");
-    // return endpoint;
-    // }
-
-
 }
