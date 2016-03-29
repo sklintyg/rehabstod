@@ -18,7 +18,13 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import com.itextpdf.text.DocumentException;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +34,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
@@ -45,9 +57,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.itextpdf.text.DocumentException;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -89,17 +99,33 @@ public class SjukfallController {
         return sjukfall.stream().map(sf -> sf.getSjukfall()).sorted((f1, f2) -> f2.getStart().compareTo(f1.getStart())).collect(Collectors.toList());
     }
 
+    /**
+     * Custom errorhandler for export error handling. For the export requests, we don't want the generic json response
+     * error handling, this handler will instead redirect the client to our generic error page with a custom reason
+     * code.
+     *
+     * @param request
+     * @param response
+     * @param ex
+     * @throws IOException
+     */
+    @ExceptionHandler(RehabExportException.class)
+    public void handleExportException(HttpServletRequest request, HttpServletResponse response, RehabExportException ex) throws IOException {
+        LOG.error("RehabExportException caught - redirecting to errorpage", ex.getException());
+        response.sendRedirect(request.getContextPath() + "/error.jsp?reason=exporterror");
+
+    }
+
     @RequestMapping(value = "/pdf", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<ByteArrayResource> getSjukfallForCareUnitAsPdf(@ModelAttribute PrintSjukfallRequest request) {
-
-        // Get user from session
-        RehabstodUser user = getRehabstodUser();
-
-        // Fetch sjukfall
-        List<InternalSjukfall> sjukfall = getSjukfall(user, request);
-        List<InternalSjukfall> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
-
         try {
+            // Get user from session
+            RehabstodUser user = getRehabstodUser();
+
+            // Fetch sjukfall
+            List<InternalSjukfall> sjukfall = getSjukfall(user, request);
+            List<InternalSjukfall> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
+
             byte[] pdfData = pdfExportService.export(finalList, request, user, sjukfall.size());
 
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if PDF export was OK.
@@ -113,24 +139,21 @@ public class SjukfallController {
 
             return new ResponseEntity<>(new ByteArrayResource(pdfData), respHeaders, HttpStatus.OK);
 
-        } catch (DocumentException | IOException e) {
-            LOG.error("Failed to create PDF export", e);
-            // Would it be better if we could redirect to error.jsp in this case?
-            return new ResponseEntity<>(new ByteArrayResource(e.getMessage().getBytes()), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (RuntimeException | DocumentException | IOException e) {
+            throw new RehabExportException("Failed to create PDF export", e);
         }
     }
 
     @RequestMapping(value = "/xlsx", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<ByteArrayResource> getSjukfallForCareUnitAsXLSX(@ModelAttribute PrintSjukfallRequest request) {
-
-        // Get user from session
-        RehabstodUser user = getRehabstodUser();
-
-        // Fetch sjukfall
-        List<InternalSjukfall> sjukfall = getSjukfall(user, request);
-        List<InternalSjukfall> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
-
         try {
+            // Get user from session
+            RehabstodUser user = getRehabstodUser();
+
+            // Fetch sjukfall
+            List<InternalSjukfall> sjukfall = getSjukfall(user, request);
+            List<InternalSjukfall> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
+
             byte[] data = xlsxExportService.export(finalList, request, user.getUrval(), sjukfall.size());
 
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if XLSX export was OK.
@@ -144,9 +167,8 @@ public class SjukfallController {
 
             return new ResponseEntity<>(new ByteArrayResource(data), respHeaders, HttpStatus.OK);
 
-        } catch (IOException e) {
-            // This should be handled a bit better...
-            return new ResponseEntity<>(new ByteArrayResource(e.getMessage().getBytes()), null, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (RuntimeException | IOException e) {
+            throw new RehabExportException("Failed to create XLS export", e);
         }
     }
 
@@ -168,7 +190,6 @@ public class SjukfallController {
 
         return sjukfallService.getSummary(enhetsId, hsaId, urval, request);
     }
-
 
     // - - - Private scope - - -
 

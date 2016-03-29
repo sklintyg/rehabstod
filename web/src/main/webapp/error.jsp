@@ -76,6 +76,12 @@
             </div>
           </c:when>
 
+          <c:when test="${param.reason eq \"exporterror\"}">
+            <h1 class="page-header">Rehabstöd - export misslyckades</h1>
+            <div id="error-export-fel" class="alert alert-danger">Tyvärr uppstod ett fel vid skapandet av exporten. Du kan försöka utföra exporten igen för att se om felet är tillfälligt. Kontakta annars i första hand din lokala IT-avdelning och i andra hand <a href="http://www.inera.se/felanmalan" target="_blank">Ineras Nationell kundservice</a>.
+            </div>
+          </c:when>
+
 
           <c:otherwise>
             <h1 class="page-header">Rehabstöd</h1>
