@@ -192,7 +192,6 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     private Element getSjukfallsDefDesc(PrintSjukfallRequest printRequest) {
         Paragraph def = new Paragraph();
         def.add(new Paragraph(H2_SJUKFALLSINSTALLNING, FRONTPAGE_H2));
-        def.add(new Paragraph(H3_SJUKFALLSDEFINITION, FRONTPAGE_H3));
         def.add(new Phrase(MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG, FRONTPAGE_NORMAL));
         def.add(new Phrase(printRequest.getMaxIntygsGlapp() + " dagar", FRONTPAGE_NORMAL_BOLD));
         return def;
