@@ -22,6 +22,8 @@ sourceSets {
     }
 }
 
+war.rootSpec.exclude "logback.xml"
+
 configurations {
     integrationTestCompile.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
