@@ -34,8 +34,11 @@ angular.module('rehabstodApp')
                 });
 
                 modalInstance.result.then(function(value) {
-                    SjukfallFilterViewState.get().glapp = value;
-                    SjukfallService.loadSjukfall(true, true);
+                    //Only reload if changed
+                    if (SjukfallFilterViewState.get().glapp !== value) {
+                        SjukfallFilterViewState.get().glapp = value;
+                        SjukfallService.loadSjukfall(true, true);
+                    }
                 }, function() {
 
                 });
