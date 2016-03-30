@@ -53,7 +53,11 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                             itemStyle: {
                                 'color': '#FFFFFF',
                                 'fontSize': '1.6em',
-                                'fontWeight': 'bold'
+                                'fontWeight': 'bold',
+                                'cursor': 'default'
+                            },
+                            itemHoverStyle: {
+                                color: '#FFFFFF'
                             },
                             floating: true
                         },

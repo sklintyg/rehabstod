@@ -99,7 +99,7 @@ app.value('pieChartBaseConfig', {
     plotOptions: {
         pie: {
             allowPointSelect: false,
-            cursor: 'pointer',
+            cursor: 'default',
             showInLegend: true,
             dataLabels: {
                 enabled: false
@@ -109,6 +109,7 @@ app.value('pieChartBaseConfig', {
 
         },
         series: {
+            cursor: 'default',
             point: {
                 events: {
                     legendItemClick: function(event) {
