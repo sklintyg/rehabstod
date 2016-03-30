@@ -326,6 +326,11 @@ h5.inline-heading {
   }
 }
 
+// Hide IE10+ clear icon, as it doesn't work well with angular
+input[type=search]::-ms-clear {
+  display: none;
+}
+
 // Component styles are injected through grunt
 // injector
 @import 'about/about.scss';
