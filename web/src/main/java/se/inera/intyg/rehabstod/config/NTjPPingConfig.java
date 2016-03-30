@@ -45,9 +45,6 @@ public class NTjPPingConfig {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @Autowired
-    private PingForConfigurationStub pingForConfigurationStub;
-
     @Bean
     @Profile(value = {"dev", "test", "prod"})
     public PingForConfigurationResponderInterface ntjpPingWebServiceClient() {
@@ -61,8 +58,8 @@ public class NTjPPingConfig {
     @Profile(value = {"dev", "wc-hsa-stub"})
     public EndpointImpl intygstjanstResponder() {
         Bus bus = (Bus) applicationContext.getBean(Bus.DEFAULT_BUS_ID);
-        Object implementor = pingForConfigurationStub;
-        EndpointImpl endpoint = new EndpointImpl(bus, implementor);
+        PingForConfigurationStub pingForConfigurationStub = applicationContext.getBean(PingForConfigurationStub.class);
+        EndpointImpl endpoint = new EndpointImpl(bus, pingForConfigurationStub);
         endpoint.publish("/ping-for-configuration/v1.0");
         return endpoint;
     }
