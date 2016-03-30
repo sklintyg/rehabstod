@@ -115,7 +115,7 @@ gretty {
     contextPath = '/'
     logbackConfigFile = "${projectDir}/src/main/resources/logback.xml"
     jvmArgs = [
-        '-Dspring.profiles.active=dev,rhs-it-stub',
+        '-Dspring.profiles.active=dev',
         '-Drehabstod.config.file=' + projectDir + '/src/main/resources/dev.properties',
         '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
         '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources',

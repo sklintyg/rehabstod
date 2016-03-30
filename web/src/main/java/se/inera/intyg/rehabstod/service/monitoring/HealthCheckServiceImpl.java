@@ -29,6 +29,7 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
+import se.inera.intyg.rehabstod.service.monitoring.ntjp.PingForConfigurationService;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 
 import javax.jms.Connection;
@@ -73,37 +74,26 @@ public class HealthCheckServiceImpl implements HealthCheckService {
     @Autowired
     private IntygstjanstClientService intygstjanstClientService;
 
-//    @Autowired
-//    @Qualifier("pingForConfigurationResponderInterfaceAuthorizationmanagement")
-//    private PingForConfigurationResponderInterface pingForConfigurationResponderInterfaceAuthorizationmanagement;
-//
-//    @Value("${infrastructure.directory.logicalAddress}")
-//    private String infrastructureDirectoryLogicalAddress;
-
-
-
-
-
+    @Autowired
+    private PingForConfigurationService pingForConfigurationService;
 
 
     @Override
     public HealthStatus checkPdlLogQueue() {
-        int queueDepth = jmsPDLLogTemplate.browse((session, browser) -> {
-            Enumeration<?> enumeration = browser.getEnumeration();
-            int qd = 0;
-            while (enumeration.hasMoreElements()) {
-                enumeration.nextElement();
-                qd++;
-            }
-            return qd;
-        });
-        LOG.info("Operation checkPdlLogQueue completed with queue size {}", queueDepth);
-        return new HealthStatus(queueDepth, true);
+        HealthStatus healthStatus = checkQueueDepth(jmsPDLLogTemplate);
+        LOG.info("Operation checkPdlLogQueue completed with queue size {}", healthStatus.getMeasurement());
+        return healthStatus;
     }
 
     @Override
     public HealthStatus checkPdlAggregatedLogQueue() {
-        int queueDepth = jmsAggregatedPDLLogTemplate.browse((session, browser) -> {
+        HealthStatus healthStatus = checkQueueDepth(jmsAggregatedPDLLogTemplate);
+        LOG.info("Operation checkPdlAggregatedLogQueue completed with queue size {}", healthStatus.getMeasurement());
+        return healthStatus;
+    }
+
+    private HealthStatus checkQueueDepth(JmsTemplate tpl) {
+        int queueDepth = tpl.browse((session, browser) -> {
             Enumeration<?> enumeration = browser.getEnumeration();
             int qd = 0;
             while (enumeration.hasMoreElements()) {
@@ -112,7 +102,6 @@ public class HealthCheckServiceImpl implements HealthCheckService {
             }
             return qd;
         });
-        LOG.info("Operation checkPdlAggregatedLogQueue completed with queue size {}", queueDepth);
         return new HealthStatus(queueDepth, true);
     }
 
@@ -151,23 +140,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
 
     @Override
     public HealthStatus checkHSA() {
-        boolean ok = true;
-//        PingForConfigurationType req = new PingForConfigurationType();
-//        req.setLogicalAddress(infrastructureDirectoryLogicalAddress);
-
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-//        try {
-//            PingForConfigurationResponseType pingResponse = pingForConfigurationResponderInterfaceAuthorizationmanagement.pingForConfiguration(infrastructureDirectoryLogicalAddress, req);
-//            ok = pingResponse !=  null && pingResponse.getPingDateTime() !=  null;
-//        } catch (Exception e) {
-//            ok = false;
-//        }
-
-        stopWatch.stop();
-        HealthStatus status = createStatusWithTiming(ok, stopWatch);
-        logStatus("checkHSA", status);
-        return status;
+        return pingForConfigurationService.pingNtjp("");
     }
 
     @Override

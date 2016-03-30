@@ -38,31 +38,31 @@
       <New class="org.apache.activemq.ActiveMQConnectionFactory">
         <Arg>vm://localhost?broker.persistent=false</Arg>
         <!-- <Arg>tcp://localhost:61616</Arg> -->
-    </New>
-  </Arg>
-</New>
- <New id="Queue" class="org.eclipse.jetty.plus.jndi.Resource">
-  <Arg>
-    <Ref refid="webAppContext" />
-  </Arg>
-  <Arg>jms/Queue</Arg>
-  <Arg>
-    <New class="org.apache.activemq.command.ActiveMQQueue">
-      <Arg>logging.queue</Arg>
-    </New>
-  </Arg>
-</New>
-
-  <New id="AggregatedLogSenderQueue" class="org.eclipse.jetty.plus.jndi.Resource">
+      </New>
+    </Arg>
+  </New>
+   <New id="Queue" class="org.eclipse.jetty.plus.jndi.Resource">
     <Arg>
       <Ref refid="webAppContext" />
     </Arg>
-    <Arg>jms/AggregatedLogSenderQueue</Arg>
+    <Arg>jms/Queue</Arg>
     <Arg>
       <New class="org.apache.activemq.command.ActiveMQQueue">
-        <Arg>aggregated.logging.queue</Arg>
+        <Arg>logging.queue</Arg>
       </New>
     </Arg>
   </New>
 
-</Configure>
+    <New id="AggregatedLogSenderQueue" class="org.eclipse.jetty.plus.jndi.Resource">
+      <Arg>
+        <Ref refid="webAppContext" />
+      </Arg>
+      <Arg>jms/AggregatedLogSenderQueue</Arg>
+      <Arg>
+        <New class="org.apache.activemq.command.ActiveMQQueue">
+          <Arg>aggregated.logging.queue</Arg>
+        </New>
+      </Arg>
+    </New>
+
+  </Configure>

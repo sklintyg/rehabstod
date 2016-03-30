@@ -37,10 +37,10 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>Koppling HSA</td>
-						<td>Ej implementerat</td>
-						<!--	<td id="hsaMeasurement">${hsaStatus.measurement}ms</td>
-						<td id="hsaStatus" class="${hsaStatus.ok ? "text-success" : "text-danger"}">${hsaStatus.ok ? "OK" : "FAIL"}</td>    -->
+						<td>Koppling NTjP (HSA, LogSender)</td>
+						<!-- <td>Ej implementerat</td>     -->
+						<td id="hsaMeasurement">${hsaStatus.measurement}ms</td>
+						<td id="hsaStatus" class="${hsaStatus.ok ? "text-success" : "text-danger"}">${hsaStatus.ok ? "OK" : "FAIL"}</td>
 					</tr>
 					<tr>
 						<td>Koppling Intygstjänsten</td>
