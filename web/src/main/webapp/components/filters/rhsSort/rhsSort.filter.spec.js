@@ -55,10 +55,10 @@ describe('Filter: RhsSortFilter', function () {
         expect(rhsSortFilter(array, 'name', true)).toEqual([{name: 'test'}, {name: 'b12'}, {name: 'a12'}, {name: '1åäö'}]);
     }));
     
-    it('sort case sensitive', inject(function (rhsSortFilter) {
+    it('always sorts case insensitive', inject(function (rhsSortFilter) {
         var array = [{name: 'a'}, {name: 'ö'}, {name: 'A'}, {name: 'Ö'}];
 
-        expect(rhsSortFilter(array, 'name', false)).toEqual([{name: 'A'}, {name: 'a'}, {name: 'Ö'}, {name: 'ö'}]);
+        expect(rhsSortFilter(array, 'name', false)).toEqual([{name: 'a'}, {name: 'A'}, {name: 'ö'}, {name: 'Ö'}]);
         expect(rhsSortFilter(array, 'name', true)).toEqual([{name: 'ö'}, {name: 'Ö'}, {name: 'a'}, {name: 'A'}]);
     }));
 

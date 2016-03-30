@@ -27,7 +27,7 @@ angular.module('rehabstodApp').filter('rhsSort', function($filter, $parse, Strin
             a = $parse(predicte)(a);
             b = $parse(predicte)(b);
             
-            return StringHelper.compareSwedishString(!reverse, true, a, b);
+            return StringHelper.compareSwedishString(!reverse, false, a, b);
         };
     };
     
