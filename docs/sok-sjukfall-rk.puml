@@ -1,10 +1,22 @@
 @startuml
 actor Rehabkoordinator
-Rehabkoordinator -> Rehabstöd: Utför urval i GUI
-Rehabstöd -> Intygstjänsten: SokSjukfall (TjK)
-Intygstjänsten -> HSA: Begär vårdenh. för överordnad vårdgiv.
-HSA -> Intygstjänsten: List av vårdenh. för överordnad vårdgiv.
-Intygstjänsten -> Intygstjänsten: Sammanställ sjukfall
-Intygstjänsten -> Rehabstöd: Lista av sjukfall (TjK)
-Rehabstöd -> Rehabkoordinator: Visa sjukfall i GUI
+Rehabkoordinator -> Rehabstöd: Väljer att visa sjukfall för Vårdenhet
+activate Rehabstöd
+    Rehabstöd -> Intygstjänsten: ListActiveSickLeavesForCareUnit
+
+    database Databas
+    activate Intygstjänsten
+        Intygstjänsten -> HSA: Begär hsaId för underord. mottagningar.
+        activate HSA
+            HSA --> Intygstjänsten: Lista av hsaId. för underord. mottagningar.
+        deactivate HSA
+        |||
+        |||
+        Intygstjänsten -> Databas: Hämta aktiva intyg för hsaIdn
+        Databas --> Intygstjänsten: Intygsdata
+        Intygstjänsten --> Rehabstöd: Intygsdata
+    deactivate Intygstjänsten
+    Rehabstöd -> Rehabstöd: Sammanställer sjukfall utifrån intyg
+    Rehabstöd -> Rehabkoordinator: Visar sjukfall på vårdenheten
+deactivate Rehabstöd
 @enduml

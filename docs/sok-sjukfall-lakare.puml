@@ -1,11 +1,23 @@
 @startuml
 actor Läkare
-Läkare -> Rehabstöd: Utför urval i GUI
-Rehabstöd -> Intygstjänsten: SokSjukfall (TjK)
-Intygstjänsten -> HSA: Begär vårdenh. för överordnad vårdgiv.
-HSA -> Intygstjänsten: List av vårdenh. för överordnad vårdgiv.
-Intygstjänsten -> Intygstjänsten: Sammanställ sjukfall
-Intygstjänsten -> Intygstjänsten: Filtrera på läkaren
-Intygstjänsten -> Rehabstöd: Lista av sjukfall (TjK)
-Rehabstöd -> Läkare: Visa sjukfall i GUI
+Läkare -> Rehabstöd: Väljer att visa sina sjukfall på Vårdenhet
+activate Rehabstöd
+    Rehabstöd -> Intygstjänsten: ListActiveSickLeavesForCareUnit
+
+    database Databas
+    activate Intygstjänsten
+        Intygstjänsten -> HSA: Begär hsaId för underord. mottagningar.
+        activate HSA
+            HSA --> Intygstjänsten: Lista av hsaId. för underord. mottagningar.
+        deactivate HSA
+        |||
+        |||
+        Intygstjänsten -> Databas: Hämta aktiva intyg för hsaIdn
+        Databas --> Intygstjänsten: Intygsdata
+        Intygstjänsten --> Rehabstöd: Intygsdata
+    deactivate Intygstjänsten
+    Rehabstöd -> Rehabstöd: Sammanställer sjukfall utifrån intyg
+    Rehabstöd -> Rehabstöd: Filtrerar på läkaren
+    Rehabstöd -> Läkare: Visar läkarens sjukfall på vårdenheten
+deactivate Rehabstöd
 @enduml
