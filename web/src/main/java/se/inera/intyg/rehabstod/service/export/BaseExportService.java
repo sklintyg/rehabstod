@@ -63,6 +63,7 @@ public abstract class BaseExportService {
     protected static final String FORMAT_ALDER_PARANTESER = " (%d år)";
     protected static final String FORMAT_ANTALA_DAGAR = "%d dagar";
     protected static final String FORMAT_ANTAL_INTYG = " (%d intyg)";
+    protected static final String UNICODE_RIGHT_ARROW_SYMBOL = "\u2192";
 
     @Autowired
     protected DiagnosKapitelService diagnosKapitelService;

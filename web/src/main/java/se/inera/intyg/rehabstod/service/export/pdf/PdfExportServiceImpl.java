@@ -47,6 +47,7 @@ import com.itextpdf.text.ListItem;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
@@ -68,9 +69,14 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     private static final BaseColor TABLE_EVEN_ROW_COLOR = BaseColor.WHITE;
     private static final BaseColor TABLE_ODD_ROW_COLOR = new BaseColor(220, 220, 220);
 
+    private static final String UNICODE_CAPABLE_FONT_PATH = "/pdf-assets/FreeSans.ttf";
+    private Font unicodeCapableFont;
+
     @Override
     public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total)
             throws DocumentException, IOException {
+
+        unicodeCapableFont = new Font(BaseFont.createFont(UNICODE_CAPABLE_FONT_PATH, BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 9, Font.NORMAL);
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -317,13 +323,18 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     }
 
     private Phrase getGrader(Sjukfall s) {
+        boolean first = true;
         Phrase grader = new Phrase();
         for (Integer grad : s.getGrader()) {
+            if (!first) {
+                grader.add(new Chunk(UNICODE_RIGHT_ARROW_SYMBOL + " ", unicodeCapableFont));
+            }
             if (grad == s.getAktivGrad()) {
                 grader.add(new Chunk(grad.toString() + "% ", TABLE_CELL_BOLD));
             } else {
                 grader.add(new Chunk(grad.toString() + "% ", TABLE_CELL_NORMAL));
             }
+            first = false;
         }
         return grader;
     }

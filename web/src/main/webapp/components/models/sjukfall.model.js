@@ -56,19 +56,19 @@ angular.module('rehabstodApp').factory('SjukfallModel',
 
         function _getGradShow(aktivGrad, grader) {
 
-            var gradShow = {show: ''};
+            var items = [];
 
             angular.forEach(grader, function(grad) {
                 if (grad === aktivGrad) {
-                    this.show += '<span class="rhs-table-grad-active">' + grad + '% </span>';
+                    this.push('<span class="rhs-table-grad-active">' + grad + '% </span>');
                 }
                 else {
-                    this.show += grad + '% ';
+                    this.push(grad + '% ');
                 }
-            }, gradShow);
+            }, items);
 
-
-            return gradShow.show;
+            //Add right-arrow symbol
+            return items.join(' &#10142; ');
         }
 
         return {
@@ -103,7 +103,7 @@ angular.module('rehabstodApp').factory('SjukfallModel',
             get: function() {
                 return data;
             },
-            setError: function(){
+            setError: function() {
                 _reset();
                 hasError = true;
             },

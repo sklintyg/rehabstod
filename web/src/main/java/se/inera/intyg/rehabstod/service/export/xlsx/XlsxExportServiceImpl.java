@@ -18,15 +18,27 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -34,10 +46,6 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by eriklupander on 2016-02-23.
@@ -279,14 +287,21 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         StringBuilder buf = new StringBuilder();
         Pair aktivIndicies = null;
         int currentIndex = 0;
+        boolean first = true;
         for (Integer grad : sf.getGrader()) {
 
+            if (!first) {
+                buf.append(UNICODE_RIGHT_ARROW_SYMBOL).append(" ");
+            }
+
+            currentIndex = buf.length();
             // Store indicies for the aktiv grad so we can make its text bold later.
             if (grad == sf.getAktivGrad()) {
                 aktivIndicies = new Pair(currentIndex, currentIndex + ("" + grad + "%").length());
             }
             buf.append("").append(grad).append("% ");
-            currentIndex = buf.length();
+
+            first = false;
         }
         buf.setLength(buf.length() - 1);
 
