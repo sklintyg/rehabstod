@@ -67,11 +67,19 @@ public class PingForConfigurationResponderImpl implements PingForConfigurationRe
 
         HealthStatus uptime = healthCheck.checkUptime();
         HealthStatus nbrOfUsers = healthCheck.checkNbrOfUsers();
+        HealthStatus ntjpStatus = healthCheck.checkHSA();
+        HealthStatus amqStatus = healthCheck.checkActiveMQ();
+        HealthStatus itStatus = healthCheck.checkIntygstjansten();
 
         addConfiguration(response, "buildNumber", buildNumberString);
         addConfiguration(response, "buildTime", buildTimeString);
         addConfiguration(response, "systemUptime", DurationFormatUtils.formatDurationWords(uptime.getMeasurement(), true, true));
         addConfiguration(response, "nbrOfUsers", "" + nbrOfUsers.getMeasurement());
+
+        addConfiguration(response, "jmsStatus", amqStatus.isOk() ? "ok" : "error");
+        addConfiguration(response, "intygstjanst", itStatus.isOk() ? "ok" : "no connection");
+        addConfiguration(response, "ntjp", ntjpStatus.isOk() ? "ok" : "no connection");
+
 
         return response;
     }

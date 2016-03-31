@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
+import se.riv.itintegration.monitoring.v1.ConfigurationType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
 
@@ -31,13 +32,18 @@ import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
  */
 @Service
 @Profile(value = {"dev", "wc-hsa-stub"})
-public class PingForConfigurationStub implements PingForConfigurationResponderInterface {
+public class NTjPPingForConfigurationStub implements PingForConfigurationResponderInterface {
 
     @Override
     public PingForConfigurationResponseType pingForConfiguration(String s, PingForConfigurationType pingForConfigurationType) {
         PingForConfigurationResponseType responseType = new PingForConfigurationResponseType();
+
         responseType.setPingDateTime(LocalDateTime.now().toString("yyyy-MM-dd'T'HH:mm:ss"));
-        responseType.setVersion("stubbed");
+        responseType.setVersion("ntjp-stub");
+        ConfigurationType cfgType = new ConfigurationType();
+        cfgType.setName("stub-info");
+        cfgType.setValue("This stub pretends it is NTjP itinfrastructure:monitoring:PingForConfiguration.");
+        responseType.getConfiguration().add(cfgType);
         return responseType;
     }
 }

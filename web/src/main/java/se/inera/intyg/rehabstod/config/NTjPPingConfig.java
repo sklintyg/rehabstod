@@ -29,7 +29,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
 
-import se.inera.intyg.rehabstod.service.monitoring.ntjp.stub.PingForConfigurationStub;
+import se.inera.intyg.rehabstod.service.monitoring.ntjp.stub.NTjPPingForConfigurationStub;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 
 /**
@@ -56,11 +56,11 @@ public class NTjPPingConfig {
 
     @Bean
     @Profile(value = {"dev", "wc-hsa-stub"})
-    public EndpointImpl intygstjanstResponder() {
+    public EndpointImpl ntjpStubResponder() {
         Bus bus = (Bus) applicationContext.getBean(Bus.DEFAULT_BUS_ID);
-        PingForConfigurationStub pingForConfigurationStub = applicationContext.getBean(PingForConfigurationStub.class);
-        EndpointImpl endpoint = new EndpointImpl(bus, pingForConfigurationStub);
-        endpoint.publish("/ping-for-configuration/v1.0");
+        NTjPPingForConfigurationStub ntjpPingForConfigurationStub = applicationContext.getBean(NTjPPingForConfigurationStub.class);
+        EndpointImpl endpoint = new EndpointImpl(bus, ntjpPingForConfigurationStub);
+        endpoint.publish("/ntjp-ping-for-configuration-stub/v1.0");
         return endpoint;
     }
 }
