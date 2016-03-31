@@ -28,7 +28,7 @@ var startPage = rhsTestTools.pages.startPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
 describe('Hantera tabellen', function() {
-    
+
     beforeEach(function() {
         browser.ignoreSynchronization = false;
         specHelper.login();
@@ -39,21 +39,30 @@ describe('Hantera tabellen', function() {
     it('Sortera på personnummer', function() {
         sjukfallPage.tableHeader.element(by.css('th.column-patient-id')).click();
 
-        var columnPatientValue = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
-        var columnNumberValue = sjukfallPage.tableBody.all(by.css('.column-number')).first().getText();
+        var columnPatientValueFirst = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
+        var columnNumberValueFirst = sjukfallPage.tableBody.all(by.css('.column-number')).first().getText();
 
-        expect(columnPatientValue).toBe('19000207-9812 (116 år)');
-        expect(columnNumberValue).toBe('1');
+        expect(columnPatientValueFirst).toBeDefined();
+        expect(columnNumberValueFirst).toBe('1');
 
-        browser.executeScript('window.scrollTo(0,0);').then(function () {
+
+        browser.executeScript('window.scrollTo(0,0);').then(function() {
             sjukfallPage.tableHeader.element(by.css('th.column-patient-id')).click();
 
-            columnPatientValue = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
-            columnNumberValue = sjukfallPage.tableBody.all(by.css('.column-number')).first().getText();
+            var afterSort = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
+            //After sorting twice, the first row should have changed..
+            expect(afterSort).not.toBe(columnPatientValueFirst);
 
-            expect(columnPatientValue).toBe('20050415-2398 (10 år)');
-            expect(columnNumberValue).toBe('1');
-        })
+        });
+
+        browser.executeScript('window.scrollTo(0,0);').then(function() {
+            sjukfallPage.tableHeader.element(by.css('th.column-patient-id')).click();
+
+            var afterSort = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
+            //After sorting again, the first row should be the same as after initial sort
+            expect(afterSort).toBe(columnPatientValueFirst);
+
+        });
 
 
     });
