@@ -66,7 +66,7 @@ deferredBootstrapper.bootstrap({
 });
 
 app.value('networkConfig', {
-    defaultTimeout: 15000
+    defaultTimeout: 30000
 });
 
 /*
