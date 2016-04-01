@@ -13,7 +13,7 @@ To execute a Gotling load test, one either needs to build Gotling from source or
 
 https://github.com/eriklupander/gotling/releases/
 
-Per 2016-03-15, v0.1-alpha exists for Mac OS X 10.11.
+Per 2016-04-01, v0.2-alpha exists for Mac OS X 10.11.
 
 2. Place the downloaded binary in the _/rehabstod/tools/loadtest/gotling_ project folder (it's gitignored)
 
@@ -24,10 +24,10 @@ Per 2016-03-15, v0.1-alpha exists for Mac OS X 10.11.
 3. Build the executable from the root of the cloned project using: go build -o gotling src/github.com/eriklupander/gotling/*.go
 4. Copy the gotling executable into _/rehabstod/tools/loadtest/gotling_
 
-### Configuring and running a test
+### Configuring and running the ListActiveSickLeavesForCareUnit test
 
-#### Test definition
-The definition for the rehabstod gotling test resides in /samples/rehabstod.yml
+#### Test definition ListActiveSickLeavesForCareUnit
+The definition for the rehabstod ListActiveSickLeavesForCareUnit gotling test resides in /samples/rehabstod.yml
 
     ---
     iterations: 50
@@ -78,7 +78,7 @@ The SOAP request is read from the file /templates/rehabstod/ListActiveSickLeaves
 
 Note the ${careUnitHsaId} parameter that Gotling will replace with the values from /data/rehabstod.csv
 
-### Running
+#### Running
 Prereq: You should be in the root /rehabstod/tools/loadtest/gotling folder, i.e. where you have the /data, /samples and /templates folders as direct subfolders.
 
     ./gotling samples/rehabstod.yml
@@ -99,3 +99,16 @@ The load test should start within a second.
 That's it!
 
 At any time, open http://localhost:8182 to load the live dashboard. After the test has finished, see /logs folder for some report data.
+
+
+### Test definition for Rehabstöd REST services
+There is also a test that uses rehabstod-web REST services in a manner similar to a real web browser, e.g. performing login, loading care unit stats, loading sjukfall and finally logging out. The test resides in /samples/rehabstod-web.yml
+
+Note that the test requires fake login to be active. It can run against test/demo environments using self-signed certificates for https.  
+
+#### Running
+Prereq: You should be in the root /rehabstod/tools/loadtest/gotling folder, i.e. where you have the /data, /samples and /templates folders as direct subfolders.
+
+    ./gotling samples/rehabstod-web.yml
+    
+By default, this test runs 50 concurrent users 30 iterations, averaging ~7 req/s.
