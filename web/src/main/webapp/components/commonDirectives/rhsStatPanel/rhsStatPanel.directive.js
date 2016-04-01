@@ -112,8 +112,8 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         },
                         tooltip: {
                             pointFormat: '{point.percentage:.1f}% <b>({point.y} st)</b> av ' +
-                            (UserModel.get().isLakare ? 'mina' : 'alla') + '<br/>' +
-                            'pågående sjukfall tillhör {point.name}.'
+                            (UserModel.get().isLakare ? 'mina' : 'alla') + ' pågående sjukfall<br/>' +
+                            'tillhör {point.name}.'
                         },
                         legend: {
                             labelFormatter: function() {
