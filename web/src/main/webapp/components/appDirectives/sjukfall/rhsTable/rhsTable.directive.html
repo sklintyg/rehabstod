@@ -16,8 +16,7 @@
           <td class="column-patient-name">{{::row.patient.namn}}</td>
           <td class="column-patient-kon">{{::row.patient.konShow}}</td>
           <td class="column-diagnos">
-            <span ng-if="::row.diagnos.beskrivning" uib-tooltip-html="getToolTip(row.diagnos)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnos.intygsVarde}}</span>
-            <span ng-if="::!row.diagnos.beskrivning">{{::row.diagnos.intygsVarde}}</span>
+            <span uib-tooltip-html="getToolTip(row.diagnos)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnos.intygsVarde}}</span>
           </td>
           <td class="column-start start-date">{{::row.start}}</td>
           <td class="column-slut end-date">{{::row.slut}}</td>

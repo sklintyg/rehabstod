@@ -47,7 +47,8 @@ rhs-table {
   }
 
   .rhs-table-tooltip {
-    cursor: pointer;
+    cursor: help;
+    border-bottom: 1px dotted;
   }
 
   .rhs-table-grad-active {

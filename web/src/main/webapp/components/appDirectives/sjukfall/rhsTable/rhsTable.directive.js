@@ -18,8 +18,8 @@
  */
 
 angular.module('rehabstodApp')
-    .controller('RhsTableCtrl', ['$scope', 'SjukfallFilterViewState', 'SjukfallModel', 'UserModel',
-        function($scope, SjukfallFilterViewState, SjukfallModel, UserModel) {
+    .controller('RhsTableCtrl', ['$scope', 'SjukfallFilterViewState', 'SjukfallModel', 'UserModel', 'messageService',
+        function($scope, SjukfallFilterViewState, SjukfallModel, UserModel, messageService) {
             'use strict';
 
             $scope.filter = SjukfallFilterViewState;
@@ -30,7 +30,9 @@ angular.module('rehabstodApp')
             $scope.displayedCollection = [].concat($scope.model.get());
 
             $scope.getToolTip = function(diagnos) {
-                return '<b>' + diagnos.kod + '</b><br>' + diagnos.beskrivning;
+                var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
+                    messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
+                return '<b>' + diagnos.kod + '</b><br>' + desc;
             };
 
             $scope.showMoreInTable = function() {

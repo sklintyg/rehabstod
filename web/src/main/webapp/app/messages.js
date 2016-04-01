@@ -138,6 +138,7 @@ var rhsMessages = {
         'label.table.number.of.rows.of' : 'av',
         'label.table.column.sort.desc': 'Fallande',
         'label.table.column.sort.asc': 'Stigande',
+        'label.table.diagnosbeskrivning.okand': 'Diagnoskod ${kod} är okänd och har ingen beskrivning',
 
 
 
