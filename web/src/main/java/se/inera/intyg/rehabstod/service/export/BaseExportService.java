@@ -39,12 +39,12 @@ public abstract class BaseExportService {
     protected static final String FILTER_TITLE_FRITEXTFILTER = "Fritextfilter";
     protected static final String VALDA_FILTER = "Valda filter";
     protected static final String H2_SJUKFALLSINSTALLNING = "Sjukfallsinställning";
-    protected static final String MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG = "Max dagar mellan intyg\t: ";
+    protected static final String MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG = "Max dagar mellan intyg: ";
     protected static final String VALD_SORTERING_PA_TABELLEN = "Vald sortering";
     protected static final String SORTERING_KOLUMN = "Kolumn: ";
     protected static final String SORTERING_RIKTNING = "Riktning: ";
     protected static final String SORTERING_INGEN = "Ingen";
-    protected static final String ANTAL_VISAR_ANTAL_PAGAENDE_SJUKFALL = "\tAntal pågående sjukfall";
+    protected static final String ANTAL_VISAR_ANTAL_PAGAENDE_SJUKFALL = "Antal pågående sjukfall";
     protected static final String ANTAL_EXPORTEN_VISAR = "Tabellen visar: ";
     protected static final String ANTAL_TOTALT_MINA = "Totalt: ";
     protected static final String ANTAL_TOTALT_PA_ENHETEN = "Totalt på enheten: ";
