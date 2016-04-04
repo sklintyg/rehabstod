@@ -20,7 +20,8 @@
 //Register module
 angular.module('rhsIndexApp', [
     'ngAnimate',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ngStorage'
 ]);
 
 
@@ -51,8 +52,8 @@ angular.module('rhsIndexApp')
 
 
 angular.module('rhsIndexApp').directive('rhsCookieBanner',
-    [
-        function() {
+    ['$localStorage',
+        function($localStorage) {
             'use strict';
 
             return {
@@ -62,15 +63,18 @@ angular.module('rhsIndexApp').directive('rhsCookieBanner',
                 controller: function($scope, $timeout) {
                     $scope.isOpen = false;
                     $scope.showDetails = false;
+                    $scope.localStorage = $localStorage;
 
-
-                    $timeout(function() {
-                        $scope.isOpen = true;
-                    }, 500);
+                    if (!$scope.localStorage.rhsCookieConsentGiven) {
+                        $timeout(function() {
+                            $scope.isOpen = true;
+                        }, 500);
+                    }
 
                     $scope.onCookieConsentClick = function() {
                         $scope.isOpen = false;
-                        //TODO: save this consent as a cookie?
+                        $scope.localStorage.rhsCookieConsentGiven = true;
+
                     };
                 }
             };
