@@ -18,10 +18,11 @@
  */
 package se.inera.intyg.rehabstod.service.monitoring;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.classic.spi.LoggingEvent;
+import ch.qos.logback.core.Appender;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,17 +33,16 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.classic.spi.LoggingEvent;
-import ch.qos.logback.core.Appender;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MonitoringLogServiceImplTest {
 
     private static final String USER_ID = "USER_ID";
     private static final String AUTHENTICATION_SCHEME = "AUTHENTICATION_SCHEME";
+    private static final String ENHET_ID = "ENHET_ID";
 
     @Mock
     private Appender<ILoggingEvent> mockAppender;
@@ -68,14 +68,21 @@ public class MonitoringLogServiceImplTest {
     public void shouldLogUserLogin() {
         logService.logUserLogin(USER_ID, AUTHENTICATION_SCHEME);
         verifyLog(Level.INFO,
-                "USER_LOGIN Login user 'e5bb97d1792ff76e360cd8e928b6b9b53bda3e4fe88b026e961c2facf963a361' using scheme 'AUTHENTICATION_SCHEME'");
+                "USER_LOGIN Login user '" + USER_ID + "' using scheme 'AUTHENTICATION_SCHEME'");
     }
 
     @Test
     public void shouldLogUserLogout() {
         logService.logUserLogout(USER_ID, AUTHENTICATION_SCHEME);
         verifyLog(Level.INFO,
-                "USER_LOGOUT Logout user 'e5bb97d1792ff76e360cd8e928b6b9b53bda3e4fe88b026e961c2facf963a361' using scheme 'AUTHENTICATION_SCHEME'");
+                "USER_LOGOUT Logout user '" + USER_ID + "' using scheme 'AUTHENTICATION_SCHEME'");
+    }
+
+    @Test
+    public void shouldLogUserViewedSjukfall() {
+        logService.logUserViewedSjukfall(USER_ID, 42, ENHET_ID);
+        verifyLog(Level.INFO,
+                "USER_VIEWED_SJUKFALL User '" + USER_ID + "' viewed 42 sjukfall on enhet 'ENHET_ID'");
     }
 
     private void verifyLog(Level logLevel, String logMessage) {

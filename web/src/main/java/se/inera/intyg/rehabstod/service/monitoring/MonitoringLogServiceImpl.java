@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import se.inera.intyg.rehabstod.common.monitoring.util.HashUtility;
 import se.inera.intyg.rehabstod.common.monitoring.util.LogMarkers;
 
 @Service("webMonitoringLogService")
@@ -32,13 +31,18 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
     private static final Logger LOG = LoggerFactory.getLogger(MonitoringLogService.class);
 
     @Override
-    public void logUserLogin(String id, String authenticationScheme) {
-        logEvent(MonitoringEvent.USER_LOGIN, HashUtility.hash(id), authenticationScheme);
+    public void logUserLogin(String userHsaId, String authenticationScheme) {
+        logEvent(MonitoringEvent.USER_LOGIN, userHsaId, authenticationScheme);
     }
 
     @Override
-    public void logUserLogout(String id, String authenticationScheme) {
-        logEvent(MonitoringEvent.USER_LOGOUT, HashUtility.hash(id), authenticationScheme);
+    public void logUserLogout(String userHsaId, String authenticationScheme) {
+        logEvent(MonitoringEvent.USER_LOGOUT, userHsaId, authenticationScheme);
+    }
+
+    @Override
+    public void logUserViewedSjukfall(String userHsaId, int numberOfSjukfall, String vardEnhet) {
+        logEvent(MonitoringEvent.USER_VIEWED_SJUKFALL, userHsaId, numberOfSjukfall, vardEnhet);
     }
 
     private void logEvent(MonitoringEvent logEvent, Object... logMsgArgs) {
@@ -53,7 +57,8 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
 
     private enum MonitoringEvent {
         USER_LOGIN("Login user '{}' using scheme '{}'"),
-        USER_LOGOUT("Logout user '{}' using scheme '{}'");
+        USER_LOGOUT("Logout user '{}' using scheme '{}'"),
+        USER_VIEWED_SJUKFALL("User '{}' viewed {} sjukfall on enhet '{}'");
 
         private String message;
 

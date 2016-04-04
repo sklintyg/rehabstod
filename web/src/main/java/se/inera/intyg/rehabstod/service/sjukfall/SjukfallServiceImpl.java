@@ -18,22 +18,22 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SjukfallEngineImpl;
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -53,14 +53,20 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Autowired
     private StatisticsCalculator statisticsCalculator;
 
+    @Autowired
+    private MonitoringLogService monitoringLogService;
+
     @Override
     public List<InternalSjukfall> getSjukfall(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request) {
-        return getFilteredSjukfallList(enhetsId, hsaId, urval, request);
+        List<InternalSjukfall> sjukfallList = getFilteredSjukfallList(enhetsId, hsaId, urval, request);
+        if (sjukfallList != null) {
+            monitoringLogService.logUserViewedSjukfall(hsaId, sjukfallList.size(), enhetsId);
+        }
+        return sjukfallList;
     }
 
     @Override
     public SjukfallSummary getSummary(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request) {
-
         return statisticsCalculator.getSjukfallSummary(getFilteredSjukfallList(enhetsId, hsaId, urval, request));
     }
 
@@ -82,7 +88,6 @@ public class SjukfallServiceImpl implements SjukfallService {
                     .filter(o -> o.getSjukfall().getLakare().getHsaId().equals(hsaId))
                     .collect(Collectors.toList());
         }
-
         return internalSjukfall;
     }
 }

@@ -28,5 +28,5 @@ public interface MonitoringLogService {
 
     void logUserLogout(String id, String authenticationScheme);
 
-
+    void logUserViewedSjukfall(String userId, int numberOfSjukfall, String vardEnhet);
 }
