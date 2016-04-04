@@ -4,31 +4,30 @@ apply plugin: 'java'
 
 dependencies {
 
-    compile "se.inera.intyg.common:log-messages:0-SNAPSHOT"
+    compile "se.inera.intyg.common:log-messages:${intygCommonVersion}"
 
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.1'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.5.1'
-    compile 'joda-time:joda-time:2.5'
-    compile 'javax.mail:javax.mail-api:1.5.2'
-    compile 'com.sun.mail:javax.mail:1.5.2'
+    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:${jacksonVersion}"
+    compile "joda-time:joda-time:${jodaTimeVersion}"
+    compile "javax.mail:javax.mail-api:${javaxMailVersion}"
+    compile "com.sun.mail:javax.mail:${javaxMailVersion}"
 
     compile "org.springframework:spring-context-support:${springContextVersion}"
     compile "org.springframework:spring-webmvc:${springContextVersion}"
 
-    compile 'org.slf4j:slf4j-api:1.7.10'
-    compile 'ch.qos.logback:logback-classic:1.0.13'
+    compile "org.slf4j:slf4j-api:${slf4jVersion}"
+    compile "ch.qos.logback:logback-classic:${logbackVersion}"
 
-    compile 'com.google.guava:guava:18.0'
-    compile 'commons-lang:commons-lang:2.6'
-    compile 'commons-io:commons-io:2.4'
-    compile 'javax.servlet:javax.servlet-api:3.1.0'
+    compile "com.google.guava:guava:${googleGuavaVersion}"
+    compile "commons-codec:commons-codec:${commonsCodecVersion}"
+    compile "commons-lang:commons-lang:${commonsLangVersion}"
+    compile "commons-io:commons-io:${commonsIoVersion}"
+    compile "javax.servlet:javax.servlet-api:${javaxServletVersion}"
     compile "org.apache.cxf:cxf-rt-frontend-jaxrs:${cxfVersion}"
     compile "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
-    compile 'commons-codec:commons-codec:1.10'
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-all:1.10.19'
-    testCompile 'org.aspectj:aspectjweaver:1.6.11'
+    testCompile "junit:junit:${junitVersion}"
+    testCompile "org.mockito:mockito-all:${mockitoAllVersion}"
+    testCompile "org.aspectj:aspectjweaver:${aspectjWeaverVersion}"
     testCompile "org.springframework:spring-test:${springContextVersion}"
-
 }

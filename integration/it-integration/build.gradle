@@ -1,23 +1,23 @@
-description = 'Inera Rehabstöd Intygstjänst-Integration module'
+description = "Inera Rehabstöd Intygstjänst-Integration module"
 
-apply plugin: 'java'
+apply plugin: "java"
 
 dependencies {
     compile project(":rehabstod-common")
 
-    compile 'se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:1.0.0'
-    compile 'se.riv.itintegration.monitoring:itintegration-monitoring-schemas:1.0.0.0'
+    compile "se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:${rehabSchemaVersion}"
+    compile "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${monitoringSchemaVersion}"
 
     compile "org.springframework:spring-beans:${springContextVersion}"
     compile "org.springframework:spring-context:${springContextVersion}"
-    compile 'joda-time:joda-time:2.2'
-    compile 'org.slf4j:slf4j-api:1.7.10'
-    compile 'org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}'
-    compile 'org.apache.cxf:cxf-rt-transports-http:${cxfVersion}'
+    compile "joda-time:joda-time:${jodaTimeVersion}"
+    compile "org.slf4j:slf4j-api:${slf4jVersion}"
+    compile "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
+    compile "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-all:1.10.19'
-    testCompile 'org.unitils:unitils-core:3.3'
+    testCompile "junit:junit:${junitVersion}"
+    testCompile "org.mockito:mockito-all:${mockitoAllVersion}"
+    testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "org.springframework:spring-test:${springContextVersion}"
-    testCompile 'joda-time:joda-time:2.2'
+    testCompile "joda-time:joda-time:${jodaTimeVersion}"
 }
