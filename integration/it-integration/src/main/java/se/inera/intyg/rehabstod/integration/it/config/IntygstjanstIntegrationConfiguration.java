@@ -20,7 +20,6 @@ package se.inera.intyg.rehabstod.integration.it.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 
 /**
  * Just a placeholder class to configure by @ComponentScan and @ImportResource.
@@ -29,6 +28,5 @@ import org.springframework.context.annotation.ImportResource;
 @ComponentScan({
         "se.inera.intyg.rehabstod.integration.it.client",
         "se.inera.intyg.rehabstod.integration.it.service" })
-@ImportResource("classpath:it-services.xml")
 public class IntygstjanstIntegrationConfiguration {
 }
