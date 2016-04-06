@@ -18,10 +18,10 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities.bootstrap;
 
-import static java.lang.String.format;
-
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
@@ -34,6 +34,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static java.lang.String.format;
 
 /**
  * The authorities configuration is read from a YAML file which is
@@ -50,16 +52,10 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
     private AuthoritiesConfiguration authoritiesConfiguration;
 
     /**
-     * Constructor loading the default configuration file authorities.yaml from classpath.
-     */
-    public AuthoritiesConfigurationLoader() {
-        this("classpath:authorities.yaml");
-    }
-
-    /**
      * Constructor taking a path to the authorities configuration file.
      */
-    public AuthoritiesConfigurationLoader(String authoritiesConfigurationFile) {
+    @Autowired
+    public AuthoritiesConfigurationLoader(@Value("${authorities.configuration.file}") String authoritiesConfigurationFile) {
         Assert.notNull(authoritiesConfigurationFile,
                 "Illegal argument: authoritiesConfigurationFile cannot be null. Argument must resolve to a configuration file");
         this.authoritiesConfigurationFile = authoritiesConfigurationFile;
