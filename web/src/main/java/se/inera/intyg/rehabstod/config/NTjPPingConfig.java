@@ -46,7 +46,6 @@ public class NTjPPingConfig {
     private ApplicationContext applicationContext;
 
     @Bean
-    @Profile(value = {"dev", "test", "prod"})
     public PingForConfigurationResponderInterface ntjpPingWebServiceClient() {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(ntjpWsPingUrl);

@@ -49,7 +49,7 @@ public class IntygstjanstIntegrationClientConfiguration {
 
 
     @Bean
-    @Profile(value = {"dev", "test", "prod"})
+    //@Profile(value = {"dev", "test", "qa", "prod"})
     public ListActiveSickLeavesForCareUnitResponderInterface itIntegrationWebServiceClient() {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(itWsUrl);
@@ -58,7 +58,7 @@ public class IntygstjanstIntegrationClientConfiguration {
     }
 
     @Bean
-    @Profile(value = {"dev", "test", "prod"})
+   // @Profile(value = {"dev", "test", "qa", "prod"})
     public PingForConfigurationResponderInterface itPingForConfigurationWebServiceClient() {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(itWsPingUrl);
