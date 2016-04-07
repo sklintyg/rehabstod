@@ -80,31 +80,25 @@ public class HealthCheckServiceImpl implements HealthCheckService {
 
     @Override
     public HealthStatus checkPdlLogQueue() {
-        HealthStatus healthStatus = checkQueueDepth(jmsPDLLogTemplate);
-        LOG.info("Operation checkPdlLogQueue completed with queue size {}", healthStatus.getMeasurement());
-        return healthStatus;
+        try {
+            HealthStatus healthStatus = checkQueueDepth(jmsPDLLogTemplate);
+            LOG.info("Operation checkPdlLogQueue completed with queue size {}", healthStatus.getMeasurement());
+            return healthStatus;
+        } catch (Exception e) {
+            return new HealthStatus(-1, false);
+        }
     }
 
     @Override
     public HealthStatus checkPdlAggregatedLogQueue() {
-        HealthStatus healthStatus = checkQueueDepth(jmsAggregatedPDLLogTemplate);
-        LOG.info("Operation checkPdlAggregatedLogQueue completed with queue size {}", healthStatus.getMeasurement());
-        return healthStatus;
+        try {
+            HealthStatus healthStatus = checkQueueDepth(jmsAggregatedPDLLogTemplate);
+            LOG.info("Operation checkPdlAggregatedLogQueue completed with queue size {}", healthStatus.getMeasurement());
+            return healthStatus;
+        } catch (Exception e) {
+            return new HealthStatus(-1, false);
+        }
     }
-
-    private HealthStatus checkQueueDepth(JmsTemplate tpl) {
-        int queueDepth = tpl.browse((session, browser) -> {
-            Enumeration<?> enumeration = browser.getEnumeration();
-            int qd = 0;
-            while (enumeration.hasMoreElements()) {
-                enumeration.nextElement();
-                qd++;
-            }
-            return qd;
-        });
-        return new HealthStatus(queueDepth, true);
-    }
-
 
     @Override
     public HealthStatus checkActiveMQ() {
@@ -189,10 +183,27 @@ public class HealthCheckServiceImpl implements HealthCheckService {
             Connection connection = connectionFactory.createConnection();
             connection.close();
         } catch (JMSException e) {
-            LOG.error("checkJmsConnection failed with exception: " + e.getMessage());
+            LOG.error("checkJmsConnection failed with JMSException: {}", e.getMessage());
+            return false;
+        } catch (Exception e) {
+            LOG.error("checkJmsConnection failed with exception of class: {}. Message: {}", e.getClass().getName(), e.getMessage());
             return false;
         }
         return true;
     }
+
+    private HealthStatus checkQueueDepth(JmsTemplate tpl) {
+        int queueDepth = tpl.browse((session, browser) -> {
+            Enumeration<?> enumeration = browser.getEnumeration();
+            int qd = 0;
+            while (enumeration.hasMoreElements()) {
+                enumeration.nextElement();
+                qd++;
+            }
+            return qd;
+        });
+        return new HealthStatus(queueDepth, true);
+    }
+
 
 }
