@@ -32,4 +32,7 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource("classpath:hsa-services-config.xml")
 public class HsaConfiguration {
 
+    public HsaConfiguration() { //NOSONAR
+    }
+
 }
