@@ -268,11 +268,17 @@
       <constructor-arg type="java.lang.String" value="${sakerhetstjanst.saml.keystore.alias}"/>
     </bean>
 
+
     <!-- Entry point to initialize authentication, default values taken from properties file -->
     <bean id="samlEntryPoint" class="org.springframework.security.saml.SAMLEntryPoint">
       <property name="defaultProfileOptions">
         <bean class="org.springframework.security.saml.websso.WebSSOProfileOptions">
           <property name="includeScoping" value="false"/>
+          <property name="authnContexts">
+               <set>
+                 <value>urn:oasis:names:tc:SAML:2.0:ac:classes:TLSClient</value>
+               </set>
+          </property>
         </bean>
       </property>
     </bean>
