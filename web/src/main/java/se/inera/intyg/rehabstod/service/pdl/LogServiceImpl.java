@@ -105,7 +105,7 @@ public class LogServiceImpl implements LogService {
             try {
                 return session.createTextMessage(objectMapper.writeValueAsString(this.logMsg));
             } catch (JsonProcessingException e) {
-                throw new IllegalArgumentException("Could not serialize log message of type '" + logMsg.getClass().getName() + "' into JSON, message: " + e.getMessage());
+                throw new IllegalArgumentException("Could not serialize log message of type '" + logMsg.getClass().getName() + "' into JSON, message: " + e.getMessage(), e);
             }
         }
     }

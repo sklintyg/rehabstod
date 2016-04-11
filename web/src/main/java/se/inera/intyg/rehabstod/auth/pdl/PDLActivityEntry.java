@@ -18,14 +18,17 @@
  */
 package se.inera.intyg.rehabstod.auth.pdl;
 
-import java.util.Objects;
-
 import se.inera.intyg.common.logmessages.ActivityType;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Created by marced on 22/02/16.
  */
-public class PDLActivityEntry {
+public class PDLActivityEntry implements Serializable {
+
+    private static final long serialVersionUID = -3747905461916881904L;
 
     private String patientId;
     private ActivityType activityType;

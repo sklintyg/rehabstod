@@ -207,7 +207,7 @@ public class AuthoritiesResolver {
      */
     Role lookupUserRoleByLegitimeradeYrkesgrupper(List<String> legitimeradeYrkesgrupper) {
         LOG.debug("  * legitimerade yrkesgrupper");
-        if (legitimeradeYrkesgrupper == null || legitimeradeYrkesgrupper.size() == 0) {
+        if (legitimeradeYrkesgrupper == null || legitimeradeYrkesgrupper.isEmpty()) {
             return null;
         }
 
@@ -221,7 +221,7 @@ public class AuthoritiesResolver {
     Role lookupUserRoleByBefattningskod(List<String> befattningsKoder) {
         LOG.debug("  * befattningskod");
 
-        if (befattningsKoder == null || befattningsKoder.size() == 0) {
+        if (befattningsKoder == null || befattningsKoder.isEmpty()) {
             return null;
         }
 
@@ -330,25 +330,13 @@ public class AuthoritiesResolver {
         return tc -> tc.getGroupPrescriptionCode() != null && tc.getGroupPrescriptionCode().equalsIgnoreCase(groupPrescriptionCode);
     }
 
-    private Function<String, RequestOrigin> fnRequestOrigin = (name) -> {
-        return getRequestOrigins().stream()
-                .filter(isRequestOrigin(name))
-                .findFirst()
-                .orElse(null);
-    };
+    private Function<String, RequestOrigin> fnRequestOrigin = (name) ->
+            getRequestOrigins().stream().filter(isRequestOrigin(name)).findFirst().orElse(null);
 
-    private Function<String, Role> fnRole = (name) -> {
-        return getRoles().stream()
-                .filter(isRole(name))
-                .findFirst()
-                .orElse(null);
-    };
+    private Function<String, Role> fnRole = (name) ->
+            getRoles().stream().filter(isRole(name)).findFirst().orElse(null);
 
-    private BiFunction<String, String, TitleCode> fnTitleCode = (titleCode, groupPrescriptionCode) -> {
-        return getTitleCodes().stream()
-                .filter(isTitleCode(titleCode).and(isGroupPrescriptionCode(groupPrescriptionCode)))
-                .findFirst()
-                .orElse(null);
-    };
+    private BiFunction<String, String, TitleCode> fnTitleCode = (titleCode, groupPrescriptionCode) ->
+            getTitleCodes().stream().filter(isTitleCode(titleCode).and(isGroupPrescriptionCode(groupPrescriptionCode))).findFirst().orElse(null);
 
 }

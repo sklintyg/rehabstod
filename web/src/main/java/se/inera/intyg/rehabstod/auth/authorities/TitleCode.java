@@ -30,7 +30,7 @@ public class TitleCode implements Serializable {
     private static final long serialVersionUID = -1634959365579825130L;
 
     @JsonProperty
-    private String titleCode;
+    private String titleCode; //NOSONAR
     @JsonProperty
     private String groupPrescriptionCode;
     @JsonProperty

@@ -18,21 +18,20 @@
  */
 package se.inera.intyg.rehabstod.auth.pdl;
 
-import java.io.Serializable;
+import se.inera.intyg.common.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import se.inera.intyg.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
-
 /**
  * A simple Map based store to cache combinations of vardenhet/patient/ActivityType
  * Created by marced on 22/02/16.
  */
-public class PDLActivityStoreImpl implements PDLActivityStore, Serializable {
+public class PDLActivityStoreImpl implements PDLActivityStore {
 
     private static final long serialVersionUID = -9124943689105873887L;
 

@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities.validation;
 
-import java.util.Optional;
-
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 
 /**
@@ -39,24 +37,13 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 public final class AuthoritiesValidator {
 
     /**
-     * Create an expectation context with both user and intyp.
-     *
-     * @param user
-     * @param intygstyp
-     * @return
-     */
-    public AuthExpectationSpecification given(RehabstodUser user, String intygstyp) {
-        return new AuthExpectationSpecImpl(user, Optional.of(intygstyp));
-    }
-
-    /**
      * Create a expectation context with just a user and no intygstyp, i.e intygstyp doesnt' matter in validations.
      *
      * @param user
      * @return
      */
     public AuthExpectationSpecification given(RehabstodUser user) {
-        return new AuthExpectationSpecImpl(user, Optional.empty());
+        return new AuthExpectationSpecImpl(user);
     }
 
 }

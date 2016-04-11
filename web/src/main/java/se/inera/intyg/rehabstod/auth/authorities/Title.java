@@ -30,7 +30,7 @@ public class Title implements Serializable {
     private static final long serialVersionUID = 2196788823051628229L;
 
     @JsonProperty
-    private String title;
+    private String title; //NOSONAR
 
     @JsonProperty
     private String desc;

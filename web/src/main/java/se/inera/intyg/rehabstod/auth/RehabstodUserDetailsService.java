@@ -39,6 +39,7 @@ import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolverUtil;
 import se.inera.intyg.rehabstod.auth.authorities.Role;
+import se.inera.intyg.rehabstod.auth.exceptions.GenericAuthenticationException;
 import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingMedarbetaruppdragException;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
@@ -75,7 +76,7 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
     public Object loadUserBySAML(SAMLCredential credential) {
 
         if (credential == null) {
-            throw new RuntimeException("SAMLCredential has not been set.");
+            throw new GenericAuthenticationException("SAMLCredential has not been set.");
         }
 
         LOG.info("Start user authentication...");
@@ -93,14 +94,12 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
             LOG.info("End user authentication...SUCCESS");
             return webCertUser;
 
-        } catch (Exception e) {
+        } catch (AuthenticationException e) {
             LOG.error("End user authentication...FAIL");
-            if (e instanceof AuthenticationException) {
-                throw e;
-            }
-
+            throw e;
+        } catch (Exception e) {
             LOG.error("Error building user {}, failed with message {}", getAssertion(credential).getHsaId(), e.getMessage());
-            throw new RuntimeException(getAssertion(credential).getHsaId(), e);
+            throw new GenericAuthenticationException(getAssertion(credential).getHsaId(), e);
         }
     }
 
@@ -184,7 +183,6 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
             return createRehabstodUser(role, credential, authorizedVardgivare, personInfo);
 
         } catch (MissingMedarbetaruppdragException e) {
-            // monitoringLogService.logMissingMedarbetarUppdrag(getAssertion(credential).getHsaId());
             throw e;
         }
 
@@ -241,7 +239,7 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         // Set user's authentication scheme
         user.setAuthenticationScheme(sa.getAuthenticationScheme());
 
-        decorateRehabstodUserWithAdditionalInfo(user, credential, personInfo);
+        decorateRehabstodUserWithAdditionalInfo(user, personInfo);
         clearMottagningarFromUser(user);
         decorateRehabstodUserWithDefaultVardenhet(user, credential);
 
@@ -256,7 +254,7 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         }
     }
 
-    private void decorateRehabstodUserWithAdditionalInfo(RehabstodUser user, SAMLCredential credential, List<PersonInformationType> hsaPersonInfo) {
+    private void decorateRehabstodUserWithAdditionalInfo(RehabstodUser user, List<PersonInformationType> hsaPersonInfo) {
 
         List<String> legitimeradeYrkesgrupper = extractLegitimeradeYrkesgrupper(hsaPersonInfo);
         List<String> befattningar = extractBefattningar(hsaPersonInfo);
@@ -310,7 +308,7 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         for (PersonInformationType pit : hsaPersonInfo) {
             if (pit.getTitle() != null && pit.getTitle().trim().length() > 0) {
                 titleSet.add(pit.getTitle());
-            } else if (pit.getHealthCareProfessionalLicence() != null && pit.getHealthCareProfessionalLicence().size() > 0) {
+            } else if (pit.getHealthCareProfessionalLicence() != null && pit.getHealthCareProfessionalLicence().isEmpty()) {
                 titleSet.addAll(pit.getHealthCareProfessionalLicence());
             }
         }

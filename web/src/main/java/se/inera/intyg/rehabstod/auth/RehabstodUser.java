@@ -18,11 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
@@ -31,6 +26,11 @@ import se.inera.intyg.rehabstod.auth.authorities.Role;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStoreImpl;
 import se.inera.intyg.rehabstod.service.Urval;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by pebe on 2015-08-11.
@@ -183,7 +183,7 @@ public class RehabstodUser implements Serializable {
 
     }
 
-    @SuppressWarnings("PMD.SimplifyBooleanReturns")
+    @SuppressWarnings({"PMD.SimplifyBooleanReturns", "PMD.CyclomaticComplexity"})
     private boolean isValidUrvalChange(Urval urval) {
         // Unset is always allowed
         if (urval == null) {

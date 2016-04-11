@@ -121,6 +121,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
             size = allPrincipals.size();
             ok = true;
         } catch (Exception e) {
+            LOG.warn("Operation checkNbrOfUsers failed", e.getMessage());
             ok = false;
         }
 
@@ -147,6 +148,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
             PingForConfigurationResponseType pingResponse = intygstjanstClientService.pingForConfiguration();
             ok = pingResponse !=  null && pingResponse.getPingDateTime() !=  null;
         } catch (Exception e) {
+            LOG.warn("Operation checkIntygstjansten failed", e.getMessage());
             ok = false;
         }
 

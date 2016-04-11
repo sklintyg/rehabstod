@@ -44,7 +44,7 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
 
     private List<String> errors = new ArrayList<String>();
 
-    public AuthExpectationSpecImpl(RehabstodUser user, Optional<String> intygstyp) {
+    public AuthExpectationSpecImpl(RehabstodUser user) {
         this.user = user;
     }
 
