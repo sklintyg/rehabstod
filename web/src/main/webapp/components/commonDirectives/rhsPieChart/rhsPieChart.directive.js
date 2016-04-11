@@ -41,6 +41,9 @@ angular.module('rehabstodApp').directive('rhsPieChart',
                                 chart.series[0].setData(newData);
                             }
                             chart.reflow();
+                            //REHAB-221: IE will include svg elements in tab sequence if focusable=true.
+                            //We don't want that.
+                            angular.element(chart.container).find('svg').attr('focusable', false);
                         }
                     });
                 }
