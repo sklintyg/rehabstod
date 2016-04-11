@@ -19,11 +19,12 @@
 package se.inera.intyg.rehabstod.service.monitoring.ntjp;
 
 import org.apache.commons.lang3.time.StopWatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
@@ -35,6 +36,8 @@ import javax.xml.ws.soap.SOAPFaultException;
  */
 @Service
 public class PingForConfigurationServiceBean implements PingForConfigurationService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PingForConfigurationServiceBean.class);
 
     /**
      * NTjP QA PfC always responds with "VP004 No Logical Adress found for serviceNamespace:urn:riv:itintegration:monitoring:PingForConfigurationResponder:1, receiverId:SExxxxxxxxxx-xxxx"
@@ -49,6 +52,26 @@ public class PingForConfigurationServiceBean implements PingForConfigurationServ
     @Qualifier("ntjpPingWebServiceClient")
     private PingForConfigurationResponderInterface pfcService;
 
+
+    /**
+     * This "NTjP" ping is a bit of a hack to mitigate the fact that services consumed over NTjP cannot be "Pinged"
+     * using PingForConfiguration due to NTjP addressing issues, among things.
+     *
+     * Therefore, we try to issue a SOAP request for itintegration:monitoring:PingForConfiguration for a given logicalAddress.
+     * We'll typically get some kind of error back, but the fact that we ARE getting a structured error back means that
+     * our connection to NTjP is working properly.
+     *
+     * Therefore - a SOAPFaultException whose message starts with the known
+     * {@link PingForConfigurationServiceBean#NO_LOGICAL_ADDRESS_ERR_PREFIX} means that the NTjP ping is working OK.
+     *
+     * In the future, NTjP and service producers will hopefully implement proper PingForConfiguration services where
+     * we can query them by their logicalAddresses. Until then, this "hack" will have to suffice.     *
+     *
+     * @param withLogicalAddress
+     *      Not used at the moment
+     * @return
+     *      true or false HealthStatus
+     */
     @Override
     public HealthStatus pingNtjp(String withLogicalAddress) {
         PingForConfigurationType reqType = new PingForConfigurationType();
@@ -61,11 +84,11 @@ public class PingForConfigurationServiceBean implements PingForConfigurationServ
             stopWatch.stop();
             return new HealthStatus(stopWatch.getTime(), true);
         } catch (SOAPFaultException e) {
-
             stopWatch.stop();
-            if (e.getMessage().startsWith(NO_LOGICAL_ADDRESS_ERR_PREFIX)) {
+            if (e.getMessage() != null && e.getMessage().startsWith(NO_LOGICAL_ADDRESS_ERR_PREFIX)) {
                 return new HealthStatus(stopWatch.getTime(), true);
             } else {
+                LOG.error("NTjP ping attempt failed with SOAPFaultException. Message: {}", e.getMessage());
                 return new HealthStatus(stopWatch.getTime(), false);
             }
         }
