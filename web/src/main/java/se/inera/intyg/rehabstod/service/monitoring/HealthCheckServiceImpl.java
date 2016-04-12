@@ -177,7 +177,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
             LOG.error("checkJmsConnection failed with JMSException: {}", e);
             return false;
         } catch (Exception e) {
-            LOG.error(String.format("checkJmsConnection failed with exception of class: %s. Message: %s", e.getClass().getName()), e);
+            LOG.error(String.format("checkJmsConnection failed with exception of class: %s. Message: %s", e.getClass().getName(), e.getMessage()), e);
             return false;
         }
         return true;
