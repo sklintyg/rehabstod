@@ -18,13 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,12 +33,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
+import se.inera.intyg.rehabstod.service.export.pdf.PdfExportServiceException;
 import se.inera.intyg.rehabstod.service.export.util.ExportUtil;
 import se.inera.intyg.rehabstod.service.export.xlsx.XlsxExportService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
@@ -57,7 +50,11 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
-import com.itextpdf.text.DocumentException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -139,7 +136,7 @@ public class SjukfallController {
 
             return new ResponseEntity<>(new ByteArrayResource(pdfData), respHeaders, HttpStatus.OK);
 
-        } catch (RuntimeException | DocumentException | IOException e) {
+        } catch (PdfExportServiceException e) {
             throw new RehabExportException("Failed to create PDF export", e);
         }
     }

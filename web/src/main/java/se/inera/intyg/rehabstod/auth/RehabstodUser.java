@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package se.inera.intyg.rehabstod.auth;
 
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
@@ -33,7 +34,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by pebe on 2015-08-11.
+ * @author pebe on 2015-08-11.
  */
 public class RehabstodUser implements Serializable {
 

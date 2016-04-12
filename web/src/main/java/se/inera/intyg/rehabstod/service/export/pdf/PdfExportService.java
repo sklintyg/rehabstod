@@ -18,12 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import com.itextpdf.text.DocumentException;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -32,6 +30,6 @@ import java.util.List;
 public interface PdfExportService {
 
     byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total)
-            throws DocumentException, IOException;
+            throws PdfExportServiceException;
 
 }

@@ -136,7 +136,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
             addFilterHeader(sheet, rowNumber++, filterTitle, userService.getUser().getNamn());
             return rowNumber;
         }
-        if (lakareList == null || lakareList.size() == 0) {
+        if (lakareList == null || lakareList.isEmpty()) {
             addFilterHeader(sheet, rowNumber++, filterTitle, SELECTION_VALUE_ALLA);
             return rowNumber;
         }
@@ -151,7 +151,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     private int addDiagnosKapitel(XSSFSheet sheet, int currentRowNumber, String filterTitle, List<String> diagnosGrupper) {
         int rowNumber = currentRowNumber;
 
-        if (diagnosGrupper == null || diagnosGrupper.size() == 0) {
+        if (diagnosGrupper == null || diagnosGrupper.isEmpty()) {
             addFilterHeader(sheet, rowNumber++, filterTitle, SELECTION_VALUE_ALLA);
             return rowNumber;
         }
@@ -256,7 +256,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
             Sjukfall sf = sjukfallList.get(a).getSjukfall();
 
             int colIndex = 0;
-            createDataCell(row, colIndex++, "" + (a + 1));
+            createDataCell(row, colIndex++, Integer.toString(a + 1));
             createRichTextDataCell(row, colIndex++, buildPersonnummerAndAgeRichText(sf.getPatient()));
             createDataCell(row, colIndex++, sf.getPatient().getNamn());
             createDataCell(row, colIndex++, sf.getPatient().getKon().getDescription());
@@ -287,7 +287,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
     private XSSFRichTextString buildGraderRichText(Sjukfall sf) {
 
-        if (sf.getGrader() == null || sf.getGrader().size() == 0) {
+        if (sf.getGrader() == null || sf.getGrader().isEmpty()) {
             return new XSSFRichTextString();
         }
 

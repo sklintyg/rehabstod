@@ -61,6 +61,15 @@ public class AuthoritiesResolver {
     @Autowired
     private HsaPersonService hsaPersonService;
 
+    private Function<String, RequestOrigin> fnRequestOrigin = name ->
+            getRequestOrigins().stream().filter(isRequestOrigin(name)).findFirst().orElse(null);
+
+    private Function<String, Role> fnRole = name ->
+            getRoles().stream().filter(isRole(name)).findFirst().orElse(null);
+
+    private BiFunction<String, String, TitleCode> fnTitleCode = (titleCode, groupPrescriptionCode) ->
+            getTitleCodes().stream().filter(isTitleCode(titleCode).and(isGroupPrescriptionCode(groupPrescriptionCode))).findFirst().orElse(null);
+
 
     // ~ API
     // ======================================================================================
@@ -329,14 +338,5 @@ public class AuthoritiesResolver {
     private Predicate<TitleCode> isGroupPrescriptionCode(String groupPrescriptionCode) {
         return tc -> tc.getGroupPrescriptionCode() != null && tc.getGroupPrescriptionCode().equalsIgnoreCase(groupPrescriptionCode);
     }
-
-    private Function<String, RequestOrigin> fnRequestOrigin = name ->
-            getRequestOrigins().stream().filter(isRequestOrigin(name)).findFirst().orElse(null);
-
-    private Function<String, Role> fnRole = name ->
-            getRoles().stream().filter(isRole(name)).findFirst().orElse(null);
-
-    private BiFunction<String, String, TitleCode> fnTitleCode = (titleCode, groupPrescriptionCode) ->
-            getTitleCodes().stream().filter(isTitleCode(titleCode).and(isGroupPrescriptionCode(groupPrescriptionCode))).findFirst().orElse(null);
 
 }

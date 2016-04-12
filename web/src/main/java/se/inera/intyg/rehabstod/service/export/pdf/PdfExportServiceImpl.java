@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package se.inera.intyg.rehabstod.service.export.pdf;
 
 import com.itextpdf.text.BaseColor;
@@ -72,42 +73,45 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     @Override
     public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total)
-            throws DocumentException, IOException {
-
-        unicodeCapableFont = new Font(BaseFont.createFont(UNICODE_CAPABLE_FONT_PATH, BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 9, Font.NORMAL);
+            throws PdfExportServiceException {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-        Document document = new Document();
+        try {
+            unicodeCapableFont = new Font(BaseFont.createFont(UNICODE_CAPABLE_FONT_PATH, BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 9, Font.NORMAL);
 
-        document.setPageSize(PageSize.A4);
-        document.setMargins(20, 20, 60, 20);
+            Document document = new Document();
+            document.setPageSize(PageSize.A4);
+            document.setMargins(20, 20, 60, 20);
 
-        PdfWriter writer = PdfWriter.getInstance(document, bos);
-        // Add handlers for page events
+            PdfWriter writer = PdfWriter.getInstance(document, bos);
+            // Add handlers for page events
 
-        writer.setPageEvent(new HeaderEventHandler(
-                Image.getInstance(IOUtils.toByteArray(resourcePatternResolver.getResource(LOGO_PATH).getInputStream())),
-                user.getNamn(), user.getValdVardenhet().getNamn()));
-        writer.setPageEvent(new PageNumberingEventHandler());
+            writer.setPageEvent(new HeaderEventHandler(
+                    Image.getInstance(IOUtils.toByteArray(resourcePatternResolver.getResource(LOGO_PATH).getInputStream())),
+                    user.getNamn(), user.getValdVardenhet().getNamn()));
+            writer.setPageEvent(new PageNumberingEventHandler());
 
-        document.open();
+            document.open();
 
-        // Add the front page with meta info
-        document.add(createFrontPage(printSjukfallRequest, user, sjukfallList.size(), total));
+            // Add the front page with meta info
+            document.add(createFrontPage(printSjukfallRequest, user, sjukfallList.size(), total));
 
-        // Switch to landscape mode
-        document.setPageSize(PageSize.A4.rotate());
-        document.newPage();
+            // Switch to landscape mode
+            document.setPageSize(PageSize.A4.rotate());
+            document.newPage();
 
-        // Add table with all sjukfall (could span several pages)
-        document.add(createSjukfallTable(sjukfallList, user.getUrval()));
+            // Add table with all sjukfall (could span several pages)
+            document.add(createSjukfallTable(sjukfallList, user.getUrval()));
 
-        // Finish off by closing the document (will invoke the event handlers)
-        document.close();
+            // Finish off by closing the document (will invoke the event handlers)
+            document.close();
+
+        } catch (DocumentException | IOException | RuntimeException e) {
+            throw new PdfExportServiceException("Failed to create PDF export!", e);
+        }
 
         return bos.toByteArray();
-
     }
 
     private Element createFrontPage(PrintSjukfallRequest printRequest, RehabstodUser user, int showing, int total) {

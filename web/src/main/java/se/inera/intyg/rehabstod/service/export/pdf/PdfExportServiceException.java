@@ -16,18 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.integration.it.config;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+package se.inera.intyg.rehabstod.service.export.pdf;
+
+import se.inera.intyg.rehabstod.service.exceptions.ServiceException;
 
 /**
- * Just a placeholder class to configure by @ComponentScan and @ImportResource.
+ * Created by Magnus Ekstrand on 2016-04-12.
  */
-@Configuration
-@ComponentScan({
-        "se.inera.intyg.rehabstod.integration.it.client",
-        "se.inera.intyg.rehabstod.integration.it.service" })
-@SuppressWarnings("all")
-public class IntygstjanstIntegrationConfiguration {
+public class PdfExportServiceException extends ServiceException {
+    /**
+     * Constructs an {@code ServiceException} with the specified message and root
+     * cause.
+     *
+     * @param msg the detail message
+     * @param t   the root cause
+     */
+    public PdfExportServiceException(String msg, Throwable t) {
+        super(msg, t);
+    }
+
+    /**
+     * Constructs an {@code ServiceException} with the specified message and no
+     * root cause.
+     *
+     * @param msg the detail message
+     */
+    public PdfExportServiceException(String msg) {
+        super(msg);
+    }
 }
