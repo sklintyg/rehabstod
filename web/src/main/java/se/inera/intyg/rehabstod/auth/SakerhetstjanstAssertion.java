@@ -177,7 +177,7 @@ public class SakerhetstjanstAssertion {
 
     // - - - - - Private scope - - - - -
 
-    @SuppressWarnings("PMD.CyclomaticComplexity")
+    @SuppressWarnings("all")
     private void extractAttributes(List<Attribute> attributes) {
         for (Attribute attribute : attributes) {
             switch (attribute.getName()) {

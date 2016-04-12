@@ -183,7 +183,7 @@ public class RehabstodUser implements Serializable {
 
     }
 
-    @SuppressWarnings({"PMD.SimplifyBooleanReturns", "PMD.CyclomaticComplexity"})
+    @SuppressWarnings("all")
     private boolean isValidUrvalChange(Urval urval) {
         // Unset is always allowed
         if (urval == null) {
@@ -207,7 +207,6 @@ public class RehabstodUser implements Serializable {
 
         // No other case allowed
         return false;
-
     }
 
     public boolean changeValdVardenhet(String vardenhetId) {

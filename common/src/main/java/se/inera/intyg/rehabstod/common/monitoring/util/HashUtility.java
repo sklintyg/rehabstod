@@ -18,22 +18,18 @@
  */
 package se.inera.intyg.rehabstod.common.monitoring.util;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public final class HashUtility {
 
-    private HashUtility() {
-    }
-
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(HashUtility.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HashUtility.class);
 
     private static final String DIGEST = "SHA-256";
     private static final MessageDigest MSG_DIGEST;
@@ -50,6 +46,15 @@ public final class HashUtility {
         }
         MSG_DIGEST = tmp;
     }
+
+
+    // constructors
+
+    private HashUtility() {
+    }
+
+
+    // api
 
     public static String hash(String payload) {
         if (StringUtils.isEmpty(payload)) {

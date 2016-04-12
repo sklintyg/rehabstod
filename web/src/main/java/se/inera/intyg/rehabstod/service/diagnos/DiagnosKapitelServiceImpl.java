@@ -22,19 +22,17 @@ package se.inera.intyg.rehabstod.service.diagnos;
  * Created by marced on 08/02/16.
  */
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DiagnosKapitelServiceImpl implements DiagnosKapitelService {
@@ -52,8 +50,7 @@ public class DiagnosKapitelServiceImpl implements DiagnosKapitelService {
             diagnosKapitelList = diagnosKapitelLoader.loadDiagnosKapitel();
             diagnosKapitelList.add(OGILTIGA_DIAGNOSKODER_KAPITEL);
         } catch (IOException e) {
-            LOG.error("Failed to load diagnosKapitelList!");
-            throw new RuntimeException(e);
+            throw new DiagnosServiceException("Failed to load diagnosKapitelList!", e);
         }
         LOG.info("Loaded " + diagnosKapitelList.size() + " diagnosKapitelList definitions");
     }

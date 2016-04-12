@@ -48,7 +48,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
     private static final Logger LOG = LoggerFactory.getLogger(HealthCheckServiceImpl.class);
 
     private static final long START_TIME = System.currentTimeMillis();
-
+    private static final long BAD_HEALTHSTATUS_MEASUREMNET = -1L;
 
     // JMS
     @Autowired
@@ -80,24 +80,16 @@ public class HealthCheckServiceImpl implements HealthCheckService {
 
     @Override
     public HealthStatus checkPdlLogQueue() {
-        try {
-            HealthStatus healthStatus = checkQueueDepth(jmsPDLLogTemplate);
-            LOG.info("Operation checkPdlLogQueue completed with queue size {}", healthStatus.getMeasurement());
-            return healthStatus;
-        } catch (Exception e) {
-            return new HealthStatus(-1, false);
-        }
+        HealthStatus healthStatus = checkQueueDepth(jmsPDLLogTemplate);
+        LOG.info("Operation checkPdlLogQueue completed with queue size {}", healthStatus.getMeasurement());
+        return healthStatus;
     }
 
     @Override
     public HealthStatus checkPdlAggregatedLogQueue() {
-        try {
-            HealthStatus healthStatus = checkQueueDepth(jmsAggregatedPDLLogTemplate);
-            LOG.info("Operation checkPdlAggregatedLogQueue completed with queue size {}", healthStatus.getMeasurement());
-            return healthStatus;
-        } catch (Exception e) {
-            return new HealthStatus(-1, false);
-        }
+        HealthStatus healthStatus = checkQueueDepth(jmsAggregatedPDLLogTemplate);
+        LOG.info("Operation checkPdlAggregatedLogQueue completed with queue size {}", healthStatus.getMeasurement());
+        return healthStatus;
     }
 
     @Override
@@ -111,7 +103,6 @@ public class HealthCheckServiceImpl implements HealthCheckService {
         return status;
     }
 
-
     @Override
     public HealthStatus checkNbrOfUsers() {
         boolean ok;
@@ -121,7 +112,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
             size = allPrincipals.size();
             ok = true;
         } catch (Exception e) {
-            LOG.warn("Operation checkNbrOfUsers failed", e.getMessage());
+            LOG.warn("Operation checkNbrOfUsers failed", e);
             ok = false;
         }
 
@@ -130,8 +121,6 @@ public class HealthCheckServiceImpl implements HealthCheckService {
 
         return new HealthStatus(size, ok);
     }
-
-
 
     @Override
     public HealthStatus checkHSA() {
@@ -148,7 +137,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
             PingForConfigurationResponseType pingResponse = intygstjanstClientService.pingForConfiguration();
             ok = pingResponse !=  null && pingResponse.getPingDateTime() !=  null;
         } catch (Exception e) {
-            LOG.warn("Operation checkIntygstjansten failed", e.getMessage());
+            LOG.warn("Operation checkIntygstjansten failed", e);
             ok = false;
         }
 
@@ -185,27 +174,38 @@ public class HealthCheckServiceImpl implements HealthCheckService {
             Connection connection = connectionFactory.createConnection();
             connection.close();
         } catch (JMSException e) {
-            LOG.error("checkJmsConnection failed with JMSException: {}", e.getMessage());
+            LOG.error("checkJmsConnection failed with JMSException: {}", e);
             return false;
         } catch (Exception e) {
-            LOG.error("checkJmsConnection failed with exception of class: {}. Message: {}", e.getClass().getName(), e.getMessage());
+            LOG.error(String.format("checkJmsConnection failed with exception of class: %s. Message: %s", e.getClass().getName()), e);
             return false;
         }
         return true;
     }
 
     private HealthStatus checkQueueDepth(JmsTemplate tpl) {
-        int queueDepth = tpl.browse((session, browser) -> {
-            Enumeration<?> enumeration = browser.getEnumeration();
-            int qd = 0;
-            while (enumeration.hasMoreElements()) {
-                enumeration.nextElement();
-                qd++;
-            }
-            return qd;
-        });
-        return new HealthStatus(queueDepth, true);
-    }
+        long queueDepth = 0;
+        boolean status = false;
 
+        try {
+            queueDepth = tpl.browse((session, browser) -> {
+                Enumeration<?> enumeration = browser.getEnumeration();
+                long qd = 0;
+                while (enumeration.hasMoreElements()) {
+                    enumeration.nextElement();
+                    qd++;
+                }
+                return qd;
+            });
+
+            status = true;
+
+        } catch (Exception e) {
+            LOG.warn("Error when checking queue depth", e);
+            queueDepth = BAD_HEALTHSTATUS_MEASUREMNET;
+        }
+
+        return new HealthStatus(queueDepth, status);
+    }
 
 }

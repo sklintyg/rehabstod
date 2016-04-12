@@ -16,21 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.common.monitoring.util;
+package se.inera.intyg.rehabstod.service.sjukfall;
 
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
+import se.inera.intyg.rehabstod.service.exceptions.ServiceException;
 
-public final class LogMarkers {
+/**
+ * Created by Magnus Ekstrand on 2016-02-22.
+ */
+public class SjukfallServiceException extends ServiceException {
 
-    public static final Marker VALIDATION = MarkerFactory.getMarker("Validation");
-    public static final Marker MONITORING = MarkerFactory.getMarker("Monitoring");
-    public static final Marker HSA = MarkerFactory.getMarker("HSA");
+    /**
+     * Constructs an {@code ServiceException} with the specified message and root
+     * cause.
+     *
+     * @param msg the detail message
+     * @param t   the root cause
+     */
+    public SjukfallServiceException(String msg, Throwable t) {
+        super(msg, t);
+    }
 
-
-    // constructors
-
-    private LogMarkers() {
+    /**
+     * Constructs an {@code ServiceException} with the specified message and no
+     * root cause.
+     *
+     * @param msg the detail message
+     */
+    public SjukfallServiceException(String msg) {
+        super(msg);
     }
 
 }

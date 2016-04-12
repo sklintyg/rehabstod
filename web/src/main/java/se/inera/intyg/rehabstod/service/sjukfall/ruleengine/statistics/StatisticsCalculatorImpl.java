@@ -18,6 +18,20 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine.statistics;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosGruppLoader;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
+import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.DiagnosGruppStat;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.GenderStat;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
+import se.inera.intyg.rehabstod.web.model.Gender;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,26 +40,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import se.inera.intyg.rehabstod.service.diagnos.DiagnosGruppLoader;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.DiagnosGruppStat;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.GenderStat;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
-import se.inera.intyg.rehabstod.web.model.Gender;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
-
 /**
  * Created by marced on 04/03/16.
  */
 @Component
 public class StatisticsCalculatorImpl implements StatisticsCalculator {
+
     private static final Logger LOG = LoggerFactory.getLogger(StatisticsCalculatorImpl.class);
 
     public static final DiagnosGrupp NON_MATCHING_GROUP = new DiagnosGrupp("", new ArrayList<>(), "Utan giltig diagnoskod");
@@ -60,8 +60,7 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
         try {
             diagnosGrupper = diagnosGruppLoader.loadDiagnosGrupper();
         } catch (IOException e) {
-            LOG.error("Failed to load diagnosGruppList!");
-            throw new RuntimeException(e);
+            throw new SjukfallServiceException("Failed to load diagnosGruppList!", e);
         }
         LOG.info("Loaded " + diagnosGrupper.size() + " diagnosGrupper definitions");
     }

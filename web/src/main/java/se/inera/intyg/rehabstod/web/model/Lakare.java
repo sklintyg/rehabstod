@@ -28,11 +28,8 @@ public class Lakare {
     private String hsaId;
     private String namn;
 
-    public Lakare() {
-    }
 
     // getters and setters
-
 
     public String getHsaId() {
         return hsaId;
@@ -49,6 +46,9 @@ public class Lakare {
     public void setNamn(String namn) {
         this.namn = namn;
     }
+
+
+    // api
 
     @Override
     public boolean equals(Object o) {

@@ -31,8 +31,7 @@ public class Diagnos {
     private String beskrivning;
 
 
-    public Diagnos() {
-    }
+    // - - - Getters and setters - - -
 
     public String getIntygsVarde() {
         return intygsVarde;
@@ -65,6 +64,9 @@ public class Diagnos {
     public void setBeskrivning(String beskrivning) {
         this.beskrivning = beskrivning;
     }
+
+
+    // - - - API - - -
 
     @Override
     public boolean equals(Object o) {

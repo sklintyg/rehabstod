@@ -32,37 +32,25 @@ import java.util.regex.Pattern;
  * Created by marced on 08/02/16.^
  */
 public class DiagnosKapitel {
+
     public static final Pattern VALID_DIAGNOSKAPITEL_ROW_FORMAT = Pattern.compile("^([A-Z]{1})([0-9]{2})-([A-Z]{1})([0-9]{2})(.*)");
+
     private static final int FROM_CHAR = 1;
     private static final int FROM_NUMBER = 2;
     private static final int TO_CHAR = 3;
     private static final int TO_NUMBER = 4;
     private static final int NAME = 5;
-    private static final String SEPARATOR = "-";
     private static final int CHAR_MULTIPLIER = 100;
+
+    private static final String SEPARATOR = "-";
 
     private DiagnosKategori from;
     private DiagnosKategori to;
 
     private String name;
 
-    public String getName() {
-        return name;
-    }
 
-    public DiagnosKategori getFrom() {
-        return from;
-    }
-
-    public DiagnosKategori getTo() {
-        return to;
-    }
-
-    public DiagnosKapitel(DiagnosKategori from, DiagnosKategori to, String name) {
-        this.from = from;
-        this.to = to;
-        this.name = name;
-    }
+    // constructors
 
     /**
      * Constructor that only accepts a diagnose code interval source string in the form "AXX-BXXSome description".
@@ -82,6 +70,30 @@ public class DiagnosKapitel {
                     + VALID_DIAGNOSKAPITEL_ROW_FORMAT.pattern());
         }
     }
+
+    public DiagnosKapitel(DiagnosKategori from, DiagnosKategori to, String name) {
+        this.from = from;
+        this.to = to;
+        this.name = name;
+    }
+
+
+    // getters and setters
+
+    public String getName() {
+        return name;
+    }
+
+    public DiagnosKategori getFrom() {
+        return from;
+    }
+
+    public DiagnosKategori getTo() {
+        return to;
+    }
+
+
+    // api
 
     /**
      * Returns an composite indentifying string for the interval in the form of "A00-B99".
@@ -131,4 +143,5 @@ public class DiagnosKapitel {
     public int hashCode() {
         return Objects.hash(from, to, name);
     }
+
 }

@@ -33,11 +33,9 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 
 /**
- * Created by martin on 03/02/16.
+ * @author Martin Hesslund on 03/02/16.
  */
 public class UserApiControllerIT extends BaseRestIntegrationTest {
-
-
 
     @Test
     public void testGetAnvandare() {
@@ -67,8 +65,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
         // An improvement of this would be to call hsaStub rest api to add testa data as we want it to
         // avoid "magic" ids and the dependency to bootstrapped data?
         final String vardEnhetToChangeTo = "TSTNMT2321000156-105P";
-        ChangeSelectedUnitRequest changeRequest = new ChangeSelectedUnitRequest();
-        changeRequest.setId(vardEnhetToChangeTo);
+        ChangeSelectedUnitRequest changeRequest = new ChangeSelectedUnitRequest(vardEnhetToChangeTo);
 
         given().contentType(ContentType.JSON).and().body(changeRequest).when().post(USER_API_ENDPOINT + "/andraenhet").
                 then().
@@ -91,8 +88,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
         // An improvement of this would be to call hsaStub rest api to add testa data as we want it to
         // avoid "magic" ids and the dependency to bootstrapped data?
         final String vardEnhetToChangeTo = "non-existing-vardenehet-id";
-        ChangeSelectedUnitRequest changeRequest = new ChangeSelectedUnitRequest();
-        changeRequest.setId(vardEnhetToChangeTo);
+        ChangeSelectedUnitRequest changeRequest = new ChangeSelectedUnitRequest(vardEnhetToChangeTo);
 
         given().contentType(ContentType.JSON).and().body(changeRequest).expect().
                 statusCode(SERVER_ERROR).when().post(USER_API_ENDPOINT + "/andraenhet");

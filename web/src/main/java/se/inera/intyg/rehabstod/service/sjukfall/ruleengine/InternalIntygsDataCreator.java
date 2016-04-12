@@ -39,8 +39,8 @@ public class InternalIntygsDataCreator {
 
     private static final Logger LOG = LoggerFactory.getLogger(InternalIntygsDataCreator.class);
 
-    public InternalIntygsDataCreator() {
-    }
+
+    // - - - API - - -
 
     public Map<String, List<InternalIntygsData>> create(List<IntygsData> intygsData, LocalDate aktivtDatum) {
         LOG.debug("Start creating a map with storing application specific certificate information...");
@@ -81,12 +81,10 @@ public class InternalIntygsDataCreator {
     Map<String, List<InternalIntygsData>> reduceMap(Map<String, List<InternalIntygsData>> map) {
         LOG.debug("  2. Reduce map - filter out each entry where there is no active certificate.");
 
-        Map<String, List<InternalIntygsData>> reducedMap = map.entrySet().stream()
+        return map.entrySet().stream()
                 .filter(e -> e.getValue().stream()
                         .filter(o -> o.isAktivtIntyg()).count() > 0)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-        return reducedMap;
     }
 
     /**
@@ -103,13 +101,11 @@ public class InternalIntygsDataCreator {
         // Lambda comparator
         Comparator<InternalIntygsData> endDateComparator = (o1, o2) -> o1.getSlutDatum().compareTo(o2.getSlutDatum());
 
-        Map<String, List<InternalIntygsData>> sortedMap = unsortedMap.entrySet().stream()
+        return unsortedMap.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         e -> e.getValue().stream()
                                 .sorted(endDateComparator)
                                 .collect(Collectors.toList())));
-
-        return sortedMap;
     }
 
     Map<String, List<InternalIntygsData>> setActive(Map<String, List<InternalIntygsData>> map) {

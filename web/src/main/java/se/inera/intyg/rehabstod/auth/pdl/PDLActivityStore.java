@@ -21,13 +21,12 @@ package se.inera.intyg.rehabstod.auth.pdl;
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by marced on 23/02/16.
  */
-public interface PDLActivityStore extends Serializable {
+public interface PDLActivityStore {
 
     /**
      * Should return list of sjukfall (internally identified by patient) not already present in store for this vardenhet

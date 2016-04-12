@@ -30,8 +30,8 @@ public class Patient {
 
     private int alder;
 
-    public Patient() {
-    }
+
+    // getters and setters
 
     public String getId() {
         return id;
@@ -64,6 +64,9 @@ public class Patient {
     public void setAlder(int alder) {
         this.alder = alder;
     }
+
+
+    // api
 
     @Override
     public boolean equals(Object o) {

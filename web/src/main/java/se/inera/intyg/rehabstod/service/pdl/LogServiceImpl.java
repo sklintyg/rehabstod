@@ -71,7 +71,7 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public void logSjukfallData(List<InternalSjukfall> sjukfallList, ActivityType activityType) {
-        if (sjukfallList.size() == 0) {
+        if (sjukfallList == null || sjukfallList.isEmpty()) {
             LOG.debug("No sjukfall in resource list for PDL logging, not logging.");
             return;
         }

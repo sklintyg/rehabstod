@@ -74,13 +74,14 @@ public class DiagnosGrupp {
      * @return
      */
     private List<DiagnosKapitel> convertToKapitelList(String kapitelListString) {
-        List<DiagnosKapitel> kapitelList = new ArrayList<>();
-        final String[] list = kapitelListString.split(KAPITELLIST_SEPARATOR);
+        List<DiagnosKapitel> list = new ArrayList<>();
+        final String[] arr = kapitelListString.split(KAPITELLIST_SEPARATOR);
 
-        for (String kapitelId : list) {
-            kapitelList.add(new DiagnosKapitel(kapitelId));
+        for (String kapitelId : arr) {
+            list.add(new DiagnosKapitel(kapitelId));
         }
-        return kapitelList;
+
+        return list;
     }
 
     public boolean includes(String diagnosKod) {

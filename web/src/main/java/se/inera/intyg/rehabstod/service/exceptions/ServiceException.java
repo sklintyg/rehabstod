@@ -16,32 +16,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.auth.exceptions;
 
-import org.springframework.security.core.AuthenticationException;
+package se.inera.intyg.rehabstod.service.exceptions;
 
 /**
- * Created by Magnus Ekstrand on 2016-04-07.
+ * Abstract superclass for all exceptions related to a Service object
+ * being invalid for whatever reason.
+ *
+ * @author by Magnus Ekstrand on 2016-04-12.
  */
-public class GenericAuthenticationException extends AuthenticationException {
+public abstract class ServiceException extends RuntimeException {
+
+    // ~ Constructors
+    // ===================================================================================================
+
     /**
-     * Constructs an {@code GenericAuthenticationException} with the specified message and root
+     * Constructs an {@code ServiceException} with the specified message and root
      * cause.
      *
      * @param msg the detail message
-     * @param t   the root cause
+     * @param t the root cause
      */
-    public GenericAuthenticationException(String msg, Throwable t) {
+    public ServiceException(String msg, Throwable t) {
         super(msg, t);
     }
 
     /**
-     * Constructs an {@code GenericAuthenticationException} with the specified message and no
+     * Constructs an {@code ServiceException} with the specified message and no
      * root cause.
      *
      * @param msg the detail message
      */
-    public GenericAuthenticationException(String msg) {
+    public ServiceException(String msg) {
         super(msg);
     }
+
 }

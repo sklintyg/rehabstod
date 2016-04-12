@@ -18,15 +18,17 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine.util;
 
-import java.util.List;
-import java.util.Stack;
-import java.util.stream.Collectors;
-
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.InternalIntygsData;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Calulates the effective length of all arbetsformaga intervals contained in the SortableIntygsData's, making sure to
  * merge overlapping intervals first.
+ *
  * Created by marced on 19/02/16.
  */
 public final class SjukfallLangdCalculator {
@@ -48,9 +50,7 @@ public final class SjukfallLangdCalculator {
         List<LocalDateInterval> mergedIntervals = mergeIntervals(allIntervals);
 
         // calculate sum of total length of remaining intervals
-        int totalDays = (int) mergedIntervals.stream().mapToLong(i -> i.getDurationInDays()).sum();
-
-        return totalDays;
+        return (int) mergedIntervals.stream().mapToLong(i -> i.getDurationInDays()).sum();
     }
 
     static List<LocalDateInterval> mergeIntervals(List<LocalDateInterval> allIntervals) {
@@ -60,7 +60,7 @@ public final class SjukfallLangdCalculator {
         }
         // 1. Sort them from lowest starting time to highest starting time
         allIntervals.sort((i1, i2) -> i1.getStartDate().compareTo(i2.getStartDate()));
-        Stack<LocalDateInterval> stack = new Stack<>();
+        Deque<LocalDateInterval> stack = new ArrayDeque<>();
 
         stack.push(allIntervals.get(0));
         for (int i = 1; i < allIntervals.size(); i++) {
@@ -80,7 +80,8 @@ public final class SjukfallLangdCalculator {
                 stack.push(top);
             }
         }
-        return stack;
+
+        return stack.stream().collect(Collectors.toList());
     }
 
 }

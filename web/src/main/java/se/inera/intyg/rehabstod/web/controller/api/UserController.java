@@ -38,19 +38,18 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetUserResponse;
 @RequestMapping("/api/user")
 public class UserController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     UserService userService;
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+
+    // api
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public GetUserResponse getUser() {
-        RehabstodUser user = userService.getUser();
-        if (user == null) {
-            throw new AuthoritiesException("No user in session");
-        } else {
-            return new GetUserResponse(user);
-        }
+        RehabstodUser user = getRehabstodUser();
+        return new GetUserResponse(user);
     }
 
     /**
@@ -62,11 +61,8 @@ public class UserController {
     @RequestMapping(value = "/andraenhet", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public GetUserResponse changeSelectedUnitOnUser(@RequestBody ChangeSelectedUnitRequest changeSelectedEnhetRequest) {
 
-        RehabstodUser user = userService.getUser();
+        RehabstodUser user = getRehabstodUser();
 
-        if (user == null) {
-            throw new AuthoritiesException("No user in session");
-        }
         LOG.debug("Attempting to change selected unit for user '{}', currently selected unit is '{}'", user.getHsaId(),
                 user.getValdVardenhet().getId());
 
@@ -85,11 +81,8 @@ public class UserController {
     @RequestMapping(value = "/urval", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public GetUserResponse changeSelectedUrvalOnUser(@RequestBody ChangeUrvalRequest changeUrvalRequest) {
 
-        RehabstodUser user = userService.getUser();
+        RehabstodUser user = getRehabstodUser();
 
-        if (user == null) {
-            throw new AuthoritiesException("No user in session");
-        }
         boolean changeSuccess = user.changeSelectedUrval(changeUrvalRequest.getUrval());
         if (!changeSuccess) {
             throw new AuthoritiesException(String.format("User %s was not allowed to change urval to %s",
@@ -100,4 +93,19 @@ public class UserController {
 
         return new GetUserResponse(user);
     }
+
+
+    // private scope
+
+    private RehabstodUser getRehabstodUser() {
+        RehabstodUser user = userService.getUser();
+
+        if (user == null) {
+            throw new AuthoritiesException("No user in session");
+        }
+
+        return user;
+    }
+
+
 }

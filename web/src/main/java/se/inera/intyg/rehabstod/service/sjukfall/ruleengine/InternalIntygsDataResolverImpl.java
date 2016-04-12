@@ -37,10 +37,6 @@ public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolve
 
     private static final Logger LOG = LoggerFactory.getLogger(InternalIntygsDataResolverImpl.class);
 
-    /* The sole constructor */
-    public InternalIntygsDataResolverImpl() {
-    }
-
 
     // - - -  API  - - -
 
@@ -50,7 +46,7 @@ public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolve
         LOG.debug("Start resolving certificate information...");
         LOG.debug("  - max days between certificates: {}, active date: {}", maxIntygsGlapp, aktivtDatum);
 
-        if (intygsData == null || intygsData.size() == 0) {
+        if (intygsData == null || intygsData.isEmpty()) {
             LOG.debug("There was no in-data! Returning empty list");
             return new HashMap<>();
         }
@@ -84,7 +80,7 @@ public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolve
         for (Map.Entry<String, List<InternalIntygsData>> entry : intygsDataMap.entrySet()) {
 
             List<InternalIntygsData> reducedList = reduceList(entry.getValue(), maxIntygsGlapp);
-            if (reducedList.size() > 0) {
+            if (!reducedList.isEmpty()) {
                 resultMap.put(entry.getKey(), reducedList);
             }
         }
@@ -182,7 +178,7 @@ public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolve
     Map<String, List<InternalIntygsData>> toMap(List<IntygsData> intygsData, LocalDate aktivtDatum) {
         Map<String, List<InternalIntygsData>> map = new HashMap();
 
-        if (intygsData == null || intygsData.size() == 0) {
+        if (intygsData == null || intygsData.isEmpty()) {
             return map;
         }
 
@@ -198,7 +194,7 @@ public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolve
     private LocalDate getCompareDate(List<InternalIntygsData> right, InternalIntygsData aktivtIntyg) {
         LocalDate smallest = null;
 
-        if (right == null || right.size() == 0) {
+        if (right == null || right.isEmpty()) {
             return  aktivtIntyg.getStartDatum();
         } else if (right.size() == 1) {
             smallest = right.stream().findFirst().get().getStartDatum();

@@ -49,6 +49,7 @@ public class HeaderEventHandler extends PdfPageEventHelper {
         this.enhetsNamn = enhetsNamn;
     }
 
+    @Override
     public void onEndPage(PdfWriter writer, Document document) {
 
         // Create the header table
@@ -75,7 +76,7 @@ public class HeaderEventHandler extends PdfPageEventHelper {
     private PdfPCell printedBy(String userName, String enhetsNamn) {
         LocalDateTime now = new LocalDateTime();
 
-        Phrase printedBy = new Phrase("", PdfExportService.TABLE_CELL_NORMAL);
+        Phrase printedBy = new Phrase("", PdfExportConstants.TABLE_CELL_NORMAL);
         printedBy.add(new Chunk("Utskrift av " + userName));
         printedBy.add(Chunk.NEWLINE);
         printedBy.add(new Chunk(enhetsNamn));
@@ -88,6 +89,7 @@ public class HeaderEventHandler extends PdfPageEventHelper {
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
         cell.setBorder(Rectangle.NO_BORDER);
+
         return cell;
     }
 

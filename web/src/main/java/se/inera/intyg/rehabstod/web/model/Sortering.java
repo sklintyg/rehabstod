@@ -28,8 +28,8 @@ public class Sortering {
     private String kolumn;
     private String order;
 
-    public Sortering() {
-    }
+
+    // getters and setters
 
     public String getKolumn() {
         return kolumn;
@@ -46,6 +46,9 @@ public class Sortering {
     public void setOrder(String order) {
         this.order = order;
     }
+
+
+    // api
 
     @Override
     public boolean equals(Object o) {

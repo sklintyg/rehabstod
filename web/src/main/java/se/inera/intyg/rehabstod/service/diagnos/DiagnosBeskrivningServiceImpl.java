@@ -32,6 +32,7 @@ import java.util.Map;
  */
 @Component
 public class DiagnosBeskrivningServiceImpl implements DiagnosBeskrivningService {
+
     private static final Logger LOG = LoggerFactory.getLogger(DiagnosBeskrivningServiceImpl.class);
 
     private Map<String, String> diagnosBeskrivningMap;
@@ -44,8 +45,7 @@ public class DiagnosBeskrivningServiceImpl implements DiagnosBeskrivningService 
         try {
             diagnosBeskrivningMap = diagnosKoderLoader.loadDiagnosKoder();
         } catch (IOException e) {
-            LOG.error("Failed to load diagnosBeskrivning!");
-            throw new RuntimeException(e);
+            throw new DiagnosServiceException("Failed to load diagnosBeskrivning!", e);
         }
         LOG.info("Loaded " + diagnosBeskrivningMap.size() + " diagnosBeskrivning definitions");
     }

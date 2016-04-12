@@ -23,9 +23,6 @@ package se.inera.intyg.rehabstod.auth.authorities;
  */
 public final class AuthoritiesConstants {
 
-    private AuthoritiesConstants() {
-    }
-
     // Titles, a.k.a 'legitimerad yrkesgrupp', has a coding system governing these titles. See:
     // HSA Innehåll Legitimerad yrkesgrupp
     // http://www.inera.se/TJANSTER--PROJEKT/HSA/Dokument/HSA-kodverk/
@@ -39,5 +36,11 @@ public final class AuthoritiesConstants {
     // Known roles (these roles are copied from authorities.yaml which is the master authorities configuration)
     public static final String ROLE_LAKARE = "LAKARE";
     public static final String ROLE_KOORDINATOR = "REHABKOORDINATOR";
+
+
+    // constructors
+
+    private AuthoritiesConstants() {
+    }
 
 }

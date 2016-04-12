@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities.bootstrap;
 
+import static java.lang.String.format;
+
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +36,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static java.lang.String.format;
 
 /**
  * The authorities configuration is read from a YAML file which is
@@ -76,7 +76,7 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
      *             as failure to set an essential property) or if initialization fails.
      */
     @Override
-    public void afterPropertiesSet() throws AuthoritiesException {
+    public void afterPropertiesSet() {
 
         Resource resource = getResource(authoritiesConfigurationFile);
         String path = null;

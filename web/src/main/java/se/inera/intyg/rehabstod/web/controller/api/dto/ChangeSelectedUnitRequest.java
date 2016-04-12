@@ -22,14 +22,23 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
  * Created by marced on 01/02/16.
  */
 public class ChangeSelectedUnitRequest {
+
     private String id;
 
+
+    // - - - Constructor - - -
+
     public ChangeSelectedUnitRequest() {
+        // Empty constructor is provided to be able to construct
+        // an object without being forced to set an id.
     }
 
     public ChangeSelectedUnitRequest(String id) {
         this.id = id;
     }
+
+
+    // - - - Getter and setter - - -
 
     public String getId() {
         return id;

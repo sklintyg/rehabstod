@@ -42,8 +42,6 @@ public class Sjukfall {
     private List<Integer> grader;
     private int aktivGrad;
 
-    public Sjukfall() {
-    }
 
     // getters and setters
 
@@ -119,6 +117,10 @@ public class Sjukfall {
         this.aktivGrad = aktivGrad;
     }
 
+
+    // api
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -156,7 +158,7 @@ public class Sjukfall {
         return lakare.equals(sjukfall.lakare);
     }
 
-
+    @Override
     public int hashCode() {
         int result = patient.hashCode();
         result = HASH_SEED * result + diagnos.hashCode();

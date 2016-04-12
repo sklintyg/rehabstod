@@ -18,36 +18,20 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import java.io.IOException;
-import java.util.List;
-
+import com.itextpdf.text.DocumentException;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
+import java.io.IOException;
+import java.util.List;
 
 /**
- * Created by marced on 24/02/16.
+ * @author marced on 24/02/16.
  */
 public interface PdfExportService {
-    /**
-     * Fonts that will be used in Rehab export PDF.
-     */
-    Font TABLE_HEADER_FONT = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.WHITE);
-    Font TABLE_CELL_BOLD = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
-    Font TABLE_CELL_NORMAL = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL);
-    Font TABLE_CELL_SMALL = new Font(Font.FontFamily.HELVETICA, 7, Font.NORMAL);
-
-    Font FRONTPAGE_H1 = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
-    Font FRONTPAGE_H2 = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
-    Font FRONTPAGE_H3 = new Font(Font.FontFamily.HELVETICA, 11, Font.BOLD);
-
-    Font FRONTPAGE_NORMAL = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL);
-    Font FRONTPAGE_NORMAL_BOLD = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
 
     byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total)
             throws DocumentException, IOException;
+
 }

@@ -27,12 +27,19 @@ public class ChangeUrvalRequest {
 
     private Urval urval;
 
+    // - - - Constructors - - -
+
     public ChangeUrvalRequest() {
+        // Empty constructor is provided to be able to construct
+        // an object without being forced to set an urval.
     }
 
     public ChangeUrvalRequest(Urval urval) {
         this.urval = urval;
     }
+
+
+    // - - - Getters and setters - - -
 
     public Urval getUrval() {
         return urval;

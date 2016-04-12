@@ -38,7 +38,7 @@ public final class AuthoritiesResolverUtil {
     public static Map<String, Role> toMap(Role role) {
         return Collections.unmodifiableMap(Stream
                 .of(new AbstractMap.SimpleEntry<>(role.getName(), role))
-                .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue())));
     }
 
     public static Map<String, Privilege> toMap(Collection<Privilege> privileges) {

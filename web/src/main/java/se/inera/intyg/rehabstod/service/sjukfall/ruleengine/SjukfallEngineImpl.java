@@ -26,6 +26,7 @@ import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKod;
+import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.util.SjukfallLangdCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
@@ -79,6 +80,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
 
     // - - -  API  - - -
 
+    @Override
     public List<InternalSjukfall> calculate(List<IntygsData> intygsData, GetSjukfallRequest requestData) {
         LOG.debug("Start calculation of sjukfall...");
 
@@ -159,7 +161,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
         InternalIntygsData aktivtIntyg = list.stream()
                 .filter(o -> o.isAktivtIntyg())
                 .findFirst()
-                .orElseThrow(() -> new SjukfallEngineException("Unable to find a 'aktivt intyg'"));
+                .orElseThrow(() -> new SjukfallServiceException("Unable to find a 'aktivt intyg'"));
 
         // Build Sjukfall object
         Sjukfall sjukfall = buildSjukfall(list, aktivtIntyg, aktivtDatum);
@@ -209,7 +211,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
         return list.stream()
                 .filter(f -> f.getStartdatum().compareTo(aktivtDatum) < 1 && f.getSlutdatum().compareTo(aktivtDatum) > -1)
                 .findFirst()
-                .orElseThrow(() -> new SjukfallEngineException("Unable to find an active 'arbetsförmåga'"))
+                .orElseThrow(() -> new SjukfallServiceException("Unable to find an active 'arbetsförmåga'"))
                 .getNedsattning();
     }
 

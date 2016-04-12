@@ -50,6 +50,7 @@ public class PageNumberingEventHandler extends PdfPageEventHelper {
      * @see com.itextpdf.text.pdf.PdfPageEventHelper#onOpenDocument(com.itextpdf.text.pdf.PdfWriter,
      *      com.itextpdf.text.Document)
      */
+    @Override
     public void onOpenDocument(PdfWriter writer, Document document) {
         total = writer.getDirectContent().createTemplate(WIDTH, HEIGHT);
     }
@@ -60,6 +61,7 @@ public class PageNumberingEventHandler extends PdfPageEventHelper {
      * @see com.itextpdf.text.pdf.PdfPageEventHelper#onEndPage(com.itextpdf.text.pdf.PdfWriter,
      *      com.itextpdf.text.Document)
      */
+    @Override
     public void onEndPage(PdfWriter writer, Document document) {
 
         try {
@@ -70,7 +72,7 @@ public class PageNumberingEventHandler extends PdfPageEventHelper {
             table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_RIGHT);
             table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
 
-            table.addCell(new Phrase(String.valueOf(writer.getPageNumber()), PdfExportService.TABLE_CELL_NORMAL));
+            table.addCell(new Phrase(String.valueOf(writer.getPageNumber()), PdfExportConstants.TABLE_CELL_NORMAL));
             PdfPCell cell = new PdfPCell(Image.getInstance(total));
             cell.setBorder(Rectangle.NO_BORDER);
             table.addCell(cell);
@@ -88,9 +90,10 @@ public class PageNumberingEventHandler extends PdfPageEventHelper {
      * @see com.itextpdf.text.pdf.PdfPageEventHelper#onCloseDocument(com.itextpdf.text.pdf.PdfWriter,
      *      com.itextpdf.text.Document)
      */
+    @Override
     public void onCloseDocument(PdfWriter writer, Document document) {
         // CHECKSTYLE:OFF MagicNumber
-        ColumnText.showTextAligned(total, Element.ALIGN_LEFT, new Phrase("(" + String.valueOf(writer.getPageNumber() + ")"), PdfExportService.TABLE_CELL_NORMAL),
+        ColumnText.showTextAligned(total, Element.ALIGN_LEFT, new Phrase("(" + String.valueOf(writer.getPageNumber()) + ")", PdfExportConstants.TABLE_CELL_NORMAL),
                 0, 5, 0);
     }
 }

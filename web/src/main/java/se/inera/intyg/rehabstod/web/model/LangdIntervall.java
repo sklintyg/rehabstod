@@ -21,15 +21,15 @@ package se.inera.intyg.rehabstod.web.model;
 import java.util.Objects;
 
 /**
- * Created by mango on 03/02/16.
+ * Created by Magnus Ekstrand on 03/02/16.
  */
 public class LangdIntervall {
 
     private String min;
     private String max;
 
-    public LangdIntervall() {
-    }
+
+    // getters and setters
 
     public String getMin() {
         return min;
@@ -46,6 +46,9 @@ public class LangdIntervall {
     public void setMax(String max) {
         this.max = max;
     }
+
+
+    // api
 
     @Override
     public boolean equals(Object o) {

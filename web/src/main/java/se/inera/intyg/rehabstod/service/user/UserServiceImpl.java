@@ -32,8 +32,7 @@ public class UserServiceImpl implements UserService {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             return null;
         }
-        RehabstodUser user = (RehabstodUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return user;
+        return (RehabstodUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

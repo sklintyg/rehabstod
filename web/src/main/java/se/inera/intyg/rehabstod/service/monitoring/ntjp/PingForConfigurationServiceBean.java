@@ -88,7 +88,7 @@ public class PingForConfigurationServiceBean implements PingForConfigurationServ
             if (e.getMessage().startsWith(NO_LOGICAL_ADDRESS_ERR_PREFIX)) {
                 return new HealthStatus(stopWatch.getTime(), true);
             } else {
-                LOG.error("NTjP ping attempt failed with SOAPFaultException. Message: {}", e.getMessage());
+                LOG.error("NTjP ping attempt failed with SOAPFaultException.", e);
                 return new HealthStatus(stopWatch.getTime(), false);
             }
         }

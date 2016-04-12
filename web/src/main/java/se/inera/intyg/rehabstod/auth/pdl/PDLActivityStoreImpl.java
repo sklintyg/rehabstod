@@ -52,13 +52,11 @@ public class PDLActivityStoreImpl implements PDLActivityStore, Serializable {
             return sjukfall;
         } else {
             // find all patientId's NOT having av event entry for the combination patientId + eventType
-            final List<InternalSjukfall> sjukfallToAdd = sjukfall.stream()
+            return sjukfall.stream()
                     .filter(sf -> vardenhetEvents.stream()
                             .noneMatch(storedEvent -> storedEvent.getPatientId().equals(sf.getSjukfall().getPatient().getId())
                                     && storedEvent.getActivityType().equals(activityType)))
                     .collect(Collectors.toList());
-            // and also return them for further processing (i.e logging)
-            return sjukfallToAdd;
         }
 
     }

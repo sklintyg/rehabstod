@@ -74,7 +74,7 @@ public class PingForConfigurationResponderImpl implements PingForConfigurationRe
         addConfiguration(response, "buildNumber", buildNumberString);
         addConfiguration(response, "buildTime", buildTimeString);
         addConfiguration(response, "systemUptime", DurationFormatUtils.formatDurationWords(uptime.getMeasurement(), true, true));
-        addConfiguration(response, "nbrOfUsers", "" + nbrOfUsers.getMeasurement());
+        addConfiguration(response, "nbrOfUsers", "" + Long.toString(nbrOfUsers.getMeasurement()));
 
         addConfiguration(response, "jmsStatus", amqStatus.isOk() ? "ok" : "error");
         addConfiguration(response, "intygstjanst", itStatus.isOk() ? "ok" : "no connection");

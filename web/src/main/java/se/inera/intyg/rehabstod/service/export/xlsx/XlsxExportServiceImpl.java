@@ -18,10 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -38,7 +34,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -47,11 +42,17 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
+
 /**
  * Created by eriklupander on 2016-02-23.
  */
 @Service
 public class XlsxExportServiceImpl extends BaseExportService implements XlsxExportService {
+
+    public static final String HELVETICA = "Helvetica";
 
     private static final String SHEET_TITLE_SJUKFALL = "Sjukfall";
     private static final int FILTER_SPACING = 3;
@@ -81,6 +82,9 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
     @Autowired
     UserService userService;
+
+
+    // api
 
     @Override
     public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest req, Urval urval, int total) throws IOException {
@@ -122,6 +126,9 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         wb.write(baos);
         return baos.toByteArray();
     }
+
+
+    // private scope
 
     private int addLakareList(XSSFSheet sheet, int currentRowNumber, String filterTitle, List<String> lakareList, Urval urval) {
         int rowNumber = currentRowNumber;
@@ -338,11 +345,11 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
      * Sets up all fonts and cell styles used in the document.
      */
     private void setupFonts(XSSFWorkbook wb) {
-        boldFont16 = buildFont(wb, 16, "Helvetica", true, true);
-        boldFont12 = buildFont(wb, 12, "Helvetica", true, false);
-        defaultFont12 = buildFont(wb, 12, "Helvetica", false, false);
-        boldFont11 = buildFont(wb, 11, "Helvetica", true, false);
-        defaultFont11 = buildFont(wb, 11, "Helvetica", false, false);
+        boldFont16 = buildFont(wb, 16, HELVETICA, true, true);
+        boldFont12 = buildFont(wb, 12, HELVETICA, true, false);
+        defaultFont12 = buildFont(wb, 12, HELVETICA, false, false);
+        boldFont11 = buildFont(wb, 11, HELVETICA, true, false);
+        defaultFont11 = buildFont(wb, 11, HELVETICA, false, false);
 
         boldStyle = wb.createCellStyle();
         boldStyle.setFont(boldFont11);
