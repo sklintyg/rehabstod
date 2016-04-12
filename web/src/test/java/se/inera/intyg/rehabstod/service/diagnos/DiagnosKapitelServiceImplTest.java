@@ -61,7 +61,7 @@ public class DiagnosKapitelServiceImplTest {
 
         final List<DiagnosKapitel> diagnosKapitelList = testee.getDiagnosKapitelList();
         assertEquals(4, diagnosKapitelList.size());
-        assertTrue(diagnosKapitelList.contains(DiagnosKapitelService.OGILTIGA_DIAGNOSKODER_KAPITEL));
+        assertTrue(diagnosKapitelList.contains(DiagnosKapitelServiceImpl.OGILTIGA_DIAGNOSKODER_KAPITEL));
 
     }
 
@@ -71,12 +71,12 @@ public class DiagnosKapitelServiceImplTest {
         assertEquals(DEFAULT_KAPITEL, testee.getDiagnosKapitel("B01"));
         assertEquals(DEFAULT_KAPITEL, testee.getDiagnosKapitel("C00"));
 
-        assertEquals(DiagnosKapitelService.OGILTIGA_DIAGNOSKODER_KAPITEL, testee.getDiagnosKapitel("R99"));
+        assertEquals(DiagnosKapitelServiceImpl.OGILTIGA_DIAGNOSKODER_KAPITEL, testee.getDiagnosKapitel("R99"));
         assertEquals(SLIM_KAPITEL, testee.getDiagnosKapitel("S00201"));
         assertEquals(SLIM_KAPITEL, testee.getDiagnosKapitel("S01201"));
-        assertEquals(DiagnosKapitelService.OGILTIGA_DIAGNOSKODER_KAPITEL, testee.getDiagnosKapitel("S02"));
+        assertEquals(DiagnosKapitelServiceImpl.OGILTIGA_DIAGNOSKODER_KAPITEL, testee.getDiagnosKapitel("S02"));
 
-        assertEquals(DiagnosKapitelService.OGILTIGA_DIAGNOSKODER_KAPITEL, testee.getDiagnosKapitel("X0102"));
+        assertEquals(DiagnosKapitelServiceImpl.OGILTIGA_DIAGNOSKODER_KAPITEL, testee.getDiagnosKapitel("X0102"));
 
     }
 

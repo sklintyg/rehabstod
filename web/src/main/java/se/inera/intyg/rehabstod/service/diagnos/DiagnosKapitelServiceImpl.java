@@ -36,8 +36,13 @@ import java.util.Optional;
 
 @Component
 public class DiagnosKapitelServiceImpl implements DiagnosKapitelService {
-    private static final Logger LOG = LoggerFactory.getLogger(DiagnosKapitelServiceImpl.class);
 
+    public static final DiagnosKapitel OGILTIGA_DIAGNOSKODER_KAPITEL = new DiagnosKapitel(
+            new DiagnosKategori(' ', 0),
+            new DiagnosKategori(' ', 0),
+            "Utan giltig diagnoskod");
+
+    private static final Logger LOG = LoggerFactory.getLogger(DiagnosKapitelServiceImpl.class);
 
     private List<DiagnosKapitel> diagnosKapitelList;
 

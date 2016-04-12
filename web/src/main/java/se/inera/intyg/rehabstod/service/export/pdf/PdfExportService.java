@@ -29,7 +29,6 @@ import java.util.List;
  */
 public interface PdfExportService {
 
-    byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total)
-            throws PdfExportServiceException;
+    byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total);
 
 }

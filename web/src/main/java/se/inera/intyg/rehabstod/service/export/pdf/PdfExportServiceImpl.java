@@ -52,7 +52,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by marced on 24/02/16.
+ * @author marced on 24/02/16.
  */
 
 // Because of a lot of tinkering with margins and absolute positioning of elements we actually DO use a lot of magic
@@ -61,19 +61,19 @@ import java.util.List;
 @Service
 public class PdfExportServiceImpl extends BaseExportService implements PdfExportService {
 
-    private static final String LOGO_PATH = "classpath:pdf-assets/rehab_pdf_logo.png";
-
-    private PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
     private static final BaseColor TABLE_HEADER_BASE_COLOR = new BaseColor(70, 87, 97);
     private static final BaseColor TABLE_EVEN_ROW_COLOR = BaseColor.WHITE;
     private static final BaseColor TABLE_ODD_ROW_COLOR = new BaseColor(220, 220, 220);
 
+    private static final String LOGO_PATH = "classpath:pdf-assets/rehab_pdf_logo.png";
     private static final String UNICODE_CAPABLE_FONT_PATH = "/pdf-assets/FreeSans.ttf";
+
+    private PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+
     private Font unicodeCapableFont;
 
     @Override
-    public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total)
-            throws PdfExportServiceException {
+    public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total) {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 

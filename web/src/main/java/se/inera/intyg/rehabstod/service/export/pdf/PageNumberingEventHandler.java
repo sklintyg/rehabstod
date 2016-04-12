@@ -93,7 +93,11 @@ public class PageNumberingEventHandler extends PdfPageEventHelper {
     @Override
     public void onCloseDocument(PdfWriter writer, Document document) {
         // CHECKSTYLE:OFF MagicNumber
-        ColumnText.showTextAligned(total, Element.ALIGN_LEFT, new Phrase("(" + String.valueOf(writer.getPageNumber()) + ")", PdfExportConstants.TABLE_CELL_NORMAL),
-                0, 5, 0);
+        ColumnText.showTextAligned(total,
+                Element.ALIGN_LEFT,
+                new Phrase("(" + Integer.toString(writer.getPageNumber()) + ")", PdfExportConstants.TABLE_CELL_NORMAL),
+                0,
+                5,
+                0);
     }
 }
