@@ -63,7 +63,7 @@
           <div class="form-group">
             <label class="control-label" for="rhs-filter-free-text-input"><span message key="label.filter.filter"></span></label>
             <input id="rhs-filter-free-text-input" ng-model="filterViewState.get().freeTextModel" placeholder="&#61442; {{::'label.filter.filter.placeholder' | message}}" class="form-control rhs-filter-filter-input"
-                     type="search" maxlength="100"/>
+                     type="search" ng-trim="false" maxlength="100"/>
           </div>
         </div>
         <div class="col-sm-6 bottom-align-text">
