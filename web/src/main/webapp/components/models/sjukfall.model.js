@@ -89,12 +89,12 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                     item.quickSearchString = '';
                     _addQuickSearchContentFromProperty(item, 'patient.id');
                     _addQuickSearchContentFromProperty(item, 'patient.namn');
-                    _addQuickSearchContent(item, '(' + item.patient.alder + ' år)');
+                    _addQuickSearchContent(item, ' (' + item.patient.alder + ' år)');
                     _addQuickSearchContentFromProperty(item, 'patient.konShow');
                     _addQuickSearchContentFromProperty(item, 'diagnos.intygsVarde');
                     _addQuickSearchContentFromProperty(item, 'start');
                     _addQuickSearchContentFromProperty(item, 'slut');
-                    _addQuickSearchContent(item, item.dagarShow + '(' + item.intyg + ' intyg)');
+                    _addQuickSearchContent(item, item.dagarShow + ' (' + item.intyg + ' intyg)');
                     _addQuickSearchContentFromProperty(item, 'intyg');
                     _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join('%,') + '%' : '');
                     _addQuickSearchContentFromProperty(item, 'lakare.namn');
