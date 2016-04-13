@@ -18,6 +18,18 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.cxf.staxutils.StaxUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -38,6 +50,7 @@ import org.springframework.security.saml.SAMLCredential;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
+
 import se.inera.intyg.common.integration.hsa.model.Mottagning;
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
@@ -47,18 +60,11 @@ import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.authorities.bootstrap.AuthoritiesConfigurationLoader;
 import se.inera.intyg.rehabstod.auth.authorities.validation.AuthoritiesValidator;
+import se.inera.intyg.rehabstod.auth.exceptions.GenericAuthenticationException;
 import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingMedarbetaruppdragException;
-
-import javax.xml.transform.stream.StreamSource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
+import se.riv.infrastructure.directory.v1.PaTitleType;
+import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
  * Created by marced on 29/01/16.
@@ -127,6 +133,16 @@ public class RehabstodUserDetailsServiceTest {
                 .getValdVardenhet().getId());
     }
 
+    @Test(expected = GenericAuthenticationException.class)
+    public void testGenericAuthenticationExceptionIsThrownWhenNoSamlCredentialsGiven() throws Exception {
+        userDetailsService.loadUserBySAML(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetAssertionWithNullThrowsIllegalArgumentException() throws Exception {
+        userDetailsService.getAssertion((Assertion) null);
+    }
+
     @Test(expected = HsaServiceException.class)
     public void testHsaServiceExceptionIsThrownWhenHsaGetPersonThrowsUncheckedException() throws Exception {
         // given
@@ -166,6 +182,107 @@ public class RehabstodUserDetailsServiceTest {
 
         // then
         userDetailsService.loadUserBySAML(samlCredential);
+    }
+
+    @Test
+    public void testExtractBefattningar() throws Exception {
+
+        // Arrange
+        PersonInformationType pt = new PersonInformationType();
+        pt.setTitle("title1");
+        final PaTitleType paTitleType1 = new PaTitleType();
+        paTitleType1.setPaTitleName("paTitle1");
+        pt.getPaTitle().add(paTitleType1);
+
+        final PaTitleType paTitleType2 = new PaTitleType();
+        paTitleType2.setPaTitleName("paTitle2");
+        pt.getPaTitle().add(paTitleType2);
+
+        List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
+        hsaPersonInfo.add(pt);
+
+        // Test
+        final List<String> befattningar = userDetailsService.extractBefattningar(hsaPersonInfo);
+
+        // Verify
+        assertEquals(2, befattningar.size());
+        assertTrue(befattningar.contains("paTitle1"));
+        assertTrue(befattningar.contains("paTitle2"));
+
+    }
+
+    @Test
+    public void testExtractTitel() throws Exception {
+
+        // Arrange
+        PersonInformationType pt = new PersonInformationType();
+        pt.setTitle("xpitTitle");
+
+        PersonInformationType pt2 = new PersonInformationType();
+        pt2.getHealthCareProfessionalLicence().add("hcpl1");
+        pt2.getHealthCareProfessionalLicence().add("hcpl2");
+
+        List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
+        hsaPersonInfo.add(pt);
+        hsaPersonInfo.add(pt2);
+
+        // Test
+        final String titleString = userDetailsService.extractTitel(hsaPersonInfo);
+
+        // Verify
+        assertEquals("hcpl1, hcpl2, xpitTitle", titleString);
+
+    }
+
+    @Test
+    public void testExtractLegitimeradeYrkesgrupper() throws Exception {
+
+        // Arrange
+        PersonInformationType pt = new PersonInformationType();
+        pt.setTitle("title1");
+        final PaTitleType paTitleType1 = new PaTitleType();
+        paTitleType1.setPaTitleName("paTitle1");
+        pt.getPaTitle().add(paTitleType1);
+
+        final PaTitleType paTitleType2 = new PaTitleType();
+        paTitleType2.setPaTitleName("paTitle2");
+        pt.getPaTitle().add(paTitleType2);
+
+        List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
+        hsaPersonInfo.add(pt);
+
+        // Test
+        final List<String> legitimeradeYrkesgrupper = userDetailsService.extractLegitimeradeYrkesgrupper(hsaPersonInfo);
+
+        // Verify
+        // Verify
+        assertEquals(2, legitimeradeYrkesgrupper.size());
+        assertTrue(legitimeradeYrkesgrupper.contains("paTitle1"));
+        assertTrue(legitimeradeYrkesgrupper.contains("paTitle2"));
+
+    }
+
+    @Test
+    public void testSetFirstVardenhetOnFirstVardgivareAsDefault() throws Exception {
+
+        // Arrange
+        Vardgivare vardgivare = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
+        Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "VårdEnhet2A");
+        vardgivare.getVardenheter().add(enhet1);
+        Vardenhet enhet2 = new Vardenhet(ENHET_HSAID_2, "Vårdcentralen");
+        vardgivare.getVardenheter().add(enhet2);
+
+        RehabstodUser user = new RehabstodUser("1", "Dr. Doctor");
+        user.setVardgivare(Arrays.asList(vardgivare));
+
+        // Test
+        final boolean success = userDetailsService.setFirstVardenhetOnFirstVardgivareAsDefault(user);
+
+        // Verify
+        assertTrue(success);
+        assertEquals(vardgivare, user.getValdVardgivare());
+        assertEquals(enhet1, user.getValdVardenhet());
+
     }
 
     private SAMLCredential createSamlCredential(String filename) throws Exception {

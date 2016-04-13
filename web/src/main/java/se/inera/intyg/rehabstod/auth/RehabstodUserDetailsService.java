@@ -287,7 +287,7 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         LOG.debug("Setting care unit '{}' as default unit on user '{}'", user.getValdVardenhet().getId(), user.getHsaId());
     }
 
-    private List<String> extractBefattningar(List<PersonInformationType> hsaPersonInfo) {
+    List<String> extractBefattningar(List<PersonInformationType> hsaPersonInfo) {
         Set<String> befattningar = new TreeSet<>();
 
         for (PersonInformationType userType : hsaPersonInfo) {
@@ -303,19 +303,19 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
     /**
      * Tries to use title attribute, otherwise resorts to healthcareProfessionalLicenses.
      */
-    private String extractTitel(List<PersonInformationType> hsaPersonInfo) {
+    String extractTitel(List<PersonInformationType> hsaPersonInfo) {
         Set<String> titleSet = new HashSet<>();
         for (PersonInformationType pit : hsaPersonInfo) {
             if (pit.getTitle() != null && pit.getTitle().trim().length() > 0) {
                 titleSet.add(pit.getTitle());
-            } else if (pit.getHealthCareProfessionalLicence() != null && pit.getHealthCareProfessionalLicence().isEmpty()) {
+            } else if (pit.getHealthCareProfessionalLicence() != null && !pit.getHealthCareProfessionalLicence().isEmpty()) {
                 titleSet.addAll(pit.getHealthCareProfessionalLicence());
             }
         }
         return titleSet.stream().sorted().collect(Collectors.joining(", "));
     }
 
-    private List<String> extractLegitimeradeYrkesgrupper(List<PersonInformationType> hsaUserTypes) {
+    List<String> extractLegitimeradeYrkesgrupper(List<PersonInformationType> hsaUserTypes) {
         Set<String> lygSet = new TreeSet<>();
 
         for (PersonInformationType userType : hsaUserTypes) {
@@ -328,7 +328,7 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         return new ArrayList<>(lygSet);
     }
 
-    private boolean setFirstVardenhetOnFirstVardgivareAsDefault(RehabstodUser user) {
+    boolean setFirstVardenhetOnFirstVardgivareAsDefault(RehabstodUser user) {
         Vardgivare firstVardgivare = user.getVardgivare().get(0);
         user.setValdVardgivare(firstVardgivare);
 

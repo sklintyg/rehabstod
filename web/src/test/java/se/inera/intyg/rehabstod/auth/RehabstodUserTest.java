@@ -101,6 +101,7 @@ public class RehabstodUserTest {
 
         assertTrue(user.changeValdVardenhet(ENHET_1));
         assertFalse(user.changeValdVardenhet("dummyid"));
+        assertFalse(user.changeValdVardenhet(null));
     }
 
     @Test
