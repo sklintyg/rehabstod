@@ -25,8 +25,9 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import java.util.List;
 
 /**
- * Created by Magnus Ekstrand on 2016-02-23.
+ * @author Magnus Ekstrand on 2016-02-23.
  */
+@FunctionalInterface
 public interface SjukfallEngine {
 
     /**

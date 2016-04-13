@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-import java.util.List;
-import java.util.Map;
-
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.Role;
 import se.inera.intyg.rehabstod.service.Urval;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Reponse dto for the getUser api.

@@ -24,8 +24,11 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import java.util.List;
 
 /**
- * Created by eriklupander on 2016-02-18.
+ * @author eriklupander on 2016-02-18.
  */
+@FunctionalInterface
 public interface LogService {
+
     void logSjukfallData(List<InternalSjukfall> sjukfall, ActivityType activityType);
+
 }

@@ -42,7 +42,7 @@ public class GetSjukfallRequest {
 
     /** The sole constructor. **/
     public GetSjukfallRequest() {
-        aktivtDatum = new LocalDate().now();
+        aktivtDatum = LocalDate.now();
     }
 
     public Sortering getSortering() {

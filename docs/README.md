@@ -1,4 +1,4 @@
-# Webcert docs
+# Rehabstöd docs
 Only "source code" files that generates documentation goes in here. Statically created documentation goes into the Wiki.
 
 ### Tools

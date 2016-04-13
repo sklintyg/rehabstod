@@ -22,8 +22,11 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Created by martin on 10/02/16.
+ * @author martin on 10/02/16.
  */
+@FunctionalInterface
 public interface DiagnosKoderLoader {
+
     Map<String, String> loadDiagnosKoder() throws IOException;
+
 }

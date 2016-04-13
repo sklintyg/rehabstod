@@ -25,8 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Magnus Ekstrand on 2016-02-18.
+ * @author Magnus Ekstrand on 2016-02-18.
  */
+@FunctionalInterface
 public interface InternalIntygsDataResolver {
 
     Map<String, List<InternalIntygsData>> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum);

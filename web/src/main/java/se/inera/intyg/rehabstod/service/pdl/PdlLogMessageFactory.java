@@ -26,8 +26,11 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import java.util.List;
 
 /**
- * Created by eriklupander on 2016-03-03.
+ * @author eriklupander on 2016-03-03.
  */
+@FunctionalInterface
 public interface PdlLogMessageFactory {
+
     PdlLogMessage buildLogMessage(List<InternalSjukfall> sjukfallList, ActivityType activityType, RehabstodUser rehabstodUser);
+
 }

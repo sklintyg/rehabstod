@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.service.diagnos;
 /**
  * Created by martin on 10/02/16.
  */
+@FunctionalInterface
 public interface DiagnosBeskrivningService {
 
     /**
@@ -30,4 +31,5 @@ public interface DiagnosBeskrivningService {
      * @return
      */
     String getDiagnosBeskrivning(String diagnosKod);
+
 }

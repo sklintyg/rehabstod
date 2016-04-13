@@ -27,6 +27,7 @@ import java.util.List;
 /**
  * @author marced on 24/02/16.
  */
+@FunctionalInterface
 public interface PdfExportService {
 
     byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total);

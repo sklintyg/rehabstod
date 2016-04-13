@@ -104,8 +104,8 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         addFilterMainHeader(sheet, rowNumber++, VALDA_FILTER);
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD,
                 req.getLangdIntervall().getMin() + " - " + req.getLangdIntervall().getMax() + " dagar");
-        rowNumber = addLakareList(sheet, rowNumber++, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), urval);
-        rowNumber = addDiagnosKapitel(sheet, rowNumber++, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper());
+        rowNumber = addLakareList(sheet, rowNumber++, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), urval); //NOSONAR
+        rowNumber = addDiagnosKapitel(sheet, rowNumber++, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper());  //NOSONAR
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_FRITEXTFILTER, notEmpty(req) ? req.getFritext() : "-");
         addFilterMainHeader(sheet, rowNumber++, H2_SJUKFALLSINSTALLNING);
         addFilterHeader(sheet, rowNumber++, MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG, req.getMaxIntygsGlapp() + " dagar");
@@ -293,7 +293,6 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
         StringBuilder buf = new StringBuilder();
         Pair aktivIndicies = null;
-        int currentIndex = 0;
         boolean first = true;
         for (Integer grad : sf.getGrader()) {
 
@@ -301,7 +300,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
                 buf.append(UNICODE_RIGHT_ARROW_SYMBOL).append(" ");
             }
 
-            currentIndex = buf.length();
+            int currentIndex = buf.length();
             // Store indicies for the aktiv grad so we can make its text bold later.
             if (grad == sf.getAktivGrad()) {
                 aktivIndicies = new Pair(currentIndex, currentIndex + ("" + grad + "%").length());

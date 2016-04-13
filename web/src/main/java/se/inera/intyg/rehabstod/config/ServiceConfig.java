@@ -49,7 +49,7 @@ public class ServiceConfig {
 
     @Bean
     public ServletContextAttributeExporter contextAttributes() {
-        final Map<String, Object> attributes = new HashMap<String, Object>();
+        final Map<String, Object> attributes = new HashMap<>();
         attributes.put("healthcheck", healtCheckService);
         final ServletContextAttributeExporter exporter = new ServletContextAttributeExporter();
         exporter.setAttributes(attributes);

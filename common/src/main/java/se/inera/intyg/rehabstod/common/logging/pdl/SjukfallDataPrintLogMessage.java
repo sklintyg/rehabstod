@@ -25,13 +25,14 @@ import se.inera.intyg.common.logmessages.PdlLogMessage;
 /**
  * Created by marced on 2016-02-19.
  */
-public abstract class SjukfallDataPrintLogMessage {
+public final class SjukfallDataPrintLogMessage {
 
     private SjukfallDataPrintLogMessage() {
-
+        // Private constructor make this class an utility class
     }
 
     public static PdlLogMessage build() {
         return new PdlLogMessage(ActivityType.PRINT, ActivityPurpose.CARE_TREATMENT);
     }
+
 }

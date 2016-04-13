@@ -18,14 +18,17 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
+
 import java.io.IOException;
 import java.util.List;
 
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
-
 /**
- * Created by marced on 14/03/16.
+ * @author marced on 14/03/16.
  */
+@FunctionalInterface
 public interface DiagnosGruppLoader {
+
     List<DiagnosGrupp> loadDiagnosGrupper() throws IOException;
+
 }

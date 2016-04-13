@@ -45,7 +45,7 @@ public class InternalIntygsDataCreator {
     public Map<String, List<InternalIntygsData>> create(List<IntygsData> intygsData, LocalDate aktivtDatum) {
         LOG.debug("Start creating a map with storing application specific certificate information...");
 
-        Map<String, List<InternalIntygsData>> map = null;
+        Map<String, List<InternalIntygsData>> map;
 
         map = createMap(intygsData, aktivtDatum);
         map = reduceMap(map);

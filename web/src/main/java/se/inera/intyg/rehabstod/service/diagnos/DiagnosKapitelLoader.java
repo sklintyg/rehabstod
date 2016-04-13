@@ -24,8 +24,11 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by marced on 08/02/16.
+ * @author marced on 08/02/16.
  */
+@FunctionalInterface
 public interface DiagnosKapitelLoader {
+
     List<DiagnosKapitel> loadDiagnosKapitel() throws IOException;
+
 }

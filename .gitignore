@@ -1,13 +1,15 @@
 .gradle/
-build/
 .settings/
 .project
 .classpath
 .gradletasknamecache
 
-bin
-out
-generatedSource
+sonar-project.properties
+
+build/
+bin/
+out/
+generatedSource/
 
 web/node_modules
 web/src/main/webapp/bower_components/

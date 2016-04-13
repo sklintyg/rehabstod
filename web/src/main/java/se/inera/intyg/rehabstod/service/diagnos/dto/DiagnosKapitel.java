@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
  * Represents an group of diagnoses ("DiagnosKaptiel") in an range interval, e.g "A00-C49" which would include also a
  * code of B34.
  *
- * Created by marced on 08/02/16.^
+ * @author marced on 08/02/16.
  */
 public class DiagnosKapitel {
 
@@ -39,7 +39,7 @@ public class DiagnosKapitel {
     private static final int FROM_NUMBER = 2;
     private static final int TO_CHAR = 3;
     private static final int TO_NUMBER = 4;
-    private static final int NAME = 5;
+    private static final int GROUP_NAME = 5;
     private static final int CHAR_MULTIPLIER = 100;
 
     private static final String SEPARATOR = "-";
@@ -64,7 +64,7 @@ public class DiagnosKapitel {
         if (matcher.find()) {
             this.from = new DiagnosKategori(matcher.group(FROM_CHAR).charAt(0), Integer.parseInt(matcher.group(FROM_NUMBER)));
             this.to = new DiagnosKategori(matcher.group(TO_CHAR).charAt(0), Integer.parseInt(matcher.group(TO_NUMBER)));
-            this.name = matcher.group(NAME);
+            this.name = matcher.group(GROUP_NAME);
         } else {
             throw new IllegalArgumentException("rangeString argument '" + rangeString + "' does not match expected format of "
                     + VALID_DIAGNOSKAPITEL_ROW_FORMAT.pattern());

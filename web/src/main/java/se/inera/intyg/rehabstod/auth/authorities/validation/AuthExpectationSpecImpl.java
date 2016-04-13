@@ -42,7 +42,7 @@ public class AuthExpectationSpecImpl implements AuthExpectationSpecification {
     private Optional<String[]> roleConstraints = Optional.empty();
     private Optional<String[]> roleNotConstraints = Optional.empty();
 
-    private List<String> errors = new ArrayList<String>();
+    private List<String> errors = new ArrayList<>();
 
     public AuthExpectationSpecImpl(RehabstodUser user) {
         this.user = user;

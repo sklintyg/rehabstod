@@ -21,8 +21,11 @@ package se.inera.intyg.rehabstod.service.monitoring.ntjp;
 import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
 
 /**
- * Created by eriklupander on 2016-03-30.
+ * @author eriklupander on 2016-03-30.
  */
+@FunctionalInterface
 public interface PingForConfigurationService {
+
     HealthStatus pingNtjp(String withLogicalAddress);
+
 }

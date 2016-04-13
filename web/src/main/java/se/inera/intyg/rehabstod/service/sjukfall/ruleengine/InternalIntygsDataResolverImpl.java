@@ -192,7 +192,7 @@ public class InternalIntygsDataResolverImpl implements InternalIntygsDataResolve
     // - - -  Private scope  - - -
 
     private LocalDate getCompareDate(List<InternalIntygsData> right, InternalIntygsData aktivtIntyg) {
-        LocalDate smallest = null;
+        LocalDate smallest;
 
         if (right == null || right.isEmpty()) {
             return  aktivtIntyg.getStartDatum();

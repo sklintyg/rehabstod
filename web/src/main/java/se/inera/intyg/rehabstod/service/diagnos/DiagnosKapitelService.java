@@ -23,9 +23,8 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import java.util.List;
 
 /**
- * Created by marced on 08/02/16.
+ * @author marced on 08/02/16.
  */
-
 public interface DiagnosKapitelService {
 
     /**

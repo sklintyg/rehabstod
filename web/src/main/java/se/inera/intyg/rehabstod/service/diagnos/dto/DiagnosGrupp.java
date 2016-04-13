@@ -25,12 +25,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by marced on 14/03/16.
+ * @author marced on 14/03/16.
  */
 public class DiagnosGrupp {
     public static final Pattern VALID_DIAGNOSGRUPP_ROW_FORMAT = Pattern.compile("^([A-Z0-9-,]+):(.+)");
     private static final int DIAGNOSKAPITEL_STRING = 1;
-    private static final int NAME = 2;
+    private static final int GROUP_NAME = 2;
     private static final String KAPITELLIST_SEPARATOR = ",";
 
     // fields
@@ -57,7 +57,7 @@ public class DiagnosGrupp {
         if (matcher.find()) {
             this.id = matcher.group(DIAGNOSKAPITEL_STRING);
             this.kapitelList = convertToKapitelList(matcher.group(DIAGNOSKAPITEL_STRING));
-            this.name = matcher.group(NAME);
+            this.name = matcher.group(GROUP_NAME);
         } else {
             throw new IllegalArgumentException(
                     "rangeString argument '" + diagnosGruppString + "' does not match expected format for a diagnosGrupp definition: "
