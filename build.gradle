@@ -71,7 +71,7 @@ if (project.hasProperty('runSonar')) {
 
             property "sonar.exclusions", [
                 "file:**/generatedSource/**",
-                "src/main/java/se/inera/intyg/rhs/**/config/**",
+                "src/main/java/se/inera/intyg/rehabstod/**/config/**",
                 "**/stub/**",
                 "**/exception/**",
                 "**/*Exception*.java",
