@@ -1,22 +1,13 @@
-CoreOS, grundläggande linux för att köra Docker. Kolla tutorials på coreos.com/kubernetes
-coreos-kubernretes-cluster-osx. "k8s".
-xhyve (nej kör Virtualbox ist.)
-etcd, programmerbar DNS. Ingår i coreOS.
-flanneld, klient etcd.
-Fleet, enkelt sätt att sätta upp ett kluster av CoreOS-noder
+# This playbook deploys rehabstod
 
-Fråga Björn om struktur för att hantera en "tjänst".
-1. Package
-2. Docker vadå???
-3. Gör något cubectl src/main/... yaml
+- hosts: rehabstod-tomcat
+  sudo: yes
+  vars:
+    # repo - values: 'snapshots or 'releases'
+    repo: releases
+    version: 1.0.0-b22
+    config_version: master
 
-kubectl descrive pods quotes
-
-Nästa steg, skapa replication controllers och services, vi vill kunna nå kubernetes utifrån
-
-rc==replication controller
-service=Ger poddar möjlighet att ha logiska ip-adresser, och därmed hittar man lastbalansering ut till klienten
-1. Definiera logiskt namn på service
-2. Speca vilka typer av poddar som realiseras av tjänsten
-3. All trafik som kommer till tjänsten skall distribueras mot poddar som svarar mot selector
-4. En tjänst har också en IPadress
+  roles:
+    - app-resources
+    - rehabstod
