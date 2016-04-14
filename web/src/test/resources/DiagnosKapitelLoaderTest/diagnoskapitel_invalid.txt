@@ -1,0 +1,3 @@
+A00-B99Vissa infektionssjukdomar och parasitsjukdomar
+I00+I99Cirkulationsorganens sjukdomar
+J00-J99Andningsorganens sjukdomar

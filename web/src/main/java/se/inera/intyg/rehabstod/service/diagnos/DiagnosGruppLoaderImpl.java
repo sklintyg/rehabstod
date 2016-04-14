@@ -18,17 +18,16 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by marced on 14/03/16.
@@ -46,7 +45,7 @@ public class DiagnosGruppLoaderImpl implements DiagnosGruppLoader {
         return getDiagnosGrupperInternal(diagnosGruppFile);
     }
 
-    protected List<DiagnosGrupp> getDiagnosGrupperInternal(Resource resource) throws IOException {
+    private List<DiagnosGrupp> getDiagnosGrupperInternal(Resource resource) throws IOException {
         LineIterator it = FileUtils.lineIterator(resource.getFile(), "UTF-8");
 
         List<DiagnosGrupp> list = new ArrayList<>();

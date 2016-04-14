@@ -67,6 +67,12 @@ public class DiagnosBeskrivningServiceImplTest {
         assertNull(testee.getDiagnosBeskrivning(KOD_4));
     }
 
+    @Test(expected = DiagnosServiceException.class)
+    public void testDiagnosServiceExceptionOnFailedInit() throws IOException {
+        when(diagnosKoderLoader.loadDiagnosKoder()).thenThrow(new IOException("Faked IO Exception"));
+        testee.init();
+    }
+
 
     private Map<String, String> buildDiagnosKoderMap() {
         Map<String, String> map = new HashMap<>();
