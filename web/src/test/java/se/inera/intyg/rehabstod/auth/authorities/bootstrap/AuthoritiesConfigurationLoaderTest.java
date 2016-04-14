@@ -36,6 +36,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConfiguration;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.auth.authorities.Privilege;
 import se.inera.intyg.rehabstod.auth.authorities.RequestOrigin;
 import se.inera.intyg.rehabstod.auth.authorities.Role;
@@ -104,6 +105,12 @@ public class AuthoritiesConfigurationLoaderTest {
     @Test(expected = IllegalArgumentException.class)
     public void loadConfigurationWithBadLocation() {
         AuthoritiesConfigurationLoader loader = new AuthoritiesConfigurationLoader(null);
+    }
+
+    @Test(expected = AuthoritiesException.class)
+    public void loadConfigurationWithNonExistingLocation() {
+        AuthoritiesConfigurationLoader loader = new AuthoritiesConfigurationLoader("non-existing-file");
+        loader.afterPropertiesSet();
     }
 
     // ~ Private scope

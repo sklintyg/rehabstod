@@ -18,9 +18,11 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,11 +32,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
+import se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion;
 import se.inera.intyg.rehabstod.auth.authorities.bootstrap.AuthoritiesConfigurationLoader;
+import se.riv.infrastructure.directory.v1.PaTitleType;
+import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 //CHECKSTYLE:OFF MagicNumber
 @RunWith(MockitoJUnitRunner.class)
@@ -150,4 +156,117 @@ public class AuthoritiesResolverTest {
             }
         }
     }
+
+    @Test
+    public void lookupUserRoleByTitleCodeAndGroupPrescriptionCodeNoMatchReturnsNull() {
+        // Act
+        Role role = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(new ArrayList<String>(), new ArrayList<String>());
+
+        // Assert
+        assertNull(role);
+
+    }
+
+    @Test
+    public void lookupUserRoleByTitleCodeAndGroupPrescriptionCodeCombination() {
+        // Arrange
+        List<String> befattningsKoder = Arrays.asList("204010", "203090", "204090");
+        List<String> gruppforskrivarKoder = Arrays.asList("9300005", "9100009");
+
+        // Act
+        Role role = authoritiesResolver.lookupUserRoleByBefattningskodAndGruppforskrivarkod(befattningsKoder, gruppforskrivarKoder);
+
+        // Assert
+        assertEquals(AuthoritiesConstants.ROLE_LAKARE, role.getName());
+
+    }
+
+    @Test
+    public void testExtractLegitimeradeYrkesgrupper() throws Exception {
+
+        // Arrange
+        final PaTitleType paTitleType1 = new PaTitleType();
+        paTitleType1.setPaTitleName("paTitle1");
+
+        final PaTitleType paTitleType2 = new PaTitleType();
+        paTitleType2.setPaTitleName("paTitle2");
+
+        PersonInformationType pt = new PersonInformationType();
+        pt.setTitle("title1");
+
+        pt.getPaTitle().addAll(Arrays.asList(paTitleType1, paTitleType2));
+
+        List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
+        hsaPersonInfo.add(pt);
+
+        // Test
+        final List<String> legitimeradeYrkesgrupper = authoritiesResolver.extractLegitimeradeYrkesgrupper(hsaPersonInfo);
+
+        // Verify
+        assertEquals(2, legitimeradeYrkesgrupper.size());
+        assertTrue(legitimeradeYrkesgrupper.contains("paTitle1"));
+        assertTrue(legitimeradeYrkesgrupper.contains("paTitle2"));
+
+    }
+
+    @Test
+    public void testResolveRehabkoordinatorRole() throws Exception {
+        // Arrange
+        SakerhetstjanstAssertion sa = Mockito.mock(SakerhetstjanstAssertion.class);
+
+        // Act
+        Role role = authoritiesResolver.lookupUserRole(sa, new ArrayList<>());
+
+        // Verify
+        assertEquals(AuthoritiesConstants.ROLE_KOORDINATOR, role.getName());
+    }
+
+    @Test
+    public void testGetIntygsTyper() throws Exception {
+        // Arrange
+
+        // Act
+        final List<String> intygstyper = authoritiesResolver.getIntygstyper();
+
+        // Verify
+        // (We don't have any in rehabstod)
+        assertEquals(0, intygstyper.size());
+    }
+
+    @Test
+    public void testGetPrivileges() throws Exception {
+        // Arrange
+
+        // Act
+        final List<Privilege> privileges = authoritiesResolver.getPrivileges();
+
+        // Verify
+        assertEquals(1, privileges.size());
+        assertEquals("VISA_SJUKFALL", privileges.get(0).getName());
+    }
+
+    @Test
+    public void testGetRequestOrigins() throws Exception {
+        // Arrange
+
+        // Act
+        final List<RequestOrigin> requestOrigins = authoritiesResolver.getRequestOrigins();
+
+        // Verify
+        assertEquals(1, requestOrigins.size());
+        assertEquals("NORMAL", requestOrigins.get(0).getName());
+    }
+
+    @Test
+    public void testGetTitles() throws Exception {
+        // Arrange
+
+        // Act
+        final List<Title> titles = authoritiesResolver.getTitles();
+
+        // Verify
+        assertEquals(2, titles.size());
+
+    }
+
 }

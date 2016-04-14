@@ -281,7 +281,7 @@ public class AuthoritiesResolver {
     // ~ Private methods
     // ======================================================================================
 
-    private List<String> extractLegitimeradeYrkesgrupper(List<PersonInformationType> hsaUserTypes) {
+    List<String> extractLegitimeradeYrkesgrupper(List<PersonInformationType> hsaUserTypes) {
         Set<String> lygSet = new TreeSet<>();
 
         for (PersonInformationType userType : hsaUserTypes) {
