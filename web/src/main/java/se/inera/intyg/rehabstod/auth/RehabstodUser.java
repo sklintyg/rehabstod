@@ -23,11 +23,11 @@ import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.authorities.Privilege;
 import se.inera.intyg.rehabstod.auth.authorities.Role;
-import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
-import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStoreImpl;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.service.Urval;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,12 +62,19 @@ public class RehabstodUser implements Serializable {
     private String origin;
 
     // Handles PDL logging state
-    private PDLActivityStore pdlActivityStore = new PDLActivityStoreImpl();
+    private Map<String, List<PDLActivityEntry>> storedActivities;
+
+
+    // constructor
 
     public RehabstodUser(String hsaId, String namn) {
+        this.storedActivities = new HashMap<>();
         this.hsaId = hsaId;
         this.namn = namn;
     }
+
+
+    // getters and setters
 
     public String getPersonId() {
         return personId;
@@ -169,68 +176,6 @@ public class RehabstodUser implements Serializable {
         return urval;
     }
 
-    public Urval getDefaultUrval() {
-        return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE) ? Urval.ISSUED_BY_ME : Urval.ALL;
-    }
-
-    public boolean changeSelectedUrval(Urval urval) {
-        if (isValidUrvalChange(urval)) {
-            this.urval = urval;
-            return true;
-        } else {
-            return false;
-        }
-
-    }
-
-    @SuppressWarnings("all")
-    private boolean isValidUrvalChange(Urval urval) {
-        // Unset is always allowed
-        if (urval == null) {
-            return true;
-        }
-
-        // If we dont have a role, we can't decide which urval change is allowed, so..
-        if (roles == null) {
-            return false;
-        }
-
-        // Case 1: Lakare is only allowed to set ISSUED_BY_ME
-        if (urval == Urval.ISSUED_BY_ME && roles.containsKey(AuthoritiesConstants.ROLE_LAKARE)) {
-            return true;
-        }
-
-        // Case 2: Koordinator is only allowed to set ALL
-        if (urval == Urval.ALL && roles.containsKey(AuthoritiesConstants.ROLE_KOORDINATOR)) {
-            return true;
-        }
-
-        // No other case allowed
-        return false;
-    }
-
-    public boolean changeValdVardenhet(String vardenhetId) {
-        if (vardenhetId == null) {
-            return false;
-        }
-
-        for (Vardgivare vg : getVardgivare()) {
-            SelectableVardenhet ve = vg.findVardenhet(vardenhetId);
-            if (ve != null) {
-                setValdVardenhet(ve);
-                setValdVardgivare(vg);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public int getTotaltAntalVardenheter() {
-        // count all hasid's in the datastructure
-        return (int) getVardgivare().stream().flatMap(vg -> vg.getHsaIds().stream()).count();
-    }
-
     public Set<String> getFeatures() {
         return features;
     }
@@ -263,11 +208,76 @@ public class RehabstodUser implements Serializable {
         this.origin = origin;
     }
 
-    public PDLActivityStore getPdlActivityStore() {
-        return pdlActivityStore;
+    public Map<String, List<PDLActivityEntry>> getStoredActivities() {
+        return storedActivities;
     }
 
-    public void setPdlActivityStore(PDLActivityStore pdlActivityStore) {
-        this.pdlActivityStore = pdlActivityStore;
+
+    // api
+
+    public boolean changeSelectedUrval(Urval urval) {
+        if (isValidUrvalChange(urval)) {
+            this.urval = urval;
+            return true;
+        } else {
+            return false;
+        }
+
     }
+
+    public Urval getDefaultUrval() {
+        return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE) ? Urval.ISSUED_BY_ME : Urval.ALL;
+    }
+
+    public boolean changeValdVardenhet(String vardenhetId) {
+        if (vardenhetId == null) {
+            return false;
+        }
+
+        for (Vardgivare vg : getVardgivare()) {
+            SelectableVardenhet ve = vg.findVardenhet(vardenhetId);
+            if (ve != null) {
+                setValdVardenhet(ve);
+                setValdVardgivare(vg);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public int getTotaltAntalVardenheter() {
+        // count all hasid's in the datastructure
+        return (int) getVardgivare().stream().flatMap(vg -> vg.getHsaIds().stream()).count();
+    }
+
+
+    // private scope
+
+    @SuppressWarnings("all")
+    private boolean isValidUrvalChange(Urval urval) {
+        // Unset is always allowed
+        if (urval == null) {
+            return true;
+        }
+
+        // If we dont have a role, we can't decide which urval change is allowed, so..
+        if (roles == null) {
+            return false;
+        }
+
+        // Case 1: Lakare is only allowed to set ISSUED_BY_ME
+        if (urval == Urval.ISSUED_BY_ME && roles.containsKey(AuthoritiesConstants.ROLE_LAKARE)) {
+            return true;
+        }
+
+        // Case 2: Koordinator is only allowed to set ALL
+        if (urval == Urval.ALL && roles.containsKey(AuthoritiesConstants.ROLE_KOORDINATOR)) {
+            return true;
+        }
+
+        // No other case allowed
+        return false;
+    }
+
 }

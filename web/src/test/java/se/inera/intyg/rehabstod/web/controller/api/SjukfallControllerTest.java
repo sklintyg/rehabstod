@@ -24,12 +24,11 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.itextpdf.text.DocumentException;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,13 +37,14 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
@@ -59,12 +59,18 @@ import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
-import com.itextpdf.text.DocumentException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(PDLActivityStore.class)
 public class SjukfallControllerTest {
 
     private static final String VARDENHETS_ID = "123";
@@ -77,9 +83,6 @@ public class SjukfallControllerTest {
 
     @Mock
     UserService userService;
-
-    @Mock
-    PDLActivityStore pdlStoreMock;
 
     @Mock
     LogService logserviceMock;
@@ -96,7 +99,7 @@ public class SjukfallControllerTest {
     @Before
     public void before() {
         when(userService.getUser()).thenReturn(rehabUserMock);
-        when(rehabUserMock.getPdlActivityStore()).thenReturn(pdlStoreMock);
+        //when(rehabUserMock.getPdlActivityStore()).thenReturn(pdlStoreMock);
         when(rehabUserMock.getValdVardenhet()).thenReturn(new Vardenhet(VARDENHETS_ID, "enhet"));
         when(rehabUserMock.getUrval()).thenReturn(Urval.ALL);
     }
@@ -108,24 +111,27 @@ public class SjukfallControllerTest {
         result.add(createSjukFallForPatient("222"));
 
         List<InternalSjukfall> toLog = new ArrayList<>();
-        result.add(createSjukFallForPatient("333"));
+        toLog.add(createSjukFallForPatient("333"));
+
+        Map<String, List<PDLActivityEntry>> storedActivities = new HashMap<>();
 
         // Given
         GetSjukfallRequest request = new GetSjukfallRequest();
 
         // When
+        mockStatic(PDLActivityStore.class);
+        when(PDLActivityStore.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(result), eq(ActivityType.READ), eq(storedActivities))).thenReturn(toLog);
         when(sjukfallService.getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(result);
-        when(pdlStoreMock.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(result), eq(ActivityType.READ))).thenReturn(toLog);
 
         // Then
         List<Sjukfall> response = sjukfallController.getSjukfallForCareUnit(request);
 
+        // Verify
+        verifyStatic();
+        PDLActivityStore.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(result), eq(ActivityType.READ), eq(storedActivities));
+
         verify(sjukfallService).getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
-
-        verify(pdlStoreMock).getActivitiesNotInStore(eq(VARDENHETS_ID), eq(result), eq(ActivityType.READ));
         verify(logserviceMock).logSjukfallData(eq(toLog), eq(ActivityType.READ));
-        verify(pdlStoreMock).addActivitiesToStore(eq(VARDENHETS_ID), eq(toLog), eq(ActivityType.READ));
-
     }
 
     @Test
@@ -139,25 +145,34 @@ public class SjukfallControllerTest {
         List<InternalSjukfall> finalList = Arrays.asList(a, b);
         List<InternalSjukfall> toLog = Arrays.asList(c);
 
+        Map<String, List<PDLActivityEntry>> storedActivities = new HashMap<>();
+
         // Given
         PrintSjukfallRequest request = new PrintSjukfallRequest();
         request.setPersonnummer(Arrays.asList("111", "222"));
 
         // When
+        mockStatic(PDLActivityStore.class);
+        doNothing().when(PDLActivityStore.class); //This is the preferred way to mock static void methods
+        PDLActivityStore.addActivitiesToStore(eq(VARDENHETS_ID), eq(toLog), eq(ActivityType.PRINT), eq(storedActivities));
+        when(PDLActivityStore.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(finalList), eq(ActivityType.PRINT), eq(storedActivities))).thenReturn(toLog);
+
         when(sjukfallService.getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(allSjukFall);
         when(pdfExportService.export(eq(finalList), eq(request), eq(rehabUserMock), eq(allSjukFall.size()))).thenReturn(new byte[0]);
-        when(pdlStoreMock.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(finalList), eq(ActivityType.PRINT))).thenReturn(toLog);
 
         // Then
         ResponseEntity response = sjukfallController.getSjukfallForCareUnitAsPdf(request);
 
+        // Verify
+        verifyStatic();
+        PDLActivityStore.addActivitiesToStore(eq(VARDENHETS_ID), eq(toLog), eq(ActivityType.PRINT), eq(storedActivities));
+        verifyStatic();
+        PDLActivityStore.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(finalList), eq(ActivityType.PRINT), eq(storedActivities));
+
         verify(sjukfallService).getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
-
-        verify(pdlStoreMock).getActivitiesNotInStore(eq(VARDENHETS_ID), eq(finalList), eq(ActivityType.PRINT));
         verify(logserviceMock).logSjukfallData(eq(toLog), eq(ActivityType.PRINT));
-        verify(pdlStoreMock).addActivitiesToStore(eq(VARDENHETS_ID), eq(toLog), eq(ActivityType.PRINT));
-        assertTrue(response.getStatusCode().equals(HttpStatus.OK));
 
+        assertTrue(response.getStatusCode().equals(HttpStatus.OK));
     }
 
     private static InternalSjukfall createSjukFallForPatient(String personNummer) {

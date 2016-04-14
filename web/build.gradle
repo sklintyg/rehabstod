@@ -185,6 +185,8 @@ dependencies {
         exclude module : "hamcrest-core"
     }
     testCompile "org.mockito:mockito-all:${mockitoAllVersion}"
+    testCompile "org.powermock:powermock-mockito-release-full:${powermockFullVersion}"
+
     testCompile "org.springframework:spring-test:${springContextVersion}"
     testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
 

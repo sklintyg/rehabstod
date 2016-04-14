@@ -24,7 +24,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Created by marced on 22/02/16.
+ * @author marced on 22/02/16.
  */
 public class PDLActivityEntry implements Serializable {
 

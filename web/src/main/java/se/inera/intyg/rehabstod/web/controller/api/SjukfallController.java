@@ -36,6 +36,8 @@ import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
 import se.inera.intyg.rehabstod.service.export.pdf.PdfExportServiceException;
@@ -54,6 +56,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -188,13 +191,13 @@ public class SjukfallController {
         return sjukfallService.getSummary(enhetsId, hsaId, urval, request);
     }
 
-    // - - - Private scope - - -
+    // - - - Package scope - - -
 
-    private String getEnhetsId(RehabstodUser user) {
+    String getEnhetsId(RehabstodUser user) {
         return user.getValdVardenhet().getId();
     }
 
-    private RehabstodUser getRehabstodUser() {
+    RehabstodUser getRehabstodUser() {
         RehabstodUser user = userService.getUser();
         if (user == null) {
             throw new AuthoritiesException("No user in session");
@@ -202,7 +205,7 @@ public class SjukfallController {
         return user;
     }
 
-    private List<InternalSjukfall> getSjukfall(RehabstodUser user, GetSjukfallRequest request) {
+    List<InternalSjukfall> getSjukfall(RehabstodUser user, GetSjukfallRequest request) {
         String enhetsId = getEnhetsId(user);
         String hsaId = user.getHsaId();
         Urval urval = user.getUrval();
@@ -211,10 +214,18 @@ public class SjukfallController {
         return sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
     }
 
-    private void logSjukfallData(RehabstodUser user, List<InternalSjukfall> sjukfallList, ActivityType activityType) {
-        List<InternalSjukfall> sjukfallToLog = user.getPdlActivityStore().getActivitiesNotInStore(getEnhetsId(user), sjukfallList, activityType);
+    void logSjukfallData(RehabstodUser user, List<InternalSjukfall> sjukfallList, ActivityType activityType) {
+        List<InternalSjukfall> sjukfallToLog = getActivitiesNotInStore(getEnhetsId(user), sjukfallList, activityType, user.getStoredActivities());
         logService.logSjukfallData(sjukfallToLog, activityType);
-        user.getPdlActivityStore().addActivitiesToStore(getEnhetsId(user), sjukfallToLog, activityType);
+        addActivitiesToStore(getEnhetsId(user), sjukfallToLog, activityType, user.getStoredActivities());
+    }
+
+    void addActivitiesToStore(String enhetsId, List<InternalSjukfall> sjukfallToAdd, ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
+        PDLActivityStore.addActivitiesToStore(enhetsId, sjukfallToAdd, activityType, storedActivities);
+    }
+
+    List<InternalSjukfall> getActivitiesNotInStore(String enhetsId, List<InternalSjukfall> sjukfallList, ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
+        return PDLActivityStore.getActivitiesNotInStore(enhetsId, sjukfallList, activityType, storedActivities);
     }
 
 }
