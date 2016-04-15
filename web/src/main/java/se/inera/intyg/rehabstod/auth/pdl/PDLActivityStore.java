@@ -60,14 +60,14 @@ public final class PDLActivityStore {
         if (vardenhetEvents == null) {
             // Nothing logged for this vardenhet yet - so all are new activities
             return sjukfall;
-        } else {
-            // find all patientId's NOT having av event entry for the combination patientId + eventType
-            return sjukfall.stream()
-                    .filter(sf -> vardenhetEvents.stream()
-                            .noneMatch(storedEvent -> storedEvent.getPatientId().equals(sf.getSjukfall().getPatient().getId())
-                                    && storedEvent.getActivityType().equals(activityType)))
-                    .collect(Collectors.toList());
         }
+
+        // find all patientId's NOT having av event entry for the combination patientId + eventType
+        return sjukfall.stream()
+                .filter(sf -> vardenhetEvents.stream()
+                        .noneMatch(storedEvent -> storedEvent.getPatientId().equals(sf.getSjukfall().getPatient().getId())
+                                && storedEvent.getActivityType().equals(activityType)))
+                .collect(Collectors.toList());
 
     }
 

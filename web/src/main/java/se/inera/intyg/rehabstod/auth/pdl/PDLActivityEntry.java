@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package se.inera.intyg.rehabstod.auth.pdl;
 
 import se.inera.intyg.common.logmessages.ActivityType;
@@ -69,6 +70,7 @@ public class PDLActivityEntry implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(patientId, activityType);
+      return Objects.hash(patientId, activityType);
     }
+
 }

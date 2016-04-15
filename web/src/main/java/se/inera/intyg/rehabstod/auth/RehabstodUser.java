@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package se.inera.intyg.rehabstod.auth;
 
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
@@ -278,6 +279,14 @@ public class RehabstodUser implements Serializable {
 
         // No other case allowed
         return false;
+    }
+
+    private void writeObject(java.io.ObjectOutputStream stream) throws java.io.IOException {
+        stream.defaultWriteObject();
+    }
+
+    private void readObject(java.io.ObjectInputStream stream) throws java.io.IOException, ClassNotFoundException {
+        stream.defaultReadObject();
     }
 
 }
