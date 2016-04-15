@@ -20,7 +20,12 @@ package se.inera.intyg.rehabstod.auth.authorities.bootstrap;
 
 import static java.lang.String.format;
 
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,14 +33,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConfiguration;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 
 /**
  * The authorities configuration is read from a YAML file which is
@@ -109,6 +111,12 @@ public class AuthoritiesConfigurationLoader implements InitializingBean {
         return r.getResource(location);
     }
 
+    /*
+     * Sonar analysis of the bytecode produced by a 'try-with-resource block' is problematic, as the bytecode produced
+     * and analyzed will contain nested try catch finally blocks. Full branch coverage seem to be very hard to achieve.
+     * Even though all lines below are covered, sonar reports only 2/8 branches covered for the try clause.
+     */
+    @SuppressWarnings("common-java:InsufficientBranchCoverage")
     private AuthoritiesConfiguration loadConfiguration(Path path) throws IOException {
         Yaml yaml = new Yaml();
         try (InputStream in = Files.newInputStream(path)) {

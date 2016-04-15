@@ -19,6 +19,9 @@
 package se.inera.intyg.rehabstod.auth;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
+import java.security.Principal;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,10 +47,23 @@ public class LoggingSessionRegistryImplTest {
 
     RehabstodUser user;
 
+    private Principal customPrincipal = (Principal) () -> "I'm not a real Principal";
+
     @Before
     public void before() {
         user = new RehabstodUser("hsaId", "En Användare");
         user.setAuthenticationScheme("my:auth");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRegisterNewSessionNullPrincipal() throws Exception {
+        testee.registerNewSession(SESSION_ID, null);
+    }
+
+    @Test
+    public void testRegisterNewSessionUnknownPrincipalType() throws Exception {
+        testee.registerNewSession(SESSION_ID, customPrincipal);
+        verifyNoMoreInteractions(monitoringService);
     }
 
     @Test
@@ -61,5 +77,18 @@ public class LoggingSessionRegistryImplTest {
         testee.registerNewSession(SESSION_ID, user);
         testee.removeSessionInformation(SESSION_ID);
         verify(monitoringService).logUserLogout(user.getHsaId(), user.getAuthenticationScheme());
+    }
+
+    @Test
+    public void testRemoveSessionInformationNoSessionExist() throws Exception {
+        testee.removeSessionInformation("unknownsessionid");
+        verifyNoMoreInteractions(monitoringService);
+    }
+
+    @Test
+    public void testRemoveSessionInformationUnknownPrincipalType() throws Exception {
+        testee.registerNewSession(SESSION_ID, customPrincipal);
+        testee.removeSessionInformation(SESSION_ID);
+        verifyNoMoreInteractions(monitoringService);
     }
 }

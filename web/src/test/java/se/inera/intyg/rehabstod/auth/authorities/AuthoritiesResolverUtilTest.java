@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.auth.authorities;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,16 @@ public class AuthoritiesResolverUtilTest {
         // Assert
         assertEquals(1, stringRoleMap.size());
         assertEquals(stringRoleMap.get(role.getName()), role);
+
+    }
+
+    @Test
+    public void testPrivilegesToMapWithNullElementInList() throws Exception {
+        // Act
+        final Map<String, Privilege> stringPrivilegeMap = AuthoritiesResolverUtil.toMap(Arrays.asList(new Privilege(), null));
+
+        // Assert
+        assertEquals(1, stringPrivilegeMap.size());
 
     }
 
