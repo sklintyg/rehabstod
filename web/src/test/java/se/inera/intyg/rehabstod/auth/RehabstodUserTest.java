@@ -138,8 +138,7 @@ public class RehabstodUserTest {
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(user);
             oos.close();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             fail("Exception thrown during test: " + ex.toString());
         }
 
@@ -160,8 +159,7 @@ public class RehabstodUserTest {
 
             // Clean up the file
             new File("tempdata.ser").delete();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             fail("Exception thrown during test: " + ex.toString());
         }
     }
