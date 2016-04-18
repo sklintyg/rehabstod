@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.auth.fake;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author andreaskaltenbach
@@ -35,6 +36,7 @@ public class FakeCredentials implements Serializable {
     private boolean tandlakare = false;
     private String befattningsKod;
     private String forskrivarKod;
+    private List<String> systemRoles;
 
     public FakeCredentials() {
     }
@@ -48,6 +50,7 @@ public class FakeCredentials implements Serializable {
         this.tandlakare = builder.tandlakare;
         this.befattningsKod = builder.befattningsKod;
         this.forskrivarKod = builder.forskrivarKod;
+        this.systemRoles = builder.systemRoles;
     }
 
     // ~ Getter and setters
@@ -113,6 +116,13 @@ public class FakeCredentials implements Serializable {
         this.tandlakare = tandlakare;
     }
 
+    public List<String> getSystemRoles() {
+        return systemRoles;
+    }
+
+    public void setSystemRoles(List<String> systemRoles) {
+        this.systemRoles = systemRoles;
+    }
 
     // ~ Public methods
     // ~====================================================================================
@@ -124,9 +134,9 @@ public class FakeCredentials implements Serializable {
                 + ", fornamn='" + fornamn + '\''
                 + ", efternamn='" + efternamn + '\''
                 + ", lakare=" + lakare
+                + ", systemRoles=" + "[" + (systemRoles == null ? "" : String.join(",", systemRoles)) + "]"
                 + '}';
     }
-
 
     // ~ Builder class
     // ~====================================================================================
@@ -140,6 +150,7 @@ public class FakeCredentials implements Serializable {
         private boolean tandlakare = false;
         private String befattningsKod;
         private String forskrivarKod;
+        private List<String> systemRoles;
 
         public FakeCredentialsBuilder(String hsaId, String fornamn, String efternamn, String enhetId) {
             this.hsaId = hsaId;
@@ -185,6 +196,11 @@ public class FakeCredentials implements Serializable {
 
         public FakeCredentialsBuilder befattningsKod(String befattningsKod) {
             this.befattningsKod = befattningsKod;
+            return this;
+        }
+
+        public FakeCredentialsBuilder systemRoles(List<String> systemRoles) {
+            this.systemRoles = systemRoles;
             return this;
         }
 

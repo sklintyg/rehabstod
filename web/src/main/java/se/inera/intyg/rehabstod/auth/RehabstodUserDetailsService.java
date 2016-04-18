@@ -20,6 +20,17 @@ package se.inera.intyg.rehabstod.auth;
 
 import static se.inera.intyg.common.integration.hsa.stub.Medarbetaruppdrag.VARD_OCH_BEHANDLING;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.opensaml.saml2.core.Assertion;
@@ -32,25 +43,20 @@ import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolverUtil;
 import se.inera.intyg.rehabstod.auth.authorities.Role;
 import se.inera.intyg.rehabstod.auth.exceptions.GenericAuthenticationException;
 import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingMedarbetaruppdragException;
+import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 /**
  * @author andreaskaltenbach
@@ -59,6 +65,10 @@ import java.util.stream.Collectors;
 public class RehabstodUserDetailsService implements SAMLUserDetailsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(RehabstodUserDetailsService.class);
+    static final String HSA_SYSTEMROLE_REHAB_UNIT_PREFIX = "INTYG;Rehab-";
+
+    //The part after prefix is assumed to be a hsa-enhetsid, this will be extracted and compared.
+    private static final Pattern HSA_SYSTEMROLE_REHAB_UNIT_PATTERN = Pattern.compile("^" + HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "(.*)");
 
     @Autowired
     private HsaOrganizationsService hsaOrganizationsService;
@@ -172,20 +182,51 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
         List<PersonInformationType> personInfo = getPersonInfo(hsaId);
         List<Vardgivare> authorizedVardgivare = getAuthorizedVardgivare(hsaId);
 
-        try {
-            assertMIU(credential);
-            assertAuthorizedVardgivare(hsaId, authorizedVardgivare);
+        assertMIU(credential);
+        assertAuthorizedVardgivare(hsaId, authorizedVardgivare);
 
-            HttpServletRequest request = getCurrentRequest();
-            Role role = authoritiesResolver.resolveRole(credential, request);
-            LOG.debug("User role is set to {}", role);
+        HttpServletRequest request = getCurrentRequest();
+        Role role = authoritiesResolver.resolveRole(credential, request);
+        LOG.debug("User role is set to {}", role);
 
-            return createRehabstodUser(role, credential, authorizedVardgivare, personInfo);
-
-        } catch (MissingMedarbetaruppdragException e) {
-            throw e;
+        if (role.getName().equals(AuthoritiesConstants.ROLE_KOORDINATOR)) {
+            removeEnheterMissingRehabKoordinatorRole(authorizedVardgivare, getAssertion(credential).getSystemRoles(), hsaId);
         }
+        return createRehabstodUser(role, credential, authorizedVardgivare, personInfo);
 
+    }
+
+    void removeEnheterMissingRehabKoordinatorRole(List<Vardgivare> authorizedVardgivare, List<String> systemRoles, String hsaId) {
+        long unitsBefore = authorizedVardgivare.stream().mapToInt(vg -> vg.getVardenheter().size()).sum();
+
+        // Get a clean list of enhetsId's that user is authorized to use rehab for
+        List<String> rehabAuthorizedEnhetIds = parseEnhetsIdsFromSystemRoles(systemRoles);
+
+        // remove all vardeneheter that's not present in whitelist
+        authorizedVardgivare.stream().forEach(vg -> vg.getVardenheter().removeIf(ve -> !rehabAuthorizedEnhetIds.contains(ve.getId())));
+
+        // Also, any vardgivare with no vardenheter left should be removed for the default selection mechanism to work
+        authorizedVardgivare.removeIf(vg -> vg.getVardenheter().size() < 1);
+
+        long unitsAfter = authorizedVardgivare.stream().mapToInt(vg -> vg.getVardenheter().size()).sum();
+
+        LOG.debug("removeEnheterMissingRehabKoordinatorRole rehabauthorized units are: [" + String.join(",", rehabAuthorizedEnhetIds)
+                + "]. User units before filtering: " + unitsBefore + ", after: " + unitsAfter);
+
+        if (unitsAfter < 1) {
+            throw new MissingUnitWithRehabSystemRoleException(hsaId);
+        }
+    }
+
+    private List<String> parseEnhetsIdsFromSystemRoles(List<String> systemRoles) {
+        List<String> idList = new ArrayList<>();
+        for (String s : systemRoles) {
+            Matcher matcher = HSA_SYSTEMROLE_REHAB_UNIT_PATTERN.matcher(s);
+            if (matcher.find()) {
+                idList.add(matcher.group(1));
+            }
+        }
+        return idList;
     }
 
     SakerhetstjanstAssertion getAssertion(Assertion assertion) {
