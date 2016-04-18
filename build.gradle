@@ -162,8 +162,7 @@ subprojects {
         wsdl4jVersion = "1.6.3"
 
         // Internal
-        //intygCommonVersion = "2.5.+"
-        intygCommonVersion = "0-SNAPSHOT"
+        intygCommonVersion = "2.5.+"
 
         // Schemas
         rehabSchemaVersion = "1.0.0"
