@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth.fake;
 
-
 import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.ENHET_HSA_ID_ATTRIBUTE;
 import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.FORNAMN_ATTRIBUTE;
 import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.FORSKRIVARKOD_ATTRIBUTE;
@@ -26,9 +25,12 @@ import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.HSA_ID_ATTR
 import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.MEDARBETARUPPDRAG_ID;
 import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.MEDARBETARUPPDRAG_TYPE;
 import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.MELLAN_OCH_EFTERNAMN_ATTRIBUTE;
+import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.SYSTEM_ROLE_ATTRIBUTE;
 import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.TITEL_ATTRIBUTE;
 import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.TITEL_KOD_ATTRIBUTE;
 import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.VARD_OCH_BEHANDLING;
+
+import java.util.ArrayList;
 
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.AttributeStatement;
@@ -42,10 +44,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.providers.ExpiringUsernameAuthenticationToken;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
+
 import se.inera.intyg.rehabstod.auth.BaseFakeAuthenticationProvider;
-
-import java.util.ArrayList;
-
 
 /**
  * @author andreaskaltenbach
@@ -65,7 +65,8 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
         SAMLCredential credential = createSamlCredential(token);
         Object details = userDetails.loadUserBySAML(credential);
 
-        ExpiringUsernameAuthenticationToken result = new ExpiringUsernameAuthenticationToken(null, details, credential, new ArrayList<GrantedAuthority>());
+        ExpiringUsernameAuthenticationToken result = new ExpiringUsernameAuthenticationToken(null, details, credential,
+                new ArrayList<GrantedAuthority>());
         result.setDetails(details);
 
         return result;
@@ -97,6 +98,13 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
         addAttribute(attributeStatement, MEDARBETARUPPDRAG_TYPE, VARD_OCH_BEHANDLING);
         addAttribute(attributeStatement, MEDARBETARUPPDRAG_ID, fakeCredentials.getEnhetId());
         addAttribute(attributeStatement, FORSKRIVARKOD_ATTRIBUTE, fakeCredentials.getForskrivarKod());
+
+        if (fakeCredentials.getSystemRoles() != null) {
+            for (String sr: fakeCredentials.getSystemRoles()) {
+                addAttribute(attributeStatement, SYSTEM_ROLE_ATTRIBUTE, sr);
+            }
+        }
+
 
         if (fakeCredentials.isLakare()) {
             addAttribute(attributeStatement, TITEL_ATTRIBUTE, "Läkare");

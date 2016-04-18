@@ -18,6 +18,19 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import javax.xml.transform.stream.StreamSource;
+
 import org.apache.cxf.staxutils.StaxUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -38,6 +51,7 @@ import org.springframework.security.saml.SAMLCredential;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
+
 import se.inera.intyg.common.integration.hsa.model.Mottagning;
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
@@ -49,16 +63,9 @@ import se.inera.intyg.rehabstod.auth.authorities.bootstrap.AuthoritiesConfigurat
 import se.inera.intyg.rehabstod.auth.authorities.validation.AuthoritiesValidator;
 import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingMedarbetaruppdragException;
-
-import javax.xml.transform.stream.StreamSource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
+import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
+import se.riv.infrastructure.directory.v1.PaTitleType;
+import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
  * Created by marced on 29/01/16.
@@ -78,6 +85,10 @@ public class RehabstodUserDetailsServiceTest {
     private static final String ENHET_HSAID_2 = "IFV1239877878-103P";
     private static final String MOTTAGNING_HSAID_1 = "IFV1239877878-103M";
     private static final String MOTTAGNING_HSAID_2 = "IFV1239877878-103N";
+    private static final String VARDGIVARE_HSAID2 = "IFV2222";
+    private static final String ENHET_HSAID_21 = "IFV_222222111";
+    private static final String ENHET_HSAID_22 = "IFV_22";
+    private static final String ENHET_HSAID_23 = "IFV_23";
 
     @InjectMocks
     private RehabstodUserDetailsService userDetailsService = new RehabstodUserDetailsService();
@@ -111,6 +122,31 @@ public class RehabstodUserDetailsServiceTest {
         when(hsaPersonService.getHsaPersonInfo(anyString())).thenReturn(Collections.emptyList());
         AUTHORITIES_RESOLVER.setHsaPersonService(hsaPersonService);
         userDetailsService.setAuthoritiesResolver(AUTHORITIES_RESOLVER);
+    }
+
+    @Test
+    public void assertLoadsOkWhenHasMatchingSystemRole() throws Exception {
+        // given
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-matching-rehab-systemrole.xml");
+        setupCallToAuthorizedEnheterForHosPerson();
+
+        // then
+        RehabstodUser rehabstodUser = (RehabstodUser) userDetailsService.loadUserBySAML(samlCredential);
+
+        AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_KOORDINATOR).orThrow();
+        assertEquals("The hsaId defined in credentials should have been selected as default vardenhet", ENHET_HSAID_1, rehabstodUser
+                .getValdVardenhet().getId());
+    }
+
+    @Test(expected = MissingUnitWithRehabSystemRoleException.class)
+    public void assertThrowsExceptionWhenNoMatchingSystemRole() throws Exception {
+        // given
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-without-matching-rehab-systemrole.xml");
+        setupCallToAuthorizedEnheterForHosPerson();
+
+        // then
+        userDetailsService.loadUserBySAML(samlCredential);
+
     }
 
     @Test
@@ -168,6 +204,191 @@ public class RehabstodUserDetailsServiceTest {
         userDetailsService.loadUserBySAML(samlCredential);
     }
 
+    @Test
+    public void testExtractBefattningar() throws Exception {
+
+        // Arrange
+        PersonInformationType pt = new PersonInformationType();
+        pt.setTitle("title1");
+        final PaTitleType paTitleType1 = new PaTitleType();
+        paTitleType1.setPaTitleName("paTitle1");
+        pt.getPaTitle().add(paTitleType1);
+
+        final PaTitleType paTitleType2 = new PaTitleType();
+        paTitleType2.setPaTitleName("paTitle2");
+        pt.getPaTitle().add(paTitleType2);
+
+        List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
+        hsaPersonInfo.add(pt);
+
+        // Test
+        final List<String> befattningar = userDetailsService.extractBefattningar(hsaPersonInfo);
+
+        // Verify
+        assertEquals(2, befattningar.size());
+        assertTrue(befattningar.contains("paTitle1"));
+        assertTrue(befattningar.contains("paTitle2"));
+
+    }
+
+    @Test
+    public void testExtractTitel() throws Exception {
+
+        // Arrange
+        PersonInformationType pt = new PersonInformationType();
+        pt.setTitle("xpitTitle");
+
+        PersonInformationType pt2 = new PersonInformationType();
+        pt2.getHealthCareProfessionalLicence().add("hcpl1");
+        pt2.getHealthCareProfessionalLicence().add("hcpl2");
+
+        List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
+        hsaPersonInfo.add(pt);
+        hsaPersonInfo.add(pt2);
+
+        // Test
+        final String titleString = userDetailsService.extractTitel(hsaPersonInfo);
+
+        // Verify
+        assertEquals("hcpl1, hcpl2, xpitTitle", titleString);
+
+    }
+
+    @Test
+    public void testExtractLegitimeradeYrkesgrupper() throws Exception {
+
+        // Arrange
+        PersonInformationType pt = new PersonInformationType();
+        pt.setTitle("title1");
+        final PaTitleType paTitleType1 = new PaTitleType();
+        paTitleType1.setPaTitleName("paTitle1");
+        pt.getPaTitle().add(paTitleType1);
+
+        final PaTitleType paTitleType2 = new PaTitleType();
+        paTitleType2.setPaTitleName("paTitle2");
+        pt.getPaTitle().add(paTitleType2);
+
+        List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
+        hsaPersonInfo.add(pt);
+
+        // Test
+        final List<String> legitimeradeYrkesgrupper = userDetailsService.extractLegitimeradeYrkesgrupper(hsaPersonInfo);
+
+        // Verify
+        // Verify
+        assertEquals(2, legitimeradeYrkesgrupper.size());
+        assertTrue(legitimeradeYrkesgrupper.contains("paTitle1"));
+        assertTrue(legitimeradeYrkesgrupper.contains("paTitle2"));
+
+    }
+
+    @Test
+    public void testSetFirstVardenhetOnFirstVardgivareAsDefault() throws Exception {
+
+        // Arrange
+        Vardgivare vardgivare = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
+        Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "VårdEnhet2A");
+        vardgivare.getVardenheter().add(enhet1);
+        Vardenhet enhet2 = new Vardenhet(ENHET_HSAID_2, "Vårdcentralen");
+        vardgivare.getVardenheter().add(enhet2);
+
+        RehabstodUser user = new RehabstodUser("1", "Dr. Doctor");
+        user.setVardgivare(Arrays.asList(vardgivare));
+
+        // Test
+        final boolean success = userDetailsService.setFirstVardenhetOnFirstVardgivareAsDefault(user);
+
+        // Verify
+        assertTrue(success);
+        assertEquals(vardgivare, user.getValdVardgivare());
+        assertEquals(enhet1, user.getValdVardenhet());
+
+    }
+
+    @Test
+    public void testRemoveEnheterMissingRehabKoordinatorRole() {
+        // Arrange
+        Vardgivare vardgivare1 = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
+        Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "Skall bort");
+        vardgivare1.getVardenheter().add(enhet1);
+        Vardenhet enhet2 = new Vardenhet(ENHET_HSAID_2, "Skall vara kvar");
+        vardgivare1.getVardenheter().add(enhet2);
+
+        Vardgivare vardgivare2 = new Vardgivare(VARDGIVARE_HSAID2, "IFV Annat");
+        Vardenhet enhet21 = new Vardenhet(ENHET_HSAID_21, "VårdEnhet22A");
+        Vardenhet enhet22 = new Vardenhet(ENHET_HSAID_22, "Skall bort med");
+        Vardenhet enhet23 = new Vardenhet(ENHET_HSAID_23, "Vårdenhet 23");
+        vardgivare2.getVardenheter().addAll(Arrays.asList(enhet21, enhet22, enhet23));
+
+        List<String> systemRoles = Arrays.asList(RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2,
+                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
+                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23);
+
+        List<Vardgivare> original = Arrays.asList(vardgivare1, vardgivare2);
+
+        // Test
+        userDetailsService.removeEnheterMissingRehabKoordinatorRole(original, systemRoles, "userHsaId");
+
+        // Verify
+        assertTrue(original.contains(vardgivare1));
+        assertFalse(vardgivare1.getVardenheter().contains(enhet1));
+        assertTrue(vardgivare1.getVardenheter().contains(enhet2));
+
+        assertTrue(original.contains(vardgivare2));
+        assertTrue(vardgivare2.getVardenheter().contains(enhet21));
+        assertFalse(vardgivare2.getVardenheter().contains(enhet22));
+        assertTrue(vardgivare2.getVardenheter().contains(enhet23));
+
+    }
+
+    @Test
+    public void testRemoveEnheterMissingRehabKoordinatorRoleRemovedEmptyVardgivare() {
+        // Arrange
+        Vardgivare vardgivare1 = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting - skall bort");
+        Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "Skall bort");
+        vardgivare1.getVardenheter().add(enhet1);
+        Vardenhet enhet2 = new Vardenhet(ENHET_HSAID_2, "Skall bort den med");
+        vardgivare1.getVardenheter().add(enhet2);
+
+        Vardgivare vardgivare2 = new Vardgivare(VARDGIVARE_HSAID2, "IFV Annat");
+        Vardenhet enhet21 = new Vardenhet(ENHET_HSAID_21, "VårdEnhet22A");
+        Vardenhet enhet22 = new Vardenhet(ENHET_HSAID_22, "Skall bort med");
+
+        vardgivare2.getVardenheter().addAll(Arrays.asList(enhet21, enhet22));
+
+        List<String> systemRoles = Arrays.asList(
+                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
+                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23);
+
+        List<Vardgivare> original = new ArrayList<>(Arrays.asList(vardgivare1, vardgivare2));
+
+        // Test
+        userDetailsService.removeEnheterMissingRehabKoordinatorRole(original, systemRoles, "userHsaId");
+
+        // Verify
+        assertFalse(original.contains(vardgivare1));
+        assertTrue(original.contains(vardgivare2));
+        assertTrue(vardgivare2.getVardenheter().contains(enhet21));
+        assertFalse(vardgivare2.getVardenheter().contains(enhet22));
+
+    }
+
+    @Test(expected = MissingUnitWithRehabSystemRoleException.class)
+    public void testRemoveEnheterMissingRehabKoordinatorRoleRemoveAllThrowsException() {
+        // Arrange
+        Vardgivare vardgivare1 = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
+        Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "Skall bort");
+        vardgivare1.getVardenheter().add(enhet1);
+
+        List<String> systemRoles = Arrays.asList(RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2);
+
+        List<Vardgivare> original = new ArrayList<>(Arrays.asList(vardgivare1));
+
+        // Act
+        userDetailsService.removeEnheterMissingRehabKoordinatorRole(original, systemRoles, "userHsaId");
+
+    }
+
     private SAMLCredential createSamlCredential(String filename) throws Exception {
         Document doc = StaxUtils.read(new StreamSource(new ClassPathResource(
                 "RehabstodUserDetailsServiceTest/" + filename).getInputStream()));
@@ -190,7 +411,7 @@ public class RehabstodUserDetailsServiceTest {
 
         vardgivare.getVardenheter().add(enhet2);
 
-        List<Vardgivare> vardgivareList = Collections.singletonList(vardgivare);
+        List<Vardgivare> vardgivareList = new ArrayList<>(Arrays.asList(vardgivare));
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(vardgivareList);
     }
 

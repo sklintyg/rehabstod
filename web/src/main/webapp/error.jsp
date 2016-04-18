@@ -1,4 +1,3 @@
-<%@ page import="org.springframework.core.env.Environment" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -75,7 +74,11 @@
             <div id="error-tekniskt-fel" class="alert alert-danger">Tyvärr har ett tekniskt problem uppstått i Rehabstöd. <a href="/index.html">Försök gärna igen</a> för att se om felet är tillfälligt. Kontakta annars i första hand din lokala IT-avdelning och i andra hand <a href="http://www.inera.se/felanmalan" target="_blank">Ineras Nationell kundservice</a>.
             </div>
           </c:when>
-
+          <c:when test="${param.reason eq \"login.saknar-hsa-rehabroll\"}">
+            <h1 class="page-header">Rehabstöd - Behörighet saknas</h1>
+            <div id="error-tekniskt-fel" class="alert alert-danger">För att logga in som Rehabkoordinator krävs att du har den rollen för vårdenheten i HSA.</div>
+            </div>
+          </c:when>
           <c:when test="${param.reason eq \"exporterror\"}">
             <h1 class="page-header">Rehabstöd - export misslyckades</h1>
             <div id="error-export-fel" class="alert alert-danger">Tyvärr uppstod ett fel vid skapandet av exporten. Du kan försöka utföra exporten igen för att se om felet är tillfälligt. Kontakta annars i första hand din lokala IT-avdelning och i andra hand <a href="http://www.inera.se/felanmalan" target="_blank">Ineras Nationell kundservice</a>.

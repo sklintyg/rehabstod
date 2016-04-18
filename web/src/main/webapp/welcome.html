@@ -51,7 +51,8 @@
       "hsaId": "TSTNMT2321000156-105J",
       "enhetId": "TSTNMT2321000156-105F",
       "lakare" : false,
-      "forskrivarKod": "9300005"
+      "forskrivarKod": "9300005",
+      "systemRoles": ["INTYG;Rehab-TSTNMT2321000156-105F"]
     },
 
     {
@@ -111,7 +112,8 @@
       "efternamn": "Ericsson",
       "hsaId": "TSTNMT2321000156-105V",
       "enhetId": "TSTNMT2321000156-105N",
-      "lakare" : false
+      "lakare" : false,
+      "systemRoles": ["INTYG;Rehab-TSTNMT2321000156-105N"]
     },
 
     // Vårdadmin 2
@@ -120,7 +122,8 @@
       "efternamn": "Johansson",
       "hsaId": "TSTNMT2321000156-105W",
       "enhetId": "TSTNMT2321000156-105P",
-      "lakare" : false
+      "lakare" : false,
+      "systemRoles": ["INTYG;Rehab-TSTNMT2321000156-105P", "INTYG;Rehab-TSTNMT2321000156-105Q"]
     } ,
     // C-bio
     {
@@ -134,7 +137,16 @@
       "efternamn": "Olsson",
       "hsaId": "TSTNMT2321000156-1066",
       "enhetId": "TSTNMT2321000156-1062",
-      "lakare" : false
+      "lakare" : false,
+      "systemRoles": ["INTYG;Rehab-TSTNMT2321000156-1062", "INTYG;Rehab-TSTNMT2321000156-1063"]
+    },
+    {
+      "fornamn": "Rolf",
+      "efternamn": "Rollöse",
+      "hsaId": "TSTNMT2321000156-105V",
+      "enhetId": "TSTNMT2321000156-105N",
+      "lakare" : false,
+      "systemRoles": []
     }
   ];
 
@@ -197,6 +209,8 @@
               <option value="9" id="TSTNMT2321000156-105W_TSTNMT2321000156-105P">Kerstin Johansson (Rehabstöd/Vårdadmin 2/Vård och Behandling)</option>
               <option value="10" id="TSTNMT2321000156-1067_TSTNMT2321000156-1062">Elin Johansson (Cambio/Läkare/Vård och Behandling)</option>
               <option value="11" id="TSTNMT2321000156-1066_TSTNMT2321000156-1062">Lars Olsson (Cambio/Vårdadmin/Vård och Behandling)</option>
+              <option value="12" id="rolf-rollöse">Rolf Rollöse (saknar hsa systemroll Rehab för enheter)</option>
+
 
             </select>
             <input id="loginBtn" type="submit" value="Logga in" class="btn btn-primary"

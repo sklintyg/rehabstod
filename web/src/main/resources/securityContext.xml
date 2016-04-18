@@ -78,6 +78,9 @@
         <prop key="se.inera.intyg.rehabstod.auth.exceptions.MissingMedarbetaruppdragException">
           /error.jsp?reason=login.medarbetaruppdrag
         </prop>
+        <prop key="se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException">
+          /error.jsp?reason=login.saknar-hsa-rehabroll
+        </prop>
         <prop key="se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException">
           /error.jsp?reason=login.hsaerror
         </prop>

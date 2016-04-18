@@ -22,6 +22,8 @@ import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.core.IsEqual.equalTo;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
@@ -36,8 +38,6 @@ import com.jayway.restassured.http.ContentType;
  * Created by martin on 03/02/16.
  */
 public class UserApiControllerIT extends BaseRestIntegrationTest {
-
-
 
     @Test
     public void testGetAnvandare() {
@@ -61,7 +61,8 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
 
         // Log in as user having medarbetaruppdrag at several vardenheter.
         FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105S", "Anders", "Multi-vardenheter",
-                "TSTNMT2321000156-105N").lakare(false).build();
+                "TSTNMT2321000156-105N").lakare(false)
+                        .systemRoles(Arrays.asList("INTYG;Rehab-TSTNMT2321000156-105N", "INTYG;Rehab-TSTNMT2321000156-105P")).build();
         RestAssured.sessionId = getAuthSession(user);
 
         // An improvement of this would be to call hsaStub rest api to add testa data as we want it to
@@ -70,11 +71,9 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
         ChangeSelectedUnitRequest changeRequest = new ChangeSelectedUnitRequest();
         changeRequest.setId(vardEnhetToChangeTo);
 
-        given().contentType(ContentType.JSON).and().body(changeRequest).when().post(USER_API_ENDPOINT + "/andraenhet").
-                then().
-                statusCode(OK).
-                body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
-                body("valdVardenhet.id", equalTo(vardEnhetToChangeTo));
+        given().contentType(ContentType.JSON).and().body(changeRequest).when().post(USER_API_ENDPOINT + "/andraenhet").then().statusCode(OK)
+                .body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json"))
+                .body("valdVardenhet.id", equalTo(vardEnhetToChangeTo));
     }
 
     /**
@@ -85,7 +84,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
 
         // Log in as user having medarbetaruppdrag at several vardenheter.
         FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105S", "Anders", "Multi-vardenheter",
-                "TSTNMT2321000156-105N").lakare(false).build();
+                "TSTNMT2321000156-105N").lakare(false).systemRoles(Arrays.asList("INTYG;Rehab-TSTNMT2321000156-105N")).build();
         RestAssured.sessionId = getAuthSession(user);
 
         // An improvement of this would be to call hsaStub rest api to add testa data as we want it to
@@ -94,8 +93,8 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
         ChangeSelectedUnitRequest changeRequest = new ChangeSelectedUnitRequest();
         changeRequest.setId(vardEnhetToChangeTo);
 
-        given().contentType(ContentType.JSON).and().body(changeRequest).expect().
-                statusCode(SERVER_ERROR).when().post(USER_API_ENDPOINT + "/andraenhet");
+        given().contentType(ContentType.JSON).and().body(changeRequest).expect().statusCode(SERVER_ERROR).when()
+                .post(USER_API_ENDPOINT + "/andraenhet");
     }
 
     @Test

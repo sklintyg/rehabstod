@@ -77,10 +77,15 @@ public class SakerhetstjanstAssertion {
     // HSA-identitet för valt uppdrag
     public static final String MEDARBETARUPPDRAG_ID = "urn:sambi:names:attribute:assignmentHsaId";
 
+    // Lista av strängar med rolltilldelningar
+    public static final String SYSTEM_ROLE_ATTRIBUTE = "urn:sambi:names:attribute:systemRole";
+
     private final List<String> titelKod = new ArrayList<>();
     private final List<String> titel = new ArrayList<>();
 
     private final List<String> forskrivarkod = new ArrayList<>();
+
+    private final List<String> systemroles = new ArrayList<>();
 
     private String hsaId;
 
@@ -98,7 +103,6 @@ public class SakerhetstjanstAssertion {
 
     private String authenticationScheme;
 
-
     /* Constructor taking an Assertion object */
     public SakerhetstjanstAssertion(Assertion assertion) {
         if (assertion.getAttributeStatements() != null) {
@@ -112,15 +116,13 @@ public class SakerhetstjanstAssertion {
         }
     }
 
-    // - - - - -  Static - - - - -
+    // - - - - - Static - - - - -
 
     public static SakerhetstjanstAssertion getAssertion(SAMLCredential credential) {
         return new SakerhetstjanstAssertion(credential.getAuthenticationAssertion());
     }
 
-
-
-    // - - - - -  Getters and setters - - - - -
+    // - - - - - Getters and setters - - - - -
 
     public List<String> getTitel() {
         return titel;
@@ -170,54 +172,60 @@ public class SakerhetstjanstAssertion {
         return medarbetaruppdragHsaId;
     }
 
+    public List<String> getSystemRoles() {
+        return systemroles;
+    }
+
     public String getAuthenticationScheme() {
         return authenticationScheme;
     }
-
 
     // - - - - - Private scope - - - - -
 
     private void extractAttributes(List<Attribute> attributes) {
         for (Attribute attribute : attributes) {
             switch (attribute.getName()) {
-                case TITEL_ATTRIBUTE:
-                    titel.addAll(getValues(attribute));
-                    break;
-                case TITEL_KOD_ATTRIBUTE:
-                    titelKod.addAll(getValues(attribute));
-                    break;
-                case FORSKRIVARKOD_ATTRIBUTE:
-                    forskrivarkod.addAll(getValues(attribute));
-                    break;
-                case HSA_ID_ATTRIBUTE:
-                    hsaId = getValue(attribute);
-                    break;
-                case FORNAMN_ATTRIBUTE:
-                    fornamn = getValue(attribute);
-                    break;
-                case MELLAN_OCH_EFTERNAMN_ATTRIBUTE:
-                    mellanOchEfternamn = getValue(attribute);
-                    break;
-                case ENHET_HSA_ID_ATTRIBUTE:
-                    enhetHsaId = getValue(attribute);
-                    break;
-                case ENHET_NAMN_ATTRIBUTE:
-                    enhetNamn = getValue(attribute);
-                    break;
-                case VARDGIVARE_HSA_ID_ATTRIBUTE:
-                    vardgivareHsaId = getValue(attribute);
-                    break;
-                case VARDGIVARE_NAMN_ATTRIBUTE:
-                    vardgivareNamn = getValue(attribute);
-                    break;
-                case MEDARBETARUPPDRAG_TYPE:
-                    medarbetaruppdragType = getValue(attribute);
-                    break;
-                case MEDARBETARUPPDRAG_ID:
-                    medarbetaruppdragHsaId = getValue(attribute);
-                    break;
-                default:
-                    // Ignore.
+            case TITEL_ATTRIBUTE:
+                titel.addAll(getValues(attribute));
+                break;
+            case TITEL_KOD_ATTRIBUTE:
+                titelKod.addAll(getValues(attribute));
+                break;
+            case FORSKRIVARKOD_ATTRIBUTE:
+                forskrivarkod.addAll(getValues(attribute));
+                break;
+            case HSA_ID_ATTRIBUTE:
+                hsaId = getValue(attribute);
+                break;
+            case FORNAMN_ATTRIBUTE:
+                fornamn = getValue(attribute);
+                break;
+            case MELLAN_OCH_EFTERNAMN_ATTRIBUTE:
+                mellanOchEfternamn = getValue(attribute);
+                break;
+            case ENHET_HSA_ID_ATTRIBUTE:
+                enhetHsaId = getValue(attribute);
+                break;
+            case ENHET_NAMN_ATTRIBUTE:
+                enhetNamn = getValue(attribute);
+                break;
+            case VARDGIVARE_HSA_ID_ATTRIBUTE:
+                vardgivareHsaId = getValue(attribute);
+                break;
+            case VARDGIVARE_NAMN_ATTRIBUTE:
+                vardgivareNamn = getValue(attribute);
+                break;
+            case MEDARBETARUPPDRAG_TYPE:
+                medarbetaruppdragType = getValue(attribute);
+                break;
+            case MEDARBETARUPPDRAG_ID:
+                medarbetaruppdragHsaId = getValue(attribute);
+                break;
+            case SYSTEM_ROLE_ATTRIBUTE:
+                systemroles.addAll(getValues(attribute));
+                break;
+            default:
+                // Ignore.
             }
         }
     }
