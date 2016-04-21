@@ -33,6 +33,8 @@ import javax.xml.ws.soap.SOAPFaultException;
 
 /**
  * Created by eriklupander on 2016-03-30.
+ *
+ * @deprecated Not possible to use for RHS 1.0, PfC in NTjP PROD not available.
  */
 @Service
 public class PingForConfigurationServiceBean implements PingForConfigurationService {

@@ -67,7 +67,9 @@ public class PingForConfigurationResponderImpl implements PingForConfigurationRe
 
         HealthStatus uptime = healthCheck.checkUptime();
         HealthStatus nbrOfUsers = healthCheck.checkNbrOfUsers();
-        HealthStatus ntjpStatus = healthCheck.checkHSA();
+
+        // INTYG-2352: Not possible to use PfC on NTjP PROD, have to remove this check for now.
+        //HealthStatus ntjpStatus = healthCheck.checkHSA();
         HealthStatus amqStatus = healthCheck.checkActiveMQ();
         HealthStatus itStatus = healthCheck.checkIntygstjansten();
 
@@ -78,7 +80,9 @@ public class PingForConfigurationResponderImpl implements PingForConfigurationRe
 
         addConfiguration(response, "jmsStatus", amqStatus.isOk() ? "ok" : "error");
         addConfiguration(response, "intygstjanst", itStatus.isOk() ? "ok" : "no connection");
-        addConfiguration(response, "ntjp", ntjpStatus.isOk() ? "ok" : "no connection");
+
+        // INTYG-2352: Not possible to use PfC on NTjP PROD, have to remove this check for now.
+        //addConfiguration(response, "ntjp", ntjpStatus.isOk() ? "ok" : "no connection");
 
 
         return response;

@@ -17,7 +17,6 @@
 			<h1>Rehabstöd - HealthCheck</h1>
 		</div>
 
-		<c:set var="hsaStatus" value="${healthcheck.checkHSA()}" />
 		<c:set var="amqStatus" value="${healthcheck.checkActiveMQ()}" />
 		<c:set var="logQueueStatus" value="${healthcheck.checkPdlLogQueue()}" />
 		<c:set var="logAggregatedQueueStatus" value="${healthcheck.checkPdlAggregatedLogQueue()}" />
@@ -38,9 +37,7 @@
 				<tbody>
 					<tr>
 						<td>Koppling NTjP (HSA, LogSender)</td>
-						<!-- <td>Ej implementerat</td>     -->
-						<td id="hsaMeasurement">${hsaStatus.measurement}ms</td>
-						<td id="hsaStatus" class="${hsaStatus.ok ? "text-success" : "text-danger"}">${hsaStatus.ok ? "OK" : "FAIL"}</td>
+						<td colspan="2">Ej implementerat</td>
 					</tr>
 					<tr>
 						<td>Koppling Intygstjänsten</td>
