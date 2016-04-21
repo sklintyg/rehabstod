@@ -29,7 +29,6 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
-import se.inera.intyg.rehabstod.service.monitoring.ntjp.PingForConfigurationService;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 
 import javax.jms.Connection;
@@ -73,9 +72,6 @@ public class HealthCheckServiceImpl implements HealthCheckService {
     // Pings
     @Autowired
     private IntygstjanstClientService intygstjanstClientService;
-
-    @Autowired
-    private PingForConfigurationService pingForConfigurationService;
 
 
     @Override
@@ -124,7 +120,9 @@ public class HealthCheckServiceImpl implements HealthCheckService {
 
     @Override
     public HealthStatus checkHSA() {
-        return pingForConfigurationService.pingNtjp("");
+        // INTYG-2352: Not possible to ping NTjP PROD, disabling this check for now.
+        return new HealthStatus(-1, true);
+        //return pingForConfigurationService.pingNtjp("");
     }
 
     @Override
