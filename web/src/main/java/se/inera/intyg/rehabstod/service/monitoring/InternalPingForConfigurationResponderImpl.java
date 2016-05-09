@@ -26,10 +26,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
-import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
-import se.riv.itintegration.monitoring.v1.ConfigurationType;
-import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
-import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
+import se.riv.clinicalprocess.healthcond.monitoring.rivtabp21.v1.InternalPingForConfigurationResponderInterface;
+import se.riv.clinicalprocess.healthcond.monitoring.v1.ConfigurationType;
+import se.riv.clinicalprocess.healthcond.monitoring.v1.InternalPingForConfigurationResponseType;
+import se.riv.clinicalprocess.healthcond.monitoring.v1.InternalPingForConfigurationType;
 
 import javax.annotation.PostConstruct;
 import javax.jws.WebParam;
@@ -40,8 +40,8 @@ import java.util.Date;
  * Implements PingForConfiguration and returns various statuses about the health of the application.
  */
 @Service
-public class PingForConfigurationResponderImpl implements PingForConfigurationResponderInterface {
-    private static final Logger LOG = LoggerFactory.getLogger(PingForConfigurationResponderImpl.class);
+public class InternalPingForConfigurationResponderImpl implements InternalPingForConfigurationResponderInterface {
+    private static final Logger LOG = LoggerFactory.getLogger(InternalPingForConfigurationResponderImpl.class);
 
     @Value("${buildVersion}")
     private String projectVersion;
@@ -56,10 +56,10 @@ public class PingForConfigurationResponderImpl implements PingForConfigurationRe
     private HealthCheckService healthCheck;
 
     @Override
-    public PingForConfigurationResponseType pingForConfiguration(
+    public InternalPingForConfigurationResponseType internalPingForConfiguration(
             @WebParam(partName = "LogicalAddress", name = "LogicalAddress", targetNamespace = "urn:riv:itintegration:registry:1", header = true) String logicalAddress,
-            @WebParam(partName = "parameters", name = "PingForConfiguration", targetNamespace = "urn:riv:itintegration:monitoring:PingForConfigurationResponder:1") PingForConfigurationType parameters) {
-        PingForConfigurationResponseType response = new PingForConfigurationResponseType();
+            @WebParam(partName = "parameters", name = "InternalPingForConfiguration", targetNamespace = "urn:riv:clinicalprocess:healthcond:monitoring:InternalPingForConfigurationResponder:1") InternalPingForConfigurationType parameters) {
+        InternalPingForConfigurationResponseType response = new InternalPingForConfigurationResponseType();
         response.setPingDateTime(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
         LOG.info("Version String: " + projectVersion);
         response.setVersion(projectVersion);
@@ -88,7 +88,7 @@ public class PingForConfigurationResponderImpl implements PingForConfigurationRe
         return response;
     }
 
-    private void addConfiguration(PingForConfigurationResponseType response, String name, String value) {
+    private void addConfiguration(InternalPingForConfigurationResponseType response, String name, String value) {
         ConfigurationType conf = new ConfigurationType();
         conf.setName(name);
         conf.setValue(value);
@@ -98,6 +98,6 @@ public class PingForConfigurationResponderImpl implements PingForConfigurationRe
     @PostConstruct
     public void init() {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-        LOG.info("PingForConfiguration loaded");
+        LOG.info("InternalPingForConfiguration loaded");
     }
 }
