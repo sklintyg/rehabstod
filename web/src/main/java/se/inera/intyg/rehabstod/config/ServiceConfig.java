@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.context.support.ServletContextAttributeExporter;
 import se.inera.intyg.rehabstod.service.monitoring.HealthCheckService;
-import se.inera.intyg.rehabstod.service.monitoring.PingForConfigurationResponderImpl;
+import se.inera.intyg.rehabstod.service.monitoring.InternalPingForConfigurationResponderImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,8 +57,8 @@ public class ServiceConfig {
     }
 
     @Bean
-    public PingForConfigurationResponderImpl pingForConfigurationResponder() {
-        return new PingForConfigurationResponderImpl();
+    public InternalPingForConfigurationResponderImpl pingForConfigurationResponder() {
+        return new InternalPingForConfigurationResponderImpl();
     }
 
     @Bean
@@ -66,7 +66,7 @@ public class ServiceConfig {
         Bus bus = (Bus) applicationContext.getBean(Bus.DEFAULT_BUS_ID);
         Object implementor = pingForConfigurationResponder();
         EndpointImpl endpoint = new EndpointImpl(bus, implementor);
-        endpoint.publish("/ping-for-configuration");
+        endpoint.publish("/internal-ping-for-configuration");
         return endpoint;
     }
 

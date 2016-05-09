@@ -163,7 +163,7 @@ dependencies {
     compile "commons-lang:commons-lang:${commonsLangVersion}"
     compile "org.apache.commons:commons-lang3:${commonsLang3Version}"
     
-    compile "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${monitoringSchemaVersion}"
+    compile "se.riv.clinicalprocess.healthcond.monitoring:clinicalprocess-healthcond-monitoring-schemas:${monitoringSchemaVersion}"
 
     compile "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
     compile "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
