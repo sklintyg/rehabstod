@@ -50,7 +50,7 @@ public class JmsConfig {
     @Bean
     public JndiObjectFactoryBean jmsFactory() {
         JndiObjectFactoryBean jndiObjectFactoryBean = new JndiObjectFactoryBean();
-        jndiObjectFactoryBean.setJndiName("java:comp/env/jms/AsyncConnectionFactory");
+        jndiObjectFactoryBean.setJndiName("java:comp/env/jms/ConnectionFactory");
         return jndiObjectFactoryBean;
     }
 
