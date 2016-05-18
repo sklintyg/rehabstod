@@ -18,10 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.monitoring;
 
+import se.inera.intyg.common.security.common.service.AuthenticationLogger;
+
 /**
  * Interface used when logging to monitoring file. Used to ensure that the log entries are uniform and easy to parse.
  */
-public interface MonitoringLogService {
+public interface MonitoringLogService extends AuthenticationLogger {
 
 
     void logUserLogin(String id, String authenticationScheme);

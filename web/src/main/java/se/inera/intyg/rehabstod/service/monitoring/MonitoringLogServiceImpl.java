@@ -41,6 +41,21 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
     }
 
     @Override
+    public void logUserSessionExpired(String userHsaId, String authScheme) {
+        logEvent(MonitoringEvent.USER_SESSION_EXPIRY, userHsaId, authScheme);
+    }
+
+    @Override
+    public void logMissingMedarbetarUppdrag(String userHsaId) {
+        logEvent(MonitoringEvent.USER_MISSING_MIU, userHsaId);
+    }
+
+    @Override
+    public void logMissingMedarbetarUppdrag(String userHsaId, String enhetsId) {
+        logEvent(MonitoringEvent.USER_MISSING_MIU_ON_ENHET, userHsaId, enhetsId);
+    }
+
+    @Override
     public void logUserViewedSjukfall(String userHsaId, int numberOfSjukfall, String vardEnhet) {
         logEvent(MonitoringEvent.USER_VIEWED_SJUKFALL, userHsaId, numberOfSjukfall, vardEnhet);
     }
@@ -58,7 +73,10 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
     private enum MonitoringEvent {
         USER_LOGIN("Login user '{}' using scheme '{}'"),
         USER_LOGOUT("Logout user '{}' using scheme '{}'"),
-        USER_VIEWED_SJUKFALL("User '{}' viewed {} sjukfall on enhet '{}'");
+        USER_VIEWED_SJUKFALL("User '{}' viewed {} sjukfall on enhet '{}'"),
+        USER_SESSION_EXPIRY("Session expired for user '{}' using scheme '{}'"),
+        USER_MISSING_MIU("No valid MIU was found for user '{}'"),
+        USER_MISSING_MIU_ON_ENHET("No valid MIU was found for user '{}' on unit '{}'");
 
         private String message;
 

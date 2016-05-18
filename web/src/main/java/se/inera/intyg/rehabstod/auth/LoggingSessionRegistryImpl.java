@@ -50,7 +50,11 @@ public class LoggingSessionRegistryImpl extends SessionRegistryImpl {
 
             if (principal instanceof RehabstodUser) {
                 RehabstodUser user = (RehabstodUser) principal;
-                monitoringService.logUserLogout(user.getHsaId(), user.getAuthenticationScheme());
+                if (sessionInformation.isExpired()) {
+                    monitoringService.logUserSessionExpired(user.getHsaId(), user.getAuthenticationScheme());
+                } else {
+                    monitoringService.logUserLogout(user.getHsaId(), user.getAuthenticationScheme());
+                }
             }
         }
         super.removeSessionInformation(sessionId);

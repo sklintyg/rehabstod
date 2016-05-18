@@ -6,7 +6,8 @@
 			"enhet": "TSTNMT2321000156-105F",
 			"andamal": [
 				"Vård och behandling"
-			]
+			],
+			"systemRoles": ["INTYG;Rehab-TSTNMT2321000156-105F"]
 		}
 	]
 }

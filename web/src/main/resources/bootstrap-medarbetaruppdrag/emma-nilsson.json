@@ -1,5 +1,10 @@
 {
+	"forNamn": "Emma",
+	"efterNamn": "Nilsson",
 	"hsaId": "TSTNMT2321000156-105R",
+	"legitimeradeYrkesgrupper" : [
+		"Läkare"
+	],
 	"uppdrag": [
 		{
 			"vardgivare": "TSTNMT2321000156-105M",

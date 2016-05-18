@@ -18,15 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities.bootstrap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,13 +25,23 @@ import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import se.inera.intyg.common.security.authorities.AuthoritiesConfiguration;
+import se.inera.intyg.common.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
+import se.inera.intyg.common.security.common.model.Privilege;
+import se.inera.intyg.common.security.common.model.RequestOrigin;
+import se.inera.intyg.common.security.common.model.Role;
+import se.inera.intyg.common.security.common.model.Title;
+import se.inera.intyg.common.security.common.model.TitleCode;
 
-import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConfiguration;
-import se.inera.intyg.rehabstod.auth.authorities.Privilege;
-import se.inera.intyg.rehabstod.auth.authorities.RequestOrigin;
-import se.inera.intyg.rehabstod.auth.authorities.Role;
-import se.inera.intyg.rehabstod.auth.authorities.Title;
-import se.inera.intyg.rehabstod.auth.authorities.TitleCode;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 
 //CHECKSTYLE:OFF MagicNumber
 @RunWith(MockitoJUnitRunner.class)

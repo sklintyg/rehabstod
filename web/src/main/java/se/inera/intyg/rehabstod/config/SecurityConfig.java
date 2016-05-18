@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.auth.exceptions;
+package se.inera.intyg.rehabstod.config;
 
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
-public class HsaServiceException extends AuthenticationException {
-
-    private static final long serialVersionUID = -1932413969496764652L;
-
-    public HsaServiceException(String hsaId, Throwable t) {
-        super("Building user HSA-ID " + hsaId + " failed", t);
-    }
+/**
+ * Created by eriklupander on 2016-05-18.
+ */
+@Configuration
+@ComponentScan("se.inera.intyg.common.security.authorities")
+public class SecurityConfig {
 }

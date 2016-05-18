@@ -20,8 +20,8 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
+import se.inera.intyg.common.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.auth.authorities.Role;
 import se.inera.intyg.rehabstod.service.Urval;
 
 import java.util.List;
