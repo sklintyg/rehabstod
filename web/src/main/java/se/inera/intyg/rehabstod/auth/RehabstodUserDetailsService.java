@@ -33,7 +33,6 @@ import se.inera.intyg.common.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.common.security.siths.BaseUserDetailsService;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,32 +51,13 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
     //The part after prefix is assumed to be a hsa-enhetsid, this will be extracted and compared.
     private static final Pattern HSA_SYSTEMROLE_REHAB_UNIT_PATTERN = Pattern.compile("^" + HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "(.*)");
 
-
-    // ~ API
-    // =====================================================================================
-    public Object loadUserBySAML(SAMLCredential credential) {
-        return super.loadUserBySAML(credential);
-    }
-
     // =====================================================================================
     // ~ Protected scope
     // =====================================================================================
 
-//    @Override
-//    protected IntygUser createUser(SAMLCredential credential) {
-//        IntygUser intygUser = super.createUser(credential);
-//        Role role = commonAuthoritiesResolver.resolveRole(intygUser, personInfo, request);
-//        if (role.getName().equals(AuthoritiesConstants.ROLE_KOORDINATOR)) {
-//            removeEnheterMissingRehabKoordinatorRole(authorizedVardgivare, systemRoles, hsaId);
-//        }
-//        // Set role and privileges
-//        intygUser.setRoles(AuthoritiesResolverUtil.toMap(role));
-//        LOG.debug("User role is set to {}", role);
-//        return intygUser;
-//    }
     @Override
-    protected RehabstodUser createUser(SAMLCredential credential) {
-        IntygUser intygUser = super.createUser(credential);
+    protected RehabstodUser buildUserPrincipal(SAMLCredential credential) {
+        IntygUser intygUser = super.buildUserPrincipal(credential);
         if (intygUser.getRoles().containsKey(AuthoritiesConstants.ROLE_KOORDINATOR)) {
             removeEnheterMissingRehabKoordinatorRole(intygUser.getVardgivare(), getSystemRoles(intygUser.getHsaId()), intygUser.getHsaId());
         }
@@ -90,6 +70,10 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         return AuthoritiesConstants.ROLE_KOORDINATOR;
     }
 
+    @Override
+    protected BaseSakerhetstjanstAssertion getAssertion(Assertion assertion) {
+        return super.getAssertion(assertion);
+    }
 
     private List<String> getSystemRoles(String employeeHsaId) {
         return getHsaPersonService().getSystemRoles(employeeHsaId);
@@ -128,37 +112,6 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         return idList;
     }
 
-
-
-//    private void assertMIU(SAMLCredential credential) {
-//        LOG.debug("Assert 'medarbetaruppdrag (MIU)'");
-//
-//        // if user has authenticated with other contract than 'Vård och behandling', we have to reject her
-//        if (!VARD_OCH_BEHANDLING.equals(getAssertion(credential).getMedarbetaruppdragType())) {
-//            throw new MissingMedarbetaruppdragException(getAssertion(credential).getHsaId());
-//        }
-//    }
-//
-//    @Override
-//    protected IntygUser createIntygUser(String employeeHsaId, String authenticationScheme, List<Vardgivare> authorizedVardgivare, List<PersonInformationType> personInfo) {
-//
-//        LOG.debug("Decorate/populate user object with additional information");
-//        IntygUser intygUser = new IntygUser();
-//        intygUser.setHsaId(employeeHsaId);
-//        intygUser.setNamn(personInfo.get(0).getGivenName() + " " + personInfo.get(0).getMiddleAndSurName());
-//        intygUser.setVardgivare(authorizedVardgivare);
-//
-//        // Förskrivarkod is sensitiv information, not allowed to store real value
-//        intygUser.setForskrivarkod("0000000");
-//
-//        decorateIntygUserWithAdditionalInfo(intygUser, personInfo);
-//        decorateIntygUserWithAuthenticationMethod(intygUser, authenticationScheme);
-//        clearMottagningarFromUser(intygUser);
-//        decorateIntygUserWithDefaultVardenhet(intygUser);
-//
-//        return intygUser;
-//    }
-
     private void clearMottagningarFromUser(IntygUser user) {
         for (Vardgivare vg : user.getVardgivare()) {
             for (Vardenhet ve : vg.getVardenheter()) {
@@ -167,30 +120,5 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         }
     }
 
-    // Local implementations, needed for testing
 
-    @Override
-    protected List<String> extractBefattningar(List<PersonInformationType> hsaPersonInfo) {
-        return super.extractBefattningar(hsaPersonInfo);
-    }
-
-    @Override
-    protected BaseSakerhetstjanstAssertion getAssertion(Assertion assertion) {
-        return super.getAssertion(assertion);
-    }
-
-    @Override
-    protected List<String> extractLegitimeradeYrkesgrupper(List<PersonInformationType> hsaUserTypes) {
-        return super.extractLegitimeradeYrkesgrupper(hsaUserTypes);
-    }
-
-    @Override
-    protected boolean setFirstVardenhetOnFirstVardgivareAsDefault(IntygUser intygUser) {
-        return super.setFirstVardenhetOnFirstVardgivareAsDefault(intygUser);
-    }
-
-    @Override
-    protected String extractTitel(List<PersonInformationType> hsaPersonInfo) {
-        return super.extractTitel(hsaPersonInfo);
-    }
 }

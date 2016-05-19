@@ -117,8 +117,6 @@ public class RehabstodUserDetailsServiceTest {
     @Mock
     private AuthenticationLogger monitoringLogService;
 
-    private Vardgivare vardgivare;
-
     @BeforeClass
     public static void setupAuthoritiesConfiguration() throws Exception {
 
@@ -243,106 +241,8 @@ public class RehabstodUserDetailsServiceTest {
         userDetailsService.loadUserBySAML(samlCredential);
     }
 
-    @Test
-    public void testExtractBefattningar() throws Exception {
 
-        // Arrange
-        PersonInformationType pt = new PersonInformationType();
-        pt.setTitle("title1");
-        final PaTitleType paTitleType1 = new PaTitleType();
-        paTitleType1.setPaTitleName("paTitle1");
-        pt.getPaTitle().add(paTitleType1);
 
-        final PaTitleType paTitleType2 = new PaTitleType();
-        paTitleType2.setPaTitleName("paTitle2");
-        pt.getPaTitle().add(paTitleType2);
-
-        List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
-        hsaPersonInfo.add(pt);
-
-        // Test
-        final List<String> befattningar = userDetailsService.extractBefattningar(hsaPersonInfo);
-
-        // Verify
-        assertEquals(2, befattningar.size());
-        assertTrue(befattningar.contains("paTitle1"));
-        assertTrue(befattningar.contains("paTitle2"));
-
-    }
-
-    @Test
-    public void testExtractTitel() throws Exception {
-
-        // Arrange
-        PersonInformationType pt = new PersonInformationType();
-        pt.setTitle("xpitTitle");
-
-        PersonInformationType pt2 = new PersonInformationType();
-        pt2.getHealthCareProfessionalLicence().add("hcpl1");
-        pt2.getHealthCareProfessionalLicence().add("hcpl2");
-
-        List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
-        hsaPersonInfo.add(pt);
-        hsaPersonInfo.add(pt2);
-
-        // Test
-        final String titleString = userDetailsService.extractTitel(hsaPersonInfo);
-
-        // Verify
-        assertEquals("hcpl1, hcpl2, xpitTitle", titleString);
-
-    }
-
-    @Test
-    public void testExtractLegitimeradeYrkesgrupper() throws Exception {
-
-        // Arrange
-        PersonInformationType pt = new PersonInformationType();
-        pt.setTitle("title1");
-        final PaTitleType paTitleType1 = new PaTitleType();
-        paTitleType1.setPaTitleName("paTitle1");
-        pt.getPaTitle().add(paTitleType1);
-
-        final PaTitleType paTitleType2 = new PaTitleType();
-        paTitleType2.setPaTitleName("paTitle2");
-        pt.getPaTitle().add(paTitleType2);
-
-        List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
-        hsaPersonInfo.add(pt);
-
-        // Test
-        final List<String> legitimeradeYrkesgrupper = userDetailsService.extractLegitimeradeYrkesgrupper(hsaPersonInfo);
-
-        // Verify
-        // Verify
-        assertEquals(2, legitimeradeYrkesgrupper.size());
-        assertTrue(legitimeradeYrkesgrupper.contains("paTitle1"));
-        assertTrue(legitimeradeYrkesgrupper.contains("paTitle2"));
-
-    }
-
-    @Test
-    public void testSetFirstVardenhetOnFirstVardgivareAsDefault() throws Exception {
-
-        // Arrange
-        Vardgivare vardgivare = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
-        Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "VårdEnhet2A");
-        vardgivare.getVardenheter().add(enhet1);
-        Vardenhet enhet2 = new Vardenhet(ENHET_HSAID_2, "Vårdcentralen");
-        vardgivare.getVardenheter().add(enhet2);
-
-        RehabstodUser user = new RehabstodUser("1", "Dr. Doctor");
-        user.setVardgivare(Arrays.asList(vardgivare));
-
-        // Test
-        final boolean success = userDetailsService.setFirstVardenhetOnFirstVardgivareAsDefault(user);
-
-        // Verify
-        assertTrue(success);
-        assertEquals(vardgivare, user.getValdVardgivare());
-        assertEquals(enhet1, user.getValdVardenhet());
-
-    }
 
     @Test
     public void testRemoveEnheterMissingRehabKoordinatorRole() {
@@ -444,7 +344,7 @@ public class RehabstodUserDetailsServiceTest {
     }
 
     private void setupCallToAuthorizedEnheterForHosPerson() {
-        vardgivare = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
+        Vardgivare vardgivare = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
         vardgivare.getVardenheter().add(new Vardenhet(ENHET_HSAID_1, "VårdEnhet2A"));
 
         final Vardenhet enhet2 = new Vardenhet(ENHET_HSAID_2, "Vårdcentralen");
@@ -502,7 +402,6 @@ public class RehabstodUserDetailsServiceTest {
         if ((specialities != null) && (specialities.size() > 0)) {
             type.getSpecialityName().addAll(specialities);
         }
-
         return type;
     }
 
