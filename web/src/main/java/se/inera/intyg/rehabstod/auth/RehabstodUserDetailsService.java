@@ -59,7 +59,7 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
     protected RehabstodUser buildUserPrincipal(SAMLCredential credential) {
         IntygUser intygUser = super.buildUserPrincipal(credential);
         if (intygUser.getRoles().containsKey(AuthoritiesConstants.ROLE_KOORDINATOR)) {
-            removeEnheterMissingRehabKoordinatorRole(intygUser.getVardgivare(), getSystemRoles(intygUser.getHsaId()), intygUser.getHsaId());
+            removeEnheterMissingRehabKoordinatorRole(intygUser.getVardgivare(), intygUser.getSystemRoles(), intygUser.getHsaId());
         }
         clearMottagningarFromUser(intygUser);
         return new RehabstodUser(intygUser);
@@ -75,9 +75,9 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         return super.getAssertion(assertion);
     }
 
-    private List<String> getSystemRoles(String employeeHsaId) {
-        return getHsaPersonService().getSystemRoles(employeeHsaId);
-    }
+//    private List<String> getSystemRoles(String employeeHsaId) {
+//        return getHsaPersonService().getSystemRoles(employeeHsaId);
+//    }
 
     void removeEnheterMissingRehabKoordinatorRole(List<Vardgivare> authorizedVardgivare, List<String> systemRoles, String hsaId) {
         long unitsBefore = authorizedVardgivare.stream().mapToInt(vg -> vg.getVardenheter().size()).sum();

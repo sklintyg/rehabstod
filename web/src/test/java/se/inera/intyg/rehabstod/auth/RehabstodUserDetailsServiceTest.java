@@ -40,6 +40,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
 import se.inera.intyg.common.integration.hsa.model.Mottagning;
+import se.inera.intyg.common.integration.hsa.model.UserAuthorizationInfo;
+import se.inera.intyg.common.integration.hsa.model.UserCredentials;
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.integration.hsa.services.HsaOrganizationsService;
@@ -57,6 +59,7 @@ import se.inera.intyg.common.security.exception.MissingMedarbetaruppdragExceptio
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.authorities.validation.AuthoritiesValidator;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
+import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 import se.riv.infrastructure.directory.v1.PaTitleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
@@ -67,6 +70,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -148,8 +152,10 @@ public class RehabstodUserDetailsServiceTest {
     public void assertLoadsOkWhenHasMatchingSystemRole() throws Exception {
         // given
         SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-matching-rehab-systemrole.xml");
-        setupCallToAuthorizedEnheterForHosPerson();
-        setupCallToGetSystemRoles();
+        UserCredentials userCredz = new UserCredentials();
+        userCredz.getHsaSystemRole().addAll(buildSystemRoles());
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, buildVardgivareList()));
+
         setupCallToGetHsaPersonInfoNonDoctor();
 
         // then
@@ -165,7 +171,6 @@ public class RehabstodUserDetailsServiceTest {
         // given
         SAMLCredential samlCredential = createSamlCredential("saml-assertion-without-matching-rehab-systemrole.xml");
         setupCallToAuthorizedEnheterForHosPerson();
-        when(hsaPersonService.getSystemRoles(PERSONAL_HSAID)).thenReturn(new ArrayList<>());
         setupCallToGetHsaPersonInfoNonDoctor();
 
         // then
@@ -223,7 +228,7 @@ public class RehabstodUserDetailsServiceTest {
     public void testMissingMedarbetaruppdragExceptionIsThrownWhenEmployeeHasNoVardgivare() throws Exception {
         // given
         setupCallToGetHsaPersonInfo();
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new ArrayList<>());
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>()));
         SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-title-lakare.xml");
 
         // then
@@ -233,7 +238,7 @@ public class RehabstodUserDetailsServiceTest {
     @Test(expected = MissingMedarbetaruppdragException.class)
     public void testMissingMedarbetaruppdragExceptionIsThrownWhenEmployeeHasNoMIU() throws Exception {
         // given
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new ArrayList<>());
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>()));
         setupCallToGetHsaPersonInfo();
         SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-other-mui.xml");
 
@@ -259,12 +264,12 @@ public class RehabstodUserDetailsServiceTest {
         Vardenhet enhet23 = new Vardenhet(ENHET_HSAID_23, "Vårdenhet 23");
         vardgivare2.getVardenheter().addAll(Arrays.asList(enhet21, enhet22, enhet23));
 
-        List<String> systemRoles = buildSystemRoles();
+        List<HsaSystemRoleType> systemRoles = buildSystemRoles();
 
         List<Vardgivare> original = Arrays.asList(vardgivare1, vardgivare2);
 
         // Test
-        userDetailsService.removeEnheterMissingRehabKoordinatorRole(original, systemRoles, "userHsaId");
+        userDetailsService.removeEnheterMissingRehabKoordinatorRole(original, systemRoles.stream().map(rt -> rt.getRole()).collect(Collectors.toList()), "userHsaId");
 
         // Verify
         assertTrue(original.contains(vardgivare1));
@@ -278,10 +283,16 @@ public class RehabstodUserDetailsServiceTest {
 
     }
 
-    private List<String> buildSystemRoles() {
+    private List<HsaSystemRoleType> buildSystemRoles() {
         return Arrays.asList(RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2,
                 RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
-                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23);
+                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23)
+                .stream()
+                .map(s -> {
+                    HsaSystemRoleType hsaSystemRole = new HsaSystemRoleType();
+                    hsaSystemRole.setRole(s);
+                    return hsaSystemRole;
+                }).collect(Collectors.toList());
     }
 
     @Test
@@ -344,6 +355,10 @@ public class RehabstodUserDetailsServiceTest {
     }
 
     private void setupCallToAuthorizedEnheterForHosPerson() {
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(new UserCredentials(), buildVardgivareList()));
+    }
+
+    private List<Vardgivare> buildVardgivareList() {
         Vardgivare vardgivare = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
         vardgivare.getVardenheter().add(new Vardenhet(ENHET_HSAID_1, "VårdEnhet2A"));
 
@@ -354,12 +369,7 @@ public class RehabstodUserDetailsServiceTest {
 
         vardgivare.getVardenheter().add(enhet2);
 
-        List<Vardgivare> vardgivareList = new ArrayList<>(Arrays.asList(vardgivare));
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(vardgivareList);
-    }
-
-    private void setupCallToGetSystemRoles() {
-        when(hsaPersonService.getSystemRoles(PERSONAL_HSAID)).thenReturn(buildSystemRoles());
+        return new ArrayList<>(Arrays.asList(vardgivare));
     }
 
     private void setupCallToGetHsaPersonInfo() {
