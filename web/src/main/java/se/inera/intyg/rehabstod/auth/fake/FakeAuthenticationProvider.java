@@ -18,20 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth.fake;
 
-import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.ENHET_HSA_ID_ATTRIBUTE;
-import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.FORNAMN_ATTRIBUTE;
-import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.FORSKRIVARKOD_ATTRIBUTE;
-import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.HSA_ID_ATTRIBUTE;
-import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.MEDARBETARUPPDRAG_ID;
-import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.MEDARBETARUPPDRAG_TYPE;
-import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.MELLAN_OCH_EFTERNAMN_ATTRIBUTE;
-import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.SYSTEM_ROLE_ATTRIBUTE;
-import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.TITEL_ATTRIBUTE;
-import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.TITEL_KOD_ATTRIBUTE;
-import static se.inera.intyg.rehabstod.auth.SakerhetstjanstAssertion.VARD_OCH_BEHANDLING;
-
-import java.util.ArrayList;
-
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.AttributeStatement;
 import org.opensaml.saml2.core.NameID;
@@ -40,12 +26,14 @@ import org.opensaml.saml2.core.impl.AttributeStatementBuilder;
 import org.opensaml.saml2.core.impl.NameIDBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.providers.ExpiringUsernameAuthenticationToken;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
-
+import se.inera.intyg.common.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.rehabstod.auth.BaseFakeAuthenticationProvider;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+
+import java.util.ArrayList;
 
 /**
  * @author andreaskaltenbach
@@ -65,11 +53,23 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
         SAMLCredential credential = createSamlCredential(token);
         Object details = userDetails.loadUserBySAML(credential);
 
+        // Hack in the forNamn and efterNamn if not present.
+        addAbsentAttributesFromFakeCredentials(token, details);
+
         ExpiringUsernameAuthenticationToken result = new ExpiringUsernameAuthenticationToken(null, details, credential,
-                new ArrayList<GrantedAuthority>());
+                new ArrayList<>());
         result.setDetails(details);
 
         return result;
+    }
+
+    private void addAbsentAttributesFromFakeCredentials(FakeAuthenticationToken token, Object details) {
+        if (details instanceof RehabstodUser) {
+            RehabstodUser user = (RehabstodUser) details;
+            if (user.getNamn() == null || user.getNamn().isEmpty()) {
+                user.setNamn(((FakeCredentials) token.getCredentials()).getFornamn() + " " +  ((FakeCredentials) token.getCredentials()).getEfternamn());
+            }
+        }
     }
 
     @Override
@@ -82,7 +82,6 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
     }
 
     private SAMLCredential createSamlCredential(FakeAuthenticationToken token) {
-        FakeCredentials fakeCredentials = (FakeCredentials) token.getCredentials();
 
         Assertion assertion = new AssertionBuilder().buildObject();
 
@@ -90,42 +89,12 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
 
         AttributeStatement attributeStatement = new AttributeStatementBuilder().buildObject();
         assertion.getAttributeStatements().add(attributeStatement);
-
-        addAttribute(attributeStatement, HSA_ID_ATTRIBUTE, fakeCredentials.getHsaId());
-        addAttribute(attributeStatement, FORNAMN_ATTRIBUTE, fakeCredentials.getFornamn());
-        addAttribute(attributeStatement, MELLAN_OCH_EFTERNAMN_ATTRIBUTE, fakeCredentials.getEfternamn());
-        addAttribute(attributeStatement, ENHET_HSA_ID_ATTRIBUTE, fakeCredentials.getEnhetId());
-        addAttribute(attributeStatement, MEDARBETARUPPDRAG_TYPE, VARD_OCH_BEHANDLING);
-        addAttribute(attributeStatement, MEDARBETARUPPDRAG_ID, fakeCredentials.getEnhetId());
-        addAttribute(attributeStatement, FORSKRIVARKOD_ATTRIBUTE, fakeCredentials.getForskrivarKod());
-
-        if (fakeCredentials.getSystemRoles() != null) {
-            for (String sr: fakeCredentials.getSystemRoles()) {
-                addAttribute(attributeStatement, SYSTEM_ROLE_ATTRIBUTE, sr);
-            }
-        }
-
-
-        if (fakeCredentials.isLakare()) {
-            addAttribute(attributeStatement, TITEL_ATTRIBUTE, "Läkare");
-        }
-        if (fakeCredentials.isTandlakare()) {
-            addAttribute(attributeStatement, TITEL_ATTRIBUTE, "Tandläkare");
-        }
-
-        addAttribute(attributeStatement, TITEL_KOD_ATTRIBUTE, fakeCredentials.getBefattningsKod());
+        attributeStatement.getAttributes().add(createAttribute(BaseSakerhetstjanstAssertion.HSA_ID_ATTRIBUTE, ((FakeCredentials) token.getCredentials()).getHsaId()));
 
         NameID nameId = new NameIDBuilder().buildObject();
         nameId.setValue(token.getCredentials().toString());
         return new SAMLCredential(nameId, assertion, "fake-idp", "webcert");
     }
 
-    private void addAttribute(AttributeStatement attributeStatement, String attributeName, String attributeValue) {
-        if (attributeName == null || attributeValue == null) {
-            return;
-        }
-
-        attributeStatement.getAttributes().add(createAttribute(attributeName, attributeValue));
-    }
 
 }

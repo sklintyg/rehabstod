@@ -1,5 +1,8 @@
 {
     "hsaId": "TSTNMT2321000156-1067",
+	"legitimeradeYrkesgrupper" : [
+		"Läkare"
+	],
 	"uppdrag":[
     	{
     		"enhet": "TSTNMT2321000156-1062",

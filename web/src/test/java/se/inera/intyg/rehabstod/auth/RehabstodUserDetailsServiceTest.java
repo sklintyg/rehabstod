@@ -18,19 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import javax.xml.transform.stream.StreamSource;
-
 import org.apache.cxf.staxutils.StaxUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -48,25 +35,48 @@ import org.opensaml.xml.io.UnmarshallerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.saml.SAMLCredential;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
-
 import se.inera.intyg.common.integration.hsa.model.Mottagning;
+import se.inera.intyg.common.integration.hsa.model.UserAuthorizationInfo;
+import se.inera.intyg.common.integration.hsa.model.UserCredentials;
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
+import se.inera.intyg.common.security.authorities.CommonAuthoritiesResolver;
+import se.inera.intyg.common.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
+import se.inera.intyg.common.security.common.exception.GenericAuthenticationException;
+import se.inera.intyg.common.security.common.model.IntygUser;
+import se.inera.intyg.common.security.common.model.UserOrigin;
+import se.inera.intyg.common.security.common.model.UserOriginType;
+import se.inera.intyg.common.security.common.service.AuthenticationLogger;
+import se.inera.intyg.common.security.common.service.CommonFeatureService;
+import se.inera.intyg.common.security.exception.HsaServiceException;
+import se.inera.intyg.common.security.exception.MissingMedarbetaruppdragException;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolver;
-import se.inera.intyg.rehabstod.auth.authorities.bootstrap.AuthoritiesConfigurationLoader;
 import se.inera.intyg.rehabstod.auth.authorities.validation.AuthoritiesValidator;
-import se.inera.intyg.rehabstod.auth.exceptions.GenericAuthenticationException;
-import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
-import se.inera.intyg.rehabstod.auth.exceptions.MissingMedarbetaruppdragException;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
+import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 import se.riv.infrastructure.directory.v1.PaTitleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
+
+import javax.xml.transform.stream.StreamSource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by marced on 29/01/16.
@@ -77,7 +87,7 @@ public class RehabstodUserDetailsServiceTest {
     protected static final String CONFIGURATION_LOCATION = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
 
     protected static final AuthoritiesConfigurationLoader CONFIGURATION_LOADER = new AuthoritiesConfigurationLoader(CONFIGURATION_LOCATION);
-    protected static final AuthoritiesResolver AUTHORITIES_RESOLVER = new AuthoritiesResolver();
+    protected static final CommonAuthoritiesResolver AUTHORITIES_RESOLVER = new CommonAuthoritiesResolver();
     protected static final AuthoritiesValidator AUTHORITIES_VALIDATOR = new AuthoritiesValidator();
     private static final String PERSONAL_HSAID = "TST5565594230-106J";
 
@@ -91,6 +101,8 @@ public class RehabstodUserDetailsServiceTest {
     private static final String ENHET_HSAID_22 = "IFV_22";
     private static final String ENHET_HSAID_23 = "IFV_23";
 
+    private static final String TITLE_HEAD_DOCTOR = "Överläkare";
+
     @InjectMocks
     private RehabstodUserDetailsService userDetailsService = new RehabstodUserDetailsService();
 
@@ -100,7 +112,14 @@ public class RehabstodUserDetailsServiceTest {
     @Mock
     private HsaPersonService hsaPersonService;
 
-    private Vardgivare vardgivare;
+    @Mock
+    private UserOrigin userOrigin;
+
+    @Mock
+    private CommonFeatureService commonFeatureService;
+
+    @Mock
+    private AuthenticationLogger monitoringLogService;
 
     @BeforeClass
     public static void setupAuthoritiesConfiguration() throws Exception {
@@ -120,19 +139,27 @@ public class RehabstodUserDetailsServiceTest {
         MockHttpServletRequest request = mockHttpServletRequest("/any/path");
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
+        ReflectionTestUtils.setField(userDetailsService, "commonFeatureService", Optional.of(commonFeatureService));
+        ReflectionTestUtils.setField(userDetailsService, "userOrigin", Optional.of(userOrigin));
+
         when(hsaPersonService.getHsaPersonInfo(anyString())).thenReturn(Collections.emptyList());
-        AUTHORITIES_RESOLVER.setHsaPersonService(hsaPersonService);
-        userDetailsService.setAuthoritiesResolver(AUTHORITIES_RESOLVER);
+        when(userOrigin.resolveOrigin(request)).thenReturn(UserOriginType.NORMAL.name());
+        when(commonFeatureService.getActiveFeatures()).thenReturn(new HashSet<>());
+        userDetailsService.setCommonAuthoritiesResolver(AUTHORITIES_RESOLVER);
     }
 
     @Test
     public void assertLoadsOkWhenHasMatchingSystemRole() throws Exception {
         // given
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-matching-rehab-systemrole.xml");
-        setupCallToAuthorizedEnheterForHosPerson();
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
+        UserCredentials userCredz = new UserCredentials();
+        userCredz.getHsaSystemRole().addAll(buildSystemRoles());
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, buildVardgivareList()));
+
+        setupCallToGetHsaPersonInfoNonDoctor();
 
         // then
-        RehabstodUser rehabstodUser = (RehabstodUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser rehabstodUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
         AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_KOORDINATOR).orThrow();
         assertEquals("The hsaId defined in credentials should have been selected as default vardenhet", ENHET_HSAID_1, rehabstodUser
@@ -142,8 +169,9 @@ public class RehabstodUserDetailsServiceTest {
     @Test(expected = MissingUnitWithRehabSystemRoleException.class)
     public void assertThrowsExceptionWhenNoMatchingSystemRole() throws Exception {
         // given
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-without-matching-rehab-systemrole.xml");
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         setupCallToAuthorizedEnheterForHosPerson();
+        setupCallToGetHsaPersonInfoNonDoctor();
 
         // then
         userDetailsService.loadUserBySAML(samlCredential);
@@ -153,11 +181,12 @@ public class RehabstodUserDetailsServiceTest {
     @Test
     public void assertRoleAndWhenUserHasTitleLakare() throws Exception {
         // given
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-title-lakare.xml");
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         setupCallToAuthorizedEnheterForHosPerson();
+        setupCallToGetHsaPersonInfo();
 
         // then
-        RehabstodUser rehabstodUser = (RehabstodUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser rehabstodUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
 
         AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_LAKARE).orThrow();
         assertEquals("The hsaId defined in credentials should have been selected as default vardenhet", ENHET_HSAID_1, rehabstodUser
@@ -171,14 +200,14 @@ public class RehabstodUserDetailsServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetAssertionWithNullThrowsIllegalArgumentException() throws Exception {
-        userDetailsService.getAssertion((Assertion) null);
+        userDetailsService.getAssertion(null);
     }
 
     @Test(expected = HsaServiceException.class)
     public void testHsaServiceExceptionIsThrownWhenHsaGetPersonThrowsUncheckedException() throws Exception {
         // given
         when(hsaPersonService.getHsaPersonInfo(anyString())).thenThrow(new RuntimeException("some-exception"));
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-title-lakare.xml");
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         setupCallToAuthorizedEnheterForHosPerson();
 
         // then
@@ -189,7 +218,7 @@ public class RehabstodUserDetailsServiceTest {
     public void testHsaServiceExceptionIsThrownWhenHsaThrowsException() throws Exception {
         // given
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenThrow(new RuntimeException("some-hsa-exception"));
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-title-lakare.xml");
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
 
         // then
         userDetailsService.loadUserBySAML(samlCredential);
@@ -198,123 +227,27 @@ public class RehabstodUserDetailsServiceTest {
     @Test(expected = MissingMedarbetaruppdragException.class)
     public void testMissingMedarbetaruppdragExceptionIsThrownWhenEmployeeHasNoVardgivare() throws Exception {
         // given
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new ArrayList<>());
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-title-lakare.xml");
+        setupCallToGetHsaPersonInfo();
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>()));
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
 
         // then
         userDetailsService.loadUserBySAML(samlCredential);
     }
 
     @Test(expected = MissingMedarbetaruppdragException.class)
-    public void testMissingMedarbetaruppdragExceptionIsThrownWhenEmployeeHasNoMIUOnSAMLTicket() throws Exception {
+    public void testMissingMedarbetaruppdragExceptionIsThrownWhenEmployeeHasNoMIU() throws Exception {
         // given
-        setupCallToAuthorizedEnheterForHosPerson();
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-other-mui.xml");
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>()));
+        setupCallToGetHsaPersonInfo();
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
 
         // then
         userDetailsService.loadUserBySAML(samlCredential);
     }
 
-    @Test
-    public void testExtractBefattningar() throws Exception {
 
-        // Arrange
-        PersonInformationType pt = new PersonInformationType();
-        pt.setTitle("title1");
-        final PaTitleType paTitleType1 = new PaTitleType();
-        paTitleType1.setPaTitleName("paTitle1");
-        pt.getPaTitle().add(paTitleType1);
 
-        final PaTitleType paTitleType2 = new PaTitleType();
-        paTitleType2.setPaTitleName("paTitle2");
-        pt.getPaTitle().add(paTitleType2);
-
-        List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
-        hsaPersonInfo.add(pt);
-
-        // Test
-        final List<String> befattningar = userDetailsService.extractBefattningar(hsaPersonInfo);
-
-        // Verify
-        assertEquals(2, befattningar.size());
-        assertTrue(befattningar.contains("paTitle1"));
-        assertTrue(befattningar.contains("paTitle2"));
-
-    }
-
-    @Test
-    public void testExtractTitel() throws Exception {
-
-        // Arrange
-        PersonInformationType pt = new PersonInformationType();
-        pt.setTitle("xpitTitle");
-
-        PersonInformationType pt2 = new PersonInformationType();
-        pt2.getHealthCareProfessionalLicence().add("hcpl1");
-        pt2.getHealthCareProfessionalLicence().add("hcpl2");
-
-        List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
-        hsaPersonInfo.add(pt);
-        hsaPersonInfo.add(pt2);
-
-        // Test
-        final String titleString = userDetailsService.extractTitel(hsaPersonInfo);
-
-        // Verify
-        assertEquals("hcpl1, hcpl2, xpitTitle", titleString);
-
-    }
-
-    @Test
-    public void testExtractLegitimeradeYrkesgrupper() throws Exception {
-
-        // Arrange
-        PersonInformationType pt = new PersonInformationType();
-        pt.setTitle("title1");
-        final PaTitleType paTitleType1 = new PaTitleType();
-        paTitleType1.setPaTitleName("paTitle1");
-        pt.getPaTitle().add(paTitleType1);
-
-        final PaTitleType paTitleType2 = new PaTitleType();
-        paTitleType2.setPaTitleName("paTitle2");
-        pt.getPaTitle().add(paTitleType2);
-
-        List<PersonInformationType> hsaPersonInfo = new ArrayList<>();
-        hsaPersonInfo.add(pt);
-
-        // Test
-        final List<String> legitimeradeYrkesgrupper = userDetailsService.extractLegitimeradeYrkesgrupper(hsaPersonInfo);
-
-        // Verify
-        // Verify
-        assertEquals(2, legitimeradeYrkesgrupper.size());
-        assertTrue(legitimeradeYrkesgrupper.contains("paTitle1"));
-        assertTrue(legitimeradeYrkesgrupper.contains("paTitle2"));
-
-    }
-
-    @Test
-    public void testSetFirstVardenhetOnFirstVardgivareAsDefault() throws Exception {
-
-        // Arrange
-        Vardgivare vardgivare = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
-        Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "VårdEnhet2A");
-        vardgivare.getVardenheter().add(enhet1);
-        Vardenhet enhet2 = new Vardenhet(ENHET_HSAID_2, "Vårdcentralen");
-        vardgivare.getVardenheter().add(enhet2);
-
-        RehabstodUser user = new RehabstodUser("1", "Dr. Doctor");
-        user.setVardgivare(Arrays.asList(vardgivare));
-
-        // Test
-        final boolean success = userDetailsService.setFirstVardenhetOnFirstVardgivareAsDefault(user);
-
-        // Verify
-        assertTrue(success);
-        assertEquals(vardgivare, user.getValdVardgivare());
-        assertEquals(enhet1, user.getValdVardenhet());
-
-    }
 
     @Test
     public void testRemoveEnheterMissingRehabKoordinatorRole() {
@@ -331,14 +264,12 @@ public class RehabstodUserDetailsServiceTest {
         Vardenhet enhet23 = new Vardenhet(ENHET_HSAID_23, "Vårdenhet 23");
         vardgivare2.getVardenheter().addAll(Arrays.asList(enhet21, enhet22, enhet23));
 
-        List<String> systemRoles = Arrays.asList(RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2,
-                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
-                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23);
+        List<HsaSystemRoleType> systemRoles = buildSystemRoles();
 
         List<Vardgivare> original = Arrays.asList(vardgivare1, vardgivare2);
 
         // Test
-        userDetailsService.removeEnheterMissingRehabKoordinatorRole(original, systemRoles, "userHsaId");
+        userDetailsService.removeEnheterMissingRehabKoordinatorRole(original, systemRoles.stream().map(rt -> rt.getRole()).collect(Collectors.toList()), "userHsaId");
 
         // Verify
         assertTrue(original.contains(vardgivare1));
@@ -350,6 +281,18 @@ public class RehabstodUserDetailsServiceTest {
         assertFalse(vardgivare2.getVardenheter().contains(enhet22));
         assertTrue(vardgivare2.getVardenheter().contains(enhet23));
 
+    }
+
+    private List<HsaSystemRoleType> buildSystemRoles() {
+        return Arrays.asList(RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2,
+                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
+                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23)
+                .stream()
+                .map(s -> {
+                    HsaSystemRoleType hsaSystemRole = new HsaSystemRoleType();
+                    hsaSystemRole.setRole(s);
+                    return hsaSystemRole;
+                }).collect(Collectors.toList());
     }
 
     @Test
@@ -412,7 +355,11 @@ public class RehabstodUserDetailsServiceTest {
     }
 
     private void setupCallToAuthorizedEnheterForHosPerson() {
-        vardgivare = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(new UserCredentials(), buildVardgivareList()));
+    }
+
+    private List<Vardgivare> buildVardgivareList() {
+        Vardgivare vardgivare = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
         vardgivare.getVardenheter().add(new Vardenhet(ENHET_HSAID_1, "VårdEnhet2A"));
 
         final Vardenhet enhet2 = new Vardenhet(ENHET_HSAID_2, "Vårdcentralen");
@@ -422,8 +369,50 @@ public class RehabstodUserDetailsServiceTest {
 
         vardgivare.getVardenheter().add(enhet2);
 
-        List<Vardgivare> vardgivareList = new ArrayList<>(Arrays.asList(vardgivare));
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(vardgivareList);
+        return new ArrayList<>(Arrays.asList(vardgivare));
+    }
+
+    private void setupCallToGetHsaPersonInfo() {
+        List<String> specs = Arrays.asList("Kirurgi", "Öron-, näs- och halssjukdomar", "Reumatologi");
+        List<String> titles = Arrays.asList("Läkare", "Psykoterapeut");
+
+        List<PersonInformationType> userTypes = Collections.singletonList(buildPersonInformationType(PERSONAL_HSAID, TITLE_HEAD_DOCTOR, specs, titles));
+
+        when(hsaPersonService.getHsaPersonInfo(PERSONAL_HSAID)).thenReturn(userTypes);
+    }
+
+    private void setupCallToGetHsaPersonInfoNonDoctor() {
+        List<String> specs = new ArrayList<>();
+        List<String> titles = Arrays.asList("Vårdadministratör");
+
+        List<PersonInformationType> userTypes = Collections.singletonList(buildPersonInformationType(PERSONAL_HSAID, "", specs, titles));
+
+        when(hsaPersonService.getHsaPersonInfo(PERSONAL_HSAID)).thenReturn(userTypes);
+    }
+
+    private PersonInformationType buildPersonInformationType(String hsaId, String title, List<String> specialities, List<String> titles) {
+
+        PersonInformationType type = new PersonInformationType();
+        type.setPersonHsaId(hsaId);
+        type.setGivenName("Danne");
+        type.setMiddleAndSurName("Doktorsson");
+
+        if (title != null) {
+            type.setTitle(title);
+        }
+
+        if ((titles != null) && (titles.size() > 0)) {
+            for (String t : titles) {
+                PaTitleType paTitle = new PaTitleType();
+                paTitle.setPaTitleName(t);
+                type.getPaTitle().add(paTitle);
+            }
+        }
+
+        if ((specialities != null) && (specialities.size() > 0)) {
+            type.getSpecialityName().addAll(specialities);
+        }
+        return type;
     }
 
     private MockHttpServletRequest mockHttpServletRequest(String requestURI) {
