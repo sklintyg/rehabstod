@@ -151,7 +151,7 @@ public class RehabstodUserDetailsServiceTest {
     @Test
     public void assertLoadsOkWhenHasMatchingSystemRole() throws Exception {
         // given
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-matching-rehab-systemrole.xml");
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         UserCredentials userCredz = new UserCredentials();
         userCredz.getHsaSystemRole().addAll(buildSystemRoles());
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, buildVardgivareList()));
@@ -169,7 +169,7 @@ public class RehabstodUserDetailsServiceTest {
     @Test(expected = MissingUnitWithRehabSystemRoleException.class)
     public void assertThrowsExceptionWhenNoMatchingSystemRole() throws Exception {
         // given
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-without-matching-rehab-systemrole.xml");
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         setupCallToAuthorizedEnheterForHosPerson();
         setupCallToGetHsaPersonInfoNonDoctor();
 
@@ -181,7 +181,7 @@ public class RehabstodUserDetailsServiceTest {
     @Test
     public void assertRoleAndWhenUserHasTitleLakare() throws Exception {
         // given
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-title-lakare.xml");
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         setupCallToAuthorizedEnheterForHosPerson();
         setupCallToGetHsaPersonInfo();
 
@@ -207,7 +207,7 @@ public class RehabstodUserDetailsServiceTest {
     public void testHsaServiceExceptionIsThrownWhenHsaGetPersonThrowsUncheckedException() throws Exception {
         // given
         when(hsaPersonService.getHsaPersonInfo(anyString())).thenThrow(new RuntimeException("some-exception"));
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-title-lakare.xml");
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         setupCallToAuthorizedEnheterForHosPerson();
 
         // then
@@ -218,7 +218,7 @@ public class RehabstodUserDetailsServiceTest {
     public void testHsaServiceExceptionIsThrownWhenHsaThrowsException() throws Exception {
         // given
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenThrow(new RuntimeException("some-hsa-exception"));
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-title-lakare.xml");
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
 
         // then
         userDetailsService.loadUserBySAML(samlCredential);
@@ -229,7 +229,7 @@ public class RehabstodUserDetailsServiceTest {
         // given
         setupCallToGetHsaPersonInfo();
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>()));
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-title-lakare.xml");
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
 
         // then
         userDetailsService.loadUserBySAML(samlCredential);
@@ -240,7 +240,7 @@ public class RehabstodUserDetailsServiceTest {
         // given
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>()));
         setupCallToGetHsaPersonInfo();
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-with-other-mui.xml");
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
 
         // then
         userDetailsService.loadUserBySAML(samlCredential);
