@@ -50,7 +50,7 @@ public abstract class BaseRestIntegrationTest {
     public static final int SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR.value();
     public static final int FORBIDDEN = HttpStatus.FORBIDDEN.value();
 
-    protected static final FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105R", "rest", "testman",
+    protected static final FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105R",
             "TSTNMT2321000156-105N").lakare(true).build();
     protected CustomObjectMapper objectMapper = new CustomObjectMapper();
 

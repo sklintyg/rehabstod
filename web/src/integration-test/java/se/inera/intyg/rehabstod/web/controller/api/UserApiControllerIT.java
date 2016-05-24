@@ -61,7 +61,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
     public void testAndraValdEnhet() {
 
         // Log in as user having medarbetaruppdrag at several vardenheter.
-        FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105S", "Anders", "Multi-vardenheter",
+        FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105S",
                 "TSTNMT2321000156-105N").lakare(false)
                         .systemRoles(Arrays.asList("INTYG;Rehab-TSTNMT2321000156-105N", "INTYG;Rehab-TSTNMT2321000156-105P")).build();
         RestAssured.sessionId = getAuthSession(user);
@@ -83,7 +83,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
     public void testAndraValdEnhetMedOgiltigEnhetsId() {
 
         // Log in as user having medarbetaruppdrag at several vardenheter.
-        FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105S", "Anders", "Multi-vardenheter",
+        FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105S",
                 "TSTNMT2321000156-105N").lakare(false).systemRoles(Arrays.asList("INTYG;Rehab-TSTNMT2321000156-105N")).build();
         RestAssured.sessionId = getAuthSession(user);
 
