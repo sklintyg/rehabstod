@@ -21,7 +21,6 @@ package se.inera.intyg.rehabstod.web.controller.api;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 import se.inera.intyg.rehabstod.service.Urval;
@@ -39,6 +38,8 @@ import static org.hamcrest.core.IsEqual.equalTo;
  */
 public class UserApiControllerIT extends BaseRestIntegrationTest {
 
+    private static final String DEFAULT_LAKARE_NAME = "Emma Nilsson";
+
     @Test
     public void testGetAnvandare() {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
@@ -47,8 +48,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
                 body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
                 body("hsaId", equalTo(DEFAULT_LAKARE.getHsaId())).
                 body("valdVardenhet.id", equalTo(DEFAULT_LAKARE.getEnhetId())).
-                body("namn", Matchers.notNullValue()
-                ); // TODO figure this out. equalTo(DEFAULT_LAKARE.getFornamn() + " " + DEFAULT_LAKARE.getEfternamn()));
+                body("namn", equalTo(DEFAULT_LAKARE_NAME));
     }
 
     @Test
