@@ -143,10 +143,9 @@ dependencies {
     compile project(":rehabstod-common")
     compile project(":rehabstod-it-integration")
 
-    compile "se.inera.intyg.common:hsa-integration:0-SNAPSHOT" //${intygCommonVersion}"
+    compile "se.inera.intyg.common:hsa-integration:0-SNAPSHOT"
     compile "se.inera.intyg.common:log-messages:${intygCommonVersion}"
-    compile "se.inera.intyg.common:security-siths:0-SNAPSHOT" // TODO fix version once built.
-    compile "se.inera.intyg.common:security-authorities:0-SNAPSHOT" // TODO fix version once built.
+    compile "se.inera.intyg.common:security-siths:0-SNAPSHOT"
 
     compile "org.springframework:spring-webmvc:${springContextVersion}"
     compile "org.springframework:spring-jms:${springContextVersion}"

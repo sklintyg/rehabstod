@@ -68,6 +68,9 @@
         "telefonnummer": {
           "type": "string"
         },
+        "agandeForm" : {
+          "type": "string"
+        },
         "start": {
           "type": "null"
         },
