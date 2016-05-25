@@ -75,10 +75,6 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         return super.getAssertion(assertion);
     }
 
-//    private List<String> getSystemRoles(String employeeHsaId) {
-//        return getHsaPersonService().getSystemRoles(employeeHsaId);
-//    }
-
     void removeEnheterMissingRehabKoordinatorRole(List<Vardgivare> authorizedVardgivare, List<String> systemRoles, String hsaId) {
         long unitsBefore = authorizedVardgivare.stream().mapToInt(vg -> vg.getVardenheter().size()).sum();
 
