@@ -409,7 +409,7 @@
     <bean id="hokWebSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerHoKImpl"/>
 
     <!-- SAML 2.0 Web SSO profile -->
-    <bean id="webSSOprofile" class="org.springframework.security.saml.websso.WebSSOProfileImpl"/>
+    <bean id="webSSOprofile" class="se.inera.intyg.rehabstod.auth.RehabstodWebSSOProfileImpl"/>
 
     <!-- SAML 2.0 Logout Profile -->
     <bean id="logoutprofile" class="org.springframework.security.saml.websso.SingleLogoutProfileImpl"/>
