@@ -183,7 +183,7 @@ public class RehabstodUserDetailsServiceTest {
         // given
         SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         setupCallToAuthorizedEnheterForHosPerson();
-        setupCallToGetHsaPersonInfo();
+        setupCallToGetHsaPersonInfo("Läkare");
 
         // then
         IntygUser rehabstodUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
@@ -371,26 +371,31 @@ public class RehabstodUserDetailsServiceTest {
 
         return new ArrayList<>(Arrays.asList(vardgivare));
     }
-
     private void setupCallToGetHsaPersonInfo() {
-        List<String> specs = Arrays.asList("Kirurgi", "Öron-, näs- och halssjukdomar", "Reumatologi");
-        List<String> titles = Arrays.asList("Läkare", "Psykoterapeut");
+        setupCallToGetHsaPersonInfo(TITLE_HEAD_DOCTOR);
+    }
 
-        List<PersonInformationType> userTypes = Collections.singletonList(buildPersonInformationType(PERSONAL_HSAID, TITLE_HEAD_DOCTOR, specs, titles));
+    private void setupCallToGetHsaPersonInfo(String title) {
+        List<String> specs = Arrays.asList("Kirurgi", "Öron-, näs- och halssjukdomar", "Reumatologi");
+        List<String> legitimeradeYrkesgrupper = Arrays.asList("Läkare", "Psykoterapeut");
+        List<String> befattningar = Collections.emptyList();
+
+        List<PersonInformationType> userTypes = Collections.singletonList(buildPersonInformationType(PERSONAL_HSAID, title, specs, legitimeradeYrkesgrupper, befattningar));
 
         when(hsaPersonService.getHsaPersonInfo(PERSONAL_HSAID)).thenReturn(userTypes);
     }
 
     private void setupCallToGetHsaPersonInfoNonDoctor() {
         List<String> specs = new ArrayList<>();
-        List<String> titles = Arrays.asList("Vårdadministratör");
+        List<String> legitimeradeYrkesgrupper = Arrays.asList("Vårdadministratör");
+        List<String> befattningar = Collections.emptyList();
 
-        List<PersonInformationType> userTypes = Collections.singletonList(buildPersonInformationType(PERSONAL_HSAID, "", specs, titles));
+        List<PersonInformationType> userTypes = Collections.singletonList(buildPersonInformationType(PERSONAL_HSAID, "", specs, legitimeradeYrkesgrupper, befattningar));
 
         when(hsaPersonService.getHsaPersonInfo(PERSONAL_HSAID)).thenReturn(userTypes);
     }
 
-    private PersonInformationType buildPersonInformationType(String hsaId, String title, List<String> specialities, List<String> titles) {
+    private PersonInformationType buildPersonInformationType(String hsaId, String title, List<String> specialities, List<String> legitimeradeYrkesgrupper, List<String> befattningar) {
 
         PersonInformationType type = new PersonInformationType();
         type.setPersonHsaId(hsaId);
@@ -401,12 +406,18 @@ public class RehabstodUserDetailsServiceTest {
             type.setTitle(title);
         }
 
-        if ((titles != null) && (titles.size() > 0)) {
-            for (String t : titles) {
-                PaTitleType paTitle = new PaTitleType();
-                paTitle.setPaTitleName(t);
-                type.getPaTitle().add(paTitle);
+        if ((legitimeradeYrkesgrupper != null) && (legitimeradeYrkesgrupper.size() > 0)) {
+            for (String t : legitimeradeYrkesgrupper) {
+                type.getHealthCareProfessionalLicence().add(t);
             }
+        }
+
+        if (befattningar !=  null) {
+           for (String befattningsKod : befattningar) {
+               PaTitleType paTitleType = new PaTitleType();
+               paTitleType.setPaTitleCode(befattningsKod);
+               type.getPaTitle().add(paTitleType);
+           }
         }
 
         if ((specialities != null) && (specialities.size() > 0)) {
