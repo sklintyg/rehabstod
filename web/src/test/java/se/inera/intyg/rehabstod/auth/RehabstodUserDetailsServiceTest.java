@@ -406,7 +406,7 @@ public class RehabstodUserDetailsServiceTest {
             type.setTitle(title);
         }
 
-        if ((legitimeradeYrkesgrupper != null) && (legitimeradeYrkesgrupper.size() > 0)) {
+        if (legitimeradeYrkesgrupper != null && legitimeradeYrkesgrupper.size() > 0) {
             for (String t : legitimeradeYrkesgrupper) {
                 type.getHealthCareProfessionalLicence().add(t);
             }
