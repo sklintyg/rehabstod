@@ -14,16 +14,16 @@
     "angular-deferred-bootstrap": "0.1.9",
     "seiyria-bootstrap-slider": "6.0.16",
     "angular-bootstrap-slider": "0.1.24",
-    "angular-smart-table": "2.1.7",
+    "angular-smart-table": "2.1.8",
     "bootstrap-sass": "3.3.4",
-    "es5-shim": "4.5.2",
-    "jquery": "1.11.3",
+    "es5-shim": "4.5.9",
+    "jquery": "1.12.4",
     "json3": "3.3.2",
     "ngstorage": "0.3.10",
-    "font-awesome": "4.5.0",
+    "font-awesome": "4.6.3",
     "ngInfiniteScroll": "1.2.2",
     "angular-placeholder-tai": "1.0.3",
-    "highcharts": "4.2.3"
+    "highcharts": "4.2.5"
   },
   "devDependencies": {
     "angular-mocks": "1.4.9",
