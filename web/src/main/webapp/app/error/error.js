@@ -25,7 +25,7 @@ angular.module('rehabstodApp')
                 url: '/error',
                 views: {
                     'content@app': {
-                        templateUrl: 'app/error/error.html',
+                        templateUrl: '/app/error/error.html',
                         controller: 'ErrorCtrl'
                     }
                 },

@@ -117,15 +117,15 @@ app.run(
 
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState/*, fromParams*/) {
-                $log.debug('$stateChangeStart: ' + fromState.name + ' to ' + toState.name);
+                //$log.debug('$stateChangeStart: ' + fromState.name + ' to ' + toState.name);
 
                 if (toState.data && angular.isFunction(toState.data.rule)) {
                     var result = toState.data.rule(fromState, toState, UserModel);
                     if (result && result.to) {
                         event.preventDefault();
-                        $log.debug(
-                            '$stateChangeStart to ' + toState.name + ' was overridden by a rule. new destination : ' +
-                            result.to);
+                        //$log.debug(
+                        //    '$stateChangeStart to ' + toState.name + ' was overridden by a rule. new destination : ' +
+                        //    result.to);
                         $state.go(result.to, result.params, result.options);
                     }
                 }

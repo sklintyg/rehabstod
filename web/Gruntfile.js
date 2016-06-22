@@ -293,7 +293,10 @@ module.exports = function(grunt) {
                     removeScriptTypeAttributes: true,
                     removeStyleLinkTypeAttributes: true
                 },
-                usemin: 'app/app.main.js'
+                usemin: 'app/app.main.js',
+                url: function(url) {
+                    return '/' + url;
+                }
             },
             main: {
                 cwd: '<%= config.client %>',

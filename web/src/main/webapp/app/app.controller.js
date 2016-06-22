@@ -24,7 +24,7 @@ angular.module('rehabstodApp')
 
             $scope.showErrorDialog = function(msgConfig) {
                 $uibModal.open({
-                    templateUrl: 'app/error/restErrorDialog.html',
+                    templateUrl: '/app/error/restErrorDialog.html',
                     controller: 'restErrorDialogCtrl',
                     size: 'md',
                     resolve: {

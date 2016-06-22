@@ -63,7 +63,6 @@ angular.module('rehabstodApp')
 
             $scope.onResetFilterClick = function() {
                 $scope.filterViewState.reset();
-                $log.debug('reset filterViewState');
             };
         }
     )

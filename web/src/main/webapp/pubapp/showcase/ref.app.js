@@ -29,13 +29,30 @@
     $.ajaxSetup({cache: false});
 
     var rehabApp = angular.module('rehabstodApp',
-        ['ui.bootstrap', 'ui.router', 'ngCookies', 'ngSanitize', 'ngAnimate', 'ngMockE2E', 'ngStorage']);
+        ['ui.bootstrap', 'ui.router', 'ngCookies', 'ngSanitize', 'ngAnimate', 'ngMockE2E', 'ngStorage',
+            'ui.bootstrap-slider',
+            'smart-table',
+            'infinite-scroll',
+            'taiPlaceholder']);
 
     var app = angular.module('showcase',
         ['ui.bootstrap', 'ui.router', 'ngCookies', 'ngSanitize', 'ngAnimate', 'ngMockE2E', 'rehabstodApp', 'rhsIndexApp']);
 
     app.value('networkConfig', {
         defaultTimeout: 30000 // test: 1000
+    });
+
+    app.value('APP_CONFIG', {
+        diagnosKapitelList: [{
+            id: 'Id1',
+            name: 'Val 1'
+        },{
+            id: 'Id2',
+            name: 'Val 2'
+        },{
+            id: 'Id3',
+            name: 'Val 3'
+        }]
     });
 
     app.config(['$httpProvider', '$logProvider',

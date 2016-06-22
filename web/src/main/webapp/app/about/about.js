@@ -24,7 +24,7 @@ angular.module('rehabstodApp')
             .state('app.about', {
                 url: '/about',
                 views: {
-                    'content@app': {templateUrl: 'app/about/about.page.html', controller: 'AboutPageCtrl'}
+                    'content@app': {templateUrl: '/app/about/about.page.html', controller: 'AboutPageCtrl'}
                 },
                 data: {
                     rule: function(fromState, toState) {
@@ -47,7 +47,7 @@ angular.module('rehabstodApp')
                 url: '/rehabstod',
                 views: {
                     'content@app.about': {
-                        templateUrl: 'app/about/subpages/rehabstod.html'
+                        templateUrl: '/app/about/subpages/rehabstod.html'
                     }
                 }
             })
@@ -55,7 +55,7 @@ angular.module('rehabstodApp')
                 url: '/faq',
                 views: {
                     'content@app.about': {
-                        templateUrl: 'app/about/subpages/faq.html'
+                        templateUrl: '/app/about/subpages/faq.html'
                     }
                 }
             })
@@ -63,7 +63,7 @@ angular.module('rehabstodApp')
                 url: '/support',
                 views: {
                     'content@app.about': {
-                        templateUrl: 'app/about/subpages/support.html'
+                        templateUrl: '/app/about/subpages/support.html'
                     }
                 }
             })
@@ -71,7 +71,7 @@ angular.module('rehabstodApp')
                 url: '/cookies',
                 views: {
                     'content@app.about': {
-                        templateUrl: 'app/about/subpages/cookies.html'
+                        templateUrl: '/app/about/subpages/cookies.html'
                     }
                 }
             });

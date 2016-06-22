@@ -18,8 +18,8 @@
  */
 
 angular.module('showcase').controller('showcase.SjukfallCtrl',
-    ['$scope', '$window',
-        function($scope, $window) {
+    ['$scope', '$window', 'SjukfallFilterViewState',
+        function($scope, $window, SjukfallFilterViewState) {
             'use strict';
 
             $scope.show = true;
@@ -28,6 +28,9 @@ angular.module('showcase').controller('showcase.SjukfallCtrl',
             $scope.loading = true;
             $scope.registerForm = {};
             $scope.registerModel = {};
+
+            $scope.filterViewState = SjukfallFilterViewState;
+            $scope.sjukfallsLangder = angular.copy($scope.filterViewState.get().sjukskrivningslangdModel);
 
             $scope.showCookieBanner = false;
             $scope.doShowCookieBanner = function() {

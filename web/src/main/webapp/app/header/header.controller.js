@@ -44,7 +44,7 @@ angular.module('rehabstodApp').controller('HeaderController',
         $scope.openChangeCareUnitDialog = function() {
             var modalInstance = $uibModal.open({
                 animation: true,
-                templateUrl: 'app/header/careunit/select-care-unit-dialog.html',
+                templateUrl: '/app/header/careunit/select-care-unit-dialog.html',
                 controller: 'SelectCareUnitCtrl',
                 size: 'md',
                 windowClass: 'select-care-unit-modal'

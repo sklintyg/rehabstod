@@ -8,6 +8,11 @@
 
   <title>Rehabstöd | Komponenter</title>
 
+  <!-- build:css(src/main/webapp) app/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="../../bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
   <!-- build:css({build/.tmp,src/main/webapp}) app/app.css -->
   <!-- injector:css -->
   <link rel="stylesheet" href="/app/app.css">
@@ -69,14 +74,28 @@
   <script type="text/javascript" src="/components/commonDirectives/rhsPieChart/rhsPieChart.directive.js"></script>
   <script type="text/javascript" src="/components/commonDirectives/rhsChartLegend/rhsChartLegend.directive.js"></script>
 
+  <script type="text/javascript" src="/components/commonDirectives/rhsSlider/rhsSlider.directive.js"></script>
+  <script type="text/javascript" src="/components/commonDirectives/rhsNumericRangeInput/rhsNumericRangeInput.directive.js"></script>
+  <script type="text/javascript" src="/components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.js"></script>
 
+  <script type="text/javascript" src="/components/appDirectives/sjukfall/rhsTable/rhsTable.directive.js"></script>
+  <script type="text/javascript" src="/components/appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.directive.js"></script>
+  <script type="text/javascript" src="/components/appDirectives/sjukfall/rhsTableResetLimit/rhsResetLimit.directive.js"></script>
 
   <script type="text/javascript" src="/components/models/user.model.js"></script>
+  <script type="text/javascript" src="/components/models/sjukfall.model.js"></script>
   <script type="text/javascript" src="/components/models/sjukfallSummary.model.js"></script>
+  <script type="text/javascript" src="/components/models/lakare.model.js"></script>
+  <script type="text/javascript" src="/components/models/diagnoskapitel.model.js"></script>
 
+  <script type="text/javascript" src="/components/filters/rhsSearchfilter/rhsSearchfilter.filter.js"></script>
+  <script type="text/javascript" src="/components/filters/rhsSort/rhsSort.filter.js"></script>
+
+  <script type="text/javascript" src="/components/viewstates/sjukfallFilterViewState.service.js"></script>
 
   <script type="text/javascript" src="/components/utils/http403ResponseInterceptor.service.js"></script>
   <script type="text/javascript" src="/components/utils/object.helper.js"></script>
+  <script type="text/javascript" src="/components/utils/string.helper.js"></script>
 
   <script type="text/javascript" src="views/bootstrap.controller.js"></script>
   <script type="text/javascript" src="views/navigation.controller.js"></script>

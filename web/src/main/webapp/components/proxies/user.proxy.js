@@ -64,8 +64,6 @@ angular.module('rehabstodApp').factory('UserProxy',
          * Get user data for logged in user
          */
         function _changeUrval(newUrval) {
-            $log.debug('_changeUrval');
-
             var promise = $q.defer();
 
             var restPath = '/api/user/urval';
@@ -73,7 +71,6 @@ angular.module('rehabstodApp').factory('UserProxy',
                 urval: newUrval
             };
 
-            $log.debug('REST call: _changeUrval ' + restPath);
             var config =  {
                 errorMessageConfig: {
                     errorTitleKey: 'server.error.changeurval.title',

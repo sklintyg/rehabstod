@@ -35,8 +35,6 @@ angular.module('rehabstodApp').factory('SjukfallSummaryProxy',
                 timeout: networkConfig.defaultTimeout
             };
             $http.get(restPath, config).success(function(data) {
-                $log.debug('unit statistic - got data:');
-                $log.debug(data);
                 if(!ObjectHelper.isDefined(data)) {
                     promise.reject({ errorCode: data, message: 'invalid data'});
                 } else {

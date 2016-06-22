@@ -1,12 +1,58 @@
 <h1>Övriga komponenter</h1>
 
-<h3>rhsStatPanel</h3>
-<div>
+<div class="showcase-directive-group">
+  <h3>rhsStatPanel</h3>
   <rhs-stat-panel vardenhet="user.valdVardenhet"></rhs-stat-panel>
 </div>
 
-<h3>rhsSpinner</h3>
-<div style="overflow-y:hidden;" rhs-spinner label="label.loading" show-spinner="loading"></div>
+<div class="showcase-directive-group">
+  <h3>rhsSpinner</h3>
+  <div style="overflow-y:hidden;" rhs-spinner label="label.loading" show-spinner="loading"></div>
+</div>
 
-<h2>rhsTooltip</h2>
-Används för att visa hjälptext <span rhs-tooltip field-help-text="här visas  tooltiptexten"></span>
+<div class="showcase-directive-group">
+  <h3>rhsTooltip</h3>
+  Används för att visa hjälptext <span rhs-tooltip field-help-text="här visas  tooltiptexten"></span>
+</div>
+
+<div class="showcase-directive-group">
+  <h3>rhsSlider</h3>
+  <div class="col-md-6">
+    <rhs-slider
+        slider-model="filterViewState.get().sjukskrivningslangdModel"
+        range="true"
+        min="1"
+        max="366"
+        position="position">
+    </rhs-slider>
+  </div>
+</div>
+
+<div class="showcase-directive-group">
+  <h3>rhsMultiSelect</h3>
+  <div class="col-md-6">
+    <rhs-multi-select
+        items-model="filterViewState.get().diagnosKapitelModel"
+        none-selected-title="{{::'label.filter.allselected' | message}}"
+        high-light-enabled="true">
+    </rhs-multi-select>
+  </div>
+</div>
+
+<div class="showcase-directive-group">
+  <h3>rhsNumericRangeInput</h3>
+  <div class="col-md-4">
+    <rhs-numeric-range-input
+        external-model="sjukfallsLangder[0]"
+        min="1"
+        max="sjukfallsLangder[1]"
+        display-max-value-as="365+">
+    </rhs-numeric-range-input>
+  </div>
+</div>
+
+<div class="showcase-directive-group">
+  <h3>rhsTable</h3>
+  <rhs-table></rhs-table>
+</div>
+
