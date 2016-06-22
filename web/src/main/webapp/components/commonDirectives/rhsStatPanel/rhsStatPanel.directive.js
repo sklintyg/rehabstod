@@ -18,8 +18,8 @@
  */
 
 angular.module('rehabstodApp').directive('rhsStatPanel',
-    ['SjukfallSummaryModel', 'SjukfallSummaryProxy', 'UserModel', '$rootScope', 'pieChartBaseConfig', 'messageService',
-        function(SjukfallSummaryModel, SjukfallSummaryProxy, UserModel, $rootScope, pieChartBaseConfig,
+    ['SjukfallSummaryModel', 'UserModel', '$rootScope', 'pieChartBaseConfig', 'messageService',
+        function(SjukfallSummaryModel, UserModel, $rootScope, pieChartBaseConfig,
             messageService) {
             'use strict';
 
@@ -130,6 +130,6 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
 
 
                 },
-                templateUrl: 'components/commonDirectives/rhsStatPanel/rhsStatPanel.directive.html'
+                templateUrl: '/components/commonDirectives/rhsStatPanel/rhsStatPanel.directive.html'
             };
         }]);

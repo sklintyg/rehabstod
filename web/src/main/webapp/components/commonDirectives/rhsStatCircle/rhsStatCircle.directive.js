@@ -33,6 +33,6 @@ angular.module('rehabstodApp').directive('rhsStatCircle',
                 controller: function(/*scope*/) {
 
                 },
-                templateUrl: 'components/commonDirectives/rhsStatCircle/rhsStatCircle.directive.html'
+                templateUrl: '/components/commonDirectives/rhsStatCircle/rhsStatCircle.directive.html'
             };
         }]);

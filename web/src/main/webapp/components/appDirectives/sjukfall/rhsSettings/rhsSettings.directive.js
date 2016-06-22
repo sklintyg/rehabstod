@@ -27,7 +27,7 @@ angular.module('rehabstodApp')
             $scope.openSettings = function() {
                 var modalInstance = $uibModal.open({
                     animation: true,
-                    templateUrl: 'components/appDirectives/sjukfall/rhsSettings/rhsSettingsModal/rhsSettingsModal.html',
+                    templateUrl: '/components/appDirectives/sjukfall/rhsSettings/rhsSettingsModal/rhsSettingsModal.html',
                     controller: 'RhsSettingsModalCtrl',
                     size: 'md',
                     backdrop: 'static'
@@ -54,6 +54,6 @@ angular.module('rehabstodApp')
                 replace: true,
                 scope: {},
                 controller: 'RhsSettingsCtrl',
-                templateUrl: 'components/appDirectives/sjukfall/rhsSettings/rhsSettings.directive.html'
+                templateUrl: '/components/appDirectives/sjukfall/rhsSettings/rhsSettings.directive.html'
             };
         });

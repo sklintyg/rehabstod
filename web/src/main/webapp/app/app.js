@@ -23,9 +23,9 @@ angular.module('rehabstodApp')
         $stateProvider
             .state('app', {
                 views: {
-                    'app@': { templateUrl: 'app/app.html', controller: 'AppPageCtrl'},
-                    'header@': { templateUrl: 'app/header/header.html', controller: 'HeaderController' },
-                    'navbar@': { templateUrl: 'app/navbar/navbar.html', controller: 'NavbarCtrl' }
+                    'app@': { templateUrl: '/app/app.html', controller: 'AppPageCtrl'},
+                    'header@': { templateUrl: '/app/header/header.html', controller: 'HeaderController' },
+                    'navbar@': { templateUrl: '/app/navbar/navbar.html', controller: 'NavbarCtrl' }
                 }
             });
     });

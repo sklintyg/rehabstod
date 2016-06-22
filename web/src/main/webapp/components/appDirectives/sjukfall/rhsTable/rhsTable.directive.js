@@ -54,6 +54,6 @@ angular.module('rehabstodApp')
                 restrict: 'E',
                 scope: {},
                 controller: 'RhsTableCtrl',
-                templateUrl: 'components/appDirectives/sjukfall/rhsTable/rhsTable.directive.html'
+                templateUrl: '/components/appDirectives/sjukfall/rhsTable/rhsTable.directive.html'
             };
         });

@@ -32,7 +32,7 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
                 itemsModel: '='
             },
 
-            templateUrl: 'components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.html',
+            templateUrl: '/components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.html',
             link: function($scope, element) {
 
 

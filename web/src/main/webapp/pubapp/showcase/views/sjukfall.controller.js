@@ -17,30 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').directive('rhsSlider',
-    ['messageService',
-        function(/*messageService*/) {
+angular.module('showcase').controller('showcase.SjukfallCtrl',
+    ['$scope', '$window',
+        function($scope, $window) {
             'use strict';
 
-            return {
-                restrict: 'E',
-                scope: {
-                    sliderModel: '=',
-                    range: '=',
-                    min: '=',
-                    max: '=',
-                    ticksPositions: '=',
-                    ticksLabels: '=',
-                    ticks: '=',
-                    position: '='
-                },
-                controller: function($scope) {
+            $scope.show = true;
+            $scope.text = 'Text';
+            $scope.showSingle = true;
+            $scope.loading = true;
+            $scope.registerForm = {};
+            $scope.registerModel = {};
 
-                    $scope.value = $scope.sliderModel;
-                    $scope.step = 1;
-                    $scope.ticksSnapBounds = 1;
-
-                },
-                templateUrl: '/components/commonDirectives/rhsSlider/rhsSlider.directive.html'
+            $scope.showCookieBanner = false;
+            $scope.doShowCookieBanner = function() {
+                $window.localStorage.setItem('pp-cookie-consent-given', '0');
+                $scope.showCookieBanner = !$scope.showCookieBanner;
             };
+
         }]);

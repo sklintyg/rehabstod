@@ -28,7 +28,7 @@ angular.module('rehabstodApp').directive('rhsChartLegend',
                     data: '=',
                     config: '='
                 },
-                templateUrl: 'components/commonDirectives/rhsChartLegend/rhsChartLegend.directive.html',
+                templateUrl: '/components/commonDirectives/rhsChartLegend/rhsChartLegend.directive.html',
                 link: function(scope) {
                     scope.getLegendText = function(item) {
                         return scope.config.legend.labelFormatter.apply(item);

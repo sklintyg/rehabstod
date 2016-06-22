@@ -29,7 +29,7 @@ angular.module('rehabstodApp').directive('rhsPieChart',
                     data: '=',
                     config: '='
                 },
-                templateUrl: 'components/commonDirectives/rhsPieChart/rhsPieChart.directive.html',
+                templateUrl: '/components/commonDirectives/rhsPieChart/rhsPieChart.directive.html',
                 link: function(scope, element) {
 
                     var chart = Highcharts.chart(element[0], scope.config);

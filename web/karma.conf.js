@@ -53,7 +53,7 @@ module.exports = function(config) {
         },
 
         ngHtml2JsPreprocessor: {
-            stripPrefix: 'src/main/webapp/',
+            stripPrefix: 'src/main/webapp',
             // the name of the Angular module to create
             moduleName: 'htmlTemplates'
         },

@@ -59,7 +59,7 @@ angular.module('rhsIndexApp').directive('rhsCookieBanner',
             return {
                 restrict: 'E',
                 scope: {},
-                templateUrl: 'pubapp/rhsCookieBanner.directive.html',
+                templateUrl: '/pubapp/rhsCookieBanner.directive.html',
                 controller: function($scope, $timeout) {
                     $scope.isOpen = false;
                     $scope.showDetails = false;

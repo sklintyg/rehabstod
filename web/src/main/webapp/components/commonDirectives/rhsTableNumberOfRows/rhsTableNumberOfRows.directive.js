@@ -35,6 +35,6 @@ angular.module('rehabstodApp').directive('rhsTableNumberOfRows',
                     $scope.rows = val;
                 });
             },
-            templateUrl: 'components/commonDirectives/rhsTableNumberOfRows/rhsTableNumberOfRows.directive.html'
+            templateUrl: '/components/commonDirectives/rhsTableNumberOfRows/rhsTableNumberOfRows.directive.html'
         };
     });

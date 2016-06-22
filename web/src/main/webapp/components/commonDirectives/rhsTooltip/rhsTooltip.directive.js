@@ -38,6 +38,6 @@ angular.module('rehabstodApp').directive('rhsTooltip',
                         return messageService.getProperty(key, msgParams);
                     };
                 },
-                templateUrl: 'components/commonDirectives/rhsTooltip/rhsTooltip.directive.html'
+                templateUrl: '/components/commonDirectives/rhsTooltip/rhsTooltip.directive.html'
             };
         }]);

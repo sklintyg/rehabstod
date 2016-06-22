@@ -1,0 +1,61 @@
+<h1>Bootstrap css / ui-bootstrap  komponenter</h1>
+
+<h2>Rubriker</h2>
+
+<h1 class="page-header">Page Header</h1>
+<h1>H1</h1><h2>H2</h2><h3>H3</h3><h3>H4</h3>
+
+<h2>Meddelanderutor</h2>
+<div class="alert alert-info">
+  <span>Information (alert-info)<br>
+    Skall användas för meddelanden av informationskaraktär.
+  </span>
+</div>
+<div class="alert alert-warning">
+  <span>Varning (alert-warning)<br>
+    Bör användas för att uppmärksamma användaren på något som är avvikande men inte direkt felaktigt.
+  </span>
+</div>
+<div class="alert alert-danger">
+  <span>Fel (alert-danger)<br>
+    Används för att uppmärksamma användaren på att något är / har gått fel.
+  </span>
+</div>
+
+<h2>Text</h2>
+<div>
+  <p>En text</p>
+  <ul>
+    <li>En lista</li>
+    <li><a href="#">Med en länk</a></li>
+  </ul>
+</div>
+
+<h2>Tillbakaknapp</h2>
+<div>
+  <a class="result-backlink"  style="position:static" href="" title="Tillbaka till"></a>
+
+</div>
+
+<h2>Toggleknapp (i form av länk, te x för att toggla sökfilter) </h2>
+<button type="button" class="btn btn-link btn-link-minimal"
+        ng-click="linkBtnState = !linkBtnState"
+        ng-switch="linkBtnState">
+  <span ng-switch-when="true">Visa sökfilter</span><span ng-switch-when="false">Dölj sökfilter</span>
+</button>
+
+<h2>ActionKnappar</h2>
+<div class="form-group">
+  Normal state<br>
+  <button type="button" class="btn btn-primary" ng-disabled="false">btn-primary</button>
+  <button type="button" class="btn btn-default" ng-disabled="false">btn-default</button>
+</div>
+
+<div class="form-group">
+  Disabled state<br>
+  <button type="button" class="btn btn-primary" ng-disabled="true">btn-primary</button>
+  <button type="button" class="btn btn-default" ng-disabled="true">btn-default</button>
+</div>
+
+<h2>Modala dialoger</h2>
+<button class="btn btn-primary" ng-click="showDialog()">Öppna modal dialog</button>

@@ -75,6 +75,6 @@ angular.module('rehabstodApp')
                 restrict: 'E',
                 scope: {},
                 controller: 'RhsFilterCtrl',
-                templateUrl: 'components/appDirectives/sjukfall/rhsFilter/rhsFilter.directive.html'
+                templateUrl: '/components/appDirectives/sjukfall/rhsFilter/rhsFilter.directive.html'
             };
         });

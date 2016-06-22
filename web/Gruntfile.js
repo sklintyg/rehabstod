@@ -182,6 +182,7 @@ module.exports = function(grunt) {
                 src: [
                     '<%= config.client %>/app.html',
                     '<%= config.client %>/index.html',
+                    '<%= config.client %>/pubapp/showcase/index.html',
                     'karma.conf.js'
                 ],
                 ignorePath: '<%= config.client %>/',
@@ -388,7 +389,7 @@ module.exports = function(grunt) {
                     transform: function(filePath) {
                         filePath = filePath.replace('/src/main/webapp/', '');
                         filePath = filePath.replace('/<%= config.tmp %>/', '');
-                        return '<script src="' + filePath + '"></script>';
+                        return '<script src="/' + filePath + '"></script>';
                     },
                     starttag: '<!-- injector:js -->',
                     endtag: '<!-- endinjector -->'
@@ -429,7 +430,7 @@ module.exports = function(grunt) {
                     transform: function(filePath) {
                         filePath = filePath.replace('/src/main/webapp/', '');
                         filePath = filePath.replace('/<%= config.tmp %>/', '');
-                        return '<link rel="stylesheet" href="' + filePath + '">';
+                        return '<link rel="stylesheet" href="/' + filePath + '">';
                     },
                     starttag: '<!-- injector:css -->',
                     endtag: '<!-- endinjector -->'
@@ -445,6 +446,9 @@ module.exports = function(grunt) {
                         '<%= config.client %>/{app,components}/**/*.css'
                     ],
                     '<%= config.client %>/error.jsp': [
+                        '<%= config.client %>/{app,components}/**/*.css'
+                    ],
+                    '<%= config.client %>/pubapp/showcase/index.html': [
                         '<%= config.client %>/{app,components}/**/*.css'
                     ]
                 }

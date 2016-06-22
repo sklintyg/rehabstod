@@ -25,7 +25,7 @@ angular.module('rehabstodApp')
                 url: 'sjukfall',
                 views: {
                     'content@app': {
-                        templateUrl: 'app/sjukfall/result/result.page.html',
+                        templateUrl: '/app/sjukfall/result/result.page.html',
                         controller: 'SjukfallResultPageCtrl'
                     }
                 },

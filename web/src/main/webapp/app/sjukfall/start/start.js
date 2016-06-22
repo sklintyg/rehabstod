@@ -6,14 +6,14 @@ angular.module('rehabstodApp')
                 url: 'start',
                 views: {
                     'content@app': {
-                        templateUrl: 'app/sjukfall/start/start.html',
+                        templateUrl: '/app/sjukfall/start/start.html',
                         controller: 'SjukfallStartCtrl'
                     }
                 }
             }).state('app.sjukfall.start.nodata', {
                 views: {
                     'content@app': {
-                        templateUrl: 'app/sjukfall/start/selection/nodata.html',
+                        templateUrl: '/app/sjukfall/start/selection/nodata.html',
                         controller: 'NoDataCtrl'
                     }
                 }
@@ -21,7 +21,7 @@ angular.module('rehabstodApp')
             .state('app.sjukfall.start.lakare', {
                 views: {
                     'content@app': {
-                        templateUrl: 'app/sjukfall/start/selection/lakare.html',
+                        templateUrl: '/app/sjukfall/start/selection/lakare.html',
                         controller: 'SjukfallStartSelectionCtrl'
                     }
                 }
@@ -29,7 +29,7 @@ angular.module('rehabstodApp')
             .state('app.sjukfall.start.rehabkoordinator', {
                 views: {
                     'content@app': {
-                        templateUrl: 'app/sjukfall/start/selection/rehabkoordinator.html',
+                        templateUrl: '/app/sjukfall/start/selection/rehabkoordinator.html',
                         controller: 'SjukfallStartSelectionCtrl'
                     }
                 }

@@ -29,6 +29,6 @@ angular.module('rehabstodApp').directive('rhsSpinner',
                 label: '@',
                 showSpinner: '='
             },
-            templateUrl: 'components/commonDirectives/rhsSpinner/rhsSpinner.directive.html'
+            templateUrl: '/components/commonDirectives/rhsSpinner/rhsSpinner.directive.html'
         };
     }]);

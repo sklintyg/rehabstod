@@ -68,6 +68,6 @@ angular.module('rehabstodApp')
                         SjukfallService.exportResult('pdf', getPersonnummer(table), getSort(table));
                     };
                 },
-                templateUrl: 'components/appDirectives/sjukfall/rhsExport/rhsExport.directive.html'
+                templateUrl: '/components/appDirectives/sjukfall/rhsExport/rhsExport.directive.html'
             };
         });
