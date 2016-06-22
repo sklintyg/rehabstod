@@ -178,19 +178,15 @@ public class RehabstodUserDetailsServiceTest {
 
     }
 
-    @Test
-    public void assertRoleAndWhenUserHasTitleLakare() throws Exception {
+    @Test(expected = MissingUnitWithRehabSystemRoleException.class)
+    public void assertNoRoleWhenUserHasTitleLakareButNoSystemRoles() throws Exception {
         // given
         SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         setupCallToAuthorizedEnheterForHosPerson();
-        setupCallToGetHsaPersonInfo("Läkare");
+        setupCallToGetHsaPersonInfoNonDoctor("Läkare");
 
         // then
-        IntygUser rehabstodUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
-
-        AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_LAKARE).orThrow();
-        assertEquals("The hsaId defined in credentials should have been selected as default vardenhet", ENHET_HSAID_1, rehabstodUser
-                .getValdVardenhet().getId());
+        userDetailsService.loadUserBySAML(samlCredential);
     }
 
     @Test(expected = GenericAuthenticationException.class)
@@ -244,6 +240,21 @@ public class RehabstodUserDetailsServiceTest {
 
         // then
         userDetailsService.loadUserBySAML(samlCredential);
+    }
+
+    // INTYG-2629
+    @Test
+    public void testUserWithTitleLakareBecomesVardadmin() throws Exception {
+        UserCredentials userCredz = new UserCredentials();
+        userCredz.getHsaSystemRole().addAll(buildSystemRoles());
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, buildVardgivareList()));
+        setupCallToGetHsaPersonInfoNonDoctor("Läkare");
+
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
+        IntygUser rehabstodUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+
+        AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_KOORDINATOR).orThrow();
+
     }
 
 
@@ -386,11 +397,15 @@ public class RehabstodUserDetailsServiceTest {
     }
 
     private void setupCallToGetHsaPersonInfoNonDoctor() {
+         setupCallToGetHsaPersonInfoNonDoctor("");
+    }
+
+    private void setupCallToGetHsaPersonInfoNonDoctor(String title) {
         List<String> specs = new ArrayList<>();
         List<String> legitimeradeYrkesgrupper = Arrays.asList("Vårdadministratör");
         List<String> befattningar = Collections.emptyList();
 
-        List<PersonInformationType> userTypes = Collections.singletonList(buildPersonInformationType(PERSONAL_HSAID, "", specs, legitimeradeYrkesgrupper, befattningar));
+        List<PersonInformationType> userTypes = Collections.singletonList(buildPersonInformationType(PERSONAL_HSAID, title, specs, legitimeradeYrkesgrupper, befattningar));
 
         when(hsaPersonService.getHsaPersonInfo(PERSONAL_HSAID)).thenReturn(userTypes);
     }
