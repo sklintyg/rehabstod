@@ -151,7 +151,7 @@ subprojects {
 
         poiVersion = "3.13"
 
-        restAssuredVersion = "2.8.0"
+        restAssuredVersion = "2.9.0"
 
         slf4jVersion = "1.7.10"
         springContextVersion = "4.2.2.RELEASE"
