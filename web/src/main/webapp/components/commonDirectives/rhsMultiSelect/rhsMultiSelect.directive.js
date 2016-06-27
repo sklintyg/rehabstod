@@ -35,6 +35,17 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
             templateUrl: '/components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.html',
             link: function($scope, element) {
 
+                var calculateDropdownHeight = function() {
+                    if ($scope.isOpen) {
+                        var dropdown = element.find('.dropdown-menu');
+
+                        var offsetTop = dropdown.offset().top - $win.scrollTop();
+
+                        var height = $window.innerHeight - offsetTop - 20;
+
+                        dropdown.css('max-height', Math.max(height, 100));
+                    }
+                };
 
                 $scope.isOpen = false;
 
@@ -60,19 +71,6 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
                 $scope.dropdownToggle = function(open) {
                     $scope.isOpen = open;
                     calculateDropdownHeight();
-                };
-
-
-                var calculateDropdownHeight = function() {
-                    if ($scope.isOpen) {
-                        var dropdown = element.find('.dropdown-menu');
-
-                        var offsetTop = dropdown.offset().top - $win.scrollTop();
-
-                        var height = $window.innerHeight - offsetTop - 20;
-
-                        dropdown.css('max-height', Math.max(height, 100));
-                    }
                 };
 
                 $win.on('resize', calculateDropdownHeight);

@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global JSON */
+
 angular.module('rehabstodApp').factory('sessionCheckService',
     ['$http', '$log', '$interval', '$window', function($http, $log, $interval, $window) {
         'use strict';
