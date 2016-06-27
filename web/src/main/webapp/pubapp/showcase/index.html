@@ -8,12 +8,11 @@
 
   <title>Rehabstöd | Komponenter</title>
 
-  <!-- build:css(src/main/webapp) app/vendor.css -->
   <!-- bower:css -->
   <link rel="stylesheet" href="../../bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css" />
   <!-- endbower -->
-  <!-- endbuild -->
-  <!-- build:css({build/.tmp,src/main/webapp}) app/app.css -->
+
+  <!-- build:css({build/.tmp,src/main/webapp}) /app/showcase_app.css -->
   <!-- injector:css -->
   <link rel="stylesheet" href="/app/app.css">
   <!-- endinjector -->
@@ -28,8 +27,7 @@
 
   <div ui-view="content" id="view"></div>
 
-
-  <!-- build:js({src/main/webapp,node_modules}) app/vendor.js -->
+  
   <!-- bower:js -->
   <script src="../../bower_components/jquery/dist/jquery.js"></script>
   <script src="../../bower_components/angular/angular.js"></script>
@@ -51,17 +49,16 @@
   <script src="../../bower_components/highcharts/highcharts.js"></script>
   <script src="../../bower_components/highcharts/modules/no-data-to-display.js"></script>
   <!-- endbower -->
-  <!-- endbuild -->
 
   <script type="text/javascript" src="../../bower_components/angular-mocks/angular-mocks.js"></script>
 
-  <script type="text/javascript" src="/app/messages.js"></script>
   <script type="text/javascript" src="ref.app.js"></script>
   <script type="text/javascript" src="ref.app.routes.js"></script>
+  
+  <!-- build:js({build/.tmp,src/main/webapp}) /app/showcase.js -->
+  <script type="text/javascript" src="/pubapp/index-app.main.js"></script>
 
-
-  <script type="text/javascript" src="../index-app.main.js"></script>
-
+  <script type="text/javascript" src="/app/messages.js"></script>
   <script type="text/javascript" src="/app/app.value.js"></script>
 
   <script type="text/javascript" src="/components/commonDirectives/message/message.service.js"></script>
@@ -96,6 +93,7 @@
   <script type="text/javascript" src="/components/utils/http403ResponseInterceptor.service.js"></script>
   <script type="text/javascript" src="/components/utils/object.helper.js"></script>
   <script type="text/javascript" src="/components/utils/string.helper.js"></script>
+  <!-- endbuild -->
 
   <script type="text/javascript" src="views/bootstrap.controller.js"></script>
   <script type="text/javascript" src="views/navigation.controller.js"></script>

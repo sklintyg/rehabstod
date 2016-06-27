@@ -237,7 +237,7 @@ module.exports = function(grunt) {
         // concat, minify and revision files. Creates configurations in memory so
         // additional tasks can operate on them
         useminPrepare: {
-            html: ['<%= config.client %>/app.html'],
+            html: ['<%= config.client %>/app.html', '<%= config.client %>/pubapp/showcase/index.html'],
             options: {
                 dest: '<%= config.dist %>',
                 staging: '<%= config.tmp %>'
@@ -246,7 +246,7 @@ module.exports = function(grunt) {
 
         // Performs rewrites based on rev and the useminPrepare configuration
         usemin: {
-            html: ['<%= config.dist %>/{,*/}*.html', '<%= config.dist %>/{,*/}*.jsp'],
+            html: ['<%= config.dist %>/{,*/}*.html', '<%= config.dist %>/{,*/}*.jsp', '<%= config.dist %>/pubapp/showcase/index.html'],
             css: ['<%= config.dist %>/{,*/}*.css'],
             js: ['<%= config.dist %>/{,*/}*.js'],
             options: {
@@ -294,19 +294,20 @@ module.exports = function(grunt) {
                     removeStyleLinkTypeAttributes: true
                 },
                 usemin: 'app/app.main.js',
-                url: function(url) {
-                    return '/' + url;
-                }
+                prefix: '/'
             },
             main: {
                 cwd: '<%= config.client %>',
                 src: ['{app,components}/**/*.html'],
                 dest: '<%= config.tmp %>/templates.js'
             },
-            tmp: {
-                cwd: '<%= config.tmp %>',
+            showcase: {
+                cwd: '<%= config.client %>',
                 src: ['{app,components}/**/*.html'],
-                dest: '<%= config.tmp %>/tmp-templates.js'
+                dest: '<%= config.tmp %>/templates_showcase.js',
+                options: {
+                    usemin: 'app/showcase.js'
+                }
             }
         },
 

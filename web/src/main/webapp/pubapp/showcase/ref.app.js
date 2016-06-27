@@ -17,8 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* global window */
+
 (function() {
     'use strict';
+
+    $.get('/api/user').then(function() {
+
+    }, function(error) {
+        if (error.status === 403) {
+            window.location = 'login.html';
+        }
+    });
 
 
     // --- end test hooks
