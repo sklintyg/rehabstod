@@ -119,6 +119,8 @@
     rehabApp.run(['$rootScope', 'messageService',
         function($rootScope, messageService) {
 
+            rhsMessages.sv['showcase.tooltip'] = 'här visas  tooltiptexten'; // jshint ignore:line
+
             messageService.addResources(rhsMessages);// jshint ignore:line
 
             $rootScope.lang = 'sv';
