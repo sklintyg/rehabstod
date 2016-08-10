@@ -16,17 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('rehabstodApp')
-    .config(function($stateProvider) {
+angular.module('rehabstodApp').directive('sendFeedback',
+    /** @ngInject */
+    function () {
         'use strict';
-        //This is the App's root that uses index.html as template
-        $stateProvider
-            .state('app', {
-                views: {
-                    'app@': { templateUrl: 'app/app.html', controller: 'AppPageCtrl'},
-                    'header@': { templateUrl: 'app/header/header.html', controller: 'HeaderController' },
-                    'navbar@': { templateUrl: 'app/navbar/navbar.html', controller: 'NavbarCtrl' },
-                    'footer@': { templateUrl: 'app/footer/footer.html' }
-                }
-            });
+
+        return {
+            restrict: 'E',
+            scope: {
+            },
+            templateUrl: 'components/appDirectives/sendFeedback/sendFeedback.html'
+        };
     });

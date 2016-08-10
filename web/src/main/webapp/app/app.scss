@@ -340,6 +340,7 @@ input[type=search]::-ms-clear {
 @import 'print.scss';
 @import 'sjukfall/result/result.page.scss';
 @import 'vendor-override.scss';
+@import 'appDirectives/sendFeedback/sendFeedback.scss';
 @import 'appDirectives/sjukfall/rhsExport/rhsExport.scss';
 @import 'appDirectives/sjukfall/rhsFilter/rhsFilter.scss';
 @import 'appDirectives/sjukfall/rhsSettings/rhsSettings.scss';
