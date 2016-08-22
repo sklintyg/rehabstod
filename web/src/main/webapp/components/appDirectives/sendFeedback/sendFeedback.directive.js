@@ -25,6 +25,6 @@ angular.module('rehabstodApp').directive('sendFeedback',
             restrict: 'E',
             scope: {
             },
-            templateUrl: 'components/appDirectives/sendFeedback/sendFeedback.html'
+            templateUrl: '/components/appDirectives/sendFeedback/sendFeedback.html'
         };
     });
