@@ -291,14 +291,14 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hosPerson5.setFullstandigtNamn("Eva Holgersson");
         HsaId hsaId5 = new HsaId();
         hsaId5.setExtension("eva");
-        hosPerson5.setPersonalId(hsaId4);
+        hosPerson5.setPersonalId(hsaId5);
 
         HosPersonal hosPerson6 = new HosPersonal();
         hosPerson6.setEnhet(underenhet2);
         hosPerson6.setFullstandigtNamn("Eva Holgersson");
         HsaId hsaId6 = new HsaId();
         hsaId6.setExtension("eva");
-        hosPerson6.setPersonalId(hsaId4);
+        hosPerson6.setPersonalId(hsaId6);
 
 
         hosPersonList.add(hosPerson1);
