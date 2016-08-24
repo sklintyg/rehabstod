@@ -243,14 +243,14 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         underenhet1 = new Enhet();
         HsaId hsaId3 = new HsaId();
         hsaId3.setExtension("dialys");
-        underenhet1.setEnhetsId(hsaId);
+        underenhet1.setEnhetsId(hsaId3);
         underenhet1.setEnhetsnamn("Dialys");
         underenhet1.setVardgivare(vg2);
 
         underenhet2 = new Enhet();
         HsaId hsaId4 = new HsaId();
         hsaId4.setExtension("akuten");
-        underenhet2.setEnhetsId(hsaId);
+        underenhet2.setEnhetsId(hsaId4);
         underenhet2.setEnhetsnamn("Akuten");
         underenhet2.setVardgivare(vg2);
     }
@@ -319,9 +319,9 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
     private void initFakedVardgivare2() {
         vg2 = new Vardgivare();
-        HsaId hsaId = new HsaId();
-        hsaId.setExtension("vastmanland");
-        vg2.setVardgivarId(hsaId);
+        HsaId hsaId2 = new HsaId();
+        hsaId2.setExtension("vastmanland");
+        vg2.setVardgivarId(hsaId2);
         vg2.setVardgivarnamn("Landstinget Västmanland");
     }
 
