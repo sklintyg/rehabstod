@@ -32,6 +32,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-01-29.
@@ -62,7 +63,9 @@ public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitRespond
         resp.setResultCode(ResultCodeEnum.OK);
 
         IntygsLista intygsLista = new IntygsLista();
-        intygsLista.getIntygsData().addAll(intygsData);
+        intygsLista.getIntygsData().addAll(intygsData.stream()
+                .filter(id -> id.getSkapadAv().getEnhet().getEnhetsId().getExtension().equals(parameters.getEnhetsId().getExtension()))
+                .collect(Collectors.toList()));
         resp.setIntygsLista(intygsLista);
         return resp;
     }

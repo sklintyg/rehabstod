@@ -236,7 +236,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         enhet2 = new Enhet();
         HsaId hsaId2 = new HsaId();
         hsaId2.setExtension("centrum-vast");
-        enhet2.setEnhetsId(hsaId);
+        enhet2.setEnhetsId(hsaId2);
         enhet2.setEnhetsnamn("Centrum Väst");
         enhet2.setVardgivare(vg2);
 
