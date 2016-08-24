@@ -19,6 +19,9 @@
 
 package se.inera.intyg.rehabstod.auth;
 
+import se.inera.intyg.common.integration.hsa.model.Mottagning;
+import se.inera.intyg.common.integration.hsa.model.Vardenhet;
+import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.security.common.model.IntygUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
@@ -129,6 +132,31 @@ public class RehabstodUser extends IntygUser implements Serializable {
         }
 
         // No other case allowed
+        return false;
+    }
+
+    /**
+     * If the currently selected vardenhet is not null and is an underenhet/mottagning, this method returns true.
+     *
+     * @return true if UE, false if not.
+     */
+    public boolean isValdVardenhetMottagning() {
+        if (valdVardenhet == null) {
+            return false;
+        }
+
+        for (Vardgivare vg : vardgivare) {
+            for (Vardenhet ve : vg.getVardenheter()) {
+                if (ve.getId().equals(valdVardenhet.getId())) {
+                    return false;
+                }
+                for (Mottagning m : ve.getMottagningar()) {
+                    if (m.getId().equals(valdVardenhet.getId())) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 

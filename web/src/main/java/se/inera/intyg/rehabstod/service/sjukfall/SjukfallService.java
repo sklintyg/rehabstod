@@ -18,20 +18,29 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.util.List;
-
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+
+import java.util.List;
 
 /**
  * Created by eriklupander on 2016-02-01.
  */
 public interface SjukfallService {
 
-    List<InternalSjukfall> getSjukfall(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request);
+    /**
+     * The 'enhetsId' is _always_ the ID of the Vardenhet we want to query IT with regardless of whether the currently
+     * selected RehabstodUser#valdVardenhet is a Vardenhet or a Mottagning. 'mottagningsId' is always null if the selected
+     * RehabstodUser#valdVardenhet is a Vardenhet.
+     *
+     * This method will always fetch all ongoing sjukfall for the specified Vardenhet from IT, but if there is a mottagningsId
+     * specified, we'll perform filtering on our side so only Sjukfall originating from the specified mottagningsId are
+     * included in the response.
+     */
+    List<InternalSjukfall> getSjukfall(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request);
 
-    SjukfallSummary getSummary(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request);
+    SjukfallSummary getSummary(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request);
 
 }

@@ -18,16 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-
 import com.itextpdf.text.DocumentException;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -65,6 +55,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -121,7 +122,7 @@ public class SjukfallControllerTest {
         // When
         mockStatic(PDLActivityStore.class);
         when(PDLActivityStore.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(result), eq(ActivityType.READ), eq(storedActivities))).thenReturn(toLog);
-        when(sjukfallService.getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(result);
+        when(sjukfallService.getSjukfall(eq(VARDENHETS_ID), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(result);
 
         // Then
         List<Sjukfall> response = sjukfallController.getSjukfallForCareUnit(request);
@@ -130,7 +131,7 @@ public class SjukfallControllerTest {
         verifyStatic();
         PDLActivityStore.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(result), eq(ActivityType.READ), eq(storedActivities));
 
-        verify(sjukfallService).getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
+        verify(sjukfallService).getSjukfall(eq(VARDENHETS_ID), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
         verify(logserviceMock).logSjukfallData(eq(toLog), eq(ActivityType.READ));
     }
 
@@ -157,7 +158,7 @@ public class SjukfallControllerTest {
         PDLActivityStore.addActivitiesToStore(eq(VARDENHETS_ID), eq(toLog), eq(ActivityType.PRINT), eq(storedActivities));
         when(PDLActivityStore.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(finalList), eq(ActivityType.PRINT), eq(storedActivities))).thenReturn(toLog);
 
-        when(sjukfallService.getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(allSjukFall);
+        when(sjukfallService.getSjukfall(eq(VARDENHETS_ID), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(allSjukFall);
         when(pdfExportService.export(eq(finalList), eq(request), eq(rehabUserMock), eq(allSjukFall.size()))).thenReturn(new byte[0]);
 
         // Then
@@ -169,7 +170,7 @@ public class SjukfallControllerTest {
         verifyStatic();
         PDLActivityStore.getActivitiesNotInStore(eq(VARDENHETS_ID), eq(finalList), eq(ActivityType.PRINT), eq(storedActivities));
 
-        verify(sjukfallService).getSjukfall(eq(VARDENHETS_ID), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
+        verify(sjukfallService).getSjukfall(eq(VARDENHETS_ID), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
         verify(logserviceMock).logSjukfallData(eq(toLog), eq(ActivityType.PRINT));
 
         assertTrue(response.getStatusCode().equals(HttpStatus.OK));

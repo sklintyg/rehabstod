@@ -57,8 +57,8 @@ public class SjukfallServiceImpl implements SjukfallService {
     private MonitoringLogService monitoringLogService;
 
     @Override
-    public List<InternalSjukfall> getSjukfall(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request) {
-        List<InternalSjukfall> sjukfallList = getFilteredSjukfallList(enhetsId, hsaId, urval, request);
+    public List<InternalSjukfall> getSjukfall(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request) {
+        List<InternalSjukfall> sjukfallList = getFilteredSjukfallList(enhetsId, mottagningsId, hsaId, urval, request);
         if (sjukfallList != null) {
             monitoringLogService.logUserViewedSjukfall(hsaId, sjukfallList.size(), enhetsId);
         }
@@ -66,11 +66,11 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     @Override
-    public SjukfallSummary getSummary(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request) {
-        return statisticsCalculator.getSjukfallSummary(getFilteredSjukfallList(enhetsId, hsaId, urval, request));
+    public SjukfallSummary getSummary(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request) {
+        return statisticsCalculator.getSjukfallSummary(getFilteredSjukfallList(enhetsId, mottagningsId, hsaId, urval, request));
     }
 
-    private List<InternalSjukfall> getFilteredSjukfallList(String enhetsId, String hsaId, Urval urval, GetSjukfallRequest request) {
+    private List<InternalSjukfall> getFilteredSjukfallList(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request) {
 
         if (urval == null) {
             throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");
@@ -86,6 +86,13 @@ public class SjukfallServiceImpl implements SjukfallService {
             LOG.debug("Filtering response - a doctor shall only see patients 'sjukfall' he/she has issued certificates.");
             internalSjukfall = internalSjukfall.stream()
                     .filter(o -> o.getSjukfall().getLakare().getHsaId().equals(hsaId))
+                    .collect(Collectors.toList());
+        }
+
+        if (mottagningsId != null) {
+            LOG.debug("Filtering response - query for mottagning, only including 'sjukfall' with active intyg on specified mottagning");
+            internalSjukfall = internalSjukfall.stream()
+                    .filter(o -> o.getVardEnhetId().equals(mottagningsId))
                     .collect(Collectors.toList());
         }
         return internalSjukfall;

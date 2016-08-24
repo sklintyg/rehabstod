@@ -60,8 +60,9 @@ public class SjukfallServiceTest {
     // CHECKSTYLE:OFF MagicNumber
 
     private final String enhetsId = "IFV1239877878-1042";
+    private final String mottagningsId = "mottagning-1";
     private final String lakareId1 = "IFV1239877878-1049";
-    private final String lakareNamn1 = "Jan Nilssom";
+    private final String lakareNamn1 = "Jan Nilsson";
     private final String lakareId2 = "IFV1239877878-104B";
     private final String lakareNamn2 = "Åsa Andersson";
 
@@ -96,12 +97,12 @@ public class SjukfallServiceTest {
     @Test
     public void testWhenNoUrvalSet() {
         thrown.expect(IllegalArgumentException.class);
-        testee.getSjukfall(enhetsId, "", null, getSjukfallRequest(intygsGlapp, activeDate));
+        testee.getSjukfall(enhetsId, null, "", null, getSjukfallRequest(intygsGlapp, activeDate));
     }
 
     @Test
     public void testWhenUrvalIsAll() {
-        List<InternalSjukfall> internalSjukfallList = testee.getSjukfall(enhetsId, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
+        List<InternalSjukfall> internalSjukfallList = testee.getSjukfall(enhetsId, null, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
@@ -109,8 +110,17 @@ public class SjukfallServiceTest {
     }
 
     @Test
+    public void testWhenUrvalIsAllForUnderenhet() {
+        List<InternalSjukfall> internalSjukfallList = testee.getSjukfall(enhetsId, mottagningsId, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
+
+        verify(integrationService).getIntygsDataForCareUnit(enhetsId);
+
+        assertTrue("Expected 7 but was " + internalSjukfallList.size(), internalSjukfallList.size() == 7);
+    }
+
+    @Test
     public void testWhenUrvalIsIssuedByMe() {
-        List<InternalSjukfall> internalSjukfallList = testee.getSjukfall(enhetsId, lakareId1, Urval.ISSUED_BY_ME,
+        List<InternalSjukfall> internalSjukfallList = testee.getSjukfall(enhetsId, null, lakareId1, Urval.ISSUED_BY_ME,
                 getSjukfallRequest(intygsGlapp, activeDate));
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
@@ -126,7 +136,17 @@ public class SjukfallServiceTest {
 
     @Test
     public void testGetSjukfallSummary() {
-        testee.getSummary(enhetsId, lakareId1, Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
+        testee.getSummary(enhetsId, null, lakareId1, Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
+
+        verify(integrationService).getIntygsDataForCareUnit(enhetsId);
+        verify(statisticsCalculator).getSjukfallSummary(anyListOf(InternalSjukfall.class));
+
+    }
+
+    @Test
+    public void testGetSjukfallSummaryWhenSelectedVardenhetIsMottagning() {
+
+        testee.getSummary(enhetsId, mottagningsId, lakareId1, Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
         verify(statisticsCalculator).getSjukfallSummary(anyListOf(InternalSjukfall.class));
@@ -144,26 +164,26 @@ public class SjukfallServiceTest {
     private List<InternalSjukfall> createInternalSjukfallList() {
         List<InternalSjukfall> internalSjukfallList = new ArrayList<>();
 
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
 
         return internalSjukfallList;
     }
 
-    private InternalSjukfall createInternalSjukfall(String lakareId, String lakareNamn) {
+    private InternalSjukfall createInternalSjukfall(String lakareId, String lakareNamn, String enhetsId) {
         Lakare lakare = new Lakare();
         lakare.setHsaId(lakareId);
         lakare.setNamn(lakareNamn);
@@ -173,7 +193,7 @@ public class SjukfallServiceTest {
 
         InternalSjukfall internalSjukfall = new InternalSjukfall();
         internalSjukfall.setSjukfall(sjukfall);
-
+        internalSjukfall.setVardEnhetId(enhetsId);
         return internalSjukfall;
     }
 

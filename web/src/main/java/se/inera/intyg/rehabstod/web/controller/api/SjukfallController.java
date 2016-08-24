@@ -33,6 +33,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.common.integration.hsa.model.Mottagning;
+import se.inera.intyg.common.integration.hsa.model.Vardenhet;
+import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.common.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -182,19 +185,34 @@ public class SjukfallController {
         RehabstodUser user = getRehabstodUser();
 
         String enhetsId = getEnhetsId(user);
+        String mottagningsId = getMottagningsId(user);
         String hsaId = user.getHsaId();
         Urval urval = user.getDefaultUrval();
 
         GetSjukfallRequest request = new GetSjukfallRequest();
         request.setMaxIntygsGlapp(0);
 
-        return sjukfallService.getSummary(enhetsId, hsaId, urval, request);
+        return sjukfallService.getSummary(enhetsId, mottagningsId, hsaId, urval, request);
     }
 
     // - - - Package scope - - -
 
     String getEnhetsId(RehabstodUser user) {
-        return user.getValdVardenhet().getId();
+        if (user.isValdVardenhetMottagning()) {
+            // Must return PARENT id
+            for (Vardgivare vg : user.getVardgivare()) {
+                for (Vardenhet ve : vg.getVardenheter()) {
+                    for (Mottagning m : ve.getMottagningar()) {
+                        if (m.getId().equals(user.getValdVardenhet().getId())) {
+                            return ve.getId();
+                        }
+                    }
+                }
+            }
+            return null;
+        } else {
+            return user.getValdVardenhet().getId();
+        }
     }
 
     RehabstodUser getRehabstodUser() {
@@ -207,11 +225,19 @@ public class SjukfallController {
 
     List<InternalSjukfall> getSjukfall(RehabstodUser user, GetSjukfallRequest request) {
         String enhetsId = getEnhetsId(user);
+        String mottagningsId = getMottagningsId(user);
         String hsaId = user.getHsaId();
         Urval urval = user.getUrval();
 
         LOG.debug("Calling the 'sjukfall' service to get a list of 'sjukfall' from care unit {}.", enhetsId);
-        return sjukfallService.getSjukfall(enhetsId, hsaId, urval, request);
+        return sjukfallService.getSjukfall(enhetsId, mottagningsId, hsaId, urval, request);
+    }
+
+    private String getMottagningsId(RehabstodUser user) {
+        if (user.isValdVardenhetMottagning()) {
+            return user.getValdVardenhet().getId();
+        }
+        return null;
     }
 
     void logSjukfallData(RehabstodUser user, List<InternalSjukfall> sjukfallList, ActivityType activityType) {
