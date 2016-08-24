@@ -60,7 +60,11 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private Queue<Patient> seededPatients = new LinkedList<>();
 
     private Enhet enhet;
+    private Enhet enhet2;
+    private Enhet underenhet1;
+    private Enhet underenhet2;
     private Vardgivare vg;
+    private Vardgivare vg2;
 
     private int currentDiagnosIndex = 0;
     private List<String> diagnosList = new ArrayList<>();
@@ -219,7 +223,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     }
 
     private void initEnhet() {
-        initFakedVardgivare();
+        initFakedVardgivare1();
+        initFakedVardgivare2();
 
         enhet = new Enhet();
         HsaId hsaId = new HsaId();
@@ -227,6 +232,27 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         enhet.setEnhetsId(hsaId);
         enhet.setEnhetsnamn("Rehabstöd Enhet ");
         enhet.setVardgivare(vg);
+
+        enhet2 = new Enhet();
+        HsaId hsaId2 = new HsaId();
+        hsaId2.setExtension("centrum-vast");
+        enhet2.setEnhetsId(hsaId);
+        enhet2.setEnhetsnamn("Centrum Väst");
+        enhet2.setVardgivare(vg2);
+
+        underenhet1 = new Enhet();
+        HsaId hsaId3 = new HsaId();
+        hsaId3.setExtension("dialys");
+        underenhet1.setEnhetsId(hsaId);
+        underenhet1.setEnhetsnamn("Dialys");
+        underenhet1.setVardgivare(vg2);
+
+        underenhet2 = new Enhet();
+        HsaId hsaId4 = new HsaId();
+        hsaId4.setExtension("akuten");
+        underenhet2.setEnhetsId(hsaId);
+        underenhet2.setEnhetsnamn("Akuten");
+        underenhet2.setVardgivare(vg2);
     }
 
     private void initHoSPerson() {
@@ -253,18 +279,50 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hsaId3.setExtension("TSTNMT2321000156-105T");
         hosPerson3.setPersonalId(hsaId3);
 
+        HosPersonal hosPerson4 = new HosPersonal();
+        hosPerson4.setEnhet(enhet2);
+        hosPerson4.setFullstandigtNamn("Eva Holgersson");
+        HsaId hsaId4 = new HsaId();
+        hsaId4.setExtension("eva");
+        hosPerson4.setPersonalId(hsaId4);
+
+        HosPersonal hosPerson5 = new HosPersonal();
+        hosPerson5.setEnhet(underenhet1);
+        hosPerson5.setFullstandigtNamn("Eva Holgersson");
+        HsaId hsaId5 = new HsaId();
+        hsaId5.setExtension("eva");
+        hosPerson5.setPersonalId(hsaId4);
+
+        HosPersonal hosPerson6 = new HosPersonal();
+        hosPerson6.setEnhet(underenhet2);
+        hosPerson6.setFullstandigtNamn("Eva Holgersson");
+        HsaId hsaId6 = new HsaId();
+        hsaId6.setExtension("eva");
+        hosPerson6.setPersonalId(hsaId4);
+
+
         hosPersonList.add(hosPerson1);
         hosPersonList.add(hosPerson2);
         hosPersonList.add(hosPerson3);
+        hosPersonList.add(hosPerson4);
+        hosPersonList.add(hosPerson5);
+        hosPersonList.add(hosPerson6);
     }
 
-    private void initFakedVardgivare() {
+    private void initFakedVardgivare1() {
         vg = new Vardgivare();
         HsaId hsaId = new HsaId();
         hsaId.setExtension("TSTNMT2321000156-105M");
         vg.setVardgivarId(hsaId);
         vg.setVardgivarnamn("Rehabstöd Vårdgivare 1");
+    }
 
+    private void initFakedVardgivare2() {
+        vg2 = new Vardgivare();
+        HsaId hsaId = new HsaId();
+        hsaId.setExtension("vastmanland");
+        vg2.setVardgivarId(hsaId);
+        vg2.setVardgivarnamn("Landstinget Västmanland");
     }
 
 }
