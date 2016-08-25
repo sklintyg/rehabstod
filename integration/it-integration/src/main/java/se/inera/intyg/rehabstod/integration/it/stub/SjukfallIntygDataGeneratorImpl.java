@@ -57,6 +57,11 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
 
+    public static final String VE_TSTNMT2321000156_105_N = "TSTNMT2321000156-105N";
+    public static final String VE_CENTRUM_VAST = "centrum-vast";
+    public static final String UE_AKUTEN = "akuten";
+    public static final String UE_DIALYS = "dialys";
+
     private Queue<Patient> seededPatients = new LinkedList<>();
 
     private Enhet enhet;
@@ -125,6 +130,17 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         }
         LOG.info("Generated {0} intygsData items for stub", intygsDataList.size());
         return intygsDataList;
+    }
+
+    @Override
+    public List<String> getUnderenheterHsaIds(String enhetId) {
+        List<String> ids = new ArrayList<>();
+        // This is incredibly stupid...
+        if (enhetId.equals(VE_CENTRUM_VAST)) {
+            ids.add(UE_AKUTEN);
+            ids.add(UE_DIALYS);
+        }
+        return ids;
     }
 
     private HosPersonal nextHosPerson() {
@@ -228,28 +244,28 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
         enhet = new Enhet();
         HsaId hsaId = new HsaId();
-        hsaId.setExtension("TSTNMT2321000156-105N");
+        hsaId.setExtension(VE_TSTNMT2321000156_105_N);
         enhet.setEnhetsId(hsaId);
         enhet.setEnhetsnamn("Rehabstöd Enhet ");
         enhet.setVardgivare(vg);
 
         enhet2 = new Enhet();
         HsaId hsaId2 = new HsaId();
-        hsaId2.setExtension("centrum-vast");
+        hsaId2.setExtension(VE_CENTRUM_VAST);
         enhet2.setEnhetsId(hsaId2);
         enhet2.setEnhetsnamn("Centrum Väst");
         enhet2.setVardgivare(vg2);
 
         underenhet1 = new Enhet();
         HsaId hsaId3 = new HsaId();
-        hsaId3.setExtension("dialys");
+        hsaId3.setExtension(UE_DIALYS);
         underenhet1.setEnhetsId(hsaId3);
         underenhet1.setEnhetsnamn("Dialys");
         underenhet1.setVardgivare(vg2);
 
         underenhet2 = new Enhet();
         HsaId hsaId4 = new HsaId();
-        hsaId4.setExtension("akuten");
+        hsaId4.setExtension(UE_AKUTEN);
         underenhet2.setEnhetsId(hsaId4);
         underenhet2.setEnhetsnamn("Akuten");
         underenhet2.setVardgivare(vg2);

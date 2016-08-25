@@ -62,9 +62,12 @@ public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitRespond
         ListActiveSickLeavesForCareUnitResponseType resp = new ListActiveSickLeavesForCareUnitResponseType();
         resp.setResultCode(ResultCodeEnum.OK);
 
+        List<String> enhetIds = sjukfallIntygDataGenerator.getUnderenheterHsaIds(parameters.getEnhetsId().getExtension());
+        enhetIds.add(parameters.getEnhetsId().getExtension());
+
         IntygsLista intygsLista = new IntygsLista();
         intygsLista.getIntygsData().addAll(intygsData.stream()
-                .filter(id -> id.getSkapadAv().getEnhet().getEnhetsId().getExtension().equals(parameters.getEnhetsId().getExtension()))
+                .filter(id -> enhetIds.contains(id.getSkapadAv().getEnhet().getEnhetsId().getExtension()))
                 .collect(Collectors.toList()));
         resp.setIntygsLista(intygsLista);
         return resp;
