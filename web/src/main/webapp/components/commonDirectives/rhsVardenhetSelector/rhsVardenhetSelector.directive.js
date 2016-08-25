@@ -24,11 +24,28 @@ angular.module('rehabstodApp').directive('rhsVardenhetSelector', function() {
         restrict: 'E',
         scope: {
             'user': '=',
-            'onUnitSelection': '&'
+            'onUnitSelection': '&',
+            'expandAll': '='
         },
         templateUrl: '/components/commonDirectives/rhsVardenhetSelector/rhsVardenhetSelector.directive.html',
         link: function($scope) {
 
+            if (angular.isArray($scope.user.vardgivare)) {
+                // Always have first vardgivare initially expanded
+                $scope.user.vardgivare[0].expanded = true;
+                if ($scope.expandAll) {
+                    angular.forEach($scope.user.vardgivare, function(vg) {
+                        vg.expanded = true;
+                        angular.forEach(vg.vardenheter, function(enhet) {
+                            enhet.expanded = true;
+
+                        });
+                    });
+                }
+            }
+
+
+            //Report user selection back to user of directive
             $scope.itemSelected = function(unit) {
                 $scope.onUnitSelection({
                     enhet: unit

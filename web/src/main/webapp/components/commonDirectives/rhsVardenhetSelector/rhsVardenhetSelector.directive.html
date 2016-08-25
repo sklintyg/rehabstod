@@ -1,31 +1,33 @@
 <div class="rhs-vardenhet-selector">
   <div ng-repeat="vg in user.vardgivare | orderBy:'namn'">
     <strong>{{vg.namn}}</strong>
-       <span class="toggle-icon" id="expand-vg-{{vg.id}}" ng-if="vg.vardenheter.length > 0" ng-click="vg.showenheter = ! vg.showenheter">
-              <span class="glyphicon" ng-class="vg.showenheter ? 'glyphicon-minus-sign' : 'glyphicon-plus-sign'"></span>
+       <span class="toggle-icon" id="expand-vg-{{vg.id}}" ng-if="vg.vardenheter.length > 0" ng-click="vg.expanded = ! vg.expanded">
+              <span class="glyphicon" ng-class="vg.expanded ? 'glyphicon-minus-sign' : 'glyphicon-plus-sign'"></span>
        </span>
-    <div ng-if="vg.showenheter" ng-repeat="enhet in vg.vardenheter | orderBy:'namn'">
+    <div ng-if="vg.expanded" ng-repeat="enhet in vg.vardenheter | orderBy:'namn'">
+
 
       <div ng-if="enhet.id == user.valdVardenhet.id">
             <span class="btn btn-link disabled enhet">
               {{enhet.namn}}
             </span>
-            <span class="toggle-icon" id="expand-disabled-enhet-{{enhet.id}}" ng-if="enhet.mottagningar.length > 0" ng-click="enhet.showMottagning = ! enhet.showMottagning">
-              <span class="glyphicon" ng-class="enhet.showMottagning ? 'glyphicon-minus-sign' : 'glyphicon-plus-sign'">
-              </span>
-            </span>
-      </div>
-      <div ng-if="enhet.id != user.valdVardenhet.id">
-        <button id="rhs-vardenhet-selector-select-active-unit-{{enhet.id}}-link" class="btn btn-link enhet" data-ng-click="itemSelected(enhet)">
-          {{enhet.namn}}
-        </button>
-            <span class="toggle-icon" id="expand-enhet-{{enhet.id}}" ng-if="enhet.mottagningar.length > 0" ng-click="enhet.showMottagning = ! enhet.showMottagning">
-              <span class="glyphicon" ng-class="enhet.showMottagning ? 'glyphicon-minus-sign' : 'glyphicon-plus-sign'">
+            <span class="toggle-icon" id="expand-disabled-enhet-{{enhet.id}}" ng-if="enhet.mottagningar.length > 0" ng-click="enhet.expanded = ! enhet.expanded">
+              <span class="glyphicon" ng-class="enhet.expanded ? 'glyphicon-minus-sign' : 'glyphicon-plus-sign'">
               </span>
             </span>
       </div>
 
-      <div ng-if="enhet.showMottagning" ng-repeat="mottagning in enhet.mottagningar | orderBy:'namn'">
+      <div ng-if="enhet.id != user.valdVardenhet.id">
+        <button id="rhs-vardenhet-selector-select-active-unit-{{enhet.id}}-link" class="btn btn-link enhet" data-ng-click="itemSelected(enhet)">
+          {{enhet.namn}}
+        </button>
+            <span class="toggle-icon" id="expand-enhet-{{enhet.id}}" ng-if="enhet.mottagningar.length > 0" ng-click="enhet.expanded = ! enhet.expanded">
+              <span class="glyphicon" ng-class="enhet.expanded ? 'glyphicon-minus-sign' : 'glyphicon-plus-sign'">
+              </span>
+            </span>
+      </div>
+
+      <div ng-if="enhet.expanded" ng-repeat="mottagning in enhet.mottagningar | orderBy:'namn'">
         <div ng-if="mottagning.id != user.valdVardenhet.id">
           <button id="rhs-vardenhet-selector-select-active-unit-{{mottagning.id}}-link" class="btn btn-link mottagning" data-ng-click="itemSelected(mottagning)">
             {{mottagning.namn}}
