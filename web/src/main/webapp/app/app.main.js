@@ -117,9 +117,15 @@ app.run(
 
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState/*, fromParams*/) {
-                //$log.debug('$stateChangeStart: ' + fromState.name + ' to ' + toState.name);
+                $log.debug('$stateChangeStart: from "' + fromState.name + '" to "' + toState.name + '"');
 
-                if (toState.data && angular.isFunction(toState.data.rule)) {
+                var user = UserModel.get();
+                if (user.valdVardenhet === null && toState.name!=='appselectunit') {
+                    event.preventDefault();
+                    $log.debug('No vardenhet selected - redirecting to selection page!');
+
+                    $state.go('appselectunit', {},  {location: false});
+                } else if (toState.data && angular.isFunction(toState.data.rule)) {
                     var result = toState.data.rule(fromState, toState, UserModel);
                     if (result && result.to) {
                         event.preventDefault();

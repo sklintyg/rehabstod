@@ -43,7 +43,6 @@ public class UserController {
     @Autowired
     UserService userService;
 
-
     // api
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -64,7 +63,7 @@ public class UserController {
         RehabstodUser user = getRehabstodUser();
 
         LOG.debug("Attempting to change selected unit for user '{}', currently selected unit is '{}'", user.getHsaId(),
-                user.getValdVardenhet().getId());
+                user.getValdVardenhet() != null ? user.getValdVardenhet().getId() : "<null>");
 
         boolean changeSuccess = user.changeValdVardenhet(changeSelectedEnhetRequest.getId());
 
@@ -94,7 +93,6 @@ public class UserController {
         return new GetUserResponse(user);
     }
 
-
     // private scope
 
     private RehabstodUser getRehabstodUser() {
@@ -106,6 +104,5 @@ public class UserController {
 
         return user;
     }
-
 
 }
