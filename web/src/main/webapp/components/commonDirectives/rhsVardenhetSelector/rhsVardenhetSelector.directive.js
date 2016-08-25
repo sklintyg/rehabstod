@@ -25,21 +25,16 @@ angular.module('rehabstodApp').directive('rhsVardenhetSelector', function() {
         scope: {
             'user': '=',
             'onUnitSelection': '&',
-            'expandAll': '='
+            'expandVardgivare': '='
         },
         templateUrl: '/components/commonDirectives/rhsVardenhetSelector/rhsVardenhetSelector.directive.html',
         link: function($scope) {
 
             if (angular.isArray($scope.user.vardgivare)) {
-                // Always have first vardgivare initially expanded
-                $scope.user.vardgivare[0].expanded = true;
-                if ($scope.expandAll) {
+
+                if ($scope.expandVardgivare) {
                     angular.forEach($scope.user.vardgivare, function(vg) {
                         vg.expanded = true;
-                        angular.forEach(vg.vardenheter, function(enhet) {
-                            enhet.expanded = true;
-
-                        });
                     });
                 }
             }

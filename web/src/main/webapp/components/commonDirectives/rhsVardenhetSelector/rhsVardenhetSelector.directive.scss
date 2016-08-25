@@ -7,11 +7,13 @@
     color: #111111;
     cursor: pointer
   }
-  .btn.enhet {
-    margin-left: 30px;
+  .enhet {
+    margin-left: 20px;
   }
-  .btn.mottagning {
+  .mottagning {
     margin-left: 60px;
   }
-
+  .glyphicon-hide {
+    color: transparent;
+  }
 }
