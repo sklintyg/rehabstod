@@ -55,6 +55,8 @@ public abstract class BaseRestIntegrationTest {
     protected CustomObjectMapper objectMapper = new CustomObjectMapper();
 
     protected static final String USER_API_ENDPOINT = "api/user";
+    protected static final String SJUKFALLSUMMARY_API_ENDPOINT = "/api/sjukfall/summary";
+
 
     /**
      * Common setup for all tests.

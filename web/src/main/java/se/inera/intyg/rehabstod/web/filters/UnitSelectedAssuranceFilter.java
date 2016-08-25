@@ -52,7 +52,6 @@ public class UnitSelectedAssuranceFilter extends OncePerRequestFilter {
         if (ignoredUrls == null) {
             LOG.warn("No ignored Urls are configured!");
         } else {
-
             ignoredUrlsList = Arrays.asList(ignoredUrls.split(","));
             LOG.info("Configured ignored urls as:" + ignoredUrlsList.stream().map(Object::toString).collect(Collectors.joining(", ")));
         }

@@ -52,6 +52,24 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
     }
 
     @Test
+    public void testAccessApiWithoutValdVardgivare() {
+        FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("eva",
+                "centrum-vast").lakare(true).build();
+        RestAssured.sessionId = getAuthSession(user);
+
+        //Ingen vardgivare skall vara vald som default eftersom denna user har flera att välja på.
+        given().expect().statusCode(OK).when().get(USER_API_ENDPOINT).
+                then().
+                body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
+                body("hsaId", equalTo("eva")).
+                body("valdVardgivare", equalTo(null)).
+                body("valdVardenhet", equalTo(null));
+
+        //Man skall nu heller inte få gå mot apiet(med vissa undantag) utan att ha någon vardenhet vald
+        given().expect().statusCode(SERVER_ERROR).when().get(SJUKFALLSUMMARY_API_ENDPOINT);
+    }
+
+    @Test
     public void testGetAnvandareNotLoggedIn() {
         RestAssured.sessionId = null;
         given().expect().statusCode(FORBIDDEN).when().get(USER_API_ENDPOINT);

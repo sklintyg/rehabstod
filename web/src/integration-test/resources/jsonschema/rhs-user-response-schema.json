@@ -81,7 +81,7 @@
           "type" : ["string", "null"]
         }
       },
-      "type": "object"
+      "type": ["object", "null"]
     },
     "valdVardgivare": {
       "additionalProperties": false,
@@ -102,7 +102,7 @@
           "type": "array"
         }
       },
-      "type": "object"
+      "type": ["object", "null"]
     },
 
     "totaltAntalVardenheter": {
