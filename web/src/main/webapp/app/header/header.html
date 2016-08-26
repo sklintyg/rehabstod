@@ -4,7 +4,7 @@
       <span class="headerbox-logo pull-left">
         <img alt="Logotyp för Rehabstöd" src="/assets/images/logo.png" /></span>
       <span class="headerbox-date pull-left">
-        <span id="location" class="location">{{today | date:"shortDate"}} - {{user.valdVardgivare.namn}} - {{user.valdVardenhet.namn}}</span>
+        <span id="location" class="location">{{today | date:"shortDate"}} - {{getUnitContext()}}</span>
         <br>
         <a id="rhs-header-other-locations" href="javascript:void(0)" class="otherLocations" ng-show="user.totaltAntalVardenheter > 1" data-ng-click="openChangeCareUnitDialog()">Byt vårdenhet</a>
 

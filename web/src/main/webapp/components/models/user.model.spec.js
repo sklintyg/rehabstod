@@ -48,7 +48,21 @@ describe('Model: UserModel', function() {
                 arbetsplatskod: '1234567890',
                 start: null,
                 end: null,
-                mottagningar: []
+                mottagningar: [{
+                    '@class':'se.inera.intyg.common.integration.hsa.model.Mottagning',
+                    'id':'mottagning 1',
+                    'namn':'mottagning 1',
+                    'epost':null,
+                    'postadress':'',
+                    'postnummer':null,
+                    'postort':null,
+                    'telefonnummer':'',
+                    'arbetsplatskod':null,
+                    'agandeForm':'OFFENTLIG',
+                    'start':null,
+                    'end':null,
+                    'parentHsaId':'IFV1239877878-1042'
+                }]
             }]
         }],
         'befattningar': [],
@@ -86,7 +100,7 @@ describe('Model: UserModel', function() {
             }]
         },
         'roles': {'LAKARE': {'name': 'LAKARE', 'desc': 'Läkare', 'privileges': []}},
-        'totaltAntalVardenheter': 1
+        'totaltAntalVardenheter': 2
     };
 
     // Initialize the controller and a mock scope
@@ -112,6 +126,20 @@ describe('Model: UserModel', function() {
             UserModel.setUrval('ALL');
             expect(UserModel.get().urval).toEqual('ALL');
             expect(UserModel.isUrvalSet()).toBeTruthy();
+
+        });
+    });
+
+    describe('test getUnitNameById', function() {
+        it('should handle getUnitNameById', function() {
+            //Arrange
+            UserModel.set(testJsonData);
+
+            //Assert
+            expect(UserModel.getUnitNameById('unknown')).toEqual('');
+            expect(UserModel.getUnitNameById('IFV1239877878-1042')).toEqual('WebCert-Enhet1');
+            expect(UserModel.getUnitNameById('mottagning 1')).toEqual('mottagning 1');
+
 
         });
     });

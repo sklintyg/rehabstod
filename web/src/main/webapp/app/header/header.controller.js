@@ -40,6 +40,23 @@ angular.module('rehabstodApp').controller('HeaderController',
         $scope.showRoleDescription = function(role) {
             return role.name === 'LAKARE';
         };
+        $scope.getUnitContext = function() {
+            var user = UserModel.get();
+            if (user.valdVardenhet) {
+                var vName = user.valdVardgivare.namn;
+                var eName = user.valdVardenhet.namn;
+                var mName = '';
+                //Is valdvardenhet actually a mottagning?
+                if (user.valdVardenhet.parentHsaId) {
+                    eName =  UserModel.getUnitNameById(user.valdVardenhet.parentHsaId);
+                    mName = user.valdVardenhet.namn;
+                }
+                return vName + ' - ' + eName + ((mName.length>0)?' - ' + mName : '');
+            }
+            return '';
+        };
+
+
 
         $scope.openChangeCareUnitDialog = function() {
             var modalInstance = $uibModal.open({

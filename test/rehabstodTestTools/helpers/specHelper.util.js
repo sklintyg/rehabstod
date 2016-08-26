@@ -46,6 +46,13 @@ module.exports = {
         }
 
     },
+    loginToSelectionPage: function(hsaId) {
+        WelcomePage.get();
+        this.waitForAngularTestability();
+        WelcomePage.login(hsaId);
+        this.waitForAngularTestability();
+        expect(SelectUnitPage.isAt()).toBe(true);
+    },
 
     logout: function() {
         element(by.id('logoutLink')).click();

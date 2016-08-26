@@ -90,6 +90,27 @@ angular.module('rehabstodApp').factory('UserModel',
             isLakare: function() {
                 return (ObjectHelper.isDefined(data.role) && data.role.name === 'LAKARE');
             },
+            getUnitNameById: function(id) {
+                var result = '';
+                if (angular.isArray(data.vardgivare)) {
+
+                    angular.forEach(data.vardgivare, function(vg) {
+                        angular.forEach(vg.vardenheter, function(ve) {
+                            if (ve.id === id) {
+                                result = ve.namn;
+                                return;
+                            }
+                            angular.forEach(ve.mottagningar, function(m) {
+                                if (m.id === id) {
+                                    result = m.namn;
+                                    return;
+                                }
+                            });
+                        });
+                    });
+                }
+                return result;
+            },
 
             isUrvalSet: function() {
                 return (ObjectHelper.isDefined(data.urval));

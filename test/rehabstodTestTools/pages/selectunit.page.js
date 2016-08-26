@@ -41,6 +41,9 @@ var RehabstodSelectUnitPageBase = RehabstodBasePage._extend({
     },
     selectUnit: function(hsaId) {
             element(by.id('rhs-vardenhet-selector-select-active-unit-' + hsaId + '-link')).click();
+    },
+    expandUnit: function(hsaId) {
+        element(by.id('expand-enhet-' + hsaId)).click();
     }
 });
 
