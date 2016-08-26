@@ -152,6 +152,7 @@ public class SjukfallServiceTest {
         verify(statisticsCalculator).getSjukfallSummary(anyListOf(InternalSjukfall.class));
 
     }
+
     // - - - Private scope - - -
 
     private GetSjukfallRequest getSjukfallRequest(int maxIntygsGlapp, LocalDate aktivtDatum) {

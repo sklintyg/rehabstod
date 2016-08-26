@@ -116,7 +116,6 @@ public class SjukfallController {
     public void handleExportException(HttpServletRequest request, HttpServletResponse response, RehabExportException ex) throws IOException {
         LOG.error("RehabExportException caught - redirecting to errorpage", ex.getException());
         response.sendRedirect(request.getContextPath() + "/error.jsp?reason=exporterror");
-
     }
 
     @RequestMapping(value = "/pdf", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -184,7 +183,7 @@ public class SjukfallController {
         // Get user from session
         RehabstodUser user = getRehabstodUser();
 
-        String enhetsId = getEnhetsId(user);
+        String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
         String mottagningsId = getMottagningsId(user);
         String hsaId = user.getHsaId();
         Urval urval = user.getDefaultUrval();
@@ -197,9 +196,37 @@ public class SjukfallController {
 
     // - - - Package scope - - -
 
-    String getEnhetsId(RehabstodUser user) {
+    List<InternalSjukfall> getSjukfall(RehabstodUser user, GetSjukfallRequest request) {
+        String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
+        String mottagningsId = getMottagningsId(user);
+        String hsaId = user.getHsaId();
+        Urval urval = user.getUrval();
+
+        LOG.debug("Calling the 'sjukfall' service to get a list of 'sjukfall' from care unit {}.", enhetsId);
+        return sjukfallService.getSjukfall(enhetsId, mottagningsId, hsaId, urval, request);
+    }
+
+    private void logSjukfallData(RehabstodUser user, List<InternalSjukfall> sjukfallList, ActivityType activityType) {
+        String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
+        if (enhetsId == null) {
+            throw new IllegalArgumentException("Cannot create PDL log statements, enhetsId was null");
+        }
+        List<InternalSjukfall> sjukfallToLog = getActivitiesNotInStore(enhetsId, sjukfallList, activityType, user.getStoredActivities());
+        logService.logSjukfallData(sjukfallToLog, activityType);
+        addActivitiesToStore(enhetsId, sjukfallToLog, activityType, user.getStoredActivities());
+    }
+
+    private void addActivitiesToStore(String enhetsId, List<InternalSjukfall> sjukfallToAdd, ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
+        PDLActivityStore.addActivitiesToStore(enhetsId, sjukfallToAdd, activityType, storedActivities);
+    }
+
+    private List<InternalSjukfall> getActivitiesNotInStore(String enhetsId, List<InternalSjukfall> sjukfallList, ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
+        return PDLActivityStore.getActivitiesNotInStore(enhetsId, sjukfallList, activityType, storedActivities);
+    }
+
+    private String getEnhetsIdForQueryingIntygstjansten(RehabstodUser user) {
         if (user.isValdVardenhetMottagning()) {
-            // Must return PARENT id
+            // Must return PARENT id if selected unit is an underenhet aka mottagning.
             for (Vardgivare vg : user.getVardgivare()) {
                 for (Vardenhet ve : vg.getVardenheter()) {
                     for (Mottagning m : ve.getMottagningar()) {
@@ -209,28 +236,18 @@ public class SjukfallController {
                     }
                 }
             }
-            return null;
+            throw new IllegalStateException("User object is in invalid state. Current selected enhet is an underenhet, but no ID for the parent enhet was found.");
         } else {
             return user.getValdVardenhet().getId();
         }
     }
 
-    RehabstodUser getRehabstodUser() {
+    private RehabstodUser getRehabstodUser() {
         RehabstodUser user = userService.getUser();
         if (user == null) {
             throw new AuthoritiesException("No user in session");
         }
         return user;
-    }
-
-    List<InternalSjukfall> getSjukfall(RehabstodUser user, GetSjukfallRequest request) {
-        String enhetsId = getEnhetsId(user);
-        String mottagningsId = getMottagningsId(user);
-        String hsaId = user.getHsaId();
-        Urval urval = user.getUrval();
-
-        LOG.debug("Calling the 'sjukfall' service to get a list of 'sjukfall' from care unit {}.", enhetsId);
-        return sjukfallService.getSjukfall(enhetsId, mottagningsId, hsaId, urval, request);
     }
 
     private String getMottagningsId(RehabstodUser user) {
@@ -239,19 +256,4 @@ public class SjukfallController {
         }
         return null;
     }
-
-    void logSjukfallData(RehabstodUser user, List<InternalSjukfall> sjukfallList, ActivityType activityType) {
-        List<InternalSjukfall> sjukfallToLog = getActivitiesNotInStore(getEnhetsId(user), sjukfallList, activityType, user.getStoredActivities());
-        logService.logSjukfallData(sjukfallToLog, activityType);
-        addActivitiesToStore(getEnhetsId(user), sjukfallToLog, activityType, user.getStoredActivities());
-    }
-
-    void addActivitiesToStore(String enhetsId, List<InternalSjukfall> sjukfallToAdd, ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
-        PDLActivityStore.addActivitiesToStore(enhetsId, sjukfallToAdd, activityType, storedActivities);
-    }
-
-    List<InternalSjukfall> getActivitiesNotInStore(String enhetsId, List<InternalSjukfall> sjukfallList, ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
-        return PDLActivityStore.getActivitiesNotInStore(enhetsId, sjukfallList, activityType, storedActivities);
-    }
-
 }

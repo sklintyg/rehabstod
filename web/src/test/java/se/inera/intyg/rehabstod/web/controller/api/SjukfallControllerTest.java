@@ -75,6 +75,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 public class SjukfallControllerTest {
 
     private static final String VARDENHETS_ID = "123";
+    private static final String MOTTAGNINGS_ID = "654";
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

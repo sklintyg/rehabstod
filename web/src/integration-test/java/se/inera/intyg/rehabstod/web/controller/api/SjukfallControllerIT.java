@@ -29,7 +29,7 @@ import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Basic test suite that verifies that the endpoint (/api/sjukfall) is available
@@ -41,9 +41,9 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
 
     private static final String API_ENDPOINT = "api/sjukfall";
 
-    private static final int EXPECTED_ON_CENTRUM_VAST = 175;
-    private static final int EXPECTED_ON_AKUTEN = 58;
-    private static final int EXPECTED_ON_DIALYSEN = 58;
+//    private static final int EXPECTED_ON_CENTRUM_VAST = 175;
+//    private static final int EXPECTED_ON_AKUTEN = 58;
+//    private static final int EXPECTED_ON_DIALYSEN = 58;
 
     @Test
     public void testGetSjukfallSummaryNotLoggedIn() {
@@ -78,22 +78,21 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testGetSjukfallOnEnhetWithUnderenheter() {
-        testAntalOnEnhet("centrum-vast", EXPECTED_ON_CENTRUM_VAST);
-    }
 
-    @Test
-    public void testGetSjukfallOnUnderenhetAkuten() {
-        testAntalOnEnhet("akuten", EXPECTED_ON_AKUTEN);
-    }
-
-    @Test
-    public void testGetSjukfallOnUnderenhetDialysen() {
-        testAntalOnEnhet("dialys", EXPECTED_ON_DIALYSEN);
-    }
-
-    private void testAntalOnEnhet(String enhetId, int expectedCount) {
         RestAssured.sessionId = getAuthSession(EVA_H_LAKARE);
         changeUrvalTo(Urval.ISSUED_BY_ME);
+
+
+        int centrumVastCount = getAntalOnEnhet("centrum-vast");
+        int akutenCount = getAntalOnEnhet("akuten");
+        int dialysCount = getAntalOnEnhet("dialys");
+
+        assertTrue(akutenCount > 0);
+        assertTrue(dialysCount > 0);
+        assertTrue(akutenCount + dialysCount < centrumVastCount);
+    }
+
+    private int getAntalOnEnhet(String enhetId) {
         selectUnitByHsaId(enhetId);
         GetSjukfallRequest request = new GetSjukfallRequest();
         request.setMaxIntygsGlapp(0);
@@ -102,6 +101,6 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
                 .body(matchesJsonSchemaInClasspath("jsonschema/rhs-sjukfall-response-schema.json")).extract().response();
 
         Sjukfall[] resultList = response.body().as(Sjukfall[].class);
-        assertEquals(expectedCount, resultList.length);
+        return resultList.length;
     }
 }

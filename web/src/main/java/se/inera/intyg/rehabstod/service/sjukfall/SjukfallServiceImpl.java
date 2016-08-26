@@ -60,9 +60,20 @@ public class SjukfallServiceImpl implements SjukfallService {
     public List<InternalSjukfall> getSjukfall(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request) {
         List<InternalSjukfall> sjukfallList = getFilteredSjukfallList(enhetsId, mottagningsId, hsaId, urval, request);
         if (sjukfallList != null) {
-            monitoringLogService.logUserViewedSjukfall(hsaId, sjukfallList.size(), enhetsId);
+            monitoringLogService.logUserViewedSjukfall(hsaId, sjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
         }
         return sjukfallList;
+    }
+
+    /**
+     * Since we always use the vardenhetsId to query intygstjänsten (even when the
+     * selected unit is a mottagning), we must take care to use the mottagningsId
+     * when logging when present). Note that this does NOT apply to PDL logging, only monitoring logging.
+     *
+     * For PDL logging we always specify the enhetsId, never a mottagningsId.
+     */
+    private String resolveIdOfActualUnit(String enhetsId, String mottagningsId) {
+        return mottagningsId != null ? mottagningsId : enhetsId;
     }
 
     @Override
