@@ -194,9 +194,9 @@ public class SjukfallController {
         return sjukfallService.getSummary(enhetsId, mottagningsId, hsaId, urval, request);
     }
 
-    // - - - Package scope - - -
+    // - - - private scope - - -
 
-    List<InternalSjukfall> getSjukfall(RehabstodUser user, GetSjukfallRequest request) {
+    private List<InternalSjukfall> getSjukfall(RehabstodUser user, GetSjukfallRequest request) {
         String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
         String mottagningsId = getMottagningsId(user);
         String hsaId = user.getHsaId();

@@ -41,10 +41,6 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
 
     private static final String API_ENDPOINT = "api/sjukfall";
 
-//    private static final int EXPECTED_ON_CENTRUM_VAST = 175;
-//    private static final int EXPECTED_ON_AKUTEN = 58;
-//    private static final int EXPECTED_ON_DIALYSEN = 58;
-
     @Test
     public void testGetSjukfallSummaryNotLoggedIn() {
 
