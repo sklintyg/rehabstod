@@ -18,10 +18,6 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.WebApplicationInitializer;
@@ -32,13 +28,15 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
-
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
 import se.inera.intyg.rehabstod.web.controller.api.SessionStatusController;
 import se.inera.intyg.rehabstod.web.filters.SessionTimeoutFilter;
-import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
+
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
 
 public class ApplicationInitializer implements WebApplicationInitializer {
 
@@ -70,7 +68,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
 
         // unitSelectedAssurance filter
-        FilterRegistration.Dynamic unitSelectedAssuranceFilter = servletContext.addFilter("unitSelectedAssuranceFilter", UnitSelectedAssuranceFilter.class);
+        FilterRegistration.Dynamic unitSelectedAssuranceFilter = servletContext.addFilter("unitSelectedAssuranceFilter", DelegatingFilterProxy.class);
+        unitSelectedAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
         unitSelectedAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
         unitSelectedAssuranceFilter.setInitParameter("ignoredUrls", "/api/config,/api/user,/api/user/andraenhet");
 

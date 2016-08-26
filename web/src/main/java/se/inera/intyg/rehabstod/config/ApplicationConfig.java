@@ -25,6 +25,7 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 
 @Configuration
 @PropertySource({ "file:${rehabstod.config.file}", "file:${credentials.file}", "classpath:version.properties"})
@@ -42,6 +43,11 @@ public class ApplicationConfig {
         source.setBasename("version");
         source.setUseCodeAsDefaultMessage(true);
         return source;
+    }
+
+    @Bean
+    public UnitSelectedAssuranceFilter unitSelectedAssuranceFilter() {
+        return new UnitSelectedAssuranceFilter();
     }
 
     @Bean(name = "jacksonJsonProvider")

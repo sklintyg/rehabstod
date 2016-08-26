@@ -18,30 +18,31 @@
  */
 package se.inera.intyg.rehabstod.web.filters;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.filter.OncePerRequestFilter;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.service.user.UserService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by marced on 2016-08-23.
  */
-
 public class UnitSelectedAssuranceFilter extends OncePerRequestFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(UnitSelectedAssuranceFilter.class);
+
+    @Autowired
+    private UserService userService;
 
     private String ignoredUrls;
     private List<String> ignoredUrlsList;
@@ -55,7 +56,6 @@ public class UnitSelectedAssuranceFilter extends OncePerRequestFilter {
             ignoredUrlsList = Arrays.asList(ignoredUrls.split(","));
             LOG.info("Configured ignored urls as:" + ignoredUrlsList.stream().map(Object::toString).collect(Collectors.joining(", ")));
         }
-
     }
 
     @Override
@@ -89,10 +89,6 @@ public class UnitSelectedAssuranceFilter extends OncePerRequestFilter {
     }
 
     private RehabstodUser getUser() {
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            return null;
-        }
-
-        return (RehabstodUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userService.getUser();
     }
 }
