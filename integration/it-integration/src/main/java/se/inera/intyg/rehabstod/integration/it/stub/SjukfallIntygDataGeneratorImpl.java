@@ -58,6 +58,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
 
     public static final String VE_TSTNMT2321000156_105_N = "TSTNMT2321000156-105N";
+    public static final String VE_TSTNMT2321000156_105P = "TSTNMT2321000156-105P";
+    public static final String VE_TSTNMT2321000156_105Q = "TSTNMT2321000156-105Q";
     public static final String VE_CENTRUM_VAST = "centrum-vast";
     public static final String UE_AKUTEN = "akuten";
     public static final String UE_DIALYS = "dialys";
@@ -68,6 +70,9 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private Enhet enhet2;
     private Enhet underenhet1;
     private Enhet underenhet2;
+    private Enhet kerstinEnhet1;
+    private Enhet kerstinEnhet2;
+
     private Vardgivare vg;
     private Vardgivare vg2;
 
@@ -178,8 +183,6 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         sjukskrivningsgradList.add(sg1);
         sjukskrivningsgradList.add(sg2);
 
-
-
         return sjukskrivningsgradList;
     }
 
@@ -269,6 +272,20 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         underenhet2.setEnhetsId(hsaId4);
         underenhet2.setEnhetsnamn("Akuten");
         underenhet2.setVardgivare(vg2);
+
+        kerstinEnhet1 = new Enhet();
+        HsaId kerstinEnhetsId1 = new HsaId();
+        kerstinEnhetsId1.setExtension(VE_TSTNMT2321000156_105P);
+        kerstinEnhet1.setEnhetsId(kerstinEnhetsId1);
+        kerstinEnhet1.setEnhetsnamn("Rehabstöd Enhet 2");
+        kerstinEnhet1.setVardgivare(vg);
+
+        kerstinEnhet2 = new Enhet();
+        HsaId kerstinEnhetsId2 = new HsaId();
+        kerstinEnhetsId2.setExtension(VE_TSTNMT2321000156_105Q);
+        kerstinEnhet2.setEnhetsId(kerstinEnhetsId2);
+        kerstinEnhet2.setEnhetsnamn("Rehabstöd Enhet 3");
+        kerstinEnhet2.setVardgivare(vg);
     }
 
     private void initHoSPerson() {
@@ -316,6 +333,20 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hsaId6.setExtension("eva");
         hosPerson6.setPersonalId(hsaId6);
 
+        HosPersonal kerstin1 = new HosPersonal();
+        kerstin1.setEnhet(kerstinEnhet1);
+        kerstin1.setFullstandigtNamn("Kerstin Johansson");
+        HsaId kerstinId1 = new HsaId();
+        kerstinId1.setExtension("TSTNMT2321000156-105W");
+        kerstin1.setPersonalId(kerstinId1);
+
+        HosPersonal kerstin2 = new HosPersonal();
+        kerstin2.setEnhet(kerstinEnhet2);
+        kerstin2.setFullstandigtNamn("Kerstin Johansson");
+        HsaId kerstinId2 = new HsaId();
+        kerstinId2.setExtension("TSTNMT2321000156-105W");
+        kerstin2.setPersonalId(kerstinId2);
+
 
         hosPersonList.add(hosPerson1);
         hosPersonList.add(hosPerson2);
@@ -323,6 +354,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hosPersonList.add(hosPerson4);
         hosPersonList.add(hosPerson5);
         hosPersonList.add(hosPerson6);
+        hosPersonList.add(kerstin1);
+        hosPersonList.add(kerstin2);
     }
 
     private void initFakedVardgivare1() {
