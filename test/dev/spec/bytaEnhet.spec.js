@@ -32,7 +32,7 @@ describe('Logga in som Kerstin Johansson', function() {
 
     beforeEach(function() {
         browser.ignoreSynchronization = false;
-        specHelper.login('TSTNMT2321000156-105W_TSTNMT2321000156-105P');
+        specHelper.login('TSTNMT2321000156-105W_TSTNMT2321000156-105P', 'TSTNMT2321000156-105P');
     });
 
     it('Öppna och stäng byt enhetsdialogen', function() {
@@ -89,7 +89,7 @@ describe('Logga in som Kerstin Johansson', function() {
         expect(startPage.navbarLocation().getText()).toBe(today + ' - Rehabstöd Vårdgivare 1 - Rehabstöd Enhet 2');
 
         startPage.clickBytVardenhet();
-        element(by.id('select-active-unit-TSTNMT2321000156-105Q-modal')).click();
+        element(by.id('rhs-vardenhet-selector-select-active-unit-TSTNMT2321000156-105Q-link')).click();
 
         expect(startPage.navbarLocation().getText()).toBe(today + ' - Rehabstöd Vårdgivare 1 - Rehabstöd Enhet 3');
     }

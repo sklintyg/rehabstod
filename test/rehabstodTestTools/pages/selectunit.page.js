@@ -17,28 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* globals browser */
+
 /**
- * Created by BESA on 2015-11-17.
- * Holds paths to page files for easy inclusion and intellisense support in specs.
+ * Created by marced
  */
+
 'use strict';
 
-//var intygPath = './intyg/'; // should point to intyg folder
+var RehabstodBasePage = require('./rehabstod.base.page.js');
 
-var rehabstodBase = require('./rehabstod.base.page.js');
-var welcomePage = require('./welcome.page.js');
-var selectUnitPage = require('./selectunit.page.js');
-var startPage = require('./start.page.js');
-var sjukfallPage = require('./sjukfall.page.js');
-var aboutPage = require('./about.page.js');
-var errorPage = require('./error.page.js');
+var RehabstodSelectUnitPageBase = RehabstodBasePage._extend({
+    init: function init() {
+        init._super.call(this);
+        this.at = element(by.id('rhs-select-unit-page'));
 
-module.exports = {
-    'rehabstodBase': rehabstodBase,
-    'welcomePage': welcomePage,
-    'selectUnitPage': selectUnitPage,
-    'startPage': startPage,
-    'sjukfallPage': sjukfallPage,
-    'aboutPage': aboutPage,
-    'errorPage': errorPage
-};
+    },
+    get: function () {
+        this.getPage('start');
+    },
+    isAt: function isAt() {
+        return isAt._super.call(this);
+    },
+    selectUnit: function(hsaId) {
+            element(by.id('rhs-vardenhet-selector-select-active-unit-' + hsaId + '-link')).click();
+    }
+});
+
+module.exports = new RehabstodSelectUnitPageBase();

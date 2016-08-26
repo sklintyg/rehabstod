@@ -27,14 +27,24 @@
 var pages = require('./../pages/pages.js');
 var WelcomePage = pages.welcomePage;
 var RehabstodStartPage = pages.startPage;
+var SelectUnitPage = pages.selectUnitPage;
 
 module.exports = {
-    login: function(userOptional) {
+    login: function(userOptional, selectUnitAfterLogin) {
         WelcomePage.get();
         this.waitForAngularTestability();
         WelcomePage.login(userOptional || 'TSTNMT2321000156-105R_TSTNMT2321000156-105N');
         this.waitForAngularTestability();
-        expect(RehabstodStartPage.isAt()).toBe(true);
+        if (selectUnitAfterLogin) {
+            SelectUnitPage.isAt().then(function() {
+                SelectUnitPage.selectUnit(selectUnitAfterLogin);
+                expect(RehabstodStartPage.isAt()).toBe(true);
+            });
+
+        } else {
+            expect(RehabstodStartPage.isAt()).toBe(true);
+        }
+
     },
 
     logout: function() {
