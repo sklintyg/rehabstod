@@ -18,7 +18,11 @@
  */
 package se.inera.intyg.rehabstod.integration.it.config;
 
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,28 +45,62 @@ import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponde
 @Profile("!rhs-it-stub")
 public class IntygstjanstIntegrationClientConfiguration {
 
+    private static final String DEFAULT_RECEIVE_TIMEOUT = "60000";
+    private static final String DEFAULT_CONNECTION_TIMEOUT = "15000";
+
+    @Value("${it.service.receive.timeout}")
+    private String receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
+
+    @Value("${it.service.connection.timeout}")
+    private String connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
+
     @Value("${it.service.url}")
     private String itWsUrl;
 
     @Value("${it.ping.url}")
     private String itWsPingUrl;
 
-
     @Bean
-    //@Profile(value = {"dev", "test", "qa", "prod"})
     public ListActiveSickLeavesForCareUnitResponderInterface itIntegrationWebServiceClient() {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(itWsUrl);
         proxyFactoryBean.setServiceClass(ListActiveSickLeavesForCareUnitResponderInterface.class);
-        return (ListActiveSickLeavesForCareUnitResponderInterface) proxyFactoryBean.create();
+        ListActiveSickLeavesForCareUnitResponderInterface listActiveSickLeavesForCareUnitResponderInterface = (ListActiveSickLeavesForCareUnitResponderInterface) proxyFactoryBean.create();
+        Client client = ClientProxy.getClient(listActiveSickLeavesForCareUnitResponderInterface);
+        applyTimeouts(client);
+        return listActiveSickLeavesForCareUnitResponderInterface;
     }
 
     @Bean
-   // @Profile(value = {"dev", "test", "qa", "prod"})
     public PingForConfigurationResponderInterface itPingForConfigurationWebServiceClient() {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(itWsPingUrl);
         proxyFactoryBean.setServiceClass(PingForConfigurationResponderInterface.class);
-        return (PingForConfigurationResponderInterface) proxyFactoryBean.create();
+
+        PingForConfigurationResponderInterface pingForConfigurationResponderInterface = (PingForConfigurationResponderInterface) proxyFactoryBean.create();
+        Client client = ClientProxy.getClient(pingForConfigurationResponderInterface);
+        applyTimeouts(client);
+        return pingForConfigurationResponderInterface;
+    }
+
+    private void applyTimeouts(Client client) {
+        Long connTimeout = parseTimeout(connectionTimeout);
+        Long recTimeout = parseTimeout(receiveTimeout);
+
+        if (client != null)  {
+            HTTPConduit conduit = (HTTPConduit) client.getConduit();
+            HTTPClientPolicy policy = new HTTPClientPolicy();
+            policy.setConnectionTimeout(connTimeout);
+            policy.setReceiveTimeout(recTimeout);
+            conduit.setClient(policy);
+        }
+    }
+
+    private Long parseTimeout(String timeout) {
+        try {
+            return Long.parseLong(timeout);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Cannot apply timeouts for IntygstjanstIntegrationClientConfiguration, unparsable String value: " + timeout + ". Message: " + e.getMessage());
+        }
     }
 }
