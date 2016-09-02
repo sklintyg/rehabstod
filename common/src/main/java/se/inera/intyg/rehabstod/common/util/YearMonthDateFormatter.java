@@ -16,20 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
+package se.inera.intyg.rehabstod.common.util;
 
 import java.time.LocalDate;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
- * @author Magnus Ekstrand on 2016-02-18.
+ * Formats {@link java.time.LocalDateTime} and {@link java.time.LocalDate} into yyyy-MM-dd format.
+ *
+ * Created by eriklupander on 2016-09-02.
  */
-@FunctionalInterface
-public interface InternalIntygsDataResolver {
+public final class YearMonthDateFormatter {
 
-    Map<String, List<InternalIntygsData>> resolve(List<IntygsData> intygsData, int maxIntygsGlapp, LocalDate aktivtDatum);
+    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    private YearMonthDateFormatter() {
+
+    }
+
+    public static String print(LocalDate local) {
+        return local.format(dateTimeFormatter);
+    }
+
+    public static String print(LocalDateTime local) {
+        return local.format(dateTimeFormatter);
+    }
 }

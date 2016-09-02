@@ -58,7 +58,9 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
         RestAssured.sessionId = getAuthSession(user);
 
         //Ingen vardgivare skall vara vald som default eftersom denna user har flera att välja på.
-        given().expect().statusCode(OK).when().get(USER_API_ENDPOINT).
+        given().expect().statusCode(OK)
+                .when()
+                .get(USER_API_ENDPOINT).
                 then().
                 body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
                 body("hsaId", equalTo("eva")).
@@ -89,7 +91,10 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
         final String vardEnhetToChangeTo = "TSTNMT2321000156-105P";
         ChangeSelectedUnitRequest changeRequest = new ChangeSelectedUnitRequest(vardEnhetToChangeTo);
 
-        given().contentType(ContentType.JSON).and().body(changeRequest).when().post(USER_API_ENDPOINT + "/andraenhet").then().statusCode(OK)
+        given().contentType(ContentType.JSON).and()
+                .body(changeRequest).when().post(USER_API_ENDPOINT + "/andraenhet")
+                .then()
+                .statusCode(OK)
                 .body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json"))
                 .body("valdVardenhet.id", equalTo(vardEnhetToChangeTo));
     }

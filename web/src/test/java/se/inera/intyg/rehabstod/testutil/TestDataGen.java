@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.testutil;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;

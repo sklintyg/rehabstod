@@ -18,17 +18,15 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine.util;
 
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
+
+import static java.time.temporal.ChronoUnit.*;
 
 /**
- *
- * JodaTime doesn't support intervals with LocalDates only LocalDateTimes.
- * Also this class has the important getDurationInDays which includes the to-date in duration length.
+ * This class has the important getDurationInDays which includes the to-date in duration length.
  *
  * Created by marced on 19/02/16.
  */
-
 public class LocalDateInterval {
     private LocalDate startDate;
 
@@ -56,8 +54,8 @@ public class LocalDateInterval {
     }
 
     public int getDurationInDays() {
-        // Days.daysBetween does not include the endDate (just between), so to get "duration", we need to add 1.
-        return Days.daysBetween(startDate, endDate).getDays() + 1;
+        // ChronoUnit.DAYS does not include the endDate (just between), so to get "duration", we need to add 1.
+        return Long.valueOf(DAYS.between(startDate, endDate)).intValue() + 1;
 
     }
 }

@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +35,8 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -189,8 +190,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private Formaga buildSjukskrivningsGrad(int value, Integer startOffset, Integer slutOffset) {
         Formaga sg2 = new Formaga();
         sg2.setNedsattning(value);
-        sg2.setStartdatum(org.joda.time.LocalDate.now().plusWeeks(startOffset));
-        sg2.setSlutdatum(org.joda.time.LocalDate.now().plusWeeks(slutOffset));
+        sg2.setStartdatum(LocalDate.now().plusWeeks(startOffset));
+        sg2.setSlutdatum(LocalDate.now().plusWeeks(slutOffset));
         return sg2;
     }
 

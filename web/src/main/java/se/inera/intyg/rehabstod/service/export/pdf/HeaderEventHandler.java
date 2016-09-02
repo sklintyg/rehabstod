@@ -22,8 +22,7 @@ package se.inera.intyg.rehabstod.service.export.pdf;
  * Created by marced on 25/02/16.
  */
 
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.ISODateTimeFormat;
+import java.time.LocalDateTime;
 
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -35,6 +34,9 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
+
+import se.inera.intyg.rehabstod.common.util.HourMinuteFormatter;
+import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 
 public class HeaderEventHandler extends PdfPageEventHelper {
     private static final int TOP_MARGIN_TO_HEADER = 20;
@@ -74,16 +76,16 @@ public class HeaderEventHandler extends PdfPageEventHelper {
     }
 
     private PdfPCell printedBy(String userName, String enhetsNamn) {
-        LocalDateTime now = new LocalDateTime();
+        LocalDateTime now = LocalDateTime.now();
 
         Phrase printedBy = new Phrase("", PdfExportConstants.TABLE_CELL_NORMAL);
         printedBy.add(new Chunk("Utskrift av " + userName));
         printedBy.add(Chunk.NEWLINE);
         printedBy.add(new Chunk(enhetsNamn));
         printedBy.add(Chunk.NEWLINE);
-        printedBy.add(new Chunk(ISODateTimeFormat.yearMonthDay().print(now)));
+        printedBy.add(new Chunk(YearMonthDateFormatter.print(now)));
         printedBy.add(new Chunk(" - "));
-        printedBy.add(new Chunk(ISODateTimeFormat.hourMinute().print(now)));
+        printedBy.add(new Chunk(HourMinuteFormatter.print(now)));
 
         PdfPCell cell = new PdfPCell(printedBy);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);

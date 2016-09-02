@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import org.joda.time.LocalDateTime;
+import java.time.LocalDateTime;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 

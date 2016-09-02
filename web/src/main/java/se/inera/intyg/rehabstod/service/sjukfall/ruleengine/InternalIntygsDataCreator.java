@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;

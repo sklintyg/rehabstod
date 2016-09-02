@@ -18,23 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.Urval;
@@ -49,6 +38,16 @@ import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by marced on 24/02/16.
@@ -166,7 +165,7 @@ public class PdfExportServiceImplTest {
         diagnos.setIntygsVarde("M16" + index);
 
         sjukfall.setDiagnos(diagnos);
-        sjukfall.setStart(new LocalDate().plusDays(index));
+        sjukfall.setStart(LocalDate.now().plusDays(index));
         sjukfall.setSlut(sjukfall.getStart().plusDays(index));
         sjukfall.setDagar(index * 2 + index % 3);
         sjukfall.setIntyg(1);

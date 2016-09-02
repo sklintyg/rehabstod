@@ -7,8 +7,8 @@ dependencies {
     compile "se.inera.intyg.common:log-messages:${intygCommonVersion}"
 
     compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:${jacksonVersion}"
-    compile "joda-time:joda-time:${jodaTimeVersion}"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
+
     compile "javax.mail:javax.mail-api:${javaxMailVersion}"
     compile "com.sun.mail:javax.mail:${javaxMailVersion}"
 

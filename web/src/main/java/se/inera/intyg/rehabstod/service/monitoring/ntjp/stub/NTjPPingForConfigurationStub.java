@@ -18,14 +18,15 @@
  */
 package se.inera.intyg.rehabstod.service.monitoring.ntjp.stub;
 
-import org.joda.time.LocalDateTime;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 import se.riv.itintegration.monitoring.v1.ConfigurationType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by eriklupander on 2016-03-30.
@@ -34,11 +35,13 @@ import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
 @Profile(value = {"dev", "wc-hsa-stub"})
 public class NTjPPingForConfigurationStub implements PingForConfigurationResponderInterface {
 
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
     @Override
     public PingForConfigurationResponseType pingForConfiguration(String s, PingForConfigurationType pingForConfigurationType) {
         PingForConfigurationResponseType responseType = new PingForConfigurationResponseType();
 
-        responseType.setPingDateTime(LocalDateTime.now().toString("yyyy-MM-dd'T'HH:mm:ss"));
+        responseType.setPingDateTime(LocalDateTime.now().format(dateTimeFormatter));
         responseType.setVersion("ntjp-stub");
         ConfigurationType cfgType = new ConfigurationType();
         cfgType.setName("stub-info");

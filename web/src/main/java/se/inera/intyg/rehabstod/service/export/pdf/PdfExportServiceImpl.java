@@ -35,11 +35,11 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import org.apache.commons.io.IOUtils;
-import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
+import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
@@ -298,8 +298,8 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             addCell(table, s.getPatient().getKon().getDescription());
             addCell(table, s.getDiagnos().getIntygsVarde());
 
-            addCell(table, s.getStart() != null ? ISODateTimeFormat.yearMonthDay().print(s.getStart()) : "?");
-            addCell(table, s.getSlut() != null ? ISODateTimeFormat.yearMonthDay().print(s.getSlut()) : "?");
+            addCell(table, s.getStart() != null ? YearMonthDateFormatter.print(s.getStart()) : "?");
+            addCell(table, s.getSlut() != null ? YearMonthDateFormatter.print(s.getSlut()) : "?");
             addCell(table, getlangdText(s));
             addCell(table, getGrader(s));
             if (Urval.ALL.equals(urval)) {

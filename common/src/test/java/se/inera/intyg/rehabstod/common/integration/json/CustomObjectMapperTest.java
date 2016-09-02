@@ -18,14 +18,13 @@
  */
 package se.inera.intyg.rehabstod.common.integration.json;
 
-import static org.junit.Assert.assertEquals;
-
-import org.joda.time.LocalDate;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import java.io.IOException;
+import java.time.LocalDate;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -46,7 +45,7 @@ public class CustomObjectMapperTest {
     public void testLocalDateDeserializesFromYYYYMMDD() throws IOException {
         LocalDate localDate = new CustomObjectMapper().readValue("\"2016-02-11\"", LocalDate.class);
         assertEquals(YEAR, localDate.getYear());
-        assertEquals(MONTH, localDate.getMonthOfYear());
+        assertEquals(MONTH, localDate.getMonthValue());
         assertEquals(DAY, localDate.getDayOfMonth());
     }
 

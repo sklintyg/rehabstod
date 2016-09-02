@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 
 import java.util.List;
 

@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine.testdata.builders;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 
 /**

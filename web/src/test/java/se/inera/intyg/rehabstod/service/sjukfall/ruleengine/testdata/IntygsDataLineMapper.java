@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine.testdata;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.testdata.builders.ArbetsformagaT;
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.testdata.builders.EnhetT;
 import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.testdata.builders.FormagaT;

@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 

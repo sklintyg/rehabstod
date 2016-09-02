@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +57,8 @@ import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -70,6 +71,8 @@ import java.util.stream.Collectors;
 public class SjukfallController {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallController.class);
+
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
     @Autowired
     private SjukfallService sjukfallService;
@@ -175,7 +178,7 @@ public class SjukfallController {
     }
 
     protected String getAttachmentFilename(RehabstodUser user, String extension) {
-        return "sjukfall-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().toString("yyyy-MM-dd'T'HH:mm") + extension;
+        return "sjukfall-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().format(dateTimeFormatter) + extension;
     }
 
     @RequestMapping(value = "/summary", method = RequestMethod.GET)

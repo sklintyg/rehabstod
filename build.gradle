@@ -142,7 +142,6 @@ subprojects {
         javaxMailVersion = "1.5.2"
         javaxServletVersion = "3.1.0"
         jaxb2Version = "0.9.5"
-        jodaTimeVersion = "2.5"
         jsonSimpleVersion = "1.1.1"
         jstlVersion = "1.2"
 
@@ -166,7 +165,7 @@ subprojects {
         intygCommonVersion = "0-SNAPSHOT"
 
         // Schemas
-        rehabSchemaVersion = "1.0.0"
+        rehabSchemaVersion = "1.0.1"
         monitoringSchemaVersion = "1.0.0.0"
 
         // Test

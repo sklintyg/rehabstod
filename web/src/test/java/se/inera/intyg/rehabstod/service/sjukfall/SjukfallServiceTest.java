@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import org.joda.time.LocalDate;
+import java.time.LocalDate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

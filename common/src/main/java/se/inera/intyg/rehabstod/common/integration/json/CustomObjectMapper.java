@@ -18,20 +18,19 @@
  */
 package se.inera.intyg.rehabstod.common.integration.json;
 
-import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.joda.ser.LocalDateSerializer;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.joda.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.joda.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class CustomObjectMapper extends ObjectMapper {
 
@@ -46,11 +45,11 @@ public class CustomObjectMapper extends ObjectMapper {
 
     private static final class Module extends SimpleModule {
         private Module() {
-            addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
-            addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer());
+            addSerializer(LocalDateTime.class, LocalDateTimeSerializer.INSTANCE);
+            addDeserializer(LocalDateTime.class, LocalDateTimeDeserializer.INSTANCE);
 
-            addSerializer(LocalDate.class, new LocalDateSerializer());
-            addDeserializer(LocalDate.class, new LocalDateDeserializer());
+            addSerializer(LocalDate.class, LocalDateSerializer.INSTANCE);
+            addDeserializer(LocalDate.class, LocalDateDeserializer.INSTANCE);
         }
 
     }

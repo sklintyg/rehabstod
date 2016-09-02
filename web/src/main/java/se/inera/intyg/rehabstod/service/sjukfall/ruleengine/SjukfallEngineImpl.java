@@ -85,7 +85,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
         LOG.debug("Start calculation of sjukfall...");
 
         int maxIntygsGlapp = requestData.getMaxIntygsGlapp();
-        org.joda.time.LocalDate activeDate = requestData.getAktivtDatum();
+        LocalDate activeDate = requestData.getAktivtDatum();
 
         Map<String, List<InternalIntygsData>> resolvedIntygsData =
                 resolver.resolve(intygsData, maxIntygsGlapp, activeDate);
@@ -156,7 +156,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
                 .collect(Collectors.toList());
     }
 
-    InternalSjukfall toInternalSjukfall(List<InternalIntygsData> list, org.joda.time.LocalDate aktivtDatum) {
+    InternalSjukfall toInternalSjukfall(List<InternalIntygsData> list, LocalDate aktivtDatum) {
         // Find the active object
         InternalIntygsData aktivtIntyg = list.stream()
                 .filter(o -> o.isAktivtIntyg())
@@ -183,7 +183,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
         return internalSjukfall;
     }
 
-    Sjukfall buildSjukfall(List<InternalIntygsData> values, InternalIntygsData aktivtIntyg, org.joda.time.LocalDate aktivtDatum) {
+    Sjukfall buildSjukfall(List<InternalIntygsData> values, InternalIntygsData aktivtIntyg, LocalDate aktivtDatum) {
         Sjukfall sjukfall = new Sjukfall();
 
         sjukfall.setPatient(getPatient(aktivtIntyg));
@@ -206,7 +206,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
 
     // - - -  Private scope  - - -
 
-    private Integer getAktivGrad(List<Formaga> list, org.joda.time.LocalDate aktivtDatum) {
+    private Integer getAktivGrad(List<Formaga> list, LocalDate aktivtDatum) {
         LOG.debug("  - Lookup 'aktiv grad'");
         return list.stream()
                 .filter(f -> f.getStartdatum().compareTo(aktivtDatum) < 1 && f.getSlutdatum().compareTo(aktivtDatum) > -1)
@@ -222,11 +222,11 @@ public class SjukfallEngineImpl implements SjukfallEngine {
                 .map(f -> f.getNedsattning()).collect(Collectors.toList());
     }
 
-    private org.joda.time.LocalDate getMinimumDate(List<InternalIntygsData> list) {
+    private LocalDate getMinimumDate(List<InternalIntygsData> list) {
         return list.stream().min((d1, d2) -> d1.getStartDatum().compareTo(d2.getStartDatum())).get().getStartDatum();
     }
 
-    private org.joda.time.LocalDate getMaximumDate(List<InternalIntygsData> list) {
+    private LocalDate getMaximumDate(List<InternalIntygsData> list) {
         return list.stream().max((d1, d2) -> d1.getSlutDatum().compareTo(d2.getSlutDatum())).get().getSlutDatum();
     }
 

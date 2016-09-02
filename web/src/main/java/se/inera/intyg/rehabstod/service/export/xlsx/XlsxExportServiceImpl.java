@@ -31,9 +31,9 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -261,8 +261,8 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
             createDataCell(row, colIndex++, sf.getPatient().getNamn());
             createDataCell(row, colIndex++, sf.getPatient().getKon().getDescription());
             createDataCell(row, colIndex++, sf.getDiagnos().getKod());
-            createDataCell(row, colIndex++, ISODateTimeFormat.yearMonthDay().print(sf.getStart()));
-            createDataCell(row, colIndex++, ISODateTimeFormat.yearMonthDay().print(sf.getSlut()));
+            createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getStart()));
+            createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getSlut()));
             createDataCell(row, colIndex++, String.format(FORMAT_ANTALA_DAGAR, sf.getDagar()) + String.format(FORMAT_ANTAL_INTYG, sf.getIntyg()));
             createRichTextDataCell(row, colIndex++, buildGraderRichText(sf));
             if (urval != Urval.ISSUED_BY_ME) {

@@ -18,10 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth.pdl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.joda.time.LocalDate;
 import org.junit.Test;
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
@@ -30,11 +26,15 @@ import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by marced on 22/02/16.
@@ -124,8 +124,8 @@ public class PDLActivityEntryStoreImplTest {
         diagnos.setIntygsVarde("M16");
 
         sjukfall.setDiagnos(diagnos);
-        sjukfall.setStart(new LocalDate());
-        sjukfall.setSlut(new LocalDate());
+        sjukfall.setStart(LocalDate.now());
+        sjukfall.setSlut(LocalDate.now());
         sjukfall.setDagar(1);
         sjukfall.setIntyg(1);
         sjukfall.setGrader(new ArrayList<>());
