@@ -161,12 +161,13 @@ subprojects {
         wsdl4jVersion = "1.6.3"
 
         // Internal
-        //intygCommonVersion = "3.0.+"
+        // intygCommonVersion = "3.0.+"
         intygCommonVersion = "0-SNAPSHOT"
 
         // Schemas
         rehabSchemaVersion = "1.0.1"
         monitoringSchemaVersion = "1.0.0.0"
+        internalMonitoringSchemaVersion = "1.0.1"
 
         // Test
         aspectjWeaverVersion = "1.6.11"
