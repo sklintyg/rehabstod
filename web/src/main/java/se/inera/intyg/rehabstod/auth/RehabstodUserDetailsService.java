@@ -20,11 +20,7 @@ package se.inera.intyg.rehabstod.auth;
 
 import static se.inera.intyg.common.integration.hsa.stub.Medarbetaruppdrag.VARD_OCH_BEHANDLING;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -48,13 +44,9 @@ import se.inera.intyg.common.integration.hsa.model.Vardenhet;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
-import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolver;
-import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesResolverUtil;
-import se.inera.intyg.rehabstod.auth.authorities.Role;
-import se.inera.intyg.rehabstod.auth.exceptions.HsaServiceException;
-import se.inera.intyg.rehabstod.auth.exceptions.MissingMedarbetaruppdragException;
-import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
+import se.inera.intyg.rehabstod.auth.authorities.*;
+import se.inera.intyg.rehabstod.auth.exceptions.*;
+import se.riv.infrastructure.directory.v1.PaTitleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
@@ -334,8 +326,10 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
 
         for (PersonInformationType userType : hsaPersonInfo) {
             if (userType.getPaTitle() != null) {
-                List<String> hsaTitles = userType.getPaTitle().stream().map(paTitle -> paTitle.getPaTitleName()).collect(Collectors.toList());
-                befattningar.addAll(hsaTitles);
+                befattningar.addAll(userType.getPaTitle().stream()
+                        .map(PaTitleType::getPaTitleName)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList()));
             }
         }
 
@@ -362,8 +356,10 @@ public class RehabstodUserDetailsService implements SAMLUserDetailsService {
 
         for (PersonInformationType userType : hsaUserTypes) {
             if (userType.getPaTitle() != null) {
-                List<String> hsaTitles = userType.getPaTitle().stream().map(paTitle -> paTitle.getPaTitleName()).collect(Collectors.toList());
-                lygSet.addAll(hsaTitles);
+                lygSet.addAll(userType.getPaTitle().stream()
+                        .map(PaTitleType::getPaTitleName)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList()));
             }
         }
 
