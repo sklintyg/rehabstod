@@ -76,7 +76,7 @@
           </c:when>
           <c:when test="${param.reason eq \"login.saknar-hsa-rehabroll\"}">
             <h1 class="page-header">Rehabstöd - Behörighet saknas</h1>
-            <div id="error-tekniskt-fel" class="alert alert-danger">För att logga in som Rehabkoordinator krävs att du har den rollen för vårdenheten i HSA.</div>
+            <div id="error-tekniskt-fel" class="alert alert-danger">För att logga in som Rehabkoordinator krävs att du har den rollen för enheten i HSA.</div>
             </div>
           </c:when>
           <c:when test="${param.reason eq \"exporterror\"}">
