@@ -30,15 +30,71 @@ angular.module('rehabstodApp').directive('rhsVardenhetSelector', function() {
         templateUrl: '/components/commonDirectives/rhsVardenhetSelector/rhsVardenhetSelector.directive.html',
         link: function($scope) {
 
-            if (angular.isArray($scope.user.vardgivare)) {
+            //Create lo local copy with only required info
+            var model = {};
+            model.vardgivare = angular.copy($scope.user.vardgivare);
+            model.valdVardenhet = angular.copy($scope.user.valdVardenhet);
 
-                if ($scope.expandVardgivare) {
-                    angular.forEach($scope.user.vardgivare, function(vg) {
-                        vg.expanded = true;
+            $scope.getTotalVECount = function totaltVELevelUnits(vgs) {
+                var result = 0;
+                if (angular.isArray(vgs)) {
+
+                    angular.forEach(vgs, function(vg) {
+                        angular.forEach(vg.vardenheter, function() {
+                            result++;
+                        });
                     });
                 }
+                return result;
+            };
+
+            var shouldExpandAllVE = ($scope.getTotalVECount(model.vardgivare) === 1);
+
+            if (angular.isArray(model.vardgivare)) {
+                angular.forEach(model.vardgivare, function(vg) {
+                    // Respect directive behaviour config for initial expansion of VG level or not.
+                    if ($scope.expandVardgivare) {
+                        vg.expanded = true;
+                    }
+                    if (shouldExpandAllVE) {
+                        vg.expanded = true;
+                        angular.forEach(vg.vardenheter, function(ve) {
+                            ve.expanded = true;
+                        });
+                    }
+
+                });
             }
 
+            //If current enhet context is set - make sure entire path to selected unit is expanded
+            var currentVG = null;
+            var currentVE = null;
+
+            if (model.valdVardenhet) {
+                angular.forEach(model.vardgivare, function(vg) {
+                    currentVG = vg;
+                    angular.forEach(vg.vardenheter, function(ve) {
+                        currentVE = ve;
+                        if (ve.id === model.valdVardenhet.id) {
+                            //VE level selected, make sure it's parent VG is expanded and this VE is visible
+                            currentVG.expanded = true;
+                        }
+
+                        angular.forEach(ve.mottagningar, function(ue) {
+                            if (ue.id === model.valdVardenhet.id) {
+                                //UE level selected, make sure it's parent VG/VE are expanded and this UE is visible
+                                currentVG.expanded = true;
+                                currentVE.expanded = true;
+                            }
+                        });
+
+                    });
+
+                });
+            }
+
+            //Expose our model copy to view
+            $scope.model = model;
 
             //Report user selection back to user of directive
             $scope.itemSelected = function(unit) {
