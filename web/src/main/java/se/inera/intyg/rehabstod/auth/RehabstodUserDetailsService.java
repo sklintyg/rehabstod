@@ -32,6 +32,7 @@ import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.stereotype.Service;
 
+import se.inera.intyg.common.integration.hsa.model.UserCredentials;
 import se.inera.intyg.common.integration.hsa.model.Vardgivare;
 import se.inera.intyg.common.security.common.model.IntygUser;
 import se.inera.intyg.common.security.siths.BaseSakerhetstjanstAssertion;
@@ -56,20 +57,35 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
     // =====================================================================================
 
     @Override
-    protected void decorateIntygUserWithDefaultVardenhet(IntygUser intygUser) {
-        // Only set a default enhet if there is only one. Otherwise let it be null so that the user must select one.
-        if (intygUser.getTotaltAntalVardenheter() == 1) {
-            super.decorateIntygUserWithDefaultVardenhet(intygUser);
-        }
+    protected RehabstodUser buildUserPrincipal(SAMLCredential credential) {
+        // All rehab customization is done in the overridden decorateXXX methods, so just return a new rehabuser
+        return new RehabstodUser(super.buildUserPrincipal(credential));
     }
 
     @Override
-    protected RehabstodUser buildUserPrincipal(SAMLCredential credential) {
-        IntygUser intygUser = super.buildUserPrincipal(credential);
+    protected void decorateIntygUserWithDefaultVardenhet(IntygUser intygUser) {
+        // Only set a default enhet if there is only one (mottagningar doesnt count).
+        // If no default vardenhet can be determined - let it be null and force user to select one.
+        if (getTotaltAntalVardenheterExcludingMottagningar(intygUser) == 1) {
+            super.decorateIntygUserWithDefaultVardenhet(intygUser);
+        }
+    }
+    protected int getTotaltAntalVardenheterExcludingMottagningar(IntygUser intygUser) {
+        // count all vardenheter (not including mottagningar under vardenheter)
+        return (int) intygUser.getVardgivare().stream().flatMap(vg -> vg.getVardenheter().stream()).count();
+    }
+
+
+
+    @Override
+    protected void decorateIntygUserWithSystemRoles(IntygUser intygUser, UserCredentials userCredentials) {
+        super.decorateIntygUserWithSystemRoles(intygUser, userCredentials);
+
         if (intygUser.getRoles().containsKey(AuthoritiesConstants.ROLE_KOORDINATOR)) {
+            //ROLE_KOORDINATOR must have a matching systemrole for each unit, or else it's removed
             removeEnheterMissingRehabKoordinatorRole(intygUser.getVardgivare(), intygUser.getSystemRoles(), intygUser.getHsaId());
         }
-        return new RehabstodUser(intygUser);
+
     }
 
     @Override

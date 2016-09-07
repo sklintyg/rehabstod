@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.auth;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
@@ -166,7 +167,8 @@ public class RehabstodUserDetailsServiceTest {
 
         AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_KOORDINATOR).orThrow();
         assertEquals(3, rehabstodUser.getTotaltAntalVardenheter());
-        assertNull("No default vardenenhet should have been selected since user have more than 1 available unit", rehabstodUser.getValdVardenhet());
+        assertNotNull("A default vardenhet should have been selected", rehabstodUser.getValdVardenhet());
+        assertEquals(ENHET_HSAID_2 + " should have been selected as valdVardgivare", ENHET_HSAID_2, rehabstodUser.getValdVardenhet().getId());
     }
 
     @Test
@@ -191,6 +193,35 @@ public class RehabstodUserDetailsServiceTest {
 
         AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_KOORDINATOR).orThrow();
         assertEquals(1, rehabstodUser.getTotaltAntalVardenheter());
+        assertEquals(ENHET_HSAID_2 + " should have been selected as valdVardgivare", ENHET_HSAID_2, rehabstodUser.getValdVardenhet().getId());
+    }
+
+    @Test
+    public void assertSelectsDefaultVardenhetWhenOnlyOneExistsEvenIfMottagningarExists() throws Exception {
+        // given
+        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
+        UserCredentials userCredz = new UserCredentials();
+        userCredz.getHsaSystemRole().addAll(buildSystemRoles());
+
+        // Just return one enhet
+        Vardgivare vardgivare = new Vardgivare(VARDGIVARE_HSAID, "IFV Testlandsting");
+        final Vardenhet enhet = new Vardenhet(ENHET_HSAID_2, "VårdEnhet2A");
+        final Mottagning mottagning = new Mottagning(MOTTAGNING_HSAID_1, "Mottagning2A1");
+        enhet.getMottagningar().add(mottagning);
+
+        vardgivare.getVardenheter().add(enhet);
+        List<Vardgivare> vardgivarList = new ArrayList<>();
+        vardgivarList.add(vardgivare);
+
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, vardgivarList));
+
+        setupCallToGetHsaPersonInfoNonDoctor();
+
+        // then
+        IntygUser rehabstodUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+
+        AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_KOORDINATOR).orThrow();
+        assertEquals(2, rehabstodUser.getTotaltAntalVardenheter());
         assertEquals(ENHET_HSAID_2 + " should have been selected as valdVardgivare", ENHET_HSAID_2, rehabstodUser.getValdVardenhet().getId());
     }
 
