@@ -144,9 +144,9 @@ var rhsMessages = {
 
 
         // Export
-        'label.export.button' : 'Exportera',
-        'label.export.pdf' : 'Exportera sida till PDF',
-        'label.export.excel' : 'Exportera sida till Excel',
+        'label.export.button' : 'Spara som',
+        'label.export.pdf' : 'PDF',
+        'label.export.excel' : 'Excel',
 
         //Rest 500 exception error messages:
         'server.error.default.title' : 'Ett fel uppstod',
