@@ -165,7 +165,7 @@ subprojects {
         intygCommonVersion = "0-SNAPSHOT"
 
         // Schemas
-        rehabSchemaVersion = "1.0.1"
+        rehabSchemaVersion = "1.0.2"
         monitoringSchemaVersion = "1.0.0.0"
         internalMonitoringSchemaVersion = "1.0.1"
 
