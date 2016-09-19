@@ -18,26 +18,28 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.jms.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import se.inera.intyg.common.logmessages.ActivityType;
 import se.inera.intyg.common.logmessages.PdlLogMessage;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
-
-import javax.annotation.PostConstruct;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
-import java.util.List;
 
 
 /**
@@ -87,7 +89,12 @@ public class LogServiceImpl implements LogService {
         }
 
         LOG.info("Logging SjukfallIntygsData for activityType {} having {}", pdlLogMessage.getActivityType().name(), pdlLogMessage.getPdlResourceList().size());
-        jmsTemplate.send(new MC(pdlLogMessage));
+        try {
+            jmsTemplate.send(new MC(pdlLogMessage));
+        } catch (JmsException e) {
+            LOG.error("Could not log list of IntygsData", e);
+            throw e;
+        }
 
     }
 

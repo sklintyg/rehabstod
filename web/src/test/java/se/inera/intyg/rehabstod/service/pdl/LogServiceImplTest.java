@@ -18,24 +18,23 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.jms.core.JmsTemplate;
-import se.inera.intyg.common.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.service.user.UserService;
-import se.inera.intyg.rehabstod.testutil.TestDataGen;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.*;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.jms.JmsException;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
+import org.springframework.jms.support.destination.DestinationResolutionException;
+
+import se.inera.intyg.common.logmessages.ActivityType;
+import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.testutil.TestDataGen;
 
 /**
  * Created by eriklupander on 2016-03-03.
@@ -77,5 +76,16 @@ public class LogServiceImplTest {
         when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser());
         testee.logSjukfallData(new ArrayList<>(), ActivityType.READ);
         verify(template, times(0)).send(any());
+    }
+
+    @Test(expected = JmsException.class)
+    public void testSendPdlJmsException() {
+        when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser());
+        doThrow(new DestinationResolutionException("")).when(template).send(any(MessageCreator.class));
+        try {
+            testee.logSjukfallData(TestDataGen.buildSjukfallList(5), ActivityType.READ);
+        } finally {
+            verify(template, times(1)).send(any());
+        }
     }
 }
