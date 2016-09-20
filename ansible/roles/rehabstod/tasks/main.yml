@@ -34,6 +34,7 @@
 - name: Download rehabstod-web-{{ version }}.war
   get_url: url=https://build-inera.nordicmedtest.se/nexus/content/repositories/{{ repo }}/se/inera/intyg/rehabstod/rehabstod-web/{{ version }}/rehabstod-web-{{ version }}.war
       dest={{ releases_folder }}/rehabstod-web-{{ version }}.war
+      timeout=60
 
 - name: remove old version of unpacked rehabstod war
   file: state=absent
