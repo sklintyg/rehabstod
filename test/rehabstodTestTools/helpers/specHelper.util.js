@@ -33,6 +33,7 @@ module.exports = {
     login: function(userOptional, selectUnitAfterLogin) {
         WelcomePage.get();
         this.waitForAngularTestability();
+        this.setCookieConsentBannerState('true');
         WelcomePage.login(userOptional || 'TSTNMT2321000156-105R_TSTNMT2321000156-105N');
         this.waitForAngularTestability();
         if (selectUnitAfterLogin) {
@@ -45,6 +46,12 @@ module.exports = {
             expect(RehabstodStartPage.isAt()).toBe(true);
         }
 
+    },
+    setCookieConsentBannerState: function(state) {
+        //If this flag is missing or set to false in localStorage the cookiebanner will appear.
+        // We pre-set this before logging in to avoid having to click on that button
+        //for every test.
+        return browser.executeScript('window.localStorage.setItem("ngStorage-rhsCookieConsentGiven", "' + state + '");');
     },
     loginToSelectionPage: function(hsaId) {
         WelcomePage.get();

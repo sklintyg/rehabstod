@@ -224,29 +224,29 @@ h5.inline-heading {
   box-shadow: none;
 }
 
+.rhs-cookie-banner {
+
+  margin: 0;
+  top: 0;
+  position: fixed;
+  right: 0;
+  left: 0;
+  border: none;
+  z-index: 10;
+
+  .alert {
+    max-width: inherit;
+    border-radius: 0;
+  }
+  .container-fluid {
+    padding: 0;
+  }
+
+}
+
 // Index page --
 .index-page {
   background-color: $link-color;
-
-  .rhs-cookie-banner {
-
-    margin: 0;
-    top: 0;
-    position: fixed;
-    right: 0;
-    left: 0;
-    border: none;
-    z-index: 10;
-
-    .alert {
-      max-width: inherit;
-      border-radius: 0;
-    }
-    .container-fluid {
-      padding: 0;
-    }
-
-  }
 
   h1 {
     color: $link-color;

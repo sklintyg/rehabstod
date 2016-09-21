@@ -29,7 +29,8 @@ var app = angular.module('rehabstodApp', [
     'ui.bootstrap-slider',
     'smart-table',
     'infinite-scroll',
-    'taiPlaceholder'
+    'taiPlaceholder',
+    'ngStorage'
 ]).value('THROTTLE_MILLISECONDS', 300).config(function(stConfig) {
     'use strict';
 
