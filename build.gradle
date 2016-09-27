@@ -165,9 +165,9 @@ subprojects {
         intygCommonVersion = "0-SNAPSHOT"
 
         // Schemas
-        rehabSchemaVersion = "1.0.2"
-        monitoringSchemaVersion = "1.0.0.0"
-        internalMonitoringSchemaVersion = "1.0.1"
+        rehabSchemaVersion = "1.0.3"
+        monitoringSchemaVersion = "1.0.0.3"
+        internalMonitoringSchemaVersion = "1.0.2"
 
         // Test
         aspectjWeaverVersion = "1.6.11"
