@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,7 +118,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
     protected Lakare getLakare(IntygsData intyg) {
         Lakare lakare = new Lakare();
         lakare.setNamn(intyg.getSkapadAv().getFullstandigtNamn());
-        lakare.setHsaId(intyg.getSkapadAv().getPersonalId().getExtension());
+        lakare.setHsaId(StringUtils.trim(intyg.getSkapadAv().getPersonalId().getExtension()));
 
         return lakare;
     }
@@ -125,7 +126,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
     protected Patient getPatient(IntygsData intyg) {
         se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient intygPatient = intyg.getPatient();
 
-        String id = intygPatient.getPersonId().getExtension();
+        String id = StringUtils.trim(intygPatient.getPersonId().getExtension());
 
         // Age
         int age = getPatientAge(id);
@@ -147,6 +148,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
 
 
     // - - -  Package scope  - - -
+
     List<InternalSjukfall> assemble(Map<String, List<InternalIntygsData>> resolvedIntygsData, GetSjukfallRequest requestData) {
         LOG.debug("  - Assembling 'sjukfall'");
 
@@ -174,9 +176,9 @@ public class SjukfallEngineImpl implements SjukfallEngine {
 
         InternalSjukfall internalSjukfall = new InternalSjukfall();
         internalSjukfall.setSjukfall(sjukfall);
-        internalSjukfall.setVardGivareId(ve.getVardgivare().getVardgivarId().getExtension());
+        internalSjukfall.setVardGivareId(StringUtils.trim(ve.getVardgivare().getVardgivarId().getExtension()));
         internalSjukfall.setVardGivareNamn(ve.getVardgivare().getVardgivarnamn());
-        internalSjukfall.setVardEnhetId(ve.getEnhetsId().getExtension());
+        internalSjukfall.setVardEnhetId(StringUtils.trim(ve.getEnhetsId().getExtension()));
         internalSjukfall.setVardEnhetNamn(ve.getEnhetsnamn());
 
         return internalSjukfall;
@@ -242,6 +244,5 @@ public class SjukfallEngineImpl implements SjukfallEngine {
 
         return (int) age;
     }
-
 
 }
