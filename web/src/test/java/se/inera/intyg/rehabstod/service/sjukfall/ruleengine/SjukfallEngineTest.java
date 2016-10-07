@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -189,7 +188,7 @@ public class SjukfallEngineTest {
         se.inera.intyg.rehabstod.web.model.Lakare sjukfallLakare = testee.getLakare(intyg);
 
         assertEquals(fullstandigtNamn, sjukfallLakare.getNamn());
-        assertEquals(hsaId, sjukfallLakare.getHsaId());
+        assertEquals(hsaId.trim(), sjukfallLakare.getHsaId());
     }
 
     @Test
@@ -313,7 +312,7 @@ public class SjukfallEngineTest {
         IntygsData intyg = new IntygsData();
 
         PersonId personId = new PersonId();
-        personId.setExtension(StringUtils.trim(patientId));
+        personId.setExtension(patientId);
 
         Patient patient = new Patient();
         patient.setPersonId(personId);
