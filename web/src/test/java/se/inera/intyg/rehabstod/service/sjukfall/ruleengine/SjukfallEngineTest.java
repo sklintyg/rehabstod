@@ -18,14 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,8 +43,16 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by martin on 11/02/16.
@@ -181,7 +182,7 @@ public class SjukfallEngineTest {
     @Test
     public void testLakare() {
         String fullstandigtNamn = "Jan Nilsson";
-        String hsaId = "IFV1239877878-1049";
+        String hsaId = " IFV1239877878-1049 ";
 
         IntygsData intyg = getIntygWithLakare(hsaId, fullstandigtNamn);
 
@@ -194,7 +195,7 @@ public class SjukfallEngineTest {
     @Test
     public void testPatient() {
         String fullstandigtNamn = "Anders Andersson";
-        String id = "19121212-1212";
+        String id = " 19121212-1212 ";
         final int expectedYear = 103;
 
         IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
@@ -204,13 +205,13 @@ public class SjukfallEngineTest {
         assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
         assertEquals(Gender.M, sjukfallPatient.getKon());
         assertEquals(expectedYear, sjukfallPatient.getAlder());
-        assertEquals(id, sjukfallPatient.getId());
+        assertEquals(id.trim(), sjukfallPatient.getId());
     }
 
     @Test
     public void testPatientMellanNamn() {
         String fullstandigtNamn = "Anders Andersson";
-        String id = "19121212-1212";
+        String id = " 19121212-1212 ";
         final int expectedYear = 103;
 
         IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
@@ -220,13 +221,13 @@ public class SjukfallEngineTest {
         assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
         assertEquals(Gender.M, sjukfallPatient.getKon());
         assertEquals(expectedYear, sjukfallPatient.getAlder());
-        assertEquals(id, sjukfallPatient.getId());
+        assertEquals(id.trim(), sjukfallPatient.getId());
     }
 
     @Test
     public void testPatientShortId() {
         String fullstandigtNamn = "Anders Andersson";
-        String id = "19121212";
+        String id = " 19121212 ";
         final int expectedYear = 103;
 
         IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
@@ -236,13 +237,13 @@ public class SjukfallEngineTest {
         assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
         assertNull(sjukfallPatient.getKon());
         assertEquals(expectedYear, sjukfallPatient.getAlder());
-        assertEquals(id, sjukfallPatient.getId());
+        assertEquals(id.trim(), sjukfallPatient.getId());
     }
 
     @Test
     public void testPatientBadId() {
         String fullstandigtNamn = "Anders Andersson";
-        String id = "191212AB-ABCD";
+        String id = " 191212AB-ABCD ";
 
         IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
 
@@ -251,9 +252,18 @@ public class SjukfallEngineTest {
         assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
         assertEquals(Gender.UNKNOWN, sjukfallPatient.getKon());
         assertEquals(0, sjukfallPatient.getAlder());
-        assertEquals(id, sjukfallPatient.getId());
+        assertEquals(id.trim(), sjukfallPatient.getId());
     }
 
+    @Test
+    public void testWhitespaceTrimming() {
+        String fullstandigtNamn = "Anders Andersson";
+        String id = " 19121212-1212 ";
+        IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
+
+        se.inera.intyg.rehabstod.web.model.Patient sjukfallPatient = testee.getPatient(intyg);
+        assertEquals(id.trim(), sjukfallPatient.getId());
+    }
 
     // - - -  Private scope  - - -
 
@@ -303,7 +313,7 @@ public class SjukfallEngineTest {
         IntygsData intyg = new IntygsData();
 
         PersonId personId = new PersonId();
-        personId.setExtension(patientId);
+        personId.setExtension(StringUtils.trim(patientId));
 
         Patient patient = new Patient();
         patient.setPersonId(personId);
@@ -327,9 +337,9 @@ public class SjukfallEngineTest {
         InternalSjukfall buildInternalSjukfall(Sjukfall sjukfall, InternalIntygsData aktivtIntyg) {
             InternalSjukfall internalSjukfall = new InternalSjukfall();
             internalSjukfall.setSjukfall(sjukfall);
-            internalSjukfall.setVardGivareId("IFV1239877878-0000");
+            internalSjukfall.setVardGivareId(" IFV1239877878-0000 ");
             internalSjukfall.setVardGivareNamn("Webcert-Vårdgivare1");
-            internalSjukfall.setVardEnhetId("IFV1239877878-1045");
+            internalSjukfall.setVardEnhetId(" IFV1239877878-1045 ");
             internalSjukfall.setVardEnhetNamn("Webcert-Enhet2");
 
             return internalSjukfall;

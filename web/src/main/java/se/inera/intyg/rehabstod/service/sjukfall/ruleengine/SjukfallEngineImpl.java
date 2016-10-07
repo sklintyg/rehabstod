@@ -147,7 +147,6 @@ public class SjukfallEngineImpl implements SjukfallEngine {
 
 
     // - - -  Package scope  - - -
-
     List<InternalSjukfall> assemble(Map<String, List<InternalIntygsData>> resolvedIntygsData, GetSjukfallRequest requestData) {
         LOG.debug("  - Assembling 'sjukfall'");
 
