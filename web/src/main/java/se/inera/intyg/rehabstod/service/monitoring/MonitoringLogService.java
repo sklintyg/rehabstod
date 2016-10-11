@@ -26,7 +26,7 @@ import se.inera.intyg.common.security.common.service.AuthenticationLogger;
 public interface MonitoringLogService extends AuthenticationLogger {
 
 
-    void logUserLogin(String id, String authenticationScheme);
+    void logUserLogin(String id, String authenticationScheme, String origin);
 
     void logUserLogout(String id, String authenticationScheme);
 

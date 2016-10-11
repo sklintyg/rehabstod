@@ -31,7 +31,8 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
     private static final Logger LOG = LoggerFactory.getLogger(MonitoringLogService.class);
 
     @Override
-    public void logUserLogin(String userHsaId, String authenticationScheme) {
+    public void logUserLogin(String userHsaId, String authenticationScheme, String origin) {
+        // Origin is not interesting for Rehabstod so we ignore it
         logEvent(MonitoringEvent.USER_LOGIN, userHsaId, authenticationScheme);
     }
 

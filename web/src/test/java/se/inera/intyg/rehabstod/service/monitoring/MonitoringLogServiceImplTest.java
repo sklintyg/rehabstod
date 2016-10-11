@@ -66,7 +66,7 @@ public class MonitoringLogServiceImplTest {
 
     @Test
     public void shouldLogUserLogin() {
-        logService.logUserLogin(USER_ID, AUTHENTICATION_SCHEME);
+        logService.logUserLogin(USER_ID, AUTHENTICATION_SCHEME, null);
         verifyLog(Level.INFO,
                 "USER_LOGIN Login user '" + USER_ID + "' using scheme 'AUTHENTICATION_SCHEME'");
     }

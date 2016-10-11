@@ -69,7 +69,7 @@ public class LoggingSessionRegistryImplTest {
     @Test
     public void testRegisterNewSession() throws Exception {
         testee.registerNewSession(SESSION_ID, user);
-        verify(monitoringService).logUserLogin(user.getHsaId(), user.getAuthenticationScheme());
+        verify(monitoringService).logUserLogin(user.getHsaId(), user.getAuthenticationScheme(), user.getOrigin());
     }
 
     @Test

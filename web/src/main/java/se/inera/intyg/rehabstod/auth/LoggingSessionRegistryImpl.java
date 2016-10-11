@@ -37,7 +37,7 @@ public class LoggingSessionRegistryImpl extends SessionRegistryImpl {
     public void registerNewSession(String sessionId, Object principal) {
         if (principal != null && principal instanceof RehabstodUser) {
             RehabstodUser user = (RehabstodUser) principal;
-            monitoringService.logUserLogin(user.getHsaId(), user.getAuthenticationScheme());
+            monitoringService.logUserLogin(user.getHsaId(), user.getAuthenticationScheme(), user.getOrigin());
         }
         super.registerNewSession(sessionId, principal);
     }
