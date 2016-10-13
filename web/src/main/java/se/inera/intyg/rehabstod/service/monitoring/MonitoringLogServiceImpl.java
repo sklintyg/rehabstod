@@ -37,11 +37,6 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
     }
 
     @Override
-    public void logUserLogin(String userHsaId, String authenticationScheme) {
-        logEvent(MonitoringEvent.USER_LOGIN, userHsaId, authenticationScheme);
-    }
-
-    @Override
     public void logUserLogout(String userHsaId, String authenticationScheme) {
         logEvent(MonitoringEvent.USER_LOGOUT, userHsaId, authenticationScheme);
     }
