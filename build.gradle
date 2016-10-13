@@ -161,7 +161,7 @@ subprojects {
         wsdl4jVersion = "1.6.3"
 
         // Internal
-        if (version != '0-SNAPSHOT') {
+        if (project.hasProperty("buildJenkins")) {
             intygCommonVersion = "3.0.+"
         } else {
             intygCommonVersion = "0-SNAPSHOT"
