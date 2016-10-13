@@ -88,7 +88,7 @@ if (project.hasProperty('runSonar')) {
             }
         }
     }
-    
+
 }
 
 subprojects {
@@ -104,7 +104,7 @@ subprojects {
             toolVersion = "0.7.1.201405082137"
         }
         jacocoTestReport {
-            
+
             classDirectories =  files(sourceSets.main.output)
             sourceDirectories = files(sourceSets.main.allJava.srcDirs)
 
@@ -114,7 +114,7 @@ subprojects {
                 html.destination "${buildDir}/jacocoHtml"
             }
         }
-        
+
     }
 
     sourceCompatibility = "1.8"
@@ -161,8 +161,11 @@ subprojects {
         wsdl4jVersion = "1.6.3"
 
         // Internal
-        // intygCommonVersion = "3.0.+"
-        intygCommonVersion = "0-SNAPSHOT"
+        if (version != '0-SNAPSHOT') {
+            intygCommonVersion = "3.0.+"
+        } else {
+            intygCommonVersion = "0-SNAPSHOT"
+        }
 
         // Schemas
         rehabSchemaVersion = "1.0.3"
