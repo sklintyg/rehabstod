@@ -1,6 +1,6 @@
 .send-feedback {
-  background: #337ab7;
-  padding: 2px;
+  background: #fd6f24;
+  padding: 3px;
   transform: rotate(90deg);
   position: fixed;
   right: -30px;
@@ -12,11 +12,11 @@
 .send-feedback-btn {
   color: #ffffff;
   text-transform: uppercase;
-  background: #337ab7;
+  background: #fd6f24;
   border: 1px solid #ffffff;
 
   &:hover {
-    color: #337ab7;
+    color: #fd6f24;
     background: #ffffff;
     border: 1px solid #ffffff;
   }
