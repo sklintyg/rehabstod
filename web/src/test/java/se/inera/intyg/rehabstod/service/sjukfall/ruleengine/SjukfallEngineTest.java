@@ -18,6 +18,20 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +39,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
@@ -38,20 +53,6 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
-
-import java.io.IOException;
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by martin on 11/02/16.
@@ -234,7 +235,23 @@ public class SjukfallEngineTest {
         se.inera.intyg.rehabstod.web.model.Patient sjukfallPatient = testee.getPatient(intyg);
 
         assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
-        assertNull(sjukfallPatient.getKon());
+        assertEquals(Gender.UNKNOWN, sjukfallPatient.getKon());
+        assertEquals(expectedYear, sjukfallPatient.getAlder());
+        assertEquals(id.trim(), sjukfallPatient.getId());
+    }
+
+    @Test
+    public void testPatientEvenShorterId() {
+        String fullstandigtNamn = "Anders Andersson";
+        String id = " 121212 ";
+        final int expectedYear = 0;
+
+        IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
+
+        se.inera.intyg.rehabstod.web.model.Patient sjukfallPatient = testee.getPatient(intyg);
+
+        assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
+        assertEquals(Gender.UNKNOWN, sjukfallPatient.getKon());
         assertEquals(expectedYear, sjukfallPatient.getAlder());
         assertEquals(id.trim(), sjukfallPatient.getId());
     }
@@ -251,6 +268,36 @@ public class SjukfallEngineTest {
         assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
         assertEquals(Gender.UNKNOWN, sjukfallPatient.getKon());
         assertEquals(0, sjukfallPatient.getAlder());
+        assertEquals(id.trim(), sjukfallPatient.getId());
+    }
+
+    @Test
+    public void testSamordningnummer() {
+        String fullstandigtNamn = "Anders Andersson";
+        String id = "19701063-2391";
+
+        IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
+
+        se.inera.intyg.rehabstod.web.model.Patient sjukfallPatient = testee.getPatient(intyg);
+
+        assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
+        assertEquals(Gender.M, sjukfallPatient.getKon());
+        assertEquals(46, sjukfallPatient.getAlder());
+        assertEquals(id.trim(), sjukfallPatient.getId());
+    }
+
+    @Test
+    public void testShortSamordningnummer() {
+        String fullstandigtNamn = "Anders Andersson";
+        String id = "701063-2391 ";
+
+        IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
+
+        se.inera.intyg.rehabstod.web.model.Patient sjukfallPatient = testee.getPatient(intyg);
+
+        assertEquals(fullstandigtNamn, sjukfallPatient.getNamn());
+        assertEquals(Gender.M, sjukfallPatient.getKon());
+        assertEquals(46, sjukfallPatient.getAlder());
         assertEquals(id.trim(), sjukfallPatient.getId());
     }
 

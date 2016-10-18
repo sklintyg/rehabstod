@@ -18,11 +18,24 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.MonthDay;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import se.inera.intyg.common.support.modules.support.api.dto.InvalidPersonNummerException;
+import se.inera.intyg.common.support.modules.support.api.dto.Personnummer;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
@@ -40,16 +53,6 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-import java.time.Clock;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 /**
  * Created by Magnus Ekstrand on 03/02/16.
  */
@@ -58,10 +61,14 @@ public class SjukfallEngineImpl implements SjukfallEngine {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallEngineImpl.class);
 
-    private static final int AGE_START = 0;
-    private static final int AGE_END = 8;
-    private static final int GENDER_START = 11;
-    private static final int GENDER_END = 12;
+
+    private static final int GENDER_START = 10;
+    private static final int GENDER_END = 11;
+    private static final int DATE_PART_OF_PERSON_ID = 8;
+    private static final int DAY_PART_OF_DATE_PART = 6;
+    private static final int MONTH_PART_OF_DATE_PART = 4;
+    private static final int SAMORDNINGSNUMMER_DAY_CONSTANT = 60;
+    private static final DateTimeFormatter MONTHDAY_FORMATTER = DateTimeFormatter.ofPattern("MMdd");
 
     protected Clock clock;
 
@@ -128,17 +135,27 @@ public class SjukfallEngineImpl implements SjukfallEngine {
 
         String id = StringUtils.trim(intygPatient.getPersonId().getExtension());
 
-        // Age
-        int age = getPatientAge(id);
+        Personnummer personNummer = new Personnummer(id);
 
-        // Gender
-        Gender gender = null;
-        if (id.length() > GENDER_END) {
-            gender = Gender.getGenderFromString(id.substring(GENDER_START, GENDER_END));
+        // Default fallback gender
+        Gender gender = Gender.UNKNOWN;
+
+        // Default fallback age
+        int age = 0;
+
+        try {
+            String normalizedPnr = personNummer.getNormalizedPnr();
+            gender = Gender.getGenderFromString(normalizedPnr.substring(GENDER_START, GENDER_END));
+            age = getPatientAge(normalizedPnr);
+        } catch (InvalidPersonNummerException e) {
+            LOG.debug("Failed to normalize patientId '" + id + "'");
+            // Age could possibly be determined even if it's not a valid personnr/samordningsnummer, e.g 19121212
+            age = getPatientAge(id);
         }
 
         Patient patient = new Patient();
         patient.setAlder(age);
+        // display original patientId as-is.
         patient.setId(id);
         patient.setNamn(intygPatient.getFullstandigtNamn());
         patient.setKon(gender);
@@ -232,17 +249,26 @@ public class SjukfallEngineImpl implements SjukfallEngine {
     }
 
     private int getPatientAge(String patientId) {
-        long age;
-        try {
-            LocalDate start = LocalDate.parse(patientId.substring(AGE_START, AGE_END), DateTimeFormatter.BASIC_ISO_DATE);
-            LocalDate end = LocalDate.now(clock);
-            age = ChronoUnit.YEARS.between(start, end);
-        } catch (DateTimeParseException e) {
-            age = 0;
-            LOG.error("Couldn't parse patient id", e);
-        }
+        int age;
 
-        return (int) age;
+        try {
+            String dateString = patientId.substring(0, DATE_PART_OF_PERSON_ID);
+            int day = Integer.parseInt(dateString.substring(DAY_PART_OF_DATE_PART));
+            int month = Integer.parseInt(dateString.substring(MONTH_PART_OF_DATE_PART, DAY_PART_OF_DATE_PART));
+
+            if (day > SAMORDNINGSNUMMER_DAY_CONSTANT) {
+                dateString = dateString.substring(0, MONTH_PART_OF_DATE_PART) + (MONTHDAY_FORMATTER.format(MonthDay.of(month, day - SAMORDNINGSNUMMER_DAY_CONSTANT)));
+            }
+            LocalDate birthDate = LocalDate.from(DateTimeFormatter.BASIC_ISO_DATE.parse(dateString));
+            Period period = Period.between(birthDate, LocalDate.now());
+            age = period.getYears();
+        } catch (Exception e) {
+            LOG.error("patientId '" + patientId + "' cannot be parsed as a date for age-calculation (adjusting for samordningsnummer did not help)", e);
+            age = 0;
+        }
+        return age;
+
+
     }
 
 }
