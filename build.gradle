@@ -162,7 +162,7 @@ subprojects {
 
         // Internal
         if (project.hasProperty("buildJenkins")) {
-            intygCommonVersion = "3.0.+"
+            intygCommonVersion = "3.1.+"
         } else {
             intygCommonVersion = "0-SNAPSHOT"
         }
