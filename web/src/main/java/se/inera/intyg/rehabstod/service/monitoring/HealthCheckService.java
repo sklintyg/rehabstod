@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.monitoring;
 
+import se.inera.intyg.common.cache.stats.model.CacheStatistics;
 import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
 
 /**
@@ -59,4 +60,6 @@ public interface HealthCheckService {
     HealthStatus checkNbrOfUsers();
 
     HealthStatus checkPdlLogQueue();
+
+    CacheStatistics getCacheStatistics();
 }

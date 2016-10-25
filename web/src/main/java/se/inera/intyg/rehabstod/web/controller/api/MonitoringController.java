@@ -18,14 +18,17 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import javax.ws.rs.core.Response;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
+import se.inera.intyg.common.cache.stats.model.CacheStatistics;
+import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 import se.inera.intyg.rehabstod.service.monitoring.HealthCheckServiceImpl;
+import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
+
+import javax.ws.rs.core.Response;
 
 @RestController
 @RequestMapping("/api/monitoring")
@@ -33,6 +36,8 @@ public class MonitoringController {
 
     @Autowired
     private HealthCheckServiceImpl healthCheck;
+
+    private ObjectMapper objectMapper = new CustomObjectMapper();
 
     @RequestMapping(value = "/uptime")
     public Response getUpTimeStatus() {
@@ -46,6 +51,17 @@ public class MonitoringController {
         HealthStatus status = healthCheck.checkNbrOfUsers();
         String xml = buildXMLResponse(status);
         return Response.ok(xml).build();
+    }
+
+    @RequestMapping(value = "/cachestats", produces = "application/json")
+    public Response getCacheStatistcs() {
+        try {
+            CacheStatistics stats = healthCheck.getCacheStatistics();
+            String json = objectMapper.writeValueAsString(stats);
+            return Response.ok(json).build();
+        } catch (JsonProcessingException | IllegalStateException e) {
+            return Response.serverError().entity(e.getMessage()).build();
+        }
     }
 
     private String buildXMLResponse(HealthStatus status) {

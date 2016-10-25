@@ -25,6 +25,8 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import se.inera.intyg.common.cache.metrics.CacheStatisticsService;
+import se.inera.intyg.common.cache.metrics.CacheStatisticsServiceImpl;
 import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 
 @Configuration
@@ -35,6 +37,11 @@ public class ApplicationConfig {
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @Bean
+    public CacheStatisticsService cacheStatisticsService() {
+        return new CacheStatisticsServiceImpl();
     }
 
     @Bean

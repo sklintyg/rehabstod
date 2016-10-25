@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.common.cache.metrics.CacheStatisticsService;
+import se.inera.intyg.common.cache.stats.model.CacheStatistics;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
@@ -36,6 +38,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service for getting the health status of the application.
@@ -72,6 +75,9 @@ public class HealthCheckServiceImpl implements HealthCheckService {
     // Pings
     @Autowired
     private IntygstjanstClientService intygstjanstClientService;
+
+    @Autowired
+    private Optional<CacheStatisticsService> cacheStatisticsService;
 
 
     @Override
@@ -156,6 +162,15 @@ public class HealthCheckServiceImpl implements HealthCheckService {
     public String checkUptimeAsString() {
         HealthStatus uptime = checkUptime();
         return DurationFormatUtils.formatDurationWords(uptime.getMeasurement(), true, true);
+    }
+
+    @Override
+    public CacheStatistics getCacheStatistics() {
+        if (!cacheStatisticsService.isPresent()) {
+            throw new java.lang.IllegalStateException("Cache statistics is not enabled!");
+        }
+
+        return cacheStatisticsService.get().getCacheStatistics();
     }
 
     private void logStatus(String operation, HealthStatus status) {
