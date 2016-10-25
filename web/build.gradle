@@ -146,7 +146,7 @@ dependencies {
     compile "se.inera.intyg.common:hsa-integration:${intygCommonVersion}"
     compile "se.inera.intyg.common:log-messages:${intygCommonVersion}"
     compile "se.inera.intyg.common:security-siths:${intygCommonVersion}"
-    compile "se.inera.intyg.common:common-cache-metrics:0-SNAPSHOT"
+    compile "se.inera.intyg.common:common-cache-metrics:${intygCommonVersion}"
 
     compile "org.springframework:spring-webmvc:${springContextVersion}"
     compile "org.springframework:spring-jms:${springContextVersion}"
