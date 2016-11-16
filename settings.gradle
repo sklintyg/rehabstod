@@ -2,9 +2,9 @@
   Gradle settings for Rehabstod
  */
 rootProject.name = 'rehabstod'
-include ':web', ':common', ':integration/it-integration', ':protractor'
+include ':web', ':common', ':integration/it-integration', ':rehabstod-protractor'
 
 project(':web').name = 'rehabstod-web'
 project(':common').name = 'rehabstod-common'
 project(':integration/it-integration').name = 'rehabstod-it-integration'
-project(':protractor').projectDir = "$rootDir/test" as File
+project(':rehabstod-protractor').projectDir = "$rootDir/test" as File
