@@ -44,19 +44,19 @@ stage('deploy') {
     //}
 //}
 
-//stage('protractor') {
-    //node {
-        //try {
-            //wrap([$class: 'Xvfb']) {
-                //shgradle "protractorTests -Dprotractor.env=build-server \
-                      //-DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion}"
-            //}
-        //} finally {
-            //publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'test/dev/report', \
-                //reportFiles: 'index.html', reportName: 'Protractor results'
-        //}
-    //}
-//}
+stage('protractor') {
+    node {
+        try {
+            wrap([$class: 'Xvfb']) {
+                shgradle "protractorTests -Dprotractor.env=build-server \
+                      -DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion}"
+            }
+        } finally {
+            publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'test/dev/report', \
+                reportFiles: 'index.html', reportName: 'Protractor results'
+        }
+    }
+}
 
 stage('tag and upload') {
     node {

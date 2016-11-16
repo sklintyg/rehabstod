@@ -1,0 +1,29 @@
+description = 'Rehabstöd (Protactor Tests)'
+
+apply plugin: 'com.moowork.grunt'
+
+grunt {
+    colors = System.properties['gruntColors'] ? System.properties['gruntColors'].toBoolean() : true
+}
+
+node {
+    version = '6.6.0'
+    download = true
+    distBaseUrl = 'https://build-inera.nordicmedtest.se/node/'
+    workDir = projectDir
+    nodeModulesDir = projectDir
+}
+
+tasks.npmInstall.inputs.files("$projectDir/rehabstodTestTools/package.json")
+
+task protractorTests(type: NodeTask, dependsOn: npmInstall) {
+    outputs.upToDateWhen { false }
+    def environment = System.properties['protractor.env'] ?: "dev"
+
+    script = file('node_modules/grunt-cli/bin/grunt')
+    args = ["default:${environment}"]
+}
+
+dependencies {
+    runtime project(':rehabstod-web')
+}
