@@ -26,7 +26,7 @@
       <h4>Configuration info</h4>
       <div>
         Application version:
-        <span class="label label-info"><spring:message code="buildVersion"></spring:message></span>
+        <span class="label label-info"><spring:message code="project.version"></spring:message></span>
       </div>
       <div>
         Build number:
