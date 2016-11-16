@@ -3,37 +3,30 @@ apply plugin: 'org.akhikhl.gretty'
 apply plugin: 'com.moowork.grunt'
 apply plugin: 'idea'
 
-//sourceSets {
-    //integrationTest {
-        //java {
-            //compileClasspath += sourceSets.main.output + sourceSets.test.output
-            //runtimeClasspath += sourceSets.main.output + sourceSets.test.output
-            //srcDir file('src/integration-test/java')
-        //}
-        //resources.srcDir file('src/integration-test/resources')
-    //}
-//}
+sourceSets {
+    restAssuredTest {
+        java {
+            compileClasspath += sourceSets.main.output + sourceSets.test.output
+            runtimeClasspath += sourceSets.main.output + sourceSets.test.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
 
 war.rootSpec.exclude "logback.xml"
 
-//configurations {
-    //integrationTestCompile.extendsFrom testCompile
-    //integrationTestRuntime.extendsFrom testRuntime
-//}
-
-//task integrationTest(type: Test) {
-    //systemProperties['integration.tests.baseUrl'] =  'http://localhost:8790/'
-
-    //testClassesDir = sourceSets.integrationTest.output.classesDir
-    //classpath = sourceSets.integrationTest.runtimeClasspath
-    //outputs.upToDateWhen { false }
-//}
+configurations {
+    restAssuredTestCompile.extendsFrom testCompile
+    restAssuredTestRuntime.extendsFrom testRuntime
+}
 
 task restAssuredTest(type: Test) {
     outputs.upToDateWhen { false }
-    // TODO!!
     systemProperty "integration.tests.baseUrl", System.properties['baseUrl'] ?: "http://localhost:8790/"
-    include '**/*IT*'
+
+    testClassesDir = sourceSets.restAssuredTest.output.classesDir
+    classpath = sourceSets.restAssuredTest.runtimeClasspath
 }
 
 tasks.withType(Test) {
@@ -68,32 +61,6 @@ if (project.hasProperty('rehabstod.useMinifiedJavaScript')) {
 else {
     war.dependsOn grunt_build_no_minify
 }
-
-
-//task assembleManifestClasspath() << {
-    //war {
-        //manifest {
-            //attributes("Build": buildVersion)
-            //attributes("Build-Time": buildTime)
-            //def gitRevision = System.env.GIT_COMMIT != null ? System.env.GIT_COMMIT : 'Local-build'
-            //attributes("Git-revision" : gitRevision)
-        //}
-    //}
-//}
-
-//war.dependsOn assembleManifestClasspath
-
-//task createVersionPropertyFile(dependsOn: processResources) << {
-    //def propertyFile = "${buildDir}/resources/main/version.properties"
-    //ant.touch(file: propertyFile, mkdirs: "true")
-    //ant.propertyfile(file: propertyFile) {
-        //entry(key: 'buildVersion', default: buildVersion)
-        //entry(key: 'buildTime', default: buildTime)
-        //entry(key: 'buildNumber', default: buildNumber)
-    //}
-//}
-
-//createVersionPropertyFile.dependsOn assembleManifestClasspath
 
 war.dependsOn createVersionPropertyFile
 
