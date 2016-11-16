@@ -36,7 +36,7 @@ stage('deploy') {
     //node {
         //try {
             //shgradle "restAssuredTest -DbaseUrl=http://webcert.inera.nordicmedtest.se/ \
-                  //-DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion} -DtyperVersion=${typerVersion}"
+                  //-DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion}"
         //} finally {
             //publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'web/build/reports/tests/restAssuredTest', \
                 //reportFiles: 'index.html', reportName: 'RestAssured results'
@@ -49,7 +49,7 @@ stage('deploy') {
         //try {
             //wrap([$class: 'Xvfb']) {
                 //shgradle "protractorTests -Dprotractor.env=build-server \
-                      //-DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion} -DtyperVersion=${typerVersion}"
+                      //-DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion}"
             //}
         //} finally {
             //publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'test/dev/report', \
@@ -60,6 +60,6 @@ stage('deploy') {
 
 stage('tag and upload') {
     node {
-        shgradle "uploadArchives tagRelease -DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion} -DtyperVersion=${typerVersion}"
+        shgradle "uploadArchives tagRelease -DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion}"
     }
 }
