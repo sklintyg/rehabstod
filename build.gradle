@@ -1,6 +1,4 @@
 ext {
-    // >>> Dependency Management
-
     // External
     activemqVersion = "5.13.0"
 
@@ -52,12 +50,6 @@ ext {
     mockitoAllVersion = "1.10.19"
     powermockFullVersion = "1.6.4"
     unitilsCoreVersion = "3.3"
-
-    // <<< Dependency management
-
-    //setProperty("buildTime", getDate().toString())
-    //setProperty("buildNumber", System.env.BUILD_NUMBER ?: "SNAPSHOT")
-    //setProperty("buildVersion", version)
 }
 
 // Load environment specific settings, if the -Penv=xxx parameter is given on invocation
@@ -80,8 +72,7 @@ allprojects {
     apply plugin: 'inera-intyg'
     apply plugin: 'maven'
     apply plugin: 'org.ajoberstar.grgit'
-
-    //project.ext.set("buildVersion", version)
+    apply plugin: 'idea'
 }
 
 subprojects {
@@ -118,12 +109,12 @@ subprojects {
 }
 
 
-//idea {
-    //module {
-        //excludeDirs += file('test/node_modules')
-        //excludeDirs += file('test/dev/report')
-    //}
-//}
+idea {
+    module {
+        excludeDirs += file('test/node_modules')
+        excludeDirs += file('test/dev/report')
+    }
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.1' //version required
@@ -143,12 +134,6 @@ def addProjectPropertiesFromFile(propfile) {
         throw new GradleScriptException("File '${propfile.path}' does not exist.", null)
     }
 }
-
-//def getDate() {
-    //def date = new Date()
-    //def formattedDate = date.format('yyyy-MM-dd HH:mm:ss')
-    //return formattedDate
-//}
 
 task tagRelease(type: TagReleaseTask)
 

@@ -13,7 +13,7 @@ stage('checkout') {
 stage('build') {
     node {
         try {
-            shgradle "--refresh-dependencies clean build sonarqube -PcodeQuality -Prehabstod.useMinifiedJavaScript -PprojectName=Rehabstodtest -PprojectId=rehabstodtest -DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion}"
+            shgradle "--refresh-dependencies clean build sonarqube -PcodeQuality -Prehabstod.useMinifiedJavaScript -PprojectName=Rehabstöd -PprojectId=rehabstod1 -DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion}"
         } finally {
             publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'build/reports/allTests', \
                 reportFiles: 'index.html', reportName: 'JUnit results'

@@ -13,6 +13,7 @@ sourceSets {
         resources.srcDir file('src/integration-test/resources')
     }
 }
+checkstyleRestAssuredTest.enabled = false
 
 war.rootSpec.exclude "logback.xml"
 

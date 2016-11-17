@@ -1,4 +1,9 @@
 subprojects {
+    apply plugin: 'checkstyle'
+    apply plugin: 'findbugs'
+    apply plugin: 'pmd'
+    apply plugin: 'com.github.hierynomus.license'
+
     configurations {
         buildtools
     }
@@ -14,7 +19,6 @@ subprojects {
         }
     }
 
-    apply plugin: 'checkstyle'
 
     checkstyle {
         config = resources.text.fromFile("${buildDir}/build-tools/checkstyle/checkstyle.xml")
@@ -40,7 +44,37 @@ subprojects {
         }
     }
 
-    apply plugin: 'com.github.hierynomus.license'
+    findbugs {
+        ignoreFailures = false
+        effort = "max"
+        reportLevel = "low"
+        includeFilter = rootProject.file("tools/codeQuality/findbugsIncludeFilter.xml")
+        sourceSets = [ sourceSets.main ]
+    }
+    tasks.withType(FindBugs) {
+        reports {
+            if (project.properties['findBugsHtmlOutput'] == "true") {
+                xml.enabled = false
+                html.enabled = true
+            }
+            else {
+                xml.enabled = true
+                html.enabled = false
+            }
+        }
+    }
+    findbugsMain.onlyIf { project.hasProperty('codeQuality') }
+    findbugsTest.enabled = false
+
+    pmd {
+        ignoreFailures = false
+        ruleSetFiles = rootProject.files("tools/codeQuality/pmdRuleSet.xml")
+        ruleSets = []
+        sourceSets = [ sourceSets.main ]
+    }
+
+    pmdMain.onlyIf { project.hasProperty('codeQuality') }
+    pmdTest.enabled = false
 
     license {
         ext.url = 'https://github.com/sklintyg/rehabstod'
