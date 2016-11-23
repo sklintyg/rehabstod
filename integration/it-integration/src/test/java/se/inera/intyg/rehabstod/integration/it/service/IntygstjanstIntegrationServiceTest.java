@@ -66,6 +66,12 @@ public class IntygstjanstIntegrationServiceTest {
         testee.getIntygsDataForCareUnit(HSA_ID_UNKNOWN);
     }
 
+    @Test(expected = IntygstjanstIntegrationException.class)
+    public void testGetIntygsDataForCareUnitThrowsExceptionWhenErrorCodeMissing() throws Exception {
+        when(intygstjanstClientService.getSjukfall(HSA_ID_UNKNOWN)).thenReturn(new ListActiveSickLeavesForCareUnitResponseType());
+        testee.getIntygsDataForCareUnit(HSA_ID_UNKNOWN);
+    }
+
     private ListActiveSickLeavesForCareUnitResponseType buildResponse() {
         ListActiveSickLeavesForCareUnitResponseType response = new ListActiveSickLeavesForCareUnitResponseType();
         response.setResultCode(ResultCodeEnum.OK);
