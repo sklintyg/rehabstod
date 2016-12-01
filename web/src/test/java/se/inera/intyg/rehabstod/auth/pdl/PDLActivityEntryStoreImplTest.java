@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.auth.pdl;
 
 import org.junit.Test;
-import se.inera.intyg.common.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Lakare;

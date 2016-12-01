@@ -26,7 +26,7 @@ import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.springframework.security.saml.context.SAMLMessageContext;
 import org.springframework.security.saml.websso.WebSSOProfileOptions;
 
-import se.inera.intyg.common.security.common.model.AuthConstants;
+import se.inera.intyg.infra.security.common.model.AuthConstants;
 
 /**
  * Created by eriklupander on 2016-05-30.

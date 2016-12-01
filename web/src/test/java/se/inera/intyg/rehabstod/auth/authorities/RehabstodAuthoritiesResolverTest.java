@@ -25,12 +25,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import se.inera.intyg.common.integration.hsa.services.HsaPersonService;
-import se.inera.intyg.common.security.authorities.CommonAuthoritiesResolver;
-import se.inera.intyg.common.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
-import se.inera.intyg.common.security.common.model.Privilege;
-import se.inera.intyg.common.security.common.model.RequestOrigin;
-import se.inera.intyg.common.security.common.model.Title;
+import se.inera.intyg.infra.integration.hsa.services.HsaPersonService;
+import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
+import se.inera.intyg.infra.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
+import se.inera.intyg.infra.security.common.model.Privilege;
+import se.inera.intyg.infra.security.common.model.RequestOrigin;
+import se.inera.intyg.infra.security.common.model.Title;
 
 import java.util.List;
 

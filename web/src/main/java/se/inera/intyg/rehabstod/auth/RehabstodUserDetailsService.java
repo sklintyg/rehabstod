@@ -18,19 +18,17 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-// import static se.inera.intyg.common.integration.hsa.stub.Medarbetaruppdrag.VARD_OCH_BEHANDLING;
-
 import org.opensaml.saml2.core.Assertion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.common.integration.hsa.model.UserCredentials;
-import se.inera.intyg.common.integration.hsa.model.Vardgivare;
-import se.inera.intyg.common.security.common.model.IntygUser;
-import se.inera.intyg.common.security.siths.BaseSakerhetstjanstAssertion;
-import se.inera.intyg.common.security.siths.BaseUserDetailsService;
+import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
+import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
+import se.inera.intyg.infra.security.common.model.IntygUser;
+import se.inera.intyg.infra.security.siths.BaseSakerhetstjanstAssertion;
+import se.inera.intyg.infra.security.siths.BaseUserDetailsService;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
 

@@ -25,8 +25,8 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import se.inera.intyg.common.cache.metrics.CacheStatisticsService;
-import se.inera.intyg.common.cache.metrics.CacheStatisticsServiceImpl;
+import se.inera.intyg.infra.cache.metrics.CacheStatisticsService;
+import se.inera.intyg.infra.cache.metrics.CacheStatisticsServiceImpl;
 import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 
 @Configuration

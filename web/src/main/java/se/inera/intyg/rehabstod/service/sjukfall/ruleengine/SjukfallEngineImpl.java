@@ -24,6 +24,7 @@ import java.time.MonthDay;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,8 +35,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import se.inera.intyg.common.support.modules.support.api.dto.InvalidPersonNummerException;
-import se.inera.intyg.common.support.modules.support.api.dto.Personnummer;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
@@ -135,21 +134,22 @@ public class SjukfallEngineImpl implements SjukfallEngine {
 
         String id = StringUtils.trim(intygPatient.getPersonId().getExtension());
 
-        Personnummer personNummer = new Personnummer(id);
-
         // Default fallback gender
         Gender gender = Gender.UNKNOWN;
 
         // Default fallback age
         int age = 0;
 
-        try {
-            String normalizedPnr = personNummer.getNormalizedPnr();
+        String normalizedPnr;
+        if (id.matches("^(19|20)[0-9]{6}[-+]?[0-9]{4}$")) {
+            normalizedPnr = id.replace("-", "").replace("+", "");
             gender = Gender.getGenderFromString(normalizedPnr.substring(GENDER_START, GENDER_END));
             age = getPatientAge(normalizedPnr);
-        } catch (InvalidPersonNummerException e) {
-            LOG.debug("Failed to normalize patientId '" + id + "'");
-            // Age could possibly be determined even if it's not a valid personnr/samordningsnummer, e.g 19121212
+        } else if (id.matches("^[0-9]{6}[+-]?[0-9]{4}$")) {
+            normalizedPnr = getCenturyFromYearAndSeparator(id) + id.replace("-", "").replace("+", "");
+            gender = Gender.getGenderFromString(normalizedPnr.substring(GENDER_START, GENDER_END));
+            age = getPatientAge(normalizedPnr);
+        } else {
             age = getPatientAge(id);
         }
 
@@ -162,9 +162,6 @@ public class SjukfallEngineImpl implements SjukfallEngine {
 
         return patient;
     }
-
-
-    // - - -  Package scope  - - -
 
     List<InternalSjukfall> assemble(Map<String, List<InternalIntygsData>> resolvedIntygsData, GetSjukfallRequest requestData) {
         LOG.debug("  - Assembling 'sjukfall'");
@@ -221,9 +218,6 @@ public class SjukfallEngineImpl implements SjukfallEngine {
         return sjukfall;
     }
 
-
-    // - - -  Private scope  - - -
-
     private Integer getAktivGrad(List<Formaga> list, LocalDate aktivtDatum) {
         LOG.debug("  - Lookup 'aktiv grad'");
         return list.stream()
@@ -269,6 +263,20 @@ public class SjukfallEngineImpl implements SjukfallEngine {
         return age;
 
 
+    }
+
+    private String getCenturyFromYearAndSeparator(String personnummer) {
+        final Calendar now = Calendar.getInstance();
+        final int currentYear = now.getWeekYear();
+        final boolean personnummerContainsCentury = personnummer.matches("[0-9]{8}[-+]?[0-9]{4}");
+        final int yearStartIndex = personnummerContainsCentury ? 2 : 0;
+        final int yearFromPersonnummer = Integer.parseInt(personnummer.substring(yearStartIndex, yearStartIndex + 2));
+        final int dividerToRemoveNonCenturyYear = 100;
+        final int century = (currentYear - yearFromPersonnummer) / dividerToRemoveNonCenturyYear;
+        if (personnummer.contains("+")) {
+            return String.valueOf(century - 1);
+        }
+        return String.valueOf(century);
     }
 
 }

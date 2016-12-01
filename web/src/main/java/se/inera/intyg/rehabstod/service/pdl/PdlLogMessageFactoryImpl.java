@@ -20,14 +20,13 @@ package se.inera.intyg.rehabstod.service.pdl;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.common.integration.hsa.model.SelectableVardenhet;
-import se.inera.intyg.common.logmessages.ActivityType;
-import se.inera.intyg.common.logmessages.Enhet;
-import se.inera.intyg.common.logmessages.Patient;
-import se.inera.intyg.common.logmessages.PdlLogMessage;
-import se.inera.intyg.common.logmessages.PdlResource;
-import se.inera.intyg.common.logmessages.ResourceType;
-import se.inera.intyg.common.support.modules.support.api.dto.Personnummer;
+import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
+import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.Enhet;
+import se.inera.intyg.infra.logmessages.Patient;
+import se.inera.intyg.infra.logmessages.PdlLogMessage;
+import se.inera.intyg.infra.logmessages.PdlResource;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataLogMessage;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataPrintLogMessage;
@@ -67,8 +66,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 
     private PdlResource buildPdlLogResource(InternalSjukfall sf) {
         PdlResource pdlResource = new PdlResource();
-        Personnummer personnummer = new Personnummer(sf.getSjukfall().getPatient().getId());
-        Patient patient = new Patient(personnummer, sf.getSjukfall().getPatient().getNamn());
+        Patient patient = new Patient(sf.getSjukfall().getPatient().getId().replace("-", "").replace("+", ""), sf.getSjukfall().getPatient().getNamn());
         pdlResource.setPatient(patient);
 
         Enhet resourceOwner = new Enhet(sf.getVardEnhetId(), sf.getVardEnhetNamn(), sf.getVardGivareId(), sf.getVardGivareNamn());

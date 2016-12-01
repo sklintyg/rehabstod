@@ -33,11 +33,11 @@ describe('Model: UserModel', function() {
         urval: null,
         authenticationScheme: 'urn:inera:rehabstod:siths:fake',
         vardgivare: [{
-            '@class': 'se.inera.intyg.common.integration.hsa.model.Vardgivare',
+            '@class': 'se.inera.intyg.infra.integration.hsa.model.Vardgivare',
             id: 'IFV1239877878-1041',
             namn: 'WebCert-Vårdgivare1',
             vardenheter: [{
-                '@class': 'se.inera.intyg.common.integration.hsa.model.Vardenhet',
+                '@class': 'se.inera.intyg.infra.integration.hsa.model.Vardenhet',
                 id: 'IFV1239877878-1042',
                 namn: 'WebCert-Enhet1',
                 epost: 'enhet1@webcert.invalid.se',
@@ -49,7 +49,7 @@ describe('Model: UserModel', function() {
                 start: null,
                 end: null,
                 mottagningar: [{
-                    '@class':'se.inera.intyg.common.integration.hsa.model.Mottagning',
+                    '@class':'se.inera.intyg.infra.integration.hsa.model.Mottagning',
                     'id':'mottagning 1',
                     'namn':'mottagning 1',
                     'epost':null,
@@ -67,7 +67,7 @@ describe('Model: UserModel', function() {
         }],
         'befattningar': [],
         'valdVardenhet': {
-            '@class': 'se.inera.intyg.common.integration.hsa.model.Vardenhet',
+            '@class': 'se.inera.intyg.infra.integration.hsa.model.Vardenhet',
             id: 'IFV1239877878-1042',
             namn: 'WebCert-Enhet1',
             epost: 'enhet1@webcert.invalid.se',
@@ -81,11 +81,11 @@ describe('Model: UserModel', function() {
             mottagningar: []
         },
         valdVardgivare: {
-            '@class': 'se.inera.intyg.common.integration.hsa.model.Vardgivare',
+            '@class': 'se.inera.intyg.infra.integration.hsa.model.Vardgivare',
             id: 'IFV1239877878-1041',
             namn: 'WebCert-Vårdgivare1',
             vardenheter: [{
-                '@class': 'se.inera.intyg.common.integration.hsa.model.Vardenhet',
+                '@class': 'se.inera.intyg.infra.integration.hsa.model.Vardenhet',
                 id: 'IFV1239877878-1042',
                 namn: 'WebCert-Enhet1',
                 epost: 'enhet1@webcert.invalid.se',

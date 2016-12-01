@@ -19,8 +19,8 @@
 package se.inera.intyg.rehabstod.auth.authorities;
 
 import org.junit.Test;
-import se.inera.intyg.common.security.common.model.Privilege;
-import se.inera.intyg.common.security.common.model.Role;
+import se.inera.intyg.infra.security.common.model.Privilege;
+import se.inera.intyg.infra.security.common.model.Role;
 
 import java.util.Arrays;
 import java.util.List;

@@ -25,6 +25,6 @@ import org.springframework.context.annotation.Configuration;
  * Created by eriklupander on 2016-05-18.
  */
 @Configuration
-@ComponentScan("se.inera.intyg.common.security.authorities")
+@ComponentScan("se.inera.intyg.infra.security.authorities")
 public class SecurityConfig {
 }

@@ -41,12 +41,12 @@ angular.module('rehabstodApp').value('mockResponse', {
         'authenticationScheme': 'urn:inera:rehabstod:siths:fake',
         'vardgivare': [
             {
-                '@class': 'se.inera.intyg.common.integration.hsa.model.Vardgivare',
+                '@class': 'se.inera.intyg.infra.integration.hsa.model.Vardgivare',
                 'id': 'IFV1239877878-1041',
                 'namn': 'WebCert-Vårdgivare1',
                 'vardenheter': [
                     {
-                        '@class': 'se.inera.intyg.common.integration.hsa.model.Vardenhet',
+                        '@class': 'se.inera.intyg.infra.integration.hsa.model.Vardenhet',
                         'id': 'IFV1239877878-1042',
                         'namn': 'WebCert-Enhet1',
                         'epost': 'enhet1@webcert.invalid.se',
@@ -63,7 +63,7 @@ angular.module('rehabstodApp').value('mockResponse', {
             }],
         'befattningar': [],
         'valdVardenhet': {
-            '@class': 'se.inera.intyg.common.integration.hsa.model.Vardenhet',
+            '@class': 'se.inera.intyg.infra.integration.hsa.model.Vardenhet',
             'id': 'IFV1239877878-1042',
             'namn': 'WebCert-Enhet1',
             'epost': 'enhet1@webcert.invalid.se',
@@ -76,12 +76,12 @@ angular.module('rehabstodApp').value('mockResponse', {
             'end': null,
             'mottagningar': []
         }, 'valdVardgivare': {
-            '@class': 'se.inera.intyg.common.integration.hsa.model.Vardgivare',
+            '@class': 'se.inera.intyg.infra.integration.hsa.model.Vardgivare',
             'id': 'IFV1239877878-1041',
             'namn': 'WebCert-Vårdgivare1',
             'vardenheter': [
                 {
-                    '@class': 'se.inera.intyg.common.integration.hsa.model.Vardenhet',
+                    '@class': 'se.inera.intyg.infra.integration.hsa.model.Vardenhet',
                     'id': 'IFV1239877878-1042',
                     'namn': 'WebCert-Enhet1',
                     'epost': 'enhet1@webcert.invalid.se',

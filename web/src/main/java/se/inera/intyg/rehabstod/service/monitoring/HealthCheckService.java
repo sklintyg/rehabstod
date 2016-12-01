@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.monitoring;
 
-import se.inera.intyg.common.cache.stats.model.CacheStatistics;
+import se.inera.intyg.infra.cache.metrics.model.CacheStatistics;
 import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
 
 /**

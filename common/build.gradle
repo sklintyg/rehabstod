@@ -4,7 +4,7 @@ apply plugin: 'java'
 
 dependencies {
 
-    compile "se.inera.intyg.common:log-messages:${intygCommonVersion}"
+    compile "se.inera.intyg.infra:log-messages:${intygInfraVersion}"
 
     compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"

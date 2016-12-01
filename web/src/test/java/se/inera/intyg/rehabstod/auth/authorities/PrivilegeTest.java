@@ -20,8 +20,8 @@ package se.inera.intyg.rehabstod.auth.authorities;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.inera.intyg.common.security.common.model.Privilege;
-import se.inera.intyg.common.security.common.model.RequestOrigin;
+import se.inera.intyg.infra.security.common.model.Privilege;
+import se.inera.intyg.infra.security.common.model.RequestOrigin;
 
 import java.util.Arrays;
 import java.util.List;

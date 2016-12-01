@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
 
-import se.inera.intyg.common.integration.hsa.stub.HsaServiceStub;
+import se.inera.intyg.infra.integration.hsa.stub.HsaServiceStub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

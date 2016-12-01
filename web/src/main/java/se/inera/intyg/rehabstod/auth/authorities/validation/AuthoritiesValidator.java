@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities.validation;
 
-import se.inera.intyg.common.security.authorities.validation.AuthExpectationSpecImpl;
-import se.inera.intyg.common.security.authorities.validation.AuthExpectationSpecification;
-import se.inera.intyg.common.security.common.model.IntygUser;
+import se.inera.intyg.infra.security.authorities.validation.AuthExpectationSpecImpl;
+import se.inera.intyg.infra.security.authorities.validation.AuthExpectationSpecification;
+import se.inera.intyg.infra.security.common.model.IntygUser;
 
 /**
  * Utility class that makes it easy to express and enforce authority constraint rules in backend code.

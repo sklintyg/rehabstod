@@ -19,7 +19,7 @@
 
 package se.inera.intyg.rehabstod.auth.pdl;
 
-import se.inera.intyg.common.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ActivityType;
 
 import java.io.Serializable;
 import java.util.Objects;

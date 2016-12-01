@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
-import se.inera.intyg.common.logmessages.ActivityType;
-import se.inera.intyg.common.logmessages.PdlLogMessage;
+import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.PdlLogMessage;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 

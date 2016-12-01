@@ -29,7 +29,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.providers.ExpiringUsernameAuthenticationToken;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
-import se.inera.intyg.common.security.siths.BaseSakerhetstjanstAssertion;
+import se.inera.intyg.infra.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.rehabstod.auth.BaseFakeAuthenticationProvider;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 

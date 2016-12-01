@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.monitoring;
 
-import se.inera.intyg.common.security.common.service.AuthenticationLogger;
+import se.inera.intyg.infra.security.common.service.AuthenticationLogger;
 
 /**
  * Interface used when logging to monitoring file. Used to ensure that the log entries are uniform and easy to parse.

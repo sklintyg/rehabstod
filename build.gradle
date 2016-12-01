@@ -37,6 +37,7 @@ ext {
     wsdl4jVersion = "1.6.3"
 
     intygCommonVersion  = System.properties['commonVersion'] ?: '0-SNAPSHOT'
+    intygInfraVersion  = System.properties['commonVersion'] ?: '0-SNAPSHOT'
 
     // Schemas
     rehabSchemaVersion = "1.0.3"

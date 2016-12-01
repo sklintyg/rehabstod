@@ -19,11 +19,11 @@
 package se.inera.intyg.rehabstod.service.pdl;
 
 import org.junit.Test;
-import se.inera.intyg.common.logmessages.ActivityPurpose;
-import se.inera.intyg.common.logmessages.ActivityType;
-import se.inera.intyg.common.logmessages.PdlLogMessage;
-import se.inera.intyg.common.logmessages.PdlResource;
-import se.inera.intyg.common.logmessages.ResourceType;
+import se.inera.intyg.infra.logmessages.ActivityPurpose;
+import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.PdlLogMessage;
+import se.inera.intyg.infra.logmessages.PdlResource;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 
 import static org.junit.Assert.assertEquals;
@@ -53,7 +53,7 @@ public class PdlLogMessageFactoryImplTest {
         assertEquals(5, pdlLogMessage.getPdlResourceList().size());
         PdlResource pdlResource = pdlLogMessage.getPdlResourceList().get(0);
         assertEquals(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL.getResourceTypeName(), pdlResource.getResourceType());
-        assertEquals("191212121212", pdlResource.getPatient().getPatientId().getPersonnummerWithoutDash());
+        assertEquals("191212121212", pdlResource.getPatient().getPatientId());
         assertEquals("Tolvan Tolvansson", pdlResource.getPatient().getPatientNamn());
     }
 
