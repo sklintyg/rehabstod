@@ -1,7 +1,7 @@
 #!groovy
 
 def buildVersion = "1.2.${BUILD_NUMBER}"
-def commonVersion = "3.1.+"
+def infraVersion = "3.1.+"
 
 stage('checkout') {
     node {
@@ -13,7 +13,7 @@ stage('checkout') {
 stage('build') {
     node {
         try {
-            shgradle "--refresh-dependencies clean build sonarqube -PcodeQuality -Prehabstod.useMinifiedJavaScript -PprojectName=Rehabstöd -PprojectId=rehabstod1 -DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion}"
+            shgradle "--refresh-dependencies clean build sonarqube -PcodeQuality -Prehabstod.useMinifiedJavaScript -PprojectName=Rehabstöd -PprojectId=rehabstod1 -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion}"
         } finally {
             publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'build/reports/allTests', \
                 reportFiles: 'index.html', reportName: 'JUnit results'
@@ -36,7 +36,7 @@ stage('restAssured') {
     node {
         try {
             shgradle "restAssuredTest -DbaseUrl=http://rehabstod.inera.nordicmedtest.se/ \
-                  -DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion}"
+                  -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion}"
         } finally {
             publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'web/build/reports/tests/restAssuredTest', \
                 reportFiles: 'index.html', reportName: 'RestAssured results'
@@ -49,7 +49,7 @@ stage('protractor') {
         try {
             wrap([$class: 'Xvfb']) {
                 shgradle "protractorTests -Dprotractor.env=build-server \
-                      -DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion}"
+                      -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion}"
             }
         } finally {
             publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'test/dev/report', \
@@ -60,6 +60,6 @@ stage('protractor') {
 
 stage('tag and upload') {
     node {
-        shgradle "uploadArchives tagRelease -DbuildVersion=${buildVersion} -DcommonVersion=${commonVersion}"
+        shgradle "uploadArchives tagRelease -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion}"
     }
 }

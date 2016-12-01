@@ -36,8 +36,7 @@ ext {
 
     wsdl4jVersion = "1.6.3"
 
-    intygCommonVersion  = System.properties['commonVersion'] ?: '0-SNAPSHOT'
-    intygInfraVersion  = System.properties['commonVersion'] ?: '0-SNAPSHOT'
+    intygInfraVersion  = System.properties['infraVersion'] ?: '0-SNAPSHOT'
 
     // Schemas
     rehabSchemaVersion = "1.0.3"
@@ -91,8 +90,8 @@ subprojects {
     }
 
     [install.repositories.mavenInstaller, uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
-        pom.dependencies.findAll {dep -> dep.groupId == 'se.inera.intyg.common'}.each {
-            it.version = findResolvedVersion(project, 'se.inera.intyg.common')
+        pom.dependencies.findAll {dep -> dep.groupId == 'se.inera.intyg.infra'}.each {
+            it.version = findResolvedVersion(project, 'se.inera.intyg.infra')
         }
     }
 

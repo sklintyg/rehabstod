@@ -9,7 +9,7 @@ subprojects {
     }
 
     dependencies {
-        buildtools "se.inera.intyg.common:common-build-tools:${intygCommonVersion}"
+        buildtools "se.inera.intyg.common:common-build-tools:3.1.+"
     }
 
     task unzipBuildTools(type: Copy) {
