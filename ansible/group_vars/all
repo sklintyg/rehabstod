@@ -31,7 +31,7 @@ tomcat_home: "{{ inera_root }}/tomcat7"
 tomcat_conf: "{{ tomcat_home }}/conf"
 tomcat_bin:  "{{ tomcat_home }}/bin"
 tomcat_lib:  "{{ tomcat_home }}/lib"
-inera_tomcat_folder: "/var/lib/{{ tomcat_service }}"
+inera_tomcat_folder: "{{ inera_root }}/{{ tomcat_service }}"
 webapps_folder: "{{ inera_tomcat_folder }}/webapps"
 
 # ActiveMQ configuration
