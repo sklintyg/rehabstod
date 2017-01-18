@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Inera AB (http://www.inera.se)
+ * Copyright (C) 2017 Inera AB (http://www.inera.se)
  *
  * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.auth;
 
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
@@ -75,6 +74,8 @@ public class RehabstodUser extends IntygUser implements Serializable {
         this.origin = intygUser.getOrigin();
 
         this.storedActivities = new HashMap<>();
+
+        this.miuNamnPerEnhetsId = intygUser.getMiuNamnPerEnhetsId();
     }
 
     public Urval getUrval() {

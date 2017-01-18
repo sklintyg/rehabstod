@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Inera AB (http://www.inera.se)
+ * Copyright (C) 2017 Inera AB (http://www.inera.se)
  *
  * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
  *
@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.testutil;
 
-import java.time.LocalDate;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
@@ -33,9 +32,12 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -165,17 +167,23 @@ public final class TestDataGen {
         RehabstodUser user = new RehabstodUser(USER_HSA_ID, USER_NAME);
         user.setValdVardenhet(buildValdVardenhet(CAREUNIT_ID, CAREUNIT_NAME));
         user.setValdVardgivare(buildValdGivare(CAREGIVER_ID, CAREGIVER_NAME));
+        user.setMiuNamnPerEnhetsId(buildMiUPerEnhetsIdMap());
+        user.setTitel("Överläkare");
         return user;
     }
 
+    private static Map<String, String> buildMiUPerEnhetsIdMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put(CAREUNIT_ID, "Läkare på " + CAREUNIT_NAME);
+        return map;
+    }
+
     private static SelectableVardenhet buildValdGivare(String hsaId, String namn) {
-        SelectableVardenhet vardgivare = new Vardgivare(hsaId, namn);
-        return vardgivare;
+        return new Vardgivare(hsaId, namn);
     }
 
     private static SelectableVardenhet buildValdVardenhet(String hsaId, String namn) {
-        SelectableVardenhet vardenhet = new Vardenhet(hsaId, namn);
-        return vardenhet;
+        return new Vardenhet(hsaId, namn);
     }
 
 

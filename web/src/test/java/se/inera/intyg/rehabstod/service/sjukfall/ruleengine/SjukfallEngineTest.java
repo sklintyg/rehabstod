@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Inera AB (http://www.inera.se)
+ * Copyright (C) 2017 Inera AB (http://www.inera.se)
  *
  * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
  *
@@ -18,20 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.ruleengine;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +25,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosBeskrivningService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
@@ -53,6 +38,21 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
+
+import java.io.IOException;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by martin on 11/02/16.
@@ -69,6 +69,7 @@ public class SjukfallEngineTest {
     private static List<InternalSjukfall> internalSjukfallList;
 
     private LocalDate activeDate = LocalDate.parse("2016-02-16");
+    private LocalDate tolvanBirthdate = LocalDate.parse("1912-12-12");
 
     @Mock
     private DiagnosBeskrivningService diagnosBeskrivningService;
@@ -196,7 +197,7 @@ public class SjukfallEngineTest {
     public void testPatient() {
         String fullstandigtNamn = "Anders Andersson";
         String id = " 19121212-1212 ";
-        final int expectedYear = 103;
+        final int expectedYear = (int) ChronoUnit.YEARS.between(tolvanBirthdate, LocalDate.now());
 
         IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
 
@@ -212,7 +213,7 @@ public class SjukfallEngineTest {
     public void testPatientMellanNamn() {
         String fullstandigtNamn = "Anders Andersson";
         String id = " 19121212-1212 ";
-        final int expectedYear = 103;
+        final int expectedYear =  (int) ChronoUnit.YEARS.between(tolvanBirthdate, LocalDate.now());
 
         IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
 
@@ -228,7 +229,7 @@ public class SjukfallEngineTest {
     public void testPatientShortId() {
         String fullstandigtNamn = "Anders Andersson";
         String id = " 19121212 ";
-        final int expectedYear = 103;
+        final int expectedYear =  (int) ChronoUnit.YEARS.between(tolvanBirthdate, LocalDate.now());
 
         IntygsData intyg = getIntygWithPatient(id, fullstandigtNamn);
 

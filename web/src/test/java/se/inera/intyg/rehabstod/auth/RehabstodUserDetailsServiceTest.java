@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Inera AB (http://www.inera.se)
+ * Copyright (C) 2017 Inera AB (http://www.inera.se)
  *
  * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
  *
@@ -17,24 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package se.inera.intyg.rehabstod.auth;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.cxf.staxutils.StaxUtils;
 import org.junit.Before;
@@ -57,7 +39,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
-
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.UserAuthorizationInfo;
 import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
@@ -81,6 +62,25 @@ import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleEx
 import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 import se.riv.infrastructure.directory.v1.PaTitleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
+
+import javax.xml.transform.stream.StreamSource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by marced on 29/01/16.
@@ -158,7 +158,7 @@ public class RehabstodUserDetailsServiceTest {
         SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         UserCredentials userCredz = new UserCredentials();
         userCredz.getHsaSystemRole().addAll(buildSystemRoles());
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, buildVardgivareList()));
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, buildVardgivareList(), buildMiuPerCareUnitMap()));
 
         setupCallToGetHsaPersonInfoNonDoctor();
 
@@ -184,7 +184,7 @@ public class RehabstodUserDetailsServiceTest {
         List<Vardgivare> vardgivarList = new ArrayList<>();
         vardgivarList.add(vardgivare);
 
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, vardgivarList));
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, vardgivarList, buildMiuPerCareUnitMap()));
 
         setupCallToGetHsaPersonInfoNonDoctor();
 
@@ -213,7 +213,7 @@ public class RehabstodUserDetailsServiceTest {
         List<Vardgivare> vardgivarList = new ArrayList<>();
         vardgivarList.add(vardgivare);
 
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, vardgivarList));
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, vardgivarList, buildMiuPerCareUnitMap()));
 
         setupCallToGetHsaPersonInfoNonDoctor();
 
@@ -284,7 +284,7 @@ public class RehabstodUserDetailsServiceTest {
         // given
         setupCallToGetHsaPersonInfo();
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
-                .thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>()));
+                .thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>(), new HashMap<>()));
         SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
 
         // then
@@ -295,7 +295,7 @@ public class RehabstodUserDetailsServiceTest {
     public void testMissingMedarbetaruppdragExceptionIsThrownWhenEmployeeHasNoMIU() throws Exception {
         // given
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
-                .thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>()));
+                .thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>(), new HashMap<>()));
         setupCallToGetHsaPersonInfo();
         SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
 
@@ -308,7 +308,7 @@ public class RehabstodUserDetailsServiceTest {
     public void testUserWithTitleLakareBecomesVardadmin() throws Exception {
         UserCredentials userCredz = new UserCredentials();
         userCredz.getHsaSystemRole().addAll(buildSystemRoles());
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, buildVardgivareList()));
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, buildVardgivareList(), buildMiuPerCareUnitMap()));
         setupCallToGetHsaPersonInfoNonDoctor("Läkare");
 
         SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
@@ -321,7 +321,7 @@ public class RehabstodUserDetailsServiceTest {
     @Test
     public void testLakareWithNoSystemRolesKeepsAllUnits() throws Exception {
         UserCredentials userCredz = new UserCredentials();
-        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, buildVardgivareList()));
+        when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID)).thenReturn(new UserAuthorizationInfo(userCredz, buildVardgivareList(), buildMiuPerCareUnitMap()));
         setupCallToGetHsaPersonInfo("Läkare");
 
         SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
@@ -440,7 +440,7 @@ public class RehabstodUserDetailsServiceTest {
 
     private void setupCallToAuthorizedEnheterForHosPerson() {
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
-                .thenReturn(new UserAuthorizationInfo(new UserCredentials(), buildVardgivareList()));
+                .thenReturn(new UserAuthorizationInfo(new UserCredentials(), buildVardgivareList(), buildMiuPerCareUnitMap()));
     }
 
     private List<Vardgivare> buildVardgivareList() {
@@ -455,6 +455,13 @@ public class RehabstodUserDetailsServiceTest {
         vardgivare.getVardenheter().add(enhet2);
 
         return new ArrayList<>(Arrays.asList(vardgivare));
+    }
+
+    private Map<String, String> buildMiuPerCareUnitMap() {
+        Map<String, String> mius = new HashMap<>();
+        mius.put(ENHET_HSAID_1 , "Läkare på VårdEnhet2A");
+        mius.put(ENHET_HSAID_2, "Stafettläkare på Vårdcentralen");
+        return mius;
     }
 
     private void setupCallToGetHsaPersonInfo() {
@@ -525,10 +532,8 @@ public class RehabstodUserDetailsServiceTest {
         if ((requestURI != null) && (requestURI.length() > 0)) {
             request.setRequestURI(requestURI);
         }
-
-        // SavedRequest savedRequest = new DefaultSavedRequest(request, new PortResolverImpl());
-        // request.getSession().setAttribute(SPRING_SECURITY_SAVED_REQUEST_KEY, savedRequest);
-
         return request;
     }
+
+
 }

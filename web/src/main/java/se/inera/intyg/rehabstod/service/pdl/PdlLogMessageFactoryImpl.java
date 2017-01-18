@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Inera AB (http://www.inera.se)
+ * Copyright (C) 2017 Inera AB (http://www.inera.se)
  *
  * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
  *
@@ -84,26 +84,21 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         throw new IllegalArgumentException("No LogMessage type for activityType " + activityType.name() + " defined");
     }
 
+    // CHECKSTYLE:OFF ParameterNumber
     private LogUser getLogUser(RehabstodUser user) {
-        LogUser logUser = new LogUser();
-
-        logUser.setUserId(user.getHsaId());
-        logUser.setUserName(user.getNamn());
-
-        SelectableVardenhet valdVardenhet = user.getValdVardenhet();
-        logUser.setEnhetsId(valdVardenhet.getId());
-        logUser.setEnhetsNamn(valdVardenhet.getNamn());
-
         SelectableVardenhet valdVardgivare = user.getValdVardgivare();
-        logUser.setVardgivareId(valdVardgivare.getId());
-        logUser.setVardgivareNamn(valdVardgivare.getNamn());
+        SelectableVardenhet valdVardenhet = user.getValdVardenhet();
 
-        return logUser;
+        return new LogUser(user.getHsaId(), user.getNamn(), user.getSelectedMedarbetarUppdragNamn(), user.getTitel(),
+                valdVardenhet.getId(), valdVardenhet.getNamn(), valdVardgivare.getId(), valdVardgivare.getNamn());
     }
+    // CHECKSTYLE:ON ParameterNumber
 
     private void populateWithCurrentUserAndCareUnit(PdlLogMessage logMsg, LogUser user) {
         logMsg.setUserId(user.getUserId());
         logMsg.setUserName(user.getUserName());
+        logMsg.setUserAssignment(user.getUserAssignment());
+        logMsg.setUserTitle(user.getUserTitle());
 
         Enhet vardenhet = new Enhet(user.getEnhetsId(), user.getEnhetsNamn(), user.getVardgivareId(), user.getVardgivareNamn());
         logMsg.setUserCareUnit(vardenhet);
