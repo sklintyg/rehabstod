@@ -37,7 +37,7 @@
     <Arg>
       <New class="org.apache.activemq.ActiveMQConnectionFactory">
         <Arg>vm://localhost?broker.persistent=false</Arg>
-        <!-- <Arg>tcp://localhost:61616</Arg> -->
+        <!--     <Arg>tcp://localhost:61616</Arg>      -->
       </New>
     </Arg>
   </New>
@@ -48,7 +48,7 @@
     <Arg>jms/Queue</Arg>
     <Arg>
       <New class="org.apache.activemq.command.ActiveMQQueue">
-        <Arg>logging.queue</Arg>
+        <Arg>dev.logging.queue</Arg>
       </New>
     </Arg>
   </New>
