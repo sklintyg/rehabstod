@@ -31,7 +31,7 @@
 var HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
 
 exports.config = {
-    seleniumAddress: require('./../rehabstodTestTools/environment.js').envConfig.SELENIUM_ADDRESS
+    seleniumAddress: require('./../rehabstodTestTools/environment.js').envConfig.SELENIUM_ADDRESS,
     baseUrl: require('./../rehabstodTestTools/environment.js').envConfig.REHABSTOD_URL,
 
     specs: ['./spec/*.spec.js'],
