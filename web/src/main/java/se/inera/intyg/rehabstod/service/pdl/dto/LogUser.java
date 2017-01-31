@@ -19,29 +19,33 @@
 package se.inera.intyg.rehabstod.service.pdl.dto;
 
 
-public class LogUser {
+/**
+ * Immutable representation of a Webcert user for PDL logging purposes.
+ *
+ * @author mekstrand
+ */
+public final class LogUser {
 
-    private String userId;
-    private String userName;
-    private String userAssignment;
-    private String userTitle;
-    private String enhetsId;
-    private String enhetsNamn;
-    private String vardgivareId;
-    private String vardgivareNamn;
+    private final String userId;
+    private final String userName;
+    private final String userAssignment;
+    private final String userTitle;
+    private final String enhetsId;
+    private final String enhetsNamn;
+    private final String vardgivareId;
+    private final String vardgivareNamn;
 
-    // CHECKSTYLE:OFF ParameterNumber
-    public LogUser(String userId, String userName, String userAssignment, String userTitle, String enhetsId, String enhetsNamn, String vardgivareId, String vardgivareNamn) {
-        this.userId = userId;
-        this.userName = userName;
-        this.userAssignment = userAssignment;
-        this.userTitle = userTitle;
-        this.enhetsId = enhetsId;
-        this.enhetsNamn = enhetsNamn;
-        this.vardgivareId = vardgivareId;
-        this.vardgivareNamn = vardgivareNamn;
+    private LogUser(Builder builder) {
+        this.userId = builder.userId;
+        this.userName = builder.userName;
+        this.userAssignment = builder.userAssignment;
+        this.userTitle = builder.userTitle;
+        this.enhetsId = builder.enhetsId;
+        this.enhetsNamn = builder.enhetsNamn;
+        this.vardgivareId = builder.vardgivareId;
+        this.vardgivareNamn = builder.vardgivareNamn;
     }
-    // CHECKSTYLE:ON ParameterNumber
+
     public String getUserId() {
         return userId;
     }
@@ -74,4 +78,66 @@ public class LogUser {
         return vardgivareNamn;
     }
 
+
+    public static class Builder {
+
+        private String userId;
+        private String userName;
+        private String userAssignment;
+        private String userTitle;
+        private String enhetsId;
+        private String enhetsNamn;
+        private String vardgivareId;
+        private String vardgivareNamn;
+
+        /**
+         * Enligt tjänstekontraktsbeskrivningen ska det i anrop till tjänsten "StoreLog"
+         * komma information om användaren som är upphov till loggposten. De fält som är
+         * obligatoriska är användarens id, vårdenhetens id och vårdgivarens id.
+         * <p>
+         * Se https://bitbucket.org/rivta-domains/riv.ehr.log/raw/master/docs/TKB_ehr_log.docx
+         *
+         * @param userId       HsaId of the logged in user.
+         * @param enhetsId     HsaId of the enhet.
+         * @param vardgivareId HsaId of the vardgivare.
+         */
+        public Builder(String userId, String enhetsId, String vardgivareId) {
+            if (userId == null || enhetsId == null || vardgivareId == null) {
+                throw new IllegalArgumentException("LogUser builder requires all constructor arguments to be non-null");
+            }
+
+            this.userId = userId;
+            this.enhetsId = enhetsId;
+            this.vardgivareId = vardgivareId;
+        }
+
+        public Builder userName(String userName) {
+            this.userName = userName;
+            return this;
+        }
+
+        public Builder userAssignment(String userAssignment) {
+            this.userAssignment = userAssignment;
+            return this;
+        }
+
+        public Builder userTitle(String userTitle) {
+            this.userTitle = userTitle;
+            return this;
+        }
+
+        public Builder enhetsNamn(String enhetsNamn) {
+            this.enhetsNamn = enhetsNamn;
+            return this;
+        }
+
+        public Builder vardgivareNamn(String vardgivareNamn) {
+            this.vardgivareNamn = vardgivareNamn;
+            return this;
+        }
+
+        public LogUser build() {
+            return new LogUser(this);
+        }
+    }
 }

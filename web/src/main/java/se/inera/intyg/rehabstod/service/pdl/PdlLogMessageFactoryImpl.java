@@ -84,15 +84,18 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         throw new IllegalArgumentException("No LogMessage type for activityType " + activityType.name() + " defined");
     }
 
-    // CHECKSTYLE:OFF ParameterNumber
     private LogUser getLogUser(RehabstodUser user) {
         SelectableVardenhet valdVardgivare = user.getValdVardgivare();
         SelectableVardenhet valdVardenhet = user.getValdVardenhet();
 
-        return new LogUser(user.getHsaId(), user.getNamn(), user.getSelectedMedarbetarUppdragNamn(), user.getTitel(),
-                valdVardenhet.getId(), valdVardenhet.getNamn(), valdVardgivare.getId(), valdVardgivare.getNamn());
+        return new LogUser.Builder(user.getHsaId(), valdVardenhet.getId(), valdVardgivare.getId())
+                .userName(user.getNamn())
+                .userAssignment(user.getSelectedMedarbetarUppdragNamn())
+                .userTitle(user.getTitel())
+                .enhetsNamn(valdVardenhet.getNamn())
+                .vardgivareNamn(valdVardgivare.getNamn())
+                .build();
     }
-    // CHECKSTYLE:ON ParameterNumber
 
     private void populateWithCurrentUserAndCareUnit(PdlLogMessage logMsg, LogUser user) {
         logMsg.setUserId(user.getUserId());
