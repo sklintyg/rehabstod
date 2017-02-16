@@ -52,7 +52,8 @@ ext {
     unitilsCoreVersion = "3.3"
 }
 
-// Load environment specific settings, if the -Penv=xxx parameter is given on invocation
+// Load environment specific settings,
+// if the -Penv=xxx parameter is given on invocation
 task loadConfiguration {
     def environment = null
     if (project.hasProperty('env')) {
@@ -65,21 +66,53 @@ task loadConfiguration {
     addProjectPropertiesFromFile(file("$rootDir/env-properties/${environment}/settings.properties"))
 }
 
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases/" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath 'se.inera.intyg:gradle-intyg-plugin:1.0.+'
+        classpath 'com.moowork.gradle:gradle-node-plugin:0.+'
+        classpath 'com.moowork.gradle:gradle-grunt-plugin:0.+'
+        classpath 'org.akhikhl.gretty:gretty:+'
+    }
+}
+
 allprojects {
-    group = 'se.inera.intyg.rehabstod'
-    version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
+    repositories {
+        mavenLocal()
+        maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases/" }
+        maven { url "http://repo.maven.apache.org/maven2" }
+    }
 
     apply plugin: 'inera-intyg'
     apply plugin: 'maven'
-    apply plugin: 'org.ajoberstar.grgit'
     apply plugin: 'idea'
-}
 
-subprojects {
-    apply plugin: 'java'
+    dependencies {
+        testCompile 'junit:junit:4.+'
+        testCompile "org.mockito:mockito-core:${mockitoAllVersion}"
+    }
+
+    group = 'se.inera.intyg.rehabstod'
+    version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
+
+    checkstyle {
+        configProperties = ['package_name': 'rehabstod']
+    }
+
+    sonarqube {
+        properties {
+            property "sonar.projectName", "Rehabstod"
+            property "sonar.projectKey", "rehabstod"
+        }
+    }
 
     task createVersionPropertyFile(type: VersionPropertyFileTask)
 
@@ -94,20 +127,7 @@ subprojects {
             it.version = findResolvedVersion(project, 'se.inera.intyg.infra')
         }
     }
-
-    dependencies {
-        testCompile 'junit:junit:4.+'
-        testCompile "org.mockito:mockito-core:${mockitoAllVersion}"
-    }
-
-    repositories {
-        mavenLocal()
-        maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases/" }
-        maven { url "http://repo.maven.apache.org/maven2" }
-    }
-
 }
-
 
 idea {
     module {
@@ -119,7 +139,6 @@ idea {
 task wrapper(type: Wrapper) {
     gradleVersion = '3.1' //version required
 }
-
 
 def addProjectPropertiesFromFile(propfile) {
     if (propfile.exists()) {
@@ -138,23 +157,3 @@ def addProjectPropertiesFromFile(propfile) {
 task tagRelease(type: TagReleaseTask)
 
 task testReport(type: SharedTestReportTask)
-
-apply from: file("codequality.gradle")
-
-buildscript {
-    dependencies {
-        classpath 'se.inera.intyg:gradle-intyg-plugin:1.0.+'
-        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.+'
-        classpath 'org.ajoberstar:gradle-git:1.+'
-        classpath 'org.akhikhl.gretty:gretty:+'
-        classpath 'com.moowork.gradle:gradle-node-plugin:0.+'
-        classpath 'com.moowork.gradle:gradle-grunt-plugin:0.+'
-        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.+'
-    }
-
-    repositories {
-        mavenLocal()
-        maven { url "https://build-inera.nordicmedtest.se/nexus/content/repositories/releases/" }
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-}
