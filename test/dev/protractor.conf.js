@@ -101,6 +101,9 @@ exports.config = {
          */
         browser.ignoreSynchronization = false;
 
+        // We need a certain size of the window to make sure everything is visible
+        browser.manage().window().setSize(1600, 1000);
+
         global.rhsTestTools = require('rehabstod-testtools');
 
         global.logg = function(text){
