@@ -43,7 +43,7 @@ import java.util.Date;
 public class InternalPingForConfigurationResponderImpl implements InternalPingForConfigurationResponderInterface {
     private static final Logger LOG = LoggerFactory.getLogger(InternalPingForConfigurationResponderImpl.class);
 
-    @Value("${buildVersion}")
+    @Value("${project.version}")
     private String projectVersion;
 
     @Value("${buildNumber}")
