@@ -1,7 +1,5 @@
-/*
-  Gradle settings for Rehabstod
- */
 rootProject.name = 'rehabstod'
+
 include ':web', ':common', ':integration/it-integration', ':rehabstod-protractor'
 
 project(':web').name = 'rehabstod-web'

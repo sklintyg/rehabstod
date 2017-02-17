@@ -1,7 +1,6 @@
 apply plugin: 'war'
 apply plugin: 'org.akhikhl.gretty'
 apply plugin: 'com.moowork.grunt'
-apply plugin: 'idea'
 
 sourceSets {
     restAssuredTest {
@@ -36,8 +35,6 @@ tasks.withType(Test) {
 
 idea {
     module {
-        //and some extra test source dirs
-        //scopes.TEST.plus += [ configurations.integrationTestCompile, configurations.integrationTestRuntime ]
         excludeDirs += file('node_modules')
         excludeDirs += file('src/main/webapp/bower_components')
     }
@@ -58,8 +55,7 @@ if (project.hasProperty('rehabstod.useMinifiedJavaScript')) {
         webAppDirName = 'build/webapp'
     }
     war.dependsOn grunt_build
-}
-else {
+} else {
     war.dependsOn grunt_build_no_minify
 }
 
@@ -85,22 +81,22 @@ gretty {
     contextPath = '/'
     logbackConfigFile = "${projectDir}/src/main/resources/logback.xml"
     jvmArgs = [
-        '-Dspring.profiles.active=dev,rhs-it-stub,caching-enabled',
-        '-Drehabstod.config.file=' + projectDir + '/src/main/resources/dev.properties',
-        '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
-        '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources',
-        '-XX:MaxPermSize=256M',
-        '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8011'
-    ]
+               '-Dspring.profiles.active=dev,rhs-it-stub,caching-enabled',
+               '-Drehabstod.config.file=' + projectDir + '/src/main/resources/dev.properties',
+               '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
+               '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources',
+               '-XX:MaxPermSize=256M',
+               '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8011'
+               ]
 
-/***************** Konfiguration för att köra med SITHS och HSA aktiverat lokalt. *******************/
-//    jvmArgs = [
-//            '-Dspring.profiles.active=dev,rhs-security-test',
-//            '-Drehabstod.config.folder=' + projectDir + '/../../rehabstod-konfiguration/demo',
-//            '-Drehabstod.config.file=' + projectDir + '/../../rehabstod-konfiguration/demo/rehabstod.properties',
-//            '-Dcredentials.file=' + projectDir + '/../../rehabstod-konfiguration/demo/credentials.properties',
-//            '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources'
-//    ]
+    /***************** Konfiguration för att köra med SITHS och HSA aktiverat lokalt. *******************/
+    //    jvmArgs = [
+    //            '-Dspring.profiles.active=dev,rhs-security-test',
+    //            '-Drehabstod.config.folder=' + projectDir + '/../../rehabstod-konfiguration/demo',
+    //            '-Drehabstod.config.file=' + projectDir + '/../../rehabstod-konfiguration/demo/rehabstod.properties',
+    //            '-Dcredentials.file=' + projectDir + '/../../rehabstod-konfiguration/demo/credentials.properties',
+    //            '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources'
+    //    ]
     fastReload = true
     inplaceMode = 'hard'
     scanInterval = 0

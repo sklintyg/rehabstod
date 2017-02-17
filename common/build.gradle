@@ -1,9 +1,4 @@
-description = 'Inera Rehabstöd common module'
-
-apply plugin: 'java'
-
 dependencies {
-
     compile "se.inera.intyg.infra:log-messages:${intygInfraVersion}"
 
     compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"

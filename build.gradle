@@ -1,18 +1,18 @@
 ext {
-    // External
-    activemqVersion = "5.13.0"
+    intygInfraVersion  = System.properties['infraVersion'] ?: '0-SNAPSHOT'
 
+    rehabSchemaVersion = "1.0.3"
+    monitoringSchemaVersion = "1.0.0.3"
+    internalMonitoringSchemaVersion = "1.0.2"
+
+    activemqVersion = "5.13.0"
     commonsCodecVersion = "1.10"
     commonsIoVersion = "2.4"
-    commonsLangVersion = "2.6"
     commonsLang3Version = "3.1"
-
+    commonsLangVersion = "2.6"
     cxfVersion = "3.1.3"
-
     googleGuavaVersion = "18.0"
-
     itextVersion = "5.5.8"
-
     jacksonVersion = "2.5.1"
     javaxJmsVersion = "1.1-rev-1"
     javaxMailVersion = "1.5.2"
@@ -20,28 +20,16 @@ ext {
     jaxb2Version = "0.9.5"
     jsonSimpleVersion = "1.1.1"
     jstlVersion = "1.2"
-
     liquibaseVersion = "3.3.1"
     logbackVersion = "1.0.13"
-
     poiVersion = "3.13"
-
     restAssuredVersion = "2.9.0"
-
     slf4jVersion = "1.7.10"
     springContextVersion = "4.2.2.RELEASE"
-    springSecurityVersion = "4.0.3.RELEASE"
     springSecurityExtensionsVersion = "1.0.1.RELEASE"
+    springSecurityVersion = "4.0.3.RELEASE"
     springWsCoreVersion = "2.2.2.RELEASE"
-
     wsdl4jVersion = "1.6.3"
-
-    intygInfraVersion  = System.properties['infraVersion'] ?: '0-SNAPSHOT'
-
-    // Schemas
-    rehabSchemaVersion = "1.0.3"
-    monitoringSchemaVersion = "1.0.0.3"
-    internalMonitoringSchemaVersion = "1.0.2"
 
     // Test
     aspectjWeaverVersion = "1.6.11"
@@ -52,20 +40,6 @@ ext {
     unitilsCoreVersion = "3.3"
 }
 
-// Load environment specific settings,
-// if the -Penv=xxx parameter is given on invocation
-task loadConfiguration {
-    def environment = null
-    if (project.hasProperty('env')) {
-        environment = project.getProperty('env')
-    } else {
-        environment = "local"
-    }
-
-    logger.quiet "Loading configuration for environment '$environment'."
-    addProjectPropertiesFromFile(file("$rootDir/env-properties/${environment}/settings.properties"))
-}
-
 buildscript {
     repositories {
         mavenLocal()
@@ -74,7 +48,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'se.inera.intyg:gradle-intyg-plugin:1.0.+'
+        classpath 'se.inera.intyg:gradle-intyg-plugin:1.0.14'
         classpath 'com.moowork.gradle:gradle-node-plugin:0.+'
         classpath 'com.moowork.gradle:gradle-grunt-plugin:0.+'
         classpath 'org.akhikhl.gretty:gretty:+'
@@ -129,6 +103,10 @@ allprojects {
     }
 }
 
+task tagRelease(type: TagReleaseTask)
+
+task testReport(type: SharedTestReportTask)
+
 idea {
     module {
         excludeDirs += file('test/node_modules')
@@ -136,8 +114,18 @@ idea {
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.1' //version required
+// Load environment specific settings,
+// if the -Penv=xxx parameter is given on invocation
+task loadConfiguration {
+    def environment = null
+    if (project.hasProperty('env')) {
+        environment = project.getProperty('env')
+    } else {
+        environment = "local"
+    }
+
+    logger.quiet "Loading configuration for environment '$environment'."
+    addProjectPropertiesFromFile(file("$rootDir/env-properties/${environment}/settings.properties"))
 }
 
 def addProjectPropertiesFromFile(propfile) {
@@ -153,7 +141,3 @@ def addProjectPropertiesFromFile(propfile) {
         throw new GradleScriptException("File '${propfile.path}' does not exist.", null)
     }
 }
-
-task tagRelease(type: TagReleaseTask)
-
-task testReport(type: SharedTestReportTask)
