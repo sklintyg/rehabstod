@@ -48,7 +48,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'se.inera.intyg:gradle-intyg-plugin:1.0.14'
+        classpath 'se.inera.intyg:gradle-intyg-plugin:1.0.15'
         classpath 'com.moowork.gradle:gradle-node-plugin:0.+'
         classpath 'com.moowork.gradle:gradle-grunt-plugin:0.+'
         classpath 'org.akhikhl.gretty:gretty:+'
