@@ -79,7 +79,7 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
         USER_MISSING_MIU("No valid MIU was found for user '{}'"),
         USER_MISSING_MIU_ON_ENHET("No valid MIU was found for user '{}' on unit '{}'");
 
-        private String message;
+        private final String message;
 
         MonitoringEvent(String msg) {
             this.message = msg;

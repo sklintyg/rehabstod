@@ -27,13 +27,15 @@ import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
 
 /**
- * If profile rhs-it-stub is NOT active, {@link se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration} will supply an implementation
+ * If profile rhs-it-stub is NOT active,
+ * {@link se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration} will supply an
+ * implementation
  * of the {@link PingForConfigurationResponderInterface} interface.
  *
  * Created by eriklupander on 2016-03-29.
  */
 @Service("itPingForConfigurationWebServiceClient")
-@Profile({"rhs-it-stub"})
+@Profile({ "rhs-it-stub" })
 public class PingForConfigurationResponderStub implements PingForConfigurationResponderInterface {
 
     @Override

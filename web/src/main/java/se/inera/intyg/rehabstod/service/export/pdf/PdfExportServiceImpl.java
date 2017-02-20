@@ -77,7 +77,8 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         try {
-            unicodeCapableFont = new Font(BaseFont.createFont(UNICODE_CAPABLE_FONT_PATH, BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 9, Font.NORMAL);
+            unicodeCapableFont = new Font(BaseFont.createFont(UNICODE_CAPABLE_FONT_PATH, BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 9,
+                    Font.NORMAL);
 
             Document document = new Document();
             document.setPageSize(PageSize.A4);
@@ -146,7 +147,8 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         Paragraph valdaDiagnoser = new Paragraph(FILTER_TITLE_VALDA_DIAGNOSER, PdfExportConstants.FRONTPAGE_H3);
         com.itextpdf.text.List diagnosLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
         if (printRequest.getDiagnosGrupper() != null) {
-            printRequest.getDiagnosGrupper().forEach(dg -> diagnosLista.add(new ListItem(getDiagnosKapitelDisplayValue(dg), PdfExportConstants.FRONTPAGE_NORMAL)));
+            printRequest.getDiagnosGrupper()
+                    .forEach(dg -> diagnosLista.add(new ListItem(getDiagnosKapitelDisplayValue(dg), PdfExportConstants.FRONTPAGE_NORMAL)));
         } else {
             diagnosLista.add(new ListItem(SELECTION_VALUE_ALLA, PdfExportConstants.FRONTPAGE_NORMAL));
         }
@@ -159,7 +161,8 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
             printRequest.getLakare().forEach(dg -> lakarLista.add(new ListItem(dg, PdfExportConstants.FRONTPAGE_NORMAL)));
         } else {
-            lakarLista.add(new ListItem(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : SELECTION_VALUE_ALLA, PdfExportConstants.FRONTPAGE_NORMAL));
+            lakarLista.add(new ListItem(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : SELECTION_VALUE_ALLA,
+                    PdfExportConstants.FRONTPAGE_NORMAL));
         }
         valdaLakare.add(lakarLista);
 
@@ -167,15 +170,18 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         Paragraph valdSjukskrivninglangd = new Paragraph(FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD, PdfExportConstants.FRONTPAGE_H3);
         Paragraph sjukskrivningslangdVarden = new Paragraph();
         sjukskrivningslangdVarden.add(new Chunk("Mellan ", PdfExportConstants.FRONTPAGE_NORMAL));
-        sjukskrivningslangdVarden.add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMin()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
+        sjukskrivningslangdVarden
+                .add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMin()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
         sjukskrivningslangdVarden.add(new Chunk(" och ", PdfExportConstants.FRONTPAGE_NORMAL));
-        sjukskrivningslangdVarden.add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMax()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
+        sjukskrivningslangdVarden
+                .add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMax()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
         sjukskrivningslangdVarden.add(new Chunk(" dagar.", PdfExportConstants.FRONTPAGE_NORMAL));
         valdSjukskrivninglangd.add(sjukskrivningslangdVarden);
 
         // Fritext
         Paragraph valdFritext = new Paragraph(FILTER_TITLE_FRITEXTFILTER, PdfExportConstants.FRONTPAGE_H3);
-        valdFritext.add(new Paragraph(StringUtil.isNullOrEmpty(printRequest.getFritext()) ? "-" : printRequest.getFritext(), PdfExportConstants.FRONTPAGE_NORMAL));
+        valdFritext.add(new Paragraph(StringUtil.isNullOrEmpty(printRequest.getFritext()) ? "-" : printRequest.getFritext(),
+                PdfExportConstants.FRONTPAGE_NORMAL));
 
         // Lagg ihop undergrupperna till filter
         Paragraph filter = new Paragraph(VALDA_FILTER, PdfExportConstants.FRONTPAGE_H2);
@@ -234,7 +240,8 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         kolumn.add(new Phrase(String.valueOf(showing), PdfExportConstants.FRONTPAGE_NORMAL));
 
         Paragraph riktning = new Paragraph();
-        riktning.add(new Chunk(urval == Urval.ISSUED_BY_ME ? ANTAL_TOTALT_MINA : ANTAL_TOTALT_PA_ENHETEN, PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
+        riktning.add(new Chunk(urval == Urval.ISSUED_BY_ME ? ANTAL_TOTALT_MINA : ANTAL_TOTALT_PA_ENHETEN,
+                PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
         riktning.add(new Chunk(String.valueOf(total), PdfExportConstants.FRONTPAGE_NORMAL));
 
         def.add(kolumn);

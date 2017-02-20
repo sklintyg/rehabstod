@@ -66,11 +66,9 @@ public class HealthCheckServiceImpl implements HealthCheckService {
     @Qualifier("jmsFactory")
     private ConnectionFactory connectionFactory;
 
-
     // User count
     @Autowired
     private SessionRegistry sessionRegistry;
-
 
     // Pings
     @Autowired
@@ -78,7 +76,6 @@ public class HealthCheckServiceImpl implements HealthCheckService {
 
     @Autowired
     private Optional<CacheStatisticsService> cacheStatisticsService;
-
 
     @Override
     public HealthStatus checkPdlLogQueue() {
@@ -128,7 +125,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
     public HealthStatus checkHSA() {
         // INTYG-2352: Not possible to ping NTjP PROD, disabling this check for now.
         return new HealthStatus(-1, true);
-        //return pingForConfigurationService.pingNtjp("");
+        // return pingForConfigurationService.pingNtjp("");
     }
 
     @Override
@@ -139,7 +136,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
         stopWatch.start();
         try {
             PingForConfigurationResponseType pingResponse = intygstjanstClientService.pingForConfiguration();
-            ok = pingResponse !=  null && pingResponse.getPingDateTime() !=  null;
+            ok = pingResponse != null && pingResponse.getPingDateTime() != null;
         } catch (Exception e) {
             LOG.warn("Operation checkIntygstjansten failed", e);
             ok = false;
@@ -190,7 +187,8 @@ public class HealthCheckServiceImpl implements HealthCheckService {
             LOG.error("checkJmsConnection failed with JMSException: {}", e);
             return false;
         } catch (Exception e) {
-            LOG.error(String.format("checkJmsConnection failed with exception of class: %s. Message: %s", e.getClass().getName(), e.getMessage()), e);
+            LOG.error(String.format("checkJmsConnection failed with exception of class: %s. Message: %s", e.getClass().getName(),
+                    e.getMessage()), e);
             return false;
         }
         return true;

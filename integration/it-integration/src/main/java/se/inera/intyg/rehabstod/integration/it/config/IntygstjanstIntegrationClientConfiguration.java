@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.integration.it.config;
 
+// CHECKSTYLE:OFF LineLength
+
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -30,6 +32,8 @@ import org.springframework.context.annotation.Profile;
 
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
+
+// CHECKSTYLE:ON LineLength
 
 /**
  * Declares and bootstraps the Intygstjänst client for {@link ListActiveSickLeavesForCareUnitResponderInterface}
@@ -62,32 +66,38 @@ public class IntygstjanstIntegrationClientConfiguration {
 
     @Bean
     public ListActiveSickLeavesForCareUnitResponderInterface itIntegrationWebServiceClient() {
+        // CHECKSTYLE:OFF LineLength
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(itWsUrl);
         proxyFactoryBean.setServiceClass(ListActiveSickLeavesForCareUnitResponderInterface.class);
-        ListActiveSickLeavesForCareUnitResponderInterface listActiveSickLeavesForCareUnitResponderInterface = (ListActiveSickLeavesForCareUnitResponderInterface) proxyFactoryBean.create();
+        ListActiveSickLeavesForCareUnitResponderInterface listActiveSickLeavesForCareUnitResponderInterface = (ListActiveSickLeavesForCareUnitResponderInterface) proxyFactoryBean
+                .create();
         Client client = ClientProxy.getClient(listActiveSickLeavesForCareUnitResponderInterface);
         applyTimeouts(client);
         return listActiveSickLeavesForCareUnitResponderInterface;
+        // CHECKSTYLE:ON LineLength
     }
 
     @Bean
     public PingForConfigurationResponderInterface itPingForConfigurationWebServiceClient() {
+        // CHECKSTYLE:OFF LineLength
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(itWsPingUrl);
         proxyFactoryBean.setServiceClass(PingForConfigurationResponderInterface.class);
 
-        PingForConfigurationResponderInterface pingForConfigurationResponderInterface = (PingForConfigurationResponderInterface) proxyFactoryBean.create();
+        PingForConfigurationResponderInterface pingForConfigurationResponderInterface = (PingForConfigurationResponderInterface) proxyFactoryBean
+                .create();
         Client client = ClientProxy.getClient(pingForConfigurationResponderInterface);
         applyTimeouts(client);
         return pingForConfigurationResponderInterface;
+        // CHECKSTYLE:ON LineLength
     }
 
     private void applyTimeouts(Client client) {
         Long connTimeout = parseTimeout(connectionTimeout);
         Long recTimeout = parseTimeout(receiveTimeout);
 
-        if (client != null)  {
+        if (client != null) {
             HTTPConduit conduit = (HTTPConduit) client.getConduit();
             HTTPClientPolicy policy = new HTTPClientPolicy();
             policy.setConnectionTimeout(connTimeout);
@@ -100,7 +110,9 @@ public class IntygstjanstIntegrationClientConfiguration {
         try {
             return Long.parseLong(timeout);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Cannot apply timeouts for IntygstjanstIntegrationClientConfiguration, unparsable String value: " + timeout + ". Message: " + e.getMessage());
+            throw new IllegalArgumentException(
+                    "Cannot apply timeouts for IntygstjanstIntegrationClientConfiguration, unparsable String value: " + timeout
+                            + ". Message: " + e.getMessage());
         }
     }
 }

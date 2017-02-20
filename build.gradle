@@ -114,8 +114,7 @@ idea {
     }
 }
 
-// Load environment specific settings,
-// if the -Penv=xxx parameter is given on invocation
+// Load environment specific settings, if the -Penv=xxx parameter is given on invocation
 task loadConfiguration {
     def environment = null
     if (project.hasProperty('env')) {

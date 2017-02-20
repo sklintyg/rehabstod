@@ -31,6 +31,7 @@ import java.util.List;
 @FunctionalInterface
 public interface XlsxExportService {
 
-    byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, Urval urval, int total) throws IOException;
+    byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, Urval urval, int total)
+            throws IOException;
 
 }

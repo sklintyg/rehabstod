@@ -63,7 +63,8 @@ public class HeaderEventHandler extends PdfPageEventHelper {
         table.addCell(printedBy(userName, enhetsNamn));
 
         // write the table
-        table.writeSelectedRows(0, -1, document.leftMargin(), document.getPageSize().getTop() - TOP_MARGIN_TO_HEADER, writer.getDirectContent());
+        table.writeSelectedRows(0, -1, document.leftMargin(), document.getPageSize().getTop() - TOP_MARGIN_TO_HEADER,
+                writer.getDirectContent());
 
     }
 

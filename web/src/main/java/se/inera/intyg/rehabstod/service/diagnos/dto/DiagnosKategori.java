@@ -60,7 +60,8 @@ public class DiagnosKategori {
         if (!StringUtil.isNullOrEmpty(diagnosKod)) {
             Matcher matcher = EXTRACT_DIAGNOSKATEGORI_REGEXP.matcher(diagnosKod);
             if (matcher.find()) {
-                return Optional.of(new DiagnosKategori(matcher.group(KATEGORI_CHAR).charAt(0), Integer.parseInt(matcher.group(KATEGORI_NUMBER))));
+                return Optional
+                        .of(new DiagnosKategori(matcher.group(KATEGORI_CHAR).charAt(0), Integer.parseInt(matcher.group(KATEGORI_NUMBER))));
             }
         }
         return Optional.empty();

@@ -64,16 +64,19 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         sessionTimeoutFilter.setInitParameter("getSessionStatusUri", SessionStatusController.SESSION_STATUS_CHECK_URI);
 
         // Spring security filter
-        FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain", DelegatingFilterProxy.class);
+        FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain",
+                DelegatingFilterProxy.class);
         springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
 
         // unitSelectedAssurance filter
-        FilterRegistration.Dynamic unitSelectedAssuranceFilter = servletContext.addFilter("unitSelectedAssuranceFilter", DelegatingFilterProxy.class);
+        FilterRegistration.Dynamic unitSelectedAssuranceFilter = servletContext.addFilter("unitSelectedAssuranceFilter",
+                DelegatingFilterProxy.class);
         unitSelectedAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
         unitSelectedAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
         unitSelectedAssuranceFilter.setInitParameter("ignoredUrls", "/api/config,/api/user,/api/user/andraenhet");
 
-        FilterRegistration.Dynamic characterEncodingFilter = servletContext.addFilter("characterEncodingFilter", CharacterEncodingFilter.class);
+        FilterRegistration.Dynamic characterEncodingFilter = servletContext.addFilter("characterEncodingFilter",
+                CharacterEncodingFilter.class);
         characterEncodingFilter.addMappingForUrlPatterns(null, false, "/*");
         characterEncodingFilter.setInitParameter("encoding", "UTF-8");
         characterEncodingFilter.setInitParameter("forceEncoding", "true");
@@ -81,7 +84,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         // NOTE: The characterEncoding filter must run before the hiddenHttpMethodFilter, otherwise the setEncoding will
         // be done to late, as the hiddenHttpMethodFilter internally uses request.getParameter which will parse the
         // parameters using a default encoding which may not be UTF-8 in e.g in tomcat it's ISO-8859-1.
-        FilterRegistration.Dynamic hiddenHttpMethodFilter = servletContext.addFilter("hiddenHttpMethodFilter", HiddenHttpMethodFilter.class);
+        FilterRegistration.Dynamic hiddenHttpMethodFilter = servletContext.addFilter("hiddenHttpMethodFilter",
+                HiddenHttpMethodFilter.class);
         hiddenHttpMethodFilter.addMappingForUrlPatterns(null, false, "/*");
 
         // CXF services filter

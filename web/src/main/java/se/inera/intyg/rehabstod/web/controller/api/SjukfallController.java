@@ -102,7 +102,8 @@ public class SjukfallController {
         LOG.debug("PDL logging - log which 'sjukfall' that are going to be displayed to the user.");
         logSjukfallData(user, sjukfall, ActivityType.READ);
 
-        return sjukfall.stream().map(sf -> sf.getSjukfall()).sorted((f1, f2) -> f2.getStart().compareTo(f1.getStart())).collect(Collectors.toList());
+        return sjukfall.stream().map(sf -> sf.getSjukfall()).sorted((f1, f2) -> f2.getStart().compareTo(f1.getStart()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -116,7 +117,8 @@ public class SjukfallController {
      * @throws IOException
      */
     @ExceptionHandler(RehabExportException.class)
-    public void handleExportException(HttpServletRequest request, HttpServletResponse response, RehabExportException ex) throws IOException {
+    public void handleExportException(HttpServletRequest request, HttpServletResponse response, RehabExportException ex)
+            throws IOException {
         LOG.error("RehabExportException caught - redirecting to errorpage", ex.getException());
         response.sendRedirect(request.getContextPath() + "/error.jsp?reason=exporterror");
     }
@@ -219,11 +221,13 @@ public class SjukfallController {
         addActivitiesToStore(enhetsId, sjukfallToLog, activityType, user.getStoredActivities());
     }
 
-    private void addActivitiesToStore(String enhetsId, List<InternalSjukfall> sjukfallToAdd, ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
+    private void addActivitiesToStore(String enhetsId, List<InternalSjukfall> sjukfallToAdd, ActivityType activityType,
+            Map<String, List<PDLActivityEntry>> storedActivities) {
         PDLActivityStore.addActivitiesToStore(enhetsId, sjukfallToAdd, activityType, storedActivities);
     }
 
-    private List<InternalSjukfall> getActivitiesNotInStore(String enhetsId, List<InternalSjukfall> sjukfallList, ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
+    private List<InternalSjukfall> getActivitiesNotInStore(String enhetsId, List<InternalSjukfall> sjukfallList, ActivityType activityType,
+            Map<String, List<PDLActivityEntry>> storedActivities) {
         return PDLActivityStore.getActivitiesNotInStore(enhetsId, sjukfallList, activityType, storedActivities);
     }
 
@@ -239,7 +243,8 @@ public class SjukfallController {
                     }
                 }
             }
-            throw new IllegalStateException("User object is in invalid state. Current selected enhet is an underenhet, but no ID for the parent enhet was found.");
+            throw new IllegalStateException(
+                    "User object is in invalid state. Current selected enhet is an underenhet, but no ID for the parent enhet was found.");
         } else {
             return user.getValdVardenhet().getId();
         }

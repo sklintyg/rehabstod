@@ -24,7 +24,7 @@ package se.inera.intyg.rehabstod.web.model;
 public enum Gender {
     F("Kvinna"), M("Man"), UNKNOWN("Okänt");
 
-    String desc;
+    private final String desc;
 
     Gender(String desc) {
         this.desc = desc;

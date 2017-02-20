@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.integration.it.service;
 
+// CHECKSTYLE:OFF LineLength
+
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -30,6 +32,8 @@ import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickle
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.integration.it.exception.IntygstjanstIntegrationException;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+
+// CHECKSTYLE:ON LineLength
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -48,7 +52,8 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
         if (responseType.getResultCode() == ResultCodeEnum.OK) {
             return responseType.getIntygsLista().getIntygsData();
         } else {
-            LOG.error("An error occured fetching sick leave certificates. Error type: {}. Error msg: {}", responseType.getResultCode(), responseType.getComment());
+            LOG.error("An error occured fetching sick leave certificates. Error type: {}. Error msg: {}",
+                    responseType.getResultCode(), responseType.getComment());
             throw new IntygstjanstIntegrationException();
         }
 

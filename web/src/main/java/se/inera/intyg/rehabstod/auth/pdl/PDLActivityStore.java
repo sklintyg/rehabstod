@@ -42,10 +42,13 @@ public final class PDLActivityStore {
      * @param enhetsId
      * @param sjukfall
      * @param activityType
-     * @param storedActivities the map holding sjukfall
+     * @param storedActivities
+     *            the map holding sjukfall
      *
      * @return a list of InternalSjukfall
-     */    public static List<InternalSjukfall> getActivitiesNotInStore(String enhetsId, List<InternalSjukfall> sjukfall, ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
+     */
+    public static List<InternalSjukfall> getActivitiesNotInStore(String enhetsId, List<InternalSjukfall> sjukfall,
+            ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
         if (sjukfall == null || sjukfall.isEmpty()) {
             return new ArrayList<>();
         }
@@ -77,9 +80,11 @@ public final class PDLActivityStore {
      * @param enhetsId
      * @param sjukfallToAdd
      * @param activityType
-     * @param storedActivities the map where sjukfall will be stored
+     * @param storedActivities
+     *            the map where sjukfall will be stored
      */
-    public static void addActivitiesToStore(String enhetsId, List<InternalSjukfall> sjukfallToAdd, ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
+    public static void addActivitiesToStore(String enhetsId, List<InternalSjukfall> sjukfallToAdd, ActivityType activityType,
+            Map<String, List<PDLActivityEntry>> storedActivities) {
         if (sjukfallToAdd == null || sjukfallToAdd.isEmpty()) {
             return;
         }

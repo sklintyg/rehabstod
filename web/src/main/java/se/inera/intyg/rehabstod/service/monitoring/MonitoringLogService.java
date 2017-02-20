@@ -25,9 +25,10 @@ import se.inera.intyg.infra.security.common.service.AuthenticationLogger;
  */
 public interface MonitoringLogService extends AuthenticationLogger {
 
-
+    @Override
     void logUserLogin(String id, String authenticationScheme, String origin);
 
+    @Override
     void logUserLogout(String id, String authenticationScheme);
 
     void logUserViewedSjukfall(String userId, int numberOfSjukfall, String vardEnhet);

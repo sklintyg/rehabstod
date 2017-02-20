@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.integration.it.client;
 
+// CHECKSTYLE:OFF LineLength
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +32,8 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
+
+// CHECKSTYLE:ON LineLength
 
 /**
  * Created by eriklupander on 2016-01-29.

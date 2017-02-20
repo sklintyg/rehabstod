@@ -42,6 +42,7 @@ public class PersonnummerLoaderImpl implements PersonnummerLoader {
     @Value("${rhs.stub.personnummer.file}")
     private String testPersonnummerFile;
 
+    @Override
     public List<String> readTestPersonnummer() throws IOException {
         Resource resource = getResource(testPersonnummerFile);
         LineIterator it = FileUtils.lineIterator(resource.getFile(), "UTF-8");

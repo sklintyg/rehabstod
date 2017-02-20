@@ -18,8 +18,12 @@
  */
 package se.inera.intyg.rehabstod.integration.it.client;
 
+// CHECKSTYLE:OFF LineLength
+
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
+
+// CHECKSTYLE:ON LineLength
 
 /**
  * Created by eriklupander on 2016-01-29.

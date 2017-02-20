@@ -60,7 +60,6 @@ public class SjukfallEngineImpl implements SjukfallEngine {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallEngineImpl.class);
 
-
     private static final int GENDER_START = 10;
     private static final int GENDER_END = 11;
     private static final int DATE_PART_OF_PERSON_ID = 8;
@@ -84,8 +83,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
         clock = Clock.system(ZoneId.of("Europe/Paris"));
     }
 
-
-    // - - -  API  - - -
+    // - - - API - - -
 
     @Override
     public List<InternalSjukfall> calculate(List<IntygsData> intygsData, GetSjukfallRequest requestData) {
@@ -94,8 +92,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
         int maxIntygsGlapp = requestData.getMaxIntygsGlapp();
         LocalDate activeDate = requestData.getAktivtDatum();
 
-        Map<String, List<InternalIntygsData>> resolvedIntygsData =
-                resolver.resolve(intygsData, maxIntygsGlapp, activeDate);
+        Map<String, List<InternalIntygsData>> resolvedIntygsData = resolver.resolve(intygsData, maxIntygsGlapp, activeDate);
 
         // Assemble Sjukfall objects
         List<InternalSjukfall> result = assemble(resolvedIntygsData, requestData);
@@ -104,8 +101,7 @@ public class SjukfallEngineImpl implements SjukfallEngine {
         return result;
     }
 
-
-    // - - -  Protected scope  - - -
+    // - - - Protected scope - - -
 
     protected Diagnos getDiagnos(IntygsData intyg) {
         String cleanedDiagnosKod = DiagnosKod.cleanKod(intyg.getDiagnoskod());
@@ -251,17 +247,18 @@ public class SjukfallEngineImpl implements SjukfallEngine {
             int month = Integer.parseInt(dateString.substring(MONTH_PART_OF_DATE_PART, DAY_PART_OF_DATE_PART));
 
             if (day > SAMORDNINGSNUMMER_DAY_CONSTANT) {
-                dateString = dateString.substring(0, MONTH_PART_OF_DATE_PART) + (MONTHDAY_FORMATTER.format(MonthDay.of(month, day - SAMORDNINGSNUMMER_DAY_CONSTANT)));
+                dateString = dateString.substring(0, MONTH_PART_OF_DATE_PART)
+                        + (MONTHDAY_FORMATTER.format(MonthDay.of(month, day - SAMORDNINGSNUMMER_DAY_CONSTANT)));
             }
             LocalDate birthDate = LocalDate.from(DateTimeFormatter.BASIC_ISO_DATE.parse(dateString));
             Period period = Period.between(birthDate, LocalDate.now());
             age = period.getYears();
         } catch (Exception e) {
-            LOG.error("patientId '" + patientId + "' cannot be parsed as a date for age-calculation (adjusting for samordningsnummer did not help)", e);
+            LOG.error("patientId '" + patientId
+                    + "' cannot be parsed as a date for age-calculation (adjusting for samordningsnummer did not help)", e);
             age = 0;
         }
         return age;
-
 
     }
 

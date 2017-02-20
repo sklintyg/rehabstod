@@ -42,7 +42,8 @@ public class PingForConfigurationServiceBean implements PingForConfigurationServ
     private static final Logger LOG = LoggerFactory.getLogger(PingForConfigurationServiceBean.class);
 
     /**
-     * NTjP QA PfC always responds with "VP004 No Logical Adress found for serviceNamespace:urn:riv:itintegration:monitoring:PingForConfigurationResponder:1, receiverId:SExxxxxxxxxx-xxxx"
+     * NTjP QA PfC always responds with "VP004 No Logical Adress found for
+     * serviceNamespace:urn:riv:itintegration:monitoring:PingForConfigurationResponder:1, receiverId:SExxxxxxxxxx-xxxx"
      * for the typical request for the logicalAddress ${infrastructure.directory.logicalAddress}.
      */
     private static final String NO_LOGICAL_ADDRESS_ERR_PREFIX = "VP004";
@@ -54,12 +55,12 @@ public class PingForConfigurationServiceBean implements PingForConfigurationServ
     @Qualifier("ntjpPingWebServiceClient")
     private PingForConfigurationResponderInterface pfcService;
 
-
     /**
      * This "NTjP" ping is a bit of a hack to mitigate the fact that services consumed over NTjP cannot be "Pinged"
      * using PingForConfiguration due to NTjP addressing issues, among things.
      *
-     * Therefore, we try to issue a SOAP request for itintegration:monitoring:PingForConfiguration for a given logicalAddress.
+     * Therefore, we try to issue a SOAP request for itintegration:monitoring:PingForConfiguration for a given
+     * logicalAddress.
      * We'll typically get some kind of error back, but the fact that we ARE getting a structured error back means that
      * our connection to NTjP is working properly.
      *
@@ -67,12 +68,12 @@ public class PingForConfigurationServiceBean implements PingForConfigurationServ
      * {@link PingForConfigurationServiceBean#NO_LOGICAL_ADDRESS_ERR_PREFIX} means that the NTjP ping is working OK.
      *
      * In the future, NTjP and service producers will hopefully implement proper PingForConfiguration services where
-     * we can query them by their logicalAddresses. Until then, this "hack" will have to suffice.     *
+     * we can query them by their logicalAddresses. Until then, this "hack" will have to suffice. *
      *
      * @param withLogicalAddress
-     *      Not used at the moment
+     *            Not used at the moment
      * @return
-     *      true or false HealthStatus
+     *         true or false HealthStatus
      */
     @Override
     public HealthStatus pingNtjp(String withLogicalAddress) {

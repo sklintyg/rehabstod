@@ -57,7 +57,8 @@ public class SjukfallServiceImpl implements SjukfallService {
     private MonitoringLogService monitoringLogService;
 
     @Override
-    public List<InternalSjukfall> getSjukfall(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request) {
+    public List<InternalSjukfall> getSjukfall(String enhetsId, String mottagningsId, String hsaId, Urval urval,
+            GetSjukfallRequest request) {
         List<InternalSjukfall> sjukfallList = getFilteredSjukfallList(enhetsId, mottagningsId, hsaId, urval, request);
         if (sjukfallList != null) {
             monitoringLogService.logUserViewedSjukfall(hsaId, sjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
@@ -81,7 +82,8 @@ public class SjukfallServiceImpl implements SjukfallService {
         return statisticsCalculator.getSjukfallSummary(getFilteredSjukfallList(enhetsId, mottagningsId, hsaId, urval, request));
     }
 
-    private List<InternalSjukfall> getFilteredSjukfallList(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request) {
+    private List<InternalSjukfall> getFilteredSjukfallList(String enhetsId, String mottagningsId, String hsaId, Urval urval,
+            GetSjukfallRequest request) {
 
         if (urval == null) {
             throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");

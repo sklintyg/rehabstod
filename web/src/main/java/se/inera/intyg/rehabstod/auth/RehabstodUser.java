@@ -102,6 +102,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
         return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE) ? Urval.ISSUED_BY_ME : Urval.ALL;
     }
 
+    @Override
     public int getTotaltAntalVardenheter() {
         // count all hasid's in the datastructure
         return (int) getVardgivare().stream().flatMap(vg -> vg.getHsaIds().stream()).count();

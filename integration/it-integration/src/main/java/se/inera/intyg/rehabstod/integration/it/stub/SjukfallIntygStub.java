@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
+// CHECKSTYLE:OFF LineLength
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -34,11 +36,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// CHECKSTYLE:ON LineLength
+
 /**
  * Created by eriklupander on 2016-01-29.
  */
 @Service
-@Profile({"rhs-it-stub"})
+@Profile({ "rhs-it-stub" })
 public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitResponderInterface {
 
     private List<IntygsData> intygsData = new ArrayList<>();
@@ -58,7 +62,8 @@ public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitRespond
     }
 
     @Override
-    public ListActiveSickLeavesForCareUnitResponseType listActiveSickLeavesForCareUnit(String logicalAddress, ListActiveSickLeavesForCareUnitType parameters) {
+    public ListActiveSickLeavesForCareUnitResponseType listActiveSickLeavesForCareUnit(String logicalAddress,
+            ListActiveSickLeavesForCareUnitType parameters) {
         ListActiveSickLeavesForCareUnitResponseType resp = new ListActiveSickLeavesForCareUnitResponseType();
         resp.setResultCode(ResultCodeEnum.OK);
 

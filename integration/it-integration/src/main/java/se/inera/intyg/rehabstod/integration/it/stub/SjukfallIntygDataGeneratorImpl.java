@@ -105,6 +105,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
      * @return
      *         List of all IntygsData
      */
+    @Override
     public List<IntygsData> generateIntygsData(Integer numberOfPatients, Integer intygPerPatient) {
 
         if (numberOfPatients > 13000) {

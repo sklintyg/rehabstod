@@ -67,7 +67,8 @@ public class PDLActivityEntryStoreImplTest {
     @Test
     public void testGetActivitiesNotInStoreSimple() throws Exception {
         // Asking for stored activities when none is stored should return all
-        assertEquals(sjukfallList1, PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList1, ActivityType.READ, new HashMap<>()));
+        assertEquals(sjukfallList1,
+                PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList1, ActivityType.READ, new HashMap<>()));
     }
 
     @Test
@@ -75,7 +76,8 @@ public class PDLActivityEntryStoreImplTest {
         Map<String, List<PDLActivityEntry>> storedActivities = new HashMap<>();
 
         // Asking for stored activities when none is stored should return all
-        assertEquals(sjukfallList1, PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList1, ActivityType.READ, storedActivities));
+        assertEquals(sjukfallList1,
+                PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList1, ActivityType.READ, storedActivities));
 
         // After storing these...
         PDLActivityStore.addActivitiesToStore(VARDENHET_1, sjukfallList1, ActivityType.READ, storedActivities);
@@ -83,7 +85,8 @@ public class PDLActivityEntryStoreImplTest {
         assertTrue(PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList1, ActivityType.READ, storedActivities).isEmpty());
 
         // ..but if we ask for the same list sjukfall - but with another actionType - we should get them back
-        assertEquals(sjukfallList1, PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList1, ActivityType.PRINT, storedActivities));
+        assertEquals(sjukfallList1,
+                PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList1, ActivityType.PRINT, storedActivities));
     }
 
     @Test
@@ -91,21 +94,26 @@ public class PDLActivityEntryStoreImplTest {
         Map<String, List<PDLActivityEntry>> storedActivities = new HashMap<>();
 
         // Asking for stored activities when none is stored should return all
-        assertEquals(sjukfallList1, PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList1, ActivityType.READ, storedActivities));
+        assertEquals(sjukfallList1,
+                PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList1, ActivityType.READ, storedActivities));
         // Add them
         PDLActivityStore.addActivitiesToStore(VARDENHET_1, sjukfallList1, ActivityType.READ, storedActivities);
 
         // subsequent addition of same eventtype should only add and return new sjukfall not previously logged
-        assertEquals(Arrays.asList(SJUKFALL_5), PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList2, ActivityType.READ, storedActivities));
+        assertEquals(Arrays.asList(SJUKFALL_5),
+                PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList2, ActivityType.READ, storedActivities));
 
         // asking for already stored sjukfall(but other eventtype) should return all again
-        assertEquals(sjukfallList1, PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList1, ActivityType.PRINT, storedActivities));
+        assertEquals(sjukfallList1,
+                PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList1, ActivityType.PRINT, storedActivities));
         PDLActivityStore.addActivitiesToStore(VARDENHET_1, sjukfallList1, ActivityType.PRINT, storedActivities);
         // and subsequent request none...
-        assertTrue(PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, new ArrayList<>(), ActivityType.PRINT, storedActivities).isEmpty());
+        assertTrue(
+                PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, new ArrayList<>(), ActivityType.PRINT, storedActivities).isEmpty());
 
         // ..unless we change vardenehet, in which case we should get all again
-        assertEquals(sjukfallList1, PDLActivityStore.getActivitiesNotInStore(VARDENHET_2, sjukfallList1, ActivityType.PRINT, storedActivities));
+        assertEquals(sjukfallList1,
+                PDLActivityStore.getActivitiesNotInStore(VARDENHET_2, sjukfallList1, ActivityType.PRINT, storedActivities));
     }
 
     private static InternalSjukfall createSjukFallForPatient(String patientId) {

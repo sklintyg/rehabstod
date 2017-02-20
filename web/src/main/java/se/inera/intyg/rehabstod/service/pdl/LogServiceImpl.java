@@ -40,7 +40,6 @@ import javax.jms.Message;
 import javax.jms.Session;
 import java.util.List;
 
-
 /**
  * Implementation of service for logging user actions according to PDL requirements.
  *
@@ -87,7 +86,8 @@ public class LogServiceImpl implements LogService {
             return;
         }
 
-        LOG.info("Logging SjukfallIntygsData for activityType {} having {}", pdlLogMessage.getActivityType().name(), pdlLogMessage.getPdlResourceList().size());
+        LOG.info("Logging SjukfallIntygsData for activityType {} having {}", pdlLogMessage.getActivityType().name(),
+                pdlLogMessage.getPdlResourceList().size());
         try {
             jmsTemplate.send(new MC(pdlLogMessage));
         } catch (JmsException e) {
@@ -111,7 +111,8 @@ public class LogServiceImpl implements LogService {
             try {
                 return session.createTextMessage(objectMapper.writeValueAsString(this.logMsg));
             } catch (JsonProcessingException e) {
-                throw new IllegalArgumentException("Could not serialize log message of type '" + logMsg.getClass().getName() + "' into JSON, message: " + e.getMessage(), e);
+                throw new IllegalArgumentException("Could not serialize log message of type '" + logMsg.getClass().getName()
+                        + "' into JSON, message: " + e.getMessage(), e);
             }
         }
     }

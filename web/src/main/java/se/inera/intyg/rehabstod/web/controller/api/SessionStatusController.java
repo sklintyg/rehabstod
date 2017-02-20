@@ -69,7 +69,8 @@ public class SessionStatusController {
         // The sessionTimeoutFilter should have put a secondsLeft attribute in the request for us to use.
         Long secondsLeft = (Long) request.getAttribute(SessionTimeoutFilter.SECONDS_UNTIL_SESSIONEXPIRE_ATTRIBUTE_KEY);
 
-        return new GetSessionStatusResponse(session != null, hasAuthenticatedPrincipalSession(session), secondsLeft == null ? 0 : secondsLeft);
+        return new GetSessionStatusResponse(session != null, hasAuthenticatedPrincipalSession(session),
+                secondsLeft == null ? 0 : secondsLeft);
     }
 
     private boolean hasAuthenticatedPrincipalSession(HttpSession session) {

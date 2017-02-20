@@ -67,7 +67,8 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
         if (details instanceof RehabstodUser) {
             RehabstodUser user = (RehabstodUser) details;
             if (user.getNamn() == null || user.getNamn().isEmpty()) {
-                user.setNamn(((FakeCredentials) token.getCredentials()).getFornamn() + " " +  ((FakeCredentials) token.getCredentials()).getEfternamn());
+                user.setNamn(((FakeCredentials) token.getCredentials()).getFornamn() + " "
+                        + ((FakeCredentials) token.getCredentials()).getEfternamn());
             }
         }
     }
@@ -89,12 +90,12 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
 
         AttributeStatement attributeStatement = new AttributeStatementBuilder().buildObject();
         assertion.getAttributeStatements().add(attributeStatement);
-        attributeStatement.getAttributes().add(createAttribute(BaseSakerhetstjanstAssertion.HSA_ID_ATTRIBUTE, ((FakeCredentials) token.getCredentials()).getHsaId()));
+        attributeStatement.getAttributes()
+                .add(createAttribute(BaseSakerhetstjanstAssertion.HSA_ID_ATTRIBUTE, ((FakeCredentials) token.getCredentials()).getHsaId()));
 
         NameID nameId = new NameIDBuilder().buildObject();
         nameId.setValue(token.getCredentials().toString());
         return new SAMLCredential(nameId, assertion, "fake-idp", "webcert");
     }
-
 
 }

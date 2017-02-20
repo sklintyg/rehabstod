@@ -43,7 +43,8 @@ public final class SjukfallLangdCalculator {
         }
 
         // Extract all Arbetsformaga grader-intervals from all sortableIntygsdata's to a list of LocalDateInterals
-        List<LocalDateInterval> allIntervals = intygsUnderlag.stream().map(sid -> sid.getArbetsformaga().getFormaga()).flatMap(l -> l.stream())
+        List<LocalDateInterval> allIntervals = intygsUnderlag.stream().map(sid -> sid.getArbetsformaga().getFormaga())
+                .flatMap(l -> l.stream())
                 .map(formaga -> new LocalDateInterval(formaga.getStartdatum(), formaga.getSlutdatum())).collect(Collectors.toList());
 
         // apply merge algorithm

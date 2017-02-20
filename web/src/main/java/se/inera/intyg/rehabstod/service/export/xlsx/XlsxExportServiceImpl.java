@@ -83,7 +83,6 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     @Autowired
     UserService userService;
 
-
     // api
 
     @Override
@@ -104,8 +103,8 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         addFilterMainHeader(sheet, rowNumber++, VALDA_FILTER);
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD,
                 req.getLangdIntervall().getMin() + " - " + req.getLangdIntervall().getMax() + " dagar");
-        rowNumber = addLakareList(sheet, rowNumber++, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), urval); //NOSONAR
-        rowNumber = addDiagnosKapitel(sheet, rowNumber++, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper());  //NOSONAR
+        rowNumber = addLakareList(sheet, rowNumber++, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), urval); // NOSONAR
+        rowNumber = addDiagnosKapitel(sheet, rowNumber++, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper()); // NOSONAR
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_FRITEXTFILTER, notEmpty(req) ? req.getFritext() : "-");
         addFilterMainHeader(sheet, rowNumber++, H2_SJUKFALLSINSTALLNING);
         addFilterHeader(sheet, rowNumber++, MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG, req.getMaxIntygsGlapp() + " dagar");
@@ -116,7 +115,8 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         rowNumber += FILTER_SPACING;
         addFilterMainHeader(sheet, rowNumber++, ANTAL_VISAR_ANTAL_PAGAENDE_SJUKFALL);
         addFilterHeader(sheet, rowNumber++, ANTAL_EXPORTEN_VISAR, String.valueOf(sjukfallList.size()));
-        addFilterHeader(sheet, rowNumber++, urval == Urval.ISSUED_BY_ME ? ANTAL_TOTALT_MINA : ANTAL_TOTALT_PA_ENHETEN, String.valueOf(total));
+        addFilterHeader(sheet, rowNumber++, urval == Urval.ISSUED_BY_ME ? ANTAL_TOTALT_MINA : ANTAL_TOTALT_PA_ENHETEN,
+                String.valueOf(total));
 
         rowNumber += 3;
         addTableHeaderRows(sheet, rowNumber++, urval);
@@ -126,7 +126,6 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         wb.write(baos);
         return baos.toByteArray();
     }
-
 
     // private scope
 
@@ -263,7 +262,8 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
             createDataCell(row, colIndex++, sf.getDiagnos().getKod());
             createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getStart()));
             createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getSlut()));
-            createDataCell(row, colIndex++, String.format(FORMAT_ANTALA_DAGAR, sf.getDagar()) + String.format(FORMAT_ANTAL_INTYG, sf.getIntyg()));
+            createDataCell(row, colIndex++,
+                    String.format(FORMAT_ANTALA_DAGAR, sf.getDagar()) + String.format(FORMAT_ANTAL_INTYG, sf.getIntyg()));
             createRichTextDataCell(row, colIndex++, buildGraderRichText(sf));
             if (urval != Urval.ISSUED_BY_ME) {
                 createDataCell(row, colIndex, sf.getLakare().getNamn());

@@ -56,20 +56,22 @@ public class InternalPingForConfigurationResponderImpl implements InternalPingFo
     private HealthCheckService healthCheck;
 
     @Override
+
+    // CHECKSTYLE:OFF LineLength
     public InternalPingForConfigurationResponseType internalPingForConfiguration(
             @WebParam(partName = "LogicalAddress", name = "LogicalAddress", targetNamespace = "urn:riv:itintegration:registry:1", header = true) String logicalAddress,
             @WebParam(partName = "parameters", name = "InternalPingForConfiguration", targetNamespace = "urn:riv:clinicalprocess:healthcond:monitoring:InternalPingForConfigurationResponder:1") InternalPingForConfigurationType parameters) {
+        // CHECKSTYLE:ON LineLength
         InternalPingForConfigurationResponseType response = new InternalPingForConfigurationResponseType();
         response.setPingDateTime(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
         LOG.info("Version String: " + projectVersion);
         response.setVersion(projectVersion);
 
-
         HealthStatus uptime = healthCheck.checkUptime();
         HealthStatus nbrOfUsers = healthCheck.checkNbrOfUsers();
 
         // INTYG-2352: Not possible to use PfC on NTjP PROD, have to remove this check for now.
-        //HealthStatus ntjpStatus = healthCheck.checkHSA();
+        // HealthStatus ntjpStatus = healthCheck.checkHSA();
         HealthStatus amqStatus = healthCheck.checkActiveMQ();
         HealthStatus itStatus = healthCheck.checkIntygstjansten();
 
@@ -82,8 +84,7 @@ public class InternalPingForConfigurationResponderImpl implements InternalPingFo
         addConfiguration(response, "intygstjanst", itStatus.isOk() ? "ok" : "no connection");
 
         // INTYG-2352: Not possible to use PfC on NTjP PROD, have to remove this check for now.
-        //addConfiguration(response, "ntjp", ntjpStatus.isOk() ? "ok" : "no connection");
-
+        // addConfiguration(response, "ntjp", ntjpStatus.isOk() ? "ok" : "no connection");
 
         return response;
     }

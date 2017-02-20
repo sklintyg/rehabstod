@@ -79,7 +79,8 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
     }
 
     private List<GenderStat> calculateGenderStat(List<InternalSjukfall> sjukfall) {
-        Map<Gender, List<InternalSjukfall>> byGender = sjukfall.stream().collect(Collectors.groupingBy(s -> s.getSjukfall().getPatient().getKon()));
+        Map<Gender, List<InternalSjukfall>> byGender = sjukfall.stream()
+                .collect(Collectors.groupingBy(s -> s.getSjukfall().getPatient().getKon()));
 
         int menTotal = byGender.getOrDefault(Gender.M, Collections.emptyList()).size();
         int womenTotal = byGender.getOrDefault(Gender.F, Collections.emptyList()).size();
