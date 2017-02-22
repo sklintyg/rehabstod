@@ -1,5 +1,12 @@
 apply plugin: 'com.moowork.grunt'
 
+idea {
+    module {
+        excludeDirs += file('node_modules')
+        excludeDirs += file('dev/report')
+    }
+}
+
 grunt {
     colors = System.properties['gruntColors'] ? System.properties['gruntColors'].toBoolean() : true
 }

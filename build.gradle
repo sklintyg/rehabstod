@@ -31,7 +31,6 @@ ext {
     springWsCoreVersion = "2.2.2.RELEASE"
     wsdl4jVersion = "1.6.3"
 
-    // Test
     aspectjWeaverVersion = "1.6.11"
     hamcrestVersion = "1.3"
     junitVersion = "4.12"
@@ -48,10 +47,9 @@ buildscript {
     }
 
     dependencies {
-        classpath 'se.inera.intyg:gradle-intyg-plugin:1.0.15'
-        classpath 'com.moowork.gradle:gradle-node-plugin:0.+'
-        classpath 'com.moowork.gradle:gradle-grunt-plugin:0.+'
-        classpath 'org.akhikhl.gretty:gretty:+'
+        classpath 'se.inera.intyg:gradle-intyg-plugin:1.0.+'
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.1.1'
+        classpath 'org.akhikhl.gretty:gretty:1.4.1'
     }
 }
 
@@ -67,6 +65,9 @@ allprojects {
     apply plugin: 'idea'
 
     dependencies {
+        compile "ch.qos.logback:logback-classic:${logbackVersion}"
+        compile "org.slf4j:slf4j-api:${slf4jVersion}"
+
         testCompile 'junit:junit:4.+'
         testCompile "org.mockito:mockito-core:${mockitoAllVersion}"
     }
@@ -76,17 +77,6 @@ allprojects {
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
-
-    checkstyle {
-        configProperties = ['package_name': 'rehabstod']
-    }
-
-    sonarqube {
-        properties {
-            property "sonar.projectName", "Rehabstod"
-            property "sonar.projectKey", "rehabstod"
-        }
-    }
 
     task createVersionPropertyFile(type: VersionPropertyFileTask)
 
@@ -107,14 +97,7 @@ task tagRelease(type: TagReleaseTask)
 
 task testReport(type: SharedTestReportTask)
 
-idea {
-    module {
-        excludeDirs += file('test/node_modules')
-        excludeDirs += file('test/dev/report')
-    }
-}
-
-// Load environment specific settings, if the -Penv=xxx parameter is given on invocation
+// Load environment specific settings, if the -Penv=xxx parameter is given on invocation.
 task loadConfiguration {
     def environment = null
     if (project.hasProperty('env')) {
@@ -122,21 +105,6 @@ task loadConfiguration {
     } else {
         environment = "local"
     }
-
     logger.quiet "Loading configuration for environment '$environment'."
-    addProjectPropertiesFromFile(file("$rootDir/env-properties/${environment}/settings.properties"))
-}
-
-def addProjectPropertiesFromFile(propfile) {
-    if (propfile.exists()) {
-        def props = new Properties();
-        propfile.withInputStream { props.load(it) }
-        allprojects { subproject ->
-            props.each { key, value ->
-                subproject.ext.setProperty(key, value.toString())
-            }
-        }
-    } else {
-        throw new GradleScriptException("File '${propfile.path}' does not exist.", null)
-    }
+    addProjectPropertiesFromFile(project, file("$rootDir/env-properties/${environment}/settings.properties"))
 }

@@ -78,6 +78,7 @@ gretty {
     //            '-Dcredentials.file=' + projectDir + '/../../rehabstod-konfiguration/demo/credentials.properties',
     //            '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources'
     //    ]
+
     fastReload = true
     inplaceMode = 'hard'
     scanInterval = 0
@@ -85,35 +86,26 @@ gretty {
 }
 
 dependencies {
-    compile project(":rehabstod-common")
     compile project(":rehabstod-it-integration")
 
     compile "se.riv.clinicalprocess.healthcond.monitoring:clinicalprocess-healthcond-monitoring-schemas:${internalMonitoringSchemaVersion}"
 
     compile "se.inera.intyg.infra:hsa-integration:${intygInfraVersion}"
-    compile "se.inera.intyg.infra:log-messages:${intygInfraVersion}"
     compile "se.inera.intyg.infra:security-siths:${intygInfraVersion}"
     compile "se.inera.intyg.infra:common-cache-metrics:${intygInfraVersion}"
 
-    compile "org.springframework:spring-webmvc:${springContextVersion}"
-    compile "org.springframework:spring-jms:${springContextVersion}"
-    compile "org.springframework.ws:spring-ws-core:${springWsCoreVersion}"
-    compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
-    compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
-    compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
-    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}" // was 2.4.4
-    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"  // was 2.4.4
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
     compile "com.googlecode.json-simple:json-simple:${jsonSimpleVersion}"
-    compile "org.slf4j:slf4j-api:${slf4jVersion}"
-    compile "ch.qos.logback:logback-classic:${logbackVersion}"
-    compile "wsdl4j:wsdl4j:${wsdl4jVersion}"
-    compile "commons-lang:commons-lang:${commonsLangVersion}"
-    compile "org.apache.commons:commons-lang3:${commonsLang3Version}"
-    compile "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
-    compile "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
-    compile "org.apache.poi:poi:${poiVersion}"
-    compile "org.apache.poi:poi-ooxml:${poiVersion}"
     compile "com.itextpdf:itextpdf:${itextVersion}"
+    compile "org.apache.commons:commons-lang3:${commonsLang3Version}"
+    compile "org.apache.poi:poi-ooxml:${poiVersion}"
+    compile "org.apache.poi:poi:${poiVersion}"
+    compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
+    compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
+    compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
+    compile "org.springframework.ws:spring-ws-core:${springWsCoreVersion}"
+    compile "org.springframework:spring-jms:${springContextVersion}"
+    compile "wsdl4j:wsdl4j:${wsdl4jVersion}"
 
     compileOnly "javax.jms:jms-api:${javaxJmsVersion}"
     compileOnly "javax.servlet:javax.servlet-api:${javaxServletVersion}"
