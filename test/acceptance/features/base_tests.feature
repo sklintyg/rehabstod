@@ -1,5 +1,5 @@
 # language: sv
-@base
+@base @notReady
 Egenskap: Bas test för Rehabstöd
 
 Bakgrund: Jag befinner mig på rehabstöd förstasida
@@ -19,7 +19,7 @@ Scenario: Logga in och kontrollera att informationen på flikarna presenteras ko
 Scenario: Logga in och kontrollera att informationen på flikarna presenteras korrekt.
 	När elementen "Sjukfall på enhet" synns
 	Så jag byter till flik "Om Rehabstöd"
-	Så elementen "Om Rehabstöd" synns
+	Så elementen ska "Om Rehabstöd" synas
 	#Så loggas jag ut 
 
 Scenario: Logga in och kontrollera innehållet i Mina Sjukfall

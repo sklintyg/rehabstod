@@ -26,6 +26,7 @@ module.exports = function() {
     //After scenario
     this.After(function(scenario, callback) {
 
+
         if (scenario.isFailed()) {
             logg('scenario failed');
             browser.takeScreenshot().then(function(png) {
@@ -35,16 +36,13 @@ module.exports = function() {
                     callback(err);
                 });
             });
-
         } else {
-
             callback();
         }
     });
 
-    this.Before(function(scenario, callback) {
+    this.Before(function(scenario) {
         global.scenario = scenario;
-        callback();
     });
 
     global.logg = function(text) {

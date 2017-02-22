@@ -23,11 +23,9 @@ var winston = require('winston');
 
 exports.config = {
 
-    allScriptsTimeout: 3000,
+    allScriptsTimeout: 10000,
     seleniumAddress: 'http://selenium1.nordicmedtest.se:4444/wd/hub',
     framework: 'custom',
-
-    // path relative to the current config file
     frameworkPath: require.resolve('protractor-cucumber-framework'),
     specs: [
         'features/*.feature'
@@ -37,7 +35,6 @@ exports.config = {
         version: '',
         platform: 'ANY'
     },
-    lmaxSessions: 1,
     cucumberOpts: {
         format: ['json:./acceptance/report/acc_results.json', 'pretty'],
         require: ['features/steps/**/*.js', 'features/support/**/*.js']
@@ -75,10 +72,8 @@ exports.config = {
                 })
             ]
         });
-
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     }
-
 };
 
 function formatLocalDate() {
@@ -89,5 +84,11 @@ function formatLocalDate() {
             var norm = Math.abs(Math.floor(num));
             return (norm < 10 ? '0' : '') + norm;
         };
-    return now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + 'T' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds()) + dif + pad(tzo / 60) + ':' + pad(tzo % 60);
+    return now.getFullYear() +
+        '-' +
+        pad(now.getMonth() +
+            1) +
+        '-' +
+        pad(now.getDate()) +
+        'T' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds()) + dif + pad(tzo / 60) + ':' + pad(tzo % 60);
 }

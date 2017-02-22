@@ -16,27 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+/*globals Promise*/
+
 'use strict';
 
 module.exports = function() {
 
-    this.Given(/^jag anger '(\d+)' i fritextfältet$/, function(fritext, callback) {
-        element(by.id('rhs-filter-free-text-input')).sendKeys(fritext)
-            .then(callback());
+    this.Given(/^jag anger "(\d+)" i fritextfältet$/, function(fritext) {
+        return element(by.id('rhs-filter-free-text-input')).sendKeys(fritext);
     });
 
-    this.Given(/^ska det endast visas rader med '(\d+)' i texten$/, function(fritext, callback) {
+    this.Given(/^ska det endast visas rader med '(\d+)' i texten$/, function(fritext) {
 
         var tabs = element.all(by.css('tr.rhs-table-row')).map(function(elm) {
             return elm.getText();
         });
 
         tabs.then(function(result) {
+            var promiseArr = [];
             for (var i = 0; i < result.length; i++) {
-                expect(result[i]).to.contain(fritext);
+                promiseArr.push(expect(result[i]).to.eventually.contain(fritext));
             }
-            callback();
+            return Promise.all(promiseArr);
+
         });
     });
 

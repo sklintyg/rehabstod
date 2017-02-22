@@ -17,14 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* globals pages*/
-/* globals logger, browser, JSON */
+/* globals logger, browser, JSON,rhsTestTools */
 
 'use strict';
-
-// var specHelper = rhsTestTools.helpers.spec;
 var welcomePage = rhsTestTools.pages.welcomePage;
-var rehabstodBase = rhsTestTools.pages.rehabstodBase;
 
 module.exports = function() {
 
@@ -51,7 +47,7 @@ function logInAsUserRole(userObj, roleName, callback, newOrigin, newUserRole) {
 
     browser.ignoreSynchronization = false;
     browser.sleep(3000);
-    expect(element(By.css('.headerbox-user-profile')).getText()).to.eventually.contain(roleName + ' - ' + userObj.fornamn + ' ' + userObj.efternamn).then(function(value) {
+    expect(element(by.css('.headerbox-user-profile')).getText()).to.eventually.contain(roleName + ' - ' + userObj.fornamn + ' ' + userObj.efternamn).then(function(value) {
         logger.info('OK - hittade : ' + value);
     }, function(reason) {
         callback('FEL - err: ' + reason);

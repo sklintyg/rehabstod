@@ -8,5 +8,7 @@
   },
   "author": "",
   "dependencies": {
+    "jclass": "^1.2.1",
+    "request": "^2.79.0"
   }
 }
