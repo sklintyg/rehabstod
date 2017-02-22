@@ -36,7 +36,7 @@ exports.config = {
         platform: 'ANY'
     },
     cucumberOpts: {
-        format: ['json:./acceptance/report/acc_results.json', 'pretty'],
+        format: ['json:./node_modules/common-testtools/cucumber-html-report/acc_results.json', 'pretty'],
         require: ['features/steps/**/*.js', 'features/support/**/*.js']
     },
     onPrepare: function() {
