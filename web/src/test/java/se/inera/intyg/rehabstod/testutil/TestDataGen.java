@@ -29,7 +29,6 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Patient;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
 import java.time.LocalDate;
@@ -46,6 +45,7 @@ import java.util.stream.Collectors;
  * Created by eriklupander on 2016-02-24.
  */
 public final class TestDataGen {
+
     private static final String USER_HSA_ID = "user-1";
     private static final String USER_NAME = "Läkar Läkarsson";
     private static final String CAREUNIT_ID = "careunit-1";
@@ -89,7 +89,11 @@ public final class TestDataGen {
         lakare.add(createLakare("IFV1239877878-1049", "Jan Nilsson"));
         lakare.add(createLakare("IFV1239877878-1255", "Ove Mört"));
 
-        return lakare.stream().map(l -> l.getNamn()).collect(Collectors.toList());
+        return lakare.stream().map(l -> l.getLakareNamn()).collect(Collectors.toList());
+    }
+
+    public static Lakare createLakare(String lakareId, String lakareNamn) {
+        return new Lakare(lakareId, lakareNamn);
     }
 
     public static List<String> buildDiagnosGrupper() {
@@ -115,34 +119,29 @@ public final class TestDataGen {
     }
 
     public static InternalSjukfall buildInternalSjukfall() {
-        InternalSjukfall sjukfall = new InternalSjukfall();
-        sjukfall.setSjukfall(buildSjukfall());
-        return sjukfall;
-    }
+        InternalSjukfall isf = new InternalSjukfall();
 
-    public static Sjukfall buildSjukfall() {
-        Sjukfall sjukfall = new Sjukfall();
+        Lakare lakare = new Lakare("IFV1239877878-1049", "Jan Nilsson");
+        isf.setLakare(lakare);
 
-        sjukfall.setAktivGrad(75);
-        sjukfall.setDagar(65);
-        sjukfall.setDiagnos(buildDiagnos());
-        sjukfall.setGrader(buildGrader());
-        sjukfall.setIntyg(2);
+        isf.setPatient(buildPatient());
+        isf.setDiagnos(buildDiagnos());
+        isf.setGrader(buildGrader());
 
-        sjukfall.setLakare(createLakare("IFV1239877878-1049", "Jan Nilsson"));
-        sjukfall.setPatient(buildPatient());
-        sjukfall.setStart(LocalDate.now().minusMonths(2));
-        sjukfall.setSlut(LocalDate.now().plusWeeks(2));
+        isf.setAktivGrad(75);
+        isf.setDagar(65);
+        isf.setIntyg(2);
 
-        return sjukfall;
+        isf.setStart(LocalDate.now().minusMonths(2));
+        isf.setSlut(LocalDate.now().plusWeeks(2));
+
+        return isf;
     }
 
     public static Patient buildPatient() {
-        Patient patient = new Patient();
+        Patient patient = new Patient("19121212-1212", "Tolvan Tolvansson");
         patient.setAlder(54);
-        patient.setId("19121212-1212");
         patient.setKon(Gender.M);
-        patient.setNamn("Tolvan Tolvansson");
         return patient;
     }
 
@@ -151,16 +150,8 @@ public final class TestDataGen {
     }
 
     public static Diagnos buildDiagnos() {
-        Diagnos diagnos = new Diagnos();
-        diagnos.setKod("J22");
+        Diagnos diagnos = new Diagnos("J22", "J22", "diagnosnamn");
         return diagnos;
-    }
-
-    private static Lakare createLakare(String hsaId, String namn) {
-        Lakare lakare = new Lakare();
-        lakare.setHsaId(hsaId);
-        lakare.setNamn(namn);
-        return lakare;
     }
 
     public static RehabstodUser buildRehabStodUser() {
@@ -185,7 +176,6 @@ public final class TestDataGen {
     private static SelectableVardenhet buildValdVardenhet(String hsaId, String namn) {
         return new Vardenhet(hsaId, namn);
     }
-
 
     // CHECKSTYLE:ON MagicNumber
 }

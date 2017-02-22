@@ -1,14 +1,14 @@
 /**
  * Copyright (C) 2017 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of SKLIntyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * SKLIntyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * SKLIntyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -18,36 +18,15 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos.dto;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import org.junit.Test;
+
 /**
- * Created by martin on 10/02/16.
+ * @author Magnus Ekstrand on 2017-02-20.
  */
 public class DiagnosKodTest {
-
-
-    @Test
-    public void testSplitNormalDignosKod() {
-        String line = "M123   Palindrom reumatism";
-
-        DiagnosKod kod = new DiagnosKod(line);
-
-        assertEquals("M123", kod.getId());
-        assertEquals("Palindrom reumatism", kod.getName());
-    }
-
-    @Test
-    public void testSplitToShortDiagnosKod() {
-        String line = "M123 ";
-
-        DiagnosKod kod = new DiagnosKod(line);
-
-        assertNull(kod.getId());
-        assertNull(kod.getName());
-    }
 
     @Test
     public void testCleanDignosKod() {
@@ -58,4 +37,29 @@ public class DiagnosKodTest {
         assertEquals("M8001", DiagnosKod.cleanKod("M.80.01   "));
         assertEquals("A", DiagnosKod.cleanKod("aÅÄÖ)(/"));
     }
+
+    @Test
+    public void testSplitNormalDignosKod() {
+        DiagnosKod kod = new DiagnosKod("M123   Palindrom reumatism");
+        assertEquals("M123", kod.getCleanedCode());
+        assertEquals("Palindrom reumatism", kod.getName());
+    }
+
+    @Test
+    public void testSplitToShortDiagnosKod() {
+        DiagnosKod kod = new DiagnosKod("M123");
+        assertEquals("M123", kod.getCleanedCode());
+        assertNull(kod.getName());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testEmptyDiagnosKod() {
+        se.inera.intyg.infra.sjukfall.dto.DiagnosKod kod = new se.inera.intyg.infra.sjukfall.dto.DiagnosKod("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullDiagnosKod() {
+        se.inera.intyg.infra.sjukfall.dto.DiagnosKod kod = new se.inera.intyg.infra.sjukfall.dto.DiagnosKod(null);
+    }
+
 }

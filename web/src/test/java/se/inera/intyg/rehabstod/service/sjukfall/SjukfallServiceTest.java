@@ -18,7 +18,14 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.time.LocalDate;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,30 +34,29 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
+import se.inera.intyg.infra.sjukfall.dto.Lakare;
+import se.inera.intyg.infra.sjukfall.dto.Sjukfall;
+import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
+import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationServiceImpl;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
-import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SjukfallEngineImpl;
-import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.statistics.StatisticsCalculator;
+import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
-import se.inera.intyg.rehabstod.web.model.Lakare;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-24.
@@ -60,7 +66,7 @@ public class SjukfallServiceTest {
     // CHECKSTYLE:OFF MagicNumber
 
     private final String enhetsId = "IFV1239877878-1042";
-    private final String mottagningsId = "mottagning-1";
+    private final String mottagningsId = "Mottagning-1";
     private final String lakareId1 = "IFV1239877878-1049";
     private final String lakareNamn1 = "Jan Nilsson";
     private final String lakareId2 = "IFV1239877878-104B";
@@ -73,16 +79,16 @@ public class SjukfallServiceTest {
     private IntygstjanstIntegrationServiceImpl integrationService;
 
     @Mock
-    private SjukfallEngineImpl engine;
-
-    @Mock
     private StatisticsCalculator statisticsCalculator;
 
     @Mock
     private MonitoringLogService monitoringLogService;
 
+    @Mock
+    private SjukfallEngineService sjukfallEngine;
+
     @InjectMocks
-    private SjukfallService testee = new SjukfallServiceImpl();
+    private SjukfallServiceImplTest testee = new SjukfallServiceImplTest();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -90,7 +96,7 @@ public class SjukfallServiceTest {
     @Before
     public void init() throws IOException {
         when(integrationService.getIntygsDataForCareUnit(anyString())).thenReturn(new ArrayList<IntygsData>());
-        when(engine.calculate(anyListOf(IntygsData.class), any(GetSjukfallRequest.class))).thenReturn(createInternalSjukfallList());
+        when(sjukfallEngine.beraknaSjukfall(anyListOf(IntygData.class), any(IntygParametrar.class))).thenReturn(createSjukfallList());
         when(statisticsCalculator.getSjukfallSummary(anyListOf(InternalSjukfall.class))).thenReturn(new SjukfallSummary(0, Collections.emptyList(), new ArrayList<>()));
     }
 
@@ -127,8 +133,8 @@ public class SjukfallServiceTest {
 
         assertTrue("Expected 8 but was " + internalSjukfallList.size(), internalSjukfallList.size() == 8);
         for (InternalSjukfall internalSjukfall : internalSjukfallList) {
-            String hsaId = internalSjukfall.getSjukfall().getLakare().getHsaId();
-            String namn = internalSjukfall.getSjukfall().getLakare().getNamn();
+            String hsaId = internalSjukfall.getLakare().getLakareId();
+            String namn = internalSjukfall.getLakare().getLakareNamn();
             assertTrue(lakareId1 == hsaId);
             assertEquals(lakareNamn1, namn);
         }
@@ -162,40 +168,96 @@ public class SjukfallServiceTest {
         return request;
     }
 
-    private List<InternalSjukfall> createInternalSjukfallList() {
-        List<InternalSjukfall> internalSjukfallList = new ArrayList<>();
+    private List<Sjukfall> createSjukfallList() {
+        List<Sjukfall> sjukfallList = new ArrayList<>();
 
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, enhetsId));
-        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
 
-        return internalSjukfallList;
+        return sjukfallList;
     }
 
-    private InternalSjukfall createInternalSjukfall(String lakareId, String lakareNamn, String enhetsId) {
-        Lakare lakare = new Lakare();
-        lakare.setHsaId(lakareId);
-        lakare.setNamn(lakareNamn);
-
+    private Sjukfall createSjukfall(String lakareId, String lakareNamn, String enhetsId) {
         Sjukfall sjukfall = new Sjukfall();
+
+        Vardenhet vardenhet = new Vardenhet(enhetsId, "enhet-" + enhetsId);
+        sjukfall.setVardenhet(vardenhet);
+
+        Lakare lakare = new Lakare(lakareId, lakareNamn);
         sjukfall.setLakare(lakare);
 
-        InternalSjukfall internalSjukfall = new InternalSjukfall();
-        internalSjukfall.setSjukfall(sjukfall);
-        internalSjukfall.setVardEnhetId(enhetsId);
-        return internalSjukfall;
+        return sjukfall;
     }
 
+    private Diagnos createDiagnos() {
+        Diagnos diagnos = new Diagnos("M123   Palindrom reumatism", "M123", "Palindrom reumatism");
+        diagnos.setBeskrivning("En beskrivning");
+        diagnos.setKapitel("M00-M99Ett diagnoskapitel");
+
+        return diagnos;
+    }
+
+
+    private class SjukfallServiceImplTest extends SjukfallServiceImpl {
+
+        private final String vardgivareId = "IFV1239877878-0000";
+        private final String vardgivareNamn = "Vårdgivare-1";
+        private final String patientId = "19121212-1212";
+        private final String patinetNamn = "Tolvan Tolvansson";
+
+        @Override
+        IntygData map(IntygsData from) {
+            HsaId hsaId = new HsaId();
+            hsaId.setExtension(vardgivareId);
+
+            Vardgivare vardgivare = new Vardgivare();
+            vardgivare.setVardgivarId(hsaId);
+            vardgivare.setVardgivarnamn(vardgivareNamn);
+
+            // Update IntygsData/Enhet with a Vardgivare, otherwise tests will fail
+            from.getSkapadAv().getEnhet().setVardgivare(vardgivare);
+
+            return super.map(from);
+        }
+
+        @Override
+        InternalSjukfall map(Sjukfall from) {
+            se.inera.intyg.infra.sjukfall.dto.Vardgivare vardgivare =
+                    new se.inera.intyg.infra.sjukfall.dto.Vardgivare(vardgivareId, vardgivareNamn);
+
+            se.inera.intyg.infra.sjukfall.dto.Patient patient =
+                    new se.inera.intyg.infra.sjukfall.dto.Patient(patientId, patinetNamn);
+
+            se.inera.intyg.infra.sjukfall.dto.DiagnosKod diagnosKod =
+                    new se.inera.intyg.infra.sjukfall.dto.DiagnosKod("J22");
+
+            // Update Sjukfall with these objects to avoid failing test
+            from.setVardgivare(vardgivare);
+            from.setPatient(patient);
+            from.setDiagnosKod(diagnosKod);
+
+            return super.map(from);
+        }
+
+        @Override
+        Diagnos map(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {
+            Diagnos to = new Diagnos(from.getOriginalCode(), from.getCleanedCode(), from.getName());
+            to.setBeskrivning("en beskrivning");
+            to.setKapitel("ett kapitel");
+            return to;
+        }
+    }
 }

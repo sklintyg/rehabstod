@@ -43,7 +43,6 @@ import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
 import java.io.ByteArrayOutputStream;
@@ -296,20 +295,19 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             } else {
                 table.getDefaultCell().setBackgroundColor(TABLE_ODD_ROW_COLOR);
             }
-            Sjukfall s = is.getSjukfall();
 
             addCell(table, String.valueOf(rowNumber));
-            addCell(table, getPersonnummerColumn(s));
-            addCell(table, s.getPatient().getNamn());
-            addCell(table, s.getPatient().getKon().getDescription());
-            addCell(table, s.getDiagnos().getIntygsVarde());
+            addCell(table, getPersonnummerColumn(is));
+            addCell(table, is.getPatient().getNamn());
+            addCell(table, is.getPatient().getKon().getDescription());
+            addCell(table, is.getDiagnos().getIntygsVarde());
 
-            addCell(table, s.getStart() != null ? YearMonthDateFormatter.print(s.getStart()) : "?");
-            addCell(table, s.getSlut() != null ? YearMonthDateFormatter.print(s.getSlut()) : "?");
-            addCell(table, getlangdText(s));
-            addCell(table, getGrader(s));
+            addCell(table, is.getStart() != null ? YearMonthDateFormatter.print(is.getStart()) : "?");
+            addCell(table, is.getSlut() != null ? YearMonthDateFormatter.print(is.getSlut()) : "?");
+            addCell(table, getlangdText(is));
+            addCell(table, getGrader(is));
             if (Urval.ALL.equals(urval)) {
-                addCell(table, s.getLakare().getNamn());
+                addCell(table, is.getLakare().getLakareNamn());
             }
             rowNumber++;
         }
@@ -330,14 +328,14 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         table.addCell(new Phrase(s, font));
     }
 
-    private Phrase getGrader(Sjukfall s) {
+    private Phrase getGrader(InternalSjukfall is) {
         boolean first = true;
         Phrase grader = new Phrase();
-        for (Integer grad : s.getGrader()) {
+        for (Integer grad : is.getGrader()) {
             if (!first) {
                 grader.add(new Chunk(UNICODE_RIGHT_ARROW_SYMBOL + " ", unicodeCapableFont));
             }
-            if (grad == s.getAktivGrad()) {
+            if (grad == is.getAktivGrad()) {
                 grader.add(new Chunk(grad.toString() + "% ", PdfExportConstants.TABLE_CELL_BOLD));
             } else {
                 grader.add(new Chunk(grad.toString() + "% ", PdfExportConstants.TABLE_CELL_NORMAL));
@@ -347,17 +345,17 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         return grader;
     }
 
-    private Phrase getPersonnummerColumn(Sjukfall s) {
+    private Phrase getPersonnummerColumn(InternalSjukfall is) {
         Phrase p = new Phrase();
-        p.add(new Chunk(s.getPatient().getId() != null ? s.getPatient().getId() : "", PdfExportConstants.TABLE_CELL_NORMAL));
-        p.add(new Chunk(String.format(FORMAT_ALDER_PARANTESER, s.getPatient().getAlder()), PdfExportConstants.TABLE_CELL_NORMAL));
+        p.add(new Chunk(is.getPatient().getId() != null ? is.getPatient().getId() : "", PdfExportConstants.TABLE_CELL_NORMAL));
+        p.add(new Chunk(String.format(FORMAT_ALDER_PARANTESER, is.getPatient().getAlder()), PdfExportConstants.TABLE_CELL_NORMAL));
         return p;
     }
 
-    private Phrase getlangdText(Sjukfall s) {
+    private Phrase getlangdText(InternalSjukfall is) {
         Phrase p = new Phrase();
-        p.add(new Chunk(String.format(FORMAT_ANTALA_DAGAR, s.getDagar()), PdfExportConstants.TABLE_CELL_NORMAL));
-        p.add(new Chunk(String.format(FORMAT_ANTAL_INTYG, s.getIntyg()), PdfExportConstants.TABLE_CELL_SMALL));
+        p.add(new Chunk(String.format(FORMAT_ANTALA_DAGAR, is.getDagar()), PdfExportConstants.TABLE_CELL_NORMAL));
+        p.add(new Chunk(String.format(FORMAT_ANTAL_INTYG, is.getIntyg()), PdfExportConstants.TABLE_CELL_SMALL));
         return p;
     }
 

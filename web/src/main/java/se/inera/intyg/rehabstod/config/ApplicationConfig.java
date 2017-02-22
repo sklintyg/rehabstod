@@ -18,16 +18,19 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
+
 import se.inera.intyg.infra.cache.metrics.CacheStatisticsService;
 import se.inera.intyg.infra.cache.metrics.CacheStatisticsServiceImpl;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
+
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 @Configuration
 @PropertySource({ "file:${rehabstod.config.file}", "file:${credentials.file}", "classpath:version.properties"})
@@ -60,5 +63,10 @@ public class ApplicationConfig {
     @Bean(name = "jacksonJsonProvider")
     public JacksonJaxbJsonProvider jacksonJsonProvider() {
         return new JacksonJaxbJsonProvider();
+    }
+
+    @Bean
+    public DiagnosFactory diagnosFactory() {
+        return new DiagnosFactory();
     }
 }

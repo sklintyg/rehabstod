@@ -71,7 +71,9 @@ public class DiagnosKapitelServiceImpl implements DiagnosKapitelService {
     }
 
     private DiagnosKapitel getDiagnosKapitelForDiagnosKategori(Optional<DiagnosKategori> diagnosKategori) {
-        return this.diagnosKapitelList.stream().filter(dk -> dk.includes(diagnosKategori)).findFirst()
+        return this.diagnosKapitelList.stream()
+                .filter(dk -> dk.includes(diagnosKategori))
+                .findFirst()
                 .orElse(OGILTIGA_DIAGNOSKODER_KAPITEL);
     }
 

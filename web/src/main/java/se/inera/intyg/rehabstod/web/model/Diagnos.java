@@ -19,42 +19,42 @@
 package se.inera.intyg.rehabstod.web.model;
 
 /**
- * Created by mango on 03/02/16.
+ * Created by Magnus Ekstrand on 03/02/16.
  */
 public class Diagnos {
 
     private static final int HASH_SEED = 31;
 
     private String intygsVarde;
-    private String kapitel;
     private String kod;
+    private String namn;
     private String beskrivning;
+    private String kapitel;
+
+    public Diagnos() {
+        // When we try to deserialize a JSON String to Diagnos an Exception
+        // “JsonMappingException: No suitable constructor found” will be thrown
+        // in absence of a default constructor
+    }
+    public Diagnos(String intygsVarde, String kod, String namn) {
+        this.intygsVarde = intygsVarde;
+        this.kod = kod;
+        this.namn = namn;
+    }
 
 
-    // - - - Getters and setters - - -
+    // getters and setters
 
     public String getIntygsVarde() {
         return intygsVarde;
-    }
-
-    public void setIntygsVarde(String intygsVarde) {
-        this.intygsVarde = intygsVarde;
-    }
-
-    public String getKapitel() {
-        return kapitel;
-    }
-
-    public void setKapitel(String kapitel) {
-        this.kapitel = kapitel;
     }
 
     public String getKod() {
         return kod;
     }
 
-    public void setKod(String kod) {
-        this.kod = kod;
+    public String getNamn() {
+        return namn;
     }
 
     public String getBeskrivning() {
@@ -65,8 +65,16 @@ public class Diagnos {
         this.beskrivning = beskrivning;
     }
 
+    public String getKapitel() {
+        return kapitel;
+    }
 
-    // - - - API - - -
+    public void setKapitel(String kapitel) {
+        this.kapitel = kapitel;
+    }
+
+
+    // api
 
     @Override
     public boolean equals(Object o) {
@@ -76,23 +84,33 @@ public class Diagnos {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+
         Diagnos diagnos = (Diagnos) o;
 
         if (!intygsVarde.equals(diagnos.intygsVarde)) {
             return false;
         }
-        if (!kapitel.equals(diagnos.kapitel)) {
+        if (!kod.equals(diagnos.kod)) {
             return false;
         }
-        return kod.equals(diagnos.kod);
+        if (!namn.equals(diagnos.namn)) {
+            return false;
+        }
+        if (beskrivning != null ? !beskrivning.equals(diagnos.beskrivning) : diagnos.beskrivning != null) {
+            return false;
+        }
 
+        return !(kapitel != null ? !kapitel.equals(diagnos.kapitel) : diagnos.kapitel != null);
     }
 
     @Override
     public int hashCode() {
         int result = intygsVarde.hashCode();
-        result = HASH_SEED * result + kapitel.hashCode();
         result = HASH_SEED * result + kod.hashCode();
+        result = HASH_SEED * result + namn.hashCode();
+        result = HASH_SEED * result + (beskrivning != null ? beskrivning.hashCode() : 0);
+        result = HASH_SEED * result + (kapitel != null ? kapitel.hashCode() : 0);
         return result;
     }
+
 }

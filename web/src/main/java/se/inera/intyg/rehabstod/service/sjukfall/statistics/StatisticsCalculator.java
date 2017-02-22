@@ -16,35 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.web.model;
+package se.inera.intyg.rehabstod.service.sjukfall.statistics;
+
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
+import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+
+import java.util.List;
 
 /**
- * Created by martin on 11/02/16.
+ * @author marced on 04/03/16.
  */
-public enum Gender {
+@FunctionalInterface
+public interface StatisticsCalculator {
 
-    F("Kvinna"), M("Man"), UNKNOWN("Okänt");
+    SjukfallSummary getSjukfallSummary(List<InternalSjukfall> sjukfall);
 
-    private final String desc;
-
-    Gender(String desc) {
-        this.desc = desc;
-    }
-
-    public String getDescription() {
-        return this.desc;
-    }
-
-    public static Gender getGenderFromString(String genderString) {
-
-        if (genderString != null && genderString.length() == 1) {
-            if (genderString.matches("^\\d*[13579]$")) {
-                return M;
-            } else if (genderString.matches("^\\d*[02468]$")) {
-                return F;
-            }
-        }
-
-        return UNKNOWN;
-    }
 }

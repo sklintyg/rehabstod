@@ -18,6 +18,17 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+
 import com.itextpdf.text.DocumentException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -46,7 +57,6 @@ import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -55,17 +65,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -126,7 +125,7 @@ public class SjukfallControllerTest {
         when(sjukfallService.getSjukfall(eq(VARDENHETS_ID), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(result);
 
         // Then
-        List<Sjukfall> response = sjukfallController.getSjukfallForCareUnit(request);
+        List<InternalSjukfall> response = sjukfallController.getSjukfallForCareUnit(request);
 
         // Verify
         verifyStatic();
@@ -179,37 +178,30 @@ public class SjukfallControllerTest {
 
     private static InternalSjukfall createSjukFallForPatient(String personNummer) {
         // CHECKSTYLE:OFF MagicNumber
-        Sjukfall sjukfall = new Sjukfall();
+        InternalSjukfall isf = new InternalSjukfall();
 
-        Patient patient = new Patient();
-        patient.setId(personNummer);
-        patient.setNamn("patient " + personNummer);
+        Lakare lakare = new Lakare("123456-0987", "Hr Doktor");
+        isf.setLakare(lakare);
+
+        Patient patient = new Patient(personNummer, "patient " + personNummer);
         patient.setAlder(50);
-        sjukfall.setPatient(patient);
+        isf.setPatient(patient);
 
         // Not really interested in these properties, but the sjukfall equals /hashcode will fail without them
-        final Diagnos diagnos = new Diagnos();
+        Diagnos diagnos = new Diagnos("M16", "M16", "diagnosnamn");
         diagnos.setKapitel("M00-M99");
-        diagnos.setKod("M16");
-        diagnos.setIntygsVarde("M16");
+        isf.setDiagnos(diagnos);
 
-        sjukfall.setDiagnos(diagnos);
-        sjukfall.setStart(LocalDate.now());
-        sjukfall.setSlut(LocalDate.now());
-        sjukfall.setDagar(1);
-        sjukfall.setIntyg(1);
-        sjukfall.setGrader(new ArrayList<>());
-        sjukfall.setAktivGrad(50);
+        isf.setDiagnos(diagnos);
+        isf.setStart(LocalDate.now());
+        isf.setSlut(LocalDate.now());
+        isf.setDagar(1);
+        isf.setIntyg(1);
+        isf.setGrader(new ArrayList<>());
+        isf.setAktivGrad(50);
 
-        Lakare lakare = new Lakare();
-        lakare.setHsaId("123456-7890");
-        lakare.setNamn("Hr Doktor");
-        sjukfall.setLakare(lakare);
-
-        InternalSjukfall is = new InternalSjukfall();
-        is.setSjukfall(sjukfall);
-
-        return is;
+        return isf;
+        // CHECKSTYLE:ON MagicNumber
     }
 
 }

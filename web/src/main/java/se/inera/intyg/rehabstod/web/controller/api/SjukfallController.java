@@ -18,6 +18,16 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
@@ -52,16 +63,6 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -90,7 +91,7 @@ public class SjukfallController {
     private PdfExportService pdfExportService;
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<Sjukfall> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
+    public List<InternalSjukfall> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
 
         // Get user from session
         RehabstodUser user = getRehabstodUser();
@@ -102,8 +103,7 @@ public class SjukfallController {
         LOG.debug("PDL logging - log which 'sjukfall' that are going to be displayed to the user.");
         logSjukfallData(user, sjukfall, ActivityType.READ);
 
-        return sjukfall.stream().map(sf -> sf.getSjukfall()).sorted((f1, f2) -> f2.getStart().compareTo(f1.getStart()))
-                .collect(Collectors.toList());
+        return sjukfall.stream().sorted((f1, f2) -> f2.getStart().compareTo(f1.getStart())).collect(Collectors.toList());
     }
 
     /**
@@ -117,8 +117,9 @@ public class SjukfallController {
      * @throws IOException
      */
     @ExceptionHandler(RehabExportException.class)
-    public void handleExportException(HttpServletRequest request, HttpServletResponse response, RehabExportException ex)
-            throws IOException {
+    public void handleExportException(HttpServletRequest request, HttpServletResponse response,
+                                      RehabExportException ex) throws IOException {
+
         LOG.error("RehabExportException caught - redirecting to errorpage", ex.getException());
         response.sendRedirect(request.getContextPath() + "/error.jsp?reason=exporterror");
     }
@@ -221,13 +222,13 @@ public class SjukfallController {
         addActivitiesToStore(enhetsId, sjukfallToLog, activityType, user.getStoredActivities());
     }
 
-    private void addActivitiesToStore(String enhetsId, List<InternalSjukfall> sjukfallToAdd, ActivityType activityType,
-            Map<String, List<PDLActivityEntry>> storedActivities) {
+    private void addActivitiesToStore(String enhetsId, List<InternalSjukfall> sjukfallToAdd,
+                                      ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
         PDLActivityStore.addActivitiesToStore(enhetsId, sjukfallToAdd, activityType, storedActivities);
     }
 
-    private List<InternalSjukfall> getActivitiesNotInStore(String enhetsId, List<InternalSjukfall> sjukfallList, ActivityType activityType,
-            Map<String, List<PDLActivityEntry>> storedActivities) {
+    private List<InternalSjukfall> getActivitiesNotInStore(String enhetsId, List<InternalSjukfall> sjukfallList,
+                                        ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
         return PDLActivityStore.getActivitiesNotInStore(enhetsId, sjukfallList, activityType, storedActivities);
     }
 
@@ -243,8 +244,8 @@ public class SjukfallController {
                     }
                 }
             }
-            throw new IllegalStateException(
-                    "User object is in invalid state. Current selected enhet is an underenhet, but no ID for the parent enhet was found.");
+            throw new IllegalStateException("User object is in invalid state. "
+                    + "Current selected enhet is an underenhet, but no ID for the parent enhet was found.");
         } else {
             return user.getValdVardenhet().getId();
         }

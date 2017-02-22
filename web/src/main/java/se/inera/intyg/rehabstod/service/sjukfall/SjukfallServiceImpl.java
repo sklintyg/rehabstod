@@ -3,12 +3,12 @@
  *
  * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * Rehabstod is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * Rehabstod is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -22,14 +22,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.sjukfall.dto.Formaga;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
+import se.inera.intyg.infra.sjukfall.dto.Sjukfall;
+import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
-import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.SjukfallEngineImpl;
-import se.inera.intyg.rehabstod.service.sjukfall.ruleengine.statistics.StatisticsCalculator;
+import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.Lakare;
+import se.inera.intyg.rehabstod.web.model.Patient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.util.List;
@@ -39,7 +47,7 @@ import java.util.stream.Collectors;
  * Created by eriklupander on 2016-02-01.
  */
 
-@Service
+@Service("sjukfallService")
 public class SjukfallServiceImpl implements SjukfallService {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallServiceImpl.class);
@@ -48,7 +56,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     private IntygstjanstIntegrationService intygstjanstIntegrationService;
 
     @Autowired
-    private SjukfallEngineImpl sjukfallEngine;
+    private SjukfallEngineService sjukfallEngine;
 
     @Autowired
     private StatisticsCalculator statisticsCalculator;
@@ -56,15 +64,113 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Autowired
     private MonitoringLogService monitoringLogService;
 
+    @Autowired
+    private DiagnosFactory diagnosFactory;
+
     @Override
-    public List<InternalSjukfall> getSjukfall(String enhetsId, String mottagningsId, String hsaId, Urval urval,
-            GetSjukfallRequest request) {
-        List<InternalSjukfall> sjukfallList = getFilteredSjukfallList(enhetsId, mottagningsId, hsaId, urval, request);
-        if (sjukfallList != null) {
-            monitoringLogService.logUserViewedSjukfall(hsaId, sjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
+    public List<InternalSjukfall> getSjukfall(String enhetsId, String mottagningsId,
+                                              String hsaId, Urval urval, GetSjukfallRequest request) {
+        List<InternalSjukfall> internalSjukfallList = getFilteredSjukfallList(enhetsId, mottagningsId, hsaId, urval, request);
+
+        if (internalSjukfallList != null) {
+            monitoringLogService.logUserViewedSjukfall(hsaId, internalSjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
         }
-        return sjukfallList;
+
+        return internalSjukfallList;
     }
+
+    @Override
+    public SjukfallSummary getSummary(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request) {
+        return statisticsCalculator.getSjukfallSummary(getFilteredSjukfallList(enhetsId, mottagningsId, hsaId, urval, request));
+    }
+
+
+    // - - - package scope - - -
+
+    /**
+     * Mapping from Sjukfall Engine format to Rehabstod internal format.
+     */
+    InternalSjukfall map(Sjukfall from) {
+        InternalSjukfall  to = new InternalSjukfall();
+
+        try {
+            to.setVardGivareId(from.getVardgivare().getId());
+            to.setVardGivareNamn(from.getVardgivare().getNamn());
+            to.setVardEnhetId(from.getVardenhet().getId());
+            to.setVardEnhetNamn(from.getVardenhet().getNamn());
+            to.setLakare(map(from.getLakare()));
+            to.setPatient(map(from.getPatient()));
+            to.setDiagnos(map(from.getDiagnosKod()));
+            to.setStart(from.getStart());
+            to.setSlut(from.getSlut());
+            to.setDagar(from.getDagar());
+            to.setIntyg(from.getIntyg());
+            to.setAktivGrad(from.getAktivGrad());
+            to.setGrader(from.getGrader());
+        } catch (Exception e) {
+            throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
+        }
+
+        return to;
+    }
+
+    /**
+     * Mapping to Sjukfall Engine format from Rehabstod internal format.
+     */
+    IntygData map(IntygsData from) {
+        IntygData to = new IntygData();
+
+        try {
+            to.setIntygId(from.getIntygsId());
+            to.setPatientId(from.getPatient().getPersonId().getExtension());
+            to.setPatientNamn(from.getPatient().getFullstandigtNamn());
+            to.setLakareId(from.getSkapadAv().getPersonalId().getExtension());
+            to.setLakareNamn(from.getSkapadAv().getFullstandigtNamn());
+            to.setVardenhetId(from.getSkapadAv().getEnhet().getEnhetsId().getExtension());
+            to.setVardenhetNamn(from.getSkapadAv().getEnhet().getEnhetsnamn());
+            to.setVardgivareId(from.getSkapadAv().getEnhet().getVardgivare().getVardgivarId().getExtension());
+            to.setVardenhetNamn(from.getSkapadAv().getEnhet().getVardgivare().getVardgivarnamn());
+            to.setDiagnosKod(from.getDiagnoskod());
+
+            List<Formaga> formagor = from.getArbetsformaga().getFormaga().stream()
+                    .map(f -> map(f)).collect(Collectors.toList());
+
+            to.setFormagor(formagor);
+            to.setSigneringsTidpunkt(from.getSigneringsTidpunkt());
+            to.setEnkeltIntyg(from.isEnkeltIntyg());
+
+        } catch (Exception e) {
+            throw new SjukfallServiceException("Error mapping internal format to SjukfallEngine format", e);
+        }
+
+        return to;
+    }
+
+    Lakare map(se.inera.intyg.infra.sjukfall.dto.Lakare from) {
+        return new Lakare(from.getId(), from.getNamn());
+    }
+
+    Patient map(se.inera.intyg.infra.sjukfall.dto.Patient from) {
+        return new Patient(from.getId(), from.getNamn());
+    }
+
+    Diagnos map(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {
+        Diagnos to = diagnosFactory.getDiagnos(from.getOriginalCode(), from.getCleanedCode(), from.getName());
+        return to;
+    }
+
+    IntygParametrar map(GetSjukfallRequest from) {
+        IntygParametrar to = new IntygParametrar(from.getMaxIntygsGlapp(), from.getAktivtDatum());
+        return to;
+    }
+
+    Formaga map(se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga from) {
+        Formaga to = new Formaga(from.getStartdatum(), from.getSlutdatum(), from.getNedsattning());
+        return to;
+    }
+
+
+    // - - - private scope - - -
 
     /**
      * Since we always use the vardenhetsId to query intygstjänsten (even when the
@@ -77,13 +183,8 @@ public class SjukfallServiceImpl implements SjukfallService {
         return mottagningsId != null ? mottagningsId : enhetsId;
     }
 
-    @Override
-    public SjukfallSummary getSummary(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request) {
-        return statisticsCalculator.getSjukfallSummary(getFilteredSjukfallList(enhetsId, mottagningsId, hsaId, urval, request));
-    }
-
-    private List<InternalSjukfall> getFilteredSjukfallList(String enhetsId, String mottagningsId, String hsaId, Urval urval,
-            GetSjukfallRequest request) {
+    private List<InternalSjukfall> getFilteredSjukfallList(String enhetsId, String mottagningsId,
+                                                           String hsaId, Urval urval, GetSjukfallRequest request) {
 
         if (urval == null) {
             throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");
@@ -93,21 +194,29 @@ public class SjukfallServiceImpl implements SjukfallService {
         List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
 
         LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall'.");
-        List<InternalSjukfall> internalSjukfall = sjukfallEngine.calculate(intygsData, request);
+        List<IntygData> data = intygsData.stream().map(o -> map(o)).collect(Collectors.toList());
+        IntygParametrar parametrar = map(request);
+
+        List<Sjukfall> sjukfallList = sjukfallEngine.beraknaSjukfall(data, parametrar);
+
+        LOG.debug("Mapping response from calculation engine to internal objects.");
+        List<InternalSjukfall> internalSjukfallList = sjukfallList.stream().map(o -> map(o)).collect(Collectors.toList());
 
         if (urval.equals(Urval.ISSUED_BY_ME)) {
             LOG.debug("Filtering response - a doctor shall only see patients 'sjukfall' he/she has issued certificates.");
-            internalSjukfall = internalSjukfall.stream()
-                    .filter(o -> o.getSjukfall().getLakare().getHsaId().equals(hsaId))
+            internalSjukfallList = internalSjukfallList.stream()
+                    .filter(o -> o.getLakare().getLakareId().equals(hsaId))
                     .collect(Collectors.toList());
         }
 
         if (mottagningsId != null) {
             LOG.debug("Filtering response - query for mottagning, only including 'sjukfall' with active intyg on specified mottagning");
-            internalSjukfall = internalSjukfall.stream()
+            internalSjukfallList = internalSjukfallList.stream()
                     .filter(o -> o.getVardEnhetId().equals(mottagningsId))
                     .collect(Collectors.toList());
         }
-        return internalSjukfall;
+
+        return internalSjukfallList;
     }
+
 }

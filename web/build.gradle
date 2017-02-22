@@ -66,8 +66,7 @@ gretty {
                '-Drehabstod.config.file=' + projectDir + '/src/main/resources/dev.properties',
                '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
                '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources',
-               '-XX:MaxPermSize=256M',
-               '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8011'
+               '-XX:MaxPermSize=256M'
                ]
 
     /***************** Konfiguration för att köra med SITHS och HSA aktiverat lokalt. *******************/
@@ -93,6 +92,7 @@ dependencies {
     compile "se.inera.intyg.infra:hsa-integration:${intygInfraVersion}"
     compile "se.inera.intyg.infra:security-siths:${intygInfraVersion}"
     compile "se.inera.intyg.infra:common-cache-metrics:${intygInfraVersion}"
+    compile "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
 
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
     compile "com.googlecode.json-simple:json-simple:${jsonSimpleVersion}"

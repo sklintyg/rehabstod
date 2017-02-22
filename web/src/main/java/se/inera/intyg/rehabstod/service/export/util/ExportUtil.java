@@ -49,7 +49,7 @@ public final class ExportUtil {
 
     private static void addSjukfallForPnr(List<InternalSjukfall> sjukfall, List<InternalSjukfall> finalList, String pNr) {
         Optional<InternalSjukfall> sjukfallForPatient = sjukfall.stream()
-                .filter(is -> is.getSjukfall().getPatient().getId().equals(pNr))
+                .filter(is -> is.getPatient().getId().equals(pNr))
                 .findFirst();
 
         if (sjukfallForPatient.isPresent()) {

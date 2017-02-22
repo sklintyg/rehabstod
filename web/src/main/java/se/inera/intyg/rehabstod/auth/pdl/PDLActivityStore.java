@@ -68,7 +68,7 @@ public final class PDLActivityStore {
         // find all patientId's NOT having av event entry for the combination patientId + eventType
         return sjukfall.stream()
                 .filter(sf -> vardenhetEvents.stream()
-                        .noneMatch(storedEvent -> storedEvent.getPatientId().equals(sf.getSjukfall().getPatient().getId())
+                        .noneMatch(storedEvent -> storedEvent.getPatientId().equals(sf.getPatient().getId())
                                 && storedEvent.getActivityType().equals(activityType)))
                 .collect(Collectors.toList());
 
@@ -92,7 +92,7 @@ public final class PDLActivityStore {
         List<PDLActivityEntry> vardenhetEvents = storedActivities.get(enhetsId);
 
         final List<PDLActivityEntry> pdlActivityEntryList = sjukfallToAdd.stream()
-                .map(sf -> new PDLActivityEntry(sf.getSjukfall().getPatient().getId(), activityType))
+                .map(sf -> new PDLActivityEntry(sf.getPatient().getId(), activityType))
                 .collect(Collectors.toList());
 
         if (vardenhetEvents == null) {

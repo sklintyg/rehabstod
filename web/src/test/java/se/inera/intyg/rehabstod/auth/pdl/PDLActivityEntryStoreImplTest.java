@@ -18,13 +18,15 @@
  */
 package se.inera.intyg.rehabstod.auth.pdl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,9 +34,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by marced on 22/02/16.
@@ -117,36 +116,30 @@ public class PDLActivityEntryStoreImplTest {
     }
 
     private static InternalSjukfall createSjukFallForPatient(String patientId) {
-        Sjukfall sjukfall = new Sjukfall();
+        // CHECKSTYLE:OFF MagicNumber
+        InternalSjukfall isf = new InternalSjukfall();
 
-        Patient patient = new Patient();
-        patient.setId(patientId);
+        Lakare lakare = new Lakare("123456-0987", "Hr Doktor");
+        isf.setLakare(lakare);
+
+        Patient patient = new Patient(patientId, "patient" + patientId);
         patient.setAlder(50);
-        patient.setNamn("patient " + patientId);
-        sjukfall.setPatient(patient);
+        isf.setPatient(patient);
 
         // Not really interested in these properties, but the sjukfall equals /hashcode will fail without them
-        final Diagnos diagnos = new Diagnos();
+        Diagnos diagnos = new Diagnos("M16", "M16", "diagnosnamn");
         diagnos.setKapitel("M00-M99");
-        diagnos.setKod("M16");
-        diagnos.setIntygsVarde("M16");
+        isf.setDiagnos(diagnos);
 
-        sjukfall.setDiagnos(diagnos);
-        sjukfall.setStart(LocalDate.now());
-        sjukfall.setSlut(LocalDate.now());
-        sjukfall.setDagar(1);
-        sjukfall.setIntyg(1);
-        sjukfall.setGrader(new ArrayList<>());
-        sjukfall.setAktivGrad(50);
+        isf.setStart(LocalDate.now());
+        isf.setSlut(LocalDate.now());
 
-        Lakare lakare = new Lakare();
-        lakare.setHsaId("123456-7890");
-        lakare.setNamn("Hr Doktor");
-        sjukfall.setLakare(lakare);
+        isf.setDagar(1);
+        isf.setIntyg(1);
+        isf.setGrader(new ArrayList<>());
+        isf.setAktivGrad(50);
 
-        InternalSjukfall is = new InternalSjukfall();
-        is.setSjukfall(sjukfall);
-
-        return is;
+        return isf;
+        // CHECKSTYLE:ON MagicNumber
     }
 }

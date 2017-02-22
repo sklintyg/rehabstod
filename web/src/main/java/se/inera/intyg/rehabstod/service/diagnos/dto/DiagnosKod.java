@@ -1,14 +1,14 @@
 /**
  * Copyright (C) 2017 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of SKLIntyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * SKLIntyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * SKLIntyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -25,29 +25,35 @@ public class DiagnosKod {
 
     public static final int KOD_LENGTH = 7;
 
+    private String originalCode;
+    private String cleanedCode;
     private String name;
-    private String id;
 
-    public DiagnosKod(String line) {
-
-        if (line.length() >= KOD_LENGTH) {
-            id = cleanKod(line.substring(0, KOD_LENGTH));
-
-            name = line.substring(KOD_LENGTH).trim();
+    public DiagnosKod(String originalCode) {
+        this.originalCode = originalCode;
+        if (this.originalCode.length() >= KOD_LENGTH) {
+            this.cleanedCode = cleanKod(this.originalCode.substring(0, KOD_LENGTH));
+            this.name = this.originalCode.substring(KOD_LENGTH).trim();
+        } else {
+            this.cleanedCode = cleanKod(this.originalCode);
         }
+    }
+
+    public String getOriginalCode() {
+        return originalCode;
     }
 
     public String getName() {
         return name;
     }
-    public String getId() {
-        return id;
+
+    public String getCleanedCode() {
+        return cleanedCode;
     }
 
     public static String cleanKod(String kod) {
-        String cleanedKod = kod.trim();
-        cleanedKod = cleanedKod.toUpperCase();
-
+        String cleanedKod = kod.trim().toUpperCase();
         return cleanedKod.replaceAll("[^A-Z0-9\\-]", "");
     }
+
 }

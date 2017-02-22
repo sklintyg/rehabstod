@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -33,6 +37,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
@@ -40,11 +45,6 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Patient;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by eriklupander on 2016-02-23.
@@ -252,7 +252,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     private void addDataRows(XSSFSheet sheet, int rowIndex, List<InternalSjukfall> sjukfallList, Urval urval) {
         for (int a = 0; a < sjukfallList.size(); a++) {
             XSSFRow row = sheet.createRow(rowIndex + a);
-            Sjukfall sf = sjukfallList.get(a).getSjukfall();
+            InternalSjukfall sf = sjukfallList.get(a);
 
             int colIndex = 0;
             createDataCell(row, colIndex++, Integer.toString(a + 1));
@@ -266,7 +266,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
                     String.format(FORMAT_ANTALA_DAGAR, sf.getDagar()) + String.format(FORMAT_ANTAL_INTYG, sf.getIntyg()));
             createRichTextDataCell(row, colIndex++, buildGraderRichText(sf));
             if (urval != Urval.ISSUED_BY_ME) {
-                createDataCell(row, colIndex, sf.getLakare().getNamn());
+                createDataCell(row, colIndex, sf.getLakare().getLakareNamn());
             }
         }
         for (int a = 0; a < HEADERS.length; a++) {
@@ -285,7 +285,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         return richTextString;
     }
 
-    private XSSFRichTextString buildGraderRichText(Sjukfall sf) {
+    private XSSFRichTextString buildGraderRichText(InternalSjukfall sf) {
 
         if (sf.getGrader() == null || sf.getGrader().isEmpty()) {
             return new XSSFRichTextString();

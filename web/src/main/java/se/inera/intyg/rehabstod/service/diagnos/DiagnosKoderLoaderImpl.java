@@ -70,8 +70,8 @@ public class DiagnosKoderLoaderImpl implements DiagnosKoderLoader {
 
                 DiagnosKod kod = new DiagnosKod(line);
 
-                if (kod.getId() != null) {
-                    map.put(kod.getId(), kod.getName());
+                if (kod.getCleanedCode() != null) {
+                    map.put(kod.getCleanedCode(), kod.getName());
                 }
             }
         } finally {
@@ -79,4 +79,5 @@ public class DiagnosKoderLoaderImpl implements DiagnosKoderLoader {
         }
         return map;
     }
+
 }

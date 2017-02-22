@@ -18,14 +18,15 @@
  */
 package se.inera.intyg.rehabstod.service.export.util;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.Patient;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by eriklupander on 2016-02-24.
@@ -42,37 +43,44 @@ public class ExportUtilTest {
     public void testListReturnedInExpectedOrder() {
         List<InternalSjukfall> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr2", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
         assertEquals(3, sjukfallList.size());
-        assertEquals("pnr1", sjukfallList.get(0).getSjukfall().getPatient().getId());
-        assertEquals("pnr2", sjukfallList.get(1).getSjukfall().getPatient().getId());
-        assertEquals("pnr3", sjukfallList.get(2).getSjukfall().getPatient().getId());
+        assertEquals("pnr1", sjukfallList.get(0).getPatient().getId());
+        assertEquals("pnr2", sjukfallList.get(1).getPatient().getId());
+        assertEquals("pnr3", sjukfallList.get(2).getPatient().getId());
     }
 
     @Test
     public void testListReturnedInExpectedOrderAndOneIsFilteredAway() {
         List<InternalSjukfall> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
         assertEquals(2, sjukfallList.size());
-        assertEquals("pnr1", sjukfallList.get(0).getSjukfall().getPatient().getId());
-        assertEquals("pnr3", sjukfallList.get(1).getSjukfall().getPatient().getId());
+        assertEquals("pnr1", sjukfallList.get(0).getPatient().getId());
+        assertEquals("pnr3", sjukfallList.get(1).getPatient().getId());
     }
 
     private List<InternalSjukfall> buildMatchingInternalSjukfallInOtherOrder() {
-        List<InternalSjukfall> sjukfallList = TestDataGen.buildSjukfallList(3);
+        List<InternalSjukfall> list = TestDataGen.buildSjukfallList(3);
 
-        sjukfallList.get(0).getSjukfall().getPatient().setId("pnr2");
-        sjukfallList.get(1).getSjukfall().getPatient().setId("pnr3");
-        sjukfallList.get(2).getSjukfall().getPatient().setId("pnr1");
+        list.get(0).setPatient(buildPatient("pnr2", list.get(0).getPatient()));
+        list.get(1).setPatient(buildPatient("pnr3", list.get(1).getPatient()));
+        list.get(2).setPatient(buildPatient("pnr1", list.get(2).getPatient()));
 
-        return sjukfallList;
+        return list;
     }
-
 
     private List<InternalSjukfall> buildNoneMatchingInternalSjukfall() {
 
         List<InternalSjukfall> sjukfallList = TestDataGen.buildSjukfallList(2);
         for (InternalSjukfall internalSjukfall : sjukfallList) {
-            internalSjukfall.getSjukfall().getPatient().setId("other-pnr");
+            internalSjukfall.setPatient(buildPatient("other-pnr", internalSjukfall.getPatient()));
         }
         return sjukfallList;
     }
+
+    private Patient buildPatient(String newPatientId, Patient oldPatient) {
+        Patient newPatient = new Patient(newPatientId, oldPatient.getNamn());
+        newPatient.setAlder(oldPatient.getAlder());
+        newPatient.setKon(oldPatient.getKon());
+        return newPatient;
+    }
+
     // CHECKSTYLE:ON MagicNumber
 }

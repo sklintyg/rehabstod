@@ -66,8 +66,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 
     private PdlResource buildPdlLogResource(InternalSjukfall sf) {
         PdlResource pdlResource = new PdlResource();
-        Patient patient = new Patient(sf.getSjukfall().getPatient().getId().replace("-", "").replace("+", ""),
-                sf.getSjukfall().getPatient().getNamn());
+        Patient patient = new Patient(sf.getPatient().getId().replace("-", "").replace("+", ""), sf.getPatient().getNamn());
         pdlResource.setPatient(patient);
 
         Enhet resourceOwner = new Enhet(sf.getVardEnhetId(), sf.getVardEnhetNamn(), sf.getVardGivareId(), sf.getVardGivareNamn());

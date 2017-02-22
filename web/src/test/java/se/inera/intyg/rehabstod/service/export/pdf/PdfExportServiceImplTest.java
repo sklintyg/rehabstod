@@ -18,6 +18,11 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,18 +41,12 @@ import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Patient;
-import se.inera.intyg.rehabstod.web.model.Sjukfall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by marced on 24/02/16.
@@ -149,36 +148,29 @@ public class PdfExportServiceImplTest {
     }
 
     private static InternalSjukfall createSjukFall(int index, String personNummer) {
-        Sjukfall sjukfall = new Sjukfall();
+        InternalSjukfall isf = new InternalSjukfall();
 
-        Patient patient = new Patient();
-        patient.setId(personNummer);
+        Lakare lakare = new Lakare("123456-0987", "Hr Doktor");
+        isf.setLakare(lakare);
+
+        Patient patient = new Patient(personNummer, "patient " + personNummer);
         patient.setAlder(50 + index / 2);
-        patient.setNamn("patient " + personNummer);
         patient.setKon(index % 2 == 0 ? Gender.M : Gender.F);
-        sjukfall.setPatient(patient);
+        isf.setPatient(patient);
 
         // Not really interested in these properties, but the sjukfall equals /hashcode will fail without them
-        final Diagnos diagnos = new Diagnos();
+        Diagnos diagnos = new Diagnos("M16", "M16", "diagnosnamn");
         diagnos.setKapitel("M00-M99");
-        diagnos.setKod("M16");
-        diagnos.setIntygsVarde("M16" + index);
+        isf.setDiagnos(diagnos);
 
-        sjukfall.setDiagnos(diagnos);
-        sjukfall.setStart(LocalDate.now().plusDays(index));
-        sjukfall.setSlut(sjukfall.getStart().plusDays(index));
-        sjukfall.setDagar(index * 2 + index % 3);
-        sjukfall.setIntyg(1);
-        sjukfall.setGrader(index % 3 == 0 ? Arrays.asList(25, 50) : Arrays.asList(50, 75));
-        sjukfall.setAktivGrad(50);
+        isf.setStart(LocalDate.now().plusDays(index));
+        isf.setSlut(isf.getStart().plusDays(index));
+        isf.setDagar(index * 2 + index % 3);
+        isf.setIntyg(1);
+        isf.setGrader(index % 3 == 0 ? Arrays.asList(25, 50) : Arrays.asList(50, 75));
+        isf.setAktivGrad(50);
 
-        Lakare lakare = new Lakare();
-        lakare.setNamn("Doktor Glas");
-        sjukfall.setLakare(lakare);
-
-        InternalSjukfall is = new InternalSjukfall();
-        is.setSjukfall(sjukfall);
-
-        return is;
+        return isf;
     }
+
 }

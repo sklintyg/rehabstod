@@ -16,35 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.web.model;
+package se.inera.intyg.rehabstod.service.sjukfall.testdata.builders;
 
 /**
- * Created by martin on 11/02/16.
+ * Created by Magnus Ekstrand on 2016-02-10.
  */
-public enum Gender {
-
-    F("Kvinna"), M("Man"), UNKNOWN("Okänt");
-
-    private final String desc;
-
-    Gender(String desc) {
-        this.desc = desc;
-    }
-
-    public String getDescription() {
-        return this.desc;
-    }
-
-    public static Gender getGenderFromString(String genderString) {
-
-        if (genderString != null && genderString.length() == 1) {
-            if (genderString.matches("^\\d*[13579]$")) {
-                return M;
-            } else if (genderString.matches("^\\d*[02468]$")) {
-                return F;
-            }
-        }
-
-        return UNKNOWN;
-    }
+public interface Builder<T> {
+    T build();
 }

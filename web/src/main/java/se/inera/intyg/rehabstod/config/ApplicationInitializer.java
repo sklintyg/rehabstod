@@ -48,7 +48,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
                 ServiceConfig.class, IntygstjanstIntegrationConfiguration.class,
                 IntygstjanstIntegrationClientConfiguration.class,
                 IntygstjanstIntegrationStubConfiguration.class,
-                JmsConfig.class, NTjPPingConfig.class, SecurityConfig.class);
+                JmsConfig.class, NTjPPingConfig.class, SecurityConfig.class,
+                SjukfallConfig.class);
 
         servletContext.addListener(new ContextLoaderListener(appContext));
 
