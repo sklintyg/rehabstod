@@ -51,7 +51,7 @@ A073   Isosporiasis
 A078   Andra specificerade tarmsjukdomar orsakade av protozoer
 A079   Protozosjukdom i tarmen, ospecificerad
 A080   Enterit orsakad av rotavirus
-A081   Akut gastroenteropati orsakad av Norwalk-faktor
+A081   Akut gastroenteropati orsakad av norovirus
 A082   Enterit orsakad av adenovirus
 A083   Enterit orsakad av annat specificerat virus
 A083A  Coxsackievirus-enterit
@@ -608,8 +608,8 @@ B334   Hantavirus med (kardio)pulmonellt syndrom [HPS] [HCPS]
 B338   Andra specificerade virussjukdomar
 B340   Adenovirusinfektion, ospecificerad lokalisation
 B341   Enterovirusinfektion, ospecificerad lokalisation
-B341A  Enterovirus-infektion, Coxsackie, UNS
-B341B  Enterovirus-infektion, Echo, UNS
+B341A  Enterovirusinfektion, coxsackie, ospecificerad lokalisation
+B341B  Enterovirusinfektion, ECHO, ospecificerad lokalisation
 B341W  Annan specificerad enterovirusinfektion, ospecificerad lokalisation
 B342   Coronavirusinfektion, ospecificerad lokalisation
 B343   Parvovirusinfektion, ospecificerad lokalisation
@@ -4643,7 +4643,7 @@ J051   Akut epiglottit
 J060   Akut laryngofaryngit
 J068   Annan specificerad akut övre luftvägsinfektion med multipel lokalisation
 J069   Akut övre luftvägsinfektion, ospecificerad
-J099   Influensa orsakad av vissa identifierade influensavirus
+J099   Influensa orsakad av identifierat zoonotiskt eller pandemiskt influensavirus
 J100   Influensa med pneumoni, identifierat säsongsinfluensavirus
 J101   Influensa med andra respiratoriska manifestationer, identifierat säsongsinfluensavirus
 J108   Influensa med andra manifestationer, identifierat säsongsinfluensavirus
@@ -5242,6 +5242,7 @@ K529W  Annan ospecificerad icke infektiös gastroenterit och kolit
 K550   Akuta kärlsjukdomar i tarmen
 K551   Kroniska kärlsjukdomar i tarmen
 K552   Angiodysplasi i kolon
+K553   Angiodysplasi i tunntarmen
 K558   Andra specificerade kärlsjukdomar i tarmen
 K559   Kärlsjukdom i tarmen, ospecificerad
 K560   Paralytisk ileus
@@ -5311,6 +5312,7 @@ K658   Annan specificerad peritonit
 K659   Peritonit, ospecificerad
 K660   Peritoneala adherenser
 K661   Hemoperitoneum
+K662   Retroperitoneal fibros
 K668   Andra specificerade sjukdomar i peritoneum
 K669   Sjukdom i peritoneum, ospecificerad
 K670   Klamydiaperitonit
@@ -6511,7 +6513,6 @@ M303   Mukokutant lymfkörtelsyndrom
 M308   Andra specificerade tillstånd besläktade med polyarteritis nodosa
 M310   Överkänslighetsangiit
 M311   Trombotisk mikroangiopati
-M312   Letalt medellinjegranulom
 M313   Wegeners granulomatos
 M314   Aortabågsarterit
 M315   Jättecellsarterit med polymyalgia rheumatica
@@ -7307,8 +7308,6 @@ N369   Sjukdom i uretra, ospecificerad
 N370   Uretrit vid sjukdomar som klassificeras annorstädes
 N378   Andra sjukliga tillstånd i uretra vid sjukdomar som klassificeras annorstädes
 N390   Urinvägsinfektion, utan angiven lokalisation
-N390A  Urinvägsinfektion, asymtomatisk (ABU)
-N390X  Urinvägsinfektion UNS
 N391   Icke specificerad kvarstående proteinuri
 N392   Icke specificerad ortostatisk proteinuri
 N393   Stressinkontinens
@@ -7870,6 +7869,8 @@ O367   Vård av blivande moder för viabelt foster vid graviditet i bukhålan
 O368   Vård av blivande moder för annat känt eller misstänkt specificerat problem hos fostret
 O368A  Vård av blivande moder för annat specificerat (misstänkt) problem hos fostret: genetisk ultraljudsmarkör, s.k. soft marker (exkl. strukturella missbildningar)
 O368B  Vård av blivande moder för annat specificerat (misstänkt) problem hos fostret: fetal hjärtarytmi
+O368C  Vård av blivande moder för alloimmun trombocytimmunisering
+O368D  Vård av blivande moder för autoimmun trombocytimmunisering
 O368W  Vård av blivande moder för annat känt eller misstänkt problem hos fostret
 O369   Vård av blivande moder för känt eller misstänkt problem hos fostret, ospecificerat
 O409   Onormalt stor mängd fostervatten
@@ -8414,6 +8415,9 @@ P598   Gulsot hos nyfödd av andra specificerade orsaker
 P599   Gulsot hos nyfödd av icke specificerad orsak
 P609   Disseminerad intravasal koagulation hos foster och nyfödd
 P610   Övergående trombocytopeni hos nyfödd
+P610A  Alloimmun trombocytopeni (FNAIT) hos nyfödd
+P610B  Autoimmun trombocytopeni hos nyfödd
+P610W  Annan övergående trombocytopeni hos nyfödd
 P611   Polycytemi hos nyfödd
 P612   Anemi vid underburenhet
 P613   Medfödd anemi på grund av blodförlust under fostertiden
@@ -8801,7 +8805,7 @@ Q390   Atresi av esofagus utan fistel
 Q391   Atresi av esofagus med trakeoesofageal fistel
 Q392   Medfödd trakeoesofageal fistel utan atresi
 Q393   Medfödd stenos och striktur av esofagus
-Q394   Esofagusmembran
+Q394   Medfött esofagusmembran
 Q395   Medfödd dilatation av esofagus
 Q396   Divertikel i esofagus
 Q398   Andra specificerade medfödda missbildningar av esofagus
@@ -9563,7 +9567,7 @@ R591   Generell lymfkörtelförstoring
 R599   Lymfkörtelförstoring, ospecificerad
 R600   Lokaliserat ödem
 R600A  Ansiktsödem UNS
-R600B  Lipödem (underben)
+R600B  Lipödem
 R600C  Underbensödem UNS
 R600D  Secretans syndrom
 R600X  Lokaliserat ödem, ospecificerat
@@ -9587,7 +9591,7 @@ R632   Polyfagi
 R633   Dåliga matvanor
 R634   Onormal viktförlust
 R635   Onormal viktökning
-R636   Otillräckligt intag av föda och vatten på grund av självförsummelse
+R636   Otillräckligt intag av föda och vatten
 R638   Andra symtom och sjukdomstecken som har samband med födo- och vätskeintag
 R649   Utmärgling
 R650   Systemiskt inflammatoriskt svarssyndrom [SIRS] av infektiöst ursprung utan organsvikt
@@ -11115,7 +11119,7 @@ T598   Andra specificerade gaser, rök och ångor
 T599   Gaser, rök och ångor, ospecificerade
 T600   Organiska fosfater och karbamater använda som insekticider
 T601   Halogenerade insekticider
-T602   Andra insekticider
+T602   Andra och ospecificerade insekticider
 T603   Herbicider och fungicider
 T604   Rodenticider
 T608   Andra specificerade pesticider
@@ -11494,7 +11498,7 @@ U065   Kod som kan tas i bruk med kort varsel
 U066   Kod som kan tas i bruk med kort varsel
 U067   Kod som kan tas i bruk med kort varsel
 U068   Kod som kan tas i bruk med kort varsel
-U069   Kod som kan tas i bruk med kort varsel
+U069   Infektion med zikavirus, ospecificerad
 U070   Kod som kan tas i bruk med kort varsel
 U071   Kod som kan tas i bruk med kort varsel
 U072   Kod som kan tas i bruk med kort varsel

@@ -1095,7 +1095,7 @@ O20    Blödning i tidig graviditet
 O21    Ihållande kräkningar under graviditeten
 O22    Venösa komplikationer och hemorrojder under graviditeten
 O23    Infektioner i urin- och könsorganen under graviditeten
-O24    Diabetes (sockersjuka) under graviditeten
+O24    Diabetes under graviditeten
 O25    Undernäring under graviditeten
 O26    Vård av modern för andra tillstånd i huvudsak sammanhängande med graviditeten
 O28    Onormala fynd vid undersökning av den blivande modern
@@ -1584,7 +1584,7 @@ T96    Sena besvär av förgiftning orsakad av droger, läkemedel och biologiska su
 T97    Sena besvär av toxiska effekter av substanser med i huvudsak icke medicinsk användning
 T98    Sena besvär av andra och icke specificerade effekter av yttre orsaker
 U04    Svår akut respiratorisk sjukdom [SARS]
-U06    Kod som kan tas i bruk med kort varsel
+U06    Infektion med zikavirus
 U07    Kod som kan tas i bruk med kort varsel
 U82    Resistens mot betalaktamantibiotika
 U83    Resistens mot andra antibiotika
