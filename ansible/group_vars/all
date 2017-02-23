@@ -7,6 +7,9 @@ java_home: "{{ inera_root }}/jre8"
 releases_folder: "{{ inera_root }}/releases"
 deploy_from_repo: true
 
+#Dummy value for proxy_env
+proxy_env : {}
+
 # Spring profiles
 profiles: test
 
@@ -23,15 +26,15 @@ config_etc_folder: "{{ config_folder }}/{{ environment_name }}"
 # Note: end with slash, in order to copy only files inside the source folder, not the folder itself
 app_resources_src: "{{ playbook_dir }}/../web/src/main/resources/"
 app_ext_resources_src: "{{ playbook_dir }}/../src/main/resources/"
-app_resources_folder: "{{ inera_root }}/rehabstod-resources"
+app_resources_folder: "{{ inera_root }}/{{ inventory_hostname }}-resources"
 
 # Tomcat installation
-tomcat_service: inera-tomcat
-tomcat_home: "{{ inera_root }}/tomcat7"
-tomcat_conf: "{{ tomcat_home }}/conf"
-tomcat_bin:  "{{ tomcat_home }}/bin"
-tomcat_lib:  "{{ tomcat_home }}/lib"
+tomcat_service: "{{ inventory_hostname }}-tomcat"
+tomcat_home: "{{ inera_root }}/{{ tomcat_service }}"
 inera_tomcat_folder: "{{ inera_root }}/{{ tomcat_service }}"
+tomcat_conf: "{{ inera_tomcat_folder }}/conf"
+tomcat_bin: "{{ inera_tomcat_folder }}/bin"
+tomcat_lib: "{{ inera_tomcat_folder }}/lib"
 webapps_folder: "{{ inera_tomcat_folder }}/webapps"
 
 # ActiveMQ configuration

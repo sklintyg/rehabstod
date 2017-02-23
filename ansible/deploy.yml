@@ -1,11 +1,12 @@
 # This playbook deploys rehabstod
 
-- hosts: rehabstod-tomcat
-  sudo: yes
+- hosts: tomcat
+  become: yes
+  serial: 1
+  environment:
+    "{{ proxy_env }}"
   vars:
-    # repo - values: 'snapshots or 'releases'
     repo: releases
-    version: 1.1.0-b30
     config_version: master
 
   roles:

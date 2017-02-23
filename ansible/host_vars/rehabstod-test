@@ -3,11 +3,6 @@ profiles: test,rhs-security-test,rhs-it-stub,wc-hsa-stub,testability-api,caching
 
 # Configuration repository
 environment_name: "test"
-config_etc_folder: "{{ config_folder }}/{{ environment_name }}"
-
-# Tomcat
-tomcat_service: tomcat-rehabstod
-tomcat_home: "{{ inera_root }}/{{ tomcat_service }}"
 
 # ActiveMQ
 activemq_broker_url: "vm://localhost:61616?broker.persistent=false"
