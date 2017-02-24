@@ -23,8 +23,8 @@ package se.inera.intyg.rehabstod.web.model;
  */
 public class Lakare {
 
-    private String lakareId;
-    private String lakareNamn;
+    private String hsaId;
+    private String namn;
 
     public Lakare() {
         // When we try to deserialize a JSON String to Lakare an Exception
@@ -32,22 +32,26 @@ public class Lakare {
         // in absence of a default constructor
     }
 
-    public Lakare(String lakareId, String lakareNamn) {
-        this.lakareId = lakareId;
-        this.lakareNamn = lakareNamn;
+    public Lakare(String hsaId, String namn) {
+        this.hsaId = hsaId;
+        this.namn = namn;
     }
 
 
     // - - - getters - - -
 
-    public String getLakareId() {
-        return lakareId;
+    public String getHsaId() {
+        return hsaId;
     }
 
-    public String getLakareNamn() {
-        return lakareNamn;
+    public String getNamn() {
+        return namn;
     }
 
+    // name is mutable since we sometimes need to post-process the doctor name
+    public void setNamn(String namn) {
+        this.namn = namn;
+    }
 
     // - - - api - - -
 
@@ -62,12 +66,12 @@ public class Lakare {
 
         Lakare lakare = (Lakare) o;
 
-        return lakareId.equals(lakare.lakareId);
+        return hsaId.equals(lakare.hsaId);
     }
 
     @Override
     public int hashCode() {
-        return lakareId.hashCode();
+        return hsaId.hashCode();
     }
 
 }
