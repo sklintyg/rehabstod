@@ -35,6 +35,8 @@
     <bean class="se.inera.intyg.infra.integration.hsa.stub.BootstrapBean" />
     <bean class="se.inera.intyg.infra.integration.hsa.client.EmployeeServiceBean" />
     <bean class="se.inera.intyg.infra.integration.hsa.services.HsaEmployeeServiceImpl" />
+
+    <bean class="se.inera.intyg.infra.cache.metrics.CacheStatisticsServiceImpl" />
     <bean class="se.inera.intyg.rehabstod.service.hsa.EmployeeNameServiceImpl"/>
 
 
