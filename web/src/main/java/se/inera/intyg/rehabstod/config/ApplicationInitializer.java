@@ -49,7 +49,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
                 IntygstjanstIntegrationClientConfiguration.class,
                 IntygstjanstIntegrationStubConfiguration.class,
                 JmsConfig.class, NTjPPingConfig.class, SecurityConfig.class,
-                SjukfallConfig.class);
+                SjukfallConfig.class, EmployeeNameCacheConfig.class);
 
         servletContext.addListener(new ContextLoaderListener(appContext));
 

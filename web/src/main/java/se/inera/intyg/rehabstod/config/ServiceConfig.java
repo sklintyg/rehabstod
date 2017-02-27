@@ -42,7 +42,7 @@ import java.util.Map;
 public class ServiceConfig {
 
     @Autowired
-    HealthCheckService healtCheckService;
+    private HealthCheckService healtCheckService;
 
     @Autowired
     private ApplicationContext applicationContext;
