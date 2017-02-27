@@ -34,28 +34,26 @@ public class SjukfallEmployeeNameResolverImpl implements SjukfallEmployeeNameRes
     @Override
     public void updateDuplicateDoctorNamesWithHsaId(List<InternalSjukfall> sjukfallList) {
         // Get number of unique lakare hsaIds
-        double numberOfHsaIds = sjukfallList.stream().map(sf -> sf.getLakare().getHsaId()).distinct().count();
-        double numberOfLakareNames = sjukfallList.stream().map(sf -> sf.getLakare().getNamn()).distinct().count();
+        long numberOfHsaIds = sjukfallList.stream().map(sf -> sf.getLakare().getHsaId()).distinct().count();
+        long numberOfLakareNames = sjukfallList.stream().map(sf -> sf.getLakare().getNamn()).distinct().count();
 
-        // If these are identical we can safely return.
-        if (numberOfHsaIds == numberOfLakareNames) {
-            return;
-        }
+        // If these counts don't add up we need to post-process the names.
+        if (numberOfHsaIds != numberOfLakareNames) {
 
-        // Make sure there are no two doctors in the list with the same name, but different hsaId's
-        Map<String, List<Lakare>> collect = sjukfallList.stream()
-                .map(sf -> sf.getLakare())
-                .collect(Collectors.groupingBy(lakare -> lakare.getNamn()));
+            // Make sure there are no two doctors in the list with the same name, but different hsaId's
+            Map<String, List<Lakare>> collect = sjukfallList.stream()
+                    .map(sf -> sf.getLakare())
+                    .collect(Collectors.groupingBy(lakare -> lakare.getNamn()));
 
-        for (Map.Entry<String, List<Lakare>> entry : collect.entrySet()) {
+            for (Map.Entry<String, List<Lakare>> entry : collect.entrySet()) {
 
-            double numberOfUnique = entry.getValue().stream().map(l -> l.getHsaId()).distinct().count();
-            if (numberOfUnique > 1) {
-                entry.getValue().stream().forEach(lakare -> {
-                    lakare.setNamn(lakare.getNamn() + " (" + lakare.getHsaId() + ")");
-                });
+                double numberOfUnique = entry.getValue().stream().map(l -> l.getHsaId()).distinct().count();
+                if (numberOfUnique > 1) {
+                    entry.getValue().stream().forEach(lakare -> {
+                        lakare.setNamn(lakare.getNamn() + " (" + lakare.getHsaId() + ")");
+                    });
+                }
             }
-
         }
     }
 }

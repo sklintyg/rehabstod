@@ -3,7 +3,6 @@ package se.inera.intyg.rehabstod.service.hsa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsa.client.EmployeeService;
 import se.inera.intyg.infra.integration.hsa.services.HsaEmployeeService;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
@@ -17,7 +16,7 @@ import static se.inera.intyg.rehabstod.config.EmployeeNameCacheConfig.EMPLOYEE_N
  * Class that provides a cachable facade for calls to HSA getEmployeeIncludingProtectedPerson.
  *
  * The purpose is to allow calls to determine doctor current name in HSA to be cached without
- * introducing caching in the hsa-integration {@link EmployeeService} itself.
+ * introducing caching in the hsa-integration {@link se.inera.intyg.infra.integration.hsa.client.EmployeeService} itself.
  *
  * Created by eriklupander on 2017-02-23.
  */
