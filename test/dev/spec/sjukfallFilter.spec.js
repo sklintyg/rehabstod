@@ -27,7 +27,7 @@ var specHelper = rhsTestTools.helpers.spec;
 var startPage = rhsTestTools.pages.startPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
-describe('Hantera filtret', function() {
+xdescribe('Hantera filtret', function() {
 
 
     beforeEach(function() {
