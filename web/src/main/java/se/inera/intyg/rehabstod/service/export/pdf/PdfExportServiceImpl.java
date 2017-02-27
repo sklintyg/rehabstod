@@ -307,7 +307,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             addCell(table, getlangdText(is));
             addCell(table, getGrader(is));
             if (Urval.ALL.equals(urval)) {
-                addCell(table, is.getLakare().getLakareNamn());
+                addCell(table, is.getLakare().getNamn());
             }
             rowNumber++;
         }

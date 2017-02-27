@@ -32,6 +32,7 @@ import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
+import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
@@ -67,6 +68,9 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Autowired
     private DiagnosFactory diagnosFactory;
 
+    @Autowired
+    private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+
     @Override
     public List<InternalSjukfall> getSjukfall(String enhetsId, String mottagningsId,
                                               String hsaId, Urval urval, GetSjukfallRequest request) {
@@ -75,6 +79,8 @@ public class SjukfallServiceImpl implements SjukfallService {
         if (internalSjukfallList != null) {
             monitoringLogService.logUserViewedSjukfall(hsaId, internalSjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
         }
+
+        sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(internalSjukfallList);
 
         return internalSjukfallList;
     }
@@ -205,7 +211,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         if (urval.equals(Urval.ISSUED_BY_ME)) {
             LOG.debug("Filtering response - a doctor shall only see patients 'sjukfall' he/she has issued certificates.");
             internalSjukfallList = internalSjukfallList.stream()
-                    .filter(o -> o.getLakare().getLakareId().equals(hsaId))
+                    .filter(o -> o.getLakare().getHsaId().equals(hsaId))
                     .collect(Collectors.toList());
         }
 

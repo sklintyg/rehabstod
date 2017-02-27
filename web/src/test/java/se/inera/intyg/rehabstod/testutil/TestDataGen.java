@@ -89,7 +89,7 @@ public final class TestDataGen {
         lakare.add(createLakare("IFV1239877878-1049", "Jan Nilsson"));
         lakare.add(createLakare("IFV1239877878-1255", "Ove Mört"));
 
-        return lakare.stream().map(l -> l.getLakareNamn()).collect(Collectors.toList());
+        return lakare.stream().map(l -> l.getNamn()).collect(Collectors.toList());
     }
 
     public static Lakare createLakare(String lakareId, String lakareNamn) {

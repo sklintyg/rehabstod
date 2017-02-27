@@ -26,19 +26,19 @@
       "lakare": {
         "additionalProperties": false,
         "properties": {
-          "lakareId": {
+          "hsaId": {
             "type": [
               "string",
               "null"
             ]
           },
-          "lakareNamn": {
+          "namn": {
             "type": "string"
           }
         },
         "required": [
-          "lakareId",
-          "lakareNamn"
+          "hsaId",
+          "namn"
         ],
         "type": "object"
       },

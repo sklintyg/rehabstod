@@ -266,7 +266,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
                     String.format(FORMAT_ANTALA_DAGAR, sf.getDagar()) + String.format(FORMAT_ANTAL_INTYG, sf.getIntyg()));
             createRichTextDataCell(row, colIndex++, buildGraderRichText(sf));
             if (urval != Urval.ISSUED_BY_ME) {
-                createDataCell(row, colIndex, sf.getLakare().getLakareNamn());
+                createDataCell(row, colIndex, sf.getLakare().getNamn());
             }
         }
         for (int a = 0; a < HEADERS.length; a++) {
