@@ -19,17 +19,15 @@
         "grunt-protractor-webdriver": "^0.2.5",
         "http-backend-proxy": "^1.4.3",
         "jasmine-reporters": "^2.1.1",
-        "jclass": "^1.1.9",
         "mysql": "^2.5.4",
         "node-soap": "^1.0.0",
         "protractor": "^3.1.1",
-        "protractor-cucumber-framework": "latest",
+        "protractor-cucumber-framework": "^1.0.0",
         "protractor-jasmine2-screenshot-reporter": "^0.3.0",
-        "request": "^2.65.0",
         "soap": "^0.13.0",
         "winston": "^2.2.0"
     },
-    "engine": "node >= 4.2.1",
+    "engine": "node >= 6.9.1",
     "scripts": {
         "install": "node node_modules/protractor/bin/webdriver-manager update",
         "result": "xdg-open './node_modules/common-testtools/cucumber-html-report/index.html'"
