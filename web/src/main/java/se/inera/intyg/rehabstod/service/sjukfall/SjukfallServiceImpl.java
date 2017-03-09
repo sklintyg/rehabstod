@@ -81,6 +81,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         }
 
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(internalSjukfallList);
+        sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(internalSjukfallList);
 
         return internalSjukfallList;
     }
