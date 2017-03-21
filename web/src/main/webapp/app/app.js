@@ -25,8 +25,7 @@ angular.module('rehabstodApp')
                 views: {
                     'app@': { templateUrl: '/app/app.html', controller: 'AppPageCtrl'},
                     'header@': { templateUrl: '/app/header/header.html', controller: 'HeaderController' },
-                    'navbar@': { templateUrl: '/app/navbar/navbar.html', controller: 'NavbarCtrl' },
-                    'footer@': { templateUrl: '/app/footer/footer.html' }
+                    'navbar@': { templateUrl: '/app/navbar/navbar.html', controller: 'NavbarCtrl' }
                 }
             });
     });
