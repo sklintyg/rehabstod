@@ -17,6 +17,7 @@ profiles: test
 environment_name: "test"
 config_name: rehabstod-konfiguration
 config_repository: https://github.com/sklintyg/rehabstod-konfiguration.git
+config_version: "master"
 config_folder: "{{ inera_root }}/rehabstod-konfiguration"
 gitcrypt_key_name: "git-crypt4.key"
 gitcrypt_key_file: "./{{ gitcrypt_key_name }}"
