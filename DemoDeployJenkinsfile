@@ -1,0 +1,23 @@
+#!groovy
+
+def baseVersion = "1.3.*"
+
+stage('checkout') {
+    node {
+        git url: "https://github.com/sklintyg/rehabstod.git", branch: GIT_BRANCH
+        util.run { checkout scm }
+    }
+}
+
+stage('deploy') {
+    node {
+        util.run({
+                def itVersion = util.latestVersion("rehabstod-web", baseVersion)
+
+                ansiblePlaybook(extraVars: [version: "${itVersion}", ansible_ssh_host: "164.40.180.105", deploy_from_repo: "true"],
+                                installation: 'ansible-yum', inventory: 'ansible/inventory/rehabstod/demo', playbook: 'ansible/deploy.yml')
+
+                util.waitForServer('https://demo.rehabstod.intygstjanster.se/version.jsp')
+            })
+    }
+}
