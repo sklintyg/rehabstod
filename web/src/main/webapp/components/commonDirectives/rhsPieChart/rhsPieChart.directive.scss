@@ -1,3 +1,7 @@
 .rhs-pie-chart-directive-container {
   min-height: 120px;
+
+  .highcharts-legend-item .highcharts-point {
+    display: none;
+  }
 }

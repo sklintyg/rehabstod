@@ -23,7 +23,7 @@
     "font-awesome": "4.7.0",
     "ngInfiniteScroll": "1.2.2",
     "angular-placeholder-tai": "1.0.3",
-    "highcharts": "4.2.5"
+    "highcharts": "5.0.10"
   },
   "devDependencies": {
     "angular-mocks": "1.4.11",

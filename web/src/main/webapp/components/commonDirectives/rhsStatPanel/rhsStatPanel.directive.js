@@ -18,9 +18,8 @@
  */
 
 angular.module('rehabstodApp').directive('rhsStatPanel',
-    ['SjukfallSummaryModel', 'UserModel', '$rootScope', 'pieChartBaseConfig', 'messageService',
         function(SjukfallSummaryModel, UserModel, $rootScope, pieChartBaseConfig,
-            messageService) {
+            messageService, chartColors) {
             'use strict';
 
             return {
@@ -38,16 +37,17 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
 
                     $scope.totalPaEnhetStatConfig = angular.merge(angular.copy(pieChartBaseConfig), {
 
-                        title: {
-                            text: null
-                        },
-                        colors: ['#57843B'],
+                        title: null,
+                        colors: [chartColors.base],
                         tooltip: {
                             pointFormat: '{point.y} st'
                         },
                         legend: {
                             labelFormat: '{y} st',
                             symbolWidth: 0,
+                            symbolPadding: 0,
+                            symbolRadius: 0,
+                            symbolHeight: 0,
                             align: 'center',
                             verticalAlign: 'middle',
                             itemStyle: {
@@ -65,7 +65,6 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                             pie: {
                                 borderColor: null,
                                 borderWidth: 0,
-
                                 allowPointSelect: false
                             }
                         }
@@ -87,7 +86,7 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         title: {
                             text: null
                         },
-                        colors: ['#EA8034', '#138391'],
+                        colors: [chartColors.female, chartColors.male],
                         tooltip: {
                             pointFormatter: function() {
                                 return this.percentage.toFixed(1) + '% <b>(' + this.y +
@@ -110,6 +109,7 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         title: {
                             text: null
                         },
+                        colors: getDiagnoseColors($scope.model.diagnoseGroupData),
                         tooltip: {
                             pointFormat: '{point.percentage:.1f}% <b>({point.y} st)</b> av ' +
                             (UserModel.get().isLakare ? 'mina' : 'alla') + ' pågående sjukfall<br/>' +
@@ -128,8 +128,18 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         }
                     });
 
+                    function getDiagnoseColors(diagnosis) {
+                        var colors = [];
+
+                        angular.forEach(diagnosis, function(diagnos) {
+                            colors.push(chartColors.diagnosis[diagnos.id]);
+                        });
+
+                        return colors;
+                    }
+
 
                 },
                 templateUrl: '/components/commonDirectives/rhsStatPanel/rhsStatPanel.directive.html'
             };
-        }]);
+        });
