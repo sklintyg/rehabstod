@@ -46,10 +46,8 @@ module.exports = function(config) {
         ],
 
         preprocessors: {
-            '**/*.jade': 'ng-jade2js',
-            '**/*.html': 'ng-html2js',
-            '**/*.coffee': 'coffee',
-            '**/*.js': ['coverage']
+            'src/main/webapp/!(bower_components)/**/*.html': ['ng-html2js'],
+            'src/main/webapp/!(bower_components)/**/!(*spec).js': ['coverage']
         },
 
         ngHtml2JsPreprocessor: {

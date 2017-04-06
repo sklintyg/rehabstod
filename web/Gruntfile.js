@@ -15,6 +15,8 @@ module.exports = function(grunt) {
         configureProxies: 'grunt-connect-proxy'
     });
 
+    var serveStatic = require('serve-static');
+
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
@@ -53,7 +55,7 @@ module.exports = function(grunt) {
                         return [
                             enablePost,
                             require('connect-livereload')(),
-                            connect.static('src/main/webapp'),
+                            serveStatic('src/main/webapp'),
                             require('grunt-connect-proxy/lib/utils').proxyRequest
                         ];
                     }
@@ -103,7 +105,7 @@ module.exports = function(grunt) {
             sass: {
                 files: [
                     '<%= config.client %>/{app,components}/**/*.{scss,sass}'],
-                tasks: ['sass', 'autoprefixer']
+                tasks: ['sass', 'postcss']
             },
             gruntfile: {
                 files: ['Gruntfile.js']
@@ -160,19 +162,15 @@ module.exports = function(grunt) {
         },
 
         // Add vendor prefixed styles
-        autoprefixer: {
+        postcss: {
             options: {
-                browsers: ['last 2 versions', 'ie 9']
+                map: false,
+                processors: [
+                    require('autoprefixer')({browsers: ['last 2 versions', 'ie 9']}) // add vendor prefixes
+                ]
             },
             dist: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: '<%= config.client %>/',
-                        src: '{,*/}*.css',
-                        dest: '<%= config.client %>/'
-                    }
-                ]
+                src: '<%= config.client %>/app/*.css'
             }
         },
 
@@ -481,9 +479,9 @@ module.exports = function(grunt) {
         grunt.task.run([
             'injector:sass',
             'sass',
+            'postcss',
             'injector',
             'wiredep',
-            'autoprefixer',
             'configureProxies:dev',
             'connect:dev',
             'wait',
@@ -498,7 +496,7 @@ module.exports = function(grunt) {
                 'injector:sass',
                 'sass',
                 'injector',
-                'autoprefixer',
+                'postcss',
                 'karma'
             ]);
         }
@@ -508,7 +506,7 @@ module.exports = function(grunt) {
                 'injector:sass',
                 'injector',
                 'wiredep',
-                'autoprefixer',
+                'postcss',
                 'express:dev',
                 'protractor'
             ]);
@@ -526,6 +524,7 @@ module.exports = function(grunt) {
         'jshint',
         'injector:sass',
         'sass',
+        'postcss',
         'injector:scripts',
         'injector:css',
         'wiredep',
@@ -538,11 +537,11 @@ module.exports = function(grunt) {
         'copy:dist',
         'injector:sass',
         'sass',
+        'postcss',
         'injector:scripts',
         'injector:css',
         'wiredep',
         'useminPrepare',
-        'autoprefixer',
         'karma',
         'ngtemplates',
         'concat',
