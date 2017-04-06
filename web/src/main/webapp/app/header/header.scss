@@ -1,63 +1,63 @@
 .header {
-    background-color: #212633;
-    padding: 5px 0 15px 0; /* don't change this setup. it's needed for IE8 flow on smaller screens to work */
-    color: #fff;
-}
+  background-color: #212633;
+  color: #fff;
+  padding: 5px 0 15px 0; // don't change this setup. it's needed for IE8 flow on smaller screens to work
 
-.header a {
+  a {
     color: #28b4c4;
     font-size: 13px;
     line-height: 14px;
+  }
+
+  span.location {
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .otherLocations {
+    font-size: 12px;
+  }
 }
 
 .headerbox {
-    padding: 0 0 0 0;
+  padding: 0;
 }
 
 span.headerbox-logo {
-    padding: 3px 20px 0 30px;
-    border-right: 1px solid #595c66;
-    display: block;
-    margin-top: 10px;
+  border-right: 1px solid #595c66;
+  display: block;
+  margin-top: 10px;
+  padding: 3px 20px 0 30px;
 }
 
 span.headerbox-date {
-    padding: 19px 0 0 30px;
-    line-height: 17px;
-    display: block;
+  display: block;
+  line-height: 17px;
+  padding: 19px 0 0 30px;
 }
 
 div.headerbox-user {
-    font-size: 13px;
-    line-height: 16px;
-    padding: 10px 0 0 0;
+  font-size: 13px;
+  line-height: 16px;
+  padding: 10px 0 0;
 }
 
 div.headerbox-avatar {
-    padding: 10px 30px 0 0;
+  padding: 10px 30px 0 0;
 }
 
 div.headerbox-user-profile {
-    padding-right: 15px;
-    font-size: 13px;
-    line-height: 18px;
-    text-align: left;
-}
-
-.header span.location {
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.header .otherLocations {
-    font-size: 12px;
+  font-size: 13px;
+  line-height: 18px;
+  padding-right: 15px;
+  text-align: left;
 }
 
 .logout-button {
-    float: right;
-    margin: 4px 30px 0 0;
+  float: right;
+  margin: 4px 30px 0 0;
 }
 
 .select-care-unit-modal {
-    margin-top: 30px;
+  margin-top: 30px;
 }

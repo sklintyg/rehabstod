@@ -12,7 +12,8 @@ module.exports = function(grunt) {
         ngtemplates: 'grunt-angular-templates',
         protractor: 'grunt-protractor-runner',
         injector: 'grunt-injector',
-        configureProxies: 'grunt-connect-proxy'
+        configureProxies: 'grunt-connect-proxy',
+        sasslint: 'grunt-sass-lint'
     });
 
     var serveStatic = require('serve-static');
@@ -379,6 +380,13 @@ module.exports = function(grunt) {
                     '<%= config.client %>/app/app.css': '<%= config.client %>/app/app.scss'
                 }
             }
+        },
+
+        sasslint: {
+            options: {
+                //configFile: 'config/.sass-lint.yml' //For now we use the .sass-lint.yml that is packaged with sass-lint
+            },
+            target: ['<%= config.client %>/{app,components}/**/*.scss']
         },
 
         injector: {

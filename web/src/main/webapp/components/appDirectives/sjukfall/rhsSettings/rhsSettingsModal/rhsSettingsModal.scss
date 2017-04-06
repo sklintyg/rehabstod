@@ -1,7 +1,9 @@
-.rhs-settings-modal .rhs-numeric-range-input {
-  width: 80px;
-}
+.rhs-settings-modal {
+  .rhs-numeric-range-input {
+    width: 80px;
+  }
 
-.rhs-settings-modal .form-control-static {
-  padding-left: 0.7em;
+  .form-control-static {
+    padding-left: .7em;
+  }
 }

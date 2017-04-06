@@ -1,348 +1,345 @@
-/* bootstrap override */
-
 .page-header {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .control-label {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .buttonbar .btn {
-    margin: 15px 20px 0 0;
+  margin: 15px 20px 0 0;
 }
 
 .btn {
-    line-height: 18px;
+  line-height: 18px;
 }
 
 .btn-secondary {
-    padding: 7px 15px;
-    background: none;
-    background-color: #f0f0f0;
+  background: none;
+  background-color: #f0f0f0;
+  padding: 7px 15px;
 }
 
 .btn-secondary:hover {
-    background-color: #f6f6f6;
+  background-color: #f6f6f6;
 }
 
 .btn-success {
-    /*	border: none;*/
-    padding: 7px 15px;
-    font-weight: bold;
-    background: none;
-    background-color: #42a341;
-    cursor: pointer;
-    white-space: nowrap;
+  background: none;
+  background-color: #42a341;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 7px 15px;
+  white-space: nowrap;
 }
 
-.btn-info, .btn-info[disabled]{
-    font-weight: bold;
-    background: none;
-    background-color: #28b4c4;
+.btn-info,
+.btn-info[disabled] {
+  background: none;
+  background-color: #28b4c4;
+  font-weight: bold;
 }
 
-.qa-table .btn-info, .buttonbar .btn-info, .qa-panel .btn-info, .modal-footer .btn-info {
-    padding: 7px 15px;
+.qa-table .btn-info,
+.buttonbar .btn-info,
+.qa-panel .btn-info,
+.modal-footer .btn-info {
+  padding: 7px 15px;
 }
 
 .table-links .btn-link {
-    text-align: left;
+  text-align: left;
 }
 
 .certblock-copy .btn-info {
-    padding: 7px 0;
+  padding: 7px 0;
 }
 
 .btn-info:hover {
-    background-color: #38c4d4;
+  background-color: #38c4d4;
 }
 
 .btn-info[disabled]:hover {
-    cursor: auto;
-    background-color: #28b4c4;
+  background-color: #28b4c4;
+  cursor: auto;
 }
 
 .btn-link {
-    color: #008391;
+  color: #008391;
 }
 
 .btn-link:hover {
-    color: #31b2be;
+  color: #31b2be;
 }
 
 .btn-link-link {
-    border: 0;
-    margin: 0;
-    padding: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
 }
 
 button.btn-link-minimal {
-    padding: 0;
+  padding: 0;
 }
 
 .btn-inverse {
-    background: none;
-    background-color: #3f3f3f;
-    color: #ffffff;
+  background: none;
+  background-color: #3f3f3f;
+  color: #fff;
 }
 
 .btn-inverse:focus,
 .btn-inverse:hover {
-    background-color: #656565;
-    color: #ffffff;
+  background-color: #656565;
+  color: #fff;
 }
 
-
 .dropdown-menu {
-    padding: 5px 5px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  padding: 5px;
 }
 
 form {
-    margin: 0;
+  margin: 0;
 }
 
 .navbar {
-    margin: 0;
-    min-height: 0;
-    padding: 0;
-    border-radius: 0;
-    border: 0;
-    border-top: 1px solid #999;
-    border-bottom: 1px solid #d4d4d4;
-}
+  border: 0;
+  border-bottom: 1px solid #d4d4d4;
+  border-radius: 0;
+  border-top: 1px solid #999;
+  margin: 0;
+  min-height: 0;
+  padding: 0;
 
-.navbar .divider-vertical {
+  .divider-vertical {
     margin: 0;
-}
+  }
 
-.navbar .nav {
-    margin: 0 0 0 0;
+  .nav {
+    margin: 0;
     white-space: nowrap;
+
+    > li {
+      border-right: 1px solid #ddd;
+      position: relative;
+
+      > a {
+        padding: 8px 20px;
+      }
+
+      > .navbar-text {
+        margin: 0;
+        padding: 8px 20px;
+      }
+    }
+
+    > li:first-child {
+      border-left: 1px solid #ddd;
+    }
+  }
 }
 
-.navbar .nav > li {
-    border-right: 1px solid #ddd;
-    /*  display: inline-block; /* Uncomment to lock menu items to one row (during 800x600 demos buttons won't be accessible otherwise)
-      float: none;*/
-    position: relative;
-}
-
-.navbar .nav > li:first-child {
-    border-left: 1px solid #ddd;
-}
-
-.navbar .nav > li > a {
-    padding: 8px 20px 8px;
-}
-
-.navbar .nav > li > .navbar-text {
-    padding: 8px 20px 8px;
-    margin: 0;
-}
 
 
 .navbar-collapse.in .nav > li {
-    border-left: 1px solid #ddd;
-    margin-right: 15px;
-    margin-left: 15px;
+  border-left: 1px solid #ddd;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 .nav-pills.nav-stacked {
-    margin-bottom: 20px;
-}
+  margin-bottom: 20px;
 
-.nav-pills.nav-stacked > li > a {
+  > li > a {
     border: 1px solid #ddd;
     border-radius: 0;
     padding-right: 20px;
-}
+  }
 
-.nav-pills.nav-stacked > li:last-child > a {
-    border-bottom-right-radius: 4px;
+  > li:last-child > a {
     border-bottom-left-radius: 4px;
-}
+    border-bottom-right-radius: 4px;
+  }
 
-.nav-pills.nav-stacked > li:first-child > a {
-    border-top-right-radius: 4px;
+  > li:first-child > a {
     border-top-left-radius: 4px;
-}
+    border-top-right-radius: 4px;
+  }
 
-.nav-pills.nav-stacked > li + li {
+  > li + li {
     margin-top: -1px;
+  }
 }
 
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
-    color: #ffffff;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-    background-color: #008391;
+  background-color: #008391;
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
 }
 
 .nav-pills li.active .glyphicon-chevron-right,
 .nav-pills li.active a:hover .glyphicon-chevron-right {
-    color: #ffffff;
-    opacity: 1;
+  color: #fff;
+  opacity: 1;
 }
 
 .nav-stacked .glyphicon-chevron-right {
-    color: #333;
-    margin-top: 2px;
-    margin-right: -6px;
-    opacity: .25;
-    position: absolute;
-    top: 25%;
-    right: 15px;
+  color: #333;
+  margin-right: -6px;
+  margin-top: 2px;
+  opacity: .25;
+  position: absolute;
+  right: 15px;
+  top: 25%;
 }
 
 .glyphicon-question-sign {
-    top: 1px;
-    font-size: 16px;
-    margin-left: 5px;
-    color: #008391;
-    font-weight: 900;
+  color: #008391;
+  font-size: 16px;
+  font-weight: 900;
+  margin-left: 5px;
+  top: 1px;
 }
 
 .glyphicon-question-sign:hover {
-    cursor: pointer;
-    color: #28b4c4;
+  color: #28b4c4;
+  cursor: pointer;
 }
 
 .table {
-    border-collapse: separate;
-    border-spacing: 0 0;
+  border-collapse: separate;
+  border-spacing: 0 0;
 }
 
 .table > thead > tr > th,
 .table > thead > tr > td,
 .table > tbody > tr > th,
 .table > tbody > tr > td {
-    padding: 2px 0;
-    border: 0;
-    vertical-align: middle;
+  border: 0;
+  padding: 2px 0;
+  vertical-align: middle;
 }
 
 .table-striped tbody > tr:nth-child(odd) > td {
-    background-color: #f9f9f9;
+  background-color: #f9f9f9;
 }
 
 .table-striped tbody > tr:nth-child(odd) > th {
-    background: none;
+  background: none;
 }
 
 th.center, td.center {
-    text-align: center;
+  text-align: center;
 }
 
 .marked {
-    color: #ff4565;
+  color: #ff4565;
 }
 
 .scrollable {
-    overflow-x: auto;
+  overflow-x: auto;
 }
 
 .no-padding {
-    padding: 0;
+  padding: 0;
 }
 
 textarea {
-    width: 100%;
-    max-width: 500px;
+  max-width: 500px;
+  width: 100%;
 }
 
 th {
-    cursor: default;
+  cursor: default;
 }
 
 label {
-    cursor: default;
+  cursor: default;
 }
 
 .pointer-labels label, input[type=radio] + label, input[type=checkbox] + label {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 input[type=radio] {
-    margin: 3px 0 0;
+  margin: 3px 0 0;
 }
 
 input[type=checkbox] {
-    margin: 3px 0 0;
+  margin: 3px 0 0;
 }
 
-/**
-UI-bootstrap
-**/
+// UI-bootstrap
 
-/* tooltip */
+// tooltip
 .tooltip {
-    text-align: left;
-    z-index: 600;
-    font-weight: normal;
-    white-space: normal;
+  font-weight: normal;
+  text-align: left;
+  white-space: normal;
+  z-index: 600;
 }
 
 .tooltip.in {
-    opacity: 1;
+  opacity: 1;
 }
 
 .tooltip-inner {
-    max-width: 450px;
-    text-align: left;
+  max-width: 450px;
+  text-align: left;
 }
 
 .popover {
-    max-width: 360px;
+  max-width: 360px;
 }
 
-/* Alerts */
+// Alerts
 .alert {
-    padding-right: 22px;
-    max-width: 600px;
-    a {
-        text-decoration: underline;
-    }
+  max-width: 600px;
+  padding-right: 22px;
+
+  a {
+      text-decoration: underline;
+  }
 }
 
 .alert-danger a {
-    color: #A94442;
+  color: #A94442;
 }
 
 .alert-column {
-    margin-right: 30px;
+  margin-right: 30px;
 }
 
 .dialog-extra-panel {
-    padding-top: 20px;
+  padding-top: 20px;
 }
 
 .alert-dialog-error {
-    margin: 0;
+  margin: 0;
 }
 
 .alert-dismissable .close, .alert-dismissible .close {
-    right: -6px;
+  right: -6px;
 }
 
-
 .btn-default {
-    &:active,
-    &.active {
-        &:focus,
-        &.focus {
-            background-color: darken($btn-default-bg, 10%);
-        }
-    }
-
+  &:active,
+  &.active {
     &:focus,
     &.focus {
-        background-color: $btn-default-bg;
+        background-color: darken($btn-default-bg, 10%);
     }
+  }
+
+  &:focus,
+  &.focus {
+    background-color: $btn-default-bg;
+  }
 }
 
 .dropdown-toggle:focus {
-    @include tab-focus;
+  @include tab-focus;
 }

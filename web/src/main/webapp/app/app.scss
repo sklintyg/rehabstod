@@ -48,14 +48,12 @@ $fa-font-path: '../bower_components/font-awesome/fonts';
 @import '../bower_components/bootstrap-sass/assets/stylesheets/bootstrap.scss';
 @import '../bower_components/font-awesome/scss/font-awesome.scss';
 
-/**
- * App-wide Styles
- */
+// App-wide Styles
 .browsehappy {
-  margin: 0.2em 0;
   background: #ccc;
   color: #000;
-  padding: 0.2em 0;
+  margin: .2em 0;
+  padding: .2em 0;
 }
 
 .locked {
@@ -63,8 +61,8 @@ $fa-font-path: '../bower_components/font-awesome/fonts';
 }
 
 .table-label-col {
-  min-width: 300px;
   font-weight: bold;
+  min-width: 300px;
 }
 
 .modal-terms .modal-body {
@@ -75,7 +73,9 @@ $fa-font-path: '../bower_components/font-awesome/fonts';
 /*****************************
 App-wide special styles
 *******************************/
-html, body, .container-fluid {
+html,
+body,
+.container-fluid {
   text-align: left;
 }
 
@@ -88,14 +88,9 @@ body {
   overflow-y: scroll;
 }
 
-
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   font-weight: bold;
 }
-
-/*input, textarea, .uneditable-input {
-  max-width: 206px; }
-*/
 
 select {
   max-width: 340px;
@@ -123,7 +118,8 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
   padding-bottom: 10px;
 
-  &.panel-title, &.modal-title {
+  &.panel-title,
+  &.modal-title {
     padding-bottom: 0;
   }
 }
@@ -134,8 +130,8 @@ h1 {
 
 h1.backlink-heading {
   display: inline-block;
-  margin-right: 20px;
   line-height: 29px;
+  margin-right: 20px;
 }
 
 h2 {
@@ -144,13 +140,13 @@ h2 {
 }
 
 h2.less-top-padding {
-  /* useful if h2 is placed immediately after h1 */
+  // useful if h2 is placed immediately after h1
   padding-top: 10px;
 }
 
 .col-head {
-  font-size: 20px;
   color: $blue-color;
+  font-size: 20px;
   padding-bottom: 10px;
 }
 
@@ -160,7 +156,7 @@ h3 {
 }
 
 h5.inline-heading {
-  padding: 20px 0 5px 0;
+  padding: 20px 0 5px;
 }
 
 .italic {
@@ -173,24 +169,25 @@ h5.inline-heading {
 
 .bluebox {
   background-color: $blue-color;
-  border-radius: 8px 8px 8px 8px;
+  border-radius: 8px;
   color: #fff;
-  padding: 20px;
   margin-bottom: 10px;
+  padding: 20px;
 }
 
 .box {
-  display: block;
-  padding: 20px 40px 15px 40px;
   background-color: #e5e5e5;
-  border-radius: 4px 4px 4px 4px;
+  border-radius: 4px;
+  display: block;
+  padding: 20px 40px 15px;
 }
 
 .buttonbar .btn {
   margin: 5px 5px 0 0;
 }
 
-.buttonbar .btn-info, .buttonbar .btn-inverse {
+.buttonbar .btn-info,
+.buttonbar .btn-inverse {
   padding: 7px 15px;
 }
 
@@ -225,7 +222,6 @@ h5.inline-heading {
 }
 
 .rhs-cookie-banner {
-
   margin: 0;
   top: 0;
   position: fixed;
@@ -235,13 +231,13 @@ h5.inline-heading {
   z-index: 10;
 
   .alert {
-    max-width: inherit;
     border-radius: 0;
+    max-width: inherit;
   }
+
   .container-fluid {
     padding: 0;
   }
-
 }
 
 // Index page --
@@ -255,7 +251,7 @@ h5.inline-heading {
 
   }
   .page-section {
-    padding: 2em 4em 1em 4em;
+    padding: 2em 4em 1em;
   }
 
   .vertical-col-middle {
@@ -271,18 +267,18 @@ h5.inline-heading {
   .index-header-section {
     @extend .page-section;
     background-color: #EFEFEF;
-
   }
 
   .index-body-section {
     @extend .page-section;
 
-    background-color: #FFFFFF;
+    background-color: #fff;
     padding-bottom: 25px;
 
     .row {
       padding-top: 10px;
     }
+
     .body-footer {
       font-size: 11px;
       color: #666;
@@ -291,6 +287,7 @@ h5.inline-heading {
         text-decoration: none;
       }
     }
+
     .body-link {
       text-decoration: underline;
       font-weight: bold;
@@ -303,35 +300,41 @@ h5.inline-heading {
       padding-bottom: 5px;
       padding-top: 30px;
     }
+
     .fa-sign-in {
       font-size: x-large;
       vertical-align: middle;
     }
-
   }
 
   .modal-content {
-    h1, h2, h3, h4 {
+    h1,
+    h2,
+    h3,
+    h4 {
       color: $link-color;
     }
 
-    h2, h3 {
-      padding: 5px 0 5px 0;
+    h2,
+    h3 {
+      padding: 5px 0;
     }
 
     h4 {
-      padding: 5px 0 10px;
       font-size: 14px;
       line-height: 18px;
+      padding: 5px 0 10px;
     }
   }
 }
+
 //The ui-view="app" is embedded in the page, but this page need to be "full-page"
 .select-unit-page {
+  height: 100%;
   position: absolute;
   width: 100%;
-  height: 100%;
 }
+
 // Hide IE10+ clear icon, as it doesn't work well with angular
 input[type=search]::-ms-clear {
   display: none;
