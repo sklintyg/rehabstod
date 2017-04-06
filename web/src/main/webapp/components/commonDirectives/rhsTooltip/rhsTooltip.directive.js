@@ -31,12 +31,15 @@ angular.module('rehabstodApp').directive('rhsTooltip',
                 scope: {
                     fieldHelpText: '@',
                     msgParams: '=',
-                    tooltipClass: '@'
+                    tooltipClass: '@',
+                    alignment: '@'
                 },
                 controller: function($scope) {
                     $scope.getMessage = function(key, msgParams) {
                         return messageService.getProperty(key, msgParams);
                     };
+
+                    $scope.align = $scope.alignment ? $scope.alignment : 'top';
                 },
                 templateUrl: '/components/commonDirectives/rhsTooltip/rhsTooltip.directive.html'
             };

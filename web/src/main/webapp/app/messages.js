@@ -127,7 +127,7 @@ var rhsMessages = {
         'label.table.column.aktivgrad': 'Sjukskrivnings&shy;grad',
         'label.table.column.aktivgrad.help': 'Sjukskrivningsgrad i nuvarande intyg. Om det innehåller flera grader anges de ordnade i tidsföljd med markering av den just nu gällande graden.',
         'label.table.column.lakare.namn': 'Läkare',
-        'label.table.column.lakare.namn.help': 'Läkaren som utfärdat nuvarande intyg.',
+        'label.table.column.lakare.namn.help': 'Läkaren som utfärdat nuvarande intyg. Namnet hämtas från HSA-katalogen. Om det inte går att slå upp läkaren i HSA-katalogen visas bara HSA-id.',
         'label.table.column.dagar': 'Sjukskrivnings&shy;längd',
         'label.table.column.dagar.help': 'Sjukfallets totala längd i dagar, från startdatum till slutdatum. Eventuella dagar mellan intyg räknas inte in.',
 
