@@ -25,7 +25,22 @@ I kommandot ovan så populeras Intygstjänsten
 
 Det finns profiler för att kunna bestämma vilken endpoint (Intygstjänst) som är mottagare av SOAP-anropen. För tillfället finns det två profiler:
 * suite-localhost
-* suite-demo
+* suite-demo (deprecated, för gamla demo)
+* suite-tunnel (för nya demo)
+
+#### Sätt upp SSH-tunnel
+Nya demomiljöerna går inte att komma åt intygstjänsten på, ens med VPN igång. Lösningen är att sätta upp en SSH-tunnel in till burken ifråga och köra port-forwarding.
+
+1) Starta Basefarm VPN och logga in
+2) Sätt upp SSH-tunnel, byt ut _myuser_ mot ditt BF-användarnamn
+
+
+    ssh -L 9000:localhost:8084 myuser@ine-dib-app01.sth.basefarm.net
+
+3) Nu har vi en tunnel uppe. Kör:
+
+ 
+    mvn com.smartbear.soapui:soapui-maven-plugin:5.1.3:test -Psuite-tunnel -DnumberOfPatients=10 -DmaxIntygsGlapp=5
 
 #### Properties
 Följande properties kan skickas med:

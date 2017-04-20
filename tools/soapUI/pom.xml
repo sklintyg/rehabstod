@@ -109,6 +109,13 @@
     </profile>
 
     <profile>
+      <id>suite-tunnel</id>
+      <properties>
+        <host.port>127.0.0.1:9000</host.port>
+      </properties>
+    </profile>
+
+    <profile>
       <id>suite-demo</id>
       <properties>
         <host.port>10.250.34.20:8080</host.port>

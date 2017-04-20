@@ -1054,8 +1054,20 @@ def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
 def projectPath = groovyUtils.projectPath
 def filePath = projectPath + "/testData/testpersonnummer_skatteverket.csv"
 
-context.pnrLines = new File(filePath).readLines()
-context.pnrLines.remove(0)  // remove header
+	context.pnrLines = []
+	def tempLines = new File(filePath).readLines()
+	tempLines.remove(0)  // remove header
+	def currentYear = new Date().format( 'yyyy') as Integer
+	tempLines.each { pnr ->
+	     def yearOfBirth = pnr.substring(0, 4) as Integer
+			 def age = currentYear - yearOfBirth
+			if (age &gt; 25) {
+				if (age &lt; 66) {
+					context.pnrLines.add(pnr)
+				}
+			}
+	}
+
 Collections.shuffle(context.pnrLines)
 
 // Setup vårdgivare
@@ -1070,15 +1082,15 @@ context.doctors = ['TSTNMT2321000156-105R':'Emma Nilsson', 'TSTNMT2321000156-105
 
 // Setup diagnoskoder
 context.tillstandskodsystemnamn = 'ICD-10'
-context.tillstandsKoder = ['J11', 'G81', 'M46']
+context.tillstandsKoder = ['J11', 'G81', 'M46','F228', 'A23', 'H17']
 
 // Setup nedsatthet
 context.nedsattningsgrad = ['Helt_nedsatt', 'Nedsatt_med_3/4', 'Nedsatt_med_1/2', 'Nedsatt_med_1/4']
 
 // Setup patientnamn
-context.kvinnor = ['Karin', 'Erika', 'Matilda', 'Sara', 'Greta', 'Lisen', 'Inger', 'Katarina', 'Julia', 'Helena', 'Sandra']
-context.man = ['Holger', 'Alfred', 'Nils', 'Daniel', 'Mattias', 'Hans', 'Mårten', 'Gustav', 'Thomas', 'Peter', 'Fredrik']
-context.efternamn = ['Karlsson', 'Larsson', 'Ericsson', 'Gustafsson', 'Persson', 'Andersson', 'Johansson', 'Martinsson', 'Jonsson', 'Fredriksson', 'Hansson']
+context.kvinnor = ['Karin', 'Erika', 'Matilda', 'Sara', 'Greta', 'Lisen', 'Inger', 'Katarina', 'Julia', 'Helena', 'Sandra', 'Moa', 'Linda', 'Anna', 'Gunilla', 'Carolina', 'Margareta', 'Filippa']
+context.man = ['Holger', 'Alfred', 'Nils', 'Daniel', 'Mattias', 'Hans', 'Mårten', 'Gustav', 'Thomas', 'Peter', 'Fredrik', 'Erik','Magnus','Börje','Björn','Rolf','Jan','Åke']
+context.efternamn = ['Karlsson', 'Larsson', 'Ericsson', 'Gustafsson', 'Persson', 'Andersson', 'Johansson', 'Martinsson', 'Jonsson', 'Fredriksson', 'Hansson','Nilsson','Bertilsson','Olofsson','Salomonsson','Magnusson']
 
 // Set a loop index
 if( context.loopIndex == null ) 
