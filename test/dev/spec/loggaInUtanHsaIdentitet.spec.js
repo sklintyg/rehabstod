@@ -34,9 +34,17 @@ describe('Logga in som Hans Hosplösa ', function() {
     });
 
     it('Öppna och försök logga in som Hans Hosplösa', function() {
+        var userJson = {
+            forNamn: 'Hans',
+            efterNamn: 'Hosplösa',
+            hsaId: 'hans-hosplosa',
+            enhetId: 'TSTNMT2321000156-105F',
+            forskrivarKod: '9300005'
+        };
+
         WelcomePage.get();
         specHelper.waitForAngularTestability();
-        WelcomePage.login('hans-hosplosa_');
+        WelcomePage.loginByJSON(JSON.stringify(userJson));
         specHelper.waitForAngularTestability();
         expect(errorPage.isAt()).toBeTruthy();
         expect(errorPage.isTeknisktFelShowing()).toBeTruthy();

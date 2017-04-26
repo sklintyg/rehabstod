@@ -22,187 +22,239 @@
 </style>
 
 <script type="text/javascript">
-  //Lägg till fler templates i arrayen + i options för att utöka antalet inloggingar
-
-  var loginArr = [
-    // NMT testperson, finns i test-HSA
-    {
-      "fornamn": "Leonie",
-      "efternamn": "Koehl",
-      "hsaId": "TSTNMT2321000156-103F",
-      "enhetId": "TSTNMT2321000156-1039",
-      "lakare": true,
-      "forskrivarKod": "9300005"
-    },
-    // NMT test-läkare
-    {
-      "fornamn": "Erik",
-      "efternamn": "Nilsson",
-      "hsaId": "TSTNMT2321000156-105H",
-      "enhetId": "TSTNMT2321000156-105F",
-      "lakare" : true,
-      "forskrivarKod": "9300005",
-      "befattningsKod": "204090"
-    },
-
-    {
-      "fornamn": "Susanne",
-      "efternamn": "Karlsson",
-      "hsaId": "TSTNMT2321000156-105J",
-      "enhetId": "TSTNMT2321000156-105F",
-      "lakare" : false,
-      "forskrivarKod": "9300005",
-      "systemRoles": ["INTYG;Rehab-TSTNMT2321000156-105F"]
-    },
-
-    {
-      "fornamn": "Pelle",
-      "efternamn": "Uppdragslös",
-      "hsaId": "pelle-uppdragslos",
-      "enhetId": "TSTNMT2321000156-105F",
-      "lakare" : false,
-      "forskrivarKod": "9300005"
-    },
-
-    {
-      "fornamn": "Hans",
-      "efternamn": "Hosplösa",
-      "hsaId": "hans-hosplosa",
-      "enhetId": "TSTNMT2321000156-105F",
-      "lakare" : false,
-      "forskrivarKod": "9300005"
-    },
-
-    // Användare för Rehabstöd som ska finnas i:
-    // - Test HSA
-    // - Rehabstöd
-    // - Webcert
-    // - Intygstjänsten
-
-    // Läkare 1
-    {
-      "fornamn": "Emma",
-      "efternamn": "Nilsson",
-      "hsaId": "TSTNMT2321000156-105R",
-      "enhetId": "TSTNMT2321000156-105N",
-      "lakare" : true
-    },
-
-    // Läkare 2
-    {
-      "fornamn": "Anders",
-      "efternamn": "Karlsson",
-      "hsaId": "TSTNMT2321000156-105S",
-      "enhetId": "TSTNMT2321000156-105N",
-      "lakare" : true
-    },
-
-    // Läkare 3
-    {
-      "fornamn": "Ingrid",
-      "efternamn": "Nilsson Olsson",
-      "hsaId": "TSTNMT2321000156-105T",
-      "enhetId": "TSTNMT2321000156-105P",
-      "lakare" : true
-    },
-
-    // Vårdadmin 1
-    {
-      "fornamn": "Nils",
-      "efternamn": "Ericsson",
-      "hsaId": "TSTNMT2321000156-105V",
-      "enhetId": "TSTNMT2321000156-105N",
-      "lakare" : false,
-      "systemRoles": ["INTYG;Rehab-TSTNMT2321000156-105N"]
-    },
-
-    // Vårdadmin 2
-    {
-      "fornamn": "Kerstin",
-      "efternamn": "Johansson",
-      "hsaId": "TSTNMT2321000156-105W",
-      "enhetId": "TSTNMT2321000156-105P",
-      "lakare" : false,
-      "systemRoles": ["INTYG;Rehab-TSTNMT2321000156-105P", "INTYG;Rehab-TSTNMT2321000156-105Q"]
-    } ,
-    // C-bio
-    {
-      "fornamn": "Elin",
-      "efternamn": "Johansson",
-      "hsaId": "TSTNMT2321000156-1067",
-      "enhetId": "TSTNMT2321000156-1062",
-      "lakare" : true
-    },{
-      "fornamn": "Lars",
-      "efternamn": "Olsson",
-      "hsaId": "TSTNMT2321000156-1066",
-      "enhetId": "TSTNMT2321000156-1062",
-      "lakare" : false,
-      "systemRoles": ["INTYG;Rehab-TSTNMT2321000156-1062", "INTYG;Rehab-TSTNMT2321000156-1063"]
-    },
-    {
-      "fornamn": "Rolf",
-      "efternamn": "Rollöse",
-      "hsaId": "TSTNMT2321000156-999V",
-      "enhetId": "TSTNMT2321000156-105N",
-      "lakare" : false,
-      "systemRoles": []
-    },
-    {
-      "fornamn": "Ralf",
-      "efternamn": "Enhetlöse",
-      "hsaId": "TSTNMT2321000156-998V",
-      "enhetId": "TSTNMT2321000156-105N",
-      "lakare" : false,
-      "systemRoles": ["INTYG;Rehab-some-other-careunit"]
-    },
-    {
-      "fornamn": "Eva",
-      "efternamn": "Holgersson",
-      "hsaId": "eva",
-      "enhetId": "centrum-vast",
-      "lakare" : true,
-      "systemRoles": []
-    },
-    {
-      "fornamn": "Peter",
-      "efternamn": "Enkel",
-      "hsaId": "peter-enkel",
-      "enhetId": "IFV1239877878-103H",
-      "lakare" : true,
-      "systemRoles": []
-    }
-  ];
-
-  function updateJsonInput() {
-    var jsonEl = document.getElementById("userJson");
-    var jsonElView = document.getElementById("userJsonDisplay");
-    var selector = document.getElementById("jsonSelect");
-    //jsonEl.value = escape(JSON.stringify(loginArr[selector.selectedIndex], undefined, 2));
-    jsonElView.value = JSON.stringify(loginArr[selector.selectedIndex], undefined, 1);
-    jsonEl.value = escape(JSON.stringify(loginArr[selector.selectedIndex], undefined, 1));
-  };
 
   angular.module('rhsWelcomeApp', [
     'rhsWelcomeApp.controllers'
   ]);
 
-  angular.module('rhsWelcomeApp.controllers', []).
-  controller('welcomeController', function($scope) {
-    $scope.loginModel = loginArr;
-    $scope.selectedIndex = '0';
-    $scope.$watch('selectedIndex', function(newSelected, oldVal) {
-      var jsonEl = angular.element( document.querySelector( '#userJson' ) );
-      var jsonElView = angular.element( document.querySelector( '#userJsonDisplay' ) );
-      var selector = angular.element( document.querySelector( '#jsonSelect' ) );
-      //jsonEl.value = escape(JSON.stringify(loginArr[selector.selectedIndex], undefined, 2));
-      //console.log("newselected : " + newSelected + ", old : " + oldVal);
-      var loginJson = JSON.stringify($scope.loginModel[newSelected], undefined, 1);
-      jsonElView.text( loginJson );
-      jsonEl.text( escape( loginJson ) );
-    });
+  angular.module('rhsWelcomeApp.controllers', []).controller('welcomeController',
+    ['$scope', '$http', '$log', function($scope, $http, $log) {
 
-  });
+      function _fetchHsaPersons() {
+        $http.get('/services/hsa-api/person').
+        success(function(data) {
+          $scope.loginModel = _loginModel(data);
+          $scope.loginOptions = _loginOptions();
+          $scope.selectedIndex = '0';
+        }).
+        error(function(data, status) {
+          $log.error('error ' + status);
+        });
+      }
+
+      function _fetchMedarbetaruppdrag() {
+        $http.get('/services/hsa-api/medarbetaruppdrag').
+        success(function(data) {
+          $scope.medarbetaruppdrag = data;
+        }).
+        error(function(data, status) {
+          console.log('error ' + status);
+          //$log.error('error ' + status);
+        });
+      }
+
+      function _filterLoginIdentity(allowedApps, appName) {
+        if (!_isArray(allowedApps)) {
+          return false;
+        }
+
+        // Allow if array is empty OR app's name is in array
+        return allowedApps.length === 0 || allowedApps.indexOf(appName) > -1;
+      }
+
+      function _getHsaPerson(hsaId) {
+        return $scope.loginModel.filter(function(item) {
+          return item.hsaId === hsaId;
+        })[0];
+      }
+
+      function _getMedarbetaruppdrag(hsaId) {
+        return $scope.medarbetaruppdrag.filter(function(item) {
+          return item.hsaId === hsaId;
+        })[0];
+      }
+
+      function _getSystemRoles(hsaId) {
+        var mu = _getMedarbetaruppdrag(hsaId);
+        if (!mu || !mu.uppdrag) {
+          return [];
+        }
+
+        return mu.uppdrag.reduce(function(acc, val) {
+            if (val.systemRoles) {
+              return acc.concat(val.systemRoles);
+            }
+          }, []);
+      }
+
+      function _isArray(obj) {
+        return Object.prototype.toString.call(obj) == "[object Array]";
+      }
+
+      function _loginModel(data) {
+        if (_isArray(data)) {
+          return data
+            .filter(function(item) {
+              // Remove all entries where
+              //  - fakeProperties are not present
+              if (!item.fakeProperties) {
+                return false;
+              }
+              //  - identity allowed in applications are false
+              return _filterLoginIdentity(item.fakeProperties.allowedInApplications, "RS");
+            })
+            .sort(function(a, b) {
+              // Sort entries by displayOrder
+              var value = parseInt(a.fakeProperties.displayOrder, 10) - parseInt(b.fakeProperties.displayOrder, 10);
+              if (isNaN(value)) {
+                return -1000;
+              }
+              return value;
+            });
+        }
+
+        return [];
+      }
+
+      /*
+       * This method creates the available login options by
+       * reducing the original HSA-person array to a new array.
+       * Each HSA-person is on the form:
+       *
+       *  {
+       *    hsaId: "TST5565594230-106J",
+       *    forNamn: "Markus",
+       *    efterNamn: "Gran",
+       *    specialiseringar: [],
+       *    enhetIds: [],
+       *    titel: "Läkare",
+       *    legitimeradeYrkesgrupper: [],
+       *    befattningsKod: null,
+       *    forskrivarKod: null,
+       *    fakeProperties: {
+       *        allowedInApplications: [],
+       *        displayOrder: "320",
+       *        env: "dev",
+       *        readOnly: true,
+       *        logins: [
+       *          {
+       *            "forvaldEnhet":"IFV1239877878-103D",
+       *            "beskrivning":"Markus Gran (Läkare | VårdEnhetA)"
+       *          }
+       *        ]
+       *     }
+       *  }
+       *
+       * The reduced login option will be on the form:
+       *
+       *  {
+       *    beskrivning: "Markus Gran (Läkare | VårdEnhetA)"
+       *    forvaldEnhet: "IFV1239877878-103D"
+       *    hsaId: "TST5565594230-106J"
+       *    index: "11"
+       *  }
+       */
+      function _loginOptions() {
+        var index = 0;
+        return $scope.loginModel
+          .reduce(
+            (function(outerProp, innerProp) {
+
+              // Reduce executes the callback function once for each element
+              // present in the array, excluding holes in the array, receiving
+              // four arguments:
+              //   * accumulator
+              //   * currentValue
+              //   * currentIndex
+              //   * array
+
+              var f = function(acc, val, ind, arr) {
+                if (val[outerProp] && val[outerProp][innerProp]) {
+                  val[outerProp][innerProp]
+                    .forEach(function(obj) {
+                      // Add properties to object
+                      obj.index = ''+index++;
+                      obj.hsaId = val.hsaId;
+
+                    });
+                  acc.push(val[outerProp][innerProp]);
+                }
+                return acc;
+              };
+              return f;
+
+            })('fakeProperties', 'logins'), [])
+          .reduce(
+            function(acc, val) {
+              return acc.concat(val);
+            },[]);
+      }
+
+      function _replacer(key, value) {
+        if (value === null || (_isArray(value) && value.length === 0)) {
+          return undefined;
+        }
+        return value;
+      }
+
+      function _stringify(hsaPerson) {
+        var validProperties = [
+          'hsaId',
+          'forNamn',
+          'efterNamn',
+          'enhetId',
+          'legitimeradeYrkesgrupper',
+          'systemRoles',
+          'befattningsKod',
+          'forskrivarKod'];
+
+        var string = JSON.stringify(hsaPerson, validProperties, 1);
+        var object = JSON.parse(string);
+
+        return JSON.stringify(object, _replacer, 1);
+      }
+
+      function _updateObject(object, propertyKey, propertyValue) {
+        object[propertyKey] = propertyValue;
+      }
+
+      $scope.loginModel = [];
+      $scope.loginOptions = [];
+      $scope.medarbetaruppdrag = [];
+
+      //$scope.loginModel = loginArr;
+      //$scope.selectedIndex = '0';
+
+      $scope.$watch('selectedIndex', function(newSelected, oldVal) {
+        if (newSelected === undefined) {
+            return;
+        }
+
+        var jsonEl = angular.element( document.querySelector( '#userJson' ) );
+        var jsonElView = angular.element( document.querySelector( '#userJsonDisplay' ) );
+        var selector = angular.element( document.querySelector( '#jsonSelect' ) );
+
+        // Catch user login option
+        var login = $scope.loginOptions[newSelected];
+
+        // Get the HSA person from model
+        var hsaPerson = _getHsaPerson(login.hsaId);
+        var systemRoles =  _getSystemRoles(login.hsaId);
+
+        // Add properties to HSA person
+        _updateObject(hsaPerson, 'enhetId', login.forvaldEnhet);
+        _updateObject(hsaPerson, 'systemRoles', systemRoles);
+
+        var loginJson = _stringify(hsaPerson);
+        jsonElView.text( loginJson );
+        jsonEl.text( escape( loginJson ) );
+      });
+
+      // Fetch fake medarbetaruppdrag and logins from the HSA stub
+      _fetchMedarbetaruppdrag();
+      _fetchHsaPersons();
+    }]
+  );
 </script>
 </head>
 <body ng-controller="welcomeController">
@@ -220,25 +272,14 @@
           <div class="form-group col-xs-8">
 
             <h4>Mallar</h4>
-            <select id="jsonSelect" name="jsonSelect" ng-model="selectedIndex" size="18" style="width: 100%;max-width:100%" class="form-control">
-              <option value="0" id="TSTNMT2321000156-103F_TSTNMT2321000156-1039">Leonie Koehl (Läkare EU/ESS/Schweiz)</option>
-              <option value="1" id="TSTNMT2321000156-105H_TSTNMT2321000156-105F">Erik Nilsson (NMT Läkare / Vård och Behandling)</option>
-              <option value="2" id="TSTNMT2321000156-105J_TSTNMT2321000156-105F">Susanne Karlsson (NMT Administratör / Vård och Behandling)</option>
-              <option value="3" id="pelle-uppdragslos_">Pelle Uppdragslös (Saknar medarbetaruppdrag)</option>
-              <option value="4" id="hans-hosplosa_">Hans Hosplösa (Finns ej i HSA-stubben)</option>
-              <option value="5" id="TSTNMT2321000156-105R_TSTNMT2321000156-105N">Emma Nilsson (Rehabstöd/Läkare 1/Vård och Behandling)</option>
-              <option value="6" id="TSTNMT2321000156-105S_TSTNMT2321000156-105N">Anders Karlsson (Rehabstöd/Läkare 2/Vård och Behandling)</option>
-              <option value="7" id="TSTNMT2321000156-105T_TSTNMT2321000156-105P">Ingrid Nilsson Olsson (Rehabstöd/Läkare 3/Vård och Behandling)</option>
-              <option value="8" id="TSTNMT2321000156-105V_TSTNMT2321000156-105N">Nils Ericsson (Rehabstöd/Vårdadmin 1/Vård och Behandling)</option>
-              <option value="9" id="TSTNMT2321000156-105W_TSTNMT2321000156-105P">Kerstin Johansson (Rehabstöd/Vårdadmin 2/Vård och Behandling)</option>
-              <option value="10" id="TSTNMT2321000156-1067_TSTNMT2321000156-1062">Elin Johansson (Cambio/Läkare/Vård och Behandling)</option>
-              <option value="11" id="TSTNMT2321000156-1066_TSTNMT2321000156-1062">Lars Olsson (Cambio/Vårdadmin/Vård och Behandling)</option>
-              <option value="12" id="TSTNMT2321000156-999V_TSTNMT2321000156-105N">Rolf Rollöse (saknar hsa systemroll Rehab för enheter)</option>
-              <option value="13" id="TSTNMT2321000156-998V_TSTNMT2321000156-105N">Ralf Enhetlöse (saknar rätt enhet på systemroll)</option>
-              <option value="14" id="eva_centrum-vast">Eva Holgersson (Läkare, har 2 VE med underenheter)</option>
-              <option value="15" id="peter-enkel">Peter Enkel (Läkare, har 1 VE med underenhet)</option>
 
+            <select id="jsonSelect" name="jsonSelect" ng-model="selectedIndex" size="18" class="form-control" style="width: 100%;max-width:100%">
+              <option id="{{login.hsaId}}_{{login.forvaldEnhet}}"
+                      ng-repeat="login in loginOptions"
+                      value="{{login.index}}">{{login.beskrivning}}
+              </option>
             </select>
+
             <input id="loginBtn" type="submit" value="Logga in" class="btn btn-primary"
                    style="margin-top: 20px;width: 100%">
 
@@ -257,7 +298,6 @@
         </div>
       </div>
     </div>
-
 
   </form>
 

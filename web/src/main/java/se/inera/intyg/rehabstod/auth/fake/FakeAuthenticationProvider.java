@@ -67,8 +67,8 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
         if (details instanceof RehabstodUser) {
             RehabstodUser user = (RehabstodUser) details;
             if (user.getNamn() == null || user.getNamn().isEmpty()) {
-                user.setNamn(((FakeCredentials) token.getCredentials()).getFornamn() + " "
-                        + ((FakeCredentials) token.getCredentials()).getEfternamn());
+                user.setNamn(((FakeCredentials) token.getCredentials()).getForNamn() + " "
+                        + ((FakeCredentials) token.getCredentials()).getEfterNamn());
             }
         }
     }

@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.core.IsEqual.equalTo;
+
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import org.junit.Test;
@@ -27,10 +31,6 @@ import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 
 import java.util.Arrays;
-
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * @author Martin Hesslund on 03/02/16.
@@ -52,19 +52,21 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testAccessApiWithoutValdVardgivare() {
+
         FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("eva",
-                "centrum-vast").lakare(true).build();
+                "centrum-vast").legitimeradeYrkesgrupper(LAKARE).build();
+
         RestAssured.sessionId = getAuthSession(user);
 
         //Ingen vardgivare skall vara vald som default eftersom denna user har flera att välja på.
         given().expect().statusCode(OK)
                 .when()
-                .get(USER_API_ENDPOINT).
-                then().
-                body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
-                body("hsaId", equalTo("eva")).
-                body("valdVardgivare", equalTo(null)).
-                body("valdVardenhet", equalTo(null));
+                .get(USER_API_ENDPOINT)
+                .then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json"))
+                .body("hsaId", equalTo("eva"))
+                .body("valdVardgivare", equalTo(null))
+                .body("valdVardenhet", equalTo(null));
 
         //Man skall nu heller inte få gå mot apiet(med vissa undantag) utan att ha någon vardenhet vald
         given().expect().statusCode(SERVER_ERROR).when().get(SJUKFALLSUMMARY_API_ENDPOINT);
@@ -80,9 +82,12 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
     public void testAndraValdEnhet() {
 
         // Log in as user having medarbetaruppdrag at several vardenheter.
-        FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105S",
-                "TSTNMT2321000156-105N").lakare(false)
-                        .systemRoles(Arrays.asList("INTYG;Rehab-TSTNMT2321000156-105N", "INTYG;Rehab-TSTNMT2321000156-105P")).build();
+        FakeCredentials user = new FakeCredentials
+            .FakeCredentialsBuilder("TSTNMT2321000156-105S", "TSTNMT2321000156-105N")
+            .legitimeradeYrkesgrupper(LAKARE)
+            .systemRoles(Arrays.asList("INTYG;Rehab-TSTNMT2321000156-105N", "INTYG;Rehab-TSTNMT2321000156-105P"))
+            .build();
+
         RestAssured.sessionId = getAuthSession(user);
 
         // An improvement of this would be to call hsaStub rest api to add testa data as we want it to
@@ -105,8 +110,12 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
     public void testAndraValdEnhetMedOgiltigEnhetsId() {
 
         // Log in as user having medarbetaruppdrag at several vardenheter.
-        FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105S",
-                "TSTNMT2321000156-105N").lakare(false).systemRoles(Arrays.asList("INTYG;Rehab-TSTNMT2321000156-105N")).build();
+        FakeCredentials user = new FakeCredentials
+            .FakeCredentialsBuilder("TSTNMT2321000156-105S", "TSTNMT2321000156-105N")
+            .legitimeradeYrkesgrupper(LAKARE)
+            .systemRoles(Arrays.asList("INTYG;Rehab-TSTNMT2321000156-105N"))
+            .build();
+
         RestAssured.sessionId = getAuthSession(user);
 
         // An improvement of this would be to call hsaStub rest api to add testa data as we want it to

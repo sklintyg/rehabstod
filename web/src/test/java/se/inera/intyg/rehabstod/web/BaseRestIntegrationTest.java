@@ -18,6 +18,12 @@
  */
 package se.inera.intyg.rehabstod.web;
 
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static java.util.Arrays.asList;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertNotNull;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
@@ -33,11 +39,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeUrvalRequest;
 
 import javax.servlet.http.HttpServletResponse;
-
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertNotNull;
+import java.util.List;
 
 /**
  * Base class for "REST-ish" integrationTests using RestAssured.
@@ -51,20 +53,23 @@ public abstract class BaseRestIntegrationTest {
     private static final String USER_JSON_FORM_PARAMETER = "userJsonDisplay";
     private static final String FAKE_LOGIN_URI = "/fake";
 
-
-    public static final int OK = HttpStatus.OK.value();
-    public static final int SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR.value();
-    public static final int FORBIDDEN = HttpStatus.FORBIDDEN.value();
-
-    protected static final FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder("TSTNMT2321000156-105R",
-            "TSTNMT2321000156-105N").lakare(true).build();
-    protected static final FakeCredentials EVA_H_LAKARE = new FakeCredentials.FakeCredentialsBuilder("eva",
-            "centrum-vast").lakare(true).build();
-    protected CustomObjectMapper objectMapper = new CustomObjectMapper();
+    protected static final List<String> LAKARE = asList("Läkare");
 
     protected static final String USER_API_ENDPOINT = "api/user";
     protected static final String CHANGE_UNIT_URL = USER_API_ENDPOINT + "/andraenhet";
     protected static final String SJUKFALLSUMMARY_API_ENDPOINT = "/api/sjukfall/summary";
+
+    protected static final FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder(
+        "TSTNMT2321000156-105R", "TSTNMT2321000156-105N").legitimeradeYrkesgrupper(LAKARE).build();
+
+    protected static final FakeCredentials EVA_H_LAKARE = new FakeCredentials.FakeCredentialsBuilder(
+        "eva", "centrum-vast").legitimeradeYrkesgrupper(LAKARE).build();
+
+    protected CustomObjectMapper objectMapper = new CustomObjectMapper();
+
+    public static final int OK = HttpStatus.OK.value();
+    public static final int SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR.value();
+    public static final int FORBIDDEN = HttpStatus.FORBIDDEN.value();
 
 
     /**

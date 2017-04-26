@@ -18,24 +18,26 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
-
 import se.inera.intyg.infra.integration.hsa.stub.HsaServiceStub;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Created by eriklupander on 2016-01-18.
  */
 @Configuration
-@ComponentScan({"se.inera.intyg.rehabstod.common"})
+@ComponentScan({ "se.inera.intyg.rehabstod.common" })
 @ImportResource("classpath:hsa-stub-context.xml")
-@Profile({"dev", "wc-hsa-stub"})
+@Profile({ "dev", "wc-hsa-stub" })
 public class HsaStubConfiguration {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HsaStubConfiguration.class);
 
     @Bean
     HsaServiceStub hsaServiceStub() {
