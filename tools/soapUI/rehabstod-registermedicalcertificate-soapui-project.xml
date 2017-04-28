@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project id="caa02659-5f39-4497-a088-1428fb362414" activeEnvironment="Default" name="RegisterMedicalCertificateInteraction_3.1_rivtabp20" resourceRoot="" soapui-version="5.2.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="6b95d506-bcfc-4ac1-a8c9-d88349d06d05" wsaVersion="NONE" name="RegisterMedicalCertificateResponderBinding" type="wsdl" bindingName="{urn:riv:insuranceprocess:healthreporting:RegisterMedicalCertificate:3:rivtabp20}RegisterMedicalCertificateResponderBinding" soapVersion="1_1" anonymous="optional" definition="file:/Users/mango/Projects/Inera/Develop/sklintyg/schemas/rivta/insuranceprocess-healthreporting/schemas/interactions/RegisterMedicalCertificateInteraction/RegisterMedicalCertificateInteraction_3.1_rivtabp20.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/Users/mango/Projects/Inera/Develop/sklintyg/schemas/rivta/insuranceprocess-healthreporting/schemas/interactions/RegisterMedicalCertificateInteraction/RegisterMedicalCertificateInteraction_3.1_rivtabp20.wsdl"><con:part><con:url>file:/Users/mango/Projects/Inera/Develop/sklintyg/schemas/rivta/insuranceprocess-healthreporting/schemas/interactions/RegisterMedicalCertificateInteraction/RegisterMedicalCertificateInteraction_3.1_rivtabp20.wsdl</con:url><con:content><![CDATA[<!--~ Copyright (C) 2016 Inera AB (http://www.inera.se)
+<con:soapui-project id="caa02659-5f39-4497-a088-1428fb362414" activeEnvironment="Default" name="RegisterMedicalCertificateInteraction_3.1_rivtabp20" resourceRoot="" soapui-version="5.3.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="6b95d506-bcfc-4ac1-a8c9-d88349d06d05" wsaVersion="NONE" name="RegisterMedicalCertificateResponderBinding" type="wsdl" bindingName="{urn:riv:insuranceprocess:healthreporting:RegisterMedicalCertificate:3:rivtabp20}RegisterMedicalCertificateResponderBinding" soapVersion="1_1" anonymous="optional" definition="file:/Users/mango/Projects/Inera/Develop/sklintyg/schemas/rivta/insuranceprocess-healthreporting/schemas/interactions/RegisterMedicalCertificateInteraction/RegisterMedicalCertificateInteraction_3.1_rivtabp20.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/Users/mango/Projects/Inera/Develop/sklintyg/schemas/rivta/insuranceprocess-healthreporting/schemas/interactions/RegisterMedicalCertificateInteraction/RegisterMedicalCertificateInteraction_3.1_rivtabp20.wsdl"><con:part><con:url>file:/Users/mango/Projects/Inera/Develop/sklintyg/schemas/rivta/insuranceprocess-healthreporting/schemas/interactions/RegisterMedicalCertificateInteraction/RegisterMedicalCertificateInteraction_3.1_rivtabp20.wsdl</con:url><con:content><![CDATA[<!--~ Copyright (C) 2016 Inera AB (http://www.inera.se)
   ~
   ~ This file is part of sklintyg (https://github.com/sklintyg).
   ~
@@ -994,17 +994,17 @@ import org.joda.time.LocalDateTime
 def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
 def projectPath = groovyUtils.projectPath
 
+
 // --------------------------------------------------
 //  Setup logging
 // --------------------------------------------------
 
-def debug = false;
-//def debug = true;
+//def debug = false;
+def debug = true;
 
 // This property can be set from command line
 // When set correctly we will use it
 String debugProperty = com.eviware.soapui.SoapUI.globalProperties.getPropertyValue( "debug" )
-
 context.debug = debugProperty.equalsIgnoreCase("true") || debugProperty.equalsIgnoreCase("false") ? (debugProperty.toBoolean()) : debug
 
 
@@ -1033,16 +1033,22 @@ if (context.debug) context.logFile.append "\nStep: Init test data\n"
 //  Context properties that can be changed
 // --------------------------------------------------
 
-def numberOfPatients = 10
-def maxIntygsGlapp = 5
+def defaultNumberOfPatients = 10
+def defaultMaxIntygsGlapp = 15
+def defaultMinIntygsLangd = 3
+def defaultMaxIntygsLangd = 30
 
 // These properties can be set from command line
 // When set correctly we will use them
 String numberOfPatientsProperty = com.eviware.soapui.SoapUI.globalProperties.getPropertyValue( "numberOfPatients" )
 String maxIntygsGlappProperty = com.eviware.soapui.SoapUI.globalProperties.getPropertyValue( "maxIntygsGlapp" )
+String minIntygsLangdProperty = com.eviware.soapui.SoapUI.globalProperties.getPropertyValue( "minIntygsLangd" )
+String maxIntygsLangdProperty = com.eviware.soapui.SoapUI.globalProperties.getPropertyValue( "maxIntygsLangd" )
 
-context.numberOfPatients = numberOfPatientsProperty.isInteger() ? (numberOfPatientsProperty as int) : numberOfPatients
-context.maxIntygsGlapp = maxIntygsGlappProperty.isInteger() ? (maxIntygsGlappProperty as int) : maxIntygsGlapp
+context.numberOfPatients = numberOfPatientsProperty?.isInteger() ? (numberOfPatientsProperty as int) : defaultNumberOfPatients
+context.maxIntygsGlapp = maxIntygsGlappProperty?.isInteger() ? (maxIntygsGlappProperty as int) : defaultMaxIntygsGlapp
+context.minIntygsLangd = minIntygsLangdProperty?.isInteger() ? (minIntygsLangdProperty as int) : defaultMinIntygsLangd
+context.maxIntygsLangd = maxIntygsLangdProperty?.isInteger() ? (maxIntygsLangdProperty as int) : defaultMaxIntygsLangd
 
 
 // --------------------------------------------------
@@ -1054,19 +1060,21 @@ def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
 def projectPath = groovyUtils.projectPath
 def filePath = projectPath + "/testData/testpersonnummer_skatteverket.csv"
 
-	context.pnrLines = []
-	def tempLines = new File(filePath).readLines()
-	tempLines.remove(0)  // remove header
-	def currentYear = new Date().format( 'yyyy') as Integer
-	tempLines.each { pnr ->
-	     def yearOfBirth = pnr.substring(0, 4) as Integer
-			 def age = currentYear - yearOfBirth
-			if (age &gt; 25) {
-				if (age &lt; 66) {
-					context.pnrLines.add(pnr)
-				}
-			}
+context.pnrLines = []
+
+def currentYear = new Date().format( 'yyyy') as Integer
+
+def tempLines = new File(filePath).readLines()
+tempLines.remove(0)  // remove header
+tempLines.each { pnr ->
+     def yearOfBirth = pnr.substring(0, 4) as Integer
+	def age = currentYear - yearOfBirth
+	if (age > 25) {
+		if (age &lt; 66) {
+			context.pnrLines.add(pnr)
+		}
 	}
+}
 
 Collections.shuffle(context.pnrLines)
 
@@ -1103,6 +1111,8 @@ if( context.unitIndex == null )
 if (context.debug) {
 	context.logFile.append "numberOfPatients = " + context.numberOfPatients + "\n"
 	context.logFile.append "maxIntygsGlapp = " + context.maxIntygsGlapp + "\n"
+	context.logFile.append "minIntygsLangd = " + context.minIntygsLangd + "\n"
+	context.logFile.append "maxIntygsLangd = " + context.maxIntygsLangd + "\n"
 }	
 
 </script></con:config></con:testStep><con:testStep type="groovy" name="Set static properties" id="4ceaf62f-cdf2-46d2-8b40-3ebb594fded2"><con:settings/><con:config><script>if (context.debug) context.logFile.append "\nStep: Set static properties\n"
@@ -1118,6 +1128,14 @@ if (context.debug) {
 	context.logFile.append "tillstandskodsystemnamn = " + context.tillstandskodsystemnamn + "\n"
 }
 </script></con:config></con:testStep><con:testStep type="groovy" name="Set patient properties" id="837c0958-613c-47d2-b29b-f739d480819e"><con:settings/><con:config><script>if (context.debug) context.logFile.append "\nStep: Set patient properties\n"
+
+// Init values used when generating certificates
+context.startDateActive = null
+context.endDateActive = null
+context.startDateBefore = null
+context.endDateBefore = null
+context.startDateAfter = null
+context.endDateAfter = null
 
 // Create patient data
 def personId = context.pnrLines[context.loopIndex]
@@ -1173,19 +1191,26 @@ if (context.debug) {
 	context.logFile.append "enhet-id = " + enhetId + "\n"
 	context.logFile.append "enhet-namn = " + enhetNamn + "\n"
 }
-</script></con:config></con:testStep><con:testStep type="groovy" name="Loop" id="16bd7cbf-0cc8-4b47-aeab-9aa7472651dd"><con:settings/><con:config><script>
+</script></con:config></con:testStep><con:testStep type="groovy" name="Loop" id="16bd7cbf-0cc8-4b47-aeab-9aa7472651dd"><con:settings/><con:config><script>if (context.debug) context.logFile.append "\nStep: Loop and create certificates\n"
+
 if (context.loopIndex++ &lt; context.numberOfPatients) {
 
-	// Create three certificates for each request
-	context.certificateIndex = 0
-	testRunner.runTestStepByName("Set datetime properties")
-	testRunner.runTestStepByName("SOAP Request")
-	context.certificateIndex = 1
-	testRunner.runTestStepByName("Set datetime properties")
-	testRunner.runTestStepByName("SOAP Request")
-	context.certificateIndex = 2
-	testRunner.runTestStepByName("Set datetime properties")
-	testRunner.runTestStepByName("SOAP Request")
+	def numberOfCertificates = new Random().nextInt(7) + 1  // [0 - 6] + 1 => a value 1 - 7
+	def hasFutureCertificate = (new Random().nextInt(10) + 1 > 8 &amp;&amp; numberOfCertificates > 3) ? true : false
+
+	testRunner.testCase.setPropertyValue("hasFutureCertificate", Boolean.toString(hasFutureCertificate))
+
+	if (context.debug) {
+		context.logFile.append "numberOfCertificates = " + numberOfCertificates + "\n"
+		context.logFile.append "hasFutureCertificate = " + hasFutureCertificate + "\n"
+	}
+
+	// Create NN number of certificates for each patient
+	for (int i = 0; i &lt; numberOfCertificates; i++) {
+		context.certificateIndex = i
+		testRunner.runTestStepByName("Set datetime properties")
+		testRunner.runTestStepByName("SOAP Request")		
+	}
 
 	if (context.debug) context.logFile.append "\n*************************************************************************\n"
 	
@@ -1208,37 +1233,67 @@ def guidVal = "${java.util.UUID.randomUUID()}"
 // Let's randomize the amount of days between certificates
 def intygsGlapp = new Random().nextInt(context.maxIntygsGlapp + 1)  // 5 + 1 => a value 0 - 5
 
+// Let's randomize the length of the certificate
+def intygsLangd = new Random().nextInt(context.maxIntygsLangd + 1 - context.minIntygsLangd) + context.minIntygsLangd;
+
 // Let's randomize the working capacity
 def nedsattningsgrad = context.nedsattningsgrad[new Random().nextInt(context.nedsattningsgrad.size())]
 
+// Fetch property telling us to create a certificate in the future or not
+String hasFutureCertificateProperty = testRunner.testCase.getPropertyValue("hasFutureCertificate")
+def hasFutureCertificate = Boolean.parseBoolean(hasFutureCertificateProperty)
+
 // For each certificate we create, we also need new dates
 def currentDateTime = new LocalDateTime()
-def startDate = null
-def endDate = null
+def startDate = null;
+def endDate = null;
 
 if (context.certificateIndex == 0) {
-	if (context.debug) context.logFile.append "Skapa 'aktivtIntyg'\n"
-	startDate = currentDateTime.minusDays(1)
-	endDate = currentDateTime.plusDays(3)
-} else if (context.certificateIndex == 1) {
 	if (context.debug) { 
-		context.logFile.append "Skapa intyg innan 'aktivtIntyg'\n"
-		context.logFile.append "intygsGlapp = " + intygsGlapp + "\n"
+		context.logFile.append "Skapa 'aktivtIntyg'\n"
+		context.logFile.append "intygsLangd = " + intygsLangd + "\n"
 	}
-	startDate = currentDateTime.minusDays(1).minusDays(intygsGlapp).minusDays(5)
-	endDate = currentDateTime.plusDays(3).minusDays(intygsGlapp).minusDays(5) 		
-} else if (context.certificateIndex == 2) {
+	context.startDateActive = currentDateTime.minusDays(1)
+	context.endDateActive = context.startDateActive.plusDays(intygsLangd - 1)
+	startDate = context.startDateActive
+	endDate = context.endDateActive
+	 	
+} else if (hasFutureCertificate == true) {
 	if (context.debug) { 
 		context.logFile.append "Skapa intyg efter 'aktivtIntyg'\n"
 		context.logFile.append "intygsGlapp = " + intygsGlapp + "\n"
+		context.logFile.append "intygsLangd = " + intygsLangd + "\n"
 	}
-	startDate = currentDateTime.minusDays(1).plusDays(intygsGlapp).plusDays(5)
-	endDate = currentDateTime.plusDays(3).plusDays(intygsGlapp).plusDays(5) 		
+	if (context.startDateAfter == null) {
+		context.startDateAfter = context.endDateActive		
+	}
+	context.startDateAfter = context.startDateAfter.plusDays(intygsGlapp + 1)
+	context.endDateAfter = context.startDateAfter.plusDays(intygsLangd - 1)		
+	startDate = context.startDateAfter
+	endDate = context.endDateAfter
+
+	// Reset if future certificates shall be created
+	testRunner.testCase.setPropertyValue("hasFutureCertificate", "false")
+ 	
+} else {
+	if (context.debug) { 
+		context.logFile.append "Skapa intyg innan 'aktivtIntyg'\n"
+		context.logFile.append "intygsGlapp = " + intygsGlapp + "\n"
+		context.logFile.append "intygsLangd = " + intygsLangd + "\n"
+	}
+	if (context.endDateBefore == null) {
+		context.endDateBefore = context.startDateActive.minusDays(intygsGlapp + 1) 		
+	} else {
+		context.endDateBefore = context.startDateBefore.minusDays(intygsGlapp + 1)				
+	}	
+	context.startDateBefore = context.endDateBefore.minusDays(intygsLangd - 1)
+	startDate = context.startDateBefore
+	endDate = context.endDateBefore 	
 }
 
 def signeringsDatum = startDate.minusDays(1).plusHours(1).toString("yyyy-MM-dd'T'HH:mm:ss")
-def skickatDatum = startDate.minusDays(1).plusHours(1).toString("yyyy-MM-dd'T'HH:mm:ss")
-def vardkontaktsTid = startDate.minusDays(1).toString("yyyy-MM-dd'T'HH:mm:ss")
+def skickatDatum = startDate.minusDays(1).plusHours(1).plusSeconds(30).toString("yyyy-MM-dd'T'HH:mm:ss")
+def vardkontaktsTid = startDate.minusDays(2).toString("yyyy-MM-dd'T'HH:mm:ss")
 def varaktighetFrom = startDate.toLocalDate().toString("yyyy-MM-dd")
 def varaktighetTom = endDate.toLocalDate().toString("yyyy-MM-dd")
 
@@ -1344,4 +1399,4 @@ for ( testCaseResult in testRunner.results ) {
 	{
 		testStepResult.each() { msg -> logFile.append(msg) }
 	}
-}</con:tearDownScript><con:properties><con:property><con:name>lakarutlatande-id</con:name><con:value>933df47f-c516-414b-9908-ea93681bbc00</con:value></con:property><con:property><con:name>signeringsdatum</con:name><con:value>2016-03-18T14:42:42</con:value></con:property><con:property><con:name>skickatDatum</con:name><con:value>2016-03-18T14:42:42</con:value></con:property><con:property><con:name>person-id</con:name><con:value>19471123-2365</con:value></con:property><con:property><con:name>person-namn</con:name><con:value>Greta Larsson</con:value></con:property><con:property><con:name>lakare-id</con:name><con:value>IFV1239877878-1049</con:value></con:property><con:property><con:name>lakare-namn</con:name><con:value>Jan Nilsson</con:value></con:property><con:property><con:name>enhet-id</con:name><con:value>IFV1239877878-1042</con:value></con:property><con:property><con:name>enhet-namn</con:name><con:value>Rehabstöd-Enhet1</con:value></con:property><con:property><con:name>vardgivare-id</con:name><con:value>IFV1239877878-1041</con:value></con:property><con:property><con:name>vardgivare-namn</con:name><con:value>Rehabstöd-Vardgivare1</con:value></con:property><con:property><con:name>vardkontaktstid</con:name><con:value>2016-03-18T13:42:42</con:value></con:property><con:property><con:name>tillstandskod</con:name><con:value>M46</con:value></con:property><con:property><con:name>tillstandskodsystemnamn</con:name><con:value>ICD-10</con:value></con:property><con:property><con:name>varaktighetFrom</con:name><con:value>2016-03-19</con:value></con:property><con:property><con:name>varaktighetTom</con:name><con:value>2016-03-23</con:value></con:property><con:property><con:name>nedsattningsgrad</con:name><con:value>Helt_nedsatt</con:value></con:property></con:properties></con:testCase><con:properties><con:property><con:name>lakarutlatande-id</con:name><con:value>foo1234</con:value></con:property></con:properties><con:setupScript/></con:testSuite><con:properties><con:property><con:name>lakarutlatande-id</con:name><con:value>b286b43a-467b-41f8-8fb6-d2d45402456c</con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:sensitiveInformation/></con:soapui-project>
+}</con:tearDownScript><con:properties><con:property><con:name>lakarutlatande-id</con:name><con:value>cceb7c39-9125-405b-91df-81f1c6e2a23f</con:value></con:property><con:property><con:name>signeringsdatum</con:name><con:value>2017-02-05T15:18:57</con:value></con:property><con:property><con:name>skickatDatum</con:name><con:value>2017-02-05T15:19:27</con:value></con:property><con:property><con:name>person-id</con:name><con:value>19901113-2389</con:value></con:property><con:property><con:name>person-namn</con:name><con:value>Anna Johansson</con:value></con:property><con:property><con:name>lakare-id</con:name><con:value>TSTNMT2321000156-105R</con:value></con:property><con:property><con:name>lakare-namn</con:name><con:value>Emma Nilsson</con:value></con:property><con:property><con:name>enhet-id</con:name><con:value>TSTNMT2321000156-105N</con:value></con:property><con:property><con:name>enhet-namn</con:name><con:value>Rehabstöd Enhet 1</con:value></con:property><con:property><con:name>vardgivare-id</con:name><con:value>IFV1239877878-1041</con:value></con:property><con:property><con:name>vardgivare-namn</con:name><con:value>Rehabstöd Vardgivare 1</con:value></con:property><con:property><con:name>vardkontaktstid</con:name><con:value>2017-02-04T14:18:57</con:value></con:property><con:property><con:name>tillstandskod</con:name><con:value>H17</con:value></con:property><con:property><con:name>tillstandskodsystemnamn</con:name><con:value>ICD-10</con:value></con:property><con:property><con:name>varaktighetFrom</con:name><con:value>2017-02-06</con:value></con:property><con:property><con:name>varaktighetTom</con:name><con:value>2017-02-11</con:value></con:property><con:property><con:name>nedsattningsgrad</con:name><con:value>Nedsatt_med_1/2</con:value></con:property><con:property><con:name>hasFutureCertificate</con:name><con:value>false</con:value></con:property></con:properties></con:testCase><con:properties><con:property><con:name>lakarutlatande-id</con:name><con:value>foo1234</con:value></con:property></con:properties><con:setupScript/></con:testSuite><con:properties><con:property><con:name>lakarutlatande-id</con:name><con:value>b286b43a-467b-41f8-8fb6-d2d45402456c</con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>
