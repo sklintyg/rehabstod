@@ -1,16 +1,21 @@
 ---
-# file: roles/app-resources/tasks/main.yml
 
-- name: delete application resources folder
-  file: "state=absent path={{ app_resources_folder }}"
+- name: Delete application resources folder
+  file:
+    state: absent
+    path: "{{ app_resources_folder }}"
 
-- name: create application resources folder
-  file: "state=directory path={{ app_resources_folder }}"
+- name: Create application resources folder
+  file:
+    state: directory
+    path: "{{ app_resources_folder }}"
 
-- name: copy application resources
-  copy: src="{{ app_resources_src }}"
-       dest="{{ app_resources_folder }}"
+- name: Copy application resources
+  copy:
+    src: "{{ app_resources_src }}"
+    dest: "{{ app_resources_folder }}"
 
-- name: copy externalized application resources
-  copy: src="{{ app_ext_resources_src }}"
-       dest="{{ app_resources_folder }}"
+- name: Copy externalized application resources
+  copy:
+    src: "{{ app_ext_resources_src }}"
+    dest: "{{ app_resources_folder }}"

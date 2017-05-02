@@ -1,25 +1,23 @@
 ---
-# file: roles/rehabstod-resurser/tasks/main.yml
 
-- name: configure connection factory
+- name: Configure connection factory
   lineinfile:
-    dest="{{ tomcat_conf }}/context.xml"
-    regexp="    <Resource name='jms/ConnectionFactory'"
-    insertbefore="</Context>"
-    line="    <Resource name='jms/ConnectionFactory' auth='Container' type='org.apache.activemq.ActiveMQConnectionFactory' description='JMS Connection Factory' factory='org.apache.activemq.jndi.JNDIReferenceFactory' brokerURL='{{ activemq_broker_url }}' userName='{{ activemq_username }}' password='{{ activemq_username }}' brokerName='ActiveMQBroker' useEmbeddedBroker='false' />"
+    dest: "{{ tomcat_conf }}/context.xml"
+    regexp: "    <Resource name='jms/ConnectionFactory'"
+    insertbefore: "</Context>"
+    line: "    <Resource name='jms/ConnectionFactory' auth='Container' type='org.apache.activemq.ActiveMQConnectionFactory' description='JMS Connection Factory' factory='org.apache.activemq.jndi.JNDIReferenceFactory' brokerURL='{{ activemq_broker_url }}' userName='{{ activemq_username }}' password='{{ activemq_username }}' brokerName='ActiveMQBroker' useEmbeddedBroker='false' />"
 
 # Note that we use 'webcert.log.queue' since both applications submits PDL log messages to the same queue.
-- name: configure PDL logging queue
+- name: Configure PDL logging queue
   lineinfile:
-    dest="{{ tomcat_conf }}/context.xml"
-    regexp="    <Resource name='jms/Queue'"
-    insertbefore="</Context>"
-    line="    <Resource name='jms/Queue' auth='Container' type='org.apache.activemq.command.ActiveMQQueue' description='Rehabstod PDL Logging Queue' factory='org.apache.activemq.jndi.JNDIReferenceFactory' physicalName='{{ environment_name }}.webcert.log.queue' />"
+    dest: "{{ tomcat_conf }}/context.xml"
+    regexp: "    <Resource name='jms/Queue'"
+    insertbefore: "</Context>"
+    line: "    <Resource name='jms/Queue' auth='Container' type='org.apache.activemq.command.ActiveMQQueue' description='Rehabstod PDL Logging Queue' factory='org.apache.activemq.jndi.JNDIReferenceFactory' physicalName='{{ environment_name }}.webcert.log.queue' />"
 
-
-- name: configure PDL aggregated logging queue (for healthcheck)
+- name: Configure PDL aggregated logging queue (for healthcheck)
   lineinfile:
-    dest="{{ tomcat_conf }}/context.xml"
-    regexp="    <Resource name='jms/AggregatedLogSenderQueue'"
-    insertbefore="</Context>"
-    line="    <Resource name='jms/AggregatedLogSenderQueue' auth='Container' type='org.apache.activemq.command.ActiveMQQueue' description='Rehabstod PDL Aggregated Logging Queue' factory='org.apache.activemq.jndi.JNDIReferenceFactory' physicalName='{{ environment_name }}.aggregated.webcert.log.queue' />"
+    dest: "{{ tomcat_conf }}/context.xml"
+    regexp: "    <Resource name='jms/AggregatedLogSenderQueue'"
+    insertbefore: "</Context>"
+    line: "    <Resource name='jms/AggregatedLogSenderQueue' auth='Container' type='org.apache.activemq.command.ActiveMQQueue' description='Rehabstod PDL Aggregated Logging Queue' factory='org.apache.activemq.jndi.JNDIReferenceFactory' physicalName='{{ environment_name }}.aggregated.webcert.log.queue' />"

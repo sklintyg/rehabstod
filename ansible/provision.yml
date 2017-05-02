@@ -1,3 +1,4 @@
 ---
 
 - include: provision_tomcat.yml
+- include: unlock_config_folder.yml

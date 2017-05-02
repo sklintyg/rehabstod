@@ -1,0 +1,11 @@
+---
+
+# Configuration repository
+environment_name: "dev"
+config_etc_folder: "{{ config_folder }}/{{ environment_name }}"
+
+# Spring profiles
+profiles: test,rhs-security-test,wc-hsa-stub,caching-enabled
+
+# ActiveMQ
+activemq_broker_url: "vm://localhost:61616?broker.persistent=false"

@@ -1,15 +1,16 @@
 ---
-# file: roles/rehabstod-systemvariabler/tasks/main.yml
 
 - name: Create rehabstod-env.sh file
-  template: src=rehabstod-env.sh.j2 dest="{{ inera_tomcat_folder }}/rehabstod-env.sh" mode=755
+  template:
+    src: rehabstod-env.sh.j2
+    dest: "{{ inera_tomcat_folder }}/rehabstod-env.sh"
+    mode: 0755
 
-- name: configure setenv.sh
+- name: Configure setenv.sh
   lineinfile:
-    dest="{{ tomcat_bin }}/setenv.sh"
-    create=yes
-    mode=755
-    regexp="rehabstod-env\.sh"
-    insertafter="EOF"
-    line=". \"{{ inera_tomcat_folder }}/rehabstod-env.sh\""
-
+    dest: "{{ tomcat_bin }}/setenv.sh"
+    regexp: "rehabstod-env\\.sh"
+    insertafter: "EOF"
+    line: ". \"{{ inera_tomcat_folder }}/rehabstod-env.sh\""
+    create: yes
+    mode: 0755
