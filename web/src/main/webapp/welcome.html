@@ -48,8 +48,7 @@
           $scope.medarbetaruppdrag = data;
         }).
         error(function(data, status) {
-          console.log('error ' + status);
-          //$log.error('error ' + status);
+          $log.error('error ' + status);
         });
       }
 
@@ -221,9 +220,6 @@
       $scope.loginModel = [];
       $scope.loginOptions = [];
       $scope.medarbetaruppdrag = [];
-
-      //$scope.loginModel = loginArr;
-      //$scope.selectedIndex = '0';
 
       $scope.$watch('selectedIndex', function(newSelected, oldVal) {
         if (newSelected === undefined) {
