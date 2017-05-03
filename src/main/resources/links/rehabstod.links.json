@@ -1,0 +1,20 @@
+[
+    {
+    "key": "key1",
+    "url": "http://path.to/something",
+    "text": "URL to something",
+    "tooltip": "Click here to go somewhere",
+    "target": "_blank"
+  },
+  {
+    "key": "key2",
+    "url": "http://path.to/else",
+    "text": "URL to else"
+  },
+  {
+    "key": "ineraNationellKundservice",
+    "url": "http://www.inera.se/felanmalan",
+    "text": "Ineras Nationell kundservice.",
+    "target": "_blank"
+  }
+]

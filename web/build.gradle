@@ -89,6 +89,8 @@ dependencies {
 
     compile "se.riv.clinicalprocess.healthcond.monitoring:clinicalprocess-healthcond-monitoring-schemas:${internalMonitoringSchemaVersion}"
 
+    compile "se.inera.intyg.common:common-links:${intygCommonVersion}"
+
     compile "se.inera.intyg.infra:hsa-integration:${intygInfraVersion}"
     compile "se.inera.intyg.infra:security-siths:${intygInfraVersion}"
     compile "se.inera.intyg.infra:common-cache-metrics:${intygInfraVersion}"

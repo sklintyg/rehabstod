@@ -1,5 +1,6 @@
 ext {
-    intygInfraVersion  = System.properties['infraVersion'] ?: '0-SNAPSHOT'
+    intygCommonVersion = System.properties['commonVersion'] ?: '0-SNAPSHOT'
+    intygInfraVersion = System.properties['infraVersion'] ?: '0-SNAPSHOT'
 
     rehabSchemaVersion = "1.0.3"
     monitoringSchemaVersion = "1.0.0.3"
