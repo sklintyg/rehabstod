@@ -140,9 +140,6 @@ var rhsMessages = {
         'label.table.column.sort.asc': 'Stigande',
         'label.table.diagnosbeskrivning.okand': 'Diagnoskod ${kod} är okänd och har ingen beskrivning',
 
-
-
-
         // Export
         'label.export.button' : 'Spara som',
         'label.export.pdf' : 'PDF',
@@ -150,7 +147,7 @@ var rhsMessages = {
 
         //Rest 500 exception error messages:
         'server.error.default.title' : 'Ett fel uppstod',
-        'server.error.default.text': 'Tyvärr har ett tekniskt problem uppstått i tjänsten. Kontakta i första hand din lokala IT-avdelning och i andra hand <a href=\"http://www.inera.se/felanmalan\" target=\"_blank\">Ineras Nationell kundservice.</a>',
+        'server.error.default.text': 'Tyvärr har ett tekniskt problem uppstått i tjänsten. Kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>',
 
         'server.error.getsjukfall.title' : 'Sjukfall för enheten kunde inte hämtas',
         'server.error.changeunit.title' : 'Byte av enhet misslyckades',

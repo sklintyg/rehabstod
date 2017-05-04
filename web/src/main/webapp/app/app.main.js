@@ -42,6 +42,10 @@ deferredBootstrapper.bootstrap({
     element: document.body,
     module: 'rehabstodApp',
     resolve: {
+        LINKS: ['$http', function($http) {
+            'use strict';
+            return $http.get('/api/config/links');
+        }],
         APP_CONFIG: ['$http', function($http) {
             'use strict';
             return $http.get('/api/config');
@@ -98,7 +102,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $uibT
 // Inject language resources
 app.run(
     function($log, $rootScope, $state, $window,
-        messageService, UserProxy, UserModel, USER_DATA) {
+        messageService, dynamicLinkService, UserProxy, UserModel, USER_DATA, LINKS) {
         'use strict';
 
         // Always scroll to top
@@ -115,6 +119,9 @@ app.run(
 
         /* jshint -W117 */
         messageService.addResources(rhsMessages);// jshint ignore:line
+        messageService.addLinks(LINKS);
+
+        dynamicLinkService.addLinks(LINKS);
 
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState/*, fromParams*/) {

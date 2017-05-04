@@ -21,9 +21,12 @@ package se.inera.intyg.rehabstod.web.controller.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
+import se.inera.intyg.infra.dynamiclink.service.DynamicLinkService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetConfigResponse;
+
+import java.util.Map;
 
 /**
  * Created by marced on 2016-02-09.
@@ -35,8 +38,16 @@ public class ConfigController {
     @Autowired
     private DiagnosKapitelService diagnosKapitelService;
 
+    @Autowired
+    private DynamicLinkService dynamicLinkService;
+
     @RequestMapping(value = "")
     public GetConfigResponse getConfig() {
         return new GetConfigResponse(diagnosKapitelService.getDiagnosKapitelList());
+    }
+
+    @RequestMapping(value = "/links", produces = "application/json")
+    public Map<String, DynamicLink> getDynamicLinks() {
+        return dynamicLinkService.getAllAsMap();
     }
 }
