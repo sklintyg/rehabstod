@@ -22,10 +22,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Created by eriklup
+ * Created by eriklup.
  */
 @Configuration
-@ComponentScan("se.inera.intyg.common.links")
+@ComponentScan("se.inera.intyg.infra.dynamiclink")
 public class DynamicLinkConfig {
 
     public DynamicLinkConfig() { //NOSONAR

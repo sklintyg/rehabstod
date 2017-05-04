@@ -1,20 +1,51 @@
 [
-    {
-    "key": "key1",
-    "url": "http://path.to/something",
-    "text": "URL to something",
-    "tooltip": "Click here to go somewhere",
-    "target": "_blank"
-  },
-  {
-    "key": "key2",
-    "url": "http://path.to/else",
-    "text": "URL to else"
-  },
   {
     "key": "ineraNationellKundservice",
     "url": "http://www.inera.se/felanmalan",
     "text": "Ineras Nationell kundservice.",
+    "target": "_blank"
+  },
+  {
+    "key": "ineraNationellKundserviceFelanmalan",
+    "url": "http://www.inera.se/felanmalan",
+    "text": "Kontaktinformation till Nationell kundservice (extern länk)",
+    "target": "_blank"
+  },
+  {
+    "key": "ptsCookies",
+    "url": "https://www.pts.se/sv/Privat/Internet/Skydd-av-uppgifter/Fragor-och-svar-om-kakor-for-anvandare1/",
+    "text": "Post- och telestyrelsens webbplats (extern länk).",
+    "target": "_blank"
+  },
+  {
+    "key": "ptsCookiesBanner",
+    "url": "https://www.pts.se/sv/Privat/Internet/Skydd-av-uppgifter/Fragor-och-svar-om-kakor-for-anvandare1/",
+    "text": "Post- och telestyrelsens webbplats",
+    "target": "_blank"
+  },
+  {
+    "key": "statistiktjanstenSjunet",
+    "url": "https://statistik.intygstjanster.sjunet.org/",
+    "text": "Statistiktjänsten",
+    "target": "_blank"
+  },
+  {
+    "key": "statistiktjanstenSjunetWithIcon",
+    "url": "https://statistik.intygstjanster.sjunet.org/",
+    "text": "<img src='/assets/images/statistiktj_logo.svg' width='141' height='26'> <i class='fa fa-arrow-right'></i>",
+    "tooltip": "Observera att denna länk kräver att du är uppkopplad via sjunet",
+    "target": "_blank"
+  },
+  {
+    "key": "ineraMainPage",
+    "url": "http://www.inera.se",
+    "text": "Inera AB",
+    "target": "_blank"
+  },
+  {
+    "key": "rehabstodAnvandarmanual",
+    "url": "http://www.inera.se/TJANSTER--PROJEKT/Rehabstod/Dokument/",
+    "text": "användarmanual (extern länk)",
     "target": "_blank"
   }
 ]

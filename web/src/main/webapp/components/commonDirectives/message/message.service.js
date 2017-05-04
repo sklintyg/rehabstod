@@ -82,6 +82,7 @@ angular.module('rehabstodApp').factory('messageService',
             _checkResources();
             var message = _messageResources[lang][key];
 
+            // Replace standard parameterized values.
             angular.forEach(variables, function(value, key) {
                 var regexp = new RegExp('\\$\\{' + key + '\\}', 'g');
                 message = message.replace(regexp, value);
@@ -89,19 +90,26 @@ angular.module('rehabstodApp').factory('messageService',
 
             // Find <LINK: dynamic links and replace
             var regex2 = /<LINK:(.*?)>/gi, result;
+
             while ( (result = regex2.exec(message)) ) {
                  var replace = result[0];
                  var linkKey = result[1];
 
-                var dynamicLink = '<a href="' + _links[linkKey].url + '"';
-                dynamicLink += _links[linkKey].target ? ' target="' + _links[linkKey].target + '">' : '>';
-                dynamicLink += _links[linkKey].text + '</a>';
+                var dynamicLink = _buildDynamicLink(linkKey);
 
                 var regexp = new RegExp(replace, 'g');
                 message = message.replace(regexp, dynamicLink);
             }
 
             return message;
+        }
+
+        function _buildDynamicLink(linkKey) {
+            var dynamicLink = '<a href="' + _links[linkKey].url + '"';
+            dynamicLink += _links[linkKey].tooltip ? ' title="' + _links[linkKey].tooltip + '"' : '';
+            dynamicLink += _links[linkKey].target ? ' target="' + _links[linkKey].target + '">' : '>';
+            dynamicLink += _links[linkKey].text + '</a>';
+            return dynamicLink;
         }
 
         function _addResources(resources) {

@@ -100,7 +100,7 @@ var rhsMessages = {
         // Settings
         'label.settings.header' : 'Antal dagar mellan intyg',
         'label.settings.help' : 'Ställ in det antal dagar det maximalt får vara mellan två intyg för att de ska räknas till samma sjukfall.',
-        'label.settings.info' : 'Max antal dagar <LINK:key2> uppehåll mellan intyg är satt till: <LINK:ineraNationellKundservice> testar lite ta bort',
+        'label.settings.info' : 'Max antal dagar uppehåll mellan intyg är satt till:',
 
         'label.settings.modal.body' : 'Välj hur många dagars uppehåll det maximalt får vara mellan två intyg för att de ska räknas till samma sjukfall.',
         'label.settings.modal.label' : 'Välj max antal dagars uppehåll mellan intygen',
@@ -140,9 +140,6 @@ var rhsMessages = {
         'label.table.column.sort.asc': 'Stigande',
         'label.table.diagnosbeskrivning.okand': 'Diagnoskod ${kod} är okänd och har ingen beskrivning',
 
-
-
-
         // Export
         'label.export.button' : 'Spara som',
         'label.export.pdf' : 'PDF',
@@ -150,8 +147,6 @@ var rhsMessages = {
 
         //Rest 500 exception error messages:
         'server.error.default.title' : 'Ett fel uppstod',
-
-        // <a href=\"http://www.inera.se/felanmalan\" target=\"_blank\">Ineras Nationell kundservice.</a>
         'server.error.default.text': 'Tyvärr har ett tekniskt problem uppstått i tjänsten. Kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>',
 
         'server.error.getsjukfall.title' : 'Sjukfall för enheten kunde inte hämtas',
