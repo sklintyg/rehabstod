@@ -8,9 +8,10 @@
   file: path={{ releases_folder }} state=directory
 
 - name: Download rehabstod-web-{{ version }}.war
-  get_url: url=https://build-inera.nordicmedtest.se/nexus/content/repositories/{{ repo }}/se/inera/intyg/rehabstod/rehabstod-web/{{ version }}/rehabstod-web-{{ version }}.war
-      dest={{ releases_folder }}/rehabstod-web-{{ version }}.war
-      timeout=60
+  get_url:
+    url: "https://build-inera.nordicmedtest.se/nexus/repository/{{ repo }}/se/inera/intyg/rehabstod/rehabstod-web/{{ version }}/rehabstod-web-{{ version }}.war"
+    dest: "{{ releases_folder }}/rehabstod-web-{{ version }}.war"
+    timeout: 60
   when: deploy_from_repo|bool
 
 - name: Copy rehabstod-web-{{ version }}.war from THIS machine when not deploying from remote repo
