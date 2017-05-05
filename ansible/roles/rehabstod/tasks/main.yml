@@ -13,7 +13,7 @@
 
 - name: Download rehabstod-web-{{ version }}.war
   get_url:
-    url: "https://build-inera.nordicmedtest.se/nexus/content/repositories/{{ repo }}/se/inera/intyg/rehabstod/rehabstod-web/{{ version }}/rehabstod-web-{{ version }}.war"
+    url: "https://build-inera.nordicmedtest.se/nexus/repository/{{ repo }}/se/inera/intyg/rehabstod/rehabstod-web/{{ version }}/rehabstod-web-{{ version }}.war"
     dest: "{{ releases_folder }}/rehabstod-web-{{ version }}.war"
     timeout: 60
   when: deploy_from_repo|bool
