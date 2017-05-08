@@ -30,7 +30,8 @@ var app = angular.module('rehabstodApp', [
     'smart-table',
     'infinite-scroll',
     'taiPlaceholder',
-    'ngStorage'
+    'ngStorage',
+    'rehabstodcommon.dynamiclink'
 ]).value('THROTTLE_MILLISECONDS', 300).config(function(stConfig) {
     'use strict';
 

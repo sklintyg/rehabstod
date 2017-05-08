@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').directive('dynamiclink',
+angular.module('rehabstodcommon.dynamiclink').directive('dynamiclink',
         function($log, $rootScope, $sce, $compile,
             dynamicLinkService) {
             'use strict';
@@ -25,19 +25,23 @@ angular.module('rehabstodApp').directive('dynamiclink',
             return {
                 restrict: 'EA',
                 scope: {
-                    'key': '@'
+                    'key': '@',
+                    'linkclass': '@'
                 },
-                template: '<a href="{{ url }}" ng-attr-target="{{ target || undefined}}" ' +
+                template: '<a href="{{ url }}" class="external-link {{ linkclass }}" ng-attr-target="{{ target || undefined}}" ' +
                     'ng-attr-title="{{ tooltip || undefined }}" ng-bind-html="text"></a>',
-                link: function(scope, element, attr) {
-                    var dynamicLink;
+                
+                link: function(scope) {
+                    scope.$watch(function() {
+                        return dynamicLinkService.getLink(scope.key);
+                    }, function(value) {
+                        if (angular.isDefined(value)) {
+                            scope.url = value.url;
+                            scope.text = $sce.trustAsHtml(value.text);
+                            scope.tooltip = value.tooltip;
+                            scope.target = value.target;
+                        }
 
-                    attr.$observe('key', function(linkKey) {
-                        dynamicLink = dynamicLinkService.getLink(linkKey);
-                        scope.url = dynamicLink.url;
-                        scope.text = dynamicLink.text;
-                        scope.tooltip = dynamicLink.tooltip;
-                        scope.target = dynamicLink.target;
                     });
                 }
             };

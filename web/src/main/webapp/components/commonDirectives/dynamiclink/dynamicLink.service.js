@@ -33,7 +33,9 @@
  * 
  * Produces: <a href="http://some.url" target="_blank" title="Some tooltip">Some text</a>
  */
-angular.module('rehabstodApp').factory('dynamicLinkService',
+angular.module('rehabstodcommon.dynamiclink', []);
+
+angular.module('rehabstodcommon.dynamiclink').factory('dynamicLinkService',
     function() {
         'use strict';
 

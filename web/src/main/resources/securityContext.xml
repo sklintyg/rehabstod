@@ -47,6 +47,7 @@
   <security:http security="none" pattern="/favicon.ico"/>
   <security:http security="none" pattern="/error.jsp"/>
   <security:http security="none" pattern="/pubapp/**"/>
+  <security:http security="none" pattern="/api/config/links" />
   <security:http security="none" create-session="never" pattern="/api/session-auth-check/**"/>
 
   <!-- Logger for SAML messages and events -->

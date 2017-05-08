@@ -21,7 +21,8 @@
 angular.module('rhsIndexApp', [
     'ngAnimate',
     'ui.bootstrap',
-    'ngStorage'
+    'ngStorage',
+    'rehabstodcommon.dynamiclink'
 ]);
 
 
@@ -52,8 +53,8 @@ angular.module('rhsIndexApp')
 
 
 angular.module('rhsIndexApp').directive('rhsCookieBanner',
-    ['$localStorage',
-        function($localStorage) {
+    ['$localStorage', '$http', 'dynamicLinkService',
+        function($localStorage, $http, dynamicLinkService) {
             'use strict';
 
             return {
@@ -61,6 +62,11 @@ angular.module('rhsIndexApp').directive('rhsCookieBanner',
                 scope: {},
                 templateUrl: '/pubapp/rhsCookieBanner.directive.html',
                 controller: function($scope, $timeout) {
+
+                    $http.get('/api/config/links').then(function(links) {
+                        dynamicLinkService.addLinks(links.data);
+                    });
+
                     $scope.isOpen = false;
                     $scope.showDetails = false;
                     $scope.localStorage = $localStorage;
