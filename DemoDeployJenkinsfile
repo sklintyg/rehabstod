@@ -12,7 +12,7 @@ stage('checkout') {
 stage('deploy') {
     node {
         util.run({
-                def itVersion = util.latestVersion("rehabstod-web", baseVersion)
+                def itVersion = util.latestVersion("se/inera/intyg/rehabstod/rehabstod-web", baseVersion)
 
                 ansiblePlaybook(extraVars: [version: "${itVersion}", ansible_ssh_host: "164.40.180.105", deploy_from_repo: "true"],
                                 installation: 'ansible-yum', inventory: 'ansible/inventory/rehabstod/demo', playbook: 'ansible/deploy.yml')
