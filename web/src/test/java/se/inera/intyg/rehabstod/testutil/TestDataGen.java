@@ -18,10 +18,13 @@
  */
 package se.inera.intyg.rehabstod.testutil;
 
+import com.google.common.collect.ImmutableMap;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
+import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
@@ -160,6 +163,7 @@ public final class TestDataGen {
         user.setValdVardgivare(buildValdGivare(CAREGIVER_ID, CAREGIVER_NAME));
         user.setMiuNamnPerEnhetsId(buildMiUPerEnhetsIdMap());
         user.setTitel("Överläkare");
+        user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_LAKARE, new Role()));
         return user;
     }
 
