@@ -44,7 +44,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 
     private static final String PDL_TITEL_LAKARE = "Läkare";
     private static final String PDL_TITEL_REHABSTOD = "Rehabkoordinator";
-    
+
     @Value("${pdlLogging.systemId}")
     private String systemId;
 
