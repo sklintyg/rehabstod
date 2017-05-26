@@ -32,10 +32,6 @@ angular.module('rehabstodApp')
 
                         var to = 'app.sjukfall.start';
 
-                        if (UserModel.isUrvalSet()) {
-                            to =  'app.sjukfall.result';
-                        }
-
                         return {
                             to: to,
                             params: {},
@@ -44,6 +40,5 @@ angular.module('rehabstodApp')
                     }
                 }
             });
-
 
     });

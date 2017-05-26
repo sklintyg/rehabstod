@@ -33,20 +33,18 @@ angular.module('rehabstodApp')
                         }
                     }
                 });
-
             };
 
             var unregisterFn = $rootScope.$on('rehab.rest.exception', function(event, msgConfig) {
-                var texts = {
-                    title: messageService.getProperty(msgConfig.errorTitleKey),
-                    body: messageService.getProperty(msgConfig.errorTextKey)
-
-                };
-                $scope.showErrorDialog(texts);
-            });
-            //rootscope on event listeners aren't unregistered automatically when 'this' directives
-            //scope is destroyed, so let's take care of that.
-            $scope.$on('$destroy', unregisterFn);
-
+                 var texts = {
+                     title: messageService.getProperty(msgConfig.errorTitleKey),
+                     body: messageService.getProperty(msgConfig.errorTextKey)
+ 
+                 };
+                 $scope.showErrorDialog(texts);
+             });
+             //rootscope on event listeners aren't unregistered automatically when 'this' directives
+             //scope is destroyed, so let's take care of that.
+             $scope.$on('$destroy', unregisterFn);
 
         });

@@ -2,14 +2,14 @@
   <div set-class-when-at-top="result-fixed-top" class="result-top container" ng-switch="user.urval">
     <a ng-click="goBack()" id="rhs-sjukfall-page-go-back" href="javascript: void(0)" class="result-backlink" title="{{::'label.sjukfall.result.back' | message}}"></a>
 
-    <div ng-switch-when="ISSUED_BY_ME">
-      <h1><span message key="label.sjukfall.result.lakare.header"></span></h1>
-      <h3 class="result-sub-header"><span message key="label.sjukfall.result.lakare.subheader"></span></h3>
+    <div ng-switch-when="ISSUED_BY_ME"> 
+      <h1><span message key="label.sjukfall.result.lakare.header"></span>{{user.valdVardenhet.namn}}</h1>
+      <div class="result-sub-header"><span message key="label.sjukfall.result.lakare.subheader"></span></div>
     </div>
 
     <div ng-switch-default>
-      <h1><span message key="label.sjukfall.result.rehab.header"></span></h1>
-      <h3 class="result-sub-header"><span message key="label.sjukfall.result.rehab.subheader"></span></h3>
+      <h1><span message key="label.sjukfall.result.rehab.header"></span>{{user.valdVardenhet.namn}}</h1>
+      <div class="result-sub-header"><span message key="label.sjukfall.result.rehab.subheader"></span></div>
     </div>
   </div>
 </div>

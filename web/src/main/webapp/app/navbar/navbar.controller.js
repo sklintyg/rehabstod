@@ -18,13 +18,18 @@
  */
 
 angular.module('rehabstodApp')
-    .controller('NavbarCtrl', function($scope) {
+    .controller('NavbarCtrl', function ($scope) {
         'use strict';
         $scope.menu = [
             {
+                title: 'Översikt',
+                link: 'app.sjukfall.start',
+                id: 'navbar-link-start'
+            },
+            {
                 title: 'Pågående sjukfall',
-                link: 'app.sjukfall',
-                id: 'navbar-link-sjukfall'
+                link: 'app.sjukfall.result',
+                id: 'navbar-link-sjukfall',
             },
             {
                 title: 'Om Rehabstöd',
