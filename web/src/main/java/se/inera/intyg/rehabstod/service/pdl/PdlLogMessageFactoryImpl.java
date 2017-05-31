@@ -42,6 +42,9 @@ import java.util.stream.Collectors;
 @Service
 public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 
+    private static final String PDL_TITEL_LAKARE = "Läkare";
+    private static final String PDL_TITEL_REHABSTOD = "Rehabkoordinator";
+
     @Value("${pdlLogging.systemId}")
     private String systemId;
 
@@ -91,7 +94,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         return new LogUser.Builder(user.getHsaId(), valdVardenhet.getId(), valdVardgivare.getId())
                 .userName(user.getNamn())
                 .userAssignment(user.getSelectedMedarbetarUppdragNamn())
-                .userTitle(user.getTitel())
+                .userTitle(user.isLakare() ? PDL_TITEL_LAKARE : PDL_TITEL_REHABSTOD)
                 .enhetsNamn(valdVardenhet.getNamn())
                 .vardgivareNamn(valdVardgivare.getNamn())
                 .build();

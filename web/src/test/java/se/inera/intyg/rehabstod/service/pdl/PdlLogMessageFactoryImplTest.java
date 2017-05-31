@@ -18,12 +18,16 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
+import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 import se.inera.intyg.infra.logmessages.ActivityPurpose;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.PdlLogMessage;
 import se.inera.intyg.infra.logmessages.PdlResource;
 import se.inera.intyg.infra.logmessages.ResourceType;
+import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 
 import static org.junit.Assert.assertEquals;
@@ -65,6 +69,20 @@ public class PdlLogMessageFactoryImplTest {
         assertNotNull(pdlLogMessage);
 
         assertEquals(ActivityType.PRINT, pdlLogMessage.getActivityType());
+    }
+
+    @Test
+    public void testBuildLogMessageForLakare() {
+        PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5), ActivityType.PRINT, TestDataGen.buildRehabStodUser());
+        assertEquals("Läkare", pdlLogMessage.getUserTitle());
+    }
+
+    @Test
+    public void testBuildLogMessageForIckeLakare() {
+        RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser();
+        rehabstodUser.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_KOORDINATOR, new Role()));
+        PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5), ActivityType.PRINT, rehabstodUser);
+        assertEquals("Rehabkoordinator", pdlLogMessage.getUserTitle());
     }
 
     @Test(expected = IllegalArgumentException.class)
