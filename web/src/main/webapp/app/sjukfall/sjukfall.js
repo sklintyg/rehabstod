@@ -24,7 +24,7 @@ angular.module('rehabstodApp')
             .state('app.sjukfall', {
                 url : '/',
                 data: {
-                    rule: function(fromState, toState, UserModel) {
+                    rule: function(fromState, toState) {
 
                         if (toState.name !== 'app.sjukfall') {
                             return;

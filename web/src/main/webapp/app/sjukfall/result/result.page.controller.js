@@ -28,8 +28,6 @@ angular.module('rehabstodApp')
                 $scope.showSpinner = true;
                 $scope.sjukfallService = SjukfallService;
                 SjukfallService.loadSjukfall(true);
-            }, function (err) {
-                console.log(err)
             });
 
         }

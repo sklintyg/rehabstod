@@ -29,7 +29,7 @@ angular.module('rehabstodApp')
             {
                 title: 'Pågående sjukfall',
                 link: 'app.sjukfall.result',
-                id: 'navbar-link-sjukfall',
+                id: 'navbar-link-sjukfall'
             },
             {
                 title: 'Om Rehabstöd',
