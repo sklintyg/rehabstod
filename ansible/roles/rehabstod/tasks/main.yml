@@ -35,6 +35,11 @@
     dest: "{{ webapps_folder }}/ROOT.war"
     remote_src: True
 
+- name: Remove rehabstod-web-{{ version }}.war from releases
+  file:
+    state: absent
+    path: "{{ releases_folder }}/rehabstod-web-{{ version }}.war"
+
 - name: Create version file
   template:
     src: version.txt.j2
