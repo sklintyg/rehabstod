@@ -1,3 +1,8 @@
 .col-head-about {
   padding-top: 0;
 }
+
+.about-content li, .about-content p{
+  width: 525px; 
+    word-break: keep-all;
+}

@@ -79,6 +79,22 @@ body,
   text-align: left;
 }
 
+.container{
+  margin-left: 0;
+}
+
+#rhs-start-page{
+  padding-left: 15px;
+}
+
+#rhs-start-stat-panel{
+  margin: 20px 0 20px 0;
+}
+
+div[show-spinner=showSpinner]{
+  padding-left:15px;
+}
+
 body {
   padding-bottom: 30px;
   -ms-overflow-style: scrollbar;

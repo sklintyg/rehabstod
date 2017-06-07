@@ -19,34 +19,49 @@
 
 angular.module('rehabstodApp')
     .controller('SjukfallResultPageCtrl',
-        function($scope, $state, $rootScope, SjukfallService, UserModel, UserProxy) {
-            'use strict';
-
-            $scope.user = UserModel.get();
-            $scope.showSpinner = true;
-            $scope.sjukfallService = SjukfallService;
-
-            SjukfallService.loadSjukfall();
-
-            var unregisterFn = $rootScope.$on('SelectedUnitChanged', function(/*event, value*/) {
+    function ($scope, $rootScope, SjukfallService, SjukfallSummaryModel, UserModel, UserProxy) {
+        'use strict';
+        if (_proceed()) {
+            UserProxy.changeUrval(UserModel.isLakare() ? 'ISSUED_BY_ME' : 'ALL').then(function (updatedUserModel) {
+                UserModel.set(updatedUserModel);
+                $scope.user = UserModel.get();
+                $scope.showSpinner = true;
+                $scope.sjukfallService = SjukfallService;
                 SjukfallService.loadSjukfall(true);
+            }, function (err) {
+                console.log(err)
             });
-            //rootscope on event listeners aren't unregistered automatically when 'this' directives
-            //scope is destroyed, so let's take care of that.
-            $scope.$on('$destroy', unregisterFn);
 
-            $scope.goBack = function() {
-                UserProxy.changeUrval(null).then(function(updatedUserModel) {
-                    UserModel.set(updatedUserModel);
+        }
 
-                    $state.go('app.sjukfall.start');
 
-                }, function() {
-                    //Handle errors
-                });
-            };
-
-            $scope.$watch('sjukfallService.isLoading()', function(val)  {
-               $scope.showSpinner = val;
-            });
+        var unregisterFn = $rootScope.$on('SelectedUnitChanged', function (/*event, value*/) {
+            SjukfallService.loadSjukfall(true);
         });
+        //rootscope on event listeners aren't unregistered automatically when 'this' directives
+        //scope is destroyed, so let's take care of that.
+        $scope.$on('$destroy', unregisterFn);
+
+        $scope.goBack = function () {
+            UserProxy.changeUrval(null).then(function (updatedUserModel) {
+                UserModel.set(updatedUserModel);
+            }, function () {
+                //Handle errors
+            });
+        };
+
+        $scope.$watch('sjukfallService.isLoading()', function (val) {
+            $scope.showSpinner = val;
+        });
+
+        function _proceed() {
+            if (SjukfallSummaryModel.get().total === 0) {
+                //No data to show - go to show 'no data for unit' state
+                return false;
+            } else {
+                return true;
+            }
+
+        }
+
+    });
