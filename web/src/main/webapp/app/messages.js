@@ -52,21 +52,18 @@ var rhsMessages = {
         'label.sjukfall.start.lakare.header' : 'Översikt över pågående sjukfall på ',
         'label.sjukfall.start.lakare.subheader': 'Mina pågående sjukfall på enheten',
         'label.sjukfall.start.lakare.selectionpanel.header' : 'Vad kan jag se i Rehabstöd?',
-        'label.sjukfall.start.lakare.selectionpanel.body' : 'Som läkare kan du ta del av de sjukfall där du själv utfärdat det nuvarande intyget.<br><br>' +
-                                                    'När du klickar på "Visa mina sjukfall" nedan kommer du att få se dina pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid och sjukskrivningsgrad. ' +
-                                                    'Om du har tillgång till flera enheter kan du se dina pågående sjukfall för en annan enhet genom att byta enhet i sidhuvudet. ' +
-                                                    '<br><br>Informationen som visas loggas enligt Patientdatalagen (PDL).',
+        'label.sjukfall.start.lakare.selectionpanel.body' : 'Som läkare kan du ta del av dina pågående sjukfall på den enhet du är inloggad på.<br><br>' +
+                                                    'Rehabstöd presenterar även statistik över det nuläge som råder för dina pågående sjukfall, det vill säga antalet sjukskrivna, könsfördelning och diagnosfördelning.<br><br>' +
+                                                    'Gå till Pågående sjukfall i menyn eller via länken nedan för att se detaljerad information om dina sjukfall.',
         'label.sjukfall.start.lakare.selectionpanel.urval.button' : 'Visa pågående sjukfall',
 
         // Sjukfall Start Rehab
         'label.sjukfall.start.rehab.header' : 'Översikt över pågående sjukfall på ',
         'label.sjukfall.start.rehab.subheader': 'Alla pågående sjukfall på enheten',
         'label.sjukfall.start.rehab.selectionpanel.header' : 'Vad kan jag se i Rehabstöd?',
-        'label.sjukfall.start.rehab.selectionpanel.body' : 'Som rehabkoordinator kan du ta del av alla pågående sjukfall på enheten.<br><br>' +
-                                                    'När du klickar på "Visa alla sjukfall" nedan kommer du att få se alla pågående sjukfall för den enhet du har loggat in på. ' +
-                                                    'För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad och läkare. ' +
-                                                    'Om du har tillgång till flera enheter kan du se pågående sjukfall för en annan enhet genom att byta enhet i sidhuvudet.' +
-                                                    '<br><br>Informationen som visas loggas enligt Patientdatalagen (PDL).',
+        'label.sjukfall.start.rehab.selectionpanel.body' : 'Som rehabkoordinator kan du ta del av alla pågående sjukfall på den enhet du är inloggad på.<br><br>' +
+                                                    'Rehabstöd presenterar även statistik över det nuläge som råder för alla pågående sjukfall, det vill säga antalet sjukskrivna, könsfördelning och diagnosfördelning.<br><br>' +
+                                                    'Gå till Pågående sjukfall i menyn eller via länken nedan för att se detaljerad information om sjukfallen på din enhet.',
         'label.sjukfall.start.rehab.selectionpanel.urval.button' : 'Visa pågående sjukfall',
 
 
