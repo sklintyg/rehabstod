@@ -356,6 +356,10 @@ input[type=search]::-ms-clear {
   display: none;
 }
 
+#rhs-start-page-header{
+  padding-top: 15px;
+}
+
 // Component styles are injected through grunt
 // injector
 @import 'about/about.scss';
