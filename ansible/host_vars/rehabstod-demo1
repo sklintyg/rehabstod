@@ -1,6 +1,10 @@
 # Spring profiles
 profiles: test,rhs-security-test,testability-api,caching-enabled,wc-hsa-stub
 
+#tomcat
+tomcat7_user: ine-app
+tomcat7_group: ine-app
+
 proxy_env:
   http_proxy: http://bf-proxy.sth:8888
   https_proxy: http://bf-proxy.sth:8888
