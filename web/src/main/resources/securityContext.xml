@@ -37,6 +37,7 @@
   <security:http security="none" pattern="/index.html" /> <!-- keep this(?), if user actually enters index.html -->
   <security:http security="none" pattern="/app/**"/> <!-- all static resources under /app is ok to access non authenticated -->
   <security:http security="none" pattern="/assets/**"/>
+  <security:http security="none" pattern="/components/**"/>
   <security:http security="none" pattern="/bower_components/**"/>
   <security:http security="none" pattern="/saml/web/**"/>
   <security:http security="none" pattern="/saml2/web/**"/>
