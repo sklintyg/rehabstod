@@ -53,12 +53,15 @@
       },
       "additionalItems": false
     },
-    "sickLeaveDegree": {
+    "sickLeaveDegrees": {
       "type": "array",
       "items": {
         "type": "object",
         "properties": {
-          "gender": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
             "type": "string"
           },
           "count": {
@@ -68,7 +71,7 @@
         "additionalProperties": false
       },
       "additionalItems": false
-    },
+    }
   },
   "additionalProperties": false,
   "required": [
