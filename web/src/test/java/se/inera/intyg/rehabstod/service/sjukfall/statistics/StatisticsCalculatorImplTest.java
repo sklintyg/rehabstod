@@ -18,9 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.statistics;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +38,9 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by marced on 04/03/16.
@@ -135,6 +135,33 @@ public class StatisticsCalculatorImplTest {
         assertEquals(4, getGenderItem(Gender.F, summary.getGenders()).getCount());
         assertEquals(0, getGenderItem(Gender.M, summary.getGenders()).getCount());
 
+    }
+
+    @Test
+    public void testGetSjukfallDifferentSjukskrivningsGrad() throws Exception {
+        List<InternalSjukfall> internalSjukfallList = new ArrayList<>();
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16", 25));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16", 25));
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "M16", 50));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "M16", 75));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "M16", 100));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "M16", 100));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "M16", 100));
+
+        final SjukfallSummary summary = testee.getSjukfallSummary(internalSjukfallList);
+        assertEquals(2, summary.getSickLeaveDegrees().get(0).getCount());
+        assertEquals(1, summary.getSickLeaveDegrees().get(1).getCount());
+        assertEquals(1, summary.getSickLeaveDegrees().get(2).getCount());
+        assertEquals(3, summary.getSickLeaveDegrees().get(3).getCount());
+
+    }
+
+    private InternalSjukfall createInternalSjukfall(String lakareId, String lakareNamn, Gender patientKon, String diagnosKod, int aktivGrad) {
+        InternalSjukfall isf = createInternalSjukfall(lakareId, lakareNamn, patientKon, diagnosKod);
+        isf.setAktivGrad(aktivGrad);
+        return isf;
     }
 
     private InternalSjukfall createInternalSjukfall(String lakareId, String lakareNamn, Gender patientKon, String diagnosKod) {

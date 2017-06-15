@@ -28,6 +28,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.DiagnosGruppStat;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.GenderStat;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveDegreeStat;
 import se.inera.intyg.rehabstod.web.model.Gender;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
 
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -72,10 +74,20 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
 
         // Note: Some of the items may have Gender.UNKNOWN, but the men/women stats are correct anyway
         List<GenderStat> genderStat = calculateGenderStat(sjukfall);
-
         List<DiagnosGruppStat> grupper = calculateGroupStatistics(sjukfall);
-        return new SjukfallSummary(total, genderStat, grupper);
+        List<SickLeaveDegreeStat> sjukskrivningsGrader = calculateSickLeaveDegrees(sjukfall);
 
+        return new SjukfallSummary(total, genderStat, grupper, sjukskrivningsGrader);
+
+    }
+
+    private List<SickLeaveDegreeStat> calculateSickLeaveDegrees(List<InternalSjukfall> sjukfall) {
+        Map<Integer, List<InternalSjukfall>> byGrad = sjukfall.stream()
+                .collect(Collectors.groupingBy(InternalSjukfall::getAktivGrad));
+        return byGrad.entrySet().stream()
+                .map(entry -> new SickLeaveDegreeStat(entry.getKey(), "" + entry.getKey() + " %", entry.getValue().size()))
+                .sorted(Comparator.comparingInt(SickLeaveDegreeStat::getId))
+                .collect(Collectors.toList());
     }
 
     private List<GenderStat> calculateGenderStat(List<InternalSjukfall> sjukfall) {

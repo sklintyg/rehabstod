@@ -35,6 +35,12 @@ angular.module('rehabstodApp')
             'R00-R99': '#C37EB2',
             'Z00-Z99': '#2A5152',
             '': '#FB7F4D'
+        },
+        sickLeaveDegrees: {
+            '25': '#E11964',
+            '50': '#032C53',
+            '75': '#FFBA3E',
+            '100': '#799745'
         }
     });
 

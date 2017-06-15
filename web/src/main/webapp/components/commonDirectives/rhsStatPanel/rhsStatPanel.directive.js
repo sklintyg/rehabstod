@@ -138,6 +138,41 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                         return colors;
                     }
 
+                    //Sjukskrivningsgrad group stat config ------------------------------------------------
+                    $scope.sickLeaveDegreeStatConfig = angular.merge(angular.copy(pieChartBaseConfig), {
+
+                        title: {
+                            text: null
+                        },
+                        colors: getSickLeaveDegreeColors($scope.model.sickLeaveDegreeGroupData),
+                        tooltip: {
+                            pointFormat: '{point.percentage:.1f}% <b>({point.y} st)</b> av ' +
+                            (UserModel.get().isLakare ? 'mina' : 'alla') + ' pågående<br/> ' +
+                            'sjukfall har en aktuell<br/>sjukskrivningsgrad på {point.name}.'
+                        },
+                        legend: {
+                            labelFormatter: function() {
+                                var truncateAfter = 30;
+                                var name = (this.name.length > truncateAfter) ?
+                                    this.name.substr(0, truncateAfter - 1) + '&hellip;' : this.name;
+                                return name + '&nbsp;<b>' + this.y +
+                                    '</b>&nbsp;st';
+                            },
+                            enabled: false
+
+                        }
+                    });
+
+                    function getSickLeaveDegreeColors(sickLeaveDegrees) {
+                        var colors = [];
+
+                        angular.forEach(sickLeaveDegrees, function(sickLeaveDegree) {
+                            colors.push(chartColors.sickLeaveDegrees[sickLeaveDegree.id]);
+                        });
+
+                        return colors;
+                    }
+
 
                 },
                 templateUrl: '/components/commonDirectives/rhsStatPanel/rhsStatPanel.directive.html'

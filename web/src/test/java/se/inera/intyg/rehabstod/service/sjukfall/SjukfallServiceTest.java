@@ -101,7 +101,7 @@ public class SjukfallServiceTest {
     public void init() throws IOException {
         when(integrationService.getIntygsDataForCareUnit(anyString())).thenReturn(new ArrayList<IntygsData>());
         when(sjukfallEngine.beraknaSjukfall(anyListOf(IntygData.class), any(IntygParametrar.class))).thenReturn(createSjukfallList());
-        when(statisticsCalculator.getSjukfallSummary(anyListOf(InternalSjukfall.class))).thenReturn(new SjukfallSummary(0, Collections.emptyList(), new ArrayList<>()));
+        when(statisticsCalculator.getSjukfallSummary(anyListOf(InternalSjukfall.class))).thenReturn(new SjukfallSummary(0, Collections.emptyList(), new ArrayList<>(), new ArrayList<>()));
     }
 
     @Test

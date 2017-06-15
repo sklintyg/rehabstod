@@ -25,11 +25,13 @@ public class SjukfallSummary {
     private int total;
     private List<GenderStat> genders;
     private List<DiagnosGruppStat> groups;
+    private List<SickLeaveDegreeStat> sickLeaveDegrees;
 
-    public SjukfallSummary(int total, List<GenderStat> genders, List<DiagnosGruppStat> groups) {
+    public SjukfallSummary(int total, List<GenderStat> genders, List<DiagnosGruppStat> groups, List<SickLeaveDegreeStat> sickLeaveDegrees) {
         this.total = total;
         this.genders = genders;
         this.groups = groups;
+        this.sickLeaveDegrees = sickLeaveDegrees;
     }
 
     public int getTotal() {
@@ -54,5 +56,13 @@ public class SjukfallSummary {
 
     public void setGroups(List<DiagnosGruppStat> groups) {
         this.groups = groups;
+    }
+
+    public List<SickLeaveDegreeStat> getSickLeaveDegrees() {
+        return sickLeaveDegrees;
+    }
+
+    public void setSickLeaveDegrees(List<SickLeaveDegreeStat> sickLeaveDegrees) {
+        this.sickLeaveDegrees = sickLeaveDegrees;
     }
 }

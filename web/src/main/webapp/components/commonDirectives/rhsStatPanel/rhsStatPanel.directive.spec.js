@@ -78,8 +78,6 @@ describe('Directive: RhsStatPanel', function() {
         expect(elementScope.diagnoseStatConfig).toBeDefined();
         expect(elementScope.diagnoseStatConfig.base).toEqual('base');
         expect(elementScope.diagnoseStatConfig.legend.labelFormatter).toBeDefined();
+        expect(elementScope.sickLeaveDegreeStatConfig.legend.labelFormatter).toBeDefined();
     });
-
-
-
 });

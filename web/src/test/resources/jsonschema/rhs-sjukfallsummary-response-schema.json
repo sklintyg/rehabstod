@@ -52,7 +52,23 @@
         "additionalProperties": false
       },
       "additionalItems": false
-    }
+    },
+    "sickLeaveDegree": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "gender": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false
+      },
+      "additionalItems": false
+    },
   },
   "additionalProperties": false,
   "required": [

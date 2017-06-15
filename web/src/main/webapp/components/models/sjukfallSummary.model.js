@@ -31,6 +31,7 @@ angular.module('rehabstodApp').factory('SjukfallSummaryModel',
             data.groups = [];
             data.diagnoseGroupData = [];
             data.genderData = [];
+            data.sickLeaveDegreeData = [];
             data.hasError = false;
             return data;
         }
@@ -41,6 +42,7 @@ angular.module('rehabstodApp').factory('SjukfallSummaryModel',
             data.total = newData.total;
             data.genders = newData.genders;
             data.groups = newData.groups;
+            data.sickLeaveDegrees = newData.sickLeaveDegrees;
 
             data.totalData = [{
                 name: '',
@@ -63,6 +65,16 @@ angular.module('rehabstodApp').factory('SjukfallSummaryModel',
                         id: genderStat.gender,
                         name: genderStat.gender,
                         y: genderStat.count
+                    });
+            });
+
+            data.sickLeaveDegreeGroupData = [];
+            angular.forEach(data.sickLeaveDegrees, function(sickLeaveDegree) {
+                data.sickLeaveDegreeGroupData.push(
+                    {
+                        id: sickLeaveDegree.id,
+                        name: sickLeaveDegree.name,
+                        y: sickLeaveDegree.count
                     });
             });
         }
