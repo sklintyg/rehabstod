@@ -65,6 +65,9 @@ var RehabstodBasePage = Class._extend({
     },
     navbarSjukfall: function() {
         return element(by.id('navbar-link-sjukfall'));
+    },
+    navbarStart: function() {
+        return element(by.id('navbar-link-start'));
     }
 });
 

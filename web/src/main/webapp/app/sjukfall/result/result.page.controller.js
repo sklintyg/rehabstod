@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp')
     .controller('SjukfallResultPageCtrl',
-    function ($scope, $rootScope, SjukfallService, SjukfallSummaryModel, UserModel, UserProxy) {
+    function ($scope, $rootScope, $state, SjukfallService, SjukfallSummaryModel, UserModel, UserProxy) {
         'use strict';
         if (_proceed()) {
             UserProxy.changeUrval(UserModel.isLakare() ? 'ISSUED_BY_ME' : 'ALL').then(function (updatedUserModel) {
@@ -41,11 +41,13 @@ angular.module('rehabstodApp')
         $scope.$on('$destroy', unregisterFn);
 
         $scope.goBack = function () {
-            UserProxy.changeUrval(null).then(function (updatedUserModel) {
+            $state.go('app.sjukfall.start');
+            /*UserProxy.changeUrval(null).then(function (updatedUserModel) {
                 UserModel.set(updatedUserModel);
+                
             }, function () {
                 //Handle errors
-            });
+            });*/
         };
 
         $scope.$watch('sjukfallService.isLoading()', function (val) {
