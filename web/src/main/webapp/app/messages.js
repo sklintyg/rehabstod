@@ -145,6 +145,12 @@ var rhsMessages = {
         'label.export.pdf' : 'PDF',
         'label.export.excel' : 'Excel',
 
+        // Modal
+        'modal.pdlconsent.title': 'Samtycke krävs',
+        'modal.pdlconsent.lakare.body': 'Viktigt!<br>Väljer du att gå vidare kommer du få se alla pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad och läkare.<br>Informationen som kommer visas loggas enligt Patientdatalagen (PDL) (läs mer här: Loggning).<br>Genom att klicka i "Jag förstår och godkänner" tar du ställning till att det är nödvändigt för dig att i din yrkesroll få ta del av patienternas uppgifter samt bekräftar din kännedom om den loggning som sker. Detta godkännande gäller för alla enheter som du har behörighet till<br><br>Detta godkännande kommer endast krävas en gång.',
+        'modal.pdlconsent.rehabkoordinator.body': 'Viktigt!<br>Väljer du att gå vidare kommer du få se dina pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid och sjukskrivningsgrad.s<br>Informationen som kommer visas loggas enligt Patientdatalagen (PDL) (läs mer här: Loggning).<br>Genom att klicka i "Jag förstår och godkänner" tar du ställning till att det är nödvändigt för dig att i din yrkesroll få ta del av patienternas uppgifter samt bekräftar din kännedom om den loggning som sker. Detta godkännande gäller för alla enheter som du har behörighet till<br><br>Detta godkännande kommer endast krävas en gång.',
+                                                                                                                                                                                                                                                                                        
+
         //Rest 500 exception error messages:
         'server.error.default.title' : 'Ett fel uppstod',
         'server.error.default.text': 'Tyvärr har ett tekniskt problem uppstått i tjänsten. Kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>',
@@ -152,7 +158,8 @@ var rhsMessages = {
         'server.error.getsjukfall.title' : 'Sjukfall för enheten kunde inte hämtas',
         'server.error.changeunit.title' : 'Byte av enhet misslyckades',
         'server.error.changeurval.title' : 'Kunde inte visa sjukfall',
-        'server.error.getsummary.text': 'Statistik för enheten kan inte visas'
+        'server.error.getsummary.text': 'Statistik för enheten kan inte visas',
+        'server.error.giveconsent.title' : 'Kunde inte lämna medgivande om PDL-loggning'
 
 
 

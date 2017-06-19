@@ -86,6 +86,7 @@ gretty {
 
 dependencies {
     compile project(":rehabstod-it-integration")
+    compile project(":rehabstod-persistence")
 
     compile "se.riv.clinicalprocess.healthcond.monitoring:clinicalprocess-healthcond-monitoring-schemas:${internalMonitoringSchemaVersion}"
 

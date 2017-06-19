@@ -134,7 +134,15 @@ app.run(
                     $log.debug('No vardenhet selected - redirecting to selection page!');
 
                     $state.go('appselectunit', {},  {location: false});
-                } else if (toState.data && angular.isFunction(toState.data.rule)) {
+                } else if ((toState.name === 'app.sjukfall.result') &&
+                    !user.pdlConsentGiven) {
+                    event.preventDefault();
+                    $log.debug('PDL logging consent not given - redirecting to give consent page!');
+
+                    // $state.go('apppdlconsent', {},  {location: false});
+                    $rootScope.$emit('show.pdl.consent');
+                }
+                else if (toState.data && angular.isFunction(toState.data.rule)) {
                     var result = toState.data.rule(fromState, toState, UserModel);
                     if (result && result.to) {
                         event.preventDefault();

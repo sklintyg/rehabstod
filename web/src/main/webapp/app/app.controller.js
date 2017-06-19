@@ -35,16 +35,36 @@ angular.module('rehabstodApp')
                 });
             };
 
+            $scope.showPdlConsentDialog = function() {
+                $uibModal.open({
+                    templateUrl: '/app/pdlconsent/pdlconsentdialog.html',
+                    size: 'md'
+                    // resolve: {
+                    //     msgConfig: function() {
+                    //         return msgConfig;
+                    //     }
+                    // }
+                });
+            };
+
             var unregisterFn = $rootScope.$on('rehab.rest.exception', function(event, msgConfig) {
                  var texts = {
                      title: messageService.getProperty(msgConfig.errorTitleKey),
                      body: messageService.getProperty(msgConfig.errorTextKey)
- 
                  };
                  $scope.showErrorDialog(texts);
              });
+
+            var unregisterFn2 = $rootScope.$on('show.pdl.consent', function() {
+                var texts = {
+                    title: messageService.getProperty('modal.pdlconsent.title'),
+                    body: messageService.getProperty('modal.pdlconsent.lakare.body')
+                };
+                $scope.showPdlConsentDialog(texts);
+            });
              //rootscope on event listeners aren't unregistered automatically when 'this' directives
              //scope is destroyed, so let's take care of that.
              $scope.$on('$destroy', unregisterFn);
+             $scope.$on('$destroy', unregisterFn2);
 
         });

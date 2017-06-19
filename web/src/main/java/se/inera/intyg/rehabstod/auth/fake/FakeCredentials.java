@@ -43,6 +43,8 @@ public class FakeCredentials implements Serializable {
     private List<String> legitimeradeYrkesgrupper;
     private List<String> systemRoles;
 
+    private boolean pdlConsentGiven = false;
+
     public FakeCredentials() {
         // Needed for deserialization
     }
@@ -93,6 +95,10 @@ public class FakeCredentials implements Serializable {
         return systemRoles;
     }
 
+    public boolean isPdlConsentGiven() {
+        return pdlConsentGiven;
+    }
+
     // ~ Public methods
     // ~====================================================================================
 
@@ -135,6 +141,7 @@ public class FakeCredentials implements Serializable {
         private String forskrivarKod;
         private List<String> legitimeradeYrkesgrupper;
         private List<String> systemRoles;
+        private boolean pdlConsentGiven;
 
         public FakeCredentialsBuilder(String hsaId, String enhetId) {
             this.hsaId = hsaId;
@@ -178,6 +185,11 @@ public class FakeCredentials implements Serializable {
 
         public FakeCredentialsBuilder legitimeradeYrkesgrupper(List<String> legitimeradeYrkesgrupper) {
             this.legitimeradeYrkesgrupper = legitimeradeYrkesgrupper;
+            return this;
+        }
+
+        public FakeCredentialsBuilder pdlConsentGiven(boolean pdlConsentGiven) {
+            this.pdlConsentGiven = pdlConsentGiven;
             return this;
         }
 

@@ -59,6 +59,8 @@ import se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.authorities.validation.AuthoritiesValidator;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
+import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
+import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 import se.riv.infrastructure.directory.v1.PaTitleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
@@ -125,6 +127,9 @@ public class RehabstodUserDetailsServiceTest {
     @Mock
     private AuthenticationLogger monitoringLogService;
 
+    @Mock
+    private AnvandarPreferenceRepository anvandarPreferenceRepository;
+
     @BeforeClass
     public static void setupAuthoritiesConfiguration() throws Exception {
 
@@ -150,6 +155,9 @@ public class RehabstodUserDetailsServiceTest {
         when(userOrigin.resolveOrigin(request)).thenReturn(UserOriginType.NORMAL.name());
         when(commonFeatureService.getActiveFeatures()).thenReturn(new HashSet<>());
         userDetailsService.setCommonAuthoritiesResolver(AUTHORITIES_RESOLVER);
+
+        AnvandarPreference anvandarPreference = new AnvandarPreference(PERSONAL_HSAID, "user_pdl_consent_given", "true");
+        when(anvandarPreferenceRepository.findByHsaIdAndKey(PERSONAL_HSAID, "user_pdl_consent_given")).thenReturn(anvandarPreference);
     }
 
     @Test

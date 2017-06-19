@@ -96,9 +96,44 @@ angular.module('rehabstodApp').factory('UserProxy',
             return promise.promise;
         }
 
+        function _givePdlConsent(hsaId) {
+            var promise = $q.defer();
+
+            var restPath = '/api/user/giveconsent';
+            var dto = {
+                hsaId: hsaId,
+                consentGiven: true
+            };
+
+            var config =  {
+                errorMessageConfig: {
+                    errorTitleKey: 'server.error.giveconsent.title',
+                    errorTextKey: 'server.error.default.text'
+                },
+                timeout: networkConfig.defaultTimeout
+            };
+            $http.post(restPath, dto, config).success(function(data) {
+                $log.debug(restPath + ' - success');
+
+                if (typeof data !== 'undefined') {
+                    promise.resolve(data);
+                } else {
+                    $log.debug('JSON response syntax error. Rejected.');
+                    promise.reject(null);
+                }
+            }).error(function(data, status) {
+                $log.error('error ' + status);
+                // Let calling code handle the error of no data response
+                promise.reject(data);
+            });
+
+            return promise.promise;
+        }
+
         // Return public API for the service
         return {
             changeSelectedUnit: _changeSelectedUnit,
-            changeUrval: _changeUrval
+            changeUrval: _changeUrval,
+            givePdlConsent: _givePdlConsent
         };
     });

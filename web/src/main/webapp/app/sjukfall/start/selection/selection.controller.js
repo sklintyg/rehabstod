@@ -1,5 +1,5 @@
 angular.module('rehabstodApp')
-    .controller('SjukfallStartSelectionCtrl', function($scope, $state, $rootScope, UserModel, UserProxy, SjukfallService) {
+    .controller('SjukfallStartSelectionCtrl', function($scope, $state, $rootScope, UserModel, UserProxy) {
         'use strict';
 
         $scope.user = UserModel.get();
@@ -17,7 +17,7 @@ angular.module('rehabstodApp')
 
                 $state.go('app.sjukfall.result');
 
-                SjukfallService.loadSjukfall(true);
+               // SjukfallService.loadSjukfall(true);
 
             }, function() {
                 //Handle errors

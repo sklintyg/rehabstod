@@ -31,6 +31,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
+import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
+import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigJndi;
 import se.inera.intyg.rehabstod.web.controller.api.SessionStatusController;
 import se.inera.intyg.rehabstod.web.filters.SessionTimeoutFilter;
 
@@ -49,7 +51,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
                 IntygstjanstIntegrationClientConfiguration.class,
                 IntygstjanstIntegrationStubConfiguration.class,
                 JmsConfig.class, NTjPPingConfig.class, SecurityConfig.class,
-                SjukfallConfig.class, EmployeeNameCacheConfig.class, DynamicLinkConfig.class);
+                SjukfallConfig.class, EmployeeNameCacheConfig.class, DynamicLinkConfig.class, PersistenceConfigJndi.class,
+                PersistenceConfigDev.class);
 
         servletContext.addListener(new ContextLoaderListener(appContext));
 
@@ -75,6 +78,13 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         unitSelectedAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
         unitSelectedAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
         unitSelectedAssuranceFilter.setInitParameter("ignoredUrls", "/api/config,/api/user,/api/user/andraenhet");
+
+        // pdlConsentGiven filter
+        FilterRegistration.Dynamic pdlConsentGivenAssuranceFilter = servletContext.addFilter("pdlConsentGivenAssuranceFilter",
+                DelegatingFilterProxy.class);
+        pdlConsentGivenAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
+        pdlConsentGivenAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
+        pdlConsentGivenAssuranceFilter.setInitParameter("ignoredUrls", "/api/session-auth-check/ping,/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary");
 
         FilterRegistration.Dynamic characterEncodingFilter = servletContext.addFilter("characterEncodingFilter",
                 CharacterEncodingFilter.class);

@@ -42,6 +42,8 @@ public class RehabstodUser extends IntygUser implements Serializable {
     private Urval urval;
     private Map<String, List<PDLActivityEntry>> storedActivities;
 
+    private boolean pdlConsentGiven = false;
+
     public RehabstodUser(String hsaId, String namn) {
         super(hsaId);
         this.storedActivities = new HashMap<>();
@@ -50,7 +52,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
     }
 
     /** The copy-constructor. */
-    public RehabstodUser(IntygUser intygUser) {
+    public RehabstodUser(IntygUser intygUser, boolean pdlConsentGiven) {
         super(intygUser.getHsaId());
         this.privatLakareAvtalGodkand = intygUser.isPrivatLakareAvtalGodkand();
         this.personId = intygUser.getPersonId();
@@ -76,6 +78,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
         this.storedActivities = new HashMap<>();
 
         this.miuNamnPerEnhetsId = intygUser.getMiuNamnPerEnhetsId();
+        this.pdlConsentGiven = pdlConsentGiven;
     }
 
     public Urval getUrval() {
@@ -160,6 +163,14 @@ public class RehabstodUser extends IntygUser implements Serializable {
             }
         }
         return false;
+    }
+
+    public boolean isPdlConsentGiven() {
+        return pdlConsentGiven;
+    }
+
+    public void setPdlConsentGiven(boolean pdlConsentGiven) {
+        this.pdlConsentGiven = pdlConsentGiven;
     }
 
     private void writeObject(java.io.ObjectOutputStream stream) throws java.io.IOException {

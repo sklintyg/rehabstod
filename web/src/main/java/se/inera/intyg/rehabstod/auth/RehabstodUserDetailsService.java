@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.auth;
 import org.opensaml.saml2.core.Assertion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ import se.inera.intyg.infra.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.infra.security.siths.BaseUserDetailsService;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
+import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
+import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +52,11 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
     // The part after prefix is assumed to be a hsa-enhetsid, this will be extracted and compared.
     private static final Pattern HSA_SYSTEMROLE_REHAB_UNIT_PATTERN = Pattern.compile("^" + HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "(.*)");
 
+    public static final String PDL_CONSENT_GIVEN = "user_pdl_consent_given";
+
+    @Autowired
+    private AnvandarPreferenceRepository anvandarPreferenceRepository;
+
     // =====================================================================================
     // ~ Protected scope
     // =====================================================================================
@@ -56,7 +64,13 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
     @Override
     protected RehabstodUser buildUserPrincipal(SAMLCredential credential) {
         // All rehab customization is done in the overridden decorateXXX methods, so just return a new rehabuser
-        return new RehabstodUser(super.buildUserPrincipal(credential));
+        IntygUser intygUser = super.buildUserPrincipal(credential);
+        return new RehabstodUser(intygUser, isPdlConsentGiven(intygUser.getHsaId()));
+    }
+
+    private boolean isPdlConsentGiven(String hsaId) {
+        AnvandarPreference pdlConsentGiven = anvandarPreferenceRepository.findByHsaIdAndKey(hsaId, PDL_CONSENT_GIVEN);
+        return pdlConsentGiven != null && Boolean.valueOf(pdlConsentGiven.getValue());
     }
 
     @Override
@@ -71,7 +85,6 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         // count all vardenheter (not including mottagningar under vardenheter)
         return (int) intygUser.getVardgivare().stream().flatMap(vg -> vg.getVardenheter().stream()).count();
     }
-
 
 
     @Override

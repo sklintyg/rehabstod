@@ -29,10 +29,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
+import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeUrvalRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetUserResponse;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GivePdlLoggingConsentRequest;
+
+import static se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService.PDL_CONSENT_GIVEN;
 
 @RestController
 @RequestMapping("/api/user")
@@ -41,7 +46,10 @@ public class UserController {
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    UserService userService;
+    private UserService userService;
+
+    @Autowired
+    private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
     // api
 
@@ -89,6 +97,24 @@ public class UserController {
         }
 
         LOG.debug(String.format("Selected urval for user %s is now '%s' ", user.getHsaId(), user.getUrval()));
+
+        return new GetUserResponse(user);
+    }
+
+    @RequestMapping(value = "/giveconsent", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public GetUserResponse givePdlLoggingConsent(@RequestBody GivePdlLoggingConsentRequest pdlLoggingConsentRequest) {
+
+        RehabstodUser user = getRehabstodUser();
+        
+        // Update backend
+        AnvandarPreference pdlConsentGiven = anvandarPreferenceRepository.findByHsaIdAndKey(user.getHsaId(), PDL_CONSENT_GIVEN);
+        pdlConsentGiven.setValue(Boolean.toString(pdlLoggingConsentRequest.isConsentGiven()));
+        anvandarPreferenceRepository.save(pdlConsentGiven);
+
+        // Update current user context.
+        user.setPdlConsentGiven(pdlLoggingConsentRequest.isConsentGiven());
+
+        LOG.debug(String.format("User %s has now set PDL logging consent to '%s' ", user.getHsaId(), user.isPdlConsentGiven()));
 
         return new GetUserResponse(user);
     }

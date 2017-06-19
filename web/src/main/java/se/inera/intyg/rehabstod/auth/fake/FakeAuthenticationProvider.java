@@ -70,6 +70,7 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
                 user.setNamn(((FakeCredentials) token.getCredentials()).getForNamn() + " "
                         + ((FakeCredentials) token.getCredentials()).getEfterNamn());
             }
+            user.setPdlConsentGiven(((FakeCredentials)token.getCredentials()).isPdlConsentGiven());
         }
     }
 
