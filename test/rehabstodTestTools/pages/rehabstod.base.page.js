@@ -54,6 +54,9 @@ var RehabstodBasePage = Class._extend({
     clickSjukfall: function() {
         this.navbarSjukfall().click();
     },
+    clickStart: function() {
+        this.navbarStart().click();
+    },
     navbarLocation: function() {
         return element(by.id('location'));
     },
@@ -61,7 +64,7 @@ var RehabstodBasePage = Class._extend({
         return element(by.id('navbar-link-about'));
     },
     closeBytVardenhet: function() {
-      return element(by.id('select-care-unit-close'));
+        return element(by.id('select-care-unit-close'));
     },
     navbarSjukfall: function() {
         return element(by.id('navbar-link-sjukfall'));

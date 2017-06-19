@@ -33,7 +33,7 @@ describe('Flöde som rehabkoordinator', function() {
     // Logga in
     beforeEach(function() {
         browser.ignoreSynchronization = false;
-        specHelper.login('TSTNMT2321000156-105W_TSTNMT2321000156-105P','TSTNMT2321000156-105P');  // Kerstin Johansson
+        specHelper.login('TSTNMT2321000156-105W_TSTNMT2321000156-105P', 'TSTNMT2321000156-105P'); // Kerstin Johansson
     });
 
     it('Bara se knappen alla sjukfall', function() {
@@ -66,7 +66,7 @@ describe('Flöde som rehabkoordinator', function() {
         it('Gå direkt till sjukfall', function() {
             sjukfallPage.get();
             specHelper.waitForAngularTestability();
-            expect(startPage.isAt()).toBeTruthy();
+            expect(sjukfallPage.isAt()).toBeTruthy();
         });
 
         it('Gå till om och sedan till sjukfall', function() {
@@ -74,7 +74,7 @@ describe('Flöde som rehabkoordinator', function() {
             navigationHelper.goToAbout();
 
             // Gå till sjukfall
-            navigationHelper.goToStart();
+            navigationHelper.goToSjukfall();
         });
     });
 
@@ -92,7 +92,7 @@ describe('Flöde som rehabkoordinator', function() {
             // Gå till sjukfall
             sjukfallPage.get();
             specHelper.waitForAngularTestability();
-            expect(startPage.isAt()).toBeTruthy();
+            expect(sjukfallPage.isAt()).toBeTruthy();
         });
 
         it('Gå tillbaka till start och sedan about och tillbaka och hamna på start.', function() {

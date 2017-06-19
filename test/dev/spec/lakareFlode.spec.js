@@ -54,6 +54,7 @@ describe('Flöde som läkare', function() {
         });
 
         it('Gå till om rehab och gå tillbaka till sjukfallssidan', function() {
+
             // Gå till about
             navigationHelper.goToAbout();
 
@@ -72,7 +73,7 @@ describe('Flöde som läkare', function() {
         it('Gå direkt till sjukfall', function() {
             sjukfallPage.get();
             specHelper.waitForAngularTestability();
-            expect(startPage.isAt()).toBeTruthy();
+            expect(sjukfallPage.isAt()).toBeTruthy();
         });
 
         it('Gå till om och sedan till sjukfall', function() {
@@ -80,7 +81,7 @@ describe('Flöde som läkare', function() {
             navigationHelper.goToAbout();
 
             // Gå till sjukfall
-            navigationHelper.goToStart();
+            navigationHelper.goToSjukfall();
         });
     });
 
@@ -98,7 +99,7 @@ describe('Flöde som läkare', function() {
             // Gå till sjukfall
             sjukfallPage.get();
             specHelper.waitForAngularTestability();
-            expect(startPage.isAt()).toBeTruthy();
+            expect(sjukfallPage.isAt()).toBeTruthy();
         });
 
         it('Gå tillbaka till start och sedan about och tillbaka och hamna på start.', function() {

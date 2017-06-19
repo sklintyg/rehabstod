@@ -1,14 +1,14 @@
 {
-  "name": "rehabstod-testtools",
-  "version": "1.0.26",
-  "description": "",
-  "main": "rehabstodTestTools.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "dependencies": {
-    "jclass": "^1.2.1",
-    "request": "^2.79.0"
-  }
+    "name": "rehabstod-testtools",
+    "version": "1.0.27",
+    "description": "",
+    "main": "rehabstodTestTools.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "dependencies": {
+        "jclass": "^1.2.1",
+        "request": "^2.79.0"
+    }
 }
