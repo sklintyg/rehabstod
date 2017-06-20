@@ -27,6 +27,16 @@
     'rhsWelcomeApp.controllers'
   ]);
 
+  var validProperties = [
+      'hsaId',
+      'forNamn',
+      'efterNamn',
+      'enhetId',
+      'legitimeradeYrkesgrupper',
+      'systemRoles',
+      'befattningsKod',
+      'forskrivarKod'];
+
   angular.module('rhsWelcomeApp.controllers', []).controller('welcomeController',
     ['$scope', '$http', '$log', function($scope, $http, $log) {
 
@@ -197,15 +207,7 @@
       }
 
       function _stringify(hsaPerson) {
-        var validProperties = [
-          'hsaId',
-          'forNamn',
-          'efterNamn',
-          'enhetId',
-          'legitimeradeYrkesgrupper',
-          'systemRoles',
-          'befattningsKod',
-          'forskrivarKod'];
+
 
         var string = JSON.stringify(hsaPerson, validProperties, 1);
         var object = JSON.parse(string);
@@ -215,6 +217,15 @@
 
       function _updateObject(object, propertyKey, propertyValue) {
         object[propertyKey] = propertyValue;
+      }
+
+      function _isPresentInValidProperties(key) {
+          for (var a = 0; a < validProperties.length; a++) {
+              if (validProperties[a] === key) {
+                return true;
+              }
+          }
+          return false;
       }
 
       $scope.loginModel = [];
@@ -240,6 +251,18 @@
         // Add properties to HSA person
         _updateObject(hsaPerson, 'enhetId', login.forvaldEnhet);
         _updateObject(hsaPerson, 'systemRoles', systemRoles);
+
+        // Find any extra context properties add push them into the actual user context.
+        if (angular.isDefined(hsaPerson.fakeProperties.extraContextProperties)) {
+           angular.forEach(hsaPerson.fakeProperties.extraContextProperties, function(value, key) {
+               _updateObject(hsaPerson, key, value);
+
+               // If not already present, add the new context property to the stringify list of props.
+               if (!_isPresentInValidProperties(key)) {
+                   validProperties.push(key);
+               }
+           });
+        }
 
         var loginJson = _stringify(hsaPerson);
         jsonElView.text( loginJson );
