@@ -119,6 +119,9 @@
         "ISSUED_BY_ME",
         null
       ]
+    },
+    "pdlConsentGiven": {
+      "type": "boolean"
     }
 
   },
@@ -133,7 +136,8 @@
     "valdVardenhet",
     "valdVardgivare",
     "totaltAntalVardenheter",
-    "urval"
+    "urval",
+    "pdlConsentGiven"
   ],
   "title": "WebCertUser transport model",
   "type": "object",

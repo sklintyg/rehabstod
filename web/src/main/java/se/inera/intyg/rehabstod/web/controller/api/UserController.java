@@ -105,16 +105,20 @@ public class UserController {
     public GetUserResponse givePdlLoggingConsent(@RequestBody GivePdlLoggingConsentRequest pdlLoggingConsentRequest) {
 
         RehabstodUser user = getRehabstodUser();
-        
         // Update backend
         AnvandarPreference pdlConsentGiven = anvandarPreferenceRepository.findByHsaIdAndKey(user.getHsaId(), PDL_CONSENT_GIVEN);
-        pdlConsentGiven.setValue(Boolean.toString(pdlLoggingConsentRequest.isConsentGiven()));
+        if (pdlConsentGiven == null) {
+            pdlConsentGiven = new AnvandarPreference(user.getHsaId(), PDL_CONSENT_GIVEN,
+                    Boolean.toString(pdlLoggingConsentRequest.isConsentGiven()));
+        } else {
+            pdlConsentGiven.setValue(Boolean.toString(pdlLoggingConsentRequest.isConsentGiven()));
+        }
         anvandarPreferenceRepository.save(pdlConsentGiven);
 
         // Update current user context.
         user.setPdlConsentGiven(pdlLoggingConsentRequest.isConsentGiven());
 
-        LOG.debug(String.format("User %s has now set PDL logging consent to '%s' ", user.getHsaId(), user.isPdlConsentGiven()));
+        LOG.debug(String.format("User %s has now set PDL logging consent to '%s' ", user.getHsaId(), user.getPdlConsentGiven()));
 
         return new GetUserResponse(user);
     }

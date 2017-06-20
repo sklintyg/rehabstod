@@ -66,11 +66,15 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
     private void addAbsentAttributesFromFakeCredentials(FakeAuthenticationToken token, Object details) {
         if (details instanceof RehabstodUser) {
             RehabstodUser user = (RehabstodUser) details;
+            FakeCredentials credentials = (FakeCredentials) token.getCredentials();
             if (user.getNamn() == null || user.getNamn().isEmpty()) {
-                user.setNamn(((FakeCredentials) token.getCredentials()).getForNamn() + " "
-                        + ((FakeCredentials) token.getCredentials()).getEfterNamn());
+                user.setNamn(credentials.getForNamn() + " "
+                        + credentials.getEfterNamn());
             }
-            user.setPdlConsentGiven(((FakeCredentials)token.getCredentials()).isPdlConsentGiven());
+
+            if (credentials.isPdlConsentGiven() != null) {
+                user.setPdlConsentGiven(credentials.isPdlConsentGiven());
+            }
         }
     }
 

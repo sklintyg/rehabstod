@@ -18,12 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web;
 
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static java.util.Arrays.asList;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertNotNull;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
@@ -40,6 +34,12 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeUrvalRequest;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static java.util.Arrays.asList;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Base class for "REST-ish" integrationTests using RestAssured.
@@ -60,10 +60,15 @@ public abstract class BaseRestIntegrationTest {
     protected static final String SJUKFALLSUMMARY_API_ENDPOINT = "/api/sjukfall/summary";
 
     protected static final FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder(
-        "TSTNMT2321000156-105R", "TSTNMT2321000156-105N").legitimeradeYrkesgrupper(LAKARE).build();
+        "TSTNMT2321000156-105R", "TSTNMT2321000156-105N").legitimeradeYrkesgrupper(LAKARE)
+            .pdlConsentGiven(true).build();
+
+    protected static final FakeCredentials DEFAULT_LAKARE_NO_CONSENT = new FakeCredentials.FakeCredentialsBuilder(
+            "TSTNMT2321000156-105R", "TSTNMT2321000156-105N").legitimeradeYrkesgrupper(LAKARE)
+            .pdlConsentGiven(false).build();
 
     protected static final FakeCredentials EVA_H_LAKARE = new FakeCredentials.FakeCredentialsBuilder(
-        "eva", "centrum-vast").legitimeradeYrkesgrupper(LAKARE).build();
+        "eva", "centrum-vast").legitimeradeYrkesgrupper(LAKARE).pdlConsentGiven(true).build();
 
     protected CustomObjectMapper objectMapper = new CustomObjectMapper();
 

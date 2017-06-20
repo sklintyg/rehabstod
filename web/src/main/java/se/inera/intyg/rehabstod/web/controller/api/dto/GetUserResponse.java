@@ -49,6 +49,8 @@ public class GetUserResponse {
 
     private Urval urval;
 
+    private boolean pdlConsentGiven = false;
+
     public GetUserResponse(RehabstodUser user) {
         this.hsaId = user.getHsaId();
         this.namn = user.getNamn();
@@ -63,6 +65,7 @@ public class GetUserResponse {
         this.valdVardenhet = user.getValdVardenhet();
         this.totaltAntalVardenheter = user.getTotaltAntalVardenheter();
         this.urval = user.getUrval();
+        this.pdlConsentGiven = user.getPdlConsentGiven();
     }
 
     public String getHsaId() {
@@ -153,4 +156,11 @@ public class GetUserResponse {
         this.urval = urval;
     }
 
+    public boolean isPdlConsentGiven() {
+        return pdlConsentGiven;
+    }
+
+    public void setPdlConsentGiven(boolean pdlConsentGiven) {
+        this.pdlConsentGiven = pdlConsentGiven;
+    }
 }

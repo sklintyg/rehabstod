@@ -88,7 +88,6 @@ angular.module('rehabstodApp').factory('UserModel',
             get: function() {
                 return data;
             },
-
             isLakare: function() {
                 return (ObjectHelper.isDefined(data.role) && data.role.name === 'LAKARE');
             },
@@ -120,6 +119,10 @@ angular.module('rehabstodApp').factory('UserModel',
 
             setUrval: function(newUrval) {
                 data.urval = newUrval;
+            },
+
+            isPdlConsentGiven: function() {
+                return data.pdlConsentGiven;
             },
             
             fakeLogin: function() {

@@ -35,6 +35,7 @@ var rhsMessages = {
         'common.close': 'Stäng',
         'common.date': 'Datum',
         'common.reset': 'Återställ',
+        'common.approve': 'Godkänn',
 
         'common.label.loading': 'Laddar',
 
@@ -147,8 +148,8 @@ var rhsMessages = {
 
         // Modal
         'modal.pdlconsent.title': 'Samtycke krävs',
-        'modal.pdlconsent.lakare.body': 'Viktigt!<br>Väljer du att gå vidare kommer du få se alla pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad och läkare.<br>Informationen som kommer visas loggas enligt Patientdatalagen (PDL) (läs mer här: Loggning).<br>Genom att klicka i "Jag förstår och godkänner" tar du ställning till att det är nödvändigt för dig att i din yrkesroll få ta del av patienternas uppgifter samt bekräftar din kännedom om den loggning som sker. Detta godkännande gäller för alla enheter som du har behörighet till<br><br>Detta godkännande kommer endast krävas en gång.',
-        'modal.pdlconsent.rehabkoordinator.body': 'Viktigt!<br>Väljer du att gå vidare kommer du få se dina pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid och sjukskrivningsgrad.s<br>Informationen som kommer visas loggas enligt Patientdatalagen (PDL) (läs mer här: Loggning).<br>Genom att klicka i "Jag förstår och godkänner" tar du ställning till att det är nödvändigt för dig att i din yrkesroll få ta del av patienternas uppgifter samt bekräftar din kännedom om den loggning som sker. Detta godkännande gäller för alla enheter som du har behörighet till<br><br>Detta godkännande kommer endast krävas en gång.',
+        'modal.pdlconsent.rehabkoordinator.body': '<b>Viktigt!</b><br><br>Väljer du att gå vidare kommer du få se alla pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad och läkare.<br><br>Informationen som kommer visas loggas enligt Patientdatalagen (PDL) (läs mer här: <a href="/app.html#/about/rehabstod" target="_blank">Loggning</a>).<br><br>Genom att klicka i "Jag förstår och godkänner" tar du ställning till att det är nödvändigt för dig att i din yrkesroll få ta del av patienternas uppgifter samt bekräftar din kännedom om den loggning som sker.<br><br>Detta godkännande gäller för alla enheter som du har behörighet till<br><br>Detta godkännande kommer endast krävas en gång.',
+        'modal.pdlconsent.lakare.body': '<b>Viktigt!</b><br><br>Väljer du att gå vidare kommer du få se dina pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid och sjukskrivningsgrad.<br><br>Informationen som kommer visas loggas enligt Patientdatalagen (PDL) (läs mer här: <a href="/app.html#/about/rehabstod" target="_blank">Loggning</a>).<br><br>Genom att klicka i "Jag förstår och godkänner" tar du ställning till att det är nödvändigt för dig att i din yrkesroll få ta del av patienternas uppgifter samt bekräftar din kännedom om den loggning som sker. <br><br>Detta godkännande gäller för alla enheter som du har behörighet till<br><br>Detta godkännande kommer endast krävas en gång.',
                                                                                                                                                                                                                                                                                         
 
         //Rest 500 exception error messages:

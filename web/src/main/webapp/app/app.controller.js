@@ -35,15 +35,16 @@ angular.module('rehabstodApp')
                 });
             };
 
-            $scope.showPdlConsentDialog = function() {
+            $scope.showPdlConsentDialog = function(msgConfig) {
                 $uibModal.open({
                     templateUrl: '/app/pdlconsent/pdlconsentdialog.html',
-                    size: 'md'
-                    // resolve: {
-                    //     msgConfig: function() {
-                    //         return msgConfig;
-                    //     }
-                    // }
+                    controller: 'pdlConsentDialogCtrl',
+                    size: 'md',
+                    resolve: {
+                        msgConfig: function() {
+                            return msgConfig;
+                        }
+                    }
                 });
             };
 
@@ -55,10 +56,9 @@ angular.module('rehabstodApp')
                  $scope.showErrorDialog(texts);
              });
 
-            var unregisterFn2 = $rootScope.$on('show.pdl.consent', function() {
+            var unregisterFn2 = $rootScope.$on('show.pdl.consent', function(event, msgConfig) {
                 var texts = {
-                    title: messageService.getProperty('modal.pdlconsent.title'),
-                    body: messageService.getProperty('modal.pdlconsent.lakare.body')
+                    body: messageService.getProperty(msgConfig.bodyTextKey)
                 };
                 $scope.showPdlConsentDialog(texts);
             });

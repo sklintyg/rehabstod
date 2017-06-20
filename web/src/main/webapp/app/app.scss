@@ -256,6 +256,19 @@ h5.inline-heading {
   }
 }
 
+.modal-checkbox {
+    cursor:pointer;
+    font-weight:normal;
+}
+
+.unselectable {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 // Index page --
 .index-page {
   background-color: $link-color;

@@ -84,7 +84,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
                 DelegatingFilterProxy.class);
         pdlConsentGivenAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
         pdlConsentGivenAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
-        pdlConsentGivenAssuranceFilter.setInitParameter("ignoredUrls", "/api/session-auth-check/ping,/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary");
+        pdlConsentGivenAssuranceFilter.setInitParameter("ignoredUrls",
+                "/api/session-auth-check/ping,/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary");
 
         FilterRegistration.Dynamic characterEncodingFilter = servletContext.addFilter("characterEncodingFilter",
                 CharacterEncodingFilter.class);
