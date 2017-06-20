@@ -34,7 +34,7 @@ module.exports = {
     },
 
     goToStart: function(success) {
-        startPage.clickSjukfall();
+        startPage.clickStart();
         expect(startPage.isAt()).toBe(success || true);
     },
 
