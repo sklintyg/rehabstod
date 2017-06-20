@@ -28,11 +28,11 @@ var startPage = rhsTestTools.pages.startPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 var aboutPage = rhsTestTools.pages.aboutPage;
 
-describe('Flöde som läkare', function() {
+fdescribe('Flöde som läkare', function() {
 
     // Logga in
     beforeEach(function() {
-        browser.ignoreSynchronization = false;
+        browser.ignoreSynchronization = true;
         specHelper.login();
     });
 
@@ -45,9 +45,9 @@ describe('Flöde som läkare', function() {
         navigationHelper.goToAbout();
     });
 
-    describe('gör urval', function() {
+    fdescribe('gör urval', function() {
 
-        beforeEach(function() {
+       /* beforeEach(function() {
             startPage.clickMyUnit();
             expect(sjukfallPage.isAt()).toBeTruthy();
             expect(sjukfallPage.lakareFilter.isPresent()).toBeFalsy();
@@ -66,7 +66,7 @@ describe('Flöde som läkare', function() {
             browser.refresh();
 
             expect(sjukfallPage.isAt()).toBeTruthy();
-        })
+        })*/
     });
 
     describe('inget urval', function() {
