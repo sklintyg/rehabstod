@@ -35,6 +35,7 @@ describe('Flöde som läkare', function() {
     beforeEach(function() {
         browser.ignoreSynchronization = false;
         specHelper.login();
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
     });
 
     it('Bara se knappen mina sjukfall', function() {
