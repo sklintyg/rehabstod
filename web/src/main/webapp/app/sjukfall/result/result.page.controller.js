@@ -42,12 +42,6 @@ angular.module('rehabstodApp')
 
         $scope.goBack = function () {
             $state.go('app.sjukfall.start');
-            /*UserProxy.changeUrval(null).then(function (updatedUserModel) {
-                UserModel.set(updatedUserModel);
-                
-            }, function () {
-                //Handle errors
-            });*/
         };
 
         $scope.$watch('sjukfallService.isLoading()', function (val) {

@@ -27,6 +27,7 @@ var navigationHelper = rhsTestTools.helpers.navigation;
 var startPage = rhsTestTools.pages.startPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 var aboutPage = rhsTestTools.pages.aboutPage;
+var ptor;
 
 describe('Flöde som läkare', function() {
 
@@ -47,11 +48,11 @@ describe('Flöde som läkare', function() {
 
     describe('gör urval', function() {
 
-        beforeEach(function() {
+       /* beforeEach(function() {
             startPage.clickMyUnit();
             expect(sjukfallPage.isAt()).toBeTruthy();
             expect(sjukfallPage.lakareFilter.isPresent()).toBeFalsy();
-        });
+        });*/
 
         it('Gå till om rehab och gå tillbaka till sjukfallssidan', function() {
 
@@ -63,6 +64,7 @@ describe('Flöde som läkare', function() {
         });
 
         it('Ladda om sidan och var kvar på sjukfallssidan', function() {
+            navigationHelper.goToSjukfall();
             browser.refresh();
 
             expect(sjukfallPage.isAt()).toBeTruthy();
@@ -88,12 +90,12 @@ describe('Flöde som läkare', function() {
     describe('gör urval och går tillbaka till start', function() {
 
         // Gör urval
-        beforeEach(function() {
+        /*beforeEach(function() {
             startPage.clickMyUnit();
             expect(sjukfallPage.isAt()).toBeTruthy();
 
             navigationHelper.goBackToStart();
-        });
+        });*/
 
         it('Gå tillbaka till start och sedan försöka gå in igen utan att göra ett urval', function() {
             // Gå till sjukfall
