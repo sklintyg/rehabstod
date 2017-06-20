@@ -28,7 +28,7 @@ var startPage = rhsTestTools.pages.startPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 var aboutPage = rhsTestTools.pages.aboutPage;
 
-describe('Flöde som rehabkoordinator', function() {
+xdescribe('Flöde som rehabkoordinator', function() {
 
     // Logga in
     beforeEach(function() {
@@ -48,11 +48,11 @@ describe('Flöde som rehabkoordinator', function() {
 
     describe('gör urval', function() {
 
-        /*beforeEach(function() {
+        beforeEach(function() {
             startPage.clickFullUnit();
             expect(sjukfallPage.isAt()).toBeTruthy();
             expect(sjukfallPage.lakareFilter.isPresent()).toBeTruthy();
-        });*/
+        });
 
         it('gå till om rehab och gå tillbaka till sjukfall', function() {
             // Gå till about
@@ -82,12 +82,12 @@ describe('Flöde som rehabkoordinator', function() {
     describe('gör urval och går tillbaka till start', function() {
 
         // Gör urval
-       /* beforeEach(function() {
+        beforeEach(function() {
             startPage.clickFullUnit();
             expect(sjukfallPage.isAt()).toBeTruthy();
 
             navigationHelper.goBackToStart();
-        });*/
+        });
 
         it('Gå tillbaka till start och sedan försöka gå in igen utan att göra ett urval', function() {
             // Gå till sjukfall
