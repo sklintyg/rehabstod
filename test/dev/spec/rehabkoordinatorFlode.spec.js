@@ -28,13 +28,12 @@ var startPage = rhsTestTools.pages.startPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 var aboutPage = rhsTestTools.pages.aboutPage;
 
-xdescribe('Flöde som rehabkoordinator', function() {
+describe('Flöde som rehabkoordinator', function() {
 
     // Logga in
     beforeEach(function() {
         browser.ignoreSynchronization = false;
         specHelper.login('TSTNMT2321000156-105W_TSTNMT2321000156-105P', 'TSTNMT2321000156-105P'); // Kerstin Johansson
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
     });
 
     it('Bara se knappen alla sjukfall', function() {

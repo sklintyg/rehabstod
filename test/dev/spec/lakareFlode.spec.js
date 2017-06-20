@@ -27,15 +27,13 @@ var navigationHelper = rhsTestTools.helpers.navigation;
 var startPage = rhsTestTools.pages.startPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 var aboutPage = rhsTestTools.pages.aboutPage;
-var ptor;
 
-xdescribe('Flöde som läkare', function() {
+describe('Flöde som läkare', function() {
 
     // Logga in
     beforeEach(function() {
         browser.ignoreSynchronization = false;
         specHelper.login();
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
     });
 
     it('Bara se knappen mina sjukfall', function() {
@@ -65,7 +63,6 @@ xdescribe('Flöde som läkare', function() {
         });
 
         it('Ladda om sidan och var kvar på sjukfallssidan', function() {
-            navigationHelper.goToSjukfall();
             browser.refresh();
 
             expect(sjukfallPage.isAt()).toBeTruthy();
