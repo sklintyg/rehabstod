@@ -1,0 +1,43 @@
+apply plugin: 'application'
+
+mainClassName = "liquibase.integration.commandline.Main"
+applicationDefaultJvmArgs = ["-Dfile.encoding=utf8"]
+
+startScripts {
+    doLast {
+        def persistenceDependency = configurations.runtime.filter { it.name.startsWith("rehabstod-persistence") }.singleFile.name
+
+        def originalScript = unixScript.text
+        unixScript.text = unixScript.text.replaceAll(/save \"\$@\"/,
+            'save --driver=com.mysql.jdbc.Driver --classpath=lib/' + persistenceDependency + ' --changeLogFile=changelog/changelog.xml "\\$@"')
+        if (originalScript.equals(unixScript.text)) {
+                throw new RuntimeException("No replacement seems to have been made to the liquibase script.")
+        }
+
+        def originalWindowsScript = windowsScript.text
+        windowsScript.text = windowsScript.text.replaceAll(/%CMD_LINE_ARGS%/,
+            "--driver=com.mysql.jdbc.Driver --classpath=lib/${persistenceDependency} --changeLogFile=changelog/changelog.xml %CMD_LINE_ARGS%")
+        if (originalWindowsScript.equals(windowsScript.text)) {
+                throw new RuntimeException("No replacement seems to have been made to the windows liquibase script.")
+        }
+    }
+}
+
+sonarqube {
+    skipProject = true
+}
+
+artifacts {
+    archives distZip
+}
+
+configurations.runtime {
+    transitive = false
+}
+
+dependencies {
+    runtime project(":rehabstod-persistence")
+
+    runtime "org.liquibase:liquibase-core:${liquibaseVersion}"
+    runtime "mysql:mysql-connector-java:${mysqlVersion}"
+}

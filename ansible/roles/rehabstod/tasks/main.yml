@@ -11,6 +11,32 @@
     path: "{{ releases_folder }}"
     state: directory
 
+- name: Download liquibase-runner-{{ version }}.zip
+  get_url:
+    url: https://build-inera.nordicmedtest.se/nexus/repository/{{ repo }}/se/inera/rehabstod/rehabstod-liquibase-runner/{{ version }}/rehabstod-liquibase-runner-{{ version }}.zip
+    dest: "{{ releases_folder }}/rehabstod-liquibase-runner-{{ version }}.zip"
+  when: deploy_from_repo|bool
+
+- name: Copy rehabstod-liquibase-runner-{{ version }}.zip
+  copy:
+    src: "{{ playbook_dir }}/../tools/liquibase-runner/build/distributions/rehabstod-liquibase-runner-{{ version }}.zip"
+    dest: "{{ releases_folder }}/rehabstod-liquibase-runner-{{ version }}.zip"
+  when: not deploy_from_repo|bool
+
+- name: Unzip liquibase-runner-{{ version }}.zip
+  unarchive:
+    src: "{{ releases_folder }}/rehabstod-liquibase-runner-{{ version }}.zip"
+    dest: "{{ releases_folder }}"
+    creates: "{{ releases_folder }}/rehabstod-liquibase-runner-{{ version }}/bin/liquibase-runner"
+    remote_src: yes
+
+- name: Run liquibase update
+  command: "{{ releases_folder }}/rehabstod-liquibase-runner-{{ version }}/bin/rehabstod-liquibase-runner --url={{ database_url }} --username={{ database_username }} --password={{ database_password }} update"
+  args:
+      chdir: "{{ releases_folder }}/rehabstod-liquibase-runner-{{ version }}"
+  environment:
+      JAVA_HOME: "{{ java_home }}"
+
 - name: Download rehabstod-web-{{ version }}.war
   get_url:
     url: "https://build-inera.nordicmedtest.se/nexus/repository/{{ repo }}/se/inera/intyg/rehabstod/rehabstod-web/{{ version }}/rehabstod-web-{{ version }}.war"

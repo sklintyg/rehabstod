@@ -4,8 +4,10 @@
 environment_name: "dev"
 config_etc_folder: "{{ config_folder }}/{{ environment_name }}"
 
+deploy_from_repo: false
+
 # Spring profiles
-profiles: test,rhs-security-test,wc-hsa-stub,caching-enabled
+profiles: test,rhs-security-test,wc-hsa-stub,testability-api,caching-enabled
 
 # ActiveMQ
 activemq_broker_url: "vm://localhost:61616?broker.persistent=false"
