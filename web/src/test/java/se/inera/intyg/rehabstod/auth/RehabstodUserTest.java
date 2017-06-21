@@ -57,47 +57,26 @@ public class RehabstodUserTest {
     private static final String ENHET_2_NAME = "En annan enhet";
 
     @Test
-    public void testChangeSelectedUrvalToNull() throws Exception {
+    public void testGetUrvalWithoutRole() throws Exception {
         RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
-        assertTrue(user.changeSelectedUrval(null));
 
+        assertNull(user.getUrval());
     }
 
     @Test
-    public void testChangeSelectedUrvalWithoutRole() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
-        assertFalse(user.changeSelectedUrval(Urval.ALL));
-        assertFalse(user.changeSelectedUrval(Urval.ALL));
-    }
-
-    @Test
-    public void testChangeSelectedUrvalLakare() throws Exception {
+    public void testGetUrvalLakare() throws Exception {
         RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
         user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_LAKARE, new Role()));
-        assertFalse(user.changeSelectedUrval(Urval.ALL));
-        assertTrue(user.changeSelectedUrval(Urval.ISSUED_BY_ME));
+
+        assertEquals(Urval.ISSUED_BY_ME, user.getUrval());
     }
 
     @Test
-    public void testChangeSelectedUrvalRehabKoordinator() throws Exception {
+    public void testGetUrvalRehabKoordinator() throws Exception {
         RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
         user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_KOORDINATOR, new Role()));
-        assertTrue(user.changeSelectedUrval(Urval.ALL));
-        assertFalse(user.changeSelectedUrval(Urval.ISSUED_BY_ME));
-    }
 
-    @Test
-    public void testGetDefaultUrvalRehabKoordinator() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
-        user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_KOORDINATOR, new Role()));
-        assertEquals(Urval.ALL, user.getDefaultUrval());
-    }
-
-    @Test
-    public void testGetDefaultUrvalLakare() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
-        user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_LAKARE, new Role()));
-        assertEquals(Urval.ISSUED_BY_ME, user.getDefaultUrval());
+        assertEquals(Urval.ALL, user.getUrval());
     }
 
     @Test

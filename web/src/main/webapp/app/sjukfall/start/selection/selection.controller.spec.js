@@ -5,9 +5,7 @@ describe('Controller: SjukfallStartSelectionCtrl', function() {
     beforeEach(module('rehabstodApp'));
 
     var scope, state, userModel, userProxy, sjukfallService;
-    var succeed = true;
     var user = {};
-    var error = {};
 
 
     // Initialize the controller and a mock scope
@@ -32,22 +30,8 @@ describe('Controller: SjukfallStartSelectionCtrl', function() {
         spyOn(state, 'go');
         spyOn(userModel, 'set');
 
-        spyOn(userProxy, 'changeUrval').and.callFake(function() {
-            return {
-                then: function(onSuccess, onError) {
-                    if (succeed) {
-                        onSuccess(user);
-                    } else {
-                        onError(error);
-                    }
-                }
-            };
-        });
-
         scope.onSelectUrval(user.urval);
 
-        //expect(userProxy.changeUrval).toHaveBeenCalledWith('ALL');
-        //expect(userModel.set).toHaveBeenCalledWith(user);
         expect(state.go).toHaveBeenCalledWith('app.sjukfall.result');
 
     });

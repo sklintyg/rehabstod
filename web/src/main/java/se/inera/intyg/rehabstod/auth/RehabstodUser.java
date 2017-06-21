@@ -39,7 +39,6 @@ public class RehabstodUser extends IntygUser implements Serializable {
     private static final long serialVersionUID = 8711015219408194075L;
 
     // Handles PDL logging state
-    private Urval urval;
     private Map<String, List<PDLActivityEntry>> storedActivities;
 
     private boolean pdlConsentGiven = false;
@@ -82,24 +81,28 @@ public class RehabstodUser extends IntygUser implements Serializable {
     }
 
     public Urval getUrval() {
-        return urval;
+        // If we dont have a role, we can't decide which urval change is allowed, so..
+        if (roles == null) {
+            return null;
+        }
+
+        // Case 1: Lakare should get ISSUED_BY_ME
+        if (roles.containsKey(AuthoritiesConstants.ROLE_LAKARE)) {
+            return Urval.ISSUED_BY_ME;
+        }
+
+        // Case 2: Koordinator should get ALL
+        if (roles.containsKey(AuthoritiesConstants.ROLE_KOORDINATOR)) {
+            return Urval.ALL;
+        }
+
+       return null;
     }
 
     public Map<String, List<PDLActivityEntry>> getStoredActivities() {
         return storedActivities;
     }
 
-
-    // api
-    public boolean changeSelectedUrval(Urval urval) {
-        if (isValidUrvalChange(urval)) {
-            this.urval = urval;
-            return true;
-        } else {
-            return false;
-        }
-
-    }
 
     public Urval getDefaultUrval() {
         return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE) ? Urval.ISSUED_BY_ME : Urval.ALL;
@@ -113,32 +116,6 @@ public class RehabstodUser extends IntygUser implements Serializable {
 
 
     // private scope
-
-    @SuppressWarnings("all")
-    private boolean isValidUrvalChange(Urval urval) {
-        // Unset is always allowed
-        if (urval == null) {
-            return true;
-        }
-
-        // If we dont have a role, we can't decide which urval change is allowed, so..
-        if (roles == null) {
-            return false;
-        }
-
-        // Case 1: Lakare is only allowed to set ISSUED_BY_ME
-        if (urval == Urval.ISSUED_BY_ME && roles.containsKey(AuthoritiesConstants.ROLE_LAKARE)) {
-            return true;
-        }
-
-        // Case 2: Koordinator is only allowed to set ALL
-        if (urval == Urval.ALL && roles.containsKey(AuthoritiesConstants.ROLE_KOORDINATOR)) {
-            return true;
-        }
-
-        // No other case allowed
-        return false;
-    }
 
     /**
      * If the currently selected vardenhet is not null and is an underenhet/mottagning, this method returns true.

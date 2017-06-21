@@ -19,20 +19,16 @@
 
 angular.module('rehabstodApp')
     .controller('SjukfallResultPageCtrl',
-    function ($scope, $rootScope, $state, SjukfallService, UserModel, UserProxy) {
+    function ($scope, $rootScope, $state, SjukfallService, UserModel) {
         'use strict';
 
         $scope.sjukfallService = SjukfallService;
+        $scope.user = UserModel.get();
 
-        UserProxy.changeUrval(UserModel.isLakare() ? 'ISSUED_BY_ME' : 'ALL').then(function (updatedUserModel) {
-            UserModel.set(updatedUserModel);
-            $scope.user = UserModel.get();
-            $scope.showSpinner = true;
-            SjukfallService.loadSjukfall(true);
-        });
+        loadSjukfall();
 
         var unregisterFn = $rootScope.$on('SelectedUnitChanged', function (/*event, value*/) {
-            SjukfallService.loadSjukfall(true);
+            loadSjukfall();
         });
         //rootscope on event listeners aren't unregistered automatically when 'this' directives
         //scope is destroyed, so let's take care of that.
@@ -45,4 +41,9 @@ angular.module('rehabstodApp')
         $scope.$watch('sjukfallService.isLoading()', function (val) {
             $scope.showSpinner = val;
         });
+
+        function loadSjukfall() {
+            $scope.showSpinner = true;
+            SjukfallService.loadSjukfall(true);
+        }
     });

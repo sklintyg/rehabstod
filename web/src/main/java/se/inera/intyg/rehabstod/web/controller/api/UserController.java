@@ -26,14 +26,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeUrvalRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetUserResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GivePdlLoggingConsentRequest;
 
@@ -81,22 +79,6 @@ public class UserController {
         }
 
         LOG.debug("Selected vardenhet is now '{}'", user.getValdVardenhet().getId());
-
-        return new GetUserResponse(user);
-    }
-
-    @RequestMapping(value = "/urval", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public GetUserResponse changeSelectedUrvalOnUser(@RequestBody ChangeUrvalRequest changeUrvalRequest) {
-
-        RehabstodUser user = getRehabstodUser();
-
-        boolean changeSuccess = user.changeSelectedUrval(changeUrvalRequest.getUrval());
-        if (!changeSuccess) {
-            throw new AuthoritiesException(String.format("User %s was not allowed to change urval to %s",
-                    user.getHsaId(), changeUrvalRequest.getUrval()));
-        }
-
-        LOG.debug(String.format("Selected urval for user %s is now '%s' ", user.getHsaId(), user.getUrval()));
 
         return new GetUserResponse(user);
     }

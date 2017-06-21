@@ -29,10 +29,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeUrvalRequest;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -93,31 +91,6 @@ public class UserControllerTest {
 
         verify(userService).getUser();
         verify(rehabUserMock).changeValdVardenhet(eq(req.getId()));
-
-    }
-
-    @Test
-    public void testChangeUrvalSuccess() {
-        ChangeUrvalRequest req = new ChangeUrvalRequest(Urval.ISSUED_BY_ME);
-        when(rehabUserMock.changeSelectedUrval(eq(req.getUrval()))).thenReturn(true);
-
-        userController.changeSelectedUrvalOnUser(req);
-
-        verify(userService).getUser();
-        verify(rehabUserMock).changeSelectedUrval(eq(req.getUrval()));
-
-    }
-
-    @Test
-    public void testChangeUrvalFails() {
-        ChangeUrvalRequest req = new ChangeUrvalRequest(Urval.ISSUED_BY_ME);
-        when(rehabUserMock.changeSelectedUrval(eq(req.getUrval()))).thenReturn(false);
-
-        thrown.expect(AuthoritiesException.class);
-        userController.changeSelectedUrvalOnUser(req);
-
-        verify(userService).getUser();
-        verify(rehabUserMock).changeSelectedUrval(eq(req.getUrval()));
 
     }
 }

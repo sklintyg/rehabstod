@@ -18,11 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,8 +25,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
+import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
@@ -46,7 +42,14 @@ import se.inera.intyg.rehabstod.web.model.Sortering;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by marced on 24/02/16.
@@ -105,7 +108,9 @@ public class PdfExportServiceImplTest {
 
     @Test
     public void testExportIssuedByMe() throws Exception {
-        user.changeSelectedUrval(Urval.ISSUED_BY_ME);
+        Map<String, Role> roles = new HashMap<>();
+        roles.put(AuthoritiesConstants.ROLE_LAKARE, null);
+        user.setRoles(roles);
         final byte[] export = testee.export(createSjukFallList(), createPrintRequest(), user, 3);
         assertTrue(export.length > 0);
         // Files.write(Paths.get("./test_issued_by_me.pdf"), export);
@@ -113,7 +118,9 @@ public class PdfExportServiceImplTest {
 
     @Test
     public void testExportAll() throws Exception {
-        user.changeSelectedUrval(Urval.ALL);
+        Map<String, Role> roles = new HashMap<>();
+        roles.put(AuthoritiesConstants.ROLE_KOORDINATOR, null);
+        user.setRoles(roles);
         final byte[] export = testee.export(createSjukFallList(), createPrintRequest(), user, 3);
         assertTrue(export.length > 0);
 

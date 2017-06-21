@@ -60,42 +60,6 @@ angular.module('rehabstodApp').factory('UserProxy',
             return promise.promise;
         }
 
-        /*
-         * Get user data for logged in user
-         */
-        function _changeUrval(newUrval) {
-            var promise = $q.defer();
-
-            var restPath = '/api/user/urval';
-            var dto = {
-                urval: newUrval
-            };
-
-            var config =  {
-                errorMessageConfig: {
-                    errorTitleKey: 'server.error.changeurval.title',
-                    errorTextKey: 'server.error.default.text'
-                },
-                timeout: networkConfig.defaultTimeout
-            };
-            $http.post(restPath, dto, config).success(function(data) {
-                $log.debug(restPath + ' - success');
-
-                if (typeof data !== 'undefined') {
-                    promise.resolve(data);
-                } else {
-                    $log.debug('JSON response syntax error. Rejected.');
-                    promise.reject(null);
-                }
-            }).error(function(data, status) {
-                $log.error('error ' + status);
-                // Let calling code handle the error of no data response
-                promise.reject(data);
-            });
-
-            return promise.promise;
-        }
-
         function _givePdlConsent(hsaId) {
             var promise = $q.defer();
 
@@ -133,7 +97,6 @@ angular.module('rehabstodApp').factory('UserProxy',
         // Return public API for the service
         return {
             changeSelectedUnit: _changeSelectedUnit,
-            changeUrval: _changeUrval,
             givePdlConsent: _givePdlConsent
         };
     });
