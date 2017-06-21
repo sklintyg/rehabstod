@@ -19,19 +19,17 @@
 
 angular.module('rehabstodApp')
     .controller('SjukfallResultPageCtrl',
-    function ($scope, $rootScope, $state, SjukfallService, SjukfallSummaryModel, UserModel, UserProxy) {
+    function ($scope, $rootScope, $state, SjukfallService, UserModel, UserProxy) {
         'use strict';
-        if (_proceed()) {
-            UserProxy.changeUrval(UserModel.isLakare() ? 'ISSUED_BY_ME' : 'ALL').then(function (updatedUserModel) {
-                UserModel.set(updatedUserModel);
-                $scope.user = UserModel.get();
-                $scope.showSpinner = true;
-                $scope.sjukfallService = SjukfallService;
-                SjukfallService.loadSjukfall(true);
-            });
 
-        }
+        $scope.sjukfallService = SjukfallService;
 
+        UserProxy.changeUrval(UserModel.isLakare() ? 'ISSUED_BY_ME' : 'ALL').then(function (updatedUserModel) {
+            UserModel.set(updatedUserModel);
+            $scope.user = UserModel.get();
+            $scope.showSpinner = true;
+            SjukfallService.loadSjukfall(true);
+        });
 
         var unregisterFn = $rootScope.$on('SelectedUnitChanged', function (/*event, value*/) {
             SjukfallService.loadSjukfall(true);
@@ -42,26 +40,9 @@ angular.module('rehabstodApp')
 
         $scope.goBack = function () {
             $state.go('app.sjukfall.start');
-            /*UserProxy.changeUrval(null).then(function (updatedUserModel) {
-                UserModel.set(updatedUserModel);
-                
-            }, function () {
-                //Handle errors
-            });*/
         };
 
         $scope.$watch('sjukfallService.isLoading()', function (val) {
             $scope.showSpinner = val;
         });
-
-        function _proceed() {
-            if (SjukfallSummaryModel.get().total === 0) {
-                //No data to show - go to show 'no data for unit' state
-                return false;
-            } else {
-                return true;
-            }
-
-        }
-
     });

@@ -1,5 +1,5 @@
 angular.module('rehabstodApp')
-    .controller('SjukfallStartSelectionCtrl', function($scope, $state, $rootScope, UserModel, UserProxy) {
+    .controller('SjukfallStartSelectionCtrl', function($scope, $state, $rootScope, UserModel) {
         'use strict';
 
         $scope.user = UserModel.get();
@@ -11,17 +11,7 @@ angular.module('rehabstodApp')
         //scope is destroyed, so let's take care of that.
         $scope.$on('$destroy', unregisterFn);
 
-        $scope.onSelectUrval = function(urval) {
-            UserProxy.changeUrval(urval).then(function(updatedUserModel) {
-                UserModel.set(updatedUserModel);
-
-                $state.go('app.sjukfall.result');
-
-               // SjukfallService.loadSjukfall(true);
-
-            }, function() {
-                //Handle errors
-            });
-
+        $scope.onSelectUrval = function() {
+            $state.go('app.sjukfall.result');
         };
     });
