@@ -18,19 +18,18 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.hamcrest.core.IsEqual.equalTo;
-
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import org.junit.Test;
 import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
-import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 
 import java.util.Arrays;
+
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * @author Martin Hesslund on 03/02/16.
@@ -125,13 +124,6 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
 
         given().contentType(ContentType.JSON).and().body(changeRequest).expect().statusCode(SERVER_ERROR).when()
                 .post(USER_API_ENDPOINT + "/andraenhet");
-    }
-
-    @Test
-    public void testAndraUrval() {
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-
-        changeUrvalTo(Urval.ISSUED_BY_ME);
     }
 
 }

@@ -22,7 +22,6 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import org.junit.Test;
-import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
@@ -61,7 +60,6 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
     @Test
     public void testGetSjukfallNotAllowedIfPdlConsentNotGiven() {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE_NO_CONSENT);
-        changeUrvalTo(Urval.ISSUED_BY_ME);
 
         GetSjukfallRequest request = new GetSjukfallRequest();
         request.setMaxIntygsGlapp(0);
@@ -73,7 +71,6 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
     public void testGetSjukfall() {
 
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-        changeUrvalTo(Urval.ISSUED_BY_ME);
 
         GetSjukfallRequest request = new GetSjukfallRequest();
         request.setMaxIntygsGlapp(0);
@@ -87,7 +84,6 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
     public void testGetSjukfallOnEnhetWithUnderenheter() {
 
         RestAssured.sessionId = getAuthSession(EVA_H_LAKARE);
-        changeUrvalTo(Urval.ISSUED_BY_ME);
 
 
         int centrumVastCount = getAntalOnEnhet("centrum-vast");
