@@ -4,15 +4,21 @@
   mysql_db:
     name: "{{ database_name }}"
     state: absent
+    login_user: root
+    login_password: ""
   when: environment_name == "test"
 
 - name: Create mysql database
   mysql_db:
+    login_user: root
+    login_password: ""
     name: "{{ database_name }}"
     state: present
 
 - name: Create mysql user
   mysql_user:
+    login_user: root
+    login_password: ""
     name: "{{ database_username }}"
     password: "{{ database_username }}"
     priv: "*.*:ALL"
