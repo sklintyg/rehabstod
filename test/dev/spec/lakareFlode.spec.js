@@ -32,7 +32,7 @@ describe('Flöde som läkare', function() {
 
     // Logga in
     beforeEach(function() {
-        browser.ignoreSynchronization = false;
+        browser.ignoreSynchronization = true;
         specHelper.login();
     });
 
