@@ -31,7 +31,6 @@ var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 describe('Logga in som Kerstin Johansson', function() {
 
     beforeEach(function() {
-        browser.ignoreSynchronization = false;
         specHelper.login('TSTNMT2321000156-105W_TSTNMT2321000156-105P', 'TSTNMT2321000156-105P');
     });
 

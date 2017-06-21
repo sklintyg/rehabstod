@@ -26,13 +26,11 @@ var specHelper = rhsTestTools.helpers.spec;
 var navigationHelper = rhsTestTools.helpers.navigation;
 var startPage = rhsTestTools.pages.startPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
-var aboutPage = rhsTestTools.pages.aboutPage;
 
 describe('Flöde som läkare', function() {
 
     // Logga in
     beforeEach(function() {
-        browser.ignoreSynchronization = true;
         specHelper.login();
     });
 
