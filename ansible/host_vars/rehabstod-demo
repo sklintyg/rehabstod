@@ -1,2 +1,5 @@
 # Configuration repository
 environment_name: "demo"
+
+database_provisioning_username: intyg
+database_provisioning_password: intyg
