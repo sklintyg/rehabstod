@@ -13,7 +13,7 @@
 
 - name: Download liquibase-runner-{{ version }}.zip
   get_url:
-    url: https://build-inera.nordicmedtest.se/nexus/repository/{{ repo }}/se/inera/rehabstod/rehabstod-liquibase-runner/{{ version }}/rehabstod-liquibase-runner-{{ version }}.zip
+    url: https://build-inera.nordicmedtest.se/nexus/repository/{{ repo }}/se/inera/intyg/rehabstod/rehabstod-liquibase-runner/{{ version }}/rehabstod-liquibase-runner-{{ version }}.zip
     dest: "{{ releases_folder }}/rehabstod-liquibase-runner-{{ version }}.zip"
   when: deploy_from_repo|bool
 
