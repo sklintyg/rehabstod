@@ -35,10 +35,8 @@ function post(options, baseUrl) {
         baseUrl = browser.baseUrl;
     }
     options.url = baseUrl + options.url;
-    console.log(options.method, options.url);
     request(options, function(error, message) {
         if (error || message.statusCode >= 400) {
-            console.log('Request error:', error);
             if(message) {
                 console.log('Error message:', message.statusCode, message.statusMessage/*, body*/);
             }
@@ -47,7 +45,6 @@ function post(options, baseUrl) {
                 message: message
             });
         } else {
-            console.log('Request success!', message.statusCode, message.statusMessage);
             defer.fulfill(message);
         }
     });

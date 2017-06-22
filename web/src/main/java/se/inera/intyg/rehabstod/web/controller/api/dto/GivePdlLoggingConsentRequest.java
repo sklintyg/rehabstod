@@ -5,23 +5,9 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
  */
 public class GivePdlLoggingConsentRequest {
 
-    private String hsaId;
     private boolean consentGiven;
 
     public GivePdlLoggingConsentRequest() {
-    }
-
-    public GivePdlLoggingConsentRequest(String hsaId, boolean consentGiven) {
-        this.hsaId = hsaId;
-        this.consentGiven = consentGiven;
-    }
-
-    public String getHsaId() {
-        return hsaId;
-    }
-
-    public void setHsaId(String hsaId) {
-        this.hsaId = hsaId;
     }
 
     public boolean isConsentGiven() {

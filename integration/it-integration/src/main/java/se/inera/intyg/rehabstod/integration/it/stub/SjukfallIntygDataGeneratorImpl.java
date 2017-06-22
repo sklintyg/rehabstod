@@ -62,6 +62,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     public static final String VE_TSTNMT2321000156_105P = "TSTNMT2321000156-105P";
     public static final String VE_TSTNMT2321000156_105Q = "TSTNMT2321000156-105Q";
     public static final String VE_CENTRUM_VAST = "centrum-vast";
+    public static final String VE_2A = "IFV1239877878-103H";
     public static final String UE_AKUTEN = "akuten";
     public static final String UE_DIALYS = "dialys";
 
@@ -69,6 +70,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
     private Enhet enhet;
     private Enhet enhet2;
+    private Enhet enhet3;
     private Enhet underenhet1;
     private Enhet underenhet2;
     private Enhet kerstinEnhet1;
@@ -76,6 +78,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
     private Vardgivare vg;
     private Vardgivare vg2;
+    private Vardgivare vg3;
 
     private int currentDiagnosIndex = 0;
     private List<String> diagnosList = new ArrayList<>();
@@ -246,6 +249,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private void initEnhet() {
         initFakedVardgivare1();
         initFakedVardgivare2();
+        initFakedVardgivare3();
 
         enhet = new Enhet();
         HsaId hsaId = new HsaId();
@@ -260,6 +264,13 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         enhet2.setEnhetsId(hsaId2);
         enhet2.setEnhetsnamn("Centrum Väst");
         enhet2.setVardgivare(vg2);
+
+        enhet3 = new Enhet();
+        HsaId hsaId2a = new HsaId();
+        hsaId2a.setExtension(VE_2A);
+        enhet3.setEnhetsId(hsaId2a);
+        enhet3.setEnhetsnamn("Vårdenhet 2A");
+        enhet3.setVardgivare(vg3);
 
         underenhet1 = new Enhet();
         HsaId hsaId3 = new HsaId();
@@ -349,6 +360,13 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         kerstinId2.setExtension("TSTNMT2321000156-105W");
         kerstin2.setPersonalId(kerstinId2);
 
+        HosPersonal peterEnkel = new HosPersonal();
+        peterEnkel.setEnhet(enhet3);
+        peterEnkel.setFullstandigtNamn("Peter Enkel");
+        HsaId peterEnkelId = new HsaId();
+        peterEnkelId.setExtension("peter-enkel");
+        peterEnkel.setPersonalId(peterEnkelId);
+
 
         hosPersonList.add(hosPerson1);
         hosPersonList.add(hosPerson2);
@@ -358,6 +376,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hosPersonList.add(hosPerson6);
         hosPersonList.add(kerstin1);
         hosPersonList.add(kerstin2);
+        hosPersonList.add(peterEnkel);
     }
 
     private void initFakedVardgivare1() {
@@ -376,4 +395,11 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         vg2.setVardgivarnamn("Landstinget Västmanland");
     }
 
+    private void initFakedVardgivare3() {
+        vg3 = new Vardgivare();
+        HsaId hsaId3 = new HsaId();
+        hsaId3.setExtension("ifv-testdata");
+        vg3.setVardgivarId(hsaId3);
+        vg3.setVardgivarnamn("IFV Testdata Vårdgivare");
+    }
 }

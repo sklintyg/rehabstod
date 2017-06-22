@@ -51,5 +51,13 @@ module.exports = {
             method: 'GET'
         };
         return restClient.run(options, 'json', env.REHABSTOD_URL);
+    },
+    removeConsent: function() {
+        var options = {
+                url: 'api/user/giveconsent',
+                method: 'POST',
+                body: {"consentGiven": false}
+            };
+        return restClient.run(options, 'json', env.REHABSTOD_URL);
     }
 };

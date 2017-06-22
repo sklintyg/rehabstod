@@ -37,6 +37,7 @@ angular.module('rehabstodApp')
 
             $scope.showPdlConsentDialog = function(msgConfig) {
                 $uibModal.open({
+                    windowClass: 'rhs-pdlconsent-modal',
                     templateUrl: '/app/pdlconsent/pdlconsentdialog.html',
                     controller: 'pdlConsentDialogCtrl',
                     size: 'md',

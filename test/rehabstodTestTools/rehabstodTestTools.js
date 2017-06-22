@@ -24,6 +24,7 @@ var environment = require('./environment.js');
 //var intygTemplates = require('./testdata/intygTemplates.js');
 var pages = require('./pages/pages.js');
 var helpers = require('./helpers/helpers.js'); // The order is important. Helpers requires pages.
+var utils = require('./util/utils.js');
 
 module.exports = {
     envConfig: environment.envConfig,
@@ -31,5 +32,6 @@ module.exports = {
     //utkastTextmap: utkastTextmap,
     //intygTemplates: intygTemplates,
     pages: pages,
-    helpers: helpers
+    helpers: helpers,
+    utils: utils
 };
