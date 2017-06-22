@@ -15,6 +15,8 @@
     name: "{{ database_name }}"
     state: present
 
+# ignore_errors is workaround for condition where we cannot create user due mysql auth check and user was created manually
+# at some point.
 - name: Create mysql user
   mysql_user:
     login_user: "{{ database_provisioning_username }}"
@@ -23,3 +25,4 @@
     password: "{{ database_username }}"
     priv: "*.*:ALL"
     state: present
+  ignore_errors: yes
