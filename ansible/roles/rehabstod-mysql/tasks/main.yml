@@ -26,3 +26,4 @@
     priv: "*.*:ALL"
     state: present
   ignore_errors: yes
+  when: environment_name != "demo"
