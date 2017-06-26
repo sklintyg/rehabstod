@@ -67,7 +67,7 @@ describe('Hantera filtret', function() {
         sjukfallPage.settingsSaveBtn.click();
     });
 
-    it('Öppna och stäng inställningar', function() {
+    xit('Öppna och stäng inställningar', function() {
         sjukfallPage.settingsButton().click();
 
         expect(sjukfallPage.settingsSaveBtn.isPresent()).toBeTruthy();
