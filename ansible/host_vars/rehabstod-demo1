@@ -14,3 +14,6 @@ environment_name: "demo"
 
 # ActiveMQ
 activemq_broker_url: "tcp://localhost:61616?jms.nonBlockingRedelivery=true&amp;jms.redeliveryPolicy.maximumRedeliveries=3&amp;jms.redeliveryPolicy.maximumRedeliveryDelay=6000&amp;jms.redeliveryPolicy.initialRedeliveryDelay=4000&amp;jms.redeliveryPolicy.useExponentialBackOff=true&amp;jms.redeliveryPolicy.backOffMultiplier=2"
+
+database_username: intyg
+database_password: intyg
