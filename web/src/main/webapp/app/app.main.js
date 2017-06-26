@@ -136,13 +136,23 @@ app.run(
                     $state.go('appselectunit', {},  {location: false});
                 } else if ((toState.name === 'app.sjukfall.result') && !UserModel.isPdlConsentGiven()) {
                     event.preventDefault();
-                    $log.debug('PDL logging consent not given - redirecting to give consent page!');
 
-                    var msgConfig = {
-                        bodyTextKey: 'modal.pdlconsent.' + (UserModel.isLakare() ? 'lakare' : 'rehabkoordinator') + '.body'
-                    };
-                    $rootScope.$emit('show.pdl.consent', msgConfig);
-                    $state.reload();
+                    // The if-statement is for the corner case where someone tries to access /app.html#/sjukfall directly
+                    // without having a valid fromState (e.g. using bookmark or similar while already being logged in)
+                    if (fromState['abstract']) {
+                        $state.go('app.sjukfall.start');
+                    } else {
+                        $log.debug('PDL logging consent not given - redirecting to give consent page!');
+
+                        var msgConfig = {
+                            bodyTextKey: 'modal.pdlconsent.' + (UserModel.isLakare() ? 'lakare' : 'rehabkoordinator') + '.body'
+                        };
+                        $rootScope.$emit('show.pdl.consent', msgConfig);
+
+                        // This is a workaround so the "Pågående sjukfall" tab doesn't stay selected if the user was redirected
+                        // to the PDL dialog and then chose to Avbryt.
+                        $state.reload();
+                    }
                 }
                 else if (toState.data && angular.isFunction(toState.data.rule)) {
                     var result = toState.data.rule(fromState, toState, UserModel);
