@@ -55,9 +55,6 @@ public class AnvandarPreferenceRepositoryTest {
     @Autowired
     private AnvandarPreferenceRepository anvandarMetadataRepository;
 
-//    @PersistenceContext
-//    private EntityManager em;
-
     @Test
     public void testFindOne() {
         AnvandarPreference saved = buildAnvandarPreference(HSA_ID, KEY_1, VALUE_1);

@@ -23,7 +23,6 @@
 'use strict';
 
 var specHelper = rhsTestTools.helpers.spec;
-var navigationHelper = rhsTestTools.helpers.navigation;
 var startPage = rhsTestTools.pages.startPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 var pdlConsentPage = rhsTestTools.pages.pdlConsentPage;
@@ -40,10 +39,6 @@ describe('Flöde som läkare utan lämnat medgivande', function() {
     describe('Gå till sjukfall', function() {
         it('Logga in', function() {
             specHelper.login('peter-enkel_'); // Peter Enkel (1 enhet). Skall EJ ha pdlConsentGiven=true
-            // browser.manage().getCookie('JSESSIONID').then(function(cookie) {
-            //     sessionCookie = cookie.value;
-            //     console.error("Got cookie: " + sessionCookie);
-            // });
             restUtil.login({
                 'forNamn': 'Peter',
                 'efterNamn': 'Enkel',

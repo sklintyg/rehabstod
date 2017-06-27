@@ -27,7 +27,6 @@
 module.exports = {
     isAt: function isAt() {
         return element(by.css('.rhs-pdlconsent-modal')).isPresent();
-        //return true;
     },
 
     isMedarbetaruppdragSaknasShowing: function isMedarbetaruppdragSaknasShowing() {
