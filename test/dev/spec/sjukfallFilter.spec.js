@@ -29,11 +29,14 @@ var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
 describe('Hantera filtret', function() {
 
-
-    beforeEach(function() {
+    beforeAll(function() {
         browser.ignoreSynchronization = false;
         specHelper.login();
         startPage.clickMyUnit();
+    });
+
+    beforeEach(function() {
+        startPage.clickSjukfall();
         expect(sjukfallPage.isAt()).toBe(true);
     });
 
@@ -45,6 +48,8 @@ describe('Hantera filtret', function() {
 
         expect(sjukfallPage.resetButton().isPresent()).toBeFalsy();
         expect(sjukfallPage.settingsButton().isPresent()).toBeFalsy();
+
+        sjukfallPage.clickHideFilter();
     });
 
     it('Återställ filtret', function() {
@@ -67,7 +72,7 @@ describe('Hantera filtret', function() {
         sjukfallPage.settingsSaveBtn.click();
     });
 
-    xit('Öppna och stäng inställningar', function() {
+    it('Öppna och stäng inställningar', function() {
         sjukfallPage.settingsButton().click();
 
         expect(sjukfallPage.settingsSaveBtn.isPresent()).toBeTruthy();
@@ -76,9 +81,5 @@ describe('Hantera filtret', function() {
 
         expect(sjukfallPage.settingsSaveBtn.isPresent()).toBeFalsy();
     });
-
-    /*afterEach(function() {
-        specHelper.logout();
-    })*/
 
 });

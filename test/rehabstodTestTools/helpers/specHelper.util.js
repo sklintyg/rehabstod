@@ -36,6 +36,10 @@ module.exports = {
         this.setCookieConsentBannerState('true');
         WelcomePage.login(userOptional || 'TSTNMT2321000156-105R_TSTNMT2321000156-105N');
         this.waitForAngularTestability();
+
+        // To disable animations, Protractor need a get to run addMockModule
+        browser.get('app.html');
+
         if (selectUnitAfterLogin) {
             SelectUnitPage.isAt().then(function() {
                 SelectUnitPage.selectUnit(selectUnitAfterLogin);
