@@ -29,9 +29,7 @@ var pdlConsentPage = rhsTestTools.pages.pdlConsentPage;
 var restUtil = rhsTestTools.utils.restUtil;
 
 describe('Flöde som läkare utan lämnat medgivande', function() {
-
-    var sessionCookie;
-
+    
     beforeEach(function() {
         browser.ignoreSynchronization = false;
     });

@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
@@ -35,15 +36,27 @@ import java.util.Map;
 @RequestMapping("/api/config")
 public class ConfigController {
 
+    private static final String STATISTIK_SJUNET_HOST_URL = "statistik.sjunet.host.url";
+
     @Autowired
     private DiagnosKapitelService diagnosKapitelService;
 
     @Autowired
     private DynamicLinkService dynamicLinkService;
 
+    /**
+     * Note - using Environment injection instead of @Value since the latter has some issues when injected into the
+     * context of this @RestController.
+     */
+    @Autowired
+    private Environment env;
+
     @RequestMapping(value = "")
     public GetConfigResponse getConfig() {
-        return new GetConfigResponse(diagnosKapitelService.getDiagnosKapitelList());
+        if (!env.containsProperty(STATISTIK_SJUNET_HOST_URL)) {
+            throw new IllegalStateException("Missing property '" + STATISTIK_SJUNET_HOST_URL + "'");
+        }
+        return new GetConfigResponse(diagnosKapitelService.getDiagnosKapitelList(), env.getProperty(STATISTIK_SJUNET_HOST_URL));
     }
 
     @RequestMapping(value = "/links", produces = "application/json")

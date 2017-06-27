@@ -27,7 +27,7 @@ angular.module('rhsIndexApp', [
 
 
 angular.module('rhsIndexApp')
-    .controller('IndexController', ['$scope', '$sce','$uibModal', '$http', function($scope, $sce, $uibModal, $http) {
+    .controller('IndexController', ['$scope', '$sce', '$uibModal', '$http', function($scope, $sce, $uibModal, $http) {
         'use strict';
 
         $scope.sjunetAvailable = false;
@@ -52,19 +52,24 @@ angular.module('rhsIndexApp')
         };
 
         function testSjunetConnection() {
-            $http.get('https://statistik.intygstjanster.sjunet.org/api/ping')
-                .then(function() {
-                // Success
-                $scope.sjunetAvailable = true;
-            },
-            function() {
-                // Failure
+            $http.get('/api/config').then(function(config) {
+                $http.get(config.data.statistikTjanstBaseUrl + '/api/ping')
+                    .then(function() {
+                            // Success
+                            $scope.sjunetAvailable = true;
+                        },
+                        function() {
+                            // Failure
+                            $scope.sjunetAvailable = false;
+                        });
+            }, function() {
+                // Could not fetch config from backend, assuming sjunet not available.
                 $scope.sjunetAvailable = false;
             });
+
         }
 
         testSjunetConnection();
-
     }]);
 
 
@@ -82,7 +87,7 @@ angular.module('rhsIndexApp').directive('rhsCookieBanner',
                     $http.get('/api/config/links').then(function(links) {
                         dynamicLinkService.addLinks(links.data);
                     });
-
+                    
                     $scope.isOpen = false;
                     $scope.showDetails = false;
                     $scope.localStorage = $localStorage;
