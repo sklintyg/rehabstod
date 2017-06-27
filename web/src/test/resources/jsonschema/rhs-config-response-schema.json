@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Defines the transport model of a rehabstod config model, e.g returned by /api/config",
+  "properties": {
+    "diagnosKapitelList": {
+      "additionalItems": false,
+      "items": {},
+      "minItems": 0,
+      "type": "array"
+    },
+    "statistikTjanstBaseUrl": {
+      "type": "string"
+    }
+
+  },
+  "required": [
+    "diagnosKapitelList",
+    "statistikTjanstBaseUrl"
+  ],
+  "title": "GetConfigResponse transport model",
+  "type": "object",
+  "additionalProperties": false
+}

@@ -18,4 +18,11 @@ public class ConfigControllerIT extends BaseRestIntegrationTest {
         given().expect().statusCode(OK).when().get(API_ENDPOINT + "/links").then()
                 .body(matchesJsonSchemaInClasspath("jsonschema/rhs-links-schema.json"));
     }
+
+    @Test
+    public void testGetConfigMatchesSchema() {
+        given().expect().statusCode(OK).when().get(API_ENDPOINT + "").then()
+                .body(matchesJsonSchemaInClasspath("jsonschema/rhs-config-response-schema.json"));
+    }
+
 }
