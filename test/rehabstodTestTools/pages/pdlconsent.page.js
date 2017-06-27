@@ -29,10 +29,6 @@ module.exports = {
         return element(by.css('.rhs-pdlconsent-modal')).isPresent();
     },
 
-    isMedarbetaruppdragSaknasShowing: function isMedarbetaruppdragSaknasShowing() {
-        return element(by.id('error-medarbetaruppdrag-saknas')).isPresent();
-    },
-
     isTeknisktFelShowing: function isTeknisktFelShowing() {
         return element(by.id('error-tekniskt-fel')).isPresent();
     },
