@@ -50,21 +50,21 @@ var rhsMessages = {
         // Sjukfall Start
         'label.loading.sjukfallssummary' : 'Hämtar sjukfallsöversikt...',
         // Sjukfall Start Läkare
-        'label.sjukfall.start.lakare.header' : 'Översikt över pågående sjukfall på ',
+        'label.sjukfall.start.lakare.header' : 'Översikt över mina pågående sjukfall på ',
         'label.sjukfall.start.lakare.subheader': 'Mina pågående sjukfall på enheten',
         'label.sjukfall.start.lakare.selectionpanel.header' : 'Vad kan jag se i Rehabstöd?',
-        'label.sjukfall.start.lakare.selectionpanel.body' : 'Som läkare kan du ta del av dina pågående sjukfall på den enhet du är inloggad på.<br><br>' +
-                                                    'Rehabstöd presenterar även statistik över det nuläge som råder för dina pågående sjukfall, det vill säga antalet sjukskrivna, könsfördelning och diagnosfördelning.<br><br>' +
-                                                    'Gå till Pågående sjukfall i menyn eller via länken nedan för att se detaljerad information om dina sjukfall.',
+        'label.sjukfall.start.lakare.selectionpanel.body' : 'Som läkare kan du ta del av de sjukfall där du själv utfärdat det nuvarande intyget.<br><br>' +
+                                                    'När du klickar på "Visa pågående sjukfall" nedan kommer du att få se dina pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid och sjukskrivningsgrad. Om du har tillgång till flera enheter kan du se dina pågående sjukfall för en annan enhet genom att byta enhet i sidhuvudet.<br><br>' +
+                                                    'Informationen som visas loggas enligt Patientdatalagen (PDL).',
         'label.sjukfall.start.lakare.selectionpanel.urval.button' : 'Visa pågående sjukfall',
 
         // Sjukfall Start Rehab
-        'label.sjukfall.start.rehab.header' : 'Översikt över pågående sjukfall på ',
+        'label.sjukfall.start.rehab.header' : 'Översikt över alla pågående sjukfall på ',
         'label.sjukfall.start.rehab.subheader': 'Alla pågående sjukfall på enheten',
         'label.sjukfall.start.rehab.selectionpanel.header' : 'Vad kan jag se i Rehabstöd?',
-        'label.sjukfall.start.rehab.selectionpanel.body' : 'Som rehabkoordinator kan du ta del av alla pågående sjukfall på den enhet du är inloggad på.<br><br>' +
-                                                    'Rehabstöd presenterar även statistik över det nuläge som råder för alla pågående sjukfall, det vill säga antalet sjukskrivna, könsfördelning och diagnosfördelning.<br><br>' +
-                                                    'Gå till Pågående sjukfall i menyn eller via länken nedan för att se detaljerad information om sjukfallen på din enhet.',
+        'label.sjukfall.start.rehab.selectionpanel.body' : 'Som rehabkoordinator kan du ta del av alla pågående sjukfall på enheten.<br><br>' +
+                                                    'När du klickar på "Visa pågående sjukfall" nedan kommer du att få se alla pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad och läkare. Om du har tillgång till flera enheter kan du se pågående sjukfall för en annan enhet genom att byta enhet i sidhuvudet.<br><br>' +
+                                                    'Informationen som visas loggas enligt Patientdatalagen (PDL).',
         'label.sjukfall.start.rehab.selectionpanel.urval.button' : 'Visa pågående sjukfall',
         'label.sjukfall.start.merstatistik.header': 'Var finns mer statistik?',
         'label.sjukfall.start.merstatistik.body': 'Om du vill se mer statistik för din enhet eller på nationell nivå kan du använda Statistiktjänsten.<br><br>När du klickar på länken nedan öppnas Statistiktjänsten i ett nytt fönster.',
@@ -149,10 +149,10 @@ var rhsMessages = {
 
         // Modal
         'modal.pdlconsent.title': 'Samtycke krävs',
-        'modal.pdlconsent.rehabkoordinator.body': '<b>Viktigt!</b><br><br>Väljer du att gå vidare kommer du få se alla pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad och läkare.<br><br>Informationen som kommer visas loggas enligt Patientdatalagen (PDL) (Läs mer under fliken "Om Rehabstöd").<br><br>Genom att klicka i "Jag förstår och godkänner" tar du ställning till att det är nödvändigt för dig att i din yrkesroll få ta del av patienternas uppgifter samt bekräftar din kännedom om den loggning som sker.<br><br>Detta godkännande gäller för alla enheter som du har behörighet till<br><br>Detta godkännande kommer endast krävas en gång.',
-        'modal.pdlconsent.lakare.body': '<b>Viktigt!</b><br><br>Väljer du att gå vidare kommer du få se dina pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid och sjukskrivningsgrad.<br><br>Informationen som kommer visas loggas enligt Patientdatalagen (PDL) (Läs mer under fliken "Om Rehabstöd").<br><br>Genom att klicka i "Jag förstår och godkänner" tar du ställning till att det är nödvändigt för dig att i din yrkesroll få ta del av patienternas uppgifter samt bekräftar din kännedom om den loggning som sker. <br><br>Detta godkännande gäller för alla enheter som du har behörighet till<br><br>Detta godkännande kommer endast krävas en gång.',
+        'modal.pdlconsent.rehabkoordinator.body': '<b>Viktigt!</b><br><br>Väljer du att gå vidare kommer du få se alla pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad och läkare.<br><br>Informationen som kommer visas loggas enligt Patientdatalagen (PDL) (för mer information om loggning gå till "Om Rehabstöd" i menyn).<br><br>Genom att klicka i "Jag förstår och godkänner" tar du ställning till att det är nödvändigt för dig att i din yrkesroll få ta del av patienternas uppgifter samt bekräftar din kännedom om den loggning som sker. Detta godkännande gäller för alla enheter som du har behörighet till.<br><br>Detta godkännande kommer endast krävas en gång.',
+        'modal.pdlconsent.lakare.body': '<b>Viktigt!</b><br><br>Väljer du att gå vidare kommer du få se dina pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid och sjukskrivningsgrad.<br><br>Informationen som kommer visas loggas enligt Patientdatalagen (PDL) (för mer information om loggning gå till "Om Rehabstöd" i menyn).<br><br>Genom att klicka i "Jag förstår och godkänner" tar du ställning till att det är nödvändigt för dig att i din yrkesroll få ta del av patienternas uppgifter samt bekräftar din kännedom om den loggning som sker. Detta godkännande gäller för alla enheter som du har behörighet till. <br><br>Detta godkännande kommer endast krävas en gång.',
         'modal.pdlconsent.userapproval': 'Jag förstår och godkänner.',
-
+                                                                                                                                                                                                                                                                                        
         //Rest 500 exception error messages:
         'server.error.default.title' : 'Ett fel uppstod',
         'server.error.default.text': 'Tyvärr har ett tekniskt problem uppstått i tjänsten. Kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>',

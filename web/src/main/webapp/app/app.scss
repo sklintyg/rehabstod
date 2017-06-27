@@ -91,9 +91,18 @@ body,
   margin: 20px 0 20px 0;
 }
 
+/*
 div[show-spinner=showSpinner]{
   padding-left:15px;
 }
+*/
+.about-content p, .about-content h3  {
+  width: 525px;
+  word-break: keep-all; }
+
+.about-content ol li{
+  width: 485px;
+  word-break: keep-all; }
 
 body {
   padding-bottom: 30px;
@@ -367,6 +376,11 @@ h5.inline-heading {
 // Hide IE10+ clear icon, as it doesn't work well with angular
 input[type=search]::-ms-clear {
   display: none;
+}
+
+.login-page {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 // Component styles are injected through grunt
