@@ -41,10 +41,5 @@ module.exports = {
     goToSjukfall: function(success) {
         startPage.clickSjukfall();
         expect(sjukfallPage.isAt()).toBe(success || true);
-    },
-
-    goBackToStart: function(success) {
-        sjukfallPage.clickGoBack();
-        expect(startPage.isAt()).toBe(success || true);
     }
 };

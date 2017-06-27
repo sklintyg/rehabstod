@@ -90,7 +90,7 @@ describe('Flöde som läkare', function() {
             startPage.clickMyUnit();
             expect(sjukfallPage.isAt()).toBeTruthy();
 
-            navigationHelper.goBackToStart();
+            navigationHelper.goToStart();
         });
 
         it('Gå tillbaka till start och sedan försöka gå in igen utan att göra ett urval', function() {
