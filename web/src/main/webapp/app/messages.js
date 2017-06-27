@@ -66,7 +66,8 @@ var rhsMessages = {
                                                     'Rehabstöd presenterar även statistik över det nuläge som råder för alla pågående sjukfall, det vill säga antalet sjukskrivna, könsfördelning och diagnosfördelning.<br><br>' +
                                                     'Gå till Pågående sjukfall i menyn eller via länken nedan för att se detaljerad information om sjukfallen på din enhet.',
         'label.sjukfall.start.rehab.selectionpanel.urval.button' : 'Visa pågående sjukfall',
-
+        'label.sjukfall.start.merstatistik.header': 'Var finns mer statistik?',
+        'label.sjukfall.start.merstatistik.body': 'Om du vill se mer statistik för din enhet eller på nationell nivå kan du använda Statistiktjänsten.<br><br>När du klickar på länken nedan öppnas Statistiktjänsten i ett nytt fönster.',
 
 
         // Sjukfall Stat
@@ -150,7 +151,7 @@ var rhsMessages = {
         'modal.pdlconsent.title': 'Samtycke krävs',
         'modal.pdlconsent.rehabkoordinator.body': '<b>Viktigt!</b><br><br>Väljer du att gå vidare kommer du få se alla pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad och läkare.<br><br>Informationen som kommer visas loggas enligt Patientdatalagen (PDL) (Läs mer under fliken "Om Rehabstöd").<br><br>Genom att klicka i "Jag förstår och godkänner" tar du ställning till att det är nödvändigt för dig att i din yrkesroll få ta del av patienternas uppgifter samt bekräftar din kännedom om den loggning som sker.<br><br>Detta godkännande gäller för alla enheter som du har behörighet till<br><br>Detta godkännande kommer endast krävas en gång.',
         'modal.pdlconsent.lakare.body': '<b>Viktigt!</b><br><br>Väljer du att gå vidare kommer du få se dina pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid och sjukskrivningsgrad.<br><br>Informationen som kommer visas loggas enligt Patientdatalagen (PDL) (Läs mer under fliken "Om Rehabstöd").<br><br>Genom att klicka i "Jag förstår och godkänner" tar du ställning till att det är nödvändigt för dig att i din yrkesroll få ta del av patienternas uppgifter samt bekräftar din kännedom om den loggning som sker. <br><br>Detta godkännande gäller för alla enheter som du har behörighet till<br><br>Detta godkännande kommer endast krävas en gång.',
-                                                                                                                                                                                                                                                                                        
+        'modal.pdlconsent.userapproval': 'Jag förstår och godkänner.',
 
         //Rest 500 exception error messages:
         'server.error.default.title' : 'Ett fel uppstod',

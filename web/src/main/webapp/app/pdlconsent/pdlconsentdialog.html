@@ -2,8 +2,8 @@
   <div class="alert alert-warning"><p ng-bind-html="msgConfig.body"></p></div>
   <div class="form-inline">
     <label id="rhs-pdlconsent-modal-checkbox-label" class="modal-checkbox unselectable">
-      <input id="rhs-pdlconsent-modal-give-consent-checkbox" type="checkbox" ng-model="approveChecked"> Jag förstår och
-      godkänner.
+      <input id="rhs-pdlconsent-modal-give-consent-checkbox" type="checkbox" ng-model="approveChecked">
+      {{::'modal.pdlconsent.userapproval' | message}}
     </label>
   </div>
 </div>

@@ -95,7 +95,8 @@
 
           </div>
           <div class="col-sm-3 text-right">
-            <a target="_blank" title="Observera att denna länk kräver att du är uppkopplad via Sjunet." href="https://statistik.intygstjanster.sjunet.org/"><img src="/assets/images/statistiktj_logo.svg" width="141" height="26">  <i class="fa fa-arrow-right"></i></a>
+            <a ng-if="sjunetAvailable" target="_blank" title="Observera att denna länk kräver att du är uppkopplad via Sjunet." href="https://statistik.intygstjanster.sjunet.org/"><img src="/assets/images/statistiktj_logo.svg" width="141" height="26">  <i class="fa fa-arrow-right"></i></a>
+            <a ng-if="!sjunetAvailable" target="_blank" title="Observera att du ej har tillgång till sjunet vilket gör att du länkas till den publika delen av statistiktjänsten." href="https://statistik.intygstjanster.se/"><img src="/assets/images/statistiktj_logo.svg" width="141" height="26">  <i class="fa fa-arrow-right"></i></a>
           </div>
         </div>
       </div><!-- end header container -->

@@ -73,8 +73,8 @@ describe('Flöde som läkare utan lämnat medgivande', function() {
             expect(pdlConsentPage.giveConsentBtn().isEnabled()).toBe(true);
         });
 
-        xit('Verifiera att vi kommer till sjukfallssidan vid klick på den nu aktiva knappen.', function() {
-            pdlConsentPage.giveConsentBtn().click();
+        it('Verifiera att vi kommer till sjukfallssidan vid klick på den nu aktiva knappen.', function() {
+            pdlConsentPage.giveConsentBtn().sendKeys(protractor.Key.SPACE);
             expect(pdlConsentPage.isAt()).toBe(false);
             expect(sjukfallPage.isAt()).toBe(true);
         });

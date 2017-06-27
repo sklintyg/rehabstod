@@ -142,7 +142,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
         return false;
     }
 
-    public boolean getPdlConsentGiven() {
+    public boolean isPdlConsentGiven() {
         return pdlConsentGiven;
     }
 

@@ -37,7 +37,7 @@ angular.module('rehabstodApp')
                 $uibModalInstance.close(updatedUserModel);
                 $state.go('app.sjukfall.result');
             }, function() {
-                //Handle errors
+                
             });
         };
 

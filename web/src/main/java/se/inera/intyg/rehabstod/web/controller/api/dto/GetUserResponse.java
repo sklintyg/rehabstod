@@ -65,7 +65,7 @@ public class GetUserResponse {
         this.valdVardenhet = user.getValdVardenhet();
         this.totaltAntalVardenheter = user.getTotaltAntalVardenheter();
         this.urval = user.getUrval();
-        this.pdlConsentGiven = user.getPdlConsentGiven();
+        this.pdlConsentGiven = user.isPdlConsentGiven();
     }
 
     public String getHsaId() {

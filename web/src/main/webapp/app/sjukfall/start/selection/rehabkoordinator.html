@@ -9,19 +9,35 @@
 
 
 <div class="row" id="rhs-start-page-rehab">
-  <div class="col-xs-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">{{::'label.sjukfall.start.rehab.selectionpanel.header' | message}}</h3>
+  <div class="col-xs-6">
+    <div class="">
+      <div class="">
+        <h3>{{::'label.sjukfall.start.rehab.selectionpanel.header' | message}}</h3>
       </div>
-      <div class="panel-body">
+      <div class="">
         <p><span message key="label.sjukfall.start.rehab.selectionpanel.body"></span></p>
 
-        <div class="pull-right">
-          <button data-ng-click="onSelectUrval('ALL')" id="rhs-start-page-all-btn" class="btn btn-primary">
+        <div>
+          <a data-ng-click="onSelectUrval('ALL')" id="rhs-start-page-all-btn">
             {{::'label.sjukfall.start.rehab.selectionpanel.urval.button' | message}}
-          </button>
+          </a>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-6">
+    <div class="">
+      <div class="">
+        <h3>{{::'label.sjukfall.start.merstatistik.header' | message}}</h3>
+      </div>
+      <div class="">
+        <p><span message key="label.sjukfall.start.merstatistik.body"></span></p>
+        <div>
+          <a ng-if="sjunetAvailable" target="_blank" title="Observera att denna länk kräver att du är uppkopplad via Sjunet." href="https://statistik.intygstjanster.sjunet.org/">Gå till statistiktjänsten</a>
+          <a ng-if="!sjunetAvailable" target="_blank" title="Observera att du ej har tillgång till sjunet vilket gör att du länkas till den publika delen av statistiktjänsten." href="https://statistik.intygstjanster.se/">Gå till statistiktjänsten</a>
+        </div>
+
       </div>
     </div>
   </div>

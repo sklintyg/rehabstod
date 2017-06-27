@@ -27,8 +27,10 @@ angular.module('rhsIndexApp', [
 
 
 angular.module('rhsIndexApp')
-    .controller('IndexController', ['$scope', '$sce','$uibModal', function($scope, $sce, $uibModal) {
+    .controller('IndexController', ['$scope', '$sce','$uibModal', '$http', function($scope, $sce, $uibModal, $http) {
         'use strict';
+
+        $scope.sjunetAvailable = false;
 
         $scope.open = function (which) {
 
@@ -48,6 +50,20 @@ angular.module('rhsIndexApp')
         $scope.ok = function () {
             $scope.modalInstance.close();
         };
+
+        function testSjunetConnection() {
+            $http.get('https://statistik.intygstjanster.sjunet.org/api/ping')
+                .then(function() {
+                // Success
+                $scope.sjunetAvailable = true;
+            },
+            function() {
+                // Failure
+                $scope.sjunetAvailable = false;
+            });
+        }
+
+        testSjunetConnection();
 
     }]);
 

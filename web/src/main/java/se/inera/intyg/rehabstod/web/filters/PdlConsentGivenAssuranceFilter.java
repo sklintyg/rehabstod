@@ -68,7 +68,7 @@ public class PdlConsentGivenAssuranceFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         RehabstodUser user = getUser();
-        boolean shouldNotFilterIf = (user != null && user.getPdlConsentGiven()) || isIgnoredUrl(request);
+        boolean shouldNotFilterIf = (user != null && user.isPdlConsentGiven()) || isIgnoredUrl(request);
         LOG.debug("shouldNotFilter " + request.getRequestURI() + " = " + shouldNotFilterIf);
         return shouldNotFilterIf;
     }

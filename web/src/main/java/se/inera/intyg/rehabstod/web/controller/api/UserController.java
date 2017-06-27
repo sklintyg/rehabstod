@@ -100,7 +100,7 @@ public class UserController {
         // Update current user context.
         user.setPdlConsentGiven(pdlLoggingConsentRequest.isConsentGiven());
 
-        LOG.debug(String.format("User %s has now set PDL logging consent to '%s' ", user.getHsaId(), user.getPdlConsentGiven()));
+        LOG.debug(String.format("User %s has now set PDL logging consent to '%s' ", user.getHsaId(), user.isPdlConsentGiven()));
 
         return new GetUserResponse(user);
     }
