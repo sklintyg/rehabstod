@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService.PDL_CONSENT_GIVEN;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +28,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
+import se.inera.intyg.rehabstod.service.feature.RehabstodFeatureServiceImpl;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetUserResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GivePdlLoggingConsentRequest;
-
-import static se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService.PDL_CONSENT_GIVEN;
 
 @RestController
 @RequestMapping("/api/user")
@@ -49,7 +51,8 @@ public class UserController {
     @Autowired
     private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-    // api
+    @Autowired
+    private RehabstodFeatureServiceImpl rehabstodFeatureService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public GetUserResponse getUser() {
@@ -78,6 +81,8 @@ public class UserController {
                     changeSelectedEnhetRequest.getId(), user.getHsaId()));
         }
 
+        user.setFeatures(rehabstodFeatureService.getActiveFeatures(user.getValdVardenhet().getId(), user.getValdVardgivare().getId()));
+
         LOG.debug("Selected vardenhet is now '{}'", user.getValdVardenhet().getId());
 
         return new GetUserResponse(user);
@@ -104,8 +109,6 @@ public class UserController {
 
         return new GetUserResponse(user);
     }
-
-    // private scope
 
     private RehabstodUser getRehabstodUser() {
         RehabstodUser user = userService.getUser();

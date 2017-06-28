@@ -18,12 +18,17 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.core.io.FileSystemResource;
+
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 import se.inera.intyg.infra.cache.metrics.CacheStatisticsService;
 import se.inera.intyg.infra.cache.metrics.CacheStatisticsServiceImpl;
@@ -31,12 +36,13 @@ import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.filters.PdlConsentGivenAssuranceFilter;
 import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
-
 @Configuration
-@PropertySource({ "file:${rehabstod.config.file}", "file:${credentials.file}", "classpath:version.properties"})
+@PropertySource({ "file:${rehabstod.config.file}", "file:${credentials.file}", "classpath:version.properties" })
 @ImportResource({ "classpath:META-INF/cxf/cxf.xml", "classpath:securityContext.xml" })
 public class ApplicationConfig {
+
+    @Value("${rehabstod.features.file}")
+    private String rehabstodFeatureFile;
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
@@ -74,5 +80,12 @@ public class ApplicationConfig {
     @Bean
     public DiagnosFactory diagnosFactory() {
         return new DiagnosFactory();
+    }
+
+    @Bean(name = "featureProperties")
+    public PropertiesFactoryBean featureProperties() {
+        PropertiesFactoryBean bean = new PropertiesFactoryBean();
+        bean.setLocation(new FileSystemResource(rehabstodFeatureFile));
+        return bean;
     }
 }

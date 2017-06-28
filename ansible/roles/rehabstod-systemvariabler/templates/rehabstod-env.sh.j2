@@ -1,6 +1,6 @@
 ENV_CFG="-Dspring.profiles.active={{ profiles }}"
 JVM_CFG="-Xms1024m -Xmx1024m -Dfile.encoding=UTF-8 -Djsse.enableSNIExtension=false"
-REHABSTOD_CFG="-Drehabstod.config.folder={{ config_etc_folder }} -Drehabstod.config.file={{ config_etc_folder }}/rehabstod.properties -Dlogback.configurationFile={{ config_etc_folder }}/rehabstod-logback.xml -Drehabstod.mailresource.file={{ config_etc_folder }}/rehabstod.mailresource.properties"
+REHABSTOD_CFG="-Drehabstod.config.folder={{ config_etc_folder }} -Drehabstod.config.file={{ config_etc_folder }}/rehabstod.properties -Dlogback.configurationFile={{ config_etc_folder }}/rehabstod-logback.xml -Drehabstod.mailresource.file={{ config_etc_folder }}/rehabstod.mailresource.properties -Drehabstod.features.file={{ config_etc_folder }}/features.properties"
 REHABSTOD_RESOURCES="-Drehabstod.resources.folder={{ app_resources_folder }}"
 CREDENTIALS_CFG="-Dcredentials.file={{ config_etc_folder }}/credentials.properties"
 AMQ_CFG="-Dorg.apache.activemq.SERIALIZABLE_PACKAGES=\\\"*\\\""

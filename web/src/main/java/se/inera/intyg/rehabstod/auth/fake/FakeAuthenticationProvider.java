@@ -18,22 +18,26 @@
  */
 package se.inera.intyg.rehabstod.auth.fake;
 
+import java.util.ArrayList;
+
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.AttributeStatement;
 import org.opensaml.saml2.core.NameID;
 import org.opensaml.saml2.core.impl.AssertionBuilder;
 import org.opensaml.saml2.core.impl.AttributeStatementBuilder;
 import org.opensaml.saml2.core.impl.NameIDBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.providers.ExpiringUsernameAuthenticationToken;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
+
+import se.inera.intyg.infra.security.common.model.IntygUser;
+import se.inera.intyg.infra.security.common.service.CommonFeatureService;
 import se.inera.intyg.infra.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.rehabstod.auth.BaseFakeAuthenticationProvider;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-
-import java.util.ArrayList;
 
 /**
  * @author andreaskaltenbach
@@ -41,6 +45,9 @@ import java.util.ArrayList;
 public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
 
     private SAMLUserDetailsService userDetails;
+
+    @Autowired
+    private CommonFeatureService rehabstodFeatureService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -55,12 +62,25 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
 
         // Hack in the forNamn and efterNamn if not present.
         addAbsentAttributesFromFakeCredentials(token, details);
+        updateFeatures(details);
 
         ExpiringUsernameAuthenticationToken result = new ExpiringUsernameAuthenticationToken(null, details, credential,
                 new ArrayList<>());
         result.setDetails(details);
 
         return result;
+    }
+
+    private void updateFeatures(Object details) {
+        if (details instanceof IntygUser) {
+            IntygUser user = (IntygUser) details;
+            if (user.getValdVardenhet() != null) {
+                user.setFeatures(
+                        rehabstodFeatureService.getActiveFeatures(user.getValdVardenhet().getId(), user.getValdVardgivare().getId()));
+            } else {
+                user.setFeatures(rehabstodFeatureService.getActiveFeatures());
+            }
+        }
     }
 
     private void addAbsentAttributesFromFakeCredentials(FakeAuthenticationToken token, Object details) {

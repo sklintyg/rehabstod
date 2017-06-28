@@ -26,6 +26,7 @@ import se.inera.intyg.rehabstod.service.Urval;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Reponse dto for the getUser api.
@@ -51,6 +52,8 @@ public class GetUserResponse {
 
     private boolean pdlConsentGiven = false;
 
+    private Set<String> features;
+
     public GetUserResponse(RehabstodUser user) {
         this.hsaId = user.getHsaId();
         this.namn = user.getNamn();
@@ -66,6 +69,7 @@ public class GetUserResponse {
         this.totaltAntalVardenheter = user.getTotaltAntalVardenheter();
         this.urval = user.getUrval();
         this.pdlConsentGiven = user.isPdlConsentGiven();
+        this.features = user.getFeatures();
     }
 
     public String getHsaId() {
@@ -163,4 +167,13 @@ public class GetUserResponse {
     public void setPdlConsentGiven(boolean pdlConsentGiven) {
         this.pdlConsentGiven = pdlConsentGiven;
     }
+
+    public Set<String> getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(Set<String> features) {
+        this.features = features;
+    }
+
 }

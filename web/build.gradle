@@ -64,6 +64,7 @@ gretty {
     jvmArgs = [
                '-Dspring.profiles.active=dev,rhs-it-stub,caching-enabled',
                '-Drehabstod.config.file=' + projectDir + '/src/main/resources/dev.properties',
+               '-Drehabstod.features.file=' + projectDir + '/src/main/resources/features.properties',
                '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
                '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources',
                '-XX:MaxPermSize=256M'
@@ -74,6 +75,7 @@ gretty {
     //            '-Dspring.profiles.active=dev,rhs-security-test',
     //            '-Drehabstod.config.folder=' + projectDir + '/../../rehabstod-konfiguration/demo',
     //            '-Drehabstod.config.file=' + projectDir + '/../../rehabstod-konfiguration/demo/rehabstod.properties',
+    //            '-Drehabstod.features.file=' + projectDir + '/../../rehabstod-konfiguration/demo/features.properties',
     //            '-Dcredentials.file=' + projectDir + '/../../rehabstod-konfiguration/demo/credentials.properties',
     //            '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources'
     //    ]

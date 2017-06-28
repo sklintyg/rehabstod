@@ -18,6 +18,13 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Collections;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,15 +33,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.service.feature.RehabstodFeatureServiceImpl;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
-
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by marced on 01/02/16.
@@ -51,13 +56,18 @@ public class UserControllerTest {
     @Mock
     UserService userService;
 
+    @Mock
+    RehabstodFeatureServiceImpl featureService;
+
     @InjectMocks
     private UserController userController = new UserController();
 
     @Before
     public void before() {
+        when(featureService.getActiveFeatures(anyString(), anyString())).thenReturn(Collections.emptySet());
         when(userService.getUser()).thenReturn(rehabUserMock);
         when(rehabUserMock.getValdVardenhet()).thenReturn(new Vardenhet("123", "enhet"));
+        when(rehabUserMock.getValdVardgivare()).thenReturn(new Vardenhet("456", "vardgivare"));
     }
 
     @Test

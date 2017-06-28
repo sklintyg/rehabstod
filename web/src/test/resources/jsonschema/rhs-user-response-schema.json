@@ -122,8 +122,13 @@
     },
     "pdlConsentGiven": {
       "type": "boolean"
+    },
+    "features": {
+      "additionalItems": false,
+      "items": {},
+      "minItems": 0,
+      "type": "array"
     }
-
   },
   "required": [
     "hsaId",
@@ -137,7 +142,8 @@
     "valdVardgivare",
     "totaltAntalVardenheter",
     "urval",
-    "pdlConsentGiven"
+    "pdlConsentGiven",
+    "features"
   ],
   "title": "WebCertUser transport model",
   "type": "object",
