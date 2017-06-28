@@ -24,7 +24,7 @@ angular.module('rehabstodApp')
 
                 UserProxy.changeSelectedUnit(enhet.id).then(function(updatedUserModel) {
                     UserModel.set(updatedUserModel);
-                    $state.go('app.sjukfall.result');
+                    $state.go('app.sjukfall.start');
                 }, function() {
                     //Handle errors
                 });

@@ -66,7 +66,7 @@ var rhsMessages = {
                                                     'När du klickar på "Visa pågående sjukfall" nedan kommer du att få se alla pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad och läkare. Om du har tillgång till flera enheter kan du se pågående sjukfall för en annan enhet genom att byta enhet i sidhuvudet.<br><br>' +
                                                     'Informationen som visas loggas enligt Patientdatalagen (PDL).',
         'label.sjukfall.start.rehab.selectionpanel.urval.button' : 'Visa pågående sjukfall',
-        'label.sjukfall.start.merstatistik.header': 'Var finns mer statistik?',
+        'label.sjukfall.start.merstatistik.header': 'Var kan jag hitta mer statistik?',
         'label.sjukfall.start.merstatistik.body': 'Om du vill se mer statistik för din enhet eller på nationell nivå kan du använda Statistiktjänsten.<br><br>När du klickar på länken nedan öppnas Statistiktjänsten i ett nytt fönster.',
 
 
@@ -81,10 +81,10 @@ var rhsMessages = {
 
 
         // Sjukfall Result
-        'label.sjukfall.result.lakare.header': 'Pågående sjukfall på ',
+        'label.sjukfall.result.lakare.header': 'Mina pågående sjukfall på ',
         'label.sjukfall.result.lakare.subheader': 'Mina pågående sjukfall på enheten',
 
-        'label.sjukfall.result.rehab.header': 'Pågående sjukfall på ',
+        'label.sjukfall.result.rehab.header': 'Alla pågående sjukfall på ',
         'label.sjukfall.result.rehab.subheader': 'Alla pågående sjukfall på enheten',
 
         'label.sjukfall.result.back': 'Tillbaka till översiktssidan',

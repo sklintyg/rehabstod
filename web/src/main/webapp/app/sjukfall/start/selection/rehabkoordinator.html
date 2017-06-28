@@ -1,6 +1,6 @@
 <div id="rhs-start-page">
   <div class="result-top">
-    <h1><span message key="label.sjukfall.start.rehab.header" class="page-header"></span>{{user.valdVardenhet.namn}}</h1>
+    <h1 class="page-header"><span message key="label.sjukfall.start.rehab.header"></span>{{user.valdVardenhet.namn}}</h1>
   </div>
 </div>
 
@@ -33,8 +33,8 @@
       <div class="">
         <p><span message key="label.sjukfall.start.merstatistik.body"></span></p>
         <div>
-          <a ng-if="sjunetAvailable" target="_blank" title="Observera att denna länk kräver att du är uppkopplad via Sjunet." href="https://statistik.intygstjanster.sjunet.org/">Gå till statistiktjänsten <img src="/assets/images/statistik-logo-frilagd.png" width="24" height="24"></a>
-          <a ng-if="!sjunetAvailable" target="_blank" title="Observera att du ej har tillgång till sjunet vilket gör att du länkas till den publika delen av statistiktjänsten." href="https://statistik.intygstjanster.se/">Gå till statistiktjänsten <img src="/assets/images/statistik-logo-frilagd.png" width="24" height="24"></a>
+          <a ng-if="sjunetAvailable" target="_blank" title="Observera att denna länk kräver att du är uppkopplad via Sjunet." href="https://statistik.intygstjanster.sjunet.org/">Gå vidare till statistiktjänsten <img src="/assets/images/statistik-logo-frilagd.png" width="24" height="24"></a>
+          <a ng-if="!sjunetAvailable" target="_blank" title="Observera att om du inte har uppkoppling till Sjunet länkas du till den nationella statistiken på Internet." href="https://statistik.intygstjanster.se/">Gå vidare till statistiktjänsten <img src="/assets/images/statistik-logo-frilagd.png" width="24" height="24"></a>
         </div>
 
       </div>
