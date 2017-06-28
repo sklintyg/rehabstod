@@ -71,6 +71,7 @@ rhs-table {
   display: block;
   position: fixed;
   z-index: 1002;
+  top: 66px !important;
 
   @media (max-width: $screen-xs-max) {
     display: none;

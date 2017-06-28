@@ -33,7 +33,7 @@ h1 .rhs-tooltip-headline {
 
 rhs-filter {
   display: block;
-  margin: 20px 0 20px 15px;
+  margin: 20px 0 20px;
 }
 
 .rhs-filter-slider {
@@ -56,4 +56,8 @@ rhs-filter {
   .rhs-filter-langd-to {
     margin-left: 20px;
   }
+}
+
+div[set-class-when-at-top="result-fixed-top"]{
+  padding-left: 0px !important;
 }
