@@ -103,8 +103,6 @@ allprojects {
 
 task tagRelease(type: TagReleaseTask)
 
-task testReport(type: SharedTestReportTask)
-
 // Load environment specific settings, if the -Penv=xxx parameter is given on invocation.
 task loadConfiguration {
     def environment = null
