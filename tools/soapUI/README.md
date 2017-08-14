@@ -54,7 +54,7 @@ Nya demomiljöerna går inte att komma åt intygstjänsten på, ens med VPN igå
 3) Nu har vi en tunnel uppe. Kör:
 
  
-    mvn com.smartbear.soapui:soapui-maven-plugin:5.1.3:test -Psuite-tunnel -DnumberOfPatients=10 -DmaxIntygsGlapp=5
+    mvn com.smartbear.soapui:soapui-maven-plugin:5.1.3:test -Psuite-tunnel -DnumberOfPatients=10 -DmaxIntygsGlapp=5 -DminIntygsLangd=3  -DmaxIntygsLangd=30
 
 #### Properties
 
