@@ -24,3 +24,4 @@ TitleCode { titleCode='203090', groupPrescriptionCode='9400003', role=
 Role { name='LAKARE', desc='Läkare', privileges= []}},
 TitleCode { titleCode='204090', groupPrescriptionCode='9100009', role=
 Role { name='LAKARE', desc='Läkare', privileges= []}}]
+SekretessmarkeringAllowed:[]
