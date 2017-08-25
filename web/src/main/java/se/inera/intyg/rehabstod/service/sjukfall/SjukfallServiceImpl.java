@@ -146,6 +146,11 @@ public class SjukfallServiceImpl implements SjukfallService {
             to.setSigneringsTidpunkt(from.getSigneringsTidpunkt());
             to.setEnkeltIntyg(from.isEnkeltIntyg());
 
+            to.setBiDiagnoser(from.getBidiagnoser());
+            to.setSysselsattning(from.getSysselsattning().stream()
+                    .map(s -> s.getTypAvSysselsattning().getCode())
+                    .collect(Collectors.toList()));
+
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping internal format to SjukfallEngine format", e);
         }
@@ -153,11 +158,11 @@ public class SjukfallServiceImpl implements SjukfallService {
         return to;
     }
 
-    Lakare map(se.inera.intyg.infra.sjukfall.dto.Lakare from) {
+    private Lakare map(se.inera.intyg.infra.sjukfall.dto.Lakare from) {
         return new Lakare(from.getId(), from.getNamn());
     }
 
-    Patient map(se.inera.intyg.infra.sjukfall.dto.Patient from) {
+    private Patient map(se.inera.intyg.infra.sjukfall.dto.Patient from) {
         return new Patient(from.getId(), from.getNamn());
     }
 
@@ -166,12 +171,12 @@ public class SjukfallServiceImpl implements SjukfallService {
         return to;
     }
 
-    IntygParametrar map(GetSjukfallRequest from) {
+    private IntygParametrar map(GetSjukfallRequest from) {
         IntygParametrar to = new IntygParametrar(from.getMaxIntygsGlapp(), from.getAktivtDatum());
         return to;
     }
 
-    Formaga map(se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga from) {
+    private Formaga map(se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga from) {
         Formaga to = new Formaga(from.getStartdatum(), from.getSlutdatum(), from.getNedsattning());
         return to;
     }
