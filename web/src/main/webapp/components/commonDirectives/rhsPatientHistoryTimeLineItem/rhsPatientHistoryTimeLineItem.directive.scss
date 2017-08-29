@@ -1,0 +1,50 @@
+rhs-patient-history-time-line-item {
+
+  $selected-color: #5aa0ae;
+  $unselected-color: #fff;
+  $stroke-color: #4a828f;
+
+  display: block;
+
+
+  svg {
+    overflow: visible;
+    position: absolute;
+    font-weight: bold;
+
+    //50% - radius of the circle
+    left: calc(50% - 26px);
+    circle {
+      position: absolute;
+      top: 0;
+      left: 0;
+      fill: $unselected-color;
+      stroke: $stroke-color;
+      stroke-width: 1px;
+    }
+
+    text {
+      fill: $selected-color;
+    }
+
+    &.selected {
+      circle {
+        fill: $selected-color;
+      }
+      text {
+        fill: $unselected-color;
+      }
+    }
+
+  }
+
+  .vertical-line {
+    width: 2px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    background: $stroke-color;
+  }
+
+}

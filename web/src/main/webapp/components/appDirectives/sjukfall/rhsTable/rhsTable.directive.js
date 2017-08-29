@@ -18,8 +18,8 @@
  */
 
 angular.module('rehabstodApp')
-    .controller('RhsTableCtrl', ['$scope', 'SjukfallFilterViewState', 'SjukfallModel', 'UserModel', 'messageService',
-        function($scope, SjukfallFilterViewState, SjukfallModel, UserModel, messageService) {
+    .controller('RhsTableCtrl', ['$scope', '$uibModal', 'SjukfallFilterViewState', 'SjukfallModel', 'UserModel', 'messageService',
+        function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService) {
             'use strict';
 
             $scope.filter = SjukfallFilterViewState;
@@ -35,6 +35,20 @@ angular.module('rehabstodApp')
                 return '<b>' + diagnos.kod + '</b><br>' + desc;
             };
 
+            $scope.showPatientHistory = function(patientModel) {
+                    $uibModal.open({
+                        windowClass: 'patient-history-dialog',
+                        templateUrl: '/app/sjukfall/patientHistory/patientHistory.dialog.html',
+                        controller: 'patientHistoryController',
+                        size: 'lg',
+                        resolve: {
+                            patient: function() {
+                                return patientModel;
+                            }
+                        }
+                    });
+            };
+
             $scope.showMoreInTable = function() {
                 $scope.limit += 50;
             };
@@ -44,6 +58,7 @@ angular.module('rehabstodApp')
             };
 
             $scope.resetLimit();
+
         }
     ])
     .directive('rhsTable',

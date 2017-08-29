@@ -1,0 +1,39 @@
+<div class="rhs-history-table-container arrow_box" ng-class="{'selected' : historyItem.selected}">
+
+  <h4>{{historyItem.diagnos.kod}} {{historyItem.diagnos.beskrivning}}</h4>
+  <button class="chevron-toggle-button" ng-click="historyItem.expanded = !historyItem.expanded">
+    <i class="glyphicon" ng-class="{'glyphicon-menu-down': !historyItem.expanded, 'glyphicon-menu-up': historyItem.expanded}"></i>
+  </button>
+
+  <table class="table table-striped table-bordered" ng-if="historyItem.expanded">
+    <tr>
+      <th id="header-column-number">#</th>
+      <th id="header-column-diagnose">Diagnos</th>
+      <th id="header-column-extra-diagnoses">Bidiagnoser</th>
+      <th id="header-column-startdate">Startdatum</th>
+      <th id="header-column-enddate">Slutdatum</th>
+      <th id="header-column-length">Längd</th>
+      <th id="header-column-grade">Grad</th>
+      <th id="header-column-doctor">Läkare</th>
+      <th id="header-column-occupation">Sysselsättning</th>
+    </tr>
+
+
+    <tbody>
+    <tr ng-repeat="intyg in historyItem.intyg">
+      <td ng-attr-id="{{index}}-column-number-{{$index}}">{{$index + 1}}</td>
+      <td ng-attr-id="{{index}}-column-diagnose-{{$index}}">{{::intyg.diagnos.kod}} {{::intyg.diagnos.beskrivning}}
+      </td>
+      <td ng-attr-id="{{index}}-column-bidiagnoses-{{$index}}">
+        <div ng-repeat="d in intyg.bidiagnoser">{{d.kod}} {{d.beskrivning}}</div>
+      </td>
+      <td ng-attr-id="{{index}}-column-startdatum-{{$index}}">{{::intyg.start}}</td>
+      <td ng-attr-id="{{index}}-column-slutdatum-{{$index}}">{{::intyg.slut}}</td>
+      <td ng-attr-id="{{index}}-column-langd-{{$index}}">{{::intyg.dagar}}</td>
+      <td ng-attr-id="{{index}}-column-grad-{{$index}}">{{::intyg.aktivGrad}}</td>
+      <td ng-attr-id="{{index}}-column-lakare-{{$index}}">{{::intyg.lakare}}</td>
+      <td ng-attr-id="{{index}}-column-sysselsattning-{{$index}}">{{::intyg.sysselsattning}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -391,6 +391,7 @@ input[type=search]::-ms-clear {
 @import 'error/restErrorDialog.scss';
 @import 'header/header.scss';
 @import 'print.scss';
+@import 'sjukfall/patientHistory/patientHistory.scss';
 @import 'sjukfall/result/result.page.scss';
 @import 'vendor-override.scss';
 @import 'appDirectives/sjukfall/rhsExport/rhsExport.scss';
@@ -402,6 +403,8 @@ input[type=search]::-ms-clear {
 @import 'commonDirectives/rhsChartLegend/rhsChartLegend.directive.scss';
 @import 'commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.scss';
 @import 'commonDirectives/rhsNumericRangeInput/rhsNumericRangeInput.directive.scss';
+@import 'commonDirectives/rhsPatientHistoryTable/rhsPatientHistoryTable.directive.scss';
+@import 'commonDirectives/rhsPatientHistoryTimeLineItem/rhsPatientHistoryTimeLineItem.directive.scss';
 @import 'commonDirectives/rhsPieChart/rhsPieChart.directive.scss';
 @import 'commonDirectives/rhsSlider/rhsSlider.scss';
 @import 'commonDirectives/rhsSpinner/rhsSpinner.scss';

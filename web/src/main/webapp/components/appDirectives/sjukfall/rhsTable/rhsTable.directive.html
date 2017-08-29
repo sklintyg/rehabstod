@@ -10,7 +10,7 @@
       <thead class="hidden" rhs-table-header id="rhs-table-fixed-header" user="user" glapp="filter.get().glapp"></thead>
       <thead rhs-table-header id="rhs-table-normal-header" user="user" glapp="filter.get().glapp"></thead>
       <tbody id="rhs-table-body">
-        <tr ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id" class="rhs-table-row">
+        <tr ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id" class="rhs-table-row" ng-click="showPatientHistory(row.patient)">
           <td class="column-number">{{$index + 1}}</td>
           <td class="column-patient-id">{{::row.patient.id}} (<span class="age">{{::row.patient.alder}} år</span>)</td>
           <td class="column-patient-name">{{::row.patient.namn}}</td>

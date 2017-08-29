@@ -1,0 +1,10 @@
+<div class="vertical-line"></div>
+<svg xmlns="http://www.w3.org/2000/svg" ng-attr-height="{{radius * 2 + 10}}" ng-attr-width="{{radius * 2 + 10}}" ng-class="{'selected' : historyItem.selected}">
+  <circle ng-attr-cx="{{radius+2}}" ng-attr-cy="{{radius+2}}" ng-attr-r="{{radius}}" />
+  <text ng-attr-x="{{radius}}" ng-attr-y="{{radius-10}}" text-anchor="middle"  >
+    {{historyItem.start | date: 'd'}}
+  </text>
+  <text ng-attr-x="{{radius}}" ng-attr-y="{{radius+10}}" text-anchor="middle">
+    {{historyItem.start | date: 'MMM'}}
+  </text>
+</svg>

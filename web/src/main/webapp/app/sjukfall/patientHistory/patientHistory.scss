@@ -1,0 +1,49 @@
+
+.patient-history-dialog {
+
+  .modal-header {
+    border-bottom: 1px solid #000;
+  }
+
+  .modal-dialog {
+    width: 95%;
+  }
+
+  .modal-body {
+    overflow-y: scroll;
+    min-height: 300px;
+
+    //TODO: Better way of handling this?
+    @media (min-height: 400px) {
+      max-height: 360px;
+    }
+    @media (min-height: 600px) {
+      max-height: 560px;
+    }
+    @media (min-height: 800px) {
+      max-height: 760px;
+    }
+    @media (min-height: 1000px) {
+      max-height: 940px;
+    }
+
+    h3 {
+      display: inline-block;
+      padding: 0;
+    }
+
+    //Make all columns equal height
+    .row {
+      display: flex;
+    }
+
+    .year-separator {
+      text-align: center;
+      border-top: 1px #008391 solid;
+      width: 40px;
+      font-weight: bold;
+    }
+
+  }
+
+}

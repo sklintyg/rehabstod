@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <b>{{patient.namn}} {{patient.id}} {{patient.alder}} år {{patient.konShow}}</b>
+</div>
+<div class="modal-body">
+  <div rhs-spinner show-spinner="showSpinner" label="label.patienthistory.Loading">
+
+
+    <div ng-repeat="year in timeline">
+
+      <!-- Year separator -->
+      <div class="row">
+        <div class="col-xs-1"><div class="year-separator center-block">{{year}}</div></div>
+        <div class="col-xs-11">
+          <h3 ng-if="$index == 0">Pågående sjukfall</h3>
+          <h3 ng-if="$index == 1">Tidigare sjukfall</h3>
+        </div>
+      </div>
+
+      <!-- Sjukfall items for this year -->
+      <div ng-repeat="sjukfall in getSjukFallsForYear(year)" class="row">
+
+        <rhs-patient-history-time-line-item history-item="sjukfall" index="$index"
+                                            class="col-xs-1"></rhs-patient-history-time-line-item>
+        <rhs-patient-history-table history-item="sjukfall" index="$index" class="col-xs-11"></rhs-patient-history-table>
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
