@@ -17,82 +17,86 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').controller('patientHistoryController',
-        function($scope, $uibModalInstance, $state, patientHistoryProxy, UserProxy, UserModel, patient) {
-            'use strict';
+angular.module('rehabstodApp').controller('patientHistoryController', function($scope, $uibModalInstance, $state, patientHistoryProxy, patient) {
+    'use strict';
 
-            $scope.patient = patient;
-            $scope.user = UserModel;
-            $scope.showSpinner = true;
+    $scope.patient = patient;
+    $scope.showSpinner = true;
+    //Constant needed in template
+    $scope.radius = 26;
 
-            function getYearFromDate(dateString) {
-                var date = new Date(dateString);
-                return date.getFullYear();
-            }
+    function getYearFromDate(dateString) {
+        var date = new Date(dateString);
+        return date.getFullYear();
+    }
 
-            // The first item is assuemd to be the active one,
-            // and array is assumed to be ordered chronologically in descending order.
-            function buildTimeline(sjukfall) {
-                //Cant do anything without any data
-                if (!angular.isArray(sjukfall) || sjukfall.length < 1) {
-                    return;
-                }
-                var historicalMarked = false;
-                var timeline = [];
-                var previousYear;
-                angular.forEach(sjukfall, function(sjukfall, index) {
-                    var thisYear = getYearFromDate(sjukfall.start);
+    /* Build a custom array based on the supplied sjukfall array
+     decorated with presentation attributes.
 
-                    if (previousYear && ((previousYear - thisYear) > 1)) {
-                        //we have a gap between years: insert empty timeline entry
-                        timeline.push({
-                            year: 0
-                        });
-                    }
-                    var isFirstHistorical = false;
-                    if (!historicalMarked && index > 0) {
-                        historicalMarked = true;
-                        isFirstHistorical = true;
-                    } else {
-                        isFirstHistorical = false;
-                    }
-                    //Add sjukfall for this year.
-                    timeline.push({
-                        year: thisYear !== previousYear ? thisYear : 0,
-                        sjukfall: sjukfall,
-                        isFirstHistorical: isFirstHistorical
-                    });
-                    previousYear = thisYear;
+     The first item is assumed to be the active one,
+     and array is assumed to be ordered chronologically in descending order.
+     */
+    function buildTimeline(sjukfall) {
+        //Can't do anything without any data..
+        if (!angular.isArray(sjukfall) || sjukfall.length < 1) {
+            return;
+        }
+        var historicalMarked = false;
+        var timeline = [];
+        var previousYear;
+        angular.forEach(sjukfall, function(sjukfall, index) {
+            var thisYear = getYearFromDate(sjukfall.start);
+
+            if (previousYear && ((previousYear - thisYear) > 1)) {
+                //we have a gap between years: insert empty timeline entry
+                timeline.push({
+                    year: 0
                 });
-
-                return timeline;
             }
-
-            $scope.onSelectSjukfall = function(timelineItem) {
-                angular.forEach($scope.timeline, function(item) {
-                    item.selected = false;
-                });
-                timelineItem.selected = true;
-                timelineItem.expanded = true;
-            };
-
-            $scope.close = function() {
-                $uibModalInstance.close();
-            };
-
-            //Initialize
-            patientHistoryProxy.get(patient).then(function(sjukfallResponse) {
-                $scope.showSpinner = false;
-                $scope.timeline = buildTimeline(sjukfallResponse);
-
-                //The first (assumed to be active) should be expanded by default
-                if ($scope.timeline.length > 0) {
-                    $scope.timeline[0].expanded = true;
-                    $scope.timeline[0].selected = true;
-
-                }
+            var isFirstHistorical = false;
+            if (!historicalMarked && index > 0) {
+                historicalMarked = true;
+                isFirstHistorical = true;
+            } else {
+                isFirstHistorical = false;
+            }
+            //Add sjukfall for this year.
+            timeline.push({
+                year: thisYear !== previousYear ? thisYear : 0,
+                sjukfall: sjukfall,
+                isFirstHistorical: isFirstHistorical
             });
-            //TODO: maybe use som other form of constant for this?
-            $scope.radius = 26;
-
+            previousYear = thisYear;
         });
+
+        return timeline;
+    }
+
+    $scope.onSelectSjukfall = function(timelineItem) {
+        //Deselect all..
+        angular.forEach($scope.timeline, function(item) {
+            item.selected = false;
+        });
+        //.. and markk the new one as selected (and expand it to)
+        timelineItem.selected = true;
+        timelineItem.expanded = true;
+    };
+
+    $scope.close = function() {
+        $uibModalInstance.close();
+    };
+
+    //Start by requesting data
+    patientHistoryProxy.get(patient).then(function(sjukfallResponse) {
+        $scope.showSpinner = false;
+        $scope.timeline = buildTimeline(sjukfallResponse);
+
+        //The first item (assumed to be the ongoing sjukfall) should be expanded by default
+        if ($scope.timeline.length > 0) {
+            $scope.timeline[0].expanded = true;
+            $scope.timeline[0].selected = true;
+
+        }
+    });
+
+});

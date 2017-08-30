@@ -1,6 +1,6 @@
 <h3 ng-if="historyItem.year !=0">
-  <span ng-if="index == 0">Pågående sjukfall</span>
-  <span ng-if="historyItem.isFirstHistorical">Tidigare sjukfall</span>
+  <span ng-if="index == 0">Pågående sjukfall på {{user.valdVardenhet.namn}}</span>
+  <span ng-if="historyItem.isFirstHistorical">Tidigare sjukfall på {{user.valdVardenhet.namn}}</span>
 </h3>
 <div class="rhs-history-table-container arrow_box" ng-class="{'selected' : historyItem.selected}">
 
@@ -25,18 +25,18 @@
 
     <tbody>
     <tr ng-repeat="intyg in historyItem.sjukfall.intyg">
-      <td ng-attr-id="{{index}}-column-number-{{$index}}">{{$index + 1}}</td>
-      <td ng-attr-id="{{index}}-column-diagnose-{{$index}}">{{::intyg.diagnos.kod}} {{::intyg.diagnos.beskrivning}}
+      <td ng-attr-id="sjukfall-{{index}}-column-number-{{$index}}">{{$index + 1}}</td>
+      <td ng-attr-id="sjukfall-{{index}}-column-diagnose-{{$index}}">{{::intyg.diagnos.kod}} {{::intyg.diagnos.beskrivning}}
       </td>
-      <td ng-attr-id="{{index}}-column-bidiagnoses-{{$index}}">
+      <td ng-attr-id="sjukfall-{{index}}-column-bidiagnoses-{{$index}}">
         <div ng-repeat="d in intyg.bidiagnoser">{{d.kod}} {{d.beskrivning}}</div>
       </td>
-      <td ng-attr-id="{{index}}-column-startdatum-{{$index}}" class="nowrap">{{::intyg.start}}</td>
-      <td ng-attr-id="{{index}}-column-slutdatum-{{$index}}" class="nowrap">{{::intyg.slut}}</td>
-      <td ng-attr-id="{{index}}-column-langd-{{$index}}">{{::intyg.dagar}}</td>
-      <td ng-attr-id="{{index}}-column-grad-{{$index}}">{{::intyg.aktivGrad}}</td>
-      <td ng-attr-id="{{index}}-column-lakare-{{$index}}">{{::intyg.lakare}}</td>
-      <td ng-attr-id="{{index}}-column-sysselsattning-{{$index}}">{{::intyg.sysselsattning}}</td>
+      <td ng-attr-id="sjukfall-{{index}}-column-startdatum-{{$index}}" class="nowrap">{{::intyg.start}}</td>
+      <td ng-attr-id="sjukfall-{{index}}-column-slutdatum-{{$index}}" class="nowrap">{{::intyg.slut}}</td>
+      <td ng-attr-id="sjukfall-{{index}}-column-langd-{{$index}}">{{::intyg.dagar}}</td>
+      <td ng-attr-id="sjukfall-{{index}}-column-grad-{{$index}}">{{::intyg.aktivGrad}}</td>
+      <td ng-attr-id="sjukfall-{{index}}-column-lakare-{{$index}}">{{::intyg.lakare}}</td>
+      <td ng-attr-id="sjukfall-{{index}}-column-sysselsattning-{{$index}}">{{::intyg.sysselsattning}}</td>
     </tr>
     </tbody>
   </table>

@@ -11,12 +11,11 @@
       <!-- special case: gap between years that have sjukfall -->
       <div ng-if="!item.sjukfall" class="row year-gap">
         <div class="col-xs-1">
-
-          <!-- gap line -->
+          <!-- gap dotted line -->
           <svg xmlns="http://www.w3.org/2000/svg" height="30" ng-attr-width="{{radius * 2 + 4}}" class="year-gap">
-            <line ng-attr-x1="{{radius-4}}" y1="0" ng-attr-x2="{{radius+8}}" y2="0" stroke-width="4"/>
+            <line ng-attr-x1="{{radius-4}}" y1="0" ng-attr-x2="{{radius+8}}" y2="0" stroke-width="4" />
             <line ng-attr-x1="{{radius+2}}" y1="0" ng-attr-x2="{{radius+2}}" y2="100%" stroke-width="2"
-                  stroke-dasharray="2, 1"/>
+                  stroke-dasharray="2, 1" />
           </svg>
 
         </div>

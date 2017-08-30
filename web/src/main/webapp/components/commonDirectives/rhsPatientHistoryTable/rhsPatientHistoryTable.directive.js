@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsPatientHistoryTable',
-    [
-        function() {
+    ['UserModel',
+        function(UserModel) {
             'use strict';
 
             return {
@@ -28,6 +28,9 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable',
                     index: '=',
                     onSelect: '&'
                 },
-                templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsPatientHistoryTable.directive.html'
+                templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsPatientHistoryTable.directive.html',
+                link: function($scope) {
+                    $scope.user = UserModel.get();
+                }
             };
         }]);
