@@ -41,6 +41,7 @@ $font-size-h2: 16px;
 $font-size-h3: 16px;
 
 $blue-color: #008391;
+$blue-color-accent: #00A1B0;
 
 $icon-font-path: '../bower_components/bootstrap-sass/assets/fonts/bootstrap/';
 $fa-font-path: '../bower_components/font-awesome/fonts';
@@ -112,6 +113,10 @@ body {
 
 .rhs-body {
   overflow-y: scroll;
+  &.modal-open {
+    overflow: hidden;
+    overflow-y: hidden;
+  }
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {

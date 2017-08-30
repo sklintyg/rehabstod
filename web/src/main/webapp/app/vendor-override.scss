@@ -228,6 +228,10 @@ form {
   background: none;
 }
 
+.table-striped tbody > tr:nth-child(odd)  {
+  background-color: #f9f9f9;
+}
+
 th.center, td.center {
   text-align: center;
 }

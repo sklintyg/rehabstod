@@ -23,12 +23,29 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTimeLineItem', functi
         restrict: 'E',
         scope: {
             historyItem: '=',
-            index: '='
+            index: '=',
+            onSelect: '&'
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTimeLineItem/rhsPatientHistoryTimeLineItem.directive.html',
         link: function($scope) {
 
             $scope.radius = 26;
+            $scope.center = $scope.radius + 2;
+
+            $scope.getCircleY = function() {
+                return $scope.radius + ($scope.showYear() ? 30 : 10);
+            };
+            $scope.getCircleTextY1 = function() {
+                return $scope.getCircleY() - 4;
+            };
+            $scope.getCircleTextY2 = function() {
+                return $scope.getCircleTextY1() + 12;
+            };
+
+            $scope.showYear = function() {
+                return $scope.historyItem.year !== 0;
+            };
+
         }
     };
 });

@@ -33,10 +33,12 @@ rhs-table {
   .rhs-table-row > td {
     padding: 5px;
   }
-  tr.rhs-table-row:hover, .table-striped tbody > tr:nth-child(odd):hover {
-    background-color: #b3e3e7;
+  tr.rhs-table-row:hover, .table-striped tbody > tr.rhs-table-row:nth-child(odd):hover  {
+    background-color: #b3e3e7 !important;
     cursor: pointer;
   }
+
+
 
   .start-date,
   .end-date {

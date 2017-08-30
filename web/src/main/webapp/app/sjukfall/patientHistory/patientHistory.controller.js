@@ -30,35 +30,50 @@ angular.module('rehabstodApp').controller('patientHistoryController',
                 return date.getFullYear();
             }
 
-            //Find the first and last year for all sjukfalls. The first item is assuemd to be the active one,
+            // The first item is assuemd to be the active one,
             // and array is assumed to be ordered chronologically in descending order.
-            function buildTimelineYears(sjukfall) {
+            function buildTimeline(sjukfall) {
                 //Cant do anything without any data
                 if (!angular.isArray(sjukfall) || sjukfall.length < 1) {
                     return;
                 }
+                var historicalMarked = false;
+                var timeline = [];
+                var previousYear;
+                angular.forEach(sjukfall, function(sjukfall, index) {
+                    var thisYear = getYearFromDate(sjukfall.start);
 
-                var newestYear = getYearFromDate(sjukfall[0].start), oldestYear = newestYear;
+                    if (previousYear && ((previousYear - thisYear) > 1)) {
+                        //we have a gap between years: insert empty timeline entry
+                        timeline.push({
+                            year: 0
+                        });
+                    }
+                    var isFirstHistorical = false;
+                    if (!historicalMarked && index > 0) {
+                        historicalMarked = true;
+                        isFirstHistorical = true;
+                    } else {
+                        isFirstHistorical = false;
+                    }
+                    //Add sjukfall for this year.
+                    timeline.push({
+                        year: thisYear !== previousYear ? thisYear : 0,
+                        sjukfall: sjukfall,
+                        isFirstHistorical: isFirstHistorical
+                    });
+                    previousYear = thisYear;
+                });
 
-                //If any historical sjukfalls exists, the oldest one must be the last one
-                if (sjukfall.length > 1) {
-                    oldestYear = getYearFromDate(sjukfall[sjukfall.length - 1].start);
-                }
-                var timelineYears = [];
-                for (var i = newestYear; i >= oldestYear; i--) {
-                    timelineYears.push(i);
-                }
-                return timelineYears;
+                return timeline;
             }
 
-            $scope.getSjukFallsForYear = function(year) {
-                var result = [];
-                angular.forEach($scope.sjukfall, function(sjukfall) {
-                    if (getYearFromDate(sjukfall.start) === year) {
-                        result.push(sjukfall);
-                    }
+            $scope.onSelectSjukfall = function(timelineItem) {
+                angular.forEach($scope.timeline, function(item) {
+                    item.selected = false;
                 });
-                return result;
+                timelineItem.selected = true;
+                timelineItem.expanded = true;
             };
 
             $scope.close = function() {
@@ -66,17 +81,18 @@ angular.module('rehabstodApp').controller('patientHistoryController',
             };
 
             //Initialize
-            patientHistoryProxy.get(patient).then(function(sjukfall) {
+            patientHistoryProxy.get(patient).then(function(sjukfallResponse) {
                 $scope.showSpinner = false;
-                $scope.sjukfall = sjukfall;
-                $scope.timeline = buildTimelineYears(sjukfall);
+                $scope.timeline = buildTimeline(sjukfallResponse);
 
                 //The first (assumed to be active) should be expanded by default
-                if ($scope.sjukfall.length > 0) {
-                    $scope.sjukfall[0].expanded = true;
-                    $scope.sjukfall[0].selected = true;
+                if ($scope.timeline.length > 0) {
+                    $scope.timeline[0].expanded = true;
+                    $scope.timeline[0].selected = true;
 
                 }
             });
+            //TODO: maybe use som other form of constant for this?
+            $scope.radius = 26;
 
         });

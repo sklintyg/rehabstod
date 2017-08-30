@@ -1,6 +1,10 @@
+<h3 ng-if="historyItem.year !=0">
+  <span ng-if="index == 0">Pågående sjukfall</span>
+  <span ng-if="historyItem.isFirstHistorical">Tidigare sjukfall</span>
+</h3>
 <div class="rhs-history-table-container arrow_box" ng-class="{'selected' : historyItem.selected}">
 
-  <h4>{{historyItem.diagnos.kod}} {{historyItem.diagnos.beskrivning}}</h4>
+  <h4 ng-click="onSelect(historyItem)">{{historyItem.sjukfall.diagnos.kod}} {{historyItem.sjukfall.diagnos.beskrivning}}</h4>
   <button class="chevron-toggle-button" ng-click="historyItem.expanded = !historyItem.expanded">
     <i class="glyphicon" ng-class="{'glyphicon-menu-down': !historyItem.expanded, 'glyphicon-menu-up': historyItem.expanded}"></i>
   </button>
@@ -20,15 +24,15 @@
 
 
     <tbody>
-    <tr ng-repeat="intyg in historyItem.intyg">
+    <tr ng-repeat="intyg in historyItem.sjukfall.intyg">
       <td ng-attr-id="{{index}}-column-number-{{$index}}">{{$index + 1}}</td>
       <td ng-attr-id="{{index}}-column-diagnose-{{$index}}">{{::intyg.diagnos.kod}} {{::intyg.diagnos.beskrivning}}
       </td>
       <td ng-attr-id="{{index}}-column-bidiagnoses-{{$index}}">
         <div ng-repeat="d in intyg.bidiagnoser">{{d.kod}} {{d.beskrivning}}</div>
       </td>
-      <td ng-attr-id="{{index}}-column-startdatum-{{$index}}">{{::intyg.start}}</td>
-      <td ng-attr-id="{{index}}-column-slutdatum-{{$index}}">{{::intyg.slut}}</td>
+      <td ng-attr-id="{{index}}-column-startdatum-{{$index}}" class="nowrap">{{::intyg.start}}</td>
+      <td ng-attr-id="{{index}}-column-slutdatum-{{$index}}" class="nowrap">{{::intyg.slut}}</td>
       <td ng-attr-id="{{index}}-column-langd-{{$index}}">{{::intyg.dagar}}</td>
       <td ng-attr-id="{{index}}-column-grad-{{$index}}">{{::intyg.aktivGrad}}</td>
       <td ng-attr-id="{{index}}-column-lakare-{{$index}}">{{::intyg.lakare}}</td>

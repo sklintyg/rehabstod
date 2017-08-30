@@ -1,50 +1,57 @@
 rhs-patient-history-time-line-item {
 
-  $selected-color: #5aa0ae;
-  $unselected-color: #fff;
-  $stroke-color: #4a828f;
-
   display: block;
 
-
+.rhs-history-timeline-container {
+  min-height: 85px;
+}
   svg {
-    overflow: visible;
+    overflow: hidden;
     position: absolute;
     font-weight: bold;
+    cursor: pointer;
+    max-height: 100%;
+    height: 100%;
 
     //50% - radius of the circle
     left: calc(50% - 26px);
-    circle {
-      position: absolute;
-      top: 0;
-      left: 0;
-      fill: $unselected-color;
-      stroke: $stroke-color;
-      stroke-width: 1px;
+
+    //All line should have the same stroke color
+    line {
+      stroke: $blue-color;
     }
 
-    text {
-      fill: $selected-color;
-    }
-
-    &.selected {
+    g.date-circle {
       circle {
-        fill: $selected-color;
+        position: absolute;
+        top: 0;
+        left: 0;
+        fill: #fff;
+        stroke: $blue-color;
+        stroke-width: 2px;
+        &.selected  {
+          fill: $blue-color-accent;
+        }
       }
+
       text {
-        fill: $unselected-color;
+        fill: $blue-color;
+        stroke: none;
+
+        &.selected {
+          fill: #fff;
+        }
+      }
+
+    }
+
+    g.year-label {
+      text {
+        fill: #000;
+        stroke: none;
       }
     }
 
-  }
-
-  .vertical-line {
-    width: 2px;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    background: $stroke-color;
   }
 
 }

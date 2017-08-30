@@ -5,7 +5,6 @@ rhs-patient-history-table {
 
   display: block;
 
-
   //css triangle - adapted from www.cssarrowplease.com
   .arrow_box {
     position: relative;
@@ -45,12 +44,10 @@ rhs-patient-history-table {
 
   }
 
-
-
   .rhs-history-table-container {
-    box-shadow: 0px 1px 4px 1px rgba(0,0,0,0.16);
-    padding: 15px;
-    margin-bottom: 15px;
+    box-shadow: 0 1px 4px 1px rgba(0, 0, 0, 0.16);
+    padding: 15px 15px 10px 15px;
+    margin: 15px 0 0 0;
 
     h4 {
       display: inline-block;
@@ -58,12 +55,20 @@ rhs-patient-history-table {
     }
 
     table {
-      margin-bottom: 0;
+      margin: 15px 0 0 0;
+      padding: 2px;
+      td {
+        vertical-align: top;
+        &.nowrap {
+          white-space: nowrap;
+        }
+
+      }
 
     }
 
     tbody > tr:first-child {
-      background-color: #fff !important;
+      //background-color: #fff !important;
 
       th {
         color: $selected-color;

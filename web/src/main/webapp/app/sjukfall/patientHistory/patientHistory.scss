@@ -3,6 +3,17 @@
 
   .modal-header {
     border-bottom: 1px solid #000;
+    padding-bottom: 0;
+
+    h4 {
+      display: inline;
+    }
+
+    .btn.close-button {
+      background: $blue-color;
+      color: #fff;
+      border-radius: 0;
+    }
   }
 
   .modal-dialog {
@@ -37,12 +48,16 @@
       display: flex;
     }
 
-    .year-separator {
-      text-align: center;
-      border-top: 1px #008391 solid;
-      width: 40px;
-      font-weight: bold;
-    }
+  }
+  svg line {
+    stroke: $blue-color;
+  }
+  svg.year-gap {
+    position: relative;
+    height: 100%;
+
+    //50% - radius of the circle
+    left: calc(50% - 26px);
 
   }
 

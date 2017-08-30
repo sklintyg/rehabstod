@@ -25,7 +25,8 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable',
                 restrict: 'E',
                 scope: {
                     historyItem: '=',
-                    index: '='
+                    index: '=',
+                    onSelect: '&'
                 },
                 templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsPatientHistoryTable.directive.html'
             };

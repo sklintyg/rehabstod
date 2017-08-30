@@ -41,6 +41,7 @@ angular.module('rehabstodApp')
                         templateUrl: '/app/sjukfall/patientHistory/patientHistory.dialog.html',
                         controller: 'patientHistoryController',
                         size: 'lg',
+                        background: 'static',
                         resolve: {
                             patient: function() {
                                 return patientModel;

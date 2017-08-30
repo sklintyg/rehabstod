@@ -1,31 +1,39 @@
 <div class="modal-header">
-  <b>{{patient.namn}} {{patient.id}} {{patient.alder}} år {{patient.konShow}}</b>
+  <h4>{{patient.namn}}&nbsp;&nbsp;&nbsp;{{patient.id}} &nbsp;&nbsp; {{patient.alder}} år {{patient.konShow}}</h4>
+  <button class="btn btn-secondary close-button pull-right" ng-click="close();"><i
+      class="glyphicon glyphicon glyphicon-remove"></i></button>
 </div>
 <div class="modal-body">
-  <div rhs-spinner show-spinner="showSpinner" label="label.patienthistory.Loading">
+  <div rhs-spinner show-spinner="showSpinner" label="label.patienthistory.loading">
 
 
-    <div ng-repeat="year in timeline">
+    <div ng-repeat="item in timeline">
+      <!-- special case: gap between years that have sjukfall -->
+      <div ng-if="!item.sjukfall" class="row year-gap">
+        <div class="col-xs-1">
 
-      <!-- Year separator -->
-      <div class="row">
-        <div class="col-xs-1"><div class="year-separator center-block">{{year}}</div></div>
-        <div class="col-xs-11">
-          <h3 ng-if="$index == 0">Pågående sjukfall</h3>
-          <h3 ng-if="$index == 1">Tidigare sjukfall</h3>
+          <!-- gap line -->
+          <svg xmlns="http://www.w3.org/2000/svg" height="30" ng-attr-width="{{radius * 2 + 4}}" class="year-gap">
+            <line ng-attr-x1="{{radius-4}}" y1="0" ng-attr-x2="{{radius+8}}" y2="0" stroke-width="4"/>
+            <line ng-attr-x1="{{radius+2}}" y1="0" ng-attr-x2="{{radius+2}}" y2="100%" stroke-width="2"
+                  stroke-dasharray="2, 1"/>
+          </svg>
+
         </div>
+        <div class="col-xs-11">&nbsp;</div>
       </div>
 
-      <!-- Sjukfall items for this year -->
-      <div ng-repeat="sjukfall in getSjukFallsForYear(year)" class="row">
+      <div ng-if="item.sjukfall" class="row">
+        <rhs-patient-history-time-line-item history-item="item" index="$index" on-select="onSelectSjukfall(item)"
+                                            class="col-xs-1">
 
-        <rhs-patient-history-time-line-item history-item="sjukfall" index="$index"
-                                            class="col-xs-1"></rhs-patient-history-time-line-item>
-        <rhs-patient-history-table history-item="sjukfall" index="$index" class="col-xs-11"></rhs-patient-history-table>
+        </rhs-patient-history-time-line-item>
+
+        <rhs-patient-history-table history-item="item" index="$index" on-select="onSelectSjukfall(item)"
+                                   class="col-xs-11"></rhs-patient-history-table>
       </div>
-
     </div>
+
   </div>
 
-
-</div>
+</div></div>
