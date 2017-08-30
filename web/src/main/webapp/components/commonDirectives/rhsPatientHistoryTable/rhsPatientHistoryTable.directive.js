@@ -16,21 +16,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('rehabstodApp').directive('rhsPatientHistoryTable',
-    ['UserModel',
-        function(UserModel) {
-            'use strict';
+angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel', function(UserModel) {
+    'use strict';
 
-            return {
-                restrict: 'E',
-                scope: {
-                    historyItem: '=',
-                    index: '=',
-                    onSelect: '&'
-                },
-                templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsPatientHistoryTable.directive.html',
-                link: function($scope) {
-                    $scope.user = UserModel.get();
+    return {
+        restrict: 'E',
+        scope: {
+            historyItem: '=',
+            index: '=',
+            onSelect: '&'
+        },
+        templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsPatientHistoryTable.directive.html',
+        link: function($scope) {
+            $scope.user = UserModel.get();
+
+            //Requirements state that only first/last of grader should be returned
+            $scope.formatGrader = function(gradArr) {
+                switch (gradArr.length) {
+                case 0:
+                    return '';
+                case 1:
+                    return gradArr[0] + '%';
+                default:
+                    return gradArr[0] + '% &#10142; ' + gradArr[gradArr.length - 1] + '%';
                 }
+
             };
-        }]);
+        }
+    };
+} ]);

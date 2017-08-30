@@ -33,8 +33,8 @@
       </td>
       <td ng-attr-id="sjukfall-{{index}}-column-startdatum-{{$index}}" class="nowrap">{{::intyg.start}}</td>
       <td ng-attr-id="sjukfall-{{index}}-column-slutdatum-{{$index}}" class="nowrap">{{::intyg.slut}}</td>
-      <td ng-attr-id="sjukfall-{{index}}-column-langd-{{$index}}">{{::intyg.dagar}}</td>
-      <td ng-attr-id="sjukfall-{{index}}-column-grad-{{$index}}">{{::intyg.aktivGrad}}</td>
+      <td ng-attr-id="sjukfall-{{index}}-column-langd-{{$index}}">{{::intyg.dagar}} dagar</td>
+      <td ng-attr-id="sjukfall-{{index}}-column-grad-{{$index}}" ng-bind-html="::formatGrader(intyg.grader)"></td>
       <td ng-attr-id="sjukfall-{{index}}-column-lakare-{{$index}}">{{::intyg.lakare}}</td>
       <td ng-attr-id="sjukfall-{{index}}-column-sysselsattning-{{$index}}">{{::intyg.sysselsattning}}</td>
     </tr>
