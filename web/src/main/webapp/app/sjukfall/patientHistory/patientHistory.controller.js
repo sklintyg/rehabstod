@@ -39,7 +39,7 @@ angular.module('rehabstodApp').controller('patientHistoryController', function($
     function buildTimeline(sjukfall) {
         //Can't do anything without any data..
         if (!angular.isArray(sjukfall) || sjukfall.length < 1) {
-            return;
+            return [];
         }
         var historicalMarked = false;
         var timeline = [];

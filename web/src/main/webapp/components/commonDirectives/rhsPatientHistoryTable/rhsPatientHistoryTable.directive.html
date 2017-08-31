@@ -1,6 +1,7 @@
-<h3 ng-if="historyItem.year !=0">
+<h3>
   <span ng-if="index == 0">Pågående sjukfall på {{user.valdVardenhet.namn}}</span>
   <span ng-if="historyItem.isFirstHistorical">Tidigare sjukfall på {{user.valdVardenhet.namn}}</span>
+  &nbsp;
 </h3>
 <div class="rhs-history-table-container arrow_box" ng-class="{'selected' : historyItem.selected}">
 

@@ -33,7 +33,7 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTimeLineItem', functi
             $scope.center = $scope.radius + 2;
 
             $scope.getCircleY = function() {
-                return $scope.radius + ($scope.showYear() ? 30 : 10);
+                return $scope.radius + 30;
             };
             $scope.getCircleTextY1 = function() {
                 return $scope.getCircleY() - 4;
