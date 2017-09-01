@@ -29,6 +29,7 @@ import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickle
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitType;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
@@ -52,11 +53,28 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
     private String logicalAddress;
 
     @Override
-    public ListActiveSickLeavesForCareUnitResponseType getSjukfall(String unitHsaId) {
+    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnit(String unitHsaId) {
         ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
+
         HsaId hsaId = new HsaId();
         hsaId.setExtension(unitHsaId);
         params.setEnhetsId(hsaId);
+
+        return service.listActiveSickLeavesForCareUnit(logicalAddress, params);
+    }
+
+    @Override
+    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForPatient(String patientId, String unitHsaId) {
+        ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
+
+        PersonId pId = new PersonId();
+        pId.setExtension(patientId);
+        params.setPersonId(pId);
+
+        HsaId hsaId = new HsaId();
+        hsaId.setExtension(unitHsaId);
+        params.setEnhetsId(hsaId);
+
         return service.listActiveSickLeavesForCareUnit(logicalAddress, params);
     }
 

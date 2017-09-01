@@ -21,20 +21,19 @@ package se.inera.intyg.rehabstod.integration.it.service;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.integration.it.exception.IntygstjanstIntegrationException;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
+
+import java.util.List;
 
 /**
  * Simple test.
@@ -44,6 +43,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
 @RunWith(MockitoJUnitRunner.class)
 public class IntygstjanstIntegrationServiceTest {
 
+    private static final String PATIENT_ID = "191212121212";
     private static final String HSA_ID = "123";
     private static final String HSA_ID_UNKNOWN = "456";
 
@@ -55,20 +55,27 @@ public class IntygstjanstIntegrationServiceTest {
 
     @Test
     public void testGetIntygsDataForCareUnit() throws Exception {
-        when(intygstjanstClientService.getSjukfall(HSA_ID)).thenReturn(buildResponse());
+        when(intygstjanstClientService.getSjukfallForUnit(HSA_ID)).thenReturn(buildResponse());
         List<IntygsData> intygsDataForCareUnit = testee.getIntygsDataForCareUnit(HSA_ID);
         assertEquals(1, intygsDataForCareUnit.size());
     }
 
+    @Test
+    public void testGetIntygsDataForPatient() throws Exception {
+        when(intygstjanstClientService.getSjukfallForPatient(PATIENT_ID, HSA_ID)).thenReturn(buildResponse());
+        List<IntygsData> intygsDataForPatient = testee.getIntygsDataForPatient(PATIENT_ID, HSA_ID);
+        assertEquals(1, intygsDataForPatient.size());
+    }
+
     @Test(expected = IntygstjanstIntegrationException.class)
     public void testGetIntygsDataForCareUnitThrowsExceptionOnError() throws Exception {
-        when(intygstjanstClientService.getSjukfall(HSA_ID_UNKNOWN)).thenReturn(buildErrorResponse());
+        when(intygstjanstClientService.getSjukfallForUnit(HSA_ID_UNKNOWN)).thenReturn(buildErrorResponse());
         testee.getIntygsDataForCareUnit(HSA_ID_UNKNOWN);
     }
 
     @Test(expected = IntygstjanstIntegrationException.class)
     public void testGetIntygsDataForCareUnitThrowsExceptionWhenErrorCodeMissing() throws Exception {
-        when(intygstjanstClientService.getSjukfall(HSA_ID_UNKNOWN)).thenReturn(new ListActiveSickLeavesForCareUnitResponseType());
+        when(intygstjanstClientService.getSjukfallForUnit(HSA_ID_UNKNOWN)).thenReturn(new ListActiveSickLeavesForCareUnitResponseType());
         testee.getIntygsDataForCareUnit(HSA_ID_UNKNOWN);
     }
 

@@ -36,6 +36,7 @@ public class Diagnos {
         // “JsonMappingException: No suitable constructor found” will be thrown
         // in absence of a default constructor
     }
+
     public Diagnos(String intygsVarde, String kod, String namn) {
         this.intygsVarde = intygsVarde;
         this.kod = kod;

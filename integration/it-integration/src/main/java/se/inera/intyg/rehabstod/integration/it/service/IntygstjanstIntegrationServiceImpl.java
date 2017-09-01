@@ -20,18 +20,17 @@ package se.inera.intyg.rehabstod.integration.it.service;
 
 // CHECKSTYLE:OFF LineLength
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.integration.it.exception.IntygstjanstIntegrationException;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+
+import java.util.List;
 
 // CHECKSTYLE:ON LineLength
 
@@ -48,14 +47,23 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
 
     @Override
     public List<IntygsData> getIntygsDataForCareUnit(String hsaId) {
-        ListActiveSickLeavesForCareUnitResponseType responseType = intygstjanstClientService.getSjukfall(hsaId);
-        if (responseType.getResultCode() == ResultCodeEnum.OK) {
+        String errorMessage = "An error occured fetching sick leave certificates for healthcare unit. Error type: {}. Error msg: {}";
+        return getIntygsData(intygstjanstClientService.getSjukfallForUnit(hsaId), errorMessage);
+    }
+
+    @Override
+    public List<IntygsData> getIntygsDataForPatient(String patientId, String hsaId) {
+        String errorMessage = "An error occured fetching sick leave certificates for patient. Error type: {}. Error msg: {}";
+        return getIntygsData(intygstjanstClientService.getSjukfallForPatient(patientId, hsaId), errorMessage);
+    }
+
+    private List<IntygsData> getIntygsData(ListActiveSickLeavesForCareUnitResponseType responseType, String errorMessage) {
+        if (responseType != null && responseType.getResultCode() == ResultCodeEnum.OK) {
             return responseType.getIntygsLista().getIntygsData();
         } else {
-            LOG.error("An error occured fetching sick leave certificates. Error type: {}. Error msg: {}",
-                    responseType.getResultCode(), responseType.getComment());
+            LOG.error(errorMessage, responseType.getResultCode(), responseType.getComment());
             throw new IntygstjanstIntegrationException();
         }
-
     }
+
 }

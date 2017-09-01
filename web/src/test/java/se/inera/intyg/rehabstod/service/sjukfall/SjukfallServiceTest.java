@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,7 +37,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
-import se.inera.intyg.infra.sjukfall.dto.Sjukfall;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallPatient;
 import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationServiceImpl;
@@ -50,14 +59,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-24.
@@ -100,7 +101,9 @@ public class SjukfallServiceTest {
     @Before
     public void init() throws IOException {
         when(integrationService.getIntygsDataForCareUnit(anyString())).thenReturn(new ArrayList<IntygsData>());
-        when(sjukfallEngine.beraknaSjukfall(anyListOf(IntygData.class), any(IntygParametrar.class))).thenReturn(createSjukfallList());
+        when(integrationService.getIntygsDataForPatient(anyString(), anyString())).thenReturn(new ArrayList<IntygsData>());
+        when(sjukfallEngine.beraknaSjukfallForEnhet(anyListOf(IntygData.class), any(IntygParametrar.class))).thenReturn(createSjukfallEnhetList());
+        when(sjukfallEngine.beraknaSjukfallForPatient(anyListOf(IntygData.class), any(IntygParametrar.class))).thenReturn(createSjukfallPatientList());
         when(statisticsCalculator.getSjukfallSummary(anyListOf(InternalSjukfall.class))).thenReturn(new SjukfallSummary(0, Collections.emptyList(), new ArrayList<>(), new ArrayList<>()));
     }
 
@@ -150,17 +153,14 @@ public class SjukfallServiceTest {
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
         verify(statisticsCalculator).getSjukfallSummary(anyListOf(InternalSjukfall.class));
-
     }
 
     @Test
     public void testGetSjukfallSummaryWhenSelectedVardenhetIsMottagning() {
-
         testee.getSummary(enhetsId, mottagningsId, lakareId1, Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
         verify(statisticsCalculator).getSjukfallSummary(anyListOf(InternalSjukfall.class));
-
     }
 
     // - - - Private scope - - -
@@ -172,30 +172,34 @@ public class SjukfallServiceTest {
         return request;
     }
 
-    private List<Sjukfall> createSjukfallList() {
-        List<Sjukfall> sjukfallList = new ArrayList<>();
+    private List<SjukfallEnhet> createSjukfallEnhetList() {
+        List<SjukfallEnhet> sjukfallList = new ArrayList<>();
 
-        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
-        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
-        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
-        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
-        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
-        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
-        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
-        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
-        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
-        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
-        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
-        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
-        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
-        sjukfallList.add(createSjukfall(lakareId1, lakareNamn1, enhetsId));
-        sjukfallList.add(createSjukfall(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId1, lakareNamn1, enhetsId));
+        sjukfallList.add(createSjukfallEnhet(lakareId2, lakareNamn2, mottagningsId));
 
         return sjukfallList;
     }
 
-    private Sjukfall createSjukfall(String lakareId, String lakareNamn, String enhetsId) {
-        Sjukfall sjukfall = new Sjukfall();
+    private List<SjukfallPatient> createSjukfallPatientList() {
+        return new ArrayList<>();
+    }
+
+    private SjukfallEnhet createSjukfallEnhet(String lakareId, String lakareNamn, String enhetsId) {
+        SjukfallEnhet sjukfall = new SjukfallEnhet();
 
         Vardenhet vardenhet = new Vardenhet(enhetsId, "enhet-" + enhetsId);
         sjukfall.setVardenhet(vardenhet);
@@ -238,7 +242,7 @@ public class SjukfallServiceTest {
         }
 
         @Override
-        InternalSjukfall map(Sjukfall from) {
+        InternalSjukfall map(SjukfallEnhet from) {
             se.inera.intyg.infra.sjukfall.dto.Vardgivare vardgivare =
                     new se.inera.intyg.infra.sjukfall.dto.Vardgivare(vardgivareId, vardgivareNamn);
 

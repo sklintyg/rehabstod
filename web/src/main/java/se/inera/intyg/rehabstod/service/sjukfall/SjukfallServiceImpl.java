@@ -25,7 +25,8 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.sjukfall.dto.Formaga;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
-import se.inera.intyg.infra.sjukfall.dto.Sjukfall;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallPatient;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
@@ -41,6 +42,7 @@ import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,10 +74,13 @@ public class SjukfallServiceImpl implements SjukfallService {
     private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
     @Override
-    public List<InternalSjukfall> getSjukfall(String enhetsId, String mottagningsId,
-                                              String hsaId, Urval urval, GetSjukfallRequest request) {
-        List<InternalSjukfall> internalSjukfallList = getFilteredSjukfallList(enhetsId, mottagningsId, hsaId, urval, request);
+    public List<InternalSjukfall> getSjukfall(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request) {
+        return getByUnit(enhetsId, mottagningsId, hsaId, urval, request);
+    }
 
+    @Override
+    public List<InternalSjukfall> getByUnit(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request) {
+        List<InternalSjukfall> internalSjukfallList = getFilteredSjukfallByEnhet(enhetsId, mottagningsId, hsaId, urval, request);
         if (internalSjukfallList != null) {
             monitoringLogService.logUserViewedSjukfall(hsaId, internalSjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
         }
@@ -87,8 +92,18 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     @Override
+    public List<InternalSjukfall> getByPatient(String patientId, String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request) {
+        List<InternalSjukfall> internalSjukfallList = getFilteredSjukfallByPatient(patientId, enhetsId, mottagningsId, hsaId, urval, request);
+        if (internalSjukfallList != null) {
+            monitoringLogService.logUserViewedSjukfall(hsaId, internalSjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
+        }
+
+        return internalSjukfallList;
+    }
+
+    @Override
     public SjukfallSummary getSummary(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request) {
-        return statisticsCalculator.getSjukfallSummary(getFilteredSjukfallList(enhetsId, mottagningsId, hsaId, urval, request));
+        return statisticsCalculator.getSjukfallSummary(getFilteredSjukfallByEnhet(enhetsId, mottagningsId, hsaId, urval, request));
     }
 
 
@@ -97,7 +112,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     /**
      * Mapping from Sjukfall Engine format to Rehabstod internal format.
      */
-    InternalSjukfall map(Sjukfall from) {
+    InternalSjukfall map(SjukfallEnhet from) {
         InternalSjukfall  to = new InternalSjukfall();
 
         try {
@@ -108,12 +123,14 @@ public class SjukfallServiceImpl implements SjukfallService {
             to.setLakare(map(from.getLakare()));
             to.setPatient(map(from.getPatient()));
             to.setDiagnos(map(from.getDiagnosKod()));
+            to.setBiDiagnoser(map(from.getBiDiagnoser()));
             to.setStart(from.getStart());
             to.setSlut(from.getSlut());
             to.setDagar(from.getDagar());
             to.setIntyg(from.getIntyg());
             to.setAktivGrad(from.getAktivGrad());
             to.setGrader(from.getGrader());
+
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
         }
@@ -167,18 +184,25 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     Diagnos map(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {
-        Diagnos to = diagnosFactory.getDiagnos(from.getOriginalCode(), from.getCleanedCode(), from.getName());
-        return to;
+        return diagnosFactory.getDiagnos(from.getOriginalCode(), from.getCleanedCode(), from.getName());
+    }
+
+    List<Diagnos> map(List<se.inera.intyg.infra.sjukfall.dto.DiagnosKod> from) {
+        if (from == null) {
+            return new ArrayList<>();
+        }
+
+        return from.stream()
+            .map(diagnosKod -> map(diagnosKod))
+            .collect(Collectors.toList());
     }
 
     private IntygParametrar map(GetSjukfallRequest from) {
-        IntygParametrar to = new IntygParametrar(from.getMaxIntygsGlapp(), from.getAktivtDatum());
-        return to;
+        return new IntygParametrar(from.getMaxIntygsGlapp(), from.getAktivtDatum());
     }
 
     private Formaga map(se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga from) {
-        Formaga to = new Formaga(from.getStartdatum(), from.getSlutdatum(), from.getNedsattning());
-        return to;
+        return new Formaga(from.getStartdatum(), from.getSlutdatum(), from.getNedsattning());
     }
 
 
@@ -195,8 +219,8 @@ public class SjukfallServiceImpl implements SjukfallService {
         return mottagningsId != null ? mottagningsId : enhetsId;
     }
 
-    private List<InternalSjukfall> getFilteredSjukfallList(String enhetsId, String mottagningsId,
-                                                           String hsaId, Urval urval, GetSjukfallRequest request) {
+    private List<InternalSjukfall> getFilteredSjukfallByEnhet(String enhetsId, String mottagningsId,
+                                                              String hsaId, Urval urval, GetSjukfallRequest request) {
 
         if (urval == null) {
             throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");
@@ -205,11 +229,11 @@ public class SjukfallServiceImpl implements SjukfallService {
         LOG.debug("Calling Intygstjänsten - fetching certificate information.");
         List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
 
-        LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall'.");
+        LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall' by unit.");
         List<IntygData> data = intygsData.stream().map(o -> map(o)).collect(Collectors.toList());
         IntygParametrar parametrar = map(request);
 
-        List<Sjukfall> sjukfallList = sjukfallEngine.beraknaSjukfall(data, parametrar);
+        List<SjukfallEnhet> sjukfallList = sjukfallEngine.beraknaSjukfallForEnhet(data, parametrar);
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
         List<InternalSjukfall> internalSjukfallList = sjukfallList.stream().map(o -> map(o)).collect(Collectors.toList());
@@ -229,6 +253,26 @@ public class SjukfallServiceImpl implements SjukfallService {
         }
 
         return internalSjukfallList;
+    }
+
+    private List<InternalSjukfall> getFilteredSjukfallByPatient(String patientId, String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request) {
+        if (urval == null) {
+            throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");
+        }
+
+        LOG.debug("Calling Intygstjänsten - fetching certificate information by patient.");
+        List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForPatient(patientId, enhetsId);
+
+        LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall' by patient.");
+        List<IntygData> data = intygsData.stream().map(o -> map(o)).collect(Collectors.toList());
+        IntygParametrar parametrar = map(request);
+
+        List<SjukfallPatient> sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parametrar);
+
+        LOG.debug("Mapping response from calculation engine to internal objects.");
+        //List<InternalSjukfall> internalSjukfallList = sjukfallList.stream().map(o -> map(o)).collect(Collectors.toList());
+        //return internalSjukfallList;
+        return new ArrayList<>();
     }
 
 }

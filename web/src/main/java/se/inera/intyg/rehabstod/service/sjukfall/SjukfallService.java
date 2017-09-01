@@ -31,6 +31,11 @@ import java.util.List;
 public interface SjukfallService {
 
     /**
+     * @see  List<InternalSjukfall> se.inera.intyg.rehabstod.service.sjukfall.SjukfallService.getByUnit
+     */
+    List<InternalSjukfall> getSjukfall(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request);
+
+    /**
      * The 'enhetsId' is _always_ the ID of the Vardenhet we want to query IT with regardless of whether the currently
      * selected RehabstodUser#valdVardenhet is a Vardenhet or a Mottagning. 'mottagningsId' is always null if the selected
      * RehabstodUser#valdVardenhet is a Vardenhet.
@@ -39,7 +44,9 @@ public interface SjukfallService {
      * specified, we'll perform filtering on our side so only Sjukfall originating from the specified mottagningsId are
      * included in the response.
      */
-    List<InternalSjukfall> getSjukfall(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request);
+    List<InternalSjukfall> getByUnit(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request);
+
+    List<InternalSjukfall> getByPatient(String patientId, String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request);
 
     SjukfallSummary getSummary(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request);
 

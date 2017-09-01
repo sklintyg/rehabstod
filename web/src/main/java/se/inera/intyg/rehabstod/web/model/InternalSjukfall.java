@@ -35,6 +35,7 @@ public class InternalSjukfall {
     private Patient patient;
 
     private Diagnos diagnos;
+    private List<Diagnos> biDiagnoser;
 
     private LocalDate start;
     private LocalDate slut;
@@ -102,6 +103,14 @@ public class InternalSjukfall {
 
     public void setDiagnos(Diagnos diagnos) {
         this.diagnos = diagnos;
+    }
+
+    public List<Diagnos> getBiDiagnoser() {
+        return biDiagnoser;
+    }
+
+    public void setBiDiagnoser(List<Diagnos> biDiagnoser) {
+        this.biDiagnoser = biDiagnoser;
     }
 
     public LocalDate getStart() {
