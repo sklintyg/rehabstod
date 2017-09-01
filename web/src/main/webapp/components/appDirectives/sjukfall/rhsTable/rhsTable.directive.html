@@ -21,8 +21,11 @@
             <span class="column-diagnos-beskrivning">{{::row.diagnos.beskrivning}}</span>
           </td>
           <td class="column-bidiagnoser">
-            <!--todo: how to present bidiagnoser & tooltips? -->
-            <span>{{::row.bidiagnoser | rhsIfEmpty: '-'}}</span>
+            <span ng-repeat="d in row.biDiagnoser track by $index">
+              <span ng-if="$index > 0"> ,</span>
+              <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::d.intygsVarde}}</span>
+            </span>
+            <span ng-if="row.biDiagnoser.length < 1">-</span>
           </td>
           <td class="column-start start-date">{{::row.start}}</td>
           <td class="column-slut end-date">{{::row.slut}}</td>
