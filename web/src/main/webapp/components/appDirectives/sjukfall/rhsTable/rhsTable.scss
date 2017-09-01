@@ -38,22 +38,20 @@ rhs-table {
     cursor: pointer;
   }
 
-
+  .column-diagnos {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-width: 80px;
+    max-width: 200px;
+    overflow: hidden;
+  }
 
   .start-date,
   .end-date {
     white-space: nowrap;
   }
 
-  .age {
-    white-space: nowrap;
-  }
-
-  .dagar {
-    padding-right: 5px;
-  }
-
-  .rhs-table-tooltip {
+ .rhs-table-tooltip {
     border-bottom: 1px dotted;
     cursor: help;
   }

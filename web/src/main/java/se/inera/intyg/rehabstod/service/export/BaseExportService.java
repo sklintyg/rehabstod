@@ -51,18 +51,19 @@ public abstract class BaseExportService {
 
     protected static final String TABLEHEADER_NR = "#";
     protected static final String TABLEHEADER_PERSONNUMMER = "Personnummer";
+    protected static final String TABLEHEADER_ALDER = "Ålder";
     protected static final String TABLEHEADER_NAMN = "Namn";
     protected static final String TABLEHEADER_KON = "Kön";
     protected static final String TABLEHEADER_NUVARANDE_DIAGNOS = "Diagnos";
+    protected static final String TABLEHEADER_BIDIAGNOSER = "Bidiagnoser";
     protected static final String TABLEHEADER_STARTDATUM = "Startdatum";
     protected static final String TABLEHEADER_SLUTDATUM = "Slutdatum";
     protected static final String TABLEHEADER_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
+    protected static final String TABLEHEADER_ANTAL = "Antal";
     protected static final String TABLEHEADER_SJUKSKRIVNINGSGRAD = "Sjukskrivningsgrad";
     protected static final String TABLEHEADER_NUVARANDE_LAKARE = "Läkare";
 
-    protected static final String FORMAT_ALDER_PARANTESER = " (%d år)";
-    protected static final String FORMAT_ANTALA_DAGAR = "%d dagar";
-    protected static final String FORMAT_ANTAL_INTYG = " (%d intyg)";
+    protected static final String FORMAT_ANTAL_DAGAR = "%d dagar";
     protected static final String UNICODE_RIGHT_ARROW_SYMBOL = "\u2192";
 
     @Autowired

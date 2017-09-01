@@ -255,9 +255,9 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
         // Setup column widths (relative to each other)
         if (Urval.ALL.equals(urval)) {
-            table = new PdfPTable(new float[] { 0.8f, 2.5f, 4, 1, 1, 1.2f, 1.2f, 2, 2, 2.5f });
+            table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2, 3f });
         } else {
-            table = new PdfPTable(new float[] { 0.8f, 2.5f, 4, 1, 1, 1.5f, 1.5f, 2, 2 });
+            table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2 });
         }
 
         table.setWidthPercentage(100.0f);
@@ -270,12 +270,15 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
         addCell(table, TABLEHEADER_NR, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_PERSONNUMMER, PdfExportConstants.TABLE_HEADER_FONT);
+        addCell(table, TABLEHEADER_ALDER, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_NAMN, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_KON, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_NUVARANDE_DIAGNOS, PdfExportConstants.TABLE_HEADER_FONT);
+        addCell(table, TABLEHEADER_BIDIAGNOSER, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_STARTDATUM, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_SLUTDATUM, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_SJUKSKRIVNINGSLANGD, PdfExportConstants.TABLE_HEADER_FONT);
+        addCell(table, TABLEHEADER_ANTAL, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_SJUKSKRIVNINGSGRAD, PdfExportConstants.TABLE_HEADER_FONT);
         if (Urval.ALL.equals(urval)) {
             addCell(table, TABLEHEADER_NUVARANDE_LAKARE, PdfExportConstants.TABLE_HEADER_FONT);
@@ -298,13 +301,17 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
             addCell(table, String.valueOf(rowNumber));
             addCell(table, getPersonnummerColumn(is));
+            addCell(table, is.getPatient().getAlder());
             addCell(table, is.getPatient().getNamn());
             addCell(table, is.getPatient().getKon().getDescription());
             addCell(table, is.getDiagnos().getIntygsVarde());
+            //TODO: bidiagnodes kommasepararerade (och "-" om inga)
+            addCell(table, "-");
 
             addCell(table, is.getStart() != null ? YearMonthDateFormatter.print(is.getStart()) : "?");
             addCell(table, is.getSlut() != null ? YearMonthDateFormatter.print(is.getSlut()) : "?");
             addCell(table, getlangdText(is));
+            addCell(table, is.getIntyg());
             addCell(table, getGrader(is));
             if (Urval.ALL.equals(urval)) {
                 addCell(table, is.getLakare().getNamn());
@@ -320,6 +327,9 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         table.addCell(p);
     }
 
+    private void addCell(PdfPTable table, int i) {
+        addCell(table, Integer.toString(i), PdfExportConstants.TABLE_CELL_NORMAL);
+    }
     private void addCell(PdfPTable table, String s) {
         addCell(table, s, PdfExportConstants.TABLE_CELL_NORMAL);
     }
@@ -348,14 +358,12 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     private Phrase getPersonnummerColumn(InternalSjukfall is) {
         Phrase p = new Phrase();
         p.add(new Chunk(is.getPatient().getId() != null ? is.getPatient().getId() : "", PdfExportConstants.TABLE_CELL_NORMAL));
-        p.add(new Chunk(String.format(FORMAT_ALDER_PARANTESER, is.getPatient().getAlder()), PdfExportConstants.TABLE_CELL_NORMAL));
         return p;
     }
 
     private Phrase getlangdText(InternalSjukfall is) {
         Phrase p = new Phrase();
-        p.add(new Chunk(String.format(FORMAT_ANTALA_DAGAR, is.getDagar()), PdfExportConstants.TABLE_CELL_NORMAL));
-        p.add(new Chunk(String.format(FORMAT_ANTAL_INTYG, is.getIntyg()), PdfExportConstants.TABLE_CELL_SMALL));
+        p.add(new Chunk(String.format(FORMAT_ANTAL_DAGAR, is.getDagar()), PdfExportConstants.TABLE_CELL_NORMAL));
         return p;
     }
 

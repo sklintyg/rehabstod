@@ -71,9 +71,10 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     private XSSFFont defaultFont11;
     private XSSFFont boldFont11;
 
-    private static final String[] HEADERS = new String[] { TABLEHEADER_NR, TABLEHEADER_PERSONNUMMER, TABLEHEADER_NAMN, TABLEHEADER_KON,
-            TABLEHEADER_NUVARANDE_DIAGNOS,
-            TABLEHEADER_STARTDATUM, TABLEHEADER_SLUTDATUM, TABLEHEADER_SJUKSKRIVNINGSLANGD, TABLEHEADER_SJUKSKRIVNINGSGRAD,
+    private static final String[] HEADERS = new String[] { TABLEHEADER_NR, TABLEHEADER_PERSONNUMMER, TABLEHEADER_ALDER, TABLEHEADER_NAMN,
+            TABLEHEADER_KON,
+            TABLEHEADER_NUVARANDE_DIAGNOS, TABLEHEADER_BIDIAGNOSER, TABLEHEADER_STARTDATUM, TABLEHEADER_SLUTDATUM,
+            TABLEHEADER_SJUKSKRIVNINGSLANGD, TABLEHEADER_ANTAL, TABLEHEADER_SJUKSKRIVNINGSGRAD,
             TABLEHEADER_NUVARANDE_LAKARE };
 
     private static final int FILTER_HEADLINE_COLUMN = 1;
@@ -256,14 +257,17 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
             int colIndex = 0;
             createDataCell(row, colIndex++, Integer.toString(a + 1));
-            createRichTextDataCell(row, colIndex++, buildPersonnummerAndAgeRichText(sf.getPatient()));
+            createRichTextDataCell(row, colIndex++, buildPersonnummerRichText(sf.getPatient()));
+            createDataCell(row, colIndex++, Integer.toString(sf.getPatient().getAlder()));
             createDataCell(row, colIndex++, sf.getPatient().getNamn());
             createDataCell(row, colIndex++, sf.getPatient().getKon().getDescription());
             createDataCell(row, colIndex++, sf.getDiagnos().getKod());
+            //TODO: bidignoser kommaseparerade eller "-" om saknas
+            createDataCell(row, colIndex++, "-");
             createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getStart()));
             createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getSlut()));
-            createDataCell(row, colIndex++,
-                    String.format(FORMAT_ANTALA_DAGAR, sf.getDagar()) + String.format(FORMAT_ANTAL_INTYG, sf.getIntyg()));
+            createDataCell(row, colIndex++, String.format(FORMAT_ANTAL_DAGAR, sf.getDagar()));
+            createDataCell(row, colIndex++, Integer.toString(sf.getIntyg()));
             createRichTextDataCell(row, colIndex++, buildGraderRichText(sf));
             if (urval != Urval.ISSUED_BY_ME) {
                 createDataCell(row, colIndex, sf.getLakare().getNamn());
@@ -276,8 +280,8 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         sheet.setColumnWidth(2, 7000);
     }
 
-    private XSSFRichTextString buildPersonnummerAndAgeRichText(Patient patient) {
-        String value = patient.getId() + String.format(FORMAT_ALDER_PARANTESER, patient.getAlder());
+    private XSSFRichTextString buildPersonnummerRichText(Patient patient) {
+        String value = patient.getId();
         XSSFRichTextString richTextString = new XSSFRichTextString();
         richTextString.setString(value);
         richTextString.applyFont(defaultFont11);
