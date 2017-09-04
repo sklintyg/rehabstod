@@ -152,16 +152,17 @@ public class SjukfallServiceImpl implements SjukfallService {
         SjukfallPatientRS to = new SjukfallPatientRS();
 
         try {
+            to.setDiagnos(map(from.getDiagnosKod()));
+            to.setStart(from.getStart());
+            to.setSlut(from.getSlut());
+
             List<PatientData> patientData = mapIntygList(from.getSjukfallIntygList());
 
             // Sort patientData by signeringsTidpunkt with descending order
             Comparator<PatientData> dateComparator = Comparator.comparing(PatientData::getSigneringsTidpunkt, Comparator.reverseOrder());
             patientData.stream().sorted(dateComparator);
 
-            to.setDiagnos(resolveDiagnos(patientData));
             to.setIntyg(patientData);
-            to.setStart(from.getStart());
-            to.setSlut(from.getSlut());
 
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
@@ -278,16 +279,6 @@ public class SjukfallServiceImpl implements SjukfallService {
 
 
     // - - - private scope - - -
-
-    private Diagnos resolveDiagnos(List<PatientData> patientData) {
-
-        List<PatientData> list = patientData.stream().filter(PatientData::isAktivtIntyg).collect(Collectors.toList());
-        if (list.isEmpty()) {
-            list = patientData;
-        }
-
-        return list.stream().max(Comparator.comparing(PatientData::getSigneringsTidpunkt)).get().getDiagnos();
-    }
 
     /**
      * Since we always use the vardenhetsId to query intygstjänsten (even when the
