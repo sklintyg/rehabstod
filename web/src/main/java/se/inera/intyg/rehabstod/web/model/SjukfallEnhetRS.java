@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Created by eriklupander on 2016-02-19.
  */
-public class InternalSjukfall {
+public class SjukfallEnhetRS {
 
     private String vardGivareId;
     private String vardGivareNamn;

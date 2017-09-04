@@ -28,7 +28,7 @@ import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -113,16 +113,16 @@ public final class TestDataGen {
         return personnummerList;
     }
 
-    public static List<InternalSjukfall> buildSjukfallList(int num) {
-        List<InternalSjukfall> sjukfallList = new ArrayList<>();
+    public static List<SjukfallEnhetRS> buildSjukfallList(int num) {
+        List<SjukfallEnhetRS> sjukfallList = new ArrayList<>();
         for (int a = 0; a < num; a++) {
             sjukfallList.add(buildInternalSjukfall());
         }
         return sjukfallList;
     }
 
-    public static InternalSjukfall buildInternalSjukfall() {
-        InternalSjukfall isf = new InternalSjukfall();
+    public static SjukfallEnhetRS buildInternalSjukfall() {
+        SjukfallEnhetRS isf = new SjukfallEnhetRS();
 
         Lakare lakare = new Lakare("IFV1239877878-1049", "Jan Nilsson");
         isf.setLakare(lakare);

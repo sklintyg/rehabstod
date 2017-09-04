@@ -18,10 +18,10 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-import java.time.LocalDate;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -38,6 +38,7 @@ public class GetSjukfallRequest {
     private List<String> lakare;
     private List<String> diagnosGrupper;
 
+    private String patientId;
     private String fritext;
 
     /** The sole constructor. **/
@@ -91,6 +92,14 @@ public class GetSjukfallRequest {
 
     public void setDiagnosGrupper(List<String> diagnosGrupper) {
         this.diagnosGrupper = diagnosGrupper;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
     }
 
     public String getFritext() {

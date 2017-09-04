@@ -30,7 +30,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.GenderStat;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveDegreeStat;
 import se.inera.intyg.rehabstod.web.model.Gender;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
     }
 
     @Override
-    public SjukfallSummary getSjukfallSummary(List<InternalSjukfall> sjukfall) {
+    public SjukfallSummary getSjukfallSummary(List<SjukfallEnhetRS> sjukfall) {
 
         int total = sjukfall.size();
 
@@ -81,17 +81,17 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
 
     }
 
-    private List<SickLeaveDegreeStat> calculateSickLeaveDegrees(List<InternalSjukfall> sjukfall) {
-        Map<Integer, List<InternalSjukfall>> byGrad = sjukfall.stream()
-                .collect(Collectors.groupingBy(InternalSjukfall::getAktivGrad));
+    private List<SickLeaveDegreeStat> calculateSickLeaveDegrees(List<SjukfallEnhetRS> sjukfall) {
+        Map<Integer, List<SjukfallEnhetRS>> byGrad = sjukfall.stream()
+                .collect(Collectors.groupingBy(SjukfallEnhetRS::getAktivGrad));
         return byGrad.entrySet().stream()
                 .map(entry -> new SickLeaveDegreeStat(entry.getKey(), "" + entry.getKey() + " %", entry.getValue().size()))
                 .sorted(Comparator.comparingInt(SickLeaveDegreeStat::getId))
                 .collect(Collectors.toList());
     }
 
-    private List<GenderStat> calculateGenderStat(List<InternalSjukfall> sjukfall) {
-        Map<Gender, List<InternalSjukfall>> byGender = sjukfall.stream().collect(Collectors.groupingBy(s -> s.getPatient().getKon()));
+    private List<GenderStat> calculateGenderStat(List<SjukfallEnhetRS> sjukfall) {
+        Map<Gender, List<SjukfallEnhetRS>> byGender = sjukfall.stream().collect(Collectors.groupingBy(s -> s.getPatient().getKon()));
 
         int menTotal = byGender.getOrDefault(Gender.M, Collections.emptyList()).size();
         int womenTotal = byGender.getOrDefault(Gender.F, Collections.emptyList()).size();
@@ -99,7 +99,7 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
         return Arrays.asList(new GenderStat(Gender.F, womenTotal), new GenderStat(Gender.M, menTotal));
     }
 
-    private List<DiagnosGruppStat> calculateGroupStatistics(List<InternalSjukfall> sjukfall) {
+    private List<DiagnosGruppStat> calculateGroupStatistics(List<SjukfallEnhetRS> sjukfall) {
         List<DiagnosGruppStat> stats = new ArrayList<>();
 
         long assignedToExistingGroupCount = 0;
@@ -122,7 +122,7 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
 
     }
 
-    private long getAntalSjukfallPerDiagnosGrupp(DiagnosGrupp grupp, List<InternalSjukfall> sjukfall) {
+    private long getAntalSjukfallPerDiagnosGrupp(DiagnosGrupp grupp, List<SjukfallEnhetRS> sjukfall) {
         return sjukfall.stream().filter(s -> grupp.includes(s.getDiagnos().getKod())).count();
     }
 }

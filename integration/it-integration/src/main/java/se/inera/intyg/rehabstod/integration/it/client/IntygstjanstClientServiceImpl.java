@@ -53,18 +53,18 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
     private String logicalAddress;
 
     @Override
-    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnit(String unitHsaId) {
+    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnit(String unitId) {
         ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
 
         HsaId hsaId = new HsaId();
-        hsaId.setExtension(unitHsaId);
+        hsaId.setExtension(unitId);
         params.setEnhetsId(hsaId);
 
         return service.listActiveSickLeavesForCareUnit(logicalAddress, params);
     }
 
     @Override
-    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForPatient(String patientId, String unitHsaId) {
+    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForPatient(String unitId, String patientId) {
         ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
 
         PersonId pId = new PersonId();
@@ -72,7 +72,7 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
         params.setPersonId(pId);
 
         HsaId hsaId = new HsaId();
-        hsaId.setExtension(unitHsaId);
+        hsaId.setExtension(unitId);
         params.setEnhetsId(hsaId);
 
         return service.listActiveSickLeavesForCareUnit(logicalAddress, params);

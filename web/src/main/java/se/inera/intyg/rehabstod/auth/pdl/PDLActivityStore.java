@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.auth.pdl;
 
 import se.inera.intyg.infra.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,10 +45,10 @@ public final class PDLActivityStore {
      * @param storedActivities
      *            the map holding sjukfall
      *
-     * @return a list of InternalSjukfall
+     * @return a list of SjukfallEnhetRS
      */
-    public static List<InternalSjukfall> getActivitiesNotInStore(String enhetsId, List<InternalSjukfall> sjukfall,
-            ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
+    public static List<SjukfallEnhetRS> getActivitiesNotInStore(String enhetsId, List<SjukfallEnhetRS> sjukfall,
+                                                                ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
         if (sjukfall == null || sjukfall.isEmpty()) {
             return new ArrayList<>();
         }
@@ -83,8 +83,8 @@ public final class PDLActivityStore {
      * @param storedActivities
      *            the map where sjukfall will be stored
      */
-    public static void addActivitiesToStore(String enhetsId, List<InternalSjukfall> sjukfallToAdd, ActivityType activityType,
-            Map<String, List<PDLActivityEntry>> storedActivities) {
+    public static void addActivitiesToStore(String enhetsId, List<SjukfallEnhetRS> sjukfallToAdd, ActivityType activityType,
+                                            Map<String, List<PDLActivityEntry>> storedActivities) {
         if (sjukfallToAdd == null || sjukfallToAdd.isEmpty()) {
             return;
         }

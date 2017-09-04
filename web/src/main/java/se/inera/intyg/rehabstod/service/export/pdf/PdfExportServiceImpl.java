@@ -42,7 +42,7 @@ import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
 import java.io.ByteArrayOutputStream;
@@ -71,7 +71,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     private Font unicodeCapableFont;
 
     @Override
-    public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total) {
+    public byte[] export(List<SjukfallEnhetRS> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total) {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -249,7 +249,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     }
 
-    private PdfPTable createSjukfallTable(List<InternalSjukfall> sjukfallList, Urval urval) throws DocumentException {
+    private PdfPTable createSjukfallTable(List<SjukfallEnhetRS> sjukfallList, Urval urval) throws DocumentException {
 
         PdfPTable table;
 
@@ -292,7 +292,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
         table.setHeaderRows(1);
         int rowNumber = 1;
-        for (InternalSjukfall is : sjukfallList) {
+        for (SjukfallEnhetRS is : sjukfallList) {
             if (rowNumber % 2 == 0) {
                 table.getDefaultCell().setBackgroundColor(TABLE_EVEN_ROW_COLOR);
             } else {
@@ -338,7 +338,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         table.addCell(new Phrase(s, font));
     }
 
-    private Phrase getGrader(InternalSjukfall is) {
+    private Phrase getGrader(SjukfallEnhetRS is) {
         boolean first = true;
         Phrase grader = new Phrase();
         for (Integer grad : is.getGrader()) {
@@ -355,13 +355,13 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         return grader;
     }
 
-    private Phrase getPersonnummerColumn(InternalSjukfall is) {
+    private Phrase getPersonnummerColumn(SjukfallEnhetRS is) {
         Phrase p = new Phrase();
         p.add(new Chunk(is.getPatient().getId() != null ? is.getPatient().getId() : "", PdfExportConstants.TABLE_CELL_NORMAL));
         return p;
     }
 
-    private Phrase getlangdText(InternalSjukfall is) {
+    private Phrase getlangdText(SjukfallEnhetRS is) {
         Phrase p = new Phrase();
         p.add(new Chunk(String.format(FORMAT_ANTAL_DAGAR, is.getDagar()), PdfExportConstants.TABLE_CELL_NORMAL));
         return p;

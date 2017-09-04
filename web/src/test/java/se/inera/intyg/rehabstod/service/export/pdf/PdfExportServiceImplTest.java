@@ -33,7 +33,7 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -146,16 +146,16 @@ public class PdfExportServiceImplTest {
         return r;
     }
 
-    private List<InternalSjukfall> createSjukFallList() {
-        List<InternalSjukfall> list = new ArrayList<>();
+    private List<SjukfallEnhetRS> createSjukFallList() {
+        List<SjukfallEnhetRS> list = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             list.add(createSjukFall(i, "19121212-" + i));
         }
         return list;
     }
 
-    private static InternalSjukfall createSjukFall(int index, String personNummer) {
-        InternalSjukfall isf = new InternalSjukfall();
+    private static SjukfallEnhetRS createSjukFall(int index, String personNummer) {
+        SjukfallEnhetRS isf = new SjukfallEnhetRS();
 
         Lakare lakare = new Lakare("123456-0987", "Hr Doktor");
         isf.setLakare(lakare);

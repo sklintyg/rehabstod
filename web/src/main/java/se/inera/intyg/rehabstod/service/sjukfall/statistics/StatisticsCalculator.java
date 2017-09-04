@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall.statistics;
 
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
 
 import java.util.List;
 
@@ -29,6 +29,6 @@ import java.util.List;
 @FunctionalInterface
 public interface StatisticsCalculator {
 
-    SjukfallSummary getSjukfallSummary(List<InternalSjukfall> sjukfall);
+    SjukfallSummary getSjukfallSummary(List<SjukfallEnhetRS> sjukfall);
 
 }

@@ -21,7 +21,8 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatientRS;
 
 import java.util.List;
 
@@ -31,9 +32,9 @@ import java.util.List;
 public interface SjukfallService {
 
     /**
-     * @see  List<InternalSjukfall> se.inera.intyg.rehabstod.service.sjukfall.SjukfallService.getByUnit
+     * @see  List< SjukfallEnhetRS > se.inera.intyg.rehabstod.service.sjukfall.SjukfallService.getByUnit
      */
-    List<InternalSjukfall> getSjukfall(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request);
+    List<SjukfallEnhetRS> getSjukfall(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
 
     /**
      * The 'enhetsId' is _always_ the ID of the Vardenhet we want to query IT with regardless of whether the currently
@@ -44,10 +45,10 @@ public interface SjukfallService {
      * specified, we'll perform filtering on our side so only Sjukfall originating from the specified mottagningsId are
      * included in the response.
      */
-    List<InternalSjukfall> getByUnit(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request);
+    List<SjukfallEnhetRS> getByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
 
-    List<InternalSjukfall> getByPatient(String patientId, String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request);
+    List<SjukfallPatientRS> getByPatient(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
 
-    SjukfallSummary getSummary(String enhetsId, String mottagningsId, String hsaId, Urval urval, GetSjukfallRequest request);
+    SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
 
 }

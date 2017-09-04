@@ -43,7 +43,7 @@ import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
 import se.inera.intyg.rehabstod.web.model.Patient;
 
 /**
@@ -87,7 +87,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     // api
 
     @Override
-    public byte[] export(List<InternalSjukfall> sjukfallList, PrintSjukfallRequest req, Urval urval, int total) throws IOException {
+    public byte[] export(List<SjukfallEnhetRS> sjukfallList, PrintSjukfallRequest req, Urval urval, int total) throws IOException {
 
         XSSFWorkbook wb = new XSSFWorkbook();
         setupFonts(wb);
@@ -250,10 +250,10 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         }
     }
 
-    private void addDataRows(XSSFSheet sheet, int rowIndex, List<InternalSjukfall> sjukfallList, Urval urval) {
+    private void addDataRows(XSSFSheet sheet, int rowIndex, List<SjukfallEnhetRS> sjukfallList, Urval urval) {
         for (int a = 0; a < sjukfallList.size(); a++) {
             XSSFRow row = sheet.createRow(rowIndex + a);
-            InternalSjukfall sf = sjukfallList.get(a);
+            SjukfallEnhetRS sf = sjukfallList.get(a);
 
             int colIndex = 0;
             createDataCell(row, colIndex++, Integer.toString(a + 1));
@@ -289,7 +289,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         return richTextString;
     }
 
-    private XSSFRichTextString buildGraderRichText(InternalSjukfall sf) {
+    private XSSFRichTextString buildGraderRichText(SjukfallEnhetRS sf) {
 
         if (sf.getGrader() == null || sf.getGrader().isEmpty()) {
             return new XSSFRichTextString();

@@ -49,7 +49,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNa
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
@@ -104,7 +104,7 @@ public class SjukfallServiceTest {
         when(integrationService.getIntygsDataForPatient(anyString(), anyString())).thenReturn(new ArrayList<IntygsData>());
         when(sjukfallEngine.beraknaSjukfallForEnhet(anyListOf(IntygData.class), any(IntygParametrar.class))).thenReturn(createSjukfallEnhetList());
         when(sjukfallEngine.beraknaSjukfallForPatient(anyListOf(IntygData.class), any(IntygParametrar.class))).thenReturn(createSjukfallPatientList());
-        when(statisticsCalculator.getSjukfallSummary(anyListOf(InternalSjukfall.class))).thenReturn(new SjukfallSummary(0, Collections.emptyList(), new ArrayList<>(), new ArrayList<>()));
+        when(statisticsCalculator.getSjukfallSummary(anyListOf(SjukfallEnhetRS.class))).thenReturn(new SjukfallSummary(0, Collections.emptyList(), new ArrayList<>(), new ArrayList<>()));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class SjukfallServiceTest {
 
     @Test
     public void testWhenUrvalIsAll() {
-        List<InternalSjukfall> internalSjukfallList = testee.getSjukfall(enhetsId, null, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
+        List<SjukfallEnhetRS> internalSjukfallList = testee.getSjukfall(enhetsId, null, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
@@ -124,7 +124,7 @@ public class SjukfallServiceTest {
 
     @Test
     public void testWhenUrvalIsAllForUnderenhet() {
-        List<InternalSjukfall> internalSjukfallList = testee.getSjukfall(enhetsId, mottagningsId, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
+        List<SjukfallEnhetRS> internalSjukfallList = testee.getSjukfall(enhetsId, mottagningsId, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
@@ -133,13 +133,13 @@ public class SjukfallServiceTest {
 
     @Test
     public void testWhenUrvalIsIssuedByMe() {
-        List<InternalSjukfall> internalSjukfallList = testee.getSjukfall(enhetsId, null, lakareId1, Urval.ISSUED_BY_ME,
+        List<SjukfallEnhetRS> internalSjukfallList = testee.getSjukfall(enhetsId, null, lakareId1, Urval.ISSUED_BY_ME,
                 getSjukfallRequest(intygsGlapp, activeDate));
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
         assertTrue("Expected 8 but was " + internalSjukfallList.size(), internalSjukfallList.size() == 8);
-        for (InternalSjukfall internalSjukfall : internalSjukfallList) {
+        for (SjukfallEnhetRS internalSjukfall : internalSjukfallList) {
             String hsaId = internalSjukfall.getLakare().getHsaId();
             String namn = internalSjukfall.getLakare().getNamn();
             assertTrue(lakareId1 == hsaId);
@@ -152,7 +152,7 @@ public class SjukfallServiceTest {
         testee.getSummary(enhetsId, null, lakareId1, Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
-        verify(statisticsCalculator).getSjukfallSummary(anyListOf(InternalSjukfall.class));
+        verify(statisticsCalculator).getSjukfallSummary(anyListOf(SjukfallEnhetRS.class));
     }
 
     @Test
@@ -160,7 +160,7 @@ public class SjukfallServiceTest {
         testee.getSummary(enhetsId, mottagningsId, lakareId1, Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
-        verify(statisticsCalculator).getSjukfallSummary(anyListOf(InternalSjukfall.class));
+        verify(statisticsCalculator).getSjukfallSummary(anyListOf(SjukfallEnhetRS.class));
     }
 
     // - - - Private scope - - -
@@ -242,7 +242,7 @@ public class SjukfallServiceTest {
         }
 
         @Override
-        InternalSjukfall map(SjukfallEnhet from) {
+        SjukfallEnhetRS map(SjukfallEnhet from) {
             se.inera.intyg.infra.sjukfall.dto.Vardgivare vardgivare =
                     new se.inera.intyg.infra.sjukfall.dto.Vardgivare(vardgivareId, vardgivareNamn);
 

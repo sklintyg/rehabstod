@@ -31,7 +31,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.GenderStat;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
 
@@ -81,7 +81,7 @@ public class StatisticsCalculatorImplTest {
 
     @Test
     public void testGetSjukfallSummaryNoInput() throws Exception {
-        List<InternalSjukfall> internalSjukfallList = new ArrayList<>();
+        List<SjukfallEnhetRS> internalSjukfallList = new ArrayList<>();
 
         final SjukfallSummary summary = testee.getSjukfallSummary(internalSjukfallList);
         assertEquals(0, summary.getTotal());
@@ -91,7 +91,7 @@ public class StatisticsCalculatorImplTest {
 
     @Test
     public void testGetSjukfallSummary() throws Exception {
-        List<InternalSjukfall> internalSjukfallList = new ArrayList<>();
+        List<SjukfallEnhetRS> internalSjukfallList = new ArrayList<>();
 
         internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16"));
         internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "P16"));
@@ -122,7 +122,7 @@ public class StatisticsCalculatorImplTest {
 
     @Test
     public void testGetSjukfallAllOneGender() throws Exception {
-        List<InternalSjukfall> internalSjukfallList = new ArrayList<>();
+        List<SjukfallEnhetRS> internalSjukfallList = new ArrayList<>();
 
         internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16"));
         internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16"));
@@ -139,7 +139,7 @@ public class StatisticsCalculatorImplTest {
 
     @Test
     public void testGetSjukfallDifferentSjukskrivningsGrad() throws Exception {
-        List<InternalSjukfall> internalSjukfallList = new ArrayList<>();
+        List<SjukfallEnhetRS> internalSjukfallList = new ArrayList<>();
 
         internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16", 25));
         internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16", 25));
@@ -158,14 +158,14 @@ public class StatisticsCalculatorImplTest {
 
     }
 
-    private InternalSjukfall createInternalSjukfall(String lakareId, String lakareNamn, Gender patientKon, String diagnosKod, int aktivGrad) {
-        InternalSjukfall isf = createInternalSjukfall(lakareId, lakareNamn, patientKon, diagnosKod);
+    private SjukfallEnhetRS createInternalSjukfall(String lakareId, String lakareNamn, Gender patientKon, String diagnosKod, int aktivGrad) {
+        SjukfallEnhetRS isf = createInternalSjukfall(lakareId, lakareNamn, patientKon, diagnosKod);
         isf.setAktivGrad(aktivGrad);
         return isf;
     }
 
-    private InternalSjukfall createInternalSjukfall(String lakareId, String lakareNamn, Gender patientKon, String diagnosKod) {
-        InternalSjukfall isf = new InternalSjukfall();
+    private SjukfallEnhetRS createInternalSjukfall(String lakareId, String lakareNamn, Gender patientKon, String diagnosKod) {
+        SjukfallEnhetRS isf = new SjukfallEnhetRS();
 
         Lakare lakare = new Lakare(lakareId, lakareNamn);
         isf.setLakare(lakare);

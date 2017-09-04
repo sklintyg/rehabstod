@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.rehabstod.service.export.util;
 
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import se.inera.intyg.rehabstod.web.model.InternalSjukfall;
-
 /**
- * We need to export InternalSjukfall in the exact same order as the personnummer list
+ * We need to export SjukfallEnhetRS in the exact same order as the personnummer list
  * provides them.
  *
  * Created by eriklupander on 2016-02-24.
@@ -36,9 +36,9 @@ public final class ExportUtil {
 
     }
 
-    public static List<InternalSjukfall> sortForExport(List<String> personnummer, List<InternalSjukfall> sjukfall) {
+    public static List<SjukfallEnhetRS> sortForExport(List<String> personnummer, List<SjukfallEnhetRS> sjukfall) {
 
-        List<InternalSjukfall> finalList = new ArrayList<>();
+        List<SjukfallEnhetRS> finalList = new ArrayList<>();
 
         personnummer.stream().forEach(pNr ->
             addSjukfallForPnr(sjukfall, finalList, pNr)
@@ -47,8 +47,8 @@ public final class ExportUtil {
         return finalList;
     }
 
-    private static void addSjukfallForPnr(List<InternalSjukfall> sjukfall, List<InternalSjukfall> finalList, String pNr) {
-        Optional<InternalSjukfall> sjukfallForPatient = sjukfall.stream()
+    private static void addSjukfallForPnr(List<SjukfallEnhetRS> sjukfall, List<SjukfallEnhetRS> finalList, String pNr) {
+        Optional<SjukfallEnhetRS> sjukfallForPatient = sjukfall.stream()
                 .filter(is -> is.getPatient().getId().equals(pNr))
                 .findFirst();
 
