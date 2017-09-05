@@ -18,13 +18,29 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+
+import se.riv.clinicalprocess.healthcond.certificate.types.v1.CV;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
+import se.riv.clinicalprocess.healthcond.certificate.v1.Sysselsattning;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
@@ -32,17 +48,6 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Can generate a suitable amount of intygsdata.
@@ -56,8 +61,6 @@ import java.util.concurrent.ThreadLocalRandom;
 @Profile({ "dev", "rhs-it-stub" })
 public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
-
     public static final String VE_TSTNMT2321000156_105_N = "TSTNMT2321000156-105N";
     public static final String VE_TSTNMT2321000156_105P = "TSTNMT2321000156-105P";
     public static final String VE_TSTNMT2321000156_105Q = "TSTNMT2321000156-105Q";
@@ -65,9 +68,11 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     public static final String VE_2A = "IFV1239877878-103H";
     public static final String UE_AKUTEN = "akuten";
     public static final String UE_DIALYS = "dialys";
+    private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
+    private final Integer startDatumOffset = -2;
+    private final Integer slutDatumOffset = -1;
 
     private Queue<Patient> seededPatients = new LinkedList<>();
-
     private Enhet enhet;
     private Enhet enhet2;
     private Enhet enhet3;
@@ -75,20 +80,15 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private Enhet underenhet2;
     private Enhet kerstinEnhet1;
     private Enhet kerstinEnhet2;
-
     private Vardgivare vg;
     private Vardgivare vg2;
     private Vardgivare vg3;
-
     private int currentDiagnosIndex = 0;
     private List<String> diagnosList = new ArrayList<>();
-
+    private int currentSysselSattningIndex = 0;
+    private List<Sysselsattning> sysselSattningList = new ArrayList<>();
     private int currentHosPersonIndex = 0;
     private List<HosPersonal> hosPersonList = new ArrayList<>();
-
-    private final Integer startDatumOffset = -2;
-    private final Integer slutDatumOffset = -1;
-
     @Autowired
     private PersonnummerLoader personnummerLoader;
 
@@ -96,6 +96,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     public void init() {
         initDiagnoser();
         initHoSPerson();
+        initSysselSattningar();
     }
 
     /**
@@ -121,25 +122,60 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         for (int a = 0; a < numberOfPatients; a++) {
             Patient patient = nextPatient();
             HosPersonal hosPerson = nextHosPerson();
-            for (int b = 0; b < intygPerPatient; b++) {
-                IntygsData intygsData = new IntygsData();
-                intygsData.setPatient(patient);
-                intygsData.setIntygsId(randomIntygId());
-                intygsData.setDiagnoskod(nextDiagnosis());
-                intygsData.setSkapadAv(hosPerson);
+            for (int intygsIndex = 0; intygsIndex < intygPerPatient; intygsIndex++) {
+                final LocalDateTime baseDate = LocalDateTime.now();
+                intygsDataList.add(buildIntygsData(patient, hosPerson, intygsIndex, baseDate));
 
-                LocalDateTime signeringsTidpunkt = LocalDateTime.now().plusWeeks(startDatumOffset).plusHours(10);
-                intygsData.setSigneringsTidpunkt(signeringsTidpunkt);
-
-                Arbetsformaga arbetsformaga = new Arbetsformaga();
-                arbetsformaga.getFormaga().addAll(getDefaultSjukskrivningsGrader(b));
-                intygsData.setArbetsformaga(arbetsformaga);
-
-                intygsDataList.add(intygsData);
+                // For patients older that are over X years old, add extra intyg so that we will have some some patients
+                // with historical sjukfalls
+                if (getAge(patient) > 50) {
+                    intygsDataList.add(
+                            buildIntygsData(patient, hosPerson, intygsIndex, baseDate.minusYears(ThreadLocalRandom.current().nextInt(4))));
+                }
             }
         }
         LOG.info("Generated {0} intygsData items for stub", intygsDataList.size());
         return intygsDataList;
+    }
+
+    private int getAge(Patient patient) {
+        int yearBorn = Integer.parseInt(patient.getPersonId().getExtension().substring(0, 4));
+        return LocalDate.now().getYear() - yearBorn;
+    }
+
+    private IntygsData buildIntygsData(Patient patient, HosPersonal hosPerson, int intygsIndex, LocalDateTime baseDate) {
+        IntygsData intygsData = new IntygsData();
+        intygsData.setPatient(patient);
+        intygsData.setIntygsId(randomIntygId());
+        intygsData.setDiagnoskod(nextDiagnosis());
+
+        // Randomly add 0 <-> 2 bidiagnoses
+        for (int i = ThreadLocalRandom.current().nextInt(3); i > 0; i--) {
+            intygsData.getBidiagnoser().add(nextDiagnosis());
+        }
+
+        // Randomly add 1 <-> 3 sysselsattningar
+        for (int i = ThreadLocalRandom.current().nextInt(1, 4); i > 0; i--) {
+            intygsData.getSysselsattning().add(getNextSysselSattning());
+        }
+
+        intygsData.setSkapadAv(hosPerson);
+
+        LocalDateTime signeringsTidpunkt = baseDate.plusWeeks(startDatumOffset).plusHours(10);
+        intygsData.setSigneringsTidpunkt(signeringsTidpunkt);
+
+        Arbetsformaga arbetsformaga = new Arbetsformaga();
+        arbetsformaga.getFormaga().addAll(getDefaultSjukskrivningsGrader(baseDate.toLocalDate(), intygsIndex));
+        intygsData.setArbetsformaga(arbetsformaga);
+
+        return intygsData;
+    }
+
+    private Sysselsattning getNextSysselSattning() {
+        if (currentSysselSattningIndex > sysselSattningList.size() - 1) {
+            currentSysselSattningIndex = 0;
+        }
+        return sysselSattningList.get(currentSysselSattningIndex++);
     }
 
     @Override
@@ -160,42 +196,41 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         return hosPersonList.get(currentHosPersonIndex++);
     }
 
-    private List<Formaga> getDefaultSjukskrivningsGrader(int number) {
+    private List<Formaga> getDefaultSjukskrivningsGrader(LocalDate baseDate, int number) {
         List<Formaga> sjukskrivningsgradList = new ArrayList<>();
 
         int startOffset = startDatumOffset;
         int slutOffset = slutDatumOffset;
 
         switch (number) {
-            case 0:
-                startOffset = ThreadLocalRandom.current().nextInt(-20, -18);
-                slutOffset = ThreadLocalRandom.current().nextInt(-18, -17);
-                break;
-            case 1:
-                startOffset = ThreadLocalRandom.current().nextInt(-17, -15);
-                slutOffset = ThreadLocalRandom.current().nextInt(-15, -14);
-                break;
-            case 2:
-                startOffset = ThreadLocalRandom.current().nextInt(-15, -10);
-                slutOffset = ThreadLocalRandom.current().nextInt(-4, -2);
-                break;
-            default:
+        case 0:
+            startOffset = ThreadLocalRandom.current().nextInt(-20, -18);
+            slutOffset = ThreadLocalRandom.current().nextInt(-18, -17);
+            break;
+        case 1:
+            startOffset = ThreadLocalRandom.current().nextInt(-17, -15);
+            slutOffset = ThreadLocalRandom.current().nextInt(-15, -14);
+            break;
+        case 2:
+            startOffset = ThreadLocalRandom.current().nextInt(-15, -10);
+            slutOffset = ThreadLocalRandom.current().nextInt(-4, -2);
+            break;
+        default:
         }
 
-
-        Formaga sg1 = buildSjukskrivningsGrad(100, startOffset, slutOffset);    // 100, -2, -1
-        Formaga sg2 = buildSjukskrivningsGrad(75, slutOffset, slutOffset + 3);  // 100, -1, 2
+        Formaga sg1 = buildSjukskrivningsGrad(baseDate, 100, startOffset, slutOffset); // 100, -2, -1
+        Formaga sg2 = buildSjukskrivningsGrad(baseDate, 75, slutOffset, slutOffset + 3); // 100, -1, 2
         sjukskrivningsgradList.add(sg1);
         sjukskrivningsgradList.add(sg2);
 
         return sjukskrivningsgradList;
     }
 
-    private Formaga buildSjukskrivningsGrad(int value, Integer startOffset, Integer slutOffset) {
+    private Formaga buildSjukskrivningsGrad(LocalDate baseDate, int value, Integer startOffset, Integer slutOffset) {
         Formaga sg2 = new Formaga();
         sg2.setNedsattning(value);
-        sg2.setStartdatum(LocalDate.now().plusWeeks(startOffset));
-        sg2.setSlutdatum(LocalDate.now().plusWeeks(slutOffset));
+        sg2.setStartdatum(baseDate.plusWeeks(startOffset));
+        sg2.setSlutdatum(baseDate.plusWeeks(slutOffset));
         return sg2;
     }
 
@@ -244,6 +279,20 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         diagnosList.add("J-110");
         diagnosList.add("A311");
         diagnosList.add("H_01");
+    }
+
+    private void initSysselSattningar() {
+        // Merged list of codes from fk7263/lisjp schema cv types
+        final List<String> possibleSysselSattningsCodes = Arrays.asList("NUVARANDE_ARBETE", "ARBETSLOSHET", "FORALDRALEDIGHET",
+                "ARBETSSOKANDE", "FORALDRALEDIG", "STUDIER");
+        for (String code : possibleSysselSattningsCodes) {
+            Sysselsattning sysselsattning = new Sysselsattning();
+            CV cvVal = new CV();
+            cvVal.setCodeSystem("KV_FKMU_0002");
+            cvVal.setCode(code);
+            sysselsattning.setTypAvSysselsattning(cvVal);
+            sysselSattningList.add(sysselsattning);
+        }
     }
 
     private void initEnhet() {
@@ -366,7 +415,6 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         HsaId peterEnkelId = new HsaId();
         peterEnkelId.setExtension("peter-enkel");
         peterEnkel.setPersonalId(peterEnkelId);
-
 
         hosPersonList.add(hosPerson1);
         hosPersonList.add(hosPerson2);
