@@ -28,8 +28,9 @@ angular.module('rehabstodcommon.dynamiclink').directive('dynamiclink',
                     'key': '@',
                     'linkclass': '@'
                 },
+                transclude: true,
                 template: '<a href="{{ url }}" class="external-link {{ linkclass }}" ng-attr-target="{{ target || undefined}}" ' +
-                    'ng-attr-title="{{ tooltip || undefined }}" ng-bind-html="text"></a>',
+                    'ng-attr-title="{{ tooltip || undefined }}"><span ng-bind-html="text"></span><ng-transclude></ng-transclude></a>',
                 
                 link: function(scope) {
                     scope.$watch(function() {

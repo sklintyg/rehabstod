@@ -50,6 +50,10 @@ $fa-font-path: '../bower_components/font-awesome/fonts';
 @import '../bower_components/bootstrap-sass/assets/stylesheets/bootstrap.scss';
 @import '../bower_components/font-awesome/scss/font-awesome.scss';
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 // App-wide Styles
 .browsehappy {
   background: #ccc;

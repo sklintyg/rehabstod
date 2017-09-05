@@ -32,7 +32,7 @@
   {
     "key": "statistiktjanstenSjunetWithIcon",
     "url": "https://statistik.intygstjanster.sjunet.org/",
-    "text": "<img src='/assets/images/statistiktj_logo.svg' width='141' height='26'> <i class='fa fa-arrow-right'></i>",
+    "text": "",
     "tooltip": "Observera att denna länk kräver att du är uppkopplad via sjunet",
     "target": "_blank"
   },
