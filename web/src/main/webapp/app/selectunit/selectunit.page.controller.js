@@ -19,10 +19,11 @@
 
 angular.module('rehabstodApp')
     .controller('SelectUnitPageCtrl',
-        function($scope, $state, UserModel, UserProxy) {
+        function($scope, $state, $http, UserModel, UserProxy, APP_CONFIG) {
             'use strict';
 
             $scope.user = UserModel.get();
+            $scope.sjunetAvailable = false;
 
             $scope.onUnitSelected = function(enhet) {
                 UserProxy.changeSelectedUnit(enhet.id).then(function(updatedUserModel) {
@@ -35,5 +36,16 @@ angular.module('rehabstodApp')
             };
 
 
+            function _testSjunetConnection() {
+                $http.get(APP_CONFIG.statistikTjanstBaseUrl + '/api/ping').then(function() {
+                        // Success
+                        $scope.sjunetAvailable = true;
+                    },
+                    function() {
+                        // Failure
+                        $scope.sjunetAvailable = false;
+                    });
+            }
 
+            _testSjunetConnection();
         });
