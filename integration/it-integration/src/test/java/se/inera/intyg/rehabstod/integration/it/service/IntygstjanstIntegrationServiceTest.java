@@ -62,7 +62,7 @@ public class IntygstjanstIntegrationServiceTest {
 
     @Test
     public void testGetIntygsDataForPatient() throws Exception {
-        when(intygstjanstClientService.getSjukfallForPatient(PATIENT_ID, HSA_ID)).thenReturn(buildResponse());
+        when(intygstjanstClientService.getSjukfallForPatient(HSA_ID, PATIENT_ID)).thenReturn(buildResponse());
         List<IntygsData> intygsDataForPatient = testee.getIntygsDataForPatient(HSA_ID, PATIENT_ID);
         assertEquals(1, intygsDataForPatient.size());
     }
