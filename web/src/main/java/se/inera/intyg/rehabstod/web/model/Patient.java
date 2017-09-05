@@ -97,6 +97,11 @@ public class Patient {
         return namn;
     }
 
+    // Need namn setter due to PU-service updating the name for us.
+    public void setNamn(String namn) {
+        this.namn = namn;
+    }
+
     public Gender getKon() {
         return kon;
     }

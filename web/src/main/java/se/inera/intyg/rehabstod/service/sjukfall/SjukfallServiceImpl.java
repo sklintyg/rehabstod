@@ -36,6 +36,7 @@ import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
+import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
@@ -80,6 +81,9 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Autowired
     private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
+    @Autowired
+    private SjukfallPuService sjukfallPuService;
+
     @Override
     public List<SjukfallEnhetRS> getSjukfall(String enhetsId, String mottagningsId,
                                              String lakareId, Urval urval, GetSjukfallRequest request) {
@@ -92,6 +96,10 @@ public class SjukfallServiceImpl implements SjukfallService {
                                            String lakareId, Urval urval, GetSjukfallRequest request) {
 
         List<SjukfallEnhetRS> internalSjukfallList = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, request);
+
+        // Utför sekretess-filtrering innan loggning, vi filtrerar ju ev. bort en del poster.
+        sjukfallPuService.enrichWithPatientNamesAndFilterSekretess(internalSjukfallList);
+
         if (internalSjukfallList != null) {
             monitoringLogService.logUserViewedSjukfall(lakareId,
                 internalSjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
@@ -99,6 +107,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(internalSjukfallList);
         sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(internalSjukfallList);
+
 
         return internalSjukfallList;
     }

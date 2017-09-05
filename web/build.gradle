@@ -95,6 +95,7 @@ dependencies {
     compile "se.inera.intyg.infra:common-cache-metrics:${intygInfraVersion}"
     compile "se.inera.intyg.infra:dynamiclink:${intygInfraVersion}"
     compile "se.inera.intyg.infra:hsa-integration:${intygInfraVersion}"
+    compile "se.inera.intyg.infra:pu-integration:${intygInfraVersion}"
     compile "se.inera.intyg.infra:security-siths:${intygInfraVersion}"
     compile "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
 
