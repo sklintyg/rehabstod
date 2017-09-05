@@ -29,6 +29,6 @@ public interface IntygstjanstIntegrationService {
 
     List<IntygsData> getIntygsDataForCareUnit(String hsaId);
 
-    List<IntygsData> getIntygsDataForPatient(String personId, String hsaId);
+    List<IntygsData> getIntygsDataForPatient(String hsaId, String personId);
 
 }

@@ -52,7 +52,7 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
     }
 
     @Override
-    public List<IntygsData> getIntygsDataForPatient(String patientId, String unitId) {
+    public List<IntygsData> getIntygsDataForPatient(String unitId, String patientId) {
         String errorMessage = "An error occured fetching sick leave certificates for patient. Error type: {}. Error msg: {}";
         return getIntygsData(intygstjanstClientService.getSjukfallForPatient(unitId, patientId), errorMessage);
     }
