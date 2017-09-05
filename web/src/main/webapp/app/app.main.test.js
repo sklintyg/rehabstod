@@ -32,6 +32,12 @@ app.value('networkConfig', {
     defaultTimeout: 15000
 });
 
+//Define a default empty APP_CONFIG so that we don't have to mock it in every tests dependency setup
+app.value('APP_CONFIG', {
+
+});
+
+
 app.config(function ($stateProvider, $urlRouterProvider, $locationProvider, $uibTooltipProvider, $httpProvider,
     http403ResponseInterceptorProvider) {
     'use strict';

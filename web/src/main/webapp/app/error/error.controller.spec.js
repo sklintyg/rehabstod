@@ -21,9 +21,7 @@ describe('Controller: ErrorCtrl', function() {
     'use strict';
 
     // load the controller's module
-    beforeEach(angular.mock.module('rehabstodApp', function($provide) {
-        $provide.value('APP_CONFIG', { webcertUrl: 'webcertUrl' });
-    }));
+    beforeEach(module('rehabstodApp'));
 
     var scope, sessionStorage;
 

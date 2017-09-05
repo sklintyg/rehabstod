@@ -3,6 +3,7 @@ describe('Controller: PatientHistoryController', function() {
 
     // load the controller's module
     beforeEach(module('rehabstodApp'));
+
     beforeEach(module('htmlTemplates'));
 
     var sjukfall2017 = {
@@ -54,7 +55,7 @@ describe('Controller: PatientHistoryController', function() {
 
     it('should build correct timeline for scenario 1', function() {
         //TODO: replace expectGET with real path when backend exists
-        $httpBackend.expectGET('patienthistorymock.json').respond(scenario1);
+        $httpBackend.expectPOST('/api/sjukfall/patient').respond(scenario1);
 
         scope.$digest();
         $httpBackend.flush();
@@ -71,7 +72,7 @@ describe('Controller: PatientHistoryController', function() {
 
     it('should build correct timeline for scenario 2', function() {
         //TODO: replace expectGET with real path when backend exists
-        $httpBackend.expectGET('patienthistorymock.json').respond(scenario2);
+        $httpBackend.expectPOST('/api/sjukfall/patient').respond(scenario2);
 
         scope.$digest();
         $httpBackend.flush();

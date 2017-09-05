@@ -23,9 +23,7 @@ describe('Directive: rhsTable', function () {
     describe('Controller: RhsTableCtrl', function () {
 
         // load the controller's module
-        beforeEach(angular.mock.module('rehabstodApp', function($provide) {
-            $provide.value('APP_CONFIG', { });
-        }));
+        beforeEach(module('rehabstodApp'));
 
         var scope;
         var SjukfallModel;
