@@ -27,7 +27,6 @@
       "minItems": 0,
       "type": "array"
     },
-
     "roles": {
       "additionalProperties": true,
       "properties": {},
