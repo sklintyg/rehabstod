@@ -20,21 +20,25 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 
 // CHECKSTYLE:OFF LineLength
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+
+import com.google.common.base.Strings;
+
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
-
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 // CHECKSTYLE:ON LineLength
 
@@ -71,9 +75,24 @@ public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitRespond
         enhetIds.add(parameters.getEnhetsId().getExtension());
 
         IntygsLista intygsLista = new IntygsLista();
-        intygsLista.getIntygsData().addAll(intygsData.stream()
-                .filter(id -> enhetIds.contains(id.getSkapadAv().getEnhet().getEnhetsId().getExtension()))
-                .collect(Collectors.toList()));
+
+
+        //Just interested in a specific patient?
+        String personnummer = parameters.getPersonId() != null && parameters.getPersonId().getExtension() != null
+                ? parameters.getPersonId().getExtension().trim()
+                : null;
+
+        if (!Strings.isNullOrEmpty(personnummer)) {
+            intygsLista.getIntygsData().addAll(intygsData.stream()
+                    .filter(id -> enhetIds.contains(id.getSkapadAv().getEnhet().getEnhetsId().getExtension())
+                            && personnummer.equals(id.getPatient().getPersonId().getExtension()))
+                    .collect(Collectors.toList()));
+        } else {
+            intygsLista.getIntygsData().addAll(intygsData.stream()
+                    .filter(id -> enhetIds.contains(id.getSkapadAv().getEnhet().getEnhetsId().getExtension()))
+                    .collect(Collectors.toList()));
+        }
+
         resp.setIntygsLista(intygsLista);
         return resp;
     }
