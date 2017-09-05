@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp').factory('patientHistoryProxy',
     function($http, $log, $q,
-        ObjectHelper, networkConfig) {
+        ObjectHelper, networkConfig, SjukfallFilterViewState) {
         'use strict';
 
         /*
@@ -27,19 +27,24 @@ angular.module('rehabstodApp').factory('patientHistoryProxy',
          */
         function _get(patient) {
 
-
             var promise = $q.defer();
 
-            $log.debug('Requesting patient history for patient ' + patient.id);
-            //TODO: call real api endpoint
-            var restPath = 'patienthistorymock.json';
-            //var restPath = '/api/sjukfall/history';
+            var query = {
+                maxIntygsGlapp: SjukfallFilterViewState.get().glapp,
+                patientId: patient.id
+            };
+
+            var restPath = '/api/sjukfall/patient';
 
             //No error keys defined, we handle errors here insted of in the interceptor
             var config =  {
                 timeout: networkConfig.defaultTimeout
             };
-            $http.get(restPath, config).success(function(data) {
+
+
+            $log.debug('Requesting patient history for patient ' + query.patientId + ' with maxIntygsGlapp ' + query.maxIntygsGlapp);
+
+            $http.post(restPath, query, config).success(function(data) {
                 if(!ObjectHelper.isDefined(data)) {
                     promise.reject({ errorCode: data, message: 'invalid data'});
                 } else {
