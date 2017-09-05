@@ -81,15 +81,20 @@ public class SjukfallServiceImpl implements SjukfallService {
     private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
     @Override
-    public List<SjukfallEnhetRS> getSjukfall(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request) {
+    public List<SjukfallEnhetRS> getSjukfall(String enhetsId, String mottagningsId,
+                                             String lakareId, Urval urval, GetSjukfallRequest request) {
+
         return getByUnit(enhetsId, mottagningsId, lakareId, urval, request);
     }
 
     @Override
-    public List<SjukfallEnhetRS> getByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request) {
+    public List<SjukfallEnhetRS> getByUnit(String enhetsId, String mottagningsId,
+                                           String lakareId, Urval urval, GetSjukfallRequest request) {
+
         List<SjukfallEnhetRS> internalSjukfallList = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, request);
         if (internalSjukfallList != null) {
-            monitoringLogService.logUserViewedSjukfall(lakareId, internalSjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
+            monitoringLogService.logUserViewedSjukfall(lakareId,
+                internalSjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
         }
 
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(internalSjukfallList);
@@ -99,17 +104,22 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     @Override
-    public List<SjukfallPatientRS> getByPatient(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request) {
-        List<SjukfallPatientRS> internalSjukfallList = getFilteredSjukfallByPatient(enhetsId, mottagningsId, lakareId, urval, request);
+    public List<SjukfallPatientRS> getByPatient(String enhetsId, String mottagningsId,
+                                                String lakareId, Urval urval, GetSjukfallRequest request) {
+
+        List<SjukfallPatientRS> internalSjukfallList = getFilteredSjukfallByPatient(enhetsId, mottagningsId, urval, request);
         if (internalSjukfallList != null) {
-            monitoringLogService.logUserViewedSjukfall(lakareId, internalSjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
+            monitoringLogService.logUserViewedSjukfall(lakareId,
+                internalSjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
         }
 
         return internalSjukfallList;
     }
 
     @Override
-    public SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request) {
+    public SjukfallSummary getSummary(String enhetsId, String mottagningsId,
+                                      String lakareId, Urval urval, GetSjukfallRequest request) {
+
         return statisticsCalculator.getSjukfallSummary(getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, request));
     }
 
@@ -159,9 +169,10 @@ public class SjukfallServiceImpl implements SjukfallService {
             List<PatientData> patientData = mapIntygList(from.getSjukfallIntygList());
 
             // Sort patientData by signeringsTidpunkt with descending order
-            Comparator<PatientData> dateComparator = Comparator.comparing(PatientData::getSigneringsTidpunkt, Comparator.reverseOrder());
-            patientData.stream().sorted(dateComparator);
+            Comparator<PatientData> dateComparator
+                = Comparator.comparing(PatientData::getSigneringsTidpunkt, Comparator.reverseOrder());
 
+            patientData = patientData.stream().sorted(dateComparator).collect(Collectors.toList());
             to.setIntyg(patientData);
 
         } catch (Exception e) {
@@ -328,11 +339,10 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     private List<SjukfallPatientRS> getFilteredSjukfallByPatient(String enhetsId, String mottagningsId,
-                                                                 String lakareId, Urval urval, GetSjukfallRequest request) {
+                                                                 Urval urval, GetSjukfallRequest request) {
         if (urval == null) {
             throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");
         }
-
 
         LOG.debug("Calling Intygstjänsten - fetching certificate information by patient.");
         List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForPatient(enhetsId, request.getPatientId());
@@ -341,25 +351,17 @@ public class SjukfallServiceImpl implements SjukfallService {
         List<IntygData> data = intygsData.stream().map(o -> map(o)).collect(Collectors.toList());
         IntygParametrar parametrar = map(request);
 
+        if (mottagningsId != null) {
+            LOG.debug("Filtering response - query for mottagning, only including 'sjukfall' with intyg on specified mottagning");
+            data = data.stream()
+                .filter(o -> !o.getVardenhetId().equals(mottagningsId))
+                .collect(Collectors.toList());
+        }
+
         List<SjukfallPatient> sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parametrar);
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
         List<SjukfallPatientRS> internalSjukfallList = sjukfallList.stream().map(o -> map(o)).collect(Collectors.toList());
-
-        // Let this filter look at the
-        if (urval.equals(Urval.ISSUED_BY_ME)) {
-            LOG.debug("Filtering response - a doctor shall only see patients 'sjukfall' he/she has issued certificates.");
-            sjukfallList = sjukfallList.stream()
-                .filter(o -> o.getSjukfallIntygList().get(0).getLakareId().equals(lakareId))
-                .collect(Collectors.toList());
-        }
-
-        if (mottagningsId != null) {
-            LOG.debug("Filtering response - query for mottagning, only including 'sjukfall' with active intyg on specified mottagning");
-            sjukfallList = sjukfallList.stream()
-                .filter(o -> o.getSjukfallIntygList().get(0).equals(mottagningsId))
-                .collect(Collectors.toList());
-        }
 
         return internalSjukfallList;
     }

@@ -58,12 +58,17 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
     }
 
     private List<IntygsData> getIntygsData(ListActiveSickLeavesForCareUnitResponseType responseType, String errorMessage) {
-        if (responseType != null && responseType.getResultCode() == ResultCodeEnum.OK) {
-            return responseType.getIntygsLista().getIntygsData();
-        } else {
+        if (responseType == null) {
+            LOG.error(errorMessage);
+            throw new IntygstjanstIntegrationException();
+        }
+
+        if (responseType.getResultCode() != ResultCodeEnum.OK) {
             LOG.error(errorMessage, responseType.getResultCode(), responseType.getComment());
             throw new IntygstjanstIntegrationException();
         }
+
+        return responseType.getIntygsLista().getIntygsData();
     }
 
 }

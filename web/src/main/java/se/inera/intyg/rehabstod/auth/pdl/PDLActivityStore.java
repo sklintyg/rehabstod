@@ -47,8 +47,11 @@ public final class PDLActivityStore {
      *
      * @return a list of SjukfallEnhetRS
      */
-    public static List<SjukfallEnhetRS> getActivitiesNotInStore(String enhetsId, List<SjukfallEnhetRS> sjukfall,
-                                                                ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
+    public static List<SjukfallEnhetRS> getActivitiesNotInStore(String enhetsId,
+                                                                List<SjukfallEnhetRS> sjukfall,
+                                                                ActivityType activityType,
+                                                                Map<String, List<PDLActivityEntry>> storedActivities) {
+
         if (sjukfall == null || sjukfall.isEmpty()) {
             return new ArrayList<>();
         }

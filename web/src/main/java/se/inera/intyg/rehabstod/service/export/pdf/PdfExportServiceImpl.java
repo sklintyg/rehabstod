@@ -305,7 +305,6 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             addCell(table, is.getPatient().getNamn());
             addCell(table, is.getPatient().getKon().getDescription());
             addCell(table, is.getDiagnos().getIntygsVarde());
-            //TODO: bidiagnodes kommasepararerade (och "-" om inga)
             addCell(table, "-");
 
             addCell(table, is.getStart() != null ? YearMonthDateFormatter.print(is.getStart()) : "?");
