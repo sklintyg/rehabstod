@@ -59,10 +59,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -103,9 +101,7 @@ public class SjukfallController {
         LOG.debug("PDL logging - log which 'sjukfall' that are going to be displayed to the user.");
         logSjukfallData(user, sjukfall, ActivityType.READ);
 
-        return sjukfall.stream()
-            .sorted(Comparator.comparing(SjukfallEnhetRS::getStart))
-            .collect(Collectors.toList());
+        return sjukfall;
     }
 
     @RequestMapping(value = "/patient", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -121,9 +117,7 @@ public class SjukfallController {
         //LOG.debug("PDL logging - log which 'sjukfall' that are going to be displayed to the user.");
         //logSjukfallData(user, sjukfall, ActivityType.READ);
 
-        return sjukfall.stream()
-            .sorted(Comparator.comparing(SjukfallPatientRS::getStart))
-            .collect(Collectors.toList());
+        return sjukfall;
     }
 
     /**
