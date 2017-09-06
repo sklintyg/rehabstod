@@ -46,6 +46,8 @@ public class PatientData {
 
     boolean aktivtIntyg;
 
+    private String enhetId;
+
 
     // - - - getters and setters
 
@@ -137,4 +139,11 @@ public class PatientData {
         this.aktivtIntyg = aktivtIntyg;
     }
 
+    public String getEnhetId() {
+        return enhetId;
+    }
+
+    public void setEnhetId(String enhetId) {
+        this.enhetId = enhetId;
+    }
 }

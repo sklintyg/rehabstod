@@ -117,6 +117,7 @@ public class SjukfallServiceImpl implements SjukfallService {
                                                 String lakareId, Urval urval, GetSjukfallRequest request) {
 
         List<SjukfallPatientRS> internalSjukfallList = getFilteredSjukfallByPatient(enhetsId, mottagningsId, urval, request);
+        sjukfallPuService.enrichWithPatientNameAndFilterSekretess(internalSjukfallList);
         if (internalSjukfallList != null) {
             monitoringLogService.logUserViewedSjukfall(lakareId,
                 internalSjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
@@ -129,7 +130,9 @@ public class SjukfallServiceImpl implements SjukfallService {
     public SjukfallSummary getSummary(String enhetsId, String mottagningsId,
                                       String lakareId, Urval urval, GetSjukfallRequest request) {
 
-        return statisticsCalculator.getSjukfallSummary(getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, request));
+        List<SjukfallEnhetRS> sjukfallList = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, request);
+        sjukfallPuService.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
+        return statisticsCalculator.getSjukfallSummary(sjukfallList);
     }
 
 
@@ -209,6 +212,7 @@ public class SjukfallServiceImpl implements SjukfallService {
             to.setLakare(from.getLakareNamn());
             to.setSysselsattning(getSysselsattningAsCsv(from.getSysselsattning()));
             to.setAktivtIntyg(from.isAktivtIntyg());
+            to.setEnhetId(from.getVardenhetId());
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
         }
