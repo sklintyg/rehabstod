@@ -18,6 +18,22 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
+
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,26 +44,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-
-import javax.annotation.PostConstruct;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-
-import se.riv.clinicalprocess.healthcond.certificate.types.v1.CV;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
-import se.riv.clinicalprocess.healthcond.certificate.v1.Sysselsattning;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
 
 /**
  * Can generate a suitable amount of intygsdata.
@@ -61,6 +57,8 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
 @Profile({ "dev", "rhs-it-stub" })
 public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerator {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
+
     public static final String VE_TSTNMT2321000156_105_N = "TSTNMT2321000156-105N";
     public static final String VE_TSTNMT2321000156_105P = "TSTNMT2321000156-105P";
     public static final String VE_TSTNMT2321000156_105Q = "TSTNMT2321000156-105Q";
@@ -68,11 +66,12 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     public static final String VE_2A = "IFV1239877878-103H";
     public static final String UE_AKUTEN = "akuten";
     public static final String UE_DIALYS = "dialys";
-    private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
+
     private final Integer startDatumOffset = -2;
     private final Integer slutDatumOffset = -1;
 
     private Queue<Patient> seededPatients = new LinkedList<>();
+
     private Enhet enhet;
     private Enhet enhet2;
     private Enhet enhet3;
@@ -86,7 +85,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private int currentDiagnosIndex = 0;
     private List<String> diagnosList = new ArrayList<>();
     private int currentSysselSattningIndex = 0;
-    private List<Sysselsattning> sysselSattningList = new ArrayList<>();
+    private List<String> sysselSattningList = new ArrayList<>();
     private int currentHosPersonIndex = 0;
     private List<HosPersonal> hosPersonList = new ArrayList<>();
     @Autowired
@@ -171,7 +170,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         return intygsData;
     }
 
-    private Sysselsattning getNextSysselSattning() {
+    private String getNextSysselSattning() {
         if (currentSysselSattningIndex > sysselSattningList.size() - 1) {
             currentSysselSattningIndex = 0;
         }
@@ -283,16 +282,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
     private void initSysselSattningar() {
         // Merged list of codes from fk7263/lisjp schema cv types
-        final List<String> possibleSysselSattningsCodes = Arrays.asList("NUVARANDE_ARBETE", "ARBETSLOSHET", "FORALDRALEDIGHET",
-                "ARBETSSOKANDE", "FORALDRALEDIG", "STUDIER");
-        for (String code : possibleSysselSattningsCodes) {
-            Sysselsattning sysselsattning = new Sysselsattning();
-            CV cvVal = new CV();
-            cvVal.setCodeSystem("KV_FKMU_0002");
-            cvVal.setCode(code);
-            sysselsattning.setTypAvSysselsattning(cvVal);
-            sysselSattningList.add(sysselsattning);
-        }
+        sysselSattningList.addAll(Arrays.asList("NUVARANDE_ARBETE", "ARBETSLOSHET", "FORALDRALEDIGHET",
+            "ARBETSSOKANDE", "FORALDRALEDIG", "STUDIER"));
     }
 
     private void initEnhet() {

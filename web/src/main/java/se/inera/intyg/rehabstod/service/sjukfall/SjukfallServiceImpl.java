@@ -251,9 +251,7 @@ public class SjukfallServiceImpl implements SjukfallService {
             to.setEnkeltIntyg(from.isEnkeltIntyg());
 
             to.setBiDiagnoser(getBidiagnoser(from.getBidiagnoser()));
-            to.setSysselsattning(from.getSysselsattning().stream()
-                    .map(s -> s.getTypAvSysselsattning().getCode())
-                    .collect(Collectors.toList()));
+            to.setSysselsattning(from.getSysselsattning());
 
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping Intygstjänsten's format to SjukfallEngine format", e);
