@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Schema for sjukfall as resturned from e.g /sjukfall",
+
+    "properties": {
+      "diagnos": {
+        "additionalProperties": false,
+        "properties": {
+          "kapitel": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "kod": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "namn": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "intygsVarde": {
+            "type": "string"
+          },
+          "beskrivning": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "kapitel",
+          "intygsVarde",
+          "kod",
+          "namn",
+          "beskrivning"
+        ],
+        "type": "object"
+      },
+      "start": {
+        "type": "string"
+      },
+      "slut": {
+        "type": "string"
+      },
+      "intyg": {
+        "minItems": 0,
+        "type": "array"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "diagnos",
+      "start",
+      "slut",
+      "intyg"
+    ],
+    "type" : "object"
+}

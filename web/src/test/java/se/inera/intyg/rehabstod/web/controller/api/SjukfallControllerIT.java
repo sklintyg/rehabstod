@@ -40,6 +40,10 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
 
     private static final String API_ENDPOINT = "api/sjukfall";
 
+    private static final String JSONSCHEMA_SUMMARY = "jsonschema/rhs-sjukfallsummary-response-schema.json";
+    private static final String JSONSCHEMA_ENHET = "jsonschema/rhs-sjukfallenhet-response-schema.json";
+    private static final String JSONSCHEMA_PATIENT = "jsonschema/rhs-sjukfallpatient-response-schema.json";
+
     @Test
     public void testGetSjukfallSummaryNotLoggedIn() {
 
@@ -54,7 +58,7 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
         given().expect().statusCode(OK).when().get(API_ENDPOINT + "/summary").then()
-                .body(matchesJsonSchemaInClasspath("jsonschema/rhs-sjukfallsummary-response-schema.json"));
+                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_SUMMARY));
     }
 
     @Test
@@ -68,7 +72,7 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
     }
 
     @Test
-    public void testGetSjukfall() {
+    public void testGetSjukfallByEnhet() {
 
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
@@ -76,7 +80,21 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         request.setMaxIntygsGlapp(0);
 
         given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT).then()
-                .body(matchesJsonSchemaInClasspath("jsonschema/rhs-sjukfallenhet-response-schema.json"));
+                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_ENHET));
+
+    }
+
+    @Test
+    public void testGetSjukfallByPatient() {
+
+        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
+
+        GetSjukfallRequest request = new GetSjukfallRequest();
+        request.setMaxIntygsGlapp(0);
+        request.setPatientId("19121212-1212ß");
+
+        given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT + "/patient").then()
+            .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT));
 
     }
 
@@ -101,7 +119,7 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         request.setMaxIntygsGlapp(0);
 
         Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT).then()
-                .body(matchesJsonSchemaInClasspath("jsonschema/rhs-sjukfallenhet-response-schema.json")).extract().response();
+                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_ENHET)).extract().response();
 
         SjukfallEnhetRS[] resultList = response.body().as(SjukfallEnhetRS[].class);
         return resultList.length;
