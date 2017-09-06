@@ -33,12 +33,12 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
     public void enrichWithPatientNamesAndFilterSekretess(List<SjukfallEnhetRS> sjukfallList) {
 
         RehabstodUser user = userService.getUser();
-        String selectedUnitHsaId = user.getValdVardenhet().getNamn();
-        boolean isLakare = user.isLakare();
 
         Iterator<SjukfallEnhetRS> i = sjukfallList.iterator();
+
         while (i.hasNext()) {
             SjukfallEnhetRS item = i.next();
+
             Personnummer pnr = Personnummer.createValidatedPersonnummerWithDash(item.getPatient().getId()).orElse(null);
             if (pnr == null) {
                 i.remove();
@@ -52,7 +52,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
                     // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE, då får vi ej visa
                     // sjukfall för s-märkt patient.
-                    if (!isLakare || !item.getVardEnhetId().equalsIgnoreCase(selectedUnitHsaId)) {
+                    if (!user.isLakare() || !item.getVardEnhetId().equalsIgnoreCase(user.getValdVardenhet().getId())) {
                         i.remove();
                     }
                 } else {
