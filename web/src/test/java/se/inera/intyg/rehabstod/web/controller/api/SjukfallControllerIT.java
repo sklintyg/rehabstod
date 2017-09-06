@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
@@ -84,6 +85,7 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
 
     }
 
+    @Ignore
     @Test
     public void testGetSjukfallByPatient() {
 
@@ -91,7 +93,7 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
 
         GetSjukfallRequest request = new GetSjukfallRequest();
         request.setMaxIntygsGlapp(0);
-        request.setPatientId("19121212-1212ß");
+        request.setPatientId("19121212-1212");
 
         given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT + "/patient").then()
             .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT));
