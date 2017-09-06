@@ -49,6 +49,9 @@
       "slut": {
         "type": "string"
       },
+      "dagar": {
+        "type": "integer"
+      },
       "intyg": {
         "minItems": 0,
         "type": "array"
@@ -59,6 +62,7 @@
       "diagnos",
       "start",
       "slut",
+      "dagar",
       "intyg"
     ],
     "type" : "object"

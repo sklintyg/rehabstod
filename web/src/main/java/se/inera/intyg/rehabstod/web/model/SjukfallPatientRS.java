@@ -31,6 +31,8 @@ public class SjukfallPatientRS {
     private LocalDate start;
     private LocalDate slut;
 
+    private Integer dagar;
+
     private List<PatientData> intyg;
 
 
@@ -58,6 +60,14 @@ public class SjukfallPatientRS {
 
     public void setSlut(LocalDate slut) {
         this.slut = slut;
+    }
+
+    public Integer getDagar() {
+        return dagar;
+    }
+
+    public void setDagar(Integer dagar) {
+        this.dagar = dagar;
     }
 
     public List<PatientData> getIntyg() {
