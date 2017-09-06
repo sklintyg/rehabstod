@@ -37,6 +37,7 @@ describe('Model: SjukfallModel', function() {
             'kod': 'M160',
             'beskrivning': 'Primär koxartros, dubbelsidig'
         },
+        'biDiagnoser': [{'intygsVarde': 'B1'},{'intygsVarde': 'B2'}],
         'start': '2016-02-01',
         'slut': '2016-03-01',
         'dagar': 84,
@@ -58,7 +59,7 @@ describe('Model: SjukfallModel', function() {
             SjukfallModel.set(testJsonData);
             expect(SjukfallModel.get().length).toEqual(testJsonData.length);
             expect(SjukfallModel.get()[0].quickSearchString).toEqual(
-                '19360721-7068:Förnamn-3607 Efternamn-21-7068:79:Kvinna:M16.0:Primär koxartros, dubbelsidig:2016-02-01:2016-03-01:84 dagar' +
+                '19360721-7068:Förnamn-3607 Efternamn-21-7068:79:Kvinna:M16.0:Primär koxartros, dubbelsidig:B1B2:2016-02-01:2016-03-01:84 dagar' +
                 ':4:100%,50%:Jan Nilsson:');
         });
 

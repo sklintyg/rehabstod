@@ -53,6 +53,16 @@ angular.module('rehabstodApp').factory('SjukfallModel',
 
             return dagar + suffix;
         }
+        function _getBiDiagnoserShow(diagnoser) {
+        var asText = '';
+        if (diagnoser) {
+            angular.forEach(diagnoser, function(diagnos) {
+                asText += diagnos.intygsVarde;
+            });
+        }
+        return asText;
+    }
+
 
         function _getGradShow(aktivGrad, grader) {
 
@@ -86,6 +96,7 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                     item.patient.konShow = _getKon(item.patient.kon);
                     item.dagarShow = _getDagar(item.dagar);
                     item.gradShow = _getGradShow(item.aktivGrad, item.grader);
+                    item.biDiagnoserShow = _getBiDiagnoserShow(item.biDiagnoser);
                     item.quickSearchString = '';
                     _addQuickSearchContentFromProperty(item, 'patient.id');
                     _addQuickSearchContentFromProperty(item, 'patient.namn');
@@ -93,6 +104,7 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                     _addQuickSearchContentFromProperty(item, 'patient.konShow');
                     _addQuickSearchContentFromProperty(item, 'diagnos.intygsVarde');
                     _addQuickSearchContentFromProperty(item, 'diagnos.beskrivning');
+                    _addQuickSearchContent(item, item.biDiagnoserShow);
                     _addQuickSearchContentFromProperty(item, 'start');
                     _addQuickSearchContentFromProperty(item, 'slut');
                     _addQuickSearchContent(item, item.dagarShow);
