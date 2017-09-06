@@ -140,7 +140,9 @@ form {
   }
 }
 
-
+.navbar-collapse {
+  padding-left: 0;
+}
 
 .navbar-collapse.in .nav > li {
   border-left: 1px solid #ddd;
@@ -343,4 +345,7 @@ input[type=checkbox] {
 
 .dropdown-toggle:focus {
   @include tab-focus;
+}
+.container-fluid {
+  padding-left: 30px;
 }

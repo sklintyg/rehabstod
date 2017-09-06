@@ -1,9 +1,6 @@
 rhs-table {
   display: block;
 
-  @media (min-width: $screen-lg-min) {
-    padding: 0 !important;
-  }
 }
 
 .st-sort-ascent {
@@ -38,14 +35,19 @@ rhs-table {
     cursor: pointer;
   }
 
-  .column-diagnos {
+
+
+  .column-diagnos-beskrivning {
     white-space: nowrap;
     text-overflow: ellipsis;
-    min-width: 80px;
-    max-width: 200px;
+    min-width: 40px;
+    max-width: 80%;
     overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
   }
 
+  .column-diagnos,
   .start-date,
   .end-date {
     white-space: nowrap;
@@ -77,19 +79,7 @@ rhs-table {
   z-index: 1002;
   top: 66px !important;
 
-  @media (max-width: $screen-xs-max) {
-    display: none;
-  }
 
-  @media (min-width: $screen-sm-min) {
-    width: $container-sm - $grid-gutter-width;
-  }
-  @media (min-width: $screen-md-min) {
-    width: $container-md - $grid-gutter-width;
-  }
-  @media (min-width: $screen-lg-min) {
-    width: $container-lg;
-  }
 
   tr {
     display: block;

@@ -1,42 +1,50 @@
-<div id="rhs-start-page">
+<div id="rhs-start-page" class="container">
   <div class="result-top">
-    <h1 class="page-header"><span message key="label.sjukfall.start.rehab.header"></span>{{user.valdVardenhet.namn}}</h1>
+    <h1 class="page-header"><span message key="label.sjukfall.start.rehab.header"></span>{{user.valdVardenhet.namn}}
+    </h1>
   </div>
-</div>
-
-<rhs-stat-panel vardenhet="user.valdVardenhet" id="rhs-start-stat-panel"></rhs-stat-panel>
 
 
-<div class="row" id="rhs-start-page-rehab">
-  <div class="col-xs-6">
-    <div class="">
+  <rhs-stat-panel vardenhet="user.valdVardenhet" id="rhs-start-stat-panel"></rhs-stat-panel>
+
+
+  <div class="row" id="rhs-start-page-rehab">
+    <div class="col-xs-6">
       <div class="">
-        <h3>{{::'label.sjukfall.start.rehab.selectionpanel.header' | message}}</h3>
-      </div>
-      <div class="">
-        <p><span message key="label.sjukfall.start.rehab.selectionpanel.body"></span></p>
+        <div class="">
+          <h3>{{::'label.sjukfall.start.rehab.selectionpanel.header' | message}}</h3>
+        </div>
+        <div class="">
+          <p><span message key="label.sjukfall.start.rehab.selectionpanel.body"></span></p>
 
-        <div>
-          <a data-ng-click="onSelectUrval('ALL')" id="rhs-start-page-all-btn">
-            {{::'label.sjukfall.start.rehab.selectionpanel.urval.button' | message}}
-          </a>
+          <div>
+            <a data-ng-click="onSelectUrval('ALL')" id="rhs-start-page-all-btn">
+              {{::'label.sjukfall.start.rehab.selectionpanel.urval.button' | message}}
+            </a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="col-xs-6">
-    <div class="">
+    <div class="col-xs-6">
       <div class="">
-        <h3>{{::'label.sjukfall.start.merstatistik.header' | message}}</h3>
-      </div>
-      <div class="">
-        <p><span message key="label.sjukfall.start.merstatistik.body"></span></p>
-        <div>
-          <a ng-if="sjunetAvailable" target="_blank" title="Observera att denna länk kräver att du är uppkopplad via Sjunet." href="https://statistik.intygstjanster.sjunet.org/">Gå vidare till statistiktjänsten <img src="/assets/images/statistik-logo-frilagd.png" width="24" height="24"></a>
-          <a ng-if="!sjunetAvailable" target="_blank" title="Observera att om du inte har uppkoppling till Sjunet länkas du till den nationella delen av Statistiktjänsten på Internet." href="https://statistik.intygstjanster.se/">Gå vidare till statistiktjänsten <img src="/assets/images/statistik-logo-frilagd.png" width="24" height="24"></a>
+        <div class="">
+          <h3>{{::'label.sjukfall.start.merstatistik.header' | message}}</h3>
         </div>
+        <div class="">
+          <p><span message key="label.sjukfall.start.merstatistik.body"></span></p>
+          <div>
+            <a ng-if="sjunetAvailable" target="_blank"
+               title="Observera att denna länk kräver att du är uppkopplad via Sjunet."
+               href="https://statistik.intygstjanster.sjunet.org/">Gå vidare till statistiktjänsten <img
+                src="/assets/images/statistik-logo-frilagd.png" width="24" height="24"></a>
+            <a ng-if="!sjunetAvailable" target="_blank"
+               title="Observera att om du inte har uppkoppling till Sjunet länkas du till den nationella delen av Statistiktjänsten på Internet."
+               href="https://statistik.intygstjanster.se/">Gå vidare till statistiktjänsten <img
+                src="/assets/images/statistik-logo-frilagd.png" width="24" height="24"></a>
+          </div>
 
+        </div>
       </div>
     </div>
   </div>

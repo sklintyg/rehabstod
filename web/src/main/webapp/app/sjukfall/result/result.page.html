@@ -1,5 +1,5 @@
-<div id="rhs-sjukfall-page">
-  <div set-class-when-at-top="result-fixed-top" class="result-top container" ng-switch="user.urval">
+<div id="rhs-sjukfall-page" class="container-fluid">
+  <div set-class-when-at-top="result-fixed-top" class="result-top" ng-switch="user.urval">
 
     <div ng-switch-when="ISSUED_BY_ME"> 
       <h1 class="page-header"><span message key="label.sjukfall.result.lakare.header"></span>{{user.valdVardenhet.namn}}</h1>
@@ -11,8 +11,8 @@
   </div>
 </div>
 
-<rhs-filter></rhs-filter>
+<rhs-filter class="container"></rhs-filter>
 
-<div rhs-spinner show-spinner="showSpinner" label="common.label.loading">
-  <rhs-table class="container"></rhs-table>
+<div rhs-spinner show-spinner="showSpinner" label="common.label.loading" class="container-fluid">
+  <rhs-table></rhs-table>
 </div>
