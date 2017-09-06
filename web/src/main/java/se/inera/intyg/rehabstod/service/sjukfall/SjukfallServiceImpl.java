@@ -177,12 +177,13 @@ public class SjukfallServiceImpl implements SjukfallService {
             to.setDiagnos(map(from.getDiagnosKod()));
             to.setStart(from.getStart());
             to.setSlut(from.getSlut());
+            to.setDagar(from.getDagar());
 
             List<PatientData> patientData = mapIntygList(from.getSjukfallIntygList());
 
-            // Sort patientData by signeringsTidpunkt with descending order
+            // Sort patientData by start date with descending order
             Comparator<PatientData> dateComparator
-                = Comparator.comparing(PatientData::getSigneringsTidpunkt, Comparator.reverseOrder());
+                = Comparator.comparing(PatientData::getStart, Comparator.reverseOrder());
 
             patientData = patientData.stream().sorted(dateComparator).collect(Collectors.toList());
             to.setIntyg(patientData);
@@ -240,7 +241,7 @@ public class SjukfallServiceImpl implements SjukfallService {
             to.setVardenhetNamn(from.getSkapadAv().getEnhet().getEnhetsnamn());
             to.setVardgivareId(from.getSkapadAv().getEnhet().getVardgivare().getVardgivarId().getExtension());
             to.setVardenhetNamn(from.getSkapadAv().getEnhet().getVardgivare().getVardgivarnamn());
-            to.setDiagnosKod(from.getDiagnoskod());
+            to.setDiagnosKod(new DiagnosKod(from.getDiagnoskod()));
 
             List<Formaga> formagor = from.getArbetsformaga().getFormaga().stream()
                     .map(f -> map(f)).collect(Collectors.toList());
