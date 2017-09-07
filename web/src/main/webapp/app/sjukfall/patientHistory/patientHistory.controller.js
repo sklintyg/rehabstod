@@ -23,7 +23,7 @@ angular.module('rehabstodApp').controller('patientHistoryController', function($
     $scope.patient = patient;
     $scope.showSpinner = true;
     //Constant needed in template
-    $scope.radius = 26;
+    $scope.radius = 30;
 
     function getYearFromDate(dateString) {
         var date = new Date(dateString);

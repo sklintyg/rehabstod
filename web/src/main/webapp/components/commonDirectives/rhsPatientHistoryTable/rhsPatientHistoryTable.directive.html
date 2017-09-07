@@ -4,13 +4,18 @@
   &nbsp;
 </h3>
 <div class="rhs-history-table-container arrow_box" ng-class="{'selected' : historyItem.selected}">
-
-  <h4 ng-click="onSelect(historyItem)">{{historyItem.sjukfall.diagnos.kod}} {{historyItem.sjukfall.diagnos.beskrivning}}</h4>
+  <div class="sjukfall-title-row" ng-click="onSelect(historyItem)">
+    <h4>{{historyItem.sjukfall.diagnos.kod}} {{historyItem.sjukfall.diagnos.beskrivning}}</h4>  <b>Sjukfallets längd
+    {{historyItem.sjukfall.dagar}} dagar</b>
+  </div>
   <button class="chevron-toggle-button" ng-click="historyItem.expanded = !historyItem.expanded">
-    <i class="glyphicon" ng-class="{'glyphicon-menu-down': !historyItem.expanded, 'glyphicon-menu-up': historyItem.expanded}"></i>
+    <i class="glyphicon"
+       ng-class="{'glyphicon-menu-down': !historyItem.expanded, 'glyphicon-menu-up': historyItem.expanded}"></i>
   </button>
 
-  <table class="table table-striped table-bordered" ng-if="historyItem.expanded">
+
+  <table class="table table-striped" ng-if="historyItem.expanded">
+    <thead>
     <tr>
       <th id="header-column-number">#</th>
       <th id="header-column-diagnose">Diagnos</th>
@@ -22,20 +27,25 @@
       <th id="header-column-doctor">Läkare</th>
       <th id="header-column-occupation">Sysselsättning</th>
     </tr>
-
+    </thead>
 
     <tbody>
     <tr ng-repeat="intyg in historyItem.sjukfall.intyg">
       <td ng-attr-id="sjukfall-{{index}}-column-number-{{$index}}">{{$index + 1}}</td>
-      <td ng-attr-id="sjukfall-{{index}}-column-diagnose-{{$index}}">{{::intyg.diagnos.kod}} {{::intyg.diagnos.beskrivning}}
+      <td ng-attr-id="sjukfall-{{index}}-column-diagnose-{{$index}}">
+        <div class="diagnos">{{::intyg.diagnos.kod}} {{::intyg.diagnos.beskrivning}}</div>
       </td>
       <td ng-attr-id="sjukfall-{{index}}-column-bidiagnoses-{{$index}}">
-        <div ng-repeat="d in intyg.bidiagnoser">{{d.kod}} {{d.beskrivning}}</div>
+        <div ng-repeat="d in intyg.bidiagnoser">
+          <div class="bidiagnos">{{d.kod}} {{d.beskrivning}}</div>
+        </div>
+        <span ng-if="intyg.bidiagnoser.length < 1">-</span>
       </td>
       <td ng-attr-id="sjukfall-{{index}}-column-startdatum-{{$index}}" class="nowrap">{{::intyg.start}}</td>
       <td ng-attr-id="sjukfall-{{index}}-column-slutdatum-{{$index}}" class="nowrap">{{::intyg.slut}}</td>
       <td ng-attr-id="sjukfall-{{index}}-column-langd-{{$index}}">{{::intyg.dagar}} dagar</td>
-      <td ng-attr-id="sjukfall-{{index}}-column-grad-{{$index}}" ng-bind-html="::formatGrader(intyg.grader)"></td>
+      <td ng-attr-id="sjukfall-{{index}}-column-grad-{{$index}}" class="nowrap"
+          ng-bind-html="::formatGrader(intyg.grader)"></td>
       <td ng-attr-id="sjukfall-{{index}}-column-lakare-{{$index}}">{{::intyg.lakare}}</td>
       <td ng-attr-id="sjukfall-{{index}}-column-sysselsattning-{{$index}}">{{::intyg.sysselsattning}}</td>
     </tr>

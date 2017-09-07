@@ -29,7 +29,7 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTimeLineItem', functi
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTimeLineItem/rhsPatientHistoryTimeLineItem.directive.html',
         link: function($scope) {
 
-            $scope.radius = 26;
+            $scope.radius = 30;
             $scope.center = $scope.radius + 2;
 
             $scope.getCircleY = function() {
@@ -39,7 +39,7 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTimeLineItem', functi
                 return $scope.getCircleY() - 4;
             };
             $scope.getCircleTextY2 = function() {
-                return $scope.getCircleTextY1() + 12;
+                return $scope.getCircleTextY1() + 14;
             };
 
             $scope.showYear = function() {

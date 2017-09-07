@@ -1,8 +1,8 @@
 <div class="modal-header">
   <h4>{{patient.namn}}&nbsp;&nbsp;&nbsp;{{patient.id}} &nbsp;&nbsp; {{patient.alder}} år {{patient.konShow}}</h4>
-  <button class="btn btn-secondary close-button pull-right" ng-click="close();"><i
-      class="glyphicon glyphicon glyphicon-remove"></i></button>
+  <button class="btn btn-link close-button pull-right" ng-click="close();">Stäng patientvy</button>
 </div>
+
 <div class="modal-body">
   <div rhs-spinner show-spinner="showSpinner" label="label.patienthistory.loading">
 
@@ -10,7 +10,7 @@
     <div ng-repeat="item in timeline">
       <!-- special case: gap between years that have sjukfall -->
       <div ng-if="!item.sjukfall" class="row year-gap">
-        <div class="col-xs-1">
+        <div class="col-xs-1 history-timeline">
           <!-- gap dotted line -->
           <svg xmlns="http://www.w3.org/2000/svg" height="30" ng-attr-width="{{radius * 2 + 4}}" class="year-gap">
             <line ng-attr-x1="{{radius-4}}" y1="0" ng-attr-x2="{{radius+8}}" y2="0" stroke-width="4" />
@@ -24,15 +24,15 @@
 
       <div ng-if="item.sjukfall" class="row">
         <rhs-patient-history-time-line-item history-item="item" index="$index" on-select="onSelectSjukfall(item)"
-                                            class="col-xs-1">
+                                            class="col-xs-1 history-timeline">
 
         </rhs-patient-history-time-line-item>
 
         <rhs-patient-history-table history-item="item" index="$index" on-select="onSelectSjukfall(item)"
-                                   class="col-xs-11"></rhs-patient-history-table>
+                                   class="col-xs-11 history-table"></rhs-patient-history-table>
       </div>
     </div>
 
   </div>
 
-</div></div>
+</div>

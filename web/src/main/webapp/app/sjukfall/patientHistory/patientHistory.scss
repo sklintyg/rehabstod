@@ -9,11 +9,6 @@
       display: inline;
     }
 
-    .btn.close-button {
-      background: $blue-color;
-      color: #fff;
-      border-radius: 0;
-    }
   }
 
   .modal-dialog {
@@ -64,5 +59,10 @@
     left: calc(50% - 26px);
 
   }
+  //Squeeze first column
+  .col-xs-1.history-timeline {
+    width: 75px;
+  }
+
 
 }
