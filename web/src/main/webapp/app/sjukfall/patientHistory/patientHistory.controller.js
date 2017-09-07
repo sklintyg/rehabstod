@@ -97,7 +97,7 @@ angular.module('rehabstodApp').controller('patientHistoryController', function($
             $scope.timeline[0].selected = true;
 
         }
-    }, function(errorResponse) {
+    }, function() {
         $scope.showSpinner = false;
         $scope.errorKey = 'server.error.loadpatienthistory.title';
 
