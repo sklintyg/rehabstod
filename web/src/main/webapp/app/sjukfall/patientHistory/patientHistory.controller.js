@@ -77,7 +77,7 @@ angular.module('rehabstodApp').controller('patientHistoryController', function($
         angular.forEach($scope.timeline, function(item) {
             item.selected = false;
         });
-        //.. and markk the new one as selected (and expand it to)
+        //.. and mark the new one as selected (and expand it too)
         timelineItem.selected = true;
         timelineItem.expanded = true;
     };
@@ -97,6 +97,10 @@ angular.module('rehabstodApp').controller('patientHistoryController', function($
             $scope.timeline[0].selected = true;
 
         }
+    }, function(errorResponse) {
+        $scope.showSpinner = false;
+        $scope.errorKey = 'server.error.loadpatienthistory.title';
+
     });
 
 });

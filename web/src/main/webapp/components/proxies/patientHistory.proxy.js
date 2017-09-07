@@ -36,10 +36,13 @@ angular.module('rehabstodApp').factory('patientHistoryProxy',
 
             var restPath = '/api/sjukfall/patient';
 
-            //No error keys defined, we handle errors here insted of in the interceptor
-            var config =  {
-                timeout: networkConfig.defaultTimeout
-            };
+            var config = {
+            errorMessageConfig: {
+                errorTitleKey: 'server.error.loadpatienthistory.title',
+                errorTextKey: 'server.error.default.text'
+            },
+            timeout: networkConfig.defaultTimeout
+        };
 
 
             $log.debug('Requesting patient history for patient ' + query.patientId + ' with maxIntygsGlapp ' + query.maxIntygsGlapp);

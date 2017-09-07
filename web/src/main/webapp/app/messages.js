@@ -170,7 +170,8 @@ var rhsMessages = {
         'server.error.changeunit.title' : 'Byte av enhet misslyckades',
         'server.error.changeurval.title' : 'Kunde inte visa sjukfall',
         'server.error.getsummary.text': 'Statistik för enheten kan inte visas',
-        'server.error.giveconsent.title' : 'Kunde inte lämna medgivande om PDL-loggning'
+        'server.error.giveconsent.title' : 'Kunde inte lämna medgivande om PDL-loggning',
+        'server.error.loadpatienthistory.title': 'Kunde inte hämta patienthistorik'
 
 
 
