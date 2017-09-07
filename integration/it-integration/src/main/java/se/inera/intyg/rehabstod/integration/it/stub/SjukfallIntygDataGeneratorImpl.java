@@ -18,22 +18,6 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
-
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -44,6 +28,30 @@ import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
+
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+
+import se.inera.intyg.infra.integration.pu.stub.ResidentStore;
+import se.inera.intyg.schemas.contract.Personnummer;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
+import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
+import se.riv.population.residentmaster.types.v1.JaNejTYPE;
+import se.riv.population.residentmaster.types.v1.NamnTYPE;
+import se.riv.population.residentmaster.types.v1.PersonpostTYPE;
+import se.riv.population.residentmaster.types.v1.ResidentType;
 
 /**
  * Can generate a suitable amount of intygsdata.
@@ -90,6 +98,9 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private List<HosPersonal> hosPersonList = new ArrayList<>();
     @Autowired
     private PersonnummerLoader personnummerLoader;
+
+    @Autowired
+    private ResidentStore residentStore;
 
     @PostConstruct
     public void init() {
@@ -255,12 +266,32 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
             int step = personNummerSize / numberOfPatients;
 
             for (int a = 0, i = 0; a < personNummerSize && i < numberOfPatients; i++, a += step) {
-                seededPatients.add(buildPerson(personNummer.get(a)));
+                final Patient patient = buildPerson(personNummer.get(a));
+                seededPatients.add(patient);
+                addToPuStub(patient);
             }
 
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not bootstrap IntygsData: " + e.getMessage());
         }
+    }
+    private void addToPuStub(Patient patient) {
+        ResidentType resident = new ResidentType();
+
+        resident.setSekretessmarkering(JaNejTYPE.N);
+
+        PersonpostTYPE personPost = new PersonpostTYPE();
+        Personnummer pnr = Personnummer.createValidatedPersonnummerWithDash(patient.getPersonId().getExtension()).orElseThrow(() -> new IllegalStateException("Invalid personnummer!"));
+        personPost.setPersonId(pnr.getPersonnummerWithoutDash());
+
+        NamnTYPE namn = new NamnTYPE();
+        namn.setFornamn("");
+        namn.setEfternamn(patient.getFullstandigtNamn());
+
+        personPost.setNamn(namn);
+
+        resident.setPersonpost(personPost);
+        residentStore.addUser(resident);
     }
 
     private Patient buildPerson(String pnr) {

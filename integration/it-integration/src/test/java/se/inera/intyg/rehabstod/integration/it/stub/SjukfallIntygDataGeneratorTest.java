@@ -24,6 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import se.inera.intyg.infra.integration.pu.stub.ResidentStore;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.util.Arrays;
@@ -31,6 +32,9 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -38,6 +42,9 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SjukfallIntygDataGeneratorTest {
+
+    @Mock
+    private ResidentStore residentStore;
 
     @Mock
     private PersonnummerLoader personnummerLoader;
@@ -53,6 +60,7 @@ public class SjukfallIntygDataGeneratorTest {
     @Test
     public void testGenerateIntygsData() throws Exception {
         when(personnummerLoader.readTestPersonnummer()).thenReturn(buildPersonnummerList());
+
         final int numberOfPatients = 10;
         final int intygPerPatient = 4;
         List<IntygsData> intygsData = testee.generateIntygsData(numberOfPatients, intygPerPatient);
@@ -61,6 +69,7 @@ public class SjukfallIntygDataGeneratorTest {
         assertEquals("M16.0", intygsData.get(0).getDiagnoskod());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum());
+        verify(residentStore, times(numberOfPatients)).addUser(any());
     }
 
     private List<String> buildPersonnummerList() {
