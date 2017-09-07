@@ -214,9 +214,9 @@ public class SjukfallController {
 
     private HttpHeaders getHttpHeaders(String contentType, long contentLength, String filenameExtension, RehabstodUser user) {
         HttpHeaders respHeaders = new HttpHeaders();
-        respHeaders.set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        respHeaders.set(HttpHeaders.CONTENT_TYPE, contentType);
         respHeaders.setContentLength(contentLength);
-        respHeaders.setContentDispositionFormData("attachment", getAttachmentFilename(user, ".xlsx"));
+        respHeaders.setContentDispositionFormData("attachment", getAttachmentFilename(user, filenameExtension));
         return respHeaders;
     }
 
