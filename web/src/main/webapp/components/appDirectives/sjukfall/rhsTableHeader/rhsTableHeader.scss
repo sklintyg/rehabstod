@@ -1,15 +1,16 @@
 .rhs-table {
   .rhs-table-head {
-    color: #fff;
+    color: $blue-color;
     cursor: pointer;
-    font-weight: normal;
+    font-weight: bold;
     padding: 7px 5px;
 
-    span {
-      vertical-align: top;
+    &.st-sort-ascent, &.st-sort-descent {
+      color: $blue-color-accent;
     }
 
     .rhs-tooltip {
+      color: $blue-color;
       display: inline-block;
       margin-left: 5px;
     }

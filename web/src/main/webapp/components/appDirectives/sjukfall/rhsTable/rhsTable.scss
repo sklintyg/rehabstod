@@ -3,6 +3,9 @@ rhs-table {
 
 }
 
+.fa-sort {
+  color: $background-darkergray-color;
+}
 .st-sort-ascent {
   .fa-sort {
     @extend .fa-sort-asc;
@@ -24,27 +27,51 @@ rhs-table {
   position: relative;
 
   thead {
-    background-color: #465761;
+    background-color: #fff;
+    > th {
+      color: $blue-color;
+    }
+
   }
 
-  .rhs-table-row > td {
-    padding: 5px;
+  tbody {
+
+    tr.rhs-table-row {
+
+      > td {
+
+        vertical-align: top;
+        padding: 5px;
+
+        &.nowrap {
+          white-space: nowrap;
+        }
+
+        .column-diagnos-beskrivning {
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          min-width: 40px;
+          max-width: 80%;
+          overflow: hidden;
+          display: inline-block;
+          vertical-align: middle;
+        }
+
+
+      }
+
+      //first tr td's should have top border
+      &:first-child > td {
+        border-top: 1px solid $inactive-element-color;
+      }
+    }
+
+
   }
-  tr.rhs-table-row:hover, .table-striped tbody > tr.rhs-table-row:nth-child(odd):hover  {
-    background-color: #b3e3e7 !important;
+
+  tr.rhs-table-row:hover, .table-striped tbody > tr.rhs-table-row:nth-child(odd):hover {
+    background-color: #b3e3e7;
     cursor: pointer;
-  }
-
-
-
-  .column-diagnos-beskrivning {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    min-width: 40px;
-    max-width: 80%;
-    overflow: hidden;
-    display: inline-block;
-    vertical-align: middle;
   }
 
   .column-diagnos,
@@ -53,7 +80,7 @@ rhs-table {
     white-space: nowrap;
   }
 
- .rhs-table-tooltip {
+  .rhs-table-tooltip {
     border-bottom: 1px dotted;
     cursor: help;
   }
@@ -78,8 +105,6 @@ rhs-table {
   position: fixed;
   z-index: 1002;
   top: 66px !important;
-
-
 
   tr {
     display: block;

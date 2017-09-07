@@ -32,12 +32,14 @@
     <tbody>
     <tr ng-repeat="intyg in historyItem.sjukfall.intyg">
       <td ng-attr-id="sjukfall-{{index}}-column-number-{{$index}}">{{$index + 1}}</td>
-      <td ng-attr-id="sjukfall-{{index}}-column-diagnose-{{$index}}">
-        <div class="diagnos">{{::intyg.diagnos.kod}} {{::intyg.diagnos.beskrivning}}</div>
+      <td ng-attr-id="sjukfall-{{index}}-column-diagnose-{{$index}}" class="nowrap">
+        <span uib-tooltip-html="getToolTip(intyg.diagnos)" tooltip-popup-delay="200" class="patient-history-dialog--tooltip">{{::intyg.diagnos.intygsVarde}}</span>
+        <div class="diagnos">{{::intyg.diagnos.beskrivning}}</div>
       </td>
-      <td ng-attr-id="sjukfall-{{index}}-column-bidiagnoses-{{$index}}">
+      <td ng-attr-id="sjukfall-{{index}}-column-bidiagnoses-{{$index}}" class="nowrap">
         <div ng-repeat="d in intyg.bidiagnoser">
-          <div class="bidiagnos">{{d.kod}} {{d.beskrivning}}</div>
+          <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="patient-history-dialog--tooltip">{{::d.intygsVarde}}</span>
+          <span class="bidiagnos">{{d.beskrivning}}</span>
         </div>
         <span ng-if="intyg.bidiagnoser.length < 1">-</span>
       </td>

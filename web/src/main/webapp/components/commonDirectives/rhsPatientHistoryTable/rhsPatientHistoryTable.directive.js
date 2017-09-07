@@ -16,7 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel', function(UserModel) {
+angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel', 'messageService',
+    function(UserModel, messageService) {
     'use strict';
 
     return {
@@ -29,6 +30,12 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsPatientHistoryTable.directive.html',
         link: function($scope) {
             $scope.user = UserModel.get();
+
+            $scope.getToolTip = function(diagnos) {
+                var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
+                    messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
+                return '<b>' + diagnos.kod + '</b><br>' + desc;
+            };
 
             //Requirements state that only first/last of grader should be returned
             $scope.formatGrader = function(gradArr) {

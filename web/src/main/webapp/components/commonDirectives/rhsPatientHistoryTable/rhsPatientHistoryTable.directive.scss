@@ -42,6 +42,7 @@ rhs-patient-history-table {
   }
 
   .rhs-history-table-container {
+
     &.selected {
       box-shadow: 1px 4px 13px 0 rgba(0, 0, 0, 0.11);
     }
@@ -67,53 +68,49 @@ rhs-patient-history-table {
       }
 
       tbody {
-        //only first/last cell have left/right border
         tr {
-          > td:first-child {
-            border-left: 1px solid $inactive-element-color;
-          }
-          > td:last-child {
-            border-right: 1px solid $inactive-element-color;
-          }
-        }
-
-        //last row have border bottom
-        tr:last-child {
-          > td {
-            border-bottom: 1px solid $inactive-element-color;
-          }
-        }
-
-        td {
-          //All cells have top border
-          border-top: 1px solid $inactive-element-color;
-          vertical-align: top;
-          padding: 2px;
-
-          &.nowrap {
-            white-space: nowrap;
+          //first tr should have top border
+          &:first-child > td {
+            border-top: 1px solid $inactive-element-color;
           }
 
-          .diagnos {
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            min-width: 40px;
-            max-width: 180px;
-            overflow: hidden;
-            display: inline-block;
+          td {
             vertical-align: top;
-          }
-          .bidiagnos {
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            min-width: 40px;
-            max-width: 140px;
-            overflow: hidden;
-            display: inline-block;
-            vertical-align: top;
-          }
+            padding: 5px;
 
+            &.nowrap {
+              white-space: nowrap;
+            }
+
+            .diagnos {
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              min-width: 40px;
+              max-width: 90%;
+              overflow: hidden;
+              display: inline-block;
+              vertical-align: top;
+            }
+            .bidiagnos {
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              min-width: 40px;
+              max-width: 90%;
+              overflow: hidden;
+              display: inline-block;
+              vertical-align: top;
+            }
+
+            .patient-history-dialog--tooltip {
+              border-bottom: 1px dotted;
+              cursor: help;
+            }
+
+          }
         }
+
+
+
       }
 
     }
