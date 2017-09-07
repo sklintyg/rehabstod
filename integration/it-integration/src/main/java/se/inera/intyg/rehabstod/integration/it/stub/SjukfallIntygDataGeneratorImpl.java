@@ -65,8 +65,6 @@ import se.riv.population.residentmaster.types.v1.ResidentType;
 @Profile({ "dev", "rhs-it-stub" })
 public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerator {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
-
     public static final String VE_TSTNMT2321000156_105_N = "TSTNMT2321000156-105N";
     public static final String VE_TSTNMT2321000156_105P = "TSTNMT2321000156-105P";
     public static final String VE_TSTNMT2321000156_105Q = "TSTNMT2321000156-105Q";
@@ -74,7 +72,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     public static final String VE_2A = "IFV1239877878-103H";
     public static final String UE_AKUTEN = "akuten";
     public static final String UE_DIALYS = "dialys";
-
+    private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
     private final Integer startDatumOffset = -2;
     private final Integer slutDatumOffset = -1;
 
@@ -275,13 +273,15 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
             throw new IllegalArgumentException("Could not bootstrap IntygsData: " + e.getMessage());
         }
     }
+
     private void addToPuStub(Patient patient) {
         ResidentType resident = new ResidentType();
 
         resident.setSekretessmarkering(JaNejTYPE.N);
 
         PersonpostTYPE personPost = new PersonpostTYPE();
-        Personnummer pnr = Personnummer.createValidatedPersonnummerWithDash(patient.getPersonId().getExtension()).orElseThrow(() -> new IllegalStateException("Invalid personnummer!"));
+        Personnummer pnr = Personnummer.createValidatedPersonnummerWithDash(patient.getPersonId().getExtension())
+                .orElseThrow(() -> new IllegalStateException("Invalid personnummer!"));
         personPost.setPersonId(pnr.getPersonnummerWithoutDash());
 
         NamnTYPE namn = new NamnTYPE();
@@ -314,7 +314,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private void initSysselSattningar() {
         // Merged list of codes from fk7263/lisjp schema cv types
         sysselSattningList.addAll(Arrays.asList("NUVARANDE_ARBETE", "ARBETSLOSHET", "FORALDRALEDIGHET",
-            "ARBETSSOKANDE", "FORALDRALEDIG", "STUDIER"));
+                "ARBETSSOKANDE", "FORALDRALEDIG", "STUDIER"));
     }
 
     private void initEnhet() {
