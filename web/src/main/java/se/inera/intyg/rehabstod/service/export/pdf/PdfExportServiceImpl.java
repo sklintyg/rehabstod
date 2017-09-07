@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.stereotype.Service;
+
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -33,9 +41,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
-import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.stereotype.Service;
+
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
@@ -44,10 +50,6 @@ import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
 import se.inera.intyg.rehabstod.web.model.Sortering;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * @author marced on 24/02/16.
@@ -305,7 +307,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             addCell(table, is.getPatient().getNamn());
             addCell(table, is.getPatient().getKon().getDescription());
             addCell(table, is.getDiagnos().getIntygsVarde());
-            addCell(table, "-");
+            addCell(table, diagnoseListToString(is.getBiDiagnoser()));
 
             addCell(table, is.getStart() != null ? YearMonthDateFormatter.print(is.getStart()) : "?");
             addCell(table, is.getSlut() != null ? YearMonthDateFormatter.print(is.getSlut()) : "?");
@@ -329,6 +331,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     private void addCell(PdfPTable table, int i) {
         addCell(table, Integer.toString(i), PdfExportConstants.TABLE_CELL_NORMAL);
     }
+
     private void addCell(PdfPTable table, String s) {
         addCell(table, s, PdfExportConstants.TABLE_CELL_NORMAL);
     }

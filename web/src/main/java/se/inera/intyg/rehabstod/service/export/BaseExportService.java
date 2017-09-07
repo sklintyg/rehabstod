@@ -22,6 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.Diagnos;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-26.
@@ -71,6 +75,16 @@ public abstract class BaseExportService {
 
     protected boolean notEmpty(PrintSjukfallRequest req) {
         return req.getFritext() != null && req.getFritext().trim().length() > 0;
+    }
+
+    protected String diagnoseListToString(List<Diagnos> biDiagnoser) {
+        if (biDiagnoser != null && biDiagnoser.size() > 0) {
+            return biDiagnoser.stream().map(d -> d.getIntygsVarde())
+                    .collect(Collectors.joining(", "));
+        } else {
+            return "-";
+        }
+
     }
 
 }
