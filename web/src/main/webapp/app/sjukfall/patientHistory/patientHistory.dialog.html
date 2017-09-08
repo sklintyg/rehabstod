@@ -35,7 +35,7 @@
     </div>
 
 
-    <div class="alert alert-danger" ng-if="errorKey">{{::errorKey | message}}</div>
+    <div class="alert alert-danger" ng-if="errorMessageKey" ng-bind-html="errorMessageKey | message"></div>
 
   </div>
 

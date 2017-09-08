@@ -171,7 +171,7 @@ var rhsMessages = {
         'server.error.changeurval.title' : 'Kunde inte visa sjukfall',
         'server.error.getsummary.text': 'Statistik för enheten kan inte visas',
         'server.error.giveconsent.title' : 'Kunde inte lämna medgivande om PDL-loggning',
-        'server.error.loadpatienthistory.title': 'Kunde inte hämta patienthistorik'
+        'server.error.loadpatienthistory.text': 'Sjukfallshistorik kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>'
 
 
 

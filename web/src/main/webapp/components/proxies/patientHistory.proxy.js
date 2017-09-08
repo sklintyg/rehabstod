@@ -18,56 +18,56 @@
  */
 
 angular.module('rehabstodApp').factory('patientHistoryProxy',
-    function($http, $log, $q,
-        ObjectHelper, networkConfig, SjukfallFilterViewState) {
-        'use strict';
+    function($http, $log, $q, ObjectHelper, networkConfig, SjukfallFilterViewState) {
+    'use strict';
 
-        /*
-         * Get history for the specified patient
-         */
-        function _get(patient) {
+    /*
+     * Get history for the specified patient
+     */
+    function _get(patient) {
 
-            var promise = $q.defer();
+        var promise = $q.defer();
 
-            var query = {
-                maxIntygsGlapp: SjukfallFilterViewState.get().glapp,
-                patientId: patient.id
-            };
+        var query = {
+            maxIntygsGlapp: SjukfallFilterViewState.get().glapp,
+            patientId: patient.id
+        };
 
-            var restPath = '/api/sjukfall/patient';
+        var restPath = '/api/sjukfall/patient';
 
-            var config = {
-            errorMessageConfig: {
-                errorTitleKey: 'server.error.loadpatienthistory.title',
-                errorTextKey: 'server.error.default.text'
-            },
+        var config = {
             timeout: networkConfig.defaultTimeout
         };
 
+        $log.debug('Requesting patient history for patient ' + query.patientId + ' with maxIntygsGlapp ' + query.maxIntygsGlapp);
 
-            $log.debug('Requesting patient history for patient ' + query.patientId + ' with maxIntygsGlapp ' + query.maxIntygsGlapp);
+        $http.post(restPath, query, config).success(function(data) {
+            if (!ObjectHelper.isDefined(data)) {
+                promise.reject({
+                    errorCode: data,
+                    message: 'invalid data'
+                });
+            } else {
+                promise.resolve(data);
+            }
+        }).error(function(data, status) {
+            $log.error('error ' + status);
+            // Let calling code handle the error of no data response
+            if (data === null) {
+                promise.reject({
+                    errorCode: data,
+                    message: 'no response'
+                });
+            } else {
+                promise.reject(data);
+            }
+        });
 
-            $http.post(restPath, query, config).success(function(data) {
-                if(!ObjectHelper.isDefined(data)) {
-                    promise.reject({ errorCode: data, message: 'invalid data'});
-                } else {
-                    promise.resolve(data);
-                }
-            }).error(function(data, status) {
-                $log.error('error ' + status);
-                // Let calling code handle the error of no data response
-                if(data === null) {
-                    promise.reject({errorCode: data, message: 'no response'});
-                } else {
-                    promise.reject(data);
-                }
-            });
+        return promise.promise;
+    }
 
-            return promise.promise;
-        }
-
-        // Return public API for the service
-        return {
-            get: _get
-        };
-    });
+    // Return public API for the service
+    return {
+        get: _get
+    };
+});

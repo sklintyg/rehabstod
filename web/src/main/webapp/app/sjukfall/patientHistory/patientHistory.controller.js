@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp').controller('patientHistoryController', function($scope, $uibModalInstance, $state, patientHistoryProxy, patient) {
     'use strict';
-
+    $scope.errorMessageKey  = '';
     $scope.patient = patient;
     $scope.showSpinner = true;
     //Constant needed in template
@@ -99,8 +99,7 @@ angular.module('rehabstodApp').controller('patientHistoryController', function($
         }
     }, function() {
         $scope.showSpinner = false;
-        $scope.errorKey = 'server.error.loadpatienthistory.title';
-
+        $scope.errorMessageKey = 'server.error.loadpatienthistory.text';
     });
 
 });
