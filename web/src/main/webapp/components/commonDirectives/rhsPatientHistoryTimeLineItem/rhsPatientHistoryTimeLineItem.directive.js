@@ -24,6 +24,7 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTimeLineItem', functi
         scope: {
             historyItem: '=',
             index: '=',
+            isLast: '=',
             onSelect: '&'
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTimeLineItem/rhsPatientHistoryTimeLineItem.directive.html',

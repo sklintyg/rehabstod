@@ -8,6 +8,7 @@
 
 
     <div ng-repeat="item in timeline">
+      
       <!-- special case: gap between years that have sjukfall -->
       <div ng-if="!item.sjukfall" class="row year-gap">
         <div class="col-xs-1 history-timeline">
@@ -23,7 +24,7 @@
       </div>
 
       <div ng-if="item.sjukfall" class="row">
-        <rhs-patient-history-time-line-item history-item="item" index="$index" on-select="onSelectSjukfall(item)"
+        <rhs-patient-history-time-line-item history-item="item" index="$index" is-last="$last" on-select="onSelectSjukfall(item)"
                                             class="col-xs-1 history-timeline">
 
         </rhs-patient-history-time-line-item>

@@ -6,7 +6,7 @@
     padding: 7px 5px;
 
     &.st-sort-ascent, &.st-sort-descent {
-      color: $blue-color-accent;
+      text-decoration: underline;
     }
 
     .rhs-tooltip {

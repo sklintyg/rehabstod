@@ -3,15 +3,18 @@ rhs-patient-history-time-line-item {
   display: block;
 
   .rhs-history-timeline-container {
-    min-height: 100px;
+    min-height: 120px;
   }
   svg {
     overflow: hidden;
     position: absolute;
     font-weight: bold;
-    cursor: pointer;
     max-height: 100%;
     height: 100%;
+
+    &.fixate-bottom {
+      top:  100%;
+    }
 
     //50% - radius of the circle
     left: calc(50% - 26px);
@@ -20,10 +23,14 @@ rhs-patient-history-time-line-item {
     line {
       stroke: $blue-color;
     }
+    rect {
+      fill: $blue-color;
+    }
 
     g.date-circle {
       circle {
         position: absolute;
+        cursor: pointer;
         top: 0;
         left: 0;
         fill: #fff;
@@ -35,6 +42,7 @@ rhs-patient-history-time-line-item {
       }
 
       text {
+        cursor: pointer;
         fill: $blue-color;
         stroke: none;
 
