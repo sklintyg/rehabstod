@@ -211,7 +211,7 @@ public class SjukfallServiceImpl implements SjukfallService {
             to.setDagar(from.getDagar());
             to.setGrader(from.getGrader());
             to.setLakare(from.getLakareNamn());
-            to.setSysselsattning(getSysselsattningAsCsv(from.getSysselsattning()));
+            to.setSysselsattning(from.getSysselsattning());
             to.setAktivtIntyg(from.isAktivtIntyg());
             to.setEnhetId(from.getVardenhetId());
         } catch (Exception e) {
@@ -219,10 +219,6 @@ public class SjukfallServiceImpl implements SjukfallService {
         }
 
         return to;
-    }
-
-    private String getSysselsattningAsCsv(List<String> sysselsattning) {
-        return sysselsattning.stream().collect(Collectors.joining(","));
     }
 
     /**

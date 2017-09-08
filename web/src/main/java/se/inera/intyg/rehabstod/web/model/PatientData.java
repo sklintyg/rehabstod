@@ -42,7 +42,7 @@ public class PatientData {
     private List<Integer> grader;
 
     private String lakare;
-    private String sysselsattning;
+    private List<String> sysselsattning;
 
     boolean aktivtIntyg;
 
@@ -123,11 +123,11 @@ public class PatientData {
         this.lakare = lakare;
     }
 
-    public String getSysselsattning() {
+    public List<String> getSysselsattning() {
         return sysselsattning;
     }
 
-    public void setSysselsattning(String sysselsattning) {
+    public void setSysselsattning(List<String> sysselsattning) {
         this.sysselsattning = sysselsattning;
     }
 

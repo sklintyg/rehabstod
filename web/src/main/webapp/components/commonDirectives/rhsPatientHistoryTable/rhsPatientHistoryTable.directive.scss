@@ -49,7 +49,6 @@ rhs-patient-history-table {
     padding: 15px;
     margin-bottom: 15px;
 
-
     .sjukfall-title-row {
       display: inline-block;
       cursor: pointer;
@@ -85,20 +84,18 @@ rhs-patient-history-table {
             .diagnos {
               white-space: nowrap;
               text-overflow: ellipsis;
-              min-width: 40px;
-              max-width: 90%;
+              max-width: 200px;
               overflow: hidden;
-              display: inline-block;
               vertical-align: top;
+              display: inline-block;
             }
             .bidiagnos {
               white-space: nowrap;
               text-overflow: ellipsis;
-              min-width: 40px;
-              max-width: 90%;
+              max-width: 160px;
               overflow: hidden;
-              display: inline-block;
               vertical-align: top;
+              display: inline-block;
             }
 
             .patient-history-dialog--tooltip {
@@ -108,8 +105,6 @@ rhs-patient-history-table {
 
           }
         }
-
-
 
       }
 
