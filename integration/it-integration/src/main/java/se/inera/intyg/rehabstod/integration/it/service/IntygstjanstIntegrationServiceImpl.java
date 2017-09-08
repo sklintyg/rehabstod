@@ -23,13 +23,16 @@ package se.inera.intyg.rehabstod.integration.it.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
+import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.integration.it.exception.IntygstjanstIntegrationException;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
+import javax.xml.bind.annotation.XmlAccessorOrder;
 import java.util.List;
 
 // CHECKSTYLE:ON LineLength
@@ -47,12 +50,16 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
 
     @Override
     public List<IntygsData> getIntygsDataForCareUnit(String unitId) {
+        verifyMandatoryParameter("unitId", unitId);
         String errorMessage = "An error occured fetching sick leave certificates for healthcare unit. Error type: {}. Error msg: {}";
         return getIntygsData(intygstjanstClientService.getSjukfallForUnit(unitId), errorMessage);
     }
 
     @Override
     public List<IntygsData> getIntygsDataForPatient(String unitId, String patientId) {
+        verifyMandatoryParameter("unitId", unitId);
+        verifyMandatoryParameter("patientId", patientId);
+
         String errorMessage = "An error occured fetching sick leave certificates for patient. Error type: {}. Error msg: {}";
         return getIntygsData(intygstjanstClientService.getSjukfallForPatient(unitId, patientId), errorMessage);
     }
@@ -71,4 +78,9 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
         return responseType.getIntygsLista().getIntygsData();
     }
 
+    private void verifyMandatoryParameter(String name, String value) {
+        if (StringUtil.isNullOrEmpty(value)) {
+            throw new IllegalArgumentException("Parameter '" + name + "' must be non-empty string");
+        }
+    }
 }

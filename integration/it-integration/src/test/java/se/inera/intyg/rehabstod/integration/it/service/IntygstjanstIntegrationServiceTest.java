@@ -60,11 +60,32 @@ public class IntygstjanstIntegrationServiceTest {
         assertEquals(1, intygsDataForCareUnit.size());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetIntygsDataForCareUnitEmptyArgumentThrowsException() throws Exception {
+        testee.getIntygsDataForCareUnit("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetIntygsDataForCareUnitNullArgumentThrowsException() throws Exception {
+        testee.getIntygsDataForCareUnit(null);
+    }
+
+
     @Test
     public void testGetIntygsDataForPatient() throws Exception {
         when(intygstjanstClientService.getSjukfallForPatient(HSA_ID, PATIENT_ID)).thenReturn(buildResponse());
         List<IntygsData> intygsDataForPatient = testee.getIntygsDataForPatient(HSA_ID, PATIENT_ID);
         assertEquals(1, intygsDataForPatient.size());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetIntygsDataForPatientNullParametersThrowsException() throws Exception {
+        testee.getIntygsDataForPatient(null, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetIntygsDataForPatientEmptyParametersThrowsException() throws Exception {
+        testee.getIntygsDataForPatient("", "");
     }
 
     @Test(expected = IntygstjanstIntegrationException.class)
