@@ -20,20 +20,19 @@ package se.inera.intyg.rehabstod.integration.it.service;
 
 // CHECKSTYLE:OFF LineLength
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.integration.it.exception.IntygstjanstIntegrationException;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import javax.xml.bind.annotation.XmlAccessorOrder;
-import java.util.List;
 
 // CHECKSTYLE:ON LineLength
 
