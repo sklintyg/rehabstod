@@ -232,12 +232,11 @@ public class SjukfallController {
 
     private List<SjukfallPatientRS> getSjukfallForPatient(RehabstodUser user, GetSjukfallRequest request) {
         String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
-        String mottagningsId = getMottagningsId(user);
         String lakarId = user.getHsaId();
         Urval urval = user.getUrval();
 
         LOG.debug("Calling the 'sjukfall' service to get a list of 'sjukfall' for one patient.");
-        return sjukfallService.getByPatient(enhetsId, mottagningsId, lakarId, urval, request);
+        return sjukfallService.getByPatient(enhetsId, lakarId, urval, request);
     }
 
     private void logSjukfallData(RehabstodUser user, List<SjukfallEnhetRS> sjukfallList, ActivityType activityType) {

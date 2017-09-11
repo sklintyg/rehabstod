@@ -113,14 +113,14 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     @Override
-    public List<SjukfallPatientRS> getByPatient(String enhetsId, String mottagningsId,
+    public List<SjukfallPatientRS> getByPatient(String enhetsId,
                                                 String lakareId, Urval urval, GetSjukfallRequest request) {
 
-        List<SjukfallPatientRS> internalSjukfallList = getFilteredSjukfallByPatient(enhetsId, mottagningsId, urval, request);
+        List<SjukfallPatientRS> internalSjukfallList = getFilteredSjukfallByPatient(enhetsId, urval, request);
         sjukfallPuService.enrichWithPatientNameAndFilterSekretess(internalSjukfallList);
         if (internalSjukfallList != null) {
             monitoringLogService.logUserViewedSjukfall(lakareId,
-                internalSjukfallList.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
+                internalSjukfallList.size(), enhetsId);
         }
 
         return internalSjukfallList;
@@ -346,8 +346,8 @@ public class SjukfallServiceImpl implements SjukfallService {
         return internalSjukfallList;
     }
 
-    private List<SjukfallPatientRS> getFilteredSjukfallByPatient(String enhetsId, String mottagningsId,
-                                                                 Urval urval, GetSjukfallRequest request) {
+    private List<SjukfallPatientRS> getFilteredSjukfallByPatient(String enhetsId,
+            Urval urval, GetSjukfallRequest request) {
         if (urval == null) {
             throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");
         }
@@ -358,13 +358,6 @@ public class SjukfallServiceImpl implements SjukfallService {
         LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall' by patient.");
         List<IntygData> data = intygsData.stream().map(o -> map(o)).collect(Collectors.toList());
         IntygParametrar parametrar = map(request);
-
-        if (mottagningsId != null) {
-            LOG.debug("Filtering response - query for mottagning, only including 'sjukfall' with intyg on specified mottagning");
-            data = data.stream()
-                .filter(o -> !o.getVardenhetId().equals(mottagningsId))
-                .collect(Collectors.toList());
-        }
 
         List<SjukfallPatient> sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parametrar);
 

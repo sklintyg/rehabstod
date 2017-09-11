@@ -47,7 +47,7 @@ public interface SjukfallService {
      */
     List<SjukfallEnhetRS> getByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
 
-    List<SjukfallPatientRS> getByPatient(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
+    List<SjukfallPatientRS> getByPatient(String enhetsId, String lakareId, Urval urval, GetSjukfallRequest request);
 
     SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
 
