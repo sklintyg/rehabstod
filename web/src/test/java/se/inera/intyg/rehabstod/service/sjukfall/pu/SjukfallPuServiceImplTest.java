@@ -167,13 +167,14 @@ public class SjukfallPuServiceImplTest {
         testee.enrichWithPatientNameAndFilterSekretess(buildPatientSjukfallList());
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void testGetPatientSjukfallThrowsExceptionIfPuNotFound() {
+    @Test
+    public void testGetPatientSjukfallWhenPatientNotFoundInPu() {
 
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.NOT_FOUND));
-
-        testee.enrichWithPatientNameAndFilterSekretess(buildPatientSjukfallList());
+        List<SjukfallPatientRS> patientSjukfallList = buildPatientSjukfallList();
+        testee.enrichWithPatientNameAndFilterSekretess(patientSjukfallList);
+        assertEquals(1, patientSjukfallList.size());
     }
 
     @Test(expected = IllegalStateException.class)

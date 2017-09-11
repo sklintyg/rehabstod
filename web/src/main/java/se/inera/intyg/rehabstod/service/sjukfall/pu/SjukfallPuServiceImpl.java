@@ -81,8 +81,6 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
                 throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
             } else {
-                LOG.warn("Patient with personnummer '{}' was not found in PU-service, not including in list of sjukfall", pnr.getPnrHash());
-                // i.remove();
                 item.getPatient().setNamn("Namn okänt");
             }
         }
@@ -118,7 +116,9 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
         } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
             throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
         } else {
-            throw new IllegalStateException("Could not find patient in PU service, not showing any sjukfall.");
+            patientSjukfall.stream()
+                    .flatMap(ps -> ps.getIntyg().stream())
+                    .forEach(i -> i.getPatient().setNamn("Namn okänt"));
         }
     }
 
