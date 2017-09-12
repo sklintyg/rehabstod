@@ -136,6 +136,20 @@ public class SjukfallPuServiceImplTest {
     }
 
     @Test
+    public void testNameIsReplacedWhenLakareAccessesSekretessmarkerad() {
+        RehabstodUser user = buildLakare(ENHET_1);
+        when(userService.getUser()).thenReturn(user);
+
+        when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
+                buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.FOUND));
+
+        List<SjukfallEnhetRS> sjukfallList = buildSjukfallList();
+        testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
+        assertEquals(sjukfallList.size(),1);
+        assertEquals(sjukfallList.get(0).getPatient().getNamn(), SjukfallPuService.SEKRETESS_SKYDDAD_NAME_PLACEHOLDER);
+    }
+
+    @Test
     public void testNameIsReplacedByPlaceholderIfFromPersonSvarWasNotFound() {
         when(userService.getUser()).thenReturn(buildVardadmin());
 
@@ -145,7 +159,7 @@ public class SjukfallPuServiceImplTest {
         List<SjukfallEnhetRS> sjukfallList = buildSjukfallList();
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
         assertEquals(1, sjukfallList.size());
-        assertEquals("Namn okänt", sjukfallList.get(0).getPatient().getNamn());
+        assertEquals(SjukfallPuService.SEKRETESS_SKYDDAD_NAME_UNKNOWN, sjukfallList.get(0).getPatient().getNamn());
     }
 
     @Test(expected = IllegalStateException.class)

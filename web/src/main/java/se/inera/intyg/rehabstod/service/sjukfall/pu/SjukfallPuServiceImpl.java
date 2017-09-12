@@ -18,11 +18,16 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.pu;
 
-import com.google.common.base.Joiner;
+import java.util.Iterator;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.common.base.Joiner;
+
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.services.PUService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -30,9 +35,6 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatientRS;
 import se.inera.intyg.schemas.contract.Personnummer;
-
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by eriklupander on 2017-09-05.
@@ -69,6 +71,9 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
                 if (personSvar.getPerson().isSekretessmarkering()) {
 
+                    // RS-US-GE-002: RS-15 => Om patienten är sekretessmarkerad, skall namnet bytas ut mot placeholder.
+                    item.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_PLACEHOLDER);
+
                     // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE, då får vi ej visa
                     // sjukfall för s-märkt patient.
                     if (!user.isLakare() || !item.getVardEnhetId().equalsIgnoreCase(user.getValdVardenhet().getId())) {
@@ -81,7 +86,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
                 throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
             } else {
-                item.getPatient().setNamn("Namn okänt");
+                item.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_UNKNOWN);
             }
         }
     }

@@ -27,6 +27,10 @@ import java.util.List;
  * Created by eriklupander on 2017-09-05.
  */
 public interface SjukfallPuService {
+
+    String SEKRETESS_SKYDDAD_NAME_PLACEHOLDER = "Sekretessmarkerad uppgift";
+    String SEKRETESS_SKYDDAD_NAME_UNKNOWN = "Namn okänt";
+
     void enrichWithPatientNamesAndFilterSekretess(List<SjukfallEnhetRS> sjukfallList);
 
     void enrichWithPatientNameAndFilterSekretess(List<SjukfallPatientRS> patientSjukfall);
