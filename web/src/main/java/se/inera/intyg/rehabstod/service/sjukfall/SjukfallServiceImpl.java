@@ -26,13 +26,12 @@ import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.web.mappers.IntygstjanstMapper;
-import se.inera.intyg.rehabstod.web.mappers.SjukfallEngineMapper;
+import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
+import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
@@ -53,13 +52,13 @@ public class SjukfallServiceImpl implements SjukfallService {
     private IntygstjanstIntegrationService intygstjanstIntegrationService;
 
     @Autowired
-    private IntygstjanstMapper intygstjanstMapper;
-
-    @Autowired
     private SjukfallEngineService sjukfallEngine;
 
     @Autowired
     private SjukfallEngineMapper sjukfallEngineMapper;
+
+    @Autowired
+    private IntygstjanstMapper intygstjanstMapper;
 
     @Autowired
     private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
@@ -116,7 +115,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     @Override
-    public SjukfallSummary getSummary(String enhetsId, String mottagningsId,
+    public se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary getSummary(String enhetsId, String mottagningsId,
                                       String lakareId, Urval urval, GetSjukfallRequest request) {
 
         List<SjukfallEnhet> sjukfallList = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, request);
@@ -156,7 +155,8 @@ public class SjukfallServiceImpl implements SjukfallService {
         List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
 
         LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall' by unit.");
-        List<se.inera.intyg.infra.sjukfall.dto.IntygData> data = intygsData.stream().map(o -> intygstjanstMapper.map(o)).collect(Collectors.toList());
+        List<se.inera.intyg.infra.sjukfall.dto.IntygData> data = intygsData.stream()
+            .map(o -> intygstjanstMapper.map(o)).collect(Collectors.toList());
         se.inera.intyg.infra.sjukfall.dto.IntygParametrar parametrar = map(request);
 
         List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> sjukfallList = sjukfallEngine.beraknaSjukfallForEnhet(data, parametrar);
@@ -192,7 +192,8 @@ public class SjukfallServiceImpl implements SjukfallService {
         List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForPatient(enhetsId, request.getPatientId());
 
         LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall' by patient.");
-        List<se.inera.intyg.infra.sjukfall.dto.IntygData> data = intygsData.stream().map(o -> intygstjanstMapper.map(o)).collect(Collectors.toList());
+        List<se.inera.intyg.infra.sjukfall.dto.IntygData> data = intygsData.stream()
+            .map(o -> intygstjanstMapper.map(o)).collect(Collectors.toList());
         se.inera.intyg.infra.sjukfall.dto.IntygParametrar parametrar = map(request);
 
         List<se.inera.intyg.infra.sjukfall.dto.SjukfallPatient> sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parametrar);

@@ -143,7 +143,7 @@ public class SjukfallPuServiceImplTest {
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.FOUND));
 
-        List<SjukfallEnhetRS> sjukfallList = buildSjukfallList();
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList();
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
         assertEquals(sjukfallList.size(),1);
         assertEquals(sjukfallList.get(0).getPatient().getNamn(), SjukfallPuService.SEKRETESS_SKYDDAD_NAME_PLACEHOLDER);
