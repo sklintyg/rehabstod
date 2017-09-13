@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
 
@@ -41,19 +41,19 @@ import java.util.Map;
 public class PDLActivityEntryStoreImplTest {
     // CHECKSTYLE:OFF MagicNumber
 
-    private static final SjukfallEnhetRS SJUKFALL_1 = createSjukFallForPatient("111");
-    private static final SjukfallEnhetRS SJUKFALL_2 = createSjukFallForPatient("222");
-    private static final SjukfallEnhetRS SJUKFALL_3 = createSjukFallForPatient("333");
-    private static final SjukfallEnhetRS SJUKFALL_4 = createSjukFallForPatient("444");
-    private static final SjukfallEnhetRS SJUKFALL_5 = createSjukFallForPatient("555");
+    private static final SjukfallEnhet SJUKFALL_1 = createSjukFallForPatient("111");
+    private static final SjukfallEnhet SJUKFALL_2 = createSjukFallForPatient("222");
+    private static final SjukfallEnhet SJUKFALL_3 = createSjukFallForPatient("333");
+    private static final SjukfallEnhet SJUKFALL_4 = createSjukFallForPatient("444");
+    private static final SjukfallEnhet SJUKFALL_5 = createSjukFallForPatient("555");
 
     private static final String VARDENHET_1 = "H111111";
     private static final String VARDENHET_2 = "H222222";
 
-    final List<SjukfallEnhetRS> sjukfallList1 = Arrays.asList(SJUKFALL_1, SJUKFALL_2, SJUKFALL_3, SJUKFALL_4);
+    final List<SjukfallEnhet> sjukfallList1 = Arrays.asList(SJUKFALL_1, SJUKFALL_2, SJUKFALL_3, SJUKFALL_4);
 
     // list2 has some patients as list 1 but adds patient 5
-    final List<SjukfallEnhetRS> sjukfallList2 = Arrays.asList(SJUKFALL_2, SJUKFALL_3, SJUKFALL_5);
+    final List<SjukfallEnhet> sjukfallList2 = Arrays.asList(SJUKFALL_2, SJUKFALL_3, SJUKFALL_5);
 
     @Test
     public void testGetActivitiesNotInStoreEmptyOrNullList() throws Exception {
@@ -115,9 +115,9 @@ public class PDLActivityEntryStoreImplTest {
                 PDLActivityStore.getActivitiesNotInStore(VARDENHET_2, sjukfallList1, ActivityType.PRINT, storedActivities));
     }
 
-    private static SjukfallEnhetRS createSjukFallForPatient(String patientId) {
+    private static SjukfallEnhet createSjukFallForPatient(String patientId) {
         // CHECKSTYLE:OFF MagicNumber
-        SjukfallEnhetRS isf = new SjukfallEnhetRS();
+        SjukfallEnhet isf = new SjukfallEnhet();
 
         Lakare lakare = new Lakare("123456-0987", "Hr Doktor");
         isf.setLakare(lakare);

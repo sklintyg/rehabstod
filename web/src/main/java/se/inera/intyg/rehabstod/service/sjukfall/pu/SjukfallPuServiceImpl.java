@@ -32,8 +32,8 @@ import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.services.PUService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.user.UserService;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
-import se.inera.intyg.rehabstod.web.model.SjukfallPatientRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 /**
@@ -51,14 +51,14 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
     private UserService userService;
 
     @Override
-    public void enrichWithPatientNamesAndFilterSekretess(List<SjukfallEnhetRS> sjukfallList) {
+    public void enrichWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList) {
 
         RehabstodUser user = userService.getUser();
 
-        Iterator<SjukfallEnhetRS> i = sjukfallList.iterator();
+        Iterator<SjukfallEnhet> i = sjukfallList.iterator();
 
         while (i.hasNext()) {
-            SjukfallEnhetRS item = i.next();
+            SjukfallEnhet item = i.next();
 
             Personnummer pnr = Personnummer.createValidatedPersonnummerWithDash(item.getPatient().getId()).orElse(null);
             if (pnr == null) {
@@ -92,7 +92,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
     }
 
     @Override
-    public void enrichWithPatientNameAndFilterSekretess(List<SjukfallPatientRS> patientSjukfall) {
+    public void enrichWithPatientNameAndFilterSekretess(List<SjukfallPatient> patientSjukfall) {
         if (patientSjukfall.size() == 0) {
             return;
         }

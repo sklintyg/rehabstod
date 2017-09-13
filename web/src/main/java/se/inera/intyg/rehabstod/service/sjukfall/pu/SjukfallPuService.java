@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.pu;
 
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
-import se.inera.intyg.rehabstod.web.model.SjukfallPatientRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public interface SjukfallPuService {
     String SEKRETESS_SKYDDAD_NAME_PLACEHOLDER = "Sekretessmarkerad uppgift";
     String SEKRETESS_SKYDDAD_NAME_UNKNOWN = "Namn okänt";
 
-    void enrichWithPatientNamesAndFilterSekretess(List<SjukfallEnhetRS> sjukfallList);
+    void enrichWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList);
 
-    void enrichWithPatientNameAndFilterSekretess(List<SjukfallPatientRS> patientSjukfall);
+    void enrichWithPatientNameAndFilterSekretess(List<SjukfallPatient> patientSjukfall);
 }

@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class SjukfallEmployeeNameResolverTest {
 
     @Test
     public void testUpdateDuplicateDoctorNamesWithHsaId() {
-        List<SjukfallEnhetRS> sjukfallList = createSjukfallList();
+        List<SjukfallEnhet> sjukfallList = createSjukfallList();
         testee.updateDuplicateDoctorNamesWithHsaId(sjukfallList);
 
         assertEquals(lakareNamn1 + " (" + lakareId1 + ")", sjukfallList.get(0).getLakare().getNamn());
@@ -48,7 +48,7 @@ public class SjukfallEmployeeNameResolverTest {
 
     @Test
     public void testUpdateNoDuplicateDoctorNames() {
-        List<SjukfallEnhetRS> sjukfallList = createSjukfallList()
+        List<SjukfallEnhet> sjukfallList = createSjukfallList()
                 .stream()
                 .filter(sf -> sf.getLakare().getNamn().equals(lakareNamn2))
                 .collect(Collectors.toList());
@@ -60,7 +60,7 @@ public class SjukfallEmployeeNameResolverTest {
 
     @Test
     public void testEmployeeNameLakare1HasNoRecordShowHsaIdAsName() {
-        List<SjukfallEnhetRS> sjukfallList = createSjukfallList();
+        List<SjukfallEnhet> sjukfallList = createSjukfallList();
         when(employeeNameService.getEmployeeHsaName(lakareId1)).thenReturn(null);
         testee.enrichWithHsaEmployeeNames(sjukfallList);
         assertEquals(lakareId1, sjukfallList.get(0).getLakare().getNamn());
@@ -68,7 +68,7 @@ public class SjukfallEmployeeNameResolverTest {
 
     @Test
     public void testEmployeeNameLakare2HasRecordSameAsNameOnSjukfall() {
-        List<SjukfallEnhetRS> sjukfallList = createSjukfallList();
+        List<SjukfallEnhet> sjukfallList = createSjukfallList();
         when(employeeNameService.getEmployeeHsaName(lakareId2)).thenReturn(lakareNamn2);
         testee.enrichWithHsaEmployeeNames(sjukfallList);
         assertEquals(lakareNamn2, sjukfallList.get(2).getLakare().getNamn());
@@ -76,14 +76,14 @@ public class SjukfallEmployeeNameResolverTest {
 
     @Test
     public void testEmployeeNameLakare3HasRecordDifferentNameOnSjukfall() {
-        List<SjukfallEnhetRS> sjukfallList = createSjukfallList();
+        List<SjukfallEnhet> sjukfallList = createSjukfallList();
         when(employeeNameService.getEmployeeHsaName(lakareId3)).thenReturn(lakareNamn3Alt);
         testee.enrichWithHsaEmployeeNames(sjukfallList);
         assertEquals(lakareNamn3Alt, sjukfallList.get(4).getLakare().getNamn());
     }
 
-    private List<SjukfallEnhetRS> createSjukfallList() {
-        List<SjukfallEnhetRS> sjukfallList = new ArrayList<>();
+    private List<SjukfallEnhet> createSjukfallList() {
+        List<SjukfallEnhet> sjukfallList = new ArrayList<>();
 
         sjukfallList.add(createSjukfall(lakareId1, lakareNamn1));
         sjukfallList.add(createSjukfall(lakareId1, lakareNamn1));
@@ -95,8 +95,8 @@ public class SjukfallEmployeeNameResolverTest {
         return sjukfallList;
     }
 
-    private SjukfallEnhetRS createSjukfall(String lakareId, String lakareNamn) {
-        SjukfallEnhetRS sjukfall = new SjukfallEnhetRS();
+    private SjukfallEnhet createSjukfall(String lakareId, String lakareNamn) {
+        SjukfallEnhet sjukfall = new SjukfallEnhet();
         Lakare lakare = new Lakare(lakareId, lakareNamn);
         sjukfall.setLakare(lakare);
 

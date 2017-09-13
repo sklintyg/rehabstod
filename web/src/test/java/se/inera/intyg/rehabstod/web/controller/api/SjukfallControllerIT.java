@@ -29,7 +29,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /**
  * Basic test suite that verifies that the endpoint (/api/sjukfall) is available
@@ -123,7 +123,7 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_ENHET)).extract().response();
 
-        SjukfallEnhetRS[] resultList = response.body().as(SjukfallEnhetRS[].class);
+        SjukfallEnhet[] resultList = response.body().as(SjukfallEnhet[].class);
         return resultList.length;
     }
 }

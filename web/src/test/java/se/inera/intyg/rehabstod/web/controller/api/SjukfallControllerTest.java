@@ -55,7 +55,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -103,12 +103,12 @@ public class SjukfallControllerTest {
 
     @Test
     public void testGetSjukfall() {
-        SjukfallEnhetRS a = createSjukFallForPatient("19121212-1212");
-        SjukfallEnhetRS b = createSjukFallForPatient("20121212-1212");
-        SjukfallEnhetRS c = createSjukFallForPatient("19840921-9287");
+        SjukfallEnhet a = createSjukFallForPatient("19121212-1212");
+        SjukfallEnhet b = createSjukFallForPatient("20121212-1212");
+        SjukfallEnhet c = createSjukFallForPatient("19840921-9287");
 
-        List<SjukfallEnhetRS> result = Arrays.asList(a, b);
-        List<SjukfallEnhetRS> toLog = Arrays.asList(c);
+        List<SjukfallEnhet> result = Arrays.asList(a, b);
+        List<SjukfallEnhet> toLog = Arrays.asList(c);
 
         // Given
         GetSjukfallRequest request = new GetSjukfallRequest();
@@ -132,13 +132,13 @@ public class SjukfallControllerTest {
     @Test
     public void testGetSjukfallAsPDF() throws DocumentException, IOException {
 
-        SjukfallEnhetRS a = createSjukFallForPatient("19121212-1212");
-        SjukfallEnhetRS b = createSjukFallForPatient("20121212-1212");
-        SjukfallEnhetRS c = createSjukFallForPatient("19840921-9287");
+        SjukfallEnhet a = createSjukFallForPatient("19121212-1212");
+        SjukfallEnhet b = createSjukFallForPatient("20121212-1212");
+        SjukfallEnhet c = createSjukFallForPatient("19840921-9287");
 
-        List<SjukfallEnhetRS> allSjukFall = Arrays.asList(a, b, c);
-        List<SjukfallEnhetRS> finalList = Arrays.asList(a, b);
-        List<SjukfallEnhetRS> toLog = Arrays.asList(c);
+        List<SjukfallEnhet> allSjukFall = Arrays.asList(a, b, c);
+        List<SjukfallEnhet> finalList = Arrays.asList(a, b);
+        List<SjukfallEnhet> toLog = Arrays.asList(c);
 
         // Given
         PrintSjukfallRequest request = new PrintSjukfallRequest();
@@ -168,9 +168,9 @@ public class SjukfallControllerTest {
         assertTrue(response.getStatusCode().equals(HttpStatus.OK));
     }
 
-    private static SjukfallEnhetRS createSjukFallForPatient(String personNummer) {
+    private static SjukfallEnhet createSjukFallForPatient(String personNummer) {
         // CHECKSTYLE:OFF MagicNumber
-        SjukfallEnhetRS isf = new SjukfallEnhetRS();
+        SjukfallEnhet isf = new SjukfallEnhet();
 
         Lakare lakare = new Lakare("123456-0987", "Hr Doktor");
         isf.setLakare(lakare);

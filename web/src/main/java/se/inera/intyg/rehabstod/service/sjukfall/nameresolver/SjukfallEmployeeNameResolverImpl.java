@@ -3,7 +3,7 @@ package se.inera.intyg.rehabstod.service.sjukfall.nameresolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class SjukfallEmployeeNameResolverImpl implements SjukfallEmployeeNameRes
     private EmployeeNameService employeeNameService;
 
     @Override
-    public void enrichWithHsaEmployeeNames(List<SjukfallEnhetRS> sjukfallList) {
+    public void enrichWithHsaEmployeeNames(List<SjukfallEnhet> sjukfallList) {
         sjukfallList.stream().forEach(sf -> {
             String employeeHsaName = employeeNameService.getEmployeeHsaName(sf.getLakare().getHsaId());
             if (employeeHsaName != null) {
@@ -32,7 +32,7 @@ public class SjukfallEmployeeNameResolverImpl implements SjukfallEmployeeNameRes
     }
 
     @Override
-    public void updateDuplicateDoctorNamesWithHsaId(List<SjukfallEnhetRS> sjukfallList) {
+    public void updateDuplicateDoctorNamesWithHsaId(List<SjukfallEnhet> sjukfallList) {
         // Get number of unique lakare hsaIds
         long numberOfHsaIds = sjukfallList.stream().map(sf -> sf.getLakare().getHsaId()).distinct().count();
         long numberOfLakareNames = sjukfallList.stream().map(sf -> sf.getLakare().getNamn()).distinct().count();

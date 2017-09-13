@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.service.pdl;
 
 import se.inera.intyg.infra.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.List;
 
@@ -29,6 +29,6 @@ import java.util.List;
 @FunctionalInterface
 public interface LogService {
 
-    void logSjukfallData(List<SjukfallEnhetRS> sjukfall, ActivityType activityType);
+    void logSjukfallData(List<SjukfallEnhet> sjukfall, ActivityType activityType);
 
 }

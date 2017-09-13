@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.Patient;
 
 import java.util.Arrays;
@@ -35,13 +35,13 @@ public class ExportUtilTest {
     // CHECKSTYLE:OFF MagicNumber
     @Test
     public void testEmptyListReturnedForNoneMatching() {
-        List<SjukfallEnhetRS> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr2", "pnr3"), buildNoneMatchingInternalSjukfall());
+        List<SjukfallEnhet> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr2", "pnr3"), buildNoneMatchingInternalSjukfall());
         assertEquals(0, sjukfallList.size());
     }
 
     @Test
     public void testListReturnedInExpectedOrder() {
-        List<SjukfallEnhetRS> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr2", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
+        List<SjukfallEnhet> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr2", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
         assertEquals(3, sjukfallList.size());
         assertEquals("pnr1", sjukfallList.get(0).getPatient().getId());
         assertEquals("pnr2", sjukfallList.get(1).getPatient().getId());
@@ -50,14 +50,14 @@ public class ExportUtilTest {
 
     @Test
     public void testListReturnedInExpectedOrderAndOneIsFilteredAway() {
-        List<SjukfallEnhetRS> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
+        List<SjukfallEnhet> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
         assertEquals(2, sjukfallList.size());
         assertEquals("pnr1", sjukfallList.get(0).getPatient().getId());
         assertEquals("pnr3", sjukfallList.get(1).getPatient().getId());
     }
 
-    private List<SjukfallEnhetRS> buildMatchingInternalSjukfallInOtherOrder() {
-        List<SjukfallEnhetRS> list = TestDataGen.buildSjukfallList(3);
+    private List<SjukfallEnhet> buildMatchingInternalSjukfallInOtherOrder() {
+        List<SjukfallEnhet> list = TestDataGen.buildSjukfallList(3);
 
         list.get(0).setPatient(buildPatient("pnr2", list.get(0).getPatient()));
         list.get(1).setPatient(buildPatient("pnr3", list.get(1).getPatient()));
@@ -66,10 +66,10 @@ public class ExportUtilTest {
         return list;
     }
 
-    private List<SjukfallEnhetRS> buildNoneMatchingInternalSjukfall() {
+    private List<SjukfallEnhet> buildNoneMatchingInternalSjukfall() {
 
-        List<SjukfallEnhetRS> sjukfallList = TestDataGen.buildSjukfallList(2);
-        for (SjukfallEnhetRS internalSjukfall : sjukfallList) {
+        List<SjukfallEnhet> sjukfallList = TestDataGen.buildSjukfallList(2);
+        for (SjukfallEnhet internalSjukfall : sjukfallList) {
             internalSjukfall.setPatient(buildPatient("other-pnr", internalSjukfall.getPatient()));
         }
         return sjukfallList;

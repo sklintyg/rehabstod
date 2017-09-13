@@ -32,7 +32,7 @@ import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.PdlLogMessage;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 import se.inera.intyg.rehabstod.service.user.UserService;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import javax.annotation.PostConstruct;
 import javax.jms.JMSException;
@@ -70,7 +70,7 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public void logSjukfallData(List<SjukfallEnhetRS> sjukfallList, ActivityType activityType) {
+    public void logSjukfallData(List<SjukfallEnhet> sjukfallList, ActivityType activityType) {
         if (sjukfallList == null || sjukfallList.isEmpty()) {
             LOG.debug("No sjukfall in resource list for PDL logging, not logging.");
             return;

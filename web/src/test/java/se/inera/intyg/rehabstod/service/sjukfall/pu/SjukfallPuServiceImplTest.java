@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.pu;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -31,17 +35,13 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.PatientData;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
-import se.inera.intyg.rehabstod.web.model.SjukfallPatientRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
 
 /**
  * Created by eriklupander on 2017-09-06.
@@ -70,7 +70,7 @@ public class SjukfallPuServiceImplTest {
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, false, PersonSvar.Status.FOUND));
 
-        List<SjukfallEnhetRS> sjukfallList = buildSjukfallList();
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList();
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
         assertEquals(1, sjukfallList.size());
     }
@@ -83,7 +83,7 @@ public class SjukfallPuServiceImplTest {
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.FOUND));
 
-        List<SjukfallEnhetRS> sjukfallList = buildSjukfallList();
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList();
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
         assertEquals(0, sjukfallList.size());
     }
@@ -96,7 +96,7 @@ public class SjukfallPuServiceImplTest {
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.FOUND));
 
-        List<SjukfallEnhetRS> sjukfallList = buildSjukfallList();
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList();
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
         assertEquals(0, sjukfallList.size());
     }
@@ -109,7 +109,7 @@ public class SjukfallPuServiceImplTest {
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.FOUND));
 
-        List<SjukfallEnhetRS> sjukfallList = buildSjukfallList();
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList();
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
         assertEquals(1, sjukfallList.size());
     }
@@ -129,7 +129,7 @@ public class SjukfallPuServiceImplTest {
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, false, PersonSvar.Status.FOUND));
 
-        List<SjukfallEnhetRS> sjukfallList = buildSjukfallList();
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList();
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
         assertEquals(1, sjukfallList.size());
         assertEquals("Fornamn Efternamn", sjukfallList.get(0).getPatient().getNamn());
@@ -156,7 +156,7 @@ public class SjukfallPuServiceImplTest {
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, false, PersonSvar.Status.NOT_FOUND));
 
-        List<SjukfallEnhetRS> sjukfallList = buildSjukfallList();
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList();
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
         assertEquals(1, sjukfallList.size());
         assertEquals(SjukfallPuService.SEKRETESS_SKYDDAD_NAME_UNKNOWN, sjukfallList.get(0).getPatient().getNamn());
@@ -186,7 +186,7 @@ public class SjukfallPuServiceImplTest {
 
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.NOT_FOUND));
-        List<SjukfallPatientRS> patientSjukfallList = buildPatientSjukfallList();
+        List<SjukfallPatient> patientSjukfallList = buildPatientSjukfallList();
         testee.enrichWithPatientNameAndFilterSekretess(patientSjukfallList);
         assertEquals(1, patientSjukfallList.size());
     }
@@ -210,21 +210,21 @@ public class SjukfallPuServiceImplTest {
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.FOUND));
 
-        List<SjukfallPatientRS> patientSjukfallList = buildPatientSjukfallList();
+        List<SjukfallPatient> patientSjukfallList = buildPatientSjukfallList();
         testee.enrichWithPatientNameAndFilterSekretess(patientSjukfallList);
         assertEquals(1, patientSjukfallList.size());
         assertEquals(1, patientSjukfallList.get(0).getIntyg().size());
         assertEquals("Fornamn Efternamn", patientSjukfallList.get(0).getIntyg().get(0).getPatient().getNamn());
     }
 
-    private List<SjukfallPatientRS> buildPatientSjukfallList() {
-        List<SjukfallPatientRS> sjukfallList = new ArrayList<>();
+    private List<SjukfallPatient> buildPatientSjukfallList() {
+        List<SjukfallPatient> sjukfallList = new ArrayList<>();
         sjukfallList.add(buildPatientSjukfall());
         return sjukfallList;
     }
 
-    private SjukfallPatientRS buildPatientSjukfall() {
-        SjukfallPatientRS sjukfallPatient = new SjukfallPatientRS();
+    private SjukfallPatient buildPatientSjukfall() {
+        SjukfallPatient sjukfallPatient = new SjukfallPatient();
         sjukfallPatient.setIntyg(buildIntyg());
         return sjukfallPatient;
     }
@@ -268,14 +268,14 @@ public class SjukfallPuServiceImplTest {
                 "Gatan 1", "11212", "Orten");
     }
 
-    private List<SjukfallEnhetRS> buildSjukfallList() {
-        List<SjukfallEnhetRS> sjukfallList = new ArrayList<>();
+    private List<SjukfallEnhet> buildSjukfallList() {
+        List<SjukfallEnhet> sjukfallList = new ArrayList<>();
         sjukfallList.add(buildSjukfall());
         return sjukfallList;
     }
 
-    private SjukfallEnhetRS buildSjukfall() {
-        SjukfallEnhetRS sjukfall = new SjukfallEnhetRS();
+    private SjukfallEnhet buildSjukfall() {
+        SjukfallEnhet sjukfall = new SjukfallEnhet();
         sjukfall.setPatient(buildPatient());
         sjukfall.setVardEnhetId(ENHET_1);
         return sjukfall;

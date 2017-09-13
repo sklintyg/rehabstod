@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.auth.pdl;
 
 import se.inera.intyg.infra.logmessages.ActivityType;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,14 +43,14 @@ public final class PDLActivityStore {
      * @param sjukfall
      * @param activityType
      * @param storedActivities
-     *            the map holding sjukfall
+     *            the mapDiagnos holding sjukfall
      *
-     * @return a list of SjukfallEnhetRS
+     * @return a list of SjukfallEnhet
      */
-    public static List<SjukfallEnhetRS> getActivitiesNotInStore(String enhetsId,
-                                                                List<SjukfallEnhetRS> sjukfall,
-                                                                ActivityType activityType,
-                                                                Map<String, List<PDLActivityEntry>> storedActivities) {
+    public static List<SjukfallEnhet> getActivitiesNotInStore(String enhetsId,
+                                                              List<SjukfallEnhet> sjukfall,
+                                                              ActivityType activityType,
+                                                              Map<String, List<PDLActivityEntry>> storedActivities) {
 
         if (sjukfall == null || sjukfall.isEmpty()) {
             return new ArrayList<>();
@@ -84,9 +84,9 @@ public final class PDLActivityStore {
      * @param sjukfallToAdd
      * @param activityType
      * @param storedActivities
-     *            the map where sjukfall will be stored
+     *            the mapDiagnos where sjukfall will be stored
      */
-    public static void addActivitiesToStore(String enhetsId, List<SjukfallEnhetRS> sjukfallToAdd, ActivityType activityType,
+    public static void addActivitiesToStore(String enhetsId, List<SjukfallEnhet> sjukfallToAdd, ActivityType activityType,
                                             Map<String, List<PDLActivityEntry>> storedActivities) {
         if (sjukfallToAdd == null || sjukfallToAdd.isEmpty()) {
             return;

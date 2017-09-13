@@ -51,8 +51,8 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
-import se.inera.intyg.rehabstod.web.model.SjukfallPatientRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -89,13 +89,13 @@ public class SjukfallController {
     private PdfExportService pdfExportService;
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<SjukfallEnhetRS> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
+    public List<SjukfallEnhet> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
 
         // Get user from session
         RehabstodUser user = getRehabstodUser();
 
         // Fetch sjukfall
-        List<SjukfallEnhetRS> sjukfall = getSjukfallForCareUnit(user, request);
+        List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request);
 
         // PDL-logging based on which sjukfall that are about to be displayed to user.
         LOG.debug("PDL logging - log which 'sjukfall' that are going to be displayed to the user.");
@@ -105,13 +105,13 @@ public class SjukfallController {
     }
 
     @RequestMapping(value = "/patient", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<SjukfallPatientRS> getSjukfallForPatient(@RequestBody GetSjukfallRequest request) {
+    public List<SjukfallPatient> getSjukfallForPatient(@RequestBody GetSjukfallRequest request) {
 
         // Get user from session
         RehabstodUser user = getRehabstodUser();
 
         // Fetch sjukfall
-        List<SjukfallPatientRS> sjukfall = getSjukfallForPatient(user, request);
+        List<SjukfallPatient> sjukfall = getSjukfallForPatient(user, request);
 
         // PDL-logging based on which sjukfall that are about to be displayed to user.
         //LOG.debug("PDL logging - log which 'sjukfall' that are going to be displayed to the user.");
@@ -145,8 +145,8 @@ public class SjukfallController {
             RehabstodUser user = getRehabstodUser();
 
             // Fetch sjukfall
-            List<SjukfallEnhetRS> sjukfall = getSjukfallForCareUnit(user, request);
-            List<SjukfallEnhetRS> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
+            List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request);
+            List<SjukfallEnhet> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
 
             byte[] pdfData = pdfExportService.export(finalList, request, user, sjukfall.size());
 
@@ -171,8 +171,8 @@ public class SjukfallController {
             RehabstodUser user = getRehabstodUser();
 
             // Fetch sjukfall
-            List<SjukfallEnhetRS> sjukfall = getSjukfallForCareUnit(user, request);
-            List<SjukfallEnhetRS> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
+            List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request);
+            List<SjukfallEnhet> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
 
             byte[] data = xlsxExportService.export(finalList, request, user.getUrval(), sjukfall.size());
 
@@ -220,7 +220,7 @@ public class SjukfallController {
         return respHeaders;
     }
 
-    private List<SjukfallEnhetRS> getSjukfallForCareUnit(RehabstodUser user, GetSjukfallRequest request) {
+    private List<SjukfallEnhet> getSjukfallForCareUnit(RehabstodUser user, GetSjukfallRequest request) {
         String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
         String mottagningsId = getMottagningsId(user);
         String lakarId = user.getHsaId();
@@ -230,7 +230,7 @@ public class SjukfallController {
         return sjukfallService.getByUnit(enhetsId, mottagningsId, lakarId, urval, request);
     }
 
-    private List<SjukfallPatientRS> getSjukfallForPatient(RehabstodUser user, GetSjukfallRequest request) {
+    private List<SjukfallPatient> getSjukfallForPatient(RehabstodUser user, GetSjukfallRequest request) {
         String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
         String lakarId = user.getHsaId();
         Urval urval = user.getUrval();
@@ -239,23 +239,23 @@ public class SjukfallController {
         return sjukfallService.getByPatient(enhetsId, lakarId, urval, request);
     }
 
-    private void logSjukfallData(RehabstodUser user, List<SjukfallEnhetRS> sjukfallList, ActivityType activityType) {
+    private void logSjukfallData(RehabstodUser user, List<SjukfallEnhet> sjukfallList, ActivityType activityType) {
         String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
         if (enhetsId == null) {
             throw new IllegalArgumentException("Cannot create PDL log statements, enhetsId was null");
         }
-        List<SjukfallEnhetRS> sjukfallToLog = getActivitiesNotInStore(enhetsId, sjukfallList, activityType, user.getStoredActivities());
+        List<SjukfallEnhet> sjukfallToLog = getActivitiesNotInStore(enhetsId, sjukfallList, activityType, user.getStoredActivities());
         logService.logSjukfallData(sjukfallToLog, activityType);
         addActivitiesToStore(enhetsId, sjukfallToLog, activityType, user.getStoredActivities());
     }
 
-    private void addActivitiesToStore(String enhetsId, List<SjukfallEnhetRS> sjukfallToAdd,
+    private void addActivitiesToStore(String enhetsId, List<SjukfallEnhet> sjukfallToAdd,
                                       ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
         PDLActivityStore.addActivitiesToStore(enhetsId, sjukfallToAdd, activityType, storedActivities);
     }
 
-    private List<SjukfallEnhetRS> getActivitiesNotInStore(String enhetsId, List<SjukfallEnhetRS> sjukfallList,
-                                                          ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
+    private List<SjukfallEnhet> getActivitiesNotInStore(String enhetsId, List<SjukfallEnhet> sjukfallList,
+                                                        ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
         return PDLActivityStore.getActivitiesNotInStore(enhetsId, sjukfallList, activityType, storedActivities);
     }
 

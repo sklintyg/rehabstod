@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Created by eriklupander on 2016-02-19.
  */
-public class SjukfallPatientRS {
+public class SjukfallPatient {
 
     private Diagnos diagnos;
 

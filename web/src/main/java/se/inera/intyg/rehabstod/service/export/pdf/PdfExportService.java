@@ -20,7 +20,7 @@ package se.inera.intyg.rehabstod.service.export.pdf;
 
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.List;
 
@@ -30,6 +30,6 @@ import java.util.List;
 @FunctionalInterface
 public interface PdfExportService {
 
-    byte[] export(List<SjukfallEnhetRS> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total);
+    byte[] export(List<SjukfallEnhet> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total);
 
 }

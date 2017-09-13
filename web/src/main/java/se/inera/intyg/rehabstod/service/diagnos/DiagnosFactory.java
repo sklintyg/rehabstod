@@ -27,7 +27,7 @@ import se.inera.intyg.rehabstod.web.model.Diagnos;
  * @author Magnus Ekstrand on 2017-02-17.
  */
 @Component
-public final class DiagnosFactory {
+public class DiagnosFactory {
 
     @Autowired
     private DiagnosBeskrivningService diagnosBeskrivningService;

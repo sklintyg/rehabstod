@@ -31,7 +31,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataLogMessage;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataPrintLogMessage;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhetRS;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,7 +52,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
     private String systemName;
 
     @Override
-    public PdlLogMessage buildLogMessage(List<SjukfallEnhetRS> sjukfallList, ActivityType activityType, RehabstodUser rehabstodUser) {
+    public PdlLogMessage buildLogMessage(List<SjukfallEnhet> sjukfallList, ActivityType activityType, RehabstodUser rehabstodUser) {
         LogUser user = getLogUser(rehabstodUser);
 
         PdlLogMessage pdlLogMessage = getLogMessageTypeForActivityType(activityType);
@@ -67,7 +67,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         return pdlLogMessage;
     }
 
-    private PdlResource buildPdlLogResource(SjukfallEnhetRS sf) {
+    private PdlResource buildPdlLogResource(SjukfallEnhet sf) {
         PdlResource pdlResource = new PdlResource();
         Patient patient = new Patient(sf.getPatient().getId().replace("-", "").replace("+", ""), sf.getPatient().getNamn());
         pdlResource.setPatient(patient);
