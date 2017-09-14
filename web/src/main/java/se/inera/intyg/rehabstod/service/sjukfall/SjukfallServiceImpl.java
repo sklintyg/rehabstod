@@ -22,16 +22,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
+import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
+import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
-import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
@@ -115,19 +117,19 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     @Override
-    public se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary getSummary(String enhetsId, String mottagningsId,
+    public SjukfallSummary getSummary(String enhetsId, String mottagningsId,
                                       String lakareId, Urval urval, GetSjukfallRequest request) {
 
         List<SjukfallEnhet> sjukfallList = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, request);
-        sjukfallPuService.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
+        sjukfallPuService.filterSekretessForSummary(sjukfallList);
         return statisticsCalculator.getSjukfallSummary(sjukfallList);
     }
 
 
     // package scope
 
-    private se.inera.intyg.infra.sjukfall.dto.IntygParametrar map(GetSjukfallRequest from) {
-        return new se.inera.intyg.infra.sjukfall.dto.IntygParametrar(from.getMaxIntygsGlapp(), from.getAktivtDatum());
+    private IntygParametrar map(GetSjukfallRequest from) {
+        return new IntygParametrar(from.getMaxIntygsGlapp(), from.getAktivtDatum());
     }
 
 

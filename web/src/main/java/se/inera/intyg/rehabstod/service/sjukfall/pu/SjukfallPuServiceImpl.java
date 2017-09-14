@@ -18,16 +18,11 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.pu;
 
-import java.util.Iterator;
-import java.util.List;
-
+import com.google.common.base.Joiner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Joiner;
-
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.services.PUService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -35,6 +30,9 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by eriklupander on 2017-09-05.
@@ -49,6 +47,38 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
     @Autowired
     private UserService userService;
+
+    @Override
+    public void filterSekretessForSummary(List<SjukfallEnhet> sjukfallList) {
+        RehabstodUser user = userService.getUser();
+
+        Iterator<SjukfallEnhet> i = sjukfallList.iterator();
+
+        while (i.hasNext()) {
+            SjukfallEnhet item = i.next();
+
+            Personnummer pnr = Personnummer.createValidatedPersonnummerWithDash(item.getPatient().getId()).orElse(null);
+            if (pnr == null) {
+                i.remove();
+                LOG.warn("Problem parsing a personnummer when looking up patient in PU service. Removing from list of sjukfall.");
+                continue;
+            }
+
+            // Explicitly null out patient name after we're done getting the pnr for querying, no leaks from here
+            // since we're ignoring PU-service problems.
+            item.getPatient().setNamn(null);
+
+            PersonSvar personSvar = puService.getPerson(pnr);
+            if (personSvar.getStatus() == PersonSvar.Status.FOUND && personSvar.getPerson().isSekretessmarkering()) {
+
+                // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE, då får vi ej visa
+                // sjukfall för s-märkt patient.
+                if (!user.isLakare() || !item.getVardEnhetId().equalsIgnoreCase(user.getValdVardenhet().getId())) {
+                    i.remove();
+                }
+            }
+        }
+    }
 
     @Override
     public void enrichWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList) {

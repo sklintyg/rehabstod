@@ -31,7 +31,30 @@ public interface SjukfallPuService {
     String SEKRETESS_SKYDDAD_NAME_PLACEHOLDER = "Sekretessmarkerad uppgift";
     String SEKRETESS_SKYDDAD_NAME_UNKNOWN = "Namn okänt";
 
+    /**
+     * Removes sjukfall belonging to patients with sekretessmarkering. Ignores PU errors, will not exclude such
+     * sjukfall. Removes patient name rather than enriching with PU info since the purpose of this method is for
+     * enabling stats aggregation.
+     *
+     * @param sjukfallList
+     */
+    void filterSekretessForSummary(List<SjukfallEnhet> sjukfallList);
+
+    /**
+     * Filters out sjukfall if the patient has sekretessmarkering and the user doesn't have the requisite privilege.
+     *
+     * If the PU-service cannot be reached, an Exception must be thrown.
+     *
+     * @param sjukfallList
+     */
     void enrichWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList);
 
+    /**
+     * Filters out sjukfall if the patient has sekretessmarkering and the user doesn't have the requisite privilege.
+     *
+     * If the PU-service cannot be reached, an Exception must be thrown.
+     *
+     * @param patientSjukfall
+     */
     void enrichWithPatientNameAndFilterSekretess(List<SjukfallPatient> patientSjukfall);
 }

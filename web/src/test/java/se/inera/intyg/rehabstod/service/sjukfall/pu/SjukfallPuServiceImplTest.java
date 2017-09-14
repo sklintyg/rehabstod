@@ -18,10 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.pu;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -42,6 +38,10 @@ import se.inera.intyg.schemas.contract.Personnummer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Created by eriklupander on 2017-09-06.
@@ -89,6 +89,19 @@ public class SjukfallPuServiceImplTest {
     }
 
     @Test
+    public void testSekretessmarkeradIsFilteredWhenUserIsVardadminFilterOnly() {
+
+        when(userService.getUser()).thenReturn(buildVardadmin());
+
+        when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
+                buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.FOUND));
+
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList();
+        testee.filterSekretessForSummary(sjukfallList);
+        assertEquals(0, sjukfallList.size());
+    }
+
+    @Test
     public void testSekretessmarkeradIsFilteredWhenUserIsLakareOnOtherUnit() {
         RehabstodUser rehabstodUser = buildLakare(ENHET_2);
         when(userService.getUser()).thenReturn(rehabstodUser);
@@ -98,6 +111,19 @@ public class SjukfallPuServiceImplTest {
 
         List<SjukfallEnhet> sjukfallList = buildSjukfallList();
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
+        assertEquals(0, sjukfallList.size());
+    }
+
+    @Test
+    public void testSekretessmarkeradIsFilteredWhenUserIsLakareOnOtherUnitFilterOnly() {
+        RehabstodUser rehabstodUser = buildLakare(ENHET_2);
+        when(userService.getUser()).thenReturn(rehabstodUser);
+
+        when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
+                buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.FOUND));
+
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList();
+        testee.filterSekretessForSummary(sjukfallList);
         assertEquals(0, sjukfallList.size());
     }
 
