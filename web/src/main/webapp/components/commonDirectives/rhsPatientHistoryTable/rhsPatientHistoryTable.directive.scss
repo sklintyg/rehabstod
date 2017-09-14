@@ -92,6 +92,15 @@ rhs-patient-history-table {
 
             .diagnos {
               max-width: 200px;
+
+              @media (min-width: $screen-md-min) {
+                max-width: 150px;
+              }
+
+              @media (min-width: 1600px) {
+                max-width: 250px;
+              }
+
             }
             .bidiagnos {
               max-width: 160px;

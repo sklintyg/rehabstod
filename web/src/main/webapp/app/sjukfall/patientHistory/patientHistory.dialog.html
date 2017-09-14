@@ -25,12 +25,12 @@
 
       <div ng-if="item.sjukfall" class="row">
         <rhs-patient-history-time-line-item history-item="item" index="$index" is-last="$last" on-select="onSelectSjukfall(item)"
-                                            class="col-xs-1 history-timeline">
+                                            class="pull-left history-timeline">
 
         </rhs-patient-history-time-line-item>
 
         <rhs-patient-history-table history-item="item" index="$index" on-select="onSelectSjukfall(item)"
-                                   class="col-xs-11 history-table"></rhs-patient-history-table>
+                                   class="pull-left history-table"></rhs-patient-history-table>
       </div>
     </div>
 

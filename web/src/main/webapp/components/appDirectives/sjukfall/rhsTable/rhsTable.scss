@@ -51,13 +51,27 @@ rhs-table {
           white-space: nowrap;
           text-overflow: ellipsis;
           min-width: 40px;
-          max-width: 80%;
+          max-width: 100px;
           overflow: hidden;
           display: inline-block;
           vertical-align: middle;
+
+          @media (min-width: $screen-md-min) {
+            max-width: 150px;
+          }
+
+          @media (min-width: $screen-lg-min) {
+            max-width: 200px;
+          }
+
+          @media (min-width: 1400px) {
+            max-width: 300px;
+          }
+
+          @media (min-width: 1600px) {
+            max-width: 400px;
+          }
         }
-
-
       }
 
       //first tr td's should have top border

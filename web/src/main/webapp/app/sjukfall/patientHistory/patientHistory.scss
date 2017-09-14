@@ -60,8 +60,18 @@
 
   }
   //Squeeze first column
-  .col-xs-1.history-timeline {
+  .history-timeline {
     width: 75px;
+    padding-left: $panel-body-padding;
+    padding-right: $panel-body-padding;
+    position: relative;
+  }
+
+  .history-table {
+    width: calc(100% - 75px);
+    padding-left: $panel-body-padding;
+    padding-right: $panel-body-padding;
+    position: relative;
   }
 
 
