@@ -18,25 +18,11 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
-
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
 import se.inera.intyg.infra.integration.pu.stub.ResidentStore;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
@@ -52,6 +38,18 @@ import se.riv.population.residentmaster.types.v1.JaNejTYPE;
 import se.riv.population.residentmaster.types.v1.NamnTYPE;
 import se.riv.population.residentmaster.types.v1.PersonpostTYPE;
 import se.riv.population.residentmaster.types.v1.ResidentType;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Can generate a suitable amount of intygsdata.
@@ -303,7 +301,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         diagnosList.add("M16.0");
         diagnosList.add("J21");
         diagnosList.add("J-110");
-        diagnosList.add("A311");
+        diagnosList.add("F198");
         diagnosList.add("H_01");
         diagnosList.add("M46");
         diagnosList.add("A25");

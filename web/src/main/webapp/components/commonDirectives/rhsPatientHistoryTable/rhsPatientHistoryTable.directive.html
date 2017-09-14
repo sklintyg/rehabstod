@@ -33,13 +33,13 @@
     <tr ng-repeat="intyg in historyItem.sjukfall.intyg">
       <td ng-attr-id="sjukfall-{{index}}-column-number-{{$index}}">{{$index + 1}}</td>
       <td ng-attr-id="sjukfall-{{index}}-column-diagnose-{{$index}}" class="nowrap">
-        <span uib-tooltip-html="getToolTip(intyg.diagnos)" tooltip-popup-delay="200" class="patient-history-dialog--tooltip">{{::intyg.diagnos.intygsVarde}}</span>
-        <div class="diagnos hidden-xs hidden-sm"> {{::intyg.diagnos.beskrivning}}</div>
+        <span uib-tooltip-html="getToolTip(intyg.diagnos)" tooltip-popup-delay="200" class="patient-history-dialog--tooltip">{{::intyg.diagnos.intygsVarde}}</span><div
+          class="diagnos hidden-xs hidden-sm">{{::intyg.diagnos.beskrivning}}</div>
       </td>
       <td ng-attr-id="sjukfall-{{index}}-column-bidiagnoses-{{$index}}" class="nowrap">
         <div ng-repeat="d in intyg.bidiagnoser">
-          <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="patient-history-dialog--tooltip">{{::d.intygsVarde}}</span>
-          <div class="bidiagnos hidden-xs hidden-sm hidden-md"> {{d.beskrivning}}</div>
+          <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="patient-history-dialog--tooltip">{{::d.intygsVarde}}</span><div
+            class="bidiagnos hidden-xs hidden-sm hidden-md">{{::d.beskrivning}}</div>
         </div>
         <span ng-if="intyg.bidiagnoser.length < 1">-</span>
       </td>
