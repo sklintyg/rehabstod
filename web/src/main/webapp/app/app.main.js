@@ -103,7 +103,7 @@ app.config(function($stateProvider, $urlRouterProvider, $locationProvider, $uibT
 // Inject language resources
 app.run(
     function($log, $rootScope, $state, $window,
-        messageService, dynamicLinkService, UserProxy, UserModel, USER_DATA, LINKS) {
+        messageService, dynamicLinkService, UserProxy, UserModel, USER_DATA, LINKS, $uibModalStack) {
         'use strict';
 
         // Always scroll to top
@@ -126,6 +126,8 @@ app.run(
 
         $rootScope.$on('$stateChangeStart',
             function(event, toState, toParams, fromState/*, fromParams*/) {
+                $uibModalStack.dismissAll();
+
                 $log.debug('$stateChangeStart: from "' + fromState.name + '" to "' + toState.name + '"');
 
                 var user = UserModel.get();
