@@ -34,6 +34,34 @@ rhs-table {
 
   }
 
+  .show-lakare-column {
+    tbody {
+      tr.rhs-table-row {
+        > td {
+
+          .column-diagnos-beskrivning {
+
+            @media (min-width: $screen-md-min) {
+              max-width: 100px;
+            }
+
+            @media (min-width: $screen-lg-min) {
+              max-width: 100px;
+            }
+
+            @media (min-width: 1400px) {
+              max-width: 150px;
+            }
+
+            @media (min-width: 1600px) {
+              max-width: calc(100vw - 1300px);
+            }
+          }
+        }
+      }
+    }
+  }
+
   tbody {
 
     tr.rhs-table-row {
@@ -69,7 +97,7 @@ rhs-table {
           }
 
           @media (min-width: 1600px) {
-            max-width: 400px;
+            max-width: calc(100vw - 1200px);
           }
         }
       }

@@ -93,17 +93,21 @@ rhs-patient-history-table {
             .diagnos {
               max-width: 200px;
 
-              @media (min-width: $screen-md-min) {
+              @media (max-width: $screen-md-max) {
                 max-width: 150px;
               }
 
               @media (min-width: 1600px) {
-                max-width: 250px;
+                max-width: calc(100vw - 1350px);
               }
 
             }
             .bidiagnos {
               max-width: 160px;
+
+              @media (min-width: 1600px) {
+                max-width: 200px;
+              }
             }
 
             .patient-history-dialog--tooltip {
