@@ -164,14 +164,14 @@ var rhsMessages = {
                                                                                                                                                                                                                                                                                         
         //Rest 500 exception error messages:
         'server.error.default.title' : 'Ett fel uppstod',
-        'server.error.default.text': 'Tyvärr har ett tekniskt problem uppstått i tjänsten. Kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>',
+        'server.error.default.text': 'Tyvärr har ett tekniskt problem uppstått i tjänsten. Kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
 
         'server.error.getsjukfall.title' : 'Sjukfall för enheten kunde inte hämtas',
         'server.error.changeunit.title' : 'Byte av enhet misslyckades',
         'server.error.changeurval.title' : 'Kunde inte visa sjukfall',
         'server.error.getsummary.text': 'Statistik för enheten kan inte visas',
         'server.error.giveconsent.title' : 'Kunde inte lämna medgivande om PDL-loggning',
-        'server.error.loadpatienthistory.text': 'Sjukfallshistorik kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>'
+        'server.error.loadpatienthistory.text': 'Sjukfallshistorik kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.'
 
 
 
