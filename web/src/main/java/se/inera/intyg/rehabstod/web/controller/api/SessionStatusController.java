@@ -45,21 +45,21 @@ import se.inera.intyg.rehabstod.web.filters.SessionTimeoutFilter;
  */
 
 @RestController
-@RequestMapping(SessionStatusController.CONTROLLER_REQUEST_MAPPING)
+@RequestMapping(SessionStatusController.SESSION_STATUS_REQUEST_MAPPING)
 public class SessionStatusController {
 
-    static final String CONTROLLER_REQUEST_MAPPING = "/api/session-auth-check";
-    static final String METHOD_REQUEST_MAPPING = "/ping";
-    static final String PROLONG_SESSION_METHOD_REQUEST_MAPPING = "/extend";
+    public static final String SESSION_STATUS_REQUEST_MAPPING = "/api/session-auth-check";
+    public static final String SESSION_STATUS_PING = "/ping";
+    public static final String SESSION_STATUS_EXTEND = "/extend";
 
-    public static final String SESSION_STATUS_CHECK_URI = CONTROLLER_REQUEST_MAPPING + METHOD_REQUEST_MAPPING;
+    public static final String SESSION_STATUS_CHECK_URI = SESSION_STATUS_REQUEST_MAPPING + SESSION_STATUS_PING;
 
-    @RequestMapping(value = SessionStatusController.METHOD_REQUEST_MAPPING, method = RequestMethod.GET)
+    @RequestMapping(value = SessionStatusController.SESSION_STATUS_PING, method = RequestMethod.GET)
     public GetSessionStatusResponse getSessionStatus(HttpServletRequest request) {
         return createStatusResponse(request);
     }
 
-    @RequestMapping(value = SessionStatusController.PROLONG_SESSION_METHOD_REQUEST_MAPPING, method = RequestMethod.GET)
+    @RequestMapping(value = SessionStatusController.SESSION_STATUS_EXTEND, method = RequestMethod.GET)
     public GetSessionStatusResponse getExtendSession(HttpServletRequest request) {
         return createStatusResponse(request);
     }

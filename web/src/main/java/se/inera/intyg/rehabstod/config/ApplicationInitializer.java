@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_CHECK_URI;
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_EXTEND;
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_REQUEST_MAPPING;
+
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.WebApplicationInitializer;
@@ -28,18 +36,14 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
+
 import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigJndi;
-import se.inera.intyg.rehabstod.web.controller.api.SessionStatusController;
 import se.inera.intyg.rehabstod.web.filters.SessionTimeoutFilter;
-
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
 
 public class ApplicationInitializer implements WebApplicationInitializer {
 
@@ -67,7 +71,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         // Session Timeout filter
         FilterRegistration.Dynamic sessionTimeoutFilter = servletContext.addFilter("sessionTimeoutFilter", SessionTimeoutFilter.class);
         sessionTimeoutFilter.addMappingForUrlPatterns(null, false, "/*");
-        sessionTimeoutFilter.setInitParameter("getSessionStatusUri", SessionStatusController.SESSION_STATUS_CHECK_URI);
+        sessionTimeoutFilter.setInitParameter("getSessionStatusUri", SESSION_STATUS_CHECK_URI);
 
         // Spring security filter
         FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain",
@@ -87,7 +91,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         pdlConsentGivenAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
         pdlConsentGivenAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
         pdlConsentGivenAssuranceFilter.setInitParameter("ignoredUrls",
-                "/api/session-auth-check/ping,/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary");
+                SESSION_STATUS_CHECK_URI + "," + SESSION_STATUS_REQUEST_MAPPING + SESSION_STATUS_EXTEND
+                        + ",/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary");
 
         FilterRegistration.Dynamic characterEncodingFilter = servletContext.addFilter("characterEncodingFilter",
                 CharacterEncodingFilter.class);
