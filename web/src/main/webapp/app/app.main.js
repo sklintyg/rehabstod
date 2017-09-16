@@ -26,7 +26,6 @@ var app = angular.module('rehabstodApp', [
     'ngMessages',
     'ui.router',
     'ui.bootstrap',
-    'ui.bootstrap-slider',
     'smart-table',
     'infinite-scroll',
     'taiPlaceholder',
