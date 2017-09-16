@@ -122,7 +122,8 @@ angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope',
             'externalModel': '=',
             'min': '=',
             'max': '=',
-            'displayMaxValueAs': '@'
+            'displayMaxValueAs': '@',
+            'inputId': '@'
         }
     };
 });

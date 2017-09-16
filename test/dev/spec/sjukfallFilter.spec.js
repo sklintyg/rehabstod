@@ -52,16 +52,33 @@ describe('Hantera filtret', function() {
         sjukfallPage.clickHideFilter();
     });
 
-    it('Återställ filtret', function() {
+    it('Fyll i filtret', function() {
+        sjukfallPage.langdFromInput().clear();
+        sjukfallPage.langdFromInput().sendKeys(10);
+        sjukfallPage.langdToInput().clear();
+        sjukfallPage.langdToInput().sendKeys(30);
+
+        sjukfallPage.alderFromInput().clear();
+        sjukfallPage.alderFromInput().sendKeys(10);
+        sjukfallPage.alderToInput().clear();
+        sjukfallPage.alderToInput().sendKeys(30);
+
         var freeTextValue = 'Hej';
 
         sjukfallPage.freeTextInput().sendKeys(freeTextValue);
 
         expect(sjukfallPage.freeTextInput().getAttribute('value')).toEqual(freeTextValue);
+    });
 
+
+    it('Återställ filtret', function() {
         sjukfallPage.clickResetFilter();
 
         expect(sjukfallPage.freeTextInput().getAttribute('value')).toEqual('');
+        expect(sjukfallPage.langdFromInput().getAttribute('value')).toEqual('1');
+        expect(sjukfallPage.langdToInput().getAttribute('value')).toEqual('365+');
+        expect(sjukfallPage.alderFromInput().getAttribute('value')).toEqual('0');
+        expect(sjukfallPage.alderToInput().getAttribute('value')).toEqual('100+');
     });
 
     it('Ändra glapp', function() {

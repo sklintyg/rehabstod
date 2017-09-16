@@ -54,6 +54,18 @@ var RehabstodSjukfallPage = RehabstodBasePage._extend({
     freeTextInput: function() {
         return element(by.id('rhs-filter-free-text-input'));
     },
+    langdFromInput: function() {
+        return element(by.id('rhs-filter-langd-from'));
+    },
+    langdToInput: function() {
+        return element(by.id('rhs-filter-langd-to'));
+    },
+    alderFromInput: function() {
+        return element(by.id('rhs-filter-alder-from'));
+    },
+    alderToInput: function() {
+        return element(by.id('rhs-filter-alder-to'));
+    },
     clickResetFilter: function() {
         this.resetButton().click();
     },
