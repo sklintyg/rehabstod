@@ -40,7 +40,7 @@ public final class PDLActivityStore {
 
     /**
      * Should return list of sjukfall (internally identified by patient) not already present in store
-     * for this vardenhet, activityType and resourceType
+     * for this vardenhet, activityType and resourceType.
      *
      * @param enhetsId
      * @param sjukfall
@@ -79,6 +79,9 @@ public final class PDLActivityStore {
 
     }
 
+    /**
+     * Should return true or false if patient's sjufall is in store or not.
+     */
     public static boolean isActivityInStore(String enhetsId,
                                             SjukfallPatient sjukfall,
                                             ActivityType activityType,
@@ -168,9 +171,9 @@ public final class PDLActivityStore {
     private static boolean isStoredEvent(PDLActivityEntry storedEvent, String patientId,
                                          ActivityType activityType, ResourceType resourceType) {
 
-        return storedEvent.getPatientId().equals(patientId) &&
-            storedEvent.getActivityType().equals(activityType) &&
-            storedEvent.getResourceType().equals(resourceType);
+        return storedEvent.getPatientId().equals(patientId)
+            && storedEvent.getActivityType().equals(activityType)
+            && storedEvent.getResourceType().equals(resourceType);
     }
 
 }
