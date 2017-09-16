@@ -25,25 +25,6 @@ angular.module('rehabstodApp')
 
             $scope.filterViewState = SjukfallFilterViewState;
             $scope.user = UserModel.get();
-
-            $scope.sjukfallsLangder = angular.copy($scope.filterViewState.get().sjukskrivningslangdModel);
-
-            //Forward changes from FilterViewState to directive
-            $scope.$watch('filterViewState.get().sjukskrivningslangdModel', function(newValue) {
-                //Make sure the model that the NumericRangeInput's boxes are bound to have correct order.
-                //The dragging one slider point ofter the other will otherwise swap hi/lo
-                $scope.sjukfallsLangder[0] = Math.min(newValue[0], newValue[1]);
-                $scope.sjukfallsLangder[1] = Math.max(newValue[0], newValue[1]);
-
-            });
-
-            //Forward changes from NumericRangeInput directives to viewState (update slider from NumericInputRange directives)
-            $scope.$watchCollection('sjukfallsLangder', function(newValue) {
-                $scope.filterViewState.get().sjukskrivningslangdModel[0] = newValue[0];
-                $scope.filterViewState.get().sjukskrivningslangdModel[1] = newValue[1];
-            });
-
-
             $scope.showSearchFilter = true;
             $scope.position = 'bottom';
             $scope.model = SjukfallModel;

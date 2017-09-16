@@ -92,9 +92,10 @@ var rhsMessages = {
         // Filter
         'label.filter.show' : 'Visa sökfilter',
         'label.filter.hide' : 'Dölj sökfilter',
-        'label.filter.diagnos' : 'Välj diagnos',
+        'label.filter.diagnos' : 'Huvuddiagnosfilter',
         'label.filter.lakare' : 'Välj läkare',
         'label.filter.langd' : 'Välj sjukskrivningslängd',
+        'label.filter.alder' : 'Välj åldersspann',
         'label.filter.filter' : 'Fritextfilter',
         'label.filter.filter.placeholder' : 'Hitta sjukfall som innehåller...',
         'label.filter.allselected' : 'Alla valda',

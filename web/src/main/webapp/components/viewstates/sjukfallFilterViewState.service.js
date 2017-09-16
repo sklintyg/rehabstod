@@ -24,10 +24,7 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
 
         var state = {
             diagnosKapitelModel: DiagnosKapitelModel,
-            lakareModel: LakareModel,
-            sjukskrivningslangdModel: [1, 366],
-            freeTextModel: '',
-            glapp: 5
+            lakareModel: LakareModel
         };
 
         //Kanske initiera diagnoskapitelmodellen samtidigt som UserModel i appmain eller något?
@@ -37,6 +34,7 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
         function _reset() {
             state.diagnosKapitelModel.reset();
             state.sjukskrivningslangdModel = [1, 366];
+            state.aldersModel = [0, 101];
             state.lakareModel.reset();
             state.freeTextModel = '';
         }
@@ -57,6 +55,8 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
                 lakare: selectedLakare,
                 sjukskrivningslangd: [state.sjukskrivningslangdModel[0],
                     state.sjukskrivningslangdModel[1] > 365 ? null : state.sjukskrivningslangdModel[1]],
+                alder: [state.aldersModel[0],
+                    state.aldersModel[1] > 100 ? null : state.aldersModel[1]],
                 freeText: state.freeTextModel,
                 glapp: state.glapp
 

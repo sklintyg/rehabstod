@@ -49,6 +49,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
             expect(SjukfallFilterViewState.get().diagnosKapitelModel.getSelected()).toEqual([]);
             expect(SjukfallFilterViewState.get().lakareModel.getSelected()).toEqual([]);
             expect(SjukfallFilterViewState.get().sjukskrivningslangdModel).toEqual([1, 366]);
+            expect(SjukfallFilterViewState.get().aldersModel).toEqual([0, 101]);
             expect(SjukfallFilterViewState.get().freeTextModel).toEqual('');
         });
     });
@@ -61,6 +62,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
             LakareModel.get()[0].selected = true;
             SjukfallFilterViewState.get().freeTextModel = 'anything';
             SjukfallFilterViewState.get().sjukskrivningslangdModel = [22, 77];
+            SjukfallFilterViewState.get().aldersModel = [22, 77];
             SjukfallFilterViewState.get().glapp = 55;
 
 
@@ -68,6 +70,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
                 diagnosKapitel: [DiagnosKapitelModel.get()[0].id],
                 lakare: [LakareModel.get()[0].id],
                 sjukskrivningslangd: SjukfallFilterViewState.get().sjukskrivningslangdModel,
+                alder: SjukfallFilterViewState.get().aldersModel,
                 freeText: SjukfallFilterViewState.get().freeTextModel,
                 glapp: 55
             };
@@ -85,12 +88,14 @@ describe('Viewstate: SjukfallFilterViewState', function() {
             LakareModel.get()[0].selected = true;
             SjukfallFilterViewState.get().freeTextModel = 'anything';
             SjukfallFilterViewState.get().sjukskrivningslangdModel = [22, 77];
+            SjukfallFilterViewState.get().aldersModel = [22, 77];
             SjukfallFilterViewState.get().glapp = 55;
 
             var expectedFilter = {
                 diagnosKapitel: [],
                 lakare: [],
                 sjukskrivningslangd: [1, null],
+                alder: [0, null],
                 freeText: '',
                 glapp: 55
             };

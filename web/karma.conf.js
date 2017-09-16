@@ -82,6 +82,13 @@ module.exports = function(config) {
         // - IE (only Windows)
         browsers: ['PhantomJS'],
 
+        coverageReporter: {
+            reporters: [
+                // reporters not supporting the `file` property
+                { type: 'html', subdir: 'report-html' },
+                { type: 'lcovonly', subdir: '.', file: 'lcov.info' }
+            ]
+        },
 
         // Continuous Integration mode
         // if true, it capture browsers, run tests and exit

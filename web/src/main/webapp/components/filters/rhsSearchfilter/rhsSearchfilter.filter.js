@@ -44,6 +44,11 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
                 return false;
             }
 
+            // Ålder
+            if (!range(actual.patient.alder, filterParams.alder[0], filterParams.alder[1])) {
+                return false;
+            }
+
             if (filterParams.freeText.length > 0 && !passWildCardSearch(actual, filterParams.freeText)) {
                 return false;
             }

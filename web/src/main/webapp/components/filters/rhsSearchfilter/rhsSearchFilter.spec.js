@@ -45,10 +45,10 @@ describe('Filter: RhsSearchFilter', function() {
         },
         {
             'patient': {
-                'id': '19360721-7068',
+                'id': '19560721-7068',
                 'namn': 'Nils Persson',
                 'kon': 'M',
-                'alder': 79
+                'alder': 59
             },
             'diagnos': {
                 'intygsVarde': 'J22.0',
@@ -63,6 +63,28 @@ describe('Filter: RhsSearchFilter', function() {
             'aktivGrad': 25,
             'lakare': {
                 'namn': 'Jan Nilsson'
+            }
+        },
+        {
+            'patient': {
+                'id': '19560721-7068',
+                'namn': 'Nils Persson',
+                'kon': 'M',
+                'alder': 59
+            },
+            'diagnos': {
+                'intygsVarde': 'J22.0',
+                'kapitel': 'J00-J99',
+                'kod': 'J220'
+            },
+            'start': '2016-08-01',
+            'slut': '2016-08-8',
+            'dagar': 180,
+            'intyg': 3,
+            'grader': [25, 50],
+            'aktivGrad': 25,
+            'lakare': {
+                'namn': undefined
             }
         }];
 
@@ -80,6 +102,7 @@ describe('Filter: RhsSearchFilter', function() {
                 diagnosKapitel: [],
                 lakare: [],
                 sjukskrivningslangd: [1, null],
+                alder: [0, null],
                 freeText: ''
             }
 
@@ -95,6 +118,7 @@ describe('Filter: RhsSearchFilter', function() {
                 diagnosKapitel: ['M00-M99'],
                 lakare: [],
                 sjukskrivningslangd: [1, 366],
+                alder: [0, 101],
                 freeText: ''
             }
         };
@@ -109,6 +133,7 @@ describe('Filter: RhsSearchFilter', function() {
                 diagnosKapitel: [],
                 lakare: ['Dummy'],
                 sjukskrivningslangd: [1, 366],
+                alder: [0, 101],
                 freeText: ''
             }
         };
@@ -117,7 +142,7 @@ describe('Filter: RhsSearchFilter', function() {
         filterParam.customSearch.lakare.push('Per Hansson');
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[0]]);
         filterParam.customSearch.lakare.push('Jan Nilsson');
-        expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual(testJsonData);
+        expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[0], testJsonData[1]]);
     }));
 
     it('should filter on sjukskrivingslängd when set', inject(function(rhsSearchfilterFilter) {
@@ -126,6 +151,7 @@ describe('Filter: RhsSearchFilter', function() {
                 diagnosKapitel: [],
                 lakare: [],
                 sjukskrivningslangd: [1, 366],
+                alder: [0, 101],
                 freeText: ''
             }
         };
@@ -134,7 +160,7 @@ describe('Filter: RhsSearchFilter', function() {
         filterParam.customSearch.sjukskrivningslangd = [1, 15];
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[0]]);
         filterParam.customSearch.sjukskrivningslangd = [100, 200];
-        expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[1]]);
+        expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[1], testJsonData[2]]);
     }));
 
     it('should filter on wildcard when set', inject(function(rhsSearchfilterFilter, SjukfallModel) {
@@ -143,6 +169,7 @@ describe('Filter: RhsSearchFilter', function() {
                 diagnosKapitel: [],
                 lakare: [],
                 sjukskrivningslangd: [1, 366],
+                alder: [0, 101],
                 freeText: 'son'
             }
         };
@@ -159,6 +186,24 @@ describe('Filter: RhsSearchFilter', function() {
 
         filterParam.customSearch.freeText = 'Jan';
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([expected[1]]);
+    }));
+
+    it('should filter on alder when set', inject(function(rhsSearchfilterFilter) {
+        var filterParam = {
+            customSearch: {
+                diagnosKapitel: [],
+                lakare: [],
+                sjukskrivningslangd: [1, 366],
+                alder: [0, 101],
+                freeText: ''
+            }
+        };
+        expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual(testJsonData);
+
+        filterParam.customSearch.alder = [0, 70];
+        expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[1], testJsonData[2]]);
+        filterParam.customSearch.alder = [70, 100];
+        expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[0]]);
     }));
 
 

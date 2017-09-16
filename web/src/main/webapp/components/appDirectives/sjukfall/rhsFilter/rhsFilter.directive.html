@@ -5,7 +5,7 @@
 
 <div class="row rhs-filter" ng-if="showSearchFilter">
   <div class="col-md-9">
-    <div class="box">
+    <div class="box rhs-box">
       <div class="row">
         <div class="col-sm-6">
           <div class="form-group search-filter-diagnos">
@@ -23,37 +23,54 @@
           </div>
         </div>
       </div>
+
       <div class="row">
-        <div class="col-sm-12 rhs-filter-slider">
+        <div class="col-sm-6">
           <div class="form-group">
             <label class="control-label"><span message key="label.filter.langd"></span></label>
-            <rhs-slider slider-model="filterViewState.get().sjukskrivningslangdModel" range="true" min="1" max="366" position="position" />
+            <div class="form-inline">
+              <span>Från&nbsp;</span>
+              <rhs-numeric-range-input external-model="filterViewState.get().sjukskrivningslangdModel[0]"
+                                       min="1"
+                                       max="filterViewState.get().sjukskrivningslangdModel[1]"
+                                       display-max-value-as="365+">
+
+              </rhs-numeric-range-input>
+
+              <span>&nbsp;till&nbsp;</span>
+              <rhs-numeric-range-input external-model="filterViewState.get().sjukskrivningslangdModel[1]"
+                                       min="filterViewState.get().sjukskrivningslangdModel[0]"
+                                       max="366"
+                                       display-max-value-as="365+">
+
+              </rhs-numeric-range-input>
+              <span>&nbsp;dagar</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col-sm-12 form-inline rhs-filter-numeric-input-controls">
+        <div class="col-sm-6">
           <div class="form-group">
-            <span class="control-label">Från&nbsp;</span>
-            <rhs-numeric-range-input external-model="sjukfallsLangder[0]"
-                                     min="1"
-                                     max="filterViewState.get().sjukskrivningslangdModel[1]"
-                                     display-max-value-as="365+">
+            <label class="control-label"><span message key="label.filter.alder"></span></label>
 
-            </rhs-numeric-range-input>
-            <span class="control-label">&nbsp;dagar&nbsp;</span>
-          </div>
+            <div class="form-inline">
+              <span>Från&nbsp;</span>
+              <rhs-numeric-range-input external-model="filterViewState.get().aldersModel[0]"
+                                       min="0"
+                                       max="filterViewState.get().aldersModel[1]"
+                                       display-max-value-as="100+">
 
-          <div class="form-group rhs-filter-langd-to">
-            <span class="control-label">till&nbsp;</span>
-            <rhs-numeric-range-input external-model="sjukfallsLangder[1]"
-                                     min="filterViewState.get().sjukskrivningslangdModel[0]"
-                                     max="366"
-                                     display-max-value-as="365+">
+              </rhs-numeric-range-input>
 
-            </rhs-numeric-range-input>
-            <span class="control-label">&nbsp;dagar</span>
+              <span>&nbsp;till&nbsp;</span>
+              <rhs-numeric-range-input external-model="filterViewState.get().aldersModel[1]"
+                                       min="filterViewState.get().aldersModel[0]"
+                                       max="101"
+                                       display-max-value-as="100+">
+
+              </rhs-numeric-range-input>
+              <span>&nbsp;år</span>
+            </div>
           </div>
         </div>
       </div>
