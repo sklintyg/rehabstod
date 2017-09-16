@@ -36,9 +36,9 @@ import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
@@ -60,7 +60,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -98,8 +97,8 @@ public class SjukfallController {
         List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request);
 
         // PDL-logging based on which sjukfall that are about to be displayed to user.
-        LOG.debug("PDL logging - log which 'sjukfall' that are going to be displayed to the user.");
-        logSjukfallData(user, sjukfall, ActivityType.READ);
+        LOG.debug("PDL logging - log which 'sjukfall' that will be displayed to the user.");
+        logSjukfallData(user, sjukfall, ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
 
         return sjukfall;
     }
@@ -114,8 +113,8 @@ public class SjukfallController {
         List<SjukfallPatient> sjukfall = getSjukfallForPatient(user, request);
 
         // PDL-logging based on which sjukfall that are about to be displayed to user.
-        //LOG.debug("PDL logging - log which 'sjukfall' that are going to be displayed to the user.");
-        //logSjukfallData(user, sjukfall, ActivityType.READ);
+        LOG.debug("PDL logging - log which detailed 'sjukfall' that will be displayed to the user.");
+        logSjukfallData(user, sjukfall.get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_PATIENT);
 
         return sjukfall;
     }
@@ -152,7 +151,7 @@ public class SjukfallController {
 
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if PDF export was OK.
             LOG.debug("PDL logging - log which 'sjukfall' that are about to be exported in PDF format.");
-            logSjukfallData(user, finalList, ActivityType.PRINT);
+            logSjukfallData(user, finalList, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
 
             HttpHeaders respHeaders = getHttpHeaders("application/pdf",
                 pdfData.length, ".pdf", user);
@@ -178,7 +177,7 @@ public class SjukfallController {
 
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if XLSX export was OK.
             LOG.debug("PDL logging - log which 'sjukfall' that are about to be exported in XLSX format.");
-            logSjukfallData(user, finalList, ActivityType.PRINT);
+            logSjukfallData(user, finalList, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
 
             HttpHeaders respHeaders = getHttpHeaders("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 data.length, ".xlsx", user);
@@ -235,28 +234,39 @@ public class SjukfallController {
         String lakarId = user.getHsaId();
         Urval urval = user.getUrval();
 
-        LOG.debug("Calling the 'sjukfall' service to get a list of 'sjukfall' for one patient.");
+        LOG.debug("Calling the 'sjukfall' service to get a list of detailed 'sjukfall' for one patient.");
         return sjukfallService.getByPatient(enhetsId, lakarId, urval, request);
     }
 
-    private void logSjukfallData(RehabstodUser user, List<SjukfallEnhet> sjukfallList, ActivityType activityType) {
+    private void logSjukfallData(RehabstodUser user, List<SjukfallEnhet> sjukfallList,
+                                 ActivityType activityType, ResourceType resourceType) {
+
         String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
         if (enhetsId == null) {
             throw new IllegalArgumentException("Cannot create PDL log statements, enhetsId was null");
         }
-        List<SjukfallEnhet> sjukfallToLog = getActivitiesNotInStore(enhetsId, sjukfallList, activityType, user.getStoredActivities());
-        logService.logSjukfallData(sjukfallToLog, activityType);
-        addActivitiesToStore(enhetsId, sjukfallToLog, activityType, user.getStoredActivities());
+
+        List<SjukfallEnhet> sjukfallToLog =
+            PDLActivityStore.getActivitiesNotInStore(enhetsId, sjukfallList, activityType, resourceType, user.getStoredActivities());
+        logService.logSjukfallData(sjukfallToLog, activityType, resourceType);
+        PDLActivityStore.addActivitiesToStore(enhetsId, sjukfallToLog, activityType, resourceType, user.getStoredActivities());
     }
 
-    private void addActivitiesToStore(String enhetsId, List<SjukfallEnhet> sjukfallToAdd,
-                                      ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
-        PDLActivityStore.addActivitiesToStore(enhetsId, sjukfallToAdd, activityType, storedActivities);
-    }
+    private void logSjukfallData(RehabstodUser user, SjukfallPatient sjukfallPatient,
+                                 ActivityType activityType, ResourceType resourceType) {
 
-    private List<SjukfallEnhet> getActivitiesNotInStore(String enhetsId, List<SjukfallEnhet> sjukfallList,
-                                                        ActivityType activityType, Map<String, List<PDLActivityEntry>> storedActivities) {
-        return PDLActivityStore.getActivitiesNotInStore(enhetsId, sjukfallList, activityType, storedActivities);
+        String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
+        if (enhetsId == null) {
+            throw new IllegalArgumentException("Cannot create PDL log statements, enhetsId was null");
+        }
+
+        boolean isInStore =
+            PDLActivityStore.isActivityInStore(enhetsId, sjukfallPatient, activityType, resourceType, user.getStoredActivities());
+
+        if (!isInStore) {
+            logService.logSjukfallData(sjukfallPatient, activityType, resourceType);
+            PDLActivityStore.addActivityToStore(enhetsId, sjukfallPatient, activityType, resourceType, user.getStoredActivities());
+        }
     }
 
     private String getEnhetsIdForQueryingIntygstjansten(RehabstodUser user) {

@@ -19,16 +19,19 @@
 package se.inera.intyg.rehabstod.service.pdl;
 
 import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import java.util.List;
 
 /**
  * @author eriklupander on 2016-02-18.
  */
-@FunctionalInterface
 public interface LogService {
 
-    void logSjukfallData(List<SjukfallEnhet> sjukfall, ActivityType activityType);
+    void logSjukfallData(List<SjukfallEnhet> sjukfall, ActivityType activityType, ResourceType resourceType);
+
+    void logSjukfallData(SjukfallPatient sjukfallPatient, ActivityType activityType, ResourceType resourceType);
 
 }

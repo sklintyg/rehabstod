@@ -110,6 +110,10 @@ public class SjukfallEngineMapper {
         PatientData to = new PatientData();
 
         try {
+            to.setVardgivareId(from.getVardgivareId());
+            to.setVardenhetNamn(from.getVardenhetNamn());
+            to.setVardenhetId(from.getVardenhetId());
+            to.setVardenhetNamn(from.getVardenhetNamn());
             to.setPatient(new Patient(from.getPatientId(), from.getPatientNamn()));
             to.setDiagnos(mapDiagnos(from.getDiagnosKod()));
             to.setBidiagnoser(mapDiagnos(from.getBiDiagnoser()));
@@ -121,7 +125,7 @@ public class SjukfallEngineMapper {
             to.setLakare(from.getLakareNamn());
             to.setSysselsattning(from.getSysselsattning());
             to.setAktivtIntyg(from.isAktivtIntyg());
-            to.setEnhetId(from.getVardenhetId());
+
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
         }
@@ -161,7 +165,5 @@ public class SjukfallEngineMapper {
     private List<PatientData> mapIntyg(List<se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg> from) {
         return from.stream().map(o -> map(o)).collect(Collectors.toList());
     }
-
-
 
 }

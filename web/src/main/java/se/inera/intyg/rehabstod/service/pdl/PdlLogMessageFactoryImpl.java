@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
@@ -31,7 +32,9 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataLogMessage;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataPrintLogMessage;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
+import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,30 +55,91 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
     private String systemName;
 
     @Override
-    public PdlLogMessage buildLogMessage(List<SjukfallEnhet> sjukfallList, ActivityType activityType, RehabstodUser rehabstodUser) {
+    public PdlLogMessage buildLogMessage(List<SjukfallEnhet> sjukfallList,
+                                         ActivityType activityType,
+                                         ResourceType resourceType,
+                                         RehabstodUser rehabstodUser) {
+
         LogUser user = getLogUser(rehabstodUser);
 
-        PdlLogMessage pdlLogMessage = getLogMessageTypeForActivityType(activityType);
-        pdlLogMessage.setSystemId(systemId);
-        pdlLogMessage.setSystemName(systemName);
+        PdlLogMessage pdlLogMessage = getLogMessage(activityType);
         populateWithCurrentUserAndCareUnit(pdlLogMessage, user);
 
+        // Add resources
         pdlLogMessage.getPdlResourceList().addAll(
                 sjukfallList.stream()
-                        .map(this::buildPdlLogResource)
+                        .map(sf -> buildPdlLogResource(sf, resourceType))
                         .collect(Collectors.toList()));
+
         return pdlLogMessage;
     }
 
-    private PdlResource buildPdlLogResource(SjukfallEnhet sf) {
-        PdlResource pdlResource = new PdlResource();
-        Patient patient = new Patient(sf.getPatient().getId().replace("-", "").replace("+", ""), sf.getPatient().getNamn());
-        pdlResource.setPatient(patient);
+    @Override
+    public PdlLogMessage buildLogMessage(SjukfallPatient sjukfallPatient,
+                                         ActivityType activityType,
+                                         ResourceType resourceType,
+                                         RehabstodUser rehabstodUser) {
 
-        Enhet resourceOwner = new Enhet(sf.getVardEnhetId(), sf.getVardEnhetNamn(), sf.getVardGivareId(), sf.getVardGivareNamn());
-        pdlResource.setResourceOwner(resourceOwner);
-        pdlResource.setResourceType(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL.getResourceTypeName());
+        LogUser user = getLogUser(rehabstodUser);
+
+        PdlLogMessage pdlLogMessage = getLogMessage(activityType);
+        populateWithCurrentUserAndCareUnit(pdlLogMessage, user);
+
+        // Add single resource
+        pdlLogMessage.getPdlResourceList().add(buildPdlLogResource(sjukfallPatient, resourceType));
+
+        return pdlLogMessage;
+    }
+
+    private PdlResource buildPdlLogResource(SjukfallEnhet sfe, ResourceType resourceType) {
+        PdlResource pdlResource = new PdlResource();
+        pdlResource.setPatient(getPatient(sfe));
+        pdlResource.setResourceOwner(getEnhet(sfe));
+        pdlResource.setResourceType(resourceType.getResourceTypeName());
+
         return pdlResource;
+    }
+
+    private PdlResource buildPdlLogResource(SjukfallPatient sjp, ResourceType resourceType) {
+        // Get log info from first certificate in list
+        PatientData first = sjp.getIntyg().get(0);
+
+        PdlResource pdlResource = new PdlResource();
+        pdlResource.setPatient(getPatient(first));
+        pdlResource.setResourceOwner(getEnhet(first));
+        pdlResource.setResourceType(resourceType.getResourceTypeName());
+
+        return pdlResource;
+    }
+
+    private Enhet getEnhet(SjukfallEnhet sfe) {
+        return new Enhet(sfe.getVardEnhetId(), sfe.getVardEnhetNamn(),
+            sfe.getVardGivareId(), sfe.getVardGivareNamn());
+    }
+
+    private Patient getPatient(SjukfallEnhet sfe) {
+        return new Patient(
+            sfe.getPatient().getId().replace("-", "").replace("+", ""),
+            sfe.getPatient().getNamn());
+    }
+
+    private Enhet getEnhet(PatientData pd) {
+        return new Enhet(pd.getVardenhetId(), pd.getVardenhetNamn(),
+            pd.getVardgivareId(), pd.getVardgivareNamn());
+    }
+
+    private Patient getPatient(PatientData pd) {
+        return new Patient(
+            pd.getPatient().getId().replace("-", "").replace("+", ""),
+            pd.getPatient().getNamn());
+    }
+
+    @NotNull
+    private PdlLogMessage getLogMessage(ActivityType activityType) {
+        PdlLogMessage pdlLogMessage = getLogMessageTypeForActivityType(activityType);
+        pdlLogMessage.setSystemId(systemId);
+        pdlLogMessage.setSystemName(systemName);
+        return pdlLogMessage;
     }
 
     private PdlLogMessage getLogMessageTypeForActivityType(ActivityType activityType) {

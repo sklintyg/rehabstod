@@ -263,7 +263,7 @@ public class SjukfallPuServiceImplTest {
 
     private PatientData buildPatientData() {
         PatientData patientData = new PatientData();
-        patientData.setEnhetId(ENHET_1);
+        patientData.setVardenhetId(ENHET_1);
         patientData.setPatient(buildPatient());
         return patientData;
     }

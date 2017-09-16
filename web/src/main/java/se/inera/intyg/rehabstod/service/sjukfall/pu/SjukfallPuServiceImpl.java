@@ -140,7 +140,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             RehabstodUser user = userService.getUser();
 
             if (personSvar.getPerson().isSekretessmarkering() && !(user.isLakare()
-                    && patientSjukfall.get(0).getIntyg().get(0).getEnhetId().equalsIgnoreCase(user.getValdVardenhet().getId()))) {
+                    && patientSjukfall.get(0).getIntyg().get(0).getVardenhetId().equalsIgnoreCase(user.getValdVardenhet().getId()))) {
                 throw new IllegalStateException("Cannot show patient details for patient having sekretessmarkering");
             } else {
                 // Uppdatera namnet på samtliga ingående intyg i sjukfallet.

@@ -19,9 +19,12 @@
 package se.inera.intyg.rehabstod.auth.pdl;
 
 import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,20 +39,20 @@ public final class PDLActivityStore {
     }
 
     /**
-     * Should return list of sjukfall (internally identified by patient) not already present in store for this vardenhet
-     * and activityType.
+     * Should return list of sjukfall (internally identified by patient) not already present in store
+     * for this vardenhet, activityType and resourceType
      *
      * @param enhetsId
      * @param sjukfall
      * @param activityType
      * @param storedActivities
-     *            the mapDiagnos holding sjukfall
      *
      * @return a list of SjukfallEnhet
      */
     public static List<SjukfallEnhet> getActivitiesNotInStore(String enhetsId,
                                                               List<SjukfallEnhet> sjukfall,
                                                               ActivityType activityType,
+                                                              ResourceType resourceType,
                                                               Map<String, List<PDLActivityEntry>> storedActivities) {
 
         if (sjukfall == null || sjukfall.isEmpty()) {
@@ -71,10 +74,36 @@ public final class PDLActivityStore {
         // find all patientId's NOT having av event entry for the combination patientId + eventType
         return sjukfall.stream()
                 .filter(sf -> vardenhetEvents.stream()
-                        .noneMatch(storedEvent -> storedEvent.getPatientId().equals(sf.getPatient().getId())
-                                && storedEvent.getActivityType().equals(activityType)))
+                        .noneMatch(storedEvent -> isStoredEvent(storedEvent, sf.getPatient().getId(), activityType, resourceType)))
                 .collect(Collectors.toList());
 
+    }
+
+    public static boolean isActivityInStore(String enhetsId,
+                                            SjukfallPatient sjukfall,
+                                            ActivityType activityType,
+                                            ResourceType resourceType,
+                                            Map<String, List<PDLActivityEntry>> storedActivities) {
+
+        if (sjukfall == null) {
+            throw new IllegalArgumentException("Cannot make lookup in PDL activity store, sjukfall was null.");
+        }
+
+        if (storedActivities == null || storedActivities.isEmpty()) {
+            return false;
+        }
+
+        // We actually don't check tha vardenehet for each sjukfall, we trust that the given enhetsId is correct.
+        List<PDLActivityEntry> vardenhetEvents = storedActivities.get(enhetsId);
+        if (vardenhetEvents == null) {
+            // Nothing logged for this vardenhet yet - so all are new activities
+            return false;
+        }
+
+        // find all patientId's NOT having av event entry for the combination patientId + activityType + resourceType
+        String patientId = sjukfall.getIntyg().get(0).getPatient().getId();
+        return vardenhetEvents.stream()
+            .anyMatch(storedEvent -> isStoredEvent(storedEvent, patientId, activityType, resourceType));
     }
 
     /**
@@ -84,9 +113,11 @@ public final class PDLActivityStore {
      * @param sjukfallToAdd
      * @param activityType
      * @param storedActivities
-     *            the mapDiagnos where sjukfall will be stored
      */
-    public static void addActivitiesToStore(String enhetsId, List<SjukfallEnhet> sjukfallToAdd, ActivityType activityType,
+    public static void addActivitiesToStore(String enhetsId,
+                                            List<SjukfallEnhet> sjukfallToAdd,
+                                            ActivityType activityType,
+                                            ResourceType resourceType,
                                             Map<String, List<PDLActivityEntry>> storedActivities) {
         if (sjukfallToAdd == null || sjukfallToAdd.isEmpty()) {
             return;
@@ -95,7 +126,7 @@ public final class PDLActivityStore {
         List<PDLActivityEntry> vardenhetEvents = storedActivities.get(enhetsId);
 
         final List<PDLActivityEntry> pdlActivityEntryList = sjukfallToAdd.stream()
-                .map(sf -> new PDLActivityEntry(sf.getPatient().getId(), activityType))
+                .map(sf -> new PDLActivityEntry(sf.getPatient().getId(), activityType, resourceType))
                 .collect(Collectors.toList());
 
         if (vardenhetEvents == null) {
@@ -103,6 +134,43 @@ public final class PDLActivityStore {
         } else {
             vardenhetEvents.addAll(pdlActivityEntryList);
         }
+    }
+
+    /**
+     * Should store the specified sjukfall for the vardenhet and activityType.
+     *
+     * @param enhetsId
+     * @param sjukfallToAdd
+     * @param activityType
+     * @param storedActivities
+     */
+    public static void addActivityToStore(String enhetsId,
+                                          SjukfallPatient sjukfallToAdd,
+                                          ActivityType activityType,
+                                          ResourceType resourceType,
+                                          Map<String, List<PDLActivityEntry>> storedActivities) {
+        if (sjukfallToAdd == null) {
+            return;
+        }
+
+        List<PDLActivityEntry> vardenhetEvents = storedActivities.get(enhetsId);
+
+        String patientId = sjukfallToAdd.getIntyg().get(0).getPatient().getId();
+        PDLActivityEntry newEntry = new PDLActivityEntry(patientId, activityType, resourceType);
+
+        if (vardenhetEvents == null) {
+            storedActivities.put(enhetsId, Collections.singletonList(newEntry));
+        } else {
+            vardenhetEvents.addAll(Collections.singletonList(newEntry));
+        }
+    }
+
+    private static boolean isStoredEvent(PDLActivityEntry storedEvent, String patientId,
+                                         ActivityType activityType, ResourceType resourceType) {
+
+        return storedEvent.getPatientId().equals(patientId) &&
+            storedEvent.getActivityType().equals(activityType) &&
+            storedEvent.getResourceType().equals(resourceType);
     }
 
 }

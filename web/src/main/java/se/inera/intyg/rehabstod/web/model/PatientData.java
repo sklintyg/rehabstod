@@ -27,6 +27,11 @@ import java.util.List;
  */
 public class PatientData {
 
+    private String vardgivareId;
+    private String vardgivareNamn;
+    private String vardenhetNamn;
+    private String vardenhetId;
+
     private Patient patient;
 
     private Diagnos diagnos;
@@ -46,10 +51,40 @@ public class PatientData {
 
     boolean aktivtIntyg;
 
-    private String enhetId;
-
 
     // - - - getters and setters
+
+    public String getVardgivareId() {
+        return vardgivareId;
+    }
+
+    public void setVardgivareId(String vardgivareId) {
+        this.vardgivareId = vardgivareId;
+    }
+
+    public String getVardgivareNamn() {
+        return vardgivareNamn;
+    }
+
+    public void setVardgivareNamn(String vardgivareNamn) {
+        this.vardgivareNamn = vardgivareNamn;
+    }
+
+    public String getVardenhetNamn() {
+        return vardenhetNamn;
+    }
+
+    public void setVardenhetNamn(String vardenhetNamn) {
+        this.vardenhetNamn = vardenhetNamn;
+    }
+
+    public String getVardenhetId() {
+        return vardenhetId;
+    }
+
+    public void setVardenhetId(String vardenhetId) {
+        this.vardenhetId = vardenhetId;
+    }
 
     public Patient getPatient() {
         return patient;
@@ -139,11 +174,4 @@ public class PatientData {
         this.aktivtIntyg = aktivtIntyg;
     }
 
-    public String getEnhetId() {
-        return enhetId;
-    }
-
-    public void setEnhetId(String enhetId) {
-        this.enhetId = enhetId;
-    }
 }

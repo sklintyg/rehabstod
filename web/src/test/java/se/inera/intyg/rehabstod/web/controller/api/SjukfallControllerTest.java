@@ -43,6 +43,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.service.Urval;
@@ -115,7 +116,8 @@ public class SjukfallControllerTest {
 
         // When
         mockStatic(PDLActivityStore.class);
-        when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ), any(Map.class))).thenReturn(toLog);
+        when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
+            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
         when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(result);
 
         // Then
@@ -123,10 +125,11 @@ public class SjukfallControllerTest {
 
         // Verify
         verifyStatic();
-        PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ), any(Map.class));
+        PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
+            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class));
 
         verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
-        verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.READ));
+        verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL));
     }
 
     @Test
@@ -147,8 +150,10 @@ public class SjukfallControllerTest {
         // When
         mockStatic(PDLActivityStore.class);
         doNothing().when(PDLActivityStore.class); //This is the preferred way to mock static void methods
-        PDLActivityStore.addActivitiesToStore(anyString(), eq(toLog), eq(ActivityType.PRINT), any(Map.class));
-        when(PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT), any(Map.class))).thenReturn(toLog);
+        PDLActivityStore.addActivitiesToStore(anyString(), eq(toLog), eq(ActivityType.PRINT),
+            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class));
+        when(PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
+            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
 
         when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(allSjukFall);
         when(pdfExportServiceMock.export(eq(finalList), eq(request), eq(rehabstodUserMock), eq(allSjukFall.size()))).thenReturn(new byte[0]);
@@ -158,12 +163,14 @@ public class SjukfallControllerTest {
 
         // Verify
         verifyStatic();
-        PDLActivityStore.addActivitiesToStore(anyString(), eq(toLog), eq(ActivityType.PRINT), any(Map.class));
+        PDLActivityStore.addActivitiesToStore(anyString(), eq(toLog), eq(ActivityType.PRINT),
+            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class));
         verifyStatic();
-        PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT), any(Map.class));
+        PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
+            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class));
 
         verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
-        verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.PRINT));
+        verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.PRINT), eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL));
 
         assertTrue(response.getStatusCode().equals(HttpStatus.OK));
     }

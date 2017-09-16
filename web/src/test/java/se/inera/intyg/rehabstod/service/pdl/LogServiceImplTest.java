@@ -19,22 +19,28 @@
 package se.inera.intyg.rehabstod.service.pdl;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-
-import java.util.ArrayList;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.jms.support.destination.DestinationResolutionException;
-
 import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
+
+import java.util.ArrayList;
 
 /**
  * Created by eriklupander on 2016-03-03.
@@ -57,7 +63,8 @@ public class LogServiceImplTest {
     @Test
     public void testSendPdlReadMessage() {
         when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser());
-        testee.logSjukfallData(TestDataGen.buildSjukfallList(5), ActivityType.READ);
+        testee.logSjukfallData(TestDataGen.buildSjukfallList(5),
+            ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
         verify(template, times(1)).send(any());
     }
 
@@ -65,7 +72,8 @@ public class LogServiceImplTest {
     public void testSendPdlUnknownMessage() {
         when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser());
         try {
-            testee.logSjukfallData(TestDataGen.buildSjukfallList(5), ActivityType.EMERGENCY_ACCESS);
+            testee.logSjukfallData(TestDataGen.buildSjukfallList(5),
+                ActivityType.EMERGENCY_ACCESS, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
         } finally {
             verify(template, times(0)).send(any());
         }
@@ -74,7 +82,8 @@ public class LogServiceImplTest {
     @Test
     public void testNoLogMessageSentWhenSjukfallListIsEmpty() {
         when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser());
-        testee.logSjukfallData(new ArrayList<>(), ActivityType.READ);
+        testee.logSjukfallData(new ArrayList<>(),
+            ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
         verify(template, times(0)).send(any());
     }
 
@@ -83,7 +92,8 @@ public class LogServiceImplTest {
         when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser());
         doThrow(new DestinationResolutionException("")).when(template).send(any(MessageCreator.class));
         try {
-            testee.logSjukfallData(TestDataGen.buildSjukfallList(5), ActivityType.READ);
+            testee.logSjukfallData(TestDataGen.buildSjukfallList(5),
+                ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
         } finally {
             verify(template, times(1)).send(any());
         }

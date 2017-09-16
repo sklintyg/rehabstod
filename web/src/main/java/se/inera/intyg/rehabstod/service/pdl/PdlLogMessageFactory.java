@@ -20,17 +20,26 @@ package se.inera.intyg.rehabstod.service.pdl;
 
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.PdlLogMessage;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import java.util.List;
 
 /**
  * @author eriklupander on 2016-03-03.
  */
-@FunctionalInterface
 public interface PdlLogMessageFactory {
 
-    PdlLogMessage buildLogMessage(List<SjukfallEnhet> sjukfallList, ActivityType activityType, RehabstodUser rehabstodUser);
+    PdlLogMessage buildLogMessage(List<SjukfallEnhet> sjukfallList,
+                                  ActivityType activityType,
+                                  ResourceType resourceType,
+                                  RehabstodUser rehabstodUser);
+
+    PdlLogMessage buildLogMessage(SjukfallPatient sjukfallPatient,
+                                  ActivityType activityType,
+                                  ResourceType resourceType,
+                                  RehabstodUser rehabstodUser);
 
 }

@@ -30,9 +30,11 @@ import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.PdlLogMessage;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import javax.annotation.PostConstruct;
 import javax.jms.JMSException;
@@ -70,12 +72,24 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public void logSjukfallData(List<SjukfallEnhet> sjukfallList, ActivityType activityType) {
+    public void logSjukfallData(List<SjukfallEnhet> sjukfallList, ActivityType activityType, ResourceType resourceType) {
         if (sjukfallList == null || sjukfallList.isEmpty()) {
             LOG.debug("No sjukfall in resource list for PDL logging, not logging.");
             return;
         }
-        PdlLogMessage pdlLogMessage = pdlLogMessageFactory.buildLogMessage(sjukfallList, activityType, userService.getUser());
+        PdlLogMessage pdlLogMessage =
+            pdlLogMessageFactory.buildLogMessage(sjukfallList, activityType, resourceType, userService.getUser());
+        send(pdlLogMessage);
+    }
+
+    @Override
+    public void logSjukfallData(SjukfallPatient sjukfallPatient, ActivityType activityType, ResourceType resourceType) {
+        if (sjukfallPatient == null) {
+            LOG.debug("No sjukfall for PDL logging, not logging.");
+            return;
+        }
+        PdlLogMessage pdlLogMessage =
+            pdlLogMessageFactory.buildLogMessage(sjukfallPatient, activityType, resourceType, userService.getUser());
         send(pdlLogMessage);
     }
 
