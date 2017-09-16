@@ -114,7 +114,7 @@ public class SjukfallController {
 
         // PDL-logging based on which sjukfall that are about to be displayed to user.
         LOG.debug("PDL logging - log which detailed 'sjukfall' that will be displayed to the user.");
-        logSjukfallData(user, sjukfall.get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_PATIENT);
+        logSjukfallData(user, sjukfall.get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK);
 
         return sjukfall;
     }
