@@ -72,6 +72,10 @@ angular.module('rehabstodApp').factory('SjukfallService', [
                 sortering: sort,
                 maxIntygsGlapp: filterState.glapp,
                 fritext: filterState.freeText,
+                aldersIntervall: {
+                    min: '' + filterState.alder[0],
+                    max: '' + (filterState.alder[1] === null? '100+' : filterState.alder[1])
+                },
                 langdIntervall: {
                     min: '' + filterState.sjukskrivningslangd[0],
                     max: '' + (filterState.sjukskrivningslangd[1] === null? '365+' : filterState.sjukskrivningslangd[1])

@@ -68,6 +68,7 @@ public final class TestDataGen {
         req.setDiagnosGrupper(buildDiagnosGrupper());
         req.setLakare(buildLakare());
         req.setLangdIntervall(buildLangdIntervall());
+        req.setAldersIntervall(buildAlderIntervall());
         req.setMaxIntygsGlapp(5);
         req.setSortering(buildSortering());
         return req;
@@ -83,6 +84,13 @@ public final class TestDataGen {
     public static LangdIntervall buildLangdIntervall() {
         LangdIntervall langdIntervall = new LangdIntervall();
         langdIntervall.setMax("90");
+        langdIntervall.setMin("30");
+        return langdIntervall;
+    }
+
+    public static LangdIntervall buildAlderIntervall() {
+        LangdIntervall langdIntervall = new LangdIntervall();
+        langdIntervall.setMax("70");
         langdIntervall.setMin("30");
         return langdIntervall;
     }

@@ -92,6 +92,10 @@ describe('Service: SjukfallService', function() {
                     min: '1',
                     max: '365+'
                 },
+                aldersIntervall: {
+                    min: '0',
+                    max: '100+'
+                },
                 lakare: cfs.lakare,
                 diagnosGrupper: cfs.diagnosKapitel,
                 personnummer: personnummer

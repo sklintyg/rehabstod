@@ -63,6 +63,8 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
 
             inputs += _addInput('langdIntervall.max', query.langdIntervall.max);
             inputs += _addInput('langdIntervall.min', query.langdIntervall.min);
+            inputs += _addInput('aldersIntervall.max', query.aldersIntervall.max);
+            inputs += _addInput('aldersIntervall.min', query.aldersIntervall.min);
             inputs += _addInput('sortering.kolumn', query.sortering.kolumn);
             inputs += _addInput('sortering.order', query.sortering.order);
             inputs += _addInput('fritext', query.fritext);

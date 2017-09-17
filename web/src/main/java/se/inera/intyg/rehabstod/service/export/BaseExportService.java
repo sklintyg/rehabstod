@@ -36,10 +36,11 @@ public abstract class BaseExportService {
     protected static final String PA_ENHETEN = "- De pågående sjukfall där jag utfärdat det nuvarande intyget";
     protected static final String ALLA_SJUKFALL = "Alla sjukfall";
     protected static final String SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN = "- Alla pågående sjukfall på enheten";
-    protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Valda diagnoser";
+    protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Huvuddiagnosfilter";
     protected static final String SELECTION_VALUE_ALLA = "Alla";
     protected static final String FILTER_TITLE_VALDA_LAKARE = "Valda läkare";
     protected static final String FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
+    protected static final String FILTER_TITLE_VALD_ALDER = "Åldersspann";
     protected static final String FILTER_TITLE_FRITEXTFILTER = "Fritextfilter";
     protected static final String VALDA_FILTER = "Valda filter";
     protected static final String H2_SJUKFALLSINSTALLNING = "Sjukfallsinställning";

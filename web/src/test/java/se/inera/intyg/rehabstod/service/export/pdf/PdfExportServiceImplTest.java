@@ -30,14 +30,12 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
+import se.inera.intyg.rehabstod.testutil.TestDataGen;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.Lakare;
-import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Patient;
-import se.inera.intyg.rehabstod.web.model.Sortering;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -111,7 +109,7 @@ public class PdfExportServiceImplTest {
         Map<String, Role> roles = new HashMap<>();
         roles.put(AuthoritiesConstants.ROLE_LAKARE, null);
         user.setRoles(roles);
-        final byte[] export = testee.export(createSjukFallList(), createPrintRequest(), user, 3);
+        final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
         assertTrue(export.length > 0);
         // Files.write(Paths.get("./test_issued_by_me.pdf"), export);
     }
@@ -121,29 +119,10 @@ public class PdfExportServiceImplTest {
         Map<String, Role> roles = new HashMap<>();
         roles.put(AuthoritiesConstants.ROLE_KOORDINATOR, null);
         user.setRoles(roles);
-        final byte[] export = testee.export(createSjukFallList(), createPrintRequest(), user, 3);
+        final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
         assertTrue(export.length > 0);
 
         // Files.write(Paths.get("./test_all.pdf"), export);
-    }
-
-    private PrintSjukfallRequest createPrintRequest() {
-        PrintSjukfallRequest r = new PrintSjukfallRequest();
-
-        r.setDiagnosGrupper(Arrays.asList("M00-M99", "J00-J99"));
-        r.setFritext("Fritext");
-        r.setLakare(Arrays.asList("Per Karlsson", "Johan Nilsson"));
-        LangdIntervall langdIntervall = new LangdIntervall();
-
-        langdIntervall.setMin("1");
-        langdIntervall.setMax("365+");
-        r.setLangdIntervall(langdIntervall);
-        r.setMaxIntygsGlapp(30);
-        final Sortering sortering = new Sortering();
-        sortering.setKolumn("Personnummer");
-        sortering.setOrder("Stigande");
-        r.setSortering(sortering);
-        return r;
     }
 
     private List<SjukfallEnhet> createSjukFallList() {

@@ -18,14 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.stereotype.Service;
-
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -41,7 +33,9 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
-
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
@@ -50,6 +44,10 @@ import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.Sortering;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author marced on 24/02/16.
@@ -179,6 +177,18 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         sjukskrivningslangdVarden.add(new Chunk(" dagar.", PdfExportConstants.FRONTPAGE_NORMAL));
         valdSjukskrivninglangd.add(sjukskrivningslangdVarden);
 
+        // Ålder
+        Paragraph valdAlder = new Paragraph(FILTER_TITLE_VALD_ALDER, PdfExportConstants.FRONTPAGE_H3);
+        Paragraph alderVarden = new Paragraph();
+        alderVarden.add(new Chunk("Mellan ", PdfExportConstants.FRONTPAGE_NORMAL));
+        alderVarden
+                .add(new Chunk(String.valueOf(printRequest.getAldersIntervall().getMin()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
+        alderVarden.add(new Chunk(" och ", PdfExportConstants.FRONTPAGE_NORMAL));
+        alderVarden
+                .add(new Chunk(String.valueOf(printRequest.getAldersIntervall().getMax()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
+        alderVarden.add(new Chunk(" år.", PdfExportConstants.FRONTPAGE_NORMAL));
+        valdAlder.add(alderVarden);
+
         // Fritext
         Paragraph valdFritext = new Paragraph(FILTER_TITLE_FRITEXTFILTER, PdfExportConstants.FRONTPAGE_H3);
         valdFritext.add(new Paragraph(StringUtil.isNullOrEmpty(printRequest.getFritext()) ? "-" : printRequest.getFritext(),
@@ -189,6 +199,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         filter.add(valdaDiagnoser);
         filter.add(valdaLakare);
         filter.add(valdSjukskrivninglangd);
+        filter.add(valdAlder);
         filter.add(valdFritext);
 
         return filter;
