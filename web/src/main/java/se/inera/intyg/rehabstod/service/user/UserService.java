@@ -23,9 +23,23 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 /**
  * @author eriklupander on 2016-01-19.
  */
-@FunctionalInterface
 public interface UserService {
 
     RehabstodUser getUser();
 
+    /**
+     * Method determine if the supplied enhetsId is a Vardenhet or Mottagning identifier.
+     *
+     * <ul>
+     *     <li>If the selectedVardenhet is a Vardenhet: The supplied enhetsId is for the Vardenhet or one of its Mottagningar.</li>
+     *     <li>If the selcetedVardenhet is a Mottagning: The supplied enhetsId is the Mottagning,
+     *     its parent Vardenhet or one of the sibling Mottagningar.</li>
+     * </ul>
+     *
+     * @param enhetsId
+     *      HSA-id of a vardenhet or mottagning.
+     * @return
+     *      true if match is found.
+     */
+    boolean isUserLoggedInOnEnhetOrUnderenhet(String enhetsId);
 }

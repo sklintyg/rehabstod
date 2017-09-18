@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.pu;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -38,10 +42,6 @@ import se.inera.intyg.schemas.contract.Personnummer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
 
 /**
  * Created by eriklupander on 2017-09-06.
@@ -131,6 +131,7 @@ public class SjukfallPuServiceImplTest {
     public void testSekretessmarkeradIsIncludedWhenUserIsLakareOnSameUnit() {
         RehabstodUser rehabstodUser = buildLakare(ENHET_1);
         when(userService.getUser()).thenReturn(rehabstodUser);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
 
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.FOUND));
@@ -165,12 +166,14 @@ public class SjukfallPuServiceImplTest {
     public void testNameIsReplacedWhenLakareAccessesSekretessmarkerad() {
         RehabstodUser user = buildLakare(ENHET_1);
         when(userService.getUser()).thenReturn(user);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
 
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.FOUND));
 
         List<SjukfallEnhet> sjukfallList = buildSjukfallList();
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
+
         assertEquals(sjukfallList.size(),1);
         assertEquals(sjukfallList.get(0).getPatient().getNamn(), SjukfallPuService.SEKRETESS_SKYDDAD_NAME_PLACEHOLDER);
     }
@@ -221,6 +224,7 @@ public class SjukfallPuServiceImplTest {
     public void testGetPatientSjukfallNotAllowedForLakareOtherUnitIfSekretessmarkering() {
         RehabstodUser user = buildLakare(ENHET_2);
         when(userService.getUser()).thenReturn(user);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(false);
 
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.FOUND));
@@ -232,6 +236,7 @@ public class SjukfallPuServiceImplTest {
     public void testGetPatientSjukfallAllowedForLakareSameUnitIfSekretessmarkering() {
         RehabstodUser user = buildLakare(ENHET_1);
         when(userService.getUser()).thenReturn(user);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
 
         when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.FOUND));

@@ -73,7 +73,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
                 // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE, då får vi ej visa
                 // sjukfall för s-märkt patient.
-                if (!user.isLakare() || !item.getVardEnhetId().equalsIgnoreCase(user.getValdVardenhet().getId())) {
+                if (!user.isLakare() || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
                     i.remove();
                 }
             }
@@ -106,7 +106,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
                     // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE, då får vi ej visa
                     // sjukfall för s-märkt patient.
-                    if (!user.isLakare() || !item.getVardEnhetId().equalsIgnoreCase(user.getValdVardenhet().getId())) {
+                    if (!user.isLakare() || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
                         i.remove();
                     }
                 } else {
@@ -140,7 +140,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             RehabstodUser user = userService.getUser();
 
             if (personSvar.getPerson().isSekretessmarkering() && !(user.isLakare()
-                    && patientSjukfall.get(0).getIntyg().get(0).getVardenhetId().equalsIgnoreCase(user.getValdVardenhet().getId()))) {
+                && userService.isUserLoggedInOnEnhetOrUnderenhet(patientSjukfall.get(0).getIntyg().get(0).getVardenhetId()))) {
                 throw new IllegalStateException("Cannot show patient details for patient having sekretessmarkering");
             } else {
                 // Uppdatera namnet på samtliga ingående intyg i sjukfallet.
