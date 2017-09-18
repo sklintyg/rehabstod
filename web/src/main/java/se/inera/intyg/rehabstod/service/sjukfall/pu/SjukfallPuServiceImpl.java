@@ -58,7 +58,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             SjukfallEnhet item = i.next();
 
             Personnummer pnr = Personnummer.createValidatedPersonnummerWithDash(item.getPatient().getId()).orElse(null);
-            if (pnr == null) {
+            if (pnr == null || !pnr.verifyControlDigit()) {
                 i.remove();
                 LOG.warn("Problem parsing a personnummer when looking up patient in PU service. Removing from list of sjukfall.");
                 continue;
@@ -69,7 +69,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             item.getPatient().setNamn(null);
 
             PersonSvar personSvar = puService.getPerson(pnr);
-            if (personSvar.getStatus() == PersonSvar.Status.FOUND && personSvar.getPerson().isSekretessmarkering()) {
+            if (personSvar != null && personSvar.getStatus() == PersonSvar.Status.FOUND && personSvar.getPerson().isSekretessmarkering()) {
 
                 // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE, då får vi ej visa
                 // sjukfall för s-märkt patient.
@@ -91,7 +91,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             SjukfallEnhet item = i.next();
 
             Personnummer pnr = Personnummer.createValidatedPersonnummerWithDash(item.getPatient().getId()).orElse(null);
-            if (pnr == null) {
+            if (pnr == null || !pnr.verifyControlDigit()) {
                 i.remove();
                 LOG.warn("Problem parsing a personnummer when looking up patient in PU service. Removing from list of sjukfall.");
                 continue;
@@ -135,12 +135,17 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
         Personnummer personnummer = Personnummer.createValidatedPersonnummerWithDash(pnr)
                 .orElseThrow(() -> new IllegalArgumentException("Unparsable personnummer"));
 
+        if (!personnummer.verifyControlDigit()) {
+            throw new IllegalArgumentException("Personnummer '" + personnummer.getPnrHash()
+                    + "' has invalid control digit, not showing patient details");
+        }
+
         PersonSvar personSvar = puService.getPerson(personnummer);
         if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
             RehabstodUser user = userService.getUser();
 
             if (personSvar.getPerson().isSekretessmarkering() && !(user.isLakare()
-                && userService.isUserLoggedInOnEnhetOrUnderenhet(patientSjukfall.get(0).getIntyg().get(0).getVardenhetId()))) {
+                    && userService.isUserLoggedInOnEnhetOrUnderenhet(patientSjukfall.get(0).getIntyg().get(0).getVardenhetId()))) {
                 throw new IllegalStateException("Cannot show patient details for patient having sekretessmarkering");
             } else {
                 // Uppdatera namnet på samtliga ingående intyg i sjukfallet.
