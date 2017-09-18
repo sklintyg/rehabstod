@@ -52,6 +52,8 @@ rhs-patient-history-table {
     .sjukfall-title-row {
       display: inline-block;
       cursor: pointer;
+      //make room for absolutely positioned chevron-toggle-button to the right
+      padding-right: 16px;
       h4 {
         display: inline-block;
         padding: 0 40px 0 0;
@@ -123,7 +125,6 @@ rhs-patient-history-table {
     }
 
     .chevron-toggle-button {
-      float: right;
       font-size: 14px;
       font-weight: normal;
       border: none;
@@ -132,6 +133,9 @@ rhs-patient-history-table {
       background-color: transparent;
       color: $blue-color;
       outline: none;
+      top: 15px;
+      right: 10px;
+      position: absolute;
     }
 
   }
