@@ -38,6 +38,7 @@ rhs-patient-history-time-line-item {
         stroke-width: 2px;
         &.selected {
           fill: $blue-color-accent;
+          cursor: default;
         }
       }
 
@@ -48,6 +49,7 @@ rhs-patient-history-time-line-item {
 
         &.selected {
           fill: #fff;
+          cursor: default;
         }
       }
 

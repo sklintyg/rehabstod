@@ -4,7 +4,7 @@
   &nbsp;
 </h3>
 <div class="rhs-history-table-container arrow_box" ng-class="{'selected' : historyItem.selected}">
-  <div class="sjukfall-title-row" ng-click="onSelect(historyItem)">
+  <div class="sjukfall-title-row" ng-click="onSelect(historyItem)" ng-class="{'selected' : historyItem.selected}">
     <h4>{{historyItem.sjukfall.diagnos.kod}} {{historyItem.sjukfall.diagnos.beskrivning}}</h4>  <b>Sjukfallets längd
     {{historyItem.sjukfall.dagar}} dagar</b>
   </div>

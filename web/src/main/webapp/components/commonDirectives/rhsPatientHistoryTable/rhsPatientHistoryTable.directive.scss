@@ -52,6 +52,11 @@ rhs-patient-history-table {
     .sjukfall-title-row {
       display: inline-block;
       cursor: pointer;
+
+      &.selected {
+        cursor: default;
+      }
+
       //make room for absolutely positioned chevron-toggle-button to the right
       padding-right: 16px;
       h4 {
