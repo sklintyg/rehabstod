@@ -79,7 +79,7 @@ describe('Filter: RhsSearchFilter', function() {
             },
             'start': '2016-08-01',
             'slut': '2016-08-8',
-            'dagar': 180,
+            'dagar': 400,
             'intyg': 3,
             'grader': [25, 50],
             'aktivGrad': 25,
@@ -117,8 +117,8 @@ describe('Filter: RhsSearchFilter', function() {
             customSearch: {
                 diagnosKapitel: ['M00-M99'],
                 lakare: [],
-                sjukskrivningslangd: [1, 366],
-                alder: [0, 101],
+                sjukskrivningslangd: [1, null],
+                alder: [0, null],
                 freeText: ''
             }
         };
@@ -132,8 +132,8 @@ describe('Filter: RhsSearchFilter', function() {
             customSearch: {
                 diagnosKapitel: [],
                 lakare: ['Dummy'],
-                sjukskrivningslangd: [1, 366],
-                alder: [0, 101],
+                sjukskrivningslangd: [1, null],
+                alder: [0, null],
                 freeText: ''
             }
         };
@@ -150,8 +150,8 @@ describe('Filter: RhsSearchFilter', function() {
             customSearch: {
                 diagnosKapitel: [],
                 lakare: [],
-                sjukskrivningslangd: [1, 366],
-                alder: [0, 101],
+                sjukskrivningslangd: [1, null],
+                alder: [0, null],
                 freeText: ''
             }
         };
@@ -160,7 +160,10 @@ describe('Filter: RhsSearchFilter', function() {
         filterParam.customSearch.sjukskrivningslangd = [1, 15];
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[0]]);
         filterParam.customSearch.sjukskrivningslangd = [100, 200];
-        expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[1], testJsonData[2]]);
+        expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[1]]);
+        filterParam.customSearch.sjukskrivningslangd = [200, null];
+        expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[2]]);
+
     }));
 
     it('should filter on wildcard when set', inject(function(rhsSearchfilterFilter, SjukfallModel) {
@@ -168,8 +171,8 @@ describe('Filter: RhsSearchFilter', function() {
             customSearch: {
                 diagnosKapitel: [],
                 lakare: [],
-                sjukskrivningslangd: [1, 366],
-                alder: [0, 101],
+                sjukskrivningslangd: [1, null],
+                alder: [0, null],
                 freeText: 'son'
             }
         };
@@ -193,8 +196,8 @@ describe('Filter: RhsSearchFilter', function() {
             customSearch: {
                 diagnosKapitel: [],
                 lakare: [],
-                sjukskrivningslangd: [1, 366],
-                alder: [0, 101],
+                sjukskrivningslangd: [1, null],
+                alder: [0, null],
                 freeText: ''
             }
         };
@@ -204,6 +207,9 @@ describe('Filter: RhsSearchFilter', function() {
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[1], testJsonData[2]]);
         filterParam.customSearch.alder = [70, 100];
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[0]]);
+
+        filterParam.customSearch.alder = [0, 0];
+        expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([]);
     }));
 
 

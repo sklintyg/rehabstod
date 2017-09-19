@@ -63,13 +63,13 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
 
         function range(actual, lower, higher) {
             //number range
-            if (lower) {
+            if (angular.isNumber(lower)) {
                 if (actual < lower) {
                     return false;
                 }
             }
 
-            if (higher) {
+            if (angular.isNumber(higher)) {
                 if (actual > higher) {
                     return false;
                 }
