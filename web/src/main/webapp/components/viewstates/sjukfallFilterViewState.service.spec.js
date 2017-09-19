@@ -51,6 +51,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
             expect(SjukfallFilterViewState.get().sjukskrivningslangdModel).toEqual([1, 366]);
             expect(SjukfallFilterViewState.get().aldersModel).toEqual([0, 101]);
             expect(SjukfallFilterViewState.get().freeTextModel).toEqual('');
+            expect(SjukfallFilterViewState.get().showPatientId).toEqual(true);
         });
     });
 
@@ -64,6 +65,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
             SjukfallFilterViewState.get().sjukskrivningslangdModel = [22, 77];
             SjukfallFilterViewState.get().aldersModel = [22, 77];
             SjukfallFilterViewState.get().glapp = 55;
+            SjukfallFilterViewState.get().showPatientId = false;
 
 
             var expectedFilter = {
@@ -72,6 +74,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
                 sjukskrivningslangd: SjukfallFilterViewState.get().sjukskrivningslangdModel,
                 alder: SjukfallFilterViewState.get().aldersModel,
                 freeText: SjukfallFilterViewState.get().freeTextModel,
+                showPatientId: false,
                 glapp: 55
             };
             //Verify
@@ -90,6 +93,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
             SjukfallFilterViewState.get().sjukskrivningslangdModel = [22, 77];
             SjukfallFilterViewState.get().aldersModel = [22, 77];
             SjukfallFilterViewState.get().glapp = 55;
+            SjukfallFilterViewState.get().showPatientId = false;
 
             var expectedFilter = {
                 diagnosKapitel: [],
@@ -97,6 +101,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
                 sjukskrivningslangd: [1, null],
                 alder: [0, null],
                 freeText: '',
+                showPatientId: true,
                 glapp: 55
             };
 

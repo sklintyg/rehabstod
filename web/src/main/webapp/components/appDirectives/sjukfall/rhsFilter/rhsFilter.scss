@@ -56,6 +56,17 @@ rhs-filter {
   .rhs-box {
     padding: 20px 20px 15px;
   }
+
+  .rhs-checkbox label, input {
+    white-space: nowrap;
+    cursor: pointer;
+    vertical-align: middle;
+    padding-top: 3px;
+    input {
+      vertical-align: text-top;
+    }
+
+  }
 }
 
 div[set-class-when-at-top="result-fixed-top"]{

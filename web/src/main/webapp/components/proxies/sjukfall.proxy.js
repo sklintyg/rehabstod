@@ -68,6 +68,7 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
             inputs += _addInput('sortering.kolumn', query.sortering.kolumn);
             inputs += _addInput('sortering.order', query.sortering.order);
             inputs += _addInput('fritext', query.fritext);
+            inputs += _addInput('showPatientId', query.showPatientId);
             inputs += _addInput('maxIntygsGlapp', query.maxIntygsGlapp);
 
             angular.forEach(query.lakare, function(item) {

@@ -1,5 +1,7 @@
 <div class="modal-header">
-  <h4>{{patient.namn}}&nbsp;&nbsp;&nbsp;{{patient.id}} &nbsp;&nbsp; {{patient.alder}} år {{patient.konShow}}</h4>
+  <h4 ng-if="showPatientId">{{patient.namn}}&nbsp;&nbsp;&nbsp;{{patient.id}} &nbsp;&nbsp; {{patient.alder}} år {{patient.konShow}}</h4>
+  <h4 ng-if="!showPatientId">{{patient.alder}} år {{patient.konShow}}</h4>
+
   <button class="btn btn-link close-button pull-right" ng-click="close();">Stäng patientvy</button>
 </div>
 

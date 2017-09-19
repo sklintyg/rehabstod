@@ -17,10 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').controller('patientHistoryController', function($scope, $uibModalInstance, $state, patientHistoryProxy, patient) {
+angular.module('rehabstodApp').controller('patientHistoryController',
+    function($scope, $uibModalInstance, $state, patientHistoryProxy, SjukfallFilterViewState, patient) {
     'use strict';
     $scope.errorMessageKey  = '';
     $scope.patient = patient;
+    $scope.showPatientId = SjukfallFilterViewState.get().showPatientId;
     $scope.showSpinner = true;
     //Constant needed in template
     $scope.radius = 30;

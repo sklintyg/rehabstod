@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.rehabstod.service.export;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-26.
@@ -42,6 +42,7 @@ public abstract class BaseExportService {
     protected static final String FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
     protected static final String FILTER_TITLE_VALD_ALDER = "Åldersspann";
     protected static final String FILTER_TITLE_FRITEXTFILTER = "Fritextfilter";
+    protected static final String FILTER_TITLE_VISAPATIENTUPPGIFTER = "Visa patientuppgifter:";
     protected static final String VALDA_FILTER = "Valda filter";
     protected static final String H2_SJUKFALLSINSTALLNING = "Sjukfallsinställning";
     protected static final String MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG = "Max dagar mellan intyg: ";

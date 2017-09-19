@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').directive('rhsTableHeader',
-    function() {
+angular.module('rehabstodApp').directive('rhsTableHeader', ['SjukfallFilterViewState', 
+    function(SjukfallFilterViewState) {
         'use strict';
 
         return {
@@ -29,9 +29,11 @@ angular.module('rehabstodApp').directive('rhsTableHeader',
             },
             templateUrl: '/components/appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.directive.html',
             link: function (scope, element) {
+                scope.filterViewState = SjukfallFilterViewState;
+                
                 element.find('th[st-sort]').bind('click', function sortClick () {
                     $('body, thead *').css('cursor', 'wait');
                 });
             }
         };
-    });
+    }]);

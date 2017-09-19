@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -33,6 +37,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
@@ -40,10 +45,6 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by eriklupander on 2016-02-23.
@@ -70,11 +71,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     private XSSFFont defaultFont11;
     private XSSFFont boldFont11;
 
-    private static final String[] HEADERS = new String[] { TABLEHEADER_NR, TABLEHEADER_PERSONNUMMER, TABLEHEADER_ALDER, TABLEHEADER_NAMN,
-            TABLEHEADER_KON,
-            TABLEHEADER_NUVARANDE_DIAGNOS, TABLEHEADER_BIDIAGNOSER, TABLEHEADER_STARTDATUM, TABLEHEADER_SLUTDATUM,
-            TABLEHEADER_SJUKSKRIVNINGSLANGD, TABLEHEADER_ANTAL, TABLEHEADER_SJUKSKRIVNINGSGRAD,
-            TABLEHEADER_NUVARANDE_LAKARE };
+    private String[] headers;
 
     private static final int FILTER_HEADLINE_COLUMN = 1;
     private static final int FILTER_VALUE_COLUMN = 2;
@@ -88,6 +85,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     @Override
     public byte[] export(List<SjukfallEnhet> sjukfallList, PrintSjukfallRequest req, Urval urval, int total) throws IOException {
 
+        initHeaders(req);
         XSSFWorkbook wb = new XSSFWorkbook();
         setupFonts(wb);
         XSSFSheet sheet = wb.createSheet(SHEET_TITLE_SJUKFALL);
@@ -108,6 +106,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_ALDER,
                 req.getAldersIntervall().getMin() + " - " + req.getAldersIntervall().getMax() + " år");
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_FRITEXTFILTER, notEmpty(req) ? req.getFritext() : "-");
+        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VISAPATIENTUPPGIFTER, req.isShowPatientId() ? " Ja" : " Nej");
         addFilterMainHeader(sheet, rowNumber++, H2_SJUKFALLSINSTALLNING);
         addFilterHeader(sheet, rowNumber++, MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG, req.getMaxIntygsGlapp() + " dagar");
         rowNumber += FILTER_SPACING;
@@ -122,11 +121,27 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
         rowNumber += 3;
         addTableHeaderRows(sheet, rowNumber++, urval);
-        addDataRows(sheet, rowNumber, sjukfallList, urval);
+        addDataRows(sheet, rowNumber, sjukfallList, urval, req.isShowPatientId());
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         wb.write(baos);
         return baos.toByteArray();
+    }
+
+    private void initHeaders(PrintSjukfallRequest req) {
+        if (req.isShowPatientId()) {
+            headers = new String[] { TABLEHEADER_NR, TABLEHEADER_PERSONNUMMER, TABLEHEADER_ALDER, TABLEHEADER_NAMN,
+                    TABLEHEADER_KON,
+                    TABLEHEADER_NUVARANDE_DIAGNOS, TABLEHEADER_BIDIAGNOSER, TABLEHEADER_STARTDATUM, TABLEHEADER_SLUTDATUM,
+                    TABLEHEADER_SJUKSKRIVNINGSLANGD, TABLEHEADER_ANTAL, TABLEHEADER_SJUKSKRIVNINGSGRAD,
+                    TABLEHEADER_NUVARANDE_LAKARE };
+        } else {
+            headers = new String[] { TABLEHEADER_NR, TABLEHEADER_ALDER,
+                    TABLEHEADER_KON,
+                    TABLEHEADER_NUVARANDE_DIAGNOS, TABLEHEADER_BIDIAGNOSER, TABLEHEADER_STARTDATUM, TABLEHEADER_SLUTDATUM,
+                    TABLEHEADER_SJUKSKRIVNINGSLANGD, TABLEHEADER_ANTAL, TABLEHEADER_SJUKSKRIVNINGSGRAD,
+                    TABLEHEADER_NUVARANDE_LAKARE };
+        }
     }
 
     // private scope
@@ -243,24 +258,29 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
         XSSFRow row = sheet.createRow(rowIndex);
 
-        for (int a = 0; a < HEADERS.length; a++) {
+        for (int a = 0; a < headers.length; a++) {
             // Not too elegant, but if we have ISSUED_BY_ME urval, we don't render the last column.
-            if (!(urval == Urval.ISSUED_BY_ME && a == HEADERS.length - 1)) {
-                createHeaderCell(row, a, HEADERS[a]);
+            if (!(urval == Urval.ISSUED_BY_ME && a == headers.length - 1)) {
+                createHeaderCell(row, a, headers[a]);
             }
         }
     }
 
-    private void addDataRows(XSSFSheet sheet, int rowIndex, List<SjukfallEnhet> sjukfallList, Urval urval) {
+    private void addDataRows(XSSFSheet sheet, int rowIndex, List<SjukfallEnhet> sjukfallList, Urval urval, boolean showPatientId) {
         for (int a = 0; a < sjukfallList.size(); a++) {
             XSSFRow row = sheet.createRow(rowIndex + a);
             SjukfallEnhet sf = sjukfallList.get(a);
 
             int colIndex = 0;
             createDataCell(row, colIndex++, Integer.toString(a + 1));
-            createRichTextDataCell(row, colIndex++, buildPersonnummerRichText(sf.getPatient()));
+            if (showPatientId) {
+                createRichTextDataCell(row, colIndex++, buildPersonnummerRichText(sf.getPatient()));
+            }
             createDataCell(row, colIndex++, Integer.toString(sf.getPatient().getAlder()));
-            createDataCell(row, colIndex++, sf.getPatient().getNamn());
+
+            if (showPatientId) {
+                createDataCell(row, colIndex++, sf.getPatient().getNamn());
+            }
             createDataCell(row, colIndex++, sf.getPatient().getKon().getDescription());
             createDataCell(row, colIndex++, sf.getDiagnos().getKod());
             createDataCell(row, colIndex++, diagnoseListToString(sf.getBiDiagnoser()));
@@ -273,7 +293,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
                 createDataCell(row, colIndex, sf.getLakare().getNamn());
             }
         }
-        for (int a = 0; a < HEADERS.length; a++) {
+        for (int a = 0; a < headers.length; a++) {
             sheet.autoSizeColumn(a);
         }
         // Makes sure the "namn" column isn't excessively wide due to the filter.

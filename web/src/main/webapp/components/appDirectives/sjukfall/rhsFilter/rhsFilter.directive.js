@@ -42,6 +42,11 @@ angular.module('rehabstodApp')
 
             });
 
+            //Make sure quicksearch has correct content after toggling show patient identity columns
+            $scope.$watch('filterViewState.get().showPatientId', function() {
+                SjukfallModel.updateQuickSearchContent();
+            });
+
             $scope.onResetFilterClick = function() {
                 $scope.filterViewState.reset();
             };

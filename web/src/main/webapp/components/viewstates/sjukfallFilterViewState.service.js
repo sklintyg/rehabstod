@@ -25,6 +25,7 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
         var state = {
             diagnosKapitelModel: DiagnosKapitelModel,
             lakareModel: LakareModel,
+            showPatientId: true,
             glapp: 5
         };
 
@@ -37,6 +38,7 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
             state.sjukskrivningslangdModel = [1, 366];
             state.aldersModel = [0, 101];
             state.lakareModel.reset();
+            state.showPatientId = true;
             state.freeTextModel = '';
         }
 
@@ -59,6 +61,7 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
                 alder: [state.aldersModel[0],
                     state.aldersModel[1] > 100 ? null : state.aldersModel[1]],
                 freeText: state.freeTextModel,
+                showPatientId: state.showPatientId,
                 glapp: state.glapp
 
             };

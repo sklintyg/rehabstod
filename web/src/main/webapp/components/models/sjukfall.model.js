@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').factory('SjukfallModel',
-    function($parse, $filter) {
+    function($parse, $filter, SjukfallFilterViewState) {
         'use strict';
 
         var data = [];
@@ -81,6 +81,33 @@ angular.module('rehabstodApp').factory('SjukfallModel',
             return items.join(' &#10142; ');
         }
 
+        function _updateQuickSearchContent() {
+            angular.forEach(data, function(item) {
+                item.patient.konShow = _getKon(item.patient.kon);
+                item.dagarShow = _getDagar(item.dagar);
+                item.gradShow = _getGradShow(item.aktivGrad, item.grader);
+                item.biDiagnoserShow = _getBiDiagnoserShow(item.biDiagnoser);
+                item.quickSearchString = '';
+
+                //We dont want to be able to quicksearch for patientname/personnr etc if in anonymous mode
+                if (SjukfallFilterViewState.get().showPatientId) {
+                    _addQuickSearchContentFromProperty(item, 'patient.id');
+                    _addQuickSearchContentFromProperty(item, 'patient.namn');
+                }
+                _addQuickSearchContent(item, item.patient.alder);
+                _addQuickSearchContentFromProperty(item, 'patient.konShow');
+                _addQuickSearchContentFromProperty(item, 'diagnos.intygsVarde');
+                _addQuickSearchContentFromProperty(item, 'diagnos.beskrivning');
+                _addQuickSearchContent(item, item.biDiagnoserShow);
+                _addQuickSearchContentFromProperty(item, 'start');
+                _addQuickSearchContentFromProperty(item, 'slut');
+                _addQuickSearchContent(item, item.dagarShow);
+                _addQuickSearchContentFromProperty(item, 'intyg');
+                _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join('%,') + '%' : '');
+                _addQuickSearchContentFromProperty(item, 'lakare.namn');
+            });
+        }
+
         return {
 
             reset: _reset,
@@ -91,27 +118,7 @@ angular.module('rehabstodApp').factory('SjukfallModel',
             set: function(newData) {
                 hasError = false;
                 data = newData;
-
-                angular.forEach(data, function(item) {
-                    item.patient.konShow = _getKon(item.patient.kon);
-                    item.dagarShow = _getDagar(item.dagar);
-                    item.gradShow = _getGradShow(item.aktivGrad, item.grader);
-                    item.biDiagnoserShow = _getBiDiagnoserShow(item.biDiagnoser);
-                    item.quickSearchString = '';
-                    _addQuickSearchContentFromProperty(item, 'patient.id');
-                    _addQuickSearchContentFromProperty(item, 'patient.namn');
-                    _addQuickSearchContent(item, item.patient.alder);
-                    _addQuickSearchContentFromProperty(item, 'patient.konShow');
-                    _addQuickSearchContentFromProperty(item, 'diagnos.intygsVarde');
-                    _addQuickSearchContentFromProperty(item, 'diagnos.beskrivning');
-                    _addQuickSearchContent(item, item.biDiagnoserShow);
-                    _addQuickSearchContentFromProperty(item, 'start');
-                    _addQuickSearchContentFromProperty(item, 'slut');
-                    _addQuickSearchContent(item, item.dagarShow);
-                    _addQuickSearchContentFromProperty(item, 'intyg');
-                    _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join('%,') + '%' : '');
-                    _addQuickSearchContentFromProperty(item, 'lakare.namn');
-                });
+                _updateQuickSearchContent();
             },
             get: function() {
                 return data;
@@ -122,7 +129,8 @@ angular.module('rehabstodApp').factory('SjukfallModel',
             },
             hasError: function() {
                 return hasError;
-            }
+            },
+            updateQuickSearchContent: _updateQuickSearchContent
         };
     }
 );

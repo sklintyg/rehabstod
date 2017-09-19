@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-import se.inera.intyg.rehabstod.web.model.LangdIntervall;
-import se.inera.intyg.rehabstod.web.model.Sortering;
-
 import java.time.LocalDate;
 import java.util.List;
+
+import se.inera.intyg.rehabstod.web.model.LangdIntervall;
+import se.inera.intyg.rehabstod.web.model.Sortering;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -33,6 +33,7 @@ public class GetSjukfallRequest {
     private LangdIntervall langdIntervall;
     private LangdIntervall aldersIntervall;
 
+    private boolean showPatientId;
     private int maxIntygsGlapp;
     private LocalDate aktivtDatum;
 
@@ -117,5 +118,13 @@ public class GetSjukfallRequest {
 
     public void setFritext(String fritext) {
         this.fritext = fritext;
+    }
+
+    public boolean isShowPatientId() {
+        return showPatientId;
+    }
+
+    public void setShowPatientId(boolean showPatientId) {
+        this.showPatientId = showPatientId;
     }
 }

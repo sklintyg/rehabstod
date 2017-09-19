@@ -12,9 +12,9 @@
       <tbody id="rhs-table-body">
         <tr ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id" class="rhs-table-row" ng-click="showPatientHistory(row.patient)">
           <td class="column-number">{{$index + 1}}</td>
-          <td class="column-patient-id">{{::row.patient.id}}</td>
+          <td class="column-patient-id" ng-if="filterViewState.get().showPatientId">{{::row.patient.id}}</td>
           <td class="column-patient-alder">{{::row.patient.alder}} år</td>
-          <td class="column-patient-name">{{::row.patient.namn}}</td>
+          <td class="column-patient-name" ng-if="filterViewState.get().showPatientId">{{::row.patient.namn}}</td>
           <td class="column-patient-kon">{{::row.patient.konShow}}</td>
           <td class="column-diagnos">
             <span uib-tooltip-html="getToolTip(row.diagnos)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnos.intygsVarde}}</span>
@@ -35,7 +35,7 @@
           <td ng-if="user.urval != 'ISSUED_BY_ME'">{{::row.lakare.namn}}</td>
         </tr>
         <tr ng-if="!displayedCollection.length">
-          <td colspan="{{noResultColspan}}" class="rhs-table-no-result">
+          <td colspan="{{noResultColspan()}}" class="rhs-table-no-result">
             <span ng-if="!model.get().length && !model.hasError()">
               {{::'label.table.no-result' | message}} {{user.valdVardgivare.namn}} - {{user.valdVardenhet.namn}}
             </span>

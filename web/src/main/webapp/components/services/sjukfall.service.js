@@ -72,6 +72,7 @@ angular.module('rehabstodApp').factory('SjukfallService', [
                 sortering: sort,
                 maxIntygsGlapp: filterState.glapp,
                 fritext: filterState.freeText,
+                showPatientId: filterState.showPatientId,
                 aldersIntervall: {
                     min: '' + filterState.alder[0],
                     max: '' + (filterState.alder[1] === null? '100+' : filterState.alder[1])

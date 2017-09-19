@@ -88,6 +88,7 @@ describe('Service: SjukfallService', function() {
                 },
                 maxIntygsGlapp: cfs.glapp,
                 fritext: cfs.freeText,
+                showPatientId: cfs.showPatientId,
                 langdIntervall: {
                     min: '1',
                     max: '365+'

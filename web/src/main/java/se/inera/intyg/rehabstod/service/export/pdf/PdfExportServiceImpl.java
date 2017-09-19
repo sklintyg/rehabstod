@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.stereotype.Service;
+
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -33,9 +41,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
-import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.stereotype.Service;
+
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
@@ -44,10 +50,6 @@ import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.Sortering;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * @author marced on 24/02/16.
@@ -101,7 +103,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             document.newPage();
 
             // Add table with all sjukfall (could span several pages)
-            document.add(createSjukfallTable(sjukfallList, user.getUrval()));
+            document.add(createSjukfallTable(sjukfallList, user.getUrval(), printSjukfallRequest.isShowPatientId()));
 
             // Finish off by closing the document (will invoke the event handlers)
             document.close();
@@ -194,6 +196,11 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         valdFritext.add(new Paragraph(StringUtil.isNullOrEmpty(printRequest.getFritext()) ? "-" : printRequest.getFritext(),
                 PdfExportConstants.FRONTPAGE_NORMAL));
 
+        // Visa Patientuppgifter
+        Paragraph visaPatientUppgifter = new Paragraph(FILTER_TITLE_VISAPATIENTUPPGIFTER, PdfExportConstants.FRONTPAGE_H3);
+        visaPatientUppgifter.add(new Phrase(printRequest.isShowPatientId() ? " Ja" : " Nej", PdfExportConstants.FRONTPAGE_NORMAL));
+
+
         // Lagg ihop undergrupperna till filter
         Paragraph filter = new Paragraph(VALDA_FILTER, PdfExportConstants.FRONTPAGE_H2);
         filter.add(valdaDiagnoser);
@@ -201,6 +208,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         filter.add(valdSjukskrivninglangd);
         filter.add(valdAlder);
         filter.add(valdFritext);
+        filter.add(visaPatientUppgifter);
 
         return filter;
     }
@@ -262,15 +270,25 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     }
 
-    private PdfPTable createSjukfallTable(List<SjukfallEnhet> sjukfallList, Urval urval) throws DocumentException {
+    private PdfPTable createSjukfallTable(List<SjukfallEnhet> sjukfallList, Urval urval, boolean showPatientId) throws DocumentException {
 
         PdfPTable table;
 
         // Setup column widths (relative to each other)
         if (Urval.ALL.equals(urval)) {
-            table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2, 3f });
+            if (showPatientId) {
+                table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2, 3f });
+            } else {
+                table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2, 3f });
+            }
+
         } else {
-            table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2 });
+            if (showPatientId) {
+                table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2 });
+            } else {
+                table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2 });
+            }
+
         }
 
         table.setWidthPercentage(100.0f);
@@ -282,9 +300,17 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         table.getDefaultCell().setPaddingLeft(2f);
 
         addCell(table, TABLEHEADER_NR, PdfExportConstants.TABLE_HEADER_FONT);
-        addCell(table, TABLEHEADER_PERSONNUMMER, PdfExportConstants.TABLE_HEADER_FONT);
+
+        if (showPatientId) {
+            addCell(table, TABLEHEADER_PERSONNUMMER, PdfExportConstants.TABLE_HEADER_FONT);
+        }
+
         addCell(table, TABLEHEADER_ALDER, PdfExportConstants.TABLE_HEADER_FONT);
-        addCell(table, TABLEHEADER_NAMN, PdfExportConstants.TABLE_HEADER_FONT);
+
+        if (showPatientId) {
+            addCell(table, TABLEHEADER_NAMN, PdfExportConstants.TABLE_HEADER_FONT);
+        }
+
         addCell(table, TABLEHEADER_KON, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_NUVARANDE_DIAGNOS, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_BIDIAGNOSER, PdfExportConstants.TABLE_HEADER_FONT);
@@ -313,9 +339,16 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             }
 
             addCell(table, String.valueOf(rowNumber));
-            addCell(table, getPersonnummerColumn(is));
+
+            if (showPatientId) {
+                addCell(table, getPersonnummerColumn(is));
+            }
+
             addCell(table, is.getPatient().getAlder());
-            addCell(table, is.getPatient().getNamn());
+
+            if (showPatientId) {
+                addCell(table, is.getPatient().getNamn());
+            }
             addCell(table, is.getPatient().getKon().getDescription());
             addCell(table, is.getDiagnos().getIntygsVarde());
             addCell(table, diagnoseListToString(is.getBiDiagnoser()));
