@@ -25,7 +25,7 @@ stage('build') {
 stage('deploy') {
     node {
         util.run {
-            ansiblePlaybook extraVars: [version: buildVersion, ansible_ssh_port: "22", deploy_from_repo: "false"], \
+            ansiblePlaybook extraVars: [version: buildVersion, ansible_ssh_port: "22", deploy_from_repo: "false", config_version: "RH-1.4"], \
                 installation: 'ansible-yum', inventory: 'ansible/inventory/rehabstod/test', playbook: 'ansible/deploy.yml'
             util.waitForServer('https://rehabstod.inera.nordicmedtest.se/version.jsp')
         }
