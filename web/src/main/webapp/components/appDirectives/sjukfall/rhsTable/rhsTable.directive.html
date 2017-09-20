@@ -18,7 +18,7 @@
           <td class="column-patient-kon">{{::row.patient.konShow}}</td>
           <td class="column-diagnos">
             <span uib-tooltip-html="getToolTip(row.diagnos)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnos.intygsVarde}}</span>
-            <span class="column-diagnos-beskrivning" ng-bind-html="row.diagnos.beskrivning"></span>
+            <span class="column-diagnos-beskrivning" ng-class="{'anonymous-mode' : !filterViewState.get().showPatientId}" ng-bind-html="row.diagnos.beskrivning"></span>
           </td>
           <td class="column-bidiagnoser">
             <span ng-repeat="d in row.biDiagnoser track by $index">

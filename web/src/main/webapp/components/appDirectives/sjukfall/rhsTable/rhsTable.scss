@@ -55,6 +55,10 @@ rhs-table {
 
             @media (min-width: 1600px) {
               max-width: calc(100vw - 1300px);
+
+              &.anonymous-mode {
+                max-width: calc(100vw - 1000px);
+              }
             }
           }
         }
