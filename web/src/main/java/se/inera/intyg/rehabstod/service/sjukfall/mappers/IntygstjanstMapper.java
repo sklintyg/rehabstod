@@ -53,7 +53,7 @@ public class IntygstjanstMapper {
             to.setVardenhetId(from.getSkapadAv().getEnhet().getEnhetsId().getExtension());
             to.setVardenhetNamn(from.getSkapadAv().getEnhet().getEnhetsnamn());
             to.setVardgivareId(from.getSkapadAv().getEnhet().getVardgivare().getVardgivarId().getExtension());
-            to.setVardenhetNamn(from.getSkapadAv().getEnhet().getVardgivare().getVardgivarnamn());
+            to.setVardgivareNamn(from.getSkapadAv().getEnhet().getVardgivare().getVardgivarnamn());
             to.setDiagnosKod(new DiagnosKod(from.getDiagnoskod()));
 
             List<Formaga> formagor = from.getArbetsformaga().getFormaga().stream()
