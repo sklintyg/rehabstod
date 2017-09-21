@@ -1,3 +1,9 @@
+plugins {
+    id "se.inera.intyg.plugin.common" version "1.0.56" apply false
+    id "org.akhikhl.gretty" version "1.4.2" apply false
+    id "com.moowork.node" version "1.1.1" apply false
+}
+
 ext {
     intygCommonVersion = System.properties['commonVersion'] ?: '0-SNAPSHOT'
     intygInfraVersion = System.properties['infraVersion'] ?: '0-SNAPSHOT'
@@ -47,20 +53,6 @@ ext {
     unitilsCoreVersion = "3.3"
 }
 
-buildscript {
-    repositories {
-        mavenLocal()
-        maven { url "https://build-inera.nordicmedtest.se/nexus/repository/releases/" }
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-
-    dependencies {
-        classpath 'se.inera.intyg:gradle-intyg-plugin:1.0.+'
-        classpath 'com.moowork.gradle:gradle-node-plugin:1.1.1'
-        classpath 'org.akhikhl.gretty:gretty:1.4.1'
-    }
-}
-
 allprojects {
     repositories {
         mavenLocal()
@@ -68,7 +60,7 @@ allprojects {
         maven { url "http://repo.maven.apache.org/maven2" }
     }
 
-    apply plugin: 'inera-intyg'
+    apply plugin: 'se.inera.intyg.plugin.common'
     apply plugin: 'maven'
     apply plugin: 'idea'
 
@@ -96,21 +88,12 @@ allprojects {
 
     [install.repositories.mavenInstaller, uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
         pom.dependencies.findAll {dep -> dep.groupId == 'se.inera.intyg.infra'}.each {
-            it.version = findResolvedVersion(project, 'se.inera.intyg.infra')
+            it.version = se.inera.intyg.ProjectUtil.findResolvedVersion(project, 'se.inera.intyg.infra')
         }
     }
 }
 
 task tagRelease(type: TagReleaseTask)
 
-// Load environment specific settings, if the -Penv=xxx parameter is given on invocation.
-task loadConfiguration {
-    def environment = null
-    if (project.hasProperty('env')) {
-        environment = project.getProperty('env')
-    } else {
-        environment = "local"
-    }
-    logger.quiet "Loading configuration for environment '$environment'."
-    addProjectPropertiesFromFile(project, file("$rootDir/env-properties/${environment}/settings.properties"))
-}
+def environment = project.findProperty('env') ?: "local"
+se.inera.intyg.ProjectUtil.addProjectPropertiesFromFile(project, file("$rootDir/env-properties/${environment}/settings.properties"))
