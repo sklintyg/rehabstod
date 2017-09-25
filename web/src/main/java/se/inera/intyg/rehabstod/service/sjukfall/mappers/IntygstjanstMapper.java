@@ -55,11 +55,9 @@ public class IntygstjanstMapper {
             to.setVardgivareId(from.getSkapadAv().getEnhet().getVardgivare().getVardgivarId().getExtension());
             to.setVardgivareNamn(from.getSkapadAv().getEnhet().getVardgivare().getVardgivarnamn());
             to.setDiagnosKod(new DiagnosKod(from.getDiagnoskod()));
-
             to.setFormagor(mapFormagor(from.getArbetsformaga().getFormaga()));
             to.setSigneringsTidpunkt(from.getSigneringsTidpunkt());
             to.setEnkeltIntyg(from.isEnkeltIntyg());
-
             to.setBiDiagnoser(mapDiagnoser(from.getBidiagnoser()));
             to.setSysselsattning(from.getSysselsattning());
 
