@@ -29,9 +29,10 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -111,7 +112,7 @@ public class SjukfallEngineMapper {
 
         try {
             to.setVardgivareId(from.getVardgivareId());
-            to.setVardenhetNamn(from.getVardenhetNamn());
+            to.setVardgivareNamn(from.getVardgivareNamn());
             to.setVardenhetId(from.getVardenhetId());
             to.setVardenhetNamn(from.getVardenhetNamn());
             to.setPatient(new Patient(from.getPatientId(), from.getPatientNamn()));
@@ -153,17 +154,13 @@ public class SjukfallEngineMapper {
     }
 
     private List<Diagnos> mapDiagnos(List<se.inera.intyg.infra.sjukfall.dto.DiagnosKod> from) {
-        if (from == null) {
-            return new ArrayList<>();
-        }
-
-        return from.stream()
-            .map(diagnosKod -> mapDiagnos(diagnosKod))
+        return Optional.ofNullable(from).orElse(Collections.emptyList()).stream()
+            .map(this::mapDiagnos)
             .collect(Collectors.toList());
     }
 
     private List<PatientData> mapIntyg(List<se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg> from) {
-        return from.stream().map(o -> map(o)).collect(Collectors.toList());
+        return from.stream().map(this::map).collect(Collectors.toList());
     }
 
 }
