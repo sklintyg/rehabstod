@@ -56,14 +56,11 @@ public class IntygstjanstMapper {
             to.setVardgivareNamn(from.getSkapadAv().getEnhet().getVardgivare().getVardgivarnamn());
             to.setDiagnosKod(new DiagnosKod(from.getDiagnoskod()));
 
-            List<Formaga> formagor = from.getArbetsformaga().getFormaga().stream()
-                .map(f -> map(f)).collect(Collectors.toList());
-
-            to.setFormagor(formagor);
+            to.setFormagor(mapFormagor(from.getArbetsformaga().getFormaga()));
             to.setSigneringsTidpunkt(from.getSigneringsTidpunkt());
             to.setEnkeltIntyg(from.isEnkeltIntyg());
 
-            to.setBiDiagnoser(map(from.getBidiagnoser()));
+            to.setBiDiagnoser(mapDiagnoser(from.getBidiagnoser()));
             to.setSysselsattning(from.getSysselsattning());
 
         } catch (Exception e) {
@@ -76,13 +73,19 @@ public class IntygstjanstMapper {
 
     // private
 
-    private static List<DiagnosKod> map(List<String> bidiagnoser) {
-        return Optional.ofNullable(bidiagnoser).orElse(Collections.emptyList()).stream()
+    private List<DiagnosKod> mapDiagnoser(List<String> from) {
+        return Optional.ofNullable(from).orElse(Collections.emptyList()).stream()
             .map(DiagnosKod::new)
             .collect(Collectors.toList());
     }
 
-    private static Formaga map(se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga from) {
+    private List<Formaga> mapFormagor(List<se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga> from) {
+        return Optional.ofNullable(from).orElse(Collections.emptyList()).stream()
+            .map(this::createFormaga)
+            .collect(Collectors.toList());
+    }
+
+    private Formaga createFormaga(se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga from) {
         return new Formaga(from.getStartdatum(), from.getSlutdatum(), from.getNedsattning());
     }
 

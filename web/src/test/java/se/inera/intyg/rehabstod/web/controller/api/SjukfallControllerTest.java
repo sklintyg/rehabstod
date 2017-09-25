@@ -103,10 +103,10 @@ public class SjukfallControllerTest {
     }
 
     @Test
-    public void testGetSjukfall() {
-        SjukfallEnhet a = createSjukFallForPatient("19121212-1212");
-        SjukfallEnhet b = createSjukFallForPatient("20121212-1212");
-        SjukfallEnhet c = createSjukFallForPatient("19840921-9287");
+    public void testGetSjukfallByUnit() {
+        SjukfallEnhet a = createSjukFallEnhet("19121212-1212");
+        SjukfallEnhet b = createSjukFallEnhet("20121212-1212");
+        SjukfallEnhet c = createSjukFallEnhet("19840921-9287");
 
         List<SjukfallEnhet> result = Arrays.asList(a, b);
         List<SjukfallEnhet> toLog = Arrays.asList(c);
@@ -133,11 +133,11 @@ public class SjukfallControllerTest {
     }
 
     @Test
-    public void testGetSjukfallAsPDF() throws DocumentException, IOException {
+    public void testGetSjukfallByUnitAsPDF() throws DocumentException, IOException {
 
-        SjukfallEnhet a = createSjukFallForPatient("19121212-1212");
-        SjukfallEnhet b = createSjukFallForPatient("20121212-1212");
-        SjukfallEnhet c = createSjukFallForPatient("19840921-9287");
+        SjukfallEnhet a = createSjukFallEnhet("19121212-1212");
+        SjukfallEnhet b = createSjukFallEnhet("20121212-1212");
+        SjukfallEnhet c = createSjukFallEnhet("19840921-9287");
 
         List<SjukfallEnhet> allSjukFall = Arrays.asList(a, b, c);
         List<SjukfallEnhet> finalList = Arrays.asList(a, b);
@@ -175,7 +175,38 @@ public class SjukfallControllerTest {
         assertTrue(response.getStatusCode().equals(HttpStatus.OK));
     }
 
-    private static SjukfallEnhet createSjukFallForPatient(String personNummer) {
+    @Test
+    public void testGetSjukfallByPatient() {
+        SjukfallEnhet a = createSjukFallEnhet("19121212-1212");
+        SjukfallEnhet b = createSjukFallEnhet("20121212-1212");
+        SjukfallEnhet c = createSjukFallEnhet("19840921-9287");
+
+        List<SjukfallEnhet> result = Arrays.asList(a, b);
+        List<SjukfallEnhet> toLog = Arrays.asList(c);
+
+        // Given
+        GetSjukfallRequest request = new GetSjukfallRequest();
+
+        // When
+        mockStatic(PDLActivityStore.class);
+        when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
+            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
+        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(result);
+
+        // Then
+        testee.getSjukfallForCareUnit(request);
+
+        // Verify
+        verifyStatic();
+        PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
+            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class));
+
+        verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
+        verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL));
+    }
+
+
+    private static SjukfallEnhet createSjukFallEnhet(String personNummer) {
         // CHECKSTYLE:OFF MagicNumber
         SjukfallEnhet isf = new SjukfallEnhet();
 
