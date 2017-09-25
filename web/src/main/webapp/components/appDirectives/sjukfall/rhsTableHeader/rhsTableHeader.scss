@@ -4,6 +4,7 @@
     cursor: pointer;
     font-weight: bold;
     padding: 7px 5px;
+    vertical-align: top;
 
     &.st-sort-ascent, &.st-sort-descent {
       text-decoration: underline;
