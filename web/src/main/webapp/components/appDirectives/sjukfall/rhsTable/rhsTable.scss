@@ -151,14 +151,22 @@ rhs-table {
   position: fixed;
   z-index: 1002;
   top: 66px !important;
+  overflow: hidden;
+  margin-left: -30px;
+  padding-left: 30px;
+
+  margin-right: -15px;
+  padding-right: 15px;
 
   tr {
     display: block;
     height: 100%;
     width: 100%;
+    white-space: nowrap;
   }
 
   th {
     display: inline-block;
+    white-space: normal;
   }
 }
