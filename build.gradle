@@ -54,15 +54,15 @@ ext {
 }
 
 allprojects {
+    apply plugin: 'se.inera.intyg.plugin.common'
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+
     repositories {
         mavenLocal()
         maven { url "https://build-inera.nordicmedtest.se/nexus/repository/releases/" }
         maven { url "http://repo.maven.apache.org/maven2" }
     }
-
-    apply plugin: 'se.inera.intyg.plugin.common'
-    apply plugin: 'maven'
-    apply plugin: 'idea'
 
     dependencies {
         compile "ch.qos.logback:logback-classic:${logbackVersion}"
