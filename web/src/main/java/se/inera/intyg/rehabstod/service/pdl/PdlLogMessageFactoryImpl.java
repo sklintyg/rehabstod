@@ -95,7 +95,6 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         PdlResource pdlResource = new PdlResource();
         pdlResource.setPatient(getPatient(sfe));
         pdlResource.setResourceOwner(getEnhet(sfe, user));
-        //pdlResource.setResourceOwner(getEnhet(sfe));
         pdlResource.setResourceType(resourceType.getResourceTypeName());
 
         return pdlResource;
