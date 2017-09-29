@@ -115,7 +115,10 @@ public class SjukfallEngineMapper {
             to.setVardgivareNamn(from.getVardgivareNamn());
             to.setVardenhetId(from.getVardenhetId());
             to.setVardenhetNamn(from.getVardenhetNamn());
-            to.setPatient(new Patient(from.getPatientId(), from.getPatientNamn()));
+
+            Patient patient = new Patient(from.getPatientId(), from.getPatientNamn());
+            to.setPatient(patient);
+
             to.setDiagnos(mapDiagnos(from.getDiagnosKod()));
             to.setBidiagnoser(mapDiagnos(from.getBiDiagnoser()));
             to.setStart(from.getStartDatum());

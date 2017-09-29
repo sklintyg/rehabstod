@@ -18,14 +18,24 @@
  */
 package se.inera.intyg.rehabstod.service.pdl.dto;
 
-import org.junit.Test;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+
+import org.junit.Test;
 
 /**
  * Created by eriklupander on 2017-01-31.
  */
 public class LogUserTest {
+
+    public void testBuildLogUserWithRequiredValues() {
+        LogUser logUser = new LogUser.Builder("1", "2", "3").build();
+        assertNotNull(logUser);
+        assertEquals("1", logUser.getUserId());
+        assertEquals("2", logUser.getEnhetsId());
+        assertEquals("3", logUser.getVardgivareId());
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildLogUserWithNullRequiredValues() {

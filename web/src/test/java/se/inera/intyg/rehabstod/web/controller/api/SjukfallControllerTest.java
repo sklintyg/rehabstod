@@ -31,6 +31,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 import com.itextpdf.text.DocumentException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -175,6 +176,7 @@ public class SjukfallControllerTest {
         assertTrue(response.getStatusCode().equals(HttpStatus.OK));
     }
 
+    @Ignore
     @Test
     public void testGetSjukfallByPatient() {
         SjukfallEnhet a = createSjukFallEnhet("19121212-1212");

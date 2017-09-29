@@ -68,7 +68,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         // Add resources
         pdlLogMessage.getPdlResourceList().addAll(
                 sjukfallList.stream()
-                        .map(sf -> buildPdlLogResource(sf, resourceType))
+                        .map(sf -> buildPdlLogResource(sf, resourceType, user))
                         .collect(Collectors.toList()));
 
         return pdlLogMessage;
@@ -91,10 +91,11 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         return pdlLogMessage;
     }
 
-    private PdlResource buildPdlLogResource(SjukfallEnhet sfe, ResourceType resourceType) {
+    private PdlResource buildPdlLogResource(SjukfallEnhet sfe, ResourceType resourceType, LogUser user) {
         PdlResource pdlResource = new PdlResource();
         pdlResource.setPatient(getPatient(sfe));
-        pdlResource.setResourceOwner(getEnhet(sfe));
+        pdlResource.setResourceOwner(getEnhet(sfe, user));
+        //pdlResource.setResourceOwner(getEnhet(sfe));
         pdlResource.setResourceType(resourceType.getResourceTypeName());
 
         return pdlResource;
@@ -112,9 +113,17 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         return pdlResource;
     }
 
-    private Enhet getEnhet(SjukfallEnhet sfe) {
-        return new Enhet(sfe.getVardEnhetId(), sfe.getVardEnhetNamn(),
-            sfe.getVardGivareId(), sfe.getVardGivareNamn());
+    private Enhet getEnhet(SjukfallEnhet sfe, LogUser user) {
+        String vardenhetId = getConditionalValue(sfe.getVardEnhetId(), user.getEnhetsId());
+        String vardenhetNamn = getConditionalValue(sfe.getVardEnhetNamn(), user.getEnhetsNamn());
+        String vardgivareId = getConditionalValue(sfe.getVardGivareId(), user.getVardgivareId());
+        String vardgivareNamn = getConditionalValue(sfe.getVardGivareNamn(), user.getVardgivareNamn());
+
+        return new Enhet(vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn);
+    }
+
+    private String getConditionalValue(String preferred, String alternative) {
+        return preferred != null ? preferred : alternative;
     }
 
     private Patient getPatient(SjukfallEnhet sfe) {
