@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').controller('patientHistoryController',
-    function($scope, $uibModalInstance, $state, patientHistoryProxy, SjukfallFilterViewState, patient) {
+    function($scope, $uibModalInstance, $state, $sce, patientHistoryProxy, SjukfallFilterViewState, patient) {
     'use strict';
     $scope.errorMessageKey  = '';
     $scope.patient = patient;
@@ -86,6 +86,14 @@ angular.module('rehabstodApp').controller('patientHistoryController',
 
     $scope.close = function() {
         $uibModalInstance.close();
+    };
+
+    $scope.showIframeInput = false;
+    $scope.visaIntygUrl = {};
+    $scope.onShowIntyg = function() {
+        //var url = 'http://localhost:9088/web/dashboard#/intyg/lisjp/df21a4c5-5737-4880-a312-25a22b2daf57';
+        var url = $sce.trustAsResourceUrl($scope.visaIntygUrl.url);
+        $scope.intygurl = url;
     };
 
     //Start by requesting data

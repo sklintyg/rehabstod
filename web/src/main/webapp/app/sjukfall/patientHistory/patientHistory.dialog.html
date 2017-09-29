@@ -1,11 +1,14 @@
 <div class="modal-header">
-  <h4 ng-if="showPatientId">{{patient.namn}}&nbsp;&nbsp;&nbsp;{{patient.id}} &nbsp;&nbsp; {{patient.alder}} år {{patient.konShow}}</h4>
+  <span  ng-click="showIframeInput=!showIframeInput"><h4 ng-if="showPatientId">{{patient.namn}}&nbsp;&nbsp;&nbsp;{{patient.id}} &nbsp;&nbsp; {{patient.alder}} år {{patient.konShow}}</h4></span>
   <h4 ng-if="!showPatientId">{{patient.alder}} år {{patient.konShow}}</h4>
-
+  <span ng-if="showIframeInput"><input id="urlen" type="text" size="50" ng-model="visaIntygUrl.url" placholder="url att visa i iframe"><button ng-click="onShowIntyg()">visa iframe</button></span>
   <button class="btn btn-link close-button pull-right" ng-click="close();">Stäng patientvy</button>
 </div>
 
 <div class="modal-body">
+  <div id="intyg-iframe" ng-if="intygurl">
+    <iframe ng-src="{{intygurl}}" width="100%" height="400"></iframe>
+  </div>
   <div rhs-spinner show-spinner="showSpinner" label="label.patienthistory.loading">
 
 
@@ -31,7 +34,7 @@
 
         </rhs-patient-history-time-line-item>
 
-        <rhs-patient-history-table history-item="item" index="$index" on-select="onSelectSjukfall(item)"
+        <rhs-patient-history-table history-item="item" index="$index" on-select="onSelectSjukfall(item)" on-show-intyg="onShowIntyg(intyg)"
                                    class="pull-left history-table"></rhs-patient-history-table>
       </div>
     </div>
