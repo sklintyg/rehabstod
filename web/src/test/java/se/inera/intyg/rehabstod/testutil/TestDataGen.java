@@ -18,16 +18,7 @@
  */
 package se.inera.intyg.rehabstod.testutil;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.google.common.collect.ImmutableMap;
-
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
@@ -42,6 +33,14 @@ import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.Sortering;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Helper base class, provides data setup for tests.
@@ -126,29 +125,34 @@ public final class TestDataGen {
     public static List<SjukfallEnhet> buildSjukfallList(int num) {
         List<SjukfallEnhet> sjukfallList = new ArrayList<>();
         for (int a = 0; a < num; a++) {
-            sjukfallList.add(buildInternalSjukfall());
+            sjukfallList.add(buildSjukfall());
         }
         return sjukfallList;
     }
 
-    public static SjukfallEnhet buildInternalSjukfall() {
-        SjukfallEnhet isf = new SjukfallEnhet();
+    public static SjukfallEnhet buildSjukfall() {
+        SjukfallEnhet sf = new SjukfallEnhet();
+
+        sf.setVardGivareId(CAREGIVER_ID);
+        sf.setVardGivareNamn(CAREGIVER_NAME);
+        sf.setVardEnhetId(CAREUNIT_ID);
+        sf.setVardEnhetNamn(CAREUNIT_NAME);
 
         Lakare lakare = new Lakare("IFV1239877878-1049", "Jan Nilsson");
-        isf.setLakare(lakare);
+        sf.setLakare(lakare);
 
-        isf.setPatient(buildPatient());
-        isf.setDiagnos(buildDiagnos());
-        isf.setGrader(buildGrader());
+        sf.setPatient(buildPatient());
+        sf.setDiagnos(buildDiagnos());
+        sf.setGrader(buildGrader());
 
-        isf.setAktivGrad(75);
-        isf.setDagar(65);
-        isf.setIntyg(2);
+        sf.setAktivGrad(75);
+        sf.setDagar(65);
+        sf.setIntyg(2);
 
-        isf.setStart(LocalDate.now().minusMonths(2));
-        isf.setSlut(LocalDate.now().plusWeeks(2));
+        sf.setStart(LocalDate.now().minusMonths(2));
+        sf.setSlut(LocalDate.now().plusWeeks(2));
 
-        return isf;
+        return sf;
     }
 
     public static Patient buildPatient() {

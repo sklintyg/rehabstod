@@ -32,6 +32,9 @@ import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+
+import java.util.List;
 
 /**
  * Created by eriklupander on 2016-03-03.
@@ -41,7 +44,7 @@ public class PdlLogMessageFactoryImplTest {
     private PdlLogMessageFactoryImpl testee = new PdlLogMessageFactoryImpl();
 
     @Test
-    public void testBuildPdlReadLogMessage() {
+    public void testBuildLogMessage() {
 
         // Then
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
@@ -60,11 +63,33 @@ public class PdlLogMessageFactoryImplTest {
         assertEquals(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL.getResourceTypeName(), pdlResource.getResourceType());
         assertEquals("191212121212", pdlResource.getPatient().getPatientId());
         assertEquals("Tolvan Tolvansson", pdlResource.getPatient().getPatientNamn());
+        assertEquals("careunit-1", pdlResource.getResourceOwner().getEnhetsId());
+        assertEquals("Vårdenhet 1", pdlResource.getResourceOwner().getEnhetsNamn());
+        assertEquals("caregiver-1", pdlResource.getResourceOwner().getVardgivareId());
+        assertEquals("Vårdgivare 1", pdlResource.getResourceOwner().getVardgivareNamn());
     }
 
     @Test
-    public void testBuildPdlPrintLogMessage() {
+    public void testBuildLogMessageWithEmptyCareGiverName() {
 
+        // Then
+        PdlLogMessage pdlLogMessage = testee.buildLogMessage(buildSjukfallListWithEmptyCareGiverName(),
+                ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, TestDataGen.buildRehabStodUser());
+
+        assertNotNull(pdlLogMessage);
+        assertEquals(1, pdlLogMessage.getPdlResourceList().size());
+        PdlResource pdlResource = pdlLogMessage.getPdlResourceList().get(0);
+        assertEquals("Vårdgivare 1", pdlResource.getResourceOwner().getVardgivareNamn());
+    }
+
+    private List<SjukfallEnhet> buildSjukfallListWithEmptyCareGiverName() {
+        List<SjukfallEnhet> sjukfallList = TestDataGen.buildSjukfallList(1);
+        sjukfallList.stream().forEach(sfe -> sfe.setVardGivareNamn(null));
+        return sjukfallList;
+    }
+
+    @Test
+    public void testBuildPrintLogMessage() {
         // Then
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
             ActivityType.PRINT, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, TestDataGen.buildRehabStodUser());
