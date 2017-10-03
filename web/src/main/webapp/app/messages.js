@@ -136,8 +136,8 @@ var rhsMessages = {
         'label.table.column.lakare.namn.help': 'Läkaren som utfärdat nuvarande intyg. Namnet hämtas från HSA-katalogen. Om det inte går att slå upp läkaren i HSA-katalogen visas bara HSA-id.',
         'label.table.column.dagar': 'Längd',
         'label.table.column.dagar.help': 'Sjukfallets totala längd i dagar, från startdatum till slutdatum. Eventuella dagar mellan intyg räknas inte in.',
-        'label.table.column.antal': 'Antal',
-        'label.table.column.antal.help': 'Antalet intyg som ingår i sjukfallet.',
+        'label.table.column.intyg': 'Antal',
+        'label.table.column.intyg.help': 'Antalet intyg som ingår i sjukfallet.',
 
 
         'label.table.no-result': 'Det finns inga pågående sjukfall på ',
