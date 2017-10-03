@@ -246,6 +246,22 @@ public class SjukfallPuServiceImplTest {
         testee.enrichWithPatientNameAndFilterSekretess(patientSjukfallList);
         assertEquals(1, patientSjukfallList.size());
         assertEquals(1, patientSjukfallList.get(0).getIntyg().size());
+        assertEquals("Sekretessmarkerad uppgift", patientSjukfallList.get(0).getIntyg().get(0).getPatient().getNamn());
+    }
+
+    @Test
+    public void testGetPatientSjukfallAllowedForLakareSameUnitIfNotSekretessmarkering() {
+        RehabstodUser user = buildLakare(ENHET_1);
+        when(userService.getUser()).thenReturn(user);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
+
+        when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
+                buildPersonSvar(TOLVANSSON_PNR, false, PersonSvar.Status.FOUND));
+
+        List<SjukfallPatient> patientSjukfallList = buildPatientSjukfallList(TOLVANSSON_PNR);
+        testee.enrichWithPatientNameAndFilterSekretess(patientSjukfallList);
+        assertEquals(1, patientSjukfallList.size());
+        assertEquals(1, patientSjukfallList.get(0).getIntyg().size());
         assertEquals("Fornamn Efternamn", patientSjukfallList.get(0).getIntyg().get(0).getPatient().getNamn());
     }
 
@@ -282,6 +298,20 @@ public class SjukfallPuServiceImplTest {
 
         List<SjukfallPatient> sjukfallPatientList = buildPatientSjukfallList(TOLVANSSON_PNR_INVALID);
         testee.enrichWithPatientNameAndFilterSekretess(sjukfallPatientList);
+    }
+
+    @Test
+    public void testPatientNameSetToSekretessWhenApplicableOnPatientView() {
+        RehabstodUser lakare = buildLakare(ENHET_1);
+        when(userService.getUser()).thenReturn(lakare);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
+
+        when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
+                buildPersonSvar(TOLVANSSON_PNR, true, PersonSvar.Status.FOUND));
+        List<SjukfallPatient> patientSjukfallList = buildPatientSjukfallList(TOLVANSSON_PNR);
+        testee.enrichWithPatientNameAndFilterSekretess(patientSjukfallList);
+        assertEquals(1, patientSjukfallList.size());
+        assertEquals("Sekretessmarkerad uppgift", patientSjukfallList.get(0).getIntyg().get(0).getPatient().getNamn());
     }
 
     private List<SjukfallPatient> buildPatientSjukfallList(String pnr) {

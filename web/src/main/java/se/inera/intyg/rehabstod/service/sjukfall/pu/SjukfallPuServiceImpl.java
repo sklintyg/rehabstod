@@ -144,15 +144,23 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
         if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
             RehabstodUser user = userService.getUser();
 
-            if (personSvar.getPerson().isSekretessmarkering() && !(user.isLakare()
-                    && userService.isUserLoggedInOnEnhetOrUnderenhet(patientSjukfall.get(0).getIntyg().get(0).getVardenhetId()))) {
-                throw new IllegalStateException("Cannot show patient details for patient having sekretessmarkering");
+            if (personSvar.getPerson().isSekretessmarkering()) {
+                if (!(user.isLakare()
+                        && userService.isUserLoggedInOnEnhetOrUnderenhet(patientSjukfall.get(0).getIntyg().get(0).getVardenhetId()))) {
+                    throw new IllegalStateException("Cannot show patient details for patient having sekretessmarkering");
+                }
+                // Uppdatera namnet på samtliga ingående intyg i sjukfallet till "Sekretessmarkering. om användaren får
+                // lov att se sjukfallen.
+                patientSjukfall.stream()
+                        .flatMap(ps -> ps.getIntyg().stream())
+                        .forEach(i -> i.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_PLACEHOLDER));
             } else {
-                // Uppdatera namnet på samtliga ingående intyg i sjukfallet.
+                // Uppdatera namnet på samtliga ingående intyg i sjukfallet om patienten EJ är s-märkt.
                 patientSjukfall.stream()
                         .flatMap(ps -> ps.getIntyg().stream())
                         .forEach(i -> i.getPatient().setNamn(joinNames(personSvar)));
             }
+
         } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
             throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
         } else {
