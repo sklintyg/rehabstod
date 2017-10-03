@@ -129,7 +129,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
     private Patient getPatient(SjukfallEnhet sfe) {
         return new Patient(
             sfe.getPatient().getId().replace("-", "").replace("+", ""),
-            sfe.getPatient().getNamn());
+            "");
     }
 
     private Enhet getEnhet(PatientData pd) {
@@ -140,7 +140,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
     private Patient getPatient(PatientData pd) {
         return new Patient(
             pd.getPatient().getId().replace("-", "").replace("+", ""),
-            pd.getPatient().getNamn());
+            "");
     }
 
     @NotNull

@@ -18,9 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 import se.inera.intyg.infra.logmessages.ActivityPurpose;
@@ -35,6 +32,9 @@ import se.inera.intyg.rehabstod.testutil.TestDataGen;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by eriklupander on 2016-03-03.
@@ -62,7 +62,9 @@ public class PdlLogMessageFactoryImplTest {
         PdlResource pdlResource = pdlLogMessage.getPdlResourceList().get(0);
         assertEquals(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL.getResourceTypeName(), pdlResource.getResourceType());
         assertEquals("191212121212", pdlResource.getPatient().getPatientId());
-        assertEquals("Tolvan Tolvansson", pdlResource.getPatient().getPatientNamn());
+
+        // INTYG-4647: Removes patient name for PDL-logging.
+        assertEquals("", pdlResource.getPatient().getPatientNamn());
         assertEquals("careunit-1", pdlResource.getResourceOwner().getEnhetsId());
         assertEquals("Vårdenhet 1", pdlResource.getResourceOwner().getEnhetsNamn());
         assertEquals("caregiver-1", pdlResource.getResourceOwner().getVardgivareId());
