@@ -1,0 +1,27 @@
+@startuml
+actor Användare
+Användare -> Rehabstöd: Väljer att visa sina sjukfall på Vårdenhet
+activate Rehabstöd
+database Databas
+
+    Rehabstöd -> Databas: Kontrollera om samtycke finns
+    activate Databas
+    Databas --> Rehabstöd: Finns samtycke?
+    deactivate Databas
+    alt Samtycke finns ej
+        Rehabstöd -> Användare: Visa samtyckesmodal
+        deactivate Rehabstöd
+        activate Användare
+        Användare --> Rehabstöd: Lämna samtycke
+        deactivate Användare
+        activate Rehabstöd
+
+        Rehabstöd -> Databas: Lagra samtycke
+        activate Databas
+        Databas --> Rehabstöd: Samtycke OK
+        deactivate Databas
+    end
+Rehabstöd -> Rehabstöd: Utför hämtning, processning etc.
+Rehabstöd --> Användare: Visar sjukfall
+deactivate Rehabstöd
+@enduml
