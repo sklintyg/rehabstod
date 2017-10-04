@@ -56,11 +56,19 @@ grunt_build.dependsOn bowerInstall
 grunt_build_no_minify.dependsOn bowerInstall
 
 gretty {
-    integrationTestTask = null
-    httpPort = 8790
-    contextConfigFile = "${projectDir}/src/main/resources/jetty-web.xml"
     contextPath = '/'
+    contextConfigFile = "${projectDir}/src/main/resources/jetty-web.xml"
     logbackConfigFile = "${projectDir}/src/main/resources/logback.xml"
+
+    integrationTestTask = null
+    scanInterval = 0
+    httpPort = 8790
+    debugPort = 5008
+    debugSuspend = false
+    fastReload = true
+    inplaceMode = 'hard'
+    enableNaming = true
+
     jvmArgs = [
                '-Dspring.profiles.active=dev,rhs-it-stub,caching-enabled',
                '-Drehabstod.config.file=' + projectDir + '/src/main/resources/dev.properties',
@@ -79,11 +87,6 @@ gretty {
     //            '-Dcredentials.file=' + projectDir + '/../../rehabstod-konfiguration/demo/credentials.properties',
     //            '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources'
     //    ]
-
-    fastReload = true
-    inplaceMode = 'hard'
-    scanInterval = 0
-    enableNaming = true
 }
 
 dependencies {
