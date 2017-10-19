@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.infra.integration.pu.stub.ResidentStore;
+import se.inera.intyg.infra.integration.pu.stub.ChronicleResidentStore;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
@@ -116,7 +116,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     @Autowired
     private PersonnummerLoader personnummerLoader;
     @Autowired
-    private ResidentStore residentStore;
+    private ChronicleResidentStore residentStore;
 
     @PostConstruct
     public void init() {
@@ -305,7 +305,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         personPost.setNamn(namn);
 
         resident.setPersonpost(personPost);
-        residentStore.addUser(resident);
+        residentStore.addResident(resident);
     }
 
     private Patient buildPerson(String pnr) {
