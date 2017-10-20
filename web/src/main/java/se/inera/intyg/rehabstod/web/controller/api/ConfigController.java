@@ -18,16 +18,17 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 import se.inera.intyg.infra.dynamiclink.service.DynamicLinkService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetConfigResponse;
-
-import java.util.Map;
 
 /**
  * Created by marced on 2016-02-09.
@@ -37,6 +38,7 @@ import java.util.Map;
 public class ConfigController {
 
     private static final String STATISTIK_SJUNET_HOST_URL = "statistik.sjunet.host.url";
+    private static final String PROJECT_VERSION_PROPERTY = "project.version";
 
     @Autowired
     private DiagnosKapitelService diagnosKapitelService;
@@ -56,7 +58,8 @@ public class ConfigController {
         if (!env.containsProperty(STATISTIK_SJUNET_HOST_URL)) {
             throw new IllegalStateException("Missing property '" + STATISTIK_SJUNET_HOST_URL + "'");
         }
-        return new GetConfigResponse(diagnosKapitelService.getDiagnosKapitelList(), env.getProperty(STATISTIK_SJUNET_HOST_URL));
+        return new GetConfigResponse(diagnosKapitelService.getDiagnosKapitelList(), env.getProperty(STATISTIK_SJUNET_HOST_URL),
+                env.getProperty(PROJECT_VERSION_PROPERTY));
     }
 
     @RequestMapping(value = "/links", produces = "application/json")

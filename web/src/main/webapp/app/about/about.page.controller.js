@@ -19,8 +19,10 @@
 
 angular.module('rehabstodApp')
     .controller('AboutPageCtrl',
-        function($scope) {
+        function($scope, APP_CONFIG) {
             'use strict';
+
+            $scope.version = APP_CONFIG.version;
 
             $scope.menuItems = [];
 

@@ -28,10 +28,12 @@ import java.util.List;
 public class GetConfigResponse {
     private List<DiagnosKapitel> diagnosKapitelList;
     private String statistikTjanstBaseUrl;
+    private String version;
 
-    public GetConfigResponse(List<DiagnosKapitel> diagnosKapitelList, String statistikTjanstBaseUrl) {
+    public GetConfigResponse(List<DiagnosKapitel> diagnosKapitelList, String statistikTjanstBaseUrl, String version) {
         this.diagnosKapitelList = diagnosKapitelList;
         this.statistikTjanstBaseUrl = statistikTjanstBaseUrl;
+        this.version = version;
     }
 
     public List<DiagnosKapitel> getDiagnosKapitelList() {
@@ -45,4 +47,13 @@ public class GetConfigResponse {
     public void setStatistikTjanstBaseUrl(String statistikTjanstBaseUrl) {
         this.statistikTjanstBaseUrl = statistikTjanstBaseUrl;
     }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
 }

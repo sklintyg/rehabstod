@@ -10,12 +10,16 @@
     },
     "statistikTjanstBaseUrl": {
       "type": "string"
+    },
+    "version": {
+      "type": "string"
     }
 
   },
   "required": [
     "diagnosKapitelList",
-    "statistikTjanstBaseUrl"
+    "statistikTjanstBaseUrl",
+    "version"
   ],
   "title": "GetConfigResponse transport model",
   "type": "object",
