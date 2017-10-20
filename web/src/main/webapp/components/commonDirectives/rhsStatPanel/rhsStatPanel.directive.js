@@ -24,7 +24,6 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
 
             return {
                 restrict: 'E',
-                replace: true,
                 scope: {
                     vardenhet: '='
                 },

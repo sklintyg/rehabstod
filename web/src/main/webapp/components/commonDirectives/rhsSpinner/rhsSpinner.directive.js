@@ -24,7 +24,6 @@ angular.module('rehabstodApp').directive('rhsSpinner',
         return {
             restrict: 'A',
             transclude: true,
-            replace: true,
             scope: {
                 label: '@',
                 showSpinner: '='

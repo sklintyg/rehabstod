@@ -51,7 +51,6 @@ angular.module('rehabstodApp')
 
             return {
                 restrict: 'E',
-                replace: true,
                 scope: {},
                 controller: 'RhsSettingsCtrl',
                 templateUrl: '/components/appDirectives/sjukfall/rhsSettings/rhsSettings.directive.html'

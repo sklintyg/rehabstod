@@ -24,7 +24,6 @@ angular.module('rehabstodApp').directive('rhsPieChart',
 
             return {
                 restrict: 'E',
-                replace: true,
                 scope: {
                     data: '=',
                     config: '='

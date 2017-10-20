@@ -115,7 +115,6 @@ angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope',
     'use strict';
     return {
         restrict: 'E',
-        replace: true,
         controller: 'rhsNumericRangeInputCtrl',
         templateUrl: '/components/commonDirectives/rhsNumericRangeInput/rhsNumericRangeInput.directive.html',
         scope: {

@@ -49,7 +49,6 @@ angular.module('rehabstodApp')
 
             return {
                 restrict: 'E',
-                replace: true,
                 require: '^stTable',
                 scope: {},
                 link: function($scope, element, attr, table) {
