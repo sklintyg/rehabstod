@@ -37,6 +37,10 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
             state.diagnosKapitelModel.reset();
             state.sjukskrivningslangdModel = [1, 366];
             state.aldersModel = [0, 101];
+            state.slutdatumModel = {
+                from: null,
+                to: null
+            };
             state.lakareModel.reset();
             state.showPatientId = true;
             state.freeTextModel = '';
@@ -60,6 +64,7 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
                     state.sjukskrivningslangdModel[1] > 365 ? null : state.sjukskrivningslangdModel[1]],
                 alder: [state.aldersModel[0],
                     state.aldersModel[1] > 100 ? null : state.aldersModel[1]],
+                slutdatum: state.slutdatumModel,
                 freeText: state.freeTextModel,
                 showPatientId: state.showPatientId,
                 glapp: state.glapp

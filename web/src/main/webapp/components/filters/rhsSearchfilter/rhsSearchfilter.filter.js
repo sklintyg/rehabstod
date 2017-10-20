@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
+angular.module('rehabstodApp').filter('rhsSearchfilter', function(moment) {
     'use strict';
 
 
@@ -49,6 +49,11 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
                 return false;
             }
 
+            // Slutdatum
+            if (!dateRange(actual.slut, filterParams.slutdatum.from, filterParams.slutdatum.to)) {
+                return false;
+            }
+
             if (filterParams.freeText.length > 0 && !passWildCardSearch(actual, filterParams.freeText)) {
                 return false;
             }
@@ -59,6 +64,18 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
 
         function passWildCardSearch(actual, wildCard) {
             return standardComparator(actual.quickSearchString, wildCard);
+        }
+
+        function dateRange(actual, from, to) {
+
+            if (angular.isDate(from) && angular.isDate(to)) {
+                from.setHours(0,0,0,0);
+                to.setHours(0,0,0,0);
+
+                return moment(actual).isBetween(from, to, null, '[]');
+            }
+
+            return true;
         }
 
         function range(actual, lower, higher) {
@@ -112,4 +129,4 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
         return processItems(array, expression);
     };
 
-}]);
+});
