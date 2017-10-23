@@ -277,16 +277,16 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         // Setup column widths (relative to each other)
         if (Urval.ALL.equals(urval)) {
             if (showPatientId) {
-                table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2, 3f });
+                table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2, 3f });
             } else {
-                table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2, 3f });
+                table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 1.5f, 3f });
             }
 
         } else {
             if (showPatientId) {
-                table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2 });
+                table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2 });
             } else {
-                table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2 });
+                table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2 });
             }
 
         }
