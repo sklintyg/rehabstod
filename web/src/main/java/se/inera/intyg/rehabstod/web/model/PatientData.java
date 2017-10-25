@@ -51,6 +51,8 @@ public class PatientData {
 
     boolean aktivtIntyg;
 
+    private String intygsId;
+
 
     // - - - getters and setters
 
@@ -172,6 +174,14 @@ public class PatientData {
 
     public void setAktivtIntyg(boolean aktivtIntyg) {
         this.aktivtIntyg = aktivtIntyg;
+    }
+
+    public String getIntygsId() {
+        return intygsId;
+    }
+
+    public void setIntygsId(String intygsId) {
+        this.intygsId = intygsId;
     }
 
 }

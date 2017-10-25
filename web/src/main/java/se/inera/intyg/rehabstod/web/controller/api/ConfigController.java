@@ -38,6 +38,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetConfigResponse;
 public class ConfigController {
 
     private static final String STATISTIK_SJUNET_HOST_URL = "statistik.sjunet.host.url";
+    private static final String WEBCERT_VIEW_INTYG_URL_TEMPLATE = "webcert.view.urltemplate";
     private static final String PROJECT_VERSION_PROPERTY = "project.version";
 
     @Autowired
@@ -59,6 +60,7 @@ public class ConfigController {
             throw new IllegalStateException("Missing property '" + STATISTIK_SJUNET_HOST_URL + "'");
         }
         return new GetConfigResponse(diagnosKapitelService.getDiagnosKapitelList(), env.getProperty(STATISTIK_SJUNET_HOST_URL),
+                env.getProperty(WEBCERT_VIEW_INTYG_URL_TEMPLATE),
                 env.getProperty(PROJECT_VERSION_PROPERTY));
     }
 

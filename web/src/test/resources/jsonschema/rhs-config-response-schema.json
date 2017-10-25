@@ -13,13 +13,17 @@
     },
     "version": {
       "type": "string"
+    },
+    "webcertViewIntygTemplateUrl": {
+      "type": "string"
     }
 
   },
   "required": [
     "diagnosKapitelList",
     "statistikTjanstBaseUrl",
-    "version"
+    "version",
+    "webcertViewIntygTemplateUrl"
   ],
   "title": "GetConfigResponse transport model",
   "type": "object",

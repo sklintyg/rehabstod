@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-
 import java.util.List;
+
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
 /**
  * Created by marced on 2016-01-18.
@@ -28,11 +28,14 @@ import java.util.List;
 public class GetConfigResponse {
     private List<DiagnosKapitel> diagnosKapitelList;
     private String statistikTjanstBaseUrl;
+    private String webcertViewIntygTemplateUrl;
     private String version;
 
-    public GetConfigResponse(List<DiagnosKapitel> diagnosKapitelList, String statistikTjanstBaseUrl, String version) {
+    public GetConfigResponse(List<DiagnosKapitel> diagnosKapitelList, String statistikTjanstBaseUrl, String webcertViewIntygTemplateUrl,
+            String version) {
         this.diagnosKapitelList = diagnosKapitelList;
         this.statistikTjanstBaseUrl = statistikTjanstBaseUrl;
+        this.webcertViewIntygTemplateUrl = webcertViewIntygTemplateUrl;
         this.version = version;
     }
 
@@ -46,6 +49,14 @@ public class GetConfigResponse {
 
     public void setStatistikTjanstBaseUrl(String statistikTjanstBaseUrl) {
         this.statistikTjanstBaseUrl = statistikTjanstBaseUrl;
+    }
+
+    public String getWebcertViewIntygTemplateUrl() {
+        return webcertViewIntygTemplateUrl;
+    }
+
+    public void setWebcertViewIntygTemplateUrl(String webcertViewIntygTemplateUrl) {
+        this.webcertViewIntygTemplateUrl = webcertViewIntygTemplateUrl;
     }
 
     public String getVersion() {

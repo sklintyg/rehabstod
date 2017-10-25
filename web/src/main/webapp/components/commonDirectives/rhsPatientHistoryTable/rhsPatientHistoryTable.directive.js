@@ -25,7 +25,8 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
         scope: {
             historyItem: '=',
             index: '=',
-            onSelect: '&'
+            onSelect: '&',
+            onLoadIntyg: '&'
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsPatientHistoryTable.directive.html',
         link: function($scope) {

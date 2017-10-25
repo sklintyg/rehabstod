@@ -39,7 +39,7 @@ angular.module('rehabstodApp').factory('patientHistoryProxy',
             timeout: networkConfig.defaultTimeout
         };
 
-        $log.debug('Requesting patient history for patient ' + query.patientId + ' with maxIntygsGlapp ' + query.maxIntygsGlapp);
+        $log.debug('Requesting patient history for patient with maxIntygsGlapp ' + query.maxIntygsGlapp);
 
         $http.post(restPath, query, config).success(function(data) {
             if (!ObjectHelper.isDefined(data)) {

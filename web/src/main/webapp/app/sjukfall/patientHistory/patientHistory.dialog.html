@@ -1,44 +1,63 @@
 <div class="modal-header">
-  <h4 ng-if="showPatientId">{{patient.namn}}&nbsp;&nbsp;&nbsp;{{patient.id}} &nbsp;&nbsp; {{patient.alder}} år {{patient.konShow}}</h4>
-  <h4 ng-if="!showPatientId">{{patient.alder}} år {{patient.konShow}}</h4>
+  <div class="row">
+    <div class="col-xs-10"><h4 ng-if="showPatientId">{{patient.namn}}&nbsp;&nbsp;&nbsp;{{patient.id}} &nbsp;&nbsp;
+      {{patient.alder}} år
+      {{patient.konShow}}</h4>
+      <h4 ng-if="!showPatientId">{{patient.alder}} år {{patient.konShow}}</h4>
+    </div>
+    <div class="col-xs-2">
+      <button class="btn btn-link close-button pull-right" ng-click="close();">Stäng patientvy</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <rhs-patient-history-tabs></rhs-patient-history-tabs>
+    </div>
+  </div>
 
-  <button class="btn btn-link close-button pull-right" ng-click="close();">Stäng patientvy</button>
 </div>
 
 <div class="modal-body">
-  <div rhs-spinner show-spinner="showSpinner" label="label.patienthistory.loading">
+  <div ng-repeat="tab in tabs">
+    <!-- patient history timeline section -->
+    <div ng-if="tab.fixed">
+      <div ng-show="tab.active">
+        <div rhs-spinner show-spinner="showSpinner" label="label.patienthistory.loading">
 
+          <div ng-repeat="item in timeline">
 
-    <div ng-repeat="item in timeline">
-      
-      <!-- special case: gap between years that have sjukfall -->
-      <div ng-if="!item.sjukfall" class="row year-gap">
-        <div class="col-xs-1 history-timeline">
-          <!-- gap dotted line -->
-          <svg xmlns="http://www.w3.org/2000/svg" height="30" ng-attr-width="{{radius * 2 + 4}}" class="year-gap">
-            <line ng-attr-x1="{{radius-4}}" y1="0" ng-attr-x2="{{radius+8}}" y2="0" stroke-width="4" />
-            <line ng-attr-x1="{{radius+2}}" y1="0" ng-attr-x2="{{radius+2}}" y2="100%" stroke-width="2"
-                  stroke-dasharray="2, 1" />
-          </svg>
+            <!-- special case: gap between years that have sjukfall -->
+            <div ng-if="!item.sjukfall" class="row year-gap">
+              <div class="col-xs-1 history-timeline">
+                <!-- gap dotted line -->
+                <svg xmlns="http://www.w3.org/2000/svg" height="30" ng-attr-width="{{radius * 2 + 4}}" class="year-gap">
+                  <line ng-attr-x1="{{radius-4}}" y1="0" ng-attr-x2="{{radius+8}}" y2="0" stroke-width="4" />
+                  <line ng-attr-x1="{{radius+2}}" y1="0" ng-attr-x2="{{radius+2}}" y2="100%" stroke-width="2"
+                        stroke-dasharray="2, 1" />
+                </svg>
 
+              </div>
+              <div class="col-xs-11">&nbsp;</div>
+            </div>
+
+            <div ng-if="item.sjukfall" class="row">
+              <rhs-patient-history-time-line-item history-item="item" index="$index" is-last="$last"
+                                                  on-select="onSelectSjukfall(item)" class="pull-left history-timeline">
+
+              </rhs-patient-history-time-line-item>
+
+              <rhs-patient-history-table history-item="item" index="$index" on-select="onSelectSjukfall(item)"
+                                         on-load-intyg="loadIntyg(intyg)"
+                                         class="pull-left history-table"></rhs-patient-history-table>
+            </div>
+          </div>
+          <div class="alert alert-danger" ng-if="errorMessageKey" ng-bind-html="errorMessageKey | message"></div>
         </div>
-        <div class="col-xs-11">&nbsp;</div>
-      </div>
-
-      <div ng-if="item.sjukfall" class="row">
-        <rhs-patient-history-time-line-item history-item="item" index="$index" is-last="$last" on-select="onSelectSjukfall(item)"
-                                            class="pull-left history-timeline">
-
-        </rhs-patient-history-time-line-item>
-
-        <rhs-patient-history-table history-item="item" index="$index" on-select="onSelectSjukfall(item)"
-                                   class="pull-left history-table"></rhs-patient-history-table>
       </div>
     </div>
 
-
-    <div class="alert alert-danger" ng-if="errorMessageKey" ng-bind-html="errorMessageKey | message"></div>
-
+    <!-- Intyg iframe tab(s) -->
+    <rhs-patient-intyg-frame tab="tab" ng-if="!tab.fixed"></rhs-patient-intyg-frame>
   </div>
 
 </div>

@@ -18,8 +18,15 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.mappers;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
@@ -28,12 +35,6 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Magnus Ekstrand on 2017-09-01.
@@ -111,6 +112,7 @@ public class SjukfallEngineMapper {
         PatientData to = new PatientData();
 
         try {
+            to.setIntygsId(from.getIntygId());
             to.setVardgivareId(from.getVardgivareId());
             to.setVardgivareNamn(from.getVardgivareNamn());
             to.setVardenhetId(from.getVardenhetId());
