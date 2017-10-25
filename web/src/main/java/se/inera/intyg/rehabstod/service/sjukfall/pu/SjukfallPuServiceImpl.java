@@ -76,6 +76,8 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                 if (!user.isLakare() || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
                     i.remove();
                 }
+            } else if (personSvar != null && personSvar.getPerson().isAvliden()) {
+                i.remove();
             }
         }
     }
@@ -109,6 +111,8 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                     if (!user.isLakare() || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
                         i.remove();
                     }
+                } else if (personSvar.getPerson().isAvliden()) {
+                    i.remove();
                 } else {
                     item.getPatient()
                             .setNamn(joinNames(personSvar));
@@ -141,7 +145,16 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
         }
 
         PersonSvar personSvar = puService.getPerson(personnummer);
+
+
+
         if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
+
+            // If patient is deceased, we shouldn't be here at all.
+            if (personSvar.getPerson().isAvliden()) {
+                throw new IllegalStateException("Cannot display sjukfall for deceased patient.");
+            }
+
             RehabstodUser user = userService.getUser();
 
             if (personSvar.getPerson().isSekretessmarkering()) {
