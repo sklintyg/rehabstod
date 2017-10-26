@@ -17,11 +17,11 @@
 
 </div>
 
-<div class="modal-body">
+<div>
   <div ng-repeat="tab in tabs">
     <!-- patient history timeline section -->
     <div ng-if="tab.fixed">
-      <div ng-show="tab.active">
+      <div ng-show="tab.active" class="modal-body">
         <div rhs-spinner show-spinner="showSpinner" label="label.patienthistory.loading">
 
           <div ng-repeat="item in timeline">

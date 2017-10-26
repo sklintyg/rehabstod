@@ -1,12 +1,29 @@
 rhs-patient-intyg-frame {
 
   display: block;
+
+  .modal-body.frame {
+    overflow-y: auto;
+    padding: 0;
+  }
+
   iframe {
     width: 100%;
     height: 100%;
     border: none;
-
-    min-height: 400px;
+    // Note: These heights should mirror max-heights in patientHistory.scss mediaquery
+    @media (min-height: 400px) {
+      height: 355px;
+    }
+    @media (min-height: 600px) {
+      height: 555px;
+    }
+    @media (min-height: 800px) {
+      height: 755px;
+    }
+    @media (min-height: 1000px) {
+      height: 935px;
+    }
   }
 
 }
