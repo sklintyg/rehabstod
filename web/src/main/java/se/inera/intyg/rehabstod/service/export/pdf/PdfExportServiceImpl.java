@@ -191,6 +191,11 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         alderVarden.add(new Chunk(" år.", PdfExportConstants.FRONTPAGE_NORMAL));
         valdAlder.add(alderVarden);
 
+        // Slutdddatum
+        Paragraph valdSluttdaum = new Paragraph(FILTER_TITLE_VALD_SLUTDATUM, PdfExportConstants.FRONTPAGE_H3);
+        Paragraph sluttdaumVarden = new Paragraph(getFilterDate(printRequest.getSlutdatumIntervall()), PdfExportConstants.FRONTPAGE_NORMAL);
+        valdSluttdaum.add(sluttdaumVarden);
+
         // Fritext
         Paragraph valdFritext = new Paragraph(FILTER_TITLE_FRITEXTFILTER, PdfExportConstants.FRONTPAGE_H3);
         valdFritext.add(new Paragraph(StringUtil.isNullOrEmpty(printRequest.getFritext()) ? "-" : printRequest.getFritext(),
@@ -207,6 +212,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         filter.add(valdaLakare);
         filter.add(valdSjukskrivninglangd);
         filter.add(valdAlder);
+        filter.add(valdSluttdaum);
         filter.add(valdFritext);
         filter.add(visaPatientUppgifter);
 
