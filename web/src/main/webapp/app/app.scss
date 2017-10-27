@@ -51,6 +51,7 @@ $fa-font-path: '../bower_components/font-awesome/fonts';
 
 @import '../bower_components/bootstrap-sass/assets/stylesheets/bootstrap.scss';
 @import '../bower_components/font-awesome/scss/font-awesome.scss';
+@import "../bower_components/jquery-date-range-picker/src/daterangepicker";
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
@@ -413,6 +414,7 @@ input[type=search]::-ms-clear {
 @import 'appDirectives/sjukfall/rhsTable/rhsTable.scss';
 @import 'appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.scss';
 @import 'commonDirectives/rhsChartLegend/rhsChartLegend.directive.scss';
+@import 'commonDirectives/rhsDateRangePicker/rhsDateRangePicker.directive.scss';
 @import 'commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.scss';
 @import 'commonDirectives/rhsNumericRangeInput/rhsNumericRangeInput.directive.scss';
 @import 'commonDirectives/rhsPatientHistoryTable/rhsPatientHistoryTable.directive.scss';

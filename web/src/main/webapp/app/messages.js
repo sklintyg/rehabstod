@@ -96,6 +96,7 @@ var rhsMessages = {
         'label.filter.lakare' : 'Välj läkare',
         'label.filter.langd' : 'Välj sjukskrivningslängd',
         'label.filter.alder' : 'Välj åldersspann',
+        'label.filter.slutdatum' : 'Välj slutdatum',
         'label.filter.filter' : 'Fritextfilter',
         'label.filter.filter.placeholder' : 'Hitta sjukfall som innehåller...',
         'label.filter.allselected' : 'Alla valda',

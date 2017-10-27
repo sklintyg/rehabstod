@@ -84,14 +84,23 @@
           </div>
         </div>
         <div class="col-sm-3">
+          <div class="form-group">
+            <label class="control-label"><span message key="label.filter.slutdatum"></span></label>
+            <rhs-date-range-picker model="filterViewState.get().slutdatumModel"></rhs-date-range-picker>
+          </div>
+        </div>
+        <div class="col-sm-3 personuppgifter">
           <div class="rhs-checkbox">
             <label class="control-label">&nbsp;</label><br>
             <label for="rhs-filter-showPatientIdToggle"><span>Visa personuppgifter </span> <input id="rhs-filter-showPatientIdToggle" type="checkbox" ng-model="filterViewState.get().showPatientId"></label>
           </div>
         </div>
-        <div class="col-sm-3 bottom-align-text">
-          <label class="control-label">&nbsp;</label><br>
-          <button id="rhs-filter-reset-btn" ng-click="onResetFilterClick()" class="btn btn-default" rhs-emulate-button-active-state>
+
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <button id="rhs-filter-reset-btn" ng-click="onResetFilterClick()" class="pull-right btn btn-default" rhs-emulate-button-active-state>
             <span style="position:relative" message key="common.reset"></span>
           </button>
         </div>

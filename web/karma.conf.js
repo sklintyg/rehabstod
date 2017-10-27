@@ -30,6 +30,7 @@ module.exports = function(config) {
             'src/main/webapp/bower_components/highcharts/highcharts.js',
             'src/main/webapp/bower_components/highcharts/modules/no-data-to-display.js',
             'src/main/webapp/bower_components/moment/moment.js',
+            'src/main/webapp/bower_components/jquery-date-range-picker/src/jquery.daterangepicker.js',
             // endbower
             'src/main/webapp/bower_components/angular-mocks/angular-mocks.js',
             'src/main/webapp/app/app.main.test.js',
