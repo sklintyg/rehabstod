@@ -35,7 +35,7 @@
       <td ng-attr-id="sjukfall-{{index}}-column-number-{{$index}}">{{$index + 1}}</td>
       <td ng-attr-id="sjukfall-{{index}}-column-diagnose-{{$index}}" class="nowrap">
         <span uib-tooltip-html="getToolTip(intyg.diagnos)" tooltip-popup-delay="200" class="patient-history-dialog--tooltip">{{::intyg.diagnos.intygsVarde}}</span><div
-          class="diagnos hidden-xs hidden-sm">{{::intyg.diagnos.beskrivning}}</div>
+          class="diagnos hidden-xs hidden-sm hidden-md">{{::intyg.diagnos.beskrivning}}</div>
       </td>
       <td ng-attr-id="sjukfall-{{index}}-column-bidiagnoses-{{$index}}" class="nowrap">
         <div ng-repeat="d in intyg.bidiagnoser">
