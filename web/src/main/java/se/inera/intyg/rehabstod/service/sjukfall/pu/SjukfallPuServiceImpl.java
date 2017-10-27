@@ -69,14 +69,15 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             item.getPatient().setNamn(null);
 
             PersonSvar personSvar = puService.getPerson(pnr);
-            if (personSvar != null && personSvar.getStatus() == PersonSvar.Status.FOUND && personSvar.getPerson().isSekretessmarkering()) {
+            boolean patientFound = personSvar != null && personSvar.getStatus() == PersonSvar.Status.FOUND;
+            if (patientFound && personSvar.getPerson().isSekretessmarkering()) {
 
                 // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE, då får vi ej visa
                 // sjukfall för s-märkt patient.
                 if (!user.isLakare() || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
                     i.remove();
                 }
-            } else if (personSvar != null && personSvar.getPerson().isAvliden()) {
+            } else if (patientFound && personSvar.getPerson().isAvliden()) {
                 i.remove();
             }
         }
