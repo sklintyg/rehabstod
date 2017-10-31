@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').filter('rhsSearchfilter', function(moment) {
+angular.module('rehabstodApp').filter('rhsSearchfilter', function(moment, _) {
     'use strict';
 
 
@@ -115,7 +115,7 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', function(moment) {
 
         function processItems(array, filterParam) {
             var filteredArray = [];
-            angular.forEach(array, function(item) {
+            _.forEach(array, function(item) {
                 if (customComparator(item, filterParam.customSearch)) {
                     filteredArray.push(item);
                 }

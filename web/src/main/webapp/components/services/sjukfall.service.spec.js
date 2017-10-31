@@ -97,6 +97,10 @@ describe('Service: SjukfallService', function() {
                     min: '0',
                     max: '100+'
                 },
+                slutdatum: {
+                    min: '',
+                    max: ''
+                },
                 lakare: cfs.lakare,
                 diagnosGrupper: cfs.diagnosKapitel,
                 personnummer: personnummer
