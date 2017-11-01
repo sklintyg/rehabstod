@@ -18,6 +18,9 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -45,6 +48,11 @@ public class SjukfallEnhet {
     private int aktivGrad;
 
     private List<Integer> grader;
+
+    @JsonIgnore
+    private String aktivIntygsId;
+
+    private RiskSignal riskSignal;
 
 
     // - - - getters and setters
@@ -161,4 +169,19 @@ public class SjukfallEnhet {
         this.grader = grader;
     }
 
+    public String getAktivIntygsId() {
+        return aktivIntygsId;
+    }
+
+    public void setAktivIntygsId(String aktivIntygsId) {
+        this.aktivIntygsId = aktivIntygsId;
+    }
+
+    public RiskSignal getRiskSignal() {
+        return riskSignal;
+    }
+
+    public void setRiskSignal(RiskSignal riskSignal) {
+        this.riskSignal = riskSignal;
+    }
 }

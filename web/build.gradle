@@ -70,7 +70,7 @@ gretty {
     enableNaming = true
 
     jvmArgs = [
-               '-Dspring.profiles.active=dev,rhs-it-stub,caching-enabled',
+               '-Dspring.profiles.active=dev,rhs-it-stub,rhs-srs-stub,caching-enabled',
                '-Drehabstod.config.file=' + projectDir + '/src/main/resources/dev.properties',
                '-Drehabstod.features.file=' + projectDir + '/src/main/resources/features.properties',
                '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
@@ -80,7 +80,7 @@ gretty {
 
     /***************** Konfiguration för att köra med SITHS och HSA aktiverat lokalt. *******************/
     //    jvmArgs = [
-    //            '-Dspring.profiles.active=dev,rhs-security-test',
+    //            '-Dspring.profiles.active=dev,rhs-security-test,rhs-srs-stub',
     //            '-Drehabstod.config.folder=' + projectDir + '/../../rehabstod-konfiguration/demo',
     //            '-Drehabstod.config.file=' + projectDir + '/../../rehabstod-konfiguration/demo/rehabstod.properties',
     //            '-Drehabstod.features.file=' + projectDir + '/../../rehabstod-konfiguration/demo/features.properties',
@@ -91,6 +91,7 @@ gretty {
 
 dependencies {
     compile project(":rehabstod-it-integration")
+    compile project(":rehabstod-srs-integration")
     compile project(":rehabstod-persistence")
 
     compile "se.riv.clinicalprocess.healthcond.monitoring:clinicalprocess-healthcond-monitoring-schemas:${internalMonitoringSchemaVersion}"

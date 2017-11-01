@@ -132,6 +132,25 @@
       "grader": {
         "minItems": 0,
         "type": "array"
+      },
+      "riskSignal": {
+        "additionalProperties": false,
+        "properties": {
+          "intygsId": {
+            "type":"string"
+          },
+          "riskKategori": {
+            "type":"integer"
+          },
+          "riskDescription": {
+            "type":"string"
+          }
+        },
+        "required": [
+          "intygsId",
+          "riskKategori",
+          "riskDescription"
+          ]
       }
     },
     "additionalProperties": false,

@@ -32,6 +32,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
+import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -74,6 +75,8 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Autowired
     private MonitoringLogService monitoringLogService;
 
+    @Autowired
+    private RiskPredictionService riskPredictionService;
 
     // api
 
@@ -100,15 +103,18 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(rehabstodSjukfall);
         sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(rehabstodSjukfall);
+        riskPredictionService.updateWithRiskPredictions(rehabstodSjukfall);
 
         return rehabstodSjukfall;
     }
+
 
     @Override
     public List<SjukfallPatient> getByPatient(String enhetsId, String lakareId, Urval urval, GetSjukfallRequest request) {
 
         List<SjukfallPatient> rehabstodSjukfall = getFilteredSjukfallByPatient(enhetsId, urval, request);
         sjukfallPuService.enrichWithPatientNameAndFilterSekretess(rehabstodSjukfall);
+        riskPredictionService.updateSjukfallPatientListWithRiskPredictions(rehabstodSjukfall);
         if (rehabstodSjukfall != null) {
             monitoringLogService.logUserViewedSjukfall(lakareId, rehabstodSjukfall.size(), enhetsId);
         }

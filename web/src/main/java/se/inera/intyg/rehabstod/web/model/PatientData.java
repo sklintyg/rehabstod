@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
+import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,9 +51,11 @@ public class PatientData {
     private String lakare;
     private List<String> sysselsattning;
 
-    boolean aktivtIntyg;
+    private boolean aktivtIntyg;
 
     private String intygsId;
+
+    private RiskSignal riskSignal;
 
 
     // - - - getters and setters
@@ -184,4 +188,11 @@ public class PatientData {
         this.intygsId = intygsId;
     }
 
+    public RiskSignal getRiskSignal() {
+        return riskSignal;
+    }
+
+    public void setRiskSignal(RiskSignal riskSignal) {
+        this.riskSignal = riskSignal;
+    }
 }

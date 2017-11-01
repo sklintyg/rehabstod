@@ -18,14 +18,6 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_CHECK_URI;
-import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_EXTEND;
-import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_REQUEST_MAPPING;
-
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.WebApplicationInitializer;
@@ -36,14 +28,24 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
-
 import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
+import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationClientConfiguration;
+import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationConfiguration;
+import se.inera.intyg.rehabstod.integration.srs.stub.SRSIntegrationStubConfiguration;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigJndi;
 import se.inera.intyg.rehabstod.web.filters.SessionTimeoutFilter;
+
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_CHECK_URI;
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_EXTEND;
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_REQUEST_MAPPING;
 
 public class ApplicationInitializer implements WebApplicationInitializer {
 
@@ -56,6 +58,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
                 ServiceConfig.class, IntygstjanstIntegrationConfiguration.class,
                 IntygstjanstIntegrationClientConfiguration.class,
                 IntygstjanstIntegrationStubConfiguration.class,
+                SRSIntegrationConfiguration.class,
+                SRSIntegrationClientConfiguration.class,
+                SRSIntegrationStubConfiguration.class,
                 JmsConfig.class, NTjPPingConfig.class, SecurityConfig.class,
                 SjukfallConfig.class, EmployeeNameCacheConfig.class, DynamicLinkConfig.class, PersistenceConfigJndi.class,
                 PersistenceConfigDev.class);

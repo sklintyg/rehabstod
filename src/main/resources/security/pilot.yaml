@@ -2,13 +2,6 @@
 pilots:
   - hsaIds:
       - TSTNMT2321000156-1062
+      - TSTNMT2321000156-105N
     features:
-      srs: false
-
-  - hsaIds:
-      - x
-      - y
-      - z
-    features:
-      feature1: false
-      feature2: true
+      srs: true

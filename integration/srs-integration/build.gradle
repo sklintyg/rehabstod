@@ -1,0 +1,9 @@
+dependencies {
+    compile project(":rehabstod-common")
+
+    compile("se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:0.0.7-beta1")
+    compile "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${monitoringSchemaVersion}"
+
+    testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
+    testCompile "org.springframework:spring-test:${springContextVersion}"
+}
