@@ -69,6 +69,10 @@ var rhsMessages = {
         'label.sjukfall.start.merstatistik.header': 'Var kan jag hitta mer statistik?',
         'label.sjukfall.start.merstatistik.body': 'Om du vill se mer statistik för din enhet eller på nationell nivå kan du använda Statistiktjänsten.<br><br>När du klickar på länken nedan öppnas Statistiktjänsten i ett nytt fönster.',
 
+        // Om SRS
+        'label.sjukfall.start.srs.header': 'Var kan jag hitta mer information om Stöd för rätt sjukskrivning (SRS)?',
+        'label.sjukfall.start.srs.body': 'Om du vill se mer information om SRS, t.ex. hur prediktionen räknas ut, fler åtgärder, mer nationell statistik så kan du gå till SRS webbplats. När du klickar på länken nedan öppnas SRS webbplats i ett nytt fönster.',
+
 
         // Sjukfall Stat
         'label.sjukfall.stat.totalt' : 'Antal sjukfall',

@@ -47,5 +47,11 @@
     "url": "http://www.inera.se/TJANSTER--PROJEKT/Rehabstod/Dokument/",
     "text": "användarmanual (extern länk)",
     "target": "_blank"
+  },
+  {
+    "key": "rattsjukskrivning",
+    "url": "http://www.rattsjukskrivning.se",
+    "text": "Gå vidare till SRS hemsida",
+    "target": "_blank"
   }
 ]
