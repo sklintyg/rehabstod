@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel', 'messageService',
-    function(UserModel, messageService) {
+angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel', 'messageService', 'featureService',
+    function(UserModel, messageService, featureService) {
     'use strict';
 
     return {
@@ -65,16 +65,7 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
             };
 
             $scope.hasFeature = function(feature) {
-                for (var a = 0; a < $scope.user.features.length; a++) {
-                    if ($scope.user.features[a] === feature) {
-                        return true;
-                    }
-                }
-                return false;
-            };
-
-            $scope.getRiskToolTip = function(riskDescription) {
-                return '<b>' + riskDescription + '</b>';
+                return featureService.hasFeature(feature);
             };
         }
     };

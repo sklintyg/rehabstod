@@ -33,7 +33,7 @@
           <td class="column-antal">{{::row.intyg}}</td>
           <td  class="column-grad" ng-bind-html="::row.gradShow"></td>
           <td ng-if="hasFeature('srs')" class="column-risk">
-            <span class="rhs-table-tooltip" ng-if="row.riskSignal.riskKategori > 1" uib-tooltip-html="getRiskToolTip(row.riskSignal.riskDescription)" tooltip-popup-delay="200">
+            <span class="rhs-table-tooltip" ng-if="row.riskSignal.riskKategori > 1" uib-tooltip-html="row.riskSignal.riskDescription" tooltip-popup-delay="200">
               <img ng-src="/assets/images/risk{{::row.riskSignal.riskKategori}}.png" height="18">
             </span>
           </td>

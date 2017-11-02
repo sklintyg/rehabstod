@@ -19,7 +19,8 @@
 
 angular.module('rehabstodApp')
     .controller('RhsTableCtrl', ['$scope', '$uibModal', 'SjukfallFilterViewState', 'SjukfallModel', 'UserModel', 'messageService',
-        function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService) {
+        'featureService',
+        function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService, featureService) {
             'use strict';
 
             $scope.filter = SjukfallFilterViewState;
@@ -63,16 +64,7 @@ angular.module('rehabstodApp')
             };
 
             $scope.hasFeature = function(feature) {
-                for (var a = 0; a < $scope.user.features.length; a++) {
-                    if ($scope.user.features[a] === feature) {
-                        return true;
-                    }
-                }
-                return false;
-            };
-
-            $scope.getRiskToolTip = function(riskDescription) {
-                return '<b>' + riskDescription + '</b>';
+                return featureService.hasFeature(feature);
             };
 
             $scope.resetLimit();

@@ -55,7 +55,7 @@
         <div ng-repeat="s in intyg.sysselsattning track by $index">{{::s}}</div>
       </td>
       <td ng-if="hasFeature('srs')" ng-attr-id="sjukfall-{{index}}-column-risk-{{$index}}" class="column-risk">
-        <span ng-if="intyg.riskSignal.riskKategori > 1" uib-tooltip-html="getRiskToolTip(intyg.riskSignal.riskDescription)" tooltip-popup-delay="200" class="patient-history-dialog--tooltip">
+        <span ng-if="intyg.riskSignal.riskKategori > 1" uib-tooltip-html="intyg.riskSignal.riskDescription" tooltip-popup-delay="200" class="patient-history-dialog--tooltip">
             <img ng-src="/assets/images/risk{{::intyg.riskSignal.riskKategori}}.png" height="18">
         </span>
       </td>
