@@ -107,9 +107,7 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
     }
 
     /**
-     * Either the GLOBAL feature is active OR the enhet-specific
-     *
-     * @return
+     * Either the global feature "srs" or pilot feature needs to be active.
      */
     private boolean isSrsFeatureActive() {
         return featureService.getActiveFeatures(userService.getUser().getValdVardenhet().getId()).contains(RehabstodFeature.SRS.getName());
