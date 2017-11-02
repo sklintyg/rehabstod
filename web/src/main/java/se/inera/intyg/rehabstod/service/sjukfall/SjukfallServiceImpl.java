@@ -18,10 +18,15 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
@@ -38,9 +43,6 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -170,8 +172,9 @@ public class SjukfallServiceImpl implements SjukfallService {
         List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> sjukfallList = sjukfallEngine.beraknaSjukfallForEnhet(data, parametrar);
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
+        LocalDate today = LocalDate.now();
         List<SjukfallEnhet> rehabstodSjukfall =
-            sjukfallList.stream().map(o -> sjukfallEngineMapper.map(o)).collect(Collectors.toList());
+            sjukfallList.stream().map(o -> sjukfallEngineMapper.map(o, today)).collect(Collectors.toList());
 
         if (urval.equals(Urval.ISSUED_BY_ME)) {
             LOG.debug("Filtering response - a doctor shall only see patients 'sjukfall' he/she has issued certificates.");

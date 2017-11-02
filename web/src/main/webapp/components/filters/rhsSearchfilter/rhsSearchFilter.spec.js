@@ -35,6 +35,7 @@ describe('Filter: RhsSearchFilter', function() {
             },
             'start': '2016-02-01',
             'slut': '2016-03-01',
+            'slutOmDagar': moment('2016-03-01').diff(moment(), 'days'),
             'dagar': 10,
             'intyg': 4,
             'grader': [100, 50],
@@ -57,6 +58,7 @@ describe('Filter: RhsSearchFilter', function() {
             },
             'start': '2016-08-01',
             'slut': '2016-08-08',
+            'slutOmDagar': moment('2016-08-08').diff(moment(), 'days'),
             'dagar': 180,
             'intyg': 3,
             'grader': [25, 50],
@@ -79,6 +81,7 @@ describe('Filter: RhsSearchFilter', function() {
             },
             'start': '2016-08-01',
             'slut': '2016-08-09',
+            'slutOmDagar': moment('2016-08-09').diff(moment(), 'days'),
             'dagar': 400,
             'intyg': 3,
             'grader': [25, 50],
@@ -161,7 +164,7 @@ describe('Filter: RhsSearchFilter', function() {
         filterParam.customSearch.slutdatum = {from: moment('2016-08-01').toDate(), to: moment('2016-08-11').toDate()};
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[1], testJsonData[2]]);
 
-        filterParam.customSearch.slutdatum = {from: moment('2016-03-01').toDate(), to: moment('2016-03-01').toDate()};
+        filterParam.customSearch.slutdatum = {from: moment('2016-03-01 12:00:00').toDate(), to: moment('2016-03-01 12:00:00').toDate()};
         expect(rhsSearchfilterFilter(testJsonData, filterParam)).toEqual([testJsonData[0]]);           
     }));
 

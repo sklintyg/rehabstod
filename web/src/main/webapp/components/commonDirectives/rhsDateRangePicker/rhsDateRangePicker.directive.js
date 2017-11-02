@@ -71,6 +71,7 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
                     autoClose: false,
                     separator: ' to ',
                     language: 'se',
+                    startDate: moment().format('YYYY-MM-DD'),
                     startOfWeek: 'monday',
                     singleMonth: false,
                     showShortcuts: true,
@@ -130,6 +131,7 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
                     var value = getDisplayValue($scope.model);
 
                     inputElement.val(value);
+                    $scope.$apply();
                 }
 
                 function getDisplayValue(model) {

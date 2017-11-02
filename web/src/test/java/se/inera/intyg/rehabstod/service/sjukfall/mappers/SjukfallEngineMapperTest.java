@@ -18,10 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.mappers;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,16 +29,17 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -62,6 +63,7 @@ public class SjukfallEngineMapperTest {
     private static final Integer NEDSATTNING = 100;
     private static final LocalDate NEDSATTNINGSTARTDATUM = LocalDate.now().plusDays(1L);
     private static final LocalDate NEDSATTNINGSLUTDATUM = LocalDate.now().plusDays(7L);
+    private static final long ANTALDAGARTILLSLUT = 7L;
     private static final String SYSSELSATTNING = "NUVARANDE_ARBETE";
     private static final Integer ANTALINTYG = 1;
 
@@ -85,9 +87,11 @@ public class SjukfallEngineMapperTest {
     public void testMappingOfSjukfallEnhet() {
         // given
         se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from = createSjukfallEnhet();
+        LocalDate today = LocalDate.now();
+
 
         // when
-        SjukfallEnhet to = testee.map(from);
+        SjukfallEnhet to = testee.map(from, today);
 
         // then
         assertEquals(VARDGIVAREID, to.getVardGivareId());
@@ -108,9 +112,24 @@ public class SjukfallEngineMapperTest {
         assertEquals(NEDSATTNING.intValue(), to.getAktivGrad());
         assertEquals(NEDSATTNINGSTARTDATUM, to.getStart());
         assertEquals(NEDSATTNINGSLUTDATUM, to.getSlut());
+        assertEquals(ANTALDAGARTILLSLUT, to.getSlutOmDagar());
         assertEquals(getSjukskrivningsDagar(), to.getDagar());
         assertTrue(1 == to.getGrader().size());
         assertEquals(NEDSATTNING, to.getGrader().get(0));
+    }
+
+    @Test
+    public void testMappingOfSjukfallEnhetEndDateToday() {
+        // given
+        se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from = createSjukfallEnhet();
+        LocalDate today = LocalDate.now().plusDays(7L);
+
+
+        // when
+        SjukfallEnhet to = testee.map(from, today);
+
+        // then
+        assertEquals(0, to.getSlutOmDagar());
     }
 
     @Test
