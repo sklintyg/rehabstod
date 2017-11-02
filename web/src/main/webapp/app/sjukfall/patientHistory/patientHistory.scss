@@ -13,21 +13,12 @@
 
   .modal-body {
     overflow-y: scroll;
-    min-height: 300px;
-    padding-bottom:20px;
+    min-height: 200px;
+    max-height: 200px;
+    padding-bottom: 20px;
 
-    //TODO: Better way of handling this?
     @media (min-height: 400px) {
-      max-height: 360px;
-    }
-    @media (min-height: 600px) {
-      max-height: 560px;
-    }
-    @media (min-height: 800px) {
-      max-height: 760px;
-    }
-    @media (min-height: 1000px) {
-      max-height: 940px;
+      max-height: calc(100vh - 160px);
     }
 
     h3 {
