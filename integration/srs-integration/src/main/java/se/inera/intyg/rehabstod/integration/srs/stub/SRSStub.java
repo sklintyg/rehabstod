@@ -41,6 +41,7 @@ public class SRSStub implements GetRiskPredictionForCertificateResponderInterfac
     private static final int TWO = 2;
     private static final int THREE = 3;
     private static final int FOUR = 4;
+    private static final int FIVE = 5;
 
     private boolean active = true;
 
@@ -54,7 +55,7 @@ public class SRSStub implements GetRiskPredictionForCertificateResponderInterfac
         for (int a = 0; a < reqType.getIntygsId().size(); a++) {
 
             // Skip adding every 5th result to mimic items having no prediction in SRS.
-            if (a % 5 != 0) {
+            if (a % FIVE != 0) {
                 RiskPrediktion riskPred = new RiskPrediktion();
                 riskPred.setIntygsId(reqType.getIntygsId().get(a));
                 riskPred.setRisksignal(buildRiskSignal(a));
