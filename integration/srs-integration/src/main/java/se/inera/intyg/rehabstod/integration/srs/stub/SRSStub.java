@@ -52,10 +52,14 @@ public class SRSStub implements GetRiskPredictionForCertificateResponderInterfac
 
         GetRiskPredictionForCertificateResponseType resp = new GetRiskPredictionForCertificateResponseType();
         for (int a = 0; a < reqType.getIntygsId().size(); a++) {
-            RiskPrediktion riskPred = new RiskPrediktion();
-            riskPred.setIntygsId(reqType.getIntygsId().get(a));
-            riskPred.setRisksignal(buildRiskSignal(a));
-            resp.getRiskPrediktioner().add(riskPred);
+
+            // Skip adding every 5th result to mimic items having no prediction in SRS.
+            if (a % 5 != 0) {
+                RiskPrediktion riskPred = new RiskPrediktion();
+                riskPred.setIntygsId(reqType.getIntygsId().get(a));
+                riskPred.setRisksignal(buildRiskSignal(a));
+                resp.getRiskPrediktioner().add(riskPred);
+            }
         }
         return resp;
     }
