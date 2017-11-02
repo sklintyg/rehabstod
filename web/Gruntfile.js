@@ -21,20 +21,6 @@ module.exports = function(grunt) {
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
-    // connect middleware for enabling post requests through
-    function enablePost(req, res, next) {
-
-        /*        console.log(req.method);
-         console.log(req.url);
-         console.log(req.headers);
-         console.log('Setting full access control.');
-         res.setHeader('Access-Control-Allow-Origin', '*');
-         res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-         res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-         */
-        return next();
-    }
-
     // Define the configuration for all the tasks
     grunt.initConfig({
 
@@ -51,12 +37,31 @@ module.exports = function(grunt) {
             dev: {
                 options: {
                     port: 9091,
+                    base: 'src/main/webapp',
                     hostname: '*',
                     middleware: function(connect, options, middlewares) {
                         return [
-                            enablePost,
                             require('connect-livereload')(),
-                            serveStatic('src/main/webapp'),
+                            connect().use(
+                                '/app.html',
+                                serveStatic(__dirname + '/src/main/webapp/app.html') // jshint ignore:line
+                            ),
+                            connect().use(
+                                '/index.html',
+                                serveStatic(__dirname + '/src/main/webapp/index.html') // jshint ignore:line
+                            ),
+                            connect().use(
+                                '/welcome.html',
+                                serveStatic(__dirname + '/src/main/webapp/welcome.html') // jshint ignore:line
+                            ),
+                            connect().use(
+                                '/app',
+                                serveStatic(__dirname + '/src/main/webapp/app') // jshint ignore:line
+                            ),
+                            connect().use(
+                                '/components',
+                                serveStatic(__dirname + '/src/main/webapp/components') // jshint ignore:line
+                            ),
                             require('grunt-connect-proxy/lib/utils').proxyRequest
                         ];
                     }

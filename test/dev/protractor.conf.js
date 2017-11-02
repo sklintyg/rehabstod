@@ -36,6 +36,7 @@ var screenshotReporter = new HtmlScreenshotReporter({
 });
 
 exports.config = {
+    directConnect: true,
     seleniumAddress: require('./../rehabstodTestTools/environment.js').envConfig.SELENIUM_ADDRESS,
     baseUrl: require('./../rehabstodTestTools/environment.js').envConfig.REHABSTOD_URL,
 
@@ -60,7 +61,7 @@ exports.config = {
         version: '11',*/
 
         // Any other browser
-        browserName: 'firefox', // possible values: phantomjs, firefox, chrome
+        browserName: 'chrome', // possible values: phantomjs, firefox, chrome
 
         // Run parallell instances of same browser (combine with any browser above)
         shardTestFiles: false, // set to true to divide tests among instances
