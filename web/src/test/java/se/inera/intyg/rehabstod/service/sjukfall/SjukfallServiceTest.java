@@ -18,6 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,6 +33,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationServiceImpl;
 import se.inera.intyg.rehabstod.service.Urval;
@@ -45,12 +52,6 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -235,6 +236,7 @@ public class SjukfallServiceTest {
 
         sjukfall.setVardenhet(vardenhet);
         sjukfall.setLakare(lakare);
+        sjukfall.setSlut(LocalDate.now().plusDays(5L));
         return sjukfall;
     }
 
@@ -246,7 +248,7 @@ public class SjukfallServiceTest {
         private final String patinetNamn = "Tolvan Tolvansson";
 
         @Override
-        public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from) {
+        public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, LocalDate today) {
             se.inera.intyg.infra.sjukfall.dto.Vardgivare vardgivare =
                 new se.inera.intyg.infra.sjukfall.dto.Vardgivare(vardgivareId, vardgivareNamn);
 
@@ -261,7 +263,7 @@ public class SjukfallServiceTest {
             from.setPatient(patient);
             from.setDiagnosKod(diagnosKod);
 
-            return super.map(from);
+            return super.map(from, today);
         }
 
         @Override

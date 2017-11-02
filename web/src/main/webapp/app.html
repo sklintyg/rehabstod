@@ -60,10 +60,6 @@
     <div ui-view="app"></div>
   </div>
 
-  <!--[if lt IE 9]>
-  <script src="bower_components/es5-shim/es5-shim.js"></script>
-  <script src="bower_components/json3/lib/json3.min.js"></script>
-  <![endif]-->
   <!-- build:js({src/main/webapp,node_modules}) app/vendor.js -->
   <!-- bower:js -->
   <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -83,6 +79,9 @@
   <script src="bower_components/angular-placeholder-tai/lib/tai-placeholder.js"></script>
   <script src="bower_components/highcharts/highcharts.js"></script>
   <script src="bower_components/highcharts/modules/no-data-to-display.js"></script>
+  <script src="bower_components/moment/moment.js"></script>
+  <script src="bower_components/jquery-date-range-picker/src/jquery.daterangepicker.js"></script>
+  <script src="bower_components/lodash/lodash.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 
@@ -93,6 +92,7 @@
   <script src="/app/about/about.page.controller.js"></script>
   <script src="/app/app.controller.js"></script>
   <script src="/app/app.js"></script>
+  <script src="/app/app.lodash.js"></script>
   <script src="/app/app.value.js"></script>
   <script src="/app/error/error.controller.js"></script>
   <script src="/app/error/error.js"></script>
@@ -128,6 +128,7 @@
   <script src="/components/commonDirectives/rhsBlurOnEnter/rhsBlurOnEnter.directive.js"></script>
   <script src="/components/commonDirectives/rhsChartLegend/rhsChartLegend.directive.js"></script>
   <script src="/components/commonDirectives/rhsCookieBanner/rhsCookieBanner.directive.js"></script>
+  <script src="/components/commonDirectives/rhsDateRangePicker/rhsDateRangePicker.directive.js"></script>
   <script src="/components/commonDirectives/rhsEmulateButtonActiveState/rhsEmulateButtonActiveState.directive.js"></script>
   <script src="/components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.js"></script>
   <script src="/components/commonDirectives/rhsNumericRangeInput/rhsNumericRangeInput.directive.js"></script>

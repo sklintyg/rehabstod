@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.mappers;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
@@ -28,12 +36,6 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Magnus Ekstrand on 2017-09-01.
@@ -50,7 +52,7 @@ public class SjukfallEngineMapper {
     /**
      * Mapping from SjukfallEngine's format to Rehabstod internal format.
      */
-    public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from) {
+    public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, LocalDate today) {
         SjukfallEnhet to = new SjukfallEnhet();
 
         try {
@@ -64,6 +66,7 @@ public class SjukfallEngineMapper {
             to.setBiDiagnoser(mapDiagnos(from.getBiDiagnoser()));
             to.setStart(from.getStart());
             to.setSlut(from.getSlut());
+            to.setSlutOmDagar(ChronoUnit.DAYS.between(today, from.getSlut()));
             to.setDagar(from.getDagar());
             to.setIntyg(from.getIntyg());
             to.setAktivGrad(from.getAktivGrad());

@@ -81,6 +81,10 @@ angular.module('rehabstodApp').factory('SjukfallService', [
                     min: '' + filterState.sjukskrivningslangd[0],
                     max: '' + (filterState.sjukskrivningslangd[1] === null? '365+' : filterState.sjukskrivningslangd[1])
                 },
+                slutdatum: {
+                    min: filterState.slutdatum.from === null ? '' : moment(filterState.slutdatum.from).format('YYYY-MM-DD'),
+                    max: filterState.slutdatum.to === null ? '' : moment(filterState.slutdatum.to).format('YYYY-MM-DD')
+                },
                 lakare: filterState.lakare,
                 diagnosGrupper: filterState.diagnosKapitel,
                 personnummer: personnummer

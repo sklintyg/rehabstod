@@ -105,6 +105,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         rowNumber = addDiagnosKapitel(sheet, rowNumber++, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper()); // NOSONAR
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_ALDER,
                 req.getAldersIntervall().getMin() + " - " + req.getAldersIntervall().getMax() + " år");
+        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SLUTDATUM, getFilterDate(req.getSlutdatumIntervall()));
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_FRITEXTFILTER, notEmpty(req) ? req.getFritext() : "-");
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VISAPATIENTUPPGIFTER, req.isShowPatientId() ? " Ja" : " Nej");
         addFilterMainHeader(sheet, rowNumber++, H2_SJUKFALLSINSTALLNING);

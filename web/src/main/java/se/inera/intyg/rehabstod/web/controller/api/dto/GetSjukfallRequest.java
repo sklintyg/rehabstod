@@ -32,6 +32,7 @@ public class GetSjukfallRequest {
     private Sortering sortering;
     private LangdIntervall langdIntervall;
     private LangdIntervall aldersIntervall;
+    private LangdIntervall slutdatumIntervall;
 
     private boolean showPatientId;
     private int maxIntygsGlapp;
@@ -70,6 +71,14 @@ public class GetSjukfallRequest {
 
     public void setAldersIntervall(LangdIntervall aldersIntervall) {
         this.aldersIntervall = aldersIntervall;
+    }
+
+    public LangdIntervall getSlutdatumIntervall() {
+        return slutdatumIntervall;
+    }
+
+    public void setSlutdatumIntervall(LangdIntervall slutdatumIntervall) {
+        this.slutdatumIntervall = slutdatumIntervall;
     }
 
     public int getMaxIntygsGlapp() {

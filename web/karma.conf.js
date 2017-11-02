@@ -29,6 +29,9 @@ module.exports = function(config) {
             'src/main/webapp/bower_components/angular-placeholder-tai/lib/tai-placeholder.js',
             'src/main/webapp/bower_components/highcharts/highcharts.js',
             'src/main/webapp/bower_components/highcharts/modules/no-data-to-display.js',
+            'src/main/webapp/bower_components/moment/moment.js',
+            'src/main/webapp/bower_components/jquery-date-range-picker/src/jquery.daterangepicker.js',
+            'src/main/webapp/bower_components/lodash/lodash.js',
             // endbower
             'src/main/webapp/bower_components/angular-mocks/angular-mocks.js',
             'src/main/webapp/app/app.main.test.js',

@@ -18,6 +18,15 @@
  */
 package se.inera.intyg.rehabstod.testutil;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.google.common.collect.ImmutableMap;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
@@ -33,14 +42,6 @@ import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.Sortering;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Helper base class, provides data setup for tests.
@@ -69,6 +70,7 @@ public final class TestDataGen {
         req.setLakare(buildLakare());
         req.setLangdIntervall(buildLangdIntervall());
         req.setAldersIntervall(buildAlderIntervall());
+        req.setSlutdatumIntervall(buildDatumIntervall());
         req.setMaxIntygsGlapp(5);
         req.setSortering(buildSortering());
         req.setShowPatientId(true);
@@ -93,6 +95,13 @@ public final class TestDataGen {
         LangdIntervall langdIntervall = new LangdIntervall();
         langdIntervall.setMax("70");
         langdIntervall.setMin("30");
+        return langdIntervall;
+    }
+
+    public static LangdIntervall buildDatumIntervall() {
+        LangdIntervall langdIntervall = new LangdIntervall();
+        langdIntervall.setMax(LocalDate.now().plusDays(7L).format(DateTimeFormatter.ISO_DATE));
+        langdIntervall.setMin(LocalDate.now().format(DateTimeFormatter.ISO_DATE));
         return langdIntervall;
     }
 

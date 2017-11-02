@@ -30,6 +30,7 @@ var app = angular.module('rehabstodApp', [
     'infinite-scroll',
     'taiPlaceholder',
     'ngStorage',
+    'lodash',
     'rehabstodcommon.dynamiclink'
 ]).value('THROTTLE_MILLISECONDS', 300).config(function(stConfig) {
     'use strict';

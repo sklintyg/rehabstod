@@ -50,6 +50,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
             expect(SjukfallFilterViewState.get().lakareModel.getSelected()).toEqual([]);
             expect(SjukfallFilterViewState.get().sjukskrivningslangdModel).toEqual([1, 366]);
             expect(SjukfallFilterViewState.get().aldersModel).toEqual([0, 101]);
+            expect(SjukfallFilterViewState.get().slutdatumModel).toEqual({from: null, to: null});
             expect(SjukfallFilterViewState.get().freeTextModel).toEqual('');
             expect(SjukfallFilterViewState.get().showPatientId).toEqual(true);
         });
@@ -64,6 +65,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
             SjukfallFilterViewState.get().freeTextModel = 'anything';
             SjukfallFilterViewState.get().sjukskrivningslangdModel = [22, 77];
             SjukfallFilterViewState.get().aldersModel = [22, 77];
+            SjukfallFilterViewState.get().slutdatumModel = {from: new Date(2017, 1, 9), to: new Date(2017, 1, 11)};
             SjukfallFilterViewState.get().glapp = 55;
             SjukfallFilterViewState.get().showPatientId = false;
 
@@ -73,6 +75,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
                 lakare: [LakareModel.get()[0].id],
                 sjukskrivningslangd: SjukfallFilterViewState.get().sjukskrivningslangdModel,
                 alder: SjukfallFilterViewState.get().aldersModel,
+                slutdatum: {from: new Date(2017, 1, 9), to: new Date(2017, 1, 11)},
                 freeText: SjukfallFilterViewState.get().freeTextModel,
                 showPatientId: false,
                 glapp: 55
@@ -92,6 +95,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
             SjukfallFilterViewState.get().freeTextModel = 'anything';
             SjukfallFilterViewState.get().sjukskrivningslangdModel = [22, 77];
             SjukfallFilterViewState.get().aldersModel = [22, 77];
+            SjukfallFilterViewState.get().slutdatumModel = {from: new Date(2017, 1, 9), to: new Date(2017, 1, 11)};
             SjukfallFilterViewState.get().glapp = 55;
             SjukfallFilterViewState.get().showPatientId = false;
 
@@ -100,6 +104,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
                 lakare: [],
                 sjukskrivningslangd: [1, null],
                 alder: [0, null],
+                slutdatum: {from: null, to: null},
                 freeText: '',
                 showPatientId: true,
                 glapp: 55

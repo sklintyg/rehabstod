@@ -2,7 +2,7 @@
   "name": "rehabstod",
   "version": "0.0.0",
   "dependencies": {
-    "jquery": "1.12.4",
+    "jquery": "3.2.1",
     "angular": "1.4.11",
     "angular-animate": "1.4.11",
     "angular-resource": "1.4.11",
@@ -15,13 +15,14 @@
     "angular-deferred-bootstrap": "0.1.9",
     "angular-smart-table": "2.1.8",
     "bootstrap-sass": "3.3.7",
-    "es5-shim": "4.5.9",
-    "json3": "3.3.2",
     "ngstorage": "0.3.11",
     "font-awesome": "4.7.0",
     "ngInfiniteScroll": "1.2.2",
     "angular-placeholder-tai": "1.0.3",
-    "highcharts": "5.0.14"
+    "highcharts": "5.0.14",
+    "moment": "^2.19.1",
+    "jquery-date-range-picker": "^0.16.0",
+    "lodash": "4.17.4"
   },
   "devDependencies": {
     "angular-mocks": "1.4.11",

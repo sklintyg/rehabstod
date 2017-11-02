@@ -42,6 +42,7 @@ public class SjukfallEnhet {
 
     private LocalDate start;
     private LocalDate slut;
+    private long slutOmDagar;
 
     private int dagar;
     private int intyg;
@@ -135,6 +136,14 @@ public class SjukfallEnhet {
 
     public void setSlut(LocalDate slut) {
         this.slut = slut;
+    }
+
+    public long getSlutOmDagar() {
+        return slutOmDagar;
+    }
+
+    public void setSlutOmDagar(long slutOmDagar) {
+        this.slutOmDagar = slutOmDagar;
     }
 
     public int getDagar() {

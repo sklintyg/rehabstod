@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
+angular.module('rehabstodApp').filter('rhsSearchfilter', function(moment, _) {
     'use strict';
 
 
@@ -27,7 +27,7 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
     };
 
     return function(array, expression) {
-        function customComparator(actual, filterParams) {
+        function customComparator(actual, filterParams, slutDatum) {
 
             //DiagnosKapitel
             if (!matchAny(actual.diagnos.kapitel, filterParams.diagnosKapitel)) {
@@ -46,6 +46,11 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
 
             // Ålder
             if (!range(actual.patient.alder, filterParams.alder[0], filterParams.alder[1])) {
+                return false;
+            }
+
+            // Slutdatum
+            if (!range(actual.slutOmDagar, slutDatum.from, slutDatum.to)) {
                 return false;
             }
 
@@ -97,19 +102,29 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', [function() {
         }
 
         function processItems(array, filterParam) {
-            var filteredArray = [];
-            angular.forEach(array, function(item) {
-                if (customComparator(item, filterParam.customSearch)) {
-                    filteredArray.push(item);
-                }
 
+            var slutDatum = {};
+
+            if (moment.isDate(filterParam.customSearch.slutdatum.from) && moment.isDate(filterParam.customSearch.slutdatum.to)) {
+
+                // Remove time from diff calculation.
+                filterParam.customSearch.slutdatum.from.setHours(0, 0, 0, 0);
+                filterParam.customSearch.slutdatum.to.setHours(0, 0, 0, 0);
+                var today = moment().hour(0).minute(0).second(0).millisecond(0);
+
+                slutDatum = {
+                    from: moment(filterParam.customSearch.slutdatum.from).diff(today, 'days'),
+                    to: moment(filterParam.customSearch.slutdatum.to).diff(today, 'days')
+                };
+            }
+
+            return _.filter(array, function(item) {
+                return customComparator(item, filterParam.customSearch, slutDatum);
             });
-
-            return filteredArray;
         }
 
 
         return processItems(array, expression);
     };
 
-}]);
+});

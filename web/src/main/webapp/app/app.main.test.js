@@ -25,7 +25,8 @@ var app = angular.module('rehabstodApp', [
     'ngStorage',
     'ngMessages',
     'ui.router',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'lodash'
 ]);
 
 app.value('networkConfig', {

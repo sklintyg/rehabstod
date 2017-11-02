@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
+import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 
 /**
  * Created by eriklupander on 2016-02-26.
@@ -41,6 +42,7 @@ public abstract class BaseExportService {
     protected static final String FILTER_TITLE_VALDA_LAKARE = "Valda läkare";
     protected static final String FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
     protected static final String FILTER_TITLE_VALD_ALDER = "Åldersspann";
+    protected static final String FILTER_TITLE_VALD_SLUTDATUM = "Slutdatum";
     protected static final String FILTER_TITLE_FRITEXTFILTER = "Fritextfilter";
     protected static final String FILTER_TITLE_VISAPATIENTUPPGIFTER = "Visa patientuppgifter:";
     protected static final String VALDA_FILTER = "Valda filter";
@@ -80,13 +82,29 @@ public abstract class BaseExportService {
     }
 
     protected String diagnoseListToString(List<Diagnos> biDiagnoser) {
-        if (biDiagnoser != null && biDiagnoser.size() > 0) {
-            return biDiagnoser.stream().map(d -> d.getIntygsVarde())
+        if (biDiagnoser != null && !biDiagnoser.isEmpty()) {
+            return biDiagnoser.stream()
+                    .map(Diagnos::getIntygsVarde)
                     .collect(Collectors.joining(", "));
         } else {
             return "-";
         }
 
+    }
+
+    protected String getFilterDate(LangdIntervall dateIntervall) {
+        String max = dateIntervall.getMax();
+        String min = dateIntervall.getMin();
+
+        if (max != null && !max.isEmpty() && min != null && !min.isEmpty()) {
+            if (max.equals(min)) {
+                return max;
+            } else {
+                return min + " - " + max;
+            }
+        }
+
+        return "-";
     }
 
 }
