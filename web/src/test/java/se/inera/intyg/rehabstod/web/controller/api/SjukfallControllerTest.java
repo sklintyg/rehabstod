@@ -18,17 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-
 import com.itextpdf.text.DocumentException;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -51,6 +40,7 @@ import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
@@ -65,6 +55,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -119,7 +120,8 @@ public class SjukfallControllerTest {
         mockStatic(PDLActivityStore.class);
         when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
             eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
-        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(result);
+        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class)))
+                .thenReturn(new SjukfallEnhetResponse(result, false));
 
         // Then
         testee.getSjukfallForCareUnit(request);
@@ -156,7 +158,8 @@ public class SjukfallControllerTest {
         when(PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
             eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
 
-        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(allSjukFall);
+        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class)))
+                .thenReturn(new SjukfallEnhetResponse(allSjukFall, false));
         when(pdfExportServiceMock.export(eq(finalList), eq(request), eq(rehabstodUserMock), eq(allSjukFall.size()))).thenReturn(new byte[0]);
 
         // Then
@@ -193,7 +196,8 @@ public class SjukfallControllerTest {
         mockStatic(PDLActivityStore.class);
         when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
             eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
-        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(result);
+        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class)))
+                .thenReturn(new SjukfallEnhetResponse(result, false));
 
         // Then
         testee.getSjukfallForCareUnit(request);

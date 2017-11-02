@@ -42,8 +42,14 @@ public class SRSStub implements GetRiskPredictionForCertificateResponderInterfac
     private static final int THREE = 3;
     private static final int FOUR = 4;
 
+    private boolean active = true;
+
     @Override
     public GetRiskPredictionForCertificateResponseType getRiskPredictionForCertificate(GetRiskPredictionForCertificateRequestType reqType) {
+        if (!active) {
+            throw new RuntimeException("Faking an error in the stub!");
+        }
+
         GetRiskPredictionForCertificateResponseType resp = new GetRiskPredictionForCertificateResponseType();
         for (int a = 0; a < reqType.getIntygsId().size(); a++) {
             RiskPrediktion riskPred = new RiskPrediktion();
@@ -52,6 +58,14 @@ public class SRSStub implements GetRiskPredictionForCertificateResponderInterfac
             resp.getRiskPrediktioner().add(riskPred);
         }
         return resp;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     private Risksignal buildRiskSignal(int index) {
@@ -64,13 +78,13 @@ public class SRSStub implements GetRiskPredictionForCertificateResponderInterfac
     private String getRiskBeskrivning(int risk) {
         switch (risk) {
         case ONE:
-            return "Ingen risk";
+            return "";
         case TWO:
-            return "Låg risk";
+            return "Lätt förhöjd risk att sjukfallet varar i mer än 90 dagar";
         case THREE:
-            return "Medel risk";
+            return "Måttlig förhöjd risk att sjukfallet varar i mer än 90 dagar";
         case FOUR:
-            return "Hög risk";
+            return "Stark förhöjd risk att sjukfallet vara i mer än 90 dagar";
         default:
             throw new IllegalArgumentException("Only risks 1,2,3 and 4 are possible");
         }

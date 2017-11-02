@@ -19,10 +19,10 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import java.util.List;
 
@@ -32,22 +32,23 @@ import java.util.List;
 public interface SjukfallService {
 
     /**
-     * @see  List<   SjukfallEnhet   > se.inera.intyg.rehabstod.service.sjukfall.SjukfallService.getByUnit
+     * @see List<se.inera.intyg.rehabstod.web.model.SjukfallEnhet> se.inera.intyg.rehabstod.service.sjukfall.SjukfallService.getByUnit
      */
-    List<SjukfallEnhet> getSjukfall(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
+    SjukfallEnhetResponse getSjukfall(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
 
     /**
      * The 'enhetsId' is _always_ the ID of the Vardenhet we want to query IT with regardless of whether the currently
      * selected RehabstodUser#valdVardenhet is a Vardenhet or a Mottagning. 'mottagningsId' is always null if the selected
      * RehabstodUser#valdVardenhet is a Vardenhet.
      *
-     * This method will always fetch all ongoing sjukfall for the specified Vardenhet from IT, but if there is a mottagningsId
+     * This method will always fetch all ongoing sjukfall for the specified Vardenhet from IT, but if there is a
+     * mottagningsId
      * specified, we'll perform filtering on our side so only Sjukfall originating from the specified mottagningsId are
      * included in the response.
      */
-    List<SjukfallEnhet> getByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
+    SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
 
-    List<SjukfallPatient> getByPatient(String enhetsId, String lakareId, Urval urval, GetSjukfallRequest request);
+    SjukfallPatientResponse getByPatient(String enhetsId, String lakareId, Urval urval, GetSjukfallRequest request);
 
     SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
 

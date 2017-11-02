@@ -31,7 +31,10 @@ import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
@@ -83,15 +86,15 @@ public class SjukfallServiceImpl implements SjukfallService {
     // api
 
     @Override
-    public List<SjukfallEnhet> getSjukfall(String enhetsId, String mottagningsId,
+    public SjukfallEnhetResponse getSjukfall(String enhetsId, String mottagningsId,
                                            String lakareId, Urval urval, GetSjukfallRequest request) {
 
         return getByUnit(enhetsId, mottagningsId, lakareId, urval, request);
     }
 
     @Override
-    public List<SjukfallEnhet> getByUnit(String enhetsId, String mottagningsId,
-                                         String lakareId, Urval urval, GetSjukfallRequest request) {
+    public SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId,
+                                           String lakareId, Urval urval, GetSjukfallRequest request) {
 
         List<SjukfallEnhet> rehabstodSjukfall = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, request);
 
@@ -105,23 +108,33 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(rehabstodSjukfall);
         sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(rehabstodSjukfall);
-        riskPredictionService.updateWithRiskPredictions(rehabstodSjukfall);
-
-        return rehabstodSjukfall;
+        boolean srsError = false;
+        try {
+            riskPredictionService.updateWithRiskPredictions(rehabstodSjukfall);
+        } catch (SRSServiceException e) {
+            srsError = true;
+        }
+        return new SjukfallEnhetResponse(rehabstodSjukfall, srsError);
     }
 
 
     @Override
-    public List<SjukfallPatient> getByPatient(String enhetsId, String lakareId, Urval urval, GetSjukfallRequest request) {
+    public SjukfallPatientResponse getByPatient(String enhetsId, String lakareId, Urval urval, GetSjukfallRequest request) {
 
         List<SjukfallPatient> rehabstodSjukfall = getFilteredSjukfallByPatient(enhetsId, urval, request);
         sjukfallPuService.enrichWithPatientNameAndFilterSekretess(rehabstodSjukfall);
-        riskPredictionService.updateSjukfallPatientListWithRiskPredictions(rehabstodSjukfall);
+        boolean srsError = false;
+        try {
+            riskPredictionService.updateSjukfallPatientListWithRiskPredictions(rehabstodSjukfall);
+        } catch (SRSServiceException e) {
+            srsError = true;
+        }
+
         if (rehabstodSjukfall != null) {
             monitoringLogService.logUserViewedSjukfall(lakareId, rehabstodSjukfall.size(), enhetsId);
         }
 
-        return rehabstodSjukfall;
+        return new SjukfallPatientResponse(rehabstodSjukfall, srsError);
     }
 
     @Override

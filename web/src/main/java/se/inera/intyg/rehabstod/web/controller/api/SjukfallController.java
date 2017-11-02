@@ -47,6 +47,8 @@ import se.inera.intyg.rehabstod.service.export.util.ExportUtil;
 import se.inera.intyg.rehabstod.service.export.xlsx.XlsxExportService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
@@ -59,6 +61,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -88,35 +91,45 @@ public class SjukfallController {
     private PdfExportService pdfExportService;
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<SjukfallEnhet> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
+    public ResponseEntity<List<SjukfallEnhet>> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
 
         // Get user from session
         RehabstodUser user = getRehabstodUser();
 
         // Fetch sjukfall
-        List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request);
+        SjukfallEnhetResponse response = getSjukfallForCareUnit(user, request);
+        List<SjukfallEnhet> sjukfall = response.getSjukfallList();
 
         // PDL-logging based on which sjukfall that are about to be displayed to user.
         LOG.debug("PDL logging - log which 'sjukfall' that will be displayed to the user.");
         logSjukfallData(user, sjukfall, ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
-
-        return sjukfall;
+        return buildResponse(response.isSrsError(), sjukfall);
     }
 
     @RequestMapping(value = "/patient", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<SjukfallPatient> getSjukfallForPatient(@RequestBody GetSjukfallRequest request) {
+    public ResponseEntity<List<SjukfallPatient>> getSjukfallForPatient(@RequestBody GetSjukfallRequest request) {
 
         // Get user from session
         RehabstodUser user = getRehabstodUser();
 
         // Fetch sjukfall
-        List<SjukfallPatient> sjukfall = getSjukfallForPatient(user, request);
-
+        SjukfallPatientResponse response = getSjukfallForPatient(user, request);
+        List<SjukfallPatient> sjukfall = response.getSjukfallList();
         // PDL-logging based on which sjukfall that are about to be displayed to user.
         LOG.debug("PDL logging - log which detailed 'sjukfall' that will be displayed to the user.");
         logSjukfallData(user, sjukfall.get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK);
 
-        return sjukfall;
+        return buildResponse(response.isSrsError(), sjukfall);
+    }
+
+    private ResponseEntity buildResponse(boolean srsError, List payload) {
+        if (!srsError) {
+            return new ResponseEntity(payload, HttpStatus.OK);
+        } else {
+            HttpHeaders headers = new HttpHeaders();
+            headers.put("SRS_UNAVAILABLE", Arrays.asList("true"));
+            return new ResponseEntity(payload, headers, HttpStatus.OK);
+        }
     }
 
     /**
@@ -144,7 +157,7 @@ public class SjukfallController {
             RehabstodUser user = getRehabstodUser();
 
             // Fetch sjukfall
-            List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request);
+            List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request).getSjukfallList();
             List<SjukfallEnhet> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
 
             byte[] pdfData = pdfExportService.export(finalList, request, user, sjukfall.size());
@@ -170,7 +183,7 @@ public class SjukfallController {
             RehabstodUser user = getRehabstodUser();
 
             // Fetch sjukfall
-            List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request);
+            List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request).getSjukfallList();
             List<SjukfallEnhet> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
 
             byte[] data = xlsxExportService.export(finalList, request, user.getUrval(), sjukfall.size());
@@ -219,7 +232,7 @@ public class SjukfallController {
         return respHeaders;
     }
 
-    private List<SjukfallEnhet> getSjukfallForCareUnit(RehabstodUser user, GetSjukfallRequest request) {
+    private SjukfallEnhetResponse getSjukfallForCareUnit(RehabstodUser user, GetSjukfallRequest request) {
         String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
         String mottagningsId = getMottagningsId(user);
         String lakarId = user.getHsaId();
@@ -229,7 +242,7 @@ public class SjukfallController {
         return sjukfallService.getByUnit(enhetsId, mottagningsId, lakarId, urval, request);
     }
 
-    private List<SjukfallPatient> getSjukfallForPatient(RehabstodUser user, GetSjukfallRequest request) {
+    private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, GetSjukfallRequest request) {
         String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
         String lakarId = user.getHsaId();
         Urval urval = user.getUrval();

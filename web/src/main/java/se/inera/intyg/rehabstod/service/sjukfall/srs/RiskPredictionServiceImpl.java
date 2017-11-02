@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.integration.srs.service.SRSIntegrationService;
+import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.feature.RehabstodFeature;
 import se.inera.intyg.rehabstod.service.feature.RehabstodFeatureServiceImpl;
 import se.inera.intyg.rehabstod.web.model.PatientData;
@@ -58,7 +59,7 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
         }
 
         List<String> intygIds = rehabstodSjukfall.stream().map(SjukfallEnhet::getAktivIntygsId).collect(Collectors.toList());
-        List<RiskSignal> prediktioner = srsIntegrationService.getRiskPreditionerForIntygsId(intygIds);
+        List<RiskSignal> prediktioner = getRiskSignals(intygIds);
 
         LOG.info("Successfully queried SRS for risk signals for {} sjukfall, got {} results.", intygIds.size(), prediktioner.size());
 
@@ -85,7 +86,7 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
                 .flatMap(patientData -> patientData.getIntyg().stream())
                 .map(intyg -> intyg.getIntygsId())
                 .collect(Collectors.toList());
-        List<RiskSignal> prediktioner = srsIntegrationService.getRiskPreditionerForIntygsId(intygIds);
+        List<RiskSignal> prediktioner = getRiskSignals(intygIds);
 
         LOG.info("Successfully queried SRS for risk signals for {} sjukfall, got {} results.", intygIds.size(), prediktioner.size());
 
@@ -99,5 +100,15 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
                 }
             }
         }
+    }
+
+    private List<RiskSignal> getRiskSignals(List<String> intygIds) {
+        List<RiskSignal> prediktioner;
+        try {
+            prediktioner = srsIntegrationService.getRiskPreditionerForIntygsId(intygIds);
+        } catch (Exception e) {
+            throw new SRSServiceException(e.getMessage());
+        }
+        return prediktioner;
     }
 }

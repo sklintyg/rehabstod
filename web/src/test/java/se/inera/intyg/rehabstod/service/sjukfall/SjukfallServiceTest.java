@@ -140,7 +140,7 @@ public class SjukfallServiceTest {
 
     @Test
     public void testWhenUrvalIsAll() {
-        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, null, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
+        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, null, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate)).getSjukfallList();
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
@@ -149,7 +149,7 @@ public class SjukfallServiceTest {
 
     @Test
     public void testWhenUrvalIsAllForUnderenhet() {
-        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, mottagningsId, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
+        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, mottagningsId, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate)).getSjukfallList();
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
@@ -159,7 +159,7 @@ public class SjukfallServiceTest {
     @Test
     public void testWhenUrvalIsIssuedByMe() {
         List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, null, lakareId1, Urval.ISSUED_BY_ME,
-                getSjukfallRequest(intygsGlapp, activeDate));
+                getSjukfallRequest(intygsGlapp, activeDate)).getSjukfallList();
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
