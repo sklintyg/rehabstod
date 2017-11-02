@@ -120,6 +120,9 @@
       "slut": {
         "type": "string"
       },
+      "slutOmDagar": {
+        "type": "integer"
+      },
       "dagar": {
         "type": "integer"
       },
