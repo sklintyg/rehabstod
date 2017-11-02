@@ -63,6 +63,19 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
                 }
 
             };
+
+            $scope.hasFeature = function(feature) {
+                for (var a = 0; a < $scope.user.features.length; a++) {
+                    if ($scope.user.features[a] === feature) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+            $scope.getRiskToolTip = function(riskDescription) {
+                return '<b>' + riskDescription + '</b>';
+            };
         }
     };
 } ]);

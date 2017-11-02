@@ -120,6 +120,13 @@ rhs-table {
     cursor: pointer;
   }
 
+  .column-risk {
+    text-align: center;
+    .rhs-table-tooltip {
+        border-bottom: 0px;
+    }
+  }
+
   .column-diagnos,
   .start-date,
   .end-date {

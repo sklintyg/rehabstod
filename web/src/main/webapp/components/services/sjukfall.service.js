@@ -18,8 +18,8 @@
  */
 
 angular.module('rehabstodApp').factory('SjukfallService', [
-    '$log', 'StringHelper', 'messageService', 'SjukfallProxy', 'SjukfallModel', 'SjukfallFilterViewState',
-    function($log, StringHelper, messageService, SjukfallProxy, SjukfallModel, SjukfallFilterViewState) {
+    '$log', 'StringHelper', 'messageService', 'SjukfallProxy', 'SjukfallModel', 'SjukfallFilterViewState', 'SjukfallViewState',
+    function($log, StringHelper, messageService, SjukfallProxy, SjukfallModel, SjukfallFilterViewState, SjukfallViewState) {
         'use strict';
 
         var loading = false;
@@ -43,8 +43,9 @@ angular.module('rehabstodApp').factory('SjukfallService', [
                     maxIntygsGlapp: SjukfallFilterViewState.get().glapp
                 };
 
-                return SjukfallProxy.get(query).then(function(successData) {
-                    SjukfallModel.set(successData);
+                return SjukfallProxy.get(query).then(function(response) {
+                    SjukfallModel.set(response.data);
+                    SjukfallViewState.setSrsError(response.srsError);
                     loading = false;
                 }, function(errorData) {
                     $log.debug('Failed to get sjukfall.');

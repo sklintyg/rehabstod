@@ -62,6 +62,19 @@ angular.module('rehabstodApp')
                 $scope.limit = 100;
             };
 
+            $scope.hasFeature = function(feature) {
+                for (var a = 0; a < $scope.user.features.length; a++) {
+                    if ($scope.user.features[a] === feature) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+            $scope.getRiskToolTip = function(riskDescription) {
+                return '<b>' + riskDescription + '</b>';
+            };
+
             $scope.resetLimit();
 
         }

@@ -34,6 +34,7 @@ angular.module('rehabstodApp').factory('UserModel',
             data.totaltAntalVardenheter = 0;
             data.isLakare = false;
             data.urval = null;
+            data.features = null;
 
             data.loggedIn = false;
             data.pdlConsentGiven = false;
@@ -84,6 +85,7 @@ angular.module('rehabstodApp').factory('UserModel',
                 data.isLakare = this.isLakare();
                 data.urval = user.urval;
                 data.pdlConsentGiven = user.pdlConsentGiven;
+                data.features = user.features;
             },
             get: function() {
                 return data;
@@ -124,7 +126,7 @@ angular.module('rehabstodApp').factory('UserModel',
             isPdlConsentGiven: function() {
                 return data.pdlConsentGiven;
             },
-            
+
             fakeLogin: function() {
                 if (data.authenticationScheme === data.fakeSchemeId) {
                     _changeLocation('/welcome.html');
@@ -143,6 +145,14 @@ angular.module('rehabstodApp').factory('UserModel',
                 } else {
                     return '/saml/logout/';
                 }
+            },
+            hasFeature: function(feature) {
+                for (var a = 0; a < data.features.length; a++) {
+                    if (data.features[a] === feature) {
+                        return true;
+                    }
+                }
+                return false;
             }
         };
     }

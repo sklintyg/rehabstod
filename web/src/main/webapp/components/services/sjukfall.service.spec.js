@@ -54,7 +54,7 @@ describe('Service: SjukfallService', function() {
             spyOn(SjukfallProxy, 'get').and.callFake(function() {
                 return {
                     then: function(success) {
-                        success(sjukFallData);
+                        success({data: sjukFallData, srsError: false});
                     }
                 };
             });
@@ -131,7 +131,7 @@ describe('Service: SjukfallService', function() {
                 spyOn(SjukfallProxy, 'get').and.callFake(function() {
                     return {
                         then: function(success) {
-                            success(sjukFallData);
+                            success({data: sjukFallData, srsError: false});
                         }
                     };
                 });
