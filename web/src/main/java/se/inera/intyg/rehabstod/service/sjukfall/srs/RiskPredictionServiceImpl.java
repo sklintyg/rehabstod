@@ -27,6 +27,7 @@ import se.inera.intyg.rehabstod.integration.srs.service.SRSIntegrationService;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.feature.RehabstodFeature;
 import se.inera.intyg.rehabstod.service.feature.RehabstodFeatureServiceImpl;
+import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
@@ -46,11 +47,14 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
     private RehabstodFeatureServiceImpl featureService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private SRSIntegrationService srsIntegrationService;
 
     @Override
     public void updateWithRiskPredictions(List<SjukfallEnhet> rehabstodSjukfall) {
-        if (!featureService.isFeatureActive(RehabstodFeature.SRS)) {
+        if (!isSrsFeatureActive()) {
             return;
         }
 
@@ -74,7 +78,7 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
 
     @Override
     public void updateSjukfallPatientListWithRiskPredictions(List<SjukfallPatient> rehabstodSjukfall) {
-        if (!featureService.isFeatureActive(RehabstodFeature.SRS)) {
+        if (!isSrsFeatureActive()) {
             return;
         }
 
@@ -102,13 +106,20 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
         }
     }
 
+    /**
+     * Either the GLOBAL feature is active OR the enhet-specific
+     *
+     * @return
+     */
+    private boolean isSrsFeatureActive() {
+        return featureService.getActiveFeatures(userService.getUser().getValdVardenhet().getId()).contains(RehabstodFeature.SRS.getName());
+    }
+
     private List<RiskSignal> getRiskSignals(List<String> intygIds) {
-        List<RiskSignal> prediktioner;
         try {
-            prediktioner = srsIntegrationService.getRiskPreditionerForIntygsId(intygIds);
+            return srsIntegrationService.getRiskPreditionerForIntygsId(intygIds);
         } catch (Exception e) {
             throw new SRSServiceException(e.getMessage());
         }
-        return prediktioner;
     }
 }
