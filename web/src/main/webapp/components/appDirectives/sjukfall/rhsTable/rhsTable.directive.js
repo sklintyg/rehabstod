@@ -27,10 +27,6 @@ angular.module('rehabstodApp')
             $scope.model = SjukfallModel;
             $scope.user = UserModel.get();
 
-            $scope.noResultColspan = function() {
-                return (($scope.user.urval !== 'ISSUED_BY_ME') ? 13 : 12) - (SjukfallFilterViewState.get().showPatientId ? 0 : 2);
-            };
-
             $scope.displayedCollection = [].concat($scope.model.get());
 
             $scope.getToolTip = function(diagnos) {
