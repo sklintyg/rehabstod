@@ -1,5 +1,5 @@
 angular.module('rehabstodApp')
-    .controller('SjukfallStartSelectionCtrl', function($scope, $state, $rootScope, UserModel) {
+    .controller('SjukfallStartSelectionCtrl', function($scope, $state, $rootScope, UserModel, featureService) {
         'use strict';
 
         $scope.user = UserModel.get();
@@ -13,5 +13,9 @@ angular.module('rehabstodApp')
 
         $scope.onSelectUrval = function() {
             $state.go('app.sjukfall.result');
+        };
+
+        $scope.hasFeature = function(feature) {
+            return featureService.hasFeature(feature);
         };
     });
