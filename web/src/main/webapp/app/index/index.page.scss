@@ -1,0 +1,18 @@
+.index-page {
+  padding-top: 40px;
+
+  .text-part {
+    padding-left: 20px;
+  }
+  .welcome-image {
+    width: 100%;
+    padding-bottom: 20px;
+  }
+
+  @media (max-width: $screen-xs-max) {
+    .btn-primary {
+      display: block;
+      width: 100%;
+    }
+  }
+}

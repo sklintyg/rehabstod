@@ -292,100 +292,6 @@ h5.inline-heading {
     user-select: none;
 }
 
-// Index page --
-.index-page {
-  background-color: $link-color;
-
-  h1 {
-    color: $link-color;
-    padding-bottom: 15px;
-    padding-top: 10px;
-
-  }
-  .page-section {
-    padding: 2em 4em 1em;
-  }
-
-  .vertical-col-middle {
-    display: inline-block;
-    float: none;
-    vertical-align: middle;
-  }
-
-  .index-content-container {
-    box-shadow: #323232 0 -5px 30px;
-  }
-
-  .index-header-section {
-    @extend .page-section;
-    background-color: #EFEFEF;
-  }
-
-  .index-body-section {
-    @extend .page-section;
-
-    background-color: #fff;
-    padding-bottom: 25px;
-
-    .row {
-      padding-top: 10px;
-    }
-
-    .body-footer {
-      font-size: 11px;
-      color: #666;
-      a {
-        color: #008391;
-        text-decoration: none;
-      }
-    }
-
-    .body-link {
-      text-decoration: underline;
-      font-weight: bold;
-    }
-
-    h2.underlined-header {
-      font-size: 14px;
-      color: #6C7B8C;
-      border-bottom: 2px #eee solid;
-      padding-bottom: 5px;
-      padding-top: 30px;
-    }
-
-    .fa-sign-in {
-      font-size: x-large;
-      vertical-align: middle;
-    }
-  }
-
-  .modal-content {
-    h1,
-    h2,
-    h3,
-    h4 {
-      color: $link-color;
-    }
-
-    h2,
-    h3 {
-      padding: 5px 0;
-    }
-
-    h4 {
-      font-size: 14px;
-      line-height: 18px;
-      padding: 5px 0 10px;
-    }
-  }
-}
-
-//The ui-view="app" is embedded in the page, but this page need to be "full-page"
-.select-unit-page {
-  height: 100%;
-  position: absolute;
-  width: 100%;
-}
 
 // Hide IE10+ clear icon, as it doesn't work well with angular
 input[type=search]::-ms-clear {
@@ -403,7 +309,9 @@ input[type=search]::-ms-clear {
 @import 'error/error.scss';
 @import 'error/restErrorDialog.scss';
 @import 'header/header.scss';
+@import 'index/index.page.scss';
 @import 'print.scss';
+@import 'selectunit/selectunit.page.scss';
 @import 'sjukfall/patientHistory/patientHistory.scss';
 @import 'sjukfall/result/result.page.scss';
 @import 'vendor-override.scss';

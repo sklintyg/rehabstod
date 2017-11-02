@@ -140,7 +140,7 @@ module.exports = function(grunt) {
                 force: false
             },
             all: [
-                '<%= config.client %>/{app,pubapp,components}/**/*.js',
+                '<%= config.client %>/{app,components}/**/*.js',
                 '!<%= config.client %>/{app,components}/**/*.spec.js',
                 '!<%= config.client %>/{app,components}/**/*.mock.js'
             ],
@@ -184,7 +184,6 @@ module.exports = function(grunt) {
         wiredep: {
             target: {
                 src: [
-                    '<%= config.client %>/app.html',
                     '<%= config.client %>/index.html',
                     'karma.conf.js'
                 ],
@@ -240,7 +239,7 @@ module.exports = function(grunt) {
         // concat, minify and revision files. Creates configurations in memory so
         // additional tasks can operate on them
         useminPrepare: {
-            html: ['<%= config.client %>/app.html'],
+            html: ['<%= config.client %>/index.html'],
             options: {
                 dest: '<%= config.dist %>',
                 staging: '<%= config.tmp %>'
@@ -318,7 +317,6 @@ module.exports = function(grunt) {
                         src: [
                             'assets/**/*',
                             'bower_components/**/*',
-                            'pubapp/**/*',
                             'components/**/*',
                             'WEB-INF/**/*',
                             '*.*'
@@ -390,7 +388,7 @@ module.exports = function(grunt) {
             options: {
                 lineEnding: grunt.util.linefeed
             },
-            // Inject application script files into app.html (doesn't include bower)
+            // Inject application script files into index.html (doesn't include bower)
             scripts: {
                 options: {
                     transform: function(filePath) {
@@ -402,7 +400,7 @@ module.exports = function(grunt) {
                     endtag: '<!-- endinjector -->'
                 },
                 files: {
-                    '<%= config.client %>/app.html': [
+                    '<%= config.client %>/index.html': [
                         ['{<%= config.tmp %>,<%= config.client %>}/{app,components}/**/*.js',
                             '!{<%= config.tmp %>,<%= config.client %>}/app/app.main.js',
                             '!{<%= config.tmp %>,<%= config.client %>}/app/app.main.test.js',
@@ -443,9 +441,6 @@ module.exports = function(grunt) {
                     endtag: '<!-- endinjector -->'
                 },
                 files: {
-                    '<%= config.client %>/app.html': [
-                        '<%= config.client %>/{app,components}/**/*.css'
-                    ],
                     '<%= config.client %>/index.html': [
                         '<%= config.client %>/{app,components}/**/*.css'
                     ],

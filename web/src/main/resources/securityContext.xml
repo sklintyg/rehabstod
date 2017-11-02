@@ -47,7 +47,6 @@
   <security:http security="none" pattern="/api/monitoring/**"/>
   <security:http security="none" pattern="/favicon.ico"/>
   <security:http security="none" pattern="/error.jsp"/>
-  <security:http security="none" pattern="/pubapp/**"/>
   <security:http security="none" pattern="/api/config/**" />
   <security:http security="none" create-session="never" pattern="/api/session-auth-check/**"/>
 
@@ -142,7 +141,7 @@
             <constructor-arg index="0" value="/" />
           </bean>
           <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-            <constructor-arg index="0" value="/app.html" />
+            <constructor-arg index="0" value="/#/app" />
           </bean>
           <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
             <constructor-arg index="0" value="/saml/**" />
@@ -214,7 +213,7 @@
     </bean>
     <bean id="fakeSuccessHandler"
         class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
-      <property name="defaultTargetUrl" value="/app.html"/>
+      <property name="defaultTargetUrl" value="/#/app"/>
     </bean>
     <bean id="rehabstodAuthenticationProvider"
         class="se.inera.intyg.rehabstod.auth.fake.FakeAuthenticationProvider">
@@ -234,7 +233,7 @@
     </bean>
 
     <!-- Decide which requests should be saved for redirection after successful login.
-         Triggers on: / and /app.html
+         Triggers on: / and /#/app
          We don't want to save /api requests since this will make the browser display the data. -->
     <bean id="saveRequestMatcher" class="org.springframework.security.web.util.matcher.OrRequestMatcher">
       <constructor-arg>
@@ -244,7 +243,7 @@
             <constructor-arg index="1" value="GET"/>
           </bean>
           <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-            <constructor-arg index="0" value="/app.html" />
+            <constructor-arg index="0" value="/#/app" />
             <constructor-arg index="1" value="GET"/>
           </bean>
         </list>
@@ -257,7 +256,7 @@
     <!-- Handler deciding where to redirect user after successful login -->
     <bean id="successRedirectHandler"
           class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
-      <property name="defaultTargetUrl" value="/app.html"/>
+      <property name="defaultTargetUrl" value="/#/app"/>
       <property name="requestCache" ref="httpSessionRequestCache" />
     </bean>
 

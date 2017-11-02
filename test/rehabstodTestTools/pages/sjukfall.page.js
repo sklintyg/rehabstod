@@ -40,7 +40,7 @@ var RehabstodSjukfallPage = RehabstodBasePage._extend({
         this.settingsCloseBtn = element(by.id('rhs-settings-modal-close-btn'));
     },
     get: function () {
-        this.getPage('sjukfall');
+        this.getPage('appsjukfall');
     },
     isAt: function isAt() {
         return isAt._super.call(this);

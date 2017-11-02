@@ -38,7 +38,7 @@ module.exports = {
         this.waitForAngularTestability();
 
         // To disable animations, Protractor need a get to run addMockModule
-        browser.get('app.html');
+        browser.get('/index.html#/app');
 
         if (selectUnitAfterLogin) {
             SelectUnitPage.isAt().then(function() {
