@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').directive('rhsTableHeader', ['SjukfallFilterViewState',
-    function(SjukfallFilterViewState) {
+angular.module('rehabstodApp').directive('rhsTableHeader', ['SjukfallFilterViewState', 'featureService',
+    function(SjukfallFilterViewState, featureService) {
         'use strict';
 
         return {
@@ -37,12 +37,7 @@ angular.module('rehabstodApp').directive('rhsTableHeader', ['SjukfallFilterViewS
             },
             controller: function($scope) {
                 $scope.hasFeature = function(feature) {
-                    for (var a = 0; a < $scope.user.features.length; a++) {
-                        if ($scope.user.features[a] === feature) {
-                            return true;
-                        }
-                    }
-                    return false;
+                    return featureService.hasFeature(feature);
                 };
             }
         };
