@@ -53,6 +53,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
@@ -61,8 +62,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -73,7 +75,8 @@ import java.util.stream.Collectors;
 public class SjukfallController {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallController.class);
-    public static final String SRS_UNAVAILABLE_HEADER = "SRS_UNAVAILABLE";
+
+    private static final String SRS_UNAVAILABLE_HEADER = "SRS_UNAVAILABLE";
 
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
@@ -119,39 +122,19 @@ public class SjukfallController {
         // Fetch sjukfall
         SjukfallPatientResponse response = getSjukfallForPatient(user, request);
         List<SjukfallPatient> sjukfall = response.getSjukfallList();
+
         // PDL-logging based on which sjukfall that are about to be displayed to user.
         LOG.debug("PDL logging - log which detailed 'sjukfall' that will be displayed to the user.");
         logSjukfallData(user, sjukfall.get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK);
 
         // If at least one intyg for the patient has an SRS prediction, log this.
-        if (sjukfall.stream().flatMap(sf -> sf.getIntyg().stream()).anyMatch(i -> i.getRiskSignal() != null)) {
+        if (sjukfall.stream().flatMap(sf -> sf.getIntyg().stream()).anyMatch(anyIntygHasRiskSignal())) {
             logSjukfallData(user, sjukfall.get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
         }
 
         return buildSjukfallPatientResponse(response.isSrsError(), sjukfall);
     }
 
-    private ResponseEntity<List<SjukfallEnhet>> buildSjukfallEnhetResponse(boolean srsError, List<SjukfallEnhet> payload) {
-        if (!srsError) {
-            return new ResponseEntity<>(payload, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(payload, buildSrsUnavailableHeader(), HttpStatus.OK);
-        }
-    }
-
-    private ResponseEntity<List<SjukfallPatient>> buildSjukfallPatientResponse(boolean srsError, List<SjukfallPatient> payload) {
-        if (!srsError) {
-            return new ResponseEntity<>(payload, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(payload, buildSrsUnavailableHeader(), HttpStatus.OK);
-        }
-    }
-
-    private HttpHeaders buildSrsUnavailableHeader() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.put(SRS_UNAVAILABLE_HEADER, Arrays.asList("true"));
-        return headers;
-    }
 
     /**
      * Custom errorhandler for export error handling. For the export requests, we don't want the generic json response
@@ -225,10 +208,6 @@ public class SjukfallController {
         }
     }
 
-    protected String getAttachmentFilename(RehabstodUser user, String extension) {
-        return "sjukfall-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().format(dateTimeFormatter) + extension;
-    }
-
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     public SjukfallSummary getUnitCertificateSummary() {
         // Get user from session
@@ -247,8 +226,24 @@ public class SjukfallController {
 
     // - - - private scope - - -
 
+    private String getAttachmentFilename(RehabstodUser user, String extension) {
+        return "sjukfall-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().format(dateTimeFormatter) + extension;
+    }
+
     private List<SjukfallEnhet> filterHavingRiskSignal(List<SjukfallEnhet> finalList) {
-        return finalList.stream().filter(sf -> sf.getRiskSignal() != null).collect(Collectors.toList());
+        return finalList.stream()
+                .filter(hasRiskSignal())
+                .collect(Collectors.toList());
+    }
+
+    // For SjukfallEnhet
+    private Predicate<SjukfallEnhet> hasRiskSignal() {
+        return sf -> sf.getRiskSignal() != null && sf.getRiskSignal().getRiskKategori() > 1;
+    }
+
+    // For PatientData
+    private Predicate<PatientData> anyIntygHasRiskSignal() {
+        return i -> i.getRiskSignal() != null && i.getRiskSignal().getRiskKategori() > 1;
     }
 
     private HttpHeaders getHttpHeaders(String contentType, long contentLength, String filenameExtension, RehabstodUser user) {
@@ -341,5 +336,28 @@ public class SjukfallController {
             return user.getValdVardenhet().getId();
         }
         return null;
+    }
+
+    // -- Response builders
+    private ResponseEntity<List<SjukfallEnhet>> buildSjukfallEnhetResponse(boolean srsError, List<SjukfallEnhet> payload) {
+        if (!srsError) {
+            return new ResponseEntity<>(payload, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(payload, buildSrsUnavailableHeader(), HttpStatus.OK);
+        }
+    }
+
+    private ResponseEntity<List<SjukfallPatient>> buildSjukfallPatientResponse(boolean srsError, List<SjukfallPatient> payload) {
+        if (!srsError) {
+            return new ResponseEntity<>(payload, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(payload, buildSrsUnavailableHeader(), HttpStatus.OK);
+        }
+    }
+
+    private HttpHeaders buildSrsUnavailableHeader() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put(SRS_UNAVAILABLE_HEADER, Collections.singletonList("true"));
+        return headers;
     }
 }
