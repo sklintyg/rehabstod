@@ -24,7 +24,6 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -80,7 +79,7 @@ public final class PDLActivityStore {
     }
 
     /**
-     * Should return true or false if patient's sjufall is in store or not.
+     * Should return true or false if patient's sjukfall is in store or not.
      */
     public static boolean isActivityInStore(String enhetsId,
                                             SjukfallPatient sjukfall,
@@ -162,9 +161,14 @@ public final class PDLActivityStore {
         PDLActivityEntry newEntry = new PDLActivityEntry(patientId, activityType, resourceType);
 
         if (vardenhetEvents == null) {
-            storedActivities.put(enhetsId, Collections.singletonList(newEntry));
+            ArrayList<PDLActivityEntry> list = new ArrayList<>();
+            list.add(newEntry);
+            storedActivities.put(enhetsId, list);
         } else {
-            vardenhetEvents.addAll(Collections.singletonList(newEntry));
+            ArrayList<PDLActivityEntry> list = new ArrayList<>();
+            list.addAll(vardenhetEvents);
+            list.add(newEntry);
+            storedActivities.put(enhetsId, list);
         }
     }
 

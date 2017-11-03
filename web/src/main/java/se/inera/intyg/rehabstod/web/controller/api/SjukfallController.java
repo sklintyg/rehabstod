@@ -63,6 +63,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -72,6 +73,7 @@ import java.util.List;
 public class SjukfallController {
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallController.class);
+    public static final String SRS_UNAVAILABLE_HEADER = "SRS_UNAVAILABLE";
 
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
@@ -103,7 +105,9 @@ public class SjukfallController {
         // PDL-logging based on which sjukfall that are about to be displayed to user.
         LOG.debug("PDL logging - log which 'sjukfall' that will be displayed to the user.");
         logSjukfallData(user, sjukfall, ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
-        return buildResponse(response.isSrsError(), sjukfall);
+        logSjukfallData(user, filterHavingRiskSignal(sjukfall),
+                ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+        return buildSjukfallEnhetResponse(response.isSrsError(), sjukfall);
     }
 
     @RequestMapping(value = "/patient", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -119,17 +123,34 @@ public class SjukfallController {
         LOG.debug("PDL logging - log which detailed 'sjukfall' that will be displayed to the user.");
         logSjukfallData(user, sjukfall.get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK);
 
-        return buildResponse(response.isSrsError(), sjukfall);
+        // If at least one intyg for the patient has an SRS prediction, log this.
+        if (sjukfall.stream().flatMap(sf -> sf.getIntyg().stream()).anyMatch(i -> i.getRiskSignal() != null)) {
+            logSjukfallData(user, sjukfall.get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+        }
+
+        return buildSjukfallPatientResponse(response.isSrsError(), sjukfall);
     }
 
-    private ResponseEntity buildResponse(boolean srsError, List payload) {
+    private ResponseEntity<List<SjukfallEnhet>> buildSjukfallEnhetResponse(boolean srsError, List<SjukfallEnhet> payload) {
         if (!srsError) {
-            return new ResponseEntity(payload, HttpStatus.OK);
+            return new ResponseEntity<>(payload, HttpStatus.OK);
         } else {
-            HttpHeaders headers = new HttpHeaders();
-            headers.put("SRS_UNAVAILABLE", Arrays.asList("true"));
-            return new ResponseEntity(payload, headers, HttpStatus.OK);
+            return new ResponseEntity<>(payload, buildSrsUnavailableHeader(), HttpStatus.OK);
         }
+    }
+
+    private ResponseEntity<List<SjukfallPatient>> buildSjukfallPatientResponse(boolean srsError, List<SjukfallPatient> payload) {
+        if (!srsError) {
+            return new ResponseEntity<>(payload, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(payload, buildSrsUnavailableHeader(), HttpStatus.OK);
+        }
+    }
+
+    private HttpHeaders buildSrsUnavailableHeader() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.put(SRS_UNAVAILABLE_HEADER, Arrays.asList("true"));
+        return headers;
     }
 
     /**
@@ -144,7 +165,7 @@ public class SjukfallController {
      */
     @ExceptionHandler(RehabExportException.class)
     public void handleExportException(HttpServletRequest request, HttpServletResponse response,
-                                      RehabExportException ex) throws IOException {
+            RehabExportException ex) throws IOException {
 
         LOG.error("RehabExportException caught - redirecting to errorpage", ex.getException());
         response.sendRedirect(request.getContextPath() + "/error.jsp?reason=exporterror");
@@ -165,9 +186,10 @@ public class SjukfallController {
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if PDF export was OK.
             LOG.debug("PDL logging - log which 'sjukfall' that are about to be exported in PDF format.");
             logSjukfallData(user, finalList, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
+            logSjukfallData(user, filterHavingRiskSignal(finalList), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
 
             HttpHeaders respHeaders = getHttpHeaders("application/pdf",
-                pdfData.length, ".pdf", user);
+                    pdfData.length, ".pdf", user);
 
             return new ResponseEntity<>(new ByteArrayResource(pdfData), respHeaders, HttpStatus.OK);
 
@@ -191,9 +213,10 @@ public class SjukfallController {
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if XLSX export was OK.
             LOG.debug("PDL logging - log which 'sjukfall' that are about to be exported in XLSX format.");
             logSjukfallData(user, finalList, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
+            logSjukfallData(user, filterHavingRiskSignal(finalList), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
 
             HttpHeaders respHeaders = getHttpHeaders("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                data.length, ".xlsx", user);
+                    data.length, ".xlsx", user);
 
             return new ResponseEntity<>(new ByteArrayResource(data), respHeaders, HttpStatus.OK);
 
@@ -224,6 +247,10 @@ public class SjukfallController {
 
     // - - - private scope - - -
 
+    private List<SjukfallEnhet> filterHavingRiskSignal(List<SjukfallEnhet> finalList) {
+        return finalList.stream().filter(sf -> sf.getRiskSignal() != null).collect(Collectors.toList());
+    }
+
     private HttpHeaders getHttpHeaders(String contentType, long contentLength, String filenameExtension, RehabstodUser user) {
         HttpHeaders respHeaders = new HttpHeaders();
         respHeaders.set(HttpHeaders.CONTENT_TYPE, contentType);
@@ -252,29 +279,29 @@ public class SjukfallController {
     }
 
     private void logSjukfallData(RehabstodUser user, List<SjukfallEnhet> sjukfallList,
-                                 ActivityType activityType, ResourceType resourceType) {
+            ActivityType activityType, ResourceType resourceType) {
 
         String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
         if (enhetsId == null) {
             throw new IllegalArgumentException("Cannot create PDL log statements, enhetsId was null");
         }
 
-        List<SjukfallEnhet> sjukfallToLog =
-            PDLActivityStore.getActivitiesNotInStore(enhetsId, sjukfallList, activityType, resourceType, user.getStoredActivities());
+        List<SjukfallEnhet> sjukfallToLog = PDLActivityStore.getActivitiesNotInStore(enhetsId, sjukfallList, activityType, resourceType,
+                user.getStoredActivities());
         logService.logSjukfallData(sjukfallToLog, activityType, resourceType);
         PDLActivityStore.addActivitiesToStore(enhetsId, sjukfallToLog, activityType, resourceType, user.getStoredActivities());
     }
 
     private void logSjukfallData(RehabstodUser user, SjukfallPatient sjukfallPatient,
-                                 ActivityType activityType, ResourceType resourceType) {
+            ActivityType activityType, ResourceType resourceType) {
 
         String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
         if (enhetsId == null) {
             throw new IllegalArgumentException("Cannot create PDL log statements, enhetsId was null");
         }
 
-        boolean isInStore =
-            PDLActivityStore.isActivityInStore(enhetsId, sjukfallPatient, activityType, resourceType, user.getStoredActivities());
+        boolean isInStore = PDLActivityStore.isActivityInStore(enhetsId, sjukfallPatient, activityType, resourceType,
+                user.getStoredActivities());
 
         if (!isInStore) {
             logService.logSjukfallData(sjukfallPatient, activityType, resourceType);

@@ -37,6 +37,7 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -174,6 +175,23 @@ public class RiskPredictionServiceImplTest {
         testee.updateSjukfallPatientListWithRiskPredictions(buildSjukfallPatientList(UUID.randomUUID().toString()));
     }
 
+    @Test
+    public void testRiskLevelOneIsFilteredOut() {
+        String intygsId = UUID.randomUUID().toString();
+
+        List<RiskSignal> riskSignals = Arrays.asList(
+                new RiskSignal(intygsId, 2, "beskrivning2"),
+                new RiskSignal(intygsId, 1, "beskrivning1"),
+                new RiskSignal(intygsId, 0, "beskrivning0")
+        );
+
+        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyList())).thenReturn(riskSignals);
+        List<SjukfallEnhet> sjukfallEnhetList = buildSjukfallEnhetList(intygsId);
+        testee.updateWithRiskPredictions(sjukfallEnhetList);
+
+        assertEquals(1, sjukfallEnhetList.size());
+    }
+
     private List<RiskSignal> buildRiskSignalList(String intygsId) {
         List<RiskSignal> list = new ArrayList<>();
         list.add(new RiskSignal(intygsId, 2, "beskrivning"));
@@ -186,6 +204,16 @@ public class RiskPredictionServiceImplTest {
         SjukfallEnhet se = new SjukfallEnhet();
         se.setAktivIntygsId(intygsId);
         list.add(se);
+        return list;
+    }
+
+    private List<SjukfallEnhet> buildSjukfallEnhetList(int size) {
+        List<SjukfallEnhet> list = new ArrayList<>();
+        for (int a = 0; a < size; a++) {
+            SjukfallEnhet se = new SjukfallEnhet();
+            se.setAktivIntygsId("intyg-" + a);
+            list.add(se);
+        }
         return list;
     }
 
