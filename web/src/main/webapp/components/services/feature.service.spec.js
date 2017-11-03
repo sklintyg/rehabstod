@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Inera AB (http://www.inera.se)
+ * Copyright (C) 2017 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -17,19 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').factory('featureService',
-    function(UserModel, _) {
-        'use strict';
+describe('Service: FeatureService', function() {
+    'use strict';
 
-        function _hasFeature(feature) {
-            var index = _.findIndex(UserModel.get().features, function(o) {
-                return o === feature;
-            });
+    // load the controller's module
+    beforeEach(angular.mock.module('rehabstodApp'));
 
-            return index !== -1;
-        }
+    var featureService;
+    var UserModel;
 
-        return {
-            hasFeature: _hasFeature
-        };
+    beforeEach(inject(function(_featureService_, _UserModel_) {
+        featureService = _featureService_;
+        UserModel = _UserModel_;
+
+        UserModel.set({
+            features: ['test']
+        });
+    }));
+
+    it('Has feature', function() {
+        expect(featureService.hasFeature('test')).toBeTruthy();
     });
+
+    it('Missing feature', function() {
+        expect(featureService.hasFeature('missing')).toBeFalsy();
+    });
+});

@@ -17,9 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').factory('SjukfallService', [
-    '$log', 'StringHelper', 'messageService', 'SjukfallProxy', 'SjukfallModel', 'SjukfallFilterViewState', 'SjukfallViewState',
-    function($log, StringHelper, messageService, SjukfallProxy, SjukfallModel, SjukfallFilterViewState, SjukfallViewState) {
+angular.module('rehabstodApp').factory('SjukfallService',
+    function($log, StringHelper, messageService, SjukfallProxy, SjukfallModel, SjukfallFilterViewState, SjukfallViewState, _) {
         'use strict';
 
         var loading = false;
@@ -64,11 +63,12 @@ angular.module('rehabstodApp').factory('SjukfallService', [
             if (sjukfall === null) {
                 return;
             }
-            for (var a = 0; a < sjukfall.length; a++) {
-                if (sjukfall[a].riskSignal === null) {
-                    sjukfall[a].riskSignal = {riskKategori: 0};
+
+            _.each(sjukfall, function(s) {
+                if (s.riskSignal === null) {
+                    s.riskSignal = {riskKategori: 0};
                 }
-            }
+            });
         }
 
         function _stripHtmlEntities(html) {
@@ -117,4 +117,4 @@ angular.module('rehabstodApp').factory('SjukfallService', [
             exportResult: _exportResult,
             isLoading: _isLoading
         };
-    }]);
+    });
