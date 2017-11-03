@@ -168,7 +168,7 @@ module.exports = function(grunt) {
             options: {
                 map: false,
                 processors: [
-                    require('autoprefixer')({browsers: ['last 2 versions', 'ie 9']}) // add vendor prefixes
+                    require('autoprefixer')({browsers: ['last 2 versions', 'ie 11']}) // add vendor prefixes
                 ]
             },
             dist: {
