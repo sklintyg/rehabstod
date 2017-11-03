@@ -46,6 +46,10 @@ $inactive-element-color: #ccc;
 $background-gray-color: #efefef;
 $background-darkergray-color: #aaa;
 
+$footer-background-color: #E5E8EE;
+$footer-text-color: #22263E;
+$footer-height: 240px;
+
 $icon-font-path: '../bower_components/bootstrap-sass/assets/fonts/bootstrap/';
 $fa-font-path: '../bower_components/font-awesome/fonts';
 
@@ -82,6 +86,10 @@ $fa-font-path: '../bower_components/font-awesome/fonts';
 /*****************************
 App-wide special styles
 *******************************/
+.content-wrapper {
+  min-height: calc(100vh -  #{$footer-height});
+  padding-bottom: 120px;
+}
 html,
 body,
 .container-fluid {
@@ -115,7 +123,6 @@ div[show-spinner=showSpinner]{
   word-break: keep-all; }  
 
 body {
-  padding-bottom: 30px;
   -ms-overflow-style: scrollbar;
 }
 
@@ -308,6 +315,7 @@ input[type=search]::-ms-clear {
 @import 'about/about.scss';
 @import 'error/error.scss';
 @import 'error/restErrorDialog.scss';
+@import 'footer/footer.scss';
 @import 'header/header.scss';
 @import 'index/index.page.scss';
 @import 'print.scss';
