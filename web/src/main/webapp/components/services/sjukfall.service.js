@@ -44,6 +44,7 @@ angular.module('rehabstodApp').factory('SjukfallService', [
                 };
 
                 return SjukfallProxy.get(query).then(function(response) {
+                    _normalizeRiskSignals(response.data);
                     SjukfallModel.set(response.data);
                     SjukfallViewState.setSrsError(response.srsError);
                     loading = false;
@@ -54,6 +55,19 @@ angular.module('rehabstodApp').factory('SjukfallService', [
                     SjukfallModel.setError();
                     loading = false;
                 });
+            }
+        }
+
+        // Due to sorting problems, we explicitly set the riskKategori for sjukfall having no
+        // risk prediction to 0.
+        function _normalizeRiskSignals(sjukfall) {
+            if (sjukfall === null) {
+                return;
+            }
+            for (var a = 0; a < sjukfall.length; a++) {
+                if (sjukfall[a].riskSignal === null) {
+                    sjukfall[a].riskSignal = {riskKategori: 0};
+                }
             }
         }
 
