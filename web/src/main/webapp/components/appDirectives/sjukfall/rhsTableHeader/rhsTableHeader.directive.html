@@ -1,16 +1,16 @@
 <tr>
-  <th class="rhs-table-head column-number">#</th>
-  <th rhs-table-header-column ng-if="filterViewState.get().showPatientId" class="column-patient-id text-nowrap" st-sort="patient.id" hide-help="true"></th>
-  <th rhs-table-header-column class="column-patient-age text-nowrap" st-sort="patient.alder" hide-help="true"></th>
-  <th rhs-table-header-column ng-if="filterViewState.get().showPatientId" class="column-patient-name text-nowrap" st-sort="patient.namn" hide-help="true"></th>
-  <th rhs-table-header-column class="column-patient-kon text-nowrap" st-sort="patient.konShow" hide-help="true"></th>
-  <th rhs-table-header-column class="column-diagnos" st-sort="diagnos.intygsVarde"></th>
-  <th rhs-table-header-column class="column-bidiagnos" st-sort="biDiagnoserShow"></th>
-  <th rhs-table-header-column class="column-start" st-sort="start" st-sort-default="true" st-descending-first="true" msg-params="{enhet:user.valdVardenhet.namn, glapp: glapp}"></th>
-  <th rhs-table-header-column class="column-slut" st-sort="slut"></th>
-  <th rhs-table-header-column class="column-dagar" st-sort="dagar"></th>
-  <th rhs-table-header-column class="column-antal" st-sort="intyg"></th>
-  <th rhs-table-header-column class="column-grad" st-sort="aktivGrad"></th>
-  <th rhs-table-header-column ng-if="hasFeature('srs')" class="" st-sort="riskSignal.riskKategori"></th>
-  <th rhs-table-header-column ng-if="user.urval != 'ISSUED_BY_ME'" class="" st-sort="lakare.namn"></th>
+  <th class="rhs-table-head column-number">#</th
+  ><th rhs-table-header-column ng-if="filterViewState.get().showPatientId" class="column-patient-id text-nowrap" st-sort="patient.id" hide-help="true"></th
+  ><th rhs-table-header-column class="column-patient-age text-nowrap" st-sort="patient.alder" hide-help="true"></th
+  ><th rhs-table-header-column ng-if="filterViewState.get().showPatientId" class="column-patient-name text-nowrap" st-sort="patient.namn" hide-help="true"></th
+  ><th rhs-table-header-column class="column-patient-kon text-nowrap" st-sort="patient.konShow" hide-help="true"></th
+  ><th rhs-table-header-column class="column-diagnos" st-sort="diagnos.intygsVarde"></th
+  ><th rhs-table-header-column class="column-bidiagnos" st-sort="biDiagnoserShow"></th
+  ><th rhs-table-header-column class="column-start" st-sort="start" st-sort-default="true" st-descending-first="true" msg-params="{enhet:user.valdVardenhet.namn, glapp: glapp}"></th
+  ><th rhs-table-header-column class="column-slut" st-sort="slut"></th
+  ><th rhs-table-header-column class="column-dagar" st-sort="dagar"></th
+  ><th rhs-table-header-column class="column-antal" st-sort="intyg"></th
+  ><th rhs-table-header-column class="column-grad" st-sort="aktivGrad"></th
+  ><th rhs-table-header-column ng-if="hasFeature('srs')" class="" st-sort="riskSignal.riskKategori"></th
+  ><th rhs-table-header-column ng-if="user.urval != 'ISSUED_BY_ME'" class="" st-sort="lakare.namn"></th>
 </tr>

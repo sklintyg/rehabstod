@@ -19,8 +19,8 @@
 
 angular.module('rehabstodApp')
     .controller('RhsTableCtrl', ['$scope', '$uibModal', 'SjukfallFilterViewState', 'SjukfallModel', 'UserModel', 'messageService',
-        'featureService',
-        function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService, featureService) {
+        'featureService', '$document',
+        function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService, featureService, $document) {
             'use strict';
 
             $scope.filter = SjukfallFilterViewState;
@@ -65,6 +65,23 @@ angular.module('rehabstodApp')
 
             $scope.resetLimit();
 
+            $document.on('scroll', handleScroll);
+
+            $scope.$on('$destroy', function() {
+                $document.off('scroll', handleScroll);
+            });
+
+            function handleScroll() {
+                var scrollLeft = $document.scrollLeft();
+                var header = $('#rhs-table-fixed-header');
+                var left = 30;
+
+                if (scrollLeft > 0) {
+                    left -= scrollLeft;
+                }
+
+                header.css('left', left + 'px');
+            }
         }
     ])
     .directive('rhsTable',
