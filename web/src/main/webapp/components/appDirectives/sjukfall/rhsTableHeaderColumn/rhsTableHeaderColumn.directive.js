@@ -17,27 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').directive('rhsTableHeader', ['SjukfallFilterViewState', 'featureService',
-    function(SjukfallFilterViewState, featureService) {
+angular.module('rehabstodApp')
+    .directive('rhsTableHeaderColumn',
+    function() {
         'use strict';
 
         return {
             restrict: 'A',
             scope: {
-                user : '=',
-                glapp : '='
+                hideHelp: '@',
+                msgParams: '='
             },
-            templateUrl: '/components/appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.directive.html',
-            link: function ($scope, element) {
-                $scope.filterViewState = SjukfallFilterViewState;
+            templateUrl: '/components/appDirectives/sjukfall/rhsTableHeaderColumn/rhsTableHeaderColumn.directive.html',
+            link: function($scope, element, attrs) {
+                $scope.label = 'label.table.column.' + attrs['stSort'].toLowerCase();
 
-                element.find('th[st-sort]').bind('click', function sortClick () {
-                    $('body, thead *').css('cursor', 'wait');
-                });
-
-                $scope.hasFeature = function(feature) {
-                    return featureService.hasFeature(feature);
-                };
+                element.addClass('rhs-table-head');
             }
         };
-    }]);
+    });
+

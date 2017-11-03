@@ -128,7 +128,7 @@ var rhsMessages = {
         'label.table.column.patient.alder': 'Ålder',
         'label.table.column.patient.konshow': 'Kön',
         'label.table.column.diagnos.intygsvarde': 'Diagnos',
-        'label.table.column.diagnos.help': 'Huvuddiagnos i nuvarande intyg. För muspekaren över koden för att se vilken diagnos den motsvarar.',
+        'label.table.column.diagnos.intygsvarde.help': 'Huvuddiagnos i nuvarande intyg. För muspekaren över koden för att se vilken diagnos den motsvarar.',
         'label.table.column.bidiagnosershow': 'Bidiagnoser',
         'label.table.column.bidiagnosershow.help': 'Bidiagnos(er) i nuvarande intyg. För muspekaren över koden för att se vilken diagnos den motsvarar.',
         'label.table.column.start': 'Startdatum',
@@ -143,8 +143,8 @@ var rhsMessages = {
         'label.table.column.dagar.help': 'Sjukfallets totala längd i dagar, från startdatum till slutdatum. Eventuella dagar mellan intyg räknas inte in.',
         'label.table.column.intyg': 'Antal',
         'label.table.column.intyg.help': 'Antalet intyg som ingår i sjukfallet.',
-        'label.table.column.risk': 'Risk',
-        'label.table.column.risk.help': 'Risksignalen för att sjukfallet varar mer än 90 dagar beräknas med matematiska metoder tillämpade på en rad variabler som till exempel ålder, kön, bostadsort och tidigare vårdkontakter för att försöka detektera om den aktuella individens risk skiljer sig från andra patienter inom samma diagnosgrupp. Metoden ska ses som ett komplement inför den egna professionella bedömningen.',
+        'label.table.column.risksignal.riskkategori': 'Risk',
+        'label.table.column.risksignal.riskkategori.help': 'Risksignalen för att sjukfallet varar mer än 90 dagar beräknas med matematiska metoder tillämpade på en rad variabler som till exempel ålder, kön, bostadsort och tidigare vårdkontakter för att försöka detektera om den aktuella individens risk skiljer sig från andra patienter inom samma diagnosgrupp. Metoden ska ses som ett komplement inför den egna professionella bedömningen.',
 
 
         'label.table.no-result': 'Det finns inga pågående sjukfall på ',
