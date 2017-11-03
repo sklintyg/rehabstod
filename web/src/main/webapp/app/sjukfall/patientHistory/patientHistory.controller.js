@@ -23,7 +23,7 @@ angular.module('rehabstodApp').controller('patientHistoryController',
 
             //Create initial default details tab (cannot be closed)
             patientHistoryViewState.reset();
-            patientHistoryViewState.addTab('', 'Detaljerat sjukfall', true, true);
+            patientHistoryViewState.addTab('', 'Sjukfall', true, true);
 
             //expose tabs model to view
             $scope.tabs = patientHistoryViewState.getTabs();
