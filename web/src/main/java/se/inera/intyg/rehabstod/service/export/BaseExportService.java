@@ -23,7 +23,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import se.inera.intyg.infra.security.common.service.CommonFeatureService;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
+import se.inera.intyg.rehabstod.service.feature.RehabstodFeature;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
@@ -70,12 +74,22 @@ public abstract class BaseExportService {
     protected static final String TABLEHEADER_ANTAL = "Antal";
     protected static final String TABLEHEADER_SJUKSKRIVNINGSGRAD = "Grad";
     protected static final String TABLEHEADER_NUVARANDE_LAKARE = "Läkare";
+    protected static final String TABLEHEADER_SRS_RISK = "Risk";
 
     protected static final String FORMAT_ANTAL_DAGAR = "%d dagar";
     protected static final String UNICODE_RIGHT_ARROW_SYMBOL = "\u2192";
+    private static final int SRS_RISK_LOW = 2;
+    private static final String SRS_RISK_LOW_DESC = "Låg";
+    private static final int SRS_RISK_MED = 3;
+    private static final String SRS_RISK_MED_DESC = "Medel";
+    private static final int SRS_RISK_HIGH = 4;
+    private static final String SRS_RISK_HIGH_DESC = "Hög";
 
     @Autowired
     protected DiagnosKapitelService diagnosKapitelService;
+
+    @Autowired
+    protected CommonFeatureService featureService;
 
     protected boolean notEmpty(PrintSjukfallRequest req) {
         return req.getFritext() != null && req.getFritext().trim().length() > 0;
@@ -105,6 +119,25 @@ public abstract class BaseExportService {
         }
 
         return "-";
+    }
+
+    protected boolean isSrsFeatureActive(RehabstodUser user) {
+        return featureService.getActiveFeatures(user.getValdVardenhet().getId()).contains(RehabstodFeature.SRS.getName());
+    }
+
+    protected String getRiskKategoriDesc(RiskSignal risksignal) {
+        if (risksignal != null) {
+            switch (risksignal.getRiskKategori()) {
+            case SRS_RISK_LOW:
+                return SRS_RISK_LOW_DESC;
+            case SRS_RISK_MED:
+                return SRS_RISK_MED_DESC;
+            case SRS_RISK_HIGH:
+                return SRS_RISK_HIGH_DESC;
+            }
+
+        }
+        return "";
     }
 
 }

@@ -103,7 +103,8 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             document.newPage();
 
             // Add table with all sjukfall (could span several pages)
-            document.add(createSjukfallTable(sjukfallList, user.getUrval(), printSjukfallRequest.isShowPatientId()));
+            document.add(
+                    createSjukfallTable(sjukfallList, user.getUrval(), printSjukfallRequest.isShowPatientId(), isSrsFeatureActive(user)));
 
             // Finish off by closing the document (will invoke the event handlers)
             document.close();
@@ -205,7 +206,6 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         Paragraph visaPatientUppgifter = new Paragraph(FILTER_TITLE_VISAPATIENTUPPGIFTER, PdfExportConstants.FRONTPAGE_H3);
         visaPatientUppgifter.add(new Phrase(printRequest.isShowPatientId() ? " Ja" : " Nej", PdfExportConstants.FRONTPAGE_NORMAL));
 
-
         // Lagg ihop undergrupperna till filter
         Paragraph filter = new Paragraph(VALDA_FILTER, PdfExportConstants.FRONTPAGE_H2);
         filter.add(valdaDiagnoser);
@@ -276,25 +276,41 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     }
 
-    private PdfPTable createSjukfallTable(List<SjukfallEnhet> sjukfallList, Urval urval, boolean showPatientId) throws DocumentException {
+    private PdfPTable createSjukfallTable(List<SjukfallEnhet> sjukfallList, Urval urval, boolean showPatientId, boolean showSrsRisk)
+            throws DocumentException {
 
         PdfPTable table;
 
         // Setup column widths (relative to each other)
         if (Urval.ALL.equals(urval)) {
             if (showPatientId) {
-                table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2, 3f });
+                if (showSrsRisk) {
+                    table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2, 3f, 1f });
+                } else {
+                    table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2, 3f });
+                }
             } else {
-                table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 1.5f, 3f });
-            }
+                if (showSrsRisk) {
+                    table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 1.5f, 3f, 1f });
+                } else {
+                    table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 1.5f, 3f });
+                }
 
+            }
         } else {
             if (showPatientId) {
-                table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2 });
+                if (showSrsRisk) {
+                    table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2, 1f });
+                } else {
+                    table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2 });
+                }
             } else {
-                table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2 });
+                if (showSrsRisk) {
+                    table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2, 1f });
+                } else {
+                    table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2 });
+                }
             }
-
         }
 
         table.setWidthPercentage(100.0f);
@@ -327,6 +343,10 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         addCell(table, TABLEHEADER_SJUKSKRIVNINGSGRAD, PdfExportConstants.TABLE_HEADER_FONT);
         if (Urval.ALL.equals(urval)) {
             addCell(table, TABLEHEADER_NUVARANDE_LAKARE, PdfExportConstants.TABLE_HEADER_FONT);
+        }
+
+        if (showSrsRisk) {
+            addCell(table, TABLEHEADER_SRS_RISK, PdfExportConstants.TABLE_HEADER_FONT);
         }
 
         // Set cell styles for the non-header cells following hereafter
@@ -366,6 +386,9 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             addCell(table, getGrader(is));
             if (Urval.ALL.equals(urval)) {
                 addCell(table, is.getLakare().getNamn());
+            }
+            if (showSrsRisk) {
+                addCell(table, getRiskKategoriDesc(is.getRiskSignal()));
             }
             rowNumber++;
         }

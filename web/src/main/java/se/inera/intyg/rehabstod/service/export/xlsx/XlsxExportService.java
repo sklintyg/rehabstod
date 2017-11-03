@@ -18,12 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
-import se.inera.intyg.rehabstod.service.Urval;
-import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
 import java.io.IOException;
 import java.util.List;
+
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /**
  * @author eriklupander on 2016-02-23.
@@ -31,7 +31,5 @@ import java.util.List;
 @FunctionalInterface
 public interface XlsxExportService {
 
-    byte[] export(List<SjukfallEnhet> sjukfallList, PrintSjukfallRequest printSjukfallRequest, Urval urval, int total)
-            throws IOException;
-
+    byte[] export(List<SjukfallEnhet> sjukfallList, PrintSjukfallRequest req, RehabstodUser user, int total) throws IOException;
 }

@@ -18,24 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
-import se.inera.intyg.infra.security.common.model.Role;
-import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.testutil.TestDataGen;
-import se.inera.intyg.rehabstod.web.model.Diagnos;
-import se.inera.intyg.rehabstod.web.model.Gender;
-import se.inera.intyg.rehabstod.web.model.Lakare;
-import se.inera.intyg.rehabstod.web.model.Patient;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -44,23 +30,72 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import com.google.common.collect.ImmutableSet;
+
+import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
+import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.infra.security.common.service.CommonFeatureService;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.feature.RehabstodFeature;
+import se.inera.intyg.rehabstod.testutil.TestDataGen;
+import se.inera.intyg.rehabstod.web.model.Diagnos;
+import se.inera.intyg.rehabstod.web.model.Gender;
+import se.inera.intyg.rehabstod.web.model.Lakare;
+import se.inera.intyg.rehabstod.web.model.Patient;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /**
  * Created by marced on 24/02/16.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class PdfExportServiceImplTest {
+
     RehabstodUser user;
 
     @Mock
     private DiagnosKapitelService diagnosKapitelService;
 
+    @Mock
+    private CommonFeatureService featureService;
+
     @InjectMocks
     private PdfExportService testee = new PdfExportServiceImpl();
+
+    private static SjukfallEnhet createSjukFall(int index, String personNummer) {
+        SjukfallEnhet isf = new SjukfallEnhet();
+
+        Lakare lakare = new Lakare("123456-0987", "Hr Doktor");
+        isf.setLakare(lakare);
+
+        Patient patient = new Patient(personNummer, "patient " + personNummer);
+        patient.setAlder(50 + index / 2);
+        patient.setKon(index % 2 == 0 ? Gender.M : Gender.F);
+        isf.setPatient(patient);
+
+        // Not really interested in these properties, but the sjukfall equals /hashcode will fail without them
+        Diagnos diagnos = new Diagnos("M16", "M16", "diagnosnamn");
+        diagnos.setKapitel("M00-M99");
+        isf.setDiagnos(diagnos);
+
+        isf.setStart(LocalDate.now().plusDays(index));
+        isf.setSlut(isf.getStart().plusDays(index));
+        isf.setDagar(index * 2 + index % 3);
+        isf.setIntyg(1);
+        isf.setGrader(index % 3 == 0 ? Arrays.asList(25, 50) : Arrays.asList(50, 75));
+        isf.setAktivGrad(50);
+
+        return isf;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -102,6 +137,8 @@ public class PdfExportServiceImplTest {
         DiagnosKapitel diagnosKapitel = mock(DiagnosKapitel.class);
         when(diagnosKapitel.getName()).thenReturn("Diagnoskapitlets namn");
         when(diagnosKapitelService.getDiagnosKapitel(anyString())).thenReturn(diagnosKapitel);
+        // Use srs as default in tests
+        when(featureService.getActiveFeatures(anyString())).thenReturn(ImmutableSet.of(RehabstodFeature.SRS.getName()));
     }
 
     @Test
@@ -124,6 +161,19 @@ public class PdfExportServiceImplTest {
 
         // Files.write(Paths.get("./test_all.pdf"), export);
     }
+    @Test
+    public void testExportAllWithoutSrs() throws Exception {
+        // Use srs as default in tests
+        when(featureService.getActiveFeatures(anyString())).thenReturn(ImmutableSet.of(""));
+
+        Map<String, Role> roles = new HashMap<>();
+        roles.put(AuthoritiesConstants.ROLE_KOORDINATOR, null);
+        user.setRoles(roles);
+        final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
+        assertTrue(export.length > 0);
+
+        // Files.write(Paths.get("./test_all.pdf"), export);
+    }
 
     private List<SjukfallEnhet> createSjukFallList() {
         List<SjukfallEnhet> list = new ArrayList<>();
@@ -131,32 +181,6 @@ public class PdfExportServiceImplTest {
             list.add(createSjukFall(i, "19121212-" + i));
         }
         return list;
-    }
-
-    private static SjukfallEnhet createSjukFall(int index, String personNummer) {
-        SjukfallEnhet isf = new SjukfallEnhet();
-
-        Lakare lakare = new Lakare("123456-0987", "Hr Doktor");
-        isf.setLakare(lakare);
-
-        Patient patient = new Patient(personNummer, "patient " + personNummer);
-        patient.setAlder(50 + index / 2);
-        patient.setKon(index % 2 == 0 ? Gender.M : Gender.F);
-        isf.setPatient(patient);
-
-        // Not really interested in these properties, but the sjukfall equals /hashcode will fail without them
-        Diagnos diagnos = new Diagnos("M16", "M16", "diagnosnamn");
-        diagnos.setKapitel("M00-M99");
-        isf.setDiagnos(diagnos);
-
-        isf.setStart(LocalDate.now().plusDays(index));
-        isf.setSlut(isf.getStart().plusDays(index));
-        isf.setDagar(index * 2 + index % 3);
-        isf.setIntyg(1);
-        isf.setGrader(index % 3 == 0 ? Arrays.asList(25, 50) : Arrays.asList(50, 75));
-        isf.setAktivGrad(50);
-
-        return isf;
     }
 
 }
