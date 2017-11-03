@@ -43,7 +43,8 @@ angular.module('rehabstodApp')
             '100': '#799745'
         }
     })
-    .value('moment', moment);
+    .value('moment', moment)
+    .value('THROTTLE_MILLISECONDS', 300);
 
 
 /*

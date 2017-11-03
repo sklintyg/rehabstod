@@ -34,7 +34,8 @@ module.exports = function(config) {
             'src/main/webapp/bower_components/lodash/lodash.js',
             // endbower
             'src/main/webapp/bower_components/angular-mocks/angular-mocks.js',
-            'src/main/webapp/app/app.main.test.js',
+            'src/main/webapp/app/**/*.module.js',
+
             'src/main/webapp/app/**/*.js',
             'src/main/webapp/components/**/*.js',
             'src/main/webapp/app/**/*.html',

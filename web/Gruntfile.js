@@ -397,9 +397,10 @@ module.exports = function(grunt) {
                 },
                 files: {
                     '<%= config.client %>/index.html': [
-                        ['{<%= config.tmp %>,<%= config.client %>}/{app,components}/**/*.js',
-                            '!{<%= config.tmp %>,<%= config.client %>}/app/app.main.js',
-                            '!{<%= config.tmp %>,<%= config.client %>}/app/app.main.test.js',
+                        [
+                            '{<%= config.tmp %>,<%= config.client %>}/{app,components}/**/*.module.js',
+                            '{<%= config.tmp %>,<%= config.client %>}/{app,components}/**/*.js',
+                            '!{<%= config.tmp %>,<%= config.client %>}/app/*.test.js',
                             '!{<%= config.tmp %>,<%= config.client %>}/{app,components}/**/*.spec.js',
                             '!{<%= config.tmp %>,<%= config.client %>}/{app,components}/**/*.mock.js']
                     ]
