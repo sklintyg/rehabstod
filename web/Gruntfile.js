@@ -43,10 +43,6 @@ module.exports = function(grunt) {
                         return [
                             require('connect-livereload')(),
                             connect().use(
-                                '/app.html',
-                                serveStatic(__dirname + '/src/main/webapp/app.html') // jshint ignore:line
-                            ),
-                            connect().use(
                                 '/index.html',
                                 serveStatic(__dirname + '/src/main/webapp/index.html') // jshint ignore:line
                             ),
