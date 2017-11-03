@@ -33,9 +33,7 @@
           <td class="column-antal">{{::row.intyg}}</td>
           <td  class="column-grad" ng-bind-html="::row.gradShow"></td>
           <td ng-if="hasFeature('srs')" class="column-risk">
-            <span class="rhs-table-tooltip" ng-if="row.riskSignal.riskKategori > 1" uib-tooltip-html="row.riskSignal.riskDescription" tooltip-popup-delay="200">
-              <img ng-src="/assets/images/risk{{::row.riskSignal.riskKategori}}.png" height="18">
-            </span>
+            <rhs-risk-indicator category="row.riskSignal.riskKategori" description="row.riskSignal.riskDescription"></rhs-risk-indicator>
           </td>
           <td ng-if="user.urval != 'ISSUED_BY_ME'">{{::row.lakare.namn}}</td>
         </tr>

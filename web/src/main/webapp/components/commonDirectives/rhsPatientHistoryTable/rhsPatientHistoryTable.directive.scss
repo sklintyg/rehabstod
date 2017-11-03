@@ -131,9 +131,6 @@ rhs-patient-history-table {
       .column-risk {
         width: 20px;
         text-align: center;
-        .patient-history-dialog--tooltip {
-              border-bottom: 0px;
-          }
 
         @media (max-width: $screen-md-max) {
           width: 10px;

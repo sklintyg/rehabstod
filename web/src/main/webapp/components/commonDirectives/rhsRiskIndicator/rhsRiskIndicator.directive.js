@@ -18,22 +18,17 @@
  */
 
 angular.module('rehabstodApp')
-    .directive('rhsTableHeaderColumn',
+    .directive('rhsRiskIndicator',
     function() {
         'use strict';
 
         return {
-            restrict: 'A',
+            restrict: 'E',
             scope: {
-                hideHelp: '@',
-                msgParams: '='
+                description: '=',
+                category: '='
             },
-            templateUrl: '/components/appDirectives/sjukfall/rhsTableHeaderColumn/rhsTableHeaderColumn.directive.html',
-            link: function($scope, element, attrs) {
-                $scope.label = 'label.table.column.' + attrs.stSort.toLowerCase();
-
-                element.addClass('rhs-table-head');
-            }
+            templateUrl: '/components/commonDirectives/rhsRiskIndicator/rhsRiskIndicator.directive.html'
         };
     });
 
