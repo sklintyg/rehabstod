@@ -20,9 +20,11 @@ package se.inera.intyg.rehabstod.service.export.pdf;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
@@ -276,42 +278,40 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     }
 
+    private PdfPTable createTableColumns(Urval urval, boolean showPatientId, boolean showSrsRisk) {
+        List<Float> tempHeaders = new ArrayList<>();
+        tempHeaders.add(0.8f); // # radnr
+        if (showPatientId) {
+            tempHeaders.add(1.7f); // personnr
+        }
+        tempHeaders.add(0.8f); // # Ålder
+        if (showPatientId) {
+            tempHeaders.add(3f); // namn
+        }
+        tempHeaders.add(0.8f); // Kön
+        tempHeaders.add(1f); // Diagnos
+        tempHeaders.add(1.5f); // Bidiagnoser
+        tempHeaders.add(1.5f); // Startdatum
+        tempHeaders.add(1.5f); // Slutdatum
+        tempHeaders.add(1.5f); // Längd
+        tempHeaders.add(0.8f); // Antal
+        tempHeaders.add(2f); // Grader
+        if (Urval.ALL.equals(urval)) {
+            tempHeaders.add(3f); // Läkare
+        }
+        if (showSrsRisk) {
+            tempHeaders.add(1f); // Srs Risk
+        }
+
+        return new PdfPTable(ArrayUtils.toPrimitive(tempHeaders.toArray(new Float[tempHeaders.size()])));
+
+    }
+
     private PdfPTable createSjukfallTable(List<SjukfallEnhet> sjukfallList, Urval urval, boolean showPatientId, boolean showSrsRisk)
             throws DocumentException {
 
-        PdfPTable table;
-
         // Setup column widths (relative to each other)
-        if (Urval.ALL.equals(urval)) {
-            if (showPatientId) {
-                if (showSrsRisk) {
-                    table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2, 3f, 1f });
-                } else {
-                    table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2, 3f });
-                }
-            } else {
-                if (showSrsRisk) {
-                    table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 1.5f, 3f, 1f });
-                } else {
-                    table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 1.5f, 3f });
-                }
-
-            }
-        } else {
-            if (showPatientId) {
-                if (showSrsRisk) {
-                    table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2, 1f });
-                } else {
-                    table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2 });
-                }
-            } else {
-                if (showSrsRisk) {
-                    table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2, 1f });
-                } else {
-                    table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 1.5f, 0.8f, 2 });
-                }
-            }
-        }
+        PdfPTable table = createTableColumns(urval, showPatientId, showSrsRisk);
 
         table.setWidthPercentage(100.0f);
 
