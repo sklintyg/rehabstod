@@ -70,8 +70,11 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     public static final String VE_2A = "IFV1239877878-103H";
     public static final String UE_AKUTEN = "akuten";
     public static final String UE_DIALYS = "dialys";
+
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
-    LocalDateTime timeSimulator = LocalDateTime.now();
+
+    private LocalDateTime timeSimulator = LocalDateTime.now();
+
     private Queue<Patient> seededPatients = new LinkedList<>();
     private Enhet enhet;
     private Enhet enhet2;
@@ -501,6 +504,13 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         peterEnkelId.setExtension("peter-enkel");
         peterEnkel.setPersonalId(peterEnkelId);
 
+        HosPersonal tothGergo = new HosPersonal();
+        tothGergo.setEnhet(enhet);
+        tothGergo.setFullstandigtNamn("Tóth Gergő Mészáros");
+        HsaId tothGergoId = new HsaId();
+        tothGergoId.setExtension("toth-gergo-1");
+        tothGergo.setPersonalId(tothGergoId);
+
         hosPersonList.add(hosPerson1);
         hosPersonList.add(hosPerson2);
         hosPersonList.add(hosPerson3);
@@ -510,6 +520,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hosPersonList.add(kerstin1);
         hosPersonList.add(kerstin2);
         hosPersonList.add(peterEnkel);
+        hosPersonList.add(tothGergo);
     }
 
     private void initFakedVardgivare1() {
