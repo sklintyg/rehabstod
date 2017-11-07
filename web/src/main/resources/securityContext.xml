@@ -24,7 +24,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-              http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd 
+              http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
               http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
   <!-- Enable auto-wiring -->
@@ -185,7 +185,7 @@
   <!-- =============================================================== -->
   <!-- The rhs-security-prod profile only supports SITHS login         -->
   <!-- =============================================================== -->
-  
+
   <beans profile="prod,rhs-security-prod">
     <security:http use-expressions="false" entry-point-ref="samlEntryPoint" request-matcher-ref="samlRequestMatcher">
       <security:csrf disabled="true"/>
@@ -232,25 +232,7 @@
       </security:filter-chain-map>
     </bean>
 
-    <!-- Decide which requests should be saved for redirection after successful login.
-         Triggers on: / and /#/app
-         We don't want to save /api requests since this will make the browser display the data. -->
-    <bean id="saveRequestMatcher" class="org.springframework.security.web.util.matcher.OrRequestMatcher">
-      <constructor-arg>
-        <list>
-          <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-            <constructor-arg index="0" value="/" />
-            <constructor-arg index="1" value="GET"/>
-          </bean>
-          <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-            <constructor-arg index="0" value="/#/app" />
-            <constructor-arg index="1" value="GET"/>
-          </bean>
-        </list>
-      </constructor-arg>
-    </bean>
-    <bean id="httpSessionRequestCache" class="org.springframework.security.web.savedrequest.HttpSessionRequestCache">
-      <property name="requestMatcher" ref="saveRequestMatcher" />
+    <bean id="httpSessionRequestCache" class="org.springframework.security.web.savedrequest.NullRequestCache">
     </bean>
 
     <!-- Handler deciding where to redirect user after successful login -->
