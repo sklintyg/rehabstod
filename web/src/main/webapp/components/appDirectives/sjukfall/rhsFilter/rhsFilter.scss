@@ -68,8 +68,10 @@ rhs-filter {
 
   }
 
-  .personuppgifter {
-    padding-left: 0;
+  @media (min-width: $screen-sm-min) {
+    .personuppgifter {
+      padding-left: 0;
+    }
   }
 }
 
