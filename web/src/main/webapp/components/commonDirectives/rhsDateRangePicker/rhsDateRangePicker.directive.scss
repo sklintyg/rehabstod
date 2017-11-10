@@ -52,8 +52,8 @@ rhs-date-range-picker {
 
   .first-date-selected,
   .last-date-selected {
-    background-color: #00A1B0 !important;
-    border: 1px solid #008391;
+    background-color: $rhs-second-accent-color !important;
+    border: 1px solid $rhs-primary-accent-color;
     padding: 5px 0 !important;
   }
 

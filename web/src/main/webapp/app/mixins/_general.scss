@@ -1,0 +1,145 @@
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+body {
+  -ms-overflow-style: scrollbar;
+}
+
+// App-wide Styles
+.browsehappy {
+  background: #ccc;
+  color: #000;
+  margin: .2em 0;
+  padding: .2em 0;
+}
+
+/*****************************
+App-wide special styles
+*******************************/
+.content-wrapper {
+  min-height: calc(100vh -  #{$footer-height});
+  padding-bottom: 120px;
+}
+
+html,
+body,
+.container-fluid {
+  text-align: left;
+}
+
+.container-fluid {
+  padding-left: 30px;
+}
+
+.container {
+  margin-left: 0;
+  padding-left: 30px;
+}
+
+#rhs-start-stat-panel {
+  margin: 20px 0 20px 0;
+}
+
+.rhs-body {
+  overflow-y: scroll;
+  &.modal-open {
+    overflow: hidden;
+    overflow-y: hidden;
+  }
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-weight: bold;
+
+  margin: 0;
+  padding-bottom: 10px;
+
+  &.panel-title,
+  &.modal-title {
+    padding-bottom: 0;
+  }
+}
+
+h1, h3 {
+  color: $blue-color;
+}
+
+h2 {
+  line-height: 20px;
+  padding-top: 30px;
+}
+
+h3 {
+  line-height: 20px;
+}
+
+select {
+  max-width: 340px;
+}
+
+.form-control {
+  padding: 4px 6px;
+}
+
+p {
+  margin: 0;
+  padding: 0 0 10px;
+}
+
+a {
+  cursor: pointer;
+}
+
+.external-link {
+  color: $rhs-link-external-color;
+
+  &:hover {
+    color: $rhs-link-external-color;
+  }
+}
+
+.col-head {
+  color: $blue-color;
+  font-size: 20px;
+  padding-bottom: 10px;
+}
+
+.box {
+  background-color: #e5e5e5;
+  border-radius: 4px;
+  display: block;
+  padding: 20px 40px 15px;
+}
+
+.deferred-bootstrap-error div#boot-error,
+.deferred-bootstrap-loading div#boot-loading {
+  display: block !important;
+}
+
+.modal-checkbox {
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.unselectable {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+// Hide IE10+ clear icon, as it doesn't work well with angular
+input[type=search]::-ms-clear {
+  display: none;
+}
+
+.login-page {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.control-label {
+  font-weight: bold;
+}

@@ -1,0 +1,55 @@
+
+.modal-footer {
+  text-align: left;
+}
+
+// Buttons
+.btn {
+  line-height: 18px;
+}
+
+.btn-success {
+  background: none;
+  background-color: #42a341;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 7px 15px;
+  white-space: nowrap;
+}
+
+.btn-link {
+  color: #008391;
+
+  &:hover {
+    color: #31b2be;
+  }
+}
+
+.btn-default {
+  &:active,
+  &.active {
+    &:focus,
+    &.focus {
+      background-color: darken($btn-default-bg, 10%);
+    }
+  }
+
+  &:focus,
+  &.focus {
+    background-color: $btn-default-bg;
+  }
+}
+
+// Alerts
+.alert {
+  max-width: 600px;
+  padding-right: 22px;
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+.alert-danger a {
+  color: #A94442;
+}

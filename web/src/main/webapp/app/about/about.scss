@@ -2,7 +2,15 @@
   padding-top: 0;
 }
 
-.about-content li, .about-content p{
-  width: 525px; 
+.about-content {
+  p,
+  h3 {
+    width: 525px;
     word-break: keep-all;
+  }
+
+  li {
+    width: 485px;
+    word-break: keep-all;
+  }
 }

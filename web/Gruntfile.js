@@ -421,6 +421,7 @@ module.exports = function(grunt) {
                 files: {
                     '<%= config.client %>/app/app.scss': [
                         '<%= config.client %>/{app,components}/**/*.{scss,sass}',
+                        '!<%= config.client %>/app/mixins/*.{scss,sass}',
                         '!<%= config.client %>/app/app.{scss,sass}'
                     ]
                 }

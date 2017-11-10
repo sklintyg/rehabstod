@@ -1,0 +1,59 @@
+$rhs-primary-accent-color: #008391;
+$rhs-second-accent-color: #00A1B0;
+
+$rhs-header-bg: #212633;
+
+$rhs-text-color: #333;
+$rhs-link-color: #378998;
+$rhs-link-external-color: #0F6EDC;
+
+$default-border-radius: 5px;
+
+$alert-warning-text: #8A6D3B; /* WCAG AA compliant */
+$alert-info-text: #306E8D; /* WCAG AA compliant */
+$alert-info-border: #9cd7e3;
+$alert-danger-text: #A94442; /* WCAG AA compliant */
+
+$form-group-margin-bottom: 10px;
+
+$slider-color: #33b4c3;
+
+// Font
+$rhs-font: Arial, sans-serif;
+$rhs-font-size-h1: 24px;
+$rhs-font-size-h2: 18px;
+$rhs-font-size-h3: 16px;
+$rhs-font-size-h4: 14px;
+
+$blue-color: $rhs-primary-accent-color;
+$blue-color-accent: $rhs-second-accent-color;
+$inactive-element-color: #ccc;
+$background-gray-color: #efefef;
+$background-darkergray-color: #aaa;
+
+$footer-background-color: #E5E8EE;
+$footer-text-color: #22263E;
+$footer-height: 240px;
+
+
+// Bootstrap variables (Here we override bootstraps default values with RHS custom variables defined above)
+
+$icon-font-path: '../bower_components/bootstrap-sass/assets/fonts/bootstrap/';
+$fa-font-path: '../bower_components/font-awesome/fonts';
+
+$font-family-base: $rhs-font;
+$font-size-h1: $rhs-font-size-h1;
+$font-size-h2: $rhs-font-size-h2;
+$font-size-h3: $rhs-font-size-h3;
+$font-size-h4: $rhs-font-size-h4;
+
+$text-color: $rhs-text-color;
+$link-color: $rhs-link-color;
+$link-hover-color: $rhs-link-color;
+
+$navbar-default-link-hover-color: #fff;
+$navbar-default-link-hover-bg: #24a1af;
+
+$navbar-default-link-active-color: $navbar-default-link-hover-color;
+$navbar-default-link-active-bg: $navbar-default-link-hover-bg;
+
