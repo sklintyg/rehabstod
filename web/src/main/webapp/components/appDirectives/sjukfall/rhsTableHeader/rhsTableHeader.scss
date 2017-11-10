@@ -1,9 +1,10 @@
 .rhs-table {
   .rhs-table-head {
     color: $blue-color;
+    font-size: $rhs-font-size-th;
     cursor: pointer;
     font-weight: bold;
-    padding: 7px 5px;
+    padding: 5px 2px 2px 5px;
     vertical-align: top;
 
     &.st-sort-ascent, &.st-sort-descent {

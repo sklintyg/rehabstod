@@ -1,3 +1,9 @@
+.modal-footer {
+  .btn + .btn {
+    //Avståndet mellan knappar skall vara 20px i dialoger.
+    margin-left: 20px;
+  }
+}
 
 .modal-footer {
   text-align: left;
@@ -5,16 +11,16 @@
 
 // Buttons
 .btn {
+  font-family: $rhs-font-buttons;
+  padding: $rhs-button-padding;
+  letter-spacing: $rhs-button-letter-spacing;
   line-height: 18px;
-}
-
-.btn-success {
-  background: none;
-  background-color: #42a341;
-  cursor: pointer;
-  font-weight: bold;
-  padding: 7px 15px;
-  white-space: nowrap;
+  &[disabled], &[disabled]:hover {
+    opacity: 1;
+    background: $rhs-button-disabled-bg !important;
+    color: $rhs-button-disabled-color;
+    border-color: $rhs-button-disabled-border !important;
+  }
 }
 
 .btn-link {
@@ -53,3 +59,4 @@
 .alert-danger a {
   color: #A94442;
 }
+

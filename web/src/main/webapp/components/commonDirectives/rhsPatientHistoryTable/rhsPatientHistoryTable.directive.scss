@@ -139,7 +139,7 @@ rhs-patient-history-table {
 
       thead > tr > th {
         color: $blue-color;
-        font-size: 12px;
+        font-size: 14px;
         padding-left: 5px;
       }
 
@@ -152,8 +152,8 @@ rhs-patient-history-table {
 
           td {
             vertical-align: top;
-            padding: 5px;
-
+            padding: 5px 2px 2px 5px;
+            line-height: 20px;
             &.nowrap {
               white-space: nowrap;
             }

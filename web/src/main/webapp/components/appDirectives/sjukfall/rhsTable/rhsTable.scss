@@ -73,7 +73,8 @@ rhs-table {
       > td {
 
         vertical-align: top;
-        padding: 5px;
+        padding: 5px 2px 2px 5px;
+        line-height: 20px;
 
         &.nowrap {
           white-space: nowrap;
@@ -117,7 +118,8 @@ rhs-table {
 
   tr.rhs-table-row:hover,
   .table-striped tbody > tr.rhs-table-row:nth-child(odd):hover {
-    background-color: #b3e3e7;
+    background-color: $rhs-table-hover-bg;
+    color: darken($rhs-table-hover-bg, 60%);
     cursor: pointer;
   }
 
