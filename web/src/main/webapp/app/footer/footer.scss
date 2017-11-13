@@ -6,12 +6,17 @@
   padding-bottom: 40px;
   display: block;
 
-  h3 {
+  h3, p {
     color: $footer-text-color;
     font-size: 14px;
+    line-height: 20px;
+  }
+  h3 {
     font-weight: bold;
     padding-bottom: 5px;
-
+  }
+  p {
+    font-weight: normal;
   }
 
 }

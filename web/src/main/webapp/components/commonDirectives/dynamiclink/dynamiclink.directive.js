@@ -30,7 +30,7 @@ angular.module('rehabstodcommon.dynamiclink').directive('dynamiclink',
                 },
                 transclude: true,
                 template: '<a href="{{ url }}" class="external-link {{ linkclass }}" ng-attr-target="{{ target || undefined}}" ' +
-                    'ng-attr-title="{{ tooltip || undefined }}"><span ng-bind-html="text"></span><ng-transclude></ng-transclude></a>',
+                    'ng-attr-title="{{ tooltip || undefined }}"><span ng-bind-html="text"></span><ng-transclude></ng-transclude> <i ng-if="target" class="glyphicon glyphicon-new-window"></i></a>',
                 
                 link: function(scope) {
                     scope.$watch(function() {
