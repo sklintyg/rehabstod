@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodcommon.dynamiclink').directive('dynamiclink',
-        function($log, $rootScope, $sce, $compile,
-            dynamicLinkService) {
+angular.module('rehabstodcommon.dynamiclink').directive(
+        'dynamiclink',
+        function($log, $rootScope, $sce, $compile, dynamicLinkService) {
             'use strict';
 
             return {
@@ -29,9 +29,10 @@ angular.module('rehabstodcommon.dynamiclink').directive('dynamiclink',
                     'linkclass': '@'
                 },
                 transclude: true,
-                template: '<a href="{{ url }}" class="external-link {{ linkclass }}" ng-attr-target="{{ target || undefined}}" ' +
-                    'ng-attr-title="{{ tooltip || undefined }}"><span ng-bind-html="text"></span><ng-transclude></ng-transclude> <i ng-if="target" class="glyphicon glyphicon-new-window"></i></a>',
-                
+                template: '<a href="{{ url }}" class="external-link {{ linkclass }}" ng-attr-target="{{ target || undefined}}" '
+                        + 'ng-attr-title="{{ tooltip || undefined }}"><span ng-bind-html="text"></span><ng-transclude></ng-transclude> '
+                        + '<i ng-if="target" class="glyphicon glyphicon-new-window"></i></a>',
+
                 link: function(scope) {
                     scope.$watch(function() {
                         return dynamicLinkService.getLink(scope.key);
