@@ -30,10 +30,17 @@
     "target": "_blank"
   },
   {
-    "key": "statistiktjanstenSjunetWithIcon",
+    "key": "statistiktjanstenSjunetTooltip",
     "url": "https://statistik.intygstjanster.sjunet.org/",
-    "text": "",
-    "tooltip": "Observera att denna länk kräver att du är uppkopplad via sjunet",
+    "text": "Gå vidare till Statistiktjänsten",
+    "tooltip": "Observera att denna länk kräver att du är uppkopplad via Sjunet.",
+    "target": "_blank"
+  },
+  {
+    "key": "statistiktjanstenTooltip",
+    "url": "https://statistik.intygstjanster.se/",
+    "text": "Gå vidare till Statistiktjänsten",
+    "tooltip": "Observera att om du inte har uppkoppling till Sjunet länkas du till den nationella delen av Statistiktjänsten på Internet.",
     "target": "_blank"
   },
   {

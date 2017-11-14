@@ -94,7 +94,7 @@ a {
 .external-link {
   color: $rhs-link-external-color;
 
-  &:hover {
+  &:hover, &:focus {
     color: $rhs-link-external-color;
   }
 }

@@ -1,67 +1,40 @@
 <div id="rhs-start-page" class="container">
   <div class="result-top">
-    <h1 class="page-header"><span message key="label.sjukfall.start.lakare.header"></span>{{user.valdVardenhet.namn}}</h1>
+    <h1 class="page-header">
+      <span message key="label.sjukfall.start.lakare.header"></span>{{user.valdVardenhet.namn}}
+    </h1>
   </div>
-
 
   <rhs-stat-panel vardenhet="user.valdVardenhet" id="rhs-start-stat-panel"></rhs-stat-panel>
 
-
   <div class="row" id="rhs-start-page-lakare">
     <div class="col-xs-6">
-      <div class="">
-        <div class="">
-          <h3>{{::'label.sjukfall.start.lakare.selectionpanel.header' | message}}</h3>
-        </div>
-        <div class="">
-          <p><span message key="label.sjukfall.start.lakare.selectionpanel.body"></span></p>
+      <div>
+        <h3>{{::'label.sjukfall.start.selectionpanel.header' | message}}</h3>
+      </div>
+      <div>
+        <p><span message key="label.sjukfall.start.lakare.selectionpanel.body"></span></p>
 
-          <div>
-            <a data-ng-click="onSelectUrval('ISSUED_BY_ME')" id="rhs-start-page-mine-btn">
-              {{::'label.sjukfall.start.lakare.selectionpanel.urval.button' | message}}
-            </a>
-          </div>
+        <div>
+          <a data-ng-click="onSelectUrval()" id="rhs-start-page-mine-btn">
+            {{::'label.sjukfall.start.selectionpanel.urval.button' | message}}
+          </a>
         </div>
       </div>
     </div>
 
     <div class="col-xs-6">
-
       <div class="row">
         <div class="col-xs-12">
-          <div class="">
-            <div class="">
-              <h3>{{::'label.sjukfall.start.merstatistik.header' | message}}</h3>
-            </div>
-            <div class="">
-              <p><span message key="label.sjukfall.start.merstatistik.body"></span></p>
-              <div>
-                <a ng-if="sjunetAvailable" target="_blank" title="Observera att denna länk kräver att du är uppkopplad via Sjunet." href="https://statistik.intygstjanster.sjunet.org/">Gå vidare till Statistiktjänsten <img src="/assets/images/statistik-logo-frilagd.png" width="24" height="24"></a>
-                <a ng-if="!sjunetAvailable" target="_blank" title="Observera att om du inte har uppkoppling till Sjunet länkas du till den nationella delen av Statistiktjänsten på Internet." href="https://statistik.intygstjanster.se/">Gå vidare till Statistiktjänsten <img src="/assets/images/statistik-logo-frilagd.png" width="24" height="24"></a>
-              </div>
-
-            </div>
-          </div>
+          <rhs-overview-more-statistic sjunet-available="sjunetAvailable"></rhs-overview-more-statistic>
         </div>
       </div>
-      <br>
-      <div class="row" ng-if="hasFeature('srs')">
+
+      <div class="row srs-row" ng-if="hasFeature('srs')">
         <div class="col-xs-12">
-          <div class="">
-            <div class="">
-              <h3>{{::'label.sjukfall.start.srs.header' | message}}</h3>
-            </div>
-            <div class="">
-              <p><span message key="label.sjukfall.start.srs.body"></span></p>
-              <div>
-                <span dynamiclink key="rattsjukskrivning"></span>
-              </div>
-            </div>
-          </div>
+          <rhs-srs-overview></rhs-srs-overview>
         </div>
       </div>
-
-
     </div>
   </div>
 </div>

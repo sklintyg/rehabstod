@@ -34,7 +34,8 @@ rhs-multi-select {
   .rhs-multi-select-btn {
     float: none;
     line-height: normal;
-    padding-top: 7px;
+    padding: 7px 12px 6px;
+    font-family: $rhs-font;
     text-align: left;
     width: 100%;
 
