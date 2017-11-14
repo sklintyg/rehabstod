@@ -76,10 +76,10 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
                     singleMonth: false,
                     showShortcuts: true,
                     customShortcuts: [{
-                        name: '<button id="clearDatePicker" class="btn btn-default">Rensa</button>',
+                        name: '<button id="closeDatePicker" class="btn btn-primary">Stäng</button>',
                         dates: function() { return null; }
                     }, {
-                        name: '<button id="closeDatePicker" class="btn btn-primary">Stäng</button>',
+                        name: '<button id="clearDatePicker" class="btn btn-default">Rensa</button>',
                         dates: function() { return null; }
                     }],
                     showTopbar: true,
