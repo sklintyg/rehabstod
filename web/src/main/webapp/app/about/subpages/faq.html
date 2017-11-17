@@ -1,82 +1,32 @@
-<h2 class="col-head col-head-about">Vanliga frågor</h2>
+<div class="faq-page">
+  <h2 class="col-head col-head-about">
+    Vanliga frågor
 
-<h3>Vad är ett sjukfall?</h3>
-<p>
-  Ett sjukfall omfattar alla de elektroniska läkarintyg som utfärdats för en viss patient vid en sjukskrivning, där uppehållet mellan intygens giltighetstider inte överskrider ett angivet maximalt antal dagar. Det maximala antalet dagar är förinställt till 5 dagar, men du kan enkelt ändra det till vilket värde du vill mellan 0 och 90 dagar.
-</p>
-<p>
-  Exempel: Om max antal dagar är inställt på 5 dagar, och intyg 1 gäller till den 14 augusti och intyg 2 gäller från den 17 augusti, så räknas de båda intygen till samma sjukfall. Om intyg 2 istället hade varit giltigt från den 21 augusti så skulle intygen ha räknats som två separata sjukfall.
-</p>
+    <span class="toggle">
+      <a href ng-click="openAll()">Öppna alla</a>
+      <span class="divider">|</span>
+      <a href ng-click="closeAll()">Stäng alla</a>
+    </span>
+  </h2>
 
-<h3>Vad är ett pågående sjukfall?</h3>
-<p>
-  Med pågående sjukfall menas de sjukfall som har ett giltigt intyg vid inloggningstillfället.
-</p>
+  <div data-ng-repeat="c in faq">
+    <h2><i class="fa {{::c.icon}}"></i> {{::c.title}}</h2>
+    <div class="panel panel-default"  data-ng-repeat="q in c.questions">
+      <div class="panel-heading" ng-click="q.closed = !q.closed">
+        <h4 class="panel-title">
+          <span message key="{{::q.title}}"></span>
 
-<h3>Vad menas med nuvarande intyg?</h3>
-<p>
-  Med nuvarande intyg menas det intyg som är giltigt just nu för en patient. I de fall det finns intyg med överlappande giltighetstid väljs det intyg som har det senaste signeringsdatumet.
-</p>
-
-<h3>Vad menas med sekretessmarkerad uppgift?</h3>
-<p>
-  Med sekretessmarkerad uppgift menas att Skatteverket har bedömt att patientens personuppgifter är extra viktiga att skydda. Det finns speciella riktlinjer om hur personuppgifter för invånare med sekretessmarkering ska hanteras. I Rehabstöd innebär det att:
-  <ul>
-    <li>Namnet på patienten har bytts ut till "Sekretessmarkerad uppgift".</li>
-    <li>Endast läkare, inloggad på den vårdenhet där denne utfärdade intyget kan se sjukfallet.</li>
-  </ul>
-</p>
-
-<h3>Varför ser jag fler sjukfall i <span dynamiclink key="statistiktjanstenSjunet"></span> än i Rehabstöd?</h3>
-<p>
-  I Statistiktjänsten redovisas totalt antal sjukfall för en månad åt gången. Alla sjukfall som pågått någon gång under månaden, även de som har avslutats tidigare under månaden, räknas med där. I Rehabstöd däremot visas bara sjukfall som pågår just nu och som inte har avslutats än.
-</p>
-<p>
-  Exempel: Det är den 23 mars och i Statistiktjänsten ser man idag att en viss enhet har 120 sjukfall under mars månad. I Rehabstöd däremot ser man samma dag att enheten endast har 100 sjukfall. Det beror på att 20 sjukfall har avslutats mellan 1 och 22 mars, och dessa räknas med i Statistiktjänstens statistik för mars men inte i Rehabstöd som bara visar pågående sjukfall.
-</p>
-
-<h3>Vad kan jag göra åt sjukfall med felaktigt slutdatum?</h3>
-<p>
-  Informationen i Rehabstöd hämtas från de läkarintyg som är utfärdade på enheten. Om läkaren av misstag har angett ett slutdatum väldigt långt fram i tiden kommer sjukfallet att synas i Rehabstöd ända till intyget går ut, eftersom sjukfallet räknas som pågående under den tiden. För att rätta felet måste det felaktiga intyget makuleras i journalsystemet och ett korrekt intyg utfärdas istället.
-</p>
-
-<h3>Varför kan jag inte få upp information om vad en diagnoskod i sjukfallstabellen betyder?</h3>
-<p>
-  Det finns två olika anledningar till att betydelsen av en diagnoskod inte kan visas när du för muspekaren över den:
-</p>
-<ol>
-  <li>Huvuddiagnoskoden som läkaren har angett i intyget är inte giltig och går inte att slå upp i något av kodverken för diagnoser (ICD-10-SE och KSH97-P).</li>
-  <li>Läkaren har felaktigt angett flera diagnoskoder i fältet för huvuddiagnos i intyget, och det går därför inte är separera koderna och slå upp kodernas betydelse.</li>
-</ol>
-
-<h3>Vad gör jag om intyg från en viss läkare inte syns i Rehabstöd?</h3>
-<ol>
-  <li>Kontrollera att läkaren har utfärdat intyget på den vårdenhet du väljer att titta på och att intyget är pågående.</li>
-  <li>Ta reda på intygs-id för utfärdat intyg (går att få via journalsystemsleverantören) som inte syns i Rehabstöd, HSA-id för läkaren och HSA-id för enheten på vilken intyget utfärdats.
-    Vänd dig sedan till <span dynamiclink key="ineraNationellKundservice"></span> för vidare felsökning.</li>
-</ol>
-
-<h3>Varför ser rehabkoordinatorn fler sjukfall i Rehabstöd än vad läkaren kan se?</h3>
-<p>
-  Läkaren kan endast se de pågående intyg som läkaren själv utfärdat. Rehabkoordinatorn har behörighet att se samtliga intyg på vårdenheten och tillhörande underenheter.
-</p>
-
-<h3>Kan jag se sjukfall från två olika vårdenheter samtidigt?</h3>
-<p>
-  Nej, i dagsläget kan man inte det. Det är endast möjligt att se en vårdenhet åt gången. Om vårdenheten har underenheter upplagda i HSA-katalogen visas dock som standard alla sjukfall för dessa enheter samtidigt när man tittar på vårdenheten.
-</p>
-
-<h3>Kan jag se intyg från andra vårdgivare eller från andra vårdenheter inom samma vårdgivare?</h3>
-<p>
-  Nej, av juridiska skäl är det i dagsläget inte möjligt att se intygsinformation från andra vårdgivare eller från andra vårdenheter inom samma vårdgivare.
-</p>
-
-<h3>Kan jag se de fullständiga intygen som sjukfallet består av i Rehabstöd?</h3>
-<p>
-  Nej, i dagsläget finns inte möjligheten att visa intygen i helhet.
-</p>
-
-<h3>Kan jag se avslutade sjukfall för en patient?</h3>
-<p>
-  Ja, om patienten har ett pågående intyg på din vårdenhet eller om du i rollen som läkare har skrivit det pågående intyget för en patient finns det möjlighet att se alla patientens tidigare sjukfall på din vårdenhet. För att visa patientens sjukfallshistorik klicka på patientens rad i sjukfallstabellen som visas upp under fliken "Pågående sjukfall".
-</p>
+          <i class="glyphicon pull-right"
+             ng-class="{'glyphicon-chevron-up': !q.closed, 'glyphicon-chevron-down': q.closed}"
+             tooltip-class="popover-content" tooltip-append-to-body="true" tooltip-trigger="mouseenter">
+          </i>
+        </h4>
+      </div>
+      <div class="panel-body" uib-collapse="q.closed">
+        <div class="panel-content">
+          <span message key="{{::q.body}}"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

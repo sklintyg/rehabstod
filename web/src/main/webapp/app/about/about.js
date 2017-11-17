@@ -55,7 +55,8 @@ angular.module('rehabstodApp')
                 url: '/faq',
                 views: {
                     'content@app.about': {
-                        templateUrl: '/app/about/subpages/faq.html'
+                        templateUrl: '/app/about/subpages/faq.html',
+                        controller: 'AboutFaqPageCtrl'
                     }
                 }
             })

@@ -188,9 +188,79 @@ var rhsMessages = {
         'server.error.changeurval.title' : 'Kunde inte visa sjukfall',
         'server.error.getsummary.text': 'Statistik för enheten kan inte visas',
         'server.error.giveconsent.title' : 'Kunde inte lämna medgivande om PDL-loggning',
-        'server.error.loadpatienthistory.text': 'Sjukfallshistorik kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.'
+        'server.error.loadpatienthistory.text': 'Sjukfallshistorik kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
 
 
+
+        // FAQ
+        'faq.sickness.1.title' : 'Vad är ett sjukfall?',
+        'faq.sickness.1.body' : '<p>Ett sjukfall omfattar alla de elektroniska läkarintyg som utfärdats för en viss patient vid en sjukskrivning, ' +
+            'där uppehållet mellan intygens giltighetstider inte överskrider ett angivet maximalt antal dagar. ' +
+            'Det maximala antalet dagar är förinställt till 5 dagar, men du kan enkelt ändra det till vilket värde du vill mellan 0 och 90 dagar.</p>' +
+            '<p>Exempel: Om max antal dagar är inställt på 5 dagar, och intyg 1 gäller till den 14 augusti och intyg 2 gäller från den 17 augusti, ' +
+            'så räknas de båda intygen till samma sjukfall. Om intyg 2 istället hade varit giltigt från den 21 augusti så skulle intygen ha räknats som två separata sjukfall.</p>',
+
+        'faq.sickness.2.title' : 'Vad är ett pågående sjukfall?',
+        'faq.sickness.2.body' : '<p>Med pågående sjukfall menas de sjukfall som har ett giltigt intyg vid inloggningstillfället.</p>',
+
+        'faq.sickness.3.title' : 'Varför ser jag fler sjukfall i <LINK:statistiktjanstenSjunet> än i Rehabstöd?',
+        'faq.sickness.3.body' : '<p>I Intygsstatistik redovisas totalt antal sjukfall för en månad åt gången. ' +
+            'Alla sjukfall som pågått någon gång under månaden, även de som har avslutats tidigare under månaden, räknas med där. ' +
+            'I Rehabstöd däremot visas bara sjukfall som pågår just nu och som inte har avslutats än.</p>' +
+            '<p>Exempel: Det är den 23 mars och i Intygsstatistiks ser man idag att en viss enhet har 120 sjukfall under mars månad. ' +
+            'I Rehabstöd däremot ser man samma dag att enheten endast har 100 sjukfall. Det beror på att 20 sjukfall har avslutats mellan 1 och 22 mars, ' +
+            'och dessa räknas med i Intygsstatistiks statistik för mars men inte i Rehabstöd som bara visar pågående sjukfall.</p>',
+
+        'faq.sickness.4.title' : 'Vad kan jag göra åt sjukfall med felaktigt slutdatum?',
+        'faq.sickness.4.body' : '<p>Informationen i Rehabstöd hämtas från de läkarintyg som är utfärdade på enheten. ' +
+            'Om läkaren av misstag har angett ett slutdatum väldigt långt fram i tiden kommer sjukfallet att synas i Rehabstöd ända till intyget går ut, ' +
+            'eftersom sjukfallet räknas som pågående under den tiden. För att rätta felet finns det två alternativ. ' +
+            'Om intygsutfärdaren arbetar i Webcert kan denne ersätta det felaktiga intyget med ett nytt. ' +
+            'Annars måste intyget makuleras i journalsystemet och ett nytt intyg skapas.</p>',
+
+        'faq.sickness.5.title' : 'Varför kan jag inte få upp information om vad en diagnoskod i sjukfallstabellen betyder?',
+        'faq.sickness.5.body' : '<p>Det finns två olika anledningar till att betydelsen av en diagnoskod inte kan visas när du för muspekaren över den:</p>' +
+            '<ol>' +
+            '<li>Huvuddiagnoskoden som läkaren har angett i intyget är inte giltig och går inte att slå upp i något av kodverken för diagnoser (ICD-10-SE och KSH97-P).</li>' +
+            '<li>Läkaren har felaktigt angett flera diagnoskoder i fältet för huvuddiagnos i intyget, och det går därför inte är separera koderna och slå upp kodernas betydelse.</li>' +
+            '</ol>',
+
+        'faq.sickness.6.title' : 'Varför ser rehabkoordinatorn fler sjukfall i Rehabstöd än vad läkaren kan se?',
+        'faq.sickness.6.body' : '<p>Läkaren kan endast se de pågående intyg som läkaren själv utfärdat. Rehabkoordinatorn har behörighet att se samtliga intyg på vårdenheten och tillhörande underenheter.</p>',
+
+        'faq.sickness.7.title' : 'Kan jag se sjukfall från två olika vårdenheter samtidigt?',
+        'faq.sickness.7.body' : '<p>Nej, i dagsläget kan man inte det. Det är endast möjligt att se en vårdenhet åt gången. ' +
+            'Om vårdenheten har underenheter upplagda i HSA-katalogen visas dock som standard alla sjukfall för dessa enheter samtidigt när man tittar på vårdenheten.</p>',
+
+        'faq.sickness.8.title' : 'Kan jag se intyg från andra vårdgivare eller från andra vårdenheter inom samma vårdgivare?',
+        'faq.sickness.8.body' : '<p>Nej, av juridiska skäl är det i dagsläget inte möjligt att se intygsinformation från andra vårdgivare eller från andra vårdenheter inom samma vårdgivare.</p>',
+
+        'faq.sickness.9.title' : 'Kan jag se avslutade sjukfall för en patient?',
+        'faq.sickness.9.body' : '<p>Ja, om patienten har ett pågående intyg på din vårdenhet eller om du i rollen som läkare har skrivit det pågående intyget för en patient finns det möjlighet att se alla patientens tidigare sjukfall på din vårdenhet. ' +
+            'För att visa patientens sjukfallshistorik klicka på patientens rad i sjukfallstabellen som visas upp under fliken "Pågående sjukfall".</p>',
+
+        'faq.certificate.1.title': 'Vad menas med nuvarande intyg?',
+        'faq.certificate.1.body': '<p>Med nuvarande intyg menas det intyg som är giltigt just nu för en patient. ' +
+            'I de fall det finns intyg med överlappande giltighetstid väljs det intyg som har det senaste signeringsdatumet.</p>',
+
+        'faq.certificate.2.title': 'Vad gör jag om intyg från en viss läkare inte syns i Rehabstöd?',
+        'faq.certificate.2.body': '<ul>' +
+            '<li>Kontrollera att läkaren har utfärdat intyget på den vårdenhet du väljer att titta på och att intyget är pågående.</li>' +
+            '<li>Ta reda på intygs-id för utfärdat intyg (går att få via journalsystemsleverantören) som inte syns i Rehabstöd, ' +
+            'HSA-id för läkaren och HSA-id för enheten på vilken intyget utfärdats. Vänd dig sedan till <LINK:ineraNationellKundservice> för vidare felsökning.</li>' +
+            '</ul>',
+
+        'faq.certificate.3.title': 'Kan jag se de fullständiga intygen som sjukfallet består av i Rehabstöd?',
+        'faq.certificate.3.body': '<p>Ja, genom att klicka upp patientens sjukfallshistorik kan du välja att "Visa intyg". ' +
+            'Det är möjligt att ha flera intyg öppna samtidigt för en patient. Men det går inte att ha intyg för olika patienter öppna samtidigt.</p>',
+
+        'faq.patient.1.title': 'Vad menas med sekretessmarkerad uppgift?',
+        'faq.patient.1.body': '<p>Med sekretessmarkerad uppgift menas att Skatteverket har bedömt att patientens personuppgifter är extra viktiga att skydda. ' +
+            'Det finns speciella riktlinjer om hur personuppgifter för invånare med sekretessmarkering ska hanteras. I Rehabstöd innebär det att:</p>' +
+            '<ul>' +
+            '<li>Namnet på patienten har bytts ut till "Sekretessmarkerad uppgift".</li>' +
+            '<li>Endast läkare, inloggad på den vårdenhet där denne utfärdade intyget kan se sjukfallet.</li>' +
+            '</ul>'
 
     },
     'en': {
