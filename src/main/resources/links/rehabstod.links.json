@@ -44,6 +44,12 @@
     "target": "_blank"
   },
   {
+    "key": "ineraHomepage",
+    "url": "https://www.inera.se",
+    "text": "www.inera.se",
+    "target": "_blank"
+  },
+  {
     "key": "ineraMainPage",
     "url": "https://www.inera.se",
     "text": "Inera AB",
