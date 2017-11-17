@@ -10,7 +10,7 @@ ext {
     rehabSchemaVersion = "1.0.7"
     monitoringSchemaVersion = "1.0.0.3"
     internalMonitoringSchemaVersion = "1.0.2"
-    srsSchemasVersion = "0.0.7-beta1"
+    srsSchemasVersion = "0.0.7"
 
     activemqVersion = "5.13.0"
     commonsCodecVersion = "1.10"
