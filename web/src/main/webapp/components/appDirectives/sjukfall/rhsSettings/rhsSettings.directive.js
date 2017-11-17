@@ -29,8 +29,7 @@ angular.module('rehabstodApp')
                     animation: true,
                     templateUrl: '/components/appDirectives/sjukfall/rhsSettings/rhsSettingsModal/rhsSettingsModal.html',
                     controller: 'RhsSettingsModalCtrl',
-                    size: 'md',
-                    backdrop: 'static'
+                    size: 'md'
                 });
 
                 modalInstance.result.then(function(value) {
