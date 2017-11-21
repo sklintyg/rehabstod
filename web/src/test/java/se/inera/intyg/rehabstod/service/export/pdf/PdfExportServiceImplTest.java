@@ -18,27 +18,13 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.ImmutableSet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.google.common.collect.ImmutableSet;
-
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.infra.security.common.service.CommonFeatureService;
@@ -53,6 +39,18 @@ import se.inera.intyg.rehabstod.web.model.Gender;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by marced on 24/02/16.
@@ -100,7 +98,7 @@ public class PdfExportServiceImplTest {
     @Before
     public void setUp() throws Exception {
 
-        user = new RehabstodUser("HSA1111", "Johannes Nielsen-Kornbach");
+        user = new RehabstodUser("HSA1111", "Johannes Nielsen-Kornbach", false);
         user.setValdVardenhet(new SelectableVardenhet() {
             @Override
             public String getId() {

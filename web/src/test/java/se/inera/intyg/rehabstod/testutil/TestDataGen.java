@@ -18,15 +18,6 @@
  */
 package se.inera.intyg.rehabstod.testutil;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.google.common.collect.ImmutableMap;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
@@ -42,6 +33,15 @@ import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.Sortering;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Helper base class, provides data setup for tests.
@@ -180,8 +180,8 @@ public final class TestDataGen {
         return diagnos;
     }
 
-    public static RehabstodUser buildRehabStodUser() {
-        RehabstodUser user = new RehabstodUser(USER_HSA_ID, USER_NAME);
+    public static RehabstodUser buildRehabStodUser(boolean isLakare) {
+        RehabstodUser user = new RehabstodUser(USER_HSA_ID, USER_NAME, isLakare);
         user.setValdVardenhet(buildValdVardenhet(CAREUNIT_ID, CAREUNIT_NAME));
         user.setValdVardgivare(buildValdGivare(CAREGIVER_ID, CAREGIVER_NAME));
         user.setMiuNamnPerEnhetsId(buildMiUPerEnhetsIdMap());

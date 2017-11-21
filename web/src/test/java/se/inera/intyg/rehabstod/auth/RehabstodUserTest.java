@@ -58,14 +58,14 @@ public class RehabstodUserTest {
 
     @Test
     public void testGetUrvalWithoutRole() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", false);
 
         assertNull(user.getUrval());
     }
 
     @Test
     public void testGetUrvalLakare() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
         user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_LAKARE, new Role()));
 
         assertEquals(Urval.ISSUED_BY_ME, user.getUrval());
@@ -73,7 +73,7 @@ public class RehabstodUserTest {
 
     @Test
     public void testGetUrvalRehabKoordinator() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", false);
         user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_KOORDINATOR, new Role()));
 
         assertEquals(Urval.ALL, user.getUrval());
@@ -81,7 +81,7 @@ public class RehabstodUserTest {
 
     @Test
     public void testChangeValdVardenhet() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
         user.setVardgivare(buildVardgivare(VG_1, VG_1_NAME));
 
         assertEquals(1, user.getVardgivare().size());
@@ -96,7 +96,7 @@ public class RehabstodUserTest {
 
     @Test
     public void testGetTotaltAntalVardenheter() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
         List<Vardgivare> vgList = new ArrayList<>();
         vgList.addAll(buildVardgivare(VG_1, VG_1_NAME));
         vgList.addAll(buildVardgivare(VG_2, VG_2_NAME));
@@ -109,7 +109,7 @@ public class RehabstodUserTest {
     @Test
     public void serializeToDisk() {
         try {
-            RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+            RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
             user.setVardgivare(buildVardgivare(VG_1, VG_1_NAME));
 
             // Write to disk

@@ -59,6 +59,7 @@ import se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.authorities.validation.AuthoritiesValidator;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
+import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
@@ -129,6 +130,9 @@ public class RehabstodUserDetailsServiceTest {
 
     @Mock
     private AnvandarPreferenceRepository anvandarPreferenceRepository;
+
+    @Mock
+    private RehabstodUnitChangeService rehabstodUnitChangeService;
 
     @BeforeClass
     public static void setupAuthoritiesConfiguration() throws Exception {
@@ -376,9 +380,9 @@ public class RehabstodUserDetailsServiceTest {
     }
 
     private List<HsaSystemRoleType> buildSystemRoles() {
-        return Arrays.asList(RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2,
-                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
-                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23)
+        return Arrays.asList(SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2,
+                SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
+                SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23)
                 .stream()
                 .map(s -> {
                     HsaSystemRoleType hsaSystemRole = new HsaSystemRoleType();
@@ -403,8 +407,8 @@ public class RehabstodUserDetailsServiceTest {
         vardgivare2.getVardenheter().addAll(Arrays.asList(enhet21, enhet22));
 
         List<String> systemRoles = Arrays.asList(
-                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
-                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23);
+                SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
+                SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23);
 
         List<Vardgivare> original = new ArrayList<>(Arrays.asList(vardgivare1, vardgivare2));
 
@@ -426,7 +430,7 @@ public class RehabstodUserDetailsServiceTest {
         Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "Skall bort");
         vardgivare1.getVardenheter().add(enhet1);
 
-        List<String> systemRoles = Arrays.asList(RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2);
+        List<String> systemRoles = Arrays.asList(SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2);
 
         List<Vardgivare> original = new ArrayList<>(Arrays.asList(vardgivare1));
 

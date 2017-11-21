@@ -311,7 +311,7 @@ public class SjukfallControllerTest {
 
     @NotNull
     private RehabstodUser buildConcreteUser() {
-        RehabstodUser user = new RehabstodUser("user-1", "Hej Hejssansson");
+        RehabstodUser user = new RehabstodUser("user-1", "Hej Hejssansson", true);
         Vardgivare vg = new Vardgivare("vg-1", "VG-namn");
         Vardenhet ve = new Vardenhet(VARDENHETS_ID, "VE-namn");
         vg.getVardenheter().add(ve);

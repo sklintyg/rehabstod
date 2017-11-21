@@ -389,7 +389,7 @@ public class SjukfallPuServiceImplTest {
     }
 
     private RehabstodUser buildVardadmin() {
-        RehabstodUser user = new RehabstodUser("hsa-123", "user-123");
+        RehabstodUser user = new RehabstodUser("hsa-123", "user-123", false);
         user.setRoles(new HashMap<>());
         return user;
     }

@@ -18,13 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Collections;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,13 +26,20 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
+import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.feature.RehabstodFeatureServiceImpl;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
+
+import java.util.Collections;
+
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by marced on 01/02/16.
@@ -59,6 +59,9 @@ public class UserControllerTest {
     @Mock
     RehabstodFeatureServiceImpl featureService;
 
+    @Mock
+    RehabstodUnitChangeService rehabstodUnitChangeService;
+
     @InjectMocks
     private UserController userController = new UserController();
 
@@ -68,6 +71,7 @@ public class UserControllerTest {
         when(userService.getUser()).thenReturn(rehabUserMock);
         when(rehabUserMock.getValdVardenhet()).thenReturn(new Vardenhet("123", "enhet"));
         when(rehabUserMock.getValdVardgivare()).thenReturn(new Vardenhet("456", "vardgivare"));
+        when(rehabstodUnitChangeService.changeValdVardenhet("123", rehabUserMock)).thenReturn(true);
     }
 
     @Test
@@ -81,26 +85,25 @@ public class UserControllerTest {
     @Test
     public void testChangeEnhetSuccess() {
         ChangeSelectedUnitRequest req = new ChangeSelectedUnitRequest("123");
-        when(rehabUserMock.changeValdVardenhet(eq(req.getId()))).thenReturn(true);
+        when(rehabstodUnitChangeService.changeValdVardenhet(eq(req.getId()), eq(rehabUserMock))).thenReturn(true);
 
         userController.changeSelectedUnitOnUser(req);
 
         verify(userService).getUser();
-        verify(rehabUserMock).changeValdVardenhet(eq(req.getId()));
+        verify(rehabstodUnitChangeService).changeValdVardenhet(eq(req.getId()), eq(rehabUserMock));
 
     }
 
     @Test
     public void testChangeEnhetFails() {
         ChangeSelectedUnitRequest req = new ChangeSelectedUnitRequest("123");
-        when(rehabUserMock.changeValdVardenhet(eq(req.getId()))).thenReturn(false);
-
+        when(rehabstodUnitChangeService.changeValdVardenhet(eq(req.getId()), eq(rehabUserMock))).thenReturn(false);
         thrown.expect(AuthoritiesException.class);
 
         userController.changeSelectedUnitOnUser(req);
 
         verify(userService).getUser();
-        verify(rehabUserMock).changeValdVardenhet(eq(req.getId()));
+        verify(rehabstodUnitChangeService).changeValdVardenhet(eq(req.getId()), eq(rehabUserMock));
 
     }
 }

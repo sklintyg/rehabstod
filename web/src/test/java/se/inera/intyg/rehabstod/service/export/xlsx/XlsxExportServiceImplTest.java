@@ -18,25 +18,14 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.util.List;
-
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.infra.security.common.service.CommonFeatureService;
@@ -46,6 +35,15 @@ import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.feature.RehabstodFeature;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by eriklupander on 2016-02-24.
@@ -66,7 +64,7 @@ public class XlsxExportServiceImplTest {
 
     @Before
     public void setup() {
-        user = new RehabstodUser("HSA1111", "Johannes Nielsen-Kornbach");
+        user = new RehabstodUser("HSA1111", "Johannes Nielsen-Kornbach", false);
         user.setValdVardenhet(new SelectableVardenhet() {
             @Override
             public String getId() {

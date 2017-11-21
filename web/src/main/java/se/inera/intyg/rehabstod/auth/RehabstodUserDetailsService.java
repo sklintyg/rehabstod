@@ -32,13 +32,11 @@ import se.inera.intyg.infra.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.infra.security.siths.BaseUserDetailsService;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
+import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author andreaskaltenbach
@@ -47,15 +45,14 @@ import java.util.regex.Pattern;
 public class RehabstodUserDetailsService extends BaseUserDetailsService implements SAMLUserDetailsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(RehabstodUserDetailsService.class);
-    static final String HSA_SYSTEMROLE_REHAB_UNIT_PREFIX = "INTYG;Rehab-";
-
-    // The part after prefix is assumed to be a hsa-enhetsid, this will be extracted and compared.
-    private static final Pattern HSA_SYSTEMROLE_REHAB_UNIT_PATTERN = Pattern.compile("^" + HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "(.*)");
 
     public static final String PDL_CONSENT_GIVEN = "user_pdl_consent_given";
 
     @Autowired
     private AnvandarPreferenceRepository anvandarPreferenceRepository;
+
+    @Autowired
+    private RehabstodUnitChangeService rehabstodUnitChangeService;
 
     // =====================================================================================
     // ~ Protected scope
@@ -65,7 +62,16 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
     protected RehabstodUser buildUserPrincipal(SAMLCredential credential) {
         // All rehab customization is done in the overridden decorateXXX methods, so just return a new rehabuser
         IntygUser intygUser = super.buildUserPrincipal(credential);
-        return new RehabstodUser(intygUser, isPdlConsentGiven(intygUser.getHsaId()));
+        RehabstodUser rehabstodUser = new RehabstodUser(intygUser, isPdlConsentGiven(intygUser.getHsaId()), intygUser.isLakare());
+
+        // INTYG-5068: Explicitly changing vardenhet on session creation to possibly appyl REHABKOORDINATOR role for
+        // this unit in case the user is LAKARE and has systemRole Rehab- for the current unit.
+        // This is only performed if there were a unit selected, e.g. user only has access to a single unit.
+        if (rehabstodUser.getValdVardenhet() != null) {
+            rehabstodUnitChangeService.changeValdVardenhet(rehabstodUser.getValdVardenhet().getId(), rehabstodUser);
+        }
+
+        return rehabstodUser;
     }
 
     private boolean isPdlConsentGiven(String hsaId) {
@@ -81,18 +87,18 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
             super.decorateIntygUserWithDefaultVardenhet(intygUser);
         }
     }
-    protected int getTotaltAntalVardenheterExcludingMottagningar(IntygUser intygUser) {
+
+    private int getTotaltAntalVardenheterExcludingMottagningar(IntygUser intygUser) {
         // count all vardenheter (not including mottagningar under vardenheter)
         return (int) intygUser.getVardgivare().stream().flatMap(vg -> vg.getVardenheter().stream()).count();
     }
-
 
     @Override
     protected void decorateIntygUserWithSystemRoles(IntygUser intygUser, UserCredentials userCredentials) {
         super.decorateIntygUserWithSystemRoles(intygUser, userCredentials);
 
         if (intygUser.getRoles().containsKey(AuthoritiesConstants.ROLE_KOORDINATOR)) {
-            //ROLE_KOORDINATOR must have a matching systemrole for each unit, or else it's removed
+            // ROLE_KOORDINATOR must have a matching systemrole for each unit, or else it's removed
             removeEnheterMissingRehabKoordinatorRole(intygUser.getVardgivare(), intygUser.getSystemRoles(), intygUser.getHsaId());
         }
 
@@ -112,7 +118,7 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         long unitsBefore = authorizedVardgivare.stream().mapToInt(vg -> vg.getVardenheter().size()).sum();
 
         // Get a clean list of enhetsId's that user is authorized to use rehab for
-        List<String> rehabAuthorizedEnhetIds = parseEnhetsIdsFromSystemRoles(systemRoles);
+        List<String> rehabAuthorizedEnhetIds = SystemRolesParser.parseEnhetsIdsFromSystemRoles(systemRoles);
 
         // remove all vardeneheter that's not present in whitelist
         authorizedVardgivare.stream().forEach(vg -> vg.getVardenheter().removeIf(ve -> !rehabAuthorizedEnhetIds.contains(ve.getId())));
@@ -128,20 +134,6 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         if (unitsAfter < 1) {
             throw new MissingUnitWithRehabSystemRoleException(hsaId);
         }
-    }
-
-    private List<String> parseEnhetsIdsFromSystemRoles(List<String> systemRoles) {
-        List<String> idList = new ArrayList<>();
-        if (systemRoles == null) {
-            return idList;
-        }
-        for (String s : systemRoles) {
-            Matcher matcher = HSA_SYSTEMROLE_REHAB_UNIT_PATTERN.matcher(s);
-            if (matcher.find()) {
-                idList.add(matcher.group(1));
-            }
-        }
-        return idList;
     }
 
 }
