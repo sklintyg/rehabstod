@@ -18,12 +18,14 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import se.inera.intyg.infra.integration.hsa.model.AbstractVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
+import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.service.Urval;
 
 import java.io.Serializable;
@@ -184,6 +186,23 @@ public class RehabstodUser extends IntygUser implements Serializable {
     @Override
     public boolean isLakare() {
         return isLakare;
+    }
+
+    /**
+     * Returns true if the user is a doctor and at least one vardenhet Id matches an Intyg;Rehab-[enhetId] systemRole.
+     */
+    public boolean isRoleSwitchPossible() {
+        if (!isLakare()) {
+            return false;
+        }
+
+        // Check if this doctor has a
+        return this.vardgivare.stream()
+                .flatMap(vg -> vg.getVardenheter().stream())
+                .map(AbstractVardenhet::getId)
+                .anyMatch(enhetId -> SystemRolesParser.parseEnhetsIdsFromSystemRoles(systemRoles).stream()
+                        .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(enhetId))
+        );
     }
 
     // private scope

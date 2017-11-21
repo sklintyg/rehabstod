@@ -51,6 +51,7 @@ public class GetUserResponse {
     private Urval urval;
 
     private boolean pdlConsentGiven = false;
+    private boolean roleSwitchPossible = false;
 
     private Set<String> features;
 
@@ -69,6 +70,7 @@ public class GetUserResponse {
         this.totaltAntalVardenheter = user.getTotaltAntalVardenheter();
         this.urval = user.getUrval();
         this.pdlConsentGiven = user.isPdlConsentGiven();
+        this.roleSwitchPossible = user.isRoleSwitchPossible();
         this.features = user.getFeatures();
     }
 
@@ -166,6 +168,14 @@ public class GetUserResponse {
 
     public void setPdlConsentGiven(boolean pdlConsentGiven) {
         this.pdlConsentGiven = pdlConsentGiven;
+    }
+
+    public boolean isRoleSwitchPossible() {
+        return roleSwitchPossible;
+    }
+
+    public void setRoleSwitchPossible(boolean roleSwitchPossible) {
+        this.roleSwitchPossible = roleSwitchPossible;
     }
 
     public Set<String> getFeatures() {

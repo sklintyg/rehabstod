@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
@@ -55,9 +56,9 @@ public class RehabstodUnitChangeService {
                 List<String> enhetIdList = SystemRolesParser.parseEnhetsIdsFromSystemRoles(user.getSystemRoles());
 
                 boolean hasSystemRoleForSelectedUnit = enhetIdList.stream().anyMatch(s -> s.equals(enhetId));
-                if (hasSystemRoleForSelectedUnit) {
+                if (hasSystemRoleForSelectedUnit || hasImplicitAccessToSubUnit(user, enhetIdList)) {
                     updateUsersRoleTo(user, AuthoritiesConstants.ROLE_KOORDINATOR);
-                } else {
+                } else  {
                     // If no systemRole for this unit, we must change back to ROLE_LAKARE.
                     updateUsersRoleTo(user, AuthoritiesConstants.ROLE_LAKARE);
                 }
@@ -65,6 +66,17 @@ public class RehabstodUnitChangeService {
         }
 
         return ok;
+    }
+
+    // Checks if any we have a Mottagning selected. If so, we check if the parent care unit is in the
+    // list of enhetIds designated by systemRoles.
+    private boolean hasImplicitAccessToSubUnit(RehabstodUser user, List<String> systemRoleEnhetIdList) {
+        if (user.getValdVardenhet() instanceof Mottagning) {
+            Mottagning m = (Mottagning) user.getValdVardenhet();
+            return systemRoleEnhetIdList.stream()
+                    .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(m.getParentHsaId()));
+        }
+        return false;
     }
 
     // Clears roles, sets new ones and updates active features.

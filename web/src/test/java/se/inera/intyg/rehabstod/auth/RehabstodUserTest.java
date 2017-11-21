@@ -40,6 +40,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static se.inera.intyg.rehabstod.auth.util.SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX;
 
 /**
  * @author marced on 01/03/16.
@@ -104,6 +105,36 @@ public class RehabstodUserTest {
 
         assertEquals(4, user.getTotaltAntalVardenheter());
 
+    }
+
+    @Test
+    public void testRoleSwitchPossibleForDoctorWithMatchingSystemRole() {
+        RehabstodUser user = setupRehabstodUserWithSystemRoles(true, new ArrayList<>(), HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_1);
+        assertTrue(user.isRoleSwitchPossible());
+    }
+
+    @Test
+    public void testRoleSwitchNotPossibleForDoctorWithoutMatchingSystemRole() {
+        RehabstodUser user = setupRehabstodUserWithSystemRoles(true, new ArrayList<>(),
+                HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "some-other-unit-id");
+        assertFalse(user.isRoleSwitchPossible());
+    }
+
+    @Test
+    public void testRoleSwitchNotPossibleForNonDoctorWithMatchingSystemRole() {
+        RehabstodUser user = setupRehabstodUserWithSystemRoles(false, new ArrayList<>(), HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_1);
+        assertFalse(user.isRoleSwitchPossible());
+    }
+
+    private RehabstodUser setupRehabstodUserWithSystemRoles(boolean isLakare, ArrayList<String> systemRoles, String e) {
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", isLakare);
+        List<Vardgivare> vgList = new ArrayList<>();
+        vgList.addAll(buildVardgivare(VG_1, VG_1_NAME));
+        vgList.addAll(buildVardgivare(VG_2, VG_2_NAME));
+        user.setVardgivare(vgList);
+        user.setSystemRoles(systemRoles);
+        user.getSystemRoles().add(e);
+        return user;
     }
 
     @Test
