@@ -105,10 +105,17 @@ angular.module('rehabstodApp').factory('messageService',
         }
 
         function _buildDynamicLink(linkKey) {
-            var dynamicLink = '<a href="' + _links[linkKey].url + '"';
+            var dynamicLink = '<a class="external-link" href="' + _links[linkKey].url + '"';
             dynamicLink += _links[linkKey].tooltip ? ' title="' + _links[linkKey].tooltip + '"' : '';
             dynamicLink += _links[linkKey].target ? ' target="' + _links[linkKey].target + '">' : '>';
-            dynamicLink += _links[linkKey].text + '</a>';
+            dynamicLink += _links[linkKey].text;
+
+            if (_links[linkKey].target) {
+                dynamicLink += ' <i class="glyphicon glyphicon-new-window"></i></a>';
+            }
+
+            dynamicLink += '</a>';
+
             return dynamicLink;
         }
 
