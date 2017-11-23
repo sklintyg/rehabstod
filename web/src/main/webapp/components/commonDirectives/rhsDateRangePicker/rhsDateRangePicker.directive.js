@@ -99,14 +99,14 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
 
                 var inputElement = element.find('input');
                 inputElement.dateRangePicker(options)
-                    .bind('datepicker-change',function(event, obj) {
+                    .on('datepicker-change', function(event, obj) {
                         /* This event will be triggered when second date is selected */
                         $scope.model.from = obj.date1;
                         $scope.model.to = obj.date2;
 
                         setDisplayValue(true);
                     })
-                    .bind('datepicker-open',function() {
+                    .on('datepicker-open', function() {
                         $('#clearDatePicker').click(function() {
                             inputElement.data('dateRangePicker').clear();
 
@@ -126,6 +126,10 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
                     $event.stopPropagation();
                     inputElement.data('dateRangePicker').open();
                 };
+
+                $scope.$on('$destroy', function() {
+                    inputElement.data('dateRangePicker').destroy();
+                });
 
                 $scope.$watch('model', function() {
                     setDisplayValue();
