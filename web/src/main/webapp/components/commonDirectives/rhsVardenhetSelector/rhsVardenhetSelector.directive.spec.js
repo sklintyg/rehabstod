@@ -51,7 +51,7 @@ describe('Directive: RhsVardenhetSelector', function() {
         $scope = $rootScope.$new();
         //Setup common prerequsites for all tests
         $scope.userParameter = userJson;
-        element = $compile('<rhs-vardenhet-selector user="userParameter" expand-vardgivare="true"/>')($scope);
+        element = $compile('<rhs-vardenhet-selector user="userParameter" expand-vardgivare="true"/> roleSwitchMessageKey="temp"')($scope);
         $scope.$digest();
 
         elementScope = element.isolateScope() || element.scope();

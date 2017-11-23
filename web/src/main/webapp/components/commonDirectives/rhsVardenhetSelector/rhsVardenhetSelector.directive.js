@@ -25,10 +25,13 @@ angular.module('rehabstodApp').directive('rhsVardenhetSelector', function() {
         scope: {
             'user': '=',
             'onUnitSelection': '&',
-            'expandVardgivare': '='
+            'expandVardgivare': '=',
+            'roleSwitchMessageKey': '@'
         },
         templateUrl: '/components/commonDirectives/rhsVardenhetSelector/rhsVardenhetSelector.directive.html',
         link: function($scope) {
+            // Add variable to scope whether to show the role switch info dialog or not.
+            $scope.showRoleSwitchMessage = $scope.user.roleSwitchPossible;
 
             //Create lo local copy with only required info
             var model = {};

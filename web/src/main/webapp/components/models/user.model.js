@@ -38,6 +38,7 @@ angular.module('rehabstodApp').factory('UserModel',
 
             data.loggedIn = false;
             data.pdlConsentGiven = false;
+            data.roleSwitchPossible = false;
             return data;
         }
 
@@ -85,6 +86,7 @@ angular.module('rehabstodApp').factory('UserModel',
                 data.isLakare = this.isLakare();
                 data.urval = user.urval;
                 data.pdlConsentGiven = user.pdlConsentGiven;
+                data.roleSwitchPossible = user.roleSwitchPossible;
                 data.features = user.features;
             },
             get: function() {
@@ -125,6 +127,10 @@ angular.module('rehabstodApp').factory('UserModel',
 
             isPdlConsentGiven: function() {
                 return data.pdlConsentGiven;
+            },
+
+            isRoleSwitchPossible: function() {
+                return data.roleSwitchPossible;
             },
 
             fakeLogin: function() {

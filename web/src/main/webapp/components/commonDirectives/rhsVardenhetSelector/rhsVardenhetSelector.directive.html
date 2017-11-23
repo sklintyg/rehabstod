@@ -1,4 +1,5 @@
 <div class="rhs-vardenhet-selector">
+  <div ng-if="showRoleSwitchMessage" class="alert alert-info"><span message key="{{ roleSwitchMessageKey }}"></span></div>
   <div ng-repeat="vg in model.vardgivare | orderBy:'namn'">
      <span class="toggle-icon" id="expand-vg-{{vg.id}}" ng-if="vg.vardenheter.length > 0" ng-click="vg.expanded = ! vg.expanded">
         <span class="glyphicon" ng-class="vg.expanded ? 'glyphicon-minus-sign' : 'glyphicon-plus-sign'"></span>

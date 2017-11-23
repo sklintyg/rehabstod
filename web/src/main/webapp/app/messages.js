@@ -176,6 +176,10 @@ var rhsMessages = {
         'modal.pdlconsent.lakare.body': 'Väljer du att gå vidare kommer du få se dina pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter vilket gör att åtkomst måste loggas enligt Patientdatalagen (PDL) (läs mer om loggning här: <a href="/#/app/about/rehabstod" class="external-link" rel="nofollow">Vad är Rehabstöd?</a>).<br><br>Observera att vid visning av intyg sker loggningen för Webcert då intyget tekniskt öppnas i Webcert men visas i Rehabstöd.<br><br>Genom att klicka i "Jag förstår och godkänner" tar du ställning till att det är nödvändigt för dig att i din yrkesroll få ta del av patienternas uppgifter samt bekräftar din kännedom om den loggning som sker. Detta godkännande gäller för alla enheter som du har behörighet till.<br><br>Detta godkännande kommer endast krävas en gång.',
         'modal.pdlconsent.userapproval': 'Jag förstår och godkänner.',
 
+        // Role switching
+        'label.role.switch.notloggedin': 'Observera! Du har behörigheten Rehabkoordinator på någon/några av dina enheter. Var uppmärksam om att din roll kommer skifta från Läkare till Rehabkoordinator när du väljer att logga in på en sådan enhet.',
+        'label.role.switch.loggedin': 'Observera! Du har olika behörigheter på olika enheter. Var uppmärksam om att din roll kan komma att skifta mellan Läkare och Rehabkoordinator beroende på vilken enhet du väljer att byta till.',
+
         // Patient History Dialog
         'label.patienthistory.loading' : 'Hämtar sjukfall för patient...',
 
