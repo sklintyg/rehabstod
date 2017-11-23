@@ -19,53 +19,30 @@
 
 angular.module('rehabstodApp')
     .controller('AboutFaqPageCtrl',
-        function($scope, _) {
+        function($scope, _, messageService) {
             'use strict';
 
-
-            function getSicknessQuestions() {
-                var questions = [];
-                var numberOfQuestions = 9;
-
-                for (var i = 1; i <= numberOfQuestions; i++) {
-                    questions.push({
-                        title: 'faq.sickness.' + i + '.title',
-                        closed: true,
-                        body: 'faq.sickness.' + i + '.body'
-                    });
-                }
-
-                return questions;
-            }
-
-            function getCertificateQuestions() {
-                var questions = [];
-                var numberOfQuestions = 3;
-
-                for (var i = 1; i <= numberOfQuestions; i++) {
-                    questions.push({
-                        title: 'faq.certificate.' + i + '.title',
-                        closed: true,
-                        body: 'faq.certificate.' + i + '.body'
-                    });
-                }
-
-                return questions;
-            }
-
-            function getPatientQuestions() {
+            function getQuestions(prefix) {
                 var questions = [];
                 var numberOfQuestions = 1;
 
-                for (var i = 1; i <= numberOfQuestions; i++) {
+                while(hasQuestion(prefix, numberOfQuestions)) {
                     questions.push({
-                        title: 'faq.patient.' + i + '.title',
+                        title: prefix + numberOfQuestions + '.title',
                         closed: true,
-                        body: 'faq.patient.' + i + '.body'
+                        body: prefix + numberOfQuestions + '.body'
                     });
+
+                    numberOfQuestions++;
                 }
 
                 return questions;
+            }
+
+            function hasQuestion(prefix, index) {
+                var key = prefix + index + '.title';
+
+                return messageService.propertyExists(key);
             }
 
             var faq = [];
@@ -73,19 +50,19 @@ angular.module('rehabstodApp')
             faq.push({
                 title: 'Sjukfall',
                 icon: 'fa-stethoscope',
-                questions: getSicknessQuestions()
+                questions: getQuestions('faq.certificate.')
             });
 
             faq.push({
                 title: 'Intyg',
                 icon: 'fa-file-text-o',
-                questions: getCertificateQuestions()
+                questions: getQuestions('faq.sickness.')
             });
 
             faq.push({
                 title: 'Patient',
                 icon: 'fa-user-o',
-                questions: getPatientQuestions()
+                questions: getQuestions('faq.patient.')
             });
 
 
