@@ -41,9 +41,4 @@ angular.module('rehabstodApp')
                 link: 'app.about.support',
                 label: 'Support och kontaktinformation'
             });
-            $scope.menuItems.push({
-                id: 'about-cookies',
-                link: 'app.about.cookies',
-                label: 'Om kakor (cookies)'
-            });
         });

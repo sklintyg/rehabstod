@@ -11,4 +11,11 @@
   li {
     word-break: keep-all;
   }
+
+  .about-table {
+    td {
+      vertical-align: top;
+      padding: 2px 5px;
+    }
+  }
 }

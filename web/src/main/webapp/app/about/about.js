@@ -67,13 +67,5 @@ angular.module('rehabstodApp')
                         templateUrl: '/app/about/subpages/support.html'
                     }
                 }
-            })
-            .state('app.about.cookies', {
-                url: '/cookies',
-                views: {
-                    'content@app.about': {
-                        templateUrl: '/app/about/subpages/cookies.html'
-                    }
-                }
             });
     });
