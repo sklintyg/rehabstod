@@ -122,6 +122,9 @@
     "pdlConsentGiven": {
       "type": "boolean"
     },
+    "roleSwitchPossible": {
+      "type": "boolean"
+    },
     "features": {
       "additionalItems": false,
       "items": {},
@@ -142,9 +145,10 @@
     "totaltAntalVardenheter",
     "urval",
     "pdlConsentGiven",
+    "roleSwitchPossible",
     "features"
   ],
-  "title": "WebCertUser transport model",
+  "title": "RehabstodUser transport model",
   "type": "object",
   "additionalProperties": false
 }
