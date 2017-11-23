@@ -16,17 +16,25 @@
     }
   }
 
+  h2 i {
+    color: #333;
+  }
+
   .panel-heading {
     border-bottom: 0;
     background-color: #fff;
     border-color: #E4E4E4;
   }
 
+  .panel {
+    margin-bottom: 10px;
+  }
+
   .panel-body {
     padding: 0;
 
     .panel-content {
-      margin: 15px;
+      margin: 0 15px 15px;
     }
   }
 }

@@ -57,11 +57,12 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   }
 }
 
-h1, h3 {
+h1 {
   color: $blue-color;
 }
 
 h2 {
+  color: $blue-color;
   line-height: 20px;
   padding-top: 30px;
 }
