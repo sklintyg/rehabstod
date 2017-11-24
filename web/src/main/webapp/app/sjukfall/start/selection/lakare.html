@@ -1,4 +1,4 @@
-<div id="rhs-start-page" class="container">
+<div id="rhs-start-page" class="container rhs-start-page">
   <div class="result-top">
     <h1 class="page-header">
       <span message key="label.sjukfall.start.lakare.header"></span>{{user.valdVardenhet.namn}}
@@ -8,7 +8,7 @@
   <rhs-stat-panel vardenhet="user.valdVardenhet" id="rhs-start-stat-panel"></rhs-stat-panel>
 
   <div class="row" id="rhs-start-page-lakare">
-    <div class="col-xs-6">
+    <div class="col-sm-6 show-sjukfall-panel">
       <div>
         <h3>{{::'label.sjukfall.start.selectionpanel.header' | message}}</h3>
       </div>
@@ -23,17 +23,11 @@
       </div>
     </div>
 
-    <div class="col-xs-6">
-      <div class="row">
-        <div class="col-xs-12">
-          <rhs-overview-more-statistic sjunet-available="sjunetAvailable"></rhs-overview-more-statistic>
-        </div>
-      </div>
+    <div class="col-sm-6">
+      <rhs-overview-more-statistic sjunet-available="sjunetAvailable"></rhs-overview-more-statistic>
 
-      <div class="row srs-row" ng-if="hasFeature('srs')">
-        <div class="col-xs-12">
-          <rhs-srs-overview></rhs-srs-overview>
-        </div>
+      <div class="srs-row" ng-if="hasFeature('srs')">
+        <rhs-srs-overview></rhs-srs-overview>
       </div>
     </div>
   </div>
