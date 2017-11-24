@@ -109,6 +109,7 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
                     .on('datepicker-open', function() {
                         $('#clearDatePicker').click(function() {
                             inputElement.data('dateRangePicker').clear();
+                            inputElement.data('dateRangePicker').redraw();
 
                             $scope.model.from = null;
                             $scope.model.to = null;
