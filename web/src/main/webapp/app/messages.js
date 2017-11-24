@@ -68,7 +68,7 @@ var rhsMessages = {
                                                     'När du klickar på "Visa pågående sjukfall" nedan kommer du att få se alla pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad och läkare. Om du har tillgång till flera enheter kan du se pågående sjukfall för en annan enhet genom att byta enhet i sidhuvudet.<br><br>' +
                                                     'Informationen som visas loggas enligt Patientdatalagen (PDL).',
         'label.sjukfall.start.merstatistik.header': 'Var kan jag hitta mer statistik?',
-        'label.sjukfall.start.merstatistik.body': 'Om du vill se mer statistik för din enhet eller på nationell nivå kan du använda Statistiktjänsten.<br><br>När du klickar på länken nedan öppnas Statistiktjänsten i ett nytt fönster.',
+        'label.sjukfall.start.merstatistik.body': 'Om du vill se mer statistik för din enhet eller på nationell nivå kan du använda Intygsstatistik.<br><br>När du klickar på länken nedan öppnas Intygsstatistik i ett nytt fönster.',
 
         // Om SRS
         'label.sjukfall.start.srs.header': 'Var kan jag hitta mer information om Stöd för rätt sjukskrivning (SRS)?',
