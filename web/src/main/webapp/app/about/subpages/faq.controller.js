@@ -49,13 +49,13 @@ angular.module('rehabstodApp')
 
             faq.push({
                 title: 'Sjukfall',
-                icon: 'fa-file-text-o',
+                icon: 'fa-stethoscope',
                 questions: getQuestions('faq.sickness.')
             });
-            
+
             faq.push({
                 title: 'Intyg',
-                icon: 'fa-stethoscope',
+                icon: 'fa-file-text-o',
                 questions: getQuestions('faq.certificate.')
             });
 
