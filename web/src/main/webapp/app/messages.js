@@ -211,7 +211,7 @@ var rhsMessages = {
         'faq.sickness.3.body' : '<p>I Intygsstatistik redovisas totalt antal sjukfall för en månad åt gången. ' +
             'Alla sjukfall som pågått någon gång under månaden, även de som har avslutats tidigare under månaden, räknas med där. ' +
             'I Rehabstöd däremot visas bara sjukfall som pågår just nu och som inte har avslutats än.</p>' +
-            '<p>Exempel: Det är den 23 mars och i Intygsstatistiks ser man idag att en viss enhet har 120 sjukfall under mars månad. ' +
+            '<p>Exempel: Det är den 23 mars och i Intygsstatistik ser man idag att en viss enhet har 120 sjukfall under mars månad. ' +
             'I Rehabstöd däremot ser man samma dag att enheten endast har 100 sjukfall. Det beror på att 20 sjukfall har avslutats mellan 1 och 22 mars, ' +
             'och dessa räknas med i Intygsstatistiks statistik för mars men inte i Rehabstöd som bara visar pågående sjukfall.</p>',
 
