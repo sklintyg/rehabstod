@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.services.PUService;
+import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -74,7 +75,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
                 // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE, då får vi ej visa
                 // sjukfall för s-märkt patient.
-                if (!user.isLakare() || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
+                if (!hasLakareRoleAndIsLakare(user) || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
                     i.remove();
                 }
             } else if (patientFound && personSvar.getPerson().isAvliden()) {
@@ -109,7 +110,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
                     // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE, då får vi ej visa
                     // sjukfall för s-märkt patient.
-                    if (!user.isLakare() || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
+                    if (!hasLakareRoleAndIsLakare(user) || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
                         i.remove();
                     }
                 } else if (personSvar.getPerson().isAvliden()) {
@@ -124,6 +125,13 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                 item.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_UNKNOWN);
             }
         }
+    }
+
+    // This is a hack to sort out the requirement that a Doctor MAY have systemRole making the Doctor a REHABKOORDINATOR.
+    // In that particular case, the "isLakare()" will still return true, but the ROLE of the user will be REHABKOORDINATOR.
+    // This method explicitly checks to the user is both a doc and has the requisite role.
+    private boolean hasLakareRoleAndIsLakare(RehabstodUser user) {
+        return user.isLakare() && user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE);
     }
 
     @Override
@@ -147,8 +155,6 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
         PersonSvar personSvar = puService.getPerson(personnummer);
 
-
-
         if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
 
             // If patient is deceased, we shouldn't be here at all.
@@ -159,7 +165,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             RehabstodUser user = userService.getUser();
 
             if (personSvar.getPerson().isSekretessmarkering()) {
-                if (!(user.isLakare()
+                if (!(hasLakareRoleAndIsLakare(user)
                         && userService.isUserLoggedInOnEnhetOrUnderenhet(patientSjukfall.get(0).getIntyg().get(0).getVardenhetId()))) {
                     throw new IllegalStateException("Cannot show patient details for patient having sekretessmarkering");
                 }

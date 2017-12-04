@@ -27,6 +27,7 @@ import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.services.PUService;
+import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -38,10 +39,13 @@ import se.inera.intyg.schemas.contract.Personnummer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 /**
  * Created by eriklupander on 2017-09-06.
  */
@@ -152,6 +156,20 @@ public class SjukfallPuServiceImplTest {
         List<SjukfallEnhet> sjukfallList = buildSjukfallList(TOLVANSSON_PNR);
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
         assertEquals(1, sjukfallList.size());
+    }
+
+    @Test
+    public void testSekretessmarkeradIsExcludedWhenUserIsLakareAsRehabkoordinatorOnSameUnit() {
+        RehabstodUser rehabstodUser = buildLakareAsRehabkoordinator(ENHET_1);
+        when(userService.getUser()).thenReturn(rehabstodUser);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
+
+        when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
+                buildPersonSvar(TOLVANSSON_PNR, true, false, PersonSvar.Status.FOUND));
+
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList(TOLVANSSON_PNR);
+        testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
+        assertEquals(0, sjukfallList.size());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -351,7 +369,6 @@ public class SjukfallPuServiceImplTest {
         assertEquals(0, patientSjukfallList.size());
     }
 
-
     private List<SjukfallPatient> buildPatientSjukfallList(String pnr) {
         List<SjukfallPatient> sjukfallList = new ArrayList<>();
         sjukfallList.add(buildPatientSjukfall(pnr));
@@ -381,10 +398,25 @@ public class SjukfallPuServiceImplTest {
         Vardenhet valdVardenhet = new Vardenhet(enhetHsaId, "namnet");
 
         RehabstodUser user = mock(RehabstodUser.class);
+        Map<String, Role> roleMap = mock(Map.class);
+        when(roleMap.containsKey(eq("LAKARE"))).thenReturn(true);
 
         when(user.getValdVardenhet()).thenReturn(valdVardenhet);
         when(user.isLakare()).thenReturn(true);
+        when(user.getRoles()).thenReturn(roleMap);
+        return user;
+    }
 
+    private RehabstodUser buildLakareAsRehabkoordinator(String enhetHsaId) {
+        Vardenhet valdVardenhet = new Vardenhet(enhetHsaId, "namnet");
+
+        RehabstodUser user = mock(RehabstodUser.class);
+        Map<String, Role> roleMap = mock(Map.class);
+        when(roleMap.containsKey(eq("LAKARE"))).thenReturn(false);
+
+        when(user.getValdVardenhet()).thenReturn(valdVardenhet);
+        when(user.isLakare()).thenReturn(true);
+        when(user.getRoles()).thenReturn(roleMap);
         return user;
     }
 
