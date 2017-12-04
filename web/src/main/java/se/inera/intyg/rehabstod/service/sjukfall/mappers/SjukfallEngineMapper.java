@@ -18,14 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.mappers;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
@@ -36,6 +28,14 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Magnus Ekstrand on 2017-09-01.
@@ -131,7 +131,7 @@ public class SjukfallEngineMapper {
             to.setSigneringsTidpunkt(from.getSigneringsTidpunkt());
             to.setDagar(from.getDagar());
             to.setGrader(from.getGrader());
-            to.setLakare(from.getLakareNamn());
+            to.setLakare(buildLakare(from.getLakareId(), from.getLakareNamn()));
             to.setSysselsattning(from.getSysselsattning());
             to.setAktivtIntyg(from.isAktivtIntyg());
 
@@ -140,6 +140,10 @@ public class SjukfallEngineMapper {
         }
 
         return to;
+    }
+
+    private Lakare buildLakare(String lakareId, String lakareNamn) {
+        return new Lakare(lakareId, lakareNamn);
     }
 
     public Diagnos getDiagnos(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {

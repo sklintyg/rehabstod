@@ -48,7 +48,8 @@ public class PatientData {
 
     private List<Integer> grader;
 
-    private String lakare;
+    private Lakare lakare;
+
     private List<String> sysselsattning;
 
     private boolean aktivtIntyg;
@@ -156,11 +157,11 @@ public class PatientData {
         this.grader = grader;
     }
 
-    public String getLakare() {
+    public Lakare getLakare() {
         return lakare;
     }
 
-    public void setLakare(String lakare) {
+    public void setLakare(Lakare lakare) {
         this.lakare = lakare;
     }
 

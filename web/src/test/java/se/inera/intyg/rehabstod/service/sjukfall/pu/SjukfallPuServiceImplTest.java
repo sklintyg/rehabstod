@@ -30,6 +30,7 @@ import se.inera.intyg.infra.integration.pu.services.PUService;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -56,6 +57,9 @@ public class SjukfallPuServiceImplTest {
     private static final String TOLVANSSON_PNR_INVALID = "19121212-1211";
     private static final String ENHET_1 = "enhet-1";
     private static final String ENHET_2 = "enhet-2";
+    private static final String LAKARE1_HSA_ID = "lakare-1";
+    private static final String LAKARE2_HSA_ID = "lakare-2";
+    private static final String LAKARE1_NAMN = "Läkare Läkarsson";
 
     @Mock
     private PUService puService;
@@ -159,8 +163,23 @@ public class SjukfallPuServiceImplTest {
     }
 
     @Test
-    public void testSekretessmarkeradIsExcludedWhenUserIsLakareAsRehabkoordinatorOnSameUnit() {
+    public void testSekretessmarkeradIsIncludedWhenUserIsLakareAsRehabkoordinatorAndSignedTheIntyg() {
         RehabstodUser rehabstodUser = buildLakareAsRehabkoordinator(ENHET_1);
+        when(userService.getUser()).thenReturn(rehabstodUser);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
+
+        when(puService.getPerson(new Personnummer(TOLVANSSON_PNR))).thenReturn(
+                buildPersonSvar(TOLVANSSON_PNR, true, false, PersonSvar.Status.FOUND));
+
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList(TOLVANSSON_PNR);
+        testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
+        assertEquals(1, sjukfallList.size());
+    }
+
+    @Test
+    public void testSekretessmarkeradIsExcludedWhenUserIsLakareAsRehabkoordinatorOnSameUnitButIsNotSigning() {
+        RehabstodUser rehabstodUser = buildLakareAsRehabkoordinator(ENHET_1);
+        when(rehabstodUser.getHsaId()).thenReturn(LAKARE2_HSA_ID);
         when(userService.getUser()).thenReturn(rehabstodUser);
         when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
 
@@ -391,6 +410,7 @@ public class SjukfallPuServiceImplTest {
         PatientData patientData = new PatientData();
         patientData.setVardenhetId(ENHET_1);
         patientData.setPatient(buildPatient(pnr));
+        patientData.setLakare(new Lakare(LAKARE1_HSA_ID, LAKARE1_NAMN));
         return patientData;
     }
 
@@ -404,6 +424,7 @@ public class SjukfallPuServiceImplTest {
         when(user.getValdVardenhet()).thenReturn(valdVardenhet);
         when(user.isLakare()).thenReturn(true);
         when(user.getRoles()).thenReturn(roleMap);
+        when(user.getHsaId()).thenReturn(LAKARE1_HSA_ID);
         return user;
     }
 
@@ -417,6 +438,7 @@ public class SjukfallPuServiceImplTest {
         when(user.getValdVardenhet()).thenReturn(valdVardenhet);
         when(user.isLakare()).thenReturn(true);
         when(user.getRoles()).thenReturn(roleMap);
+        when(user.getHsaId()).thenReturn(LAKARE1_HSA_ID);
         return user;
     }
 
@@ -445,6 +467,7 @@ public class SjukfallPuServiceImplTest {
         SjukfallEnhet sjukfall = new SjukfallEnhet();
         sjukfall.setPatient(buildPatient(pnr));
         sjukfall.setVardEnhetId(ENHET_1);
+        sjukfall.setLakare(new Lakare(LAKARE1_HSA_ID, LAKARE1_NAMN));
         return sjukfall;
     }
 

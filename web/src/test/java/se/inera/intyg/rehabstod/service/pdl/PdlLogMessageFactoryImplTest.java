@@ -32,9 +32,13 @@ import se.inera.intyg.rehabstod.testutil.TestDataGen;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by eriklupander on 2016-03-03.
@@ -105,6 +109,17 @@ public class PdlLogMessageFactoryImplTest {
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
             ActivityType.PRINT, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, TestDataGen.buildRehabStodUser(true));
         assertEquals("Läkare", pdlLogMessage.getUserTitle());
+    }
+
+    @Test
+    public void testBuildLogMessageForLakareHavingRehabkoordinatorRole() {
+        RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser(true);
+        Map<String, Role> rolesMap = mock(Map.class);
+        when(rolesMap.containsKey(eq("LAKARE"))).thenReturn(false);
+        rehabstodUser.setRoles(rolesMap);
+        PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
+                ActivityType.PRINT, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, rehabstodUser);
+        assertEquals("Rehabkoordinator", pdlLogMessage.getUserTitle());
     }
 
     @Test
