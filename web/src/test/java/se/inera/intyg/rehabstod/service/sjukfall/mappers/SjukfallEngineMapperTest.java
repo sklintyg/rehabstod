@@ -18,23 +18,22 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.mappers;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.Assert.assertEquals;
@@ -164,7 +163,8 @@ public class SjukfallEngineMapperTest {
         assertEquals(VARDGIVARENAMN, to.getVardgivareNamn());
         assertEquals(VARDENHETID, to.getVardenhetId());
         assertEquals(VARDENHETNAMN, to.getVardenhetNamn());
-        assertEquals(LAKARENAMN, to.getLakare());
+        assertEquals(LAKAREID, to.getLakare().getHsaId());
+        assertEquals(LAKARENAMN, to.getLakare().getNamn());
         assertEquals(NEDSATTNINGSTARTDATUM, to.getStart());
         assertEquals(NEDSATTNINGSLUTDATUM, to.getSlut());
         assertEquals(NEDSATTNING, to.getGrader().get(0));

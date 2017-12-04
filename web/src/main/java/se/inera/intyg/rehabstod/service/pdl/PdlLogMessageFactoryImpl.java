@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
@@ -29,6 +28,7 @@ import se.inera.intyg.infra.logmessages.PdlLogMessage;
 import se.inera.intyg.infra.logmessages.PdlResource;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataLogMessage;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataPrintLogMessage;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
@@ -142,7 +142,6 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
             "");
     }
 
-    @NotNull
     private PdlLogMessage getLogMessage(ActivityType activityType) {
         PdlLogMessage pdlLogMessage = getLogMessageTypeForActivityType(activityType);
         pdlLogMessage.setSystemId(systemId);
@@ -166,10 +165,20 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         return new LogUser.Builder(user.getHsaId(), valdVardenhet.getId(), valdVardgivare.getId())
                 .userName(user.getNamn())
                 .userAssignment(user.getSelectedMedarbetarUppdragNamn())
-                .userTitle(user.isLakare() ? PDL_TITEL_LAKARE : PDL_TITEL_REHABSTOD)
+                .userTitle(resolveUserTitle(user))
                 .enhetsNamn(valdVardenhet.getNamn())
                 .vardgivareNamn(valdVardgivare.getNamn())
                 .build();
+    }
+
+    /**
+     * LAKARE if user has LAKARE as current ROLE AND isLakare() is true.
+     * REHABKOORDINATOR if user has REHABKOORDINATOR as current role and isLakare is true.
+     * REHABKOORDINATOR if user has REHABKOORDINATOR as current role and isLakare is false.
+     */
+    private String resolveUserTitle(RehabstodUser user) {
+        return user.isLakare() && user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE)
+                ? PDL_TITEL_LAKARE : PDL_TITEL_REHABSTOD;
     }
 
     private void populateWithCurrentUserAndCareUnit(PdlLogMessage logMsg, LogUser user) {
