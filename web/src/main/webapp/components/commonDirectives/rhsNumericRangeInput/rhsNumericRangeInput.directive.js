@@ -82,7 +82,7 @@ angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope',
     };
 
     $scope.onKeyDown = function(event) {
-        if (event.which > 58) {
+        if (!(event.which >= 96 && event.which <= 105) && event.which > 58) {
             event.preventDefault();
         }
     };
