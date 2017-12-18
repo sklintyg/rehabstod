@@ -28,15 +28,15 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
+import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.service.feature.RehabstodFeatureServiceImpl;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 
 import java.util.Collections;
 
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,17 +57,17 @@ public class UserControllerTest {
     UserService userService;
 
     @Mock
-    RehabstodFeatureServiceImpl featureService;
+    RehabstodUnitChangeService rehabstodUnitChangeService;
 
     @Mock
-    RehabstodUnitChangeService rehabstodUnitChangeService;
+    private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
     @InjectMocks
     private UserController userController = new UserController();
 
     @Before
     public void before() {
-        when(featureService.getActiveFeatures(anyString(), anyString())).thenReturn(Collections.emptySet());
+        when(commonAuthoritiesResolver.getFeatures(any())).thenReturn(Collections.emptyMap());
         when(userService.getUser()).thenReturn(rehabUserMock);
         when(rehabUserMock.getValdVardenhet()).thenReturn(new Vardenhet("123", "enhet"));
         when(rehabUserMock.getValdVardgivare()).thenReturn(new Vardenhet("456", "vardgivare"));
@@ -76,7 +76,6 @@ public class UserControllerTest {
 
     @Test
     public void testCreateGet() {
-
         userController.getUser();
 
         verify(userService).getUser();
@@ -91,7 +90,6 @@ public class UserControllerTest {
 
         verify(userService).getUser();
         verify(rehabstodUnitChangeService).changeValdVardenhet(eq(req.getId()), eq(rehabUserMock));
-
     }
 
     @Test

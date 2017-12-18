@@ -27,8 +27,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.context.support.ServletContextAttributeExporter;
-import se.inera.intyg.infra.security.common.service.PilotService;
-import se.inera.intyg.infra.security.common.service.PilotServiceImpl;
 import se.inera.intyg.rehabstod.service.monitoring.HealthCheckService;
 import se.inera.intyg.rehabstod.service.monitoring.InternalPingForConfigurationResponderImpl;
 
@@ -71,10 +69,4 @@ public class ServiceConfig {
         endpoint.publish("/internal-ping-for-configuration");
         return endpoint;
     }
-
-    @Bean
-    public PilotService getPilotService() {
-        return new PilotServiceImpl();
-    }
-
 }

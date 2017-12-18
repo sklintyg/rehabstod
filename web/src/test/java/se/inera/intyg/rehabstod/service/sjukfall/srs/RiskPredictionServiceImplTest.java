@@ -25,12 +25,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
+import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.integration.srs.service.SRSIntegrationService;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
-import se.inera.intyg.rehabstod.service.feature.RehabstodFeature;
-import se.inera.intyg.rehabstod.service.feature.RehabstodFeatureServiceImpl;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -38,13 +38,11 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyList;
@@ -64,33 +62,25 @@ public class RiskPredictionServiceImplTest {
     private static final String ENHET_2 = "enhet-2";
 
     @Mock
-    private RehabstodFeatureServiceImpl featureService;
-
-    @Mock
     private SRSIntegrationService srsIntegrationService;
 
     @Mock
     private UserService userService;
 
-    private Set<String> activeFeatures = Stream.of(RehabstodFeature.SRS.getName()).collect(toSet());
-
     @InjectMocks
     private RiskPredictionServiceImpl testee;
 
+    private RehabstodUser user;
+
     @Before
     public void init() {
-        RehabstodUser user = buildUser(ENHET_1);
+        user = buildUser(ENHET_1);
         when(userService.getUser()).thenReturn(user);
-
-        // Active by default in tests.
-        when(featureService.getActiveFeatures(ENHET_1)).thenReturn(activeFeatures);
     }
-
-
 
     @Test
     public void testNoInteractionWithSRSWhenFeatureNotActive() {
-        when(featureService.getActiveFeatures(ENHET_1)).thenReturn(new HashSet<>());
+        when(user.getFeatures()).thenReturn(Collections.emptyMap());
         testee.updateWithRiskPredictions(buildSjukfallEnhetList(UUID.randomUUID().toString()));
         verifyZeroInteractions(srsIntegrationService);
     }
@@ -98,19 +88,18 @@ public class RiskPredictionServiceImplTest {
     @Test
     public void testNoInteractionWithSRSWhenFeatureNotActiveForUnit() {
         RehabstodUser user = buildUser(ENHET_2);
+        when(user.getFeatures()).thenReturn(Collections.emptyMap());
         when(userService.getUser()).thenReturn(user);
         testee.updateWithRiskPredictions(buildSjukfallEnhetList(UUID.randomUUID().toString()));
         verifyZeroInteractions(srsIntegrationService);
     }
 
-
     @Test
     public void testPatientDataNoInteractionWithSRSWhenFeatureNotActive() {
-        when(featureService.getActiveFeatures(ENHET_1)).thenReturn(new HashSet<>());
+        when(user.getFeatures()).thenReturn(Collections.emptyMap());
         testee.updateSjukfallPatientListWithRiskPredictions(buildSjukfallPatientList(UUID.randomUUID().toString()));
         verifyZeroInteractions(srsIntegrationService);
     }
-
 
     @Test
     public void testNoInteractionWithSRSWhenFeatureActiveButNoSjukfallSupplied() {
@@ -143,7 +132,6 @@ public class RiskPredictionServiceImplTest {
         verify(srsIntegrationService, times(1)).getRiskPreditionerForIntygsId(anyList());
     }
 
-
     @Test
     public void testPatientDataInteractionWithSRSWhenFeatureActive() {
         String intygsId = UUID.randomUUID().toString();
@@ -167,7 +155,6 @@ public class RiskPredictionServiceImplTest {
         when(srsIntegrationService.getRiskPreditionerForIntygsId(anyList())).thenThrow(new RuntimeException("FEL FEL FEL"));
         testee.updateWithRiskPredictions(buildSjukfallEnhetList(UUID.randomUUID().toString()));
     }
-
 
     @Test(expected = SRSServiceException.class)
     public void testPatientListExpectedExceptionIsThrownWhenCallToSRSFails() {
@@ -244,6 +231,11 @@ public class RiskPredictionServiceImplTest {
         SelectableVardenhet ve = mock(SelectableVardenhet.class);
         when(ve.getId()).thenReturn(unitHsaId);
         when(user.getValdVardenhet()).thenReturn(ve);
+        Feature f = new Feature();
+        f.setGlobal(true);
+        Map<String, Feature> features = Collections
+                .singletonMap(AuthoritiesConstants.FEATURE_SRS, f);
+        when(user.getFeatures()).thenReturn(features);
         return user;
     }
 

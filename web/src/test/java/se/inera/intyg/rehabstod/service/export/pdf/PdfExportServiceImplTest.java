@@ -26,13 +26,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
+import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.security.common.model.Role;
-import se.inera.intyg.infra.security.common.service.CommonFeatureService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.service.feature.RehabstodFeature;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Gender;
@@ -43,6 +42,7 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,9 +62,6 @@ public class PdfExportServiceImplTest {
 
     @Mock
     private DiagnosKapitelService diagnosKapitelService;
-
-    @Mock
-    private CommonFeatureService featureService;
 
     @InjectMocks
     private PdfExportService testee = new PdfExportServiceImpl();
@@ -96,7 +93,7 @@ public class PdfExportServiceImplTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         user = new RehabstodUser("HSA1111", "Johannes Nielsen-Kornbach", false);
         user.setValdVardenhet(new SelectableVardenhet() {
@@ -131,12 +128,14 @@ public class PdfExportServiceImplTest {
                 return null;
             }
         });
+        Feature f = new Feature();
+        f.setGlobal(true);
+        f.setName(AuthoritiesConstants.FEATURE_SRS);
+        user.setFeatures(Collections.singletonMap(AuthoritiesConstants.FEATURE_SRS, f));
 
         DiagnosKapitel diagnosKapitel = mock(DiagnosKapitel.class);
         when(diagnosKapitel.getName()).thenReturn("Diagnoskapitlets namn");
         when(diagnosKapitelService.getDiagnosKapitel(anyString())).thenReturn(diagnosKapitel);
-        // Use srs as default in tests
-        when(featureService.getActiveFeatures(anyString())).thenReturn(ImmutableSet.of(RehabstodFeature.SRS.getName()));
     }
 
     @Test
@@ -159,10 +158,11 @@ public class PdfExportServiceImplTest {
 
         // Files.write(Paths.get("./test_all.pdf"), export);
     }
+
     @Test
     public void testExportAllWithoutSrs() throws Exception {
         // Use srs as default in tests
-        when(featureService.getActiveFeatures(anyString())).thenReturn(ImmutableSet.of(""));
+        user.setFeatures(Collections.emptyMap());
 
         Map<String, Role> roles = new HashMap<>();
         roles.put(AuthoritiesConstants.ROLE_KOORDINATOR, null);

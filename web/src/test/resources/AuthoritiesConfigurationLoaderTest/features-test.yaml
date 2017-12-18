@@ -1,0 +1,26 @@
+---
+
+# De intygstyper som systemet känner till
+knownIntygstyper: []
+
+knownFeatures:
+  - &kf010 SRS
+
+# Aktiverade features i Rehabstöd
+features:
+  - &f010
+    name: *kf010
+    desc: Hantera frågor
+    global: false
+
+pilots:
+  - name: TEST_PILOT
+    desc: Pilot avsedd för testsyfte
+    hsaIds:
+      - IFV1239877878-1042
+      - TSTNMT2321000156-1077
+    activated:
+      - &pf010
+        name: *kf010
+        desc: SRS-stöd i Rehabstöd
+        global: true

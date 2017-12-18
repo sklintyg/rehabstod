@@ -26,7 +26,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import se.inera.intyg.infra.security.authorities.AuthoritiesConfiguration;
-import se.inera.intyg.infra.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
+import se.inera.intyg.infra.security.authorities.AuthoritiesException;
+import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.RequestOrigin;
 import se.inera.intyg.infra.security.common.model.Role;
@@ -42,16 +43,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-
 //CHECKSTYLE:OFF MagicNumber
 @RunWith(MockitoJUnitRunner.class)
-public class AuthoritiesConfigurationLoaderMinimalTest {
+public class SecurityConfigurationLoaderTest {
 
-    private static final String AUTHORITIES_CONFIGURATION_TEST_FILE = "AuthoritiesConfigurationLoaderTest/authorities-test-minimal.yaml";
-    private static final String AUTHORITIES_CONFIGURATION_OUTPUT_FILE = "AuthoritiesConfigurationLoaderTest/authorities-output-minimal.txt";
+    private static final String AUTHORITIES_CONFIGURATION_TEST_FILE = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    private static final String FEATURES_CONFIGURATION_TEST_FILE = "AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    private static final String AUTHORITIES_CONFIGURATION_OUTPUT_FILE = "AuthoritiesConfigurationLoaderTest/authorities-output.txt";
 
     @InjectMocks
-    AuthoritiesConfigurationLoader loader = new AuthoritiesConfigurationLoader(AUTHORITIES_CONFIGURATION_TEST_FILE);
+    SecurityConfigurationLoader loader = new SecurityConfigurationLoader(AUTHORITIES_CONFIGURATION_TEST_FILE,
+            FEATURES_CONFIGURATION_TEST_FILE);
 
     @Before
     public void setupAuthoritiesConfiguration() {
@@ -65,10 +67,10 @@ public class AuthoritiesConfigurationLoaderMinimalTest {
 
     @Test
     public void loadConfigurationAndAssertTypeOfObjects() {
-        AuthoritiesConfiguration configuration = loader.getConfiguration();
+        AuthoritiesConfiguration configuration = loader.getAuthoritiesConfiguration();
 
-        assertTrue(configuration.getRequestOrigins().size() == 0);
-        assertTrue(configuration.getPrivileges().size() == 0);
+        assertTrue(configuration.getRequestOrigins().size() == 1);
+        assertTrue(configuration.getPrivileges().size() == 1);
         assertTrue(configuration.getRoles().size() == 2);
         assertTrue(configuration.getTitles().size() == 2);
         assertTrue(configuration.getTitleCodes().size() == 4);
@@ -87,7 +89,7 @@ public class AuthoritiesConfigurationLoaderMinimalTest {
 
     @Test
     public void loadConfigurationAndAssertString() {
-        AuthoritiesConfiguration configuration = loader.getConfiguration();
+        AuthoritiesConfiguration configuration = loader.getAuthoritiesConfiguration();
 
         String actual = configuration.toString().replaceAll("\\s", "").trim();
         String expected = "";
@@ -104,7 +106,13 @@ public class AuthoritiesConfigurationLoaderMinimalTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void loadConfigurationWithBadLocation() {
-        AuthoritiesConfigurationLoader loader = new AuthoritiesConfigurationLoader(null);
+        new SecurityConfigurationLoader(null, null);
+    }
+
+    @Test(expected = AuthoritiesException.class)
+    public void loadConfigurationWithNonExistingLocation() throws Exception {
+        SecurityConfigurationLoader loader = new SecurityConfigurationLoader("non-existing-file", "even-more-non-existing-file");
+        loader.afterPropertiesSet();
     }
 
     // ~ Private scope

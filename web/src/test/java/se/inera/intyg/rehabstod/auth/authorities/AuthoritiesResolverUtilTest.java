@@ -53,7 +53,7 @@ public class AuthoritiesResolverUtilTest {
     }
 
     @Test
-    public void testRoleToMap() throws Exception {
+    public void testRoleToMap() {
         // Act
         final Map<String, Role> stringRoleMap = AuthoritiesResolverUtil.toMap(role);
 
@@ -64,9 +64,10 @@ public class AuthoritiesResolverUtilTest {
     }
 
     @Test
-    public void testPrivilegesToMapWithNullElementInList() throws Exception {
+    public void testPrivilegesToMapWithNullElementInList() {
         // Act
-        final Map<String, Privilege> stringPrivilegeMap = AuthoritiesResolverUtil.toMap(Arrays.asList(new Privilege(), null));
+        final Map<String, Privilege> stringPrivilegeMap = AuthoritiesResolverUtil
+                .toMap(Arrays.asList(new Privilege(), null), Privilege::getName);
 
         // Assert
         assertEquals(1, stringPrivilegeMap.size());
@@ -74,9 +75,9 @@ public class AuthoritiesResolverUtilTest {
     }
 
     @Test
-    public void testPrivilegesToMap() throws Exception {
+    public void testPrivilegesToMap() {
         // Act
-        final Map<String, Privilege> stringPrivilegeMap = AuthoritiesResolverUtil.toMap(role.getPrivileges());
+        final Map<String, Privilege> stringPrivilegeMap = AuthoritiesResolverUtil.toMap(role.getPrivileges(), Privilege::getName);
 
         // Assert
         assertEquals(1, stringPrivilegeMap.size());
@@ -85,7 +86,7 @@ public class AuthoritiesResolverUtilTest {
     }
 
     @Test
-    public void testToList() throws Exception {
+    public void testToList() {
         // Arrange
         Map<String, Object> map = new HashMap<>();
         map.put(KEY, VALUE);
@@ -100,7 +101,7 @@ public class AuthoritiesResolverUtilTest {
     }
 
     @Test
-    public void testToArray() throws Exception {
+    public void testToArray() {
         // Arrange
         Map<String, Object> map = new HashMap<>();
         map.put(KEY, VALUE);

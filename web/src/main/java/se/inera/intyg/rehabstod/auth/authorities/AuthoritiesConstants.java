@@ -37,6 +37,8 @@ public final class AuthoritiesConstants {
     public static final String ROLE_LAKARE = "LAKARE";
     public static final String ROLE_KOORDINATOR = "REHABKOORDINATOR";
 
+    public static final String FEATURE_SRS = "SRS";
+
 
     // constructors
 

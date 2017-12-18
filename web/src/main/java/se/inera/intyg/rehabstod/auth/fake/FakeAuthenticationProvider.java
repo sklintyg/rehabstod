@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth.fake;
 
-import java.util.ArrayList;
-
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.AttributeStatement;
 import org.opensaml.saml2.core.NameID;
@@ -32,12 +30,15 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.providers.ExpiringUsernameAuthenticationToken;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
-
+import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.infra.security.common.model.IntygUser;
-import se.inera.intyg.infra.security.common.service.CommonFeatureService;
 import se.inera.intyg.infra.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.rehabstod.auth.BaseFakeAuthenticationProvider;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * @author andreaskaltenbach
@@ -45,9 +46,8 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
 
     private SAMLUserDetailsService userDetails;
-
     @Autowired
-    private CommonFeatureService rehabstodFeatureService;
+    private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -75,10 +75,10 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
         if (details instanceof IntygUser) {
             IntygUser user = (IntygUser) details;
             if (user.getValdVardenhet() != null) {
-                user.setFeatures(
-                        rehabstodFeatureService.getActiveFeatures(user.getValdVardenhet().getId(), user.getValdVardgivare().getId()));
+                user.setFeatures(commonAuthoritiesResolver
+                        .getFeatures(Arrays.asList(user.getValdVardenhet().getId(), user.getValdVardgivare().getId())));
             } else {
-                user.setFeatures(rehabstodFeatureService.getActiveFeatures());
+                user.setFeatures(commonAuthoritiesResolver.getFeatures(Collections.emptyList()));
             }
         }
     }

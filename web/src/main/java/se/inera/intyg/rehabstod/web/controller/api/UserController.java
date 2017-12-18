@@ -27,15 +27,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
+import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
-import se.inera.intyg.rehabstod.service.feature.RehabstodFeatureServiceImpl;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetUserResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GivePdlLoggingConsentRequest;
+
+import java.util.Arrays;
 
 import static se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService.PDL_CONSENT_GIVEN;
 
@@ -52,10 +54,10 @@ public class UserController {
     private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
     @Autowired
-    private RehabstodFeatureServiceImpl rehabstodFeatureService;
+    private RehabstodUnitChangeService rehabstodUnitChangeService;
 
     @Autowired
-    private RehabstodUnitChangeService rehabstodUnitChangeService;
+    private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public GetUserResponse getUser() {
@@ -86,7 +88,8 @@ public class UserController {
                     changeSelectedEnhetRequest.getId(), user.getHsaId()));
         }
 
-        user.setFeatures(rehabstodFeatureService.getActiveFeatures(user.getValdVardenhet().getId(), user.getValdVardgivare().getId()));
+        user.setFeatures(
+                commonAuthoritiesResolver.getFeatures(Arrays.asList(user.getValdVardenhet().getId(), user.getValdVardgivare().getId())));
 
         LOG.debug("Selected vardenhet is now '{}'", user.getValdVardenhet().getId());
 

@@ -27,7 +27,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.services.HsaPersonService;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
-import se.inera.intyg.infra.security.authorities.bootstrap.AuthoritiesConfigurationLoader;
+import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.RequestOrigin;
 import se.inera.intyg.infra.security.common.model.Title;
@@ -38,19 +38,21 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Should _only_ contain asserts specific to the Rehabstöd authorities-test.yaml file.
- *
+ * <p>
  * Created by eriklupander on 2016-05-17.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class RehabstodAuthoritiesResolverTest {
 
-    private String configurationLocation = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    private String authoritiesConfigurationFile = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    private String featuresConfigurationsFile = "AuthoritiesConfigurationLoaderTest/features-test.yaml";
 
     @Mock
     private HsaPersonService hsaPersonService;
 
     @Spy
-    private AuthoritiesConfigurationLoader configurationLoader = new AuthoritiesConfigurationLoader(configurationLocation);
+    private SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationFile,
+            featuresConfigurationsFile);
 
     @InjectMocks
     private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();

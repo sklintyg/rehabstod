@@ -18,19 +18,19 @@
  */
 package se.inera.intyg.rehabstod.service.export;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
-import se.inera.intyg.infra.security.common.service.CommonFeatureService;
+import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
-import se.inera.intyg.rehabstod.service.feature.RehabstodFeature;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-26.
@@ -88,9 +88,6 @@ public abstract class BaseExportService {
     @Autowired
     protected DiagnosKapitelService diagnosKapitelService;
 
-    @Autowired
-    protected CommonFeatureService featureService;
-
     protected boolean notEmpty(PrintSjukfallRequest req) {
         return req.getFritext() != null && req.getFritext().trim().length() > 0;
     }
@@ -122,7 +119,9 @@ public abstract class BaseExportService {
     }
 
     protected boolean isSrsFeatureActive(RehabstodUser user) {
-        return featureService.getActiveFeatures(user.getValdVardenhet().getId()).contains(RehabstodFeature.SRS.getName());
+        return Optional.ofNullable(user.getFeatures())
+                .map(features -> features.get(AuthoritiesConstants.FEATURE_SRS))
+                .map(Feature::getGlobal).orElse(false);
     }
 
     protected String getRiskKategoriDesc(RiskSignal risksignal) {
