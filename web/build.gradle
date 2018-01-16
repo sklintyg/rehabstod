@@ -89,16 +89,6 @@ gretty {
     //    ]
 }
 
-license {
-    sourceSets {
-        main {
-            resources {
-                srcDirs  = ["src/main/webapp/app", "src/main/webapp/components"]
-            }
-        }
-    }
-}
-
 dependencies {
     compile project(":rehabstod-it-integration")
     compile project(":rehabstod-srs-integration")
