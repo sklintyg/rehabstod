@@ -22,6 +22,10 @@ rhs-date-range-picker {
     margin-top: 3px;
     color: #555;
 
+    &[disabled] {
+      cursor: pointer;
+    }
+
     &:focus {
       border-color: #66afe9;
       outline: 0;
