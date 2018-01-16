@@ -57,3 +57,8 @@ För att köra Protractor-testerna måste Intygstjänsten och Rehabstöd vara ig
     $ cd rehabstod/test
     $ grunt
 
+
+### Köra mot lokal intygstjänst
+För att ta bort stubbad intygstjänst och köra mot en riktig (lokal) sådan så gå in i /web/build.gradle och plocka bort "rhs-it-stub" ur gretty-konfigurationen, dvs:
+
+    '-Dspring.profiles.active=dev,rhs-srs-stub,caching-enabled',   // rhs-it-stub,
