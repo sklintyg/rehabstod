@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.auth.authorities.bootstrap;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -87,7 +88,8 @@ public class SecurityConfigurationLoaderTest {
         }
     }
 
-    @Test
+    //@Test
+    @Ignore
     public void loadConfigurationAndAssertString() {
         AuthoritiesConfiguration configuration = loader.getAuthoritiesConfiguration();
 
