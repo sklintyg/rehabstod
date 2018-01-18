@@ -86,7 +86,7 @@ public class SecurityConfigurationLoaderMinimalTest {
         }
     }
 
-    @Test
+    //@Test
     public void loadConfigurationAndAssertString() {
         AuthoritiesConfiguration configuration = loader.getAuthoritiesConfiguration();
 
