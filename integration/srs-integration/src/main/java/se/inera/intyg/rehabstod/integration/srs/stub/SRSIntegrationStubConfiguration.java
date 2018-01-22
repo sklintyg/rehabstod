@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.integration.srs.stub;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.cxf.Bus;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Configuration
 @ComponentScan({ "se.inera.intyg.rehabstod.integration.srs.stub" })
-@Profile({"rhs-srs-stub" })
+@Profile({ "rhs-srs-stub" })
 public class SRSIntegrationStubConfiguration {
 
     @Autowired
@@ -40,6 +39,9 @@ public class SRSIntegrationStubConfiguration {
     @Autowired
     private SRSStub srsStub;
 
+    @Autowired
+    private Bus bus;
+
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
@@ -47,7 +49,6 @@ public class SRSIntegrationStubConfiguration {
 
     @Bean
     public EndpointImpl intygstjanstResponder() {
-        Bus bus = (Bus) applicationContext.getBean(Bus.DEFAULT_BUS_ID);
         Object implementor = srsStub;
         EndpointImpl endpoint = new EndpointImpl(bus, implementor);
         endpoint.publish("/get-risk-prediction-for-certificate/v1.0");

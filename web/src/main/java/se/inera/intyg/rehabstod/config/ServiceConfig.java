@@ -47,6 +47,9 @@ public class ServiceConfig {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private Bus bus;
+
     @Bean
     public ServletContextAttributeExporter contextAttributes() {
         final Map<String, Object> attributes = new HashMap<>();
@@ -63,7 +66,6 @@ public class ServiceConfig {
 
     @Bean
     public EndpointImpl pingForConfigurationEndpoint() {
-        Bus bus = (Bus) applicationContext.getBean(Bus.DEFAULT_BUS_ID);
         Object implementor = pingForConfigurationResponder();
         EndpointImpl endpoint = new EndpointImpl(bus, implementor);
         endpoint.publish("/internal-ping-for-configuration");

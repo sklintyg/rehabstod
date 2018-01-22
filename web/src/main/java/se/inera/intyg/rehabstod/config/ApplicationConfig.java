@@ -19,6 +19,9 @@
 package se.inera.intyg.rehabstod.config;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import org.apache.cxf.Bus;
+import org.apache.cxf.feature.LoggingFeature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
@@ -31,14 +34,27 @@ import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.filters.PdlConsentGivenAssuranceFilter;
 import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 @Configuration
 @PropertySource({ "file:${rehabstod.config.file}", "file:${credentials.file}", "classpath:version.properties" })
 @ImportResource({ "classpath:META-INF/cxf/cxf.xml", "classpath:securityContext.xml" })
 public class ApplicationConfig {
 
+    @Autowired
+    private Bus bus;
+
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @PostConstruct
+    public Bus init() {
+        bus.setFeatures(new ArrayList<>(Arrays.asList(loggingFeature())));
+        return bus;
     }
 
     @Bean
@@ -72,5 +88,12 @@ public class ApplicationConfig {
     @Bean
     public DiagnosFactory diagnosFactory() {
         return new DiagnosFactory();
+    }
+
+    @Bean
+    public LoggingFeature loggingFeature() {
+        LoggingFeature loggingFeature = new LoggingFeature();
+        loggingFeature.setPrettyLogging(true);
+        return loggingFeature;
     }
 }

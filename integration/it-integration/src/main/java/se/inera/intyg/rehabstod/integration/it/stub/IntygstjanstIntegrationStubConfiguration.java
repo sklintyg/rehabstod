@@ -40,6 +40,9 @@ public class IntygstjanstIntegrationStubConfiguration {
     @Autowired
     private SjukfallIntygStub sjukfallIntygStub;
 
+    @Autowired
+    private Bus bus;
+
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
@@ -47,7 +50,6 @@ public class IntygstjanstIntegrationStubConfiguration {
 
     @Bean
     public EndpointImpl intygstjanstResponder() {
-        Bus bus = (Bus) applicationContext.getBean(Bus.DEFAULT_BUS_ID);
         Object implementor = sjukfallIntygStub;
         EndpointImpl endpoint = new EndpointImpl(bus, implementor);
         endpoint.publish("/get-active-sickleaves-for-careunit/v1.0");

@@ -28,7 +28,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
-
 import se.inera.intyg.rehabstod.service.monitoring.ntjp.stub.NTjPPingForConfigurationStub;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 
@@ -45,6 +44,9 @@ public class NTjPPingConfig {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private Bus bus;
+
     @Bean
     public PingForConfigurationResponderInterface ntjpPingWebServiceClient() {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
@@ -54,9 +56,8 @@ public class NTjPPingConfig {
     }
 
     @Bean
-    @Profile(value = {"dev", "wc-hsa-stub"})
+    @Profile(value = { "dev", "wc-hsa-stub" })
     public EndpointImpl ntjpStubResponder() {
-        Bus bus = (Bus) applicationContext.getBean(Bus.DEFAULT_BUS_ID);
         NTjPPingForConfigurationStub ntjpPingForConfigurationStub = applicationContext.getBean(NTjPPingForConfigurationStub.class);
         EndpointImpl endpoint = new EndpointImpl(bus, ntjpPingForConfigurationStub);
         endpoint.publish("/ntjp-ping-for-configuration-stub/v1.0");
