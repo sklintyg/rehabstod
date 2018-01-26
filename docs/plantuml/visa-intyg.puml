@@ -1,0 +1,40 @@
+@startuml
+actor Webbläsare
+participant Rehabstöd
+participant Webcert
+participant Intygstjänst
+participant SRS
+
+
+    Webbläsare -> Rehabstöd: Väljer att visa intyg
+activate Rehabstöd
+    Rehabstöd -> Rehabstöd: Bygger upp URL till Webcert
+    Rehabstöd --> Webbläsare: Överhopps-URL
+deactivate Rehabstöd
+
+Webbläsare -> Webcert: Öppnar Webcert i iFrame
+activate Webcert
+    Webcert -> Webcert: Validerar session mot SÄK
+    Webcert -> Intygstjänst: Anropa GetCertificateType
+    activate Intygstjänst
+    Intygstjänst --> Webcert: Svarar med intygstypen
+    deactivate Intygstjänst
+    Webcert -> Webcert: Sätter vårdenhet på sessionen.
+    Webcert -> Webbläsare: Omdirigerar till intygsvyn
+    deactivate Webcert
+    Webbläsare -> Webcert: Öppnar intygsvyn
+    activate Webcert
+    Webcert -> Intygstjänst: GetCertificate (Hämtar intyget)
+    activate Intygstjänst
+    Intygstjänst --> Webcert: IntygData
+    deactivate Intygstjänst
+    alt SRS-pilot aktiv
+        Webcert -> SRS: GetSRSInformationForDiagnosis
+        activate SRS
+        SRS --> Webcert: SRS-information
+        deactivate SRS
+    end
+    Webcert -> Webcert: Renderar intyget till Webbläsaren via UV-ramverket
+    Webcert --> Webbläsare: Intyget visas i Readonly-läge
+    deactivate Webcert
+@enduml
