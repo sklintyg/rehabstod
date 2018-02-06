@@ -203,13 +203,6 @@ public class SjukfallPuServiceImplTest {
         assertEquals(0, sjukfallList.size());
     }
 
-    private Map<Personnummer, PersonSvar> buildPersonMap() {
-        Map<Personnummer, PersonSvar> persons = new HashMap<>();
-        persons.put(new Personnummer(TOLVANSSON_PNR),  buildPersonSvar(TOLVANSSON_PNR, true, false, PersonSvar.Status.FOUND));
-        return persons;
-    }
-
-
 
     @Test(expected = IllegalStateException.class)
     public void testExceptionIsThrownWhenPuUnavailable() {
