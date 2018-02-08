@@ -1,6 +1,6 @@
 .rhs-table {
   .rhs-table-head {
-    color: $blue-color;
+    color: $rs-color-03;
     font-size: $rhs-font-size-th;
     cursor: pointer;
     font-weight: bold;
@@ -11,8 +11,12 @@
       text-decoration: underline;
     }
 
+    .fa-sort {
+      color: $rs-color-08;
+    }
+
     .rhs-tooltip {
-      color: $blue-color;
+      color: $rs-color-03;
       display: inline-block;
       margin-left: 5px;
     }
