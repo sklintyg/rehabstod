@@ -13,16 +13,10 @@ $rs-color-12: #2E6EA5;
 $rs-color-13: #286090;
 $rs-color-14: #E6E5E5;
 
-$rhs-header-bg: #212633;
-
-$rhs-primary-text-color: #333;
-$rhs-secondary-text-color: #999;
 $rhs-link-color: #378998;
 $rhs-link-external-color: #0F6EDC;
 
 $default-border-radius: 5px;
-
-
 
 $form-group-margin-bottom: 10px;
 
@@ -38,9 +32,6 @@ $rhs-font-size-th: 14px;
 // Buttons
 $rhs-font-buttons: "Arial Rounded MT Bold", sans-serif;
 $rhs-button-padding: 8px 20px;
-$rhs-button-disabled-bg: #F0F0F0;
-$rhs-button-disabled-color: #9B9B9B;
-$rhs-button-disabled-border: #D3D3D3;
 $rhs-button-letter-spacing: 0.06px;
 
 $inactive-element-color: #ccc;
@@ -66,7 +57,7 @@ $font-size-h3: $rhs-font-size-h3;
 $font-size-h4: $rhs-font-size-h4;
 $headings-line-height:    1.5;
 
-$text-color: $rhs-primary-text-color;
+$text-color: $rs-color-10;
 $link-color: $rhs-link-color;
 $link-hover-color: $rhs-link-color;
 
@@ -103,10 +94,10 @@ $alert-success-bg: #DFF0D8;
 $alert-success-border: #DFF0D8;
 
 // Buttons
-$btn-default-color: #666;
-$btn-default-bg: #FFF;
-$btn-default-border: #CCC;
+$btn-default-color: $rs-color-09;
+$btn-default-bg: $rs-color-01;
+$btn-default-border: $rs-color-07;
 
-$btn-primary-color: #FFF;
-$btn-primary-bg: #337AB7;
-$btn-primary-border: #2E6EA5;
+$btn-primary-color: $rs-color-01;
+$btn-primary-bg: $rs-color-11;
+$btn-primary-border: $rs-color-12;

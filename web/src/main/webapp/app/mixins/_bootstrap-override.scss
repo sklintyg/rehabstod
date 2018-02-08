@@ -17,9 +17,9 @@
   line-height: 18px;
   &[disabled], &[disabled]:hover {
     opacity: 1;
-    background: $rhs-button-disabled-bg !important;
-    color: $rhs-button-disabled-color;
-    border-color: $rhs-button-disabled-border !important;
+    background: $rs-color-06 !important;
+    color: $rs-color-08;
+    border-color: $rs-color-07 !important;
   }
 }
 
