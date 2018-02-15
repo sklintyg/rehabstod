@@ -89,14 +89,6 @@ a {
   cursor: pointer;
 }
 
-.external-link {
-  color: $rhs-link-external-color;
-
-  &:hover, &:focus {
-    color: $rhs-link-external-color;
-  }
-}
-
 .col-head {
   color: $rs-color-03;
   font-size: 20px;

@@ -13,9 +13,6 @@ $rs-color-12: #2E6EA5;
 $rs-color-13: #286090;
 $rs-color-14: #E6E5E5;
 
-$rhs-link-color: #378998;
-$rhs-link-external-color: #0F6EDC;
-
 $default-border-radius: 5px;
 
 $form-group-margin-bottom: 10px;
@@ -58,8 +55,8 @@ $font-size-h4: $rhs-font-size-h4;
 $headings-line-height:    1.5;
 
 $text-color: $rs-color-10;
-$link-color: $rhs-link-color;
-$link-hover-color: $rhs-link-color;
+$link-color: $rs-color-03;
+$link-hover-color: $rs-color-03;
 
 $navbar-default-color:             $rs-color-10;
 $navbar-default-link-color:        $rs-color-10;
