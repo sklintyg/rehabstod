@@ -15,7 +15,7 @@
         "http-backend-proxy": "^1.4.3",
         "jasmine-reporters": "^2.1.1",
         "protractor-cucumber-framework": "^1.0.0",
-        "protractor-jasmine2-screenshot-reporter": "^0.3.0",
+        "protractor-jasmine2-screenshot-reporter": "^0.5.0",
         "winston": "^2.2.0"
     },
     "engine": "node >= 6.9.1",

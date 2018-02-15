@@ -46,24 +46,24 @@ angular.module('rehabstodApp').factory('sessionCheckService',
          */
         function _getSessionInfo() {
             $log.debug('_getSessionInfo requesting session info =>');
-            $http.get('/api/session-auth-check/ping').success(function(data) {
+            $http.get('/api/session-auth-check/ping').then(function(response) {
                 $log.debug('<= _getSessionInfo success');
-                if (data) {
-                    $log.debug('session status  = ' + JSON.stringify(data));
-                    if (data.authenticated === false) {
+                if (response.data) {
+                    $log.debug('session status  = ' + JSON.stringify(response.data));
+                    if (response.data.authenticated === false) {
                         $log.debug('No longer authenticated - redirecting to loggedout');
                         _stopPolling();
                         $window.location.href = '/error.jsp?reason=inactivity-timeout';
                     }
                 } else {
-                    $log.debug('_getSessionInfo returned unexpected data:' + data);
+                    $log.debug('_getSessionInfo returned unexpected data:' + response.data);
                 }
 
                 //Schedule new polling
                 _stopPolling();
                 pollPromise = $interval(_getSessionInfo, msPollingInterval);
-            }).error(function(data, status) {
-                $log.error('_getSessionInfo error ' + status);
+            }, function(response) {
+                $log.error('_getSessionInfo error ' + response.status);
 
                 _stopPolling();
                 //Schedule a new check
@@ -85,10 +85,10 @@ angular.module('rehabstodApp').factory('sessionCheckService',
          */
         function _executeExtendSessionRequest() {
             $log.debug('_executeExtendSessionRequest sending request now =>');
-            $http.get('/api/session-auth-check/extend').success(function(data) {
-                $log.debug('<= _executeExtendSessionRequest success:' + data);
-            }).error(function(data, status) {
-                $log.error('<= _executeExtendSessionRequest failed: ' + status);
+            $http.get('/api/session-auth-check/extend').then(function(response) {
+                $log.debug('<= _executeExtendSessionRequest success:' + response.data);
+            }, function(response) {
+                $log.error('<= _executeExtendSessionRequest failed: ' + response.status);
             }).finally(function() { // jshint ignore:line
                 //clear interval no matter the outcome of the request
                 if (extendSessionPromise) {

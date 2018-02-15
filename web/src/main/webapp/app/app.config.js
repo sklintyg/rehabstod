@@ -19,8 +19,10 @@
 
 angular
     .module('rehabstodApp')
-    .config(function($stateProvider, $urlRouterProvider, $locationProvider, $uibTooltipProvider, $httpProvider,
-    http403ResponseInterceptorProvider, stConfig) {
+    .config(
+    /** @ngInject */
+    function($stateProvider, $urlRouterProvider, $locationProvider, $uibTooltipProvider, $httpProvider,
+    http403ResponseInterceptorProvider, stConfig, $compileProvider) {
     'use strict';
 
         // Default route is "Landing page"
@@ -48,4 +50,10 @@ angular
 
         stConfig.sort.skipNatural = true;
         stConfig.sort.delay = 100;
+
+        $compileProvider.commentDirectivesEnabled(false);
+        $compileProvider.cssClassDirectivesEnabled(false);
+        $compileProvider.preAssignBindingsEnabled(true);
+
+        $locationProvider.hashPrefix('');
     });

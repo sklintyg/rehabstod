@@ -42,23 +42,21 @@
 
       function _fetchHsaPersons() {
         $http.get('/services/hsa-api/person').
-        success(function(data) {
-          $scope.loginModel = _loginModel(data);
+        then(function(response) {
+          $scope.loginModel = _loginModel(response.data);
           $scope.loginOptions = _loginOptions();
           $scope.selectedIndex = '0';
-        }).
-        error(function(data, status) {
-          $log.error('error ' + status);
+        }, function(response) {
+          $log.error('error ' + response.status);
         });
       }
 
       function _fetchMedarbetaruppdrag() {
         $http.get('/services/hsa-api/medarbetaruppdrag').
-        success(function(data) {
-          $scope.medarbetaruppdrag = data;
-        }).
-        error(function(data, status) {
-          $log.error('error ' + status);
+        then(function(response) {
+          $scope.medarbetaruppdrag = response.data;
+        }, function(response) {
+          $log.error('error ' + response.status);
         });
       }
 
