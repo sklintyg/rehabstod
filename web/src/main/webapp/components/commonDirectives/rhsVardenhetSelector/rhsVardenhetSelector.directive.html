@@ -11,10 +11,10 @@
     <div ng-if="vg.expanded" ng-repeat="enhet in vg.vardenheter | orderBy:'namn'">
 
       <div class="enhet">
-        <span ng-if="enhet.mottagningar.length > 0" class="toggle-icon" id="expand-disabled-enhet-{{::enhet.id}}" ng-click="enhet.expanded = ! enhet.expanded">
+        <span ng-if="enhet.mottagningar.length > 0" class="toggle-icon" id="expand-enhet-{{::enhet.id}}" ng-click="enhet.expanded = ! enhet.expanded">
           <span class="glyphicon" ng-class="enhet.expanded ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></span>
         </span>
-         <span ng-if="enhet.mottagningar.length < 1" class="glyphicon glyphicon-chevron-up glyphicon-hide"></span>
+        <span ng-if="enhet.mottagningar.length < 1" class="glyphicon glyphicon-chevron-up glyphicon-hide"></span>
 
         <span ng-if="enhet.id == model.valdVardenhet.id">
           <span class="active-enhet">{{::enhet.namn}}</span> (vald enhet)

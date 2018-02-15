@@ -24,7 +24,6 @@
 
 var specHelper = rhsTestTools.helpers.spec;
 var startPage = rhsTestTools.pages.startPage;
-var WelcomePage = rhsTestTools.pages.welcomePage;
 var selectUnitPage = rhsTestTools.pages.selectUnitPage;
 
 describe('Flöde som rehabkoordinator - loggar in på mottagning', function() {
