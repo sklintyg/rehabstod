@@ -177,8 +177,8 @@ var rhsMessages = {
         'modal.pdlconsent.userapproval': 'Jag förstår och godkänner.',
 
         // Role switching
-        'label.role.switch.notloggedin': 'Observera! Du har behörigheten Rehabkoordinator på någon/några av dina enheter. Var uppmärksam om att din roll kommer skifta från Läkare till Rehabkoordinator när du väljer att logga in på en sådan enhet.',
-        'label.role.switch.loggedin': 'Observera! Du har olika behörigheter på olika enheter. Var uppmärksam om att din roll kan komma att skifta mellan Läkare och Rehabkoordinator beroende på vilken enhet du väljer att byta till.',
+        'label.role.switch.notloggedin': 'Du har behörigheten Rehabkoordinator på någon/några av dina enheter. Var uppmärksam om att din roll kommer skifta från Läkare till Rehabkoordinator när du väljer att logga in på en sådan enhet.',
+        'label.role.switch.loggedin': 'Du har olika behörigheter på olika enheter. Var uppmärksam om att din roll kan komma att skifta mellan Läkare och Rehabkoordinator beroende på vilken enhet du väljer att byta till.',
 
         // Patient History Dialog
         'label.patienthistory.loading' : 'Hämtar sjukfall för patient...',

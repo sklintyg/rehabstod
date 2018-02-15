@@ -1,11 +1,25 @@
 .rhs-vardenhet-selector {
 
-  .btn {
-    padding: 2px;
+  .vardgivare-title {
+    @extend %rs-typo-04;
+    background: $rs-color-06;
+    padding: 10px 20px;
+    margin-bottom: 5px;
+  }
+
+  a, .active-enhet {
+    padding: 5px 0;
+    display: inline-block;
+  }
+
+  .active-enhet {
+    color: $rs-color-03;
+    vertical-align: baseline;
+    cursor: default;
   }
 
   .toggle-icon {
-    color: #111;
+    color: $rs-color-10;
     cursor: pointer;
   }
 

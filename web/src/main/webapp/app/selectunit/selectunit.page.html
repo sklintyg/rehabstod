@@ -3,11 +3,15 @@
     <div class="col-xs-12 col-sm-6">
 
       <h1>Välj enhet</h1>
-      <p>Du har behörighet för flera olika enheter. Välj den enhet du vill se pågående sjukfall för. Du kan byta enhet
-        även efter inloggning.</p>
-      <rhs-vardenhet-selector user="user" on-unit-selection="onUnitSelected(enhet)" expand-vardgivare="true"
-                              role-switch-message-key="label.role.switch.notloggedin"></rhs-vardenhet-selector>
+      <p>
+        Du har behörighet för flera olika enheter. Välj den enhet du vill se pågående sjukfall för. Du kan byta enhet även efter inloggning.
+      </p>
 
+      <rhs-vardenhet-selector
+          user="user"
+          on-unit-selection="onUnitSelected(enhet)"
+          expand-vardgivare="true"
+          role-switch-message-key="label.role.switch.notloggedin"></rhs-vardenhet-selector>
     </div>
     <div class="clearfix"></div>
   </div>
