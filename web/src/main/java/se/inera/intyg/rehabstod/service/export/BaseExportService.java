@@ -18,7 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.export;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
@@ -28,19 +33,15 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 /**
  * Created by eriklupander on 2016-02-26.
  */
 public abstract class BaseExportService {
 
-    protected static final String MINA_PAGAENDE_SJUKFALL = "Mina sjukfall";
-    protected static final String PA_ENHETEN = "- De pågående sjukfall där jag utfärdat det nuvarande intyget";
-    protected static final String ALLA_SJUKFALL = "Alla sjukfall";
-    protected static final String SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN = "- Alla pågående sjukfall på enheten";
+    protected static final String MINA_PAGAENDE_SJUKFALL = "Sjukfall";
+    protected static final String PA_ENHETEN = "- Pågående sjukfall där jag utfärdat det nuvarande intyget";
+    protected static final String ALLA_SJUKFALL = "Sjukfall";
+    protected static final String SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN = "- Pågående sjukfall på enheten";
     protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Huvuddiagnosfilter";
     protected static final String SELECTION_VALUE_ALLA = "Alla";
     protected static final String FILTER_TITLE_VALDA_LAKARE = "Valda läkare";
