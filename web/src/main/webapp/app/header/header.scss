@@ -59,4 +59,14 @@ div.headerbox-user-profile {
 
 .select-care-unit-modal {
   margin-top: 30px;
+
+  .modal-body {
+    overflow-y: auto;
+    min-height: 200px;
+    max-height: 200px;
+
+    @media (min-height: 400px) {
+      max-height: calc(100vh - 220px);
+    }
+  }
 }
