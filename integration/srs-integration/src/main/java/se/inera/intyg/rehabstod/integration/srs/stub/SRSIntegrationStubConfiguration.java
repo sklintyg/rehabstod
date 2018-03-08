@@ -48,10 +48,10 @@ public class SRSIntegrationStubConfiguration {
     }
 
     @Bean
-    public EndpointImpl intygstjanstResponder() {
+    public EndpointImpl srsResponder() {
         Object implementor = srsStub;
         EndpointImpl endpoint = new EndpointImpl(bus, implementor);
-        endpoint.publish("/get-risk-prediction-for-certificate/v1.0");
+        endpoint.publish("/stubs/get-risk-prediction-for-certificate/v1.0");
         return endpoint;
     }
 }

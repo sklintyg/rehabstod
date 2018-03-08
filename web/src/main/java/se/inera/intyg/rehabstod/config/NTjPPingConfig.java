@@ -60,7 +60,7 @@ public class NTjPPingConfig {
     public EndpointImpl ntjpStubResponder() {
         NTjPPingForConfigurationStub ntjpPingForConfigurationStub = applicationContext.getBean(NTjPPingForConfigurationStub.class);
         EndpointImpl endpoint = new EndpointImpl(bus, ntjpPingForConfigurationStub);
-        endpoint.publish("/ntjp-ping-for-configuration-stub/v1.0");
+        endpoint.publish("/stubs/itintegration/monitoring/PingForConfiguration/1/rivtabp20");
         return endpoint;
     }
 }

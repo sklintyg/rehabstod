@@ -41,7 +41,7 @@
     ['$scope', '$http', '$log', function($scope, $http, $log) {
 
       function _fetchHsaPersons() {
-        $http.get('/services/hsa-api/person').
+        $http.get('/services/api/hsa-api/person').
         then(function(response) {
           $scope.loginModel = _loginModel(response.data);
           $scope.loginOptions = _loginOptions();
@@ -52,7 +52,7 @@
       }
 
       function _fetchMedarbetaruppdrag() {
-        $http.get('/services/hsa-api/medarbetaruppdrag').
+        $http.get('/services/api/hsa-api/medarbetaruppdrag').
         then(function(response) {
           $scope.medarbetaruppdrag = response.data;
         }, function(response) {

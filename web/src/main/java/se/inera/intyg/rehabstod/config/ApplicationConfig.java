@@ -39,7 +39,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @Configuration
-@PropertySource({ "file:${rehabstod.config.file}", "file:${credentials.file}", "classpath:version.properties" })
+@PropertySource({ "classpath:default.properties",
+                  "file:${rehabstod.config.file}",
+                  "file:${credentials.file}",
+                  "classpath:version.properties"})
 @ImportResource({ "classpath:META-INF/cxf/cxf.xml", "classpath:securityContext.xml" })
 public class ApplicationConfig {
 
