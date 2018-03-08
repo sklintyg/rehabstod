@@ -72,7 +72,6 @@ gretty {
     jvmArgs = [
                '-Dspring.profiles.active=dev,rhs-it-stub,rhs-srs-stub,caching-enabled',
                '-Drehabstod.config.file=' + projectDir + '/src/main/resources/dev.properties',
-               '-Drehabstod.features.file=' + projectDir + '/src/main/resources/features.properties',
                '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
                '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources',
                '-XX:MaxPermSize=256M'
