@@ -18,15 +18,12 @@
  */
 
 angular.module('rehabstodApp').factory('featureService',
-    function(UserModel, _) {
+    function(UserModel) {
         'use strict';
 
         function _hasFeature(feature) {
-            var index = _.findIndex(UserModel.get().features, function(o) {
-                return o === feature;
-            });
-
-            return index !== -1;
+            var userFeature = UserModel.get().features[feature];
+            return (userFeature !== undefined && userFeature.global === true);
         }
 
         return {

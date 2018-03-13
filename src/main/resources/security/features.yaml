@@ -10,7 +10,7 @@ knownFeatures:
 features:
   - &f010
     name: *kf010
-    desc: Hantera frågor
+    desc: SRS-stöd i Rehabstöd
     global: false
 
 pilots:
@@ -18,6 +18,7 @@ pilots:
     desc: Pilot avsedd för testsyfte
     hsaIds:
       - IFV1239877878-1042
+      - TSTNMT2321000156-105N
       - TSTNMT2321000156-1077
     activated:
       - &pf010
