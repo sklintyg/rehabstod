@@ -95,6 +95,8 @@ dependencies {
 
     compile "se.riv.clinicalprocess.healthcond.monitoring:clinicalprocess-healthcond-monitoring-schemas:${internalMonitoringSchemaVersion}"
 
+    compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
+
     compile "se.inera.intyg.infra:common-cache-metrics:${intygInfraVersion}"
     compile "se.inera.intyg.infra:dynamiclink:${intygInfraVersion}"
     compile "se.inera.intyg.infra:hsa-integration:${intygInfraVersion}"

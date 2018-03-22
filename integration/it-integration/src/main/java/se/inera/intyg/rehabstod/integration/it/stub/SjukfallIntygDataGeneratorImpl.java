@@ -296,7 +296,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
         resident.setProtectedPersonIndicator(false);
 
-        Personnummer pnr = Personnummer.createValidatedPersonnummerWithDash(patient.getPersonId().getExtension())
+        Personnummer pnr = Personnummer.createPersonnummer(patient.getPersonId().getExtension())
                 .orElseThrow(() -> new IllegalStateException("Invalid personnummer!"));
         resident.setPersonalIdentity(buildIIType(pnr.getPersonnummer()));
 
