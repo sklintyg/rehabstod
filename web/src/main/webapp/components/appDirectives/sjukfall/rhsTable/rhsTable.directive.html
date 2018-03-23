@@ -6,7 +6,7 @@
 
   <rhs-table-number-of-rows total-rows="model.get().length"></rhs-table-number-of-rows>
 
-    <table class="table table-striped" rhs-table-fixed-header="rhs-table-header-fixed-top" data-ng-class="{'show-lakare-column': 'user.urval != \'ISSUED_BY_ME\''}" fixed-header="rhs-table-fixed-header" normal-header="rhs-table-normal-header"  padding-top="46">
+    <table class="table table-striped" rhs-table-fixed-header="rhs-table-header-fixed-top" data-ng-class="{'show-lakare-column': showLakareColumn}" fixed-header="rhs-table-fixed-header" normal-header="rhs-table-normal-header"  padding-top="46">
       <thead class="hidden" rhs-table-header id="rhs-table-fixed-header" user="user" glapp="filter.get().glapp"></thead>
       <thead rhs-table-header id="rhs-table-normal-header" user="user" glapp="filter.get().glapp"></thead>
       <tbody id="rhs-table-body">
@@ -19,14 +19,11 @@
           <td class="column-diagnos">
             <span uib-tooltip-html="getToolTip(row.diagnos)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnos.intygsVarde}}</span>
             <span class="column-diagnos-beskrivning" ng-class="{'anonymous-mode' : !filterViewState.get().showPatientId}" ng-bind-html="row.diagnos.beskrivning"></span>
-          </td>
-          <td class="column-bidiagnoser">
-            <span ng-repeat="d in row.biDiagnoser track by $index">
-              <span ng-if="$index > 0"> ,</span>
+            <span ng-repeat="d in row.biDiagnoser track by $index">,
               <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::d.intygsVarde}}</span>
             </span>
-            <span ng-if="row.biDiagnoser.length < 1">-</span>
           </td>
+
           <td class="column-start start-date">{{::row.start}}</td>
           <td class="column-slut end-date">{{::row.slut}}</td>
           <td class="column-dagar">{{::row.dagarShow}}</td>
@@ -35,7 +32,7 @@
           <td ng-if="hasFeature('SRS')" class="column-risk">
             <rhs-risk-indicator category="row.riskSignal.riskKategori" description="row.riskSignal.riskDescription"></rhs-risk-indicator>
           </td>
-          <td ng-if="user.urval != 'ISSUED_BY_ME'">{{::row.lakare.namn}}</td>
+          <td ng-if="showLakareColumn">{{::row.lakare.namn}}</td>
         </tr>
 
       </tbody>

@@ -282,15 +282,14 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         List<Float> tempHeaders = new ArrayList<>();
         tempHeaders.add(0.8f); // # radnr
         if (showPatientId) {
-            tempHeaders.add(1.7f); // personnr
+            tempHeaders.add(1.5f); // personnr
         }
         tempHeaders.add(0.8f); // # Ålder
         if (showPatientId) {
             tempHeaders.add(3f); // namn
         }
         tempHeaders.add(0.8f); // Kön
-        tempHeaders.add(1f); // Diagnos
-        tempHeaders.add(1.5f); // Bidiagnoser
+        tempHeaders.add(2f); // Diagnos
         tempHeaders.add(1.5f); // Startdatum
         tempHeaders.add(1.5f); // Slutdatum
         tempHeaders.add(1.5f); // Längd
@@ -335,7 +334,6 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
         addCell(table, TABLEHEADER_KON, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_NUVARANDE_DIAGNOS, PdfExportConstants.TABLE_HEADER_FONT);
-        addCell(table, TABLEHEADER_BIDIAGNOSER, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_STARTDATUM, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_SLUTDATUM, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_SJUKSKRIVNINGSLANGD, PdfExportConstants.TABLE_HEADER_FONT);
@@ -376,9 +374,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
                 addCell(table, is.getPatient().getNamn());
             }
             addCell(table, is.getPatient().getKon().getDescription());
-            addCell(table, is.getDiagnos().getIntygsVarde());
-            addCell(table, diagnoseListToString(is.getBiDiagnoser()));
-
+            addCell(table, is.getDiagnos().getIntygsVarde() + diagnoseListToString(is.getBiDiagnoser()));
             addCell(table, is.getStart() != null ? YearMonthDateFormatter.print(is.getStart()) : "?");
             addCell(table, is.getSlut() != null ? YearMonthDateFormatter.print(is.getSlut()) : "?");
             addCell(table, getlangdText(is));

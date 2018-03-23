@@ -53,15 +53,15 @@ angular.module('rehabstodApp').factory('SjukfallModel',
 
             return dagar + suffix;
         }
-        function _getBiDiagnoserShow(diagnoser) {
-        var asText = '';
-        if (diagnoser) {
-            angular.forEach(diagnoser, function(diagnos) {
-                asText += diagnos.intygsVarde;
-            });
+        function _getBiDiagnoserSearch(diagnoser) {
+            var asText = '';
+            if (diagnoser) {
+                angular.forEach(diagnoser, function(diagnos) {
+                    asText += diagnos.intygsVarde;
+                });
+            }
+            return asText;
         }
-        return asText;
-    }
 
 
         function _getGradShow(aktivGrad, grader) {
@@ -86,7 +86,6 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                 item.patient.konShow = _getKon(item.patient.kon);
                 item.dagarShow = _getDagar(item.dagar);
                 item.gradShow = _getGradShow(item.aktivGrad, item.grader);
-                item.biDiagnoserShow = _getBiDiagnoserShow(item.biDiagnoser);
                 item.quickSearchString = '';
 
                 //We dont want to be able to quicksearch for patientname/personnr etc if in anonymous mode
@@ -98,7 +97,7 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                 _addQuickSearchContentFromProperty(item, 'patient.konShow');
                 _addQuickSearchContentFromProperty(item, 'diagnos.intygsVarde');
                 _addQuickSearchContentFromProperty(item, 'diagnos.beskrivning');
-                _addQuickSearchContent(item, item.biDiagnoserShow);
+                _addQuickSearchContent(item, _getBiDiagnoserSearch(item.biDiagnoser));
                 _addQuickSearchContentFromProperty(item, 'start');
                 _addQuickSearchContentFromProperty(item, 'slut');
                 _addQuickSearchContent(item, item.dagarShow);

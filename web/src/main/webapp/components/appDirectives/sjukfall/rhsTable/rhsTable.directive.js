@@ -27,6 +27,8 @@ angular.module('rehabstodApp')
             $scope.model = SjukfallModel;
             $scope.user = UserModel.get();
 
+            $scope.showLakareColumn = $scope.user.urval !== 'ISSUED_BY_ME';
+
             $scope.displayedCollection = [].concat($scope.model.get());
 
             $scope.getToolTip = function(diagnos) {

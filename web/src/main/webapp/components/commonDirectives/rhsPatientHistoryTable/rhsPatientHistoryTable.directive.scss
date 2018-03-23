@@ -84,17 +84,6 @@ rhs-patient-history-table {
         }
       }
 
-      .column-extra-diagnoses {
-        width: 200px;
-
-        @media (min-width: $screen-xl-min) {
-          width: 250px;
-        }
-
-        @media (max-width: $screen-md-max) {
-          width: 80px;
-        }
-      }
 
       .column-showintyg {
         width: 110px;

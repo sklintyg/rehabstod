@@ -18,8 +18,7 @@
     <thead>
     <tr>
       <th id="header-column-number" class="column-number">#</th>
-      <th id="header-column-diagnose" class="column-diagnose">Diagnos</th>
-      <th id="header-column-extra-diagnoses" class="column-extra-diagnoses">Bidiagnoser</th>
+      <th id="header-column-diagnose" class="column-diagnose">Diagnos/diagnoser</th>
       <th id="header-column-startdate" class="column-startdate">Startdatum</th>
       <th id="header-column-enddate" class="column-enddate">Slutdatum</th>
       <th id="header-column-length" class="column-length">Längd</th>
@@ -37,13 +36,7 @@
       <td ng-attr-id="sjukfall-{{index}}-column-diagnose-{{$index}}" class="nowrap">
         <span uib-tooltip-html="getToolTip(intyg.diagnos)" tooltip-popup-delay="200" class="patient-history-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnos.intygsVarde}}</span><div
           class="diagnos hidden-xs hidden-sm hidden-md">{{::intyg.diagnos.beskrivning}}</div>
-      </td>
-      <td ng-attr-id="sjukfall-{{index}}-column-bidiagnoses-{{$index}}" class="nowrap">
-        <div ng-repeat="d in intyg.bidiagnoser">
-          <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="patient-history-dialog-tooltip">{{::d.intygsVarde}}</span><div
-            class="bidiagnos hidden-xs hidden-sm hidden-md">{{::d.beskrivning}}</div>
-        </div>
-        <span ng-if="intyg.bidiagnoser.length < 1">-</span>
+        <span ng-repeat="d in intyg.bidiagnoser">, <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="patient-history-dialog-tooltip">{{::d.intygsVarde}}</span></span>
       </td>
       <td ng-attr-id="sjukfall-{{index}}-column-startdatum-{{$index}}" class="nowrap">{{::intyg.start}}</td>
       <td ng-attr-id="sjukfall-{{index}}-column-slutdatum-{{$index}}" class="nowrap">{{::intyg.slut}}</td>

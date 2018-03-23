@@ -42,7 +42,7 @@ public abstract class BaseExportService {
     protected static final String PA_ENHETEN = "- Pågående sjukfall där jag utfärdat det nuvarande intyget";
     protected static final String ALLA_SJUKFALL = "Sjukfall";
     protected static final String SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN = "- Pågående sjukfall på enheten";
-    protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Huvuddiagnosfilter";
+    protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Diagnosfilter";
     protected static final String SELECTION_VALUE_ALLA = "Alla";
     protected static final String FILTER_TITLE_VALDA_LAKARE = "Valda läkare";
     protected static final String FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
@@ -67,8 +67,7 @@ public abstract class BaseExportService {
     protected static final String TABLEHEADER_ALDER = "Ålder";
     protected static final String TABLEHEADER_NAMN = "Namn";
     protected static final String TABLEHEADER_KON = "Kön";
-    protected static final String TABLEHEADER_NUVARANDE_DIAGNOS = "Diagnos";
-    protected static final String TABLEHEADER_BIDIAGNOSER = "Bidiagnoser";
+    protected static final String TABLEHEADER_NUVARANDE_DIAGNOS = "Diagnos/diagnoser";
     protected static final String TABLEHEADER_STARTDATUM = "Startdatum";
     protected static final String TABLEHEADER_SLUTDATUM = "Slutdatum";
     protected static final String TABLEHEADER_SJUKSKRIVNINGSLANGD = "Längd";
@@ -97,9 +96,9 @@ public abstract class BaseExportService {
         if (biDiagnoser != null && !biDiagnoser.isEmpty()) {
             return biDiagnoser.stream()
                     .map(Diagnos::getIntygsVarde)
-                    .collect(Collectors.joining(", "));
+                    .collect(Collectors.joining(", ", ", ", ""));
         } else {
-            return "-";
+            return "";
         }
 
     }

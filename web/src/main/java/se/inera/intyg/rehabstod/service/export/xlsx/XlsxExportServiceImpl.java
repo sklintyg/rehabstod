@@ -135,7 +135,6 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         }
         tempHeaders.add(TABLEHEADER_KON);
         tempHeaders.add(TABLEHEADER_NUVARANDE_DIAGNOS);
-        tempHeaders.add(TABLEHEADER_BIDIAGNOSER);
         tempHeaders.add(TABLEHEADER_STARTDATUM);
         tempHeaders.add(TABLEHEADER_SLUTDATUM);
         tempHeaders.add(TABLEHEADER_SJUKSKRIVNINGSLANGD);
@@ -286,8 +285,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
                 createDataCell(row, colIndex++, sf.getPatient().getNamn());
             }
             createDataCell(row, colIndex++, sf.getPatient().getKon().getDescription());
-            createDataCell(row, colIndex++, sf.getDiagnos().getKod());
-            createDataCell(row, colIndex++, diagnoseListToString(sf.getBiDiagnoser()));
+            createDataCell(row, colIndex++, sf.getDiagnos().getKod() + diagnoseListToString(sf.getBiDiagnoser()));
             createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getStart()));
             createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getSlut()));
             createDataCell(row, colIndex++, String.format(FORMAT_ANTAL_DAGAR, sf.getDagar()));
