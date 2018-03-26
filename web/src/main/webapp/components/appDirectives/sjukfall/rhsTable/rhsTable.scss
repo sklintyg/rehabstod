@@ -56,10 +56,10 @@ rhs-table {
 
             @media (min-width: 1600px) {
               max-width: calc(100vw - 1300px);
+            }
 
-              &.anonymous-mode {
-                max-width: calc(100vw - 1000px);
-              }
+            &.anonymous-mode {
+              max-width: calc(100vw - 1100px);
             }
           }
         }
@@ -95,16 +95,19 @@ rhs-table {
             min-width: 1px;
           }
 
+          &.anonymous-mode {
+            max-width: calc(100vw - 800px);
+          }
           @media (min-width: $screen-md-min) {
-            max-width: 100px;
+            max-width: 120px;
           }
 
           @media (min-width: $screen-lg-min) {
-            max-width: 140px;
+            max-width: 160px;
           }
 
           @media (min-width: 1400px) {
-            max-width: 200px;
+            max-width: 260px;
           }
 
           @media (min-width: 1600px) {
