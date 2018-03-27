@@ -69,6 +69,9 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     private static final String LOGO_PATH = "classpath:pdf-assets/rehab_pdf_logo.png";
     private static final String UNICODE_CAPABLE_FONT_PATH = "/pdf-assets/FreeSans.ttf";
+    private static final int ELLIPSIZE_AT_LIMIT = 15;
+    private static final int ELLIPSIZE_AT_LIMIT_ANONYMOUS = 35;
+    private static final String ELLIPSIZE_SUFFIX = "...";
 
     private PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
@@ -280,23 +283,29 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     private PdfPTable createTableColumns(Urval urval, boolean showPatientId, boolean showSrsRisk) {
         List<Float> tempHeaders = new ArrayList<>();
-        tempHeaders.add(0.8f); // # radnr
+        tempHeaders.add(0.5f); // # radnr
         if (showPatientId) {
-            tempHeaders.add(1.5f); // personnr
+            tempHeaders.add(1.3f); // personnr
         }
-        tempHeaders.add(0.8f); // # Ålder
+        tempHeaders.add(0.7f); // # Ålder
         if (showPatientId) {
-            tempHeaders.add(3f); // namn
+            tempHeaders.add(2f); // namn
         }
-        tempHeaders.add(0.8f); // Kön
-        tempHeaders.add(2f); // Diagnos
-        tempHeaders.add(1.5f); // Startdatum
-        tempHeaders.add(1.5f); // Slutdatum
-        tempHeaders.add(1.5f); // Längd
-        tempHeaders.add(0.8f); // Antal
+        tempHeaders.add(0.7f); // Kön
+
+        if (showPatientId) {
+            tempHeaders.add(2f); // Diagnos
+        } else {
+            tempHeaders.add(3f); // Diagnos extra bred eftersom vi inte visar patientinfo
+        }
+
+        tempHeaders.add(1.2f); // Startdatum
+        tempHeaders.add(1.2f); // Slutdatum
+        tempHeaders.add(1.2f); // Längd
+        tempHeaders.add(0.5f); // Antal
         tempHeaders.add(2f); // Grader
         if (Urval.ALL.equals(urval)) {
-            tempHeaders.add(3f); // Läkare
+            tempHeaders.add(2f); // Läkare
         }
         if (showSrsRisk) {
             tempHeaders.add(1f); // Srs Risk
@@ -374,7 +383,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
                 addCell(table, is.getPatient().getNamn());
             }
             addCell(table, is.getPatient().getKon().getDescription());
-            addCell(table, is.getDiagnos().getIntygsVarde() + diagnoseListToString(is.getBiDiagnoser()));
+            addCell(table, getCompoundDiagnoseText(is, showPatientId));
             addCell(table, is.getStart() != null ? YearMonthDateFormatter.print(is.getStart()) : "?");
             addCell(table, is.getSlut() != null ? YearMonthDateFormatter.print(is.getSlut()) : "?");
             addCell(table, getlangdText(is));
@@ -391,6 +400,27 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
         return table;
 
+    }
+
+    private String getCompoundDiagnoseText(SjukfallEnhet sf, boolean showPatientId) {
+        StringBuilder b = new StringBuilder();
+        b.append(sf.getDiagnos().getKod()).append(" ");
+        b.append(ellipsize(sf.getDiagnos().getBeskrivning(), showPatientId));
+        b.append(diagnoseListToString(sf.getBiDiagnoser()));
+        return b.toString();
+    }
+
+    private String ellipsize(String namn, boolean showPatientId) {
+        if (StringUtil.isNullOrEmpty(namn)) {
+            return "";
+        }
+
+        int maxLength = showPatientId ? ELLIPSIZE_AT_LIMIT : ELLIPSIZE_AT_LIMIT_ANONYMOUS;
+        if (namn.length() > maxLength) {
+            return namn.substring(0, maxLength) + ELLIPSIZE_SUFFIX;
+        } else {
+            return namn;
+        }
     }
 
     private void addCell(PdfPTable table, Phrase p) {

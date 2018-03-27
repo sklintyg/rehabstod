@@ -285,7 +285,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
                 createDataCell(row, colIndex++, sf.getPatient().getNamn());
             }
             createDataCell(row, colIndex++, sf.getPatient().getKon().getDescription());
-            createDataCell(row, colIndex++, sf.getDiagnos().getKod() + diagnoseListToString(sf.getBiDiagnoser()));
+            createDataCell(row, colIndex++, getCompoundDiagnoseText(sf));
             createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getStart()));
             createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getSlut()));
             createDataCell(row, colIndex++, String.format(FORMAT_ANTAL_DAGAR, sf.getDagar()));
@@ -305,6 +305,14 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         }
         // Makes sure the "namn" column isn't excessively wide due to the filter.
         sheet.setColumnWidth(2, 7000);
+    }
+
+    private String getCompoundDiagnoseText(SjukfallEnhet sf) {
+        StringBuilder b = new StringBuilder();
+        b.append(sf.getDiagnos().getKod()).append(" ");
+        b.append(sf.getDiagnos().getBeskrivning());
+        b.append(diagnoseListToString(sf.getBiDiagnoser()));
+        return b.toString();
     }
 
     private XSSFRichTextString buildPersonnummerRichText(Patient patient) {

@@ -18,26 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import com.google.common.collect.ImmutableSet;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
-import se.inera.intyg.infra.security.common.model.Feature;
-import se.inera.intyg.infra.security.common.model.Role;
-import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.testutil.TestDataGen;
-import se.inera.intyg.rehabstod.web.model.Diagnos;
-import se.inera.intyg.rehabstod.web.model.Gender;
-import se.inera.intyg.rehabstod.web.model.Lakare;
-import se.inera.intyg.rehabstod.web.model.Patient;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -47,10 +31,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
+import se.inera.intyg.infra.security.common.model.Feature;
+import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.testutil.TestDataGen;
+import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.Diagnos;
+import se.inera.intyg.rehabstod.web.model.Gender;
+import se.inera.intyg.rehabstod.web.model.Lakare;
+import se.inera.intyg.rehabstod.web.model.Patient;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /**
  * Created by marced on 24/02/16.
@@ -79,8 +81,13 @@ public class PdfExportServiceImplTest {
 
         // Not really interested in these properties, but the sjukfall equals /hashcode will fail without them
         Diagnos diagnos = new Diagnos("M16", "M16", "diagnosnamn");
+        diagnos.setBeskrivning("Diagnosnamn som kan vara ganska långt i vissa fall");
         diagnos.setKapitel("M00-M99");
         isf.setDiagnos(diagnos);
+
+        final Diagnos bd1 = new Diagnos("B16", "B16", "bidiagnosnamn");
+        final Diagnos bd2 = new Diagnos("B17", "B17", "bidiagnosnamn");
+        isf.setBiDiagnoser(Arrays.asList(bd1, bd2));
 
         isf.setStart(LocalDate.now().plusDays(index));
         isf.setSlut(isf.getStart().plusDays(index));
@@ -88,6 +95,7 @@ public class PdfExportServiceImplTest {
         isf.setIntyg(1);
         isf.setGrader(index % 3 == 0 ? Arrays.asList(25, 50) : Arrays.asList(50, 75));
         isf.setAktivGrad(50);
+        isf.setRiskSignal( new RiskSignal("", 2, "Lätt"));
 
         return isf;
     }
@@ -145,7 +153,7 @@ public class PdfExportServiceImplTest {
         user.setRoles(roles);
         final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
         assertTrue(export.length > 0);
-        // Files.write(Paths.get("./test_issued_by_me.pdf"), export);
+        //Files.write(Paths.get("./test_issued_by_me.pdf"), export);
     }
 
     @Test
@@ -156,7 +164,20 @@ public class PdfExportServiceImplTest {
         final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
         assertTrue(export.length > 0);
 
-        // Files.write(Paths.get("./test_all.pdf"), export);
+        //Files.write(Paths.get("./test_all.pdf"), export);
+    }
+
+    @Test
+    public void testExportAllAnonymous() throws Exception {
+        Map<String, Role> roles = new HashMap<>();
+        roles.put(AuthoritiesConstants.ROLE_KOORDINATOR, null);
+        user.setRoles(roles);
+        PrintSjukfallRequest request = TestDataGen.buildPrintRequest();
+        request.setShowPatientId(false);
+        final byte[] export = testee.export(createSjukFallList(), request, user, 3);
+        assertTrue(export.length > 0);
+
+        //Files.write(Paths.get("./test_all_no_patient_id.pdf"), export);
     }
 
     @Test
