@@ -18,7 +18,6 @@ pilots:
     desc: Pilot avsedd för testsyfte
     hsaIds:
       - IFV1239877878-1042
-      - TSTNMT2321000156-105N
       - TSTNMT2321000156-1077
     activated:
       - &pf010
