@@ -69,8 +69,8 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     private static final String LOGO_PATH = "classpath:pdf-assets/rehab_pdf_logo.png";
     private static final String UNICODE_CAPABLE_FONT_PATH = "/pdf-assets/FreeSans.ttf";
-    private static final int ELLIPSIZE_AT_LIMIT = 15;
-    private static final int ELLIPSIZE_AT_LIMIT_ANONYMOUS = 35;
+    private static final int ELLIPSIZE_AT_LIMIT = 20;
+    private static final int ELLIPSIZE_AT_LIMIT_ANONYMOUS = 40;
     private static final String ELLIPSIZE_SUFFIX = "...";
 
     private PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
@@ -287,22 +287,22 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         if (showPatientId) {
             tempHeaders.add(1.3f); // personnr
         }
-        tempHeaders.add(0.7f); // # Ålder
+        tempHeaders.add(0.5f); // # Ålder
         if (showPatientId) {
             tempHeaders.add(2f); // namn
         }
         tempHeaders.add(0.7f); // Kön
 
         if (showPatientId) {
-            tempHeaders.add(2f); // Diagnos
+            tempHeaders.add(2.1f); // Diagnos
         } else {
-            tempHeaders.add(3f); // Diagnos extra bred eftersom vi inte visar patientinfo
+            tempHeaders.add(3.4f); // Diagnos extra bred eftersom vi inte visar patientinfo
         }
 
-        tempHeaders.add(1.2f); // Startdatum
-        tempHeaders.add(1.2f); // Slutdatum
-        tempHeaders.add(1.2f); // Längd
-        tempHeaders.add(0.5f); // Antal
+        tempHeaders.add(1.1f); // Startdatum
+        tempHeaders.add(1.1f); // Slutdatum
+        tempHeaders.add(1.0f); // Längd
+        tempHeaders.add(0.45f); // Antal
         tempHeaders.add(2f); // Grader
         if (Urval.ALL.equals(urval)) {
             tempHeaders.add(2f); // Läkare
@@ -403,19 +403,22 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     }
 
     private String getCompoundDiagnoseText(SjukfallEnhet sf, boolean showPatientId) {
+        String dignosKodSpace = sf.getDiagnos().getKod() + " ";
+
         StringBuilder b = new StringBuilder();
-        b.append(sf.getDiagnos().getKod()).append(" ");
-        b.append(ellipsize(sf.getDiagnos().getBeskrivning(), showPatientId));
+        b.append(dignosKodSpace);
+        b.append(ellipsize(sf.getDiagnos().getBeskrivning(), dignosKodSpace.length(), showPatientId));
         b.append(diagnoseListToString(sf.getBiDiagnoser()));
         return b.toString();
     }
 
-    private String ellipsize(String namn, boolean showPatientId) {
+    private String ellipsize(String namn, int dignosKodLength, boolean showPatientId) {
         if (StringUtil.isNullOrEmpty(namn)) {
             return "";
         }
 
         int maxLength = showPatientId ? ELLIPSIZE_AT_LIMIT : ELLIPSIZE_AT_LIMIT_ANONYMOUS;
+        maxLength -= dignosKodLength; // Ta bort längden för diagnoskoden
         if (namn.length() > maxLength) {
             return namn.substring(0, maxLength) + ELLIPSIZE_SUFFIX;
         } else {
