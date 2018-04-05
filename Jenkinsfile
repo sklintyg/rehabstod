@@ -1,7 +1,7 @@
 #!groovy
 
-def buildVersion = "1.4.${BUILD_NUMBER}"
-def infraVersion = "3.4.+"
+def buildVersion = "1.5.0.${BUILD_NUMBER}"
+def infraVersion = "3.5.0.+"
 
 stage('checkout') {
     node {
@@ -25,7 +25,7 @@ stage('build') {
 stage('deploy') {
     node {
         util.run {
-            ansiblePlaybook extraVars: [version: buildVersion, ansible_ssh_port: "22", deploy_from_repo: "false", config_version: "RH-1.4"], \
+            ansiblePlaybook extraVars: [version: buildVersion, ansible_ssh_port: "22", deploy_from_repo: "false", config_version: "RH-1.5"], \
                 installation: 'ansible-yum', inventory: 'ansible/inventory/rehabstod/test', playbook: 'ansible/deploy.yml'
             util.waitForServer('https://rehabstod.inera.nordicmedtest.se/version.jsp')
         }

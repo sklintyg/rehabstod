@@ -23,7 +23,6 @@ angular.module('rehabstodApp').directive('rhsChartLegend',
 
             return {
                 restrict: 'E',
-                replace: true,
                 scope: {
                     data: '=',
                     config: '='

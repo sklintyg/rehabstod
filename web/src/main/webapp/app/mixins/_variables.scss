@@ -1,0 +1,99 @@
+$rhs-primary-accent-color: #008391;
+$rhs-second-accent-color: #00A1B0;
+
+$rhs-header-bg: #212633;
+
+$rhs-primary-text-color: #333;
+$rhs-secondary-text-color: #999;
+$rhs-link-color: #378998;
+$rhs-link-external-color: #0F6EDC;
+
+$default-border-radius: 5px;
+
+
+
+$form-group-margin-bottom: 10px;
+
+// Font
+$rhs-font: Arial, sans-serif;
+$rhs-font-size-h1: 24px;
+$rhs-font-size-h2: 18px;
+$rhs-font-size-h3: 16px;
+$rhs-font-size-h4: 14px;
+
+$rhs-font-size-th: 14px;
+
+// Buttons
+$rhs-font-buttons: "Arial Rounded MT Bold", sans-serif;
+$rhs-button-padding: 8px 20px;
+$rhs-button-disabled-bg: #F0F0F0;
+$rhs-button-disabled-color: #9B9B9B;
+$rhs-button-disabled-border: #D3D3D3;
+$rhs-button-letter-spacing: 0.06px;
+
+
+$blue-color: $rhs-primary-accent-color;
+$blue-color-accent: $rhs-second-accent-color;
+$inactive-element-color: #ccc;
+$background-gray-color: #efefef;
+$background-darkergray-color: #aaa;
+
+$footer-background-color: #E5E8EE;
+$footer-text-color: #22263E;
+$footer-height: 240px;
+
+$rhs-table-hover-bg: #bce4e8; //30% opacity of of specified color 00A1B0
+
+
+// Bootstrap variables (Here we override bootstraps default values with RHS custom variables defined above, or just directly..)
+
+$icon-font-path: '../bower_components/bootstrap-sass/assets/fonts/bootstrap/';
+$fa-font-path: '../bower_components/font-awesome/fonts';
+
+$font-family-base: $rhs-font;
+$font-size-h1: $rhs-font-size-h1;
+$font-size-h2: $rhs-font-size-h2;
+$font-size-h3: $rhs-font-size-h3;
+$font-size-h4: $rhs-font-size-h4;
+$headings-line-height:    1.5;
+
+$text-color: $rhs-primary-text-color;
+$link-color: $rhs-link-color;
+$link-hover-color: $rhs-link-color;
+
+$navbar-default-link-hover-color: #fff;
+$navbar-default-link-hover-bg: #24a1af;
+
+$navbar-default-link-active-color: $navbar-default-link-hover-color;
+$navbar-default-link-active-bg: $navbar-default-link-hover-bg;
+
+
+//Alerts overrides
+$alert-padding: 12px 16px;
+$alert-border-radius: 4px;
+
+$alert-warning-text: #9A6C41;
+$alert-warning-bg: #FFF8E4;
+$alert-warning-border: #F0E1B4;
+
+$alert-danger-text: #751723;
+$alert-danger-bg: #F2DEDE;
+$alert-danger-border: #D0021C;
+
+$alert-info-text: #000000;
+$alert-info-bg: #D9EDF7;
+$alert-info-border: #4890E2;
+
+//(we currently dont use success, but define override values anyway)
+$alert-success-text: #3C763D;
+$alert-success-bg: #DFF0D8;
+$alert-success-border: #DFF0D8;
+
+// Buttons
+$btn-default-color: #666;
+$btn-default-bg: #FFF;
+$btn-default-border: #CCC;
+
+$btn-primary-color: #FFF;
+$btn-primary-bg: #337AB7;
+$btn-primary-border: #2E6EA5;

@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,12 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
-import se.inera.intyg.rehabstod.service.Urval;
-import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
 import java.io.IOException;
 import java.util.List;
+
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /**
  * @author eriklupander on 2016-02-23.
@@ -31,7 +31,5 @@ import java.util.List;
 @FunctionalInterface
 public interface XlsxExportService {
 
-    byte[] export(List<SjukfallEnhet> sjukfallList, PrintSjukfallRequest printSjukfallRequest, Urval urval, int total)
-            throws IOException;
-
+    byte[] export(List<SjukfallEnhet> sjukfallList, PrintSjukfallRequest req, RehabstodUser user, int total) throws IOException;
 }

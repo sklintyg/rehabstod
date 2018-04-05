@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,18 +18,8 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-
 import com.itextpdf.text.DocumentException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -43,21 +33,28 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
+import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
+import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -65,6 +62,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -119,7 +129,8 @@ public class SjukfallControllerTest {
         mockStatic(PDLActivityStore.class);
         when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
             eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
-        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(result);
+        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class)))
+                .thenReturn(new SjukfallEnhetResponse(result, false));
 
         // Then
         testee.getSjukfallForCareUnit(request);
@@ -156,7 +167,8 @@ public class SjukfallControllerTest {
         when(PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
             eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
 
-        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(allSjukFall);
+        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class)))
+                .thenReturn(new SjukfallEnhetResponse(allSjukFall, false));
         when(pdfExportServiceMock.export(eq(finalList), eq(request), eq(rehabstodUserMock), eq(allSjukFall.size()))).thenReturn(new byte[0]);
 
         // Then
@@ -193,7 +205,8 @@ public class SjukfallControllerTest {
         mockStatic(PDLActivityStore.class);
         when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
             eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
-        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class))).thenReturn(result);
+        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class)))
+                .thenReturn(new SjukfallEnhetResponse(result, false));
 
         // Then
         testee.getSjukfallForCareUnit(request);
@@ -205,6 +218,106 @@ public class SjukfallControllerTest {
 
         verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
         verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL));
+    }
+
+    @Test
+    public void testPDLLogSRSForSjukfallPatient() {
+
+        RehabstodUser user = buildConcreteUser();
+        when(userServiceMock.getUser()).thenReturn(user);
+
+        // Should trigger one history PDL item.
+        SjukfallPatient a = createSjukFallPatient("19121212-1212", 2, 0);
+
+        // Should trigger one risk PDL item.
+        SjukfallPatient b = createSjukFallPatient("19121212-1212", 3, 2);
+        List<SjukfallPatient> finalList = Arrays.asList(a, b);
+
+        // Given
+        GetSjukfallRequest request = new GetSjukfallRequest();
+
+        // When
+        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), any(Urval.class), any(GetSjukfallRequest.class)))
+                .thenReturn(new SjukfallPatientResponse(finalList, false));
+
+        testee.getSjukfallForPatient(request);
+
+        // Expect entries for ONE enhet
+        assertEquals(1, user.getStoredActivities().size());
+        List<PDLActivityEntry> pdlActivityEntries = user.getStoredActivities().get(VARDENHETS_ID);
+
+        // Expect one OVERSIKT and one SRS log entry.
+        assertEquals(2, pdlActivityEntries.size());
+        assertEquals(1L, pdlActivityEntries.stream()
+                .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_PREDIKTION_SRS)
+                .count());
+        assertEquals(1L, pdlActivityEntries.stream()
+                .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK)
+                .count());
+
+        verify(logServiceMock, times(2));
+    }
+
+    private SjukfallPatient createSjukFallPatient(String personNummer, int numberOfIntyg, int numberOfIntygHavingRisk) {
+        SjukfallPatient sp = new SjukfallPatient();
+        sp.setIntyg(new ArrayList<>());
+        for (int a = 0; a < numberOfIntyg; a++) {
+            PatientData pd = new PatientData();
+            pd.setPatient(new Patient(personNummer, "Namnsson"));
+
+            if (a < numberOfIntygHavingRisk) {
+                pd.setRiskSignal(new RiskSignal("intyg-123", 3, "desc"));
+            }
+            sp.getIntyg().add(pd);
+        }
+
+        return sp;
+    }
+
+    @Test
+    public void testPDLLogSRSForSjukfallEnhet() {
+
+        RehabstodUser user = buildConcreteUser();
+
+        when(userServiceMock.getUser()).thenReturn(user);
+
+        SjukfallEnhet a = createSjukFallEnhet("19121212-1212", true);
+        SjukfallEnhet b = createSjukFallEnhet("20121212-1212", false);
+        List<SjukfallEnhet> finalList = Arrays.asList(a, b);
+
+        // Given
+        GetSjukfallRequest request = new GetSjukfallRequest();
+
+        // When
+        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class)))
+                .thenReturn(new SjukfallEnhetResponse(finalList, false));
+
+        testee.getSjukfallForCareUnit(request);
+
+        // Expect entries for ONE enhet
+        assertEquals(1, user.getStoredActivities().size());
+        List<PDLActivityEntry> pdlActivityEntries = user.getStoredActivities().get(VARDENHETS_ID);
+
+        assertEquals(3, pdlActivityEntries.size());
+        assertEquals(1L, pdlActivityEntries.stream()
+                .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_PREDIKTION_SRS)
+                .count());
+        assertEquals(2L, pdlActivityEntries.stream()
+                .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL)
+                .count());
+
+        verify(logServiceMock, times(3));
+    }
+
+    @NotNull
+    private RehabstodUser buildConcreteUser() {
+        RehabstodUser user = new RehabstodUser("user-1", "Hej Hejssansson", true);
+        Vardgivare vg = new Vardgivare("vg-1", "VG-namn");
+        Vardenhet ve = new Vardenhet(VARDENHETS_ID, "VE-namn");
+        vg.getVardenheter().add(ve);
+        user.setVardgivare(Arrays.asList(vg));
+        user.setValdVardenhet(ve);
+        return user;
     }
 
 
@@ -233,6 +346,14 @@ public class SjukfallControllerTest {
 
         return isf;
         // CHECKSTYLE:ON MagicNumber
+    }
+
+    private static SjukfallEnhet createSjukFallEnhet(String personNummer, boolean includeRisk) {
+        SjukfallEnhet isf = createSjukFallEnhet(personNummer);
+        if (includeRisk) {
+            isf.setRiskSignal(new RiskSignal("intyg-1", 3, "Descr."));
+        }
+        return isf;
     }
 
 }

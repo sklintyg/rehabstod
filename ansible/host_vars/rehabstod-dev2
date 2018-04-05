@@ -1,5 +1,5 @@
 # Spring profiles
-profiles: test,rhs-security-test,wc-hsa-stub,testability-api,caching-enabled
+profiles: test,rhs-security-test,wc-hsa-stub,testability-api,caching-enabled,rhs-srs-stub
 
 deploy_from_repo: false
 

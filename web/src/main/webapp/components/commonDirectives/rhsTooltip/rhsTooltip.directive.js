@@ -17,9 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Enable tooltips for other components than wcFields
- */
 angular.module('rehabstodApp').directive('rhsTooltip',
     [ 'messageService',
         function(messageService) {
@@ -27,7 +24,6 @@ angular.module('rehabstodApp').directive('rhsTooltip',
 
             return {
                 restrict: 'A',
-                transclude: true,
                 scope: {
                     fieldHelpText: '@',
                     msgParams: '=',
@@ -39,7 +35,7 @@ angular.module('rehabstodApp').directive('rhsTooltip',
                         return messageService.getProperty(key, msgParams);
                     };
 
-                    $scope.align = $scope.alignment ? $scope.alignment : 'top';
+                    $scope.align = $scope.alignment ? $scope.alignment : 'auto top';
                 },
                 templateUrl: '/components/commonDirectives/rhsTooltip/rhsTooltip.directive.html'
             };

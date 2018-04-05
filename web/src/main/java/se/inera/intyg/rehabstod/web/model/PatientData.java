@@ -1,22 +1,24 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
- * <p>
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
+ *
  * This file is part of sklintyg (https://github.com/sklintyg).
- * <p>
+ *
  * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ *
  * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package se.inera.intyg.rehabstod.web.model;
+
+import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -46,10 +48,15 @@ public class PatientData {
 
     private List<Integer> grader;
 
-    private String lakare;
+    private Lakare lakare;
+
     private List<String> sysselsattning;
 
-    boolean aktivtIntyg;
+    private boolean aktivtIntyg;
+
+    private String intygsId;
+
+    private RiskSignal riskSignal;
 
 
     // - - - getters and setters
@@ -150,11 +157,11 @@ public class PatientData {
         this.grader = grader;
     }
 
-    public String getLakare() {
+    public Lakare getLakare() {
         return lakare;
     }
 
-    public void setLakare(String lakare) {
+    public void setLakare(Lakare lakare) {
         this.lakare = lakare;
     }
 
@@ -174,4 +181,19 @@ public class PatientData {
         this.aktivtIntyg = aktivtIntyg;
     }
 
+    public String getIntygsId() {
+        return intygsId;
+    }
+
+    public void setIntygsId(String intygsId) {
+        this.intygsId = intygsId;
+    }
+
+    public RiskSignal getRiskSignal() {
+        return riskSignal;
+    }
+
+    public void setRiskSignal(RiskSignal riskSignal) {
+        this.riskSignal = riskSignal;
+    }
 }

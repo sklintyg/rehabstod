@@ -2,20 +2,6 @@
   border-bottom: 1px solid #eee;
 }
 
-.result-backlink {
-  background: transparent url('/assets/images/backlink-icon.png') center left no-repeat;
-  display: block;
-  height: 24px;
-  left: -20px;
-  position: absolute;
-  top: 35%;
-  width: 24px;
-
-  &:hover {
-    background: transparent url('/assets/images/backlink-icon-hover.png') center left no-repeat;
-  }
-}
-
 .result-top {
   margin: 0;
   padding-top: 15px;
@@ -54,10 +40,7 @@
   }
 }
 
-@media (max-width: $screen-xs-max) {
-  .result-backlink {
-    left: 0;
-  }
 
-
+.bottom-padding-medium {
+  padding-bottom: 10px;
 }

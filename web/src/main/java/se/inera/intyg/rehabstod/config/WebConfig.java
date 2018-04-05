@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -40,7 +40,8 @@ import java.util.Properties;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan({ "se.inera.intyg.rehabstod.web", "se.inera.intyg.rehabstod.common.service.stub" })
+@ComponentScan({ "se.inera.intyg.rehabstod.web", "se.inera.intyg.rehabstod.common.service.stub",
+        "se.inera.intyg.rehabstod.integration.srs.stub.api" })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     private static final int SECONDS_IN_HOUR = 3600;
@@ -74,7 +75,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/favicon.ico").addResourceLocations("/").setCachePeriod(cachePeriodInDays);
         registry.addResourceHandler("/robots.txt").addResourceLocations("/").setCachePeriod(cachePeriodInDays);
         registry.addResourceHandler("/bower_components/**").addResourceLocations("/bower_components/");
-        registry.addResourceHandler("/pubapp/**").addResourceLocations("/pubapp/");
         registry.addResourceHandler("/app/**").addResourceLocations("/app/");
         registry.addResourceHandler("/components/**").addResourceLocations("/components/");
     }

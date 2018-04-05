@@ -73,7 +73,8 @@ rhs-table {
       > td {
 
         vertical-align: top;
-        padding: 5px;
+        padding: 5px 2px 2px 5px;
+        line-height: 20px;
 
         &.nowrap {
           white-space: nowrap;
@@ -115,9 +116,15 @@ rhs-table {
 
   }
 
-  tr.rhs-table-row:hover, .table-striped tbody > tr.rhs-table-row:nth-child(odd):hover {
-    background-color: #b3e3e7;
+  tr.rhs-table-row:hover,
+  .table-striped tbody > tr.rhs-table-row:nth-child(odd):hover {
+    background-color: $rhs-table-hover-bg;
+    color: darken($rhs-table-hover-bg, 60%);
     cursor: pointer;
+  }
+
+  .column-risk {
+    text-align: center;
   }
 
   .column-diagnos,
@@ -137,11 +144,6 @@ rhs-table {
 
   .tooltip {
     @extend .rhs-table-header-tooltip;
-  }
-
-  .rhs-table-no-result {
-    font-size: 16px;
-    padding: 20px;
   }
 }
 
@@ -169,4 +171,11 @@ rhs-table {
     display: inline-block;
     white-space: normal;
   }
+}
+
+.rhs-table-no-result {
+    font-size: 16px;
+    padding: 20px;
+    background-color: #efefef;
+    margin-top:-16px;
 }

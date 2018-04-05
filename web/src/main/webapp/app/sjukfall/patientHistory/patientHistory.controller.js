@@ -18,90 +18,50 @@
  */
 
 angular.module('rehabstodApp').controller('patientHistoryController',
-    function($scope, $uibModalInstance, $state, patientHistoryProxy, SjukfallFilterViewState, patient) {
-    'use strict';
-    $scope.errorMessageKey  = '';
-    $scope.patient = patient;
-    $scope.showPatientId = SjukfallFilterViewState.get().showPatientId;
-    $scope.showSpinner = true;
-    //Constant needed in template
-    $scope.radius = 30;
+        function($scope, $uibModalInstance, $state, patientHistoryProxy, SjukfallFilterViewState, patientHistoryViewState,  patient) {
+            'use strict';
 
-    function getYearFromDate(dateString) {
-        var date = new Date(dateString);
-        return date.getFullYear();
-    }
+            //Create initial default details tab (cannot be closed)
+            patientHistoryViewState.reset();
+            patientHistoryViewState.addTab('', 'Sjukfall', true, true);
 
-    /* Build a custom array based on the supplied sjukfall array
-     decorated with presentation attributes.
+            //expose tabs model to view
+            $scope.tabs = patientHistoryViewState.getTabs();
 
-     The first item is assumed to be the active one,
-     and array is assumed to be ordered chronologically in descending order.
-     */
-    function buildTimeline(sjukfall) {
-        //Can't do anything without any data..
-        if (!angular.isArray(sjukfall) || sjukfall.length < 1) {
-            return [];
-        }
-        var historicalMarked = false;
-        var timeline = [];
-        var previousYear;
-        angular.forEach(sjukfall, function(sjukfall, index) {
-            var thisYear = getYearFromDate(sjukfall.start);
+            $scope.errorMessageKey = '';
+            $scope.patient = patient;
+            $scope.showPatientId = SjukfallFilterViewState.get().showPatientId;
+            $scope.showSpinner = true;
+            //Constant needed in template
+            $scope.radius = 30;
 
-            if (previousYear && ((previousYear - thisYear) > 1)) {
-                //we have a gap between years: insert empty timeline entry
-                timeline.push({
-                    year: 0
-                });
-            }
-            var isFirstHistorical = false;
-            if (!historicalMarked && index > 0) {
-                historicalMarked = true;
-                isFirstHistorical = true;
-            } else {
-                isFirstHistorical = false;
-            }
-            //Add sjukfall for this year.
-            timeline.push({
-                year: thisYear !== previousYear ? thisYear : 0,
-                sjukfall: sjukfall,
-                isFirstHistorical: isFirstHistorical
+            $scope.loadIntyg = function(intyg) {
+                //Either select or create new tab if not already opened..
+                var existingTab = patientHistoryViewState.getTabById(intyg.intygsId);
+                if (existingTab) {
+                    patientHistoryViewState.selectTab(existingTab);
+                } else {
+                    patientHistoryViewState.addTab(intyg.intygsId, intyg.start, false, false);
+                }
+
+            };
+
+            $scope.onSelectSjukfall = function(timelineItem) {
+                patientHistoryViewState.selectTimelineItem(timelineItem);
+            };
+
+            $scope.close = function() {
+                $uibModalInstance.close();
+            };
+
+            //Start by requesting data
+            patientHistoryProxy.get(patient).then(function(sjukfallResponse) {
+                $scope.showSpinner = false;
+                patientHistoryViewState.setTimelineItems(sjukfallResponse);
+                $scope.timeline = patientHistoryViewState.getTimelineItems();
+            }, function() {
+                $scope.showSpinner = false;
+                $scope.errorMessageKey = 'server.error.loadpatienthistory.text';
             });
-            previousYear = thisYear;
+
         });
-
-        return timeline;
-    }
-
-    $scope.onSelectSjukfall = function(timelineItem) {
-        //Deselect all..
-        angular.forEach($scope.timeline, function(item) {
-            item.selected = false;
-        });
-        //.. and mark the new one as selected (and expand it too)
-        timelineItem.selected = true;
-        timelineItem.expanded = true;
-    };
-
-    $scope.close = function() {
-        $uibModalInstance.close();
-    };
-
-    //Start by requesting data
-    patientHistoryProxy.get(patient).then(function(sjukfallResponse) {
-        $scope.showSpinner = false;
-        $scope.timeline = buildTimeline(sjukfallResponse);
-
-        //The first item (assumed to be the ongoing sjukfall) should be expanded by default
-        if ($scope.timeline.length > 0) {
-            $scope.timeline[0].expanded = true;
-            $scope.timeline[0].selected = true;
-
-        }
-    }, function() {
-        $scope.showSpinner = false;
-        $scope.errorMessageKey = 'server.error.loadpatienthistory.text';
-    });
-
-});

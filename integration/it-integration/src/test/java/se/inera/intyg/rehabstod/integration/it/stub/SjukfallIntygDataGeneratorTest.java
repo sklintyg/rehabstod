@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import se.inera.intyg.infra.integration.pu.stub.ResidentStore;
+import se.inera.intyg.infra.integration.pu.stub.ChronicleResidentStore;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.util.Arrays;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 public class SjukfallIntygDataGeneratorTest {
 
     @Mock
-    private ResidentStore residentStore;
+    private ChronicleResidentStore residentStore;
 
     @Mock
     private PersonnummerLoader personnummerLoader;
@@ -69,7 +69,7 @@ public class SjukfallIntygDataGeneratorTest {
         assertEquals("M16.0", intygsData.get(0).getDiagnoskod());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum());
-        verify(residentStore, times(numberOfPatients)).addUser(any());
+        verify(residentStore, times(numberOfPatients)).addResident(any());
     }
 
     private List<String> buildPersonnummerList() {

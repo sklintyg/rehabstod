@@ -1,29 +1,22 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package se.inera.intyg.rehabstod.service.pdl;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +34,13 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 
 import java.util.ArrayList;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by eriklupander on 2016-03-03.
@@ -62,7 +62,7 @@ public class LogServiceImplTest {
 
     @Test
     public void testSendPdlReadMessage() {
-        when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser());
+        when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser(true));
         testee.logSjukfallData(TestDataGen.buildSjukfallList(5),
             ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
         verify(template, times(1)).send(any());
@@ -70,7 +70,7 @@ public class LogServiceImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testSendPdlUnknownMessage() {
-        when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser());
+        when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser(true));
         try {
             testee.logSjukfallData(TestDataGen.buildSjukfallList(5),
                 ActivityType.EMERGENCY_ACCESS, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
@@ -81,7 +81,7 @@ public class LogServiceImplTest {
 
     @Test
     public void testNoLogMessageSentWhenSjukfallListIsEmpty() {
-        when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser());
+        when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser(true));
         testee.logSjukfallData(new ArrayList<>(),
             ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
         verify(template, times(0)).send(any());
@@ -89,7 +89,7 @@ public class LogServiceImplTest {
 
     @Test(expected = JmsException.class)
     public void testSendPdlJmsException() {
-        when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser());
+        when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser(true));
         doThrow(new DestinationResolutionException("")).when(template).send(any(MessageCreator.class));
         try {
             testee.logSjukfallData(TestDataGen.buildSjukfallList(5),

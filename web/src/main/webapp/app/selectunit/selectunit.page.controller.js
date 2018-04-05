@@ -35,7 +35,6 @@ angular.module('rehabstodApp')
                 });
             };
 
-
             function _testSjunetConnection() {
                 $http.get(APP_CONFIG.statistikTjanstBaseUrl + '/api/ping').then(function() {
                         // Success

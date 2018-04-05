@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.service.export.xlsx;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -35,13 +36,12 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
-import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -56,36 +56,30 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
     private static final String SHEET_TITLE_SJUKFALL = "Sjukfall";
     private static final int FILTER_SPACING = 3;
+    private static final int FILTER_HEADLINE_COLUMN = 1;
+    private static final int FILTER_VALUE_COLUMN = 2;
+    private static final int FILTER_END_COLUMN_SPAN = 6;
 
     private XSSFCellStyle boldStyle;
     private XSSFCellStyle filterMainHeaderStyle;
     private XSSFCellStyle filterHeaderStyle;
     private XSSFCellStyle filterTextStyle;
-
     private XSSFCellStyle stripedDarker;
     private XSSFCellStyle stripedLighter;
-
     private XSSFFont boldFont16;
     private XSSFFont defaultFont12;
     private XSSFFont boldFont12;
     private XSSFFont defaultFont11;
     private XSSFFont boldFont11;
-
     private String[] headers;
-
-    private static final int FILTER_HEADLINE_COLUMN = 1;
-    private static final int FILTER_VALUE_COLUMN = 2;
-    private static final int FILTER_END_COLUMN_SPAN = 6;
-
-    @Autowired
-    UserService userService;
 
     // api
 
     @Override
-    public byte[] export(List<SjukfallEnhet> sjukfallList, PrintSjukfallRequest req, Urval urval, int total) throws IOException {
+    public byte[] export(List<SjukfallEnhet> sjukfallList, PrintSjukfallRequest req, RehabstodUser user, int total)
+            throws IOException {
 
-        initHeaders(req);
+        headers = initHeaders(req, user.getUrval(), isSrsFeatureActive(user));
         XSSFWorkbook wb = new XSSFWorkbook();
         setupFonts(wb);
         XSSFSheet sheet = wb.createSheet(SHEET_TITLE_SJUKFALL);
@@ -101,10 +95,11 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         addFilterMainHeader(sheet, rowNumber++, VALDA_FILTER);
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD,
                 req.getLangdIntervall().getMin() + " - " + req.getLangdIntervall().getMax() + " dagar");
-        rowNumber = addLakareList(sheet, rowNumber++, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), urval); // NOSONAR
+        rowNumber = addLakareList(sheet, rowNumber++, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), user); // NOSONAR
         rowNumber = addDiagnosKapitel(sheet, rowNumber++, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper()); // NOSONAR
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_ALDER,
                 req.getAldersIntervall().getMin() + " - " + req.getAldersIntervall().getMax() + " år");
+        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SLUTDATUM, getFilterDate(req.getSlutdatumIntervall()));
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_FRITEXTFILTER, notEmpty(req) ? req.getFritext() : "-");
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VISAPATIENTUPPGIFTER, req.isShowPatientId() ? " Ja" : " Nej");
         addFilterMainHeader(sheet, rowNumber++, H2_SJUKFALLSINSTALLNING);
@@ -116,40 +111,52 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         rowNumber += FILTER_SPACING;
         addFilterMainHeader(sheet, rowNumber++, ANTAL_VISAR_ANTAL_PAGAENDE_SJUKFALL);
         addFilterHeader(sheet, rowNumber++, ANTAL_EXPORTEN_VISAR, String.valueOf(sjukfallList.size()));
-        addFilterHeader(sheet, rowNumber++, urval == Urval.ISSUED_BY_ME ? ANTAL_TOTALT_MINA : ANTAL_TOTALT_PA_ENHETEN,
+        addFilterHeader(sheet, rowNumber++, user.getUrval() == Urval.ISSUED_BY_ME ? ANTAL_TOTALT_MINA : ANTAL_TOTALT_PA_ENHETEN,
                 String.valueOf(total));
 
         rowNumber += 3;
-        addTableHeaderRows(sheet, rowNumber++, urval);
-        addDataRows(sheet, rowNumber, sjukfallList, urval, req.isShowPatientId());
+        addTableHeaderRows(sheet, rowNumber++);
+        addDataRows(sheet, rowNumber, sjukfallList, user.getUrval(), req.isShowPatientId(), isSrsFeatureActive(user));
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         wb.write(baos);
         return baos.toByteArray();
     }
 
-    private void initHeaders(PrintSjukfallRequest req) {
+    private String[] initHeaders(PrintSjukfallRequest req, Urval urval, boolean showSrs) {
+        List<String> tempHeaders = new ArrayList<>();
+        tempHeaders.add(TABLEHEADER_NR);
         if (req.isShowPatientId()) {
-            headers = new String[] { TABLEHEADER_NR, TABLEHEADER_PERSONNUMMER, TABLEHEADER_ALDER, TABLEHEADER_NAMN,
-                    TABLEHEADER_KON,
-                    TABLEHEADER_NUVARANDE_DIAGNOS, TABLEHEADER_BIDIAGNOSER, TABLEHEADER_STARTDATUM, TABLEHEADER_SLUTDATUM,
-                    TABLEHEADER_SJUKSKRIVNINGSLANGD, TABLEHEADER_ANTAL, TABLEHEADER_SJUKSKRIVNINGSGRAD,
-                    TABLEHEADER_NUVARANDE_LAKARE };
+            tempHeaders.add(TABLEHEADER_PERSONNUMMER);
+            tempHeaders.add(TABLEHEADER_ALDER);
+            tempHeaders.add(TABLEHEADER_NAMN);
         } else {
-            headers = new String[] { TABLEHEADER_NR, TABLEHEADER_ALDER,
-                    TABLEHEADER_KON,
-                    TABLEHEADER_NUVARANDE_DIAGNOS, TABLEHEADER_BIDIAGNOSER, TABLEHEADER_STARTDATUM, TABLEHEADER_SLUTDATUM,
-                    TABLEHEADER_SJUKSKRIVNINGSLANGD, TABLEHEADER_ANTAL, TABLEHEADER_SJUKSKRIVNINGSGRAD,
-                    TABLEHEADER_NUVARANDE_LAKARE };
+            tempHeaders.add(TABLEHEADER_ALDER);
         }
+        tempHeaders.add(TABLEHEADER_KON);
+        tempHeaders.add(TABLEHEADER_NUVARANDE_DIAGNOS);
+        tempHeaders.add(TABLEHEADER_BIDIAGNOSER);
+        tempHeaders.add(TABLEHEADER_STARTDATUM);
+        tempHeaders.add(TABLEHEADER_SLUTDATUM);
+        tempHeaders.add(TABLEHEADER_SJUKSKRIVNINGSLANGD);
+        tempHeaders.add(TABLEHEADER_ANTAL);
+        tempHeaders.add(TABLEHEADER_SJUKSKRIVNINGSGRAD);
+        if (urval != Urval.ISSUED_BY_ME) {
+            tempHeaders.add(TABLEHEADER_NUVARANDE_LAKARE);
+        }
+
+        if (showSrs) {
+            tempHeaders.add(TABLEHEADER_SRS_RISK);
+        }
+        return tempHeaders.toArray(new String[tempHeaders.size()]);
     }
 
     // private scope
 
-    private int addLakareList(XSSFSheet sheet, int currentRowNumber, String filterTitle, List<String> lakareList, Urval urval) {
+    private int addLakareList(XSSFSheet sheet, int currentRowNumber, String filterTitle, List<String> lakareList, RehabstodUser user) {
         int rowNumber = currentRowNumber;
-        if (Urval.ISSUED_BY_ME == urval) {
-            addFilterHeader(sheet, rowNumber++, filterTitle, userService.getUser().getNamn());
+        if (Urval.ISSUED_BY_ME == user.getUrval()) {
+            addFilterHeader(sheet, rowNumber++, filterTitle, user.getNamn());
             return rowNumber;
         }
         if (lakareList == null || lakareList.isEmpty()) {
@@ -254,19 +261,16 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         createMergedCellFromColumn(FILTER_VALUE_COLUMN, filterTextStyle, sheet, row);
     }
 
-    private void addTableHeaderRows(XSSFSheet sheet, int rowIndex, Urval urval) {
+    private void addTableHeaderRows(XSSFSheet sheet, int rowIndex) {
 
         XSSFRow row = sheet.createRow(rowIndex);
-
         for (int a = 0; a < headers.length; a++) {
-            // Not too elegant, but if we have ISSUED_BY_ME urval, we don't render the last column.
-            if (!(urval == Urval.ISSUED_BY_ME && a == headers.length - 1)) {
-                createHeaderCell(row, a, headers[a]);
-            }
+            createHeaderCell(row, a, headers[a]);
         }
     }
 
-    private void addDataRows(XSSFSheet sheet, int rowIndex, List<SjukfallEnhet> sjukfallList, Urval urval, boolean showPatientId) {
+    private void addDataRows(XSSFSheet sheet, int rowIndex, List<SjukfallEnhet> sjukfallList, Urval urval, boolean showPatientId,
+            boolean showSrs) {
         for (int a = 0; a < sjukfallList.size(); a++) {
             XSSFRow row = sheet.createRow(rowIndex + a);
             SjukfallEnhet sf = sjukfallList.get(a);
@@ -290,8 +294,13 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
             createDataCell(row, colIndex++, Integer.toString(sf.getIntyg()));
             createRichTextDataCell(row, colIndex++, buildGraderRichText(sf));
             if (urval != Urval.ISSUED_BY_ME) {
-                createDataCell(row, colIndex, sf.getLakare().getNamn());
+                createDataCell(row, colIndex++, sf.getLakare().getNamn());
             }
+
+            if (showSrs) {
+                createDataCell(row, colIndex++, getRiskKategoriDesc(sf.getRiskSignal()));
+            }
+
         }
         for (int a = 0; a < headers.length; a++) {
             sheet.autoSizeColumn(a);

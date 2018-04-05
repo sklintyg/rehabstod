@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -32,6 +32,7 @@ public class GetSjukfallRequest {
     private Sortering sortering;
     private LangdIntervall langdIntervall;
     private LangdIntervall aldersIntervall;
+    private LangdIntervall slutdatumIntervall;
 
     private boolean showPatientId;
     private int maxIntygsGlapp;
@@ -70,6 +71,14 @@ public class GetSjukfallRequest {
 
     public void setAldersIntervall(LangdIntervall aldersIntervall) {
         this.aldersIntervall = aldersIntervall;
+    }
+
+    public LangdIntervall getSlutdatumIntervall() {
+        return slutdatumIntervall;
+    }
+
+    public void setSlutdatumIntervall(LangdIntervall slutdatumIntervall) {
+        this.slutdatumIntervall = slutdatumIntervall;
     }
 
     public int getMaxIntygsGlapp() {

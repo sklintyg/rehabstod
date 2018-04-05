@@ -67,5 +67,11 @@ rhs-filter {
     }
 
   }
+
+  @media (min-width: $screen-sm-min) {
+    .personuppgifter {
+      padding-left: 0;
+    }
+  }
 }
 

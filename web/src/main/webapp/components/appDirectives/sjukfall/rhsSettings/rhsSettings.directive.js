@@ -29,8 +29,7 @@ angular.module('rehabstodApp')
                     animation: true,
                     templateUrl: '/components/appDirectives/sjukfall/rhsSettings/rhsSettingsModal/rhsSettingsModal.html',
                     controller: 'RhsSettingsModalCtrl',
-                    size: 'md',
-                    backdrop: 'static'
+                    size: 'md'
                 });
 
                 modalInstance.result.then(function(value) {
@@ -51,7 +50,6 @@ angular.module('rehabstodApp')
 
             return {
                 restrict: 'E',
-                replace: true,
                 scope: {},
                 controller: 'RhsSettingsCtrl',
                 templateUrl: '/components/appDirectives/sjukfall/rhsSettings/rhsSettings.directive.html'

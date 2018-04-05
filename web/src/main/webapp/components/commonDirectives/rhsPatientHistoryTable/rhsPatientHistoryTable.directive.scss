@@ -1,3 +1,5 @@
+$screen-xl-min: 1600px;
+
 rhs-patient-history-table {
   margin: 12px 0 0 0;
   display: block;
@@ -68,9 +70,77 @@ rhs-patient-history-table {
     table {
       margin: 15px 0 0 0;
 
+      .column-number {
+        width: 20px;
+      }
+
+      .column-diagnose {
+        @media (max-width: ($screen-xl-min - 1)) {
+          width: 250px;
+        }
+
+        @media (max-width: $screen-md-max) {
+          width: 200px;
+        }
+      }
+
+      .column-extra-diagnoses {
+        width: 200px;
+
+        @media (min-width: $screen-xl-min) {
+          width: 250px;
+        }
+
+        @media (max-width: $screen-md-max) {
+          width: 80px;
+        }
+      }
+
+      .column-showintyg {
+        width: 110px;
+      }
+      .column-startdate,
+      .column-enddate {
+        width: 85px;
+      }
+
+      .column-length {
+        width: 75px;
+      }
+
+      .column-grade {
+        width: 100px;
+      }
+
+      .column-doctor {
+        width: 150px;
+
+        @media (max-width: $screen-md-max) {
+          width: 110px;
+        }
+      }
+
+      .column-occupation {
+        width: 250px;
+
+        @media (max-width: $screen-md-max) {
+          width: 190px;
+        }
+      }
+
+      .column-risk {
+        width: 20px;
+        text-align: center;
+
+        @media (max-width: $screen-md-max) {
+          width: 10px;
+        }
+      }
+
       thead > tr > th {
         color: $blue-color;
-        font-size: 12px;
+        font-size: 14px;
+        padding-left: 5px;
       }
 
       tbody {
@@ -82,8 +152,8 @@ rhs-patient-history-table {
 
           td {
             vertical-align: top;
-            padding: 5px;
-
+            padding: 5px 2px 2px 5px;
+            line-height: 20px;
             &.nowrap {
               white-space: nowrap;
             }
@@ -104,20 +174,20 @@ rhs-patient-history-table {
                 max-width: 150px;
               }
 
-              @media (min-width: 1600px) {
-                max-width: calc(100vw - 1350px);
+              @media (min-width: $screen-xl-min) {
+                max-width: calc(100vw - 1400px);
               }
 
             }
             .bidiagnos {
-              max-width: 160px;
+              max-width: 100px;
 
-              @media (min-width: 1600px) {
+              @media (min-width: $screen-xl-min) {
                 max-width: 200px;
               }
             }
 
-            .patient-history-dialog--tooltip {
+            .patient-history-dialog-tooltip {
               border-bottom: 1px dotted;
               cursor: help;
             }

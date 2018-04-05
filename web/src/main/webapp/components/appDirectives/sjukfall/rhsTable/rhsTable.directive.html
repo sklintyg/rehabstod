@@ -1,4 +1,4 @@
-<div class="rhs-table" st-set-filter="rhsSearchfilter" st-set-sort="rhsSort" st-table="displayedCollection" st-safe-src="model.get()" infinite-scroll="showMoreInTable()" infinite-scroll-distance="2">
+<div class="rhs-table" st-set-filter="rhsSearchfilter" st-set-sort="rhsSort" st-table="displayedCollection" st-safe-src="model.get()" infinite-scroll="showMoreInTable()" infinite-scroll-container="'.rhs-body'" infinite-scroll-distance="2">
 
   <rhs-export></rhs-export>
   <rhs-table-search-connector></rhs-table-search-connector>
@@ -32,21 +32,25 @@
           <td class="column-dagar">{{::row.dagarShow}}</td>
           <td class="column-antal">{{::row.intyg}}</td>
           <td  class="column-grad" ng-bind-html="::row.gradShow"></td>
+          <td ng-if="hasFeature('srs')" class="column-risk">
+            <rhs-risk-indicator category="row.riskSignal.riskKategori" description="row.riskSignal.riskDescription"></rhs-risk-indicator>
+          </td>
           <td ng-if="user.urval != 'ISSUED_BY_ME'">{{::row.lakare.namn}}</td>
         </tr>
-        <tr ng-if="!displayedCollection.length">
-          <td colspan="{{noResultColspan()}}" class="rhs-table-no-result">
-            <span ng-if="!model.get().length && !model.hasError()">
-              {{::'label.table.no-result' | message}} {{user.valdVardgivare.namn}} - {{user.valdVardenhet.namn}}
-            </span>
-            <span ng-if="model.get().length">
-              {{::'label.table.no-filter-result' | message}}
-            </span>
-            <span ng-if="model.hasError()">
-              {{::'server.error.getsjukfall.title' | message}}
-            </span>
-          </td>
-        </tr>
+
       </tbody>
     </table>
+
+  <div ng-if="!displayedCollection.length" class="rhs-table-no-result">
+    <span ng-if="!model.get().length && !model.hasError()">
+      {{::'label.table.no-result' | message}} {{user.valdVardgivare.namn}} - {{user.valdVardenhet.namn}}
+    </span>
+    <span ng-if="model.get().length">
+      {{::'label.table.no-filter-result' | message}}
+    </span>
+    <span ng-if="model.hasError()">
+      {{::'server.error.getsjukfall.title' | message}}
+    </span>
+
+  </div>
 </div>

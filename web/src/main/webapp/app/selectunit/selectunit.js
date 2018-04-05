@@ -19,9 +19,13 @@
 
 angular.module('rehabstodApp').config(function($stateProvider) {
     'use strict';
-    $stateProvider.state('appselectunit', {
+    $stateProvider.state('app.selectunit', {
         url: '/selectunit',
         views: {
+            'header@': {
+                templateUrl: '/app/index/index.header.html'
+            },
+            'navbar@': {},
             'app@': {
                 templateUrl: '/app/selectunit/selectunit.page.html',
                 controller: 'SelectUnitPageCtrl'

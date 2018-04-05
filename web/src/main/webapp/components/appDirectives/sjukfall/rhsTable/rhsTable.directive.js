@@ -19,16 +19,13 @@
 
 angular.module('rehabstodApp')
     .controller('RhsTableCtrl', ['$scope', '$uibModal', 'SjukfallFilterViewState', 'SjukfallModel', 'UserModel', 'messageService',
-        function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService) {
+        'featureService', '$document',
+        function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService, featureService, $document) {
             'use strict';
 
             $scope.filter = SjukfallFilterViewState;
             $scope.model = SjukfallModel;
             $scope.user = UserModel.get();
-
-            $scope.noResultColspan = function() {
-                return (($scope.user.urval !== 'ISSUED_BY_ME') ? 13 : 12) - (SjukfallFilterViewState.get().showPatientId ? 0 : 2);
-            };
 
             $scope.displayedCollection = [].concat($scope.model.get());
 
@@ -62,8 +59,29 @@ angular.module('rehabstodApp')
                 $scope.limit = 100;
             };
 
+            $scope.hasFeature = function(feature) {
+                return featureService.hasFeature(feature);
+            };
+
             $scope.resetLimit();
 
+            $document.on('scroll', handleScroll);
+
+            $scope.$on('$destroy', function() {
+                $document.off('scroll', handleScroll);
+            });
+
+            function handleScroll() {
+                var scrollLeft = $document.scrollLeft();
+                var header = $('#rhs-table-fixed-header');
+                var left = 30;
+
+                if (scrollLeft > 0) {
+                    left -= scrollLeft;
+                }
+
+                header.css('left', left + 'px');
+            }
         }
     ])
     .directive('rhsTable',

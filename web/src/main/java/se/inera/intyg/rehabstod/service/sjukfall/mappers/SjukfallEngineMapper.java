@@ -1,18 +1,18 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
- * <p>
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
+ *
  * This file is part of sklintyg (https://github.com/sklintyg).
- * <p>
+ *
  * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * <p>
+ *
  * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * <p>
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,6 +29,8 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -50,7 +52,7 @@ public class SjukfallEngineMapper {
     /**
      * Mapping from SjukfallEngine's format to Rehabstod internal format.
      */
-    public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from) {
+    public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, LocalDate today) {
         SjukfallEnhet to = new SjukfallEnhet();
 
         try {
@@ -64,10 +66,12 @@ public class SjukfallEngineMapper {
             to.setBiDiagnoser(mapDiagnos(from.getBiDiagnoser()));
             to.setStart(from.getStart());
             to.setSlut(from.getSlut());
+            to.setSlutOmDagar(ChronoUnit.DAYS.between(today, from.getSlut()));
             to.setDagar(from.getDagar());
             to.setIntyg(from.getIntyg());
             to.setAktivGrad(from.getAktivGrad());
             to.setGrader(from.getGrader());
+            to.setAktivIntygsId(from.getAktivIntygsId());
 
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
@@ -111,6 +115,7 @@ public class SjukfallEngineMapper {
         PatientData to = new PatientData();
 
         try {
+            to.setIntygsId(from.getIntygId());
             to.setVardgivareId(from.getVardgivareId());
             to.setVardgivareNamn(from.getVardgivareNamn());
             to.setVardenhetId(from.getVardenhetId());
@@ -126,7 +131,7 @@ public class SjukfallEngineMapper {
             to.setSigneringsTidpunkt(from.getSigneringsTidpunkt());
             to.setDagar(from.getDagar());
             to.setGrader(from.getGrader());
-            to.setLakare(from.getLakareNamn());
+            to.setLakare(buildLakare(from.getLakareId(), from.getLakareNamn()));
             to.setSysselsattning(from.getSysselsattning());
             to.setAktivtIntyg(from.isAktivtIntyg());
 
@@ -135,6 +140,10 @@ public class SjukfallEngineMapper {
         }
 
         return to;
+    }
+
+    private Lakare buildLakare(String lakareId, String lakareNamn) {
+        return new Lakare(lakareId, lakareNamn);
     }
 
     public Diagnos getDiagnos(se.inera.intyg.infra.sjukfall.dto.DiagnosKod from) {

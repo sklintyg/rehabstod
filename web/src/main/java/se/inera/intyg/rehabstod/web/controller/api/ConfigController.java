@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,16 +18,17 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 import se.inera.intyg.infra.dynamiclink.service.DynamicLinkService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetConfigResponse;
-
-import java.util.Map;
 
 /**
  * Created by marced on 2016-02-09.
@@ -37,6 +38,8 @@ import java.util.Map;
 public class ConfigController {
 
     private static final String STATISTIK_SJUNET_HOST_URL = "statistik.sjunet.host.url";
+    private static final String WEBCERT_VIEW_INTYG_URL_TEMPLATE = "webcert.view.urltemplate";
+    private static final String PROJECT_VERSION_PROPERTY = "project.version";
 
     @Autowired
     private DiagnosKapitelService diagnosKapitelService;
@@ -56,7 +59,9 @@ public class ConfigController {
         if (!env.containsProperty(STATISTIK_SJUNET_HOST_URL)) {
             throw new IllegalStateException("Missing property '" + STATISTIK_SJUNET_HOST_URL + "'");
         }
-        return new GetConfigResponse(diagnosKapitelService.getDiagnosKapitelList(), env.getProperty(STATISTIK_SJUNET_HOST_URL));
+        return new GetConfigResponse(diagnosKapitelService.getDiagnosKapitelList(), env.getProperty(STATISTIK_SJUNET_HOST_URL),
+                env.getProperty(WEBCERT_VIEW_INTYG_URL_TEMPLATE),
+                env.getProperty(PROJECT_VERSION_PROPERTY));
     }
 
     @RequestMapping(value = "/links", produces = "application/json")

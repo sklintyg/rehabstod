@@ -1,10 +1,9 @@
 .header {
-  background-color: #212633;
+  background-color: $rhs-header-bg;
   color: #fff;
   padding: 5px 0 15px 0; // don't change this setup. it's needed for IE8 flow on smaller screens to work
 
   a {
-    color: #28b4c4;
     font-size: 13px;
     line-height: 14px;
   }

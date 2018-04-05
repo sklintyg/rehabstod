@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -51,6 +51,7 @@ public class GetUserResponse {
     private Urval urval;
 
     private boolean pdlConsentGiven = false;
+    private boolean roleSwitchPossible = false;
 
     private Set<String> features;
 
@@ -69,6 +70,7 @@ public class GetUserResponse {
         this.totaltAntalVardenheter = user.getTotaltAntalVardenheter();
         this.urval = user.getUrval();
         this.pdlConsentGiven = user.isPdlConsentGiven();
+        this.roleSwitchPossible = user.isRoleSwitchPossible();
         this.features = user.getFeatures();
     }
 
@@ -166,6 +168,14 @@ public class GetUserResponse {
 
     public void setPdlConsentGiven(boolean pdlConsentGiven) {
         this.pdlConsentGiven = pdlConsentGiven;
+    }
+
+    public boolean isRoleSwitchPossible() {
+        return roleSwitchPossible;
+    }
+
+    public void setRoleSwitchPossible(boolean roleSwitchPossible) {
+        this.roleSwitchPossible = roleSwitchPossible;
     }
 
     public Set<String> getFeatures() {

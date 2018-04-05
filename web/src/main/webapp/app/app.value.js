@@ -42,7 +42,9 @@ angular.module('rehabstodApp')
             '75': '#FFBA3E',
             '100': '#799745'
         }
-    });
+    })
+    .value('moment', moment)
+    .value('THROTTLE_MILLISECONDS', 300);
 
 
 /*

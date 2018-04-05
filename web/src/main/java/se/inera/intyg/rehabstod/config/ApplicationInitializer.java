@@ -1,30 +1,22 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package se.inera.intyg.rehabstod.config;
-
-import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_CHECK_URI;
-import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_EXTEND;
-import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_REQUEST_MAPPING;
-
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
 
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
@@ -36,14 +28,24 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
-
 import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
+import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationClientConfiguration;
+import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationConfiguration;
+import se.inera.intyg.rehabstod.integration.srs.stub.SRSIntegrationStubConfiguration;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigJndi;
 import se.inera.intyg.rehabstod.web.filters.SessionTimeoutFilter;
+
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_CHECK_URI;
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_EXTEND;
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_REQUEST_MAPPING;
 
 public class ApplicationInitializer implements WebApplicationInitializer {
 
@@ -56,6 +58,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
                 ServiceConfig.class, IntygstjanstIntegrationConfiguration.class,
                 IntygstjanstIntegrationClientConfiguration.class,
                 IntygstjanstIntegrationStubConfiguration.class,
+                SRSIntegrationConfiguration.class,
+                SRSIntegrationClientConfiguration.class,
+                SRSIntegrationStubConfiguration.class,
                 JmsConfig.class, NTjPPingConfig.class, SecurityConfig.class,
                 SjukfallConfig.class, EmployeeNameCacheConfig.class, DynamicLinkConfig.class, PersistenceConfigJndi.class,
                 PersistenceConfigDev.class);
@@ -92,7 +97,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         pdlConsentGivenAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
         pdlConsentGivenAssuranceFilter.setInitParameter("ignoredUrls",
                 SESSION_STATUS_CHECK_URI + "," + SESSION_STATUS_REQUEST_MAPPING + SESSION_STATUS_EXTEND
-                        + ",/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary");
+                        + ",/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary,/api/stub");
 
         FilterRegistration.Dynamic characterEncodingFilter = servletContext.addFilter("characterEncodingFilter",
                 CharacterEncodingFilter.class);

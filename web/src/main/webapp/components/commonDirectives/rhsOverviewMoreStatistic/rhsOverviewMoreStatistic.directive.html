@@ -1,0 +1,12 @@
+<div>
+  <h3>{{::'label.sjukfall.start.merstatistik.header' | message}}</h3>
+</div>
+
+<div>
+  <p><span message key="label.sjukfall.start.merstatistik.body"></span></p>
+  <div>
+    <span ng-if="sjunetAvailable" dynamiclink key="statistiktjanstenSjunetTooltip"></span>
+    <span ng-if="!sjunetAvailable" dynamiclink key="statistiktjanstenTooltip"></span>
+    <img src="/assets/images/intygsstatistik_64x64.png" class="statistik-icon">
+  </div>
+</div>

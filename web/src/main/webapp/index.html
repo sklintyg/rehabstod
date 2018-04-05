@@ -1,109 +1,63 @@
-<!DOCTYPE html>
-<html lang="sv" id="ng-app" ng-app="rhsIndexApp">
-
+<!doctype html>
+<html class="no-js">
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width">
-
 <base href="/">
 <title>Rehabstöd</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+<!-- build:css(src/main/webapp) app/vendor.css -->
+<!-- bower:css -->
+<!-- endbower -->
+<!-- endbuild -->
 <!-- build:css({build/.tmp,src/main/webapp}) app/app.css -->
 <!-- injector:css -->
 <link rel="stylesheet" href="/app/app.css">
 <!-- endinjector -->
 <!-- endbuild -->
 </head>
-<style>
-  html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
-</style>
-
-<body class="index-page" ng-controller="IndexController">
-  <!--[if lt IE 9]>
+<body id="ng-app">
+  <div class="rhs-body">
+  <!--[if lt IE 11]>
   <p class="browsehappy">Du använder en <strong>omodern</strong> webbläsare. Var vänlig <a
       href="http://browsehappy.com/">uppgradera
     din webbläsare</a> för att få bästa upplevelse av denna webbplats.</p>
   <![endif]-->
 
-
   <rhs-cookie-banner></rhs-cookie-banner>
 
-  <div class="index-content-container">
-
-    <!-- header part -->
-    <div class="index-header-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-6 vertical-col-middle">
-            <img class="hidden-sm hidden-md hidden-lg"
-                 src="/assets/images/rehab_big_logo.png" width="192" height="40">
-            <h1>Välkommen till Rehabstöd</h1>
-            <p>
-              Rehabstöd är ett verktyg för dig som arbetar med att koordinera rehabiliterings&shy;insatser för
-              sjukskrivna patienter. Tjänsten ger en samlad bild över pågående sjukfall på en enhet. </p>
-            <p>
-              När du loggat in får du se en sammanställning över pågående sjukfall på den valda enheten.
-               Du kan sedan filtrera informationen på bland annat diagnos och sjukskrivningslängd.
-              Om du är läkare kan du endast se pågående sjukfall där du skrivit intyget. </p>
-
-          </div>
-          <div class="col-sm-6 hidden-xs text-right vertical-col-middle" style="width:49%">
-            <img src="/assets/images/rehab_big_logo.png" >
-          </div>
-
-        </div>
-      </div><!-- end header container -->
-    </div>
-
-
-    <!-- middle part -->
-    <div class="index-body-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-6">
-
-            <h2>Logga in</h2>
-            <p>
-              För att logga in behöver du ett SITHS-kort samt medarbetaruppdraget "Vård och behandling" i
-              HSA-katalogen. </p>
-            <div>
-              <a href="/saml/login/alias/defaultAlias" class="btn btn-success" id="loginBtn">Logga in</a>
-            </div>
-
-            <br>
-            <p>Problem med inloggning med SITHS-kort?<br>
-              <a href="#" data-ng-click="open('pubapp/siths.help.html')" class="body-link">Läs mer om hur du kan felsöka</a>
-            </p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <h2 class="underlined-header">Se också</h2>
-          </div>
-        </div>
-        <div class="row body-footer">
-          <div class="col-sm-9">
-
-            Statistiktjänsten för ordinerad sjukskrivning är en webbtjänst som visar samlad statistik för sjukskrivning
-            som ordinerats i elektroniska läkarintyg. Statistiktjänsten visar utvecklingen av sjukskrivning över tid och
-            innehåller inga personuppgifter.
-
-          </div>
-          <div class="col-sm-3 text-right" ng-cloak>
-            <a ng-if="sjunetAvailable" target="_blank" title="Observera att denna länk kräver att du är uppkopplad via Sjunet." href="https://statistik.intygstjanster.sjunet.org/">
-              <img src="/assets/images/statistiktj_logo.svg" width="141" height="26">  <i class="fa fa-arrow-right"></i></a>
-            <a ng-if="!sjunetAvailable" target="_blank" title="Observera att om du inte har uppkoppling till Sjunet länkas du till den nationella delen av Statistiktjänsten på Internet." href="https://statistik.intygstjanster.se/">
-              <img src="/assets/images/statistiktj_logo.svg" width="141" height="26">  <i class="fa fa-arrow-right"></i></a>
-          </div>
-        </div>
-      </div><!-- end header container -->
+  <div class="container" id="boot-loading" style="display:none">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="page-header ng-scope">Var vänlig vänta, laddar...</h1>
+        <img aria-labelledby="loading-message" src="assets/images/ajax-loader.gif" />
+      </div>
     </div>
   </div>
+
+  <div class="container" id="boot-error" style="display:none">
+    <div class="row">
+      <div class="col-lg-12">
+        <h1 class="page-header ng-scope">Ett fel har inträffat</h1>
+        <div class="content alert alert-danger">
+          Något gick fel vid uppstarten av Rehabstödet. Du kan prova att ladda om sidan.
+        </div>
+        <a class="btn btn-primary" href="/">Gå till startsidan</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Site content here -->
+  <div class="content-wrapper">
+    <div ui-view="header"></div>
+    <div ui-view="navbar"></div>
+    <div ui-view="app"></div>
+  </div>
+  <div ui-view="footer"></div>
+
   <!-- build:js({src/main/webapp,node_modules}) app/vendor.js -->
   <!-- bower:js -->
   <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -123,11 +77,109 @@
   <script src="bower_components/angular-placeholder-tai/lib/tai-placeholder.js"></script>
   <script src="bower_components/highcharts/highcharts.js"></script>
   <script src="bower_components/highcharts/modules/no-data-to-display.js"></script>
+  <script src="bower_components/moment/moment.js"></script>
+  <script src="bower_components/jquery-date-range-picker/src/jquery.daterangepicker.js"></script>
+  <script src="bower_components/lodash/lodash.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 
-  <script type="text/javascript" src="/components/commonDirectives/dynamiclink/dynamicLink.service.js"></script>
-  <script type="text/javascript" src="/components/commonDirectives/dynamiclink/dynamiclink.directive.js"></script>
-  <script type="text/javascript" src="/pubapp/index-app.main.js"></script>
+  <!-- build:js({build/.tmp,src/main/webapp}) app/app.main.js -->
+  <!-- injector:js -->
+  <script src="/app/app.module.js"></script>
+  <script src="/app/about/about.js"></script>
+  <script src="/app/about/about.page.controller.js"></script>
+  <script src="/app/about/subpages/faq.controller.js"></script>
+  <script src="/app/app.config.js"></script>
+  <script src="/app/app.controller.js"></script>
+  <script src="/app/app.js"></script>
+  <script src="/app/app.lodash.js"></script>
+  <script src="/app/app.main.js"></script>
+  <script src="/app/app.run.js"></script>
+  <script src="/app/app.value.js"></script>
+  <script src="/app/error/error.controller.js"></script>
+  <script src="/app/error/error.js"></script>
+  <script src="/app/error/restErrorDialog.controller.js"></script>
+  <script src="/app/footer/footer.controller.js"></script>
+  <script src="/app/header/careunit/SelectCareUnit.controller.js"></script>
+  <script src="/app/header/header.controller.js"></script>
+  <script src="/app/index/index.js"></script>
+  <script src="/app/messages.js"></script>
+  <script src="/app/navbar/navbar.controller.js"></script>
+  <script src="/app/pdlconsent/pdlconsentdialog.controller.js"></script>
+  <script src="/app/selectunit/selectunit.js"></script>
+  <script src="/app/selectunit/selectunit.page.controller.js"></script>
+  <script src="/app/sjukfall/patientHistory/patientHistory.controller.js"></script>
+  <script src="/app/sjukfall/result/result.js"></script>
+  <script src="/app/sjukfall/result/result.page.controller.js"></script>
+  <script src="/app/sjukfall/sjukfall.js"></script>
+  <script src="/app/sjukfall/start/selection/nodata.controller.js"></script>
+  <script src="/app/sjukfall/start/selection/selection.controller.js"></script>
+  <script src="/app/sjukfall/start/start.controller.js"></script>
+  <script src="/app/sjukfall/start/start.js"></script>
+  <script src="/components/appDirectives/sjukfall/rhsExport/rhsExport.directive.js"></script>
+  <script src="/components/appDirectives/sjukfall/rhsFilter/rhsFilter.directive.js"></script>
+  <script src="/components/appDirectives/sjukfall/rhsSettings/rhsSettings.directive.js"></script>
+  <script src="/components/appDirectives/sjukfall/rhsSettings/rhsSettingsModal/rhsSettingsModal.controller.js"></script>
+  <script src="/components/appDirectives/sjukfall/rhsTable/rhsTable.directive.js"></script>
+  <script src="/components/appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.directive.js"></script>
+  <script src="/components/appDirectives/sjukfall/rhsTableHeaderColumn/rhsTableHeaderColumn.directive.js"></script>
+  <script src="/components/appDirectives/sjukfall/rhsTableResetLimit/rhsResetLimit.directive.js"></script>
+  <script src="/components/appDirectives/sjukfall/rhsTableSearchConnector/rhsTableSearchConnector.directive.js"></script>
+  <script src="/components/commonDirectives/dynamiclink/dynamicLink.service.js"></script>
+  <script src="/components/commonDirectives/dynamiclink/dynamiclink.directive.js"></script>
+  <script src="/components/commonDirectives/message/message.directive.js"></script>
+  <script src="/components/commonDirectives/message/message.filter.js"></script>
+  <script src="/components/commonDirectives/message/message.service.js"></script>
+  <script src="/components/commonDirectives/rhsBlurOnEnter/rhsBlurOnEnter.directive.js"></script>
+  <script src="/components/commonDirectives/rhsChartLegend/rhsChartLegend.directive.js"></script>
+  <script src="/components/commonDirectives/rhsCookieBanner/rhsCookieBanner.directive.js"></script>
+  <script src="/components/commonDirectives/rhsDateRangePicker/rhsDateRangePicker.directive.js"></script>
+  <script src="/components/commonDirectives/rhsEmulateButtonActiveState/rhsEmulateButtonActiveState.directive.js"></script>
+  <script src="/components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.js"></script>
+  <script src="/components/commonDirectives/rhsNumericRangeInput/rhsNumericRangeInput.directive.js"></script>
+  <script src="/components/commonDirectives/rhsOverviewMoreStatistic/rhsOverviewMoreStatistic.directive.js"></script>
+  <script src="/components/commonDirectives/rhsPatientHistoryTable/rhsPatientHistoryTable.directive.js"></script>
+  <script src="/components/commonDirectives/rhsPatientHistoryTabs/rhsPatientHistoryTabs.directive.js"></script>
+  <script src="/components/commonDirectives/rhsPatientHistoryTimeLineItem/rhsPatientHistoryTimeLineItem.directive.js"></script>
+  <script src="/components/commonDirectives/rhsPatientIntygFrame/rhsPatientIntygFrame.directive.js"></script>
+  <script src="/components/commonDirectives/rhsPieChart/rhsPieChart.directive.js"></script>
+  <script src="/components/commonDirectives/rhsRepeatOnMousedown/rhsRepeatOnMousedown.directive.js"></script>
+  <script src="/components/commonDirectives/rhsRiskIndicator/rhsRiskIndicator.directive.js"></script>
+  <script src="/components/commonDirectives/rhsSpinner/rhsSpinner.directive.js"></script>
+  <script src="/components/commonDirectives/rhsSrsOverview/rhsSrsOverview.directive.js"></script>
+  <script src="/components/commonDirectives/rhsStatPanel/rhsStatPanel.directive.js"></script>
+  <script src="/components/commonDirectives/rhsTableFixedHeader/rhsTableFixedHeader.directive.js"></script>
+  <script src="/components/commonDirectives/rhsTableNumberOfRows/rhsTableNumberOfRows.directive.js"></script>
+  <script src="/components/commonDirectives/rhsTooltip/rhsTooltip.directive.js"></script>
+  <script src="/components/commonDirectives/rhsVardenhetSelector/rhsVardenhetSelector.directive.js"></script>
+  <script src="/components/commonDirectives/setClassWhenAtTop/setClassWhenAtTop.directive.js"></script>
+  <script src="/components/filters/rhsKon/rhsKon.filter.js"></script>
+  <script src="/components/filters/rhsSearchfilter/rhsSearchfilter.filter.js"></script>
+  <script src="/components/filters/rhsSort/rhsSort.filter.js"></script>
+  <script src="/components/filters/rhsSuffix/rhsSuffix.filter.js"></script>
+  <script src="/components/filters/rhsUnique/rhsUnique.filter.js"></script>
+  <script src="/components/mock/mockResponse.js"></script>
+  <script src="/components/models/diagnoskapitel.model.js"></script>
+  <script src="/components/models/lakare.model.js"></script>
+  <script src="/components/models/sjukfall.model.js"></script>
+  <script src="/components/models/sjukfallSummary.model.js"></script>
+  <script src="/components/models/user.model.js"></script>
+  <script src="/components/proxies/patientHistory.proxy.js"></script>
+  <script src="/components/proxies/sjukfall.proxy.js"></script>
+  <script src="/components/proxies/sjukfallSummary.proxy.js"></script>
+  <script src="/components/proxies/user.proxy.js"></script>
+  <script src="/components/services/feature.service.js"></script>
+  <script src="/components/services/sessionCheckService.service.js"></script>
+  <script src="/components/services/sjukfall.service.js"></script>
+  <script src="/components/utils/http403ResponseInterceptor.service.js"></script>
+  <script src="/components/utils/object.helper.js"></script>
+  <script src="/components/utils/restErrorResponseInterceptor.provider.js"></script>
+  <script src="/components/utils/string.helper.js"></script>
+  <script src="/components/viewstates/patientHistoryViewState.service.js"></script>
+  <script src="/components/viewstates/sjukfallFilterViewState.service.js"></script>
+  <script src="/components/viewstates/sjukfallViewState.service.js"></script>
+  <!-- endinjector -->
+  <!-- endbuild -->
+  </div>
 </body>
 </html>

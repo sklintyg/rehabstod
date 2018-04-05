@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -20,9 +20,11 @@ package se.inera.intyg.rehabstod.service.export.pdf;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
@@ -103,7 +105,8 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             document.newPage();
 
             // Add table with all sjukfall (could span several pages)
-            document.add(createSjukfallTable(sjukfallList, user.getUrval(), printSjukfallRequest.isShowPatientId()));
+            document.add(
+                    createSjukfallTable(sjukfallList, user.getUrval(), printSjukfallRequest.isShowPatientId(), isSrsFeatureActive(user)));
 
             // Finish off by closing the document (will invoke the event handlers)
             document.close();
@@ -191,6 +194,11 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         alderVarden.add(new Chunk(" år.", PdfExportConstants.FRONTPAGE_NORMAL));
         valdAlder.add(alderVarden);
 
+        // Slutdddatum
+        Paragraph valdSluttdaum = new Paragraph(FILTER_TITLE_VALD_SLUTDATUM, PdfExportConstants.FRONTPAGE_H3);
+        Paragraph sluttdaumVarden = new Paragraph(getFilterDate(printRequest.getSlutdatumIntervall()), PdfExportConstants.FRONTPAGE_NORMAL);
+        valdSluttdaum.add(sluttdaumVarden);
+
         // Fritext
         Paragraph valdFritext = new Paragraph(FILTER_TITLE_FRITEXTFILTER, PdfExportConstants.FRONTPAGE_H3);
         valdFritext.add(new Paragraph(StringUtil.isNullOrEmpty(printRequest.getFritext()) ? "-" : printRequest.getFritext(),
@@ -200,13 +208,13 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         Paragraph visaPatientUppgifter = new Paragraph(FILTER_TITLE_VISAPATIENTUPPGIFTER, PdfExportConstants.FRONTPAGE_H3);
         visaPatientUppgifter.add(new Phrase(printRequest.isShowPatientId() ? " Ja" : " Nej", PdfExportConstants.FRONTPAGE_NORMAL));
 
-
         // Lagg ihop undergrupperna till filter
         Paragraph filter = new Paragraph(VALDA_FILTER, PdfExportConstants.FRONTPAGE_H2);
         filter.add(valdaDiagnoser);
         filter.add(valdaLakare);
         filter.add(valdSjukskrivninglangd);
         filter.add(valdAlder);
+        filter.add(valdSluttdaum);
         filter.add(valdFritext);
         filter.add(visaPatientUppgifter);
 
@@ -270,26 +278,40 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     }
 
-    private PdfPTable createSjukfallTable(List<SjukfallEnhet> sjukfallList, Urval urval, boolean showPatientId) throws DocumentException {
+    private PdfPTable createTableColumns(Urval urval, boolean showPatientId, boolean showSrsRisk) {
+        List<Float> tempHeaders = new ArrayList<>();
+        tempHeaders.add(0.8f); // # radnr
+        if (showPatientId) {
+            tempHeaders.add(1.7f); // personnr
+        }
+        tempHeaders.add(0.8f); // # Ålder
+        if (showPatientId) {
+            tempHeaders.add(3f); // namn
+        }
+        tempHeaders.add(0.8f); // Kön
+        tempHeaders.add(1f); // Diagnos
+        tempHeaders.add(1.5f); // Bidiagnoser
+        tempHeaders.add(1.5f); // Startdatum
+        tempHeaders.add(1.5f); // Slutdatum
+        tempHeaders.add(1.5f); // Längd
+        tempHeaders.add(0.8f); // Antal
+        tempHeaders.add(2f); // Grader
+        if (Urval.ALL.equals(urval)) {
+            tempHeaders.add(3f); // Läkare
+        }
+        if (showSrsRisk) {
+            tempHeaders.add(1f); // Srs Risk
+        }
 
-        PdfPTable table;
+        return new PdfPTable(ArrayUtils.toPrimitive(tempHeaders.toArray(new Float[tempHeaders.size()])));
+
+    }
+
+    private PdfPTable createSjukfallTable(List<SjukfallEnhet> sjukfallList, Urval urval, boolean showPatientId, boolean showSrsRisk)
+            throws DocumentException {
 
         // Setup column widths (relative to each other)
-        if (Urval.ALL.equals(urval)) {
-            if (showPatientId) {
-                table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2, 3f });
-            } else {
-                table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2, 3f });
-            }
-
-        } else {
-            if (showPatientId) {
-                table = new PdfPTable(new float[] { 0.8f, 1.7f, 0.8f, 3, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2 });
-            } else {
-                table = new PdfPTable(new float[] { 0.8f, 0.8f, 1, 1, 1.5f, 1.5f, 1.5f, 2, 0.8f, 2 });
-            }
-
-        }
+        PdfPTable table = createTableColumns(urval, showPatientId, showSrsRisk);
 
         table.setWidthPercentage(100.0f);
 
@@ -321,6 +343,10 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         addCell(table, TABLEHEADER_SJUKSKRIVNINGSGRAD, PdfExportConstants.TABLE_HEADER_FONT);
         if (Urval.ALL.equals(urval)) {
             addCell(table, TABLEHEADER_NUVARANDE_LAKARE, PdfExportConstants.TABLE_HEADER_FONT);
+        }
+
+        if (showSrsRisk) {
+            addCell(table, TABLEHEADER_SRS_RISK, PdfExportConstants.TABLE_HEADER_FONT);
         }
 
         // Set cell styles for the non-header cells following hereafter
@@ -360,6 +386,9 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             addCell(table, getGrader(is));
             if (Urval.ALL.equals(urval)) {
                 addCell(table, is.getLakare().getNamn());
+            }
+            if (showSrsRisk) {
+                addCell(table, getRiskKategoriDesc(is.getRiskSignal()));
             }
             rowNumber++;
         }

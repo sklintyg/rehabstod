@@ -1,0 +1,62 @@
+.modal-footer {
+  .btn + .btn {
+    //Avståndet mellan knappar skall vara 20px i dialoger.
+    margin-left: 20px;
+  }
+}
+
+.modal-footer {
+  text-align: left;
+}
+
+// Buttons
+.btn {
+  font-family: $rhs-font-buttons;
+  padding: $rhs-button-padding;
+  letter-spacing: $rhs-button-letter-spacing;
+  line-height: 18px;
+  &[disabled], &[disabled]:hover {
+    opacity: 1;
+    background: $rhs-button-disabled-bg !important;
+    color: $rhs-button-disabled-color;
+    border-color: $rhs-button-disabled-border !important;
+  }
+}
+
+.btn-link {
+  color: #008391;
+
+  &:hover {
+    color: #31b2be;
+  }
+}
+
+.btn-default {
+  &:active,
+  &.active {
+    &:focus,
+    &.focus {
+      background-color: darken($btn-default-bg, 10%);
+    }
+  }
+
+  &:focus,
+  &.focus {
+    background-color: $btn-default-bg;
+  }
+}
+
+// Alerts
+.alert {
+  max-width: 600px;
+  padding-right: 22px;
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+.alert-danger a {
+  color: #A94442;
+}
+

@@ -1,0 +1,9 @@
+<ul class="history-nav-tabs">
+  <li ng-repeat="tab in tabs" role="presentation" ng-class="{'active': tab.active}">
+    <a href="#" ng-click="$event.preventDefault(); onSelect(tab);">{{tab.title}}
+      <span ng-if="!tab.fixed" ng-click="onClose(tab); $event.preventDefault();">
+        <i class="glyphicon glyphicon-remove"></i>
+      </span>
+    </a>
+  </li>
+</ul>

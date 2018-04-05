@@ -32,18 +32,21 @@ var HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
 
 var screenshotReporter = new HtmlScreenshotReporter({
     dest: 'dev/report',
-    filename: 'index.html'
+    filename: 'index.html',
+    ignoreSkippedSpecs: true,
+    captureOnlyFailedSpecs: true
 });
 
 exports.config = {
+    directConnect: true,
     seleniumAddress: require('./../rehabstodTestTools/environment.js').envConfig.SELENIUM_ADDRESS,
     baseUrl: require('./../rehabstodTestTools/environment.js').envConfig.REHABSTOD_URL,
 
     specs: ['./spec/*.spec.js'],
 
     suites: {
-      //  testdata: './spec/generateTestData/**/*.spec.js',
-      //  clean: './spec/cleanTestData/**/*.spec.js',
+        //  testdata: './spec/generateTestData/**/*.spec.js',
+        //  clean: './spec/cleanTestData/**/*.spec.js',
         app: ['./spec/*.spec.js']
     },
 
@@ -60,7 +63,7 @@ exports.config = {
         version: '11',*/
 
         // Any other browser
-        browserName: 'firefox', // possible values: phantomjs, firefox, chrome
+        browserName: 'chrome', // possible values: phantomjs, firefox, chrome
 
         // Run parallell instances of same browser (combine with any browser above)
         shardTestFiles: false, // set to true to divide tests among instances
@@ -106,12 +109,6 @@ exports.config = {
         //browser.manage().timeouts().pageLoadTimeout(40000);
         //browser.manage().timeouts().implicitlyWait(25000);
 
-        // for non-angular page
-        /**
-         * This makes protractor not wait for Angular promises, such as those from $http or $timeout to resolve,
-         * which you might want to do if you're testing behaviour during $http or $timeout (e.g., a 'loading' message),
-         * or testing non-Angular sites or pages, such as a separate login page.
-         */
         browser.ignoreSynchronization = false;
 
         // We need a certain size of the window to make sure everything is visible

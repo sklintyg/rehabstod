@@ -37,19 +37,19 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
                 },
                 timeout: networkConfig.defaultTimeout
             };
-            $http.post(restPath, query, config).success(function(data) {
-                if (!ObjectHelper.isDefined(data)) {
-                    promise.reject({errorCode: data, message: 'invalid data'});
+            $http.post(restPath, query, config).then(function(response) {
+                if (!ObjectHelper.isDefined(response.data)) {
+                    promise.reject({errorCode: response.data, message: 'invalid data'});
                 } else {
-                    promise.resolve(data);
+                    promise.resolve({data: response.data, srsError: response.headers('SRS_UNAVAILABLE') === 'true'});
                 }
-            }).error(function(data, status) {
-                $log.error('error ' + status);
+            }, function(response) {
+                $log.error('error ' + response.status);
                 // Let calling code handle the error of no data response
-                if (data === null) {
-                    promise.reject({errorCode: data, message: 'no response'});
+                if (response.data === null) {
+                    promise.reject({errorCode: response.data, message: 'no response'});
                 } else {
-                    promise.reject(data);
+                    promise.reject(response.data);
                 }
             });
 
@@ -65,6 +65,8 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
             inputs += _addInput('langdIntervall.min', query.langdIntervall.min);
             inputs += _addInput('aldersIntervall.max', query.aldersIntervall.max);
             inputs += _addInput('aldersIntervall.min', query.aldersIntervall.min);
+            inputs += _addInput('slutdatumIntervall.min', query.slutdatum.min);
+            inputs += _addInput('slutdatumIntervall.max', query.slutdatum.max);
             inputs += _addInput('sortering.kolumn', query.sortering.kolumn);
             inputs += _addInput('sortering.order', query.sortering.order);
             inputs += _addInput('fritext', query.fritext);

@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
@@ -29,6 +28,7 @@ import se.inera.intyg.infra.logmessages.PdlLogMessage;
 import se.inera.intyg.infra.logmessages.PdlResource;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataLogMessage;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataPrintLogMessage;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
@@ -95,7 +95,6 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         PdlResource pdlResource = new PdlResource();
         pdlResource.setPatient(getPatient(sfe));
         pdlResource.setResourceOwner(getEnhet(sfe, user));
-        //pdlResource.setResourceOwner(getEnhet(sfe));
         pdlResource.setResourceType(resourceType.getResourceTypeName());
 
         return pdlResource;
@@ -143,7 +142,6 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
             "");
     }
 
-    @NotNull
     private PdlLogMessage getLogMessage(ActivityType activityType) {
         PdlLogMessage pdlLogMessage = getLogMessageTypeForActivityType(activityType);
         pdlLogMessage.setSystemId(systemId);
@@ -167,10 +165,20 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         return new LogUser.Builder(user.getHsaId(), valdVardenhet.getId(), valdVardgivare.getId())
                 .userName(user.getNamn())
                 .userAssignment(user.getSelectedMedarbetarUppdragNamn())
-                .userTitle(user.isLakare() ? PDL_TITEL_LAKARE : PDL_TITEL_REHABSTOD)
+                .userTitle(resolveUserTitle(user))
                 .enhetsNamn(valdVardenhet.getNamn())
                 .vardgivareNamn(valdVardgivare.getNamn())
                 .build();
+    }
+
+    /**
+     * LAKARE if user has LAKARE as current ROLE AND isLakare() is true.
+     * REHABKOORDINATOR if user has REHABKOORDINATOR as current role and isLakare is true.
+     * REHABKOORDINATOR if user has REHABKOORDINATOR as current role and isLakare is false.
+     */
+    private String resolveUserTitle(RehabstodUser user) {
+        return user.isLakare() && user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE)
+                ? PDL_TITEL_LAKARE : PDL_TITEL_REHABSTOD;
     }
 
     private void populateWithCurrentUserAndCareUnit(PdlLogMessage logMsg, LogUser user) {

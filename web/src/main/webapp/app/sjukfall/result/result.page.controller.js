@@ -19,11 +19,13 @@
 
 angular.module('rehabstodApp')
     .controller('SjukfallResultPageCtrl',
-    function ($scope, $rootScope, $state, SjukfallService, UserModel) {
+    function ($scope, $rootScope, $state, SjukfallService, UserModel, SjukfallViewState) {
         'use strict';
 
         $scope.sjukfallService = SjukfallService;
+        $scope.SjukfallViewState = SjukfallViewState;
         $scope.user = UserModel.get();
+        $scope.srsError = false;
 
         loadSjukfall();
 
@@ -40,6 +42,10 @@ angular.module('rehabstodApp')
 
         $scope.$watch('sjukfallService.isLoading()', function (val) {
             $scope.showSpinner = val;
+        });
+
+        $scope.$watch('SjukfallViewState.get().srsError', function (val) {
+            $scope.srsError = val;
         });
 
         function loadSjukfall() {

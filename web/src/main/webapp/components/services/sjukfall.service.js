@@ -17,9 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').factory('SjukfallService', [
-    '$log', 'StringHelper', 'messageService', 'SjukfallProxy', 'SjukfallModel', 'SjukfallFilterViewState',
-    function($log, StringHelper, messageService, SjukfallProxy, SjukfallModel, SjukfallFilterViewState) {
+angular.module('rehabstodApp').factory('SjukfallService',
+    function($log, StringHelper, messageService, SjukfallProxy, SjukfallModel, SjukfallFilterViewState, SjukfallViewState, _) {
         'use strict';
 
         var loading = false;
@@ -43,8 +42,10 @@ angular.module('rehabstodApp').factory('SjukfallService', [
                     maxIntygsGlapp: SjukfallFilterViewState.get().glapp
                 };
 
-                return SjukfallProxy.get(query).then(function(successData) {
-                    SjukfallModel.set(successData);
+                return SjukfallProxy.get(query).then(function(response) {
+                    _normalizeRiskSignals(response.data);
+                    SjukfallModel.set(response.data);
+                    SjukfallViewState.setSrsError(response.srsError);
                     loading = false;
                 }, function(errorData) {
                     $log.debug('Failed to get sjukfall.');
@@ -54,6 +55,20 @@ angular.module('rehabstodApp').factory('SjukfallService', [
                     loading = false;
                 });
             }
+        }
+
+        // Due to sorting problems, we explicitly set the riskKategori for sjukfall having no
+        // risk prediction to 0.
+        function _normalizeRiskSignals(sjukfall) {
+            if (sjukfall === null) {
+                return;
+            }
+
+            _.each(sjukfall, function(s) {
+                if (s.riskSignal === null) {
+                    s.riskSignal = {riskKategori: 0};
+                }
+            });
         }
 
         function _stripHtmlEntities(html) {
@@ -81,6 +96,10 @@ angular.module('rehabstodApp').factory('SjukfallService', [
                     min: '' + filterState.sjukskrivningslangd[0],
                     max: '' + (filterState.sjukskrivningslangd[1] === null? '365+' : filterState.sjukskrivningslangd[1])
                 },
+                slutdatum: {
+                    min: filterState.slutdatum.from === null ? '' : moment(filterState.slutdatum.from).format('YYYY-MM-DD'),
+                    max: filterState.slutdatum.to === null ? '' : moment(filterState.slutdatum.to).format('YYYY-MM-DD')
+                },
                 lakare: filterState.lakare,
                 diagnosGrupper: filterState.diagnosKapitel,
                 personnummer: personnummer
@@ -98,4 +117,4 @@ angular.module('rehabstodApp').factory('SjukfallService', [
             exportResult: _exportResult,
             isLoading: _isLoading
         };
-    }]);
+    });

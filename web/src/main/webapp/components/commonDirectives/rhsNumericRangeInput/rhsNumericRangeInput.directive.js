@@ -22,8 +22,8 @@ angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope',
     //Initialize internal model
     _updateInputModel();
 
-    var isNumberPattern = /^[-0-9]+$/;
-    var isNumber = /[^0-9-]/g;
+    var isNumberPattern = /^[0-9]+$/;
+    var isNumber = /[^0-9]/g;
 
     //Store originalMaxValue in case we need to set it
     $scope.originalMaxValue = parseInt($scope.max, 10);
@@ -82,7 +82,7 @@ angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope',
     };
 
     $scope.onKeyDown = function(event) {
-        if (event.which > 58 && event.which < 90) {
+        if (!(event.which >= 96 && event.which <= 105) && event.which > 58) {
             event.preventDefault();
         }
     };
@@ -115,7 +115,6 @@ angular.module('rehabstodApp').controller('rhsNumericRangeInputCtrl', ['$scope',
     'use strict';
     return {
         restrict: 'E',
-        replace: true,
         controller: 'rhsNumericRangeInputCtrl',
         templateUrl: '/components/commonDirectives/rhsNumericRangeInput/rhsNumericRangeInput.directive.html',
         scope: {

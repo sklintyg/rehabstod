@@ -21,20 +21,6 @@ module.exports = function(grunt) {
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
-    // connect middleware for enabling post requests through
-    function enablePost(req, res, next) {
-
-        /*        console.log(req.method);
-         console.log(req.url);
-         console.log(req.headers);
-         console.log('Setting full access control.');
-         res.setHeader('Access-Control-Allow-Origin', '*');
-         res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-         res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-         */
-        return next();
-    }
-
     // Define the configuration for all the tasks
     grunt.initConfig({
 
@@ -51,12 +37,27 @@ module.exports = function(grunt) {
             dev: {
                 options: {
                     port: 9091,
+                    base: 'src/main/webapp',
                     hostname: '*',
                     middleware: function(connect, options, middlewares) {
                         return [
-                            enablePost,
                             require('connect-livereload')(),
-                            serveStatic('src/main/webapp'),
+                            connect().use(
+                                '/index.html',
+                                serveStatic(__dirname + '/src/main/webapp/index.html') // jshint ignore:line
+                            ),
+                            connect().use(
+                                '/welcome.html',
+                                serveStatic(__dirname + '/src/main/webapp/welcome.html') // jshint ignore:line
+                            ),
+                            connect().use(
+                                '/app',
+                                serveStatic(__dirname + '/src/main/webapp/app') // jshint ignore:line
+                            ),
+                            connect().use(
+                                '/components',
+                                serveStatic(__dirname + '/src/main/webapp/components') // jshint ignore:line
+                            ),
                             require('grunt-connect-proxy/lib/utils').proxyRequest
                         ];
                     }
@@ -135,7 +136,7 @@ module.exports = function(grunt) {
                 force: false
             },
             all: [
-                '<%= config.client %>/{app,pubapp,components}/**/*.js',
+                '<%= config.client %>/{app,components}/**/*.js',
                 '!<%= config.client %>/{app,components}/**/*.spec.js',
                 '!<%= config.client %>/{app,components}/**/*.mock.js'
             ],
@@ -167,7 +168,7 @@ module.exports = function(grunt) {
             options: {
                 map: false,
                 processors: [
-                    require('autoprefixer')({browsers: ['last 2 versions', 'ie 9']}) // add vendor prefixes
+                    require('autoprefixer')({browsers: ['last 2 versions', 'ie 11']}) // add vendor prefixes
                 ]
             },
             dist: {
@@ -179,12 +180,11 @@ module.exports = function(grunt) {
         wiredep: {
             target: {
                 src: [
-                    '<%= config.client %>/app.html',
                     '<%= config.client %>/index.html',
                     'karma.conf.js'
                 ],
                 ignorePath: '<%= config.client %>/',
-                exclude: [/bootstrap-sass-official/, '/bootstrap.js', '/json3/', '/es5-shim/'],
+                exclude: [/bootstrap-sass-official/, '/bootstrap.js'],
                 fileTypes: {
                     js: {
                         block: /(([\s\t]*)\/\/\s*bower:*(\S*))(\n|\r|.)*?(\/\/\s*endbower)/gi,
@@ -235,7 +235,7 @@ module.exports = function(grunt) {
         // concat, minify and revision files. Creates configurations in memory so
         // additional tasks can operate on them
         useminPrepare: {
-            html: ['<%= config.client %>/app.html'],
+            html: ['<%= config.client %>/index.html'],
             options: {
                 dest: '<%= config.dist %>',
                 staging: '<%= config.tmp %>'
@@ -313,7 +313,6 @@ module.exports = function(grunt) {
                         src: [
                             'assets/**/*',
                             'bower_components/**/*',
-                            'pubapp/**/*',
                             'components/**/*',
                             'WEB-INF/**/*',
                             '*.*'
@@ -385,7 +384,7 @@ module.exports = function(grunt) {
             options: {
                 lineEnding: grunt.util.linefeed
             },
-            // Inject application script files into app.html (doesn't include bower)
+            // Inject application script files into index.html (doesn't include bower)
             scripts: {
                 options: {
                     transform: function(filePath) {
@@ -397,10 +396,11 @@ module.exports = function(grunt) {
                     endtag: '<!-- endinjector -->'
                 },
                 files: {
-                    '<%= config.client %>/app.html': [
-                        ['{<%= config.tmp %>,<%= config.client %>}/{app,components}/**/*.js',
-                            '!{<%= config.tmp %>,<%= config.client %>}/app/app.main.js',
-                            '!{<%= config.tmp %>,<%= config.client %>}/app/app.main.test.js',
+                    '<%= config.client %>/index.html': [
+                        [
+                            '{<%= config.tmp %>,<%= config.client %>}/{app,components}/**/*.module.js',
+                            '{<%= config.tmp %>,<%= config.client %>}/{app,components}/**/*.js',
+                            '!{<%= config.tmp %>,<%= config.client %>}/app/*.test.js',
                             '!{<%= config.tmp %>,<%= config.client %>}/{app,components}/**/*.spec.js',
                             '!{<%= config.tmp %>,<%= config.client %>}/{app,components}/**/*.mock.js']
                     ]
@@ -421,6 +421,7 @@ module.exports = function(grunt) {
                 files: {
                     '<%= config.client %>/app/app.scss': [
                         '<%= config.client %>/{app,components}/**/*.{scss,sass}',
+                        '!<%= config.client %>/app/mixins/*.{scss,sass}',
                         '!<%= config.client %>/app/app.{scss,sass}'
                     ]
                 }
@@ -438,9 +439,6 @@ module.exports = function(grunt) {
                     endtag: '<!-- endinjector -->'
                 },
                 files: {
-                    '<%= config.client %>/app.html': [
-                        '<%= config.client %>/{app,components}/**/*.css'
-                    ],
                     '<%= config.client %>/index.html': [
                         '<%= config.client %>/{app,components}/**/*.css'
                     ],

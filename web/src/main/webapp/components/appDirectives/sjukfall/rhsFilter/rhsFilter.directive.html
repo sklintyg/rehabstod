@@ -9,7 +9,7 @@
       <div class="row">
         <div class="col-sm-6">
           <div class="form-group search-filter-diagnos">
-            <label class="control-label"><span message key="label.filter.diagnos"></span></label>
+            <label class="control-label"><span message key="label.filter.diagnos"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.diagnos.help"></span></label>
             <rhs-multi-select items-model="filterViewState.get().diagnosKapitelModel"
                               none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="true" />
           </div>
@@ -17,7 +17,7 @@
 
         <div ng-if="user.urval === 'ALL'" class="col-sm-6">
           <div class="form-group">
-            <label class="control-label"><span message key="label.filter.lakare"></span></label>
+            <label class="control-label"><span message key="label.filter.lakare"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.lakare.help"></span></label>
             <rhs-multi-select id="rhs-filter-lakare" items-model="filterViewState.get().lakareModel" none-selected-title="{{::'label.filter.allselected' | message}}"
                               high-light-enabled="false" />
           </div>
@@ -27,7 +27,7 @@
       <div class="row">
         <div class="col-sm-6">
           <div class="form-group">
-            <label class="control-label"><span message key="label.filter.langd"></span></label>
+            <label class="control-label"><span message key="label.filter.langd"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.langd.help"></span></label>
             <div class="form-inline">
               <span>Från&nbsp;</span>
               <rhs-numeric-range-input external-model="filterViewState.get().sjukskrivningslangdModel[0]"
@@ -51,7 +51,7 @@
 
         <div class="col-sm-6">
           <div class="form-group">
-            <label class="control-label"><span message key="label.filter.alder"></span></label>
+            <label class="control-label"><span message key="label.filter.alder"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.alder.help"></span></label>
 
             <div class="form-inline">
               <span>Från&nbsp;</span>
@@ -59,7 +59,6 @@
                                        min="0"
                                        max="filterViewState.get().aldersModel[1]"
                                        display-max-value-as="100+" input-id="rhs-filter-alder-from">
-
               </rhs-numeric-range-input>
 
               <span>&nbsp;till&nbsp;</span>
@@ -78,20 +77,29 @@
       <div class="row">
         <div class="col-sm-6">
           <div class="form-group">
-            <label class="control-label" for="rhs-filter-free-text-input"><span message key="label.filter.filter"></span></label>
+            <label class="control-label" for="rhs-filter-free-text-input"><span message key="label.filter.filter"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.filter.help"></span></label>
             <input id="rhs-filter-free-text-input" ng-model="filterViewState.get().freeTextModel" placeholder="&#61442; {{::'label.filter.filter.placeholder' | message}}" class="form-control rhs-filter-filter-input"
                      type="search" ng-trim="false" maxlength="100"/>
           </div>
         </div>
         <div class="col-sm-3">
-          <div class="rhs-checkbox">
-            <label class="control-label">&nbsp;</label><br>
-            <label for="rhs-filter-showPatientIdToggle"><span>Visa personuppgifter </span> <input id="rhs-filter-showPatientIdToggle" type="checkbox" ng-model="filterViewState.get().showPatientId"></label>
+          <div class="form-group">
+            <label class="control-label"><span message key="label.filter.slutdatum"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.slutdatum.help"></span></label>
+            <rhs-date-range-picker model="filterViewState.get().slutdatumModel"></rhs-date-range-picker>
           </div>
         </div>
-        <div class="col-sm-3 bottom-align-text">
-          <label class="control-label">&nbsp;</label><br>
-          <button id="rhs-filter-reset-btn" ng-click="onResetFilterClick()" class="btn btn-default" rhs-emulate-button-active-state>
+        <div class="col-sm-3 personuppgifter">
+          <div class="rhs-checkbox">
+            <label class="control-label">&nbsp;</label><br>
+            <label for="rhs-filter-showPatientIdToggle"><span><span message key="label.filter.personuppgifter"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.personuppgifter.help" alignment="auto top"></span> </span> <input id="rhs-filter-showPatientIdToggle" type="checkbox" ng-model="filterViewState.get().showPatientId"></label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <button id="rhs-filter-reset-btn" ng-click="onResetFilterClick()" class="pull-right btn btn-default" rhs-emulate-button-active-state>
             <span style="position:relative" message key="common.reset"></span>
           </button>
         </div>

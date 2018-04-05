@@ -1,22 +1,25 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package se.inera.intyg.rehabstod.web.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -39,12 +42,18 @@ public class SjukfallEnhet {
 
     private LocalDate start;
     private LocalDate slut;
+    private long slutOmDagar;
 
     private int dagar;
     private int intyg;
     private int aktivGrad;
 
     private List<Integer> grader;
+
+    @JsonIgnore
+    private String aktivIntygsId;
+
+    private RiskSignal riskSignal;
 
 
     // - - - getters and setters
@@ -129,6 +138,14 @@ public class SjukfallEnhet {
         this.slut = slut;
     }
 
+    public long getSlutOmDagar() {
+        return slutOmDagar;
+    }
+
+    public void setSlutOmDagar(long slutOmDagar) {
+        this.slutOmDagar = slutOmDagar;
+    }
+
     public int getDagar() {
         return dagar;
     }
@@ -161,4 +178,19 @@ public class SjukfallEnhet {
         this.grader = grader;
     }
 
+    public String getAktivIntygsId() {
+        return aktivIntygsId;
+    }
+
+    public void setAktivIntygsId(String aktivIntygsId) {
+        this.aktivIntygsId = aktivIntygsId;
+    }
+
+    public RiskSignal getRiskSignal() {
+        return riskSignal;
+    }
+
+    public void setRiskSignal(RiskSignal riskSignal) {
+        this.riskSignal = riskSignal;
+    }
 }

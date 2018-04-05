@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -40,6 +40,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static se.inera.intyg.rehabstod.auth.util.SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX;
 
 /**
  * @author marced on 01/03/16.
@@ -58,14 +59,14 @@ public class RehabstodUserTest {
 
     @Test
     public void testGetUrvalWithoutRole() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", false);
 
         assertNull(user.getUrval());
     }
 
     @Test
     public void testGetUrvalLakare() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
         user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_LAKARE, new Role()));
 
         assertEquals(Urval.ISSUED_BY_ME, user.getUrval());
@@ -73,7 +74,7 @@ public class RehabstodUserTest {
 
     @Test
     public void testGetUrvalRehabKoordinator() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", false);
         user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_KOORDINATOR, new Role()));
 
         assertEquals(Urval.ALL, user.getUrval());
@@ -81,7 +82,7 @@ public class RehabstodUserTest {
 
     @Test
     public void testChangeValdVardenhet() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
         user.setVardgivare(buildVardgivare(VG_1, VG_1_NAME));
 
         assertEquals(1, user.getVardgivare().size());
@@ -96,7 +97,7 @@ public class RehabstodUserTest {
 
     @Test
     public void testGetTotaltAntalVardenheter() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
         List<Vardgivare> vgList = new ArrayList<>();
         vgList.addAll(buildVardgivare(VG_1, VG_1_NAME));
         vgList.addAll(buildVardgivare(VG_2, VG_2_NAME));
@@ -107,9 +108,39 @@ public class RehabstodUserTest {
     }
 
     @Test
+    public void testRoleSwitchPossibleForDoctorWithMatchingSystemRole() {
+        RehabstodUser user = setupRehabstodUserWithSystemRoles(true, new ArrayList<>(), HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_1);
+        assertTrue(user.isRoleSwitchPossible());
+    }
+
+    @Test
+    public void testRoleSwitchNotPossibleForDoctorWithoutMatchingSystemRole() {
+        RehabstodUser user = setupRehabstodUserWithSystemRoles(true, new ArrayList<>(),
+                HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "some-other-unit-id");
+        assertFalse(user.isRoleSwitchPossible());
+    }
+
+    @Test
+    public void testRoleSwitchNotPossibleForNonDoctorWithMatchingSystemRole() {
+        RehabstodUser user = setupRehabstodUserWithSystemRoles(false, new ArrayList<>(), HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_1);
+        assertFalse(user.isRoleSwitchPossible());
+    }
+
+    private RehabstodUser setupRehabstodUserWithSystemRoles(boolean isLakare, ArrayList<String> systemRoles, String e) {
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", isLakare);
+        List<Vardgivare> vgList = new ArrayList<>();
+        vgList.addAll(buildVardgivare(VG_1, VG_1_NAME));
+        vgList.addAll(buildVardgivare(VG_2, VG_2_NAME));
+        user.setVardgivare(vgList);
+        user.setSystemRoles(systemRoles);
+        user.getSystemRoles().add(e);
+        return user;
+    }
+
+    @Test
     public void serializeToDisk() {
         try {
-            RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson");
+            RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
             user.setVardgivare(buildVardgivare(VG_1, VG_1_NAME));
 
             // Write to disk

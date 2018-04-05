@@ -55,7 +55,8 @@ angular.module('rehabstodApp')
                 url: '/faq',
                 views: {
                     'content@app.about': {
-                        templateUrl: '/app/about/subpages/faq.html'
+                        templateUrl: '/app/about/subpages/faq.html',
+                        controller: 'AboutFaqPageCtrl'
                     }
                 }
             })
@@ -64,14 +65,6 @@ angular.module('rehabstodApp')
                 views: {
                     'content@app.about': {
                         templateUrl: '/app/about/subpages/support.html'
-                    }
-                }
-            })
-            .state('app.about.cookies', {
-                url: '/cookies',
-                views: {
-                    'content@app.about': {
-                        templateUrl: '/app/about/subpages/cookies.html'
                     }
                 }
             });

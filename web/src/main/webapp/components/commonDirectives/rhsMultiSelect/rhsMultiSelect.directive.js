@@ -25,7 +25,6 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
 
         return {
             restrict: 'E',
-            replace: true,
             scope: {
                 noneSelectedTitle: '@',
                 highLightEnabled: '=',

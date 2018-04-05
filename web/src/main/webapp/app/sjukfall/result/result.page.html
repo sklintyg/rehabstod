@@ -1,7 +1,7 @@
 <div id="rhs-sjukfall-page" class="container-fluid">
   <div set-class-when-at-top="result-fixed-top" class="result-top" ng-switch="user.urval">
 
-    <div ng-switch-when="ISSUED_BY_ME"> 
+    <div ng-switch-when="ISSUED_BY_ME">
       <h1 class="page-header"><span message key="label.sjukfall.result.lakare.header"></span>{{user.valdVardenhet.namn}}</h1>
     </div>
 
@@ -12,6 +12,10 @@
 </div>
 
 <rhs-filter class="container"></rhs-filter>
+
+<div ng-if="srsError" class="container-fluid bottom-padding-medium">
+  <div class="alert alert-danger pull-right">Tekniskt fel. Det gick inte att hämta information om risk för lång sjukskrivning.</div>
+</div>
 
 <div rhs-spinner show-spinner="showSpinner" label="common.label.loading" class="container-fluid">
   <rhs-table></rhs-table>

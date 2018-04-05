@@ -1,65 +1,14 @@
-<div class="index-page select-unit-page" id="rhs-select-unit-page">
-  <div class="index-content-container">
+<div id="rhs-select-unit-page" class="container select-unit-page">
+  <div id="content-body" class="row">
+    <div class="col-xs-12 col-sm-6">
 
-    <!-- header part -->
-    <div class="index-header-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-6 vertical-col-middle">
-            <img class="hidden-sm hidden-md hidden-lg" src="/assets/images/rehab_big_logo.png" width="192" height="40">
-            <h1>Välkommen till Rehabstöd</h1>
-            <p>
-              Rehabstöd är ett verktyg för dig som arbetar med att koordinera rehabiliterings&shy;insatser för
-              sjukskrivna patienter. Tjänsten ger en samlad bild över pågående sjukfall på en enhet. </p>
-            <p>
-              När du loggat in får du se en sammanställning över pågående sjukfall på den valda enheten.
-              Du kan sedan filtrera informationen på bland annat diagnos och sjukskrivningslängd.
-              Om du är läkare kan du endast se pågående sjukfall där du skrivit intyget. </p>
+      <h1>Välj enhet</h1>
+      <p>Du har behörighet för flera olika enheter. Välj den enhet du vill se pågående sjukfall för. Du kan byta enhet
+        även efter inloggning.</p>
+      <rhs-vardenhet-selector user="user" on-unit-selection="onUnitSelected(enhet)" expand-vardgivare="true"
+                              role-switch-message-key="label.role.switch.notloggedin"></rhs-vardenhet-selector>
 
-          </div>
-          <div class="col-sm-6 hidden-xs text-right vertical-col-middle" style="width:49%">
-            <img src="/assets/images/rehab_big_logo.png">
-          </div>
-
-        </div>
-      </div><!-- end header container -->
     </div>
-
-
-    <!-- middle part -->
-    <div class="index-body-section">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-6">
-
-            <h2>Välj enhet</h2>
-            <p>Du har behörighet för flera olika enheter. Välj den enhet du vill se pågående sjukfall för. Du kan byta enhet även efter inloggning.</p>
-            <rhs-vardenhet-selector user="user" on-unit-selection="onUnitSelected(enhet)" expand-vardgivare="true"></rhs-vardenhet-selector>
-
-
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <h2 class="underlined-header">Se också</h2>
-          </div>
-        </div>
-        <div class="row body-footer">
-          <div class="col-sm-9">
-
-            Statistiktjänsten för ordinerad sjukskrivning är en webbtjänst som visar samlad statistik för sjukskrivning
-            som ordinerats i elektroniska läkarintyg. Statistiktjänsten visar utvecklingen av sjukskrivning över tid och
-            innehåller inga personuppgifter.
-
-          </div>
-          <div class="col-sm-3 text-right">
-            <a ng-if="sjunetAvailable" target="_blank" title="Observera att denna länk kräver att du är uppkopplad via Sjunet." href="https://statistik.intygstjanster.sjunet.org/">
-              <img src="/assets/images/statistiktj_logo.svg" width="141" height="26">  <i class="fa fa-arrow-right"></i></a>
-            <a ng-if="!sjunetAvailable" target="_blank" title="Observera att om du inte har uppkoppling till Sjunet länkas du till den nationella delen av Statistiktjänsten på Internet." href="https://statistik.intygstjanster.se/">
-              <img src="/assets/images/statistiktj_logo.svg" width="141" height="26">  <i class="fa fa-arrow-right"></i></a>
-          </div>
-        </div>
-      </div><!-- end header container -->
-    </div>
+    <div class="clearfix"></div>
   </div>
 </div>

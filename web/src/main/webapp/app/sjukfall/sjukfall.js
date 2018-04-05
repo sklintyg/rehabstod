@@ -22,10 +22,9 @@ angular.module('rehabstodApp')
         'use strict';
         $stateProvider
             .state('app.sjukfall', {
-                url : '/',
+                url : '',
                 data: {
                     rule: function(fromState, toState) {
-
                         if (toState.name !== 'app.sjukfall') {
                             return;
                         }

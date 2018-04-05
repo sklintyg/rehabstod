@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import se.inera.intyg.infra.integration.pu.stub.ResidentStore;
+import se.inera.intyg.infra.integration.pu.stub.ChronicleResidentStore;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
@@ -70,8 +70,11 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     public static final String VE_2A = "IFV1239877878-103H";
     public static final String UE_AKUTEN = "akuten";
     public static final String UE_DIALYS = "dialys";
+
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
-    LocalDateTime timeSimulator = LocalDateTime.now();
+
+    private LocalDateTime timeSimulator = LocalDateTime.now();
+
     private Queue<Patient> seededPatients = new LinkedList<>();
     private Enhet enhet;
     private Enhet enhet2;
@@ -93,10 +96,30 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private int currentSjukskrivningsgraderIndex = 0;
     private int currentHosPersonIndex = 0;
     private List<HosPersonal> hosPersonList = new ArrayList<>();
+
+    private List<String> femaleNames = Arrays.asList("Eva", "Britt-Marie", "Petra", "Maria", "Anna", "Margaret", "Elisabet", "Eva",
+            "Kristina", "Birgitta", "Karin", "Elisabet", "Marie", "Ingrid", "Christina", "Linnéa", "Sofia", "Kerstin", "Marianne", "Lena",
+            "Helena", "Emma", "Johanna", "Linnea", "Inger", "Sara", "Cecilia", "Elin");
+    private int currentFemaleIndex = 0;
+
+    private List<String> maleNames = Arrays.asList("Johan",
+            "Lars", "Karl", "Anders", "Johan", "Per", "Nils", "Carl", "Nils", "Roger", "Hans-Åke", "Vidar", "Birk", "Thomas", "Mikael",
+            "Jan", "Hans", "Sören", "Morgan", "Ahmad", "Herbert", "Lennart", "Olof", "Peter", "Gunnar", "Sven",
+            "Fredrik", "Bengt", "Bo", "Daniel", "Gustav", "Åke", "Göran", "Alexander", "Magnus");
+    private int currentMaleIndex = 0;
+
+    private List<String> lastNames = Arrays.asList("Andersson", "Ekman", "Melin", "Holmqvist", "Pålsson", "Marklund", "Krantz-HöllerBach",
+            "Åkerblom", "Chen", "Westling", "Mahmoud", "Dalman", "Stolt", "Rönnberg", "Svedin", "Gran", "Hosseini", "Nordstrand",
+            "Karlsson", "Weibull", "Nilsson", "Eriksson", "Larsson", "Söderlind", "Olsson", "Persson", "Pullman", "Svensson", "Sollervik",
+            "Gustafsson", "Pettersson", "Lindberg", "Jonsson", "Jansson", "Hansson", "Bengtsson", "Jönsson", "von Zinken", "Carlsson",
+            "Petersson", "Lindberg", "Öfverkvist", "Wahlström", "Magnusson", "Lindström", "Gustavsson", "Olofsson", "Möller", "Sjöström",
+            "Lindgren", "Zaid", "Zetterström", "Öberg");
+    private int currentLastNameIndex = 0;
+
     @Autowired
     private PersonnummerLoader personnummerLoader;
     @Autowired
-    private ResidentStore residentStore;
+    private ChronicleResidentStore residentStore;
 
     @PostConstruct
     public void init() {
@@ -285,7 +308,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         personPost.setNamn(namn);
 
         resident.setPersonpost(personPost);
-        residentStore.addUser(resident);
+        residentStore.addResident(resident);
     }
 
     private Patient buildPerson(String pnr) {
@@ -293,8 +316,41 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         PersonId personId = new PersonId();
         personId.setExtension(pnr);
         patient.setPersonId(personId);
-        patient.setFullstandigtNamn("Förnamn-" + pnr.substring(2, 6) + " Efternamn-" + pnr.substring(6));
+        if (isFemale(pnr)) {
+            patient.setFullstandigtNamn(getNextFirstName(true) + " " + getNextLastName());
+        } else {
+            patient.setFullstandigtNamn(getNextFirstName(false) + " " + getNextLastName());
+        }
+
         return patient;
+    }
+
+    private String getNextLastName() {
+        if (currentLastNameIndex > lastNames.size() - 1) {
+            currentLastNameIndex = 0;
+        }
+        return lastNames.get(currentLastNameIndex++);
+    }
+
+    private String getNextFirstName(boolean female) {
+
+        if (female) {
+            if (currentFemaleIndex > femaleNames.size() - 1) {
+                currentFemaleIndex = 0;
+            }
+            return femaleNames.get(currentFemaleIndex++);
+        } else {
+            if (currentMaleIndex > maleNames.size() - 1) {
+                currentMaleIndex = 0;
+            }
+            return maleNames.get(currentMaleIndex++);
+        }
+
+    }
+
+    private boolean isFemale(String personnr) {
+        String withoutDash = personnr.replace("-", "").replace("+", "");
+        return withoutDash.substring(10, 11).matches("^\\d*[02468]$");
     }
 
     private void initDiagnoser() {
@@ -305,10 +361,26 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         diagnosList.add("H_01");
         diagnosList.add("M46");
         diagnosList.add("A25");
+        diagnosList.add("A048");
+        diagnosList.add("A165");
+        diagnosList.add("J168");
         diagnosList.add("B09");
         diagnosList.add("D21");
         diagnosList.add("Z88");
         diagnosList.add("Y65");
+        diagnosList.add("M259");
+        diagnosList.add("M478");
+        diagnosList.add("N342W");
+        diagnosList.add("R072");
+        diagnosList.add("R119");
+        diagnosList.add("R227");
+        diagnosList.add("S004");
+        diagnosList.add("S0230");
+        diagnosList.add("T055");
+        diagnosList.add("T171");
+        diagnosList.add("Z610");
+        diagnosList.add("Z723");
+        diagnosList.add("Z870");
     }
 
     private void initEnhet() {
@@ -432,6 +504,13 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         peterEnkelId.setExtension("peter-enkel");
         peterEnkel.setPersonalId(peterEnkelId);
 
+        HosPersonal tothGergo = new HosPersonal();
+        tothGergo.setEnhet(enhet);
+        tothGergo.setFullstandigtNamn("Tóth Gergő Mészáros");
+        HsaId tothGergoId = new HsaId();
+        tothGergoId.setExtension("toth-gergo-1");
+        tothGergo.setPersonalId(tothGergoId);
+
         hosPersonList.add(hosPerson1);
         hosPersonList.add(hosPerson2);
         hosPersonList.add(hosPerson3);
@@ -441,6 +520,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hosPersonList.add(kerstin1);
         hosPersonList.add(kerstin2);
         hosPersonList.add(peterEnkel);
+        hosPersonList.add(tothGergo);
     }
 
     private void initFakedVardgivare1() {

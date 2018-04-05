@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,12 +18,14 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import se.inera.intyg.infra.integration.hsa.model.AbstractVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
+import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.service.Urval;
 
 import java.io.Serializable;
@@ -42,16 +44,37 @@ public class RehabstodUser extends IntygUser implements Serializable {
     private Map<String, List<PDLActivityEntry>> storedActivities;
 
     private boolean pdlConsentGiven = false;
+    private boolean isLakare = false;
 
-    public RehabstodUser(String hsaId, String namn) {
+    /**
+     * Typically used by unit tests.
+     */
+    public RehabstodUser(String hsaId, String namn, boolean isLakare) {
         super(hsaId);
         this.storedActivities = new HashMap<>();
         this.hsaId = hsaId;
         this.namn = namn;
+        this.isLakare = isLakare;
     }
 
-    /** The copy-constructor. */
-    public RehabstodUser(IntygUser intygUser, boolean pdlConsentGiven) {
+    /**
+     * Copy-constructor that takes a populated {@link IntygUser} and booleans for whether the user has given PDL consent
+     * and whether the user has LAKARE privileges.
+     *
+     * The "isLakare" backs the overridden "isLakare()" method, i.e. the RehabstodUser class doesn't derive LAKARE status
+     * from the underlying roles once the isLakare value has been set. This is due to the requirement that LAKARE having
+     * systemRoles for being Rehabkoordinator on one or more care units must be able to "switch" between roles when
+     * changing units without losing the original "isLakare" information. See INTYG-5068.
+     *
+     * @param intygUser
+     *      User principal, typically constructed in the {@link org.springframework.security.saml.userdetails.SAMLUserDetailsService}
+     *      implementor.
+     * @param pdlConsentGiven
+     *      Whether the user has given PDL logging consent.
+     * @param isLakare
+     *      Wheter the user is LAKARE or not. Immutable once set.
+     */
+    public RehabstodUser(IntygUser intygUser, boolean pdlConsentGiven, boolean isLakare) {
         super(intygUser.getHsaId());
         this.privatLakareAvtalGodkand = intygUser.isPrivatLakareAvtalGodkand();
         this.personId = intygUser.getPersonId();
@@ -64,6 +87,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
         this.befattningar = intygUser.getBefattningar();
         this.specialiseringar = intygUser.getSpecialiseringar();
         this.legitimeradeYrkesgrupper = intygUser.getLegitimeradeYrkesgrupper();
+        this.systemRoles = intygUser.getSystemRoles();
 
         this.valdVardenhet = intygUser.getValdVardenhet();
         this.valdVardgivare = intygUser.getValdVardgivare();
@@ -78,6 +102,8 @@ public class RehabstodUser extends IntygUser implements Serializable {
 
         this.miuNamnPerEnhetsId = intygUser.getMiuNamnPerEnhetsId();
         this.pdlConsentGiven = pdlConsentGiven;
+
+        this.isLakare = isLakare;
     }
 
     public Urval getUrval() {
@@ -115,7 +141,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
     }
 
 
-    // private scope
+
 
     /**
      * If the currently selected vardenhet is not null and is an underenhet/mottagning, this method returns true.
@@ -150,6 +176,36 @@ public class RehabstodUser extends IntygUser implements Serializable {
         this.pdlConsentGiven = pdlConsentGiven;
     }
 
+    /**
+     * In rehabstöd, isLakare is an immutable field that must be set when logging in. This is due to us
+     * sometimes changing the ROLE of a doctor to be a Rehabkoordinator based on systemRoles.
+     *
+     * @return
+     *      true if doctor, false if not.
+     */
+    @Override
+    public boolean isLakare() {
+        return isLakare;
+    }
+
+    /**
+     * Returns true if the user is a doctor and at least one vardenhet Id matches an Intyg;Rehab-[enhetId] systemRole.
+     */
+    public boolean isRoleSwitchPossible() {
+        if (!isLakare()) {
+            return false;
+        }
+
+        // Check if this doctor has a
+        return this.vardgivare.stream()
+                .flatMap(vg -> vg.getVardenheter().stream())
+                .map(AbstractVardenhet::getId)
+                .anyMatch(enhetId -> SystemRolesParser.parseEnhetsIdsFromSystemRoles(systemRoles).stream()
+                        .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(enhetId))
+        );
+    }
+
+    // private scope
     private void writeObject(java.io.ObjectOutputStream stream) throws java.io.IOException {
         stream.defaultWriteObject();
     }
@@ -157,5 +213,4 @@ public class RehabstodUser extends IntygUser implements Serializable {
     private void readObject(java.io.ObjectInputStream stream) throws java.io.IOException, ClassNotFoundException {
         stream.defaultReadObject();
     }
-
 }

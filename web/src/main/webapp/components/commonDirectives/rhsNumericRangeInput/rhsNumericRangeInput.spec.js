@@ -138,20 +138,20 @@ describe('Directive: RhsNumericRangeInput', function() {
 
     it('should set min value when a value below min is entered', function() {
         //Arrange
-        elementScope.min = 0;
+        elementScope.min = 2;
         elementScope.externalModel = 5;
         elementScope.displayMaxValueAs = 'Mer';
         elementScope.max = 10;
 
 
         //Act
-        elementScope.inputModel = '-100';
+        elementScope.inputModel = '1';
         elementScope.onManualChange();
         $scope.$digest();
 
         // Assert
-        expect(elementScope.inputModel).toEqual(0);
-        expect(elementScope.externalModel).toEqual(0);
+        expect(elementScope.inputModel).toEqual(2);
+        expect(elementScope.externalModel).toEqual(2);
     });
 
     it('remove non numeric values in input', function() {
@@ -186,6 +186,24 @@ describe('Directive: RhsNumericRangeInput', function() {
 
         // Assert
         expect(elementScope.externalModel).toEqual(10);
+    });
+
+    it('should handle show previous value when entering only a "-"', function() {
+        //Arrange
+        elementScope.min = 0;
+        elementScope.externalModel = 8;
+        elementScope.inputModel = 5;
+        elementScope.displayMaxValueAs = 'Mer';
+        elementScope.max = 10;
+
+        //Act
+        elementScope.inputModel = '-';
+        elementScope.onManualChange();
+        $scope.$digest();
+
+        // Assert
+        expect(elementScope.externalModel).toEqual(8);
+        expect(elementScope.inputModel).toEqual(8);
     });
 
 });

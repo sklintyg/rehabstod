@@ -13,7 +13,7 @@ describe('Controller: PatientHistoryController', function() {
             'kod': 'J661',
             'beskrivning': 'desc1'
         },
-        'intyg': [ {} ]
+        'intyg': [ {'intygsId':'111'} ]
     };
 
     var sjukfall2016 = {
@@ -23,7 +23,7 @@ describe('Controller: PatientHistoryController', function() {
             'kod': 'J662',
             'beskrivning': 'desc2'
         },
-        'intyg': [ {} ]
+        'intyg': [ {'intygsId':'222'} ]
     };
     var sjukfall2013 = {
         'start': '2013-02-22',
@@ -32,7 +32,7 @@ describe('Controller: PatientHistoryController', function() {
             'kod': 'J663',
             'beskrivning': 'Småont i ryggen3'
         },
-        'intyg': [ {} ]
+        'intyg': [ {'intygsId':'333'} ]
     };
 
     var scenario1 = [ sjukfall2017, sjukfall2016 ];
@@ -41,7 +41,7 @@ describe('Controller: PatientHistoryController', function() {
     var scope, $httpBackend;
 
     // Initialize the controller and a mock scope
-    beforeEach(inject(function($controller, $rootScope, $state, _$httpBackend_, _patientHistoryProxy_) {
+    beforeEach(inject(function($controller, $rootScope, $state, _$httpBackend_, _patientHistoryProxy_, _patientHistoryViewState_) {
         scope = $rootScope.$new();
         $httpBackend = _$httpBackend_;
         $controller('patientHistoryController', {
@@ -49,54 +49,54 @@ describe('Controller: PatientHistoryController', function() {
             $uibModalInstance: {},
             $state: $state,
             patientHistoryProxy: _patientHistoryProxy_,
+            patientHistoryViewState: _patientHistoryViewState_,
             patient: {}
         });
     }));
 
     it('should build correct timeline for scenario 1', function() {
-        //TODO: replace expectGET with real path when backend exists
         $httpBackend.expectPOST('/api/sjukfall/patient').respond(scenario1);
 
         scope.$digest();
         $httpBackend.flush();
 
         expect(scope.timeline.length).toBe(2);
-        verifyFirstYear();
-        expect(scope.timeline[1].year).toBe(2016);
-        expect(scope.timeline[1].selected).toBeUndefined();
-        expect(scope.timeline[1].expanded).toBeUndefined();
-        expect(scope.timeline[1].isFirstHistorical).toBe(true);
-        expect(scope.timeline[1].sjukfall).toEqual(sjukfall2016);
+
 
     });
 
     it('should build correct timeline for scenario 2', function() {
-        //TODO: replace expectGET with real path when backend exists
         $httpBackend.expectPOST('/api/sjukfall/patient').respond(scenario2);
 
         scope.$digest();
         $httpBackend.flush();
 
         expect(scope.timeline.length).toBe(3);
-        verifyFirstYear();
-        expect(scope.timeline[1].year).toBe(0);
-        expect(scope.timeline[1].sjukfall).toBeUndefined();
 
-        expect(scope.timeline[2].year).toBe(2013);
-        expect(scope.timeline[2].selected).toBeUndefined();
-        expect(scope.timeline[2].expanded).toBeUndefined();
-        expect(scope.timeline[2].isFirstHistorical).toBe(true);
-        expect(scope.timeline[2].sjukfall).toEqual(sjukfall2013);
 
     });
 
-    function verifyFirstYear() {
+    it('should handle load intyg correctly', function() {
+        $httpBackend.expectPOST('/api/sjukfall/patient').respond(scenario2);
 
-        expect(scope.timeline[0].year).toBe(2017);
-        expect(scope.timeline[0].selected).toBe(true);
-        expect(scope.timeline[0].expanded).toBe(true);
-        expect(scope.timeline[0].isFirstHistorical).toBe(false);
-        expect(scope.timeline[0].sjukfall).toEqual(sjukfall2017);
-    }
+        scope.$digest();
+        $httpBackend.flush();
+
+        expect(scope.timeline.length).toBe(3);
+        expect(scope.tabs.length).toBe(1);
+
+        scope.loadIntyg({intygsId: '333'});
+        scope.$digest();
+
+        expect(scope.tabs.length).toBe(2);
+
+        scope.loadIntyg({intygsId: '333'});
+        scope.$digest();
+        //Should still be 2
+        expect(scope.tabs.length).toBe(2);
+
+    });
+
+
 
 });

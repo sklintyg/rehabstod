@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -18,14 +18,11 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,29 +33,34 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationServiceImpl;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
-import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
-import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
-import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
-import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
+import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
+import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
+import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
+import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-24.
@@ -104,6 +106,9 @@ public class SjukfallServiceTest {
     @Mock
     private SjukfallPuService sjukfallPuService;
 
+    @Mock
+    private RiskPredictionService riskPredictionService;
+
     @InjectMocks
     private SjukfallServiceImpl testee = new SjukfallServiceImpl();
 
@@ -135,7 +140,7 @@ public class SjukfallServiceTest {
 
     @Test
     public void testWhenUrvalIsAll() {
-        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, null, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
+        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, null, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate)).getSjukfallList();
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
@@ -144,7 +149,7 @@ public class SjukfallServiceTest {
 
     @Test
     public void testWhenUrvalIsAllForUnderenhet() {
-        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, mottagningsId, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
+        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, mottagningsId, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate)).getSjukfallList();
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
@@ -154,7 +159,7 @@ public class SjukfallServiceTest {
     @Test
     public void testWhenUrvalIsIssuedByMe() {
         List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, null, lakareId1, Urval.ISSUED_BY_ME,
-                getSjukfallRequest(intygsGlapp, activeDate));
+                getSjukfallRequest(intygsGlapp, activeDate)).getSjukfallList();
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
@@ -231,6 +236,7 @@ public class SjukfallServiceTest {
 
         sjukfall.setVardenhet(vardenhet);
         sjukfall.setLakare(lakare);
+        sjukfall.setSlut(LocalDate.now().plusDays(5L));
         return sjukfall;
     }
 
@@ -242,7 +248,7 @@ public class SjukfallServiceTest {
         private final String patinetNamn = "Tolvan Tolvansson";
 
         @Override
-        public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from) {
+        public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, LocalDate today) {
             se.inera.intyg.infra.sjukfall.dto.Vardgivare vardgivare =
                 new se.inera.intyg.infra.sjukfall.dto.Vardgivare(vardgivareId, vardgivareNamn);
 
@@ -257,7 +263,7 @@ public class SjukfallServiceTest {
             from.setPatient(patient);
             from.setDiagnosKod(diagnosKod);
 
-            return super.map(from);
+            return super.map(from, today);
         }
 
         @Override

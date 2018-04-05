@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -32,9 +32,13 @@ import se.inera.intyg.rehabstod.testutil.TestDataGen;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by eriklupander on 2016-03-03.
@@ -48,7 +52,7 @@ public class PdlLogMessageFactoryImplTest {
 
         // Then
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
-            ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, TestDataGen.buildRehabStodUser());
+            ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, TestDataGen.buildRehabStodUser(true));
         assertNotNull(pdlLogMessage);
 
         assertEquals(ActivityType.READ, pdlLogMessage.getActivityType());
@@ -76,7 +80,7 @@ public class PdlLogMessageFactoryImplTest {
 
         // Then
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(buildSjukfallListWithEmptyCareGiverName(),
-                ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, TestDataGen.buildRehabStodUser());
+                ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, TestDataGen.buildRehabStodUser(true));
 
         assertNotNull(pdlLogMessage);
         assertEquals(1, pdlLogMessage.getPdlResourceList().size());
@@ -94,7 +98,7 @@ public class PdlLogMessageFactoryImplTest {
     public void testBuildPrintLogMessage() {
         // Then
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
-            ActivityType.PRINT, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, TestDataGen.buildRehabStodUser());
+            ActivityType.PRINT, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, TestDataGen.buildRehabStodUser(true));
         assertNotNull(pdlLogMessage);
 
         assertEquals(ActivityType.PRINT, pdlLogMessage.getActivityType());
@@ -103,13 +107,24 @@ public class PdlLogMessageFactoryImplTest {
     @Test
     public void testBuildLogMessageForLakare() {
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
-            ActivityType.PRINT, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, TestDataGen.buildRehabStodUser());
+            ActivityType.PRINT, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, TestDataGen.buildRehabStodUser(true));
         assertEquals("Läkare", pdlLogMessage.getUserTitle());
     }
 
     @Test
+    public void testBuildLogMessageForLakareHavingRehabkoordinatorRole() {
+        RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser(true);
+        Map<String, Role> rolesMap = mock(Map.class);
+        when(rolesMap.containsKey(eq("LAKARE"))).thenReturn(false);
+        rehabstodUser.setRoles(rolesMap);
+        PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
+                ActivityType.PRINT, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, rehabstodUser);
+        assertEquals("Rehabkoordinator", pdlLogMessage.getUserTitle());
+    }
+
+    @Test
     public void testBuildLogMessageForIckeLakare() {
-        RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser();
+        RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser(false);
         rehabstodUser.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_KOORDINATOR, new Role()));
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
             ActivityType.PRINT, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, rehabstodUser);
@@ -119,6 +134,6 @@ public class PdlLogMessageFactoryImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testBuildWithUnknownType() {
         testee.buildLogMessage(TestDataGen.buildSjukfallList(1),
-            ActivityType.EMERGENCY_ACCESS, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, TestDataGen.buildRehabStodUser());
+            ActivityType.EMERGENCY_ACCESS, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL, TestDataGen.buildRehabStodUser(true));
     }
 }

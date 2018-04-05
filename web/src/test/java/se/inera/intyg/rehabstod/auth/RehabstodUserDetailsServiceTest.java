@@ -1,16 +1,16 @@
-/**
- * Copyright (C) 2017 Inera AB (http://www.inera.se)
+/*
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
- * This file is part of rehabstod (https://github.com/sklintyg/rehabstod).
+ * This file is part of sklintyg (https://github.com/sklintyg).
  *
- * rehabstod is free software: you can redistribute it and/or modify
+ * sklintyg is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * rehabstod is distributed in the hope that it will be useful,
+ * sklintyg is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -59,6 +59,7 @@ import se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.authorities.validation.AuthoritiesValidator;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
+import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
@@ -129,6 +130,9 @@ public class RehabstodUserDetailsServiceTest {
 
     @Mock
     private AnvandarPreferenceRepository anvandarPreferenceRepository;
+
+    @Mock
+    private RehabstodUnitChangeService rehabstodUnitChangeService;
 
     @BeforeClass
     public static void setupAuthoritiesConfiguration() throws Exception {
@@ -376,9 +380,9 @@ public class RehabstodUserDetailsServiceTest {
     }
 
     private List<HsaSystemRoleType> buildSystemRoles() {
-        return Arrays.asList(RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2,
-                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
-                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23)
+        return Arrays.asList(SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2,
+                SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
+                SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23)
                 .stream()
                 .map(s -> {
                     HsaSystemRoleType hsaSystemRole = new HsaSystemRoleType();
@@ -403,8 +407,8 @@ public class RehabstodUserDetailsServiceTest {
         vardgivare2.getVardenheter().addAll(Arrays.asList(enhet21, enhet22));
 
         List<String> systemRoles = Arrays.asList(
-                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
-                RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23);
+                SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
+                SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23);
 
         List<Vardgivare> original = new ArrayList<>(Arrays.asList(vardgivare1, vardgivare2));
 
@@ -426,7 +430,7 @@ public class RehabstodUserDetailsServiceTest {
         Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "Skall bort");
         vardgivare1.getVardenheter().add(enhet1);
 
-        List<String> systemRoles = Arrays.asList(RehabstodUserDetailsService.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2);
+        List<String> systemRoles = Arrays.asList(SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2);
 
         List<Vardgivare> original = new ArrayList<>(Arrays.asList(vardgivare1));
 

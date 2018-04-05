@@ -26,26 +26,57 @@
   {
     "key": "statistiktjanstenSjunet",
     "url": "https://statistik.intygstjanster.sjunet.org/",
-    "text": "Statistiktjänsten",
+    "text": "Intygsstatistik",
     "target": "_blank"
   },
   {
-    "key": "statistiktjanstenSjunetWithIcon",
+    "key": "statistiktjanstenSjunetTooltip",
     "url": "https://statistik.intygstjanster.sjunet.org/",
-    "text": "",
-    "tooltip": "Observera att denna länk kräver att du är uppkopplad via sjunet",
+    "text": "Gå vidare till Intygsstatistik",
+    "tooltip": "Observera att denna länk kräver att du är uppkopplad via Sjunet.",
+    "target": "_blank"
+  },
+  {
+    "key": "statistiktjanstenTooltip",
+    "url": "https://statistik.intygstjanster.se/",
+    "text": "Gå vidare till Intygsstatistik",
+    "tooltip": "Observera att om du inte har uppkoppling till Sjunet länkas du till den nationella delen av Intygsstatistik på Internet.",
+    "target": "_blank"
+  },
+  {
+    "key": "ineraHomepage",
+    "url": "https://www.inera.se",
+    "text": "www.inera.se",
     "target": "_blank"
   },
   {
     "key": "ineraMainPage",
-    "url": "http://www.inera.se",
+    "url": "https://www.inera.se",
     "text": "Inera AB",
     "target": "_blank"
   },
   {
+    "key": "ineraKundservice",
+    "url": "https://www.inera.se/kundservice",
+    "text": "Hjälp och support",
+    "target": "_blank"
+  },
+  {
     "key": "rehabstodAnvandarmanual",
-    "url": "http://www.inera.se/TJANSTER--PROJEKT/Rehabstod/Dokument/",
+    "url": "https://www.inera.se/kundservice/dokument-och-lankar/tjanster/rehabstod/",
     "text": "användarmanual (extern länk)",
+    "target": "_blank"
+  },
+  {
+    "key": "rattsjukskrivning",
+    "url": "http://www.rattsjukskrivning.se",
+    "text": "Gå vidare till SRS hemsida",
+    "target": "_blank"
+  },
+  {
+    "key": "rehabstodAnvandarmanualPdf",
+    "url": "https://www.inera.se/kundservice/dokument-och-lankar/tjanster/rehabstod/",
+    "text": "Läs mer om behörigheter",
     "target": "_blank"
   }
 ]

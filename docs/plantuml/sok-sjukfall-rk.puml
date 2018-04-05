@@ -17,6 +17,16 @@ activate Rehabstöd
         Intygstjänsten --> Rehabstöd: Intygsdata
     deactivate Intygstjänsten
     Rehabstöd -> Rehabstöd: Sammanställer sjukfall utifrån intyg
+    Rehabstöd -> HSA: Hämta aktuellt namn för läkare per sjukfall (cache finns)
+    activate HSA
+       HSA --> Rehabstöd
+    deactivate HSA
+        Rehabstöd --> PU: Slå upp patient per sjukfall (cache finns)
+    activate PU
+        PU -> Rehabstöd: aktuellt patientnamn och sekretessmarkering
+    deactivate PU
+    Rehabstöd -> Rehabstöd: Filtrera sjukfall och patienter baserat på sekretessstatus
+
     Rehabstöd -> Rehabkoordinator: Visar sjukfall på vårdenheten
 deactivate Rehabstöd
 @enduml
