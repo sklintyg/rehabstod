@@ -150,40 +150,14 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     private Element getFilterDesc(PrintSjukfallRequest printRequest, RehabstodUser user) {
 
-        // Diagnoser
-        Paragraph valdaDiagnoser = new Paragraph(FILTER_TITLE_VALDA_DIAGNOSER, PdfExportConstants.FRONTPAGE_H3);
-        com.itextpdf.text.List diagnosLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
-        if (printRequest.getDiagnosGrupper() != null) {
-            printRequest.getDiagnosGrupper()
-                    .forEach(dg -> diagnosLista.add(new ListItem(getDiagnosKapitelDisplayValue(dg), PdfExportConstants.FRONTPAGE_NORMAL)));
-        } else {
-            diagnosLista.add(new ListItem(SELECTION_VALUE_ALLA, PdfExportConstants.FRONTPAGE_NORMAL));
-        }
-        valdaDiagnoser.add(diagnosLista);
+        // Fritext
+        Paragraph valdFritext = new Paragraph(FILTER_TITLE_FRITEXTFILTER, PdfExportConstants.FRONTPAGE_H3);
+        valdFritext.add(new Paragraph(StringUtil.isNullOrEmpty(printRequest.getFritext()) ? "-" : printRequest.getFritext(),
+                PdfExportConstants.FRONTPAGE_NORMAL));
 
-        // Lakare
-        Paragraph valdaLakare = new Paragraph(FILTER_TITLE_VALDA_LAKARE, PdfExportConstants.FRONTPAGE_H3);
-        com.itextpdf.text.List lakarLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
-        if (printRequest.getLakare() != null) {
-
-            printRequest.getLakare().forEach(dg -> lakarLista.add(new ListItem(dg, PdfExportConstants.FRONTPAGE_NORMAL)));
-        } else {
-            lakarLista.add(new ListItem(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : SELECTION_VALUE_ALLA,
-                    PdfExportConstants.FRONTPAGE_NORMAL));
-        }
-        valdaLakare.add(lakarLista);
-
-        // Sjukskrivningslangd
-        Paragraph valdSjukskrivninglangd = new Paragraph(FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD, PdfExportConstants.FRONTPAGE_H3);
-        Paragraph sjukskrivningslangdVarden = new Paragraph();
-        sjukskrivningslangdVarden.add(new Chunk("Mellan ", PdfExportConstants.FRONTPAGE_NORMAL));
-        sjukskrivningslangdVarden
-                .add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMin()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
-        sjukskrivningslangdVarden.add(new Chunk(" och ", PdfExportConstants.FRONTPAGE_NORMAL));
-        sjukskrivningslangdVarden
-                .add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMax()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
-        sjukskrivningslangdVarden.add(new Chunk(" dagar.", PdfExportConstants.FRONTPAGE_NORMAL));
-        valdSjukskrivninglangd.add(sjukskrivningslangdVarden);
+        // Visa Patientuppgifter
+        Paragraph visaPatientUppgifter = new Paragraph(FILTER_TITLE_VISAPATIENTUPPGIFTER, PdfExportConstants.FRONTPAGE_H3);
+        visaPatientUppgifter.add(new Phrase(printRequest.isShowPatientId() ? " Ja" : " Nej", PdfExportConstants.FRONTPAGE_NORMAL));
 
         // Ålder
         Paragraph valdAlder = new Paragraph(FILTER_TITLE_VALD_ALDER, PdfExportConstants.FRONTPAGE_H3);
@@ -197,29 +171,55 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         alderVarden.add(new Chunk(" år.", PdfExportConstants.FRONTPAGE_NORMAL));
         valdAlder.add(alderVarden);
 
+        // Diagnoser
+        Paragraph valdaDiagnoser = new Paragraph(FILTER_TITLE_VALDA_DIAGNOSER, PdfExportConstants.FRONTPAGE_H3);
+        com.itextpdf.text.List diagnosLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+        if (printRequest.getDiagnosGrupper() != null) {
+            printRequest.getDiagnosGrupper()
+                    .forEach(dg -> diagnosLista.add(new ListItem(getDiagnosKapitelDisplayValue(dg), PdfExportConstants.FRONTPAGE_NORMAL)));
+        } else {
+            diagnosLista.add(new ListItem(SELECTION_VALUE_ALLA, PdfExportConstants.FRONTPAGE_NORMAL));
+        }
+        valdaDiagnoser.add(diagnosLista);
+
         // Slutdddatum
-        Paragraph valdSluttdaum = new Paragraph(FILTER_TITLE_VALD_SLUTDATUM, PdfExportConstants.FRONTPAGE_H3);
-        Paragraph sluttdaumVarden = new Paragraph(getFilterDate(printRequest.getSlutdatumIntervall()), PdfExportConstants.FRONTPAGE_NORMAL);
-        valdSluttdaum.add(sluttdaumVarden);
+        Paragraph valdSlutdatum = new Paragraph(FILTER_TITLE_VALD_SLUTDATUM, PdfExportConstants.FRONTPAGE_H3);
+        Paragraph slutdatumVarden = new Paragraph(getFilterDate(printRequest.getSlutdatumIntervall()), PdfExportConstants.FRONTPAGE_NORMAL);
+        valdSlutdatum.add(slutdatumVarden);
 
-        // Fritext
-        Paragraph valdFritext = new Paragraph(FILTER_TITLE_FRITEXTFILTER, PdfExportConstants.FRONTPAGE_H3);
-        valdFritext.add(new Paragraph(StringUtil.isNullOrEmpty(printRequest.getFritext()) ? "-" : printRequest.getFritext(),
-                PdfExportConstants.FRONTPAGE_NORMAL));
+        // Sjukskrivningslangd
+        Paragraph valdSjukskrivninglangd = new Paragraph(FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD, PdfExportConstants.FRONTPAGE_H3);
+        Paragraph sjukskrivningslangdVarden = new Paragraph();
+        sjukskrivningslangdVarden.add(new Chunk("Mellan ", PdfExportConstants.FRONTPAGE_NORMAL));
+        sjukskrivningslangdVarden
+                .add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMin()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
+        sjukskrivningslangdVarden.add(new Chunk(" och ", PdfExportConstants.FRONTPAGE_NORMAL));
+        sjukskrivningslangdVarden
+                .add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMax()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
+        sjukskrivningslangdVarden.add(new Chunk(" dagar.", PdfExportConstants.FRONTPAGE_NORMAL));
+        valdSjukskrivninglangd.add(sjukskrivningslangdVarden);
 
-        // Visa Patientuppgifter
-        Paragraph visaPatientUppgifter = new Paragraph(FILTER_TITLE_VISAPATIENTUPPGIFTER, PdfExportConstants.FRONTPAGE_H3);
-        visaPatientUppgifter.add(new Phrase(printRequest.isShowPatientId() ? " Ja" : " Nej", PdfExportConstants.FRONTPAGE_NORMAL));
+        // Lakare
+        Paragraph valdaLakare = new Paragraph(FILTER_TITLE_VALDA_LAKARE, PdfExportConstants.FRONTPAGE_H3);
+        com.itextpdf.text.List lakarLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+        if (printRequest.getLakare() != null) {
+
+            printRequest.getLakare().forEach(dg -> lakarLista.add(new ListItem(dg, PdfExportConstants.FRONTPAGE_NORMAL)));
+        } else {
+            lakarLista.add(new ListItem(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : SELECTION_VALUE_ALLA,
+                    PdfExportConstants.FRONTPAGE_NORMAL));
+        }
+        valdaLakare.add(lakarLista);
 
         // Lagg ihop undergrupperna till filter
         Paragraph filter = new Paragraph(VALDA_FILTER, PdfExportConstants.FRONTPAGE_H2);
-        filter.add(valdaDiagnoser);
-        filter.add(valdaLakare);
-        filter.add(valdSjukskrivninglangd);
-        filter.add(valdAlder);
-        filter.add(valdSluttdaum);
         filter.add(valdFritext);
         filter.add(visaPatientUppgifter);
+        filter.add(valdAlder);
+        filter.add(valdaDiagnoser);
+        filter.add(valdSlutdatum);
+        filter.add(valdSjukskrivninglangd);
+        filter.add(valdaLakare);
 
         return filter;
     }
