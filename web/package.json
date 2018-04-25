@@ -4,8 +4,8 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "autoprefixer": "^7.1.4",
-    "bower": "1.8.2",
+    "autoprefixer": "^8.3.0",
+    "bower": "1.8.4",
     "compass-mixins": "0.12.10",
     "connect-livereload": "0.6.0",
     "grunt": "0.4.5",

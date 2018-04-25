@@ -156,7 +156,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
                 PdfExportConstants.FRONTPAGE_NORMAL));
 
         // Visa Patientuppgifter
-        Paragraph visaPatientUppgifter = new Paragraph(FILTER_TITLE_VISAPATIENTUPPGIFTER, PdfExportConstants.FRONTPAGE_H3);
+        Paragraph visaPatientUppgifter = new Paragraph(FILTER_TITLE_VISAPATIENTUPPGIFTER + ": ", PdfExportConstants.FRONTPAGE_H3);
         visaPatientUppgifter.add(new Phrase(printRequest.isShowPatientId() ? " Ja" : " Nej", PdfExportConstants.FRONTPAGE_NORMAL));
 
         // Ålder
@@ -236,7 +236,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     private Element getSjukfallsDefDesc(PrintSjukfallRequest printRequest) {
         Paragraph def = new Paragraph();
         def.add(new Paragraph(H2_SJUKFALLSINSTALLNING, PdfExportConstants.FRONTPAGE_H2));
-        def.add(new Phrase(MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG, PdfExportConstants.FRONTPAGE_NORMAL));
+        def.add(new Phrase(MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG + ": ", PdfExportConstants.FRONTPAGE_NORMAL));
         def.add(new Phrase(printRequest.getMaxIntygsGlapp() + " dagar", PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
         return def;
     }
