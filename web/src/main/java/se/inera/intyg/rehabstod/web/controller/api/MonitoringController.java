@@ -18,12 +18,10 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import se.inera.intyg.infra.cache.metrics.model.CacheStatistics;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 import se.inera.intyg.rehabstod.service.monitoring.HealthCheckServiceImpl;
 import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
@@ -55,13 +53,7 @@ public class MonitoringController {
 
     @RequestMapping(value = "/cachestats", produces = "application/json")
     public Response getCacheStatistcs() {
-        try {
-            CacheStatistics stats = healthCheck.getCacheStatistics();
-            String json = objectMapper.writeValueAsString(stats);
-            return Response.ok(json).build();
-        } catch (JsonProcessingException | IllegalStateException e) {
-            return Response.serverError().entity(e.getMessage()).build();
-        }
+        return Response.serverError().entity("Statistics is not supported.").build();
     }
 
     private String buildXMLResponse(HealthStatus status) {

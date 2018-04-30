@@ -53,7 +53,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
     public void onStartup(javax.servlet.ServletContext servletContext) throws ServletException {
         AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
 
-        appContext.register(ApplicationConfig.class, HsaConfiguration.class,
+        appContext.register(ApplicationConfig.class, CacheConfigurationFromInfra.class, HsaConfiguration.class,
                 PuConfiguration.class, PuCacheConfiguration.class,
                 ServiceConfig.class, IntygstjanstIntegrationConfiguration.class,
                 IntygstjanstIntegrationClientConfiguration.class,

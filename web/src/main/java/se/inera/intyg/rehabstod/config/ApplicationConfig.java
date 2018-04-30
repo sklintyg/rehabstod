@@ -28,8 +28,6 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import se.inera.intyg.infra.cache.metrics.CacheStatisticsService;
-import se.inera.intyg.infra.cache.metrics.CacheStatisticsServiceImpl;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.filters.PdlConsentGivenAssuranceFilter;
 import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
@@ -58,11 +56,6 @@ public class ApplicationConfig {
     public Bus init() {
         bus.setFeatures(new ArrayList<>(Arrays.asList(loggingFeature())));
         return bus;
-    }
-
-    @Bean
-    public CacheStatisticsService cacheStatisticsService() {
-        return new CacheStatisticsServiceImpl();
     }
 
     @Bean

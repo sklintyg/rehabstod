@@ -18,29 +18,13 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
+import org.springframework.context.annotation.ImportResource;
 
-import javax.annotation.PostConstruct;
-
-/**
- * Created by eriklupander on 2017-02-23.
- */
 @Configuration
-public class EmployeeNameCacheConfig {
-    public static final String EMPLOYEE_NAME_CACHE_NAME = "employeeName";
-    private static final String EMPLOYEE_NAME_CACHE_EXPIRY = "employee.name.cache.expiry";
+@ImportResource("classpath:basic-cache-config.xml")
+public class CacheConfigurationFromInfra {
 
-    @Value("${" + EMPLOYEE_NAME_CACHE_EXPIRY + "}")
-    private String employeeNameCacheExpirySeconds;
-
-    @Autowired
-    private RedisCacheOptionsSetter redisCacheOptionsSetter;
-
-    @PostConstruct
-    public void init() {
-        redisCacheOptionsSetter.createCache(EMPLOYEE_NAME_CACHE_NAME, EMPLOYEE_NAME_CACHE_EXPIRY);
+    public CacheConfigurationFromInfra() { //NOSONAR
     }
 }
