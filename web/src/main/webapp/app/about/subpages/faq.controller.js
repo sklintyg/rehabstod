@@ -109,7 +109,6 @@ angular.module('rehabstodApp')
                 do {
                     location += element.offsetTop;
                     element = element.offsetParent;
-                    // NOTE: This is a patch made to fix a bug when scrolling within a container. In the container case, we dont wan't to iterate further up than the container wer'e scrolling in!
                 } while (element &&  element.id !== containerId);
 
                 return location;
