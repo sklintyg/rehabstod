@@ -27,28 +27,18 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
  */
 public class GetConfigResponse {
     private List<DiagnosKapitel> diagnosKapitelList;
-    private String statistikTjanstBaseUrl;
     private String webcertViewIntygTemplateUrl;
     private String version;
 
-    public GetConfigResponse(List<DiagnosKapitel> diagnosKapitelList, String statistikTjanstBaseUrl, String webcertViewIntygTemplateUrl,
+    public GetConfigResponse(List<DiagnosKapitel> diagnosKapitelList, String webcertViewIntygTemplateUrl,
             String version) {
         this.diagnosKapitelList = diagnosKapitelList;
-        this.statistikTjanstBaseUrl = statistikTjanstBaseUrl;
         this.webcertViewIntygTemplateUrl = webcertViewIntygTemplateUrl;
         this.version = version;
     }
 
     public List<DiagnosKapitel> getDiagnosKapitelList() {
         return diagnosKapitelList;
-    }
-
-    public String getStatistikTjanstBaseUrl() {
-        return statistikTjanstBaseUrl;
-    }
-
-    public void setStatistikTjanstBaseUrl(String statistikTjanstBaseUrl) {
-        this.statistikTjanstBaseUrl = statistikTjanstBaseUrl;
     }
 
     public String getWebcertViewIntygTemplateUrl() {

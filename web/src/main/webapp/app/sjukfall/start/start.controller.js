@@ -1,10 +1,8 @@
 angular.module('rehabstodApp')
     .controller('SjukfallStartCtrl', function($scope, $state, $http,
-        UserModel, SjukfallSummaryModel, SjukfallSummaryProxy, APP_CONFIG) {
+        UserModel, SjukfallSummaryModel, SjukfallSummaryProxy) {
         'use strict';
         
-        $scope.sjunetAvailable = false;
-
         function _init() {
             SjukfallSummaryModel.reset();
             SjukfallSummaryProxy.get().then(
@@ -31,17 +29,5 @@ angular.module('rehabstodApp')
             }
         }
 
-        function _testSjunetConnection() {
-            $http.get(APP_CONFIG.statistikTjanstBaseUrl + '/api/ping').then(function() {
-                    // Success
-                    $scope.sjunetAvailable = true;
-                },
-                function() {
-                    // Failure
-                    $scope.sjunetAvailable = false;
-                });
-        }
-
         _init();
-        _testSjunetConnection();
     });

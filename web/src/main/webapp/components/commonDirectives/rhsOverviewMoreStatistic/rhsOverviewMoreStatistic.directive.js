@@ -23,9 +23,7 @@ angular.module('rehabstodApp').directive('rhsOverviewMoreStatistic',
 
         return {
             restrict: 'E',
-            scope: {
-                sjunetAvailable: '='
-            },
+            scope: {},
             templateUrl: '/components/commonDirectives/rhsOverviewMoreStatistic/rhsOverviewMoreStatistic.directive.html'
         };
     }]);
