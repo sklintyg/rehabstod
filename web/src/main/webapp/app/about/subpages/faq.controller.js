@@ -19,15 +19,16 @@
 
 angular.module('rehabstodApp')
     .controller('AboutFaqPageCtrl',
-        function($scope, _, messageService) {
+        function($scope, _, messageService, $window, smoothScroll) {
             'use strict';
 
-            function getQuestions(prefix) {
+            function getQuestions(prefix, idPrefix) {
                 var questions = [];
                 var numberOfQuestions = 1;
 
                 while(hasQuestion(prefix, numberOfQuestions)) {
                     questions.push({
+                        id: 'faq-' + idPrefix + '-' + numberOfQuestions,
                         title: prefix + numberOfQuestions + '.title',
                         closed: true,
                         body: prefix + numberOfQuestions + '.body'
@@ -50,19 +51,19 @@ angular.module('rehabstodApp')
             faq.push({
                 title: 'Sjukfall',
                 icon: 'fa-stethoscope',
-                questions: getQuestions('faq.sickness.')
+                questions: getQuestions('faq.sickness.', 'sickness')
             });
 
             faq.push({
                 title: 'Intyg',
                 icon: 'fa-file-text-o',
-                questions: getQuestions('faq.certificate.')
+                questions: getQuestions('faq.certificate.', 'certificate')
             });
 
             faq.push({
                 title: 'Patient',
                 icon: 'fa-user-o',
-                questions: getQuestions('faq.patient.')
+                questions: getQuestions('faq.patient.', 'patient')
             });
 
 
@@ -75,6 +76,44 @@ angular.module('rehabstodApp')
             $scope.closeAll = function() {
                 toggleQuestions(true);
             };
+
+            $scope.toggleQuestion = function(question) {
+                question.closed = !question.closed;
+
+                if (!question.closed) {
+                    var elementToScrollTo = $('#' + question.id);
+
+                    var windowElement = $($window);
+                    var windowHeight = windowElement.height() / 2;
+                    var bodyElement = $('#rhs-body');
+                    var scrollTop = bodyElement.scrollTop();
+                    var elementPosition = findElementPosition(elementToScrollTo[0], 'rhs-body');
+
+                    if (elementPosition - scrollTop > windowHeight) {
+                        var offset = 100;
+                        var options = {
+                            duration: 500,
+                            easing: 'easeInOutQuart',
+                            offset: offset,
+                            containerId: 'rhs-body'
+                        };
+
+                        //scroll to this questions panel heading, centered vertically
+                        smoothScroll(elementToScrollTo[0], options);
+                    }
+                }
+            };
+
+            function findElementPosition(element, containerId) {
+                var location = 0;
+                do {
+                    location += element.offsetTop;
+                    element = element.offsetParent;
+                    // NOTE: This is a patch made to fix a bug when scrolling within a container. In the container case, we dont wan't to iterate further up than the container wer'e scrolling in!
+                } while (element &&  element.id !== containerId);
+
+                return location;
+            }
 
             function toggleQuestions(closed) {
                 _.each(faq, function(category) {

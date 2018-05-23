@@ -31,5 +31,6 @@ angular.module('rehabstodApp', [
     'taiPlaceholder',
     'ngStorage',
     'lodash',
-    'rehabstodcommon.dynamiclink'
+    'rehabstodcommon.dynamiclink',
+    'smoothScroll'
 ]);
