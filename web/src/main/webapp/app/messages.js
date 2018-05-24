@@ -205,7 +205,7 @@ var rhsMessages = {
         'faq.sickness.2.title' : 'Vad är ett pågående sjukfall?',
         'faq.sickness.2.body' : '<p>Med pågående sjukfall menas de sjukfall som har ett giltigt intyg vid inloggningstillfället.</p>',
 
-        'faq.sickness.3.title' : 'Varför ser jag fler sjukfall i <LINK:statistiktjanstenTooltip> än i Rehabstöd?',
+        'faq.sickness.3.title' : 'Varför ser jag fler sjukfall i <LINK:statistiktjansten> än i Rehabstöd?',
         'faq.sickness.3.body' : '<p>I Intygsstatistik redovisas totalt antal sjukfall för en månad åt gången. ' +
             'Alla sjukfall som pågått någon gång under månaden, även de som har avslutats tidigare under månaden, räknas med där. ' +
             'I Rehabstöd däremot visas bara sjukfall som pågår just nu och som inte har avslutats än.</p>' +

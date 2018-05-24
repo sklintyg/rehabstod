@@ -31,6 +31,12 @@
     "target": "_blank"
   },
   {
+    "key": "statistiktjansten",
+    "url": "https://statistik.intygstjanster.se/",
+    "text": "Intygsstatistik",
+    "target": "_blank"
+  },
+  {
     "key": "ineraHomepage",
     "url": "https://www.inera.se",
     "text": "www.inera.se",
