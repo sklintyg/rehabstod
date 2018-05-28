@@ -41,8 +41,8 @@ import static org.junit.Assert.assertNull;
  * Created by eriklupander on 2015-08-05.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = { PersistenceConfigTest.class, PersistenceConfigDev.class })
-@ActiveProfiles({ "dev" })
+@ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = {PersistenceConfigTest.class, PersistenceConfigDev.class})
+@ActiveProfiles({"dev"})
 @Transactional
 public class AnvandarPreferenceRepositoryTest {
 
@@ -59,7 +59,7 @@ public class AnvandarPreferenceRepositoryTest {
     public void testFindOne() {
         AnvandarPreference saved = buildAnvandarPreference(HSA_ID, KEY_1, VALUE_1);
         anvandarMetadataRepository.save(saved);
-        AnvandarPreference read = anvandarMetadataRepository.findOne(saved.getInternReferens());
+        AnvandarPreference read = anvandarMetadataRepository.findById(saved.getInternReferens()).get();
         assertEquals(saved, read);
     }
 
