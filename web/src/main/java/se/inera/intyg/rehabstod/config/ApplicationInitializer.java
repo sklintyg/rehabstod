@@ -28,7 +28,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
-import se.inera.intyg.infra.integration.pu.cache.PuCacheConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
@@ -54,8 +53,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
 
         appContext.register(ApplicationConfig.class, CacheConfigurationFromInfra.class, HsaConfiguration.class,
-                PuConfiguration.class, PuCacheConfiguration.class,
-                ServiceConfig.class, IntygstjanstIntegrationConfiguration.class,
+                PuConfiguration.class, ServiceConfig.class, IntygstjanstIntegrationConfiguration.class,
                 IntygstjanstIntegrationClientConfiguration.class,
                 IntygstjanstIntegrationStubConfiguration.class,
                 SRSIntegrationConfiguration.class,
