@@ -40,7 +40,7 @@ ext {
     restAssuredVersion = "2.9.0"
     slf4jVersion = "1.7.10"
     springContextVersion = "4.3.16.RELEASE"
-    springDataJpaVersion = "2.0.6.RELEASE"
+    springDataJpaVersion = "1.11.12.RELEASE"
     springSecurityExtensionsVersion = "1.0.3.RELEASE"
     springSecurityVersion = "4.2.5.RELEASE"
     springWsCoreVersion = "2.2.2.RELEASE"
