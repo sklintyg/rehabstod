@@ -1,0 +1,69 @@
+rhs-header-unit {
+  $rhs-header-unit-min-width: 120px;
+
+  //default is to act as a non-growing, shrinkable flex-item
+  flex: 0 1 auto;
+
+  //flex items must a some sort of width applied for it to be able to shrink
+  //NOTE: when using min-width:0px (no unit), scss processing optimised it by
+  // removing the unit, casuing rendering errorss in IE that doesnt handle unitless min-widths in flex context. took me 6 hours to find that ugh!
+  min-width: $rhs-header-unit-min-width;
+
+  display: block;
+  padding: 0 16px;
+  white-space: nowrap;
+
+  .btn-link {
+    padding: 8px 15px;
+
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      color: $rs-color-01;
+    }
+  }
+
+  .header-unit {
+    //default is to act as a non-growing, shrinkable flex-item
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    //flex items must a some sort of width applied for it to be able to shrink
+    //NOTE: when using min-width:0px (no unit), scss processing optimised it by
+    // removing the unit, casuing rendering errorss in IE that doesnt handle unitless min-widths in flex context. took me 6 hours to find that ugh!
+    min-width: $rhs-header-unit-min-width;
+
+    .single-text-row-container {
+      //lay out items horizontally
+      display: flex;
+
+      //if we user 0px / 0%, scss minification removes the unit - causing flexbox errors in IE, so we set 1px
+      min-width: 1px;
+
+      @media (max-width: $screen-xs-max) {
+        flex-direction: column;
+      }
+    }
+  }
+
+  .header-change-unit-link {
+    margin-left: 10px;
+  }
+}
+
+
+.select-care-unit-modal {
+  margin-top: 30px;
+
+  .modal-body {
+    overflow-y: auto;
+    min-height: 200px;
+    max-height: 200px;
+
+    @media (min-height: 400px) {
+      max-height: calc(100vh - 220px);
+    }
+  }
+}

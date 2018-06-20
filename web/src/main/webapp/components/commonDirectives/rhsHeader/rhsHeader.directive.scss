@@ -1,7 +1,6 @@
 rhs-header {
 
   $rhs-header-user-min-width: 100px;
-  $rhs-header-unit-min-width: 120px;
 
   @extend %rs-typo-04;
 
@@ -22,10 +21,14 @@ rhs-header {
   a {
     @extend %rs-typo-06;
     color: $rs-color-02;
+
+    &:hover,
+    &:active {
+      color: $rs-color-02;
+    }
   }
 
   .header-user,
-  .header-unit,
   .header-links,
   .header-logo {
     //Act as a flex horizontal container
@@ -62,32 +65,6 @@ rhs-header {
     min-width: $rhs-header-user-min-width;
   }
 
-  .header-unit {
-    //default is to act as a non-growing, shrinkable flex-item
-    flex: 0 1 auto;
-
-    //flex items must a some sort of width applied for it to be able to shrink
-    //NOTE: when using min-width:0px (no unit), scss processing optimised it by
-    // removing the unit, casuing rendering errorss in IE that doesnt handle unitless min-widths in flex context. took me 6 hours to find that ugh!
-    min-width: $rhs-header-unit-min-width;
-
-    .single-text-row-container {
-      //lay out items horizontally
-      display: flex;
-
-      //if we user 0px / 0%, scss minification removes the unit - causing flexbox errors in IE, so we set 1px
-      min-width: 1px;
-
-      @media (max-width: $screen-xs-max) {
-        flex-direction: column;
-      }
-    }
-  }
-
-  .header-change-unit-link {
-    margin-left: 10px;
-  }
-
   .header-two-row {
     display: flex;
     flex: 0 1 auto;
@@ -107,18 +84,34 @@ rhs-header {
 
     padding-right: 25px;
   }
-}
 
-.select-care-unit-modal {
-  margin-top: 30px;
+  //Override bootstraps default dropdown for this context
+  .dropdown-menu {
+    min-width: 0;
+    position: relative;
+    padding: 20px 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-clip: border-box;
+    background-color: $rs-color-04;
 
-  .modal-body {
-    overflow-y: auto;
-    min-height: 200px;
-    max-height: 200px;
+    margin: 0;
+    border-radius: 0;
+    border-width: 0 6px;
+    border-style: solid;
+    border-color: transparent;
+    border-image: none;
 
-    @media (min-height: 400px) {
-      max-height: calc(100vh - 220px);
+    > li > a {
+      @extend %rs-typo-06;
+      color: $rs-color-02;
+      text-decoration: none;
+      &:focus, &:hover {
+        background-color: $rs-color-04;
+        color: $rs-color-02;
+        text-decoration: underline;
+      }
     }
   }
 }

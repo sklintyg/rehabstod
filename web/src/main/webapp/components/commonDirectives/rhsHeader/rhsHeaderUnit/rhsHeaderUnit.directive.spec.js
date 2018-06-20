@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe('Directive: rhsHeader', function () {
+describe('Directive: rhsHeaderUnit', function () {
     'use strict';
 
     // load the controller's module
@@ -37,7 +37,7 @@ describe('Directive: rhsHeader', function () {
         UserModel = _UserModel_;
 
         element =
-            $compile(' <rhs-header />')(
+            $compile(' <rhs-header-unit />')(
                 $scope);
         $scope.$digest();
 
@@ -45,23 +45,55 @@ describe('Directive: rhsHeader', function () {
 
     }));
 
+    describe('getVardgivare', function() {
 
-    it('show description if user is lakare', function() {
-        var role = {
-            name: 'LAKARE',
-            desc: 'Läkare'
-        };
+        it('Empty userModel', function() {
+            UserModel.set({});
+            expect(elementScope.getVardgivare()).toBe('');
+        });
 
-        expect(elementScope.showRoleDescription(role)).toBeTruthy();
+        it('Vald vårdgivare', function() {
+            UserModel.set({
+                valdVardenhet: {},
+                valdVardgivare: {
+                    namn: 'vg1'
+                }
+            });
+            expect(elementScope.getVardgivare()).toBe('vg1');
+        });
+
     });
 
-    it('hide description if user is REHABKOORDINATOR', function() {
-        var role = {
-            name: 'REHABKOORDINATOR',
-            desc: 'Rehabkoordinator'
-        };
+    describe('getVardenhet', function() {
 
-        expect(elementScope.showRoleDescription(role)).toBeFalsy();
+        it('Empty userModel', function() {
+            UserModel.set({});
+            expect(elementScope.getVardenhet()).toBe('');
+        });
+
+        it('Vald enhet, ingen mottagning', function() {
+            UserModel.set({
+                valdVardenhet: {
+                    namn: 'enhet1'
+                }
+            });
+            expect(elementScope.getVardenhet()).toBe('enhet1');
+        });
+
+        it('Vald enhet, mottagning', function() {
+            UserModel.set({
+                valdVardenhet: {
+                    parentHsaId: '123',
+                    namn: 'enhet1'
+                }
+            });
+
+            UserModel.getUnitNameById = function() {
+                return 'parent';
+            };
+
+            expect(elementScope.getVardenhet()).toBe('parent - enhet1');
+        });
     });
 });
 

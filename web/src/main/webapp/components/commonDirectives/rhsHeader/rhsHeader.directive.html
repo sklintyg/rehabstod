@@ -15,25 +15,7 @@
   </div>
 </div>
 
-<div class="header-unit" data-ng-if="user.loggedIn">
-
-  <i class="fa fa-building-o"></i>
-
-  <div class="header-two-row">
-    <div id="vardgivareNameLabel" class="truncate-when-needed">{{getVardgivare()}}</div>
-    <div class="truncate-when-needed">
-      <span class="hidden-xs">&nbsp;-&nbsp;</span><span id="verksamhetsNameLabel">{{getVardenhet()}}</span>
-    </div>
-  </div>
-  <a
-     id="rhs-header-other-locations"
-     class="header-change-unit-link"
-     href="javascript:void(0)"
-     ng-if="user.totaltAntalVardenheter > 1"
-     data-ng-click="openChangeCareUnitDialog()">
-    Byt enhet
-  </a>
-</div>
+<rhs-header-unit  data-ng-if="showUnit()"></rhs-header-unit>
 
 <div class="header-links" data-ng-if="user.loggedIn">
   <a id="logoutLink" href="{{::logoutLocation}}"><span message key="common.logout"></span></a>
