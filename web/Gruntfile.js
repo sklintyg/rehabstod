@@ -10,7 +10,6 @@ module.exports = function(grunt) {
         connect: 'grunt-contrib-connect',
         useminPrepare: 'grunt-usemin',
         ngtemplates: 'grunt-angular-templates',
-        protractor: 'grunt-protractor-runner',
         injector: 'grunt-injector',
         configureProxies: 'grunt-connect-proxy',
         sasslint: 'grunt-sass-lint'
@@ -342,19 +341,6 @@ module.exports = function(grunt) {
             }
         },
 
-        protractor: {
-            options: {
-                configFile: 'protractor.conf.js'
-            },
-            chrome: {
-                options: {
-                    args: {
-                        browser: 'chrome'
-                    }
-                }
-            }
-        },
-
 
         // Compiles Sass to CSS
         sass: {
@@ -469,50 +455,23 @@ module.exports = function(grunt) {
         this.async();
     });
 
-    grunt.registerTask('serve', function(target) {
+    grunt.registerTask('serve', [
+        'injector:sass',
+        'sass',
+        'postcss',
+        'injector',
+        'wiredep',
+        'configureProxies:dev',
+        'connect:dev',
+        'wait',
+        'open',
+        'watch'
+    ]);
 
-        grunt.task.run([
-            'injector:sass',
-            'sass',
-            'postcss',
-            'injector',
-            'wiredep',
-            'configureProxies:dev',
-            'connect:dev',
-            'wait',
-            'open',
-            'watch'
-        ]);
-    });
-
-    grunt.registerTask('test', function(target) {
-        if (target === 'client') {
-            return grunt.task.run([
-                'injector:sass',
-                'sass',
-                'injector',
-                'postcss',
-                'karma'
-            ]);
-        }
-
-        else if (target === 'e2e') {
-            return grunt.task.run([
-                'injector:sass',
-                'injector',
-                'wiredep',
-                'postcss',
-                'express:dev',
-                'protractor'
-            ]);
-        }
-
-        else {
-            grunt.task.run([
-                'test:client'
-            ]);
-        }
-    });
+    grunt.registerTask('test', [
+        'injector:scripts',
+        'karma'
+    ]);
 
     grunt.registerTask('build_no_minify', [
         'clean:dist',

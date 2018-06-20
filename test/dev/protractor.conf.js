@@ -67,7 +67,10 @@ exports.config = {
 
         // Run parallell instances of same browser (combine with any browser above)
         shardTestFiles: false, // set to true to divide tests among instances
-        maxInstances: 1 // change to >1 for parallell instances
+        maxInstances: 1, // change to >1 for parallell instances
+        chromeOptions: {
+            args: [ "--no-sandbox", "--headless", "--disable-gpu", "--window-size=1600x1024" ]
+        }
     },
 
     // Run *different browsers* in parallell (optional, completely replaces 'capabilities' above)
@@ -112,7 +115,7 @@ exports.config = {
         browser.ignoreSynchronization = false;
 
         // We need a certain size of the window to make sure everything is visible
-        browser.manage().window().setSize(1600, 1000);
+        browser.manage().window().setSize(1600, 1024);
 
         global.rhsTestTools = require('rehabstod-testtools');
 
