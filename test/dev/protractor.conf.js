@@ -67,10 +67,10 @@ exports.config = {
 
         // Run parallell instances of same browser (combine with any browser above)
         shardTestFiles: false, // set to true to divide tests among instances
-        maxInstances: 1, // change to >1 for parallell instances
-        chromeOptions: {
-            args: [ "--no-sandbox", "--headless", "--disable-gpu", "--window-size=1600x1024" ]
-        }
+        maxInstances: 1 // change to >1 for parallell instances
+        // chromeOptions: {
+        //     args: [ "--no-sandbox", "--headless", "--disable-gpu", "--window-size=1600x1024" ]
+        // }
     },
 
     // Run *different browsers* in parallell (optional, completely replaces 'capabilities' above)
