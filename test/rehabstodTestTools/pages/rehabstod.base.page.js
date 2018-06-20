@@ -57,8 +57,11 @@ var RehabstodBasePage = Class._extend({
     clickStart: function() {
         this.navbarStart().click();
     },
-    navbarLocation: function() {
-        return element(by.id('location'));
+    navbarVardgivare: function() {
+        return element(by.id('vardgivareNameLabel'));
+    },
+    navbarVardenhet: function() {
+        return element(by.id('verksamhetsNameLabel'));
     },
     navbarAbout: function() {
         return element(by.id('navbar-link-about'));

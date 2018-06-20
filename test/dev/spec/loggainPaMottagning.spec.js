@@ -44,9 +44,8 @@ describe('Flöde som rehabkoordinator - loggar in på mottagning', function() {
         });
 
         it('skall ha med mottagning i unit kontext', function() {
-            var today = new Date().toISOString().split('T')[0];
-
-            expect(startPage.navbarLocation().getText()).toBe(today + ' - Landstinget Västmanland - Vårdcentrum i Väst - Akuten');
+            expect(startPage.navbarVardgivare().getText()).toBe('Landstinget Västmanland');
+            expect(startPage.navbarVardenhet().getText()).toBe('Vårdcentrum i Väst - Akuten');
         });
 
 

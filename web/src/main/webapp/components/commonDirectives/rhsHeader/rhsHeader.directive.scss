@@ -1,0 +1,124 @@
+rhs-header {
+
+  $rhs-header-user-min-width: 100px;
+  $rhs-header-unit-min-width: 120px;
+
+  @extend %rs-typo-04;
+
+  // Is a flex (root) container and is not itself a flexitem
+  display: flex;
+  //Stretch on cross-axis to make items 100% height
+  align-items: stretch;
+  justify-content: space-between;
+  background-color: $rs-color-04;
+  color: $rs-color-01;
+  height: 80px;
+
+  i.fa {
+    font-size: 24px;
+    margin-right: 7px;
+  }
+
+  a {
+    @extend %rs-typo-06;
+    color: $rs-color-02;
+  }
+
+  .header-user,
+  .header-unit,
+  .header-links,
+  .header-logo {
+    //Act as a flex horizontal container
+    display: flex;
+    //where its items are vertically centered..
+    align-items: center;
+
+    padding: 0 16px;
+    white-space: nowrap;
+  }
+
+  .header-logo {
+    flex: 1;
+    min-width: 172px;
+    max-width: 172px;
+
+    img {
+      height: 30px;
+    }
+
+    @media (max-width: $screen-xs-max) {
+      min-width: 62px;
+      max-width: 62px;
+    }
+  }
+
+  .header-user {
+    //default for this directive is to act as a non-growing, (aggressivly) shrinkable flex-item
+    flex: 0 3 auto;
+
+    //flex items must a some sort of width applied for it to be able to shrink
+    //NOTE: when using min-width:0px (no unit), scss processing optimised it by
+    // removing the unit, casuing rendering errorss in IE that doesnt handle unitless min-widths in flex context. took me 6 hours to find that ugh!
+    min-width: $rhs-header-user-min-width;
+  }
+
+  .header-unit {
+    //default is to act as a non-growing, shrinkable flex-item
+    flex: 0 1 auto;
+
+    //flex items must a some sort of width applied for it to be able to shrink
+    //NOTE: when using min-width:0px (no unit), scss processing optimised it by
+    // removing the unit, casuing rendering errorss in IE that doesnt handle unitless min-widths in flex context. took me 6 hours to find that ugh!
+    min-width: $rhs-header-unit-min-width;
+
+    .single-text-row-container {
+      //lay out items horizontally
+      display: flex;
+
+      //if we user 0px / 0%, scss minification removes the unit - causing flexbox errors in IE, so we set 1px
+      min-width: 1px;
+
+      @media (max-width: $screen-xs-max) {
+        flex-direction: column;
+      }
+    }
+  }
+
+  .header-change-unit-link {
+    margin-left: 10px;
+  }
+
+  .header-two-row {
+    display: flex;
+    flex: 0 1 auto;
+    min-width: 1px;
+
+
+    @media (max-width: $screen-xs-max) {
+      flex-direction: column;
+    }
+  }
+
+  .header-links {
+    //default is to act as a growing, shrinkable flex-item, taking excessive widths
+    flex: 1 1 auto;
+    //push all items to the right
+    justify-content: flex-end;
+
+    padding-right: 25px;
+  }
+}
+
+.select-care-unit-modal {
+  margin-top: 30px;
+
+  .modal-body {
+    overflow-y: auto;
+    min-height: 200px;
+    max-height: 200px;
+
+    @media (min-height: 400px) {
+      max-height: calc(100vh - 220px);
+    }
+  }
+}

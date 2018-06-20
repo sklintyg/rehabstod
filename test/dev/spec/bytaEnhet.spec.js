@@ -83,14 +83,14 @@ describe('Logga in som Kerstin Johansson', function() {
 
 
     function bytEnhet() {
-        var today = new Date().toISOString().split('T')[0];
-
-        expect(startPage.navbarLocation().getText()).toBe(today + ' - Rehabstöd Vårdgivare 1 - Rehabstöd Enhet 2');
+        expect(startPage.navbarVardgivare().getText()).toBe('Rehabstöd Vårdgivare 1');
+        expect(startPage.navbarVardenhet().getText()).toBe('Rehabstöd Enhet 2');
 
         startPage.clickBytVardenhet();
         element(by.id('rhs-vardenhet-selector-select-active-unit-TSTNMT2321000156-105Q-link')).click();
 
-        expect(startPage.navbarLocation().getText()).toBe(today + ' - Rehabstöd Vårdgivare 1 - Rehabstöd Enhet 3');
+        expect(startPage.navbarVardgivare().getText()).toBe('Rehabstöd Vårdgivare 1');
+        expect(startPage.navbarVardenhet().getText()).toBe('Rehabstöd Enhet 3');
     }
 
 

@@ -59,6 +59,11 @@ angular
                 _redirect($state, toState.name, event, 'app.index', {}, {
                     location: 'replace'
                 });
+            } else if (UserModel.get().loggedIn && toState.name === 'app.index') {
+                // app.index is the only valid route when not authenticated
+                _redirect($state, toState.name, event, 'app.sjukfall', {}, {
+                    location: 'replace'
+                });
             } else if (UserModel.get().loggedIn && UserModel.get().valdVardenhet === null && toState.name !== 'app.selectunit') {
                 // app.selectunit is the only valid route when no vardenhet selected
                 _redirect($state, toState.name, event, 'app.selectunit', {}, {
