@@ -81,6 +81,9 @@
         },
         "vardgivareHsaId" : {
           "type" : ["string", "null"]
+        },
+        "vardgivareOrgnr" : {
+          "type" : ["string", "null"]
         }
       },
       "type": ["object", "null"]
