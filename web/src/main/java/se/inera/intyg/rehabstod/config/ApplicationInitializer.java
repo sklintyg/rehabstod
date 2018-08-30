@@ -28,6 +28,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
+import se.inera.intyg.infra.security.filter.SecurityHeadersFilter;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
@@ -39,6 +40,7 @@ import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigJndi;
 import se.inera.intyg.rehabstod.web.filters.SessionTimeoutFilter;
 
 import javax.servlet.FilterRegistration;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
@@ -110,6 +112,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
                 HiddenHttpMethodFilter.class);
         hiddenHttpMethodFilter.addMappingForUrlPatterns(null, false, "/*");
 
+        registerSecurityHeadersFilter(servletContext);
+
         // CXF services filter
         ServletRegistration.Dynamic cxfServlet = servletContext.addServlet("services", new CXFServlet());
         cxfServlet.setLoadOnStartup(1);
@@ -118,6 +122,11 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         // Listeners for session audit logging
         servletContext.addListener(new HttpSessionEventPublisher());
         servletContext.addListener(new RequestContextListener());
+    }
+
+    private void registerSecurityHeadersFilter(ServletContext servletContext) {
+        SecurityHeadersFilter filter = new SecurityHeadersFilter();
+        servletContext.addFilter("securityHeadersFilter", filter).addMappingForUrlPatterns(null, true, "/*");
     }
 
 }
