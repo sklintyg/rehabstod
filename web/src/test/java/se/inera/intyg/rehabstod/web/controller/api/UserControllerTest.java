@@ -31,11 +31,15 @@ import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
+import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.PreferenceRequest;
 
 import java.util.Collections;
 
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -46,6 +50,10 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class UserControllerTest {
+
+    private static final String KEY = "key";
+
+    private static final String HSA_ID = "abcdefghijkl";
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -62,6 +70,9 @@ public class UserControllerTest {
     @Mock
     private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
+    @Mock
+    private AnvandarPreferenceRepository anvandarPreferenceRepository;
+
     @InjectMocks
     private UserController userController = new UserController();
 
@@ -71,6 +82,7 @@ public class UserControllerTest {
         when(userService.getUser()).thenReturn(rehabUserMock);
         when(rehabUserMock.getValdVardenhet()).thenReturn(new Vardenhet("123", "enhet"));
         when(rehabUserMock.getValdVardgivare()).thenReturn(new Vardenhet("456", "vardgivare"));
+        when(rehabUserMock.getHsaId()).thenReturn(HSA_ID);
         when(rehabstodUnitChangeService.changeValdVardenhet("123", rehabUserMock)).thenReturn(true);
     }
 
@@ -102,6 +114,19 @@ public class UserControllerTest {
 
         verify(userService).getUser();
         verify(rehabstodUnitChangeService).changeValdVardenhet(eq(req.getId()), eq(rehabUserMock));
-
     }
+
+    @Test
+    public void testUpdatingExistingPreference() throws Exception {
+        AnvandarPreference anvPref = new AnvandarPreference(HSA_ID, KEY, "old value");
+        when(anvandarPreferenceRepository.findByHsaIdAndKey(eq(HSA_ID), eq(KEY))).thenReturn(anvPref);
+
+        PreferenceRequest req = new PreferenceRequest();
+        req.setKey(KEY);
+        req.setValue("new value");
+        userController.updatePref(req);
+
+        assertEquals("new value", anvPref.getValue());
+    }
+
 }
