@@ -85,6 +85,10 @@ rhs-header {
     padding-right: 25px;
   }
 
+  .header-link {
+    margin-left: 10px;
+  }
+
   //Override bootstraps default dropdown for this context
   .dropdown-menu {
     min-width: 0;

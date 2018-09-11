@@ -23,6 +23,69 @@ angular.module('rehabstodApp').factory('UserProxy',
         'use strict';
 
         /*
+         * Get user preference settings for logged in user
+         */
+        function _getSettings() {
+            $log.debug('_getSettings');
+
+            var promise = $q.defer();
+
+            var restPath = '/api/user/preferences';
+            var config =  {
+                timeout: networkConfig.defaultTimeout
+            };
+            $log.debug('REST call: ' + restPath);
+            $http.get(restPath, config).then(function(response) {
+                $log.debug(restPath + ' - success');
+
+                if (typeof response !== 'undefined') {
+                    promise.resolve(response.data);
+                } else {
+                    $log.debug('JSON response syntax error. Rejected.');
+                    promise.reject(null);
+                }
+            }, function(response) {
+                $log.error('error ' + response.status);
+                // Let calling code handle the error of no data response
+                promise.reject(response.data);
+            });
+
+            return promise.promise;
+        }
+
+        /*
+         * Get user data for logged in user
+         */
+        function _saveSettings(settingsModel) {
+            $log.debug('_saveSettings');
+
+            var promise = $q.defer();
+
+            var restPath = '/api/user/preferences';
+            var dto = settingsModel;
+            var config =  {
+                timeout: networkConfig.defaultTimeout
+            };
+            $log.debug('REST call: _changeSelectedUnit ' + restPath);
+            $http.post(restPath, dto, config).then(function(response) {
+                $log.debug(restPath + ' - success');
+
+                if (typeof response !== 'undefined') {
+                    promise.resolve(response.data);
+                } else {
+                    $log.debug('JSON response syntax error. Rejected.');
+                    promise.reject(null);
+                }
+            }, function(response) {
+                $log.error('error ' + response.status);
+                // Let calling code handle the error of no data response
+                promise.reject(response.data);
+            });
+
+            return promise.promise;
+        }
+
+        /*
          * Get user data for logged in user
          */
         function _changeSelectedUnit(newUnitId) {
@@ -97,6 +160,8 @@ angular.module('rehabstodApp').factory('UserProxy',
         // Return public API for the service
         return {
             changeSelectedUnit: _changeSelectedUnit,
-            givePdlConsent: _givePdlConsent
+            givePdlConsent: _givePdlConsent,
+            getSettings: _getSettings,
+            saveSettings: _saveSettings
         };
     });

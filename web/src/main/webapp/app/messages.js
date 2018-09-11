@@ -115,14 +115,10 @@ var rhsMessages = {
         'label.filter.allselected' : 'Alla valda',
 
         // Settings
-        'label.settings.header' : 'Antal dagar mellan intyg',
-        'label.settings.help' : 'Ställ in det antal dagar det maximalt får vara mellan två intyg för att de ska räknas till samma sjukfall.',
-        'label.settings.info' : 'Max antal dagar uppehåll mellan intyg är satt till:',
-
-        'label.settings.modal.body' : 'Välj hur många dagars uppehåll det maximalt får vara mellan två intyg för att de ska räknas till samma sjukfall.',
-        'label.settings.modal.label' : 'Välj max antal dagars uppehåll mellan intygen',
-
-
+        'settings.modal.header' : 'Inställningar',
+        'settings.modal.maxantaldagarmellanintyg.title': 'Antal dagar mellan intyg',
+        'settings.modal.maxantaldagarmellanintyg.help' : 'Ställ in det antal dagar det maximalt får vara mellan två intyg för att de ska räknas till samma sjukfall. Välj 0-90 dagar.',
+        'settings.modal.maxantaldagarmellanintyg.description' : 'Välj max antal dagars uppehåll mellan intygen:',
 
         //
         'label.gender.male': 'Man',

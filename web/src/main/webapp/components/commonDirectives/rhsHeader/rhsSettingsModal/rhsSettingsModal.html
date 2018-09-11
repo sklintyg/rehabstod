@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <button class="close" data-dismiss="modal" data-ng-click="cancel()">×</button>
+  <h4 class="modal-title">{{::'settings.modal.header' | message}}</h4>
+</div>
+<div class="modal-body rhs-settings-modal">
+
+  <div class="form-group" ng-repeat="setting in settings">
+    <h3>
+      <span message key="{{::setting.title}}" disable-highlight-words="true"></span>
+      <i uib-tooltip="{{::setting.help | lowercase | message}}" class="fa fa-question-circle"></i>
+    </h3>
+    <div class="row">
+      <div class="col-md-8">
+        <span message key="{{::setting.description}}" disable-highlight-words="true"></span>
+      </div>
+      <div class="col-md-4">
+        <rhs-numeric-range-input external-model="setting.value"
+                                 min="0"
+                                 max="90"></rhs-numeric-range-input>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" id="rhs-settings-modal-save-btn" data-ng-click="save()">
+    <i class="fa fa-spinner" data-ng-class="{'fa-spin': saving}" data-ng-show="saving"></i> {{::'common.save' | message}}
+  </button>
+  <button class="btn btn-default" id="rhs-settings-modal-close-btn" data-dismiss="modal" data-ng-click="cancel()">{{::'common.cancel' | message}}</button>
+</div>
