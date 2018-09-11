@@ -42,12 +42,10 @@ describe('Hantera filtret', function() {
 
     it('Göm filtret', function() {
         expect(sjukfallPage.resetButton().isPresent()).toBeTruthy();
-        expect(sjukfallPage.settingsButton().isPresent()).toBeTruthy();
 
         sjukfallPage.clickHideFilter();
 
         expect(sjukfallPage.resetButton().isPresent()).toBeFalsy();
-        expect(sjukfallPage.settingsButton().isPresent()).toBeFalsy();
 
         sjukfallPage.clickHideFilter();
     });
@@ -79,24 +77,6 @@ describe('Hantera filtret', function() {
         expect(sjukfallPage.langdToInput().getAttribute('value')).toEqual('365+');
         expect(sjukfallPage.alderFromInput().getAttribute('value')).toEqual('0');
         expect(sjukfallPage.alderToInput().getAttribute('value')).toEqual('100+');
-    });
-
-    it('Ändra glapp', function() {
-        sjukfallPage.settingsButton().click();
-
-        // TODO: Ändra glapp
-
-        sjukfallPage.settingsSaveBtn.click();
-    });
-
-    it('Öppna och stäng inställningar', function() {
-        sjukfallPage.settingsButton().click();
-
-        expect(sjukfallPage.settingsSaveBtn.isPresent()).toBeTruthy();
-
-        sjukfallPage.settingsCloseBtn.click();
-
-        expect(sjukfallPage.settingsSaveBtn.isPresent()).toBeFalsy();
     });
 
 });
