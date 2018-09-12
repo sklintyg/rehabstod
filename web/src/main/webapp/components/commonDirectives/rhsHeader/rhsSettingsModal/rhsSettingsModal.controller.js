@@ -25,11 +25,10 @@ angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
          * Private functions
          */
         function convertArrayToObject(array) {
-            var newObject = {key: '', value: ''};
+            var newObject = {};
 
             _.each(array, function(value) { // jshint ignore:line
-                newObject.key = value.property;
-                newObject.value = value.value;
+                newObject[value.property] = value.value;
             });
 
             return newObject;
@@ -79,8 +78,8 @@ angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
          */
         var oldSettingData = [];
         UserProxy.getSettings().then(function(settings){
-            if(settings.preferences){
-                oldSettingData = settings.preferences;
+            if(settings){
+                oldSettingData = settings;
                 addSetting(oldSettingData, 'maxAntalDagarMellanIntyg');
             }
         });
