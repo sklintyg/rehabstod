@@ -24,9 +24,10 @@ import org.junit.Test;
 import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.PreferenceRequest;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -130,16 +131,15 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
     @Test
     public void testSetAndGetPreferenceForUser() {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-        PreferenceRequest request = new PreferenceRequest();
-        request.setKey("key1");
-        request.setValue("value1");
-        given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when()
+        Map<String, String> preferences = new HashMap<>();
+        preferences.put("key1", "value1");
+
+        given().contentType(ContentType.JSON).and().body(preferences).expect().statusCode(OK).when()
         .post(USER_API_ENDPOINT + "/preferences");
 
         given().expect().statusCode(OK).when().get(USER_API_ENDPOINT + "/preferences").
                 then().
-                body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-preferences-response-schema.json")).
-                body("preferences.key1", equalTo("value1"));
+                body("key1", equalTo("value1"));
     }
 
 }
