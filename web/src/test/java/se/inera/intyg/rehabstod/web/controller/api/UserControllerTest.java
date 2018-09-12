@@ -35,9 +35,10 @@ import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.PreferenceRequest;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -121,9 +122,8 @@ public class UserControllerTest {
         AnvandarPreference anvPref = new AnvandarPreference(HSA_ID, KEY, "old value");
         when(anvandarPreferenceRepository.findByHsaIdAndKey(eq(HSA_ID), eq(KEY))).thenReturn(anvPref);
 
-        PreferenceRequest req = new PreferenceRequest();
-        req.setKey(KEY);
-        req.setValue("new value");
+        Map<String, String> req = new HashMap<>();
+        req.put(KEY, "new value");
         userController.updatePref(req);
 
         assertEquals("new value", anvPref.getValue());
