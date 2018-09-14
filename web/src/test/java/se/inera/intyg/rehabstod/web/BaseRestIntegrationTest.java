@@ -56,22 +56,21 @@ public abstract class BaseRestIntegrationTest {
     protected static final String SJUKFALLSUMMARY_API_ENDPOINT = "/api/sjukfall/summary";
 
     protected static final FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder(
-        "TSTNMT2321000156-105R", "TSTNMT2321000156-105N").legitimeradeYrkesgrupper(LAKARE)
-            .pdlConsentGiven(true).build();
+            "TSTNMT2321000156-105R", "TSTNMT2321000156-105N").legitimeradeYrkesgrupper(LAKARE)
+                    .pdlConsentGiven(true).build();
 
     protected static final FakeCredentials DEFAULT_LAKARE_NO_CONSENT = new FakeCredentials.FakeCredentialsBuilder(
             "TSTNMT2321000156-105R", "TSTNMT2321000156-105N").legitimeradeYrkesgrupper(LAKARE)
-            .pdlConsentGiven(false).build();
+                    .pdlConsentGiven(false).build();
 
     protected static final FakeCredentials EVA_H_LAKARE = new FakeCredentials.FakeCredentialsBuilder(
-        "eva", "centrum-vast").legitimeradeYrkesgrupper(LAKARE).pdlConsentGiven(true).build();
+            "eva", "centrum-vast").legitimeradeYrkesgrupper(LAKARE).pdlConsentGiven(true).build();
 
     protected CustomObjectMapper objectMapper = new CustomObjectMapper();
 
     public static final int OK = HttpStatus.OK.value();
     public static final int SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR.value();
     public static final int FORBIDDEN = HttpStatus.FORBIDDEN.value();
-
 
     /**
      * Common setup for all tests.
@@ -81,6 +80,8 @@ public abstract class BaseRestIntegrationTest {
         RestAssured.reset();
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.baseURI = System.getProperty("integration.tests.baseUrl");
+        RestAssured.config = RestAssured.config().sessionConfig(RestAssured.config().getSessionConfig().sessionIdName("SESSION"));
+
     }
 
     /**
