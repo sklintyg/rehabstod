@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="true" scanPeriod="30 seconds">
+  <jmxConfigurator />
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <filter class="se.inera.intyg.rehabstod.common.monitoring.util.MarkerFilter">
+      <markers>Monitoring</markers>
+      <onMatch>DENY</onMatch>
+      <onMismatch>ACCEPT</onMismatch>
+    </filter>
+    <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+      <layout class="ch.qos.logback.classic.PatternLayout">
+        <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+      </layout>
+    </encoder>
+  </appender>
+
+  <!--Daily rolling file appender -->
+  <appender name="FILE"
+    class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <filter class="se.inera.intyg.rehabstod.common.monitoring.util.MarkerFilter">
+      <markers>Monitoring</markers>
+      <onMatch>DENY</onMatch>
+      <onMismatch>ACCEPT</onMismatch>
+    </filter>
+
+    <file>${catalina.base}/logs/rehabstod.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${catalina.base}/logs/rehabstod.%d{yyyy-MM-dd}.log</fileNamePattern>
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+      <layout class="ch.qos.logback.classic.PatternLayout">
+        <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+      </layout>
+    </encoder>
+  </appender>
+
+  <!-- Daily rolling file appender for logging monitoring events -->
+  <appender name="MONITORING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <filter class="se.inera.intyg.rehabstod.common.monitoring.util.MarkerFilter">
+      <marker>Monitoring</marker>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+    <file>${catalina.base}/logs/rehabstod-monitoring.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${catalina.base}/logs/rehabstod-monitoring.%d{yyyy-MM-dd}.log
+      </fileNamePattern>
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+      <layout class="se.inera.intyg.rehabstod.logging.PatternLayoutWithUserContext">
+        <param name="Pattern" value="%date{ISO8601} %session %user - %msg%n" />
+      </layout>
+    </encoder>
+  </appender>
+
+  <logger name="se.inera.intyg.rehabstod.service.monitoring" level="info"/>
+  <logger name="org.hibernate.engine.jdbc.spi.SqlExceptionHelper" level="off" />
+
+  <root>
+    <level value="warn" />
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />
+    <appender-ref ref="MONITORING" />
+  </root>
+</configuration>

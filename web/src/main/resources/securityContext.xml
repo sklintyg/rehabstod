@@ -50,6 +50,8 @@
   <security:http security="none" pattern="/api/config/**" />
   <security:http security="none" create-session="never" pattern="/api/session-auth-check/**"/>
 
+  <bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
+
   <!-- Logger for SAML messages and events -->
   <bean id="samlLogger" class="org.springframework.security.saml.log.SAMLDefaultLogger">
     <property name="logMessages" value="true"/>

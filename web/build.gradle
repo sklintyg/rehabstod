@@ -71,9 +71,9 @@ gretty {
 
     jvmArgs = [
                '-Dspring.profiles.active=dev,rhs-it-stub,rhs-srs-stub,caching-enabled',
-               '-Drehabstod.config.file=' + projectDir + '/src/main/resources/dev.properties',
+               '-Dconfig.file=' + projectDir + '/src/main/resources/dev.properties',
                '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
-               '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources',
+               '-Dresources.folder=/' +projectDir + '/../src/main/resources',
                '-XX:MaxPermSize=256M'
                ]
 
@@ -115,6 +115,7 @@ dependencies {
     compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
     compile "org.springframework.ws:spring-ws-core:${springWsCoreVersion}"
     compile "org.springframework:spring-jms:${springContextVersion}"
+    compile "org.springframework.session:spring-session:${springSessionVersion}"
     compile "wsdl4j:wsdl4j:${wsdl4jVersion}"
 
     compileOnly "javax.jms:jms-api:${javaxJmsVersion}"
