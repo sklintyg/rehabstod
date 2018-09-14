@@ -73,6 +73,12 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         servlet.setLoadOnStartup(1);
         servlet.addMapping("/");
 
+        // Spring security filter
+        FilterRegistration.Dynamic springSessionRepositoryFilter = servletContext.addFilter("springSessionRepositoryFilter",
+                DelegatingFilterProxy.class);
+        springSessionRepositoryFilter.addMappingForUrlPatterns(null, false, "/*");
+
+
         // Session Timeout filter
         FilterRegistration.Dynamic sessionTimeoutFilter = servletContext.addFilter("sessionTimeoutFilter", SessionTimeoutFilter.class);
         sessionTimeoutFilter.addMappingForUrlPatterns(null, false, "/*");
