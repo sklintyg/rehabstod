@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jms.connection.TransactionAwareConnectionFactoryProxy;
+import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jndi.JndiObjectFactoryBean;
 
 import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
 
 /**
  * Created by eriklupander on 2016-02-18.
@@ -33,49 +33,51 @@ import javax.jms.Destination;
 @Configuration
 public class JmsConfig {
 
+    @Value("${activemq.broker.url}")
+    private String activeMqBrokerUrl;
+
+    @Value("${activemq.broker.username}")
+    private String activeMqBrokerUsername;
+
+    @Value("${activemq.broker.password}")
+    private String activeMqBrokerPassword;
+
+    @Value("${pdl.logging.queue.name}")
+    private String loggingQueueName;
+
+    @Value("${aggregated.pdl.logging.queue.name}")
+    private String aggregatedLoggingQueueName;
+
     @Bean
-    public JndiObjectFactoryBean queue() {
-        JndiObjectFactoryBean jndiObjectFactoryBean = new JndiObjectFactoryBean();
-        jndiObjectFactoryBean.setJndiName("java:comp/env/jms/Queue");
-        return jndiObjectFactoryBean;
+    public JmsTransactionManager jmsTransactionManager() {
+        return new JmsTransactionManager(connectionFactory());
     }
 
     @Bean
-    public JndiObjectFactoryBean aggregatedQueue() {
-        JndiObjectFactoryBean jndiObjectFactoryBean = new JndiObjectFactoryBean();
-        jndiObjectFactoryBean.setJndiName("java:comp/env/jms/AggregatedLogSenderQueue");
-        return jndiObjectFactoryBean;
+    public ConnectionFactory connectionFactory() {
+        return new ActiveMQConnectionFactory(activeMqBrokerUsername, activeMqBrokerPassword, activeMqBrokerUrl);
     }
 
     @Bean
-    public JndiObjectFactoryBean jmsFactory() {
-        JndiObjectFactoryBean jndiObjectFactoryBean = new JndiObjectFactoryBean();
-        jndiObjectFactoryBean.setJndiName("java:comp/env/jms/ConnectionFactory");
-        return jndiObjectFactoryBean;
+    public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
+        return new JmsTemplate(connectionFactory);
     }
 
     @Bean
     public JmsTemplate jmsPDLLogTemplate() {
         JmsTemplate jmsTemplate = new JmsTemplate();
-        jmsTemplate.setDefaultDestination((Destination) queue().getObject());
+        jmsTemplate.setDefaultDestinationName(loggingQueueName);
         jmsTemplate.setConnectionFactory(connectionFactory());
+        jmsTemplate.setSessionTransacted(true);
         return jmsTemplate;
     }
 
     @Bean
     public JmsTemplate jmsAggregatedPDLLogTemplate() {
         JmsTemplate jmsTemplate = new JmsTemplate();
-        jmsTemplate.setDefaultDestination((Destination) aggregatedQueue().getObject());
+        jmsTemplate.setDefaultDestinationName(aggregatedLoggingQueueName);
         jmsTemplate.setConnectionFactory(connectionFactory());
+        jmsTemplate.setSessionTransacted(true);
         return jmsTemplate;
     }
-
-    @Bean
-    public ConnectionFactory connectionFactory() {
-        TransactionAwareConnectionFactoryProxy activeMQConnectionFactory = new TransactionAwareConnectionFactoryProxy();
-        activeMQConnectionFactory.setTargetConnectionFactory((ConnectionFactory) jmsFactory().getObject());
-        activeMQConnectionFactory.setSynchedLocalTransactionAllowed(true);
-        return activeMQConnectionFactory;
-    }
-
 }

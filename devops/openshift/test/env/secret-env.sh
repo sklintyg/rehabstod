@@ -1,6 +1,15 @@
 #!/bin/bash
 # Assign backing service addresses from the outer environment
 
+export DB_USERNAME=${DATABASE_USERNAME:-rehabstod}
+export DB_PASSWORD=${DATABASE_PASSWORD:-rehabstod}
+export DB_NAME=${DATABASE_NAME:-rehabstod_test}
+export DB_SERVER=mysql
+export DB_PORT=$MYSQL_SERVICE_PORT
+
+export ACTIVEMQ_BROKER_USERNAME=${ACTIVEMQ_BROKER_USERNAME:-admin}
+export ACTIVEMQ_BROKER_PASSWORD=${ACTIVEMQ_BROKER_PASSWORD:-admin}
+
 export REDIS_PASSWORD=${REDIS_PASSWORD:-redis}
 export REDIS_PORT=$REDIS_SERVICE_PORT
 export REDIS_HOST=$REDIS_SERVICE_HOST

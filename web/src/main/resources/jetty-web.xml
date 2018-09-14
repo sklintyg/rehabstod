@@ -28,7 +28,7 @@
     <Arg>org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern</Arg>
     <Arg>.*/.*jsp-api-[^/]\.jar$|./.*jsp-[^/]\.jar$|./.*taglibs[^/]*\.jar$</Arg>
   </Call>
-
+<!--
   <New id="ConnectionFactory" class="org.eclipse.jetty.plus.jndi.Resource">
     <Arg>
       <Ref refid="webAppContext" />
@@ -37,7 +37,6 @@
     <Arg>
       <New class="org.apache.activemq.ActiveMQConnectionFactory">
         <Arg>vm://localhost?broker.persistent=false</Arg>
-        <!--     <Arg>tcp://localhost:61616</Arg>      -->
       </New>
     </Arg>
   </New>
@@ -64,5 +63,5 @@
         </New>
       </Arg>
     </New>
-
+-->
   </Configure>

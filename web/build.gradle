@@ -118,6 +118,9 @@ dependencies {
     compile "org.springframework.session:spring-session:${springSessionVersion}"
     compile "wsdl4j:wsdl4j:${wsdl4jVersion}"
 
+    compile "org.apache.activemq:activemq-spring:${activemqVersion}"
+    compile "mysql:mysql-connector-java:${mysqlVersion}"
+
     compileOnly "javax.jms:jms-api:${javaxJmsVersion}"
     compileOnly "javax.servlet:javax.servlet-api:${javaxServletVersion}"
     compileOnly "jstl:jstl:${jstlVersion}"

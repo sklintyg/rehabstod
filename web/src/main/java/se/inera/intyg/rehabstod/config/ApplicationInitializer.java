@@ -35,8 +35,8 @@ import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubC
 import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.srs.stub.SRSIntegrationStubConfiguration;
+import se.inera.intyg.rehabstod.persistence.config.PersistenceConfig;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
-import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigJndi;
 import se.inera.intyg.rehabstod.web.filters.SessionTimeoutFilter;
 
 import javax.servlet.FilterRegistration;
@@ -62,7 +62,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
                 SRSIntegrationClientConfiguration.class,
                 SRSIntegrationStubConfiguration.class,
                 JmsConfig.class, NTjPPingConfig.class, SecurityConfig.class,
-                SjukfallConfig.class, EmployeeNameCacheConfig.class, DynamicLinkConfig.class, PersistenceConfigJndi.class,
+                SjukfallConfig.class, EmployeeNameCacheConfig.class, DynamicLinkConfig.class, PersistenceConfig.class,
                 PersistenceConfigDev.class);
 
         servletContext.addListener(new ContextLoaderListener(appContext));

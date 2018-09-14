@@ -58,10 +58,6 @@ public class HealthCheckServiceImpl implements HealthCheckService {
     @Qualifier("jmsAggregatedPDLLogTemplate")
     private JmsTemplate jmsAggregatedPDLLogTemplate;
 
-    @Autowired
-    @Qualifier("jmsFactory")
-    private ConnectionFactory connectionFactory;
-
     // User count
     @Autowired
     private SessionRegistry sessionRegistry;
@@ -88,7 +84,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
     public HealthStatus checkActiveMQ() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        boolean ok = checkJmsConnection();
+        boolean ok = checkJmsConnection(jmsPDLLogTemplate.getConnectionFactory());
         stopWatch.stop();
         HealthStatus status = createStatusWithTiming(ok, stopWatch);
         logStatus("checkActiveMQ", status);
@@ -163,7 +159,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
         return new HealthStatus(stopWatch.getTime(), ok);
     }
 
-    private boolean checkJmsConnection() {
+    private boolean checkJmsConnection(ConnectionFactory connectionFactory) {
         try {
             Connection connection = connectionFactory.createConnection();
             connection.close();
