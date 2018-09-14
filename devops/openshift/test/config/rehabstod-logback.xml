@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration scan="true" scanPeriod="30 seconds">
-  <jmxConfigurator />
+ <!-- <jmxConfigurator /> -->
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <filter class="se.inera.intyg.rehabstod.common.monitoring.util.MarkerFilter">
       <markers>Monitoring</markers>

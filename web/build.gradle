@@ -58,7 +58,7 @@ grunt_build_no_minify.dependsOn bowerInstall
 gretty {
     contextPath = '/'
     contextConfigFile = "${projectDir}/src/main/resources/jetty-web.xml"
-    logbackConfigFile = "${projectDir}/src/main/resources/logback.xml"
+    // logbackConfigFile = "${projectDir}/src/main/resources/logback.xml"
 
     integrationTestTask = null
     scanInterval = 0
