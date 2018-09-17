@@ -30,6 +30,7 @@ import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.security.filter.SecurityHeadersFilter;
+import se.inera.intyg.infra.security.filter.SessionTimeoutFilter;
 import se.inera.intyg.rehabstod.common.monitoring.util.LogbackConfiguratorContextListener;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
@@ -39,7 +40,6 @@ import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationConfigurati
 import se.inera.intyg.rehabstod.integration.srs.stub.SRSIntegrationStubConfiguration;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfig;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
-import se.inera.intyg.rehabstod.web.filters.SessionTimeoutFilter;
 
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;

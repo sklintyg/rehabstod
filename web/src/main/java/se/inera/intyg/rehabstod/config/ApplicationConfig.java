@@ -28,9 +28,9 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import se.inera.intyg.infra.security.filter.PrincipalUpdatedFilter;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.filters.PdlConsentGivenAssuranceFilter;
-import se.inera.intyg.rehabstod.web.filters.PrincipalUpdatedFilter;
 import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 
 import javax.annotation.PostConstruct;
