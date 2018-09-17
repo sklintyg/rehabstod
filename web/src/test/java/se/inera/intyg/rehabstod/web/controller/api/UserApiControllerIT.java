@@ -21,6 +21,8 @@ package se.inera.intyg.rehabstod.web.controller.api;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import org.junit.Test;
+
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
@@ -132,14 +134,14 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
     public void testSetAndGetPreferenceForUser() {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
         Map<String, String> preferences = new HashMap<>();
-        preferences.put("key1", "value1");
+        preferences.put(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG.getFrontendKeyName(), "7");
 
         given().contentType(ContentType.JSON).and().body(preferences).expect().statusCode(OK).when()
         .post(USER_API_ENDPOINT + "/preferences");
 
-        given().expect().statusCode(OK).when().get(USER_API_ENDPOINT + "/preferences").
+        given().expect().statusCode(OK).when().get(USER_API_ENDPOINT).
                 then().
-                body("key1", equalTo("value1"));
+                body("preferences." + Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG.getFrontendKeyName(), equalTo("7"));
     }
 
 }
