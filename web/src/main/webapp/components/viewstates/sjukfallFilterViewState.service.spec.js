@@ -66,7 +66,6 @@ describe('Viewstate: SjukfallFilterViewState', function() {
             SjukfallFilterViewState.get().sjukskrivningslangdModel = [22, 77];
             SjukfallFilterViewState.get().aldersModel = [22, 77];
             SjukfallFilterViewState.get().slutdatumModel = {from: new Date(2017, 1, 9), to: new Date(2017, 1, 11)};
-            SjukfallFilterViewState.get().glapp = 55;
             SjukfallFilterViewState.get().showPatientId = false;
 
 
@@ -77,8 +76,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
                 alder: SjukfallFilterViewState.get().aldersModel,
                 slutdatum: {from: new Date(2017, 1, 9), to: new Date(2017, 1, 11)},
                 freeText: SjukfallFilterViewState.get().freeTextModel,
-                showPatientId: false,
-                glapp: 55
+                showPatientId: false
             };
             //Verify
 
@@ -96,7 +94,6 @@ describe('Viewstate: SjukfallFilterViewState', function() {
             SjukfallFilterViewState.get().sjukskrivningslangdModel = [22, 77];
             SjukfallFilterViewState.get().aldersModel = [22, 77];
             SjukfallFilterViewState.get().slutdatumModel = {from: new Date(2017, 1, 9), to: new Date(2017, 1, 11)};
-            SjukfallFilterViewState.get().glapp = 55;
             SjukfallFilterViewState.get().showPatientId = false;
 
             var expectedFilter = {
@@ -106,8 +103,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
                 alder: [0, null],
                 slutdatum: {from: null, to: null},
                 freeText: '',
-                showPatientId: true,
-                glapp: 55
+                showPatientId: true
             };
 
             //Act

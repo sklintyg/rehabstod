@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
-    function($scope, $uibModalInstance, UserProxy, SjukfallService) {
+    function($scope, $uibModalInstance, UserProxy, UserModel, SjukfallService) {
         'use strict';
 
         /**
@@ -62,8 +62,9 @@ angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
             var settingData = convertArrayToObject($scope.settings);
 
             $scope.saving = true;
-            UserProxy.saveSettings(settingData).then(function() {
+            UserProxy.saveSettings(settingData).then(function(preferences) {
                 $scope.saving = false;
+                UserModel.get().preferences = preferences;
                 $uibModalInstance.close($scope.settingsModel);
                 SjukfallService.loadSjukfall(true, true);
             }, function() {
@@ -76,12 +77,7 @@ angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
         /**
          * Run
          */
-        var oldSettingData = [];
-        UserProxy.getSettings().then(function(settings){
-            if(settings){
-                oldSettingData = settings;
-                addSetting(oldSettingData, 'maxAntalDagarMellanIntyg');
-            }
-        });
+        var oldSettingData = UserModel.get().preferences;
+        addSetting(oldSettingData, 'maxAntalDagarMellanIntyg');
     }
 );

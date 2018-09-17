@@ -5,7 +5,7 @@
   ><th rhs-table-header-column ng-if="filterViewState.get().showPatientId" class="column-patient-name text-nowrap" st-sort="patient.namn" hide-help="true"></th
   ><th rhs-table-header-column class="column-patient-kon text-nowrap" st-sort="patient.konShow" hide-help="true"></th
   ><th rhs-table-header-column class="column-diagnos" st-sort="diagnos.intygsVarde"></th
-  ><th rhs-table-header-column class="column-start" st-sort="start" st-sort-default="true" st-descending-first="true" msg-params="{enhet:user.valdVardenhet.namn, glapp: glapp}"></th
+  ><th rhs-table-header-column class="column-start" st-sort="start" st-sort-default="true" st-descending-first="true" msg-params="{enhet:user.valdVardenhet.namn, glapp: user.preferences.maxAntalDagarMellanIntyg}"></th
   ><th rhs-table-header-column class="column-slut" st-sort="slut"></th
   ><th rhs-table-header-column class="column-dagar" st-sort="dagar"></th
   ><th rhs-table-header-column class="column-antal" st-sort="intyg"></th
