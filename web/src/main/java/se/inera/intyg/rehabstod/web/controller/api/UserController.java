@@ -125,9 +125,11 @@ public class UserController {
         return new GetUserResponse(user);
     }
 
-    @RequestMapping(value = "/preferences", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void updatePref(@RequestBody Map<String, String> keyValueMap) {
+    @RequestMapping(value = "/preferences", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, String> updatePref(@RequestBody Map<String, String> keyValueMap) {
         userPreferencesService.updatePreferences(RehabstodUserPreferences.fromFrontend(keyValueMap));
+        return getAllPrefs();
     }
 
     @RequestMapping(value = "/preferences", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
