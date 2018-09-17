@@ -19,45 +19,4 @@
     <location>/error.jsp?reason=error</location>
   </error-page>
 
-  <!-- JMS resources for PDL logging
-  <resource-ref>
-    <res-ref-name>jms/ConnectionFactory</res-ref-name>
-    <res-type>javax.jms.ConnectionFactory</res-type>
-    <res-auth>Container</res-auth>
-  </resource-ref>
-
-  <resource-ref>
-    <res-ref-name>jms/Queue</res-ref-name>
-    <res-type>javax.jms.Queue</res-type>
-    <res-auth>Container</res-auth>
-  </resource-ref>
-
-  <resource-ref>
-    <res-ref-name>jms/AggregatedLogSenderQueue</res-ref-name>
-    <res-type>javax.jms.Queue</res-type>
-    <res-auth>Container</res-auth>
-  </resource-ref>
--->
-    <context-param>
-        <param-name>logbackConfigParameter</param-name>
-        <param-value>logback.file</param-value>
-    </context-param>
-
-    <!--
-    <filter>
-        <filter-name>LogMDCFilter</filter-name>
-        <filter-class>se.inera.intyg.infra.monitoring.logging.LogMDCServletFilter</filter-class>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>LogMDCFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-    -->
-
-    <!-- Listener for external logback configuration file -->
-    <listener>
-        <listener-class>se.inera.intyg.rehabstod.common.monitoring.util.LogbackConfiguratorContextListener</listener-class>
-    </listener>
-
 </web-app> 

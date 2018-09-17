@@ -20,11 +20,13 @@ package se.inera.intyg.rehabstod.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 /**
  * Created by eriklupander on 2016-05-18.
  */
 @Configuration
+@EnableRedisHttpSession
 @ComponentScan("se.inera.intyg.infra.security.authorities")
 public class SecurityConfig {
 }

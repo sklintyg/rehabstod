@@ -22,7 +22,7 @@
 <configuration>
     <!-- logback config for the Openshift Container Platform (OCP). Stream to stdout, use layout and appenders from infra. -->
 
-    <property name="APP_NAME" value="${APP_NAME:-intygstjanst}"/>
+    <property name="APP_NAME" value="${APP_NAME:-rehabstod}"/>
 
     <include resource="logback-ocp-base.xml"/>
 

@@ -30,6 +30,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.filters.PdlConsentGivenAssuranceFilter;
+import se.inera.intyg.rehabstod.web.filters.PrincipalUpdatedFilter;
 import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 
 import javax.annotation.PostConstruct;
@@ -74,6 +75,11 @@ public class ApplicationConfig {
     @Bean
     public PdlConsentGivenAssuranceFilter pdlConsentGivenAssuranceFilter() {
         return new PdlConsentGivenAssuranceFilter();
+    }
+
+    @Bean
+    public PrincipalUpdatedFilter principalUpdatedFilter() {
+        return new PrincipalUpdatedFilter();
     }
 
     @Bean(name = "jacksonJsonProvider")

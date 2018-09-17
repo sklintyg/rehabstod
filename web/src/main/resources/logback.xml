@@ -57,7 +57,7 @@
   <logger name="org.hibernate.engine.jdbc.spi.SqlExceptionHelper" level="off" />
 
   <root>
-    <level value="warn" />
+    <level value="info" />
     <appender-ref ref="STDOUT" />
     <appender-ref ref="FILE" />
     <appender-ref ref="MONITORING" />

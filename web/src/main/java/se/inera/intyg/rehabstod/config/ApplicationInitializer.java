@@ -28,7 +28,9 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
+import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.security.filter.SecurityHeadersFilter;
+import se.inera.intyg.rehabstod.common.monitoring.util.LogbackConfiguratorContextListener;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
@@ -63,7 +65,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
                 SRSIntegrationStubConfiguration.class,
                 JmsConfig.class, NTjPPingConfig.class, SecurityConfig.class,
                 SjukfallConfig.class, EmployeeNameCacheConfig.class, DynamicLinkConfig.class, PersistenceConfig.class,
-                PersistenceConfigDev.class);
+                PersistenceConfigDev.class, MonitoringConfiguration.class);
 
         servletContext.addListener(new ContextLoaderListener(appContext));
 
@@ -73,7 +75,12 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         servlet.setLoadOnStartup(1);
         servlet.addMapping("/");
 
-        // Spring security filter
+        // LogMDCServletFilter
+        FilterRegistration.Dynamic logMdcFilter = servletContext.addFilter("logMDCServletFilter",
+                DelegatingFilterProxy.class);
+        logMdcFilter.addMappingForUrlPatterns(null, false, "/*");
+
+        // Spring session filter
         FilterRegistration.Dynamic springSessionRepositoryFilter = servletContext.addFilter("springSessionRepositoryFilter",
                 DelegatingFilterProxy.class);
         springSessionRepositoryFilter.addMappingForUrlPatterns(null, false, "/*");
@@ -88,6 +95,12 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain",
                 DelegatingFilterProxy.class);
         springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
+
+        // principalUpdatedFilter filter
+        FilterRegistration.Dynamic principalUpdatedFilter = servletContext.addFilter("principalUpdatedFilter",
+                DelegatingFilterProxy.class);
+        principalUpdatedFilter.setInitParameter("targetFilterLifecycle", "true");
+        principalUpdatedFilter.addMappingForUrlPatterns(null, false, "/*");
 
         // unitSelectedAssurance filter
         FilterRegistration.Dynamic unitSelectedAssuranceFilter = servletContext.addFilter("unitSelectedAssuranceFilter",
@@ -112,7 +125,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         characterEncodingFilter.setInitParameter("forceEncoding", "true");
 
         // NOTE: The characterEncoding filter must run before the hiddenHttpMethodFilter, otherwise the setEncoding will
-        // be done to late, as the hiddenHttpMethodFilter internally uses request.getParameter which will parse the
+        // be done too late, as the hiddenHttpMethodFilter internally uses request.getParameter which will parse the
         // parameters using a default encoding which may not be UTF-8 in e.g in tomcat it's ISO-8859-1.
         FilterRegistration.Dynamic hiddenHttpMethodFilter = servletContext.addFilter("hiddenHttpMethodFilter",
                 HiddenHttpMethodFilter.class);
@@ -128,6 +141,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         // Listeners for session audit logging
         servletContext.addListener(new HttpSessionEventPublisher());
         servletContext.addListener(new RequestContextListener());
+
+        servletContext.setInitParameter("logbackConfigParameter", "logback.file");
+        servletContext.addListener(new LogbackConfiguratorContextListener());
     }
 
     private void registerSecurityHeadersFilter(ServletContext servletContext) {
