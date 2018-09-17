@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
@@ -42,6 +43,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNa
 import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
+import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
@@ -82,6 +84,9 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     @Autowired
     private RiskPredictionService riskPredictionService;
+
+    @Autowired
+    private UserPreferencesService userPreferencesService;
 
     // api
 
@@ -146,13 +151,12 @@ public class SjukfallServiceImpl implements SjukfallService {
         return statisticsCalculator.getSjukfallSummary(sjukfallList);
     }
 
-
     // package scope
 
     private IntygParametrar map(GetSjukfallRequest from) {
-        return new IntygParametrar(from.getMaxIntygsGlapp(), from.getAktivtDatum());
+        int maxIntygsGlapp = Integer.parseInt(userPreferencesService.getPreferenceValue(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG));
+        return new IntygParametrar(maxIntygsGlapp, from.getAktivtDatum());
     }
-
 
     // private scope
 

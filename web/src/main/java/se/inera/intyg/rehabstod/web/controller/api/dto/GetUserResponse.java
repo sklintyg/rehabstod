@@ -54,6 +54,7 @@ public class GetUserResponse {
     private boolean roleSwitchPossible = false;
 
     private Map<String, Feature> features;
+    private Map<String, String> preferences;
 
     public GetUserResponse(RehabstodUser user) {
         this.hsaId = user.getHsaId();
@@ -72,6 +73,7 @@ public class GetUserResponse {
         this.pdlConsentGiven = user.isPdlConsentGiven();
         this.roleSwitchPossible = user.isRoleSwitchPossible();
         this.features = user.getFeatures();
+        this.preferences = user.getPreferences().toFrontendMap();
     }
 
     public String getHsaId() {
@@ -184,6 +186,14 @@ public class GetUserResponse {
 
     public void setFeatures(Map<String, Feature> features) {
         this.features = features;
+    }
+
+    public Map<String, String> getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(Map<String, String> preferences) {
+        this.preferences = preferences;
     }
 
 }

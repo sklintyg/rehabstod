@@ -36,8 +36,10 @@ import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
+import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetUserResponse;
@@ -51,6 +53,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserPreferencesService userPreferencesService;
 
     @Autowired
     private AnvandarPreferenceRepository anvandarPreferenceRepository;
@@ -121,25 +126,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/preferences", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void updatePref(@RequestBody Map<String, String> request) {
-        RehabstodUser user = getRehabstodUser();
-        LOG.debug("Updating preference {} for {}.", request, user.getHsaId());
-        for (Map.Entry<String, String> entry: request.entrySet()) {
-            AnvandarPreference anvPref = anvandarPreferenceRepository.findByHsaIdAndKey(user.getHsaId(), entry.getKey());
-            if (anvPref == null) {
-                anvPref = new AnvandarPreference(user.getHsaId(), entry.getKey(), entry.getValue());
-            } else {
-                anvPref.setValue(entry.getValue());
-            }
-            anvandarPreferenceRepository.save(anvPref);
-        }
+    public void updatePref(@RequestBody Map<String, String> keyValueMap) {
+        userPreferencesService.updatePreferences(RehabstodUserPreferences.fromFrontend(keyValueMap));
     }
 
     @RequestMapping(value = "/preferences", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, String> getAllPrefs() {
-        RehabstodUser user = getRehabstodUser();
-        LOG.debug("Getting all preferences for {}.", user.getHsaId());
-        return anvandarPreferenceRepository.getAnvandarPreference(user.getHsaId());
+        return userPreferencesService.getAllPreferences().toFrontendMap();
     }
 
     private RehabstodUser getRehabstodUser() {

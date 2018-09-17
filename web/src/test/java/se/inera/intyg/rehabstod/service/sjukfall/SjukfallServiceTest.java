@@ -35,6 +35,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationServiceImpl;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
@@ -46,6 +47,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNa
 import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
+import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.PatientData;
@@ -109,6 +111,9 @@ public class SjukfallServiceTest {
     @Mock
     private RiskPredictionService riskPredictionService;
 
+    @Mock
+    private UserPreferencesService userPreferencesService;
+
     @InjectMocks
     private SjukfallServiceImpl testee = new SjukfallServiceImpl();
 
@@ -127,6 +132,7 @@ public class SjukfallServiceTest {
         when(statisticsCalculator.getSjukfallSummary(anyListOf(SjukfallEnhet.class))).thenReturn(
             new SjukfallSummary(0, Collections.emptyList(), new ArrayList<>(), new ArrayList<>()));
         when(employeeNameService.getEmployeeHsaName(anyString())).thenReturn("Tolvan Tolvansson");
+        when(userPreferencesService.getPreferenceValue(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG)).thenReturn("5");
 
         doNothing().when(sjukfallEmployeeNameResolver).enrichWithHsaEmployeeNames(anyListOf(SjukfallEnhet.class));
         doNothing().when(sjukfallEmployeeNameResolver).updateDuplicateDoctorNamesWithHsaId(anyListOf(SjukfallEnhet.class));
