@@ -49,7 +49,7 @@ Vi har integrationstester skrivna med [REST-Assured](https://github.com/jayway/r
 De körs inte automatiskt vid bygge av applikationen utan man behöver köra dem med kommandot
 
     $ cd rehabstod
-    $ ./gradlew integrationTest
+    $ ./gradlew restAssuredTest
     
 ### Kör Protractor
 För att köra Protractor-testerna måste Intygstjänsten och Rehabstöd vara igång:
