@@ -22,9 +22,8 @@ import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
-import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 
-import java.util.List;
+import java.time.LocalDate;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -34,7 +33,7 @@ public interface SjukfallService {
     /**
      * @see List<se.inera.intyg.rehabstod.web.model.SjukfallEnhet> se.inera.intyg.rehabstod.service.sjukfall.SjukfallService.getByUnit
      */
-    SjukfallEnhetResponse getSjukfall(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
+    SjukfallEnhetResponse getSjukfall(String enhetsId, String mottagningsId, String lakareId, Urval urval, int maxGlapp, LocalDate date);
 
     /**
      * The 'enhetsId' is _always_ the ID of the Vardenhet we want to query IT with regardless of whether the currently
@@ -46,10 +45,10 @@ public interface SjukfallService {
      * specified, we'll perform filtering on our side so only Sjukfall originating from the specified mottagningsId are
      * included in the response.
      */
-    SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
+    SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval, int maxGlapp, LocalDate date);
 
-    SjukfallPatientResponse getByPatient(String enhetsId, String lakareId, Urval urval, GetSjukfallRequest request);
+    SjukfallPatientResponse getByPatient(String enhetsId, String lakareId, Urval urval, String patientId, int maxGlapp, LocalDate date);
 
-    SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId, Urval urval, GetSjukfallRequest request);
+    SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId, Urval urval, int maxGlapp, LocalDate date);
 
 }

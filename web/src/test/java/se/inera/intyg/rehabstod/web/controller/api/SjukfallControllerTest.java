@@ -37,6 +37,8 @@ import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
@@ -66,6 +68,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
@@ -111,6 +114,9 @@ public class SjukfallControllerTest {
         when(userServiceMock.getUser()).thenReturn(rehabstodUserMock);
         when(rehabstodUserMock.getValdVardenhet()).thenReturn(new Vardenhet(VARDENHETS_ID, "enhet"));
         when(rehabstodUserMock.getUrval()).thenReturn(Urval.ALL);
+        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+        preferences.updatePreference(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
+        when(rehabstodUserMock.getPreferences()).thenReturn(preferences);
     }
 
     @Test
@@ -129,7 +135,7 @@ public class SjukfallControllerTest {
         mockStatic(PDLActivityStore.class);
         when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
             eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
-        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class)))
+        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), anyInt(), any(LocalDate.class)))
                 .thenReturn(new SjukfallEnhetResponse(result, false));
 
         // Then
@@ -140,7 +146,7 @@ public class SjukfallControllerTest {
         PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
             eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class));
 
-        verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
+        verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), anyInt(), any(LocalDate.class));
         verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL));
     }
 
@@ -167,7 +173,7 @@ public class SjukfallControllerTest {
         when(PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
             eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
 
-        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class)))
+        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), anyInt(), any(LocalDate.class)))
                 .thenReturn(new SjukfallEnhetResponse(allSjukFall, false));
         when(pdfExportServiceMock.export(eq(finalList), eq(request), eq(rehabstodUserMock), eq(allSjukFall.size()))).thenReturn(new byte[0]);
 
@@ -182,7 +188,7 @@ public class SjukfallControllerTest {
         PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
             eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class));
 
-        verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
+        verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), anyInt(), any(LocalDate.class));
         verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.PRINT), eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL));
 
         assertTrue(response.getStatusCode().equals(HttpStatus.OK));
@@ -205,7 +211,7 @@ public class SjukfallControllerTest {
         mockStatic(PDLActivityStore.class);
         when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
             eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
-        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class)))
+        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), anyInt(), any(LocalDate.class)))
                 .thenReturn(new SjukfallEnhetResponse(result, false));
 
         // Then
@@ -216,7 +222,7 @@ public class SjukfallControllerTest {
         PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
             eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class));
 
-        verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class));
+        verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), anyInt(), any(LocalDate.class));
         verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL));
     }
 
@@ -237,7 +243,7 @@ public class SjukfallControllerTest {
         GetSjukfallRequest request = new GetSjukfallRequest();
 
         // When
-        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), any(Urval.class), any(GetSjukfallRequest.class)))
+        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), any(Urval.class), anyString(), anyInt(), any(LocalDate.class)))
                 .thenReturn(new SjukfallPatientResponse(finalList, false));
 
         testee.getSjukfallForPatient(request);
@@ -289,7 +295,7 @@ public class SjukfallControllerTest {
         GetSjukfallRequest request = new GetSjukfallRequest();
 
         // When
-        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(GetSjukfallRequest.class)))
+        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), anyInt(), any(LocalDate.class)))
                 .thenReturn(new SjukfallEnhetResponse(finalList, false));
 
         testee.getSjukfallForCareUnit(request);
@@ -317,6 +323,7 @@ public class SjukfallControllerTest {
         vg.getVardenheter().add(ve);
         user.setVardgivare(Arrays.asList(vg));
         user.setValdVardenhet(ve);
+        user.getPreferences().updatePreference(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
         return user;
     }
 

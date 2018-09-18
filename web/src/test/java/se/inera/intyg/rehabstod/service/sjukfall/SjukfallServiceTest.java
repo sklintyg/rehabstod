@@ -48,7 +48,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
-import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -141,12 +140,12 @@ public class SjukfallServiceTest {
     @Test
     public void testWhenNoUrvalSet() {
         thrown.expect(IllegalArgumentException.class);
-        testee.getSjukfall(enhetsId, null, "", null, getSjukfallRequest(intygsGlapp, activeDate));
+        testee.getSjukfall(enhetsId, null, "", null, intygsGlapp, activeDate);
     }
 
     @Test
     public void testWhenUrvalIsAll() {
-        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, null, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate)).getSjukfallList();
+        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, null, "", Urval.ALL, intygsGlapp, activeDate).getSjukfallList();
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
@@ -155,7 +154,7 @@ public class SjukfallServiceTest {
 
     @Test
     public void testWhenUrvalIsAllForUnderenhet() {
-        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, mottagningsId, "", Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate)).getSjukfallList();
+        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, mottagningsId, "", Urval.ALL, intygsGlapp, activeDate).getSjukfallList();
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
@@ -165,7 +164,7 @@ public class SjukfallServiceTest {
     @Test
     public void testWhenUrvalIsIssuedByMe() {
         List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, null, lakareId1, Urval.ISSUED_BY_ME,
-                getSjukfallRequest(intygsGlapp, activeDate)).getSjukfallList();
+                intygsGlapp, activeDate).getSjukfallList();
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
 
@@ -180,7 +179,7 @@ public class SjukfallServiceTest {
 
     @Test
     public void testGetSjukfallSummary() {
-        testee.getSummary(enhetsId, null, lakareId1, Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
+        testee.getSummary(enhetsId, null, lakareId1, Urval.ALL, intygsGlapp, activeDate);
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
         verify(statisticsCalculator).getSjukfallSummary(anyListOf(SjukfallEnhet.class));
@@ -188,20 +187,13 @@ public class SjukfallServiceTest {
 
     @Test
     public void testGetSjukfallSummaryWhenSelectedVardenhetIsMottagning() {
-        testee.getSummary(enhetsId, mottagningsId, lakareId1, Urval.ALL, getSjukfallRequest(intygsGlapp, activeDate));
+        testee.getSummary(enhetsId, mottagningsId, lakareId1, Urval.ALL, intygsGlapp, activeDate);
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId);
         verify(statisticsCalculator).getSjukfallSummary(anyListOf(SjukfallEnhet.class));
     }
 
     // - - - Private scope - - -
-
-    private GetSjukfallRequest getSjukfallRequest(int maxIntygsGlapp, LocalDate aktivtDatum) {
-        GetSjukfallRequest request = new GetSjukfallRequest();
-        request.setMaxIntygsGlapp(maxIntygsGlapp);
-        request.setAktivtDatum(aktivtDatum);
-        return request;
-    }
 
     private List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> createSjukfallEnhetList() {
         List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> sjukfallList = new ArrayList<>();

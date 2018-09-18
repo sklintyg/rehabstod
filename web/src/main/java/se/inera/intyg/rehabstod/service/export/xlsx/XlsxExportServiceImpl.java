@@ -39,6 +39,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
@@ -105,8 +106,9 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         rowNumber = addLakareList(sheet, rowNumber++, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), user); // NOSONAR
 
         // Inställningar
+        String maxGlapp = user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG);
         addFilterMainHeader(sheet, rowNumber++, H2_SJUKFALLSINSTALLNING);
-        addFilterHeader(sheet, rowNumber++, MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG, req.getMaxIntygsGlapp() + " dagar");
+        addFilterHeader(sheet, rowNumber++, MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG, maxGlapp + " dagar");
         rowNumber += FILTER_SPACING;
 
         // Sortering
