@@ -62,3 +62,9 @@ stage('tag and upload') {
         shgradle "uploadArchives tagRelease -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion} -Prehabstod.useMinifiedJavaScript"
     }
 }
+
+stage('propagate') {
+    node {
+        build job: "rehabstod-dintyg-build", wait: false, parameters: [[$class: 'StringParameterValue', name: 'REHABSTOD_BUILD_VERSION', value: buildVersion]]
+    }
+}
