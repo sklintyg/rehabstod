@@ -11,5 +11,10 @@
         "REHABSTOD_URL": "http://localhost:9091/",
         "INTYGTJANST_URL": "http://localhost:8080/inera-certificate",
         "SELENIUM_ADDRESS": ""
+    },
+    "test-pipeline": {
+        "REHABSTOD_URL": "http://rehabstod-test:8080/",
+        "INTYGTJANST_URL": "http://intygstjanst-rehabstod-test:8080/inera-certificate",
+        "SELENIUM_ADDRESS": ""
     }
 }
