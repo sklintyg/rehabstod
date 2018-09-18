@@ -37,8 +37,7 @@ angular.module('rehabstodApp')
 
                         return {
                             to: to,
-                            params: {},
-                            options: {location: 'replace'}
+                            params: {}
                         };
                     }
                 }
