@@ -166,7 +166,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
                 intygsDataList.add(buildIntygsData(patient, hosPerson));
             }
         }
-        LOG.info("Generated {0} intygsData items for stub", intygsDataList.size());
+        LOG.info("Generated {} intygsData items for stub", intygsDataList.size());
         return intygsDataList;
     }
 

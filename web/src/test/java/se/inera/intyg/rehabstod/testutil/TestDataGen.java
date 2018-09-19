@@ -71,7 +71,6 @@ public final class TestDataGen {
         req.setLangdIntervall(buildLangdIntervall());
         req.setAldersIntervall(buildAlderIntervall());
         req.setSlutdatumIntervall(buildDatumIntervall());
-        req.setMaxIntygsGlapp(5);
         req.setSortering(buildSortering());
         req.setShowPatientId(true);
         return req;

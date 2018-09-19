@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').factory('patientHistoryProxy',
-    function($http, $log, $q, ObjectHelper, networkConfig, SjukfallFilterViewState) {
+    function($http, $log, $q, ObjectHelper, networkConfig) {
     'use strict';
 
     /*
@@ -29,7 +29,6 @@ angular.module('rehabstodApp').factory('patientHistoryProxy',
         var promise = $q.defer();
 
         var query = {
-            maxIntygsGlapp: SjukfallFilterViewState.get().glapp,
             patientId: patient.id
         };
 

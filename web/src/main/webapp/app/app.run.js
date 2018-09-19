@@ -32,7 +32,8 @@ angular
         $rootScope.lang = 'sv';
         $rootScope.DEFAULT_LANG = 'sv';
 
-        // Populate user with resolved user state
+        // Populate user with resolved user state.
+        // NOTE: new properties from backend need to manually be added in UserModel.set to be accessible to the app
         UserModel.init();
         if (angular.isDefined(USER_DATA)) {
             UserModel.set(USER_DATA);

@@ -154,6 +154,12 @@
         }
       },
       "type": "object"
+    },
+    "preferences": {
+      "type" : "object",
+      "additionalProperties" : {
+        "type" : "string"
+      }
     }
   },
   "required": [
@@ -170,7 +176,8 @@
     "urval",
     "pdlConsentGiven",
     "roleSwitchPossible",
-    "features"
+    "features",
+    "preferences"
   ],
   "title": "RehabstodUser transport model",
   "type": "object",

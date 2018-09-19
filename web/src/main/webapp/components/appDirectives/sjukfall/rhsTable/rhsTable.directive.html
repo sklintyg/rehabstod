@@ -7,8 +7,8 @@
   <rhs-table-number-of-rows total-rows="model.get().length"></rhs-table-number-of-rows>
 
     <table class="table table-striped" rhs-table-fixed-header="rhs-table-header-fixed-top" data-ng-class="{'show-lakare-column': showLakareColumn}" fixed-header="rhs-table-fixed-header" normal-header="rhs-table-normal-header"  padding-top="46">
-      <thead class="hidden" rhs-table-header id="rhs-table-fixed-header" user="user" glapp="filter.get().glapp"></thead>
-      <thead rhs-table-header id="rhs-table-normal-header" user="user" glapp="filter.get().glapp"></thead>
+      <thead class="hidden" rhs-table-header id="rhs-table-fixed-header" user="user"></thead>
+      <thead rhs-table-header id="rhs-table-normal-header" user="user"></thead>
       <tbody id="rhs-table-body">
         <tr ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id" class="rhs-table-row" ng-click="showPatientHistory(row.patient)">
           <td class="column-number">{{$index + 1}}</td>

@@ -67,7 +67,6 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE_NO_CONSENT);
 
         GetSjukfallRequest request = new GetSjukfallRequest();
-        request.setMaxIntygsGlapp(0);
 
         given().contentType(ContentType.JSON).and().body(request).expect().statusCode(SERVER_ERROR).when().post(API_ENDPOINT);
     }
@@ -78,7 +77,6 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
         GetSjukfallRequest request = new GetSjukfallRequest();
-        request.setMaxIntygsGlapp(0);
 
         given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_ENHET));
@@ -92,7 +90,6 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
         GetSjukfallRequest request = new GetSjukfallRequest();
-        request.setMaxIntygsGlapp(0);
         request.setPatientId("19121212-1212");
 
         given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT + "/patient").then()
@@ -118,7 +115,6 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
     private int getAntalOnEnhet(String enhetId) {
         selectUnitByHsaId(enhetId);
         GetSjukfallRequest request = new GetSjukfallRequest();
-        request.setMaxIntygsGlapp(0);
 
         Response response = given()
                 .contentType(ContentType.JSON).and()

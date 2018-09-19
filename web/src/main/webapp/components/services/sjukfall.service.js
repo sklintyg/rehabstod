@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').factory('SjukfallService',
-    function($log, StringHelper, messageService, SjukfallProxy, SjukfallModel, SjukfallFilterViewState, SjukfallViewState, _) {
+    function($log, StringHelper, messageService, SjukfallProxy, SjukfallModel, SjukfallFilterViewState, SjukfallViewState, _, UserModel) {
         'use strict';
 
         var loading = false;
@@ -39,7 +39,7 @@ angular.module('rehabstodApp').factory('SjukfallService',
                 }
 
                 var query = {
-                    maxIntygsGlapp: SjukfallFilterViewState.get().glapp
+                    maxIntygsGlapp: UserModel.get().preferences.maxAntalDagarMellanIntyg
                 };
 
                 return SjukfallProxy.get(query).then(function(response) {
@@ -85,7 +85,7 @@ angular.module('rehabstodApp').factory('SjukfallService',
 
             var query = {
                 sortering: sort,
-                maxIntygsGlapp: filterState.glapp,
+                maxIntygsGlapp: UserModel.get().preferences.maxAntalDagarMellanIntyg,
                 fritext: filterState.freeText,
                 showPatientId: filterState.showPatientId,
                 aldersIntervall: {

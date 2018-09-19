@@ -45,6 +45,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 import se.inera.intyg.rehabstod.service.Urval;
@@ -122,12 +123,14 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     }
 
     private Element createFrontPage(PrintSjukfallRequest printRequest, RehabstodUser user, int showing, int total) {
+        String maxGlapp = user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG);
+
         Paragraph sida = new Paragraph();
 
         sida.add(getUrvalDesc(user));
         sida.add(new Chunk(new LineSeparator()));
         sida.add(getFilterDesc(printRequest, user));
-        sida.add(getSjukfallsDefDesc(printRequest));
+        sida.add(getSjukfallsDefDesc(maxGlapp));
         sida.add(getSorteringDesc(printRequest.getSortering()));
         sida.add(getAntalDesc(user.getUrval(), showing, total));
 
@@ -233,11 +236,11 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         return b.toString();
     }
 
-    private Element getSjukfallsDefDesc(PrintSjukfallRequest printRequest) {
+    private Element getSjukfallsDefDesc(String maxGlapp) {
         Paragraph def = new Paragraph();
         def.add(new Paragraph(H2_SJUKFALLSINSTALLNING, PdfExportConstants.FRONTPAGE_H2));
         def.add(new Phrase(MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG + ": ", PdfExportConstants.FRONTPAGE_NORMAL));
-        def.add(new Phrase(printRequest.getMaxIntygsGlapp() + " dagar", PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
+        def.add(new Phrase(maxGlapp + " dagar", PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
         return def;
     }
 

@@ -135,7 +135,7 @@ var rhsMessages = {
         'label.table.column.diagnos.intygsvarde': 'Diagnos/diagnoser',
         'label.table.column.diagnos.intygsvarde.help': 'Diagnos/diagnoser i nuvarande intyg. Om det finns flera diagnoser så är den som anges först den som påverkar arbetsförmågan mest. För muspekaren över koden att se vilken diagnos den motsvarar.',
         'label.table.column.start': 'Startdatum',
-        'label.table.column.start.help': 'Datum då sjukfallet började på ${enhet}. Alla intyg för samma patient som följer på varandra med max ${glapp} dagars uppehåll räknas till samma sjukfall. Max antal dagars uppehåll mellan intyg kan ställas in i filtret.',
+        'label.table.column.start.help': 'Datum då sjukfallet började på ${enhet}. Alla intyg för samma patient som följer på varandra med max ${glapp} dagars uppehåll räknas till samma sjukfall. Max antal dagars uppehåll mellan intyg kan ställas in i inställningar.',
         'label.table.column.slut': 'Slutdatum',
         'label.table.column.slut.help': 'Slutdatum för sjukfallet, dvs. den sista dagen då det finns ett giltigt intyg.',
         'label.table.column.aktivgrad': 'Grad',

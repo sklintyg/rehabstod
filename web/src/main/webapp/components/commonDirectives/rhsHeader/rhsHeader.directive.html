@@ -3,26 +3,8 @@
   <img alt="Logotyp för Rehabstöd" class="visible-xs" src="/assets/images/logo_small.png" />
 </div>
 
-<div class="header-user" data-ng-if="user.loggedIn">
-  <i class="fa fa-user"></i>
-  <div class="header-two-row">
-    <div class="truncate-when-needed">
-      {{::user.name}}
-    </div>
-    <span id="logged-in-role" ng-if="showRoleDescription(user.role)">
-      <span class="hidden-xs">&nbsp;-&nbsp;</span>{{::user.role.desc}}
-    </span>
-    <a
-        id="rhs-header-settings"
-        class="header-link hidden-xs"
-        href
-        data-ng-click="openSettingsDialog()">
-      Inställningar
-    </a>
-  </div>
-</div>
-
-<rhs-header-unit  data-ng-if="showUnit()"></rhs-header-unit>
+<rhs-header-user data-ng-if="user.loggedIn"></rhs-header-user>
+<rhs-header-unit data-ng-if="showUnit()"></rhs-header-unit>
 
 <div class="header-links" data-ng-if="user.loggedIn">
   <a id="logoutLink" href="{{::logoutLocation}}"><span message key="common.logout"></span></a>

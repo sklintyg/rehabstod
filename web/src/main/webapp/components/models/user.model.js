@@ -39,6 +39,7 @@ angular.module('rehabstodApp').factory('UserModel',
             data.loggedIn = false;
             data.pdlConsentGiven = false;
             data.roleSwitchPossible = false;
+            data.preferences ={maxAntalDagarMellanIntyg: 5};
             return data;
         }
 
@@ -88,6 +89,7 @@ angular.module('rehabstodApp').factory('UserModel',
                 data.pdlConsentGiven = user.pdlConsentGiven;
                 data.roleSwitchPossible = user.roleSwitchPossible;
                 data.features = user.features;
+                data.preferences = user.preferences;
             },
             get: function() {
                 return data;

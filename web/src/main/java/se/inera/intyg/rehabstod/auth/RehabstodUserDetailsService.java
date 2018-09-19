@@ -70,6 +70,9 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         if (rehabstodUser.getValdVardenhet() != null) {
             rehabstodUnitChangeService.changeValdVardenhet(rehabstodUser.getValdVardenhet().getId(), rehabstodUser);
         }
+        RehabstodUserPreferences preferences = RehabstodUserPreferences
+                .fromBackend(anvandarPreferenceRepository.getAnvandarPreference(intygUser.getHsaId()));
+        rehabstodUser.setPreferences(preferences);
 
         return rehabstodUser;
     }

@@ -24,8 +24,7 @@ angular.module('rehabstodApp').directive('rhsTableHeader', ['SjukfallFilterViewS
         return {
             restrict: 'A',
             scope: {
-                user : '=',
-                glapp : '='
+                user : '='
             },
             templateUrl: '/components/appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.directive.html',
             link: function ($scope, element) {

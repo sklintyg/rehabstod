@@ -86,7 +86,7 @@ describe('Service: SjukfallService', function() {
                     kolumn: messageService.getProperty('label.table.column.' + sortState.kolumn),
                     order: messageService.getProperty('label.table.column.sort.' + sortState.order)
                 },
-                maxIntygsGlapp: cfs.glapp,
+                maxIntygsGlapp: 5,
                 fritext: cfs.freeText,
                 showPatientId: cfs.showPatientId,
                 langdIntervall: {

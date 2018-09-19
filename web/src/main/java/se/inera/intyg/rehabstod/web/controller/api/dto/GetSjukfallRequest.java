@@ -35,7 +35,6 @@ public class GetSjukfallRequest {
     private LangdIntervall slutdatumIntervall;
 
     private boolean showPatientId;
-    private int maxIntygsGlapp;
     private LocalDate aktivtDatum;
 
     private List<String> lakare;
@@ -79,14 +78,6 @@ public class GetSjukfallRequest {
 
     public void setSlutdatumIntervall(LangdIntervall slutdatumIntervall) {
         this.slutdatumIntervall = slutdatumIntervall;
-    }
-
-    public int getMaxIntygsGlapp() {
-        return maxIntygsGlapp;
-    }
-
-    public void setMaxIntygsGlapp(int maxIntygsGlapp) {
-        this.maxIntygsGlapp = maxIntygsGlapp;
     }
 
     public LocalDate getAktivtDatum() {

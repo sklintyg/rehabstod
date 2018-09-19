@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.web.controller.api;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -50,6 +51,7 @@ import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
@@ -121,7 +123,7 @@ public class SjukfallController {
         RehabstodUser user = getRehabstodUser();
 
         // Fetch sjukfall
-        SjukfallPatientResponse response = getSjukfallForPatient(user, request);
+        SjukfallPatientResponse response = getSjukfallForPatient(user, request.getPatientId(), request.getAktivtDatum());
         List<SjukfallPatient> sjukfall = response.getSjukfallList();
 
         // PDL-logging based on which sjukfall that are about to be displayed to user.
@@ -217,10 +219,7 @@ public class SjukfallController {
         String hsaId = user.getHsaId();
         Urval urval = user.getDefaultUrval();
 
-        GetSjukfallRequest request = new GetSjukfallRequest();
-        request.setMaxIntygsGlapp(0);
-
-        return sjukfallService.getSummary(enhetsId, mottagningsId, hsaId, urval, request);
+        return sjukfallService.getSummary(enhetsId, mottagningsId, hsaId, urval, 0, LocalDate.now());
     }
 
     // - - - private scope - - -
@@ -260,16 +259,20 @@ public class SjukfallController {
         Urval urval = user.getUrval();
 
         LOG.debug("Calling the 'sjukfall' service to get a list of 'sjukfall' from care unit {}.", enhetsId);
-        return sjukfallService.getByUnit(enhetsId, mottagningsId, lakarId, urval, request);
+        return sjukfallService.getByUnit(enhetsId, mottagningsId, lakarId, urval, getMaxGlapp(user), request.getAktivtDatum());
     }
 
-    private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, GetSjukfallRequest request) {
+    private int getMaxGlapp(RehabstodUser user) {
+        return Integer.parseInt(user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG));
+    }
+
+    private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, String patientId, LocalDate date) {
         String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
         String lakarId = user.getHsaId();
         Urval urval = user.getUrval();
 
         LOG.debug("Calling the 'sjukfall' service to get a list of detailed 'sjukfall' for one patient.");
-        return sjukfallService.getByPatient(enhetsId, lakarId, urval, request);
+        return sjukfallService.getByPatient(enhetsId, lakarId, urval, patientId, getMaxGlapp(user), date);
     }
 
     private void logSjukfallData(RehabstodUser user, List<SjukfallEnhet> sjukfallList,
