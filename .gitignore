@@ -25,6 +25,5 @@ test/node_modules
 
 tools/soapUI/logs/soapui-rehabstod-logfile.txt
 
-test/node-v6.6.0-darwin-x64
-test/node-v6.11.3-darwin-x64
+test/node-v*
 test/reports
