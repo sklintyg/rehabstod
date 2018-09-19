@@ -127,9 +127,9 @@ public class UserController {
 
     @RequestMapping(value = "/preferences", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, String> updatePref(@RequestBody Map<String, String> keyValueMap) {
+    public void updatePref(@RequestBody Map<String, String> keyValueMap) {
         userPreferencesService.updatePreferences(RehabstodUserPreferences.fromFrontend(keyValueMap));
-        return getAllPrefs();
+        LOG.debug("Updating user pref with values {}", keyValueMap);
     }
 
     @RequestMapping(value = "/preferences", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -144,6 +144,14 @@ public class UserController {
             throw new AuthoritiesException("No user in session");
         }
 
+        if (userPreferencesService.getAllPreferences() != null) {
+            for (Map.Entry<RehabstodUserPreferences.Preference, String> pref
+                    : userPreferencesService.getAllPreferences().preferences().entrySet()) {
+                user.getPreferences().updatePreference(
+                        pref.getKey(),
+                        pref.getValue());
+            }
+        }
         return user;
     }
 

@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
@@ -50,9 +51,10 @@ public class UserPreferencesServiceImpl implements UserPreferencesService {
     }
 
     @Override
+    @Transactional
     public void updatePreferences(RehabstodUserPreferences keyValueMap) {
         RehabstodUser user = userService.getUser();
-        log.debug("Updating preference {} for {}.", keyValueMap, user.getHsaId());
+        log.debug("Updating preference {} for {}.", keyValueMap.toFrontendMap(), user.getHsaId());
         for (Map.Entry<Preference, String> pref : keyValueMap.preferences().entrySet()) {
             AnvandarPreference anvPref = anvandarPreferenceRepository.findByHsaIdAndKey(user.getHsaId(),
                     pref.getKey().getBackendKeyName());
@@ -62,7 +64,6 @@ public class UserPreferencesServiceImpl implements UserPreferencesService {
                 anvPref.setValue(pref.getValue());
             }
             anvandarPreferenceRepository.save(anvPref);
-            user.getPreferences().updatePreference(pref.getKey(), anvPref.getValue());
         }
     }
 

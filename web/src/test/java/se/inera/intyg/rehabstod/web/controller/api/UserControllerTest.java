@@ -41,6 +41,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
+import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 
@@ -69,6 +70,9 @@ public class UserControllerTest {
 
     @Mock
     private AnvandarPreferenceRepository anvandarPreferenceRepository;
+
+    @Mock
+    private UserPreferencesService userPreferencesService;
 
     @InjectMocks
     private UserController userController = new UserController();
