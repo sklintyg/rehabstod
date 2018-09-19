@@ -28,6 +28,7 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import se.inera.intyg.infra.security.filter.PrincipalUpdatedFilter;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.filters.PdlConsentGivenAssuranceFilter;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @Configuration
+@EnableTransactionManagement
 @PropertySource({ "classpath:default.properties",
                   "file:${config.file}",
                   "file:${credentials.file}",
