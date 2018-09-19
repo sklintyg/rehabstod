@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe('Directive: rhsHeader', function () {
+describe('Directive: rhsHeaderUser', function () {
     'use strict';
 
     // load the controller's module
@@ -37,7 +37,7 @@ describe('Directive: rhsHeader', function () {
         UserModel = _UserModel_;
 
         element =
-            $compile(' <rhs-header />')(
+            $compile(' <rhs-header-user />')(
                 $scope);
         $scope.$digest();
 

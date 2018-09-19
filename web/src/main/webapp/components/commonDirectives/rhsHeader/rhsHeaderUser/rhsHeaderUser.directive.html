@@ -1,0 +1,42 @@
+<div class="header-user" data-ng-if="user.loggedIn">
+  <i class="fa fa-user"></i>
+  <div class="header-two-row">
+    <div class="truncate-when-needed">
+      {{::user.name}}
+    </div>
+    <span id="logged-in-role" ng-if="showRoleDescription(user.role)">
+      <span class="hidden-xs">&nbsp;-&nbsp;</span>{{::user.role.desc}}
+    </span>
+    <a
+        id="rhs-header-settings"
+        class="header-link hidden-xs"
+        href
+        data-ng-click="openSettingsDialog()">
+      Inställningar
+    </a>
+  </div>
+  <button
+      type="button"
+      id="expand-usermenu-btn"
+      class="btn btn-link visible-xs"
+      ng-click="toggleMenu($event)">
+    <i class="glyphicon"
+       data-ng-class="[{'glyphicon-chevron-down': !userExpanded}, {'glyphicon-chevron-up': userExpanded}]"></i>
+  </button>
+</div>
+
+
+<!-- must be outside flex container to be able to relatively position it -->
+<div uib-dropdown is-open="userExpanded">
+  <ul uib-dropdown-menu>
+    <li>
+      <a
+          id="rhs-header-settings-menu"
+          class="header-link"
+          href
+          data-ng-click="openSettingsDialog()">
+        Inställningar
+      </a>
+    </li>
+  </ul>
+</div>

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsHeader',
-        function($log, $uibModal) {
+        function() {
             'use strict';
 
             return {
@@ -37,31 +37,12 @@ angular.module('rehabstodApp').directive('rhsHeader',
 
                     $scope.logoutLocation = UserModel.getLogoutLocation();
 
-                    $scope.showRoleDescription = function(role) {
-                        return role.name === 'LAKARE';
-                    };
-
                     $scope.showUnit = function() {
                         var user = UserModel.get();
 
                         return user.loggedIn && user.valdVardenhet;
                     };
 
-                    $scope.openSettingsDialog = function() {
-                        var modalInstance = $uibModal.open({
-                            animation: true,
-                            templateUrl: '/components/commonDirectives/rhsHeader/rhsSettingsModal/rhsSettingsModal.html',
-                            controller: 'RhsSettingsModalCtrl',
-                            size: 'md',
-                            windowClass: 'settings-modal'
-                        });
-
-                        modalInstance.result.then(function() {
-                            $log.debug('Settings Modal closed with a selection');
-                        }, function() {
-                            $log.debug('Settings Modal cancelled');
-                        });
-                    };
                 }
             };
         });
