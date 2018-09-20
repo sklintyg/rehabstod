@@ -5,15 +5,12 @@ module.exports = function(grunt) {
 
     var sass = require('node-sass');
 
-    grunt.loadNpmTasks('grunt-connect-proxy');
-
     // Load grunt tasks automatically, when needed
     require('jit-grunt')(grunt, {
         connect: 'grunt-contrib-connect',
         useminPrepare: 'grunt-usemin',
         ngtemplates: 'grunt-angular-templates',
         injector: 'grunt-injector',
-        configureProxies: 'grunt-connect-proxy',
         sasslint: 'grunt-sass-lint'
     });
 
@@ -59,17 +56,13 @@ module.exports = function(grunt) {
                                 '/components',
                                 serveStatic(__dirname + '/src/main/webapp/components') // jshint ignore:line
                             ),
-                            require('grunt-connect-proxy/lib/utils').proxyRequest
+                            require('http-proxy-middleware')({
+                                target: 'http://localhost:8790',
+                                logLevel: 'info'
+                            })
                         ];
                     }
-                },
-                proxies: [
-                    {
-                        context: '/',
-                        host: 'localhost',
-                        port: 8790
-                    }
-                ]
+                }
             }
         },
         open: {
@@ -464,7 +457,6 @@ module.exports = function(grunt) {
         'postcss',
         'injector',
         'wiredep',
-        'configureProxies:dev',
         'connect:dev',
         'wait',
         'open',
