@@ -32,6 +32,7 @@ angular.module('rehabstodApp').directive('rhsHeaderUser',
                     /**
                      * Exposed scope interaction functions
                      */
+                    $scope.userModel = UserModel;
                     $scope.user = UserModel.get();
                     $scope.userExpanded = false;
 
