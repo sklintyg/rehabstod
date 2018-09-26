@@ -45,6 +45,7 @@
 @import 'appDirectives/sjukfall/rhsFilter/rhsFilter.scss';
 @import 'appDirectives/sjukfall/rhsTable/rhsTable.scss';
 @import 'appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.scss';
+@import 'commonDirectives/rhsBoxButton/rhsBoxButton.directive.scss';
 @import 'commonDirectives/rhsChartLegend/rhsChartLegend.directive.scss';
 @import 'commonDirectives/rhsCookieBanner/rhsCookieBanner.directive.scss';
 @import 'commonDirectives/rhsDateRangePicker/rhsDateRangePicker.directive.scss';
@@ -54,7 +55,10 @@
 @import 'commonDirectives/rhsHeader/rhsHeaderUser/rhsSettingsModal/rhsSettingsModal.scss';
 @import 'commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.scss';
 @import 'commonDirectives/rhsNumericRangeInput/rhsNumericRangeInput.directive.scss';
+@import 'commonDirectives/rhsPatientHistoryTable/rhsInfoBox/rhsInfoBox.directive.scss';
 @import 'commonDirectives/rhsPatientHistoryTable/rhsPatientHistoryTable.directive.scss';
+@import 'commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedFlow.directive.scss';
+@import 'commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedStep1/rhsUnblockedStep1.directive.scss';
 @import 'commonDirectives/rhsPatientHistoryTabs/rhsPatientHistoryTabs.directive.scss';
 @import 'commonDirectives/rhsPatientHistoryTimeLineItem/rhsPatientHistoryTimeLineItem.directive.scss';
 @import 'commonDirectives/rhsPatientIntygFrame/rhsPatientIntygFrame.directive.scss';

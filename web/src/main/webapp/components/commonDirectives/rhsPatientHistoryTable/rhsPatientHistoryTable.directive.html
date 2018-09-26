@@ -1,7 +1,6 @@
 <h3>
   <span ng-if="index == 0">Pågående sjukfall på {{getEffectiveVardenhetUnitName()}}</span>
-  <span ng-if="historyItem.isFirstHistorical">Tidigare sjukfall på {{getEffectiveVardenhetUnitName()}}</span>
-  &nbsp;
+  <span ng-if="historyItem.isFirstHistorical">Tidigare sjukfall på {{getEffectiveVardenhetUnitName()}}</span> &nbsp;
 </h3>
 <div class="rhs-history-table-container arrow_box" ng-class="{'selected' : historyItem.selected}">
   <div class="sjukfall-title-row" ng-click="onSelect(historyItem)" ng-class="{'selected' : historyItem.selected}">
@@ -34,9 +33,11 @@
     <tr ng-repeat="intyg in historyItem.sjukfall.intyg">
       <td ng-attr-id="sjukfall-{{index}}-column-number-{{$index}}">{{$index + 1}}</td>
       <td ng-attr-id="sjukfall-{{index}}-column-diagnose-{{$index}}" class="nowrap">
-        <span uib-tooltip-html="getToolTip(intyg.diagnos)" tooltip-popup-delay="200" class="patient-history-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnos.intygsVarde}}</span><div
-          class="diagnos hidden-xs hidden-sm hidden-md">{{::intyg.diagnos.beskrivning}}</div>
-        <span ng-repeat="d in intyg.bidiagnoser">, <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="patient-history-dialog-tooltip">{{::d.intygsVarde}}</span></span>
+        <span uib-tooltip-html="getToolTip(intyg.diagnos)" tooltip-popup-delay="200"
+              class="patient-history-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnos.intygsVarde}}</span>
+        <div class="diagnos hidden-xs hidden-sm hidden-md">{{::intyg.diagnos.beskrivning}}</div>
+        <span ng-repeat="d in intyg.bidiagnoser">, <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200"
+                                                         class="patient-history-dialog-tooltip">{{::d.intygsVarde}}</span></span>
       </td>
       <td ng-attr-id="sjukfall-{{index}}-column-startdatum-{{$index}}" class="nowrap">{{::intyg.start}}</td>
       <td ng-attr-id="sjukfall-{{index}}-column-slutdatum-{{$index}}" class="nowrap">{{::intyg.slut}}</td>
@@ -48,10 +49,50 @@
         <div ng-repeat="s in intyg.sysselsattning track by $index">{{::s}}</div>
       </td>
       <td ng-if="hasFeature('SRS')" ng-attr-id="sjukfall-{{index}}-column-risk-{{$index}}" class="column-risk">
-        <rhs-risk-indicator category="intyg.riskSignal.riskKategori" description="intyg.riskSignal.riskDescription"></rhs-risk-indicator>
+        <rhs-risk-indicator category="intyg.riskSignal.riskKategori"
+                            description="intyg.riskSignal.riskDescription"></rhs-risk-indicator>
       </td>
-      <td><button class="btn btn-default" ng-attr-id="sjukfall-{{index}}-show-intyg-{{intyg.id}}" ng-click="onLoadIntyg({'intyg': intyg})"><b><i class="glyphicon glyphicon-eye-open"></i> Visa intyg</b></button></td>
+      <td>
+        <button class="btn btn-default" ng-attr-id="sjukfall-{{index}}-show-intyg-{{intyg.id}}"
+                ng-click="onLoadIntyg({'intyg': intyg})"><b><i class="glyphicon glyphicon-eye-open"></i> Visa intyg</b>
+        </button>
+      </td>
     </tr>
     </tbody>
   </table>
+
+  <div class="extra-diagnoser" ng-if="index == 0" ng-switch="extraDiagnoser.available">
+    <div ng-switch-when="false" class="text-center">
+      Ingen ytterligare intygsinformation hittades.
+    </div>
+    <div ng-switch-when="true">
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <h3>Ytterligare intygsinformation</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-4">
+              <rhs-info-box info-expr="extraDiagnoser.sparradInfoInomVardgivare" box-title="label.extradiagnoser.sparradinom.title"
+                            label-truthy="label.extradiagnoser.sparradinom"
+                            label-falsy="label.extradiagnoser.empty"></rhs-info-box>
+            </div>
+            <div class="col-md-4">
+              <rhs-info-box info-expr="extraDiagnoser.osparradInfoAndraVardgivare" box-title="label.extradiagnoser.osparradandra.title"
+                            label-falsy="label.extradiagnoser.empty">
+                <rhs-unblocked-flow></rhs-unblocked-flow>
+              </rhs-info-box>
+            </div>
+            <div class="col-md-4">
+              <rhs-info-box info-expr="extraDiagnoser.sparradInfoAndraVardgivare" box-title="label.extradiagnoser.sparradandra.title"
+                            label-truthy="label.extradiagnoser.sparradandra"
+                            label-falsy="label.extradiagnoser.empty"></rhs-info-box>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

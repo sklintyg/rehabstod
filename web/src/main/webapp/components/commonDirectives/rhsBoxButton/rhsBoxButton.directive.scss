@@ -1,0 +1,16 @@
+rhs-box-button {
+  display: block;
+
+  button.btn {
+    @extend %rs-typo-10;
+    background-color: $rs-color-02;
+    width: 100%;
+    outline: none;
+
+    &:hover {
+      color: $rs-color-01;
+      background-color: $rs-color-03;
+    }
+  }
+
+}

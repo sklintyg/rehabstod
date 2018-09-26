@@ -32,6 +32,13 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
         link: function($scope) {
             $scope.user = UserModel.get();
 
+            $scope.extraDiagnoser = {
+                available: true,
+                sparradInfoInomVardgivare: true,
+                osparradInfoAndraVardgivare: true,
+                sparradInfoAndraVardgivare: true
+            };
+
             $scope.getToolTip = function(diagnos) {
                 var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
                     messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
