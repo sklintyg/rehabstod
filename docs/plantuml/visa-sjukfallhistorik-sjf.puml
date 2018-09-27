@@ -1,0 +1,54 @@
+@startuml
+actor Läkare
+participant rhs as "Rehabstöd"
+participant sfm as "Sjukfallsmotor"
+participant st as "Spärrtjänsten"
+participant it as "Intygstjänsten"
+
+Läkare -> rhs: Väljer att visa sjukfallshistorik\nför patient på Vårdenhet
+activate rhs
+    rhs -> it: ListActiveSickLeavesForCareUnit(enhet, personId)
+    activate it
+    it -> it: Läser upp patientens\nsamtliga intyg över alla VG
+    it --> rhs: Lista av patientens samtliga intyg
+    deactivate it
+
+|||
+
+    rhs -> rhs: Kontrollera om det finns intyg på annan VG
+
+    rhs -> rhs: Kontrollera om det finns intyg\npå annan VE inom vår VG
+|||
+    alt Om det finns info på annan VG
+    rhs -> st: CheckConsent v2
+    activate st
+    st --> rhs: Har consent?
+    deactivate st
+
+    rhs -> rhs: För varje intyg, plocka fram patientId, vgId,\nveId och signeringsdatum
+    rhs -> st: CheckBlocks v4
+    activate st
+    st --> rhs: Blocks...
+    deactivate st
+
+    rhs -> rhs: Ta reda på VILKA vg som har ospärrad info\nlägg på Response, skall synkas mot "hämtade"\nVG i sessionen.
+    rhs -> rhs: Märk upp vilka intyg i intygslistan som ej kan visas pga saknad consent.
+
+
+    rhs -> rhs: Märk upp vilka intyg i intygslistan som är "blocked"
+    rhs -> rhs: Plocka fram eventuella existerande "Hämtade" VG\nfrån användarsessionen
+
+
+    rhs -> sfm: Skicka in _samtliga_ intyg oavsett spärr/consent
+    sfm --> rhs: Bruttosjukfall.
+
+    rhs -> rhs: Notera _vilka_ intyg i det _aktiva_ sjukfallet som saknar consent/har spärr, lägg åt sidan
+
+    rhs -> sfm: Skicka in _nettolistan_ av intyg för att\nfå verkliga sjukfall
+    sfm --> rhs: Nettosjukfall
+end
+    rhs -> rhs: Sammanställ svar med lista av sjukfall\nsamt metadataobjekt med info om vad som plockats väck.
+
+    rhs -> Läkare: Visar patientens sjukfallshistorik\ninkl SJF
+deactivate rhs
+@enduml
