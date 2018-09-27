@@ -28,7 +28,7 @@ angular.module('rehabstodApp').directive('rhsBoxButton',
                 scope: {
                     rhsClick: '&'
                 },
-                controller: function($scope) {
+                controller: function() {
                 },
                 templateUrl: '/components/commonDirectives/rhsBoxButton/rhsBoxButton.directive.html'
             };

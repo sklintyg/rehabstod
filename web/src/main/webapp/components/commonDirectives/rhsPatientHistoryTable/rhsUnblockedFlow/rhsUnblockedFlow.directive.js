@@ -25,7 +25,7 @@ angular.module('rehabstodApp').directive('rhsUnblockedFlow', [
         scope: {
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedFlow.directive.html',
-        link: function($scope) {
+        link: function() {
         }
     };
 } ]);
