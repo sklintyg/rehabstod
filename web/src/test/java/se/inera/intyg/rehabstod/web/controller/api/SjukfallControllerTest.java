@@ -46,6 +46,7 @@ import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -105,7 +106,6 @@ public class SjukfallControllerTest {
 
     @Mock
     private SjukfallService sjukfallServiceMock;
-
     @InjectMocks
     private SjukfallController testee = new SjukfallController();
 
@@ -243,8 +243,8 @@ public class SjukfallControllerTest {
         GetSjukfallRequest request = new GetSjukfallRequest();
 
         // When
-        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), any(Urval.class), anyString(), anyInt(), any(LocalDate.class)))
-                .thenReturn(new SjukfallPatientResponse(finalList, false));
+        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), any(Urval.class), anyString(), anyInt(), any(LocalDate.class)))
+                .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false));
 
         testee.getSjukfallForPatient(request);
 
@@ -322,6 +322,7 @@ public class SjukfallControllerTest {
         Vardenhet ve = new Vardenhet(VARDENHETS_ID, "VE-namn");
         vg.getVardenheter().add(ve);
         user.setVardgivare(Arrays.asList(vg));
+        user.setValdVardgivare(vg);
         user.setValdVardenhet(ve);
         user.getPreferences().updatePreference(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
         return user;

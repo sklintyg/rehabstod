@@ -35,8 +35,8 @@ describe('Controller: PatientHistoryController', function() {
         'intyg': [ {'intygsId':'333'} ]
     };
 
-    var scenario1 = [ sjukfall2017, sjukfall2016 ];
-    var scenario2 = [ sjukfall2017, sjukfall2013 ];
+    var scenario1 = { sjukfallList: [ sjukfall2017, sjukfall2016 ] };
+    var scenario2 = { sjukfallList: [ sjukfall2017, sjukfall2013 ] };
 
     var scope, $httpBackend;
 

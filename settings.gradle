@@ -7,12 +7,13 @@ pluginManagement {
 
 rootProject.name = 'rehabstod'
 
-include ':web', ':common', ':persistence', ':integration/it-integration', ':integration/srs-integration', ':rehabstod-liquibase-runner', ':rehabstod-protractor'
+include ':web', ':common', ':persistence', ':integration/it-integration', ':integration/srs-integration',':integration/sparrtjanst-integration', ':rehabstod-liquibase-runner', ':rehabstod-protractor'
 
 project(':web').name = 'rehabstod-web'
 project(':common').name = 'rehabstod-common'
 project(':persistence').name = 'rehabstod-persistence'
 project(':integration/it-integration').name = 'rehabstod-it-integration'
+project(':integration/sparrtjanst-integration').name = 'rehabstod-sparrtjanst-integration'
 project(':integration/srs-integration').name = 'rehabstod-srs-integration'
 project(':rehabstod-liquibase-runner').projectDir = "$rootDir/tools/liquibase-runner" as File
 project(':rehabstod-protractor').projectDir = "$rootDir/test" as File

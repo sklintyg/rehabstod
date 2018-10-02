@@ -18,12 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.time.LocalDate;
+
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
-
-import java.time.LocalDate;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -31,7 +31,8 @@ import java.time.LocalDate;
 public interface SjukfallService {
 
     /**
-     * @see List<se.inera.intyg.rehabstod.web.model.SjukfallEnhet> se.inera.intyg.rehabstod.service.sjukfall.SjukfallService.getByUnit
+     * @see List<se.inera.intyg.rehabstod.web.model.SjukfallEnhet>
+     *      se.inera.intyg.rehabstod.service.sjukfall.SjukfallService.getByUnit
      */
     SjukfallEnhetResponse getSjukfall(String enhetsId, String mottagningsId, String lakareId, Urval urval, int maxGlapp, LocalDate date);
 
@@ -47,7 +48,8 @@ public interface SjukfallService {
      */
     SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval, int maxGlapp, LocalDate date);
 
-    SjukfallPatientResponse getByPatient(String enhetsId, String lakareId, Urval urval, String patientId, int maxGlapp, LocalDate date);
+    SjukfallPatientResponse getByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId, Urval urval, String patientId,
+            int maxGlapp, LocalDate date);
 
     SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId, Urval urval, int maxGlapp, LocalDate date);
 

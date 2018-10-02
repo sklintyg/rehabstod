@@ -40,6 +40,62 @@
   angular.module('rhsWelcomeApp.controllers', []).controller('welcomeController',
     ['$scope', '$http', '$log', function($scope, $http, $log) {
 
+      $scope.SPT = {
+        patientId : '',
+        from : '',
+        to : '',
+          messages: []
+      };
+      $scope.addSPT = function() {
+          var m = $scope.SPT;
+
+          $http.put('/services/api/stub/sparrtjanst-api/person/' + m.patientId + '?from=' + m.from + '&to=' + m.to).
+          then(function(response) {
+              $scope.SPT.messages.unshift('Lade till spärr för tiden [ ' + m.from + '  :  ' +  m.to + ' ] för ' + m.patientId);
+          }, function(response) {
+              $scope.SPT.messages.unshift('Fick felsvar! ' + response.status);
+          });
+      };
+
+      $scope.purgeSPT = function(patientId) {
+
+          if (patientId) {
+              $http.delete('/services/api/stub/sparrtjanst-api/person/' + patientId).
+              then(function(response) {
+                  $scope.SPT.messages.unshift('Tog bort alla spärrar för ' + patientId);
+              }, function(response) {
+                  $scope.SPT.messages.unshift('Fick felsvar! ' + response.status);
+              });
+
+          } else {
+              $http.delete('/services/api/stub/sparrtjanst-api/person').
+              then(function(response) {
+                  $scope.SPT.messages.unshift('Tog bort alla spärrar');
+              }, function(response) {
+                  $scope.SPT.messages.unshift('Fick felsvar! ' + response.status);
+              });
+          }
+
+      };
+        $scope.dumpSPT = function() {
+            var m = $scope.SPT;
+            $http.get('/services/api/stub/sparrtjanst-api').
+            then(function(response) {
+                $scope.SPT.messages.splice(0, $scope.SPT.messages.length);
+                if (response.data.length === 0) {
+                    $scope.SPT.messages.push('Inga spärrar satta');
+                }
+                angular.forEach(response.data, function(row) {
+                    $scope.SPT.messages.push(row);
+                });
+
+            }, function(response) {
+                $scope.SPT.messages.unshift('Fick felsvar! ' + response.status);
+            });
+        };
+        //--------------------------------------
+
+
       function _fetchHsaPersons() {
         $http.get('/services/api/hsa-api/person').
         then(function(response) {
@@ -312,6 +368,52 @@
           </div>
 
         </div>
+
+
+
+        <div class="content row">
+          <br>
+          <div class="panel panel-body panel-default">
+            <h4>Spärrtjänst Stub Management</h4>
+            <input type="text" name="patientId" ng-model="SPT.patientId" size="18"  maxlength="12" placeholder="personnnr (utan -)">
+            <input type="text" name="spt.from" ng-model="SPT.from" size="18" placeholder="from åååå-mm-dd">
+            <input type="text" name="spt.to" ng-model="SPT.to" size="18" placeholder="tom åååå-mm-dd">
+            <div class="btn-group btn-group-sm" role="group">
+
+              <button type="button" class="btn btn-small btn-primary"
+                      ng-click="addSPT()"
+                      ng-disabled="!SPT.patientId || SPT.patientId.length!=12 || SPT.from.length<10 || SPT.to.length<10">
+                Lägg till Spärr
+              </button>
+              <button type="button" class="btn btn-small btn-primary"
+                      ng-click="purgeSPT(SPT.patientId)"
+                      ng-disabled="!SPT.patientId || SPT.patientId.length<12">
+                Rensa Spärrar
+              </button>
+
+            </div>
+            <br>
+            <div class="btn-group btn-group-sm" role="group">
+              <button type="button" class="btn btn-small btn-primary"
+                      ng-click="dumpSPT()">
+                Visa alla spärrar
+              </button>
+
+
+              <button type="button" class="btn btn-small btn-primary"
+                      ng-click="purgeSPT()">
+                Rensa alla spärrar
+              </button>
+            </div>
+
+            <div>
+              <div ng-repeat="row in SPT.messages track by $index">>{{row}}</div>
+            </div>
+
+          </div>
+        </div>
+
+
       </div>
     </div>
 

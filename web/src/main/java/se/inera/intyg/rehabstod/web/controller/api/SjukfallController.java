@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,6 +26,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,7 +118,7 @@ public class SjukfallController {
     }
 
     @RequestMapping(value = "/patient", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<SjukfallPatient>> getSjukfallForPatient(@RequestBody GetSjukfallRequest request) {
+    public ResponseEntity<SjukfallPatientResponse> getSjukfallForPatient(@RequestBody GetSjukfallRequest request) {
 
         // Get user from session
         RehabstodUser user = getRehabstodUser();
@@ -128,6 +129,7 @@ public class SjukfallController {
 
         // PDL-logging based on which sjukfall that are about to be displayed to user.
         LOG.debug("PDL logging - log which detailed 'sjukfall' that will be displayed to the user.");
+        //TODO: vi visar ju även historiska sjukfall?
         logSjukfallData(user, sjukfall.get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK);
 
         // If at least one intyg for the patient has an SRS prediction, log this.
@@ -135,7 +137,7 @@ public class SjukfallController {
             logSjukfallData(user, sjukfall.get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
         }
 
-        return buildSjukfallPatientResponse(response.isSrsError(), sjukfall);
+        return buildSjukfallPatientResponse(response.isSrsError(), response);
     }
 
     /**
@@ -268,11 +270,12 @@ public class SjukfallController {
 
     private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, String patientId, LocalDate date) {
         String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
+        String currentVardgivarHsaId = user.getValdVardgivare().getId();
         String lakarId = user.getHsaId();
         Urval urval = user.getUrval();
 
         LOG.debug("Calling the 'sjukfall' service to get a list of detailed 'sjukfall' for one patient.");
-        return sjukfallService.getByPatient(enhetsId, lakarId, urval, patientId, getMaxGlapp(user), date);
+        return sjukfallService.getByPatient(currentVardgivarHsaId, enhetsId, lakarId, urval, patientId, getMaxGlapp(user), date);
     }
 
     private void logSjukfallData(RehabstodUser user, List<SjukfallEnhet> sjukfallList,
@@ -349,7 +352,7 @@ public class SjukfallController {
         }
     }
 
-    private ResponseEntity<List<SjukfallPatient>> buildSjukfallPatientResponse(boolean srsError, List<SjukfallPatient> payload) {
+    private ResponseEntity<SjukfallPatientResponse> buildSjukfallPatientResponse(boolean srsError, SjukfallPatientResponse payload) {
         if (!srsError) {
             return new ResponseEntity<>(payload, HttpStatus.OK);
         } else {

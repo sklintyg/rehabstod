@@ -70,7 +70,7 @@ gretty {
     enableNaming = true
 
     jvmArgs = [
-               '-Dspring.profiles.active=dev,rhs-it-stub,rhs-srs-stub,caching-enabled',
+               '-Dspring.profiles.active=dev,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,caching-enabled',
                '-Dconfig.file=' + projectDir + '/src/main/resources/dev.properties',
                '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
                '-Dresources.folder=/' +projectDir + '/../src/main/resources'
@@ -89,6 +89,7 @@ gretty {
 
 dependencies {
     compile project(":rehabstod-it-integration")
+    compile project(":rehabstod-sparrtjanst-integration")
     compile project(":rehabstod-srs-integration")
     compile project(":rehabstod-persistence")
 

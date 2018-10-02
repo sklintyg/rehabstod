@@ -19,7 +19,9 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -27,12 +29,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
+import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
+import se.inera.intyg.rehabstod.integration.sparrtjanst.service.SparrtjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.FilteredSjukFallByPatientResult;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
@@ -82,18 +92,21 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Autowired
     private RiskPredictionService riskPredictionService;
 
+    @Autowired
+    private SparrtjanstIntegrationService sparrtjanstIntegrationService;
+
     // api
 
     @Override
     public SjukfallEnhetResponse getSjukfall(String enhetsId, String mottagningsId,
-                                           String lakareId, Urval urval, int maxGlapp, LocalDate date) {
+            String lakareId, Urval urval, int maxGlapp, LocalDate date) {
 
         return getByUnit(enhetsId, mottagningsId, lakareId, urval, maxGlapp, date);
     }
 
     @Override
     public SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId,
-                                           String lakareId, Urval urval, int maxGlapp, LocalDate date) {
+            String lakareId, Urval urval, int maxGlapp, LocalDate date) {
 
         List<SjukfallEnhet> rehabstodSjukfall = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, maxGlapp, date);
 
@@ -102,7 +115,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         if (rehabstodSjukfall != null) {
             monitoringLogService.logUserViewedSjukfall(lakareId,
-                rehabstodSjukfall.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
+                    rehabstodSjukfall.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
         }
 
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(rehabstodSjukfall);
@@ -116,12 +129,17 @@ public class SjukfallServiceImpl implements SjukfallService {
         return new SjukfallEnhetResponse(rehabstodSjukfall, srsError);
     }
 
-
     @Override
-    public SjukfallPatientResponse getByPatient(String enhetsId, String lakareId, Urval urval, String patientId, int maxGlapp,
+    public SjukfallPatientResponse getByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId, Urval urval,
+            String patientId, int maxGlapp,
             LocalDate date) {
 
-        List<SjukfallPatient> rehabstodSjukfall = getFilteredSjukfallByPatient(enhetsId, urval, patientId, maxGlapp, date);
+
+        FilteredSjukFallByPatientResult result = getFilteredSjukfallByPatient(lakareId, currentVardgivarHsaId, enhetsId, urval, patientId,
+                maxGlapp, date);
+
+        final List<SjukfallPatient> rehabstodSjukfall = result.getRehabstodSjukfall();
+
         sjukfallPuService.enrichWithPatientNameAndFilterSekretess(rehabstodSjukfall);
         boolean srsError = false;
         try {
@@ -134,12 +152,12 @@ public class SjukfallServiceImpl implements SjukfallService {
             monitoringLogService.logUserViewedSjukfall(lakareId, rehabstodSjukfall.size(), enhetsId);
         }
 
-        return new SjukfallPatientResponse(rehabstodSjukfall, srsError);
+        return new SjukfallPatientResponse(rehabstodSjukfall, result.getSjfMetaData(), srsError);
     }
 
     @Override
     public SjukfallSummary getSummary(String enhetsId, String mottagningsId,
-                                      String lakareId, Urval urval, int maxGlapp, LocalDate date) {
+            String lakareId, Urval urval, int maxGlapp, LocalDate date) {
 
         List<SjukfallEnhet> sjukfallList = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, maxGlapp, date);
         sjukfallPuService.filterSekretessForSummary(sjukfallList);
@@ -160,7 +178,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     private List<SjukfallEnhet> getFilteredSjukfallByUnit(String enhetsId, String mottagningsId,
-                                                          String lakareId, Urval urval, int maxGlapp, LocalDate date) {
+            String lakareId, Urval urval, int maxGlapp, LocalDate date) {
 
         if (urval == null) {
             throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");
@@ -171,14 +189,14 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall' by unit.");
         List<se.inera.intyg.infra.sjukfall.dto.IntygData> data = intygsData.stream()
-            .map(o -> intygstjanstMapper.map(o)).collect(Collectors.toList());
+                .map(o -> intygstjanstMapper.map(o)).collect(Collectors.toList());
         se.inera.intyg.infra.sjukfall.dto.IntygParametrar parametrar = new IntygParametrar(maxGlapp, date);
 
         List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> sjukfallList = sjukfallEngine.beraknaSjukfallForEnhet(data, parametrar);
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
-        List<SjukfallEnhet> rehabstodSjukfall =
-            sjukfallList.stream().map(o -> sjukfallEngineMapper.map(o, date)).collect(Collectors.toList());
+        List<SjukfallEnhet> rehabstodSjukfall = sjukfallList.stream().map(o -> sjukfallEngineMapper.map(o, date))
+                .collect(Collectors.toList());
 
         if (urval.equals(Urval.ISSUED_BY_ME)) {
             LOG.debug("Filtering response - a doctor shall only see patients 'sjukfall' he/she has issued certificates.");
@@ -197,27 +215,100 @@ public class SjukfallServiceImpl implements SjukfallService {
         return rehabstodSjukfall;
     }
 
-    private List<SjukfallPatient> getFilteredSjukfallByPatient(String enhetsId,
-                                                               Urval urval, String patientId, int maxGlapp, LocalDate date) {
-        if (urval == null) {
-            throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");
-        }
+    private FilteredSjukFallByPatientResult getFilteredSjukfallByPatient(String lakarId, String currentVardgivarHsaId, String enhetsId,
+            Urval urval, String patientId, int maxGlapp, LocalDate date) {
+
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(lakarId), "lakarId may not be null or empty");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardgivarHsaId), "currentVardgivarHsaId may not be null or empty");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(enhetsId), "enhetsId may not be null or empty");
+        Preconditions.checkArgument(urval != null, "urval may not be null");
+
+        IntygParametrar parametrar = new IntygParametrar(maxGlapp, date);
+        List<se.inera.intyg.infra.sjukfall.dto.SjukfallPatient> sjukfallList;
+        Map<String, IntygAccessControlMetaData> intygAccessMetaData = new HashMap<>();
 
         LOG.debug("Calling Intygstjänsten - fetching certificate information by patient.");
         List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForPatient(enhetsId, patientId);
 
-        LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall' by patient.");
-        List<se.inera.intyg.infra.sjukfall.dto.IntygData> data = intygsData.stream()
-            .map(o -> intygstjanstMapper.map(o)).collect(Collectors.toList());
-        se.inera.intyg.infra.sjukfall.dto.IntygParametrar parametrar = new IntygParametrar(maxGlapp, date);
+        List<IntygData> data = intygsData
+                .stream()
+                .map(o -> intygstjanstMapper.map(o))
+                .collect(Collectors.toList());
 
-        List<se.inera.intyg.infra.sjukfall.dto.SjukfallPatient> sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parametrar);
+        // Create initial map linked to each intyg by intygsId
+        data.forEach(intygData -> intygAccessMetaData.put(intygData.getIntygId(),
+                new IntygAccessControlMetaData(intygData, currentVardgivarHsaId.equals(intygData.getVardgivareId()))));
+
+        // Decorate intygAccessMetaData with "spärr" info
+        sparrtjanstIntegrationService.decorateWithBlockStatus(currentVardgivarHsaId, enhetsId, lakarId, patientId, intygAccessMetaData,
+                data);
+
+        // Make an initial calculation using _all_ available intyg...
+        sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parametrar);
+        // ... and check which intyg is contributing to the aktive sjukfall
+        updateAccessMetaDataWithContributingStatus(sjukfallList, intygAccessMetaData);
+        // TODOO: skapa listorna med vilka vårdgivare som hade intyg SKULLE funnits i aktivt sjukfall men som inte kommer med
+        // pga spärr inre/yttrespärr.
+        SjfMetaData sjfMetaData = createSjfMetaData(intygAccessMetaData);
+
+        // Final run, where all intyg not cleared (sparr/samtycke) to be included have been removed
+        sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(filterByAcessMetaData(data, intygAccessMetaData), parametrar);
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
-        List<SjukfallPatient> rehabstodSjukfall
-            = sjukfallList.stream().map(o -> sjukfallEngineMapper.map(o)).collect(Collectors.toList());
+        List<SjukfallPatient> rehabstodSjukfall = sjukfallList.stream().map(o -> sjukfallEngineMapper.map(o)).collect(Collectors.toList());
 
-        return rehabstodSjukfall;
+
+        return new FilteredSjukFallByPatientResult(rehabstodSjukfall, sjfMetaData);
+    }
+
+    private SjfMetaData createSjfMetaData(Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
+        SjfMetaData metadata = new SjfMetaData();
+
+        intygAccessMetaData.forEach((intygsId, iacm) -> {
+            if (iacm.isBidrarTillAktivtSjukfall()) {
+                if (iacm.inreSparr()) {
+                    metadata.getVardenheterInomVGMedSparr().add(iacm.getIntygData().getVardenhetNamn());
+                }
+                if (iacm.yttreSparr()) {
+                    metadata.getAndraVardgivareMedSparr().add(iacm.getIntygData().getVardgivareNamn());
+                }
+            }
+        });
+
+        return metadata;
+    }
+
+    private void updateAccessMetaDataWithContributingStatus(List<se.inera.intyg.infra.sjukfall.dto.SjukfallPatient> sjukfallList,
+            Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
+        if (sjukfallList.isEmpty()) {
+            return;
+        }
+
+        // Update BidrarTillAktivtSjukfall for all that are part of active sjukfall.
+        final se.inera.intyg.infra.sjukfall.dto.SjukfallPatient aktivtSjukfall = sjukfallList.get(0);
+        aktivtSjukfall.getSjukfallIntygList()
+                .forEach(sjukfallIntyg -> intygAccessMetaData.get(sjukfallIntyg.getIntygId()).setBidrarTillAktivtSjukfall(true));
+
+    }
+
+    private List<IntygData> filterByAcessMetaData(List<IntygData> data, Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
+        return data.stream()
+                .filter(intygData -> shouldInclude(intygData, intygAccessMetaData.get(intygData.getIntygId())))
+                .collect(Collectors.toList());
+    }
+
+    private boolean shouldInclude(IntygData intygData, IntygAccessControlMetaData intygAccessControlMetaData) {
+        // 1. Får inte har spärr
+        if (intygAccessControlMetaData.isSparr()) {
+            return false;
+        }
+
+        // 2. Om Samtycke krävs - måste också samtycke vara givet
+        if (intygAccessControlMetaData.isKraverSamtycke() && !intygAccessControlMetaData.isHarSamtycke()) {
+            return false;
+        }
+
+        return true;
     }
 
 }

@@ -94,6 +94,7 @@ public class ApplicationConfig implements TransactionManagementConfigurer {
 
     @Bean(name = "jacksonJsonProvider")
     public JacksonJaxbJsonProvider jacksonJsonProvider() {
+
         return new JacksonJaxbJsonProvider();
     }
 

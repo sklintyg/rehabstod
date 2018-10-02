@@ -18,31 +18,25 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
-import java.util.List;
-
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
+import java.util.List;
+
 /**
- * Encapsulates the response for sjukfall for a patient with a flag indicating whether SRS predictions could be fetched.
+ * Created by marced on 2018-10-02.
  */
-public class SjukfallPatientResponse {
-
+public class FilteredSjukFallByPatientResult {
+    private final List<SjukfallPatient> rehabstodSjukfall;
     private final SjfMetaData sjfMetaData;
-    private List<SjukfallPatient> sjukfallList;
-    private boolean srsError = false;
 
-    public SjukfallPatientResponse(List<SjukfallPatient> rehabstodSjukfall, SjfMetaData sjfMetaData, boolean srsError) {
-        this.sjukfallList = rehabstodSjukfall;
+    public FilteredSjukFallByPatientResult(List<SjukfallPatient> rehabstodSjukfall, SjfMetaData sjfMetaData) {
+
+        this.rehabstodSjukfall = rehabstodSjukfall;
         this.sjfMetaData = sjfMetaData;
-        this.srsError = srsError;
     }
 
-    public List<SjukfallPatient> getSjukfallList() {
-        return sjukfallList;
-    }
-
-    public boolean isSrsError() {
-        return srsError;
+    public List<SjukfallPatient> getRehabstodSjukfall() {
+        return rehabstodSjukfall;
     }
 
     public SjfMetaData getSjfMetaData() {

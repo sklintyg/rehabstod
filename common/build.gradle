@@ -1,5 +1,6 @@
 dependencies {
     compile "se.inera.intyg.infra:log-messages:${intygInfraVersion}"
+    compile "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
 
     compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
