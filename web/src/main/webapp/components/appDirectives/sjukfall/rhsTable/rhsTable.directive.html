@@ -28,7 +28,7 @@
           <td class="column-slut end-date">{{::row.slut}}</td>
           <td class="column-dagar">{{::row.dagarShow}}</td>
           <td class="column-antal">{{::row.intyg}}</td>
-          <td  class="column-grad" ng-bind-html="::row.gradShow"></td>
+          <td class="column-grad" ng-bind-html="::row.gradShow"></td>
           <td ng-if="hasFeature('SRS')" class="column-risk">
             <rhs-risk-indicator category="row.riskSignal.riskKategori" description="row.riskSignal.riskDescription"></rhs-risk-indicator>
           </td>
@@ -40,7 +40,8 @@
 
   <div ng-if="!displayedCollection.length" class="rhs-table-no-result">
     <span ng-if="!model.get().length && !model.hasError()">
-      {{::'label.table.no-result' | message}} {{user.valdVardgivare.namn}} - {{user.valdVardenhet.namn}}
+      <span ng-if="user.isLakare" message key="label.table.no-result.lakare"></span>
+      <span ng-if="!user.isLakare" message key="label.table.no-result.rehab"></span>
     </span>
     <span ng-if="model.get().length">
       {{::'label.table.no-filter-result' | message}}

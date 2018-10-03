@@ -150,7 +150,8 @@ var rhsMessages = {
         'label.table.column.risksignal.riskkategori.help': 'Risksignalen för att sjukfallet varar mer än 90 dagar beräknas med matematiska metoder tillämpade på en rad variabler som till exempel ålder, kön, bostadsort och tidigare vårdkontakter för att försöka detektera om den aktuella individens risk skiljer sig från andra patienter inom samma diagnosgrupp. Metoden ska ses som ett komplement inför den egna professionella bedömningen.',
 
 
-        'label.table.no-result': 'Det finns inga pågående sjukfall på ',
+        'label.table.no-result.rehab': 'Det finns inga pågående sjukfall på enheten',
+        'label.table.no-result.lakare': 'Du har inga pågående sjukfall på enheten',
         'label.table.no-filter-result': 'Inga sjukfall matchade filtreringen.',
 
         'label.table.number.of.rows' : 'Visar',
