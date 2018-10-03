@@ -32,7 +32,11 @@ angular.module('rehabstodcommon.dynamiclink').directive(
                 template: '<a href="{{ url }}" ' +
                     'class="external-link {{ linkclass }}" ' +
                     'ng-attr-target="{{ target || undefined}}" ' +
-                    'ng-attr-title="{{ tooltip || undefined }}">' +
+                    'uib-tooltip="{{ tooltip || undefined }}"' +
+                    'tooltip-enable="{{ !!tooltip}}"' +
+                    'tooltip-placement="auto top"' +
+                    'tooltip-append-to-body="true"' +
+                    '>' +
                     '<span ng-bind-html="text"></span>' +
                     '<ng-transclude></ng-transclude> ' +
                     '<i ng-if="target" class="glyphicon glyphicon-new-window"></i></a>',
