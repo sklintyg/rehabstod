@@ -18,11 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import static se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService.PDL_CONSENT_GIVEN;
-
-import java.util.Arrays;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
@@ -44,6 +38,11 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetUserResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GivePdlLoggingConsentRequest;
+
+import java.util.Arrays;
+import java.util.Map;
+
+import static se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService.PDL_CONSENT_GIVEN;
 
 @RestController
 @RequestMapping("/api/user")
@@ -143,15 +142,6 @@ public class UserController {
 
         if (user == null) {
             throw new AuthoritiesException("No user in session");
-        }
-
-        if (userPreferencesService.getAllPreferences() != null) {
-            for (Map.Entry<RehabstodUserPreferences.Preference, String> pref
-                    : userPreferencesService.getAllPreferences().preferences().entrySet()) {
-                user.getPreferences().updatePreference(
-                        pref.getKey(),
-                        pref.getValue());
-            }
         }
         return user;
     }
