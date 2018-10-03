@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import com.itextpdf.text.DocumentException;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -315,7 +314,6 @@ public class SjukfallControllerTest {
         verify(logServiceMock, times(3));
     }
 
-    @NotNull
     private RehabstodUser buildConcreteUser() {
         RehabstodUser user = new RehabstodUser("user-1", "Hej Hejssansson", true);
         Vardgivare vg = new Vardgivare("vg-1", "VG-namn");
