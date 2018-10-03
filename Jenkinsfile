@@ -65,6 +65,11 @@ stage('tag and upload') {
 
 stage('propagate') {
     node {
-        build job: "rehabstod-dintyg-build", wait: false, parameters: [[$class: 'StringParameterValue', name: 'REHABSTOD_BUILD_VERSION', value: buildVersion]]
+        gitRef = "v${buildVersion}"
+        build job: "rehabstod-dintyg-build", wait: false, parameters: [
+                [$class: 'StringParameterValue', name: 'REHABSTOD_BUILD_VERSION', value: buildVersion],
+                [$class: 'StringParameterValue', name: 'INFRA_VERSION', value: infraVersion],
+                [$class: 'StringParameterValue', name: 'GIT_REF', value: gitRef]
+        ]
     }
 }
