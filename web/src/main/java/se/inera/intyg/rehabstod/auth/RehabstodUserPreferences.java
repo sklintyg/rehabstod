@@ -82,6 +82,23 @@ public final class RehabstodUserPreferences implements Serializable {
         return result;
     }
 
+    // CHECKSTYLE:OFF NeedBraces
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RehabstodUserPreferences)) return false;
+
+        RehabstodUserPreferences that = (RehabstodUserPreferences) o;
+
+        return map != null ? map.equals(that.map) : that.map == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return map != null ? map.hashCode() : 0;
+    }
+    // CHECKSTYLE:ON NeedBraces
+
     public enum Preference {
         PDL_CONSENT_GIVEN("user_pdl_consent_given", "pdlConsentGiven", "false"),
         MAX_ANTAL_DAGAR_MELLAN_INTYG("maxAntalDagarMellanIntyg", "maxAntalDagarMellanIntyg", "5");

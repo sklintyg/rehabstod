@@ -18,19 +18,18 @@
  */
 package se.inera.intyg.rehabstod.service.user;
 
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
+
+import java.util.Map;
 
 @Service
 public class UserPreferencesServiceImpl implements UserPreferencesService {
@@ -64,6 +63,7 @@ public class UserPreferencesServiceImpl implements UserPreferencesService {
                 anvPref.setValue(pref.getValue());
             }
             anvandarPreferenceRepository.save(anvPref);
+            user.getPreferences().updatePreference(pref.getKey(), pref.getValue());
         }
     }
 

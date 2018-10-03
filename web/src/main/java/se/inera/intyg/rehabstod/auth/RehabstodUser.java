@@ -216,6 +216,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
         );
     }
 
+
     // CHECKSTYLE:OFF NeedBraces
     @Override
     public boolean equals(Object o) {
@@ -227,9 +228,10 @@ public class RehabstodUser extends IntygUser implements Serializable {
 
         if (pdlConsentGiven != that.pdlConsentGiven) return false;
         if (isLakare != that.isLakare) return false;
-        return storedActivities != null ? storedActivities.equals(that.storedActivities) : that.storedActivities == null;
+        if (storedActivities != null ? !storedActivities.equals(that.storedActivities) : that.storedActivities != null)
+            return false;
+        return preferences.equals(that.preferences);
     }
-    // CHECKSTYLE:ON NeedBraces
 
     @Override
     public int hashCode() {
@@ -237,8 +239,10 @@ public class RehabstodUser extends IntygUser implements Serializable {
         result = THIRTYONE * result + (storedActivities != null ? storedActivities.hashCode() : 0);
         result = THIRTYONE * result + (pdlConsentGiven ? 1 : 0);
         result = THIRTYONE * result + (isLakare ? 1 : 0);
+        result = THIRTYONE * result + preferences.hashCode();
         return result;
     }
+    // CHECKSTYLE:ON NeedBraces
 
     // private scope
     private void writeObject(java.io.ObjectOutputStream stream) throws java.io.IOException {
