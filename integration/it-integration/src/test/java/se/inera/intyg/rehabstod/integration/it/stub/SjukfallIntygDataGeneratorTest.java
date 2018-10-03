@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import se.inera.intyg.infra.integration.pu.stub.ChronicleResidentStore;
+import se.inera.intyg.infra.integration.pu.stub.StubResidentStore;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import java.util.Arrays;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 public class SjukfallIntygDataGeneratorTest {
 
     @Mock
-    private ChronicleResidentStore residentStore;
+    private StubResidentStore residentStore;
 
     @Mock
     private PersonnummerLoader personnummerLoader;
