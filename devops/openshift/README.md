@@ -30,7 +30,7 @@ Note that we strongly recommend using a git account that has read-only (e.g. pub
 
 ##### Create pipeline
 
-    ~/intyg/oc/./oc process -f ~/intyg/tools/devops/openshift/pipelinetemplate-test-webapp-new.yaml -p APP_NAME=rehabstod-test -p STAGE=test -p SECRET=nosecret -p TESTS="restAssuredTest" | ~/intyg/oc/./oc apply -f -
+    oc process pipelinetemplate-test-webapp -p APP_NAME=rehabstod-test -p STAGE=test -p SECRET=nosecret -p TESTS="restAssuredTest" | oc apply -f -
 
 ##### Create env var secret and config map
 
