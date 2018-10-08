@@ -3,6 +3,10 @@
 def buildVersion = "1.8.0.${BUILD_NUMBER}"
 def infraVersion = "3.8.0.+"
 
+// Common is not used by Rehabstod but is defined since the
+// OpenShift pipeline template depends on this property
+def commonVersion = "3.8.0.+"
+
 stage('checkout') {
     node {
         git url: "https://github.com/sklintyg/rehabstod.git", branch: GIT_BRANCH
