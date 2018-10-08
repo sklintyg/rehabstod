@@ -32,6 +32,33 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
 
     var _defaultTab = null;
 
+    var _sjfMetaData = {};
+
+    function _setSjfMetaData(sjfMetaData) {
+        _sjfMetaData = sjfMetaData;
+
+        // FAKE DATA WHILE BACKEND IS BUILT
+        _sjfMetaData.vardenheterInomVGMedSparr = [];
+        var i = 0;
+        for(; i < 20; i++){
+            _sjfMetaData.vardenheterInomVGMedSparr.push('Vardenhetmedlangtnamnochmassaandraproblem ' + (i + 1));
+        }
+
+        _sjfMetaData.andraVardgivareMedSparr = [];
+        for(i = 0; i < 20; i++){
+            _sjfMetaData.andraVardgivareMedSparr.push('Vardgivaremedlangtnamnochmassaandraproblem ' + (i + 1));
+        }
+
+        _sjfMetaData.andraVardgivareUtanSparr = [];
+        for(i = 0; i < 20; i++){
+            _sjfMetaData.andraVardgivareUtanSparr.push('Vardgivaremedlangtnamnochmassaandraproblem ' + (i + 1));
+        }
+    }
+
+    function _getSjfMetaData() {
+        return _sjfMetaData;
+    }
+
     // Timeline ---------------
 
     /* Build a custom array based on the supplied sjukfall array
@@ -158,6 +185,8 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
         getTabById: _getTabById,
         setTimelineItems: _setTimelineItems,
         getTimelineItems: _getTimelineItems,
-        selectTimelineItem: _selectTimelineItem
+        selectTimelineItem: _selectTimelineItem,
+        setSjfMetaData: _setSjfMetaData,
+        getSjfMetaData: _getSjfMetaData
     };
 } ]);

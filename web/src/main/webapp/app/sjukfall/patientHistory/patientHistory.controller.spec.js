@@ -13,7 +13,7 @@ describe('Controller: PatientHistoryController', function() {
             'kod': 'J661',
             'beskrivning': 'desc1'
         },
-        'intyg': [ {'intygsId':'111'} ]
+        'intyg': [{'intygsId': '111'}]
     };
 
     var sjukfall2016 = {
@@ -23,7 +23,7 @@ describe('Controller: PatientHistoryController', function() {
             'kod': 'J662',
             'beskrivning': 'desc2'
         },
-        'intyg': [ {'intygsId':'222'} ]
+        'intyg': [{'intygsId': '222'}]
     };
     var sjukfall2013 = {
         'start': '2013-02-22',
@@ -32,27 +32,42 @@ describe('Controller: PatientHistoryController', function() {
             'kod': 'J663',
             'beskrivning': 'Småont i ryggen3'
         },
-        'intyg': [ {'intygsId':'333'} ]
+        'intyg': [{'intygsId': '333'}]
     };
 
-    var scenario1 = { sjukfallList: [ sjukfall2017, sjukfall2016 ] };
-    var scenario2 = { sjukfallList: [ sjukfall2017, sjukfall2013 ] };
+    var scenario1 = {
+        sjukfallList: [sjukfall2017, sjukfall2016],
+        sjfMetaData: {
+            vardenheterInomVGMedSparr: ['Vardenhet 1', 'Vardenhet 2'],
+            andraVardgivareMedSparr: ['Vardgivare 1', 'Vardgivare 2'],
+            andraVardgivareUtanSparr: ['Vardgivare 1', 'Vardgivare 2']
+        }
+    };
+    var scenario2 = {
+        sjukfallList: [sjukfall2017, sjukfall2013],
+        sjfMetaData: {
+            vardenheterInomVGMedSparr: ['Vardenhet 1', 'Vardenhet 2'],
+            andraVardgivareMedSparr: ['Vardgivare 1', 'Vardgivare 2'],
+            andraVardgivareUtanSparr: ['Vardgivare 1', 'Vardgivare 2']
+        }
+    };
 
     var scope, $httpBackend;
 
     // Initialize the controller and a mock scope
-    beforeEach(inject(function($controller, $rootScope, $state, _$httpBackend_, _patientHistoryProxy_, _patientHistoryViewState_) {
-        scope = $rootScope.$new();
-        $httpBackend = _$httpBackend_;
-        $controller('patientHistoryController', {
-            $scope: scope,
-            $uibModalInstance: {},
-            $state: $state,
-            patientHistoryProxy: _patientHistoryProxy_,
-            patientHistoryViewState: _patientHistoryViewState_,
-            patient: {}
-        });
-    }));
+    beforeEach(inject(
+        function($controller, $rootScope, $state, _$httpBackend_, _patientHistoryProxy_, _patientHistoryViewState_) {
+            scope = $rootScope.$new();
+            $httpBackend = _$httpBackend_;
+            $controller('patientHistoryController', {
+                $scope: scope,
+                $uibModalInstance: {},
+                $state: $state,
+                patientHistoryProxy: _patientHistoryProxy_,
+                patientHistoryViewState: _patientHistoryViewState_,
+                patient: {}
+            });
+        }));
 
     it('should build correct timeline for scenario 1', function() {
         $httpBackend.expectPOST('/api/sjukfall/patient').respond(scenario1);
@@ -96,7 +111,6 @@ describe('Controller: PatientHistoryController', function() {
         expect(scope.tabs.length).toBe(2);
 
     });
-
 
 
 });

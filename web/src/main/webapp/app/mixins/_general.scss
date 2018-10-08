@@ -140,3 +140,20 @@ input[type=search]::-ms-clear {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.flex-fill {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-space-between {
+  display: flex;
+  flex-direction: inherit;
+  align-content: space-between;
+}
+
+.scrollable-list {
+  max-height: 300px;
+  overflow-y: auto;
+}

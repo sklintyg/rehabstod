@@ -1,0 +1,170 @@
+/*!
+ * Copyright (C) 2017 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+rhs-date-picker {
+  display: inline-block;
+  vertical-align: middle;
+
+  .rhs-datepicker-wrapper {
+
+    width: 150px;
+
+    input.form-control {
+      height: 36px;
+      border: 1px solid $rs-color-15;
+      border-radius: 4px;
+      transition: border-color .36s ease-in-out, box-shadow .36s ease-in-out;
+      &:focus {
+        outline: none !important;
+        border: 1px solid $rs-color-11;
+        //box-shadow: 0 4px 2px -2px $black_12;
+        box-shadow: 0 2px 4px 0 $black_12;
+      }
+      &:disabled, fieldset[disabled] & {
+        background-color: $rs-color-14;
+        color: $rs-color-09;
+        pointer-events: none; /* this is a workaround for fieldset[disabled] not working correctly in IE11 */
+      }
+    }
+
+    /* this is a workaround for fieldset[disabled] not working correctly in IE11 */
+    fieldset[disabled] & {
+      cursor:not-allowed;
+    }
+
+    .btn-default {
+      border-color: $rs-color-15;
+      &:disabled, fieldset[disabled] & {
+        background-color: $rs-color-14;
+        color: $rs-color-09;
+      }
+    }
+    .btn {
+      padding: 8px 12px;
+    }
+    .border {
+      border-color: $rs-color-11 !important;
+      box-shadow: 2px 2px 4px 0 $black_12;
+    }
+
+    .text-invalid, INPUT.ng-invalid-dateperiod, INPUT.ng-invalid-min-date, INPUT.ng-invalid-max-date, INPUT.ng-invalid-date  {
+      border-color: $rs-color-11;
+      &+ SPAN.input-group-btn  {
+        button {
+          border-right-color: $rs-color-11;
+          border-top-color: $rs-color-11;
+          border-bottom-color: $rs-color-11;
+        }
+      }
+    }
+
+  }
+
+
+  /*
+   *  Detta (=nedanför) bör kunna tas bort när WC-6.0 görs
+   */
+
+  .uib-datepicker-popup.dropdown-menu {
+    z-index: 1020;
+    border-color: transparent;
+    padding: 5px 13px 7px;
+
+    table {
+      outline: none;
+    }
+
+    thead {
+      .uib-left, .uib-right {
+        padding: 1px;
+        margin: -5px -13px 0;
+        border-radius: 4px;
+        width: 40px;
+        &:hover {
+          background-color: #e9eaed;
+          border-color: #e9eaed;
+          color: $rs-color-13;
+          cursor: pointer;
+        }
+      }
+
+      .weekday {
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .month-title {
+        strong {
+          font-size: 18px;
+        }
+      }
+    }
+
+    td {
+      &:first-child {
+        width: 30px;
+        padding: 3px 13px 2px 3px
+      }
+      padding: 1px 1px 2px 2px;
+
+      &.uib-day .btn-default {
+        border-color: $rs-color-13;
+        width: 40px;
+        height: 40px;
+      }
+
+      &.current-day .btn-default {
+        border-color: $rs-color-11;
+      }
+
+      .active {
+        @extend %rs-typo-06;
+        box-shadow: none;
+      }
+
+      .btn-default:hover {
+        background-color: $rs-color-02;
+        color: $rs-color-13;
+        border-color: $rs-color-13;
+      }
+
+      &.text-muted .btn {
+        background-color: $rs-color-14;
+      }
+
+      .btn[disabled], .btn.disabled {
+        opacity: 1;
+        color: $rs-color-08;
+      }
+    }
+
+    table:focus .active {
+      box-shadow: 0 0 8px 0 rgba(0,0,0,.24);
+    }
+
+    .uib-button-bar {
+      padding: 10px 0 2px;
+
+      .uib-clear {
+        border-color: $rs-color-13;
+        margin-right: 4px;
+      }
+    }
+  }
+}

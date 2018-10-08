@@ -1,0 +1,11 @@
+<h5>{{::listLabel|message}}</h5>
+
+<div class="scrollable-list">
+  <table class="table table-striped">
+    <tbody>
+    <tr ng-repeat="row in model">
+      <td ng-attr-id="osparrad-{{index}}-column-number-{{$index}}">{{row}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -6,8 +6,9 @@ rhs-box-button {
     background-color: $rs-color-02;
     width: 100%;
     outline: none;
+    border-radius: 0;
 
-    &:hover {
+    &:hover, &:active {
       color: $rs-color-01;
       background-color: $rs-color-03;
     }

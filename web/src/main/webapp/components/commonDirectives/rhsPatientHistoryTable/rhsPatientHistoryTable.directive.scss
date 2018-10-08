@@ -207,10 +207,17 @@ rhs-patient-history-table {
 
   .extra-diagnoser {
     padding: 20px 0 0;
+    display: flex;
 
-    > .row {
-      display: block;
+    .extra-diagnoser__wrapper {
+      width: 100%;
     }
   }
 
+}
+
+@media (min-width: 992px) {
+  .extra-intyginfo {
+    display: flex;
+  }
 }

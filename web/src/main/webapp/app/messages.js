@@ -179,12 +179,16 @@ var rhsMessages = {
         'label.patienthistory.loading' : 'Hämtar sjukfall för patient...',
 
         'label.extradiagnoser.empty': 'Det finns ingenting att visa här.',
-        'label.extradiagnoser.sparradinom.title' : 'Spärrad intygsinfromation inom vårdgivaren',
+        'label.extradiagnoser.sparradinom.title' : 'Spärrad intygsinformation inom vårdgivaren',
         'label.extradiagnoser.sparradinom' : 'Det finns spärrad intygsinformation inom vårdgivaren som kan vara relevant för det aktuella sjukfallet. Endast patienten kan få spärren hävd genom att kontakta den instans där spärren sattes.',
-        'label.extradiagnoser.sparradandra.title' : 'Spärrad intygsinfromation på andra vårdgivare',
-        'label.extradiagnoser.sparradandra' : 'Det finns spärrad intygsinformation hos andra vårdgivare som kan vara relevant för det aktuella sjukfallet. Endast patienten kan få spärren hävd genom att kontakta den instans där spärren sattes.',
-        'label.extradiagnoser.osparradandra.title' : 'Ospärrad intygsinfromation på andra vårdgivare',
+        'label.extradiagnoser.sparradinom.list.title': 'Vårdenheter',
+
+        'label.extradiagnoser.osparradandra.title' : 'Ospärrad intygsinformation på andra vårdgivare',
         'label.extradiagnoser.osparradandra' : 'Det finns ospärrad intygsinformation hos andra vårdgivare som kan vara relevant för det aktuella sjukfallet. Endast patienten kan få spärren hävd genom att kontakta den instans där spärren sattes.',
+
+        'label.extradiagnoser.sparradandra.title' : 'Spärrad intygsinformation på andra vårdgivare',
+        'label.extradiagnoser.sparradandra' : 'Det finns spärrad intygsinformation hos andra vårdgivare som kan vara relevant för det aktuella sjukfallet. Endast patienten kan få spärren hävd genom att kontakta den instans där spärren sattes.',
+        'label.extradiagnoser.sparradandra.list.title': 'Vårdgivare',
 
         //Rest 500 exception error messages:
         'server.error.default.title' : 'Ett fel uppstod',

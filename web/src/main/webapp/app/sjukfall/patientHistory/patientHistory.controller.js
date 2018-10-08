@@ -58,6 +58,7 @@ angular.module('rehabstodApp').controller('patientHistoryController',
             patientHistoryProxy.get(patient).then(function(sjukfallResponse) {
                 $scope.showSpinner = false;
                 patientHistoryViewState.setTimelineItems(sjukfallResponse.sjukfallList);
+                patientHistoryViewState.setSjfMetaData(sjukfallResponse.sjfMetaData);
 
                 $scope.timeline = patientHistoryViewState.getTimelineItems();
             }, function() {

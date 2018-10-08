@@ -1,0 +1,16 @@
+rhs-unblocked-consent {
+  display: block;
+  padding: 10px 0 0 0;
+
+  rhs-box-button {
+    padding: 10px 0 0 0;
+  }
+
+  rhs-numeric-range-input {
+    vertical-align: middle;
+
+    .input-group input.form-control {
+      width: 35px;
+    }
+  }
+}

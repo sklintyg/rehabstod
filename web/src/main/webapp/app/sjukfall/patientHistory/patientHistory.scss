@@ -26,11 +26,10 @@
       padding-bottom: 5px;
     }
 
-    //Make all columns equal height
-    .row {
+    //Make all columns equal height - can't use real row here or we'll screw up all bootstrap columns inside here
+    .flex-row {
       display: flex;
     }
-
   }
   svg line {
     stroke: $rs-color-03;

@@ -65,32 +65,39 @@
     <div ng-switch-when="false" class="text-center">
       Ingen ytterligare intygsinformation hittades.
     </div>
-    <div ng-switch-when="true">
+    <div ng-switch-when="true" class="extra-diagnoser__wrapper">
       <div class="row">
         <div class="col-md-12 text-center">
           <h3>Ytterligare intygsinformation</h3>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="row">
-            <div class="col-md-4">
-              <rhs-info-box info-expr="extraDiagnoser.sparradInfoInomVardgivare" box-title="label.extradiagnoser.sparradinom.title"
-                            label-truthy="label.extradiagnoser.sparradinom"
-                            label-falsy="label.extradiagnoser.empty"></rhs-info-box>
-            </div>
-            <div class="col-md-4">
-              <rhs-info-box info-expr="extraDiagnoser.osparradInfoAndraVardgivare" box-title="label.extradiagnoser.osparradandra.title"
-                            label-falsy="label.extradiagnoser.empty">
-                <rhs-unblocked-flow></rhs-unblocked-flow>
-              </rhs-info-box>
-            </div>
-            <div class="col-md-4">
-              <rhs-info-box info-expr="extraDiagnoser.sparradInfoAndraVardgivare" box-title="label.extradiagnoser.sparradandra.title"
-                            label-truthy="label.extradiagnoser.sparradandra"
-                            label-falsy="label.extradiagnoser.empty"></rhs-info-box>
-            </div>
-          </div>
+      <div class="row extra-intyginfo">
+        <div class="col-md-4">
+          <rhs-info-box info-expr="extraDiagnoser.sparradInfoInomVardgivare"
+                        box-title="label.extradiagnoser.sparradinom.title"
+                        label-truthy="label.extradiagnoser.sparradinom"
+                        label-falsy="label.extradiagnoser.empty">
+            <rhs-blocked-list model="patientHistoryViewState.getSjfMetaData().vardenheterInomVGMedSparr"
+                              list-label="label.extradiagnoser.sparradinom.list.title"></rhs-blocked-list>
+          </rhs-info-box>
+        </div>
+        <div class="col-md-4">
+          <rhs-info-box info-expr="extraDiagnoser.osparradInfoAndraVardgivare"
+                        box-title="label.extradiagnoser.osparradandra.title"
+                        label-truthy="label.extradiagnoser.osparradandra"
+                        label-falsy="label.extradiagnoser.empty">
+            <rhs-unblocked-flow class="flex-fill"></rhs-unblocked-flow>
+          </rhs-info-box>
+        </div>
+        <div class="col-md-4">
+          <rhs-info-box info-expr="extraDiagnoser.sparradInfoAndraVardgivare"
+                        box-title="label.extradiagnoser.sparradandra.title"
+                        label-truthy="label.extradiagnoser.sparradandra"
+                        label-falsy="label.extradiagnoser.empty">
+            <rhs-blocked-list model="patientHistoryViewState.getSjfMetaData().andraVardgivareMedSparr"
+                              list-label="label.extradiagnoser.sparradandra.list.title"></rhs-blocked-list>
+
+          </rhs-info-box>
         </div>
       </div>
     </div>

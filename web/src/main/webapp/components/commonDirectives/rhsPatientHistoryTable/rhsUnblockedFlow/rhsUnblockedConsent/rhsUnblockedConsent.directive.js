@@ -16,16 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('rehabstodApp').directive('rhsUnblockedStep1', [
-    function() {
+angular.module('rehabstodApp').directive('rhsUnblockedConsent',
+    function($rootScope) {
     'use strict';
 
     return {
         restrict: 'E',
         scope: {
         },
-        templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedStep1/rhsUnblockedStep1.directive.html',
-        link: function() {
+        templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedConsent/rhsUnblockedConsent.directive.html',
+        link: function($scope) {
+
+            $scope.vardgivareMedInfo = 'Vardgivare1, Vardgivare2';
+
+            $scope.consent = {
+                confirm: false,
+                target: 'MEONLY',
+                days: 7
+            };
+
+            $scope.next = function() {
+                $rootScope.$broadcast('rhsUnblockedFlow.next');
+            };
         }
     };
-} ]);
+});
