@@ -54,6 +54,10 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 
     @Override
     public void onStartup(javax.servlet.ServletContext servletContext) throws ServletException {
+
+        servletContext.setInitParameter("logbackConfigParameter", "logback.file");
+        servletContext.addListener(new LogbackConfiguratorContextListener());
+
         AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
 
         appContext.register(ApplicationConfig.class, CacheConfigurationFromInfra.class, HsaConfiguration.class,
@@ -142,9 +146,6 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         // Listeners for session audit logging
         servletContext.addListener(new HttpSessionEventPublisher());
         servletContext.addListener(new RequestContextListener());
-
-        servletContext.setInitParameter("logbackConfigParameter", "logback.file");
-        servletContext.addListener(new LogbackConfiguratorContextListener());
     }
 
     private void registerSecurityHeadersFilter(ServletContext servletContext) {
