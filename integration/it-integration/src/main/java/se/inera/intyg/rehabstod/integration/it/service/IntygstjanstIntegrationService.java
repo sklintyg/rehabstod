@@ -27,8 +27,8 @@ import java.util.List;
  */
 public interface IntygstjanstIntegrationService {
 
-    List<IntygsData> getIntygsDataForCareUnit(String hsaId);
+    List<IntygsData> getIntygsDataForCareUnit(String hsaId, int maxAntalDagarSedanSjukfallAvslut);
 
-    List<IntygsData> getIntygsDataForPatient(String hsaId, String personId);
+    List<IntygsData> getIntygsDataForPatient(String hsaId, String personId, int maxAntalDagarSedanSjukfallAvslut);
 
 }

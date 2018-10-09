@@ -30,9 +30,9 @@ import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
  */
 public interface IntygstjanstClientService {
 
-    ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnit(String unitId);
+    ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnit(String unitId, int maxAntalDagarSedanSjukfallAvslut);
 
-    ListActiveSickLeavesForCareUnitResponseType getSjukfallForPatient(String unitId, String personId);
+    ListActiveSickLeavesForCareUnitResponseType getSjukfallForPatient(String unitId, String personId, int maxAntalDagarSedanSjukfallAvslut);
 
     PingForConfigurationResponseType pingForConfiguration();
 }

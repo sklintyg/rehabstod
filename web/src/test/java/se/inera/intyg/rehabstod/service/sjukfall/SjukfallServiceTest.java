@@ -34,6 +34,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationServiceImpl;
@@ -57,6 +58,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -70,6 +72,7 @@ import static org.mockito.Mockito.when;
 public class SjukfallServiceTest {
     // CHECKSTYLE:OFF MagicNumber
 
+    private static final int MAX_DAGAR_SEDAN_AVSLUT = 0;
     private final String enhetsId = "IFV1239877878-1042";
     private final String mottagningsId = "Mottagning-1";
     private final String lakareId1 = "IFV1239877878-1049";
@@ -79,6 +82,8 @@ public class SjukfallServiceTest {
 
     private Integer intygsGlapp = 5;
     private LocalDate activeDate = LocalDate.parse("2016-02-16");
+
+    private IntygParametrar parameters = new IntygParametrar(intygsGlapp, MAX_DAGAR_SEDAN_AVSLUT, activeDate);
 
     @Mock
     private IntygstjanstIntegrationServiceImpl integrationService;
@@ -122,8 +127,8 @@ public class SjukfallServiceTest {
     @Before
     public void init() throws IOException {
         when(intygstjanstMapper.map(any(IntygsData.class))).thenReturn(new se.inera.intyg.infra.sjukfall.dto.IntygData());
-        when(integrationService.getIntygsDataForCareUnit(anyString())).thenReturn(new ArrayList<IntygsData>());
-        when(integrationService.getIntygsDataForPatient(anyString(), anyString())).thenReturn(new ArrayList<IntygsData>());
+        when(integrationService.getIntygsDataForCareUnit(anyString(), anyInt())).thenReturn(new ArrayList<IntygsData>());
+        when(integrationService.getIntygsDataForPatient(anyString(), anyString(), anyInt())).thenReturn(new ArrayList<IntygsData>());
         when(sjukfallEngine.beraknaSjukfallForEnhet(anyListOf(se.inera.intyg.infra.sjukfall.dto.IntygData.class),
             any(se.inera.intyg.infra.sjukfall.dto.IntygParametrar.class))).thenReturn(createSjukfallEnhetList());
         when(sjukfallEngine.beraknaSjukfallForPatient(anyListOf(se.inera.intyg.infra.sjukfall.dto.IntygData.class),
@@ -140,33 +145,32 @@ public class SjukfallServiceTest {
     @Test
     public void testWhenNoUrvalSet() {
         thrown.expect(IllegalArgumentException.class);
-        testee.getSjukfall(enhetsId, null, "", null, intygsGlapp, activeDate);
+        testee.getByUnit(enhetsId, null, "", null, parameters);
     }
 
     @Test
     public void testWhenUrvalIsAll() {
-        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, null, "", Urval.ALL, intygsGlapp, activeDate).getSjukfallList();
+        List<SjukfallEnhet> internalSjukfallList = testee.getByUnit(enhetsId, null, "", Urval.ALL, parameters).getSjukfallList();
 
-        verify(integrationService).getIntygsDataForCareUnit(enhetsId);
+        verify(integrationService).getIntygsDataForCareUnit(enhetsId, MAX_DAGAR_SEDAN_AVSLUT);
 
         assertTrue("Expected 15 but was " + internalSjukfallList.size(), internalSjukfallList.size() == 15);
     }
 
     @Test
     public void testWhenUrvalIsAllForUnderenhet() {
-        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, mottagningsId, "", Urval.ALL, intygsGlapp, activeDate).getSjukfallList();
+        List<SjukfallEnhet> internalSjukfallList = testee.getByUnit(enhetsId, mottagningsId, "", Urval.ALL, parameters).getSjukfallList();
 
-        verify(integrationService).getIntygsDataForCareUnit(enhetsId);
+        verify(integrationService).getIntygsDataForCareUnit(enhetsId, MAX_DAGAR_SEDAN_AVSLUT);
 
         assertTrue("Expected 7 but was " + internalSjukfallList.size(), internalSjukfallList.size() == 7);
     }
 
     @Test
     public void testWhenUrvalIsIssuedByMe() {
-        List<SjukfallEnhet> internalSjukfallList = testee.getSjukfall(enhetsId, null, lakareId1, Urval.ISSUED_BY_ME,
-                intygsGlapp, activeDate).getSjukfallList();
+        List<SjukfallEnhet> internalSjukfallList = testee.getByUnit(enhetsId, null, lakareId1, Urval.ISSUED_BY_ME, parameters).getSjukfallList();
 
-        verify(integrationService).getIntygsDataForCareUnit(enhetsId);
+        verify(integrationService).getIntygsDataForCareUnit(enhetsId, MAX_DAGAR_SEDAN_AVSLUT);
 
         assertTrue("Expected 8 but was " + internalSjukfallList.size(), internalSjukfallList.size() == 8);
         for (SjukfallEnhet internalSjukfall : internalSjukfallList) {
@@ -179,17 +183,17 @@ public class SjukfallServiceTest {
 
     @Test
     public void testGetSjukfallSummary() {
-        testee.getSummary(enhetsId, null, lakareId1, Urval.ALL, intygsGlapp, activeDate);
+        testee.getSummary(enhetsId, null, lakareId1, Urval.ALL, parameters);
 
-        verify(integrationService).getIntygsDataForCareUnit(enhetsId);
+        verify(integrationService).getIntygsDataForCareUnit(enhetsId, MAX_DAGAR_SEDAN_AVSLUT);
         verify(statisticsCalculator).getSjukfallSummary(anyListOf(SjukfallEnhet.class));
     }
 
     @Test
     public void testGetSjukfallSummaryWhenSelectedVardenhetIsMottagning() {
-        testee.getSummary(enhetsId, mottagningsId, lakareId1, Urval.ALL, intygsGlapp, activeDate);
+        testee.getSummary(enhetsId, mottagningsId, lakareId1, Urval.ALL, parameters);
 
-        verify(integrationService).getIntygsDataForCareUnit(enhetsId);
+        verify(integrationService).getIntygsDataForCareUnit(enhetsId, MAX_DAGAR_SEDAN_AVSLUT);
         verify(statisticsCalculator).getSjukfallSummary(anyListOf(SjukfallEnhet.class));
     }
 
@@ -246,7 +250,7 @@ public class SjukfallServiceTest {
         private final String patinetNamn = "Tolvan Tolvansson";
 
         @Override
-        public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, LocalDate today) {
+        public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, int maxDagarSedanAvslut, LocalDate today) {
             se.inera.intyg.infra.sjukfall.dto.Vardgivare vardgivare =
                 new se.inera.intyg.infra.sjukfall.dto.Vardgivare(vardgivareId, vardgivareNamn);
 
@@ -261,7 +265,7 @@ public class SjukfallServiceTest {
             from.setPatient(patient);
             from.setDiagnosKod(diagnosKod);
 
-            return super.map(from, today);
+            return super.map(from, maxDagarSedanAvslut, today);
         }
 
         @Override

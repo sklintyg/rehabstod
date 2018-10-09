@@ -48,19 +48,20 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
     private IntygstjanstClientService intygstjanstClientService;
 
     @Override
-    public List<IntygsData> getIntygsDataForCareUnit(String unitId) {
+    public List<IntygsData> getIntygsDataForCareUnit(String unitId, int maxAntalDagarSedanSjukfallAvslut) {
         verifyMandatoryParameter("unitId", unitId);
         String errorMessage = "An error occured fetching sick leave certificates for healthcare unit. Error type: {}. Error msg: {}";
-        return getIntygsData(intygstjanstClientService.getSjukfallForUnit(unitId), errorMessage);
+        return getIntygsData(intygstjanstClientService.getSjukfallForUnit(unitId, maxAntalDagarSedanSjukfallAvslut), errorMessage);
     }
 
     @Override
-    public List<IntygsData> getIntygsDataForPatient(String unitId, String patientId) {
+    public List<IntygsData> getIntygsDataForPatient(String unitId, String patientId, int maxAntalDagarSedanSjukfallAvslut) {
         verifyMandatoryParameter("unitId", unitId);
         verifyMandatoryParameter("patientId", patientId);
 
         String errorMessage = "An error occured fetching sick leave certificates for patient. Error type: {}. Error msg: {}";
-        return getIntygsData(intygstjanstClientService.getSjukfallForPatient(unitId, patientId), errorMessage);
+        return getIntygsData(intygstjanstClientService.getSjukfallForPatient(unitId, patientId, maxAntalDagarSedanSjukfallAvslut),
+                errorMessage);
     }
 
     private List<IntygsData> getIntygsData(ListActiveSickLeavesForCareUnitResponseType responseType, String errorMessage) {

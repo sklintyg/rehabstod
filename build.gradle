@@ -7,7 +7,7 @@ plugins {
 ext {
     intygInfraVersion = System.properties['infraVersion'] ?: '0-SNAPSHOT'
 
-    rehabSchemaVersion = "1.0.7"
+    rehabSchemaVersion = "1.0.8-beta2"
     blockingSchemaVersion = "4.0"
     consentSchemaVersion = "2.0-beta1"
     monitoringSchemaVersion = "1.0.0.3"

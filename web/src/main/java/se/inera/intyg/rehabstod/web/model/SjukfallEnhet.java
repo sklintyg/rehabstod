@@ -54,6 +54,7 @@ public class SjukfallEnhet {
     private String aktivIntygsId;
 
     private RiskSignal riskSignal;
+    private boolean nyligenAvslutat;
 
 
     // - - - getters and setters
@@ -192,5 +193,13 @@ public class SjukfallEnhet {
 
     public void setRiskSignal(RiskSignal riskSignal) {
         this.riskSignal = riskSignal;
+    }
+
+    public boolean isNyligenAvslutat() {
+        return nyligenAvslutat;
+    }
+
+    public void setNyligenAvslutat(boolean nyligenAvslutat) {
+        this.nyligenAvslutat = nyligenAvslutat;
     }
 }

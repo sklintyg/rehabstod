@@ -19,6 +19,8 @@
 package se.inera.intyg.rehabstod.integration.it.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
 
 import org.junit.Test;
@@ -46,6 +48,7 @@ public class IntygstjanstIntegrationServiceTest {
     private static final String PATIENT_ID = "191212121212";
     private static final String HSA_ID = "123";
     private static final String HSA_ID_UNKNOWN = "456";
+    private static int MAX_DAGAR_SEDAN_AVSLUT = 0;
 
     @Mock
     private IntygstjanstClientService intygstjanstClientService;
@@ -55,49 +58,49 @@ public class IntygstjanstIntegrationServiceTest {
 
     @Test
     public void testGetIntygsDataForCareUnit() throws Exception {
-        when(intygstjanstClientService.getSjukfallForUnit(HSA_ID)).thenReturn(buildResponse());
-        List<IntygsData> intygsDataForCareUnit = testee.getIntygsDataForCareUnit(HSA_ID);
+        when(intygstjanstClientService.getSjukfallForUnit(eq(HSA_ID), anyInt())).thenReturn(buildResponse());
+        List<IntygsData> intygsDataForCareUnit = testee.getIntygsDataForCareUnit(HSA_ID, MAX_DAGAR_SEDAN_AVSLUT);
         assertEquals(1, intygsDataForCareUnit.size());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetIntygsDataForCareUnitEmptyArgumentThrowsException() throws Exception {
-        testee.getIntygsDataForCareUnit("");
+        testee.getIntygsDataForCareUnit("", MAX_DAGAR_SEDAN_AVSLUT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetIntygsDataForCareUnitNullArgumentThrowsException() throws Exception {
-        testee.getIntygsDataForCareUnit(null);
+        testee.getIntygsDataForCareUnit(null, MAX_DAGAR_SEDAN_AVSLUT);
     }
 
 
     @Test
     public void testGetIntygsDataForPatient() throws Exception {
-        when(intygstjanstClientService.getSjukfallForPatient(HSA_ID, PATIENT_ID)).thenReturn(buildResponse());
-        List<IntygsData> intygsDataForPatient = testee.getIntygsDataForPatient(HSA_ID, PATIENT_ID);
+        when(intygstjanstClientService.getSjukfallForPatient(HSA_ID, PATIENT_ID, MAX_DAGAR_SEDAN_AVSLUT)).thenReturn(buildResponse());
+        List<IntygsData> intygsDataForPatient = testee.getIntygsDataForPatient(HSA_ID, PATIENT_ID, MAX_DAGAR_SEDAN_AVSLUT);
         assertEquals(1, intygsDataForPatient.size());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetIntygsDataForPatientNullParametersThrowsException() throws Exception {
-        testee.getIntygsDataForPatient(null, null);
+        testee.getIntygsDataForPatient(null, null, MAX_DAGAR_SEDAN_AVSLUT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetIntygsDataForPatientEmptyParametersThrowsException() throws Exception {
-        testee.getIntygsDataForPatient("", "");
+        testee.getIntygsDataForPatient("", "", MAX_DAGAR_SEDAN_AVSLUT);
     }
 
     @Test(expected = IntygstjanstIntegrationException.class)
     public void testGetIntygsDataForCareUnitThrowsExceptionOnError() throws Exception {
-        when(intygstjanstClientService.getSjukfallForUnit(HSA_ID_UNKNOWN)).thenReturn(buildErrorResponse());
-        testee.getIntygsDataForCareUnit(HSA_ID_UNKNOWN);
+        when(intygstjanstClientService.getSjukfallForUnit(eq(HSA_ID_UNKNOWN), anyInt())).thenReturn(buildErrorResponse());
+        testee.getIntygsDataForCareUnit(HSA_ID_UNKNOWN, MAX_DAGAR_SEDAN_AVSLUT);
     }
 
     @Test(expected = IntygstjanstIntegrationException.class)
     public void testGetIntygsDataForCareUnitThrowsExceptionWhenErrorCodeMissing() throws Exception {
-        when(intygstjanstClientService.getSjukfallForUnit(HSA_ID_UNKNOWN)).thenReturn(new ListActiveSickLeavesForCareUnitResponseType());
-        testee.getIntygsDataForCareUnit(HSA_ID_UNKNOWN);
+        when(intygstjanstClientService.getSjukfallForUnit(eq(HSA_ID_UNKNOWN), anyInt())).thenReturn(new ListActiveSickLeavesForCareUnitResponseType());
+        testee.getIntygsDataForCareUnit(HSA_ID_UNKNOWN, MAX_DAGAR_SEDAN_AVSLUT);
     }
 
     private ListActiveSickLeavesForCareUnitResponseType buildResponse() {

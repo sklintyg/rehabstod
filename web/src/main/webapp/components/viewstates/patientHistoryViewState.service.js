@@ -89,10 +89,15 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
                     year: 0
                 });
             }
-            var isFirstHistorical = false;
-            if (!historicalMarked && index > 0) {
+
+            var isActive = false;
+            angular.forEach(sjukfall.intyg, function(intyg) {
+                isActive = isActive || intyg.aktivtIntyg;
+            });
+
+            var isFirstHistorical = !isActive;
+            if (!historicalMarked && isFirstHistorical) {
                 historicalMarked = true;
-                isFirstHistorical = true;
             } else {
                 isFirstHistorical = false;
             }
@@ -101,6 +106,7 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
             _timeline.push({
                 year: thisYear !== previousYear ? thisYear : 0,
                 sjukfall: sjukfall,
+                isActive: isActive,
                 isFirstHistorical: isFirstHistorical,
                 expanded: index === 0,
                 selected: index === 0
