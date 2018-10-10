@@ -18,14 +18,9 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.util;
 
-import java.util.Optional;
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-
 import se.inera.intyg.schemas.contract.Personnummer;
-import se.riv.informationsecurity.authorization.blocking.v4.AccessingActorType;
-import se.riv.informationsecurity.authorization.blocking.v4.IIType;
+
+import java.util.Optional;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
@@ -65,23 +60,4 @@ public final class SamtyckestjanstUtil {
         return isSamordningsNummer(personnummer) ? KODVERK_SAMORDNINGSNUMMER : KODVERK_PERSONNUMMER;
     }
 
-    public static IIType buildIITypeForPersonOrSamordningsnummer(Personnummer personnummer) {
-        IIType patient = new IIType();
-        patient.setRoot(getRootForPersonnummer(personnummer));
-        // TODOO: with dash? exact string format not specified?
-        patient.setExtension(personnummer.getPersonnummer());
-        return patient;
-    }
-
-    public static AccessingActorType buildAccessingActorType(String careProviderId, String careUnitId, String employeeId) {
-        // In AccessingActorType schema, alla properties are mandatory...
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(careProviderId), "careProviderId is mandatory");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(careUnitId), "careUnitId is mandatory");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(employeeId), "employeeId is mandatory");
-        AccessingActorType accessingActor = new AccessingActorType();
-        accessingActor.setCareProviderId(careProviderId);
-        accessingActor.setCareUnitId(careUnitId);
-        accessingActor.setEmployeeId(employeeId);
-        return accessingActor;
-    }
 }

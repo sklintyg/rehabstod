@@ -18,26 +18,16 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.service;
 
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
-import se.inera.intyg.rehabstod.integration.sparrtjanst.client.SparrtjanstClientService;
-import se.inera.intyg.rehabstod.integration.sparrtjanst.exception.SparrtjanstIntegrationException;
-import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;
-import se.riv.informationsecurity.authorization.blocking.v4.CheckBlocksResultType;
-import se.riv.informationsecurity.authorization.blocking.v4.CheckResultType;
-import se.riv.informationsecurity.authorization.blocking.v4.CheckStatusType;
-import se.riv.informationsecurity.authorization.blocking.v4.ResultCodeType;
+import se.inera.intyg.rehabstod.integration.samtyckestjanst.client.SamtyckestjanstClientService;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.

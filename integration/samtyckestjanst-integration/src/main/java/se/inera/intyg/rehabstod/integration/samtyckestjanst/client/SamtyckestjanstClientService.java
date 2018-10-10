@@ -18,10 +18,10 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.client;
 
-import java.util.List;
-
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;
+import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
+
+import java.util.List;
 
 /**
  * Created by Magnus Ekstrand 2018-10-10.
@@ -29,6 +29,6 @@ import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4
 public interface SamtyckestjanstClientService {
 
     CheckConsentResponseType getCheckConsent(String vgHsaId, String veHsaId, String userHsaId, String patientId,
-            List<IntygData> intygLista);
+                                             List<IntygData> intygLista);
 
 }

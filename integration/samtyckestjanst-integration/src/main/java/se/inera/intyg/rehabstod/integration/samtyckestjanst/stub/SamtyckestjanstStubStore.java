@@ -18,12 +18,12 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Component;
 
 /**
  * Simple in-memory store for consents.
@@ -53,8 +53,8 @@ public class SamtyckestjanstStubStore {
 
     private boolean isWithinInterval(ConsentData consentData, LocalDate queryDate) {
         // Either touches start/end or is in within
-        return queryDate.isEqual(consentData.getBlockFrom()) || queryDate.isEqual(consentData.getBlockTo())
-                || (queryDate.isAfter(consentData.getBlockFrom()) && queryDate.isBefore(consentData.getBlockTo()));
+        return queryDate.isEqual(consentData.getConsentFrom()) || queryDate.isEqual(consentData.getConsentTo())
+                || (queryDate.isAfter(consentData.getConsentFrom()) && queryDate.isBefore(consentData.getConsentTo()));
     }
 
     public void add(ConsentData data) {

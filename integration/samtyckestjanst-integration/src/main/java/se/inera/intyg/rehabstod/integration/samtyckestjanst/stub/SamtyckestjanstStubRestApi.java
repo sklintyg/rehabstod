@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
-import java.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -29,8 +29,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.LocalDate;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
@@ -47,7 +46,7 @@ public class SamtyckestjanstStubRestApi {
             @PathParam("personId") String personId,
             @QueryParam("from") String from,
             @QueryParam("to") String to) {
-        store.add(new BlockData(personId, LocalDate.parse(from), LocalDate.parse(to)));
+        store.add(new ConsentData(personId, LocalDate.parse(from), LocalDate.parse(to)));
         return Response.ok().build();
     }
 

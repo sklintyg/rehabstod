@@ -20,22 +20,15 @@ package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
 // CHECKSTYLE:OFF LineLength
 
-import java.time.LocalDate;
+import com.google.common.base.Joiner;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
+import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
+import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentType;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.google.common.base.Joiner;
-
-import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
-import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;
-import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksType;
-import se.riv.informationsecurity.authorization.blocking.v4.CheckBlocksResultType;
-import se.riv.informationsecurity.authorization.blocking.v4.CheckResultType;
-import se.riv.informationsecurity.authorization.blocking.v4.CheckStatusType;
-import se.riv.informationsecurity.authorization.blocking.v4.ResultCodeType;
-import se.riv.informationsecurity.authorization.blocking.v4.ResultType;
 
 // CHECKSTYLE:ON LineLength
 
@@ -52,8 +45,6 @@ public class SamtyckestjanstIntegrationStub implements CheckConsentResponderInte
         validate(logicalAddress, parameters);
 
         CheckConsentResponseType response = new CheckConsentResponseType();
-        CheckConsentResultType result = new CheckConsentResultType();
-        List<CheckResultType> resultList = new ArrayList<>();
 
         // TODO: ....
 

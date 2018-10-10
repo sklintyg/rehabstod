@@ -18,20 +18,14 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.inera.intyg.rehabstod.integration.sparrtjanst.util.SparrtjanstUtil;
-import se.inera.intyg.schemas.contract.Personnummer;
-import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
-import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;
-import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksType;
-import se.riv.informationsecurity.authorization.blocking.v4.InformationEntityType;
+import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
+import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
+
+import java.util.List;
 
 /**
  * Created by Magnus Ekstrand 2018-10-10.
@@ -47,7 +41,7 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
 
     @Override
     public CheckConsentResponseType getCheckConsent(String vgHsaId, String veHsaId, String userHsaId, String patientId,
-            List<IntygData> intygLista) {
+                                                    List<IntygData> intygLista) {
 
         return null;
     }
