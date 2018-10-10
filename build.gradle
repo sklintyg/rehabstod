@@ -9,6 +9,7 @@ ext {
 
     rehabSchemaVersion = "1.0.7"
     blockingSchemaVersion = "4.0"
+    consentSchemaVersion = "2.0-beta1"
     monitoringSchemaVersion = "1.0.0.3"
     internalMonitoringSchemaVersion = "1.0.2"
     srsSchemasVersion = "0.0.7"
