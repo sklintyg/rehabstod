@@ -38,7 +38,9 @@ public class IntygAccessControlMetaData {
     public IntygAccessControlMetaData(IntygData intygData, boolean inomVardgivare) {
         this.intygData = intygData;
         this.inomVardgivare = inomVardgivare;
+        this.kraverSamtycke = !inomVardgivare;
     }
+
     public IntygData getIntygData() {
         return intygData;
     }

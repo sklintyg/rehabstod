@@ -21,11 +21,11 @@ package se.inera.intyg.rehabstod.integration.samtyckestjanst.client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.integration.samtyckestjanst.util.SamtyckestjanstUtil;
+import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
-
-import java.util.List;
+import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentType;
 
 /**
  * Created by Magnus Ekstrand 2018-10-10.
@@ -39,11 +39,20 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
     @Value("${samtyckestjanst.service.logicalAddress}")
     private String logicalAddress;
 
+    /**
+     * @see SamtyckestjanstClientService#checkConsent(String, String, String, String) checkConsent
+     */
     @Override
-    public CheckConsentResponseType getCheckConsent(String vgHsaId, String veHsaId, String userHsaId, String patientId,
-                                                    List<IntygData> intygLista) {
+    public CheckConsentResponseType checkConsent(String vgHsaId, String veHsaId, String userHsaId, String patientId) {
 
-        return null;
+        final Personnummer personnummer = Personnummer.createPersonnummer(patientId)
+                .orElseThrow(() -> new IllegalArgumentException("PatientId must be a valid personnummer or samordningsnummer"));
+
+        CheckConsentType checkConsentType = new CheckConsentType();
+        checkConsentType.setPatientId(SamtyckestjanstUtil.buildIITypeForPersonOrSamordningsnummer(personnummer));
+        checkConsentType.setAccessingActor(SamtyckestjanstUtil.buildAccessingActorType(vgHsaId, veHsaId, userHsaId));
+
+        return service.checkConsent(logicalAddress, checkConsentType);
     }
 
 }

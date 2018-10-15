@@ -18,6 +18,9 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.service;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +28,15 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.client.SamtyckestjanstClientService;
+import se.inera.intyg.rehabstod.integration.samtyckestjanst.exception.SamtyckestjanstIntegrationException;
+import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
+import se.riv.informationsecurity.authorization.consent.v2.CheckResultType;
+import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
@@ -41,7 +50,91 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
     private SamtyckestjanstClientService samtyckestjanstClientService;
 
     @Override
-    public void decorateWithConsentStatus(String currentVardgivarHsaId, String currentVardenhetHsaId, String userHsaId, String patientId,
-            Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> intygLista) {
+    public void checkForConsent(String userHsaId,
+                                String patientId,
+                                Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
+
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(userHsaId), "userHsaId may not be null or empty");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
+
+        if (intygAccessMetaData == null || intygAccessMetaData.isEmpty()) {
+            LOG.info("Cannot check consent when unsufficient information - intygAccessMetaData was null or empty");
+            return;
+        }
+
+        // Make distinct list based on 'vårdgivare and vårdenhet'.
+        // Why? To reduce the number of calls to the CheckConsent service of course.
+        List<IntygAccessControlMetaData> distinctMetaDataList = getDistinctMetaDataList(intygAccessMetaData);
+
+        for (IntygAccessControlMetaData metaData : distinctMetaDataList) {
+            String vgHsaId = metaData.getIntygData().getVardgivareId();
+            String veHsaId = metaData.getIntygData().getVardenhetId();
+
+            // Make call to the CheckConsent service and handle response
+            final CheckConsentResponseType response =
+                    samtyckestjanstClientService.checkConsent(vgHsaId, veHsaId, userHsaId, patientId);
+
+            if (response == null || response.getCheckResult() == null) {
+                throw new SamtyckestjanstIntegrationException("Failed to get response from CheckConsent service");
+            }
+
+            // OK = OK
+            // INFO = Some of the request information resouces ha an validation error, but a response should still have been
+            // provided
+            CheckResultType checkResultType = response.getCheckResult();
+            if (checkResultType.getResult().getResultCode() != ResultCodeType.OK) {
+                if (checkResultType.getResult().getResultCode() == ResultCodeType.INFO) {
+                    LOG.warn(String.format(
+                            "checkForConsent recived INFO result with resultText '%s' - a partially valid response is still expected.",
+                            checkResultType.getResult().getResultText()));
+                } else {
+                    throw new SamtyckestjanstIntegrationException(
+                            String.format("checkForConsent failed with resultCode %s and resultText '%s'",
+                                    checkResultType.getResult().getResultCode(),
+                                    checkResultType.getResult().getResultText()));
+                }
+            }
+
+            updateConsentStatus(vgHsaId, veHsaId, checkResultType.isHasConsent(), intygAccessMetaData);
+        }
     }
+
+    @VisibleForTesting
+    void updateConsentStatus(String vgHsaId, String veHsaId, boolean hasConsent,
+                                     Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
+
+        intygAccessMetaData.entrySet().stream()
+                .filter(e -> compare(vgHsaId, veHsaId, e.getValue().getIntygData()))
+                .forEach((entry) -> {
+                    entry.getValue().setHarSamtycke(hasConsent);
+                });
+
+    }
+
+    @VisibleForTesting
+    List<IntygAccessControlMetaData> getDistinctMetaDataList(Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
+
+        List<IntygAccessControlMetaData> metaDataList = intygAccessMetaData.entrySet().stream()
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+
+        // There must be a better way to do this with lamda magic.
+        return metaDataList.stream()
+                .filter(thisObj -> metaDataList.stream()
+                        .filter(thatObj -> compare(thisObj.getIntygData(), thatObj.getIntygData()))
+                        .findFirst()
+                        .equals(Optional.of(thisObj))
+                )
+                .collect(Collectors.toList());
+    }
+
+    private boolean compare(String vgHsaId, String veHsaId, IntygData obj) {
+        return obj.getVardgivareId().equals(vgHsaId) && obj.getVardenhetId().equals(veHsaId);
+    }
+
+    private boolean compare(IntygData obj1, IntygData obj2) {
+        return obj1.getVardgivareId().equals(obj2.getVardgivareId())
+                && obj1.getVardenhetId().equals(obj2.getVardenhetId());
+    }
+
 }

@@ -18,25 +18,18 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
+import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.service.SparrtjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
@@ -55,6 +48,12 @@ import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -94,6 +93,9 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     @Autowired
     private SparrtjanstIntegrationService sparrtjanstIntegrationService;
+
+    @Autowired
+    private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
     // api
 
@@ -245,8 +247,14 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         // Make an initial calculation using _all_ available intyg...
         sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parametrar);
+
         // ... and check which intyg is contributing to the aktive sjukfall
         updateAccessMetaDataWithContributingStatus(sjukfallList, intygAccessMetaData);
+
+        // TODOO: gör anrop till check consent
+        // Decorate intygAccessMetaData with consent info
+        samtyckestjanstIntegrationService.checkForConsent(lakarId, patientId, intygAccessMetaData);
+
         // TODOO: skapa listorna med vilka vårdgivare som hade intyg SKULLE funnits i aktivt sjukfall men som inte kommer med
         // pga spärr inre/yttrespärr.
         SjfMetaData sjfMetaData = createSjfMetaData(intygAccessMetaData);

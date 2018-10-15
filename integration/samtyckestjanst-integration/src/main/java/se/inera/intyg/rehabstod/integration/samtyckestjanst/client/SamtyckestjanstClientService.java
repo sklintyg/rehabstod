@@ -18,17 +18,26 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.client;
 
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
-
-import java.util.List;
 
 /**
  * Created by Magnus Ekstrand 2018-10-10.
  */
 public interface SamtyckestjanstClientService {
 
-    CheckConsentResponseType getCheckConsent(String vgHsaId, String veHsaId, String userHsaId, String patientId,
-                                             List<IntygData> intygLista);
+    /**
+     * Tjänst som kontrollerar om det finns ett giltigt samtycke, alternativt intyg om nödsituation,
+     * gällande åtkomst för viss aktör (vårdenhet eller medarbetare). Med giltigt samtycke avses ett
+     * samtycke som fortfarande är giltigt (giltigt t o m har ej passerats), ej makulerat eller återkallat.
+     *
+     * Om ett giltigt intyg gällande åtkomst för angiven aktör hittas, kommer tjänsten att svara OK.
+     *
+     * @param vgHsaId Id på medarbetarens vårdgivare enligt aktuellt medarbetaruppdrag.
+     * @param veHsaId Id på medarbetarens vårdenhet enligt aktuellt medarbetaruppdrag.
+     * @param userHsaId Id för medarbetaren/personen.
+     * @param patientId Personidentitet på patienten vars samtycke skall kontrolleras.
+     * @return Status för om ett giltigt intyg gällande åtkomst för angiven aktör hittades.
+     */
+    CheckConsentResponseType checkConsent(String vgHsaId, String veHsaId, String userHsaId, String patientId);
 
 }
