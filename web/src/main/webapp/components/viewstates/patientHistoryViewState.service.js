@@ -51,7 +51,12 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
 
         _sjfMetaData.andraVardgivareUtanSparr = [];
         for(i = 0; i < 20; i++){
-            _sjfMetaData.andraVardgivareUtanSparr.push('Vardgivaremedlangtnamnochmassaandraproblem ' + (i + 1));
+            _sjfMetaData.andraVardgivareUtanSparr.push({
+                id: i + 1,
+                name: 'Vardgivaremedlangtnamnochmassaandraproblem ' + (i + 1),
+                loading: false,
+                fetched: false
+            });
         }
     }
 

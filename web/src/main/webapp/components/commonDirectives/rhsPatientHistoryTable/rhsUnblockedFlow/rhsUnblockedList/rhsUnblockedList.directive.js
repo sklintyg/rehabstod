@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsUnblockedList',
-    function(patientHistoryViewState) {
+    function($timeout, patientHistoryViewState) {
     'use strict';
 
     return {
@@ -29,7 +29,21 @@ angular.module('rehabstodApp').directive('rhsUnblockedList',
 
             $scope.patientHistoryViewState = patientHistoryViewState;
 
-            $scope.fetch = function(/*vardgivare*/) {
+            $scope.fetch = function(vardgivareId) {
+
+                var vardgivare = patientHistoryViewState.getSjfMetaData().andraVardgivareUtanSparr.filter(function(item){
+                    return item.id === vardgivareId;
+                });
+
+                if(vardgivare.length > 0){
+                    vardgivare[0].loading = true;
+
+                    // fake backend fetch
+                    $timeout(function(){
+                        vardgivare[0].loading = false;
+                        vardgivare[0].fetched = true;
+                    }, 1000);
+                }
 
             };
         }

@@ -4,9 +4,17 @@
   <table class="table table-striped">
     <tbody>
     <tr ng-repeat="vardgivare in patientHistoryViewState.getSjfMetaData().andraVardgivareUtanSparr">
-      <td ng-attr-id="osparrad-{{index}}-column-number-{{$index}}">{{vardgivare}}</td>
-      <td>
-        <a href ng-click="">Hämta</a>
+      <td ng-attr-id="osparrad-{{index}}-column-number-{{$index}}">{{vardgivare.name}}</td>
+      <td ng-switch="vardgivare.loading">
+        <div ng-switch-when="true">
+          <img class="fa-spin list-spinner" aria-labelledby="loading-message" src="/assets/images/ajax-loader.gif" />
+        </div>
+        <div ng-switch-when="false">
+          <span ng-switch="vardgivare.fetched">
+            <a ng-switch-when="false" href ng-click="fetch(vardgivare.id)">Hämta</a>
+            <i ng-switch-when="true" class="fa fa-check"></i>
+          </span>
+        </div>
       </td>
     </tr>
     </tbody>
