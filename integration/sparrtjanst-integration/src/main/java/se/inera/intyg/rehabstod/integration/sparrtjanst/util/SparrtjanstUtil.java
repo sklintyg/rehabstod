@@ -31,8 +31,8 @@ import se.riv.informationsecurity.authorization.blocking.v4.IIType;
  * Created by marced on 2018-09-26.
  */
 public final class SparrtjanstUtil {
-    private static final String KODVERK_SAMORDNINGSNUMMER = "1.2.752.129.2.1.3.3";
-    private static final String KODVERK_PERSONNUMMER = "1.2.752.129.2.1.3.1";
+    public static final String KODVERK_SAMORDNINGSNUMMER = "1.2.752.129.2.1.3.3";
+    public static final String KODVERK_PERSONNUMMER = "1.2.752.129.2.1.3.1";
 
     private static final int SAMORDNING_MONTH_INDEX = 6;
     private static final int SAMORDNING_MONTH_VALUE_MIN = 6;
