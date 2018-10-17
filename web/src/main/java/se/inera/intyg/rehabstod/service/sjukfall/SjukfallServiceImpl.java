@@ -29,7 +29,6 @@ import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
-import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.service.SparrtjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
@@ -94,8 +93,10 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Autowired
     private SparrtjanstIntegrationService sparrtjanstIntegrationService;
 
+    /*
     @Autowired
     private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+    */
 
     // api
 
@@ -253,7 +254,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         // TODOO: gör anrop till check consent
         // Decorate intygAccessMetaData with consent info
-        samtyckestjanstIntegrationService.checkForConsent(lakarId, patientId, intygAccessMetaData);
+        //samtyckestjanstIntegrationService.checkForConsent(lakarId, patientId, intygAccessMetaData);
 
         // TODOO: skapa listorna med vilka vårdgivare som hade intyg SKULLE funnits i aktivt sjukfall men som inte kommer med
         // pga spärr inre/yttrespärr.
