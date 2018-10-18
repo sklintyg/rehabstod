@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitType;
+import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
@@ -53,6 +54,7 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
     private String logicalAddress;
 
     @Override
+    @PrometheusTimeMethod
     public ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnit(String unitId) {
         ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
 
@@ -64,6 +66,7 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
     }
 
     @Override
+    @PrometheusTimeMethod
     public ListActiveSickLeavesForCareUnitResponseType getSjukfallForPatient(String unitId, String patientId) {
         ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
 
@@ -79,6 +82,7 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
     }
 
     @Override
+    @PrometheusTimeMethod
     public PingForConfigurationResponseType pingForConfiguration() {
         PingForConfigurationType reqType = new PingForConfigurationType();
         reqType.setLogicalAddress(logicalAddress);

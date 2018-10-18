@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistryImpl;
 
+import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 
 /**
@@ -34,6 +35,7 @@ public class LoggingSessionRegistryImpl extends SessionRegistryImpl {
     private MonitoringLogService monitoringService;
 
     @Override
+    @PrometheusTimeMethod
     public void registerNewSession(String sessionId, Object principal) {
         if (principal != null && principal instanceof RehabstodUser) {
             RehabstodUser user = (RehabstodUser) principal;
@@ -43,6 +45,7 @@ public class LoggingSessionRegistryImpl extends SessionRegistryImpl {
     }
 
     @Override
+    @PrometheusTimeMethod
     public void removeSessionInformation(String sessionId) {
         SessionInformation sessionInformation = getSessionInformation(sessionId);
         if (sessionInformation != null) {

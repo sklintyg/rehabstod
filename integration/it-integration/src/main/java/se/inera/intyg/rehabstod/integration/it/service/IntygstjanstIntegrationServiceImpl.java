@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
+import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.integration.it.exception.IntygstjanstIntegrationException;
@@ -48,6 +49,7 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
     private IntygstjanstClientService intygstjanstClientService;
 
     @Override
+    @PrometheusTimeMethod
     public List<IntygsData> getIntygsDataForCareUnit(String unitId) {
         verifyMandatoryParameter("unitId", unitId);
         String errorMessage = "An error occured fetching sick leave certificates for healthcare unit. Error type: {}. Error msg: {}";
@@ -55,6 +57,7 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
     }
 
     @Override
+    @PrometheusTimeMethod
     public List<IntygsData> getIntygsDataForPatient(String unitId, String patientId) {
         verifyMandatoryParameter("unitId", unitId);
         verifyMandatoryParameter("patientId", patientId);

@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
@@ -81,6 +82,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
     }
 
     @Override
+    @PrometheusTimeMethod
     public HealthStatus checkActiveMQ() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -138,6 +140,7 @@ public class HealthCheckServiceImpl implements HealthCheckService {
     }
 
     @Override
+    @PrometheusTimeMethod
     public HealthStatus checkUptime() {
         long uptime = System.currentTimeMillis() - START_TIME;
         LOG.info("Current system uptime is {}", DurationFormatUtils.formatDurationWords(uptime, true, true));
