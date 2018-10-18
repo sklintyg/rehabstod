@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
@@ -85,6 +86,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     // api
 
     @Override
+    @PrometheusTimeMethod
     public SjukfallEnhetResponse getSjukfall(String enhetsId, String mottagningsId,
                                            String lakareId, Urval urval, int maxGlapp, LocalDate date) {
 
@@ -92,6 +94,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     @Override
+    @PrometheusTimeMethod
     public SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId,
                                            String lakareId, Urval urval, int maxGlapp, LocalDate date) {
 
@@ -118,6 +121,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
 
     @Override
+    @PrometheusTimeMethod
     public SjukfallPatientResponse getByPatient(String enhetsId, String lakareId, Urval urval, String patientId, int maxGlapp,
             LocalDate date) {
 
@@ -138,6 +142,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     @Override
+    @PrometheusTimeMethod
     public SjukfallSummary getSummary(String enhetsId, String mottagningsId,
                                       String lakareId, Urval urval, int maxGlapp, LocalDate date) {
 

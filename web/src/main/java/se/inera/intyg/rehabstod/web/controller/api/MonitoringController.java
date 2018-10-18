@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
-import se.inera.intyg.rehabstod.service.monitoring.HealthCheckServiceImpl;
+import se.inera.intyg.rehabstod.service.monitoring.HealthCheckService;
 import se.inera.intyg.rehabstod.service.monitoring.dto.HealthStatus;
 
 import javax.ws.rs.core.Response;
@@ -33,20 +33,20 @@ import javax.ws.rs.core.Response;
 public class MonitoringController {
 
     @Autowired
-    private HealthCheckServiceImpl healthCheck;
+    private HealthCheckService healthCheckService;
 
     private ObjectMapper objectMapper = new CustomObjectMapper();
 
     @RequestMapping(value = "/uptime")
     public Response getUpTimeStatus() {
-        HealthStatus status = healthCheck.checkUptime();
+        HealthStatus status = healthCheckService.checkUptime();
         String xml = buildXMLResponse(status);
         return Response.ok(xml).build();
     }
 
     @RequestMapping(value = "/usernumber")
     public Response getUpNumberOfUsers() {
-        HealthStatus status = healthCheck.checkNbrOfUsers();
+        HealthStatus status = healthCheckService.checkNbrOfUsers();
         String xml = buildXMLResponse(status);
         return Response.ok(xml).build();
     }

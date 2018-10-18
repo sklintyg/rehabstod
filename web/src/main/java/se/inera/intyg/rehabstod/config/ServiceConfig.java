@@ -37,12 +37,12 @@ import java.util.Map;
  * Created by pebe on 2015-09-07.
  */
 @Configuration
-@ComponentScan("se.inera.intyg.rehabstod.service, se.inera.intyg.rehabstod.auth, se.inera.intyg.rehabstod.common.service")
+@ComponentScan({"se.inera.intyg.rehabstod.service", "se.inera.intyg.rehabstod.auth", "se.inera.intyg.rehabstod.common"})
 @EnableScheduling
 public class ServiceConfig {
 
     @Autowired
-    private HealthCheckService healtCheckService;
+    private HealthCheckService healthCheckService;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -53,7 +53,7 @@ public class ServiceConfig {
     @Bean
     public ServletContextAttributeExporter contextAttributes() {
         final Map<String, Object> attributes = new HashMap<>();
-        attributes.put("healthcheck", healtCheckService);
+        attributes.put("healthcheck", healthCheckService);
         final ServletContextAttributeExporter exporter = new ServletContextAttributeExporter();
         exporter.setAttributes(attributes);
         return exporter;

@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.services.HsaEmployeeService;
+import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 import javax.xml.ws.WebServiceException;
@@ -45,6 +46,7 @@ public class EmployeeNameServiceImpl implements EmployeeNameService {
     private HsaEmployeeService employeeService;
 
     @Override
+    @PrometheusTimeMethod
     @Cacheable(value = EMPLOYEE_NAME_CACHE_NAME, key = "#employeeHsaId", unless = "#result == null")
     public String getEmployeeHsaName(String employeeHsaId) {
         try {

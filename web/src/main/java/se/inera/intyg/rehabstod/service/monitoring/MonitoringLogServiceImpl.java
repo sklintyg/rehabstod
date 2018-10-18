@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.common.monitoring.util.LogMarkers;
 
 @Service("webMonitoringLogService")
@@ -31,32 +32,38 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
     private static final Logger LOG = LoggerFactory.getLogger(MonitoringLogService.class);
 
     @Override
+    @PrometheusTimeMethod
     public void logUserLogin(String userHsaId, String authenticationScheme, String origin) {
         // Origin is not interesting for Rehabstod so we ignore it
         logEvent(MonitoringEvent.USER_LOGIN, userHsaId, authenticationScheme);
     }
 
     @Override
+    @PrometheusTimeMethod
     public void logUserLogout(String userHsaId, String authenticationScheme) {
         logEvent(MonitoringEvent.USER_LOGOUT, userHsaId, authenticationScheme);
     }
 
     @Override
+    @PrometheusTimeMethod
     public void logUserSessionExpired(String userHsaId, String authScheme) {
         logEvent(MonitoringEvent.USER_SESSION_EXPIRY, userHsaId, authScheme);
     }
 
     @Override
+    @PrometheusTimeMethod
     public void logMissingMedarbetarUppdrag(String userHsaId) {
         logEvent(MonitoringEvent.USER_MISSING_MIU, userHsaId);
     }
 
     @Override
+    @PrometheusTimeMethod
     public void logMissingMedarbetarUppdrag(String userHsaId, String enhetsId) {
         logEvent(MonitoringEvent.USER_MISSING_MIU_ON_ENHET, userHsaId, enhetsId);
     }
 
     @Override
+    @PrometheusTimeMethod
     public void logUserViewedSjukfall(String userHsaId, int numberOfSjukfall, String vardEnhet) {
         logEvent(MonitoringEvent.USER_VIEWED_SJUKFALL, userHsaId, numberOfSjukfall, vardEnhet);
     }

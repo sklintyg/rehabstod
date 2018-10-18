@@ -28,6 +28,7 @@ import org.apache.cxf.feature.LoggingFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -38,6 +39,7 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
+import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.security.filter.PrincipalUpdatedFilter;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.filters.PdlConsentGivenAssuranceFilter;
@@ -50,6 +52,7 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
         "file:${credentials.file}",
         "classpath:version.properties" })
 @ImportResource({ "classpath:META-INF/cxf/cxf.xml", "classpath:securityContext.xml" })
+@Import(MonitoringConfiguration.class)
 public class ApplicationConfig implements TransactionManagementConfigurer {
 
     @Autowired

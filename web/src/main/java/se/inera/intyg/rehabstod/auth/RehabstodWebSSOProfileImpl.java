@@ -26,6 +26,7 @@ import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.springframework.security.saml.context.SAMLMessageContext;
 import org.springframework.security.saml.websso.WebSSOProfileOptions;
 
+import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.infra.security.common.model.AuthConstants;
 
 /**
@@ -47,6 +48,7 @@ public class RehabstodWebSSOProfileImpl extends org.springframework.security.sam
      * @throws MetadataProviderException error retreiving metadata
      */
     @Override
+    @PrometheusTimeMethod
     protected AuthnRequest getAuthnRequest(SAMLMessageContext context, WebSSOProfileOptions options,
                                            AssertionConsumerService assertionConsumer,
                                            SingleSignOnService bindingService) throws SAMLException, MetadataProviderException {

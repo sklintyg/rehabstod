@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.infra.integration.pu.stub.StubResidentStore;
+import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
@@ -138,6 +139,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
      *         List of all IntygsData
      */
     @Override
+    @PrometheusTimeMethod
     public List<IntygsData> generateIntygsData(Integer numberOfPatients, Integer intygPerPatient) {
 
         if (numberOfPatients > 13000) {
