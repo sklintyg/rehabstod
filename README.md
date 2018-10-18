@@ -17,12 +17,15 @@ Efter att man har klonat repository navigera till den klonade katalogen rehabsto
 
 Det här kommandot kommer att bygga samtliga moduler i systemet. 
 
-När applikationen har byggt klart, kan man gå till `/web` och köra kommandot
+När applikationen har byggt klart, kan man gå till roten och köra kommandot
 
-    $ cd rehabstod
     $ ./gradlew appRun
 
 för att starta applikationen lokalt.
+
+Gå sedan till `/web` och kör
+
+    $ grunt server
 
 Nu går det att öppna en webbläsare och surfa till 
 
