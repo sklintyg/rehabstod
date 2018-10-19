@@ -71,7 +71,12 @@ rhs-table {
   tbody {
 
     tr.rhs-table-row {
-
+      &.nyligen-avslutad-row {
+        @extend %rs-typo-13;
+        .column-slut span {
+          @extend %rs-typo-14;
+        }
+      }
       > td {
 
         vertical-align: top;

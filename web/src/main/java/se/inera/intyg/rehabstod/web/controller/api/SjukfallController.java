@@ -38,6 +38,7 @@ import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
@@ -127,7 +128,7 @@ public class SjukfallController {
 
         // PDL-logging based on which sjukfall that are about to be displayed to user.
         LOG.debug("PDL logging - log which detailed 'sjukfall' that will be displayed to the user.");
-        //TODO: vi visar ju även historiska sjukfall?
+        // vi visar ju även historiska sjukfall?
         logSjukfallData(user, sjukfall.get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK);
 
         // If at least one intyg for the patient has an SRS prediction, log this.
@@ -219,7 +220,8 @@ public class SjukfallController {
         String hsaId = user.getHsaId();
         Urval urval = user.getDefaultUrval();
 
-        return sjukfallService.getSummary(enhetsId, mottagningsId, hsaId, urval, 0, LocalDate.now());
+        IntygParametrar parameters = new IntygParametrar(0, LocalDate.now());
+        return sjukfallService.getSummary(enhetsId, mottagningsId, hsaId, urval, parameters);
     }
 
     // - - - private scope - - -
@@ -256,14 +258,20 @@ public class SjukfallController {
         String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
         String mottagningsId = getMottagningsId(user);
         String lakarId = user.getHsaId();
+
         Urval urval = user.getUrval();
+        IntygParametrar parameters = new IntygParametrar(getMaxGlapp(user), getMaxDagarSedanSjukfallAvslut(user), request.getAktivtDatum());
 
         LOG.debug("Calling the 'sjukfall' service to get a list of 'sjukfall' from care unit {}.", enhetsId);
-        return sjukfallService.getByUnit(enhetsId, mottagningsId, lakarId, urval, getMaxGlapp(user), request.getAktivtDatum());
+        return sjukfallService.getByUnit(enhetsId, mottagningsId, lakarId, urval, parameters);
     }
 
     private int getMaxGlapp(RehabstodUser user) {
         return Integer.parseInt(user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG));
+    }
+
+    private int getMaxDagarSedanSjukfallAvslut(RehabstodUser user) {
+        return Integer.parseInt(user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT));
     }
 
     private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, String patientId, LocalDate date) {
@@ -272,8 +280,9 @@ public class SjukfallController {
         String lakarId = user.getHsaId();
         Urval urval = user.getUrval();
 
+        IntygParametrar parameters = new IntygParametrar(getMaxGlapp(user), getMaxDagarSedanSjukfallAvslut(user), date);
         LOG.debug("Calling the 'sjukfall' service to get a list of detailed 'sjukfall' for one patient.");
-        return sjukfallService.getByPatient(currentVardgivarHsaId, enhetsId, lakarId, urval, patientId, getMaxGlapp(user), date);
+        return sjukfallService.getByPatient(currentVardgivarHsaId, enhetsId, lakarId, urval, patientId, parameters);
     }
 
     private void logSjukfallData(RehabstodUser user, List<SjukfallEnhet> sjukfallList,

@@ -31,7 +31,7 @@ describe('Viewstate: patientHistoryViewState', function() {
             'kod': 'J661',
             'beskrivning': 'desc1'
         },
-        'intyg': [ {} ]
+        'intyg': [ {'aktivtIntyg': true} ]
     };
 
     var sjukfall2016 = {

@@ -38,6 +38,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
+import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
@@ -77,6 +78,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     // api
 
     @Override
+    @PrometheusTimeMethod
     public byte[] export(List<SjukfallEnhet> sjukfallList, PrintSjukfallRequest req, RehabstodUser user, int total)
             throws IOException {
 

@@ -52,7 +52,7 @@ public class SjukfallEngineMapper {
     /**
      * Mapping from SjukfallEngine's format to Rehabstod internal format.
      */
-    public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, LocalDate today) {
+    public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, int maxDagarSedanAvslut, LocalDate today) {
         SjukfallEnhet to = new SjukfallEnhet();
 
         try {
@@ -72,7 +72,7 @@ public class SjukfallEngineMapper {
             to.setAktivGrad(from.getAktivGrad());
             to.setGrader(from.getGrader());
             to.setAktivIntygsId(from.getAktivIntygsId());
-
+            to.setNyligenAvslutat(to.getSlutOmDagar() < 0 && to.getSlutOmDagar() + maxDagarSedanAvslut >= 0);
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
         }

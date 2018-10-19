@@ -24,12 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
-import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.service.SparrtjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
@@ -49,7 +49,6 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,23 +93,19 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Autowired
     private SparrtjanstIntegrationService sparrtjanstIntegrationService;
 
-    @Autowired
-    private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+    /*
+     * @Autowired
+     * private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+     */
 
     // api
 
     @Override
-    public SjukfallEnhetResponse getSjukfall(String enhetsId, String mottagningsId,
-            String lakareId, Urval urval, int maxGlapp, LocalDate date) {
+    @PrometheusTimeMethod
+    public SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval,
+            IntygParametrar parameters) {
 
-        return getByUnit(enhetsId, mottagningsId, lakareId, urval, maxGlapp, date);
-    }
-
-    @Override
-    public SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId,
-            String lakareId, Urval urval, int maxGlapp, LocalDate date) {
-
-        List<SjukfallEnhet> rehabstodSjukfall = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, maxGlapp, date);
+        List<SjukfallEnhet> rehabstodSjukfall = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, parameters);
 
         // Utför sekretess-filtrering innan loggning, vi filtrerar ju ev. bort en del poster.
         sjukfallPuService.enrichWithPatientNamesAndFilterSekretess(rehabstodSjukfall);
@@ -132,13 +127,11 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     @Override
+    @PrometheusTimeMethod
     public SjukfallPatientResponse getByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId, Urval urval,
-            String patientId, int maxGlapp,
-            LocalDate date) {
-
-
+            String patientId, IntygParametrar parameters) {
         FilteredSjukFallByPatientResult result = getFilteredSjukfallByPatient(lakareId, currentVardgivarHsaId, enhetsId, urval, patientId,
-                maxGlapp, date);
+                parameters);
 
         final List<SjukfallPatient> rehabstodSjukfall = result.getRehabstodSjukfall();
 
@@ -158,10 +151,11 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     @Override
+    @PrometheusTimeMethod
     public SjukfallSummary getSummary(String enhetsId, String mottagningsId,
-            String lakareId, Urval urval, int maxGlapp, LocalDate date) {
+            String lakareId, Urval urval, IntygParametrar parameters) {
 
-        List<SjukfallEnhet> sjukfallList = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, maxGlapp, date);
+        List<SjukfallEnhet> sjukfallList = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, parameters);
         sjukfallPuService.filterSekretessForSummary(sjukfallList);
         return statisticsCalculator.getSjukfallSummary(sjukfallList);
     }
@@ -179,25 +173,26 @@ public class SjukfallServiceImpl implements SjukfallService {
         return mottagningsId != null ? mottagningsId : enhetsId;
     }
 
-    private List<SjukfallEnhet> getFilteredSjukfallByUnit(String enhetsId, String mottagningsId,
-            String lakareId, Urval urval, int maxGlapp, LocalDate date) {
+    private List<SjukfallEnhet> getFilteredSjukfallByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval,
+            IntygParametrar parameters) {
 
         if (urval == null) {
             throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");
         }
 
         LOG.debug("Calling Intygstjänsten - fetching certificate information.");
-        List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId);
+        List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId,
+                parameters.getMaxAntalDagarSedanSjukfallAvslut());
 
         LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall' by unit.");
         List<se.inera.intyg.infra.sjukfall.dto.IntygData> data = intygsData.stream()
                 .map(o -> intygstjanstMapper.map(o)).collect(Collectors.toList());
-        se.inera.intyg.infra.sjukfall.dto.IntygParametrar parametrar = new IntygParametrar(maxGlapp, date);
 
-        List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> sjukfallList = sjukfallEngine.beraknaSjukfallForEnhet(data, parametrar);
+        List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> sjukfallList = sjukfallEngine.beraknaSjukfallForEnhet(data, parameters);
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
-        List<SjukfallEnhet> rehabstodSjukfall = sjukfallList.stream().map(o -> sjukfallEngineMapper.map(o, date))
+        List<SjukfallEnhet> rehabstodSjukfall = sjukfallList.stream()
+                .map(o -> sjukfallEngineMapper.map(o, parameters.getMaxAntalDagarSedanSjukfallAvslut(), parameters.getAktivtDatum()))
                 .collect(Collectors.toList());
 
         if (urval.equals(Urval.ISSUED_BY_ME)) {
@@ -218,19 +213,19 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     private FilteredSjukFallByPatientResult getFilteredSjukfallByPatient(String lakarId, String currentVardgivarHsaId, String enhetsId,
-            Urval urval, String patientId, int maxGlapp, LocalDate date) {
+            Urval urval, String patientId, IntygParametrar parameters) {
 
         Preconditions.checkArgument(!Strings.isNullOrEmpty(lakarId), "lakarId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardgivarHsaId), "currentVardgivarHsaId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(enhetsId), "enhetsId may not be null or empty");
         Preconditions.checkArgument(urval != null, "urval may not be null");
 
-        IntygParametrar parametrar = new IntygParametrar(maxGlapp, date);
         List<se.inera.intyg.infra.sjukfall.dto.SjukfallPatient> sjukfallList;
         Map<String, IntygAccessControlMetaData> intygAccessMetaData = new HashMap<>();
 
         LOG.debug("Calling Intygstjänsten - fetching certificate information by patient.");
-        List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForPatient(enhetsId, patientId);
+        List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForPatient(enhetsId, patientId,
+                parameters.getMaxAntalDagarSedanSjukfallAvslut());
 
         List<IntygData> data = intygsData
                 .stream()
@@ -246,25 +241,23 @@ public class SjukfallServiceImpl implements SjukfallService {
                 data);
 
         // Make an initial calculation using _all_ available intyg...
-        sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parametrar);
-
+        sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parameters);
         // ... and check which intyg is contributing to the aktive sjukfall
         updateAccessMetaDataWithContributingStatus(sjukfallList, intygAccessMetaData);
 
-        // TODOO: gör anrop till check consent
+        // gör anrop till check consent
         // Decorate intygAccessMetaData with consent info
-        samtyckestjanstIntegrationService.checkForConsent(lakarId, patientId, intygAccessMetaData);
+        // samtyckestjanstIntegrationService.checkForConsent(lakarId, patientId, intygAccessMetaData);
 
-        // TODOO: skapa listorna med vilka vårdgivare som hade intyg SKULLE funnits i aktivt sjukfall men som inte kommer med
+        // skapa listorna med vilka vårdgivare som hade intyg SKULLE funnits i aktivt sjukfall men som inte kommer med
         // pga spärr inre/yttrespärr.
         SjfMetaData sjfMetaData = createSjfMetaData(intygAccessMetaData);
 
         // Final run, where all intyg not cleared (sparr/samtycke) to be included have been removed
-        sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(filterByAcessMetaData(data, intygAccessMetaData), parametrar);
+        sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(filterByAcessMetaData(data, intygAccessMetaData), parameters);
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
         List<SjukfallPatient> rehabstodSjukfall = sjukfallList.stream().map(o -> sjukfallEngineMapper.map(o)).collect(Collectors.toList());
-
 
         return new FilteredSjukFallByPatientResult(rehabstodSjukfall, sjfMetaData);
     }

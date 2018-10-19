@@ -24,6 +24,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.PatientData;
@@ -47,6 +49,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class SjukfallEngineMapperTest {
 
+    private static final int MAX_DAGAR_SEDAN_AVSLUT = 5;
     private static final String INTYGSID = "A1234-B1234-C1234-D1234-E1234";
     private static final LocalDateTime SIGNERINGSTIDPUNKT = LocalDateTime.now();
     private static final String PERSONNUMMER = "19121212-1212";
@@ -90,7 +93,7 @@ public class SjukfallEngineMapperTest {
 
 
         // when
-        SjukfallEnhet to = testee.map(from, today);
+        SjukfallEnhet to = testee.map(from, 0, today);
 
         // then
         assertEquals(VARDGIVAREID, to.getVardGivareId());
@@ -125,7 +128,7 @@ public class SjukfallEngineMapperTest {
 
 
         // when
-        SjukfallEnhet to = testee.map(from, today);
+        SjukfallEnhet to = testee.map(from, 0, today);
 
         // then
         assertEquals(0, to.getSlutOmDagar());
@@ -229,13 +232,13 @@ public class SjukfallEngineMapperTest {
     private List<se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg> createSjukfallIntygList() {
         return Arrays.asList(new se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg(
             new se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg.SjukfallIntygBuilder(
-                createIntygData(), AKTIVTDATUM)));
+                createIntygData(), AKTIVTDATUM, MAX_DAGAR_SEDAN_AVSLUT)));
     }
 
     private se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg createSjukfallIntyg() {
         return new se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg(
             new se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg.SjukfallIntygBuilder(
-                createIntygData(), AKTIVTDATUM));
+                createIntygData(), AKTIVTDATUM, MAX_DAGAR_SEDAN_AVSLUT));
     }
 
     private se.inera.intyg.infra.sjukfall.dto.IntygData createIntygData() {

@@ -44,6 +44,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 
+import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
@@ -79,6 +80,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     private Font unicodeCapableFont;
 
     @Override
+    @PrometheusTimeMethod
     public byte[] export(List<SjukfallEnhet> sjukfallList, PrintSjukfallRequest printSjukfallRequest, RehabstodUser user, int total) {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
