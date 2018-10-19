@@ -18,21 +18,14 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
@@ -55,6 +48,11 @@ import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -96,9 +94,9 @@ public class SjukfallServiceImpl implements SjukfallService {
     private SparrtjanstIntegrationService sparrtjanstIntegrationService;
 
     /*
-    @Autowired
-    private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
-    */
+     * @Autowired
+     * private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+     */
 
     // api
 
@@ -132,8 +130,6 @@ public class SjukfallServiceImpl implements SjukfallService {
     @PrometheusTimeMethod
     public SjukfallPatientResponse getByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId, Urval urval,
             String patientId, IntygParametrar parameters) {
-
-
         FilteredSjukFallByPatientResult result = getFilteredSjukfallByPatient(lakareId, currentVardgivarHsaId, enhetsId, urval, patientId,
                 parameters);
 
@@ -190,12 +186,13 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall' by unit.");
         List<se.inera.intyg.infra.sjukfall.dto.IntygData> data = intygsData.stream()
-            .map(o -> intygstjanstMapper.map(o)).collect(Collectors.toList());
+                .map(o -> intygstjanstMapper.map(o)).collect(Collectors.toList());
 
         List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> sjukfallList = sjukfallEngine.beraknaSjukfallForEnhet(data, parameters);
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
-        List<SjukfallEnhet> rehabstodSjukfall = sjukfallList.stream().map(o -> sjukfallEngineMapper.map(o, parameters.getMaxAntalDagarSedanSjukfallAvslut(), parameters.getAktivtDatum()))
+        List<SjukfallEnhet> rehabstodSjukfall = sjukfallList.stream()
+                .map(o -> sjukfallEngineMapper.map(o, parameters.getMaxAntalDagarSedanSjukfallAvslut(), parameters.getAktivtDatum()))
                 .collect(Collectors.toList());
 
         if (urval.equals(Urval.ISSUED_BY_ME)) {
@@ -248,11 +245,11 @@ public class SjukfallServiceImpl implements SjukfallService {
         // ... and check which intyg is contributing to the aktive sjukfall
         updateAccessMetaDataWithContributingStatus(sjukfallList, intygAccessMetaData);
 
-        // TODOO: gör anrop till check consent
+        // gör anrop till check consent
         // Decorate intygAccessMetaData with consent info
-        //samtyckestjanstIntegrationService.checkForConsent(lakarId, patientId, intygAccessMetaData);
+        // samtyckestjanstIntegrationService.checkForConsent(lakarId, patientId, intygAccessMetaData);
 
-        // TODOO: skapa listorna med vilka vårdgivare som hade intyg SKULLE funnits i aktivt sjukfall men som inte kommer med
+        // skapa listorna med vilka vårdgivare som hade intyg SKULLE funnits i aktivt sjukfall men som inte kommer med
         // pga spärr inre/yttrespärr.
         SjfMetaData sjfMetaData = createSjfMetaData(intygAccessMetaData);
 
@@ -261,7 +258,6 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
         List<SjukfallPatient> rehabstodSjukfall = sjukfallList.stream().map(o -> sjukfallEngineMapper.map(o)).collect(Collectors.toList());
-
 
         return new FilteredSjukFallByPatientResult(rehabstodSjukfall, sjfMetaData);
     }
