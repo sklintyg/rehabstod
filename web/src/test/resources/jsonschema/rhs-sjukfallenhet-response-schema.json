@@ -126,6 +126,9 @@
       "dagar": {
         "type": "integer"
       },
+      "nyligenAvslutat": {
+        "type": "boolean"
+      },
       "intyg": {
         "type": "integer"
       },
@@ -165,6 +168,7 @@
       "start",
       "slut",
       "dagar",
+      "nyligenAvslutat",
       "intyg",
       "aktivGrad",
       "grader"

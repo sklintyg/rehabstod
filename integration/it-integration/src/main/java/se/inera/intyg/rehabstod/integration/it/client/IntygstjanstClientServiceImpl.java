@@ -55,19 +55,21 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
 
     @Override
     @PrometheusTimeMethod
-    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnit(String unitId) {
+    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnit(String unitId, int maxAntalDagarSedanSjukfallAvslut) {
         ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
 
         HsaId hsaId = new HsaId();
         hsaId.setExtension(unitId);
         params.setEnhetsId(hsaId);
+        params.setMaxDagarSedanAvslut(maxAntalDagarSedanSjukfallAvslut);
 
         return service.listActiveSickLeavesForCareUnit(logicalAddress, params);
     }
 
     @Override
     @PrometheusTimeMethod
-    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForPatient(String unitId, String patientId) {
+    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForPatient(String unitId, String patientId,
+            int maxAntalDagarSedanSjukfallAvslut) {
         ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
 
         PersonId pId = new PersonId();
@@ -77,6 +79,7 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
         HsaId hsaId = new HsaId();
         hsaId.setExtension(unitId);
         params.setEnhetsId(hsaId);
+        params.setMaxDagarSedanAvslut(maxAntalDagarSedanSjukfallAvslut);
 
         return service.listActiveSickLeavesForCareUnit(logicalAddress, params);
     }

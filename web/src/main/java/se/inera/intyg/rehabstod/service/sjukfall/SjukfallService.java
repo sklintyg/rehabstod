@@ -18,8 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.time.LocalDate;
-
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
@@ -31,12 +30,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 public interface SjukfallService {
 
     /**
-     * @see List<se.inera.intyg.rehabstod.web.model.SjukfallEnhet>
-     *      se.inera.intyg.rehabstod.service.sjukfall.SjukfallService.getByUnit
-     */
-    SjukfallEnhetResponse getSjukfall(String enhetsId, String mottagningsId, String lakareId, Urval urval, int maxGlapp, LocalDate date);
-
-    /**
      * The 'enhetsId' is _always_ the ID of the Vardenhet we want to query IT with regardless of whether the currently
      * selected RehabstodUser#valdVardenhet is a Vardenhet or a Mottagning. 'mottagningsId' is always null if the selected
      * RehabstodUser#valdVardenhet is a Vardenhet.
@@ -46,11 +39,11 @@ public interface SjukfallService {
      * specified, we'll perform filtering on our side so only Sjukfall originating from the specified mottagningsId are
      * included in the response.
      */
-    SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval, int maxGlapp, LocalDate date);
+    SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval, IntygParametrar parameters);
 
     SjukfallPatientResponse getByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId, Urval urval, String patientId,
-            int maxGlapp, LocalDate date);
+            IntygParametrar parameters);
 
-    SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId, Urval urval, int maxGlapp, LocalDate date);
+    SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId, Urval urval, IntygParametrar parameters);
 
 }

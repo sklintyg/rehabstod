@@ -34,14 +34,16 @@ angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
             return newObject;
         }
 
-        function addSetting(settingData, property) {
+        function addSetting(settingData, property, defaultValue, min, max) {
             $scope.settings.push({
                 id: 'setting-' + property.toLowerCase(),
                 property: property,
                 title: 'settings.modal.' + property + '.title',
                 description: 'settings.modal.' + property + '.description',
                 help: 'settings.modal.' + property + '.help',
-                value: settingData[property] ? settingData[property] : 5
+                min: min,
+                max: max,
+                value: settingData[property] ? settingData[property] : defaultValue
             });
         }
 
@@ -78,6 +80,7 @@ angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
          * Run
          */
         var oldSettingData = UserModel.get().preferences;
-        addSetting(oldSettingData, 'maxAntalDagarMellanIntyg');
+        addSetting(oldSettingData, 'maxAntalDagarMellanIntyg', 5, 0, 90);
+        addSetting(oldSettingData, 'maxAntalDagarSedanSjukfallAvslut', 0, 0, 14);
     }
 );
