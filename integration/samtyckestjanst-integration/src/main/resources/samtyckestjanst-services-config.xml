@@ -32,8 +32,8 @@
   </jaxws:client>
 
   <jaxws:client id="registerExtendedConsentClient"
-      serviceClass="se.riv.informationsecurity.authorization.consent.RegisterExtendedConsent.v2.rivtabp21.RegisterExtendedConsentResponderInterface"
-      address="${samtyckestjanst.registerextendedconsent.endpoint.url}">
+    serviceClass="se.riv.informationsecurity.authorization.consent.RegisterExtendedConsent.v2.rivtabp21.RegisterExtendedConsentResponderInterface"
+    address="${samtyckestjanst.registerextendedconsent.endpoint.url}">
   </jaxws:client>
 
   <beans profile="!rhs-samtyckestjanst-stub">

@@ -30,9 +30,13 @@ import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.client.SamtyckestjanstClientService;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.exception.SamtyckestjanstIntegrationException;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
+import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsentResponder.v2.RegisterExtendedConsentResponseType;
+import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.CheckResultType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
+import se.riv.informationsecurity.authorization.consent.v2.ResultType;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,7 +45,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
  */
-@Service
+@Service("samtyckestjanstIntegrationService")
 public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstIntegrationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(SamtyckestjanstIntegrationServiceImpl.class);
@@ -85,7 +89,7 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
             if (checkResultType.getResult().getResultCode() != ResultCodeType.OK) {
                 if (checkResultType.getResult().getResultCode() == ResultCodeType.INFO) {
                     LOG.warn(String.format(
-                            "checkForConsent recived INFO result with resultText '%s' - a partially valid response is still expected.",
+                            "checkForConsent received INFO result with resultText '%s' - a partially valid response is still expected.",
                             checkResultType.getResult().getResultText()));
                 } else {
                     throw new SamtyckestjanstIntegrationException(
@@ -97,6 +101,49 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
 
             updateConsentStatus(vgHsaId, veHsaId, checkResultType.isHasConsent(), intygAccessMetaData);
         }
+    }
+
+    @Override
+    public void registerConsent(String vgHsaId,
+                                String veHsaId,
+                                String patientId,
+                                String userHsaId,
+                                String representedBy,
+                                LocalDateTime consentFrom,
+                                LocalDateTime consentTo,
+                                ActionType registrationAction) {
+
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(vgHsaId), "vgHsaId may not be null or empty");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(veHsaId), "veHsaId may not be null or empty");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
+        Preconditions.checkNotNull(registrationAction, "registrationAction may not be null");
+
+        // Make call to the CheckConsent service and handle response
+        final RegisterExtendedConsentResponseType response =
+                samtyckestjanstClientService.registerExtendedConsent(vgHsaId, veHsaId, userHsaId, patientId,
+                        representedBy, consentFrom, consentTo, registrationAction);
+
+        if (response == null || response.getResult() == null) {
+            throw new SamtyckestjanstIntegrationException("Failed to get response from RegisterExtendedConsent service");
+        }
+
+        // OK = OK
+        // INFO = Some of the request information resouces ha an validation error, but a response should still have been
+        // provided
+        ResultType resultType = response.getResult();
+        if (resultType.getResultCode() != ResultCodeType.OK) {
+            if (resultType.getResultCode() == ResultCodeType.INFO) {
+                LOG.warn(String.format(
+                        "registerConsent received INFO result with resultText '%s' - a partially valid response is still expected.",
+                        resultType.getResultText()));
+            } else {
+                throw new SamtyckestjanstIntegrationException(
+                        String.format("registerConsent failed with resultCode %s and resultText '%s'",
+                                resultType.getResultCode(),
+                                resultType.getResultText()));
+            }
+        }
+
     }
 
     @VisibleForTesting

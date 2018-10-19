@@ -25,10 +25,14 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
   http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
   http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd"
-  profile="rhs-sparrtjanst-stub">
+  profile="rhs-samtyckestjanst-stub">
 
   <jaxws:endpoint
-      address="/stubs/informationsecurity/authorization/blocking/CheckBlocks/4/rivtabp21"
+      address="/stubs/informationsecurity/authorization/consent/CheckConsent/2/rivtabp21"
+      implementor="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstIntegrationStub"/>
+
+  <jaxws:endpoint
+      address="/stubs/informationsecurity/authorization/consent/RegisterExtendedConsent/2/rivtabp21"
       implementor="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstIntegrationStub"/>
 
   <bean id="samtyckestjanstStubRestApi" class="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstStubRestApi"/>

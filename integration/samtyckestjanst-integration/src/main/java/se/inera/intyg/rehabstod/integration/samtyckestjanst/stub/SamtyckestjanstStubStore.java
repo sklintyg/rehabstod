@@ -42,19 +42,17 @@ public class SamtyckestjanstStubStore {
         repository.clear();
     }
 
-    public List<ConsentData> getAllForPerson(String personId) {
-        return repository.stream().filter(consentData -> consentData.getPersonId().equals(personId)).collect(Collectors.toList());
+    public List<ConsentData> getConsents(String vgHsaId, String veHsaId, String patientId) {
+        return repository.stream()
+                .filter(consent -> consent.getPatientId().equals(patientId)
+                        && consent.getVgHsaId().equals(vgHsaId)
+                        && consent.getVeHsaId().equals(veHsaId))
+                .collect(Collectors.toList());
     }
 
-    public boolean isConsentWithinInterval(String personId, LocalDate queryDateFrom, LocalDate queryDateTo) {
-        return getAllForPerson(personId).stream()
-                .anyMatch(consentData -> isWithinInterval(consentData, queryDateFrom) || isWithinInterval(consentData, queryDateTo));
-    }
-
-    private boolean isWithinInterval(ConsentData consentData, LocalDate queryDate) {
-        // Either touches start/end or is in within
-        return queryDate.isEqual(consentData.getConsentFrom()) || queryDate.isEqual(consentData.getConsentTo())
-                || (queryDate.isAfter(consentData.getConsentFrom()) && queryDate.isBefore(consentData.getConsentTo()));
+    public boolean hasConsent(String vgHsaId, String veHsaId, String patientId, LocalDate queryDate) {
+        return getConsents(vgHsaId, veHsaId, patientId).stream()
+                .anyMatch(consent -> isWithinInterval(consent, queryDate));
     }
 
     public void add(ConsentData data) {
@@ -62,6 +60,19 @@ public class SamtyckestjanstStubStore {
     }
 
     public void remove(String personId) {
-        repository.removeIf(consentData -> consentData.getPersonId().equals(personId));
+        repository.removeIf(consent -> consent.getPatientId().equals(personId));
     }
+
+    private boolean isWithinInterval(ConsentData consent, LocalDate queryDate) {
+        // Either touches start/end or is in within
+        if (queryDate.isEqual(consent.getConsentFrom().toLocalDate())) {
+            return true;
+        }
+        if (queryDate.isEqual(consent.getConsentTo().toLocalDate())) {
+            return true;
+        }
+        return queryDate.isAfter(consent.getConsentFrom().toLocalDate())
+                && queryDate.isBefore(consent.getConsentTo().toLocalDate());
+    }
+
 }
