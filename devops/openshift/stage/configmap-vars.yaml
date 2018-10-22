@@ -1,0 +1,18 @@
+apiVersion: v1
+data:
+  REDIS_HOST: <value>
+  REDIS_PORT: <value>
+  REDIS_SENTINEL_MASTER_NAME: <value>
+  BROKER_AMQ_TCP_PORT: tcp://<value>:<value>
+  NTJP_WS_CERTIFICATE_TYPE: <value>
+  NTJP_WS_TRUSTSTORE_TYPE: <value>
+  SAKERHETSTJANST_SAML_IDP_METADATA_URL: https://idp2.acctest.sakerhetstjanst.inera.se:443/idp/saml
+  SAKERHETSTJANST_SAML_KEYSTORE_ALIAS: <value>
+  SAKERHETSTJANST_SAML_KEYSTORE_FILE: file://${CERTIFICATE_FOLDER}/<value>
+  SAKERHETSTJANST_SAML_TRUSTSTORE_FILE: file://${CERTIFICATE_FOLDER}/<value>
+  NTJP_WS_CERTIFICATE_FILE: ${CERTIFICATE_FOLDER}/<value>
+  NTJP_WS_TRUSTSTORE_FILE: ${CERTIFICATE_FOLDER}/<value>
+kind: ConfigMap
+metadata:
+  name: rehabstod-stage-configmap-envvar
+type: Opaque
