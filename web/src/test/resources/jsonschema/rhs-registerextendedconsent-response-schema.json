@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Schema for RegisterExtendedConsent as resturned from e.g /consent",
+
+    "properties": {
+      "responseCode": {
+        "type": "string"
+      },
+      "responseMessage": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "registeredBy": {
+        "type": "string"
+      },
+      "registrationDate": {
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "responseCode",
+      "registeredBy",
+      "registrationDate"
+    ],
+    "type" : "object"
+}
