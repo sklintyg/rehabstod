@@ -3,9 +3,16 @@
   <img alt="Logotyp för Rehabstöd" class="visible-xs" src="/assets/images/logo_small.png" />
 </div>
 
-<rhs-header-user data-ng-if="user.loggedIn"></rhs-header-user>
-<rhs-header-unit data-ng-if="showUnit()"></rhs-header-unit>
+<rhs-header-user ng-if="user.loggedIn" class="header-divider"></rhs-header-user>
+<rhs-header-unit ng-if="showUnit()" class="header-divider"></rhs-header-unit>
 
-<div class="header-links" data-ng-if="user.loggedIn">
-  <a id="logoutLink" href="{{::logoutLocation}}"><span message key="common.logout"></span></a>
+<div ng-if="!user.loggedIn" class="header-empty header-divider"></div>
+
+<div class="header-links header-divider" ng-if="user.loggedIn">
+  <div class="header-link header-divider">
+    <a id="omRehadbstod" ng-click="openInfoDialog($event)">Om Rehabstöd</a>
+  </div>
+  <div class="header-link header-divider">
+    <a id="logoutLink" href="{{::logoutLocation}}"><span message key="common.logout"></span></a>
+  </div>
 </div>

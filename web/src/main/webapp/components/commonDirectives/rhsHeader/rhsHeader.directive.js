@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsHeader',
-        function() {
+        function($uibModal) {
             'use strict';
 
             return {
@@ -43,6 +43,19 @@ angular.module('rehabstodApp').directive('rhsHeader',
                         return user.loggedIn && user.valdVardenhet;
                     };
 
+                    $scope.openInfoDialog = function($event) {
+                        if ($event) {
+                            $event.preventDefault();
+                        }
+                        $uibModal.open({
+                            templateUrl: '/components/commonDirectives/rhsHeader/rhsHeaderModal/omRehabstod.modal.html',
+                            controller: 'omRehabstodModalController',
+                            size: 'md',
+                            windowClass: 'header-om-rehabstod'
+                            // Removes angular error "Possibly unhandled rejection:
+                            // backdrop click" when clicking outside of modal
+                        }).result.then(function(){}, function(){});
+                    };
                 }
             };
         });

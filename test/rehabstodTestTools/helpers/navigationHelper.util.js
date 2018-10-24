@@ -28,11 +28,6 @@ var aboutPage = pages.aboutPage;
 
 module.exports = {
 
-    goToAbout: function(success) {
-        startPage.clickTestAbout();
-        expect(aboutPage.isAt()).toBe(success || true);
-    },
-
     goToStart: function(success) {
         startPage.clickStart();
         expect(startPage.isAt()).toBe(success || true);

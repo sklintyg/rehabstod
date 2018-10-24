@@ -24,17 +24,16 @@
 @import '../bower_components/font-awesome/scss/font-awesome.scss';
 @import "../bower_components/jquery-date-range-picker/src/daterangepicker";
 @import "mixins/bootstrap-override";
-
 @import "mixins/general";
+@import "mixins/btn";
+@import "mixins/dynamic-links";
+
 
 // Component styles are injected through grunt
 // injector
-@import 'about/about.scss';
-@import 'about/subpages/faq.scss';
 @import 'error/error.scss';
 @import 'error/restErrorDialog.scss';
 @import 'footer/footer.scss';
-@import 'header/header.scss';
 @import 'index/index.page.scss';
 @import 'selectunit/selectunit.page.scss';
 @import 'sjukfall/patientHistory/patientHistory.scss';
@@ -51,6 +50,7 @@
 @import 'commonDirectives/rhsDatePicker/rhsDatePickerField.directive.scss';
 @import 'commonDirectives/rhsDateRangePicker/rhsDateRangePicker.directive.scss';
 @import 'commonDirectives/rhsHeader/rhsHeader.directive.scss';
+@import 'commonDirectives/rhsHeader/rhsHeaderModal/omRehabstod.modal.scss';
 @import 'commonDirectives/rhsHeader/rhsHeaderUnit/rhsHeaderUnit.directive.scss';
 @import 'commonDirectives/rhsHeader/rhsHeaderUser/rhsHeaderUser.directive.scss';
 @import 'commonDirectives/rhsHeader/rhsHeaderUser/rhsSettingsModal/rhsSettingsModal.scss';
