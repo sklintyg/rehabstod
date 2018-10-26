@@ -27,7 +27,7 @@ import java.util.Objects;
  */
 public class RegisterExtendedConsentResponse implements Serializable {
 
-    public enum ResponseCode {OK, ERROR};
+    public enum ResponseCode { OK, ERROR };
 
     private static final long serialVersionUID = -5797795536344707201L;
 
@@ -65,13 +65,17 @@ public class RegisterExtendedConsentResponse implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RegisterExtendedConsentResponse)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof RegisterExtendedConsentResponse)) {
+            return false;
+        }
         RegisterExtendedConsentResponse that = (RegisterExtendedConsentResponse) o;
-        return responseCode == that.responseCode &&
-                Objects.equals(responseMessage, that.responseMessage) &&
-                Objects.equals(registeredBy, that.registeredBy) &&
-                Objects.equals(registrationDate, that.registrationDate);
+        return responseCode == that.responseCode
+                && Objects.equals(responseMessage, that.responseMessage)
+                && Objects.equals(registeredBy, that.registeredBy)
+                && Objects.equals(registrationDate, that.registrationDate);
     }
 
     @Override

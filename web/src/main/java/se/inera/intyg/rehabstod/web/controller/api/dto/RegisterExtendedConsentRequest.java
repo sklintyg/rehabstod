@@ -78,14 +78,18 @@ public class RegisterExtendedConsentRequest implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RegisterExtendedConsentRequest)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof RegisterExtendedConsentRequest)) {
+            return false;
+        }
         RegisterExtendedConsentRequest that = (RegisterExtendedConsentRequest) o;
-        return Objects.equals(patientId, that.patientId) &&
-                Objects.equals(userHsaId, that.userHsaId) &&
-                Objects.equals(representedBy, that.representedBy) &&
-                Objects.equals(consentFrom, that.consentFrom) &&
-                Objects.equals(consentTo, that.consentTo);
+        return Objects.equals(patientId, that.patientId)
+                && Objects.equals(userHsaId, that.userHsaId)
+                && Objects.equals(representedBy, that.representedBy)
+                && Objects.equals(consentFrom, that.consentFrom)
+                && Objects.equals(consentTo, that.consentTo);
     }
 
     @Override

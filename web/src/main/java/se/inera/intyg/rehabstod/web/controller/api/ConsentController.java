@@ -73,12 +73,12 @@ public class ConsentController {
 
             samtyckestjanstIntegrationService.registerConsent(user.getValdVardgivare().getId(), user.getValdVardenhet().getId(),
                     request.getPatientId(), request.getUserHsaId(), request.getRepresentedBy(),
-                    consentFrom, consentTo,createActionType(user, registrationDate));
+                    consentFrom, consentTo, createActionType(user, registrationDate));
 
             response = new RegisterExtendedConsentResponse(
                     RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId(), registrationDate.toLocalDate());
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             response = new RegisterExtendedConsentResponse(
                     RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(), registrationDate.toLocalDate());
             response.setResponseMessage(e.getMessage());
