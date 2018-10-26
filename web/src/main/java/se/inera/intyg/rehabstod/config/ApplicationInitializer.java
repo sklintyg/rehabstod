@@ -64,6 +64,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
                 PuConfiguration.class, ServiceConfig.class, IntygstjanstIntegrationConfiguration.class,
                 IntygstjanstIntegrationClientConfiguration.class,
                 IntygstjanstIntegrationStubConfiguration.class,
+                SamtyckestjanstConfiguration.class,
+                SamtyckestjanstStubConfiguration.class,
                 SparrtjanstConfiguration.class,
                 SRSIntegrationConfiguration.class,
                 SRSIntegrationClientConfiguration.class,

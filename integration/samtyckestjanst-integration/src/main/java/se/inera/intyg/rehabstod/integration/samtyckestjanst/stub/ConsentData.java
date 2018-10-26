@@ -18,62 +18,166 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
-import java.time.LocalDate;
+import se.riv.informationsecurity.authorization.consent.v2.ActionType;
+import se.riv.informationsecurity.authorization.consent.v2.AssertionTypeType;
+import se.riv.informationsecurity.authorization.consent.v2.ScopeType;
+
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * Created by Magnus Ekstrand on 2018-10-10.
+ * @author Magnus Ekstrand on 2018-10-17.
  */
 public class ConsentData {
 
-    String personId;
-    LocalDate consentFrom;
-    LocalDate consentTo;
+    private String assertionId;
+    private String vgHsaId;
+    private String veHsaId;
+    private String patientId;
+    private String userHsaId;
+    private String representedBy;
 
-    public ConsentData(String personId, LocalDate consentFrom, LocalDate consentTo) {
-        this.personId = personId;
-        this.consentFrom = consentFrom;
-        this.consentTo = consentTo;
+    private LocalDateTime consentFrom;
+    private LocalDateTime consentTo;
+
+    private ActionType registrationAction;
+
+    private final ScopeType  scopeType = ScopeType.NATIONAL_LEVEL;
+    private final AssertionTypeType assertionType = AssertionTypeType.CONSENT;
+
+    ConsentData(Builder builder) {
+        this.assertionId = builder.assertionId;
+        this.vgHsaId = builder.vgHsaId;
+        this.veHsaId = builder.veHsaId;
+        this.patientId = builder.patientId;
+        this.userHsaId = builder.userHsaId;
+        this.representedBy = builder.representedBy;
+        this.consentFrom = builder.consentFrom;
+        this.consentTo = builder.consentTo;
+        this.registrationAction = builder.registrationAction;
     }
 
-    public String getPersonId() {
-        return personId;
+    public String getAssertionId() {
+        return assertionId;
     }
 
-    public void setPersonId(String personId) {
-        this.personId = personId;
+    public String getVgHsaId() {
+        return vgHsaId;
     }
 
-    public LocalDate getConsentFrom() {
+    public String getVeHsaId() {
+        return veHsaId;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public String getUserHsaId() {
+        return userHsaId;
+    }
+
+    public String getRepresentedBy() {
+        return representedBy;
+    }
+
+    public LocalDateTime getConsentFrom() {
         return consentFrom;
     }
 
-    public void setConsentFrom(LocalDate consentFrom) {
-        this.consentFrom = consentFrom;
-    }
-
-    public LocalDate getConsentTo() {
+    public LocalDateTime getConsentTo() {
         return consentTo;
     }
 
-    public void setConsentTo(LocalDate consentTo) {
+    public ActionType getRegistrationAction() {
+        return registrationAction;
+    }
+
+    public ScopeType getScopeType() {
+        return scopeType;
+    }
+
+    public AssertionTypeType getAssertionType() {
+        return assertionType;
+    }
+
+    public void setUserHsaId(String userHsaId) {
+        this.userHsaId = userHsaId;
+    }
+
+    public void setRepresentedBy(String representedBy) {
+        this.representedBy = representedBy;
+    }
+
+    public void setConsentFrom(LocalDateTime consentFrom) {
+        this.consentFrom = consentFrom;
+    }
+
+    public void setConsentTo(LocalDateTime consentTo) {
         this.consentTo = consentTo;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ConsentData consentData = (ConsentData) o;
-        return Objects.equals(personId, consentData.personId);
+        if (this == o) return true;
+        if (!(o instanceof ConsentData)) return false;
+        ConsentData that = (ConsentData) o;
+        return Objects.equals(assertionId, that.assertionId) &&
+                Objects.equals(vgHsaId, that.vgHsaId) &&
+                Objects.equals(veHsaId, that.veHsaId) &&
+                Objects.equals(patientId, that.patientId) &&
+                Objects.equals(registrationAction, that.registrationAction);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(personId);
+
+        return Objects.hash(assertionId, vgHsaId, veHsaId, patientId, registrationAction);
+    }
+
+
+    public static final class Builder {
+
+        private String assertionId;
+        private String vgHsaId;
+        private String veHsaId;
+        private String patientId;
+        private String userHsaId;
+        private String representedBy;
+        private LocalDateTime consentFrom;
+        private LocalDateTime consentTo;
+        private ActionType registrationAction;
+
+        public Builder(String assertionId, String vgHsaId, String veHsaId, String patientId, ActionType registrationAction) {
+            this.assertionId = assertionId;
+            this.vgHsaId = vgHsaId;
+            this.veHsaId = veHsaId;
+            this.patientId = patientId;
+            this.registrationAction = registrationAction;
+        }
+
+        public Builder userHsaId(String userHsaId) {
+            this.userHsaId = userHsaId;
+            return this;
+        }
+
+        public Builder representedBy(String representedBy) {
+            this.representedBy = representedBy;
+            return this;
+        }
+
+        public Builder consentFrom(LocalDateTime consentFrom) {
+            this.consentFrom = consentFrom;
+            return this;
+        }
+
+        public Builder consentTo(LocalDateTime consentTo) {
+            this.consentTo = consentTo;
+            return this;
+        }
+
+        public ConsentData build() {
+            return new ConsentData(this);
+        }
     }
 }
