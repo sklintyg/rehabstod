@@ -104,6 +104,7 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
     }
 
     @Override
+    // CHECKSTYLE:OFF ParameterNumber
     public void registerConsent(String vgHsaId,
                                 String veHsaId,
                                 String patientId,
@@ -145,6 +146,8 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
         }
 
     }
+    // CHECKSTYLE:ON ParameterNumber
+
 
     @VisibleForTesting
     void updateConsentStatus(String vgHsaId, String veHsaId, boolean hasConsent,

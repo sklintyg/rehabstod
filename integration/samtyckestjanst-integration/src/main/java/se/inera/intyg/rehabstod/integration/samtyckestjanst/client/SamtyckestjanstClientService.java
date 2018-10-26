@@ -58,12 +58,13 @@ public interface SamtyckestjanstClientService {
      * @param userHsaId Användarens Hsa-id. Anges om användaren har uppgett att samtycket
      *                  endast ska gälla för denne och inte alla behöriga användare på vårdenheten.
      * @param patientId Personidentitet på patienten vars samtycke skall kontrolleras.
-     * @param representedBy
+     * @param representedBy Personidentitet på företrädare/vårdnadshavare som företräder patienten
      * @param consentFrom Samtycket gäller fr.o.m. denna tidpunkt.
      * @param consentTo Samtycket gäller t.o.m. denna tidpunkt.
      * @param registrationAction Identifierar den användare som angivit samtycket.
      * @return
      */
+    // CHECKSTYLE:OFF ParameterNumber
     RegisterExtendedConsentResponseType registerExtendedConsent(String vgHsaId,
                                                                 String veHsaId,
                                                                 String userHsaId,
@@ -72,5 +73,5 @@ public interface SamtyckestjanstClientService {
                                                                 LocalDateTime consentFrom,
                                                                 LocalDateTime consentTo,
                                                                 ActionType registrationAction);
-
+    // CHECKSTYLE:ON ParameterNumber
 }

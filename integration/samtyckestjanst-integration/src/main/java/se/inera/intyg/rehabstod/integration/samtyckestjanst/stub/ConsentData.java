@@ -119,19 +119,22 @@ public class ConsentData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ConsentData)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ConsentData)) {
+            return false;
+        }
         ConsentData that = (ConsentData) o;
-        return Objects.equals(assertionId, that.assertionId) &&
-                Objects.equals(vgHsaId, that.vgHsaId) &&
-                Objects.equals(veHsaId, that.veHsaId) &&
-                Objects.equals(patientId, that.patientId) &&
-                Objects.equals(registrationAction, that.registrationAction);
+        return Objects.equals(assertionId, that.assertionId)
+                && Objects.equals(vgHsaId, that.vgHsaId)
+                && Objects.equals(veHsaId, that.veHsaId)
+                && Objects.equals(patientId, that.patientId)
+                && Objects.equals(registrationAction, that.registrationAction);
     }
 
     @Override
     public int hashCode() {
-
         return Objects.hash(assertionId, vgHsaId, veHsaId, patientId, registrationAction);
     }
 

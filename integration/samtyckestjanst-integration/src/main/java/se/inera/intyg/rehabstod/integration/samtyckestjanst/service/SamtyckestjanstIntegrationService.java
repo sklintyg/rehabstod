@@ -48,6 +48,7 @@ public interface SamtyckestjanstIntegrationService {
      * Service that registers an extended consent for a particular patient, and thus, providing direct
      * access to the patient's information from other healthcare providers according to PDL.
      */
+    // CHECKSTYLE:OFF ParameterNumber
     void registerConsent(String vgHsaId,
                          String veHsaId,
                          String patientId,
@@ -56,5 +57,6 @@ public interface SamtyckestjanstIntegrationService {
                          LocalDateTime consentFrom,
                          LocalDateTime consentTo,
                          ActionType registrationAction);
+    // CHECKSTYLE:ON ParameterNumber
 
 }

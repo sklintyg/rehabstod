@@ -77,6 +77,7 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
      *                                                              LocalDateTime, LocalDateTime, ActionType) registerConsent
      */
     @Override
+    // CHECKSTYLE:OFF ParameterNumber
     public RegisterExtendedConsentResponseType registerExtendedConsent(String vgHsaId,
                                                                        String veHsaId,
                                                                        String userHsaId,
@@ -85,6 +86,9 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
                                                                        LocalDateTime consentFrom,
                                                                        LocalDateTime consentTo,
                                                                        ActionType registrationAction) {
+
+        LocalDateTime startDate = consentFrom;
+        LocalDateTime endDate = consentTo;
 
         RegisterExtendedConsentType registerExtendedConsentType = new RegisterExtendedConsentType();
 
@@ -113,27 +117,29 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
                             createPersonnummer(representedBy, "representedBy")));
         }
 
-        if (consentFrom == null) {
-            consentFrom = LocalDateTime.now();
+        if (startDate == null) {
+            startDate = LocalDateTime.now();
         }
-        registerExtendedConsentType.setStartDate(consentFrom);
+        registerExtendedConsentType.setStartDate(startDate);
 
-        if (consentTo != null) {
-            if (consentTo.isBefore(consentFrom)) {
+        if (endDate != null) {
+            if (endDate.isBefore(startDate)) {
                 throw new IllegalArgumentException(String.format(
-                        "a consent's start date %tF must be before its end date %tF", consentFrom, consentTo));
+                        "a consent's start date %tF must be before its end date %tF", startDate, endDate));
             }
-            registerExtendedConsentType.setEndDate(consentTo);
+            registerExtendedConsentType.setEndDate(endDate);
         }
 
         registerExtendedConsentType.setRegistrationAction(registrationAction);
 
         return registerExtendedConsentService.registerExtendedConsent(logicalAddress, registerExtendedConsentType);
     }
+    // CHECKSTYLE:ON ParameterNumber
 
     private Personnummer createPersonnummer(String str, String fieldName) {
         return Personnummer
                 .createPersonnummer(str)
                 .orElseThrow(() -> new IllegalArgumentException(fieldName + " must be a valid personnummer or samordningsnummer"));
     }
+
 }
