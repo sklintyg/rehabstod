@@ -18,9 +18,7 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import com.itextpdf.text.DocumentException;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -59,7 +57,6 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,6 +102,7 @@ public class SjukfallControllerTest {
 
     @Mock
     private SjukfallService sjukfallServiceMock;
+
     @InjectMocks
     private SjukfallController testee = new SjukfallController();
 
@@ -151,8 +149,7 @@ public class SjukfallControllerTest {
     }
 
     @Test
-    public void testGetSjukfallByUnitAsPDF() throws DocumentException, IOException {
-
+    public void testGetSjukfallByUnitAsPDF() {
         SjukfallEnhet a = createSjukFallEnhet("19121212-1212");
         SjukfallEnhet b = createSjukFallEnhet("20121212-1212");
         SjukfallEnhet c = createSjukFallEnhet("19840921-9287");
@@ -194,7 +191,6 @@ public class SjukfallControllerTest {
         assertTrue(response.getStatusCode().equals(HttpStatus.OK));
     }
 
-    @Ignore
     @Test
     public void testGetSjukfallByPatient() {
         SjukfallEnhet a = createSjukFallEnhet("19121212-1212");
@@ -243,7 +239,8 @@ public class SjukfallControllerTest {
         GetSjukfallRequest request = new GetSjukfallRequest();
 
         // When
-        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), any(Urval.class), anyString(), any(IntygParametrar.class)))
+        when(sjukfallServiceMock
+                .getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class)))
                 .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false));
 
         testee.getSjukfallForPatient(request);

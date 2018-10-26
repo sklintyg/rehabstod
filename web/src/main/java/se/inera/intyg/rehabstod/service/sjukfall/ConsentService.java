@@ -16,21 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.integration.it.service;
+package se.inera.intyg.rehabstod.service.sjukfall;
 
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
+import se.inera.intyg.rehabstod.service.Urval;
 
 import java.util.List;
 
 /**
- * Created by eriklupander on 2016-02-01.
+ * @author Magnus Ekstrand on 2018-10-25.
  */
-public interface IntygstjanstIntegrationService {
+public interface ConsentService {
 
-    List<IntygsData> getIntygsDataForCareUnit(String careUnitHsaId, int maxAntalDagarSedanSjukfallAvslut);
-
-    List<IntygsData> getIntygsDataForCareUnitAndPatient(String careUnitHsaId, String personId, int maxAntalDagarSedanSjukfallAvslut);
-
-    List<IntygsData> getAllIntygsDataForPatient(String personId, int maxAntalDagarSedanSjukfallAvslut);
-
+    List<IntygData> getIntygDataForPatient(String currentVardgivarHsaId, String enhetsId, String lakareId,
+                                           String patientId, Urval urval, IntygParametrar parameters);
 }

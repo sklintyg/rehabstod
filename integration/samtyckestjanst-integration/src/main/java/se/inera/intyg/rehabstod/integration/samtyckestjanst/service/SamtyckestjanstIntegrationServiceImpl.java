@@ -54,12 +54,12 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
     private SamtyckestjanstClientService samtyckestjanstClientService;
 
     @Override
-    public void checkForConsent(String userHsaId,
-                                String patientId,
+    public void checkForConsent(String patientId,
+                                String userHsaId,
                                 Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
 
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(userHsaId), "userHsaId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(userHsaId), "userHsaId may not be null or empty");
 
         if (intygAccessMetaData == null || intygAccessMetaData.isEmpty()) {
             LOG.info("Cannot check consent when unsufficient information - intygAccessMetaData was null or empty");

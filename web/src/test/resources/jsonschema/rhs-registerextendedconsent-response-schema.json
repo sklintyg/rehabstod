@@ -4,13 +4,11 @@
 
     "properties": {
       "responseCode": {
-        "type": "string"
+        "type": "string",
+        "enum": ["OK", "ERROR"]
       },
       "responseMessage": {
-        "type": [
-          "string",
-          "null"
-        ]
+        "type": ["string", "null"]
       },
       "registeredBy": {
         "type": "string"

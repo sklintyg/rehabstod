@@ -28,6 +28,9 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitType;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonType;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
@@ -44,7 +47,10 @@ import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
 public class IntygstjanstClientServiceImpl implements IntygstjanstClientService {
 
     @Autowired
-    private ListActiveSickLeavesForCareUnitResponderInterface service;
+    private ListActiveSickLeavesForCareUnitResponderInterface careUnitService;
+
+    @Autowired
+    private ListActiveSickLeavesForPersonResponderInterface personService;
 
     @Autowired
     @Qualifier("itPingForConfigurationWebServiceClient")
@@ -56,32 +62,46 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
     @Override
     @PrometheusTimeMethod
     public ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnit(String unitId, int maxAntalDagarSedanSjukfallAvslut) {
-        ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
-
         HsaId hsaId = new HsaId();
         hsaId.setExtension(unitId);
+
+        ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
         params.setEnhetsId(hsaId);
         params.setMaxDagarSedanAvslut(maxAntalDagarSedanSjukfallAvslut);
 
-        return service.listActiveSickLeavesForCareUnit(logicalAddress, params);
+        return careUnitService.listActiveSickLeavesForCareUnit(logicalAddress, params);
     }
 
     @Override
     @PrometheusTimeMethod
-    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForPatient(String unitId, String patientId,
-            int maxAntalDagarSedanSjukfallAvslut) {
-        ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
+    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnitAndPatient(
+            String unitId, String patientId, int maxAntalDagarSedanSjukfallAvslut) {
 
         PersonId pId = new PersonId();
         pId.setExtension(patientId);
-        params.setPersonId(pId);
 
         HsaId hsaId = new HsaId();
         hsaId.setExtension(unitId);
+
+        ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
+        params.setPersonId(pId);
         params.setEnhetsId(hsaId);
         params.setMaxDagarSedanAvslut(maxAntalDagarSedanSjukfallAvslut);
 
-        return service.listActiveSickLeavesForCareUnit(logicalAddress, params);
+        return careUnitService.listActiveSickLeavesForCareUnit(logicalAddress, params);
+    }
+
+    @Override
+    @PrometheusTimeMethod
+    public ListActiveSickLeavesForPersonResponseType getAllSjukfallForPatient(String patientId, int maxAntalDagarSedanSjukfallAvslut) {
+        PersonId pId = new PersonId();
+        pId.setExtension(patientId);
+
+        ListActiveSickLeavesForPersonType params = new ListActiveSickLeavesForPersonType();
+        params.setPersonId(pId);
+        params.setMaxDagarSedanAvslut(maxAntalDagarSedanSjukfallAvslut);
+
+        return personService.listActiveSickLeavesForPerson(logicalAddress, params);
     }
 
     @Override

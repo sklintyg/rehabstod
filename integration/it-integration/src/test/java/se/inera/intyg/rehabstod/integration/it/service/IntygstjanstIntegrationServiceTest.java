@@ -76,19 +76,19 @@ public class IntygstjanstIntegrationServiceTest {
 
     @Test
     public void testGetIntygsDataForPatient() throws Exception {
-        when(intygstjanstClientService.getSjukfallForPatient(HSA_ID, PATIENT_ID, MAX_DAGAR_SEDAN_AVSLUT)).thenReturn(buildResponse());
-        List<IntygsData> intygsDataForPatient = testee.getIntygsDataForPatient(HSA_ID, PATIENT_ID, MAX_DAGAR_SEDAN_AVSLUT);
+        when(intygstjanstClientService.getSjukfallForUnitAndPatient(HSA_ID, PATIENT_ID, MAX_DAGAR_SEDAN_AVSLUT)).thenReturn(buildResponse());
+        List<IntygsData> intygsDataForPatient = testee.getIntygsDataForCareUnitAndPatient(HSA_ID, PATIENT_ID, MAX_DAGAR_SEDAN_AVSLUT);
         assertEquals(1, intygsDataForPatient.size());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetIntygsDataForPatientNullParametersThrowsException() throws Exception {
-        testee.getIntygsDataForPatient(null, null, MAX_DAGAR_SEDAN_AVSLUT);
+        testee.getIntygsDataForCareUnitAndPatient(null, null, MAX_DAGAR_SEDAN_AVSLUT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetIntygsDataForPatientEmptyParametersThrowsException() throws Exception {
-        testee.getIntygsDataForPatient("", "", MAX_DAGAR_SEDAN_AVSLUT);
+        testee.getIntygsDataForCareUnitAndPatient("", "", MAX_DAGAR_SEDAN_AVSLUT);
     }
 
     @Test(expected = IntygstjanstIntegrationException.class)
