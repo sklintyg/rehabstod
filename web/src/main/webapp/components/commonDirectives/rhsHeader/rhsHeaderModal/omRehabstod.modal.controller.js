@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Inera AB (http://www.inera.se)
+ * Copyright (C) 2018 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -17,21 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp')
-    .controller('NavbarCtrl', function ($scope) {
+angular.module('rehabstodApp').controller('omRehabstodModalController',
+    function($scope, APP_CONFIG) {
         'use strict';
-        $scope.menu = [
-            {
-                title: 'Översikt',
-                link: 'app.sjukfall.start',
-                id: 'navbar-link-start'
-            },
-            {
-                title: 'Pågående sjukfall',
-                link: 'app.sjukfall.result',
-                id: 'navbar-link-sjukfall'
-            }
-        ];
-
-        $scope.isCollapsed = true;
-    });
+        $scope.version = APP_CONFIG.version;
+    }
+);

@@ -9,7 +9,7 @@ rhs-header {
   //Stretch on cross-axis to make items 100% height
   align-items: stretch;
   justify-content: space-between;
-  background-color: $rs-color-04;
+  background-color: $rs-color-28;
   color: $rs-color-01;
   height: 80px;
 
@@ -30,20 +30,30 @@ rhs-header {
 
   .header-user,
   .header-links,
-  .header-logo {
+  .header-logo{
     //Act as a flex horizontal container
     display: flex;
     //where its items are vertically centered..
     align-items: center;
-
-    padding: 0 16px;
     white-space: nowrap;
   }
+
+  .header-user,
+  .header-links .header-link,
+  .header-logo{
+    padding: 0 16px;
+  }
+
+  .header-empty{
+    flex: 1 1 auto;
+  }
+
 
   .header-logo {
     flex: 1;
     min-width: 172px;
     max-width: 172px;
+    background-color: $rs-color-29;
 
     img {
       height: 30px;
@@ -81,8 +91,23 @@ rhs-header {
     flex: 1 1 auto;
     //push all items to the right
     justify-content: flex-end;
-
     padding-right: 25px;
+
+    .header-link{
+      display: flex;
+      align-items: center;
+      height: 100%;
+      margin: 0;
+
+      &:first-of-type {
+        border-left: 0;
+      }
+
+      &:last-of-type {
+        border-right: 0;
+        padding-right: 0;
+      }
+    }
   }
 
   .header-link {
@@ -117,5 +142,15 @@ rhs-header {
         text-decoration: underline;
       }
     }
+  }
+
+
+  .header-divider{
+    border-width: 0 6px;
+    border-style: solid;
+    //border-image-source: url('/assets/images/divider-border.png');
+    border-image-slice: 0 50%;
+    border-image-repeat: round;
+    border-image-source: linear-gradient(to right, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 45%, rgba(0, 0, 0, 0.01) 55%, rgba(0, 0, 0, 0.08) 100%);
   }
 }

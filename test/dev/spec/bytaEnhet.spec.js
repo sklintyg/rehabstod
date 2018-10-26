@@ -48,14 +48,6 @@ describe('Logga in som Kerstin Johansson', function() {
         bytEnhet();
     });
 
-    it('Byt enhet på om sidan', function() {
-        navigationHelper.goToAbout();
-
-        bytEnhet();
-
-        expect(aboutPage.isAt()).toBeTruthy();
-    });
-
     it('Byt enhet på sjukfallssidan', function() {
         startPage.clickFullUnit();
         expect(sjukfallPage.isAt()).toBeTruthy();

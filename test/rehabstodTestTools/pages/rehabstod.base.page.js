@@ -48,9 +48,6 @@ var RehabstodBasePage = Class._extend({
     clickCloseBytVardenhet: function() {
         this.closeBytVardenhet().click();
     },
-    clickTestAbout: function() {
-        this.navbarAbout().click();
-    },
     clickSjukfall: function() {
         this.navbarSjukfall().click();
     },
@@ -62,9 +59,6 @@ var RehabstodBasePage = Class._extend({
     },
     navbarVardenhet: function() {
         return element(by.id('verksamhetsNameLabel'));
-    },
-    navbarAbout: function() {
-        return element(by.id('navbar-link-about'));
     },
     closeBytVardenhet: function() {
         return element(by.id('select-care-unit-close'));

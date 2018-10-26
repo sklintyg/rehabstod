@@ -18,8 +18,7 @@
  */
 
 /*globals browser */
-/*globals pages */
-/*globals describe,it,helpers */
+/*globals describe,it,rhsTestTools */
 'use strict';
 
 var specHelper = rhsTestTools.helpers.spec;
@@ -39,10 +38,6 @@ describe('Flöde som läkare', function() {
         expect(startPage.myUnit.isPresent()).toBeTruthy();
     });
 
-    it('Gå till om rehab', function() {
-        navigationHelper.goToAbout();
-    });
-
     describe('gör urval', function() {
 
         beforeEach(function() {
@@ -51,20 +46,11 @@ describe('Flöde som läkare', function() {
             expect(sjukfallPage.lakareFilter.isPresent()).toBeFalsy();
         });
 
-        it('Gå till om rehab och gå tillbaka till sjukfallssidan', function() {
-
-            // Gå till about
-            navigationHelper.goToAbout();
-
-            // Gå till sjukfall
-            navigationHelper.goToSjukfall();
-        });
-
         it('Ladda om sidan och var kvar på sjukfallssidan', function() {
             browser.refresh();
 
             expect(sjukfallPage.isAt()).toBeTruthy();
-        })
+        });
     });
 
     describe('inget urval', function() {
@@ -74,13 +60,6 @@ describe('Flöde som läkare', function() {
             expect(sjukfallPage.isAt()).toBeTruthy();
         });
 
-        it('Gå till om och sedan till sjukfall', function() {
-            // Gå till about
-            navigationHelper.goToAbout();
-
-            // Gå till sjukfall
-            navigationHelper.goToSjukfall();
-        });
     });
 
     describe('gör urval och går tillbaka till start', function() {
@@ -100,13 +79,6 @@ describe('Flöde som läkare', function() {
             expect(sjukfallPage.isAt()).toBeTruthy();
         });
 
-        it('Gå tillbaka till start och sedan about och tillbaka och hamna på start.', function() {
-            // Gå till about
-            navigationHelper.goToAbout();
-
-            // Gå till start
-            navigationHelper.goToStart();
-        });
     });
 
 

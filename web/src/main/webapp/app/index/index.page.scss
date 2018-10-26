@@ -12,6 +12,10 @@
     padding-bottom: 20px;
   }
 
+  .login-button{
+    margin-top: 6em;
+  }
+
   @media (max-width: $screen-xs-max) {
     .btn-primary {
       display: block;

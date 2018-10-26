@@ -40,10 +40,6 @@ describe('Flöde som rehabkoordinator', function() {
         expect(startPage.myUnit.isPresent()).toBeFalsy();
     });
 
-    it('Gå till om rehab', function() {
-        navigationHelper.goToAbout();
-    });
-
     describe('gör urval', function() {
 
         beforeEach(function() {
@@ -52,12 +48,11 @@ describe('Flöde som rehabkoordinator', function() {
             expect(sjukfallPage.lakareFilter.isPresent()).toBeTruthy();
         });
 
-        it('gå till om rehab och gå tillbaka till sjukfall', function() {
-            // Gå till about
-            navigationHelper.goToAbout();
-
+        it('gå till till sjukfall och tillbaka till start', function() {
             // Gå till sjukfall
             navigationHelper.goToSjukfall();
+
+            navigationHelper.goToStart();
         });
     });
 
@@ -66,14 +61,6 @@ describe('Flöde som rehabkoordinator', function() {
             sjukfallPage.get();
             specHelper.waitForAngularTestability();
             expect(sjukfallPage.isAt()).toBeTruthy();
-        });
-
-        it('Gå till om och sedan till sjukfall', function() {
-            // Gå till about
-            navigationHelper.goToAbout();
-
-            // Gå till sjukfall
-            navigationHelper.goToSjukfall();
         });
     });
 
@@ -92,14 +79,6 @@ describe('Flöde som rehabkoordinator', function() {
             sjukfallPage.get();
             specHelper.waitForAngularTestability();
             expect(sjukfallPage.isAt()).toBeTruthy();
-        });
-
-        it('Gå tillbaka till start och sedan about och tillbaka och hamna på start.', function() {
-            // Gå till about
-            navigationHelper.goToAbout();
-
-            // Gå till start
-            navigationHelper.goToStart();
         });
     });
 
