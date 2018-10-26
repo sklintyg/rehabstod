@@ -15,7 +15,7 @@ export REDIS_PORT=$REDIS_SERVICE_PORT
 export REDIS_HOST=$REDIS_SERVICE_HOST
 
 # dev profile is default for pipeline
-SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-test,rhs-security-test,testability-api,caching-enabled,wc-hsa-stub,wc-pu-stub,rhs-sparrtjanst-stub}
+SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-test,rhs-security-test,testability-api,caching-enabled,wc-hsa-stub,wc-pu-stub,rhs-sparrtjanst-stub,rhs-samtyckestjanst-stub}
 
 export CATALINA_OPTS_APPEND="\
 -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE \

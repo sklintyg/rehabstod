@@ -1,5 +1,5 @@
 # Spring profiles
-profiles: test,rhs-security-test,testability-api,caching-enabled,wc-hsa-stub,wc-pu-stub,rhs-sparrtjanst-stub
+profiles: test,rhs-security-test,testability-api,caching-enabled,wc-hsa-stub,wc-pu-stub,rhs-sparrtjanst-stub,rhs-samtyckestjanst-stub
 
 #tomcat
 tomcat7_user: ine-app

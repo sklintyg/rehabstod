@@ -1,5 +1,5 @@
 # Spring profiles
-profiles: test,rhs-security-test,rhs-it-stub,wc-hsa-stub,wc-pu-stub,testability-api,caching-enabled,rhs-srs-stub,rhs-sparrtjanst-stub
+profiles: test,rhs-security-test,rhs-it-stub,wc-hsa-stub,wc-pu-stub,testability-api,caching-enabled,rhs-srs-stub,rhs-sparrtjanst-stub,rhs-samtyckestjanst-stub
 
 # Configuration repository
 environment_name: "test"
