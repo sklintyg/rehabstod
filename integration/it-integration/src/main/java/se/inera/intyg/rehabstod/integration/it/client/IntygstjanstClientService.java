@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.integration.it.client;
 // CHECKSTYLE:OFF LineLength
 
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonResponseType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 
 // CHECKSTYLE:ON LineLength
@@ -30,9 +31,36 @@ import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
  */
 public interface IntygstjanstClientService {
 
+    /**
+     * Method returns all sick leaves for a health care unit.
+     *
+     * @param unitId health care unit identifier (i.e HsaId)
+     * @param maxAntalDagarSedanSjukfallAvslut
+     * @return
+     */
     ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnit(String unitId, int maxAntalDagarSedanSjukfallAvslut);
 
-    ListActiveSickLeavesForCareUnitResponseType getSjukfallForPatient(String unitId, String personId, int maxAntalDagarSedanSjukfallAvslut);
+    /**
+     * Method returns all sick leaves for a patient on a health care unit.
+     *
+     * @param unitId health care unit identifier (i.e HsaId)
+     * @param patientId patient identifier
+     * @param maxAntalDagarSedanSjukfallAvslut
+     * @return
+     */
+    ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnitAndPatient(String unitId,
+                                                                             String patientId,
+                                                                             int maxAntalDagarSedanSjukfallAvslut);
+
+    /**
+     * Method returns all sick leaves for a patient for all health care givers and its health care units.
+     *
+     * @param patientId patient identifier
+     * @param maxAntalDagarSedanSjukfallAvslut
+     * @return
+     */
+    ListActiveSickLeavesForPersonResponseType getAllSjukfallForPatient(String patientId,
+                                                                       int maxAntalDagarSedanSjukfallAvslut);
 
     PingForConfigurationResponseType pingForConfiguration();
 }

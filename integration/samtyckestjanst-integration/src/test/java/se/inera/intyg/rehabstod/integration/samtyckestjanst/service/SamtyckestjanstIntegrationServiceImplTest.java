@@ -80,7 +80,7 @@ public class SamtyckestjanstIntegrationServiceImplTest {
     public void testCheckForConsent() {
         Map<String, IntygAccessControlMetaData> metaDataMap = createMetaDataMap();
 
-        testee.checkForConsent(USER_HSA_ID, PATIENT_ID, metaDataMap);
+        testee.checkForConsent(PATIENT_ID, USER_HSA_ID, metaDataMap);
 
         for (IntygAccessControlMetaData metaData : metaDataMap.values()) {
             IntygData data = metaData.getIntygData();

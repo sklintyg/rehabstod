@@ -32,15 +32,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import se.inera.intyg.infra.integration.hsa.model.Mottagning;
-import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
-import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
@@ -55,6 +50,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
+import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
@@ -102,7 +98,7 @@ public class SjukfallController {
     public ResponseEntity<List<SjukfallEnhet>> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
 
         // Get user from session
-        RehabstodUser user = getRehabstodUser();
+        RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
 
         // Fetch sjukfall
         SjukfallEnhetResponse response = getSjukfallForCareUnit(user, request);
@@ -120,7 +116,7 @@ public class SjukfallController {
     public ResponseEntity<SjukfallPatientResponse> getSjukfallForPatient(@RequestBody GetSjukfallRequest request) {
 
         // Get user from session
-        RehabstodUser user = getRehabstodUser();
+        RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
 
         // Fetch sjukfall
         SjukfallPatientResponse response = getSjukfallForPatient(user, request.getPatientId(), request.getAktivtDatum());
@@ -161,7 +157,7 @@ public class SjukfallController {
     public ResponseEntity<ByteArrayResource> getSjukfallForCareUnitAsPdf(@ModelAttribute PrintSjukfallRequest request) {
         try {
             // Get user from session
-            RehabstodUser user = getRehabstodUser();
+            RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
 
             // Fetch sjukfall
             List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request).getSjukfallList();
@@ -188,7 +184,7 @@ public class SjukfallController {
     public ResponseEntity<ByteArrayResource> getSjukfallForCareUnitAsXLSX(@ModelAttribute PrintSjukfallRequest request) {
         try {
             // Get user from session
-            RehabstodUser user = getRehabstodUser();
+            RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
 
             // Fetch sjukfall
             List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request).getSjukfallList();
@@ -213,9 +209,9 @@ public class SjukfallController {
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     public SjukfallSummary getUnitCertificateSummary() {
         // Get user from session
-        RehabstodUser user = getRehabstodUser();
+        RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
 
-        String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
+        String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         String mottagningsId = getMottagningsId(user);
         String hsaId = user.getHsaId();
         Urval urval = user.getDefaultUrval();
@@ -255,40 +251,35 @@ public class SjukfallController {
     }
 
     private SjukfallEnhetResponse getSjukfallForCareUnit(RehabstodUser user, GetSjukfallRequest request) {
-        String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
+        String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         String mottagningsId = getMottagningsId(user);
         String lakarId = user.getHsaId();
 
         Urval urval = user.getUrval();
-        IntygParametrar parameters = new IntygParametrar(getMaxGlapp(user), getMaxDagarSedanSjukfallAvslut(user), request.getAktivtDatum());
+        IntygParametrar parameters = new IntygParametrar(ControllerUtil.getMaxGlapp(user),
+                        ControllerUtil.getMaxDagarSedanSjukfallAvslut(user), request.getAktivtDatum());
 
         LOG.debug("Calling the 'sjukfall' service to get a list of 'sjukfall' from care unit {}.", enhetsId);
         return sjukfallService.getByUnit(enhetsId, mottagningsId, lakarId, urval, parameters);
     }
 
-    private int getMaxGlapp(RehabstodUser user) {
-        return Integer.parseInt(user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG));
-    }
-
-    private int getMaxDagarSedanSjukfallAvslut(RehabstodUser user) {
-        return Integer.parseInt(user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT));
-    }
-
     private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, String patientId, LocalDate date) {
-        String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
+        String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         String currentVardgivarHsaId = user.getValdVardgivare().getId();
         String lakarId = user.getHsaId();
         Urval urval = user.getUrval();
 
-        IntygParametrar parameters = new IntygParametrar(getMaxGlapp(user), getMaxDagarSedanSjukfallAvslut(user), date);
+        IntygParametrar parameters = new IntygParametrar(
+                ControllerUtil.getMaxGlapp(user), ControllerUtil.getMaxDagarSedanSjukfallAvslut(user), date);
+
         LOG.debug("Calling the 'sjukfall' service to get a list of detailed 'sjukfall' for one patient.");
-        return sjukfallService.getByPatient(currentVardgivarHsaId, enhetsId, lakarId, urval, patientId, parameters);
+        return sjukfallService.getByPatient(currentVardgivarHsaId, enhetsId, lakarId, patientId, urval, parameters);
     }
 
     private void logSjukfallData(RehabstodUser user, List<SjukfallEnhet> sjukfallList,
             ActivityType activityType, ResourceType resourceType) {
 
-        String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
+        String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         if (enhetsId == null) {
             throw new IllegalArgumentException("Cannot create PDL log statements, enhetsId was null");
         }
@@ -302,7 +293,7 @@ public class SjukfallController {
     private void logSjukfallData(RehabstodUser user, SjukfallPatient sjukfallPatient,
             ActivityType activityType, ResourceType resourceType) {
 
-        String enhetsId = getEnhetsIdForQueryingIntygstjansten(user);
+        String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         if (enhetsId == null) {
             throw new IllegalArgumentException("Cannot create PDL log statements, enhetsId was null");
         }
@@ -314,33 +305,6 @@ public class SjukfallController {
             logService.logSjukfallData(sjukfallPatient, activityType, resourceType);
             PDLActivityStore.addActivityToStore(enhetsId, sjukfallPatient, activityType, resourceType, user.getStoredActivities());
         }
-    }
-
-    private String getEnhetsIdForQueryingIntygstjansten(RehabstodUser user) {
-        if (user.isValdVardenhetMottagning()) {
-            // Must return PARENT id if selected unit is an underenhet aka mottagning.
-            for (Vardgivare vg : user.getVardgivare()) {
-                for (Vardenhet ve : vg.getVardenheter()) {
-                    for (Mottagning m : ve.getMottagningar()) {
-                        if (m.getId().equals(user.getValdVardenhet().getId())) {
-                            return ve.getId();
-                        }
-                    }
-                }
-            }
-            throw new IllegalStateException("User object is in invalid state. "
-                    + "Current selected enhet is an underenhet, but no ID for the parent enhet was found.");
-        } else {
-            return user.getValdVardenhet().getId();
-        }
-    }
-
-    private RehabstodUser getRehabstodUser() {
-        RehabstodUser user = userService.getUser();
-        if (user == null) {
-            throw new AuthoritiesException("No user in session");
-        }
-        return user;
     }
 
     private String getMottagningsId(RehabstodUser user) {

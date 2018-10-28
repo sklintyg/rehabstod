@@ -128,7 +128,7 @@ public class SjukfallServiceTest {
     public void init() throws IOException {
         when(intygstjanstMapper.map(any(IntygsData.class))).thenReturn(new se.inera.intyg.infra.sjukfall.dto.IntygData());
         when(integrationService.getIntygsDataForCareUnit(anyString(), anyInt())).thenReturn(new ArrayList<IntygsData>());
-        when(integrationService.getIntygsDataForPatient(anyString(), anyString(), anyInt())).thenReturn(new ArrayList<IntygsData>());
+        when(integrationService.getIntygsDataForCareUnitAndPatient(anyString(), anyString(), anyInt())).thenReturn(new ArrayList<IntygsData>());
         when(sjukfallEngine.beraknaSjukfallForEnhet(anyListOf(se.inera.intyg.infra.sjukfall.dto.IntygData.class),
             any(se.inera.intyg.infra.sjukfall.dto.IntygParametrar.class))).thenReturn(createSjukfallEnhetList());
         when(sjukfallEngine.beraknaSjukfallForPatient(anyListOf(se.inera.intyg.infra.sjukfall.dto.IntygData.class),

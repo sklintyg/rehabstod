@@ -33,15 +33,15 @@ public interface SamtyckestjanstIntegrationService {
      * Updates the 'has consent' attribute for each {@link IntygAccessControlMetaData} in
      * intygAccessMetaData map.
      *
-     * @param userHsaId
-     *            - The hsaId of the current user
      * @param patientId
      *            - The id of the current patient
+     * @param userHsaId
+     *            - The hsaId of the current user
      * @param intygAccessMetaData
      *            - Map containing access control metadata
      */
-    void checkForConsent(String userHsaId,
-                         String patientId,
+    void checkForConsent(String patientId,
+                         String userHsaId,
                          Map<String, IntygAccessControlMetaData> intygAccessMetaData);
 
     /**

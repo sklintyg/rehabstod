@@ -39,11 +39,13 @@ public interface SjukfallService {
      * specified, we'll perform filtering on our side so only Sjukfall originating from the specified mottagningsId are
      * included in the response.
      */
-    SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval, IntygParametrar parameters);
+    SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId, String lakareId,
+                                    Urval urval, IntygParametrar parameters);
 
-    SjukfallPatientResponse getByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId, Urval urval, String patientId,
-            IntygParametrar parameters);
+    SjukfallPatientResponse getByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId, String patientId,
+                                         Urval urval, IntygParametrar parameters);
 
-    SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId, Urval urval, IntygParametrar parameters);
+    SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId,
+                               Urval urval, IntygParametrar parameters);
 
 }

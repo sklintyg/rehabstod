@@ -40,7 +40,7 @@ import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponde
  *
  * Somewhat "hackish" use of profiles:
  *
- * Bean is only active when rhs-it-stub is NOT active. The underlying itIntegrationWebServiceClient() @Bean and (PfC) is
+ * Bean is only active when rhs-it-stub is NOT active. The underlying getRiskPredictionForCertificateWebServiceClient() @Bean and (PfC) is
  * active for either of dev,test,prod (which should be possible to replace with no @Profile at all)
  *
  * Created by eriklupander on 2016-02-05.

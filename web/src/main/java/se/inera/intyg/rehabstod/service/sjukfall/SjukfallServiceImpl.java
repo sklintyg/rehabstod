@@ -30,6 +30,7 @@ import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
+import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.service.SparrtjanstIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
@@ -93,10 +94,8 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Autowired
     private SparrtjanstIntegrationService sparrtjanstIntegrationService;
 
-    /*
-     * @Autowired
-     * private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
-     */
+     @Autowired
+     private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
     // api
 
@@ -128,10 +127,11 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     @Override
     @PrometheusTimeMethod
-    public SjukfallPatientResponse getByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId, Urval urval,
-            String patientId, IntygParametrar parameters) {
-        FilteredSjukFallByPatientResult result = getFilteredSjukfallByPatient(lakareId, currentVardgivarHsaId, enhetsId, urval, patientId,
-                parameters);
+    public SjukfallPatientResponse getByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId,
+                                                String patientId, Urval urval, IntygParametrar parameters) {
+
+        FilteredSjukFallByPatientResult result =
+                getFilteredSjukfallByPatient(currentVardgivarHsaId, enhetsId, lakareId, patientId, urval, parameters);
 
         final List<SjukfallPatient> rehabstodSjukfall = result.getRehabstodSjukfall();
 
@@ -153,7 +153,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Override
     @PrometheusTimeMethod
     public SjukfallSummary getSummary(String enhetsId, String mottagningsId,
-            String lakareId, Urval urval, IntygParametrar parameters) {
+                                      String lakareId, Urval urval, IntygParametrar parameters) {
 
         List<SjukfallEnhet> sjukfallList = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, parameters);
         sjukfallPuService.filterSekretessForSummary(sjukfallList);
@@ -212,23 +212,26 @@ public class SjukfallServiceImpl implements SjukfallService {
         return rehabstodSjukfall;
     }
 
-    private FilteredSjukFallByPatientResult getFilteredSjukfallByPatient(String lakarId, String currentVardgivarHsaId, String enhetsId,
-            Urval urval, String patientId, IntygParametrar parameters) {
+    private FilteredSjukFallByPatientResult getFilteredSjukfallByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId,
+                                                                         String patientId, Urval urval, IntygParametrar parameters) {
 
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(lakarId), "lakarId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardgivarHsaId), "currentVardgivarHsaId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(enhetsId), "enhetsId may not be null or empty");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(lakareId), "lakareId may not be null or empty");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
         Preconditions.checkArgument(urval != null, "urval may not be null");
 
         List<se.inera.intyg.infra.sjukfall.dto.SjukfallPatient> sjukfallList;
         Map<String, IntygAccessControlMetaData> intygAccessMetaData = new HashMap<>();
 
         LOG.debug("Calling Intygstjänsten - fetching certificate information by patient.");
-        List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForPatient(enhetsId, patientId,
-                parameters.getMaxAntalDagarSedanSjukfallAvslut());
+//        List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnitAndPatient(enhetsId, patientId,
+//                parameters.getMaxAntalDagarSedanSjukfallAvslut());
 
-        List<IntygData> data = intygsData
-                .stream()
+        List<IntygsData> intygsData =
+                intygstjanstIntegrationService.getAllIntygsDataForPatient(patientId, parameters.getMaxAntalDagarSedanSjukfallAvslut());
+
+        List<IntygData> data = intygsData.stream()
                 .map(o -> intygstjanstMapper.map(o))
                 .collect(Collectors.toList());
 
@@ -237,7 +240,7 @@ public class SjukfallServiceImpl implements SjukfallService {
                 new IntygAccessControlMetaData(intygData, currentVardgivarHsaId.equals(intygData.getVardgivareId()))));
 
         // Decorate intygAccessMetaData with "spärr" info
-        sparrtjanstIntegrationService.decorateWithBlockStatus(currentVardgivarHsaId, enhetsId, lakarId, patientId, intygAccessMetaData,
+        sparrtjanstIntegrationService.decorateWithBlockStatus(currentVardgivarHsaId, enhetsId, lakareId, patientId, intygAccessMetaData,
                 data);
 
         // Make an initial calculation using _all_ available intyg...
@@ -245,9 +248,9 @@ public class SjukfallServiceImpl implements SjukfallService {
         // ... and check which intyg is contributing to the aktive sjukfall
         updateAccessMetaDataWithContributingStatus(sjukfallList, intygAccessMetaData);
 
-        // gör anrop till check consent
-        // Decorate intygAccessMetaData with consent info
-        // samtyckestjanstIntegrationService.checkForConsent(lakarId, patientId, intygAccessMetaData);
+        // Make a call to the check for consent service
+        // Decorate intygAccessMetaData with the consent info
+        samtyckestjanstIntegrationService.checkForConsent(patientId, lakareId, intygAccessMetaData);
 
         // skapa listorna med vilka vårdgivare som hade intyg SKULLE funnits i aktivt sjukfall men som inte kommer med
         // pga spärr inre/yttrespärr.
@@ -294,11 +297,11 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     private List<IntygData> filterByAcessMetaData(List<IntygData> data, Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
         return data.stream()
-                .filter(intygData -> shouldInclude(intygData, intygAccessMetaData.get(intygData.getIntygId())))
+                .filter(intygData -> shouldInclude(intygAccessMetaData.get(intygData.getIntygId())))
                 .collect(Collectors.toList());
     }
 
-    private boolean shouldInclude(IntygData intygData, IntygAccessControlMetaData intygAccessControlMetaData) {
+    private boolean shouldInclude(IntygAccessControlMetaData intygAccessControlMetaData) {
         // 1. Får inte har spärr
         if (intygAccessControlMetaData.isSparr()) {
             return false;

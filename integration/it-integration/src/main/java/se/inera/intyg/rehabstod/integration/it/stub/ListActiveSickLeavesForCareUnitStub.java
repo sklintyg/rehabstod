@@ -20,25 +20,22 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 
 // CHECKSTYLE:OFF LineLength
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-
+import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Strings;
-
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 // CHECKSTYLE:ON LineLength
 
@@ -47,7 +44,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
  */
 @Service
 @Profile({ "rhs-it-stub" })
-public class SjukfallIntygStub implements ListActiveSickLeavesForCareUnitResponderInterface {
+public class ListActiveSickLeavesForCareUnitStub implements ListActiveSickLeavesForCareUnitResponderInterface {
 
     private List<IntygsData> intygsData = new ArrayList<>();
 

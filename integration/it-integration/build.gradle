@@ -1,7 +1,7 @@
 dependencies {
     compile project(":rehabstod-common")
 
-    compile "se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:${rehabSchemaVersion}"
+    compile "se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:${rehabilitationSchemaVersion}"
     compile "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${monitoringSchemaVersion}"
     compile "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
     compile "se.inera.intyg.infra:pu-integration:${intygInfraVersion}"

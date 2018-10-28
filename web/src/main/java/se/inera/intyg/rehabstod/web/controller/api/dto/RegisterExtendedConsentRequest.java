@@ -96,5 +96,4 @@ public class RegisterExtendedConsentRequest implements Serializable {
     public int hashCode() {
         return Objects.hash(patientId, userHsaId, representedBy, consentFrom, consentTo);
     }
-
 }

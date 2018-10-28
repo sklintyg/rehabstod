@@ -31,6 +31,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonResponderInterface;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 
 // CHECKSTYLE:ON LineLength
@@ -40,7 +41,7 @@ import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponde
  *
  * Somewhat "hackish" use of profiles:
  *
- * Bean is only active when rhs-it-stub is NOT active. The underlying itIntegrationWebServiceClient() @Bean and (PfC) is
+ * Bean is only active when rhs-it-stub is NOT active. The underlying beans is
  * active for either of dev,test,prod (which should be possible to replace with no @Profile at all)
  *
  * Created by eriklupander on 2016-02-05.
@@ -65,7 +66,7 @@ public class IntygstjanstIntegrationClientConfiguration {
     private String itWsPingUrl;
 
     @Bean
-    public ListActiveSickLeavesForCareUnitResponderInterface itIntegrationWebServiceClient() {
+    public ListActiveSickLeavesForCareUnitResponderInterface listActiveSickLeavesForCareUnitWebServiceClient() {
         // CHECKSTYLE:OFF LineLength
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(itWsUrl);
@@ -75,6 +76,20 @@ public class IntygstjanstIntegrationClientConfiguration {
         Client client = ClientProxy.getClient(listActiveSickLeavesForCareUnitResponderInterface);
         applyTimeouts(client);
         return listActiveSickLeavesForCareUnitResponderInterface;
+        // CHECKSTYLE:ON LineLength
+    }
+
+    @Bean
+    public ListActiveSickLeavesForPersonResponderInterface listActiveSickLeavesForPersonWebServiceClient() {
+        // CHECKSTYLE:OFF LineLength
+        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
+        proxyFactoryBean.setAddress(itWsUrl);
+        proxyFactoryBean.setServiceClass(ListActiveSickLeavesForPersonResponderInterface.class);
+        ListActiveSickLeavesForPersonResponderInterface listActiveSickLeavesForPersonResponderInterface = (ListActiveSickLeavesForPersonResponderInterface) proxyFactoryBean
+                .create();
+        Client client = ClientProxy.getClient(listActiveSickLeavesForPersonResponderInterface);
+        applyTimeouts(client);
+        return listActiveSickLeavesForPersonResponderInterface;
         // CHECKSTYLE:ON LineLength
     }
 

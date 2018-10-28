@@ -38,7 +38,10 @@ public class IntygstjanstIntegrationStubConfiguration {
     private ApplicationContext applicationContext;
 
     @Autowired
-    private SjukfallIntygStub sjukfallIntygStub;
+    private ListActiveSickLeavesForCareUnitStub listActiveSickLeavesForCareUnitStub;
+
+    @Autowired
+    private ListActiveSickLeavesForPersonStub listActiveSickLeavesForPersonStub;
 
     @Autowired
     private Bus bus;
@@ -49,10 +52,19 @@ public class IntygstjanstIntegrationStubConfiguration {
     }
 
     @Bean
-    public EndpointImpl intygstjanstResponder() {
-        Object implementor = sjukfallIntygStub;
+    public EndpointImpl listActiveSickLeavesForCareUnitResponder() {
+        Object implementor = listActiveSickLeavesForCareUnitStub;
         EndpointImpl endpoint = new EndpointImpl(bus, implementor);
         endpoint.publish("/get-active-sickleaves-for-careunit/v1.0");
         return endpoint;
     }
+
+    @Bean
+    public EndpointImpl listActiveSickLeavesForPersonResponder() {
+        Object implementor = listActiveSickLeavesForPersonStub;
+        EndpointImpl endpoint = new EndpointImpl(bus, implementor);
+        endpoint.publish("/get-active-sickleaves-for-person/v1.0");
+        return endpoint;
+    }
+
 }
