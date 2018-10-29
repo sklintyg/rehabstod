@@ -266,14 +266,14 @@ public class SjukfallController {
     private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, String patientId, LocalDate date) {
         String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         String currentVardgivarHsaId = user.getValdVardgivare().getId();
-        String lakarId = user.getHsaId();
+        String lakareId = user.getHsaId();
         Urval urval = user.getUrval();
 
         IntygParametrar parameters = new IntygParametrar(
                 ControllerUtil.getMaxGlapp(user), ControllerUtil.getMaxDagarSedanSjukfallAvslut(user), date);
 
         LOG.debug("Calling the 'sjukfall' service to get a list of detailed 'sjukfall' for one patient.");
-        return sjukfallService.getByPatient(currentVardgivarHsaId, enhetsId, lakarId, patientId, urval, parameters);
+        return sjukfallService.getByPatient(currentVardgivarHsaId, enhetsId, lakareId, patientId, urval, parameters);
     }
 
     private void logSjukfallData(RehabstodUser user, List<SjukfallEnhet> sjukfallList,

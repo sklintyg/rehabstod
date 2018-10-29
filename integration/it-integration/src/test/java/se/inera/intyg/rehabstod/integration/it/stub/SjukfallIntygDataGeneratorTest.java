@@ -63,17 +63,19 @@ public class SjukfallIntygDataGeneratorTest {
 
         final int numberOfPatients = 10;
         final int intygPerPatient = 4;
+        final int intygTolvan = intygPerPatient + 2; // Tolvan är gammal och ges då två extra intyg
         List<IntygsData> intygsData = testee.generateIntygsData(numberOfPatients, intygPerPatient);
-        assertEquals(numberOfPatients * intygPerPatient, intygsData.size());
+        assertEquals(numberOfPatients * intygPerPatient + intygTolvan, intygsData.size());
         assertEquals("19791110-9291", intygsData.get(0).getPatient().getPersonId().getExtension());
         assertEquals("M16.0", intygsData.get(0).getDiagnoskod());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum());
-        verify(residentStore, times(numberOfPatients)).addResident(any());
+        verify(residentStore, times(numberOfPatients + 1)).addResident(any());
     }
 
     private List<String> buildPersonnummerList() {
-        return Arrays.asList("19791110-9291",
+        return Arrays.asList(
+                "19791110-9291",
                 "19791123-9262",
                 "19791212-9280",
                 "19791230-9296",

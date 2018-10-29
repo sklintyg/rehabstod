@@ -146,30 +146,43 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
             throw new IllegalArgumentException("Cannot seed more than 13000 patients or we would have to recycle personnummer...");
         }
 
+        // Firstly: seed a number of random test patients
         seedPatients(numberOfPatients);
 
         List<IntygsData> intygsDataList = new ArrayList<>();
+
         for (int a = 0; a < numberOfPatients; a++) {
             Patient patient = nextPatient();
             HosPersonal hosPerson = nextHosPerson();
-            // Start by resetting time to 60-120 days back in time..
-            timeSimulator = LocalDateTime.now().minusDays(ThreadLocalRandom.current().nextInt(60, 120));
-            for (int intygsIndex = 0; intygsIndex < intygPerPatient; intygsIndex++) {
+            addToIntygsData(intygPerPatient, patient, hosPerson, intygsDataList);
 
-                intygsDataList.add(buildIntygsData(patient, hosPerson));
-                // Add random nr of days glapp between intyg
-                timeSimulator = timeSimulator.plusDays(ThreadLocalRandom.current().nextInt(0, 10));
-
-            }
-            // Once for each patient > 50 years old, add a 2 really old intyg to get som history
-            if (getAge(patient) > 50) {
-                timeSimulator = timeSimulator.minusYears(ThreadLocalRandom.current().nextInt(4));
-                intygsDataList.add(buildIntygsData(patient, hosPerson));
-                intygsDataList.add(buildIntygsData(patient, hosPerson));
-            }
         }
+
+        // Secondly: Always add Tolvan Tolvansson to stub data
+        Patient tolvan = buildTolvanTolvansson();
+        addToPuStub(tolvan);
+        addToIntygsData(intygPerPatient, tolvan, hosPersonList.get(0), intygsDataList);
+
         LOG.info("Generated {} intygsData items for stub", intygsDataList.size());
         return intygsDataList;
+    }
+
+    private void addToIntygsData(Integer intygPerPatient, Patient patient, HosPersonal hosPerson, List<IntygsData> intygsDataList) {
+        // Start by resetting time to 60-120 days back in time..
+        timeSimulator = LocalDateTime.now().minusDays(ThreadLocalRandom.current().nextInt(60, 120));
+        for (int intygsIndex = 0; intygsIndex < intygPerPatient; intygsIndex++) {
+
+            intygsDataList.add(buildIntygsData(patient, hosPerson));
+            // Add random nr of days glapp between intyg
+            timeSimulator = timeSimulator.plusDays(ThreadLocalRandom.current().nextInt(0, 10));
+
+        }
+        // Once for each patient > 50 years old, add a 2 really old intyg to get som history
+        if (getAge(patient) > 50) {
+            timeSimulator = timeSimulator.minusYears(ThreadLocalRandom.current().nextInt(4));
+            intygsDataList.add(buildIntygsData(patient, hosPerson));
+            intygsDataList.add(buildIntygsData(patient, hosPerson));
+        }
     }
 
     private int getAge(Patient patient) {
@@ -320,6 +333,15 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         IIType iiType = new IIType();
         iiType.setExtension(extension);
         return iiType;
+    }
+
+    private Patient buildTolvanTolvansson() {
+        Patient patient = new Patient();
+        PersonId personId = new PersonId();
+        personId.setExtension("19121212-1212");
+        patient.setPersonId(personId);
+        patient.setFullstandigtNamn("Tolvan Tolvansson");
+        return patient;
     }
 
     private Patient buildPerson(String pnr) {
