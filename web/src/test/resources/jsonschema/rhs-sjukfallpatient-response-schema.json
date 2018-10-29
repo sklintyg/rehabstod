@@ -1,69 +1,97 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Schema for sjukfall as resturned from e.g /sjukfall",
+  "title": "Schema for one patient's sjukfall as resturned from e.g /sjukfall/patient",
 
     "properties": {
-      "diagnos": {
-        "additionalProperties": false,
+      "sjfMetaData": {
         "properties": {
-          "kapitel": {
-            "type": [
-              "string",
-              "null"
-            ]
+          "vardenheterInomVGMedSparr": {
+            "minItems": 0,
+            "type": "array"
           },
-          "kod": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "namn": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "intygsVarde": {
-            "type": "string"
-          },
-          "beskrivning": {
-            "type": [
-              "string",
-              "null"
-            ]
+          "andraVardgivareMedSparr": {
+            "minItems": 0,
+            "type": "array"
           }
         },
+        "type": "object",
+        "additionalProperties": false,
         "required": [
-          "kapitel",
-          "intygsVarde",
-          "kod",
-          "namn",
-          "beskrivning"
-        ],
-        "type": "object"
+          "vardenheterInomVGMedSparr",
+          "andraVardgivareMedSparr"
+        ]      },
+      "sjukfallList": {
+        "items": {
+          "diagnos": {
+            "properties": {
+              "kapitel": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "kod": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "namn": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "intygsVarde": {
+                "type": "string"
+              },
+              "beskrivning": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "kapitel",
+              "intygsVarde",
+              "kod",
+              "namn",
+              "beskrivning"
+            ]
+          },
+          "start": {
+            "type": "string"
+          },
+          "slut": {
+            "type": "string"
+          },
+          "dagar": {
+            "type": "integer"
+          },
+          "intyg": {
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "type" : "array",
+        "additionalItems": false,
+        "required": [
+          "diagnos",
+          "start",
+          "slut",
+          "dagar",
+          "intyg"
+        ]
       },
-      "start": {
-        "type": "string"
-      },
-      "slut": {
-        "type": "string"
-      },
-      "dagar": {
-        "type": "integer"
-      },
-      "intyg": {
-        "minItems": 0,
-        "type": "array"
+      "srsError": {
+        "type": "boolean"
       }
     },
-    "additionalProperties": false,
     "required": [
-      "diagnos",
-      "start",
-      "slut",
-      "dagar",
-      "intyg"
-    ],
-    "type" : "object"
+      "sjfMetaData",
+      "sjukfallList",
+      "srsError"
+    ]
 }

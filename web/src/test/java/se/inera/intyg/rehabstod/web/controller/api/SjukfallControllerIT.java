@@ -21,7 +21,6 @@ package se.inera.intyg.rehabstod.web.controller.api;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
@@ -83,7 +82,6 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
 
     }
 
-    @Ignore
     @Test
     public void testGetSjukfallByPatient() {
 
