@@ -346,7 +346,7 @@
 
             <h4>Mallar</h4>
 
-            <select id="jsonSelect" name="jsonSelect" ng-model="selectedIndex" size="18" class="form-control" style="width: 100%;max-width:100%">
+            <select id="jsonSelect" name="jsonSelect" ng-model="selectedIndex" size="18" class="form-control" style="width: 100%;max-width:100%" autofocus>
               <option id="{{login.hsaId}}_{{login.forvaldEnhet}}"
                       ng-repeat="login in loginOptions"
                       value="{{login.index}}">{{login.beskrivning}}
