@@ -74,8 +74,6 @@ public class ListActiveSickLeavesForPersonStub implements ListActiveSickLeavesFo
         Preconditions.checkArgument(!Strings.isNullOrEmpty(personnummer));
 
         IntygsLista intygsLista = new IntygsLista();
-        intygsLista.getIntygsData().addAll(intygsData);
-
         intygsLista.getIntygsData().addAll(intygsData.stream()
                 .filter(item -> personnummer.equals(item.getPatient().getPersonId().getExtension()))
                 .collect(Collectors.toList()));
