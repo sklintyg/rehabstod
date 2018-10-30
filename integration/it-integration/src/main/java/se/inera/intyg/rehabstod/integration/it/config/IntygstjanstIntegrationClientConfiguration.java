@@ -62,6 +62,10 @@ public class IntygstjanstIntegrationClientConfiguration {
     @Value("${it.service.url}")
     private String itWsUrl;
 
+    @Value("${it.listactivesickleavesforperson.url}")
+    private String listActiveSickleavesForPersonUrl;
+
+
     @Value("${it.ping.url}")
     private String itWsPingUrl;
 
@@ -83,7 +87,7 @@ public class IntygstjanstIntegrationClientConfiguration {
     public ListActiveSickLeavesForPersonResponderInterface listActiveSickLeavesForPersonWebServiceClient() {
         // CHECKSTYLE:OFF LineLength
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setAddress(itWsUrl);
+        proxyFactoryBean.setAddress(listActiveSickleavesForPersonUrl);
         proxyFactoryBean.setServiceClass(ListActiveSickLeavesForPersonResponderInterface.class);
         ListActiveSickLeavesForPersonResponderInterface listActiveSickLeavesForPersonResponderInterface = (ListActiveSickLeavesForPersonResponderInterface) proxyFactoryBean
                 .create();
