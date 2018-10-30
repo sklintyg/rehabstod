@@ -34,7 +34,7 @@ ext {
     jsonSimpleVersion = "1.1.1"
     jstlVersion = "1.2"
     liquibaseVersion = "3.3.1"
-    logbackVersion = "1.0.13"
+    logbackVersion = "1.2.3"
     mysqlVersion = "5.1.40"
     poiVersion = "3.13"
     restAssuredVersion = "2.9.0"
