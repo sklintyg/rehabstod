@@ -68,7 +68,6 @@ public final class SparrtjanstUtil {
     public static IIType buildIITypeForPersonOrSamordningsnummer(Personnummer personnummer) {
         IIType patient = new IIType();
         patient.setRoot(getRootForPersonnummer(personnummer));
-        // TODOO: with dash? exact string format not specified?
         patient.setExtension(personnummer.getPersonnummer());
         return patient;
     }
