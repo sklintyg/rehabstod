@@ -1,14 +1,15 @@
 apiVersion: v1
 data:
-  CERTIFICATE_BASEURL: "http://intygstjanst:8080"
+  CERTIFICATE_BASEURL: "http://intygstjanst-test-${app.name}-test:8080"
   ACTIVEMQ_BROKER_URL: "failover:(tcp://ind-sint-activemq1.ind1.sth.basefarm.net:61616,tcp://ind-sint-activemq2.ind1.sth.basefarm.net:61616)"
-  DATABASE_PORT: "3306"
-  DATABASE_SERVER: "ind-sint-mysqlvip.ind1.sth.basefarm.net"
+  DB_PORT: "${mysql.service.port}"
+  DB_SERVER: "${mysql.service.host}"
+  DB_NAME: "${database.name}"
   IT_WS_CERTIFICATE_FILE: "${certificate.folder}/truststore.jks"
   IT_WS_TRUSTSTORE_TYPE: "JKS"
-  REDIS_HOST: "ind-sint-redis1.ind1.sth.basefarm.net;ind-sint-redis2.ind1.sth.basefarm.net;ind-sint-redis3.ind1.sth.basefarm.net"
-  REDIS_PORT: "26379;26379;26379"
-  REDIS_SENTINEL_MASTER_NAME: "ind-sint-redis"
+  REDIS_HOST: "${redis.ervice.host}"
+  REDIS_PORT: "${redis.ervice.port}"
+  REDIS_SENTINEL_MASTER_NAME: "master"
   NTJP_WS_CERTIFICATE_FILE: "${certificate.folder}/verifiering.rehabstod.intygstjanster.sjunet.org.jks"
   NTJP_WS_TRUSTSTORE_FILE: "${certificate.folder}/truststore.jks"
   NTJP_WS_CERTIFICATE_TYPE: "JKS"
@@ -19,5 +20,5 @@ data:
   SAKERHETSTJANST_SAML_TRUSTSTORE_FILE: "file://${certificate.folder}/truststore.jks"
 kind: ConfigMap
 metadata:
-  name: rehabstod-stage-configmap-envvar
+  name: rehabstod-test-configmap-envvar
 type: Opaque
