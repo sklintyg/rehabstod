@@ -18,41 +18,22 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
-import org.apache.cxf.Bus;
-import org.apache.cxf.jaxws.EndpointImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Configuration
-@ComponentScan({ "se.inera.intyg.rehabstod.integration.srs.stub" })
-@Profile({ "rhs-srs-stub" })
+@ComponentScan("se.inera.intyg.rehabstod.integration.samtyckestjanst")
+@ImportResource("classpath:samtyckestjanst-stub-context.xml")
+@Profile("rhs-samtyckestjanst-stub")
 public class SamtyckestjanstStubConfiguration {
-
-    @Autowired
-    private ApplicationContext applicationContext;
-
-    @Autowired
-    private SRSStub srsStub;
-
-    @Autowired
-    private Bus bus;
 
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
 
-    @Bean
-    public EndpointImpl srsResponder() {
-        Object implementor = srsStub;
-        EndpointImpl endpoint = new EndpointImpl(bus, implementor);
-        endpoint.publish("/stubs/get-risk-prediction-for-certificate/v1.0");
-        return endpoint;
-    }
 }

@@ -23,19 +23,14 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ResultType;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 // CHECKSTYLE:ON LineLength
@@ -47,21 +42,8 @@ import java.util.stream.Collectors;
 @Profile({"rhs-it-stub"})
 public class ListActiveSickLeavesForPersonStub implements ListActiveSickLeavesForPersonResponderInterface {
 
-    private List<IntygsData> intygsData = new ArrayList<>();
-
     @Autowired
-    private SjukfallIntygDataGenerator sjukfallIntygDataGenerator;
-
-    @Value("${rhs.sjukfall.stub.numberOfPatients}")
-    private Integer numberOfPatients;
-
-    @Value("${rhs.sjukfall.stub.intygPerPatient}")
-    private Integer intygPerPatient;
-
-    @PostConstruct
-    public void init() {
-        intygsData = sjukfallIntygDataGenerator.generateIntygsData(numberOfPatients, intygPerPatient);
-    }
+    private  SjukfallIntygStub sjukfallIntygStub;
 
     @Override
     public ListActiveSickLeavesForPersonResponseType listActiveSickLeavesForPerson(String s, ListActiveSickLeavesForPersonType parameters) {
@@ -74,7 +56,7 @@ public class ListActiveSickLeavesForPersonStub implements ListActiveSickLeavesFo
         Preconditions.checkArgument(!Strings.isNullOrEmpty(personnummer));
 
         IntygsLista intygsLista = new IntygsLista();
-        intygsLista.getIntygsData().addAll(intygsData.stream()
+        intygsLista.getIntygsData().addAll(sjukfallIntygStub.getIntygsData().stream()
                 .filter(item -> personnummer.equals(item.getPatient().getPersonId().getExtension()))
                 .collect(Collectors.toList()));
 

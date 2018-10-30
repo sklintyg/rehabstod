@@ -36,8 +36,7 @@ public class RegisterExtendedConsentRequest implements Serializable {
     private LocalDate consentFrom;
     private LocalDate consentTo;
 
-    public RegisterExtendedConsentRequest(String patientId) {
-        this.patientId = patientId;
+    public RegisterExtendedConsentRequest() {
     }
 
     public String getPatientId() {
@@ -58,6 +57,10 @@ public class RegisterExtendedConsentRequest implements Serializable {
 
     public LocalDate getConsentTo() {
         return consentTo;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
     }
 
     public void setUserHsaId(String userHsaId) {

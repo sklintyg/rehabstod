@@ -22,18 +22,14 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 
 import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,21 +42,8 @@ import java.util.stream.Collectors;
 @Profile({ "rhs-it-stub" })
 public class ListActiveSickLeavesForCareUnitStub implements ListActiveSickLeavesForCareUnitResponderInterface {
 
-    private List<IntygsData> intygsData = new ArrayList<>();
-
     @Autowired
-    private SjukfallIntygDataGenerator sjukfallIntygDataGenerator;
-
-    @Value("${rhs.sjukfall.stub.numberOfPatients}")
-    private Integer numberOfPatients;
-
-    @Value("${rhs.sjukfall.stub.intygPerPatient}")
-    private Integer intygPerPatient;
-
-    @PostConstruct
-    public void init() {
-        intygsData = sjukfallIntygDataGenerator.generateIntygsData(numberOfPatients, intygPerPatient);
-    }
+    private SjukfallIntygStub sjukfallIntygStub;
 
     @Override
     public ListActiveSickLeavesForCareUnitResponseType listActiveSickLeavesForCareUnit(String logicalAddress,
@@ -68,11 +51,10 @@ public class ListActiveSickLeavesForCareUnitStub implements ListActiveSickLeaves
         ListActiveSickLeavesForCareUnitResponseType resp = new ListActiveSickLeavesForCareUnitResponseType();
         resp.setResultCode(ResultCodeEnum.OK);
 
-        List<String> enhetIds = sjukfallIntygDataGenerator.getUnderenheterHsaIds(parameters.getEnhetsId().getExtension());
+        List<String> enhetIds = SjukfallIntygDataGeneratorHelper.getUnderenheterHsaIds(parameters.getEnhetsId().getExtension());
         enhetIds.add(parameters.getEnhetsId().getExtension());
 
         IntygsLista intygsLista = new IntygsLista();
-
 
         //Just interested in a specific patient?
         String personnummer = parameters.getPersonId() != null && parameters.getPersonId().getExtension() != null
@@ -80,12 +62,12 @@ public class ListActiveSickLeavesForCareUnitStub implements ListActiveSickLeaves
                 : null;
 
         if (!Strings.isNullOrEmpty(personnummer)) {
-            intygsLista.getIntygsData().addAll(intygsData.stream()
+            intygsLista.getIntygsData().addAll(sjukfallIntygStub.getIntygsData().stream()
                     .filter(id -> enhetIds.contains(id.getSkapadAv().getEnhet().getEnhetsId().getExtension())
                             && personnummer.equals(id.getPatient().getPersonId().getExtension()))
                     .collect(Collectors.toList()));
         } else {
-            intygsLista.getIntygsData().addAll(intygsData.stream()
+            intygsLista.getIntygsData().addAll(sjukfallIntygStub.getIntygsData().stream()
                     .filter(id -> enhetIds.contains(id.getSkapadAv().getEnhet().getEnhetsId().getExtension()))
                     .collect(Collectors.toList()));
         }

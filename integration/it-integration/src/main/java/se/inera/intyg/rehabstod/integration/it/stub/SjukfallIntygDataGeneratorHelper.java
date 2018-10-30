@@ -18,15 +18,29 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+import static se.inera.intyg.rehabstod.integration.it.stub.SjukfallIntygDataGeneratorImpl.UE_AKUTEN;
+import static se.inera.intyg.rehabstod.integration.it.stub.SjukfallIntygDataGeneratorImpl.UE_DIALYS;
+import static se.inera.intyg.rehabstod.integration.it.stub.SjukfallIntygDataGeneratorImpl.VE_CENTRUM_VAST;
 
 /**
  * Created by eriklupander on 2016-02-01.
  */
-public interface SjukfallIntygDataGeneratorHelper {
+public final class SjukfallIntygDataGeneratorHelper {
 
-    List<IntygsData> generateIntygsData(Integer numberOfPatients, Integer intygPerPatient);
+    private SjukfallIntygDataGeneratorHelper() {
+    }
+
+    public static List<String> getUnderenheterHsaIds(String enhetId) {
+        List<String> ids = new ArrayList<>();
+        // This is incredibly stupid...
+        if (enhetId.equals(VE_CENTRUM_VAST)) {
+            ids.add(UE_AKUTEN);
+            ids.add(UE_DIALYS);
+        }
+        return ids;
+    }
 
 }

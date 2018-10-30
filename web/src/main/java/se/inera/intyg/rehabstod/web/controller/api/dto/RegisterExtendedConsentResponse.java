@@ -37,10 +37,7 @@ public class RegisterExtendedConsentResponse implements Serializable {
     private String registeredBy;
     private LocalDate registrationDate;
 
-    public RegisterExtendedConsentResponse(ResponseCode responseCode, String registeredBy, LocalDate registrationDate) {
-        this.responseCode = responseCode;
-        this.registeredBy = registeredBy;
-        this.registrationDate = registrationDate;
+    public RegisterExtendedConsentResponse() {
     }
 
     public ResponseCode getResponseCode() {
@@ -57,6 +54,18 @@ public class RegisterExtendedConsentResponse implements Serializable {
 
     public LocalDate getRegistrationDate() {
         return registrationDate;
+    }
+
+    public void setResponseCode(ResponseCode responseCode) {
+        this.responseCode = responseCode;
+    }
+
+    public void setRegisteredBy(String registeredBy) {
+        this.registeredBy = registeredBy;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     public void setResponseMessage(String responseMessage) {

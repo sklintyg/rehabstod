@@ -29,5 +29,4 @@ public interface SjukfallIntygDataGenerator {
 
     List<IntygsData> generateIntygsData(Integer numberOfPatients, Integer intygPerPatient);
 
-    List<String> getUnderenheterHsaIds(String enhetId);
 }

@@ -18,15 +18,22 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import com.google.common.base.Strings;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
-import org.junit.Ignore;
+import com.jayway.restassured.response.Response;
 import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
+
+import java.time.LocalDate;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-28.
@@ -35,16 +42,50 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
     private static final String API_ENDPOINT = "api/consent";
 
-    @Ignore
+    // Use Tolvan Tolvansson since he exist in the stubbed data.
+    private static final String PNR_TOLVAN_TOLVANSSON = "19121212-1212";
+
     @Test
     public void testRegisteredExtendedConsent() {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
-        RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest("201212121212");
+        RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
+        request.setPatientId(PNR_TOLVAN_TOLVANSSON);
+        request.setConsentFrom(LocalDate.now());
+        request.setConsentTo(LocalDate.now().plusMonths(1));
 
-        given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT).then()
-                .body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"));
+        Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)
+                .when().post(API_ENDPOINT)
+                .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
+                .extract().response();
 
+        assertNotNull(response);
+
+        RegisterExtendedConsentResponse result = response.body().as(RegisterExtendedConsentResponse.class);
+        assertEquals(RegisterExtendedConsentResponse.ResponseCode.OK, result.getResponseCode());
+        assertTrue(Strings.isNullOrEmpty(result.getResponseMessage()));
+        assertEquals(LocalDate.now(), result.getRegistrationDate());
+        assertEquals(DEFAULT_LAKARE.getHsaId(), result.getRegisteredBy());
+    }
+
+    @Test
+    public void testRegisteredExtendedConsentWithNoPatientId() {
+        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
+
+        RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
+        request.setConsentFrom(LocalDate.now());
+        request.setConsentTo(LocalDate.now().plusMonths(1));
+
+        Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)
+                .when().post(API_ENDPOINT)
+                .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
+                .extract().response();
+
+        assertNotNull(response);
+
+        RegisterExtendedConsentResponse result = response.body().as(RegisterExtendedConsentResponse.class);
+        assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, result.getResponseCode());
+        assertTrue(!Strings.isNullOrEmpty(result.getResponseMessage()));
     }
 
 }

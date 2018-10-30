@@ -108,12 +108,10 @@ public class ConsentController {
                                     consentFrom, consentTo, registrationAction);
                         }));
 
-            response = new RegisterExtendedConsentResponse(
-                    RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId(), registrationDate.toLocalDate());
+            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId(), registrationDate.toLocalDate());
 
         } catch (Exception e) {
-            response = new RegisterExtendedConsentResponse(
-                    RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(), registrationDate.toLocalDate());
+            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(), registrationDate.toLocalDate());
             response.setResponseMessage(e.getMessage());
         }
 
@@ -147,4 +145,14 @@ public class ConsentController {
         return actorType;
     }
 
+    private RegisterExtendedConsentResponse createResponse(RegisterExtendedConsentResponse.ResponseCode responseCode,
+                                                           String registeredBy,
+                                                           LocalDate registrationDate) {
+
+        RegisterExtendedConsentResponse response = new RegisterExtendedConsentResponse();
+        response.setResponseCode(responseCode);
+        response.setRegisteredBy(registeredBy);
+        response.setRegistrationDate(registrationDate);
+        return response;
+    }
 }

@@ -64,13 +64,23 @@ public class SamtyckestjanstStubStore {
     }
 
     private boolean isWithinInterval(ConsentData consent, LocalDate queryDate) {
-        // Either touches start/end or is in within
+        // Om queryDate är lika med startDatum så är det inom intervallet.
         if (queryDate.isEqual(consent.getConsentFrom().toLocalDate())) {
             return true;
         }
+        // Om slutDatum inte finns så finns det inte en bortre datumgräns för samtycket.
+        // Men queryDate ska i så fall vara efter startDatum.
+        if (consent.getConsentTo() == null) {
+            if (queryDate.isAfter(consent.getConsentFrom().toLocalDate())) {
+                return true;
+            }
+            return false;
+        }
+        // Om queryDate är lika med slutDatum så är det inom intervallet.
         if (queryDate.isEqual(consent.getConsentTo().toLocalDate())) {
             return true;
         }
+        // Kontrollera att queryDate är mellan start- och slutdatum.
         return queryDate.isAfter(consent.getConsentFrom().toLocalDate())
                 && queryDate.isBefore(consent.getConsentTo().toLocalDate());
     }

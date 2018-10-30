@@ -59,7 +59,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ConsentControllerTest {
 
-    private static final String PERSON_ID = "20121212-1212";
+    private static final String PERSON_ID = "19121212-1212";
     private static final String VARDGIVARE_ID = "VG123";
     private static final String VARDENHETS_ID = "VEA";
 
@@ -107,9 +107,15 @@ public class ConsentControllerTest {
                 .getIntygDataForPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class)))
                 .thenReturn(result);
 
-        testee.registerConsent(new RegisterExtendedConsentRequest(PERSON_ID));
+        testee.registerConsent(createRequest(PERSON_ID));
 
         verify(consentServiceMock).getIntygDataForPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class));
+    }
+
+    private RegisterExtendedConsentRequest createRequest(String personId) {
+        RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
+        request.setPatientId(personId);
+        return request;
     }
 
     @Test
@@ -124,7 +130,7 @@ public class ConsentControllerTest {
 
     @Test
     public void convertToJson() throws IOException {
-        RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest("201212121212");
+        RegisterExtendedConsentRequest request = createRequest(PERSON_ID);
         StringWriter jsonWriter = new StringWriter();
         CustomObjectMapper objectMapper = new CustomObjectMapper();
         objectMapper.writeValue(jsonWriter, request);

@@ -37,7 +37,7 @@ import java.util.List;
  */
 @Service
 @Profile({"rhs-it-stub"})
-public class SjukfallIntegrationStub {
+public class SjukfallIntygStub {
 
     private List<IntygsData> intygsData = new ArrayList<>();
 

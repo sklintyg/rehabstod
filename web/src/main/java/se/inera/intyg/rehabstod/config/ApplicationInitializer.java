@@ -35,6 +35,7 @@ import se.inera.intyg.rehabstod.common.monitoring.util.LogbackConfiguratorContex
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
+import se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstStubConfiguration;
 import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.srs.stub.SRSIntegrationStubConfiguration;

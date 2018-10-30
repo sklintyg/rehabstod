@@ -29,11 +29,11 @@
 
   <jaxws:endpoint
       address="/stubs/informationsecurity/authorization/consent/CheckConsent/2/rivtabp21"
-      implementor="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstIntegrationStub"/>
+      implementor="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.CheckConsentStub"/>
 
   <jaxws:endpoint
       address="/stubs/informationsecurity/authorization/consent/RegisterExtendedConsent/2/rivtabp21"
-      implementor="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstIntegrationStub"/>
+      implementor="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.RegisterExtendedConsentStub"/>
 
   <bean id="samtyckestjanstStubRestApi" class="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstStubRestApi"/>
 
