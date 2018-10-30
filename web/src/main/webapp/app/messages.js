@@ -78,7 +78,7 @@ var rhsMessages = {
         // Sjukfall Stat
         'label.sjukfall.stat.totalt' : 'Antal sjukfall',
         'label.sjukfall.stat.gender' : 'Könsfördelning',
-        'label.sjukfall.stat.diagnoses' : 'Diagnosfördelning',
+        'label.sjukfall.stat.diagnoses' : 'Diagnosgrupp',
         'label.sjukfall.stat.sickleavedegree' : 'Sjukskrivningsgrad',
         'label.stat.nosjukfall.rehab' : 'Det finns inga pågående sjukfall på enheten.',
         'label.stat.nosjukfall.lakare' : 'Du har inga pågående sjukfall på enheten.',
