@@ -18,21 +18,22 @@
  */
 package se.inera.intyg.rehabstod.common.monitoring.util;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.classic.util.ContextInitializer;
-import ch.qos.logback.core.joran.spi.JoranException;
-import ch.qos.logback.core.util.StatusPrinter;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import java.io.IOException;
-import java.io.InputStream;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.classic.util.ContextInitializer;
+import ch.qos.logback.core.joran.spi.JoranException;
+import ch.qos.logback.core.util.StatusPrinter;
 
 public class LogbackConfiguratorContextListener implements ServletContextListener {
 
@@ -73,7 +74,7 @@ public class LogbackConfiguratorContextListener implements ServletContextListene
     }
 
     private Resource getConfigurationResource(final String uri) {
-        return (uri.startsWith(CLASSPATH))
+        return uri.startsWith(CLASSPATH)
                 ? new ClassPathResource(uri.substring(CLASSPATH.length()))
                 : new FileSystemResource(uri);
     }

@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.time.LocalDate;
 import java.time.MonthDay;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -158,7 +158,7 @@ public class Patient {
 
             if (day > SAMORDNINGSNUMMER_DAY_CONSTANT) {
                 dateString = dateString.substring(0, MONTH_PART_OF_DATE_PART)
-                        + (MONTHDAY_FORMATTER.format(MonthDay.of(month, day - SAMORDNINGSNUMMER_DAY_CONSTANT)));
+                        + MONTHDAY_FORMATTER.format(MonthDay.of(month, day - SAMORDNINGSNUMMER_DAY_CONSTANT));
             }
             LocalDate birthDate = LocalDate.from(DateTimeFormatter.BASIC_ISO_DATE.parse(dateString));
             Period period = Period.between(birthDate, LocalDate.now());
