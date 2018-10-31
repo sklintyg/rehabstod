@@ -3,11 +3,16 @@
 
 export DB_USERNAME=${DATABASE_USERNAME:-intyg}
 export DB_PASSWORD=${DATABASE_PASSWORD:-intyg}
+export DB_NAME=${DATABASE_NAME:-rehabstod_test}
+export DB_SERVER=$MYSQL_SERVICE_HOST
+export DB_PORT=$MYSQL_SERVICE_PORT
 
 export ACTIVEMQ_BROKER_USERNAME=${ACTIVEMQ_BROKER_USERNAME:-admin}
 export ACTIVEMQ_BROKER_PASSWORD=${ACTIVEMQ_BROKER_PASSWORD:-admin}
 
 export REDIS_PASSWORD=${REDIS_PASSWORD:-redis}
+export REDIS_PORT=$REDIS_SERVICE_PORT
+export REDIS_HOST=$REDIS_SERVICE_HOST
 
 # dev profile is default for pipeline
 SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-test,rhs-security-test,rhs-it-stub,wc-hsa-stub,wc-pu-stub,testability-api,caching-enabled,rhs-srs-stub,rhs-sparrtjanst-stub,rhs-samtyckestjanst-stub}
@@ -21,4 +26,5 @@ export CATALINA_OPTS_APPEND="\
 -Dcredentials.file=/opt/$APP_NAME/env/secret-env.properties \
 -Dresources.folder=/tmp/resources \
 -Dfile.encoding=UTF-8 \
--DbaseUrl=http://${APP_NAME}:8080"
+-DbaseUrl=http://${APP_NAME}:8080 \
+-Dcertificate.baseUrl=http://intygstjanst-test-${APP_NAME}:8080"
