@@ -44,13 +44,27 @@
         patientId : '',
         from : '',
         to : '',
+        messages: []
+      };
+
+      $scope.SAMTYCKE = {
+          patientId : '',
+          from : '',
+          to : '',
+          vgHsaId: '',
+          veHsaId: '',
+          userHsaId: '',
           messages: []
       };
+
+      var samtyckeApiBase = "/services/api/stub/samtyckestjanst-api";
+      var sparrtjanstApiBase = "/services/api/stub/sparrtjanst-api";
+
       $scope.addSPT = function() {
           var m = $scope.SPT;
 
-          $http.put('/services/api/stub/sparrtjanst-api/person/' + m.patientId + '?from=' + m.from + '&to=' + m.to).
-          then(function(response) {
+          $http.put(sparrtjanstApiBase + '/person/' + m.patientId + '?from=' + m.from + '&to=' + m.to).
+          then(function() {
               $scope.SPT.messages.unshift('Lade till spärr för tiden [ ' + m.from + '  :  ' +  m.to + ' ] för ' + m.patientId);
           }, function(response) {
               $scope.SPT.messages.unshift('Fick felsvar! ' + response.status);
@@ -58,41 +72,96 @@
       };
 
       $scope.purgeSPT = function(patientId) {
-
           if (patientId) {
-              $http.delete('/services/api/stub/sparrtjanst-api/person/' + patientId).
-              then(function(response) {
+              $http.delete(sparrtjanstApiBase + '/person/' + patientId).
+              then(function() {
                   $scope.SPT.messages.unshift('Tog bort alla spärrar för ' + patientId);
               }, function(response) {
                   $scope.SPT.messages.unshift('Fick felsvar! ' + response.status);
               });
 
           } else {
-              $http.delete('/services/api/stub/sparrtjanst-api/person').
-              then(function(response) {
+              $http.delete(sparrtjanstApiBase + '/person').
+              then(function() {
                   $scope.SPT.messages.unshift('Tog bort alla spärrar');
               }, function(response) {
                   $scope.SPT.messages.unshift('Fick felsvar! ' + response.status);
               });
           }
-
       };
-        $scope.dumpSPT = function() {
-            var m = $scope.SPT;
-            $http.get('/services/api/stub/sparrtjanst-api').
-            then(function(response) {
-                $scope.SPT.messages.splice(0, $scope.SPT.messages.length);
-                if (response.data.length === 0) {
-                    $scope.SPT.messages.push('Inga spärrar satta');
-                }
-                angular.forEach(response.data, function(row) {
-                    $scope.SPT.messages.push(row);
-                });
 
-            }, function(response) {
-                $scope.SPT.messages.unshift('Fick felsvar! ' + response.status);
-            });
-        };
+      $scope.dumpSPT = function() {
+          $http.get(sparrtjanstApiBase).
+          then(function(response) {
+              $scope.SPT.messages.splice(0, $scope.SPT.messages.length);
+              if (response.data.length === 0) {
+                  $scope.SPT.messages.push('Inga spärrar satta');
+              }
+              angular.forEach(response.data, function(row) {
+                  $scope.SPT.messages.push(row);
+              });
+
+          }, function(response) {
+              $scope.SPT.messages.unshift('Fick felsvar! ' + response.status);
+          });
+      };
+
+      $scope.addSamtycke = function() {
+          var m = $scope.SAMTYCKE;
+
+          var object = {
+              from:  m.from,
+              to: m.to,
+              vgHsaId: '',
+              veHsaId: '',
+              userId: ''
+          };
+
+          var urlParams = '?from=' + m.from + '&to=' + m.to + '&vgHsaId=' + m.vgHsaId  + '&veHsaId=' + m.veHsaId + '&userId=' + m.userHsaId;
+
+          $http.put(samtyckeApiBase + '/consent/' + m.patientId + urlParams).
+          then(function() {
+              $scope.SAMTYCKE.messages.unshift('Lade till samtycke för tiden [ ' + m.from + '  :  ' +  m.to + ' ] för ' + m.patientId);
+          }, function(response) {
+              $scope.SAMTYCKE.messages.unshift('Fick felsvar! ' + response.status);
+          });
+      };
+
+      $scope.purgeSamtycke = function(patientId) {
+          if (patientId) {
+              $http.delete(samtyckeApiBase + '/consent/' + patientId).
+              then(function() {
+                  $scope.SAMTYCKE.messages.unshift('Tog bort alla samtycken för ' + patientId);
+              }, function(response) {
+                  $scope.SAMTYCKE.messages.unshift('Fick felsvar! ' + response.status);
+              });
+
+          } else {
+              $http.delete(samtyckeApiBase + '/consent').
+              then(function() {
+                  $scope.SAMTYCKE.messages.unshift('Tog bort alla samtycken');
+              }, function(response) {
+                  $scope.SAMTYCKE.messages.unshift('Fick felsvar! ' + response.status);
+              });
+          }
+      };
+
+      $scope.dumpSamtycke = function() {
+          $http.get(samtyckeApiBase).
+          then(function(response) {
+              $scope.SAMTYCKE.messages.splice(0, $scope.SAMTYCKE.messages.length);
+              if (response.data.length === 0) {
+                  $scope.SAMTYCKE.messages.push('Inga samtycken satta');
+              }
+              angular.forEach(response.data, function(row) {
+                  $scope.SAMTYCKE.messages.push(row);
+              });
+
+          }, function(response) {
+              $scope.SAMTYCKE.messages.unshift('Fick felsvar! ' + response.status);
+          });
+      };
+
         //--------------------------------------
 
 
@@ -408,6 +477,51 @@
 
             <div>
               <div ng-repeat="row in SPT.messages track by $index">>{{row}}</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="content row">
+          <br>
+          <div class="panel panel-body panel-default">
+            <h4>Samtycke Stub Management</h4>
+            <input type="text" name="patientId" ng-model="SAMTYCKE.patientId" size="18"  maxlength="12" placeholder="personnnr (utan -)">
+            <input type="text" name="samtycke.from" ng-model="SAMTYCKE.from" size="18" placeholder="from åååå-mm-dd">
+            <input type="text" name="samtycke.to" ng-model="SAMTYCKE.to" size="18" placeholder="tom åååå-mm-dd">
+            <input type="text" name="samtycke.vgHsaId" ng-model="SAMTYCKE.vgHsaId" size="18" placeholder="vgHsaId">
+            <input type="text" name="samtycke.veHsaId" ng-model="SAMTYCKE.veHsaId" size="18" placeholder="veHsaId">
+            <input type="text" name="samtycke.veHsaId" ng-model="SAMTYCKE.userHsaId" size="18" placeholder="läkarens hsaId">
+            <div class="btn-group btn-group-sm" role="group">
+
+              <button type="button" class="btn btn-small btn-primary"
+                      ng-click="addSamtycke()"
+                      ng-disabled="!SAMTYCKE.patientId || SAMTYCKE.patientId.length!=12 || SAMTYCKE.from.length<10 || SAMTYCKE.to.length<10">
+                Lägg till samtycke
+              </button>
+              <button type="button" class="btn btn-small btn-primary"
+                      ng-click="purgeSamtycke(SAMTYCKE.patientId)"
+                      ng-disabled="!SAMTYCKE.patientId || SAMTYCKE.patientId.length<12">
+                Rensa samtycke
+              </button>
+
+            </div>
+            <br>
+            <div class="btn-group btn-group-sm" role="group">
+              <button type="button" class="btn btn-small btn-primary"
+                      ng-click="dumpSamtycke()">
+                Visa alla samtycken
+              </button>
+
+
+              <button type="button" class="btn btn-small btn-primary"
+                      ng-click="purgeSamtycke()">
+                Rensa alla samtycken
+              </button>
+            </div>
+
+            <div>
+              <div ng-repeat="row in SAMTYCKE.messages track by $index">>{{row}}</div>
             </div>
 
           </div>

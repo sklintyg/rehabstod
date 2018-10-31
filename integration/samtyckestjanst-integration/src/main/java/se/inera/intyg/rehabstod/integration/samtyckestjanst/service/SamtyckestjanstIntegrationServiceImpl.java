@@ -18,13 +18,20 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.service;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.client.SamtyckestjanstClientService;
@@ -35,12 +42,6 @@ import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.CheckResultType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultType;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
@@ -164,8 +165,9 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
     @VisibleForTesting
     List<IntygAccessControlMetaData> getDistinctMetaDataList(Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
 
-        List<IntygAccessControlMetaData> metaDataList = intygAccessMetaData.entrySet().stream()
-                .map(Map.Entry::getValue)
+        List<IntygAccessControlMetaData> metaDataList = intygAccessMetaData.values().stream()
+                .filter(IntygAccessControlMetaData::isKraverSamtycke)
+                .filter(IntygAccessControlMetaData::isBidrarTillAktivtSjukfall)
                 .collect(Collectors.toList());
 
         // There must be a better way to do this with lamda magic.

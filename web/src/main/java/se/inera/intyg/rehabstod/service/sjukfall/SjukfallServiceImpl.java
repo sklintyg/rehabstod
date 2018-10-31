@@ -18,12 +18,18 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
@@ -37,6 +43,7 @@ import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.FilteredSjukFallByPatientResult;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfSamtyckeMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
@@ -49,11 +56,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -268,16 +270,44 @@ public class SjukfallServiceImpl implements SjukfallService {
     private SjfMetaData createSjfMetaData(Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
         SjfMetaData metadata = new SjfMetaData();
 
+        Map<String, SjfSamtyckeMetaData> kraverSamtycke = new HashMap<>();
+        Map<String, String> harSamtycke = new HashMap<>();
+
         intygAccessMetaData.forEach((intygsId, iacm) -> {
             if (iacm.isBidrarTillAktivtSjukfall()) {
+                String vardgivareId = iacm.getIntygData().getVardgivareId();
+                String vardgivareNamn = iacm.getIntygData().getVardenhetNamn();
+
                 if (iacm.inreSparr()) {
-                    metadata.getVardenheterInomVGMedSparr().add(iacm.getIntygData().getVardenhetNamn());
+                    metadata.getVardenheterInomVGMedSparr().add(vardgivareNamn);
                 }
                 if (iacm.yttreSparr()) {
-                    metadata.getAndraVardgivareMedSparr().add(iacm.getIntygData().getVardgivareNamn());
+                    metadata.getAndraVardgivareMedSparr().add(vardgivareNamn);
+                }
+
+                if (iacm.isKraverSamtycke()) {
+                    if (iacm.isHarSamtycke()) {
+                        if (!harSamtycke.containsKey(vardgivareId)) {
+                            harSamtycke.put(vardgivareId, vardgivareNamn);
+                        }
+                    } else {
+                        SjfSamtyckeMetaData sjfSamtyckeMetaData;
+
+                        if (kraverSamtycke.containsKey(vardgivareId)) {
+                            sjfSamtyckeMetaData = kraverSamtycke.get(vardgivareId);
+                        } else {
+                            sjfSamtyckeMetaData = new SjfSamtyckeMetaData(vardgivareId, vardgivareNamn);
+                            kraverSamtycke.put(vardgivareId, sjfSamtyckeMetaData);
+                        }
+
+                        sjfSamtyckeMetaData.getUnits().add(iacm.getIntygData().getVardenhetId());
+                    }
                 }
             }
         });
+
+        metadata.setSamtyckeSaknas(kraverSamtycke.values());
+        metadata.setSamtyckeFinns(harSamtycke);
 
         return metadata;
     }

@@ -12,6 +12,14 @@
           "andraVardgivareMedSparr": {
             "minItems": 0,
             "type": "array"
+          },
+          "samtyckeFinns": {
+            "minItems": 0,
+            "type": "object"
+          },
+          "samtyckeSaknas": {
+            "minItems": 0,
+            "type": "array"
           }
         },
         "type": "object",

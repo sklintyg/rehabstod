@@ -70,6 +70,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     public static final String VE_TSTNMT2321000156_105Q = "TSTNMT2321000156-105Q";
     public static final String VE_CENTRUM_VAST = "centrum-vast";
     public static final String VE_2A = "IFV1239877878-103H";
+    public static final String VE_2B = "exterenenheter";
     public static final String UE_AKUTEN = "akuten";
     public static final String UE_DIALYS = "dialys";
 
@@ -81,6 +82,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private Enhet enhet;
     private Enhet enhet2;
     private Enhet enhet3;
+    private Enhet enhet4;
     private Enhet underenhet1;
     private Enhet underenhet2;
     private Enhet kerstinEnhet1;
@@ -88,6 +90,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private Vardgivare vg;
     private Vardgivare vg2;
     private Vardgivare vg3;
+    private Vardgivare vg4;
+    private HosPersonal utanInloggning;
     private int currentDiagnosIndex = 0;
     private List<String> diagnosList = new ArrayList<>();
     private int currentSysselSattningIndex = 0;
@@ -156,6 +160,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
             Patient patient = nextPatient();
             HosPersonal hosPerson = nextHosPerson();
             addToIntygsData(intygPerPatient, patient, hosPerson, intygsDataList);
+            addToIntygsData(intygPerPatient, patient, utanInloggning, intygsDataList);
 
         }
 
@@ -163,6 +168,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         Patient tolvan = buildTolvanTolvansson();
         addToPuStub(tolvan);
         addToIntygsData(intygPerPatient, tolvan, hosPersonList.get(0), intygsDataList);
+        addToIntygsData(intygPerPatient, tolvan, utanInloggning, intygsDataList);
 
         LOG.info("Generated {} intygsData items for stub", intygsDataList.size());
         return intygsDataList;
@@ -410,6 +416,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         initFakedVardgivare1();
         initFakedVardgivare2();
         initFakedVardgivare3();
+        initFakedVardgivare4();
 
         enhet = new Enhet();
         HsaId hsaId = new HsaId();
@@ -431,6 +438,13 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         enhet3.setEnhetsId(hsaId2a);
         enhet3.setEnhetsnamn("Vårdenhet 2A");
         enhet3.setVardgivare(vg3);
+
+        enhet4 = new Enhet();
+        HsaId hsaId2b = new HsaId();
+        hsaId2b.setExtension(VE_2B);
+        enhet4.setEnhetsId(hsaId2b);
+        enhet4.setEnhetsnamn("Vårdenhet 2b");
+        enhet4.setVardgivare(vg4);
 
         underenhet1 = new Enhet();
         HsaId hsaId3 = new HsaId();
@@ -544,6 +558,13 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hosPersonList.add(kerstin2);
         hosPersonList.add(peterEnkel);
         hosPersonList.add(tothGergo);
+
+        utanInloggning = new HosPersonal();
+        utanInloggning.setEnhet(enhet4);
+        utanInloggning.setFullstandigtNamn("Ny läkare");
+        HsaId utanInloggningHSA = new HsaId();
+        utanInloggningHSA.setExtension("ny-lakare-hsa-id");
+        utanInloggning.setPersonalId(utanInloggningHSA);
     }
 
     private void initFakedVardgivare1() {
@@ -568,5 +589,13 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hsaId3.setExtension("ifv-testdata");
         vg3.setVardgivarId(hsaId3);
         vg3.setVardgivarnamn("IFV Testdata Vårdgivare");
+    }
+
+    private void initFakedVardgivare4() {
+        vg4 = new Vardgivare();
+        HsaId hsaId = new HsaId();
+        hsaId.setExtension("no-user-vg");
+        vg4.setVardgivarId(hsaId);
+        vg4.setVardgivarnamn("Vårdgivare extra");
     }
 }

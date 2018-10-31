@@ -18,10 +18,9 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import se.riv.informationsecurity.authorization.consent.v2.ActionType;
-import se.riv.informationsecurity.authorization.consent.v2.ActorType;
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -31,8 +30,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDateTime;
-import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import se.riv.informationsecurity.authorization.consent.v2.ActionType;
+import se.riv.informationsecurity.authorization.consent.v2.ActorType;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
@@ -43,12 +45,12 @@ public class SamtyckestjanstStubRestApi {
     private SamtyckestjanstStubStore store;
 
     @PUT
-    @Path("/consent")
+    @Path("/consent/{personId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addConsentForPerson(
+            @PathParam("personId") String personId,
             @QueryParam("vgHsaId") String vgHsaId,
             @QueryParam("veHsaId") String veHsaId,
-            @QueryParam("personId") String personId,
             @QueryParam("userId") String userId,
             @QueryParam("from") String from,
             @QueryParam("to") String to) {
@@ -63,10 +65,10 @@ public class SamtyckestjanstStubRestApi {
         actionType.setRequestedBy(actorType);
 
         String assertionId = UUID.randomUUID().toString();
-        ConsentData consentData = new ConsentData.Builder(vgHsaId, veHsaId, personId, assertionId, actionType)
+        ConsentData consentData = new ConsentData.Builder(assertionId, vgHsaId, veHsaId, personId, actionType)
                 .userHsaId(userId)
-                .consentFrom(LocalDateTime.parse(from))
-                .consentTo(LocalDateTime.parse(to))
+                .consentFrom(LocalDate.parse(from).atStartOfDay())
+                .consentTo(LocalDate.parse(to).atStartOfDay())
                 .build();
 
         store.add(consentData);

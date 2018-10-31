@@ -19,39 +19,59 @@
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Created by marced on 2018-10-02.
  */
 public class SjfMetaData {
 
-    private List<String> vardenheterInomVGMedSparr = new ArrayList<>();
-    private List<String> andraVardgivareMedSparr = new ArrayList<>();
+    private Collection<String> vardenheterInomVGMedSparr = new HashSet<>();
+    private Collection<String> andraVardgivareMedSparr = new HashSet<>();
+    private Map<String, String> samtyckeFinns = new HashMap<>();
+    private Collection<SjfSamtyckeMetaData> samtyckeSaknas = new ArrayList<>();
 
     public SjfMetaData() {
 
     }
 
-    public SjfMetaData(List<String> vardenheterInomVGMedSparr, List<String> andraVardgivareMedSparr) {
+    public SjfMetaData(Collection<String> vardenheterInomVGMedSparr, Collection<String> andraVardgivareMedSparr) {
         this.vardenheterInomVGMedSparr = vardenheterInomVGMedSparr;
         this.andraVardgivareMedSparr = andraVardgivareMedSparr;
     }
 
-    public List<String> getVardenheterInomVGMedSparr() {
+    public Collection<String> getVardenheterInomVGMedSparr() {
         return vardenheterInomVGMedSparr;
     }
 
-    public void setVardenheterInomVGMedSparr(List<String> vardenheterInomVGMedSparr) {
+    public void setVardenheterInomVGMedSparr(Collection<String> vardenheterInomVGMedSparr) {
         this.vardenheterInomVGMedSparr = vardenheterInomVGMedSparr;
     }
 
-    public List<String> getAndraVardgivareMedSparr() {
+    public Collection<String> getAndraVardgivareMedSparr() {
         return andraVardgivareMedSparr;
     }
 
-    public void setAndraVardgivareMedSparr(List<String> andraVardgivareMedSparr) {
+    public void setAndraVardgivareMedSparr(Collection<String> andraVardgivareMedSparr) {
         this.andraVardgivareMedSparr = andraVardgivareMedSparr;
     }
 
+    public Map<String, String> getSamtyckeFinns() {
+        return samtyckeFinns;
+    }
+
+    public void setSamtyckeFinns(Map<String, String> samtyckeFinns) {
+        this.samtyckeFinns = samtyckeFinns;
+    }
+
+    public Collection<SjfSamtyckeMetaData> getSamtyckeSaknas() {
+        return samtyckeSaknas;
+    }
+
+    public void setSamtyckeSaknas(Collection<SjfSamtyckeMetaData> samtyckeSaknas) {
+        this.samtyckeSaknas = samtyckeSaknas;
+    }
 }

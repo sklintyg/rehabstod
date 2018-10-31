@@ -18,17 +18,18 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import se.inera.intyg.infra.integration.pu.stub.StubResidentStore;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -63,9 +64,10 @@ public class SjukfallIntygDataGeneratorTest {
 
         final int numberOfPatients = 10;
         final int intygPerPatient = 4;
-        final int intygTolvan = intygPerPatient + 2; // Tolvan är gammal och ges då två extra intyg
+        final int intygPerPatientOtherCareUnit = intygPerPatient; // Vi skapar upp intyg på andra vårdgivare för sjf
+        final int intygTolvan = intygPerPatient + intygPerPatientOtherCareUnit + 4; // Tolvan är gammal och ges då fyra extra intyg
         List<IntygsData> intygsData = testee.generateIntygsData(numberOfPatients, intygPerPatient);
-        assertEquals(numberOfPatients * intygPerPatient + intygTolvan, intygsData.size());
+        assertEquals(numberOfPatients * (intygPerPatient + intygPerPatientOtherCareUnit) + intygTolvan, intygsData.size());
         assertEquals("19791110-9291", intygsData.get(0).getPatient().getPersonId().getExtension());
         assertEquals("M16.0", intygsData.get(0).getDiagnoskod());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum());

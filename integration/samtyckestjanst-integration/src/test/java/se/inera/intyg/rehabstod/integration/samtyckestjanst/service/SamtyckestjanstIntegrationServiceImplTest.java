@@ -19,6 +19,11 @@
 
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +32,7 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.client.SamtyckestjanstClientService;
@@ -35,12 +41,9 @@ import se.riv.informationsecurity.authorization.consent.v2.CheckResultType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultType;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 
@@ -101,16 +104,15 @@ public class SamtyckestjanstIntegrationServiceImplTest {
     @Test
     public void testUpdateConsent() {
         Map<String, IntygAccessControlMetaData> map = createMetaDataMap();
-                testee.updateConsentStatus("vgHsaId-2", "veHsaId-2", true, map);
+                testee.updateConsentStatus(VG_HSAID_2, VE_HSAID_2, true, map);
 
         for (IntygAccessControlMetaData metaData : map.values()) {
             IntygData data = metaData.getIntygData();
-            if (data.getVardgivareId().equals("vgHsaId-2") && data.getVardenhetId().equals("veHsaId-2")) {
-                assertEquals(true, metaData.isHarSamtycke());
+            if (data.getVardgivareId().equals(VG_HSAID_2) && data.getVardenhetId().equals(VE_HSAID_2)) {
+                assertTrue(metaData.isHarSamtycke());
             } else {
-                assertEquals(false, metaData.isHarSamtycke());
+                assertFalse(metaData.isHarSamtycke());
             }
-
         }
     }
 
@@ -120,15 +122,24 @@ public class SamtyckestjanstIntegrationServiceImplTest {
         map.put("B", createMetaData("B","vgHsaId-1", "veHsaId-1"));
         map.put("C", createMetaData("C","vgHsaId-1", "veHsaId-2"));
         map.put("D", createMetaData("D","vgHsaId-1", "veHsaId-3"));
-        map.put("E", createMetaData("E","vgHsaId-2", "veHsaId-1"));
-        map.put("F", createMetaData("F","vgHsaId-2", "veHsaId-2"));
-        map.put("G", createMetaData("G","vgHsaId-2", "veHsaId-2"));
-        map.put("H", createMetaData("H","vgHsaId-2", "veHsaId-2"));
+        map.put("E", createMetaData("E",VG_HSAID_2, "veHsaId-1"));
+        map.put("F", createMetaData("F",VG_HSAID_2, VE_HSAID_2));
+        map.put("G", createMetaData("G",VG_HSAID_2, VE_HSAID_2));
+        map.put("H", createMetaData("H",VG_HSAID_2, VE_HSAID_2));
+        map.put("I", createMetaData("I","vgHsaId-3", "veHsaId-3", true, true));
+        map.put("J", createMetaData("I","vgHsaId-3", "veHsaId-3", true, false));
         return map;
     }
 
     private IntygAccessControlMetaData createMetaData(String intygId, String vgHsaId, String veHsaId) {
-        return new IntygAccessControlMetaData(createIntygData(intygId, vgHsaId, veHsaId), false);
+        return createMetaData(intygId, vgHsaId, veHsaId, false, true);
+    }
+
+    private IntygAccessControlMetaData createMetaData(String intygId, String vgHsaId, String veHsaId, boolean inomVardgivare, boolean aktivtSjukfall) {
+        IntygAccessControlMetaData intygAccessControlMetaData = new IntygAccessControlMetaData(createIntygData(intygId, vgHsaId, veHsaId), inomVardgivare);
+        intygAccessControlMetaData.setBidrarTillAktivtSjukfall(aktivtSjukfall);
+
+        return intygAccessControlMetaData;
     }
 
     private IntygData createIntygData(String intygId, String vgHsaId, String veHsaId) {
