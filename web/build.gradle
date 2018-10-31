@@ -144,7 +144,4 @@ dependencies {
     testCompile "org.springframework:spring-test:${springContextVersion}"
     testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "javax.jms:jms-api:${javaxJmsVersion}"
-
-    gretty "org.apache.activemq:activemq-client:${activemqVersion}"
-    gretty "org.apache.activemq:activemq-broker:${activemqVersion}"
 }
