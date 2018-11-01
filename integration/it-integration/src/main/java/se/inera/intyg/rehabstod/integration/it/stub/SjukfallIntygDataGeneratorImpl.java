@@ -70,7 +70,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     public static final String VE_TSTNMT2321000156_105Q = "TSTNMT2321000156-105Q";
     public static final String VE_CENTRUM_VAST = "centrum-vast";
     public static final String VE_2A = "IFV1239877878-103H";
-    public static final String VE_2B = "exterenenheter";
+    public static final String VE_2B = "extern-enhet";
     public static final String UE_AKUTEN = "akuten";
     public static final String UE_DIALYS = "dialys";
 

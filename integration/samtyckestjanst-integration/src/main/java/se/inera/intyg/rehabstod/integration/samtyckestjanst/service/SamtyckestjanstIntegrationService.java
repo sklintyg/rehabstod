@@ -18,11 +18,10 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.service;
 
+import java.time.LocalDateTime;
+
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
-
-import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
@@ -37,12 +36,15 @@ public interface SamtyckestjanstIntegrationService {
      *            - The id of the current patient
      * @param userHsaId
      *            - The hsaId of the current user
-     * @param intygAccessMetaData
-     *            - Map containing access control metadata
+     * @param currentVardgivarHsaId
+     *           - The hsaId of the current vardgivare
+     * @param currentEnhetsId
+     *           - The hsaId of the current enehet
      */
-    void checkForConsent(String patientId,
-                         String userHsaId,
-                         Map<String, IntygAccessControlMetaData> intygAccessMetaData);
+    boolean checkForConsent(String patientId,
+                              String userHsaId,
+                              String currentVardgivarHsaId,
+                              String currentEnhetsId);
 
     /**
      * Service that registers an extended consent for a particular patient, and thus, providing direct

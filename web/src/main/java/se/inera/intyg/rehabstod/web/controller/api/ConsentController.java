@@ -73,10 +73,8 @@ public class ConsentController {
         // CHECKSTYLE:ON MagicNumber
 
         try {
-            request.getGiveConsentToUnits().forEach((vgId, value) -> value.forEach(veId -> {
-                consentService.giveConsent(vgId, veId, request.getPatientId(), request.isOnlyCurrentUser(),
-                        null, consentFrom, consentTo, user);
-            }));
+            consentService.giveConsent(request.getPatientId(), request.isOnlyCurrentUser(), null,
+                    consentFrom, consentTo, user);
 
             response = createResponse(RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId());
 

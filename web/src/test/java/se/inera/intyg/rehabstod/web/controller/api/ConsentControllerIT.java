@@ -18,11 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Test;
 
 import com.google.common.base.Strings;
@@ -53,12 +48,8 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
     public void testRegisteredExtendedConsent() {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
-        Map<String, List<String>> vgs = new HashMap<>();
-        vgs.put("vg1", Arrays.asList("enhet1", "enhet2"));
-
         RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
         request.setPatientId(PNR_TOLVAN_TOLVANSSON);
-        request.setGiveConsentToUnits(vgs);
         request.setDays(30);
 
         Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)
@@ -78,11 +69,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
     public void testRegisteredExtendedConsentWithNoPatientId() {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
-        Map<String, List<String>> vgs = new HashMap<>();
-        vgs.put("vg1", Arrays.asList("enhet1", "enhet2"));
-
         RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
-        request.setGiveConsentToUnits(vgs);
         request.setDays(30);
 
         Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)

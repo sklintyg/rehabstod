@@ -27,14 +27,10 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
  */
 public interface ConsentService {
 
-    // CHECKSTYLE:OFF ParameterNumber
-    LocalDateTime giveConsent(String vgHsaId,
-                        String veHsaId,
-                        String patientId,
+    LocalDateTime giveConsent(String patientId,
                         boolean onlyCurrentUser,
                         String representedBy,
                         LocalDateTime consentFrom,
                         LocalDateTime consentTo,
                         RehabstodUser user);
-    // CHECKSTYLE:ON ParameterNumber
 }

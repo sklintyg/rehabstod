@@ -28,8 +28,8 @@ public class IntygAccessControlMetaData {
     private IntygData intygData;
     private boolean inomVardgivare;
     private boolean sparr;
-    private boolean harSamtycke;
     private boolean kraverSamtycke;
+    private boolean includeBasedOnSamtycke;
     private boolean bidrarTillAktivtSjukfall;
 
     public IntygAccessControlMetaData() {
@@ -65,14 +65,6 @@ public class IntygAccessControlMetaData {
         this.sparr = sparr;
     }
 
-    public boolean isHarSamtycke() {
-        return harSamtycke;
-    }
-
-    public void setHarSamtycke(boolean harSamtycke) {
-        this.harSamtycke = harSamtycke;
-    }
-
     public boolean isKraverSamtycke() {
         return kraverSamtycke;
     }
@@ -87,6 +79,14 @@ public class IntygAccessControlMetaData {
 
     public void setBidrarTillAktivtSjukfall(boolean bidrarTillAktivtSjukfall) {
         this.bidrarTillAktivtSjukfall = bidrarTillAktivtSjukfall;
+    }
+
+    public boolean isIncludeBasedOnSamtycke() {
+        return includeBasedOnSamtycke;
+    }
+
+    public void setIncludeBasedOnSamtycke(boolean includeBasedOnSamtycke) {
+        this.includeBasedOnSamtycke = includeBasedOnSamtycke;
     }
 
     // Convenience methods

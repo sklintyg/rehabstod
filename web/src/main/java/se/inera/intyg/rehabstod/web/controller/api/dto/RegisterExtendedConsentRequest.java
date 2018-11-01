@@ -18,9 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author Magnus Ekstrand on 2018-10-19.
  */
@@ -28,7 +25,6 @@ public class RegisterExtendedConsentRequest {
 
     private String patientId;
     private boolean onlyCurrentUser;
-    private Map<String, List<String>> giveConsentToUnits;
     private int days;
 
     public RegisterExtendedConsentRequest() {
@@ -48,14 +44,6 @@ public class RegisterExtendedConsentRequest {
 
     public void setOnlyCurrentUser(boolean onlyCurrentUser) {
         this.onlyCurrentUser = onlyCurrentUser;
-    }
-
-    public Map<String, List<String>> getGiveConsentToUnits() {
-        return giveConsentToUnits;
-    }
-
-    public void setGiveConsentToUnits(Map<String, List<String>> giveConsentToUnits) {
-        this.giveConsentToUnits = giveConsentToUnits;
     }
 
     public int getDays() {

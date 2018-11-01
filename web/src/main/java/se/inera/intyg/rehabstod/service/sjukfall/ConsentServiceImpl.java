@@ -37,15 +37,16 @@ public class ConsentServiceImpl implements ConsentService {
     @Autowired
     private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
-    // CHECKSTYLE:OFF ParameterNumber
     @Override
-    public LocalDateTime giveConsent(String vgHsaId, String veHsaId, String patientId, boolean onlyCurrentUser, String representedBy,
+    public LocalDateTime giveConsent(String patientId, boolean onlyCurrentUser, String representedBy,
                                      LocalDateTime consentFrom, LocalDateTime consentTo, RehabstodUser user) {
 
         LocalDateTime registrationDate = LocalDateTime.now();
         ActionType registrationAction = createActionType(user, registrationDate);
 
         String userHsaId = onlyCurrentUser ? user.getHsaId() : null;
+        String vgHsaId = user.getValdVardgivare().getId();
+        String veHsaId = user.getValdVardenhet().getId();
 
         samtyckestjanstIntegrationService.registerConsent(vgHsaId, veHsaId,
                 patientId, userHsaId, representedBy,
@@ -53,7 +54,6 @@ public class ConsentServiceImpl implements ConsentService {
 
         return registrationDate;
     }
-    // CHECKSTYLE:ON ParameterNumber
 
 
     private ActionType createActionType(RehabstodUser user, LocalDateTime registrationDate) {

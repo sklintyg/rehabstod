@@ -20,8 +20,10 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -45,7 +47,6 @@ import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.FilteredSjukFallByPatientResult;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfSamtyckeFinnsMetaData;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfSamtyckeMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
@@ -253,14 +254,14 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         // Make a call to the check for consent service
         // Decorate intygAccessMetaData with the consent info
-        samtyckestjanstIntegrationService.checkForConsent(patientId, lakareId, intygAccessMetaData);
+        boolean haveConsent = samtyckestjanstIntegrationService.checkForConsent(patientId, lakareId, currentVardgivarHsaId, enhetsId);
 
         // skapa listorna med vilka vårdgivare som hade intyg SKULLE funnits i aktivt sjukfall men som inte kommer med
         // pga spärr inre/yttrespärr.
-        SjfMetaData sjfMetaData = createSjfMetaData(intygAccessMetaData);
+        SjfMetaData sjfMetaData = createSjfMetaData(intygAccessMetaData, haveConsent);
 
         // Final run, where all intyg not cleared (sparr/samtycke) to be included have been removed
-        sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(filterByAcessMetaData(data, intygAccessMetaData), parameters);
+        sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(filterByAcessMetaData(data, intygAccessMetaData, haveConsent), parameters);
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
         List<SjukfallPatient> rehabstodSjukfall = sjukfallList.stream().map(o -> sjukfallEngineMapper.map(o)).collect(Collectors.toList());
@@ -268,16 +269,16 @@ public class SjukfallServiceImpl implements SjukfallService {
         return new FilteredSjukFallByPatientResult(rehabstodSjukfall, sjfMetaData);
     }
 
-    private SjfMetaData createSjfMetaData(Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
+    private SjfMetaData createSjfMetaData(Map<String, IntygAccessControlMetaData> intygAccessMetaData, boolean haveConsent) {
         SjfMetaData metadata = new SjfMetaData();
 
-        Map<String, SjfSamtyckeMetaData> kraverSamtycke = new HashMap<>();
+        Set<String> kraverSamtycke = new HashSet<>();
         Map<String, SjfSamtyckeFinnsMetaData> harSamtycke = new HashMap<>();
 
         intygAccessMetaData.forEach((intygsId, iacm) -> {
             if (iacm.isBidrarTillAktivtSjukfall()) {
                 String vardgivareId = iacm.getIntygData().getVardgivareId();
-                String vardgivareNamn = iacm.getIntygData().getVardenhetNamn();
+                String vardgivareNamn = iacm.getIntygData().getVardgivareNamn();
 
                 if (iacm.inreSparr()) {
                     metadata.getVardenheterInomVGMedSparr().add(vardgivareNamn);
@@ -287,7 +288,7 @@ public class SjukfallServiceImpl implements SjukfallService {
                 }
 
                 if (iacm.isKraverSamtycke()) {
-                    if (iacm.isHarSamtycke()) {
+                    if (haveConsent) {
                         if (!harSamtycke.containsKey(vardgivareId)) {
                             SjfSamtyckeFinnsMetaData sjfSamtyckeFinnsMetaData = new SjfSamtyckeFinnsMetaData();
                             sjfSamtyckeFinnsMetaData.setVardgivareId(vardgivareId);
@@ -296,22 +297,13 @@ public class SjukfallServiceImpl implements SjukfallService {
                             harSamtycke.put(vardgivareId, sjfSamtyckeFinnsMetaData);
                         }
                     } else {
-                        SjfSamtyckeMetaData sjfSamtyckeMetaData;
-
-                        if (kraverSamtycke.containsKey(vardgivareId)) {
-                            sjfSamtyckeMetaData = kraverSamtycke.get(vardgivareId);
-                        } else {
-                            sjfSamtyckeMetaData = new SjfSamtyckeMetaData(vardgivareId, vardgivareNamn);
-                            kraverSamtycke.put(vardgivareId, sjfSamtyckeMetaData);
-                        }
-
-                        sjfSamtyckeMetaData.getUnits().add(iacm.getIntygData().getVardenhetId());
+                        kraverSamtycke.add(vardgivareNamn);
                     }
                 }
             }
         });
 
-        metadata.setSamtyckeSaknas(kraverSamtycke.values());
+        metadata.setSamtyckeSaknas(kraverSamtycke);
         metadata.setSamtyckeFinns(harSamtycke.values());
 
         return metadata;
@@ -330,14 +322,15 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     }
 
-    private List<IntygData> filterByAcessMetaData(List<IntygData> data, Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
+    private List<IntygData> filterByAcessMetaData(List<IntygData> data, Map<String, IntygAccessControlMetaData> intygAccessMetaData,
+                                                  boolean haveConsent) {
         return data.stream()
-                .filter(intygData -> shouldInclude(intygAccessMetaData.get(intygData.getIntygId())))
+                .filter(intygData -> shouldInclude(intygAccessMetaData.get(intygData.getIntygId()), haveConsent))
                 //.map(intygData -> clearDataByAccessMetaData(intygData, intygAccessMetaData.get(intygData.getIntygId())))
                 .collect(Collectors.toList());
     }
 
-    private boolean shouldInclude(IntygAccessControlMetaData intygAccessControlMetaData) {
+    private boolean shouldInclude(IntygAccessControlMetaData intygAccessControlMetaData, boolean haveConsent) {
         // 1. Får inte har spärr
         if (intygAccessControlMetaData.isSparr()) {
             return false;
@@ -348,12 +341,12 @@ public class SjukfallServiceImpl implements SjukfallService {
             return false;
         }
 
-        // 2. Om Samtycke krävs - måste också samtycke vara givet
-        if (intygAccessControlMetaData.isKraverSamtycke() && !intygAccessControlMetaData.isHarSamtycke()) {
+        // 3. Om Samtycke krävs - måste också samtycke vara givet
+        if (intygAccessControlMetaData.isKraverSamtycke() && !haveConsent) {
             return false;
         }
 
-        // 3. Om samtycke finns måste aktivt val för att ta med i sjufakll gjorts
+        // 4. Om samtycke finns måste aktivt val för att ta med i sjufakll gjorts
         //if (intygAccessControlMetaData.isKraverSamtycke() && intygAccessControlMetaData.isHarSamtycke()
         // && !intygAccessControlMetaData.isIncludeBasedOnSamtycke()) {
         //    return false;

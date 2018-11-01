@@ -19,9 +19,6 @@
 
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.junit.Before;
@@ -33,15 +30,12 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.client.SamtyckestjanstClientService;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
 import se.riv.informationsecurity.authorization.consent.v2.CheckResultType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultType;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
@@ -80,74 +74,20 @@ public class SamtyckestjanstIntegrationServiceImplTest {
     }
 
     @Test
+    public void testCheckForConsent_missing() {
+        String currentVgHsaId = "vgHsaId-3";
+        String currentVeHsaId = "veHsaId-3";
+
+        boolean haveConsent = testee.checkForConsent(PATIENT_ID, USER_HSA_ID, currentVgHsaId, currentVeHsaId);
+
+        assertFalse(haveConsent);
+    }
+
+    @Test
     public void testCheckForConsent() {
-        Map<String, IntygAccessControlMetaData> metaDataMap = createMetaDataMap();
+        boolean haveConsent = testee.checkForConsent(PATIENT_ID, USER_HSA_ID, VG_HSAID_2, VE_HSAID_2);
 
-        testee.checkForConsent(PATIENT_ID, USER_HSA_ID, metaDataMap);
-
-        for (IntygAccessControlMetaData metaData : metaDataMap.values()) {
-            IntygData data = metaData.getIntygData();
-            if (data.getVardgivareId().equals(VG_HSAID_2) && data.getVardenhetId().equals(VE_HSAID_2)) {
-                assertEquals(true, metaData.isHarSamtycke());
-            } else {
-                assertEquals(false, metaData.isHarSamtycke());
-            }
-        }
-    }
-
-    @Test
-    public void testDistinctList() {
-        List<IntygAccessControlMetaData> list = testee.getDistinctMetaDataList(createMetaDataMap());
-        assertEquals(5, list.size());
-    }
-
-    @Test
-    public void testUpdateConsent() {
-        Map<String, IntygAccessControlMetaData> map = createMetaDataMap();
-                testee.updateConsentStatus(VG_HSAID_2, VE_HSAID_2, true, map);
-
-        for (IntygAccessControlMetaData metaData : map.values()) {
-            IntygData data = metaData.getIntygData();
-            if (data.getVardgivareId().equals(VG_HSAID_2) && data.getVardenhetId().equals(VE_HSAID_2)) {
-                assertTrue(metaData.isHarSamtycke());
-            } else {
-                assertFalse(metaData.isHarSamtycke());
-            }
-        }
-    }
-
-    private Map<String,IntygAccessControlMetaData> createMetaDataMap() {
-        Map<String, IntygAccessControlMetaData> map = new HashMap<>();
-        map.put("A", createMetaData("A","vgHsaId-1", "veHsaId-1"));
-        map.put("B", createMetaData("B","vgHsaId-1", "veHsaId-1"));
-        map.put("C", createMetaData("C","vgHsaId-1", "veHsaId-2"));
-        map.put("D", createMetaData("D","vgHsaId-1", "veHsaId-3"));
-        map.put("E", createMetaData("E",VG_HSAID_2, "veHsaId-1"));
-        map.put("F", createMetaData("F",VG_HSAID_2, VE_HSAID_2));
-        map.put("G", createMetaData("G",VG_HSAID_2, VE_HSAID_2));
-        map.put("H", createMetaData("H",VG_HSAID_2, VE_HSAID_2));
-        map.put("I", createMetaData("I","vgHsaId-3", "veHsaId-3", true, true));
-        map.put("J", createMetaData("I","vgHsaId-3", "veHsaId-3", true, false));
-        return map;
-    }
-
-    private IntygAccessControlMetaData createMetaData(String intygId, String vgHsaId, String veHsaId) {
-        return createMetaData(intygId, vgHsaId, veHsaId, false, true);
-    }
-
-    private IntygAccessControlMetaData createMetaData(String intygId, String vgHsaId, String veHsaId, boolean inomVardgivare, boolean aktivtSjukfall) {
-        IntygAccessControlMetaData intygAccessControlMetaData = new IntygAccessControlMetaData(createIntygData(intygId, vgHsaId, veHsaId), inomVardgivare);
-        intygAccessControlMetaData.setBidrarTillAktivtSjukfall(aktivtSjukfall);
-
-        return intygAccessControlMetaData;
-    }
-
-    private IntygData createIntygData(String intygId, String vgHsaId, String veHsaId) {
-        IntygData data = new IntygData();
-        data.setIntygId(intygId);
-        data.setVardgivareId(vgHsaId);
-        data.setVardenhetId(veHsaId);
-        return data;
+        assertTrue(haveConsent);
     }
 
     private CheckConsentResponseType createCheckConsentResponseType(boolean hasConsent) {
