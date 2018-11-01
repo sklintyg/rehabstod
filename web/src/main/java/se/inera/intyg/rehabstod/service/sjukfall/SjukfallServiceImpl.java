@@ -100,10 +100,8 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Autowired
     private SparrtjanstIntegrationService sparrtjanstIntegrationService;
 
-     @Autowired
-     private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
-
-    // api
+    @Autowired
+    private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
     @Override
     @PrometheusTimeMethod
@@ -331,7 +329,6 @@ public class SjukfallServiceImpl implements SjukfallService {
                                                   boolean haveConsent) {
         return data.stream()
                 .filter(intygData -> shouldInclude(intygAccessMetaData.get(intygData.getIntygId()), haveConsent))
-                //.map(intygData -> clearDataByAccessMetaData(intygData, intygAccessMetaData.get(intygData.getIntygId())))
                 .collect(Collectors.toList());
     }
 
@@ -357,18 +354,6 @@ public class SjukfallServiceImpl implements SjukfallService {
         }
 
         return true;
-    }
-
-    private IntygData clearDataByAccessMetaData(IntygData intyg, IntygAccessControlMetaData intygAccessControlMetaData) {
-        if (!intygAccessControlMetaData.isInomVardgivare()) {
-            intyg.setDiagnosKod(null);
-            intyg.setBiDiagnoser(null);
-            intyg.setLakareId(null);
-            intyg.setLakareNamn(null);
-            intyg.setSysselsattning(null);
-        }
-
-        return intyg;
     }
 
     private void clearDataByAccessMetaData(SjukfallPatient sjukfallPatient, String currentVardgivarHsaId) {

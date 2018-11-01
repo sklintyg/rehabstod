@@ -15,7 +15,18 @@
           },
           "samtyckeFinns": {
             "minItems": 0,
-            "type": "array"
+            "type": "array",
+            "items": {
+              "vardgivareId": {
+                "type": "string"
+              },
+              "vardgivareNamn": {
+                "type": "string"
+              },
+              "includedInSjukfall": {
+                "type": "boolean"
+              }
+            }
           },
           "samtyckeSaknas": {
             "minItems": 0,
