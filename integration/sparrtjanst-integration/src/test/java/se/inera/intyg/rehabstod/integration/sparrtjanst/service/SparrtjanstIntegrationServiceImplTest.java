@@ -18,10 +18,6 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.service;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +40,10 @@ import se.riv.informationsecurity.authorization.blocking.v4.CheckResultType;
 import se.riv.informationsecurity.authorization.blocking.v4.CheckStatusType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultCodeType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultType;
+
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by marced on 2018-10-12.
@@ -76,8 +76,8 @@ public class SparrtjanstIntegrationServiceImplTest {
         IntygData intygData2 = new IntygData();
         intygData2.setIntygId(INTYGS_ID_2);
 
-        aclList.put(INTYGS_ID_1, new IntygAccessControlMetaData(intygData1, false));
-        aclList.put(INTYGS_ID_2, new IntygAccessControlMetaData(intygData2, false));
+        aclList.put(INTYGS_ID_1, new IntygAccessControlMetaData(intygData1, false, false));
+        aclList.put(INTYGS_ID_2, new IntygAccessControlMetaData(intygData2, false, false));
 
         intygList.add(intygData1);
         intygList.add(intygData2);

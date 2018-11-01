@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.util.Collection;
+
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
@@ -43,7 +45,7 @@ public interface SjukfallService {
                                     Urval urval, IntygParametrar parameters);
 
     SjukfallPatientResponse getByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId, String patientId,
-                                         Urval urval, IntygParametrar parameters);
+                                         Urval urval, IntygParametrar parameters, Collection<String> vgHsaIds);
 
     SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId,
                                Urval urval, IntygParametrar parameters);

@@ -18,6 +18,17 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
@@ -48,23 +60,13 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallForPatientRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -113,13 +115,14 @@ public class SjukfallController {
     }
 
     @RequestMapping(value = "/patient", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SjukfallPatientResponse> getSjukfallForPatient(@RequestBody GetSjukfallRequest request) {
+    public ResponseEntity<SjukfallPatientResponse> getSjukfallForPatient(@RequestBody GetSjukfallForPatientRequest request) {
 
         // Get user from session
         RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
 
         // Fetch sjukfall
-        SjukfallPatientResponse response = getSjukfallForPatient(user, request.getPatientId(), request.getAktivtDatum());
+        SjukfallPatientResponse response = getSjukfallForPatient(user, request.getPatientId(), request.getAktivtDatum(),
+                request.getVgHsaIds());
         List<SjukfallPatient> sjukfall = response.getSjukfallList();
 
         // PDL-logging based on which sjukfall that are about to be displayed to user.
@@ -263,7 +266,7 @@ public class SjukfallController {
         return sjukfallService.getByUnit(enhetsId, mottagningsId, lakarId, urval, parameters);
     }
 
-    private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, String patientId, LocalDate date) {
+    private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, String patientId, LocalDate date, List<String> vgHsaId) {
         String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         String currentVardgivarHsaId = user.getValdVardgivare().getId();
         String lakareId = user.getHsaId();
@@ -273,7 +276,7 @@ public class SjukfallController {
                 ControllerUtil.getMaxGlapp(user), ControllerUtil.getMaxDagarSedanSjukfallAvslut(user), date);
 
         LOG.debug("Calling the 'sjukfall' service to get a list of detailed 'sjukfall' for one patient.");
-        return sjukfallService.getByPatient(currentVardgivarHsaId, enhetsId, lakareId, patientId, urval, parameters);
+        return sjukfallService.getByPatient(currentVardgivarHsaId, enhetsId, lakareId, patientId, urval, parameters, vgHsaId);
     }
 
     private void logSjukfallData(RehabstodUser user, List<SjukfallEnhet> sjukfallList,

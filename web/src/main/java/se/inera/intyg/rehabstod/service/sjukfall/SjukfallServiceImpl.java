@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -133,10 +134,11 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Override
     @PrometheusTimeMethod
     public SjukfallPatientResponse getByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId,
-                                                String patientId, Urval urval, IntygParametrar parameters) {
+                                                String patientId, Urval urval, IntygParametrar parameters,
+                                                Collection<String> vgHsaIds) {
 
         FilteredSjukFallByPatientResult result =
-                getFilteredSjukfallByPatient(currentVardgivarHsaId, enhetsId, lakareId, patientId, urval, parameters);
+                getFilteredSjukfallByPatient(currentVardgivarHsaId, enhetsId, lakareId, patientId, urval, parameters, vgHsaIds);
 
         final List<SjukfallPatient> rehabstodSjukfall = result.getRehabstodSjukfall();
 
@@ -220,7 +222,8 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     private FilteredSjukFallByPatientResult getFilteredSjukfallByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId,
-                                                                         String patientId, Urval urval, IntygParametrar parameters) {
+                                                                         String patientId, Urval urval, IntygParametrar parameters,
+                                                                         Collection<String> vgHsaIds) {
 
         Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardgivarHsaId), "currentVardgivarHsaId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(enhetsId), "enhetsId may not be null or empty");
@@ -241,7 +244,8 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         // Create initial map linked to each intyg by intygsId
         data.forEach(intygData -> intygAccessMetaData.put(intygData.getIntygId(),
-                new IntygAccessControlMetaData(intygData, currentVardgivarHsaId.equals(intygData.getVardgivareId()))));
+                new IntygAccessControlMetaData(intygData, currentVardgivarHsaId.equals(intygData.getVardgivareId()),
+                        vgHsaIds.contains(intygData.getVardgivareId()))));
 
         // Decorate intygAccessMetaData with "spärr" info
         sparrtjanstIntegrationService.decorateWithBlockStatus(currentVardgivarHsaId, enhetsId, lakareId, patientId, intygAccessMetaData,
@@ -293,6 +297,7 @@ public class SjukfallServiceImpl implements SjukfallService {
                             SjfSamtyckeFinnsMetaData sjfSamtyckeFinnsMetaData = new SjfSamtyckeFinnsMetaData();
                             sjfSamtyckeFinnsMetaData.setVardgivareId(vardgivareId);
                             sjfSamtyckeFinnsMetaData.setVardgivareNamn(vardgivareNamn);
+                            sjfSamtyckeFinnsMetaData.setIncludedInSjukfall(iacm.isIncludeBasedOnSamtycke());
 
                             harSamtycke.put(vardgivareId, sjfSamtyckeFinnsMetaData);
                         }
@@ -347,10 +352,9 @@ public class SjukfallServiceImpl implements SjukfallService {
         }
 
         // 4. Om samtycke finns måste aktivt val för att ta med i sjufakll gjorts
-        //if (intygAccessControlMetaData.isKraverSamtycke() && intygAccessControlMetaData.isHarSamtycke()
-        // && !intygAccessControlMetaData.isIncludeBasedOnSamtycke()) {
-        //    return false;
-        //}
+        if (intygAccessControlMetaData.isKraverSamtycke() && haveConsent && !intygAccessControlMetaData.isIncludeBasedOnSamtycke()) {
+            return false;
+        }
 
         return true;
     }

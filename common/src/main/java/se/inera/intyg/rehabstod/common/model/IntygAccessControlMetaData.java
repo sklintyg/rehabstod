@@ -35,10 +35,11 @@ public class IntygAccessControlMetaData {
     public IntygAccessControlMetaData() {
     }
 
-    public IntygAccessControlMetaData(IntygData intygData, boolean inomVardgivare) {
+    public IntygAccessControlMetaData(IntygData intygData, boolean inomVardgivare, boolean includeBasedOnSamtycke) {
         this.intygData = intygData;
         this.inomVardgivare = inomVardgivare;
         this.kraverSamtycke = !inomVardgivare;
+        this.includeBasedOnSamtycke = includeBasedOnSamtycke;
     }
 
     public IntygData getIntygData() {
