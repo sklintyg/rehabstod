@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -35,7 +34,6 @@ public class RegisterExtendedConsentResponse implements Serializable {
     private String responseMessage;
 
     private String registeredBy;
-    private LocalDate registrationDate;
 
     public RegisterExtendedConsentResponse() {
     }
@@ -52,20 +50,12 @@ public class RegisterExtendedConsentResponse implements Serializable {
         return registeredBy;
     }
 
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
-
     public void setResponseCode(ResponseCode responseCode) {
         this.responseCode = responseCode;
     }
 
     public void setRegisteredBy(String registeredBy) {
         this.registeredBy = registeredBy;
-    }
-
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
     }
 
     public void setResponseMessage(String responseMessage) {
@@ -83,13 +73,12 @@ public class RegisterExtendedConsentResponse implements Serializable {
         RegisterExtendedConsentResponse that = (RegisterExtendedConsentResponse) o;
         return responseCode == that.responseCode
                 && Objects.equals(responseMessage, that.responseMessage)
-                && Objects.equals(registeredBy, that.registeredBy)
-                && Objects.equals(registrationDate, that.registrationDate);
+                && Objects.equals(registeredBy, that.registeredBy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(responseCode, responseMessage, registeredBy, registrationDate);
+        return Objects.hash(responseCode, responseMessage, registeredBy);
     }
 
 }

@@ -18,17 +18,21 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
-import se.inera.intyg.rehabstod.service.Urval;
+import java.time.LocalDateTime;
 
-import java.util.List;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 
 /**
  * @author Magnus Ekstrand on 2018-10-25.
  */
 public interface ConsentService {
 
-    List<IntygData> getIntygDataForPatient(String currentVardgivarHsaId, String enhetsId, String lakareId,
-                                           String patientId, Urval urval, IntygParametrar parameters);
+    LocalDateTime giveConsent(String vgHsaId,
+                        String veHsaId,
+                        String patientId,
+                        boolean onlyCurrentUser,
+                        String representedBy,
+                        LocalDateTime consentFrom,
+                        LocalDateTime consentTo,
+                        RehabstodUser user);
 }

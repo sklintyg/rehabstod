@@ -18,23 +18,18 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.Objects;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Magnus Ekstrand on 2018-10-19.
  */
-public class RegisterExtendedConsentRequest implements Serializable {
-
-    private static final long serialVersionUID = 6854285992002662050L;
+public class RegisterExtendedConsentRequest {
 
     private String patientId;
-    private String userHsaId;
-    private String representedBy;
-
-    private LocalDate consentFrom;
-    private LocalDate consentTo;
+    private boolean onlyCurrentUser;
+    private Map<String, List<String>> giveConsentToUnits;
+    private int days;
 
     public RegisterExtendedConsentRequest() {
     }
@@ -43,60 +38,31 @@ public class RegisterExtendedConsentRequest implements Serializable {
         return patientId;
     }
 
-    public String getUserHsaId() {
-        return userHsaId;
-    }
-
-    public String getRepresentedBy() {
-        return representedBy;
-    }
-
-    public LocalDate getConsentFrom() {
-        return consentFrom;
-    }
-
-    public LocalDate getConsentTo() {
-        return consentTo;
-    }
-
     public void setPatientId(String patientId) {
         this.patientId = patientId;
     }
 
-    public void setUserHsaId(String userHsaId) {
-        this.userHsaId = userHsaId;
+    public boolean isOnlyCurrentUser() {
+        return onlyCurrentUser;
     }
 
-    public void setRepresentedBy(String representedBy) {
-        this.representedBy = representedBy;
+    public void setOnlyCurrentUser(boolean onlyCurrentUser) {
+        this.onlyCurrentUser = onlyCurrentUser;
     }
 
-    public void setConsentFrom(LocalDate consentFrom) {
-        this.consentFrom = consentFrom;
+    public Map<String, List<String>> getGiveConsentToUnits() {
+        return giveConsentToUnits;
     }
 
-    public void setConsentTo(LocalDate consentTo) {
-        this.consentTo = consentTo;
+    public void setGiveConsentToUnits(Map<String, List<String>> giveConsentToUnits) {
+        this.giveConsentToUnits = giveConsentToUnits;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof RegisterExtendedConsentRequest)) {
-            return false;
-        }
-        RegisterExtendedConsentRequest that = (RegisterExtendedConsentRequest) o;
-        return Objects.equals(patientId, that.patientId)
-                && Objects.equals(userHsaId, that.userHsaId)
-                && Objects.equals(representedBy, that.representedBy)
-                && Objects.equals(consentFrom, that.consentFrom)
-                && Objects.equals(consentTo, that.consentTo);
+    public int getDays() {
+        return days;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(patientId, userHsaId, representedBy, consentFrom, consentTo);
+    public void setDays(int days) {
+        this.days = days;
     }
 }

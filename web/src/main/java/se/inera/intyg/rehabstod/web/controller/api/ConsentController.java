@@ -18,49 +18,32 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import com.google.common.annotations.VisibleForTesting;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import se.inera.intyg.infra.sjukfall.dto.IntygData;
-import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
+
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
-import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.ConsentService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
-import se.riv.informationsecurity.authorization.consent.v2.ActionType;
-import se.riv.informationsecurity.authorization.consent.v2.ActorType;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/consent")
 public class ConsentController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ConsentController.class);
 
     @Autowired
     private ConsentService consentService;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
     /**
      * Register a consent for a patient.
@@ -78,81 +61,33 @@ public class ConsentController {
         // Get logged in user
         RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
 
-        LocalDateTime registrationDate = LocalDateTime.now();
-        LocalDateTime consentFrom = request.getConsentFrom() == null ? null : request.getConsentFrom().atStartOfDay();
-        LocalDateTime consentTo = request.getConsentTo() == null ? null : request.getConsentTo().atStartOfDay();
+        LocalDate today = LocalDate.now();
 
-        ActionType registrationAction = createActionType(user, registrationDate);
+        LocalDateTime consentFrom = today.atStartOfDay();
+        LocalDateTime consentTo = today.plusDays(request.getDays()).atTime(23,59,59);
 
         try {
-            // 1. Collect all unique VG and VE
-            String currentVardgivarHsaId = user.getValdVardgivare().getId();
-            String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-            String lakareId = user.getHsaId();
-            Urval urval = user.getUrval();
+            request.getGiveConsentToUnits().forEach((vgId, value) -> value.forEach(veId -> {
+                consentService.giveConsent(vgId, veId, request.getPatientId(), request.isOnlyCurrentUser(),
+                        null, consentFrom, consentTo, user);
+            }));
 
-            IntygParametrar parameters = new IntygParametrar(
-                    ControllerUtil.getMaxGlapp(user), ControllerUtil.getMaxDagarSedanSjukfallAvslut(user), LocalDate.now());
-
-            List<IntygData> intygDataList =
-                    consentService.getIntygDataForPatient(currentVardgivarHsaId, enhetsId, lakareId,
-                            request.getPatientId(), urval, parameters);
-
-            Map<String, Set<String>> unique = getUniqueVardgivareAndVardenheter(intygDataList);
-
-            // 2. Register a consent for each VG and VE combination
-            unique.forEach((key, value) -> value
-                        .forEach(item -> {
-                            samtyckestjanstIntegrationService.registerConsent(key, item,
-                                    request.getPatientId(), request.getUserHsaId(), request.getRepresentedBy(),
-                                    consentFrom, consentTo, registrationAction);
-                        }));
-
-            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId(), registrationDate.toLocalDate());
+            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId());
 
         } catch (Exception e) {
-            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(), registrationDate.toLocalDate());
+            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId());
             response.setResponseMessage(e.getMessage());
         }
 
         return response;
     }
 
-    @VisibleForTesting
-    Map<String, Set<String>> getUniqueVardgivareAndVardenheter(List<IntygData> intygDataList) {
-        return intygDataList.stream()
-                .filter(ControllerUtil.distinctByKeys(IntygData::getVardgivareId, IntygData::getVardenhetId))
-                .collect(Collectors.groupingBy(
-                        IntygData::getVardgivareId,
-                        Collectors.mapping(
-                                IntygData::getVardenhetId,
-                                Collectors.toSet())));
-    }
-
-    private ActionType createActionType(RehabstodUser user, LocalDateTime registrationDate) {
-        ActionType registrationAction = new ActionType();
-        registrationAction.setRegisteredBy(createActorType(user));
-        registrationAction.setRegistrationDate(registrationDate);
-        registrationAction.setRequestedBy(createActorType(user));
-        registrationAction.setRequestDate(registrationDate);
-        return registrationAction;
-    }
-
-    private ActorType createActorType(RehabstodUser user) {
-        ActorType actorType = new ActorType();
-        actorType.setEmployeeId(user.getHsaId());
-        actorType.setAssignmentName(user.getSelectedMedarbetarUppdragNamn());
-        return actorType;
-    }
-
     private RegisterExtendedConsentResponse createResponse(RegisterExtendedConsentResponse.ResponseCode responseCode,
-                                                           String registeredBy,
-                                                           LocalDate registrationDate) {
+                                                           String registeredBy) {
 
         RegisterExtendedConsentResponse response = new RegisterExtendedConsentResponse();
         response.setResponseCode(responseCode);
         response.setRegisteredBy(registeredBy);
-        response.setRegistrationDate(registrationDate);
         return response;
     }
 }
