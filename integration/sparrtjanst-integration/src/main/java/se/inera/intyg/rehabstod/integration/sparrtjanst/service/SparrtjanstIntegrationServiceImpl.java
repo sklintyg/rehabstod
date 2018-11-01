@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.integration.sparrtjanst.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,9 +59,17 @@ public class SparrtjanstIntegrationServiceImpl implements SparrtjanstIntegration
         Preconditions.checkArgument(!Strings.isNullOrEmpty(userHsaId), "userHsaId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
 
+        List<IntygData> onlyOtherUntisIntygLista = intygLista.stream()
+                .filter(
+                        intygData -> !(currentVardgivarHsaId.equals(intygData.getVardgivareId())
+                                        && currentVardenhetHsaId.equals(intygData.getVardenhetId()))
+                )
+                .collect(Collectors.toList());
+
+
         final CheckBlocksResponseType checkBlocksForPersonResponse = sparrtjanstClientService.getCheckBlocks(currentVardgivarHsaId,
                 currentVardenhetHsaId,
-                userHsaId, patientId, intygLista);
+                userHsaId, patientId, onlyOtherUntisIntygLista);
 
         if (checkBlocksForPersonResponse == null || checkBlocksForPersonResponse.getCheckBlocksResult() == null) {
             throw new SparrtjanstIntegrationException("Failed to get checkblocks");
@@ -82,11 +91,11 @@ public class SparrtjanstIntegrationServiceImpl implements SparrtjanstIntegration
             }
         }
 
-        updateBlockStatuses(intygAccessMetaData, intygLista, response.getCheckResults(), currentVardgivarHsaId);
+        updateBlockStatuses(intygAccessMetaData, onlyOtherUntisIntygLista, response.getCheckResults());
     }
 
     private void updateBlockStatuses(Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> queryList,
-            List<CheckResultType> responseList, String currentVardgivarHsaId) {
+            List<CheckResultType> responseList) {
 
         // Sanity check before processing result - we must have gotten exactly the same number of responses as in list.
         if (responseList.size() != queryList.size()) {
