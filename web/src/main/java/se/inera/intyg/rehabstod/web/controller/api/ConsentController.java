@@ -21,6 +21,8 @@ package se.inera.intyg.rehabstod.web.controller.api;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +40,8 @@ import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 @RestController
 @RequestMapping("/api/consent")
 public class ConsentController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ConsentController.class);
 
     @Autowired
     private ConsentService consentService;
@@ -63,8 +67,10 @@ public class ConsentController {
 
         LocalDate today = LocalDate.now();
 
+        // CHECKSTYLE:OFF MagicNumber
         LocalDateTime consentFrom = today.atStartOfDay();
-        LocalDateTime consentTo = today.plusDays(request.getDays()).atTime(23,59,59);
+        LocalDateTime consentTo = today.plusDays(request.getDays()).atTime(23, 59, 59);
+        // CHECKSTYLE:ON MagicNumber
 
         try {
             request.getGiveConsentToUnits().forEach((vgId, value) -> value.forEach(veId -> {
@@ -75,6 +81,7 @@ public class ConsentController {
             response = createResponse(RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId());
 
         } catch (Exception e) {
+            LOG.error("Error giving consent", e);
             response = createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId());
             response.setResponseMessage(e.getMessage());
         }

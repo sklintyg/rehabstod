@@ -18,16 +18,20 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
+
 import com.google.common.base.Strings;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
-
-import java.time.LocalDate;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -49,10 +53,13 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
     public void testRegisteredExtendedConsent() {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
+        Map<String, List<String>> vgs = new HashMap<>();
+        vgs.put("vg1", Arrays.asList("enhet1", "enhet2"));
+
         RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
         request.setPatientId(PNR_TOLVAN_TOLVANSSON);
-        request.setConsentFrom(LocalDate.now());
-        request.setConsentTo(LocalDate.now().plusMonths(1));
+        request.setGiveConsentToUnits(vgs);
+        request.setDays(30);
 
         Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)
                 .when().post(API_ENDPOINT)
@@ -64,7 +71,6 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
         RegisterExtendedConsentResponse result = response.body().as(RegisterExtendedConsentResponse.class);
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.OK, result.getResponseCode());
         assertTrue(Strings.isNullOrEmpty(result.getResponseMessage()));
-        assertEquals(LocalDate.now(), result.getRegistrationDate());
         assertEquals(DEFAULT_LAKARE.getHsaId(), result.getRegisteredBy());
     }
 
@@ -72,9 +78,12 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
     public void testRegisteredExtendedConsentWithNoPatientId() {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
+        Map<String, List<String>> vgs = new HashMap<>();
+        vgs.put("vg1", Arrays.asList("enhet1", "enhet2"));
+
         RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
-        request.setConsentFrom(LocalDate.now());
-        request.setConsentTo(LocalDate.now().plusMonths(1));
+        request.setGiveConsentToUnits(vgs);
+        request.setDays(30);
 
         Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)
                 .when().post(API_ENDPOINT)

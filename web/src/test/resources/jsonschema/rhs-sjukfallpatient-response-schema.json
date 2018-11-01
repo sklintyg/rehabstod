@@ -15,7 +15,7 @@
           },
           "samtyckeFinns": {
             "minItems": 0,
-            "type": "object"
+            "type": "array"
           },
           "samtyckeSaknas": {
             "minItems": 0,

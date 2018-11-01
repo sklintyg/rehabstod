@@ -37,6 +37,7 @@ public class ConsentServiceImpl implements ConsentService {
     @Autowired
     private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
+    // CHECKSTYLE:OFF ParameterNumber
     @Override
     public LocalDateTime giveConsent(String vgHsaId, String veHsaId, String patientId, boolean onlyCurrentUser, String representedBy,
                                      LocalDateTime consentFrom, LocalDateTime consentTo, RehabstodUser user) {
@@ -52,6 +53,7 @@ public class ConsentServiceImpl implements ConsentService {
 
         return registrationDate;
     }
+    // CHECKSTYLE:ON ParameterNumber
 
 
     private ActionType createActionType(RehabstodUser user, LocalDateTime registrationDate) {

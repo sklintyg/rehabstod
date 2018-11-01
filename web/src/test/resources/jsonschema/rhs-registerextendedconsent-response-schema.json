@@ -12,16 +12,12 @@
       },
       "registeredBy": {
         "type": "string"
-      },
-      "registrationDate": {
-        "type": "string"
       }
     },
     "additionalProperties": false,
     "required": [
       "responseCode",
-      "registeredBy",
-      "registrationDate"
+      "registeredBy"
     ],
     "type" : "object"
 }

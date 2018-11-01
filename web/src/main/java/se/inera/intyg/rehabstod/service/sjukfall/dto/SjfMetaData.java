@@ -20,9 +20,7 @@ package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 /**
  * Created by marced on 2018-10-02.
@@ -31,7 +29,7 @@ public class SjfMetaData {
 
     private Collection<String> vardenheterInomVGMedSparr = new HashSet<>();
     private Collection<String> andraVardgivareMedSparr = new HashSet<>();
-    private Map<String, String> samtyckeFinns = new HashMap<>();
+    private Collection<SjfSamtyckeFinnsMetaData> samtyckeFinns = new ArrayList<>();
     private Collection<SjfSamtyckeMetaData> samtyckeSaknas = new ArrayList<>();
 
     public SjfMetaData() {
@@ -59,11 +57,11 @@ public class SjfMetaData {
         this.andraVardgivareMedSparr = andraVardgivareMedSparr;
     }
 
-    public Map<String, String> getSamtyckeFinns() {
+    public Collection<SjfSamtyckeFinnsMetaData> getSamtyckeFinns() {
         return samtyckeFinns;
     }
 
-    public void setSamtyckeFinns(Map<String, String> samtyckeFinns) {
+    public void setSamtyckeFinns(Collection<SjfSamtyckeFinnsMetaData> samtyckeFinns) {
         this.samtyckeFinns = samtyckeFinns;
     }
 

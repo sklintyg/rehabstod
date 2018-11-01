@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,7 @@ import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.FilteredSjukFallByPatientResult;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfSamtyckeFinnsMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfSamtyckeMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
@@ -147,6 +149,8 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         if (rehabstodSjukfall != null) {
             monitoringLogService.logUserViewedSjukfall(lakareId, rehabstodSjukfall.size(), enhetsId);
+
+            rehabstodSjukfall.forEach(sjukfallPatient -> clearDataByAccessMetaData(sjukfallPatient, currentVardgivarHsaId));
         }
 
         return new SjukfallPatientResponse(rehabstodSjukfall, result.getSjfMetaData(), srsError);
@@ -227,9 +231,6 @@ public class SjukfallServiceImpl implements SjukfallService {
         Map<String, IntygAccessControlMetaData> intygAccessMetaData = new HashMap<>();
 
         LOG.debug("Calling Intygstjänsten - fetching certificate information by patient.");
-//        List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnitAndPatient(enhetsId, patientId,
-//                parameters.getMaxAntalDagarSedanSjukfallAvslut());
-
         List<IntygsData> intygsData =
                 intygstjanstIntegrationService.getAllIntygsDataForPatient(patientId, parameters.getMaxAntalDagarSedanSjukfallAvslut());
 
@@ -271,7 +272,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         SjfMetaData metadata = new SjfMetaData();
 
         Map<String, SjfSamtyckeMetaData> kraverSamtycke = new HashMap<>();
-        Map<String, String> harSamtycke = new HashMap<>();
+        Map<String, SjfSamtyckeFinnsMetaData> harSamtycke = new HashMap<>();
 
         intygAccessMetaData.forEach((intygsId, iacm) -> {
             if (iacm.isBidrarTillAktivtSjukfall()) {
@@ -288,7 +289,11 @@ public class SjukfallServiceImpl implements SjukfallService {
                 if (iacm.isKraverSamtycke()) {
                     if (iacm.isHarSamtycke()) {
                         if (!harSamtycke.containsKey(vardgivareId)) {
-                            harSamtycke.put(vardgivareId, vardgivareNamn);
+                            SjfSamtyckeFinnsMetaData sjfSamtyckeFinnsMetaData = new SjfSamtyckeFinnsMetaData();
+                            sjfSamtyckeFinnsMetaData.setVardgivareId(vardgivareId);
+                            sjfSamtyckeFinnsMetaData.setVardgivareNamn(vardgivareNamn);
+
+                            harSamtycke.put(vardgivareId, sjfSamtyckeFinnsMetaData);
                         }
                     } else {
                         SjfSamtyckeMetaData sjfSamtyckeMetaData;
@@ -307,7 +312,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         });
 
         metadata.setSamtyckeSaknas(kraverSamtycke.values());
-        metadata.setSamtyckeFinns(harSamtycke);
+        metadata.setSamtyckeFinns(harSamtycke.values());
 
         return metadata;
     }
@@ -328,6 +333,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     private List<IntygData> filterByAcessMetaData(List<IntygData> data, Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
         return data.stream()
                 .filter(intygData -> shouldInclude(intygAccessMetaData.get(intygData.getIntygId())))
+                //.map(intygData -> clearDataByAccessMetaData(intygData, intygAccessMetaData.get(intygData.getIntygId())))
                 .collect(Collectors.toList());
     }
 
@@ -337,12 +343,47 @@ public class SjukfallServiceImpl implements SjukfallService {
             return false;
         }
 
+        // 2. Tar bort intyg på andra vårdgivare som inte bidrar till det aktiva sjukfallet
+        if (!intygAccessControlMetaData.isInomVardgivare() && !intygAccessControlMetaData.isBidrarTillAktivtSjukfall()) {
+            return false;
+        }
+
         // 2. Om Samtycke krävs - måste också samtycke vara givet
         if (intygAccessControlMetaData.isKraverSamtycke() && !intygAccessControlMetaData.isHarSamtycke()) {
             return false;
         }
 
+        // 3. Om samtycke finns måste aktivt val för att ta med i sjufakll gjorts
+        //if (intygAccessControlMetaData.isKraverSamtycke() && intygAccessControlMetaData.isHarSamtycke()
+        // && !intygAccessControlMetaData.isIncludeBasedOnSamtycke()) {
+        //    return false;
+        //}
+
         return true;
+    }
+
+    private IntygData clearDataByAccessMetaData(IntygData intyg, IntygAccessControlMetaData intygAccessControlMetaData) {
+        if (!intygAccessControlMetaData.isInomVardgivare()) {
+            intyg.setDiagnosKod(null);
+            intyg.setBiDiagnoser(null);
+            intyg.setLakareId(null);
+            intyg.setLakareNamn(null);
+            intyg.setSysselsattning(null);
+        }
+
+        return intyg;
+    }
+
+    private void clearDataByAccessMetaData(SjukfallPatient sjukfallPatient, String currentVardgivarHsaId) {
+        sjukfallPatient.getIntyg().stream()
+                .filter(patientData -> !patientData.getVardgivareId().equals(currentVardgivarHsaId))
+                .forEach(patientData -> {
+                    patientData.setBidiagnoser(new ArrayList<>());
+                    patientData.setDiagnos(null);
+                    patientData.setGrader(null);
+                    patientData.setLakare(null);
+                    patientData.setSysselsattning(null);
+                });
     }
 
 }

@@ -18,29 +18,33 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
-import java.util.HashSet;
-import java.util.Set;
-
-public class SjfSamtyckeMetaData {
+public class SjfSamtyckeFinnsMetaData {
 
     private String vardgivareId;
     private String vardgivareNamn;
-    private Set<String> units = new HashSet<>(); // ta bort??
-
-    public SjfSamtyckeMetaData(String vardgivareId, String vardgivareNamn) {
-        this.vardgivareId = vardgivareId;
-        this.vardgivareNamn = vardgivareNamn;
-    }
+    private boolean includedInSjukfall;
 
     public String getVardgivareId() {
         return vardgivareId;
+    }
+
+    public void setVardgivareId(String vardgivareId) {
+        this.vardgivareId = vardgivareId;
     }
 
     public String getVardgivareNamn() {
         return vardgivareNamn;
     }
 
-    public Set<String> getUnits() {
-        return units;
+    public void setVardgivareNamn(String vardgivareNamn) {
+        this.vardgivareNamn = vardgivareNamn;
+    }
+
+    public boolean isIncludedInSjukfall() {
+        return includedInSjukfall;
+    }
+
+    public void setIncludedInSjukfall(boolean includedInSjukfall) {
+        this.includedInSjukfall = includedInSjukfall;
     }
 }
