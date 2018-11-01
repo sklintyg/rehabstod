@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').controller('patientHistoryController',
-        function($scope, $uibModalInstance, $state, patientHistoryProxy, SjukfallFilterViewState, patientHistoryViewState,  patient) {
+        function($scope, $uibModalInstance, $state, patientHistoryProxy, SjukfallFilterViewState, patientHistoryViewState, patient) {
             'use strict';
 
             //Create initial default details tab (cannot be closed)

@@ -17,26 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsUnblockedConsent',
-    function($rootScope) {
+    function($rootScope, patientHistoryViewState, patientHistoryProxy) {
     'use strict';
 
     return {
         restrict: 'E',
         scope: {
+            patient: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedConsent/rhsUnblockedConsent.directive.html',
         link: function($scope) {
 
-            $scope.vardgivareMedInfo = 'Vardgivare1, Vardgivare2';
+            $scope.vardgivareUtanSamtycke = patientHistoryViewState.getSjfMetaData().samtyckeSaknas;
+
+            var vardgivareUtanSamtyckeNames = $scope.vardgivareUtanSamtycke.map(function(vg) {
+                return vg.vardgivareNamn;
+            });
+
+            $scope.vardgivareMedInfo = vardgivareUtanSamtyckeNames.join(', ');
 
             $scope.consent = {
                 confirm: false,
-                target: 'MEONLY',
+                onlyCurrentUser: 'ONLYCURRENT',
                 days: 7
             };
 
             $scope.next = function() {
-                $rootScope.$broadcast('rhsUnblockedFlow.next');
+                patientHistoryProxy.giveConsent({
+                    patientId: $scope.patient.id,
+                    onlyCurrentUser: $scope.consent.onlyCurrentUser === 'ONLYCURRENT',
+                    days: $scope.consent.days
+                }).then(function() {
+                    $rootScope.$broadcast('rhsUnblockedFlow.next');
+                });
             };
         }
     };

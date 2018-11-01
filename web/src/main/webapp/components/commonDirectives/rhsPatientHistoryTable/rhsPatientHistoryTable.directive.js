@@ -24,6 +24,7 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
         restrict: 'E',
         scope: {
             historyItem: '=',
+            patient: '=',
             index: '=',
             onSelect: '&',
             onLoadIntyg: '&'

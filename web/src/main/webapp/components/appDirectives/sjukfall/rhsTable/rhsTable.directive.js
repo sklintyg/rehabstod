@@ -18,26 +18,28 @@
  */
 
 angular.module('rehabstodApp')
-    .controller('RhsTableCtrl', ['$scope', '$uibModal', 'SjukfallFilterViewState', 'SjukfallModel', 'UserModel', 'messageService',
-        'featureService', '$document',
-        function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService, featureService, $document) {
-            'use strict';
+    .controller('RhsTableCtrl',
+        ['$scope', '$uibModal', 'SjukfallFilterViewState', 'SjukfallModel', 'UserModel', 'messageService',
+            'featureService', '$document',
+            function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService,
+                featureService, $document) {
+                'use strict';
 
-            $scope.filter = SjukfallFilterViewState;
-            $scope.model = SjukfallModel;
-            $scope.user = UserModel.get();
+                $scope.filter = SjukfallFilterViewState;
+                $scope.model = SjukfallModel;
+                $scope.user = UserModel.get();
 
-            $scope.showLakareColumn = $scope.user.urval !== 'ISSUED_BY_ME';
+                $scope.showLakareColumn = $scope.user.urval !== 'ISSUED_BY_ME';
 
-            $scope.displayedCollection = [].concat($scope.model.get());
+                $scope.displayedCollection = [].concat($scope.model.get());
 
-            $scope.getToolTip = function(diagnos) {
-                var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
-                    messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
-                return '<b>' + diagnos.kod + '</b><br>' + desc;
-            };
+                $scope.getToolTip = function(diagnos) {
+                    var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
+                        messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
+                    return '<b>' + diagnos.kod + '</b><br>' + desc;
+                };
 
-            $scope.showPatientHistory = function(patientModel) {
+                $scope.showPatientHistory = function(patientModel) {
                     $uibModal.open({
                         windowClass: 'patient-history-dialog',
                         templateUrl: '/app/sjukfall/patientHistory/patientHistory.dialog.html',
@@ -51,41 +53,41 @@ angular.module('rehabstodApp')
                             }
                         }
                     });
-            };
+                };
 
-            $scope.showMoreInTable = function() {
-                $scope.limit += 50;
-            };
+                $scope.showMoreInTable = function() {
+                    $scope.limit += 50;
+                };
 
-            $scope.resetLimit = function() {
-                $scope.limit = 100;
-            };
+                $scope.resetLimit = function() {
+                    $scope.limit = 100;
+                };
 
-            $scope.hasFeature = function(feature) {
-                return featureService.hasFeature(feature);
-            };
+                $scope.hasFeature = function(feature) {
+                    return featureService.hasFeature(feature);
+                };
 
-            $scope.resetLimit();
+                $scope.resetLimit();
 
-            $document.on('scroll', handleScroll);
+                $document.on('scroll', handleScroll);
 
-            $scope.$on('$destroy', function() {
-                $document.off('scroll', handleScroll);
-            });
+                $scope.$on('$destroy', function() {
+                    $document.off('scroll', handleScroll);
+                });
 
-            function handleScroll() {
-                var scrollLeft = $document.scrollLeft();
-                var header = $('#rhs-table-fixed-header');
-                var left = 30;
+                function handleScroll() {
+                    var scrollLeft = $document.scrollLeft();
+                    var header = $('#rhs-table-fixed-header');
+                    var left = 30;
 
-                if (scrollLeft > 0) {
-                    left -= scrollLeft;
+                    if (scrollLeft > 0) {
+                        left -= scrollLeft;
+                    }
+
+                    header.css('left', left + 'px');
                 }
-
-                header.css('left', left + 'px');
             }
-        }
-    ])
+        ])
     .directive('rhsTable',
         function() {
             'use strict';

@@ -44,7 +44,7 @@
               <rhs-patient-history-time-line-item history-item="item" index="$index" is-last="$last"
                                                   on-select="onSelectSjukfall(item)" class="pull-left history-timeline"></rhs-patient-history-time-line-item>
 
-              <rhs-patient-history-table history-item="item" index="$index" on-select="onSelectSjukfall(item)"
+              <rhs-patient-history-table history-item="item" patient="patient" index="$index" on-select="onSelectSjukfall(item)"
                                          on-load-intyg="loadIntyg(intyg)"
                                          class="pull-left history-table"></rhs-patient-history-table>
             </div>

@@ -19,54 +19,94 @@
 
 angular.module('rehabstodApp').factory('patientHistoryProxy',
     function($http, $log, $q, ObjectHelper, networkConfig) {
-    'use strict';
+        'use strict';
 
-    /*
-     * Get history for the specified patient
-     */
-    function _get(patient) {
+        /*
+         * Get history for the specified patient
+         */
+        function _get(patient) {
 
-        var promise = $q.defer();
+            var promise = $q.defer();
 
-        var query = {
-            patientId: patient.id
+            var query = {
+                patientId: patient.id
+            };
+
+            var restPath = '/api/sjukfall/patient';
+
+            var config = {
+                timeout: networkConfig.defaultTimeout
+            };
+
+            $log.debug('Requesting patient history for patient with maxIntygsGlapp ' + query.maxIntygsGlapp);
+
+            $http.post(restPath, query, config).then(function(response) {
+                if (!ObjectHelper.isDefined(response.data)) {
+                    promise.reject({
+                        errorCode: response.data,
+                        message: 'invalid data'
+                    });
+                } else {
+                    promise.resolve(response.data);
+                }
+            }, function(response) {
+                $log.error('error ' + response.status);
+                // Let calling code handle the error of no data response
+                if (response === null) {
+                    promise.reject({
+                        errorCode: response,
+                        message: 'no response'
+                    });
+                } else {
+                    promise.reject(response.data);
+                }
+            });
+
+            return promise.promise;
+        }
+
+        function _giveConsent(vgConsent) {
+
+            var promise = $q.defer();
+
+            var query = vgConsent;
+
+            var restPath = '/api/consent';
+
+            var config = {
+                timeout: networkConfig.defaultTimeout
+            };
+
+            $log.debug('Give consent ' + query.patientId);
+
+            $http.post(restPath, query, config).then(function(response) {
+                if (!ObjectHelper.isDefined(response.data)) {
+                    promise.reject({
+                        errorCode: response.data,
+                        message: 'invalid data'
+                    });
+                } else {
+                    promise.resolve(response.data);
+                }
+            }, function(response) {
+                $log.error('error ' + response.status);
+                // Let calling code handle the error of no data response
+                if (response === null) {
+                    promise.reject({
+                        errorCode: response,
+                        message: 'no response'
+                    });
+                } else {
+                    promise.reject(response.data);
+                }
+            });
+            
+            return promise.promise;
+        }
+
+        // Return public API for the service
+        return {
+            get: _get,
+            giveConsent: _giveConsent
         };
-
-        var restPath = '/api/sjukfall/patient';
-
-        var config = {
-            timeout: networkConfig.defaultTimeout
-        };
-
-        $log.debug('Requesting patient history for patient with maxIntygsGlapp ' + query.maxIntygsGlapp);
-
-        $http.post(restPath, query, config).then(function(response) {
-            if (!ObjectHelper.isDefined(response.data)) {
-                promise.reject({
-                    errorCode: response.data,
-                    message: 'invalid data'
-                });
-            } else {
-                promise.resolve(response.data);
-            }
-        }, function(response) {
-            $log.error('error ' + response.status);
-            // Let calling code handle the error of no data response
-            if (response === null) {
-                promise.reject({
-                    errorCode: response,
-                    message: 'no response'
-                });
-            } else {
-                promise.reject(response.data);
-            }
-        });
-
-        return promise.promise;
-    }
-
-    // Return public API for the service
-    return {
-        get: _get
-    };
-});
+    });

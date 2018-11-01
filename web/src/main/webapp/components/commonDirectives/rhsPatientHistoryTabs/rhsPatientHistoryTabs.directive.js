@@ -33,11 +33,9 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTabs',
 
                 $scope.onSelect = function(tab) {
                     patientHistoryViewState.selectTab(tab);
-
                 };
                 $scope.onClose = function(tab) {
                     patientHistoryViewState.closeTab(tab);
-
                 };
 
             }
