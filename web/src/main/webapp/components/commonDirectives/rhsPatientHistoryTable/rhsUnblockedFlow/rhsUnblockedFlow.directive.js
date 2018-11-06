@@ -28,7 +28,11 @@ angular.module('rehabstodApp').directive('rhsUnblockedFlow',
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedFlow.directive.html',
         link: function($scope) {
-            $scope.step = 'consent';
+
+            $scope.step = 'list';
+            if(patientHistoryViewState.getSjfMetaData().samtyckeSaknas.length > 0){
+                $scope.step = 'consent';
+            }
 
             $scope.$on('rhsUnblockedFlow.next', function() {
 
