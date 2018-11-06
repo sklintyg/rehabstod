@@ -107,9 +107,7 @@ Download onto a computer having Java installed and network access to the databas
 
 ##### 2.3.1 Clone the repository
 
-Clone repository and switch to the release branch specified in the release notes. Substitute `<name>` below with the actual release name, such as `2018-3`.
-
-**NOTE!!!!** For release of Rehabstöd 1.7 in nov 2018, the release-branch in git was named _release/2018-3_. **NOTE!!**
+Clone repository and switch to the release branch specified in the release notes. Substitute `<name>` below with the actual release name, such as `2018-4`.
     
     > git clone https://github.com/sklintyg/rehabstod.git
     > git checkout release/<name>
