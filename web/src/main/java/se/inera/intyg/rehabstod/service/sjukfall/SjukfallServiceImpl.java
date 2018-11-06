@@ -21,10 +21,8 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -274,8 +272,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     private SjfMetaData createSjfMetaData(Map<String, IntygAccessControlMetaData> intygAccessMetaData, boolean haveConsent) {
         SjfMetaData metadata = new SjfMetaData();
 
-        Set<String> kraverSamtycke = new HashSet<>();
-        Map<String, SjfSamtyckeFinnsMetaData> harSamtycke = new HashMap<>();
+        Map<String, SjfSamtyckeFinnsMetaData> vardgivareSamtycke = new HashMap<>();
 
         intygAccessMetaData.forEach((intygsId, iacm) -> {
             if (iacm.isBidrarTillAktivtSjukfall()) {
@@ -290,24 +287,23 @@ public class SjukfallServiceImpl implements SjukfallService {
                 }
 
                 if (iacm.isKraverSamtycke()) {
-                    if (haveConsent) {
-                        if (!harSamtycke.containsKey(vardgivareId)) {
-                            SjfSamtyckeFinnsMetaData sjfSamtyckeFinnsMetaData = new SjfSamtyckeFinnsMetaData();
-                            sjfSamtyckeFinnsMetaData.setVardgivareId(vardgivareId);
-                            sjfSamtyckeFinnsMetaData.setVardgivareNamn(vardgivareNamn);
-                            sjfSamtyckeFinnsMetaData.setIncludedInSjukfall(iacm.isIncludeBasedOnSamtycke());
+                    if (!vardgivareSamtycke.containsKey(vardgivareId)) {
+                        SjfSamtyckeFinnsMetaData sjfSamtyckeFinnsMetaData = new SjfSamtyckeFinnsMetaData();
+                        sjfSamtyckeFinnsMetaData.setVardgivareId(vardgivareId);
+                        sjfSamtyckeFinnsMetaData.setVardgivareNamn(vardgivareNamn);
+                        sjfSamtyckeFinnsMetaData.setIncludedInSjukfall(iacm.isIncludeBasedOnSamtycke());
 
-                            harSamtycke.put(vardgivareId, sjfSamtyckeFinnsMetaData);
-                        }
-                    } else {
-                        kraverSamtycke.add(vardgivareNamn);
+                        vardgivareSamtycke.put(vardgivareId, sjfSamtyckeFinnsMetaData);
                     }
                 }
             }
         });
 
-        metadata.setSamtyckeSaknas(kraverSamtycke);
-        metadata.setSamtyckeFinns(harSamtycke.values());
+        if (haveConsent) {
+            metadata.setSamtyckeFinns(vardgivareSamtycke.values());
+        } else {
+            metadata.setSamtyckeSaknas(vardgivareSamtycke.values());
+        }
 
         return metadata;
     }
