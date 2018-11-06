@@ -18,13 +18,14 @@
  */
 
 angular.module('rehabstodApp').directive('rhsDateRangePicker',
-    function(moment) {
+    function(moment, $timeout) {
         'use strict';
 
         return {
             restrict: 'E',
             scope: {
-                model: '='
+                model: '=',
+                id: '@'
             },
             templateUrl: '/components/commonDirectives/rhsDateRangePicker/rhsDateRangePicker.directive.html',
             link: function($scope, element) {
@@ -82,6 +83,8 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
                         name: '<button id="clearDatePicker" class="btn btn-default">Rensa</button>',
                         dates: function() { return null; }
                     }],
+                    inline: true,
+                    container: '#' + $scope.id + '-inline-container',
                     showTopbar: true,
                     hoveringTooltip: false,
                     getValue: function() {
@@ -98,29 +101,32 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
                 };
 
                 var inputElement = element.find('input');
-                inputElement.dateRangePicker(options)
-                    .on('datepicker-change', function(event, obj) {
-                        /* This event will be triggered when second date is selected */
-                        $scope.model.from = obj.date1;
-                        $scope.model.to = obj.date2;
-
-                        setDisplayValue(true);
-                    })
-                    .on('datepicker-open', function() {
-                        $('#clearDatePicker').click(function() {
-                            inputElement.data('dateRangePicker').clear();
-                            inputElement.data('dateRangePicker').redraw();
-
-                            $scope.model.from = null;
-                            $scope.model.to = null;
+                $timeout(function() {
+                    inputElement.dateRangePicker(options)
+                        .on('datepicker-change', function(event, obj) {
+                            /* This event will be triggered when second date is selected */
+                            $scope.model.from = obj.date1;
+                            $scope.model.to = obj.date2;
 
                             setDisplayValue(true);
-                        });
+                        })
+                        .on('datepicker-open', function() {
+                            $('#clearDatePicker').click(function() {
+                                inputElement.data('dateRangePicker').clear();
+                                inputElement.data('dateRangePicker').redraw();
 
-                        $('#closeDatePicker').click(function() {
-                            inputElement.data('dateRangePicker').close();
+                                $scope.model.from = null;
+                                $scope.model.to = null;
+
+                                setDisplayValue(true);
+                            });
+
+                            $('#closeDatePicker').click(function() {
+                                inputElement.data('dateRangePicker').close();
+                            });
                         });
-                    });
+                });
+
 
                 $scope.open = function($event) {
                     $event.preventDefault();
@@ -135,7 +141,7 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
                 $scope.$watch('model', function() {
                     setDisplayValue();
 
-                    if (!moment.isDate($scope.model.from)) {
+                    if (!moment.isDate($scope.model.from) && typeof(inputElement.data('dateRangePicker')) !== 'undefined') {
                         inputElement.data('dateRangePicker').clear();
                     }
                 }, true);
