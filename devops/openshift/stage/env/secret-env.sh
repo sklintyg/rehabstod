@@ -26,5 +26,4 @@ export CATALINA_OPTS_APPEND="\
 -Dcredentials.file=/opt/$APP_NAME/env/secret-env.properties \
 -Dresources.folder=/tmp/resources \
 -Dfile.encoding=UTF-8 \
--DbaseUrl=http://${APP_NAME}:8080 \
--Dcertificate.baseUrl=http://intygstjanst-stage:8080"
+-DbaseUrl=http://${APP_NAME}:8080"

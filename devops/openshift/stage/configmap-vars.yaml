@@ -1,17 +1,22 @@
 apiVersion: v1
 data:
-  REDIS_HOST: <value>
-  REDIS_PORT: <value>
-  REDIS_SENTINEL_MASTER_NAME: <value>
-  BROKER_AMQ_TCP_PORT: tcp://<value>:<value>
-  NTJP_WS_CERTIFICATE_TYPE: <value>
-  NTJP_WS_TRUSTSTORE_TYPE: <value>
-  SAKERHETSTJANST_SAML_IDP_METADATA_URL: https://idp2.acctest.sakerhetstjanst.inera.se:443/idp/saml
-  SAKERHETSTJANST_SAML_KEYSTORE_ALIAS: <value>
-  SAKERHETSTJANST_SAML_KEYSTORE_FILE: file://${CERTIFICATE_FOLDER}/<value>
-  SAKERHETSTJANST_SAML_TRUSTSTORE_FILE: file://${CERTIFICATE_FOLDER}/<value>
-  NTJP_WS_CERTIFICATE_FILE: ${CERTIFICATE_FOLDER}/<value>
-  NTJP_WS_TRUSTSTORE_FILE: ${CERTIFICATE_FOLDER}/<value>
+  CERTIFICATE_BASEURL: "http://intygstjanst:8080"
+  ACTIVEMQ_BROKER_URL: "failover:(tcp://ind-sint-activemq1.ind1.sth.basefarm.net:61616,tcp://ind-sint-activemq2.ind1.sth.basefarm.net:61616)"
+  DATABASE_PORT: "3306"
+  DATABASE_SERVER: "ind-sint-mysqlvip.ind1.sth.basefarm.net"
+  IT_WS_CERTIFICATE_FILE: "${certificate.folder}/truststore.jks"
+  IT_WS_TRUSTSTORE_TYPE: "JKS"
+  REDIS_HOST: "ind-sint-redis1.ind1.sth.basefarm.net;ind-sint-redis2.ind1.sth.basefarm.net;ind-sint-redis3.ind1.sth.basefarm.net"
+  REDIS_PORT: "26379;26379;26379"
+  REDIS_SENTINEL_MASTER_NAME: "ind-sint-redis"
+  NTJP_WS_CERTIFICATE_FILE: "${certificate.folder}/verifiering.rehabstod.intygstjanster.sjunet.org.jks"
+  NTJP_WS_TRUSTSTORE_FILE: "${certificate.folder}/truststore.jks"
+  NTJP_WS_CERTIFICATE_TYPE: "JKS"
+  NTJP_WS_TRUSTSTORE_TYPE: "JKS"
+  SAKERHETSTJANST_SAML_IDP_METADATA_URL: "https://idp2.acctest.sakerhetstjanst.inera.se:443/idp/saml"
+  SAKERHETSTJANST_SAML_KEYSTORE_ALIAS: "verifiering.rehabstod.intygstjanster.sjunet.org"
+  SAKERHETSTJANST_SAML_KEYSTORE_FILE: "file://${certificate.folder}/verifiering.rehabstod.intygstjanster.sjunet.org.jks"
+  SAKERHETSTJANST_SAML_TRUSTSTORE_FILE: "file://${certificate.folder}/truststore.jks"
 kind: ConfigMap
 metadata:
   name: rehabstod-stage-configmap-envvar
