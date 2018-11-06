@@ -31,7 +31,7 @@ describe('Directive: RhsDateRangePicker', function() {
 
     // Store references to $rootScope and $compile
     // so they are available to all tests in this describe block
-    beforeEach(inject(function(_$compile_, $rootScope) {
+    beforeEach(inject(function(_$compile_, $rootScope, $timeout) {
         // The injector unwraps the underscores (_) from around the parameter names when matching
         $compile = _$compile_;
         $scope = $rootScope.$new();
@@ -39,8 +39,10 @@ describe('Directive: RhsDateRangePicker', function() {
         $scope.slutdatum = {from: null, to: null};
 
         element =
-            $compile(' <rhs-date-range-picker model="slutdatum" />')(
+            $compile('<rhs-date-range-picker id="slutdatum" model="slutdatum" />')(
                 $scope);
+
+        $timeout.flush();
         $scope.$digest();
 
         elementScope = element.isolateScope() || element.scope();
