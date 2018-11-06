@@ -34,12 +34,19 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
             $scope.user = UserModel.get();
             $scope.patientHistoryViewState = patientHistoryViewState;
 
+            var patientSjfMetaData = patientHistoryViewState.getSjfMetaData();
+
+            var veInomVGMedSparrCount = patientSjfMetaData.vardenheterInomVGMedSparr.length;
+            var andraVardgivareUtanSparr = patientSjfMetaData.samtyckeFinns.length + patientSjfMetaData.samtyckeSaknas.length;
+            var andraVardgivareMedSparr = patientSjfMetaData.andraVardgivareMedSparr.length;
+
             $scope.extraDiagnoser = {
-                available: true,
-                sparradInfoInomVardgivare: true,
-                osparradInfoAndraVardgivare: true,
-                sparradInfoAndraVardgivare: true,
-                samtyckeFinns: false
+                patientSjfMetaData: patientSjfMetaData,
+                available: veInomVGMedSparrCount > 0 || andraVardgivareMedSparr > 0 || andraVardgivareUtanSparr > 0,
+                sparradInfoInomVardgivare: veInomVGMedSparrCount > 0,
+                osparradInfoAndraVardgivare: andraVardgivareUtanSparr > 0,
+                sparradInfoAndraVardgivare: andraVardgivareMedSparr > 0,
+                samtyckeFinns: patientSjfMetaData.samtyckeSaknas.length <= 0
             };
 
             $scope.getToolTip = function(diagnos) {

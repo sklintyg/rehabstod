@@ -3,8 +3,8 @@
 <div class="scrollable-list">
   <table class="table table-striped">
     <tbody>
-    <tr ng-repeat="vardgivare in patientHistoryViewState.getSjfMetaData().andraVardgivareUtanSparr">
-      <td ng-attr-id="osparrad-{{index}}-column-number-{{$index}}">{{vardgivare.name}}</td>
+    <tr ng-repeat="vardgivare in patientHistoryViewState.getSjfMetaData().samtyckeFinns">
+      <td ng-attr-id="osparrad-{{index}}-column-number-{{$index}}">{{vardgivare.vardgivareNamn}}</td>
       <td ng-switch="vardgivare.loading">
         <div ng-switch-when="true">
           <img class="fa-spin list-spinner" aria-labelledby="loading-message" src="/assets/images/ajax-loader.gif" />

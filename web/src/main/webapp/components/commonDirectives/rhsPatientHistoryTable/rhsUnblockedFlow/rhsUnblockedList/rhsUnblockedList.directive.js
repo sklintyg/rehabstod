@@ -23,15 +23,22 @@ angular.module('rehabstodApp').directive('rhsUnblockedList',
     return {
         restrict: 'E',
         scope: {
+            patientSjfMetaData: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedList/rhsUnblockedList.directive.html',
         link: function($scope) {
 
             $scope.patientHistoryViewState = patientHistoryViewState;
 
+            $scope.patientHistoryViewState.getSjfMetaData().samtyckeFinns.map(function(vg) {
+                vg.loading = false;
+                vg.fetched = false;
+                return vg;
+            });
+
             $scope.fetch = function(vardgivareId) {
 
-                var vardgivare = patientHistoryViewState.getSjfMetaData().andraVardgivareUtanSparr.filter(function(item){
+                var vardgivare = patientHistoryViewState.getSjfMetaData().samtyckeFinns.filter(function(item){
                     return item.id === vardgivareId;
                 });
 

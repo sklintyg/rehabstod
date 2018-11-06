@@ -23,7 +23,8 @@ angular.module('rehabstodApp').directive('rhsUnblockedConsent',
     return {
         restrict: 'E',
         scope: {
-            patient: '='
+            patient: '=',
+            patientSjfMetaData: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedConsent/rhsUnblockedConsent.directive.html',
         link: function($scope) {
@@ -47,8 +48,15 @@ angular.module('rehabstodApp').directive('rhsUnblockedConsent',
                     patientId: $scope.patient.id,
                     onlyCurrentUser: $scope.consent.onlyCurrentUser === 'ONLYCURRENT',
                     days: $scope.consent.days
-                }).then(function() {
-                    $rootScope.$broadcast('rhsUnblockedFlow.next');
+                }).then(function(response) {
+
+                    if(response.responseCode === 'OK')
+                    {
+                        var patientSjfMeta = patientHistoryViewState.getSjfMetaData();
+                        patientSjfMeta.samtyckeFinns = patientSjfMeta.samtyckeFinns.concat(patientSjfMeta.samtyckeSaknas);
+                        patientSjfMeta.samtyckeSaknas = [];
+                        $rootScope.$broadcast('rhsUnblockedFlow.next');
+                    }
                 });
             };
         }

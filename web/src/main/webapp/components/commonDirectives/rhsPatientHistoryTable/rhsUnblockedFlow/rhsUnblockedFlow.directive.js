@@ -23,7 +23,8 @@ angular.module('rehabstodApp').directive('rhsUnblockedFlow',
     return {
         restrict: 'E',
         scope: {
-            patient: '='
+            patient: '=',
+            patientSjfMetaData: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedFlow.directive.html',
         link: function($scope) {

@@ -36,7 +36,7 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
 
     function _setSjfMetaData(sjfMetaData) {
         _sjfMetaData = sjfMetaData;
-
+/*
         // FAKE DATA WHILE BACKEND IS BUILT
         _sjfMetaData.vardenheterInomVGMedSparr = [];
         var i = 0;
@@ -58,6 +58,7 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
                 fetched: false
             });
         }
+        */
     }
 
     function _getSjfMetaData() {
