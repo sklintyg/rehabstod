@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.integration.samtyckestjanst.service;
 import java.time.LocalDateTime;
 
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
+import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 
 /**
@@ -53,7 +54,7 @@ public interface SamtyckestjanstIntegrationService {
     // CHECKSTYLE:OFF ParameterNumber
     void registerConsent(String vgHsaId,
                          String veHsaId,
-                         String patientId,
+                         Personnummer patientId,
                          String userHsaId,
                          String representedBy,
                          LocalDateTime consentFrom,

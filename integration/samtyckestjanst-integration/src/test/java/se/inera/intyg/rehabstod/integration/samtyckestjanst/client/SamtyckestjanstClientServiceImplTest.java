@@ -19,7 +19,9 @@
 
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.client;
 
-import com.google.common.base.Strings;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +30,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import com.google.common.base.Strings;
+import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentType;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsent.v2.rivtabp21.RegisterExtendedConsentResponderInterface;
@@ -36,9 +41,6 @@ import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.ActorType;
 import se.riv.informationsecurity.authorization.consent.v2.AssertionTypeType;
 import se.riv.informationsecurity.authorization.consent.v2.ScopeType;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
@@ -55,6 +57,7 @@ public class SamtyckestjanstClientServiceImplTest {
     private static final String REGISTERED_BY_HSA_ID = UUID.randomUUID().toString();
     private static final String USER_HSA_ID = UUID.randomUUID().toString();
     private static final String PATIENT_ID = "20121212-1212";
+    private static final Personnummer PERSONNUMMER = Personnummer.createPersonnummer(PATIENT_ID).get();
     private static final String VG_HSA_ID = "vgHsaId-2";
     private static final String VE_HSA_ID = "veHsaId-2.1";
     private static final String LOGICAL_ADDRESS = "123";
@@ -102,7 +105,7 @@ public class SamtyckestjanstClientServiceImplTest {
         LocalDateTime registrationDate = LocalDateTime.now();
         ActionType registrationAction = createActionType(REGISTERED_BY_HSA_ID, registrationDate, REGISTERED_BY_HSA_ID, registrationDate);
 
-        testee.registerExtendedConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, null, null, null, registrationAction);
+        testee.registerExtendedConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PERSONNUMMER, null, null, null, registrationAction);
 
         verify(registerExtendedConsentService).registerExtendedConsent(eq(LOGICAL_ADDRESS), requestCapture.capture());
 
@@ -127,19 +130,11 @@ public class SamtyckestjanstClientServiceImplTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void registerExtendedConsentThrowsExceptionForInvalidPatientId() throws Exception {
-        LocalDateTime registrationDate = LocalDateTime.now();
-        ActionType registrationAction = createActionType(REGISTERED_BY_HSA_ID, registrationDate, REGISTERED_BY_HSA_ID, registrationDate);
-
-        testee.registerExtendedConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, "123456789", null, null, null, registrationAction);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void registerExtendedConsentThrowsExceptionForInvalidRepresentedBy() throws Exception {
         LocalDateTime registrationDate = LocalDateTime.now();
         ActionType registrationAction = createActionType(REGISTERED_BY_HSA_ID, registrationDate, REGISTERED_BY_HSA_ID, registrationDate);
 
-        testee.registerExtendedConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, "123456789", null, null, registrationAction);
+        testee.registerExtendedConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PERSONNUMMER, "123456789", null, null, registrationAction);
     }
 
     @Test
@@ -151,14 +146,14 @@ public class SamtyckestjanstClientServiceImplTest {
         LocalDateTime consentTo = consentFrom.minusDays(1);
 
         try {
-            testee.registerExtendedConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, null, consentFrom, consentTo, registrationAction);
+            testee.registerExtendedConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PERSONNUMMER, null, consentFrom, consentTo, registrationAction);
             fail("Date consentTo cannot be before consentFrom");
         } catch (IllegalArgumentException e) {
            assertTrue(e.getMessage().startsWith("a consent's start date"));
         }
 
         try {
-            testee.registerExtendedConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, null, null, consentTo, registrationAction);
+            testee.registerExtendedConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PERSONNUMMER, null, null, consentTo, registrationAction);
             fail("Date consentTo cannot be before consentFrom. "
                     + "If consentFrom is not supplied Then "
                     + "   it will be set, in client, to LocalDateTime.now() "

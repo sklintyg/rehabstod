@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.web.controller.api;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,7 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 @RestController
 @RequestMapping("/api/consent")
@@ -73,7 +75,13 @@ public class ConsentController {
         // CHECKSTYLE:ON MagicNumber
 
         try {
-            consentService.giveConsent(request.getPatientId(), request.isOnlyCurrentUser(), null,
+            Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
+
+            if (!personnummer.isPresent()) {
+                throw new RuntimeException("error parsing personnummer");
+            }
+
+            consentService.giveConsent(personnummer.get(), request.isOnlyCurrentUser(), null,
                     consentFrom, consentTo, user);
 
             response = createResponse(RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId());

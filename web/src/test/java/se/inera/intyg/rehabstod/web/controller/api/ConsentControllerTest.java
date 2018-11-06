@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -42,6 +43,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.ConsentService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -93,7 +95,7 @@ public class ConsentControllerTest {
     public void testRegisterExtendedConsent() {
         LocalDateTime result = LocalDateTime.now();
 
-        when(consentServiceMock.giveConsent(anyString(), anyBoolean(), anyString(), any(), any(), any()))
+        when(consentServiceMock.giveConsent(any(), anyBoolean(), anyString(), any(), any(), any()))
                 .thenReturn(result);
 
         RegisterExtendedConsentResponse response = testee.registerConsent(createRequest(PERSON_ID));
@@ -103,19 +105,22 @@ public class ConsentControllerTest {
 
         assertEquals(rehabstodUserMock.getHsaId(), response.getRegisteredBy());
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.OK, response.getResponseCode());
-        verify(consentServiceMock).giveConsent(eq(PERSON_ID), eq(false), eq(null), eq(consentFrom), eq(consentTo), eq(rehabstodUserMock));
+
+        Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
+
+        verify(consentServiceMock).giveConsent(eq(personnummer.get()), eq(false), eq(null), eq(consentFrom), eq(consentTo), eq(rehabstodUserMock));
     }
 
     @Test
     public void testRegisterExtendedConsent_error() {
-        when(consentServiceMock.giveConsent(anyString(), anyBoolean(), anyString(), any(), any(), any()))
+        when(consentServiceMock.giveConsent(any(), anyBoolean(), anyString(), any(), any(), any()))
                 .thenThrow(new RuntimeException("error"));
 
         RegisterExtendedConsentResponse response = testee.registerConsent(createRequest(PERSON_ID));
 
         assertEquals(rehabstodUserMock.getHsaId() ,response.getRegisteredBy());
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
-        verify(consentServiceMock).giveConsent(anyString(), anyBoolean(), anyString(), any(), any(), any());
+        verify(consentServiceMock).giveConsent(any(), anyBoolean(), anyString(), any(), any(), any());
     }
 
     @Test

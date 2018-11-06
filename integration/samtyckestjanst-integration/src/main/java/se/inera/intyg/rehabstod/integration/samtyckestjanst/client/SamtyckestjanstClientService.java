@@ -18,11 +18,12 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.client;
 
+import java.time.LocalDateTime;
+
+import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsentResponder.v2.RegisterExtendedConsentResponseType;
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
-
-import java.time.LocalDateTime;
 
 /**
  * Created by Magnus Ekstrand 2018-10-10.
@@ -68,7 +69,7 @@ public interface SamtyckestjanstClientService {
     RegisterExtendedConsentResponseType registerExtendedConsent(String vgHsaId,
                                                                 String veHsaId,
                                                                 String userHsaId,
-                                                                String patientId,
+                                                                Personnummer patientId,
                                                                 String representedBy,
                                                                 LocalDateTime consentFrom,
                                                                 LocalDateTime consentTo,

@@ -18,10 +18,14 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.client;
 
-import com.google.common.base.Strings;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import com.google.common.base.Strings;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.util.SamtyckestjanstUtil;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
@@ -33,9 +37,6 @@ import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsentR
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.AssertionTypeType;
 import se.riv.informationsecurity.authorization.consent.v2.ScopeType;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 /**
  * Created by Magnus Ekstrand 2018-10-10.
@@ -61,8 +62,7 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
     @Override
     public CheckConsentResponseType checkConsent(String vgHsaId, String veHsaId, String userHsaId, String patientId) {
 
-        final Personnummer personnummer = Personnummer.createPersonnummer(patientId)
-                .orElseThrow(() -> new IllegalArgumentException("PatientId must be a valid personnummer or samordningsnummer"));
+        final Personnummer personnummer = createPersonnummer(patientId, "PatientId");
 
         CheckConsentType checkConsentType = new CheckConsentType();
         checkConsentType.setPatientId(SamtyckestjanstUtil.buildIITypeForPersonOrSamordningsnummer(personnummer));
@@ -73,7 +73,7 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
 
 
     /**
-     * @see SamtyckestjanstClientService#registerExtendedConsent(String, String, String, String, String,
+     * @see SamtyckestjanstClientService#registerExtendedConsent(String, String, String, Personnummer, String,
      *                                                              LocalDateTime, LocalDateTime, ActionType) registerConsent
      */
     @Override
@@ -81,7 +81,7 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
     public RegisterExtendedConsentResponseType registerExtendedConsent(String vgHsaId,
                                                                        String veHsaId,
                                                                        String userHsaId,
-                                                                       String patientId,
+                                                                       Personnummer patientId,
                                                                        String representedBy,
                                                                        LocalDateTime consentFrom,
                                                                        LocalDateTime consentTo,
@@ -103,9 +103,7 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
 
         registerExtendedConsentType.setCareProviderId(vgHsaId);
         registerExtendedConsentType.setCareUnitId(veHsaId);
-        registerExtendedConsentType.setPatientId(
-                SamtyckestjanstUtil.buildIITypeForPersonOrSamordningsnummer(
-                        createPersonnummer(patientId, "patientId")));
+        registerExtendedConsentType.setPatientId(SamtyckestjanstUtil.buildIITypeForPersonOrSamordningsnummer(patientId));
 
         if (!Strings.isNullOrEmpty(userHsaId)) {
             registerExtendedConsentType.setEmployeeId(userHsaId);

@@ -29,6 +29,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.client.SamtyckestjanstClientService;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.exception.SamtyckestjanstIntegrationException;
+import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsentResponder.v2.RegisterExtendedConsentResponseType;
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
@@ -87,7 +88,7 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
     // CHECKSTYLE:OFF ParameterNumber
     public void registerConsent(String vgHsaId,
                                 String veHsaId,
-                                String patientId,
+                                Personnummer patientId,
                                 String userHsaId,
                                 String representedBy,
                                 LocalDateTime consentFrom,
@@ -96,7 +97,7 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
 
         Preconditions.checkArgument(!Strings.isNullOrEmpty(vgHsaId), "vgHsaId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(veHsaId), "veHsaId may not be null or empty");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
+        Preconditions.checkNotNull(patientId, "patientId may not be null");
         Preconditions.checkNotNull(registrationAction, "registrationAction may not be null");
 
         // Make call to the CheckConsent service and handle response

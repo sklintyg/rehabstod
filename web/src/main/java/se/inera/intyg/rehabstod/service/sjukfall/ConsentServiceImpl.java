@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
+import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.ActorType;
 
@@ -38,7 +39,7 @@ public class ConsentServiceImpl implements ConsentService {
     private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
     @Override
-    public LocalDateTime giveConsent(String patientId, boolean onlyCurrentUser, String representedBy,
+    public LocalDateTime giveConsent(Personnummer personnummer, boolean onlyCurrentUser, String representedBy,
                                      LocalDateTime consentFrom, LocalDateTime consentTo, RehabstodUser user) {
 
         LocalDateTime registrationDate = LocalDateTime.now();
@@ -49,7 +50,7 @@ public class ConsentServiceImpl implements ConsentService {
         String veHsaId = user.getValdVardenhet().getId();
 
         samtyckestjanstIntegrationService.registerConsent(vgHsaId, veHsaId,
-                patientId, userHsaId, representedBy,
+                personnummer, userHsaId, representedBy,
                 consentFrom, consentTo, registrationAction);
 
         return registrationDate;

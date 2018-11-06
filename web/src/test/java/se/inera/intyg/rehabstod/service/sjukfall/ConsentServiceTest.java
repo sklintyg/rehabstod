@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +32,7 @@ import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -67,8 +69,10 @@ public class ConsentServiceTest {
         LocalDateTime consentFrom = LocalDateTime.now();
         LocalDateTime consentTo = consentFrom.plusDays(10);
 
-        testee.giveConsent(PERSON_ID, true, null, consentFrom, consentTo, rehabstodUserMock);
+        Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
 
-        verify(samtyckestjanstIntegrationService).registerConsent(eq(VARDGIVARE_ID), eq(VARDENHETS_ID), eq(PERSON_ID), eq(USER_HSA_ID), eq(null), eq(consentFrom), eq(consentTo), any());
+        testee.giveConsent(personnummer.get(), true, null, consentFrom, consentTo, rehabstodUserMock);
+
+        verify(samtyckestjanstIntegrationService).registerConsent(eq(VARDGIVARE_ID), eq(VARDENHETS_ID), eq(personnummer.get()), eq(USER_HSA_ID), eq(null), eq(consentFrom), eq(consentTo), any());
     }
 }

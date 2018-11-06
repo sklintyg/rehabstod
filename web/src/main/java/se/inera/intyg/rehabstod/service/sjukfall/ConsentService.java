@@ -21,16 +21,17 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 import java.time.LocalDateTime;
 
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 /**
  * @author Magnus Ekstrand on 2018-10-25.
  */
 public interface ConsentService {
 
-    LocalDateTime giveConsent(String patientId,
-                        boolean onlyCurrentUser,
-                        String representedBy,
-                        LocalDateTime consentFrom,
-                        LocalDateTime consentTo,
-                        RehabstodUser user);
+    LocalDateTime giveConsent(Personnummer personnummer,
+                              boolean onlyCurrentUser,
+                              String representedBy,
+                              LocalDateTime consentFrom,
+                              LocalDateTime consentTo,
+                              RehabstodUser user);
 }
