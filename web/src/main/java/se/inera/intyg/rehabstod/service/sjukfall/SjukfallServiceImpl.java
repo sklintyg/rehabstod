@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -55,6 +56,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNa
 import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
+import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
@@ -149,7 +151,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         if (rehabstodSjukfall != null) {
             monitoringLogService.logUserViewedSjukfall(lakareId, rehabstodSjukfall.size(), enhetsId);
 
-            rehabstodSjukfall.forEach(sjukfallPatient -> clearDataByAccessMetaData(sjukfallPatient, currentVardgivarHsaId));
+            rehabstodSjukfall.forEach(sjukfallPatient -> clearDataByAccessMetaData(sjukfallPatient, currentVardgivarHsaId, enhetsId));
         }
 
         return new SjukfallPatientResponse(rehabstodSjukfall, result.getSjfMetaData(), srsError);
@@ -250,7 +252,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         // Make an initial calculation using _all_ available intyg...
         sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parameters);
         // ... and check which intyg is contributing to the aktive sjukfall
-        updateAccessMetaDataWithContributingStatus(sjukfallList, intygAccessMetaData);
+        updateAccessMetaDataWithContributingStatus(sjukfallList, intygAccessMetaData, parameters);
 
         // Make a call to the check for consent service
         // Decorate intygAccessMetaData with the consent info
@@ -309,15 +311,18 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     private void updateAccessMetaDataWithContributingStatus(List<se.inera.intyg.infra.sjukfall.dto.SjukfallPatient> sjukfallList,
-            Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
+            Map<String, IntygAccessControlMetaData> intygAccessMetaData, IntygParametrar parameters) {
         if (sjukfallList.isEmpty()) {
             return;
         }
 
         // Update BidrarTillAktivtSjukfall for all that are part of active sjukfall.
         final se.inera.intyg.infra.sjukfall.dto.SjukfallPatient aktivtSjukfall = sjukfallList.get(0);
-        aktivtSjukfall.getSjukfallIntygList()
-                .forEach(sjukfallIntyg -> intygAccessMetaData.get(sjukfallIntyg.getIntygId()).setBidrarTillAktivtSjukfall(true));
+
+        if (aktivtSjukfall.getSlut().isAfter(parameters.getAktivtDatum())) {
+            aktivtSjukfall.getSjukfallIntygList()
+                    .forEach(sjukfallIntyg -> intygAccessMetaData.get(sjukfallIntyg.getIntygId()).setBidrarTillAktivtSjukfall(true));
+        }
 
     }
 
@@ -352,17 +357,38 @@ public class SjukfallServiceImpl implements SjukfallService {
         return true;
     }
 
-    private void clearDataByAccessMetaData(SjukfallPatient sjukfallPatient, String currentVardgivarHsaId) {
+    private void clearDataByAccessMetaData(SjukfallPatient sjukfallPatient, String currentVardgivarHsaId, String currentVardenhetrHsaId) {
+
         sjukfallPatient.getIntyg().stream()
-                .filter(patientData -> !patientData.getVardgivareId().equals(currentVardgivarHsaId))
+                .filter(patientData -> !patientData.getVardgivareId().equals(currentVardgivarHsaId)
+                                    || !patientData.getVardenhetId().equals(currentVardenhetrHsaId))
                 .forEach(patientData -> {
-                    patientData.setBidiagnoser(new ArrayList<>());
-                    patientData.setDiagnos(null);
-                    patientData.setGrader(null);
-                    patientData.setLakare(null);
-                    patientData.setSysselsattning(null);
-                    patientData.setOtherVardgivare(true);
+                    clearPatientData(patientData);
+
+                    if (patientData.getVardgivareId().equals(currentVardgivarHsaId)) {
+                        patientData.setOtherVardgivare(true);
+                    } else {
+                        patientData.setOtherVardenhet(true);
+                    }
                 });
+
+
+        Optional<PatientData> firstWithDiagnos = sjukfallPatient.getIntyg().stream()
+                .filter(patientData -> patientData.getDiagnos() != null)
+                .findFirst();
+
+
+        if (firstWithDiagnos.isPresent()) {
+            sjukfallPatient.setDiagnos(firstWithDiagnos.get().getDiagnos());
+        }
+    }
+
+    private void clearPatientData(PatientData patientData) {
+        patientData.setBidiagnoser(new ArrayList<>());
+        patientData.setDiagnos(null);
+        patientData.setGrader(null);
+        patientData.setLakare(null);
+        patientData.setSysselsattning(null);
     }
 
 }

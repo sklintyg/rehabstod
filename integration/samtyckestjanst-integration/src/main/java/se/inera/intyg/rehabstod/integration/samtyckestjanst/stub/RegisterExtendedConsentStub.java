@@ -18,18 +18,19 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsent.v2.rivtabp21.RegisterExtendedConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsentResponder.v2.RegisterExtendedConsentResponseType;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsentResponder.v2.RegisterExtendedConsentType;
 import se.riv.informationsecurity.authorization.consent.v2.IIType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
@@ -52,7 +53,7 @@ public class RegisterExtendedConsentStub implements RegisterExtendedConsentRespo
                 registerExtendedConsentType.getRegistrationAction())
                 .userHsaId(registerExtendedConsentType.getEmployeeId())
                 .consentFrom(registerExtendedConsentType.getStartDate())
-                .consentFrom(registerExtendedConsentType.getEndDate())
+                .consentTo(registerExtendedConsentType.getEndDate())
                 .representedBy(getRegisteredBy(registerExtendedConsentType.getRepresentedBy()))
                 .build();
 
