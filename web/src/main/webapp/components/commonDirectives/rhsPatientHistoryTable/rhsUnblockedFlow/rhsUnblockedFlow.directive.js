@@ -17,20 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsUnblockedFlow',
-    function() {
+    function(patientHistoryViewState) {
     'use strict';
 
     return {
         restrict: 'E',
         scope: {
-            patient: '=',
-            patientSjfMetaData: '='
+            patient: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedFlow.directive.html',
         link: function($scope) {
 
             $scope.step = 'list';
-            if(patientHistoryViewState.getSjfMetaData().samtyckeSaknas.length > 0){
+            if(!patientHistoryViewState.hasSamtycke()){
                 $scope.step = 'consent';
             }
 

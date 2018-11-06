@@ -54,16 +54,23 @@ angular.module('rehabstodApp').controller('patientHistoryController',
                 $uibModalInstance.close();
             };
 
-            //Start by requesting data
-            patientHistoryProxy.get(patient).then(function(sjukfallResponse) {
-                $scope.showSpinner = false;
-                patientHistoryViewState.setTimelineItems(sjukfallResponse.sjukfallList);
-                patientHistoryViewState.setSjfMetaData(sjukfallResponse.sjfMetaData);
+            function updatePatientSjukfall(patient) {
+                //Start by requesting data
+                patientHistoryProxy.get(patient).then(function(sjukfallResponse) {
+                    $scope.showSpinner = false;
+                    patientHistoryViewState.setTimelineItems(sjukfallResponse.sjukfallList);
+                    patientHistoryViewState.setSjfMetaData(sjukfallResponse.sjfMetaData);
 
-                $scope.timeline = patientHistoryViewState.getTimelineItems();
-            }, function() {
-                $scope.showSpinner = false;
-                $scope.errorMessageKey = 'server.error.loadpatienthistory.text';
+                    $scope.timeline = patientHistoryViewState.getTimelineItems();
+                }, function() {
+                    $scope.showSpinner = false;
+                    $scope.errorMessageKey = 'server.error.loadpatienthistory.text';
+                });
+            }
+
+            $scope.$on('patientHistory.update', function(event, data){
+                updatePatientSjukfall(patient);
             });
 
+            updatePatientSjukfall(patient);
         });

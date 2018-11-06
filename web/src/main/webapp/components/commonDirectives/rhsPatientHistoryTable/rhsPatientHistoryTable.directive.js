@@ -46,7 +46,7 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
                 sparradInfoInomVardgivare: veInomVGMedSparrCount > 0,
                 osparradInfoAndraVardgivare: andraVardgivareUtanSparr > 0,
                 sparradInfoAndraVardgivare: andraVardgivareMedSparr > 0,
-                samtyckeFinns: patientSjfMetaData.samtyckeSaknas.length <= 0
+                samtyckeFinns: patientHistoryViewState.hasSamtycke()
             };
 
             $scope.getToolTip = function(diagnos) {

@@ -17,41 +17,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsUnblockedList',
-    function($timeout, patientHistoryViewState) {
+    function($rootScope, $timeout, patientHistoryProxy, patientHistoryViewState) {
     'use strict';
 
     return {
         restrict: 'E',
         scope: {
-            patientSjfMetaData: '='
+            patient: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedList/rhsUnblockedList.directive.html',
         link: function($scope) {
 
             $scope.patientHistoryViewState = patientHistoryViewState;
 
-            $scope.patientHistoryViewState.getSjfMetaData().samtyckeFinns.map(function(vg) {
-                vg.loading = false;
-                vg.fetched = false;
-                return vg;
-            });
+            patientHistoryViewState.boxState.shownVgMedSparr = true;
+
+            patientHistoryViewState.setVgMedSparrViewState($scope.patientHistoryViewState.getSjfMetaData().samtyckeFinns);
 
             $scope.fetch = function(vardgivareId) {
 
-                var vardgivare = patientHistoryViewState.getSjfMetaData().samtyckeFinns.filter(function(item){
-                    return item.id === vardgivareId;
-                });
+                var vardgivare = patientHistoryViewState.getVgMedSparrViewStateById(vardgivareId);
+                vardgivare.loading = true;
 
-                if(vardgivare.length > 0){
-                    vardgivare[0].loading = true;
-
-                    // fake backend fetch
-                    $timeout(function(){
-                        vardgivare[0].loading = false;
-                        vardgivare[0].fetched = true;
-                    }, 1000);
-                }
-
+                //patientHistoryProxy.getFromVG($scope.patient, vardgivareId).then(function() {
+                    vardgivare.loading = false;
+                    vardgivare.includedInSjukfall = true;
+                    $rootScope.$broadcast('patientHistory.update');
+                //});
             };
         }
     };

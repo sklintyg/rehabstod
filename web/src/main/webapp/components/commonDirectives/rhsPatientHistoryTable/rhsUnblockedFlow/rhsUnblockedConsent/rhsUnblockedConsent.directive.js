@@ -23,11 +23,12 @@ angular.module('rehabstodApp').directive('rhsUnblockedConsent',
     return {
         restrict: 'E',
         scope: {
-            patient: '=',
-            patientSjfMetaData: '='
+            patient: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedConsent/rhsUnblockedConsent.directive.html',
         link: function($scope) {
+
+            patientHistoryViewState.boxState.shownVgMedSparr = true;
 
             $scope.vardgivareUtanSamtycke = patientHistoryViewState.getSjfMetaData().samtyckeSaknas;
 
@@ -49,7 +50,6 @@ angular.module('rehabstodApp').directive('rhsUnblockedConsent',
                     onlyCurrentUser: $scope.consent.onlyCurrentUser === 'ONLYCURRENT',
                     days: $scope.consent.days
                 }).then(function(response) {
-
                     if(response.responseCode === 'OK')
                     {
                         var patientSjfMeta = patientHistoryViewState.getSjfMetaData();

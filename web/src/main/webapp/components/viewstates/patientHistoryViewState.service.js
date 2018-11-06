@@ -34,31 +34,41 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
 
     var _sjfMetaData = {};
 
+    var _vgViewState = {};
+
+    var _boxState = {
+        shownVgMedSparr: false
+    };
+
+    function _hasSamtycke() {
+        return _sjfMetaData.samtyckeSaknas.length <= 0;
+    }
+
+    function _setVgMedSparrViewState(vg) {
+        _vgViewState = vg;
+        _vgViewState = _vgViewState.map(function(vg) {
+            vg.loading = false;
+            return vg;
+        });
+    }
+
+    function _getVgMedSparrViewState() {
+        return _vgViewState;
+    }
+
+    function _getVgMedSparrViewStateById(vgId) {
+        var result = null;
+        _vgViewState.forEach(function(item){
+            if(item.vardgivareId === vgId){
+                result = item;
+            }
+        });
+
+        return result;
+    }
+
     function _setSjfMetaData(sjfMetaData) {
         _sjfMetaData = sjfMetaData;
-/*
-        // FAKE DATA WHILE BACKEND IS BUILT
-        _sjfMetaData.vardenheterInomVGMedSparr = [];
-        var i = 0;
-        for(; i < 20; i++){
-            _sjfMetaData.vardenheterInomVGMedSparr.push('Vardenhetmedlangtnamnochmassaandraproblem ' + (i + 1));
-        }
-
-        _sjfMetaData.andraVardgivareMedSparr = [];
-        for(i = 0; i < 20; i++){
-            _sjfMetaData.andraVardgivareMedSparr.push('Vardgivaremedlangtnamnochmassaandraproblem ' + (i + 1));
-        }
-
-        _sjfMetaData.andraVardgivareUtanSparr = [];
-        for(i = 0; i < 20; i++){
-            _sjfMetaData.andraVardgivareUtanSparr.push({
-                id: i + 1,
-                name: 'Vardgivaremedlangtnamnochmassaandraproblem ' + (i + 1),
-                loading: false,
-                fetched: false
-            });
-        }
-        */
     }
 
     function _getSjfMetaData() {
@@ -199,6 +209,11 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
         getTimelineItems: _getTimelineItems,
         selectTimelineItem: _selectTimelineItem,
         setSjfMetaData: _setSjfMetaData,
-        getSjfMetaData: _getSjfMetaData
+        getSjfMetaData: _getSjfMetaData,
+        setVgMedSparrViewState: _setVgMedSparrViewState,
+        getVgMedSparrViewState: _getVgMedSparrViewState,
+        getVgMedSparrViewStateById: _getVgMedSparrViewStateById,
+        boxState: _boxState,
+        hasSamtycke: _hasSamtycke
     };
 } ]);

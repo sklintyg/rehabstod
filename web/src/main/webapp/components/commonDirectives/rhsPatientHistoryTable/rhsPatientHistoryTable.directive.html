@@ -71,6 +71,8 @@
           <h3>Ytterligare intygsinformation</h3>
         </div>
       </div>
+
+      {{extraDiagnoser}}
       <div class="row extra-intyginfo">
         <div class="col-md-4">
           <rhs-info-box info-expr="extraDiagnoser.sparradInfoInomVardgivare"
@@ -82,11 +84,12 @@
           </rhs-info-box>
         </div>
         <div class="col-md-4">
-          <rhs-info-box info-expr="extraDiagnoser.osparradInfoAndraVardgivare.length > 0"
+          <rhs-info-box info-expr="extraDiagnoser.osparradInfoAndraVardgivare"
                         box-title="label.extradiagnoser.osparradandra.title"
                         label-truthy="label.extradiagnoser.osparradandra"
-                        label-falsy="label.extradiagnoser.empty">
-            <rhs-unblocked-flow class="flex-fill" patient="patient" patientSjfMetaData="extraDiagnoser.patientSjfMetaData"></rhs-unblocked-flow>
+                        label-falsy="label.extradiagnoser.empty"
+                        show-content="patientHistoryViewState.boxState.shownVgMedSparr">
+            <rhs-unblocked-flow class="flex-fill" patient="patient"></rhs-unblocked-flow>
           </rhs-info-box>
         </div>
         <div class="col-md-4">
