@@ -64,10 +64,13 @@ public class SjukfallIntygDataGeneratorTest {
 
         final int numberOfPatients = 10;
         final int intygPerPatient = 4;
-        final int intygPerPatientOtherCareUnit = intygPerPatient; // Vi skapar upp intyg på andra vårdgivare för sjf
-        final int intygTolvan = intygPerPatient + intygPerPatientOtherCareUnit + 4; // Tolvan är gammal och ges då fyra extra intyg
         List<IntygsData> intygsData = testee.generateIntygsData(numberOfPatients, intygPerPatient);
-        assertEquals(numberOfPatients * (intygPerPatient + intygPerPatientOtherCareUnit) + intygTolvan, intygsData.size());
+
+        final int intygPerPatientOtherCareUnit = intygPerPatient * 2; // Vi skapar upp intyg på andra vårdgivare för sjf
+        final int intygTolvan = intygPerPatient + intygPerPatientOtherCareUnit + 6; // Tolvan är gammal och ges då fyra extra intyg
+        int expectedAntalIntyg = numberOfPatients * (intygPerPatient + intygPerPatientOtherCareUnit) + intygTolvan;
+
+        assertEquals(expectedAntalIntyg, intygsData.size());
         assertEquals("19791110-9291", intygsData.get(0).getPatient().getPersonId().getExtension());
         assertEquals("M16.0", intygsData.get(0).getDiagnoskod());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum());

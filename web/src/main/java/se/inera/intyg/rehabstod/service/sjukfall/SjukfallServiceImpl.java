@@ -365,6 +365,7 @@ public class SjukfallServiceImpl implements SjukfallService {
                     patientData.setGrader(null);
                     patientData.setLakare(null);
                     patientData.setSysselsattning(null);
+                    patientData.setOtherVardgivare(true);
                 });
     }
 

@@ -161,6 +161,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
             HosPersonal hosPerson = nextHosPerson();
             addToIntygsData(intygPerPatient, patient, hosPerson, intygsDataList);
             addToIntygsData(intygPerPatient, patient, utanInloggning, intygsDataList);
+            addToIntygsData(intygPerPatient, patient, nextHosPerson(), intygsDataList);
 
         }
 
@@ -169,6 +170,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         addToPuStub(tolvan);
         addToIntygsData(intygPerPatient, tolvan, hosPersonList.get(0), intygsDataList);
         addToIntygsData(intygPerPatient, tolvan, utanInloggning, intygsDataList);
+        addToIntygsData(intygPerPatient, tolvan, hosPersonList.get(1), intygsDataList);
 
         LOG.info("Generated {} intygsData items for stub", intygsDataList.size());
         return intygsDataList;

@@ -91,7 +91,67 @@
           },
           "intyg": {
             "minItems": 0,
-            "type": "array"
+            "type": "array",
+            "items": {
+              "vardgivareId": {
+                "type": "string"
+              },
+              "vardgivareNamn": {
+                "type": "string"
+              },
+              "vardenhetNamn": {
+                "type": "string"
+              },
+              "vardenhetId": {
+                "type": "string"
+              },
+              "patient": {
+                "type": "object"
+              },
+              "diagnos": {
+                "type": "object"
+              },
+              "bidiagnoser": {
+                "type": "array"
+              },
+              "start": {
+                "type": "string"
+              },
+              "slut": {
+                "type": "string"
+              },
+              "signeringsTidpunkt": {
+                "type": "string"
+              },
+              "dagar": {
+                "type": "integer"
+              },
+              "grader": {
+                "type": "array"
+              },
+              "lakare": {
+                "type": "object"
+              },
+              "sysselsattning": {
+                "type": "array"
+              },
+              "aktivtIntyg": {
+                "type": "boolean"
+              },
+              "intygsId": {
+                "type": "string"
+              },
+              "riskSignal": {
+                "type": "object"
+              },
+              "otherVardgivare": {
+                "type": "boolean"
+              },
+              "otherVardenhet": {
+                "type": "boolean"
+              },
+              "additionalItems": false
+            }
           }
         },
         "type" : "array",

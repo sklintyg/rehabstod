@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
-import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 
 /**
  * @author Magnus Ekstrand on 2017-09-01.
@@ -58,6 +58,8 @@ public class PatientData {
 
     private RiskSignal riskSignal;
 
+    private boolean otherVardgivare;
+    private boolean otherVardenhet;
 
     // - - - getters and setters
 
@@ -195,5 +197,21 @@ public class PatientData {
 
     public void setRiskSignal(RiskSignal riskSignal) {
         this.riskSignal = riskSignal;
+    }
+
+    public boolean isOtherVardgivare() {
+        return otherVardgivare;
+    }
+
+    public void setOtherVardgivare(boolean otherVardgivare) {
+        this.otherVardgivare = otherVardgivare;
+    }
+
+    public boolean isOtherVardenhet() {
+        return otherVardenhet;
+    }
+
+    public void setOtherVardenhet(boolean otherVardenhet) {
+        this.otherVardenhet = otherVardenhet;
     }
 }
