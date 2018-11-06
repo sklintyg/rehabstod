@@ -20,12 +20,15 @@ package se.inera.intyg.rehabstod.web.controller.api;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,6 +39,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.ConsentService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
+import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterIncludeInSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.schemas.contract.Personnummer;
 
@@ -93,6 +97,37 @@ public class ConsentController {
         }
 
         return response;
+    }
+
+    /**
+     * Register vardgivare to be include in sjukfall calculations during session.
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/includeVg", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<String>> includeInSjukfall(@RequestBody RegisterIncludeInSjukfallRequest request) {
+
+        // Get logged in user
+        RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
+
+        try {
+            Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
+
+            if (!personnummer.isPresent()) {
+                throw new RuntimeException("error parsing personnummer");
+            }
+
+            user.addSjfPatientVardgivare(personnummer.get().getPersonnummer(), request.getVardgivareId());
+
+            return ResponseEntity.ok(user.getSjfPatientVardgivare().get(personnummer.get().getPersonnummer()));
+
+        } catch (Exception e) {
+            LOG.error("Error giving consent", e);
+            return  ResponseEntity.unprocessableEntity().body(new ArrayList<>());
+        }
     }
 
     private RegisterExtendedConsentResponse createResponse(RegisterExtendedConsentResponse.ResponseCode responseCode,

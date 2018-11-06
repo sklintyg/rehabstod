@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import se.inera.intyg.infra.integration.hsa.model.AbstractVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
@@ -27,11 +35,6 @@ import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.service.Urval;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author pebe on 2015-08-11.
@@ -48,6 +51,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
     private boolean isLakare = false;
 
     private RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+    private Map<String, Set<String>> sjfPatientVardgivare = new HashMap<>();
 
     /**
      * Typically used by unit tests.
@@ -185,6 +189,22 @@ public class RehabstodUser extends IntygUser implements Serializable {
 
     public void setPreferences(RehabstodUserPreferences preferences) {
         this.preferences = preferences;
+    }
+
+    public Map<String, Set<String>> getSjfPatientVardgivare() {
+        return sjfPatientVardgivare;
+    }
+
+    public Collection<String> getSjfPatientVardgivareForPatient(String patientId) {
+        if (!sjfPatientVardgivare.containsKey(patientId)) {
+            sjfPatientVardgivare.put(patientId, new HashSet<>());
+        }
+
+        return sjfPatientVardgivare.get(patientId);
+    }
+
+    public void addSjfPatientVardgivare(String patientId, String vardgivarId) {
+        getSjfPatientVardgivareForPatient(patientId).add(vardgivarId);
     }
 
     /**

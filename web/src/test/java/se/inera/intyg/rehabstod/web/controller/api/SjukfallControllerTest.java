@@ -240,6 +240,7 @@ public class SjukfallControllerTest {
 
         // Given
         GetSjukfallForPatientRequest request = new GetSjukfallForPatientRequest();
+        request.setPatientId("19121212-1212");
 
         // When
         when(sjukfallServiceMock

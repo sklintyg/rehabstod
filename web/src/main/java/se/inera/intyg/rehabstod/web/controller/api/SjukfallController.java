@@ -22,8 +22,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
@@ -67,6 +69,7 @@ import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -120,9 +123,12 @@ public class SjukfallController {
         // Get user from session
         RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
 
+        Optional<Personnummer> personnummerOptional = Personnummer.createPersonnummer(request.getPatientId());
+        Collection<String> vardgivareIds = user.getSjfPatientVardgivareForPatient(personnummerOptional.get().getPersonnummer());
+
+
         // Fetch sjukfall
-        SjukfallPatientResponse response = getSjukfallForPatient(user, request.getPatientId(), request.getAktivtDatum(),
-                request.getVgHsaIds());
+        SjukfallPatientResponse response = getSjukfallForPatient(user, request.getPatientId(), request.getAktivtDatum(), vardgivareIds);
         List<SjukfallPatient> sjukfall = response.getSjukfallList();
 
         // PDL-logging based on which sjukfall that are about to be displayed to user.
@@ -266,7 +272,8 @@ public class SjukfallController {
         return sjukfallService.getByUnit(enhetsId, mottagningsId, lakarId, urval, parameters);
     }
 
-    private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, String patientId, LocalDate date, List<String> vgHsaId) {
+    private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, String patientId, LocalDate date,
+                                                          Collection<String> vgHsaId) {
         String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         String currentVardgivarHsaId = user.getValdVardgivare().getId();
         String lakareId = user.getHsaId();

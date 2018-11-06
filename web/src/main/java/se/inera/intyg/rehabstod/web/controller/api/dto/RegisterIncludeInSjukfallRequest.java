@@ -18,28 +18,15 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-import java.time.LocalDate;
-
 /**
- * Created by Magnus Ekstrand on 03/02/16.
+ * @author Magnus Ekstrand on 2018-10-19.
  */
-public class GetSjukfallForPatientRequest {
+public class RegisterIncludeInSjukfallRequest {
 
-    private LocalDate aktivtDatum;
     private String patientId;
+    private String vardgivareId;
 
-    /** The sole constructor. **/
-    public GetSjukfallForPatientRequest() {
-        aktivtDatum = LocalDate.now();
-    }
-
-
-    public LocalDate getAktivtDatum() {
-        return aktivtDatum;
-    }
-
-    public void setAktivtDatum(LocalDate aktivtDatum) {
-        this.aktivtDatum = aktivtDatum;
+    public RegisterIncludeInSjukfallRequest() {
     }
 
     public String getPatientId() {
@@ -48,5 +35,13 @@ public class GetSjukfallForPatientRequest {
 
     public void setPatientId(String patientId) {
         this.patientId = patientId;
+    }
+
+    public String getVardgivareId() {
+        return vardgivareId;
+    }
+
+    public void setVardgivareId(String vardgivareId) {
+        this.vardgivareId = vardgivareId;
     }
 }
