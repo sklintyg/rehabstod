@@ -66,6 +66,11 @@ public class SparrtjanstIntegrationServiceImpl implements SparrtjanstIntegration
                 )
                 .collect(Collectors.toList());
 
+        // Return
+        if (onlyOtherUntisIntygLista.isEmpty()) {
+            return;
+        }
+
 
         final CheckBlocksResponseType checkBlocksForPersonResponse = sparrtjanstClientService.getCheckBlocks(currentVardgivarHsaId,
                 currentVardenhetHsaId,
