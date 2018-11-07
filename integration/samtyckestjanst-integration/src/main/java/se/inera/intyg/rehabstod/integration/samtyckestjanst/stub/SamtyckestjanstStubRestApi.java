@@ -18,9 +18,11 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.inera.intyg.schemas.contract.Personnummer;
+import se.riv.informationsecurity.authorization.consent.v2.ActionType;
+import se.riv.informationsecurity.authorization.consent.v2.ActorType;
+
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -30,11 +32,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import se.riv.informationsecurity.authorization.consent.v2.ActionType;
-import se.riv.informationsecurity.authorization.consent.v2.ActorType;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
@@ -49,14 +49,14 @@ public class SamtyckestjanstStubRestApi {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addConsentForPerson(
             @PathParam("personId") String personId,
-            @QueryParam("vgHsaId") String vgHsaId,
-            @QueryParam("veHsaId") String veHsaId,
-            @QueryParam("userId") String userId,
+            @QueryParam("vardgivareId") String vgHsaId,
+            @QueryParam("vardenhetId") String veHsaId,
+            @QueryParam("employeeId") String userHsaId,
             @QueryParam("from") String from,
             @QueryParam("to") String to) {
 
         ActorType actorType = new ActorType();
-        actorType.setEmployeeId(userId);
+        actorType.setEmployeeId(userHsaId);
 
         ActionType actionType = new ActionType();
         actionType.setRegisteredBy(actorType);
@@ -65,8 +65,10 @@ public class SamtyckestjanstStubRestApi {
         actionType.setRequestedBy(actorType);
 
         String assertionId = UUID.randomUUID().toString();
-        ConsentData consentData = new ConsentData.Builder(assertionId, vgHsaId, veHsaId, personId, actionType)
-                .userHsaId(userId)
+        Personnummer pnr = parsePersonId(personId);
+
+        ConsentData consentData = new ConsentData.Builder(assertionId, vgHsaId, veHsaId, pnr.getPersonnummer(), actionType)
+                .employeeId(userHsaId)
                 .consentFrom(LocalDate.parse(from).atStartOfDay())
                 .consentTo(LocalDate.parse(to).atStartOfDay())
                 .build();
@@ -77,26 +79,42 @@ public class SamtyckestjanstStubRestApi {
 
     @DELETE
     @Path("/consent/{personId}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response removeConsentForPerson(@PathParam("personId") String personId) {
-        store.remove(personId);
+        Personnummer pnr = parsePersonId(personId);
+        store.remove(pnr.getPersonnummer());
         return Response.ok().build();
     }
 
     @DELETE
     @Path("/consent")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response removeAllConsent() {
         store.removeAll();
         return Response.ok().build();
     }
 
     @GET
-    @Path("/")
+    @Path("/consent/{personId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getConsentForPerson(
+            @PathParam("personId") String personId,
+            @QueryParam("vardgivareId") String vgHsaId,
+            @QueryParam("vardenhetId") String veHsaId
+    ) {
+        Personnummer pnr = parsePersonId(personId);
+        return Response.ok(store.hasConsent(vgHsaId, veHsaId, pnr.getPersonnummer(), LocalDate.now())).build();
+    }
+
+    @GET
+    @Path("/consent")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllConsent() {
         return Response.ok(store.getAll()).build();
 
+    }
+
+    private Personnummer parsePersonId(String personId) {
+        return Personnummer.createPersonnummer(personId)
+                .orElseThrow(() -> new IllegalStateException("Invalid personnummer!"));
     }
 
 }

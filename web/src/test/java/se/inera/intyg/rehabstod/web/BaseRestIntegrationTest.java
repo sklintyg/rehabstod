@@ -55,12 +55,16 @@ public abstract class BaseRestIntegrationTest {
     protected static final String CHANGE_UNIT_URL = USER_API_ENDPOINT + "/andraenhet";
     protected static final String SJUKFALLSUMMARY_API_ENDPOINT = "/api/sjukfall/summary";
 
+    protected static final String DEFAULT_VG_HSAID = "TSTNMT2321000156-105M";
+    protected static final String DEFAULT_VE_HSAID = "TSTNMT2321000156-105N";
+    protected static final String DEFAULT_LAKARE_HSAID = "TSTNMT2321000156-105R";
+
     protected static final FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder(
-            "TSTNMT2321000156-105R", "TSTNMT2321000156-105N").legitimeradeYrkesgrupper(LAKARE)
+            DEFAULT_LAKARE_HSAID, DEFAULT_VE_HSAID).legitimeradeYrkesgrupper(LAKARE)
                     .pdlConsentGiven(true).build();
 
     protected static final FakeCredentials DEFAULT_LAKARE_NO_CONSENT = new FakeCredentials.FakeCredentialsBuilder(
-            "TSTNMT2321000156-105R", "TSTNMT2321000156-105N").legitimeradeYrkesgrupper(LAKARE)
+            DEFAULT_LAKARE_HSAID, DEFAULT_VE_HSAID).legitimeradeYrkesgrupper(LAKARE)
                     .pdlConsentGiven(false).build();
 
     protected static final FakeCredentials EVA_H_LAKARE = new FakeCredentials.FakeCredentialsBuilder(
@@ -79,7 +83,7 @@ public abstract class BaseRestIntegrationTest {
     public void setup() {
         RestAssured.reset();
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        RestAssured.baseURI = System.getProperty("integration.tests.baseUrl");
+        RestAssured.baseURI = System.getProperty("integration.tests.baseUrl", "http://localhost:8790/");
         RestAssured.config = RestAssured.config().sessionConfig(RestAssured.config().getSessionConfig().sessionIdName("SESSION"));
 
     }

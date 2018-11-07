@@ -23,7 +23,6 @@ import se.riv.informationsecurity.authorization.consent.v2.AssertionTypeType;
 import se.riv.informationsecurity.authorization.consent.v2.ScopeType;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * @author Magnus Ekstrand on 2018-10-17.
@@ -31,10 +30,10 @@ import java.util.Objects;
 public class ConsentData {
 
     private String assertionId;
-    private String vgHsaId;
-    private String veHsaId;
+    private String vardgivareId;
+    private String vardenhetId;
     private String patientId;
-    private String userHsaId;
+    private String employeeId;
     private String representedBy;
 
     private LocalDateTime consentFrom;
@@ -47,10 +46,10 @@ public class ConsentData {
 
     ConsentData(Builder builder) {
         this.assertionId = builder.assertionId;
-        this.vgHsaId = builder.vgHsaId;
-        this.veHsaId = builder.veHsaId;
+        this.vardgivareId = builder.vardgivareId;
+        this.vardenhetId = builder.vardenhetId;
         this.patientId = builder.patientId;
-        this.userHsaId = builder.userHsaId;
+        this.employeeId = builder.employeeId;
         this.representedBy = builder.representedBy;
         this.consentFrom = builder.consentFrom;
         this.consentTo = builder.consentTo;
@@ -61,20 +60,20 @@ public class ConsentData {
         return assertionId;
     }
 
-    public String getVgHsaId() {
-        return vgHsaId;
+    public String getVardgivareId() {
+        return vardgivareId;
     }
 
-    public String getVeHsaId() {
-        return veHsaId;
+    public String getVardenhetId() {
+        return vardenhetId;
     }
 
     public String getPatientId() {
         return patientId;
     }
 
-    public String getUserHsaId() {
-        return userHsaId;
+    public String getEmployeeId() {
+        return employeeId;
     }
 
     public String getRepresentedBy() {
@@ -101,8 +100,8 @@ public class ConsentData {
         return assertionType;
     }
 
-    public void setUserHsaId(String userHsaId) {
-        this.userHsaId = userHsaId;
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
     }
 
     public void setRepresentedBy(String representedBy) {
@@ -117,35 +116,12 @@ public class ConsentData {
         this.consentTo = consentTo;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ConsentData)) {
-            return false;
-        }
-        ConsentData that = (ConsentData) o;
-        return Objects.equals(assertionId, that.assertionId)
-                && Objects.equals(vgHsaId, that.vgHsaId)
-                && Objects.equals(veHsaId, that.veHsaId)
-                && Objects.equals(patientId, that.patientId)
-                && Objects.equals(registrationAction, that.registrationAction);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(assertionId, vgHsaId, veHsaId, patientId, registrationAction);
-    }
-
-
     public static final class Builder {
-
         private String assertionId;
-        private String vgHsaId;
-        private String veHsaId;
+        private String vardgivareId;
+        private String vardenhetId;
         private String patientId;
-        private String userHsaId;
+        private String employeeId;
         private String representedBy;
         private LocalDateTime consentFrom;
         private LocalDateTime consentTo;
@@ -153,14 +129,14 @@ public class ConsentData {
 
         public Builder(String assertionId, String vgHsaId, String veHsaId, String patientId, ActionType registrationAction) {
             this.assertionId = assertionId;
-            this.vgHsaId = vgHsaId;
-            this.veHsaId = veHsaId;
+            this.vardgivareId = vgHsaId;
+            this.vardenhetId = veHsaId;
             this.patientId = patientId;
             this.registrationAction = registrationAction;
         }
 
-        public Builder userHsaId(String userHsaId) {
-            this.userHsaId = userHsaId;
+        public Builder employeeId(String userHsaId) {
+            this.employeeId = userHsaId;
             return this;
         }
 

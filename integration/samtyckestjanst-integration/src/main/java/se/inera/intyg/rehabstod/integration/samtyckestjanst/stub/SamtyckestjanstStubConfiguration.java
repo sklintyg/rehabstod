@@ -26,7 +26,7 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@ComponentScan("se.inera.intyg.rehabstod.integration.samtyckestjanst")
+@ComponentScan("se.inera.intyg.rehabstod.integration.samtyckestjanst.stub")
 @ImportResource("classpath:samtyckestjanst-stub-context.xml")
 @Profile("rhs-samtyckestjanst-stub")
 public class SamtyckestjanstStubConfiguration {

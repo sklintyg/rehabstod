@@ -18,15 +18,12 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.service;
 
-import java.time.LocalDateTime;
-
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.client.SamtyckestjanstClientService;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.exception.SamtyckestjanstIntegrationException;
 import se.inera.intyg.schemas.contract.Personnummer;
@@ -36,6 +33,8 @@ import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.CheckResultType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultType;
+
+import java.time.LocalDateTime;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
@@ -52,7 +51,7 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
     public boolean checkForConsent(String patientId, String userHsaId, String currentVardgivarHsaId, String currentEnhetsId) {
 
         Preconditions.checkArgument(!Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(userHsaId), "userHsaId may not be null or empty");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(userHsaId), "employeeId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardgivarHsaId), "currentVardgivarHsaId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(currentEnhetsId), "currentEnhetsId may not be null or empty");
 
@@ -125,7 +124,6 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
                                 resultType.getResultText()));
             }
         }
-
     }
     // CHECKSTYLE:ON ParameterNumber
 

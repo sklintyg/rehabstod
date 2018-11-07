@@ -51,7 +51,7 @@ public class RegisterExtendedConsentStub implements RegisterExtendedConsentRespo
                 registerExtendedConsentType.getCareUnitId(),
                 registerExtendedConsentType.getPatientId().getExtension(),
                 registerExtendedConsentType.getRegistrationAction())
-                .userHsaId(registerExtendedConsentType.getEmployeeId())
+                .employeeId(registerExtendedConsentType.getEmployeeId())
                 .consentFrom(registerExtendedConsentType.getStartDate())
                 .consentTo(registerExtendedConsentType.getEndDate())
                 .representedBy(getRegisteredBy(registerExtendedConsentType.getRepresentedBy()))

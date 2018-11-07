@@ -23,9 +23,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * @author andreaskaltenbach
- */
 public class FakeCredentials implements Serializable {
 
     private static final long serialVersionUID = -7620199916206349045L;

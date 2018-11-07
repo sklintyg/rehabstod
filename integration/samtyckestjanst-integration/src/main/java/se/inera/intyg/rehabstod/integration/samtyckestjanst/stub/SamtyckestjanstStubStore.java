@@ -18,11 +18,13 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
+import com.google.common.base.Strings;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -32,21 +34,21 @@ import java.util.stream.Collectors;
 @Component
 public class SamtyckestjanstStubStore {
 
-    private List<ConsentData> repository = new ArrayList<>();
+    private Set<ConsentData> repository = new HashSet<>();
 
-    public List<ConsentData> getAll() {
-        return repository;
+    public void add(ConsentData data) {
+        repository.add(data);
     }
 
-    public void removeAll() {
-        repository.clear();
+    public List<ConsentData> getAll() {
+        return repository.stream().collect(Collectors.toList());
     }
 
     public List<ConsentData> getConsents(String vgHsaId, String veHsaId, String patientId) {
         return repository.stream()
                 .filter(consent -> consent.getPatientId().equals(patientId)
-                        && consent.getVgHsaId().equals(vgHsaId)
-                        && consent.getVeHsaId().equals(veHsaId))
+                        && consent.getVardgivareId().equals(vgHsaId)
+                        && consent.getVardenhetId().equals(veHsaId))
                 .collect(Collectors.toList());
     }
 
@@ -55,12 +57,14 @@ public class SamtyckestjanstStubStore {
                 .anyMatch(consent -> isWithinInterval(consent, queryDate));
     }
 
-    public void add(ConsentData data) {
-        repository.add(data);
+    public void removeAll() {
+        repository.clear();
     }
 
     public void remove(String personId) {
-        repository.removeIf(consent -> consent.getPatientId().equals(personId));
+        if (!Strings.isNullOrEmpty(personId)) {
+            repository.removeIf(consent -> consent.getPatientId().equals(personId));
+        }
     }
 
     private boolean isWithinInterval(ConsentData consent, LocalDate queryDate) {
