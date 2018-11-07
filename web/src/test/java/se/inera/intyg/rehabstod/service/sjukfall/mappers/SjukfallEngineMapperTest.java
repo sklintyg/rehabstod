@@ -38,7 +38,9 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 
@@ -160,7 +162,7 @@ public class SjukfallEngineMapperTest {
     }
 
     @Test
-    public void testMappingOfSjukfallPatientClearData() {
+    public void testMappingOfSjukfallPatientClearDataVardgivare() {
         // given
         se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
 
@@ -176,6 +178,33 @@ public class SjukfallEngineMapperTest {
 
         PatientData patientData = to.getIntyg().get(0);
 
+        assertTrue(patientData.isOtherVardgivare());
+        assertNull(patientData.getDiagnos());
+        assertNull(patientData.getLakare());
+        assertEquals(0, patientData.getBidiagnoser().size());
+        assertEquals(0, patientData.getGrader().size());
+        assertEquals(0, patientData.getSysselsattning().size());
+    }
+
+    @Test
+    public void testMappingOfSjukfallPatientClearDataVardenhet() {
+        // given
+        se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
+
+        // when
+        SjukfallPatient to = testee.map(from, VARDGIVAREID, VARDENHETID + "other");
+
+        // then
+        assertEquals(NEDSATTNINGSTARTDATUM, to.getStart());
+        assertEquals(NEDSATTNINGSLUTDATUM, to.getSlut());
+        assertEquals(getSjukskrivningsDagar(), to.getDagar().intValue());
+        assertNull(to.getDiagnos());
+        assertEquals(ANTALINTYG.intValue(), to.getIntyg().size());
+
+        PatientData patientData = to.getIntyg().get(0);
+
+        assertFalse(patientData.isOtherVardgivare());
+        assertTrue(patientData.isOtherVardenhet());
         assertNull(patientData.getDiagnos());
         assertNull(patientData.getLakare());
         assertEquals(0, patientData.getBidiagnoser().size());

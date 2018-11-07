@@ -190,9 +190,9 @@ public class SjukfallEngineMapper {
                     clearPatientData(patientData);
 
                     if (patientData.getVardgivareId().equals(currentVardgivarHsaId)) {
-                        patientData.setOtherVardgivare(true);
-                    } else {
                         patientData.setOtherVardenhet(true);
+                    } else {
+                        patientData.setOtherVardgivare(true);
                     }
                 });
 
