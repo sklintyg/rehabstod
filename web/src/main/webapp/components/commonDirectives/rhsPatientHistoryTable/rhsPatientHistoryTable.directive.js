@@ -37,7 +37,7 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
             var patientSjfMetaData = patientHistoryViewState.getSjfMetaData();
 
             var veInomVGMedSparrCount = patientSjfMetaData.vardenheterInomVGMedSparr.length;
-            var andraVardgivareUtanSparr = patientSjfMetaData.samtyckeFinns.length + patientSjfMetaData.samtyckeSaknas.length;
+            var andraVardgivareUtanSparr = patientSjfMetaData.kraverSamtycke.length;
             var andraVardgivareMedSparr = patientSjfMetaData.andraVardgivareMedSparr.length;
 
             $scope.extraDiagnoser = {

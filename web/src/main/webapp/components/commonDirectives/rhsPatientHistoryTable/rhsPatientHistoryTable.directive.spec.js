@@ -32,24 +32,17 @@ describe('Directive: rhsPatientHistoryTable', function() {
             sjfMetaData.andraVardgivareMedSparr.push('Vardgivaremedlangtnamnochmassaandraproblem ' + (i + 1));
         }
 
-        sjfMetaData.samtyckeFinns = [];
+        sjfMetaData.kraverSamtycke = [];
         for(i = 0; i < 20; i++){
-            sjfMetaData.samtyckeFinns.push({
+            sjfMetaData.kraverSamtycke.push({
                 id: i + 1,
                 name: 'Vardgivaremedlangtnamnochmassaandraproblem ' + (i + 1),
                 loading: false,
                 fetched: false
             });
         }
-        sjfMetaData.samtyckeSaknas = [];
-        for(i = 0; i < 20; i++){
-            sjfMetaData.samtyckeSaknas.push({
-                id: i + 1,
-                name: 'Vardgivaremedlangtnamnochmassaandraproblem ' + (i + 1),
-                loading: false,
-                fetched: false
-            });
-        }
+
+        sjfMetaData.samtyckeFinns = false;
 
         _patientHistoryViewState_.setSjfMetaData(sjfMetaData);
 

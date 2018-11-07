@@ -41,7 +41,7 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
     };
 
     function _hasSamtycke() {
-        return _sjfMetaData.samtyckeSaknas.length <= 0;
+        return _sjfMetaData.samtyckeFinns;
     }
 
     function _setVgMedSparrViewState(vg) {

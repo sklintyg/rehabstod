@@ -30,7 +30,7 @@ angular.module('rehabstodApp').directive('rhsUnblockedConsent',
 
             patientHistoryViewState.vgMedSparrBoxState.skipStart = true;
 
-            $scope.vardgivareUtanSamtycke = patientHistoryViewState.getSjfMetaData().samtyckeSaknas;
+            $scope.vardgivareUtanSamtycke = patientHistoryViewState.getSjfMetaData().kraverSamtycke;
 
             var vardgivareUtanSamtyckeNames = $scope.vardgivareUtanSamtycke.map(function(vg) {
                 return vg.vardgivareNamn;
@@ -53,8 +53,7 @@ angular.module('rehabstodApp').directive('rhsUnblockedConsent',
                     if(response.responseCode === 'OK')
                     {
                         var patientSjfMeta = patientHistoryViewState.getSjfMetaData();
-                        patientSjfMeta.samtyckeFinns = patientSjfMeta.samtyckeFinns.concat(patientSjfMeta.samtyckeSaknas);
-                        patientSjfMeta.samtyckeSaknas = [];
+                        patientSjfMeta.samtyckeFinns = true;
                         $rootScope.$broadcast('rhsUnblockedFlow.next');
                     }
                 });
