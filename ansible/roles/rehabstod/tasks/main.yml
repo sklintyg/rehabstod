@@ -37,6 +37,16 @@
   environment:
       JAVA_HOME: "{{ java_home }}"
 
+- name: Remove liquibase-runner-{{ version }}.zip
+  file:
+    state: absent
+    path: "{{ releases_folder }}/rehabstod-liquibase-runner-{{ version }}.zip"
+
+- name: Remove unziped liquibase-runner-{{ version }}
+  file:
+    state: absent
+    path: "{{ releases_folder }}/rehabstod-liquibase-runner-{{ version }}"
+
 - name: Download rehabstod-web-{{ version }}.war
   get_url:
     url: "https://build-inera.nordicmedtest.se/nexus/repository/{{ repo }}/se/inera/intyg/rehabstod/rehabstod-web/{{ version }}/rehabstod-web-{{ version }}.war"
