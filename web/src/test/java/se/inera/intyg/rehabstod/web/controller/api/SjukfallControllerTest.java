@@ -87,6 +87,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 public class SjukfallControllerTest {
 
     private static final String VARDENHETS_ID = "123";
+    private static final String VARDGIVARE_ID = "vg1";
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -113,6 +114,7 @@ public class SjukfallControllerTest {
     public void before() {
         when(userServiceMock.getUser()).thenReturn(rehabstodUserMock);
         when(rehabstodUserMock.getValdVardenhet()).thenReturn(new Vardenhet(VARDENHETS_ID, "enhet"));
+        when(rehabstodUserMock.getValdVardgivare()).thenReturn(new Vardgivare(VARDGIVARE_ID, "vg"));
         when(rehabstodUserMock.getUrval()).thenReturn(Urval.ALL);
         RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
         preferences.updatePreference(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
@@ -196,33 +198,34 @@ public class SjukfallControllerTest {
 
     @Test
     public void testGetSjukfallByPatient() {
-        SjukfallEnhet a = createSjukFallEnhet("19121212-1212");
-        SjukfallEnhet b = createSjukFallEnhet("20121212-1212");
-        SjukfallEnhet c = createSjukFallEnhet("19840921-9287");
+        String patientId = "19121212-1212";
 
-        List<SjukfallEnhet> result = Arrays.asList(a, b);
-        List<SjukfallEnhet> toLog = Arrays.asList(c);
+        SjukfallPatient a = createSjukFallPatient(patientId, 1, 0);
+
+        List<SjukfallPatient> result = Arrays.asList(a);
 
         // Given
-        GetSjukfallRequest request = new GetSjukfallRequest();
+        GetSjukfallForPatientRequest request = new GetSjukfallForPatientRequest();
+        request.setPatientId(patientId);
 
         // When
         mockStatic(PDLActivityStore.class);
-        when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
-            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
-        when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(IntygParametrar.class)))
-                .thenReturn(new SjukfallEnhetResponse(result, false));
+        //when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
+        //    eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK), any(Map.class))).thenReturn(result);
+        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
+                .thenReturn(new SjukfallPatientResponse(result, new SjfMetaData(), false));
 
         // Then
-        testee.getSjukfallForCareUnit(request);
+        testee.getSjukfallForPatient(request);
 
         // Verify
         verifyStatic();
-        PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
-            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class));
+        PDLActivityStore.isActivityInStore(anyString(), any(), eq(ActivityType.READ),
+            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK), any(Map.class));
 
-        verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(IntygParametrar.class));
-        verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL));
+        verify(sjukfallServiceMock).getByPatient(eq(VARDGIVARE_ID), eq(VARDENHETS_ID), anyString(), eq(patientId), any(Urval.class),
+                any(IntygParametrar.class), anyCollectionOf(String.class));
+        verify(logServiceMock).logSjukfallData(eq(a), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK));
     }
 
     @Test
