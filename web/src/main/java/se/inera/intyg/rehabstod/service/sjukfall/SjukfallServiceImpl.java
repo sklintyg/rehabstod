@@ -258,7 +258,8 @@ public class SjukfallServiceImpl implements SjukfallService {
         SjfMetaData sjfMetaData = createSjfMetaData(intygAccessMetaData, haveConsent);
 
         // Final run, where all intyg not cleared (sparr/samtycke) to be included have been removed
-        sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(filterByAcessMetaData(data, intygAccessMetaData, haveConsent), parameters);
+        data = filterByAcessMetaData(data, intygAccessMetaData, haveConsent);
+        sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parameters);
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
         List<SjukfallPatient> rehabstodSjukfall = sjukfallList.stream()

@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -34,17 +36,20 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.Patient;
 import se.inera.intyg.infra.sjukfall.dto.Vardgivare;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineServiceImpl;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
+import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationServiceImpl;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
-import se.inera.intyg.rehabstod.integration.sparrtjanst.service.SparrtjanstIntegrationService;
+import se.inera.intyg.rehabstod.integration.sparrtjanst.service.SparrtjanstIntegrationServiceImpl;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfSamtyckeFinnsMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
@@ -68,6 +73,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
@@ -87,6 +93,7 @@ public class SjukfallServiceTest {
     private static final int MAX_DAGAR_SEDAN_AVSLUT = 0;
     private final String vgId = "vg1";
     private final String vgId2 = "vg2";
+    private final String vgId3 = "vg3";
     private final String enhetsId = "IFV1239877878-1042";
     private final String enhetsId2 = "enhet2";
     private final String mottagningsId = "Mottagning-1";
@@ -95,10 +102,12 @@ public class SjukfallServiceTest {
     private final String lakareId2 = "IFV1239877878-104B";
     private final String lakareNamn2 = "Åsa Andersson";
     private final String patientId1 = "19121212-1212";
-    private int intygsId = 1;
+    private int intygsIdCounter = 1;
 
     private Integer intygsGlapp = 5;
     private LocalDate activeDate = LocalDate.parse("2016-02-16");
+
+    private List<String> intygWithSparr = new ArrayList<>();
 
     private IntygParametrar parameters = new IntygParametrar(intygsGlapp, MAX_DAGAR_SEDAN_AVSLUT, activeDate);
 
@@ -135,8 +144,8 @@ public class SjukfallServiceTest {
     @Mock
     private UserPreferencesService userPreferencesService;
 
-    @Mock
-    private SparrtjanstIntegrationService sparrtjanstIntegrationService;
+    @Spy
+    private SparrtjanstIntegrationServiceImplTest sparrtjanstIntegrationService;
 
     @Mock
     private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
@@ -221,7 +230,7 @@ public class SjukfallServiceTest {
     }
 
     @Test
-    public void testGetByPatient() {
+    public void testGetByPatient_utanSamtycke() {
         List<String> vgHsaId = new ArrayList<>();
 
         SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId);
@@ -229,8 +238,37 @@ public class SjukfallServiceTest {
         assertEquals(1, patientResponse.getSjukfallList().size());
         assertEquals(3, patientResponse.getSjukfallList().get(0).getIntyg().size());
 
-        assertEquals(1, patientResponse.getSjfMetaData().getKraverSamtycke().size());
+        assertEquals(2, patientResponse.getSjfMetaData().getKraverSamtycke().size());
+        assertEquals(vgId2, patientResponse.getSjfMetaData().getKraverSamtycke().iterator().next().getVardgivareId());
         assertFalse(patientResponse.getSjfMetaData().isSamtyckeFinns());
+
+        assertEquals(1, patientResponse.getSjfMetaData().getAndraVardgivareMedSparr().size());
+        assertEquals(1, patientResponse.getSjfMetaData().getVardenheterInomVGMedSparr().size());
+    }
+
+    @Test
+    public void testGetByPatient_medSamtycke() {
+        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId, enhetsId)).thenReturn(true);
+
+        List<String> vgHsaId = new ArrayList<>();
+        vgHsaId.add(vgId2);
+
+        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId);
+
+        assertEquals(1, patientResponse.getSjukfallList().size());
+        assertEquals(4, patientResponse.getSjukfallList().get(0).getIntyg().size());
+
+        assertEquals(2, patientResponse.getSjfMetaData().getKraverSamtycke().size());
+
+        Iterator<SjfSamtyckeFinnsMetaData> kraverSamtycke = patientResponse.getSjfMetaData().getKraverSamtycke().iterator();
+        SjfSamtyckeFinnsMetaData vg2metaData = kraverSamtycke.next();
+        SjfSamtyckeFinnsMetaData vg3metaData = kraverSamtycke.next();
+
+        assertEquals(vgId2, vg2metaData.getVardgivareId());
+        assertTrue(vg2metaData.isIncludedInSjukfall());
+        assertEquals(vgId3, vg3metaData.getVardgivareId());
+        assertFalse(vg3metaData.isIncludedInSjukfall());
+        assertTrue(patientResponse.getSjfMetaData().isSamtyckeFinns());
     }
 
     // - - - Private scope - - -
@@ -260,10 +298,15 @@ public class SjukfallServiceTest {
     private List<IntygsData> createIntygsData() {
         List<IntygsData> intygsData = new ArrayList<>();
 
+        intygWithSparr = new ArrayList<>();
+
         intygsData.add(createIntygsData(vgId, enhetsId, lakareId1, patientId1));
         intygsData.add(createIntygsData(vgId, enhetsId, lakareId1, patientId1));
         intygsData.add(createIntygsData(vgId, enhetsId2, lakareId1, patientId1));
+        intygsData.add(createIntygsData(vgId, enhetsId2, lakareId1, patientId1, true));
         intygsData.add(createIntygsData(vgId2, enhetsId, lakareId1, patientId1));
+        intygsData.add(createIntygsData(vgId3, enhetsId, lakareId1, patientId1));
+        intygsData.add(createIntygsData(vgId3, enhetsId, lakareId1, patientId1, true));
 
         return intygsData;
     }
@@ -340,7 +383,14 @@ public class SjukfallServiceTest {
         intygsData.setSigneringsTidpunkt(activeDate.atStartOfDay());
         intygsData.setArbetsformaga(arbetsformaga);
         intygsData.setDiagnoskod("J20");
-        intygsData.setIntygsId("intygsId" + intygsId++);
+
+        String intygId = "intygsId" + intygsIdCounter++;
+
+        intygsData.setIntygsId(intygId);
+
+        if (harSparr) {
+            intygWithSparr.add(intygId);
+        }
 
         return intygsData;
     }
@@ -389,5 +439,20 @@ public class SjukfallServiceTest {
             return to;
         }
 
+    }
+
+    class SparrtjanstIntegrationServiceImplTest extends SparrtjanstIntegrationServiceImpl {
+
+        @Override
+        public void decorateWithBlockStatus(String currentVardgivarHsaId, String currentVardenhetHsaId, String userHsaId,
+                                            String patientId, Map<String, IntygAccessControlMetaData> intygAccessMetaData,
+                                            List<IntygData> intygLista) {
+
+            intygWithSparr.forEach(intygsId -> {
+                if (intygAccessMetaData.containsKey(intygsId)) {
+                    intygAccessMetaData.get(intygsId).setSparr(true);
+                }
+            });
+        }
     }
 }

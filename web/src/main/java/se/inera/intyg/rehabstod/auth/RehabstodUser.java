@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import se.inera.intyg.infra.integration.hsa.model.AbstractVardenhet;
@@ -42,7 +43,6 @@ import se.inera.intyg.rehabstod.service.Urval;
 public class RehabstodUser extends IntygUser implements Serializable {
 
     private static final long serialVersionUID = 8711015219408194075L;
-    public static final int THIRTYONE = 31;
 
     // Handles PDL logging state
     private Map<String, List<PDLActivityEntry>> storedActivities;
@@ -236,31 +236,23 @@ public class RehabstodUser extends IntygUser implements Serializable {
         );
     }
 
-
     // CHECKSTYLE:OFF NeedBraces
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RehabstodUser)) return false;
         if (!super.equals(o)) return false;
-
         RehabstodUser that = (RehabstodUser) o;
-
-        if (pdlConsentGiven != that.pdlConsentGiven) return false;
-        if (isLakare != that.isLakare) return false;
-        if (storedActivities != null ? !storedActivities.equals(that.storedActivities) : that.storedActivities != null)
-            return false;
-        return preferences.equals(that.preferences);
+        return pdlConsentGiven == that.pdlConsentGiven &&
+                isLakare == that.isLakare &&
+                Objects.equals(storedActivities, that.storedActivities) &&
+                Objects.equals(preferences, that.preferences) &&
+                Objects.equals(sjfPatientVardgivare, that.sjfPatientVardgivare);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = THIRTYONE * result + (storedActivities != null ? storedActivities.hashCode() : 0);
-        result = THIRTYONE * result + (pdlConsentGiven ? 1 : 0);
-        result = THIRTYONE * result + (isLakare ? 1 : 0);
-        result = THIRTYONE * result + preferences.hashCode();
-        return result;
+        return Objects.hash(super.hashCode(), storedActivities, pdlConsentGiven, isLakare, preferences, sjfPatientVardgivare);
     }
     // CHECKSTYLE:ON NeedBraces
 

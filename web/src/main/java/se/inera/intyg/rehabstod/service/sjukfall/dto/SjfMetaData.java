@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -29,7 +28,7 @@ public class SjfMetaData {
 
     private Collection<String> vardenheterInomVGMedSparr = new HashSet<>();
     private Collection<String> andraVardgivareMedSparr = new HashSet<>();
-    private Collection<SjfSamtyckeFinnsMetaData> kraverSamtycke = new ArrayList<>();
+    private Collection<SjfSamtyckeFinnsMetaData> kraverSamtycke = new HashSet<>();
     private boolean samtyckeFinns;
 
     public SjfMetaData() {
