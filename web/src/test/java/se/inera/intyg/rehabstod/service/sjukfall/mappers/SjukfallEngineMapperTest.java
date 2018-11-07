@@ -18,6 +18,11 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.mappers;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,21 +30,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 
@@ -68,6 +67,7 @@ public class SjukfallEngineMapperTest {
     private static final long ANTALDAGARTILLSLUT = 7L;
     private static final String SYSSELSATTNING = "NUVARANDE_ARBETE";
     private static final Integer ANTALINTYG = 1;
+    private static final String DIAGNOS_KOD = "M123";
 
     private static final LocalDate AKTIVTDATUM = LocalDate.now();
 
@@ -79,8 +79,8 @@ public class SjukfallEngineMapperTest {
 
     @Before
     public void beforeEach() {
-        when(diagnosFactory.getDiagnos(DIAGNOS, "M123", "Palindrom reumatism"))
-            .thenReturn(createDiagnos(DIAGNOS, "M123", "Palindrom reumatism"));
+        when(diagnosFactory.getDiagnos(DIAGNOS, DIAGNOS_KOD, "Palindrom reumatism"))
+            .thenReturn(createDiagnos(DIAGNOS, DIAGNOS_KOD, "Palindrom reumatism"));
         when(diagnosFactory.getDiagnos(BIDIAGNOS, "S666", "Skada på multipla böjmuskler och deras senor på handleds- och handnivå"))
             .thenReturn(createDiagnos(BIDIAGNOS, "S666", "Skada på multipla böjmuskler och deras senor på handleds- och handnivå"));
     }
@@ -105,9 +105,9 @@ public class SjukfallEngineMapperTest {
         assertEquals(PERSONNUMMER, to.getPatient().getId());
         assertEquals(PERSONNAMN, to.getPatient().getNamn());
         assertEquals(DIAGNOS, to.getDiagnos().getIntygsVarde());
-        assertEquals("M123", to.getDiagnos().getKod());
+        assertEquals(DIAGNOS_KOD, to.getDiagnos().getKod());
         assertEquals("Palindrom reumatism", to.getDiagnos().getNamn());
-        assertTrue(1 == to.getBiDiagnoser().size());
+        assertEquals(1, to.getBiDiagnoser().size());
         assertEquals(BIDIAGNOS, to.getBiDiagnoser().get(0).getIntygsVarde());
         assertEquals("S666", to.getBiDiagnoser().get(0).getKod());
         assertEquals("Skada på multipla böjmuskler och deras senor på handleds- och handnivå", to.getBiDiagnoser().get(0).getNamn());
@@ -116,7 +116,7 @@ public class SjukfallEngineMapperTest {
         assertEquals(NEDSATTNINGSLUTDATUM, to.getSlut());
         assertEquals(ANTALDAGARTILLSLUT, to.getSlutOmDagar());
         assertEquals(getSjukskrivningsDagar(), to.getDagar());
-        assertTrue(1 == to.getGrader().size());
+        assertEquals(1, to.getGrader().size());
         assertEquals(NEDSATTNING, to.getGrader().get(0));
     }
 
@@ -140,16 +140,47 @@ public class SjukfallEngineMapperTest {
         se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
 
         // when
-        SjukfallPatient to = testee.map(from);
+        SjukfallPatient to = testee.map(from, VARDGIVAREID, VARDENHETID);
 
         // then
         assertEquals(NEDSATTNINGSTARTDATUM, to.getStart());
         assertEquals(NEDSATTNINGSLUTDATUM, to.getSlut());
         assertEquals(getSjukskrivningsDagar(), to.getDagar().intValue());
         assertEquals(DIAGNOS, to.getDiagnos().getIntygsVarde());
-        assertEquals("M123", to.getDiagnos().getKod());
+        assertEquals(DIAGNOS_KOD, to.getDiagnos().getKod());
         assertEquals("Palindrom reumatism", to.getDiagnos().getNamn());
         assertEquals(ANTALINTYG.intValue(), to.getIntyg().size());
+
+        PatientData patientData = to.getIntyg().get(0);
+
+        assertEquals(DIAGNOS_KOD, patientData.getDiagnos().getKod());
+        assertEquals(1, patientData.getBidiagnoser().size());
+        assertEquals(1, patientData.getGrader().size());
+        assertEquals(1, patientData.getSysselsattning().size());
+    }
+
+    @Test
+    public void testMappingOfSjukfallPatientClearData() {
+        // given
+        se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
+
+        // when
+        SjukfallPatient to = testee.map(from, VARDGIVAREID + "other", VARDENHETID);
+
+        // then
+        assertEquals(NEDSATTNINGSTARTDATUM, to.getStart());
+        assertEquals(NEDSATTNINGSLUTDATUM, to.getSlut());
+        assertEquals(getSjukskrivningsDagar(), to.getDagar().intValue());
+        assertNull(to.getDiagnos());
+        assertEquals(ANTALINTYG.intValue(), to.getIntyg().size());
+
+        PatientData patientData = to.getIntyg().get(0);
+
+        assertNull(patientData.getDiagnos());
+        assertNull(patientData.getLakare());
+        assertEquals(0, patientData.getBidiagnoser().size());
+        assertEquals(0, patientData.getGrader().size());
+        assertEquals(0, patientData.getSysselsattning().size());
     }
 
     @Test
@@ -174,7 +205,7 @@ public class SjukfallEngineMapperTest {
         assertEquals(PERSONNUMMER, to.getPatient().getId());
         assertEquals(PERSONNAMN, to.getPatient().getNamn());
         assertEquals(DIAGNOS, to.getDiagnos().getIntygsVarde());
-        assertEquals("M123", to.getDiagnos().getKod());
+        assertEquals(DIAGNOS_KOD, to.getDiagnos().getKod());
         assertEquals("Palindrom reumatism", to.getDiagnos().getNamn());
         assertEquals(BIDIAGNOS, to.getBidiagnoser().get(0).getIntygsVarde());
         assertEquals("S666", to.getBidiagnoser().get(0).getKod());

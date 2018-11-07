@@ -18,12 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -56,7 +54,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNa
 import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
-import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
@@ -150,8 +147,6 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         if (rehabstodSjukfall != null) {
             monitoringLogService.logUserViewedSjukfall(lakareId, rehabstodSjukfall.size(), enhetsId);
-
-            rehabstodSjukfall.forEach(sjukfallPatient -> clearDataByAccessMetaData(sjukfallPatient, currentVardgivarHsaId, enhetsId));
         }
 
         return new SjukfallPatientResponse(rehabstodSjukfall, result.getSjfMetaData(), srsError);
@@ -266,7 +261,9 @@ public class SjukfallServiceImpl implements SjukfallService {
         sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(filterByAcessMetaData(data, intygAccessMetaData, haveConsent), parameters);
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
-        List<SjukfallPatient> rehabstodSjukfall = sjukfallList.stream().map(o -> sjukfallEngineMapper.map(o)).collect(Collectors.toList());
+        List<SjukfallPatient> rehabstodSjukfall = sjukfallList.stream()
+                .map(o -> sjukfallEngineMapper.map(o, currentVardgivarHsaId, enhetsId))
+                .collect(Collectors.toList());
 
         return new FilteredSjukFallByPatientResult(rehabstodSjukfall, sjfMetaData);
     }
@@ -301,11 +298,8 @@ public class SjukfallServiceImpl implements SjukfallService {
             }
         });
 
-        if (haveConsent) {
-            metadata.setSamtyckeFinns(vardgivareSamtycke.values());
-        } else {
-            metadata.setSamtyckeSaknas(vardgivareSamtycke.values());
-        }
+        metadata.setKraverSamtycke(vardgivareSamtycke.values());
+        metadata.setSamtyckeFinns(haveConsent);
 
         return metadata;
     }
@@ -355,40 +349,6 @@ public class SjukfallServiceImpl implements SjukfallService {
         }
 
         return true;
-    }
-
-    private void clearDataByAccessMetaData(SjukfallPatient sjukfallPatient, String currentVardgivarHsaId, String currentVardenhetrHsaId) {
-
-        sjukfallPatient.getIntyg().stream()
-                .filter(patientData -> !patientData.getVardgivareId().equals(currentVardgivarHsaId)
-                                    || !patientData.getVardenhetId().equals(currentVardenhetrHsaId))
-                .forEach(patientData -> {
-                    clearPatientData(patientData);
-
-                    if (patientData.getVardgivareId().equals(currentVardgivarHsaId)) {
-                        patientData.setOtherVardgivare(true);
-                    } else {
-                        patientData.setOtherVardenhet(true);
-                    }
-                });
-
-
-        Optional<PatientData> firstWithDiagnos = sjukfallPatient.getIntyg().stream()
-                .filter(patientData -> patientData.getDiagnos() != null)
-                .findFirst();
-
-
-        if (firstWithDiagnos.isPresent()) {
-            sjukfallPatient.setDiagnos(firstWithDiagnos.get().getDiagnos());
-        }
-    }
-
-    private void clearPatientData(PatientData patientData) {
-        patientData.setBidiagnoser(new ArrayList<>());
-        patientData.setDiagnos(null);
-        patientData.setGrader(null);
-        patientData.setLakare(null);
-        patientData.setSysselsattning(null);
     }
 
 }

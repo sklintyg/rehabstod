@@ -67,6 +67,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
@@ -228,7 +229,8 @@ public class SjukfallServiceTest {
         assertEquals(1, patientResponse.getSjukfallList().size());
         assertEquals(3, patientResponse.getSjukfallList().get(0).getIntyg().size());
 
-        assertEquals(1, patientResponse.getSjfMetaData().getSamtyckeSaknas().size());
+        assertEquals(1, patientResponse.getSjfMetaData().getKraverSamtycke().size());
+        assertFalse(patientResponse.getSjfMetaData().isSamtyckeFinns());
     }
 
     // - - - Private scope - - -
@@ -370,8 +372,8 @@ public class SjukfallServiceTest {
         }
 
         @Override
-        public SjukfallPatient map(se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from) {
-            return super.map(from);
+        public SjukfallPatient map(se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from, String vgId, String enhetId) {
+            return super.map(from, vgId, enhetId);
         }
 
         @Override

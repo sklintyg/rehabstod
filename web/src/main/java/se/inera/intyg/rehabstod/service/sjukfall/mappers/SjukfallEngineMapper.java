@@ -18,8 +18,18 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.mappers;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
@@ -28,14 +38,6 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
-
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author Magnus Ekstrand on 2017-09-01.
@@ -83,7 +85,8 @@ public class SjukfallEngineMapper {
     /**
      * Mapping from SjukfallEngine's format to Rehabstod internal format.
      */
-    public SjukfallPatient map(se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from) {
+    public SjukfallPatient map(se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from, String currentVardgivarHsaId,
+                               String currentVardenhetHsaId) {
         SjukfallPatient to = new SjukfallPatient();
 
         try {
@@ -100,6 +103,8 @@ public class SjukfallEngineMapper {
 
             patientData = patientData.stream().sorted(dateComparator).collect(Collectors.toList());
             to.setIntyg(patientData);
+
+            clearDataIfOtherUnit(to, currentVardgivarHsaId, currentVardenhetHsaId);
 
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
@@ -173,6 +178,43 @@ public class SjukfallEngineMapper {
 
     private List<PatientData> mapIntyg(List<se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg> from) {
         return from.stream().map(this::map).collect(Collectors.toList());
+    }
+
+
+    private void clearDataIfOtherUnit(SjukfallPatient sjukfallPatient, String currentVardgivarHsaId, String currentVardenhetHsaId) {
+
+        sjukfallPatient.getIntyg().stream()
+                .filter(patientData -> !patientData.getVardgivareId().equals(currentVardgivarHsaId)
+                        || !patientData.getVardenhetId().equals(currentVardenhetHsaId))
+                .forEach(patientData -> {
+                    clearPatientData(patientData);
+
+                    if (patientData.getVardgivareId().equals(currentVardgivarHsaId)) {
+                        patientData.setOtherVardgivare(true);
+                    } else {
+                        patientData.setOtherVardenhet(true);
+                    }
+                });
+
+
+        Optional<PatientData> firstWithDiagnos = sjukfallPatient.getIntyg().stream()
+                .filter(patientData -> patientData.getDiagnos() != null)
+                .findFirst();
+
+
+        if (firstWithDiagnos.isPresent()) {
+            sjukfallPatient.setDiagnos(firstWithDiagnos.get().getDiagnos());
+        } else {
+            sjukfallPatient.setDiagnos(null);
+        }
+    }
+
+    private void clearPatientData(PatientData patientData) {
+        patientData.setBidiagnoser(new ArrayList<>());
+        patientData.setDiagnos(null);
+        patientData.setGrader(new ArrayList<>());
+        patientData.setLakare(null);
+        patientData.setSysselsattning(new ArrayList<>());
     }
 
 }

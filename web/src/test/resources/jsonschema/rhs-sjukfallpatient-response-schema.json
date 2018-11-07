@@ -13,7 +13,7 @@
             "minItems": 0,
             "type": "array"
           },
-          "samtyckeFinns": {
+          "kraverSamtycke": {
             "minItems": 0,
             "type": "array",
             "items": {
@@ -28,9 +28,8 @@
               }
             }
           },
-          "samtyckeSaknas": {
-            "minItems": 0,
-            "type": "array"
+          "samtyckeFinns": {
+            "type": "boolean"
           }
         },
         "type": "object",
