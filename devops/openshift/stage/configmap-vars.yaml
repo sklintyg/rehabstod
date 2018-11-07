@@ -17,6 +17,8 @@ data:
   SAKERHETSTJANST_SAML_KEYSTORE_ALIAS: "verifiering.rehabstod.intygstjanster.sjunet.org"
   SAKERHETSTJANST_SAML_KEYSTORE_FILE: "file://${certificate.folder}/verifiering.rehabstod.intygstjanster.sjunet.org.jks"
   SAKERHETSTJANST_SAML_TRUSTSTORE_FILE: "file://${certificate.folder}/truststore.jks"
+  AGGREGATED_PDL_LOGGING_QUEUE_NAME: "webcert.aggregated.loq.queue"
+  PDL_LOGGING_QUEUE_NAME: "webcert.log.queue"
 kind: ConfigMap
 metadata:
   name: rehabstod-stage-configmap-envvar
