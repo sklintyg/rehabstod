@@ -243,11 +243,11 @@ public class RehabstodUser extends IntygUser implements Serializable {
         if (!(o instanceof RehabstodUser)) return false;
         if (!super.equals(o)) return false;
         RehabstodUser that = (RehabstodUser) o;
-        return pdlConsentGiven == that.pdlConsentGiven &&
-                isLakare == that.isLakare &&
-                Objects.equals(storedActivities, that.storedActivities) &&
-                Objects.equals(preferences, that.preferences) &&
-                Objects.equals(sjfPatientVardgivare, that.sjfPatientVardgivare);
+        return pdlConsentGiven == that.pdlConsentGiven
+                && isLakare == that.isLakare
+                && Objects.equals(storedActivities, that.storedActivities)
+                && Objects.equals(preferences, that.preferences)
+                && Objects.equals(sjfPatientVardgivare, that.sjfPatientVardgivare);
     }
 
     @Override
