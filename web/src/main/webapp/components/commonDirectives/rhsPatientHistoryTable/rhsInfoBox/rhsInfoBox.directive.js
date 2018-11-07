@@ -28,10 +28,15 @@ angular.module('rehabstodApp').directive('rhsInfoBox',
             boxTitle: '@',
             labelTruthy: '@',
             labelFalsy: '@',
-            boxState: '='
+            boxState: '=?' // allows to set skipStart to skip the "Visa mig" section
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsInfoBox/rhsInfoBox.directive.html',
         link: function($scope) {
+
+            // Box state is optional so set defaults if its not provided
+            if(!$scope.boxState){
+                $scope.boxState = { skipStart: false };
+            }
 
             if(!$scope.boxState.skipStart){
                 $scope.boxState.skipStart = false;
