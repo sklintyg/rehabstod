@@ -1,7 +1,7 @@
 <h4>{{::boxTitle |message}}</h4>
 <div ng-switch="infoExpr" class="flex-fill">
   <div ng-switch-when="true" class="flex-fill">
-    <div ng-switch="showContent" class="flex-fill">
+    <div ng-switch="boxState.skipStart" class="flex-fill">
       <div ng-switch-when="true" class="flex-fill">
         <ng-transclude class="flex-fill"></ng-transclude>
       </div>

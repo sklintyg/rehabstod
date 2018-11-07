@@ -30,7 +30,7 @@ angular.module('rehabstodApp').directive('rhsUnblockedList',
 
             $scope.patientHistoryViewState = patientHistoryViewState;
 
-            patientHistoryViewState.boxState.shownVgMedSparr = true;
+            patientHistoryViewState.vgMedSparrBoxState.skipStart = true;
 
             patientHistoryViewState.setVgMedSparrViewState($scope.patientHistoryViewState.getSjfMetaData().samtyckeFinns);
 
@@ -39,11 +39,13 @@ angular.module('rehabstodApp').directive('rhsUnblockedList',
                 var vardgivare = patientHistoryViewState.getVgMedSparrViewStateById(vardgivareId);
                 vardgivare.loading = true;
 
-                //patientHistoryProxy.getFromVG($scope.patient, vardgivareId).then(function() {
+                patientHistoryProxy.getFromVG($scope.patient, vardgivareId).then(function() {
                     vardgivare.loading = false;
                     vardgivare.includedInSjukfall = true;
                     $rootScope.$broadcast('patientHistory.update');
-                //});
+                }, function() {
+                    vardgivare.loading = false;
+                });
             };
         }
     };

@@ -68,7 +68,7 @@ angular.module('rehabstodApp').controller('patientHistoryController',
                 });
             }
 
-            $scope.$on('patientHistory.update', function(event, data){
+            $scope.$on('patientHistory.update', function(){
                 updatePatientSjukfall(patient);
             });
 

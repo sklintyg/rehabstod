@@ -28,7 +28,7 @@ angular.module('rehabstodApp').directive('rhsUnblockedConsent',
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedConsent/rhsUnblockedConsent.directive.html',
         link: function($scope) {
 
-            patientHistoryViewState.boxState.shownVgMedSparr = true;
+            patientHistoryViewState.vgMedSparrBoxState.skipStart = true;
 
             $scope.vardgivareUtanSamtycke = patientHistoryViewState.getSjfMetaData().samtyckeSaknas;
 

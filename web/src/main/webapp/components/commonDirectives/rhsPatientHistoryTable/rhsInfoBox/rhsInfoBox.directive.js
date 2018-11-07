@@ -28,17 +28,17 @@ angular.module('rehabstodApp').directive('rhsInfoBox',
             boxTitle: '@',
             labelTruthy: '@',
             labelFalsy: '@',
-            showContent: '='
+            boxState: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsInfoBox/rhsInfoBox.directive.html',
         link: function($scope) {
 
-            if(!$scope.showContent){
-                $scope.showContent = false;
+            if(!$scope.boxState.skipStart){
+                $scope.boxState.skipStart = false;
             }
 
             $scope.next = function() {
-                $scope.showContent = true;
+                $scope.boxState.skipStart = true;
             };
         }
     };
