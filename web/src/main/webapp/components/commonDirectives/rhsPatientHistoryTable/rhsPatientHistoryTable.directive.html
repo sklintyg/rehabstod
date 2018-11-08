@@ -34,8 +34,9 @@
       <tr ng-repeat="intyg in historyItem.sjukfall.intyg">
         <td ng-attr-id="sjukfall-{{index}}-column-number-{{$index}}">{{$index + 1}}</td>
         <td ng-attr-id="sjukfall-{{index}}-column-diagnose-{{$index}}" class="nowrap">
-        <span uib-tooltip-html="getToolTip(intyg.diagnos)" tooltip-popup-delay="200"
-              class="patient-history-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnos.intygsVarde}}</span>
+          <span uib-tooltip-html="getToolTip(intyg.diagnos)" tooltip-popup-delay="200"
+              class="patient-history-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnos.intygsVarde}}
+          </span><span ng-if="!intyg.diagnos.intygsVarde" class="hidden-value">Okänt</span>
           <div class="diagnos hidden-xs hidden-sm hidden-md">{{::intyg.diagnos.beskrivning}}</div>
           <span ng-repeat="d in intyg.bidiagnoser">, <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200"
                                                            class="patient-history-dialog-tooltip">{{::d.intygsVarde}}</span></span>
@@ -43,10 +44,11 @@
         <td ng-attr-id="sjukfall-{{index}}-column-datum-{{$index}}" class="nowrap">{{::intyg.start}} - {{::intyg.slut}}</td>
         <td ng-attr-id="sjukfall-{{index}}-column-langd-{{$index}}">{{::intyg.dagar}} dagar</td>
         <td ng-attr-id="sjukfall-{{index}}-column-grad-{{$index}}" class="nowrap"
-            ng-bind-html="::formatGrader(intyg.grader)"></td>
-        <td ng-attr-id="sjukfall-{{index}}-column-lakare-{{$index}}">{{::intyg.lakare.namn}}</td>
+            ng-bind-html="::formatGrader(intyg.grader)">{{intyg.grader}}<span ng-if="!intyg.grader || intyg.grader.length <= 0" class="hidden-value">Okänt</span></td>
+        <td ng-attr-id="sjukfall-{{index}}-column-lakare-{{$index}}">{{::intyg.lakare.namn}}<span ng-if="!intyg.lakare.namn" class="hidden-value">Okänt</span></td>
         <td ng-attr-id="sjukfall-{{index}}-column-sysselsattning-{{$index}}">
           <div ng-repeat="s in intyg.sysselsattning track by $index">{{::s}}</div>
+          <span ng-if="!intyg.sysselsattning || intyg.sysselsattning.length <= 0" class="hidden-value">Okänt</span>
         </td>
         <td ng-attr-id="sjukfall-{{index}}-column-vardgivare-{{$index}}">{{::intyg.vardgivareNamn}}
           <i ng-if="intyg.otherVardgivare" class="fa fa-exclamation-triangle warning-triangle" uib-tooltip-html="'Intyget kommer från en annan vårdgivare, det kommer inte att synas i Rehabstöd i övrigt.'" tooltip-popup-delay="200"></i>
