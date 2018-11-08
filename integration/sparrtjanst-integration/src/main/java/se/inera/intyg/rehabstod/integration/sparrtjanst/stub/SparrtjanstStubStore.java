@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Component;
 
@@ -31,7 +32,31 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SparrtjanstStubStore {
+    private static final String VE_TSTNMT2321000156_105Q = "TSTNMT2321000156-105Q";
+    private static final String VE_CENTRUM_VAST = "centrum-vast";
+    private static final String VG1 = "TSTNMT2321000156-105M";
+    private static final String VG2 = "vastmanland";
+
+
     private List<BlockData> repository = new ArrayList<>();
+
+    @PostConstruct
+    public void init() {
+        generateDefaultData();
+    }
+
+    // CHECKSTYLE:OFF MagicNumber
+    private void generateDefaultData() {
+        // sjf data
+        int days = 10;
+        String pnr = "201212121212";
+        LocalDate blockFrom = LocalDate.now().minusDays(days);
+        LocalDate blockTo = LocalDate.now().plusDays(days);
+
+        repository.add(new BlockData(pnr, blockFrom, blockTo, VG1, VE_TSTNMT2321000156_105Q));
+        repository.add(new BlockData(pnr, blockFrom, blockTo, VG2, VE_CENTRUM_VAST));
+    }
+    // CHECKSTYLE:ON MagicNumber
 
     public List<BlockData> getAll() {
         return repository;
@@ -45,8 +70,15 @@ public class SparrtjanstStubStore {
         return repository.stream().filter(blockData -> blockData.getPersonId().equals(personId)).collect(Collectors.toList());
     }
 
-    public boolean isBlockedAtDate(String personId, LocalDate queryDateFrom, LocalDate queryDateTo) {
+    public boolean isBlockedAtDate(String personId, LocalDate queryDateFrom, LocalDate queryDateTo,
+                                   String vardGivareId, String vardEnhetId) {
         return getAllForPerson(personId).stream()
+                .filter(blockData -> {
+                    boolean vardGivare = blockData.getVardGivareId() == null || blockData.getVardGivareId().equals(vardGivareId);
+                    boolean vardEnhet = blockData.getVardEnhetId() == null || blockData.getVardEnhetId().equals(vardEnhetId);
+
+                    return vardGivare && vardEnhet;
+                })
                 .anyMatch(blockData -> isWithinInterval(blockData, queryDateFrom) || isWithinInterval(blockData, queryDateTo));
     }
 

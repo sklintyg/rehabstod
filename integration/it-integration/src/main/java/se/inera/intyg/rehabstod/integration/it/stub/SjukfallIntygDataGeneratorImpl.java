@@ -87,6 +87,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private Enhet underenhet2;
     private Enhet kerstinEnhet1;
     private Enhet kerstinEnhet2;
+    private HosPersonal kerstin1HosPersonal;
+    private HosPersonal kerstin2HosPersonal;
     private Vardgivare vg;
     private Vardgivare vg2;
     private Vardgivare vg3;
@@ -172,8 +174,36 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         addToIntygsData(intygPerPatient, tolvan, utanInloggning, intygsDataList);
         addToIntygsData(intygPerPatient, tolvan, hosPersonList.get(1), intygsDataList);
 
+        // Lilltolvan
+        createSjfPatientData(intygsDataList, intygPerPatient);
+
         LOG.info("Generated {} intygsData items for stub", intygsDataList.size());
         return intygsDataList;
+    }
+
+    private void createSjfPatientData(List<IntygsData> intygsDataList, Integer intygPerPatient) {
+
+        Patient tolvan = buildLilltolvanTolvansson();
+        addToPuStub(tolvan);
+        // Samma vårdgivare
+        addToIntygsDataFixedDates(intygPerPatient, tolvan, kerstin1HosPersonal, intygsDataList);
+        // Samma vårdgivare annan enhet
+        addToIntygsDataFixedDates(2, tolvan, kerstin2HosPersonal, intygsDataList);
+        addToIntygsDataFixedDates(2, tolvan, hosPersonList.get(0), intygsDataList);
+        // Annan vårdgivare
+        addToIntygsDataFixedDates(2, tolvan, utanInloggning, intygsDataList);
+        addToIntygsDataFixedDates(2, tolvan, hosPersonList.get(3), intygsDataList);
+    }
+
+    private void addToIntygsDataFixedDates(Integer intygPerPatient, Patient patient, HosPersonal hosPerson,
+                                           List<IntygsData> intygsDataList) {
+        timeSimulator = LocalDateTime.now();
+        for (int intygsIndex = 0; intygsIndex < intygPerPatient; intygsIndex++) {
+
+            intygsDataList.add(buildIntygsData(patient, hosPerson));
+            // Add random nr of days glapp between intyg
+            timeSimulator = LocalDateTime.now().minusDays(20L * (intygsIndex + 1L));
+        }
     }
 
     private void addToIntygsData(Integer intygPerPatient, Patient patient, HosPersonal hosPerson, List<IntygsData> intygsDataList) {
@@ -339,6 +369,15 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         personId.setExtension("19121212-1212");
         patient.setPersonId(personId);
         patient.setFullstandigtNamn("Tolvan Tolvansson");
+        return patient;
+    }
+
+    private Patient buildLilltolvanTolvansson() {
+        Patient patient = new Patient();
+        PersonId personId = new PersonId();
+        personId.setExtension("20121212-1212");
+        patient.setPersonId(personId);
+        patient.setFullstandigtNamn("Lilltolvan Tolvansson");
         return patient;
     }
 
@@ -522,19 +561,19 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hsaId6.setExtension("eva");
         hosPerson6.setPersonalId(hsaId6);
 
-        HosPersonal kerstin1 = new HosPersonal();
-        kerstin1.setEnhet(kerstinEnhet1);
-        kerstin1.setFullstandigtNamn("Kerstin Johansson");
+        kerstin1HosPersonal = new HosPersonal();
+        kerstin1HosPersonal.setEnhet(kerstinEnhet1);
+        kerstin1HosPersonal.setFullstandigtNamn("Kerstin Johansson");
         HsaId kerstinId1 = new HsaId();
         kerstinId1.setExtension("TSTNMT2321000156-105W");
-        kerstin1.setPersonalId(kerstinId1);
+        kerstin1HosPersonal.setPersonalId(kerstinId1);
 
-        HosPersonal kerstin2 = new HosPersonal();
-        kerstin2.setEnhet(kerstinEnhet2);
-        kerstin2.setFullstandigtNamn("Kerstin Johansson");
+        kerstin2HosPersonal = new HosPersonal();
+        kerstin2HosPersonal.setEnhet(kerstinEnhet2);
+        kerstin2HosPersonal.setFullstandigtNamn("Kerstin Johansson");
         HsaId kerstinId2 = new HsaId();
         kerstinId2.setExtension("TSTNMT2321000156-105W");
-        kerstin2.setPersonalId(kerstinId2);
+        kerstin2HosPersonal.setPersonalId(kerstinId2);
 
         HosPersonal peterEnkel = new HosPersonal();
         peterEnkel.setEnhet(enhet3);
@@ -556,8 +595,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hosPersonList.add(hosPerson4);
         hosPersonList.add(hosPerson5);
         hosPersonList.add(hosPerson6);
-        hosPersonList.add(kerstin1);
-        hosPersonList.add(kerstin2);
+        hosPersonList.add(kerstin1HosPersonal);
+        hosPersonList.add(kerstin2HosPersonal);
         hosPersonList.add(peterEnkel);
         hosPersonList.add(tothGergo);
 

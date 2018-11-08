@@ -68,14 +68,15 @@ public class SjukfallIntygDataGeneratorTest {
 
         final int intygPerPatientOtherCareUnit = intygPerPatient * 2; // Vi skapar upp intyg på andra vårdgivare för sjf
         final int intygTolvan = intygPerPatient + intygPerPatientOtherCareUnit + 6; // Tolvan är gammal och ges då fyra extra intyg
-        int expectedAntalIntyg = numberOfPatients * (intygPerPatient + intygPerPatientOtherCareUnit) + intygTolvan;
+        final int intygLillTolvan = intygPerPatient + 8; //sjf användare
+        int expectedAntalIntyg = numberOfPatients * (intygPerPatient + intygPerPatientOtherCareUnit) + intygTolvan + intygLillTolvan;
 
         assertEquals(expectedAntalIntyg, intygsData.size());
         assertEquals("19791110-9291", intygsData.get(0).getPatient().getPersonId().getExtension());
         assertEquals("M16.0", intygsData.get(0).getDiagnoskod());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum());
-        verify(residentStore, times(numberOfPatients + 1)).addResident(any());
+        verify(residentStore, times(numberOfPatients + 2)).addResident(any());
     }
 
     private List<String> buildPersonnummerList() {

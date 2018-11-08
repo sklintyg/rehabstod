@@ -25,15 +25,23 @@ import java.util.Objects;
  * Created by marced on 2018-10-01.
  */
 public class BlockData {
-    // Maybe add vg/ve to?
-    String personId;
-    LocalDate blockFrom;
-    LocalDate blockTo;
+    private String personId;
+    private LocalDate blockFrom;
+    private LocalDate blockTo;
+    private String vardGivareId;
+    private String vardEnhetId;
 
     public BlockData(String personId, LocalDate blockFrom, LocalDate blockTo) {
         this.personId = personId;
         this.blockFrom = blockFrom;
         this.blockTo = blockTo;
+    }
+
+    public BlockData(String personId, LocalDate blockFrom, LocalDate blockTo, String vardGivareId, String vardEnhetId) {
+        this(personId, blockFrom, blockTo);
+
+        this.vardGivareId = vardGivareId;
+        this.vardEnhetId = vardEnhetId;
     }
 
     public String getPersonId() {
@@ -58,6 +66,22 @@ public class BlockData {
 
     public void setBlockTo(LocalDate blockTo) {
         this.blockTo = blockTo;
+    }
+
+    public String getVardGivareId() {
+        return vardGivareId;
+    }
+
+    public void setVardGivareId(String vardGivareId) {
+        this.vardGivareId = vardGivareId;
+    }
+
+    public String getVardEnhetId() {
+        return vardEnhetId;
+    }
+
+    public void setVardEnhetId(String vardEnhetId) {
+        this.vardEnhetId = vardEnhetId;
     }
 
     @Override

@@ -60,8 +60,11 @@ public class SparrtjanstIntegrationStub implements CheckBlocksResponderInterface
             singleResult.setRowNumber(i);
             LocalDate queryDateFrom = parameters.getInformationEntities().get(i).getInformationStartDate().toLocalDate();
             LocalDate queryDateTo = parameters.getInformationEntities().get(i).getInformationEndDate().toLocalDate();
+            String vardGivareId = parameters.getInformationEntities().get(i).getInformationCareProviderId();
+            String vardEnhetId = parameters.getInformationEntities().get(i).getInformationCareUnitId();
             singleResult
-                    .setStatus(store.isBlockedAtDate(parameters.getPatientId().getExtension(), queryDateFrom, queryDateTo)
+                    .setStatus(store.isBlockedAtDate(parameters.getPatientId().getExtension(), queryDateFrom, queryDateTo,
+                            vardGivareId, vardEnhetId)
                             ? CheckStatusType.BLOCKED
                             : CheckStatusType.OK);
 

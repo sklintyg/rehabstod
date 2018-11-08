@@ -280,13 +280,11 @@ public class SjukfallServiceImpl implements SjukfallService {
                 String vardgivareNamn = iacm.getIntygData().getVardgivareNamn();
 
                 if (iacm.inreSparr()) {
-                    metadata.getVardenheterInomVGMedSparr().add(vardgivareNamn);
+                    metadata.getVardenheterInomVGMedSparr().add(iacm.getIntygData().getVardenhetNamn());
                 }
                 if (iacm.yttreSparr()) {
                     metadata.getAndraVardgivareMedSparr().add(vardgivareNamn);
-                }
-
-                if (iacm.isKraverSamtycke()) {
+                } else if (iacm.isKraverSamtycke()) {
                     if (!vardgivareSamtycke.containsKey(vardgivareId)) {
                         SjfSamtyckeFinnsMetaData sjfSamtyckeFinnsMetaData = new SjfSamtyckeFinnsMetaData();
                         sjfSamtyckeFinnsMetaData.setVardgivareId(vardgivareId);
@@ -329,7 +327,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     private boolean shouldInclude(IntygAccessControlMetaData intygAccessControlMetaData, boolean haveConsent) {
-        // 1. Får inte har spärr
+        // 1. Får inte ha spärr
         if (intygAccessControlMetaData.isSparr()) {
             return false;
         }
