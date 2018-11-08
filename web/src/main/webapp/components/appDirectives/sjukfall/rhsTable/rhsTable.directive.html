@@ -10,7 +10,7 @@
       <thead class="hidden" rhs-table-header id="rhs-table-fixed-header" user="user"></thead>
       <thead rhs-table-header id="rhs-table-normal-header" user="user"></thead>
       <tbody id="rhs-table-body">
-        <tr ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id" class="rhs-table-row" ng-click="showPatientHistory(row.patient)" ng-class="{'nyligen-avslutad-row' : row.nyligenAvslutat}">
+        <tr id="sjukfall-row-{{$index}}" ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id" class="rhs-table-row" ng-click="showPatientHistory(row.patient)" ng-class="{'nyligen-avslutad-row' : row.nyligenAvslutat}">
           <td class="column-number">{{$index + 1}}</td>
           <td class="column-patient-id" ng-if="filterViewState.get().showPatientId">{{::row.patient.id}}</td>
           <td class="column-patient-alder">{{::row.patient.alder}} år</td>

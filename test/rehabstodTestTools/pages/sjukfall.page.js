@@ -38,6 +38,9 @@ var RehabstodSjukfallPage = RehabstodBasePage._extend({
 
         this.settingsSaveBtn = element(by.id('rhs-settings-modal-save-btn'));
         this.settingsCloseBtn = element(by.id('rhs-settings-modal-close-btn'));
+
+        this.patientModal = element(by.id('rhs-patient-modal'));
+        this.patientSjukfallTable = element(by.id('patient-sjukfall-table'));
     },
     get: function () {
         this.getPage('appsjukfall');
@@ -74,6 +77,12 @@ var RehabstodSjukfallPage = RehabstodBasePage._extend({
     },
     clickGoBack: function() {
         this.backBtn.click();
+    },
+    clickTableRow: function(index) {
+        return element(by.id('sjukfall-row-' + index)).click();
+    },
+    getPatientSjukfallRow: function(sjukfallIndex, rowIndex) {
+        return element(by.id('sjukfall-' + sjukfallIndex + '-column-number-' + rowIndex));
     }
 });
 
