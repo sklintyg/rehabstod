@@ -71,7 +71,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
     @Test
     public void testRegisterConsent() throws Exception {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-        cleanupConsentsInStore();
+        resetConsents();
 
         // 1. Register a consent
         RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
@@ -97,7 +97,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
     @Test
     public void testRegisterConsentForCurrentUserOnly() throws Exception {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-        cleanupConsentsInStore();
+        resetConsents();
 
         // 1. Register a consent
         RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
@@ -124,7 +124,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
     @Test
     public void testRegisterConsentWithNoPatientId() {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-        cleanupConsentsInStore();
+        resetConsents();
 
         RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
         request.setDays(30);
@@ -144,7 +144,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
     @Test
     public void testIncludeVgInSjukfall() {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-        cleanupConsentsInStore();
+        resetConsents();
 
         RegisterIncludeInSjukfallRequest request = new RegisterIncludeInSjukfallRequest();
         request.setPatientId(PNR_TOLVAN_TOLVANSSON);
@@ -161,22 +161,10 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
         assertEquals(1, result.size());
     }
 
-    private void cleanupConsentsInStore() {
-        String contextPath = API_STUB_ENDPOINT;
-        URL url = getUrl(contextPath, new HashMap<>());
-
-        HttpURLConnection httpURLConnection = null;
-        try {
-            httpURLConnection = getHttpURLConnection(url, "DELETE", false);
-            int statusCode = httpURLConnection.getResponseCode();
-            assertEquals(200, statusCode);
-        } catch (IOException e) {
-            fail(e.getMessage());
-        } finally {
-            if (httpURLConnection != null) {
-                httpURLConnection.disconnect();
-            }
-        }
+    private void resetConsents() {
+        given().contentType(ContentType.JSON)
+                .expect().statusCode(OK)
+                .when().delete(API_STUB_ENDPOINT);
     }
 
     private static Personnummer createPnr(String personId) {
