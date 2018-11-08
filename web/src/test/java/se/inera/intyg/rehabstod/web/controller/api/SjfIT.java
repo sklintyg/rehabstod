@@ -25,7 +25,7 @@ import com.jayway.restassured.http.ContentType;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterIncludeInSjukfallRequest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -33,6 +33,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class SjfIT extends BaseRestIntegrationTest {
 
+    private static final String API_ENDPOINT_INCLUDE_VG = "api/sjukfall/patient/addVardgivare";
     private static final String API_ENDPOINT_PATIENT = "api/sjukfall/patient";
     private static final String API_ENDPOINT_CONSENT = "api/consent";
 
@@ -89,13 +90,13 @@ public class SjfIT extends BaseRestIntegrationTest {
 
 
         // Inkludera vårdgivare
-        RegisterIncludeInSjukfallRequest includeInSjukfallRequest = new RegisterIncludeInSjukfallRequest();
+        AddVgToPatientViewRequest includeInSjukfallRequest = new AddVgToPatientViewRequest();
         includeInSjukfallRequest.setPatientId(patientId);
         includeInSjukfallRequest.setVardgivareId(vgId);
 
         given().contentType(ContentType.JSON).and().body(includeInSjukfallRequest)
                 .expect().statusCode(OK)
-                .when().post(API_ENDPOINT_CONSENT + "/includeVg");
+                .when().post(API_ENDPOINT_INCLUDE_VG);
 
 
         // Kollar att vårdgivaren kommer med

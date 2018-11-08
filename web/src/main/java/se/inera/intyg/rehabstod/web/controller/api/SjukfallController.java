@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -65,6 +66,7 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallForPatientRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -227,6 +229,37 @@ public class SjukfallController {
 
         IntygParametrar parameters = new IntygParametrar(0, LocalDate.now());
         return sjukfallService.getSummary(enhetsId, mottagningsId, hsaId, urval, parameters);
+    }
+
+    /**
+     * Register vardgivare to be include in patient view sjukfall calculations during session.
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/patient/addVardgivare", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<String>> addVgToPatientView(@RequestBody AddVgToPatientViewRequest request) {
+
+        // Get logged in user
+        RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
+
+        try {
+            Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
+
+            if (!personnummer.isPresent()) {
+                throw new RuntimeException("error parsing personnummer");
+            }
+
+            user.addSjfPatientVardgivare(personnummer.get().getPersonnummer(), request.getVardgivareId());
+
+            return ResponseEntity.ok(user.getSjfPatientVardgivare().get(personnummer.get().getPersonnummer()));
+
+        } catch (Exception e) {
+            LOG.error("Error giving consent", e);
+            return  ResponseEntity.unprocessableEntity().body(new ArrayList<>());
+        }
     }
 
     // - - - private scope - - -

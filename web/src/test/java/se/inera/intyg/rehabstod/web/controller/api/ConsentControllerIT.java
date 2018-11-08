@@ -18,20 +18,20 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+
+import java.util.Map;
+
+import org.junit.Test;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
-import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterIncludeInSjukfallRequest;
 import se.inera.intyg.schemas.contract.Personnummer;
-
-import java.util.Collection;
-import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -146,27 +146,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
         assertTrue(!Strings.isNullOrEmpty(result.getResponseMessage()));
     }
 
-    @Test
-    public void testIncludeVgInSjukfall() {
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-        given().contentType(ContentType.JSON).expect().statusCode(OK).when().delete(API_ENDPOINT_STUB);
-
-        RegisterIncludeInSjukfallRequest request = new RegisterIncludeInSjukfallRequest();
-        request.setPatientId(PNR_TOLVAN_TOLVANSSON);
-        request.setVardgivareId("vg1");
-
-        Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)
-                .when().post(API_ENDPOINT + "/includeVg")
-                .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-include-vg-in-sjukfall-response-schema.json"))
-                .extract().response();
-
-        assertNotNull(response);
-
-        Collection<String> result = response.body().as(Collection.class);
-        assertEquals(1, result.size());
-    }
-
-    private Personnummer createPnr(String personId) {
+    private static Personnummer createPnr(String personId) {
         return Personnummer.createPersonnummer(personId)
                 .orElseThrow(() -> new IllegalArgumentException("Could not parse passed personnummer: " + personId));
     }

@@ -77,7 +77,7 @@ angular.module('rehabstodApp').factory('patientHistoryProxy',
                 vardgivareId: vardgivareId
             };
 
-            var restPath = '/api/consent/includeVg';
+            var restPath = '/api/sjukfall/patient/addVardgivare';
 
             var config = {
                 timeout: networkConfig.defaultTimeout

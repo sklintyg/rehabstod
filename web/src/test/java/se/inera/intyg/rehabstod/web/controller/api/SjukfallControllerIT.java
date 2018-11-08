@@ -18,16 +18,22 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.util.Collection;
+
+import org.junit.Test;
+
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -43,6 +49,8 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
     private static final String JSONSCHEMA_SUMMARY = "jsonschema/rhs-sjukfallsummary-response-schema.json";
     private static final String JSONSCHEMA_ENHET = "jsonschema/rhs-sjukfallenhet-response-schema.json";
     private static final String JSONSCHEMA_PATIENT = "jsonschema/rhs-sjukfallpatient-response-schema.json";
+
+    private static final String PNR_TOLVAN_TOLVANSSON = "19121212-1212";
 
     @Test
     public void testGetSjukfallSummaryNotLoggedIn() {
@@ -88,7 +96,7 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
         GetSjukfallRequest request = new GetSjukfallRequest();
-        request.setPatientId("19121212-1212");
+        request.setPatientId(PNR_TOLVAN_TOLVANSSON);
 
         given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT + "/patient").then()
             .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT));
@@ -108,6 +116,25 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         assertTrue(akutenCount > 0);
         assertTrue(dialysCount > 0);
         assertTrue(akutenCount + dialysCount < centrumVastCount);
+    }
+
+    @Test
+    public void testIncludeVgInSjukfall() {
+        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
+
+        AddVgToPatientViewRequest request = new AddVgToPatientViewRequest();
+        request.setPatientId(PNR_TOLVAN_TOLVANSSON);
+        request.setVardgivareId("vg1");
+
+        Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)
+                .when().post(API_ENDPOINT + "/patient/addVardgivare")
+                .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-include-vg-in-sjukfall-response-schema.json"))
+                .extract().response();
+
+        assertNotNull(response);
+
+        Collection<String> result = response.body().as(Collection.class);
+        assertEquals(1, result.size());
     }
 
     private int getAntalOnEnhet(String enhetId) {

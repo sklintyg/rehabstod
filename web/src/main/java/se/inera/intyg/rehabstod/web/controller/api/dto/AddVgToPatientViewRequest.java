@@ -21,12 +21,12 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 /**
  * @author Magnus Ekstrand on 2018-10-19.
  */
-public class RegisterIncludeInSjukfallRequest {
+public class AddVgToPatientViewRequest {
 
     private String patientId;
     private String vardgivareId;
 
-    public RegisterIncludeInSjukfallRequest() {
+    public AddVgToPatientViewRequest() {
     }
 
     public String getPatientId() {

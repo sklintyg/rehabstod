@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Schema for RegisterExtendedConsent as resturned from e.g /consent/includeVg",
+  "title": "Schema for RegisterExtendedConsent as resturned from e.g /sjukfall/patient/addVardgivare",
 
   "items": {
     "type" : "string"
