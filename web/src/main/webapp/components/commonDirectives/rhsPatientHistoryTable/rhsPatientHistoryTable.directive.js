@@ -70,6 +70,7 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
 
             //Requirements state that only first/last of grader should be returned
             $scope.formatGrader = function(gradArr) {
+
                 switch (gradArr.length) {
                 case 0:
                     return '';
