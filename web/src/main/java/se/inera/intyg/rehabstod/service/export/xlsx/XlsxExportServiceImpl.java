@@ -288,7 +288,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
             if (showPatientId) {
                 createRichTextDataCell(row, colIndex++, buildPersonnummerRichText(sf.getPatient()));
             }
-            createDataCell(row, colIndex++, Integer.toString(sf.getPatient().getAlder()));
+            createDataCell(row, colIndex++, Integer.toString(sf.getPatient().getAlder()) + " år");
 
             if (showPatientId) {
                 createDataCell(row, colIndex++, sf.getPatient().getNamn());

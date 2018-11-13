@@ -382,7 +382,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
                 addCell(table, getPersonnummerColumn(is));
             }
 
-            addCell(table, is.getPatient().getAlder());
+            addCell(table, is.getPatient().getAlder() + " år");
 
             if (showPatientId) {
                 addCell(table, is.getPatient().getNamn());
