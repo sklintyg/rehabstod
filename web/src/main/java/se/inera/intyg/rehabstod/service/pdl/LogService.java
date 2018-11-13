@@ -22,6 +22,7 @@ import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 import java.util.List;
 
@@ -30,8 +31,24 @@ import java.util.List;
  */
 public interface LogService {
 
-    void logSjukfallData(List<SjukfallEnhet> sjukfall, ActivityType activityType, ResourceType resourceType);
+    void logSjukfallData(List<SjukfallEnhet> sjukfall,
+                         ActivityType activityType,
+                         ResourceType resourceType);
 
-    void logSjukfallData(SjukfallPatient sjukfallPatient, ActivityType activityType, ResourceType resourceType);
+    void logSjukfallData(SjukfallPatient sjukfallPatient,
+                         ActivityType activityType,
+                         ResourceType resourceType);
+
+    void logSjukfallData(Personnummer personnummer,
+                         String vardenhetId,
+                         String vardenhetNamn,
+                         String vardgivareId,
+                         String vardgivareNamn,
+                         ActivityType activityType,
+                         ResourceType resourceType);
+
+    void logConsent(Personnummer personnummer,
+                    ActivityType activityType,
+                    ResourceType resourceType);
 
 }

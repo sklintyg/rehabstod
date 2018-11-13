@@ -18,12 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,7 +29,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
@@ -64,6 +57,13 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+import se.inera.intyg.schemas.contract.Personnummer;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -86,8 +86,22 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @PrepareForTest(PDLActivityStore.class)
 public class SjukfallControllerTest {
 
-    private static final String VARDENHETS_ID = "123";
-    private static final String VARDGIVARE_ID = "vg1";
+    private final Vardenhet DEFAULT_VARDENHET = new Vardenhet("ve123", "Vardenhet_123");
+    private final Vardgivare DEFAULT_VARDGIVARE = new Vardgivare("vg987", "Vardgivare_987");
+
+    private final List<Vardenhet> vardenheter = new ArrayList() {{
+        add(DEFAULT_VARDENHET);
+        add(new Vardenhet("ve234", "Vardenhet_234"));
+        add(new Vardenhet("ve345", "Vardenhet_345"));
+        add(new Vardenhet("ve456", "Vardenhet_456"));
+        add(new Vardenhet("ve567", "Vardenhet_567"));
+    }};
+
+    private final List<Vardgivare> vardgivare = new ArrayList() {{
+        add(DEFAULT_VARDGIVARE);
+        add(new Vardgivare("vg876", "Vardgivare_876"));
+        add(new Vardgivare("vg765", "Vardgivare_765"));
+    }};
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -113,8 +127,8 @@ public class SjukfallControllerTest {
     @Before
     public void before() {
         when(userServiceMock.getUser()).thenReturn(rehabstodUserMock);
-        when(rehabstodUserMock.getValdVardenhet()).thenReturn(new Vardenhet(VARDENHETS_ID, "enhet"));
-        when(rehabstodUserMock.getValdVardgivare()).thenReturn(new Vardgivare(VARDGIVARE_ID, "vg"));
+        when(rehabstodUserMock.getValdVardenhet()).thenReturn(DEFAULT_VARDENHET);
+        when(rehabstodUserMock.getValdVardgivare()).thenReturn(DEFAULT_VARDGIVARE);
         when(rehabstodUserMock.getUrval()).thenReturn(Urval.ALL);
         RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
         preferences.updatePreference(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
@@ -137,7 +151,7 @@ public class SjukfallControllerTest {
         // When
         mockStatic(PDLActivityStore.class);
         when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
-            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
+            eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class))).thenReturn(toLog);
         when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(IntygParametrar.class)))
                 .thenReturn(new SjukfallEnhetResponse(result, false));
 
@@ -147,10 +161,10 @@ public class SjukfallControllerTest {
         // Verify
         verifyStatic();
         PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
-            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class));
+            eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class));
 
         verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(IntygParametrar.class));
-        verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL));
+        verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_SJUKFALL));
     }
 
     @Test
@@ -171,9 +185,9 @@ public class SjukfallControllerTest {
         mockStatic(PDLActivityStore.class);
         doNothing().when(PDLActivityStore.class); //This is the preferred way to mock static void methods
         PDLActivityStore.addActivitiesToStore(anyString(), eq(toLog), eq(ActivityType.PRINT),
-            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class));
+            eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class));
         when(PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
-            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class))).thenReturn(toLog);
+            eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class))).thenReturn(toLog);
 
         when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(IntygParametrar.class)))
                 .thenReturn(new SjukfallEnhetResponse(allSjukFall, false));
@@ -185,22 +199,22 @@ public class SjukfallControllerTest {
         // Verify
         verifyStatic();
         PDLActivityStore.addActivitiesToStore(anyString(), eq(toLog), eq(ActivityType.PRINT),
-            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class));
+            eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class));
         verifyStatic();
         PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
-            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL), any(Map.class));
+            eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class));
 
         verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(IntygParametrar.class));
-        verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.PRINT), eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL));
+        verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.PRINT), eq(ResourceType.RESOURCE_TYPE_SJUKFALL));
 
         assertTrue(response.getStatusCode().equals(HttpStatus.OK));
     }
 
     @Test
-    public void testGetSjukfallByPatient() {
+    public void getSjukfallByPatient_whenIntygFromSingleUnit() {
         String patientId = "19121212-1212";
 
-        SjukfallPatient a = createSjukFallPatient(patientId, 1, 0);
+        SjukfallPatient a = createSjukFallPatient(patientId, 1, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
 
         List<SjukfallPatient> result = Arrays.asList(a);
 
@@ -210,8 +224,6 @@ public class SjukfallControllerTest {
 
         // When
         mockStatic(PDLActivityStore.class);
-        //when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
-        //    eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK), any(Map.class))).thenReturn(result);
         when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
                 .thenReturn(new SjukfallPatientResponse(result, new SjfMetaData(), false));
 
@@ -220,32 +232,106 @@ public class SjukfallControllerTest {
 
         // Verify
         verifyStatic();
-        PDLActivityStore.isActivityInStore(anyString(), any(), eq(ActivityType.READ),
-            eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK), any(Map.class));
+        PDLActivityStore.isActivityInStore(anyString(), any(SjukfallPatient.class), eq(ActivityType.READ),
+            eq(ResourceType.RESOURCE_TYPE_INTYG), any(Map.class));
 
-        verify(sjukfallServiceMock).getByPatient(eq(VARDGIVARE_ID), eq(VARDENHETS_ID), anyString(), eq(patientId), any(Urval.class),
-                any(IntygParametrar.class), anyCollectionOf(String.class));
-        verify(logServiceMock).logSjukfallData(eq(a), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK));
+        verify(sjukfallServiceMock).getByPatient(eq(DEFAULT_VARDGIVARE.getId()), eq(DEFAULT_VARDENHET.getId()), anyString(),
+                eq(patientId), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class));
+        verify(logServiceMock).logSjukfallData(eq(a), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
+    }
+
+    @Test
+    public void getSjukfallByPatient_whenIntygFromMultipleUnits() {
+        String patientId = "19121212-1212";
+
+        SjukfallPatient a = createSjukFallPatient(patientId, 1, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
+        SjukfallPatient b = createSjukFallPatient(patientId, 1, 0, vardenheter.get(1), DEFAULT_VARDGIVARE);
+        SjukfallPatient c = createSjukFallPatient(patientId, 1, 0, vardenheter.get(2), DEFAULT_VARDGIVARE);
+        SjukfallPatient d = createSjukFallPatient(patientId, 1, 0, vardenheter.get(3), vardgivare.get(1));
+
+        List<SjukfallPatient> result = Arrays.asList(a, b, c, d);
+
+        // Given
+        GetSjukfallForPatientRequest request = new GetSjukfallForPatientRequest();
+        request.setPatientId(patientId);
+
+        // When
+        mockStatic(PDLActivityStore.class);
+        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
+                .thenReturn(new SjukfallPatientResponse(result, new SjfMetaData(), false));
+
+        // Then
+        testee.getSjukfallForPatient(request);
+
+        // Verify
+        verifyStatic();
+        PDLActivityStore.isActivityInStore(anyString(), any(SjukfallPatient.class), eq(ActivityType.READ),
+                eq(ResourceType.RESOURCE_TYPE_INTYG), any(Map.class));
+
+        verify(sjukfallServiceMock).getByPatient(eq(DEFAULT_VARDGIVARE.getId()), eq(DEFAULT_VARDENHET.getId()), anyString(),
+                eq(patientId), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class));
+        verify(logServiceMock, times(1)).logSjukfallData(eq(a), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
+        verify(logServiceMock, times(2)).logSjukfallData(any(Personnummer.class), anyString(), anyString(), anyString(), anyString(),
+                eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
+    }
+
+    @Test
+    public void getSjukfallByPatient_whenIntygFromMultipleUnits_andOneIsBlocked() {
+        String patientId = "19121212-1212";
+
+        SjukfallPatient a = createSjukFallPatient(patientId, 1, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
+        SjukfallPatient b = createSjukFallPatient(patientId, 1, 0, vardenheter.get(1), DEFAULT_VARDGIVARE);
+        SjukfallPatient c = createSjukFallPatient(patientId, 1, 0, vardenheter.get(2), DEFAULT_VARDGIVARE);
+        SjukfallPatient d = createSjukFallPatient(patientId, 1, 0, vardenheter.get(3), vardgivare.get(1));
+
+        List<SjukfallPatient> result = Arrays.asList(a, b, c, d);
+
+        SjfMetaData sjfMetaData = new SjfMetaData();
+        sjfMetaData.setVardenheterInomVGMedSparr(new ArrayList<String>(Arrays.asList(vardenheter.get(2).getId())));
+
+        // Given
+        GetSjukfallForPatientRequest request = new GetSjukfallForPatientRequest();
+        request.setPatientId(patientId);
+
+        // When
+        mockStatic(PDLActivityStore.class);
+        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
+                .thenReturn(new SjukfallPatientResponse(result, sjfMetaData, false));
+
+        // Then
+        testee.getSjukfallForPatient(request);
+
+        // Verify
+        verifyStatic();
+        PDLActivityStore.isActivityInStore(anyString(), any(SjukfallPatient.class), eq(ActivityType.READ),
+                eq(ResourceType.RESOURCE_TYPE_INTYG), any(Map.class));
+
+        verify(sjukfallServiceMock).getByPatient(eq(DEFAULT_VARDGIVARE.getId()), eq(DEFAULT_VARDENHET.getId()), anyString(),
+                eq(patientId), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class));
+        verify(logServiceMock, times(1)).logSjukfallData(eq(a), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
+        verify(logServiceMock, times(1)).logSjukfallData(any(Personnummer.class), anyString(), anyString(), anyString(), anyString(),
+                eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
     }
 
     @Test
     public void testPDLLogSRSForSjukfallPatient() {
-
+        String patientId = "19121212-1212";
         RehabstodUser user = buildConcreteUser();
-        when(userServiceMock.getUser()).thenReturn(user);
 
         // Should trigger one history PDL item.
-        SjukfallPatient a = createSjukFallPatient("19121212-1212", 2, 0);
-
+        SjukfallPatient a = createSjukFallPatient(patientId, 1, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
         // Should trigger one risk PDL item.
-        SjukfallPatient b = createSjukFallPatient("19121212-1212", 3, 2);
+        SjukfallPatient b = createSjukFallPatient(patientId, 3, 2, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
+
         List<SjukfallPatient> finalList = Arrays.asList(a, b);
 
         // Given
         GetSjukfallForPatientRequest request = new GetSjukfallForPatientRequest();
-        request.setPatientId("19121212-1212");
+        request.setPatientId(patientId);
 
         // When
+        when(userServiceMock.getUser()).thenReturn(user);
+
         when(sjukfallServiceMock
                 .getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
                 .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false));
@@ -254,34 +340,18 @@ public class SjukfallControllerTest {
 
         // Expect entries for ONE enhet
         assertEquals(1, user.getStoredActivities().size());
-        List<PDLActivityEntry> pdlActivityEntries = user.getStoredActivities().get(VARDENHETS_ID);
+        List<PDLActivityEntry> pdlActivityEntries = user.getStoredActivities().get(DEFAULT_VARDENHET.getId());
 
-        // Expect one OVERSIKT and one SRS log entry.
+        // Expect one INTYG and one SRS log entry.
         assertEquals(2, pdlActivityEntries.size());
         assertEquals(1L, pdlActivityEntries.stream()
                 .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_PREDIKTION_SRS)
                 .count());
         assertEquals(1L, pdlActivityEntries.stream()
-                .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL_HISTORIK)
+                .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_INTYG)
                 .count());
 
         verify(logServiceMock, times(2));
-    }
-
-    private SjukfallPatient createSjukFallPatient(String personNummer, int numberOfIntyg, int numberOfIntygHavingRisk) {
-        SjukfallPatient sp = new SjukfallPatient();
-        sp.setIntyg(new ArrayList<>());
-        for (int a = 0; a < numberOfIntyg; a++) {
-            PatientData pd = new PatientData();
-            pd.setPatient(new Patient(personNummer, "Namnsson"));
-
-            if (a < numberOfIntygHavingRisk) {
-                pd.setRiskSignal(new RiskSignal("intyg-123", 3, "desc"));
-            }
-            sp.getIntyg().add(pd);
-        }
-
-        return sp;
     }
 
     @Test
@@ -306,14 +376,14 @@ public class SjukfallControllerTest {
 
         // Expect entries for ONE enhet
         assertEquals(1, user.getStoredActivities().size());
-        List<PDLActivityEntry> pdlActivityEntries = user.getStoredActivities().get(VARDENHETS_ID);
+        List<PDLActivityEntry> pdlActivityEntries = user.getStoredActivities().get(DEFAULT_VARDENHET.getId());
 
         assertEquals(3, pdlActivityEntries.size());
         assertEquals(1L, pdlActivityEntries.stream()
                 .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_PREDIKTION_SRS)
                 .count());
         assertEquals(2L, pdlActivityEntries.stream()
-                .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL)
+                .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_SJUKFALL)
                 .count());
 
         verify(logServiceMock, times(3));
@@ -321,8 +391,8 @@ public class SjukfallControllerTest {
 
     private RehabstodUser buildConcreteUser() {
         RehabstodUser user = new RehabstodUser("user-1", "Hej Hejssansson", true);
-        Vardgivare vg = new Vardgivare("vg-1", "VG-namn");
-        Vardenhet ve = new Vardenhet(VARDENHETS_ID, "VE-namn");
+        Vardgivare vg = DEFAULT_VARDGIVARE;
+        Vardenhet ve = DEFAULT_VARDENHET;
         vg.getVardenheter().add(ve);
         user.setVardgivare(Arrays.asList(vg));
         user.setValdVardgivare(vg);
@@ -331,7 +401,6 @@ public class SjukfallControllerTest {
         user.getPreferences().updatePreference(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "0");
         return user;
     }
-
 
     private static SjukfallEnhet createSjukFallEnhet(String personNummer) {
         // CHECKSTYLE:OFF MagicNumber
@@ -366,6 +435,28 @@ public class SjukfallControllerTest {
             isf.setRiskSignal(new RiskSignal("intyg-1", 3, "Descr."));
         }
         return isf;
+    }
+
+    private SjukfallPatient createSjukFallPatient(String personNummer, int numberOfIntyg, int numberOfIntygHavingRisk,
+                                                  Vardenhet vardenhet, Vardgivare vardgivare) {
+
+        SjukfallPatient sp = new SjukfallPatient();
+        sp.setIntyg(new ArrayList<>());
+        for (int a = 0; a < numberOfIntyg; a++) {
+            PatientData pd = new PatientData();
+            pd.setPatient(new Patient(personNummer, "Namnsson"));
+            pd.setVardenhetId(vardenhet.getId());
+            pd.setVardenhetNamn(vardenhet.getNamn());
+            pd.setVardgivareId(vardgivare.getId());
+            pd.setVardgivareNamn(vardgivare.getNamn());
+
+            if (a < numberOfIntygHavingRisk) {
+                pd.setRiskSignal(new RiskSignal("intyg-123", 3, "desc"));
+            }
+            sp.getIntyg().add(pd);
+        }
+
+        return sp;
     }
 
 }

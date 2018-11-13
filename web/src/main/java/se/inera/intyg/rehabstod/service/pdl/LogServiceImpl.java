@@ -35,6 +35,7 @@ import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 import javax.annotation.PostConstruct;
 import javax.jms.JMSException;
@@ -91,6 +92,28 @@ public class LogServiceImpl implements LogService {
         PdlLogMessage pdlLogMessage =
             pdlLogMessageFactory.buildLogMessage(sjukfallPatient, activityType, resourceType, userService.getUser());
         send(pdlLogMessage);
+    }
+
+    @Override
+    public void logSjukfallData(Personnummer personnummer, String vardenhetId, String vardenhetNamn, String vardgivareId,
+                                String vardgivareNamn, ActivityType activityType, ResourceType resourceType) {
+
+        PdlLogMessage pdlLogMessage =
+                pdlLogMessageFactory.buildLogMessage(personnummer, vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn,
+                        activityType, resourceType, userService.getUser());
+        send(pdlLogMessage);
+    }
+
+    @Override
+    public void logConsent(Personnummer personnummer, ActivityType activityType, ResourceType resourceType) {
+        if (personnummer == null) {
+            LOG.debug("No personnummer for PDL logging, not logging.");
+            return;
+        }
+        PdlLogMessage pdlLogMessage =
+                pdlLogMessageFactory.buildLogMessage(personnummer, activityType, resourceType, userService.getUser());
+        send(pdlLogMessage);
+
     }
 
     private void send(PdlLogMessage pdlLogMessage) {

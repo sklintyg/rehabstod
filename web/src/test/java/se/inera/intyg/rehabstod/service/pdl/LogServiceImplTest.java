@@ -64,7 +64,7 @@ public class LogServiceImplTest {
     public void testSendPdlReadMessage() {
         when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser(true));
         testee.logSjukfallData(TestDataGen.buildSjukfallList(5),
-            ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
+            ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
         verify(template, times(1)).send(any());
     }
 
@@ -73,7 +73,7 @@ public class LogServiceImplTest {
         when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser(true));
         try {
             testee.logSjukfallData(TestDataGen.buildSjukfallList(5),
-                ActivityType.EMERGENCY_ACCESS, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
+                ActivityType.EMERGENCY_ACCESS, ResourceType.RESOURCE_TYPE_SJUKFALL);
         } finally {
             verify(template, times(0)).send(any());
         }
@@ -83,7 +83,7 @@ public class LogServiceImplTest {
     public void testNoLogMessageSentWhenSjukfallListIsEmpty() {
         when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser(true));
         testee.logSjukfallData(new ArrayList<>(),
-            ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
+            ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
         verify(template, times(0)).send(any());
     }
 
@@ -93,7 +93,7 @@ public class LogServiceImplTest {
         doThrow(new DestinationResolutionException("")).when(template).send(any(MessageCreator.class));
         try {
             testee.logSjukfallData(TestDataGen.buildSjukfallList(5),
-                ActivityType.READ, ResourceType.RESOURCE_TYPE_OVERSIKT_SJUKFALL);
+                ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
         } finally {
             verify(template, times(1)).send(any());
         }

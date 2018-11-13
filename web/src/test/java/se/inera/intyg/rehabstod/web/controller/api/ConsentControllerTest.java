@@ -18,12 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Optional;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,18 +26,20 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
-import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
-import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.ConsentService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.schemas.contract.Personnummer;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -60,15 +56,18 @@ import static org.mockito.Mockito.when;
 public class ConsentControllerTest {
 
     private static final String PERSON_ID = "19121212-1212";
+    private static final String LAKARE_ID = "L999";
+    private static final String LAKARE_NAMN = "L. Lakarsson";
     private static final String VARDGIVARE_ID = "VG123";
     private static final String VARDENHETS_ID = "VEA";
+
     private static final int DAYS = 30;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Mock
-    RehabstodUser rehabstodUserMock;
+    LogService logService;
 
     @Mock
     private UserService userServiceMock;
@@ -81,14 +80,7 @@ public class ConsentControllerTest {
 
     @Before
     public void before() {
-        when(userServiceMock.getUser()).thenReturn(rehabstodUserMock);
-        when(rehabstodUserMock.getValdVardgivare()).thenReturn(new Vardgivare(VARDGIVARE_ID, "vårdgivare"));
-        when(rehabstodUserMock.getValdVardenhet()).thenReturn(new Vardenhet(VARDENHETS_ID, "enhet"));
-        when(rehabstodUserMock.getUrval()).thenReturn(Urval.ALL);
-        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
-        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
-        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "0");
-        when(rehabstodUserMock.getPreferences()).thenReturn(preferences);
+        when(userServiceMock.getUser()).thenReturn(buildUser());
     }
 
     @Test
@@ -98,17 +90,18 @@ public class ConsentControllerTest {
         when(consentServiceMock.giveConsent(any(), anyBoolean(), anyString(), any(), any(), any()))
                 .thenReturn(result);
 
-        RegisterExtendedConsentResponse response = testee.registerConsent(createRequest(PERSON_ID));
+        RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest(PERSON_ID));
 
         LocalDateTime consentFrom = LocalDate.now().atStartOfDay();
         LocalDateTime consentTo = LocalDate.now().plusDays(DAYS).atTime(23, 59, 59);
 
-        assertEquals(rehabstodUserMock.getHsaId(), response.getRegisteredBy());
+        assertEquals(LAKARE_ID, response.getRegisteredBy());
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.OK, response.getResponseCode());
 
         Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
 
-        verify(consentServiceMock).giveConsent(eq(personnummer.get()), eq(false), eq(null), eq(consentFrom), eq(consentTo), eq(rehabstodUserMock));
+        verify(consentServiceMock).giveConsent(eq(personnummer.get()), eq(false),
+                eq(null), eq(consentFrom), eq(consentTo), any(RehabstodUser.class));
     }
 
     @Test
@@ -116,23 +109,27 @@ public class ConsentControllerTest {
         when(consentServiceMock.giveConsent(any(), anyBoolean(), anyString(), any(), any(), any()))
                 .thenThrow(new RuntimeException("error"));
 
-        RegisterExtendedConsentResponse response = testee.registerConsent(createRequest(PERSON_ID));
+        RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest(PERSON_ID));
 
-        assertEquals(rehabstodUserMock.getHsaId() ,response.getRegisteredBy());
+        assertEquals(LAKARE_ID, response.getRegisteredBy());
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
         verify(consentServiceMock).giveConsent(any(), anyBoolean(), anyString(), any(), any(), any());
     }
 
-    @Test
-    public void convertToJson() throws IOException {
-        RegisterExtendedConsentRequest request = createRequest(PERSON_ID);
-        StringWriter jsonWriter = new StringWriter();
-        CustomObjectMapper objectMapper = new CustomObjectMapper();
-        objectMapper.writeValue(jsonWriter, request);
-        System.out.println(jsonWriter);
+    private RehabstodUser buildUser() {
+        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
+        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "0");
+
+        RehabstodUser user = new RehabstodUser(LAKARE_ID, LAKARE_NAMN, true);
+        user.setPreferences(preferences);
+        user.setValdVardgivare(new Vardgivare(VARDGIVARE_ID, "vårdgivare"));
+        user.setValdVardenhet(new Vardenhet(VARDENHETS_ID, "enhet"));
+
+        return user;
     }
 
-    private RegisterExtendedConsentRequest createRequest(String personId) {
+    private RegisterExtendedConsentRequest buildRequest(String personId) {
         RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
         request.setPatientId(personId);
         request.setDays(DAYS);

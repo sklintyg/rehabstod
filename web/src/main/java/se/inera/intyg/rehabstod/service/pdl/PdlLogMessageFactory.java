@@ -24,6 +24,7 @@ import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 import java.util.List;
 
@@ -42,4 +43,17 @@ public interface PdlLogMessageFactory {
                                   ResourceType resourceType,
                                   RehabstodUser rehabstodUser);
 
+    PdlLogMessage buildLogMessage(Personnummer personnummer,
+                                  ActivityType activityType,
+                                  ResourceType resourceType,
+                                  RehabstodUser rehabstodUser);
+
+    PdlLogMessage buildLogMessage(Personnummer personnummer,
+                                  String vardenhetId,
+                                  String vardenhetNamn,
+                                  String vardgivareId,
+                                  String vardgivareNamn,
+                                  ActivityType activityType,
+                                  ResourceType resourceType,
+                                  RehabstodUser rehabstodUser);
 }

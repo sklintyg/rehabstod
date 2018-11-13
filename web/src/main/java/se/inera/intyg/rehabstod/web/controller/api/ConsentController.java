@@ -18,10 +18,7 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Optional;
-
+import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +27,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
+import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
+import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.ConsentService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.schemas.contract.Personnummer;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/consent")
@@ -50,6 +54,9 @@ public class ConsentController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LogService logService;
 
     /**
      * Register a consent for a patient.
@@ -86,6 +93,9 @@ public class ConsentController {
 
             response = createResponse(RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId());
 
+            LOG.debug("PDL logging - log registration of consent.");
+            logRegistrationOfConsent(user, personnummer.get(), ActivityType.READ, ResourceType.RESOURCE_TYPE_SAMTYCKE);
+
         } catch (Exception e) {
             LOG.error("Error giving consent", e);
             response = createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId());
@@ -103,4 +113,21 @@ public class ConsentController {
         response.setRegisteredBy(registeredBy);
         return response;
     }
+
+    private void logRegistrationOfConsent(RehabstodUser user, Personnummer personnummer,
+                                          ActivityType activityType, ResourceType resourceType) {
+
+        String errMsg = "Cannot make lookup in PDL activity store, %s was null.";
+        Preconditions.checkNotNull(personnummer, String.format(errMsg, "enhetsId"));
+
+        boolean isInStore = PDLActivityStore.isActivityInStore(user.getValdVardenhet().getId(), personnummer.getPersonnummer(),
+                activityType, resourceType, user.getStoredActivities());
+
+        if (!isInStore) {
+            logService.logConsent(personnummer, activityType, resourceType);
+            PDLActivityStore.addActivityToStore(user.getValdVardenhet().getId(), personnummer.getPersonnummer(),
+                    activityType, resourceType, user.getStoredActivities());
+        }
+    }
+
 }
