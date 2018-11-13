@@ -61,7 +61,7 @@
                               description="intyg.riskSignal.riskDescription"></rhs-risk-indicator>
         </td>
         <td>
-          <button class="btn btn-default" ng-attr-id="sjukfall-{{index}}-show-intyg-{{intyg.id}}"
+          <button ng-if="!intyg.otherVardgivare && !intyg.otherVardenhet" class="btn btn-default" ng-attr-id="sjukfall-{{index}}-show-intyg-{{intyg.id}}"
                   ng-click="onLoadIntyg({'intyg': intyg})"><b><i class="glyphicon glyphicon-eye-open"></i> Visa intyg</b>
           </button>
         </td>
@@ -71,7 +71,7 @@
 
     <div class="extra-diagnoser" ng-if="historyItem.isActive" ng-switch="extraDiagnoser.available">
       <div ng-switch-when="false" class="text-center">
-        Det finns för tillfället inget intyg i denna kategori som tillhör patientens pågående sjukfall.
+        <span message key="label.extradiagnoser.none"></span>
       </div>
       <div ng-switch-when="true" class="extra-diagnoser__wrapper">
         <div class="row">
