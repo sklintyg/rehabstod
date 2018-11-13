@@ -1,5 +1,5 @@
 <h5>Vårdgivare med information</h5>
-<p class="scrollable-list">{{vardgivareMedInfo}}</p>
+<div class="message-wrapper scrollable-list">{{vardgivareMedInfo}}</div>
 
 <div class="flex-fill">
   <div class="rhs-info-box--section rhs-info-box--spacing row">
@@ -17,10 +17,11 @@
   </div>
 </div>
 
-<h5 class="rhs-info-box--spacing">Vem har samtycke?</h5><p>
+<h5 class="rhs-info-box--spacing">Vem har samtycke?</h5>
+<div class="message-wrapper">
   <label class="control-label"><input type="radio" ng-model="consent.onlyCurrentUser" ng-disabled="!consent.confirm"
                                       value="ONLYCURRENT" /> Bara mig</label>&nbsp; <label class="control-label"><input
     type="radio" ng-model="consent.onlyCurrentUser" ng-disabled="!consent.confirm" value="ALL" /> All behörig personal på
   vårdenheten</label>
-</p>
+</div>
 <rhs-box-button rhs-click="next()" btn-disabled="!consent.confirm">Hämta information</rhs-box-button>

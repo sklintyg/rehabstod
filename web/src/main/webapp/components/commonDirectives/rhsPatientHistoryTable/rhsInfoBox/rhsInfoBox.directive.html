@@ -6,7 +6,7 @@
         <ng-transclude class="flex-fill"></ng-transclude>
       </div>
       <div ng-switch-when="false" class="flex-fill">
-        <p class="flex-fill" ng-if="labelTruthy">{{::labelTruthy |message}}</p>
+        <div class="message-wrapper flex-fill" ng-if="labelTruthy"><span message key="{{::labelTruthy}}"></span></div>
         <rhs-box-button rhs-click="next()">Visa mig</rhs-box-button>
       </div>
     </div>
