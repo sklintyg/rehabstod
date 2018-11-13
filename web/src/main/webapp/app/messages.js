@@ -118,7 +118,7 @@ var rhsMessages = {
         'settings.modal.header' : 'Inställningar',
 
         'settings.modal.maxantaldagarmellanintyg.title' : 'Antal dagar mellan intyg',
-        'settings.modal.maxantaldagarmellanintyg.help' : 'Ställ in det antal dagar det maximalt får vara mellan två intyg för att de ska räknas till samma sjukfall. Välj 0-90 dagar.',
+        'settings.modal.maxantaldagarmellanintyg.help' : 'Välj hur många dagars uppehåll det maximalt får vara mellan två intyg för att de ska räknas till samma sjukfall. Välj 0-90 dagar.',
         'settings.modal.maxantaldagarmellanintyg.description' : 'Välj max antal dagars uppehåll mellan intygen:',
 
         'settings.modal.maxantaldagarsedansjukfallavslut.title' : 'Visa nyligen avslutade sjukfall',
