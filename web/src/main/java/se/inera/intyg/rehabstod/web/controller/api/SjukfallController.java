@@ -154,17 +154,6 @@ public class SjukfallController {
         return buildSjukfallPatientResponse(response.isSrsError(), response);
     }
 
-    @VisibleForTesting
-    Map<String, Set<String>> getUniqueVardgivareAndVardenheter(List<PatientData> patientData) {
-        return patientData.stream()
-                .filter(ControllerUtil.distinctByKeys(PatientData::getVardgivareId, PatientData::getVardenhetId))
-                .collect(Collectors.groupingBy(
-                        PatientData::getVardgivareId,
-                        Collectors.mapping(
-                                PatientData::getVardenhetId,
-                                Collectors.toSet())));
-    }
-
     /**
      * Custom errorhandler for export error handling. For the export requests, we don't want the generic json response
      * error handling, this handler will instead redirect the client to our generic error page with a custom reason
@@ -387,6 +376,7 @@ public class SjukfallController {
                         pd.getVardgivareId(), pd.getVardgivareNamn(), activityType, resourceType);
     }
 
+    // CHECKSTYLE:OFF ParameterNumber
     private void logSjukfallData(RehabstodUser user, String patientId, String enhetsId,
                                  String enhetsNamn, String vardgivareId, String vardgivareNamn,
                                  ActivityType activityType, ResourceType resourceType) {
@@ -407,6 +397,7 @@ public class SjukfallController {
             PDLActivityStore.addActivityToStore(enhetsId, patientId, activityType, resourceType, user.getStoredActivities());
         }
     }
+    // CHECKSTYLE:ON ParameterNumber
 
     private Personnummer createPnr(String personId) {
         return Personnummer.createPersonnummer(personId)

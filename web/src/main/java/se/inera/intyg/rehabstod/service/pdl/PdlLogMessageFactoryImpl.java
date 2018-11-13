@@ -108,6 +108,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
     }
 
     @Override
+    // CHECKSTYLE:OFF ParameterNumber
     public PdlLogMessage buildLogMessage(Personnummer personnummer,
                                          String vardenhetId,
                                          String vardenhetNamn,
@@ -128,6 +129,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 
         return pdlLogMessage;
     }
+    // CHECKSTYLE:ON ParameterNumber
 
     private PdlResource buildPdlLogResource(SjukfallEnhet sfe, ResourceType resourceType, LogUser user) {
         PdlResource pdlResource = new PdlResource();

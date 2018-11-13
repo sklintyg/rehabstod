@@ -48,6 +48,7 @@ public interface PdlLogMessageFactory {
                                   ResourceType resourceType,
                                   RehabstodUser rehabstodUser);
 
+    // CHECKSTYLE:OFF ParameterNumber
     PdlLogMessage buildLogMessage(Personnummer personnummer,
                                   String vardenhetId,
                                   String vardenhetNamn,
@@ -56,4 +57,5 @@ public interface PdlLogMessageFactory {
                                   ActivityType activityType,
                                   ResourceType resourceType,
                                   RehabstodUser rehabstodUser);
+    // CHECKSTYLE:ON ParameterNumber
 }
