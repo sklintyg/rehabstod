@@ -46,8 +46,10 @@ public class SparrtjanstStubRestApi {
     public Response addBlocksForPerson(
             @PathParam("personId") String personId,
             @QueryParam("from") String from,
-            @QueryParam("to") String to) {
-        store.add(new BlockData(personId, LocalDate.parse(from), LocalDate.parse(to)));
+            @QueryParam("to") String to,
+            @QueryParam("vardgivare") String vardgivare,
+            @QueryParam("vardenhet") String vardenhet) {
+        store.add(new BlockData(personId, LocalDate.parse(from), LocalDate.parse(to), vardgivare, vardenhet));
         return Response.ok().build();
     }
 

@@ -44,6 +44,8 @@
         patientId : '',
         from : '',
         to : '',
+        vardgivare: '',
+        vardenhet: '',
         messages: []
       };
 
@@ -63,7 +65,7 @@
       $scope.addSPT = function() {
           var m = $scope.SPT;
 
-          $http.put(sparrtjanstApiBase + '/person/' + m.patientId + '?from=' + m.from + '&to=' + m.to).
+          $http.put(sparrtjanstApiBase + '/person/' + m.patientId + '?from=' + m.from + '&to=' + m.to + '&vardgivare=' + m.vardgivare + '&vardenhet=' + m.vardenhet).
           then(function() {
               $scope.SPT.messages.unshift('Lade till spärr för tiden [ ' + m.from + '  :  ' +  m.to + ' ] för ' + m.patientId);
           }, function(response) {
@@ -447,6 +449,8 @@
             <input type="text" name="patientId" ng-model="SPT.patientId" size="18"  maxlength="12" placeholder="personnnr (utan -)">
             <input type="text" name="spt.from" ng-model="SPT.from" size="18" placeholder="from åååå-mm-dd">
             <input type="text" name="spt.to" ng-model="SPT.to" size="18" placeholder="tom åååå-mm-dd">
+            <input type="text" name="spt.vardgivare" ng-model="SPT.vardgivare" size="18" placeholder="Vårdgivarens HsaId">
+            <input type="text" name="spt.vardenhet" ng-model="SPT.vardenhet" size="18" placeholder="Vårdenhetens HsaId">
             <div class="btn-group btn-group-sm" role="group">
 
               <button type="button" class="btn btn-small btn-primary"
