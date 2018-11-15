@@ -26,13 +26,19 @@ angular.module('rehabstodApp')
             restrict: 'A',
             scope: {
                 hideHelp: '@',
-                msgParams: '='
+                msgParams: '=',
+                column: '@',
+                defaultSort: '@'
             },
             templateUrl: '/components/appDirectives/sjukfall/rhsTableHeaderColumn/rhsTableHeaderColumn.directive.html',
-            link: function($scope, element, attrs) {
-                $scope.label = 'label.table.column.' + attrs.stSort.toLowerCase();
+            link: function($scope, element) {
+                $scope.label = 'label.table.column.' + $scope.column.toLowerCase();
 
                 element.addClass('rhs-table-head');
+
+                element.find('span[st-sort]').bind('click', function sortClick () {
+                    $('body, thead *').css('cursor', 'wait');
+                });
             }
         };
     });

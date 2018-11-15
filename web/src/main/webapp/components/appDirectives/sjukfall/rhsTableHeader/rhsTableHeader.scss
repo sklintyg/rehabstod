@@ -2,12 +2,15 @@
   .rhs-table-head {
     color: $rs-color-03;
     font-size: $rhs-font-size-th;
-    cursor: pointer;
     font-weight: bold;
     padding: 5px 2px 2px 5px;
     vertical-align: top;
 
-    &.st-sort-ascent, &.st-sort-descent {
+    [st-sort] {
+      cursor: pointer;
+    }
+
+    .st-sort-ascent, .st-sort-descent {
       text-decoration: underline;
     }
 
@@ -19,6 +22,7 @@
       color: $rs-color-03;
       display: inline-block;
       margin-left: 5px;
+      cursor: default;
     }
 
     &.column-number {

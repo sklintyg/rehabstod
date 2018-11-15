@@ -27,12 +27,8 @@ angular.module('rehabstodApp').directive('rhsTableHeader', ['SjukfallFilterViewS
                 user : '='
             },
             templateUrl: '/components/appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.directive.html',
-            link: function ($scope, element) {
+            link: function ($scope) {
                 $scope.filterViewState = SjukfallFilterViewState;
-
-                element.find('th[st-sort]').bind('click', function sortClick () {
-                    $('body, thead *').css('cursor', 'wait');
-                });
 
                 $scope.hasFeature = function(feature) {
                     return featureService.hasFeature(feature);
