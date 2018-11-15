@@ -18,13 +18,10 @@
  */
 package se.inera.intyg.rehabstod.integration.it.client;
 
-// CHECKSTYLE:OFF LineLength
-
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonResponseType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 
-// CHECKSTYLE:ON LineLength
 
 /**
  * Created by eriklupander on 2016-01-29.
@@ -56,11 +53,9 @@ public interface IntygstjanstClientService {
      * Method returns all sick leaves for a patient for all health care givers and its health care units.
      *
      * @param patientId patient identifier
-     * @param maxAntalDagarSedanSjukfallAvslut
      * @return
      */
-    ListActiveSickLeavesForPersonResponseType getAllSjukfallForPatient(String patientId,
-                                                                       int maxAntalDagarSedanSjukfallAvslut);
+    ListSickLeavesForPersonResponseType getAllSjukfallForPatient(String patientId);
 
     PingForConfigurationResponseType pingForConfiguration();
 }

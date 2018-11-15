@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponderInterface;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 
 // CHECKSTYLE:ON LineLength
@@ -62,8 +62,8 @@ public class IntygstjanstIntegrationClientConfiguration {
     @Value("${it.service.url}")
     private String itWsUrl;
 
-    @Value("${it.listactivesickleavesforperson.url}")
-    private String listActiveSickleavesForPersonUrl;
+    @Value("${it.listsickleavesforperson.url}")
+    private String listSickleavesForPersonUrl;
 
 
     @Value("${it.ping.url}")
@@ -84,16 +84,16 @@ public class IntygstjanstIntegrationClientConfiguration {
     }
 
     @Bean
-    public ListActiveSickLeavesForPersonResponderInterface listActiveSickLeavesForPersonWebServiceClient() {
+    public ListSickLeavesForPersonResponderInterface listSickLeavesForPersonWebServiceClient() {
         // CHECKSTYLE:OFF LineLength
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setAddress(listActiveSickleavesForPersonUrl);
-        proxyFactoryBean.setServiceClass(ListActiveSickLeavesForPersonResponderInterface.class);
-        ListActiveSickLeavesForPersonResponderInterface listActiveSickLeavesForPersonResponderInterface = (ListActiveSickLeavesForPersonResponderInterface) proxyFactoryBean
+        proxyFactoryBean.setAddress(listSickleavesForPersonUrl);
+        proxyFactoryBean.setServiceClass(ListSickLeavesForPersonResponderInterface.class);
+        ListSickLeavesForPersonResponderInterface listSickLeavesForPersonResponderInterface = (ListSickLeavesForPersonResponderInterface) proxyFactoryBean
                 .create();
-        Client client = ClientProxy.getClient(listActiveSickLeavesForPersonResponderInterface);
+        Client client = ClientProxy.getClient(listSickLeavesForPersonResponderInterface);
         applyTimeouts(client);
-        return listActiveSickLeavesForPersonResponderInterface;
+        return listSickLeavesForPersonResponderInterface;
         // CHECKSTYLE:ON LineLength
     }
 

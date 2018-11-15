@@ -20,18 +20,19 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 
 // CHECKSTYLE:OFF LineLength
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonType;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ResultType;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
 
-import java.util.stream.Collectors;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonType;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ResultType;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
 
 // CHECKSTYLE:ON LineLength
 
@@ -40,13 +41,13 @@ import java.util.stream.Collectors;
  */
 @Service
 @Profile({"rhs-it-stub"})
-public class ListActiveSickLeavesForPersonStub implements ListActiveSickLeavesForPersonResponderInterface {
+public class ListSickLeavesForPersonStub implements ListSickLeavesForPersonResponderInterface {
 
     @Autowired
     private  SjukfallIntygStub sjukfallIntygStub;
 
     @Override
-    public ListActiveSickLeavesForPersonResponseType listActiveSickLeavesForPerson(String s, ListActiveSickLeavesForPersonType parameters) {
+    public ListSickLeavesForPersonResponseType listSickLeavesForPerson(String s, ListSickLeavesForPersonType parameters) {
 
         //Just interested in a specific patient?
         String personnummer = parameters.getPersonId() != null && parameters.getPersonId().getExtension() != null
@@ -62,9 +63,9 @@ public class ListActiveSickLeavesForPersonStub implements ListActiveSickLeavesFo
 
         ResultType resultType = new ResultType();
         resultType.setResultCode(
-                se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ResultCodeEnum.OK);
+                se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ResultCodeEnum.OK);
 
-        ListActiveSickLeavesForPersonResponseType resp = new ListActiveSickLeavesForPersonResponseType();
+        ListSickLeavesForPersonResponseType resp = new ListSickLeavesForPersonResponseType();
         resp.setResult(resultType);
         resp.setIntygsLista(intygsLista);
 

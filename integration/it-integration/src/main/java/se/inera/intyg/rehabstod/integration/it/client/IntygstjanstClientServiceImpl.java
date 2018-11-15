@@ -25,12 +25,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitType;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonType;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
@@ -50,7 +50,7 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
     private ListActiveSickLeavesForCareUnitResponderInterface careUnitService;
 
     @Autowired
-    private ListActiveSickLeavesForPersonResponderInterface personService;
+    private ListSickLeavesForPersonResponderInterface personService;
 
     @Autowired
     @Qualifier("itPingForConfigurationWebServiceClient")
@@ -93,15 +93,14 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
 
     @Override
     @PrometheusTimeMethod
-    public ListActiveSickLeavesForPersonResponseType getAllSjukfallForPatient(String patientId, int maxAntalDagarSedanSjukfallAvslut) {
+    public ListSickLeavesForPersonResponseType getAllSjukfallForPatient(String patientId) {
         PersonId pId = new PersonId();
         pId.setExtension(patientId);
 
-        ListActiveSickLeavesForPersonType params = new ListActiveSickLeavesForPersonType();
+        ListSickLeavesForPersonType params = new ListSickLeavesForPersonType();
         params.setPersonId(pId);
-        params.setMaxDagarSedanAvslut(maxAntalDagarSedanSjukfallAvslut);
 
-        return personService.listActiveSickLeavesForPerson(logicalAddress, params);
+        return personService.listSickLeavesForPerson(logicalAddress, params);
     }
 
     @Override

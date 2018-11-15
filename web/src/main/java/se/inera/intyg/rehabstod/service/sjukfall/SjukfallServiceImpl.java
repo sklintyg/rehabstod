@@ -229,7 +229,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         LOG.debug("Calling Intygstjänsten - fetching certificate information by patient.");
         List<IntygsData> intygsData =
-                intygstjanstIntegrationService.getAllIntygsDataForPatient(patientId, parameters.getMaxAntalDagarSedanSjukfallAvslut());
+                intygstjanstIntegrationService.getAllIntygsDataForPatient(patientId);
 
         List<IntygData> data = intygsData.stream()
                 .map(o -> intygstjanstMapper.map(o))

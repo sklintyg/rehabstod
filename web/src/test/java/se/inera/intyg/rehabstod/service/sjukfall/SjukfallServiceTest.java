@@ -168,7 +168,7 @@ public class SjukfallServiceTest {
         when(employeeNameService.getEmployeeHsaName(anyString())).thenReturn("Tolvan Tolvansson");
         when(userPreferencesService.getPreferenceValue(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG)).thenReturn("5");
 
-        when(integrationService.getAllIntygsDataForPatient(anyString(), anyInt())).thenReturn(createIntygsData());
+        when(integrationService.getAllIntygsDataForPatient(anyString())).thenReturn(createIntygsData());
 
         doNothing().when(sjukfallEmployeeNameResolver).enrichWithHsaEmployeeNames(anyListOf(SjukfallEnhet.class));
         doNothing().when(sjukfallEmployeeNameResolver).updateDuplicateDoctorNamesWithHsaId(anyListOf(SjukfallEnhet.class));

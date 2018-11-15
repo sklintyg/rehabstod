@@ -20,19 +20,21 @@ package se.inera.intyg.rehabstod.integration.it.service;
 
 // CHECKSTYLE:OFF LineLength
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ListActiveSickLeavesForPersonResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.integration.it.exception.IntygstjanstIntegrationException;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
-import java.util.List;
 
 // CHECKSTYLE:ON LineLength
 
@@ -68,12 +70,11 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
 
     @Override
     @PrometheusTimeMethod
-    public List<IntygsData> getAllIntygsDataForPatient(String patientId, int maxAntalDagarSedanSjukfallAvslut) {
+    public List<IntygsData> getAllIntygsDataForPatient(String patientId) {
         verifyMandatoryParameter("patientId", patientId);
 
         String errorMessage = "An error occured fetching all sick leave certificates for a patient. Error type: {}. Error msg: {}";
-        return getIntygsData(intygstjanstClientService.getAllSjukfallForPatient(patientId, maxAntalDagarSedanSjukfallAvslut),
-                errorMessage);
+        return getIntygsData(intygstjanstClientService.getAllSjukfallForPatient(patientId), errorMessage);
     }
 
     private List<IntygsData> getIntygsData(ListActiveSickLeavesForCareUnitResponseType responseType, String errorMessage) {
@@ -91,14 +92,14 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
         return responseType.getIntygsLista().getIntygsData();
     }
 
-    private List<IntygsData> getIntygsData(ListActiveSickLeavesForPersonResponseType responseType, String errorMessage) {
+    private List<IntygsData> getIntygsData(ListSickLeavesForPersonResponseType responseType, String errorMessage) {
         if (responseType == null) {
             LOG.error(errorMessage);
             throw new IntygstjanstIntegrationException();
         }
 
         if (responseType.getResult().getResultCode()
-                != se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforperson.v1.ResultCodeEnum.OK) {
+                != se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ResultCodeEnum.OK) {
             LOG.error(errorMessage, responseType.getResult().getResultCode(), responseType.getResult().getResultMessage());
             throw new IntygstjanstIntegrationException();
         }
