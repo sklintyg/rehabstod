@@ -18,21 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
@@ -73,6 +57,21 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -115,8 +114,7 @@ public class SjukfallController {
         // PDL-logging based on which sjukfall that are about to be displayed to user.
         LOG.debug("PDL logging - log which 'sjukfall' that will be displayed to the user.");
         logSjukfallData(user, sjukfall, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
-        logSjukfallData(user, filterHavingRiskSignal(sjukfall),
-                ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+        logSjukfallData(user, filterHavingRiskSignal(sjukfall), ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
         return buildSjukfallEnhetResponse(response.isSrsError(), sjukfall);
     }
 
@@ -133,20 +131,21 @@ public class SjukfallController {
         SjukfallPatientResponse response = getSjukfallForPatient(user, request.getPatientId(), request.getAktivtDatum(), vardgivareIds);
         List<SjukfallPatient> sjukfall = response.getSjukfallList();
 
-        // PDL-logging based on which sjukfall that are about to be displayed to user.
-        LOG.debug("PDL logging - log which detailed 'sjukfall' that will be displayed to the user.");
-        logSjukfallData(user, sjukfall.get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_INTYG);
+        // All filtrering av samtycke och spärrar har redan gjorts! De sjukfall vi har tillgång till
+        // är de vi har rätt att ta del av. PDL-loggning behöver endast ske för den patientvy som har öppnats.
+        // Loggning behöver bara ske första gången som patientens patientvy visats under den pågående
+        // inloggningen för användaren.
 
-        // Om denna aktivitet, att öppna patientvyn, medför tillgång till ospärrad vårdinformation från flera vårdenheter
-        // (inom samma vårdgivare) måste loggposten få ytterligare en "resource" för varje vårdenhet.
+        // PDL-logging based on which sjukfall that are about to be displayed to user.
+        LOG.debug("PDL logging - log which 'sjukfall' information that will be displayed to the user.");
+        Consumer<PatientData> logPatientData = pd -> logSjukfallData(user, pd, ActivityType.READ, ResourceType.RESOURCE_TYPE_INTYG);
         sjukfall.stream()
                 .flatMap(sp -> sp.getIntyg().stream())
-                .filter(isNotBlocked(user, response))
-                .forEach(logSjukfallData(user, ActivityType.READ, ResourceType.RESOURCE_TYPE_INTYG));
+                .forEach(logPatientData);
 
         // If at least one intyg for the patient has an SRS prediction, log this.
         if (sjukfall.stream().flatMap(sf -> sf.getIntyg().stream()).anyMatch(anyIntygHasRiskSignal())) {
-            logSjukfallData(user, sjukfall.get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+            logSjukfallData(user, sjukfall.get(0).getIntyg().get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
         }
 
         return buildSjukfallPatientResponse(response.isSrsError(), response);
@@ -346,60 +345,33 @@ public class SjukfallController {
         PDLActivityStore.addActivitiesToStore(enhetsId, sjukfallToLog, activityType, resourceType, user.getStoredActivities());
     }
 
-    private void logSjukfallData(RehabstodUser user, SjukfallPatient sjukfallPatient,
-            ActivityType activityType, ResourceType resourceType) {
-
-        String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-        logSjukfallData(user, sjukfallPatient, enhetsId, activityType, resourceType);
-    }
-
-    private void logSjukfallData(RehabstodUser user, SjukfallPatient sjukfallPatient, String enhetsId,
+    private void logSjukfallData(RehabstodUser user, PatientData patientData,
                                  ActivityType activityType, ResourceType resourceType) {
 
-        if (enhetsId == null) {
-            throw new IllegalArgumentException("Cannot create PDL log statements, enhetsId was null");
+        if (patientData == null) {
+            throw new IllegalArgumentException("Cannot create PDL log statements, sjukfallPatient was null");
         }
-
-        boolean isInStore = PDLActivityStore.isActivityInStore(enhetsId, sjukfallPatient, activityType, resourceType,
-                user.getStoredActivities());
-
-        if (!isInStore) {
-            logService.logSjukfallData(sjukfallPatient, activityType, resourceType);
-            PDLActivityStore.addActivityToStore(enhetsId, sjukfallPatient, activityType, resourceType, user.getStoredActivities());
-        }
+        logSjukfallData(user, patientData, patientData.getVardenhetId(), activityType, resourceType);
     }
 
-    private Consumer<PatientData> logSjukfallData(RehabstodUser user, ActivityType activityType, ResourceType resourceType)  {
-        return (pd) -> logSjukfallData(user, pd.getPatient().getId(), pd.getVardenhetId(), pd.getVardenhetNamn(),
-                        pd.getVardgivareId(), pd.getVardgivareNamn(), activityType, resourceType);
-    }
-
-    // CHECKSTYLE:OFF ParameterNumber
-    private void logSjukfallData(RehabstodUser user, String patientId, String enhetsId,
-                                 String enhetsNamn, String vardgivareId, String vardgivareNamn,
+    private void logSjukfallData(RehabstodUser user, PatientData patientData, String enhetsId,
                                  ActivityType activityType, ResourceType resourceType) {
 
-        if (patientId == null) {
-            throw new IllegalArgumentException("Cannot create PDL log statements, patientId was null");
+        if (patientData == null) {
+            throw new IllegalArgumentException("Cannot create PDL log statements, patientData was null");
         }
         if (enhetsId == null) {
             throw new IllegalArgumentException("Cannot create PDL log statements, enhetsId was null");
         }
 
-        boolean isInStore = PDLActivityStore.isActivityInStore(enhetsId, patientId, activityType, resourceType,
-                user.getStoredActivities());
+        String patientId = patientData.getPatient().getId();
+        boolean isInStore =
+                PDLActivityStore.isActivityInStore(enhetsId, patientId, activityType, resourceType, user.getStoredActivities());
 
         if (!isInStore) {
-            logService.logSjukfallData(createPnr(patientId), enhetsId, enhetsNamn,
-                    vardgivareId, vardgivareNamn, activityType, resourceType);
+            logService.logSjukfallData(patientData, activityType, resourceType);
             PDLActivityStore.addActivityToStore(enhetsId, patientId, activityType, resourceType, user.getStoredActivities());
         }
-    }
-    // CHECKSTYLE:ON ParameterNumber
-
-    private Personnummer createPnr(String personId) {
-        return Personnummer.createPersonnummer(personId)
-                .orElseThrow(() -> new IllegalArgumentException("Could not parse passed personnummer"));
     }
 
     private String getMottagningsId(RehabstodUser user) {

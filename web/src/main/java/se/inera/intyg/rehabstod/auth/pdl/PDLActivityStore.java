@@ -23,7 +23,7 @@ import com.google.common.base.Strings;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +75,10 @@ public final class PDLActivityStore {
         // find all patientId's NOT having av event entry for the combination patientId + eventType
         return sjukfall.stream()
                 .filter(sf -> vardenhetEvents.stream()
-                        .noneMatch(storedEvent -> isStoredEvent(storedEvent, sf.getPatient().getId(), activityType, resourceType)))
+                        .noneMatch(storedEvent -> isStoredEvent(storedEvent,
+                                sf.getPatient().getId(),
+                                activityType,
+                                resourceType)))
                 .collect(Collectors.toList());
 
     }
@@ -97,7 +100,7 @@ public final class PDLActivityStore {
             return false;
         }
 
-        // We actually don't check tha vardenehet for each sjukfall, we trust that the given enhetsId is correct.
+        // We actually don't check tha vardenhet for each sjukfall, we trust that the given enhetsId is correct.
         List<PDLActivityEntry> vardenhetEvents = storedActivities.get(enhetsId);
         if (vardenhetEvents == null) {
             // Nothing logged for this vardenhet yet - so all are new activities
@@ -106,21 +109,6 @@ public final class PDLActivityStore {
 
         return vardenhetEvents.stream()
                 .anyMatch(storedEvent -> isStoredEvent(storedEvent, patientId, activityType, resourceType));
-    }
-
-    /**
-     * Should return true or false if patient's sjukfall is in store or not.
-     */
-    public static boolean isActivityInStore(String enhetsId,
-                                            SjukfallPatient sjukfall,
-                                            ActivityType activityType,
-                                            ResourceType resourceType,
-                                            Map<String, List<PDLActivityEntry>> storedActivities) {
-
-        Preconditions.checkNotNull(sjukfall, "Cannot make lookup in PDL activity store, sjukfall was null");
-
-        String patientId = sjukfall.getIntyg().get(0).getPatient().getId();
-        return isActivityInStore(enhetsId, patientId, activityType, resourceType, storedActivities);
     }
 
     /**
@@ -136,7 +124,10 @@ public final class PDLActivityStore {
             return;
         }
 
-        PDLActivityEntry newEntry = new PDLActivityEntry(patientId, activityType, resourceType);
+        PDLActivityEntry newEntry = new PDLActivityEntry(
+                createPersonnummer(patientId).getPersonnummer(),
+                activityType,
+                resourceType);
 
         List<PDLActivityEntry> vardenhetEvents = storedActivities.get(enhetsId);
         if (vardenhetEvents == null) {
@@ -159,27 +150,6 @@ public final class PDLActivityStore {
      * @param activityType
      * @param storedActivities
      */
-    public static void addActivityToStore(String enhetsId,
-                                          SjukfallPatient sjukfallToAdd,
-                                          ActivityType activityType,
-                                          ResourceType resourceType,
-                                          Map<String, List<PDLActivityEntry>> storedActivities) {
-        if (sjukfallToAdd == null) {
-            return;
-        }
-
-        String patientId = sjukfallToAdd.getIntyg().get(0).getPatient().getId();
-        addActivityToStore(enhetsId, patientId, activityType, resourceType, storedActivities);
-    }
-
-    /**
-     * Should store the specified sjukfall for the vardenhet and activityType.
-     *
-     * @param enhetsId
-     * @param sjukfallToAdd
-     * @param activityType
-     * @param storedActivities
-     */
     public static void addActivitiesToStore(String enhetsId,
                                             List<SjukfallEnhet> sjukfallToAdd,
                                             ActivityType activityType,
@@ -190,26 +160,36 @@ public final class PDLActivityStore {
             return;
         }
 
-        List<PDLActivityEntry> vardenhetEvents = storedActivities.get(enhetsId);
-
         final List<PDLActivityEntry> newEntryList = sjukfallToAdd.stream()
-                .map(sf -> new PDLActivityEntry(sf.getPatient().getId(), activityType, resourceType))
+                .map(sf -> new PDLActivityEntry(
+                        createPersonnummer(sf.getPatient().getId()).getPersonnummer(),
+                        activityType,
+                        resourceType))
                 .collect(Collectors.toList());
 
+        List<PDLActivityEntry> vardenhetEvents = storedActivities.get(enhetsId);
         if (vardenhetEvents == null) {
             storedActivities.put(enhetsId, newEntryList);
         } else {
-            vardenhetEvents.addAll(newEntryList);
-            storedActivities.put(enhetsId, vardenhetEvents);
+            ArrayList<PDLActivityEntry> list = new ArrayList<>();
+            list.addAll(vardenhetEvents);
+            list.addAll(newEntryList);
+            storedActivities.put(enhetsId, list);
         }
     }
 
     private static boolean isStoredEvent(PDLActivityEntry storedEvent, String patientId,
                                          ActivityType activityType, ResourceType resourceType) {
 
-        return storedEvent.getPatientId().equals(patientId)
+        Personnummer pnrPatinet = createPersonnummer(patientId);
+
+        return storedEvent.getPatientId().equals(pnrPatinet.getPersonnummer())
             && storedEvent.getActivityType().equals(activityType)
             && storedEvent.getResourceType().equals(resourceType);
     }
 
+    private static Personnummer createPersonnummer(String personId) {
+        return Personnummer.createPersonnummer(personId)
+                .orElseThrow(() -> new IllegalStateException("Could not parse passed personnummer: " + personId));
+    }
 }

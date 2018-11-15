@@ -21,10 +21,9 @@ package se.inera.intyg.rehabstod.service.pdl;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.PdlLogMessage;
 import se.inera.intyg.infra.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.service.pdl.dto.LogPatient;
+import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
-import se.inera.intyg.schemas.contract.Personnummer;
 
 import java.util.List;
 
@@ -34,28 +33,13 @@ import java.util.List;
 public interface PdlLogMessageFactory {
 
     PdlLogMessage buildLogMessage(List<SjukfallEnhet> sjukfallList,
+                                  LogUser logUser,
                                   ActivityType activityType,
-                                  ResourceType resourceType,
-                                  RehabstodUser rehabstodUser);
+                                  ResourceType resourceType);
 
-    PdlLogMessage buildLogMessage(SjukfallPatient sjukfallPatient,
+    PdlLogMessage buildLogMessage(LogPatient logPatient,
+                                  LogUser logUser,
                                   ActivityType activityType,
-                                  ResourceType resourceType,
-                                  RehabstodUser rehabstodUser);
+                                  ResourceType resourceType);
 
-    PdlLogMessage buildLogMessage(Personnummer personnummer,
-                                  ActivityType activityType,
-                                  ResourceType resourceType,
-                                  RehabstodUser rehabstodUser);
-
-    // CHECKSTYLE:OFF ParameterNumber
-    PdlLogMessage buildLogMessage(Personnummer personnummer,
-                                  String vardenhetId,
-                                  String vardenhetNamn,
-                                  String vardgivareId,
-                                  String vardgivareNamn,
-                                  ActivityType activityType,
-                                  ResourceType resourceType,
-                                  RehabstodUser rehabstodUser);
-    // CHECKSTYLE:ON ParameterNumber
 }

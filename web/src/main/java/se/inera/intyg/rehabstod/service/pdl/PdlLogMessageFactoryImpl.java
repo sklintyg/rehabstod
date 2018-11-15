@@ -20,22 +20,17 @@ package se.inera.intyg.rehabstod.service.pdl;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.Enhet;
 import se.inera.intyg.infra.logmessages.Patient;
 import se.inera.intyg.infra.logmessages.PdlLogMessage;
 import se.inera.intyg.infra.logmessages.PdlResource;
 import se.inera.intyg.infra.logmessages.ResourceType;
-import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataLogMessage;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataPrintLogMessage;
+import se.inera.intyg.rehabstod.service.pdl.dto.LogPatient;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
-import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
-import se.inera.intyg.schemas.contract.Personnummer;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,92 +41,49 @@ import java.util.stream.Collectors;
 @Service
 public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 
-    private static final String PDL_TITEL_LAKARE = "Läkare";
-    private static final String PDL_TITEL_REHABSTOD = "Rehabkoordinator";
-
     @Value("${pdlLogging.systemId}")
     private String systemId;
 
     @Value("${pdlLogging.systemName}")
     private String systemName;
 
+
     @Override
     public PdlLogMessage buildLogMessage(List<SjukfallEnhet> sjukfallList,
+                                         LogUser logUser,
                                          ActivityType activityType,
-                                         ResourceType resourceType,
-                                         RehabstodUser rehabstodUser) {
-
-        LogUser user = getLogUser(rehabstodUser);
+                                         ResourceType resourceType) {
 
         PdlLogMessage pdlLogMessage = getLogMessage(activityType);
-        populateWithCurrentUserAndCareUnit(pdlLogMessage, user);
+        populateWithCurrentUserAndCareUnit(pdlLogMessage, logUser);
 
         // Add resources
         pdlLogMessage.getPdlResourceList().addAll(
                 sjukfallList.stream()
-                        .map(sf -> buildPdlLogResource(sf, resourceType, user))
+                        .map(sfe -> buildPdlLogResource(sfe, logUser, resourceType))
                         .collect(Collectors.toList()));
 
         return pdlLogMessage;
     }
 
     @Override
-    public PdlLogMessage buildLogMessage(SjukfallPatient sjukfallPatient,
+    public PdlLogMessage buildLogMessage(LogPatient logPatient,
+                                         LogUser logUser,
                                          ActivityType activityType,
-                                         ResourceType resourceType,
-                                         RehabstodUser rehabstodUser) {
-
-        PatientData pd = sjukfallPatient.getIntyg().get(0);
-        return buildLogMessage(
-                createPnr(pd.getPatient().getId()),
-                pd.getVardenhetId(),
-                pd.getVardenhetNamn(),
-                pd.getVardgivareId(),
-                pd.getVardgivareNamn(),
-                activityType,
-                resourceType,
-                rehabstodUser);
-    }
-
-    @Override
-    public PdlLogMessage buildLogMessage(Personnummer personnummer, ActivityType activityType,
-                                         ResourceType resourceType, RehabstodUser rehabstodUser) {
-        return buildLogMessage(
-                personnummer,
-                rehabstodUser.getValdVardenhet().getId(),
-                rehabstodUser.getValdVardenhet().getNamn(),
-                rehabstodUser.getValdVardgivare().getId(),
-                rehabstodUser.getValdVardgivare().getNamn(),
-                activityType,
-                resourceType,
-                rehabstodUser);
-    }
-
-    @Override
-    // CHECKSTYLE:OFF ParameterNumber
-    public PdlLogMessage buildLogMessage(Personnummer personnummer,
-                                         String vardenhetId,
-                                         String vardenhetNamn,
-                                         String vardgivareId,
-                                         String vardgivareNamn,
-                                         ActivityType activityType,
-                                         ResourceType resourceType,
-                                         RehabstodUser rehabstodUser) {
-
-        LogUser user = getLogUser(rehabstodUser);
+                                         ResourceType resourceType) {
 
         PdlLogMessage pdlLogMessage = getLogMessage(activityType);
-        populateWithCurrentUserAndCareUnit(pdlLogMessage, user);
+        populateWithCurrentUserAndCareUnit(pdlLogMessage, logUser);
 
         // Add single resource
-        pdlLogMessage.getPdlResourceList().add(buildPdlLogResource(personnummer, vardenhetId, vardenhetNamn,
-                vardgivareId, vardgivareNamn, resourceType));
+        pdlLogMessage.getPdlResourceList().add(
+                buildPdlLogResource(logPatient.getPatientId(), logPatient.getEnhetsId(), logPatient.getEnhetsNamn(),
+                        logPatient.getVardgivareId(), logPatient.getVardgivareNamn(), resourceType));
 
         return pdlLogMessage;
     }
-    // CHECKSTYLE:ON ParameterNumber
 
-    private PdlResource buildPdlLogResource(SjukfallEnhet sfe, ResourceType resourceType, LogUser user) {
+    private PdlResource buildPdlLogResource(SjukfallEnhet sfe, LogUser user, ResourceType resourceType) {
         PdlResource pdlResource = new PdlResource();
         pdlResource.setPatient(getPatient(sfe));
         pdlResource.setResourceOwner(getEnhet(sfe, user));
@@ -140,24 +92,14 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         return pdlResource;
     }
 
-    private PdlResource buildPdlLogResource(SjukfallPatient sjp, ResourceType resourceType) {
-        // Get log info from first certificate in list
-        PatientData first = sjp.getIntyg().get(0);
-
-        PdlResource pdlResource = new PdlResource();
-        pdlResource.setPatient(getPatient(first));
-        pdlResource.setResourceOwner(getEnhet(first));
-        pdlResource.setResourceType(resourceType.getResourceTypeName());
-
-        return pdlResource;
-    }
-
-    private PdlResource buildPdlLogResource(Personnummer personnummer,
-                                            String vardenhetId, String vardenhetNamn,
-                                            String vardgivareId, String vardgivareNamn,
+    private PdlResource buildPdlLogResource(String patientId,
+                                            String vardenhetId,
+                                            String vardenhetNamn,
+                                            String vardgivareId,
+                                            String vardgivareNamn,
                                             ResourceType resourceType) {
 
-        Patient patient = getPatient(personnummer.getPersonnummer());
+        Patient patient = getPatient(patientId);
         Enhet enhet = getEnhet(vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn);
 
         PdlResource pdlResource = new PdlResource();
@@ -181,11 +123,6 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         return getEnhet(vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn);
     }
 
-    private Enhet getEnhet(PatientData pd) {
-        return getEnhet(pd.getVardenhetId(), pd.getVardenhetNamn(),
-                pd.getVardgivareId(), pd.getVardgivareNamn());
-    }
-
     private Enhet getEnhet(String vardenhetId, String vardenhetNamn, String vardgivareId, String vardgivareNamn) {
         return new Enhet(vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn);
     }
@@ -194,14 +131,8 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         return getPatient(sfe.getPatient().getId());
     }
 
-    private Patient getPatient(PatientData pd) {
-        return getPatient(pd.getPatient().getId());
-    }
-
     private Patient getPatient(String patientId) {
-        return new Patient(
-                patientId.replace("-", "").replace("+", ""),
-                "");
+        return new Patient(patientId.replace("-", "").replace("+", ""), "");
     }
 
     private PdlLogMessage getLogMessage(ActivityType activityType) {
@@ -220,29 +151,6 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         throw new IllegalArgumentException("No LogMessage type for activityType " + activityType.name() + " defined");
     }
 
-    private LogUser getLogUser(RehabstodUser user) {
-        SelectableVardenhet valdVardgivare = user.getValdVardgivare();
-        SelectableVardenhet valdVardenhet = user.getValdVardenhet();
-
-        return new LogUser.Builder(user.getHsaId(), valdVardenhet.getId(), valdVardgivare.getId())
-                .userName(user.getNamn())
-                .userAssignment(user.getSelectedMedarbetarUppdragNamn())
-                .userTitle(resolveUserTitle(user))
-                .enhetsNamn(valdVardenhet.getNamn())
-                .vardgivareNamn(valdVardgivare.getNamn())
-                .build();
-    }
-
-    /**
-     * LAKARE if user has LAKARE as current ROLE AND isLakare() is true.
-     * REHABKOORDINATOR if user has REHABKOORDINATOR as current role and isLakare is true.
-     * REHABKOORDINATOR if user has REHABKOORDINATOR as current role and isLakare is false.
-     */
-    private String resolveUserTitle(RehabstodUser user) {
-        return user.isLakare() && user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE)
-                ? PDL_TITEL_LAKARE : PDL_TITEL_REHABSTOD;
-    }
-
     private void populateWithCurrentUserAndCareUnit(PdlLogMessage logMsg, LogUser user) {
         logMsg.setUserId(user.getUserId());
         logMsg.setUserName(user.getUserName());
@@ -251,11 +159,6 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 
         Enhet vardenhet = new Enhet(user.getEnhetsId(), user.getEnhetsNamn(), user.getVardgivareId(), user.getVardgivareNamn());
         logMsg.setUserCareUnit(vardenhet);
-    }
-
-    private Personnummer createPnr(String personId) {
-        return Personnummer.createPersonnummer(personId)
-                .orElseThrow(() -> new IllegalArgumentException("Could not parse passed personnummer"));
     }
 
 }

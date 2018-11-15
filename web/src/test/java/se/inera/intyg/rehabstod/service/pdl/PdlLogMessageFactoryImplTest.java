@@ -52,7 +52,9 @@ public class PdlLogMessageFactoryImplTest {
 
         // Then
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
-            ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL, TestDataGen.buildRehabStodUser(true));
+                PdlLogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
+                ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
+
         assertNotNull(pdlLogMessage);
 
         assertEquals(ActivityType.READ, pdlLogMessage.getActivityType());
@@ -77,10 +79,9 @@ public class PdlLogMessageFactoryImplTest {
 
     @Test
     public void testBuildLogMessageWithEmptyCareGiverName() {
-
-        // Then
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(buildSjukfallListWithEmptyCareGiverName(),
-                ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL, TestDataGen.buildRehabStodUser(true));
+                PdlLogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
+                        ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
         assertNotNull(pdlLogMessage);
         assertEquals(1, pdlLogMessage.getPdlResourceList().size());
@@ -98,27 +99,34 @@ public class PdlLogMessageFactoryImplTest {
     public void testBuildPrintLogMessage() {
         // Then
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
-            ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL, TestDataGen.buildRehabStodUser(true));
-        assertNotNull(pdlLogMessage);
+                PdlLogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
+                        ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
+        assertNotNull(pdlLogMessage);
         assertEquals(ActivityType.PRINT, pdlLogMessage.getActivityType());
     }
 
     @Test
     public void testBuildLogMessageForLakare() {
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
-            ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL, TestDataGen.buildRehabStodUser(true));
+                PdlLogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
+                        ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
+
         assertEquals("Läkare", pdlLogMessage.getUserTitle());
     }
 
     @Test
     public void testBuildLogMessageForLakareHavingRehabkoordinatorRole() {
-        RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser(true);
         Map<String, Role> rolesMap = mock(Map.class);
-        when(rolesMap.containsKey(eq("LAKARE"))).thenReturn(false);
+        RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser(true);
         rehabstodUser.setRoles(rolesMap);
+
+        when(rolesMap.containsKey(eq("LAKARE"))).thenReturn(false);
+
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
-                ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL, rehabstodUser);
+                PdlLogUtil.getLogUser(rehabstodUser),
+                        ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
+
         assertEquals("Rehabkoordinator", pdlLogMessage.getUserTitle());
     }
 
@@ -127,13 +135,17 @@ public class PdlLogMessageFactoryImplTest {
         RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser(false);
         rehabstodUser.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_KOORDINATOR, new Role()));
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
-            ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL, rehabstodUser);
+                PdlLogUtil.getLogUser(rehabstodUser),
+                        ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
+
         assertEquals("Rehabkoordinator", pdlLogMessage.getUserTitle());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testBuildWithUnknownType() {
         testee.buildLogMessage(TestDataGen.buildSjukfallList(1),
-            ActivityType.EMERGENCY_ACCESS, ResourceType.RESOURCE_TYPE_SJUKFALL, TestDataGen.buildRehabStodUser(true));
+                PdlLogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
+                        ActivityType.EMERGENCY_ACCESS, ResourceType.RESOURCE_TYPE_SJUKFALL);
     }
+
 }

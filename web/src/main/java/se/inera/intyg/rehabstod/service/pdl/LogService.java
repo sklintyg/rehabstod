@@ -20,8 +20,8 @@ package se.inera.intyg.rehabstod.service.pdl;
 
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 import java.util.List;
@@ -35,15 +35,7 @@ public interface LogService {
                          ActivityType activityType,
                          ResourceType resourceType);
 
-    void logSjukfallData(SjukfallPatient sjukfallPatient,
-                         ActivityType activityType,
-                         ResourceType resourceType);
-
-    void logSjukfallData(Personnummer personnummer,
-                         String vardenhetId,
-                         String vardenhetNamn,
-                         String vardgivareId,
-                         String vardgivareNamn,
+    void logSjukfallData(PatientData patientData,
                          ActivityType activityType,
                          ResourceType resourceType);
 

@@ -57,7 +57,6 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
-import se.inera.intyg.schemas.contract.Personnummer;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -75,6 +74,7 @@ import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
@@ -130,6 +130,7 @@ public class SjukfallControllerTest {
         when(rehabstodUserMock.getValdVardenhet()).thenReturn(DEFAULT_VARDENHET);
         when(rehabstodUserMock.getValdVardgivare()).thenReturn(DEFAULT_VARDGIVARE);
         when(rehabstodUserMock.getUrval()).thenReturn(Urval.ALL);
+
         RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
         preferences.updatePreference(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
         preferences.updatePreference(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "0");
@@ -231,13 +232,14 @@ public class SjukfallControllerTest {
         testee.getSjukfallForPatient(request);
 
         // Verify
-        verifyStatic();
-        PDLActivityStore.isActivityInStore(anyString(), any(SjukfallPatient.class), eq(ActivityType.READ),
-            eq(ResourceType.RESOURCE_TYPE_INTYG), any(Map.class));
-
         verify(sjukfallServiceMock).getByPatient(eq(DEFAULT_VARDGIVARE.getId()), eq(DEFAULT_VARDENHET.getId()), anyString(),
                 eq(patientId), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class));
-        verify(logServiceMock).logSjukfallData(eq(a), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
+
+        verifyStatic();
+        PDLActivityStore.isActivityInStore(anyString(), eq(patientId), eq(ActivityType.READ),
+            eq(ResourceType.RESOURCE_TYPE_INTYG), any(Map.class));
+
+        verify(logServiceMock).logSjukfallData(any(PatientData.class), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
     }
 
     @Test
@@ -257,64 +259,100 @@ public class SjukfallControllerTest {
 
         // When
         mockStatic(PDLActivityStore.class);
-        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
+        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), anyString(),
+                any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
                 .thenReturn(new SjukfallPatientResponse(result, new SjfMetaData(), false));
 
         // Then
         testee.getSjukfallForPatient(request);
 
         // Verify
-        verifyStatic();
-        PDLActivityStore.isActivityInStore(anyString(), any(SjukfallPatient.class), eq(ActivityType.READ),
-                eq(ResourceType.RESOURCE_TYPE_INTYG), any(Map.class));
-
         verify(sjukfallServiceMock).getByPatient(eq(DEFAULT_VARDGIVARE.getId()), eq(DEFAULT_VARDENHET.getId()), anyString(),
                 eq(patientId), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class));
-        verify(logServiceMock, times(1)).logSjukfallData(eq(a), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
-        verify(logServiceMock, times(2)).logSjukfallData(any(Personnummer.class), anyString(), anyString(), anyString(), anyString(),
-                eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
+
+        verifyStatic(atLeastOnce());
+        PDLActivityStore.isActivityInStore(anyString(), eq(patientId), eq(ActivityType.READ),
+                eq(ResourceType.RESOURCE_TYPE_INTYG), any(Map.class));
+
+        verify(logServiceMock, atLeastOnce()).logSjukfallData(
+                any(PatientData.class), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
     }
 
     @Test
-    public void getSjukfallByPatient_whenIntygFromMultipleUnits_andOneIsBlocked() {
+    public void pdlLogSjukfallPatient_whenIntygFromSingleUnit() {
         String patientId = "19121212-1212";
+        RehabstodUser user = buildConcreteUser();
 
+        // Should trigger one history PDL item.
         SjukfallPatient a = createSjukFallPatient(patientId, 1, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
-        SjukfallPatient b = createSjukFallPatient(patientId, 1, 0, vardenheter.get(1), DEFAULT_VARDGIVARE);
-        SjukfallPatient c = createSjukFallPatient(patientId, 1, 0, vardenheter.get(2), DEFAULT_VARDGIVARE);
-        SjukfallPatient d = createSjukFallPatient(patientId, 1, 0, vardenheter.get(3), vardgivare.get(1));
 
-        List<SjukfallPatient> result = Arrays.asList(a, b, c, d);
-
-        SjfMetaData sjfMetaData = new SjfMetaData();
-        sjfMetaData.setVardenheterInomVGMedSparr(new ArrayList<String>(Arrays.asList(vardenheter.get(2).getId())));
+        List<SjukfallPatient> finalList = Arrays.asList(a);
 
         // Given
         GetSjukfallForPatientRequest request = new GetSjukfallForPatientRequest();
         request.setPatientId(patientId);
 
         // When
-        mockStatic(PDLActivityStore.class);
-        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
-                .thenReturn(new SjukfallPatientResponse(result, sjfMetaData, false));
+        when(userServiceMock.getUser()).thenReturn(user);
 
-        // Then
+        when(sjukfallServiceMock
+                .getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
+                .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false));
+
         testee.getSjukfallForPatient(request);
 
-        // Verify
-        verifyStatic();
-        PDLActivityStore.isActivityInStore(anyString(), any(SjukfallPatient.class), eq(ActivityType.READ),
-                eq(ResourceType.RESOURCE_TYPE_INTYG), any(Map.class));
+        // Expect entries for ONE enhet
+        assertEquals(1, user.getStoredActivities().size());
+        List<PDLActivityEntry> pdlActivityEntries = user.getStoredActivities().get(DEFAULT_VARDENHET.getId());
 
-        verify(sjukfallServiceMock).getByPatient(eq(DEFAULT_VARDGIVARE.getId()), eq(DEFAULT_VARDENHET.getId()), anyString(),
-                eq(patientId), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class));
-        verify(logServiceMock, times(1)).logSjukfallData(eq(a), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
-        verify(logServiceMock, times(1)).logSjukfallData(any(Personnummer.class), anyString(), anyString(), anyString(), anyString(),
-                eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
+        // Assert entry
+        assertPdlActivityEntries(user, DEFAULT_VARDENHET, ResourceType.RESOURCE_TYPE_INTYG);
+
+        verify(logServiceMock).logSjukfallData(
+                any(PatientData.class), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
     }
 
     @Test
-    public void testPDLLogSRSForSjukfallPatient() {
+    public void pdlLogSjukfallPatient_whenIntygFromMultipleUnits() {
+        String patientId = "19121212-1212";
+        RehabstodUser user = buildConcreteUser();
+
+        // Should trigger one history PDL item.
+        SjukfallPatient a = createSjukFallPatient(patientId, 3, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
+        SjukfallPatient b = createSjukFallPatient(patientId, 1, 0, vardenheter.get(1), DEFAULT_VARDGIVARE);
+        SjukfallPatient c = createSjukFallPatient(patientId, 2, 0, vardenheter.get(2), DEFAULT_VARDGIVARE);
+        SjukfallPatient d = createSjukFallPatient(patientId, 1, 0, vardenheter.get(3), vardgivare.get(1));
+
+        List<SjukfallPatient> finalList = Arrays.asList(a, b, c, d);
+
+        // Given
+        GetSjukfallForPatientRequest request = new GetSjukfallForPatientRequest();
+        request.setPatientId(patientId);
+
+        // When
+        when(userServiceMock.getUser()).thenReturn(user);
+
+        when(sjukfallServiceMock
+                .getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
+                .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false));
+
+        testee.getSjukfallForPatient(request);
+
+        // Expect one entry for each unit
+        assertEquals(4, user.getStoredActivities().size());
+
+        // Assert entries - one for each unit
+        assertPdlActivityEntries(user, DEFAULT_VARDENHET, ResourceType.RESOURCE_TYPE_INTYG);
+        assertPdlActivityEntries(user, vardenheter.get(1), ResourceType.RESOURCE_TYPE_INTYG);
+        assertPdlActivityEntries(user, vardenheter.get(2), ResourceType.RESOURCE_TYPE_INTYG);
+        assertPdlActivityEntries(user, vardenheter.get(3), ResourceType.RESOURCE_TYPE_INTYG);
+
+        verify(logServiceMock, times(4)).logSjukfallData(
+                any(PatientData.class), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
+    }
+
+    @Test
+    public void pdlLogSjukfallPatient_shouldTriggerSRSLogEntry() {
         String patientId = "19121212-1212";
         RehabstodUser user = buildConcreteUser();
 
@@ -342,14 +380,12 @@ public class SjukfallControllerTest {
         assertEquals(1, user.getStoredActivities().size());
         List<PDLActivityEntry> pdlActivityEntries = user.getStoredActivities().get(DEFAULT_VARDENHET.getId());
 
-        // Expect one INTYG and one SRS log entry.
+        // Assert total number of entries
         assertEquals(2, pdlActivityEntries.size());
-        assertEquals(1L, pdlActivityEntries.stream()
-                .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_PREDIKTION_SRS)
-                .count());
-        assertEquals(1L, pdlActivityEntries.stream()
-                .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_INTYG)
-                .count());
+
+        // Assert entries - expect one INTYG and one SRS log entry.
+        assertPdlActivityEntries(user, DEFAULT_VARDENHET, ResourceType.RESOURCE_TYPE_INTYG);
+        assertPdlActivityEntries(user, DEFAULT_VARDENHET, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
 
         verify(logServiceMock, times(2));
     }
@@ -387,6 +423,15 @@ public class SjukfallControllerTest {
                 .count());
 
         verify(logServiceMock, times(3));
+    }
+
+    private void assertPdlActivityEntries(RehabstodUser user, Vardenhet vardenhet, ResourceType resourceType) {
+        List<PDLActivityEntry> pdlActivityEntries = user.getStoredActivities().get(vardenhet.getId());
+
+        // Expect one INTYG with a certain ResourceType
+        assertEquals(1L, pdlActivityEntries.stream()
+                .filter(entry -> entry.getResourceType() == resourceType)
+                .count());
     }
 
     private RehabstodUser buildConcreteUser() {

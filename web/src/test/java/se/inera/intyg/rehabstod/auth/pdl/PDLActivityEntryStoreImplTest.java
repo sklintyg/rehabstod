@@ -42,11 +42,11 @@ import static org.junit.Assert.assertTrue;
 public class PDLActivityEntryStoreImplTest {
     // CHECKSTYLE:OFF MagicNumber
 
-    private static final SjukfallEnhet SJUKFALL_1 = createSjukFallForPatient("111");
-    private static final SjukfallEnhet SJUKFALL_2 = createSjukFallForPatient("222");
-    private static final SjukfallEnhet SJUKFALL_3 = createSjukFallForPatient("333");
-    private static final SjukfallEnhet SJUKFALL_4 = createSjukFallForPatient("444");
-    private static final SjukfallEnhet SJUKFALL_5 = createSjukFallForPatient("555");
+    private static final SjukfallEnhet SJUKFALL_1 = createSjukFallForPatient("19990824-2382");
+    private static final SjukfallEnhet SJUKFALL_2 = createSjukFallForPatient("19990826-2380");
+    private static final SjukfallEnhet SJUKFALL_3 = createSjukFallForPatient("19990828-2388");
+    private static final SjukfallEnhet SJUKFALL_4 = createSjukFallForPatient("19990831-2391");
+    private static final SjukfallEnhet SJUKFALL_5 = createSjukFallForPatient("19990903-2386");
 
     private static final String VARDENHET_1 = "H111111";
     private static final String VARDENHET_2 = "H222222";
@@ -105,31 +105,32 @@ public class PDLActivityEntryStoreImplTest {
         // Asking for stored activities when none is stored should return all
         assertEquals(sjukfallList1,
                 PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList1,
-                    ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL, storedActivities));
-        // Add them
+                        ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL, storedActivities));
+
+        // ...now add them
         PDLActivityStore.addActivitiesToStore(VARDENHET_1, sjukfallList1,
             ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL, storedActivities);
 
         // subsequent addition of same eventtype should only add and return new sjukfall not previously logged
         assertEquals(Arrays.asList(SJUKFALL_5),
                 PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList2,
-                    ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL, storedActivities));
+                        ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL, storedActivities));
 
         // asking for already stored sjukfall(but other eventtype) should return all again
         assertEquals(sjukfallList1,
                 PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, sjukfallList1,
-                    ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL, storedActivities));
+                        ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL, storedActivities));
         PDLActivityStore.addActivitiesToStore(VARDENHET_1, sjukfallList1,
-            ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL, storedActivities);
+                ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL, storedActivities);
+
         // and subsequent request none...
-        assertTrue(
-                PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, new ArrayList<>(),
-                    ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL, storedActivities).isEmpty());
+        assertTrue(PDLActivityStore.getActivitiesNotInStore(VARDENHET_1, new ArrayList<>(),
+                ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL, storedActivities).isEmpty());
 
         // ..unless we change vardenehet, in which case we should get all again
         assertEquals(sjukfallList1,
                 PDLActivityStore.getActivitiesNotInStore(VARDENHET_2, sjukfallList1,
-                    ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL, storedActivities));
+                        ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL, storedActivities));
     }
 
     private static SjukfallEnhet createSjukFallForPatient(String patientId) {
@@ -139,7 +140,7 @@ public class PDLActivityEntryStoreImplTest {
         Lakare lakare = new Lakare("123456-0987", "Hr Doktor");
         isf.setLakare(lakare);
 
-        Patient patient = new Patient(patientId, "patient" + patientId);
+        Patient patient = new Patient(patientId, patientId);
         patient.setAlder(50);
         isf.setPatient(patient);
 

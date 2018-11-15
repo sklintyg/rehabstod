@@ -31,10 +31,12 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.PdlLogMessage;
 import se.inera.intyg.infra.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
+import se.inera.intyg.rehabstod.service.pdl.dto.LogPatient;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 import javax.annotation.PostConstruct;
@@ -45,8 +47,6 @@ import java.util.List;
 
 /**
  * Implementation of service for logging user actions according to PDL requirements.
- *
- * ResourceType: "Översikt sjukskrivning (diagnos, till- och fråndatum, sjukskrivningsgrad, läkare)"
  *
  * @author eriklupander
  */
@@ -79,28 +79,19 @@ public class LogServiceImpl implements LogService {
             return;
         }
         PdlLogMessage pdlLogMessage =
-            pdlLogMessageFactory.buildLogMessage(sjukfallList, activityType, resourceType, userService.getUser());
+            pdlLogMessageFactory.buildLogMessage(sjukfallList, PdlLogUtil.getLogUser(userService.getUser()), activityType, resourceType);
         send(pdlLogMessage);
     }
 
     @Override
-    public void logSjukfallData(SjukfallPatient sjukfallPatient, ActivityType activityType, ResourceType resourceType) {
-        if (sjukfallPatient == null) {
-            LOG.debug("No sjukfall for PDL logging, not logging.");
+    public void logSjukfallData(PatientData patientData, ActivityType activityType, ResourceType resourceType) {
+        if (patientData == null) {
+            LOG.debug("No patientData for PDL logging, not logging.");
             return;
         }
         PdlLogMessage pdlLogMessage =
-            pdlLogMessageFactory.buildLogMessage(sjukfallPatient, activityType, resourceType, userService.getUser());
-        send(pdlLogMessage);
-    }
-
-    @Override
-    public void logSjukfallData(Personnummer personnummer, String vardenhetId, String vardenhetNamn, String vardgivareId,
-                                String vardgivareNamn, ActivityType activityType, ResourceType resourceType) {
-
-        PdlLogMessage pdlLogMessage =
-                pdlLogMessageFactory.buildLogMessage(personnummer, vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn,
-                        activityType, resourceType, userService.getUser());
+                pdlLogMessageFactory.buildLogMessage(PdlLogUtil.getLogPatient(patientData),
+                        PdlLogUtil.getLogUser(userService.getUser()), activityType, resourceType);
         send(pdlLogMessage);
     }
 
@@ -110,11 +101,20 @@ public class LogServiceImpl implements LogService {
             LOG.debug("No personnummer for PDL logging, not logging.");
             return;
         }
-        PdlLogMessage pdlLogMessage =
-                pdlLogMessageFactory.buildLogMessage(personnummer, activityType, resourceType, userService.getUser());
-        send(pdlLogMessage);
 
+        RehabstodUser user = userService.getUser();
+        LogPatient logPatient = new LogPatient.Builder(
+                personnummer.getPersonnummer(), user.getValdVardenhet().getId(), user.getValdVardgivare().getId())
+                .enhetsNamn(user.getValdVardenhet().getNamn())
+                .vardgivareNamn(user.getValdVardgivare().getNamn())
+                .build();
+
+        PdlLogMessage pdlLogMessage =
+                pdlLogMessageFactory.buildLogMessage(logPatient,
+                        PdlLogUtil.getLogUser(user), activityType, resourceType);
+        send(pdlLogMessage);
     }
+
 
     private void send(PdlLogMessage pdlLogMessage) {
 
@@ -131,12 +131,10 @@ public class LogServiceImpl implements LogService {
             LOG.error("Could not log list of IntygsData", e);
             throw e;
         }
-
     }
 
     private static final class MC implements MessageCreator {
         private final PdlLogMessage logMsg;
-
         private final ObjectMapper objectMapper = new CustomObjectMapper();
 
         private MC(PdlLogMessage logMsg) {
