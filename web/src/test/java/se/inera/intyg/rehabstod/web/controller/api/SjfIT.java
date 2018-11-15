@@ -42,7 +42,7 @@ public class SjfIT extends BaseRestIntegrationTest {
 
     @Test
     public void testGetSjukfallByPatient() {
-        String patientId = "19121212-1212";
+        String patientId = "20121212-1212";
         String vgId = "no-user-vg";
 
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
@@ -62,8 +62,9 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(false))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(1))
-                .body("sjfMetaData.kraverSamtycke[0].includedInSjukfall", equalTo(false));
+                .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
+                .body("sjfMetaData.kraverSamtycke[0].includedInSjukfall", equalTo(false))
+                .body("sjfMetaData.kraverSamtycke[1].includedInSjukfall", equalTo(false));
 
 
         // Registerar samtycke
@@ -85,8 +86,9 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(1))
-                .body("sjfMetaData.kraverSamtycke[0].includedInSjukfall", equalTo(false));
+                .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
+                .body("sjfMetaData.kraverSamtycke[0].includedInSjukfall", equalTo(false))
+                .body("sjfMetaData.kraverSamtycke[1].includedInSjukfall", equalTo(false));
 
 
         // Inkludera vårdgivare
@@ -105,8 +107,9 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(1))
-                .body("sjfMetaData.kraverSamtycke[0].includedInSjukfall", equalTo(true));
+                .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
+                .body("sjfMetaData.kraverSamtycke[0].includedInSjukfall", equalTo(false))
+                .body("sjfMetaData.kraverSamtycke[1].includedInSjukfall", equalTo(true));
 
 
     }
