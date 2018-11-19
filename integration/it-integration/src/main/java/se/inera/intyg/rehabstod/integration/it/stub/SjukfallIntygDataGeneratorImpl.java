@@ -635,8 +635,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private void initFakedVardgivare4() {
         vg4 = new Vardgivare();
         HsaId hsaId = new HsaId();
-        hsaId.setExtension("no-user-vg");
+        hsaId.setExtension("TSTNMT2321000156-1061");
         vg4.setVardgivarId(hsaId);
-        vg4.setVardgivarnamn("Vårdgivare extra");
+        vg4.setVardgivarnamn("VårdgivareCambio");
     }
 }

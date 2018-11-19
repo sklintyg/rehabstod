@@ -31,6 +31,8 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+
+import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
@@ -99,6 +101,9 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     @Autowired
     private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+
+    @Autowired
+    private HsaOrganizationsService hsaOrganizationsService;
 
     @Override
     @PrometheusTimeMethod
@@ -231,10 +236,13 @@ public class SjukfallServiceImpl implements SjukfallService {
         List<IntygsData> intygsData =
                 intygstjanstIntegrationService.getAllIntygsDataForPatient(patientId);
 
+
         List<IntygData> data = intygsData.stream()
                 .map(o -> intygstjanstMapper.map(o))
                 .collect(Collectors.toList());
 
+        //decorate with VG names
+        decorateWithVardgivarNamn(data);
         // Create initial map linked to each intyg by intygsId
         data.forEach(intygData -> intygAccessMetaData.put(intygData.getIntygId(),
                 new IntygAccessControlMetaData(intygData, currentVardgivarHsaId.equals(intygData.getVardgivareId()),
@@ -267,6 +275,20 @@ public class SjukfallServiceImpl implements SjukfallService {
                 .collect(Collectors.toList());
 
         return new FilteredSjukFallByPatientResult(rehabstodSjukfall, sjfMetaData);
+    }
+
+    private void decorateWithVardgivarNamn(List<IntygData> data) {
+        data.stream().forEach(
+                intygData -> intygData.setVardgivareNamn(getVardgivarNamn(intygData.getVardgivareId())));
+    }
+
+    private String getVardgivarNamn(String vardgivareId) {
+        try {
+            return hsaOrganizationsService.getVardgivareInfo(vardgivareId).getNamn();
+        } catch (Exception e) {
+            LOG.error("Failed to get VardgivareInfo from HSA for vardgivarId '{}'", vardgivareId, e);
+            return "(" + vardgivareId + ")";
+        }
     }
 
     private SjfMetaData createSjfMetaData(Map<String, IntygAccessControlMetaData> intygAccessMetaData, boolean haveConsent) {

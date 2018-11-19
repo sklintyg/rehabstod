@@ -18,6 +18,18 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,6 +48,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.Patient;
@@ -70,18 +83,6 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-24.
@@ -148,6 +149,9 @@ public class SjukfallServiceTest {
     private SparrtjanstIntegrationServiceImplTest sparrtjanstIntegrationService;
 
     @Mock
+    private HsaOrganizationsService hsaOrganizationsService;
+
+    @Mock
     private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
     @InjectMocks
@@ -169,6 +173,9 @@ public class SjukfallServiceTest {
         when(userPreferencesService.getPreferenceValue(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG)).thenReturn("5");
 
         when(integrationService.getAllIntygsDataForPatient(anyString())).thenReturn(createIntygsData());
+        when(hsaOrganizationsService.getVardgivareInfo(anyString()))
+                .thenAnswer(i -> new se.inera.intyg.infra.integration.hsa.model.Vardgivare((String) i.getArguments()[0],
+                        i.getArguments()[0] + "-VGNAME"));
 
         doNothing().when(sjukfallEmployeeNameResolver).enrichWithHsaEmployeeNames(anyListOf(SjukfallEnhet.class));
         doNothing().when(sjukfallEmployeeNameResolver).updateDuplicateDoctorNamesWithHsaId(anyListOf(SjukfallEnhet.class));
@@ -265,8 +272,10 @@ public class SjukfallServiceTest {
         SjfSamtyckeFinnsMetaData vg3metaData = kraverSamtycke.next();
 
         assertEquals(vgId2, vg2metaData.getVardgivareId());
+        assertEquals(vgId2 + "-VGNAME", vg2metaData.getVardgivareNamn());
         assertTrue(vg2metaData.isIncludedInSjukfall());
         assertEquals(vgId3, vg3metaData.getVardgivareId());
+        assertEquals(vgId3 + "-VGNAME", vg3metaData.getVardgivareNamn());
         assertFalse(vg3metaData.isIncludedInSjukfall());
         assertTrue(patientResponse.getSjfMetaData().isSamtyckeFinns());
     }
