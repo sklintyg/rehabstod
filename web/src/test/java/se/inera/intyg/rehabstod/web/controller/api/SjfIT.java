@@ -43,7 +43,8 @@ public class SjfIT extends BaseRestIntegrationTest {
     @Test
     public void testGetSjukfallByPatient() {
         String patientId = "20121212-1212";
-        String vgId = "no-user-vg";
+        String vgIdOther = "TSTNMT2321000156-1061";
+        String vgIdOwn = "vastmanland";
 
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
@@ -63,8 +64,10 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(false))
                 .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
-                .body("sjfMetaData.kraverSamtycke[0].includedInSjukfall", equalTo(false))
-                .body("sjfMetaData.kraverSamtycke[1].includedInSjukfall", equalTo(false));
+                .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOther + "' }.includedInSjukfall",
+                        equalTo(false))
+                .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOwn + "' }.includedInSjukfall",
+                        equalTo(false));
 
 
         // Registerar samtycke
@@ -87,14 +90,15 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(true))
                 .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
-                .body("sjfMetaData.kraverSamtycke[0].includedInSjukfall", equalTo(false))
-                .body("sjfMetaData.kraverSamtycke[1].includedInSjukfall", equalTo(false));
-
+                .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOther + "' }.includedInSjukfall",
+                        equalTo(false))
+                .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOwn + "' }.includedInSjukfall",
+                        equalTo(false));
 
         // Inkludera vårdgivare
         AddVgToPatientViewRequest includeInSjukfallRequest = new AddVgToPatientViewRequest();
         includeInSjukfallRequest.setPatientId(patientId);
-        includeInSjukfallRequest.setVardgivareId(vgId);
+        includeInSjukfallRequest.setVardgivareId(vgIdOther);
 
         given().contentType(ContentType.JSON).and().body(includeInSjukfallRequest)
                 .expect().statusCode(OK)
@@ -108,8 +112,10 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(true))
                 .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
-                .body("sjfMetaData.kraverSamtycke[0].includedInSjukfall", equalTo(false))
-                .body("sjfMetaData.kraverSamtycke[1].includedInSjukfall", equalTo(true));
+                .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOther + "' }.includedInSjukfall",
+                        equalTo(true))
+                .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOwn + "' }.includedInSjukfall",
+                        equalTo(false));
 
 
     }
