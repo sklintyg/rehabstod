@@ -183,7 +183,7 @@ var rhsMessages = {
         // Patient History Dialog
         'label.patienthistory.loading' : 'Hämtar sjukfall för patient...',
 
-        'label.extradiagnoser.none': 'Det finns för tillfället inga intyg att inhämta från andra vårdenheter eller vårdgivare som tillhör patientens pågående sjukfall.',
+        'label.extradiagnoser.none': 'Det finns för tillfället inga intyg att inhämta från andra vårdgivare samt inga spärrade intyg på andra vårdenheter som tillhör patientens pågående sjukfall.',
         'label.extradiagnoser.empty': 'Det finns för tillfället inget intyg i denna kategori som tillhör patientens pågående sjukfall.',
 
         'label.extradiagnoser.sparradinom.title' : 'Spärrad information hos din vårdgivare',
