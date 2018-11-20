@@ -1,7 +1,6 @@
 apiVersion: v1
 data:
-  CERTIFICATE_BASEURL: "http://intygstjanst:8080"
-  ACTIVEMQ_BROKER_URL: "failover:(tcp://ind-sint-activemq1.ind1.sth.basefarm.net:61616,tcp://ind-sint-activemq2.ind1.sth.basefarm.net:61616)"
+  ACTIVEMQ_BROKER_URL: "failover:(tcp://ind-sint-activemq1.ind1.sth.basefarm.net:61616,tcp://ind-sint-activemq2.ind1.sth.basefarm.net:61616)?jms.nonBlockingRedelivery=true&jms.redeliveryPolicy.useExponentialBackOff=true&jms.redeliveryPolicy.backOffMultiplier=2&jms.redeliveryPolicy.maximumRedeliveries=30&jms.redeliveryPolicy.maximumRedeliveryDelay=3600000&jms.redeliveryPolicy.initialRedeliveryDelay=60000"
   DATABASE_PORT: "3306"
   DATABASE_SERVER: "ind-sint-mysqlvip.ind1.sth.basefarm.net"
   IT_WS_CERTIFICATE_FILE: "${certificate.folder}/truststore.jks"
@@ -17,6 +16,9 @@ data:
   SAKERHETSTJANST_SAML_KEYSTORE_ALIAS: "verifiering.rehabstod.intygstjanster.sjunet.org"
   SAKERHETSTJANST_SAML_KEYSTORE_FILE: "file://${certificate.folder}/verifiering.rehabstod.intygstjanster.sjunet.org.jks"
   SAKERHETSTJANST_SAML_TRUSTSTORE_FILE: "file://${certificate.folder}/truststore.jks"
+  AGGREGATED_PDL_LOGGING_QUEUE_NAME: "webcert.aggregated.loq.queue"
+  PDL_LOGGING_QUEUE_NAME: "webcert.log.queue"
+  WEBCERT_VIEW_URLTEMPLATE: "https://verifiering.webcert.intygstjanster.se/visa/intyg/{intygsId}/readonly?enhet={enhet}"
 kind: ConfigMap
 metadata:
   name: rehabstod-stage-configmap-envvar
