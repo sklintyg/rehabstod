@@ -287,7 +287,8 @@ public class SjukfallServiceImpl implements SjukfallService {
             return hsaOrganizationsService.getVardgivareInfo(vardgivareId).getNamn();
         } catch (Exception e) {
             LOG.error("Failed to get VardgivareInfo from HSA for vardgivarId '{}'", vardgivareId, e);
-            return "(" + vardgivareId + ")";
+            //Fallback is to show hsaId instead.
+            return vardgivareId;
         }
     }
 

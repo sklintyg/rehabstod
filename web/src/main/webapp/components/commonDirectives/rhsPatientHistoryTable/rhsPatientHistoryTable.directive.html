@@ -18,15 +18,17 @@
       <tr>
         <th id="header-column-number" class="column-number">#</th>
         <th id="header-column-diagnose" class="column-diagnose">Diagnos/diagnoser</th>
-        <th id="header-column-date" class="column-startdate">Startdatum/Slutdatum</th>
+        <th id="header-column-startdate" class="column-startdate">Startdatum</th>
+        <th id="header-column-enddate" class="column-enddate">Slutdatum</th>
         <th id="header-column-length" class="column-length">Längd</th>
         <th id="header-column-grade" class="column-grade">Grad</th>
         <th id="header-column-doctor" class="column-doctor">Läkare</th>
         <th id="header-column-occupation" class="column-occupation">Sysselsättning</th>
-        <th id="header-column-vardgivare">Vårdgivare</th>
-        <th id="header-column-vardenhet">Vårdenhet</th>
+        <th id="header-column-vardenhet" ng-if="historyItem.isActive">Vårdenhet</th>
+        <th id="header-column-vardgivare" ng-if="historyItem.isActive">Vårdgivare</th>
         <th id="header-column-risk" class="column-risk" ng-if="hasFeature('SRS')">Risk</th>
         <th id="header-column-show-intyg" class="column-showintyg"></th>
+        <th id="header-column-show-source-warning" class="column-show-source-warning" ng-if="historyItem.isActive"></th>
       </tr>
       </thead>
 
@@ -38,10 +40,13 @@
               class="patient-history-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnos.intygsVarde}}
           </span><span ng-if="!intyg.diagnos.intygsVarde" class="hidden-value">Okänt</span>
           <div class="diagnos hidden-xs hidden-sm hidden-md">{{::intyg.diagnos.beskrivning}}</div>
-          <span ng-repeat="d in intyg.bidiagnoser">, <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200"
-                                                           class="patient-history-dialog-tooltip">{{::d.intygsVarde}}</span></span>
+          <div ng-repeat="d in intyg.bidiagnoser">
+            <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" tooltip-placement="auto top-right" class="patient-history-dialog-tooltip">{{::d.intygsVarde}}</span>
+            <span class="diagnos hidden-xs hidden-sm hidden-md">{{::d.beskrivning}}</span>
+          </div>
         </td>
-        <td ng-attr-id="sjukfall-{{index}}-column-datum-{{$index}}" class="nowrap">{{::intyg.start}} - {{::intyg.slut}}</td>
+        <td ng-attr-id="sjukfall-{{index}}-column-startdatum-{{$index}}" class="nowrap">{{::intyg.start}}</td>
+        <td ng-attr-id="sjukfall-{{index}}-column-slutdatum-{{$index}}" class="nowrap">{{::intyg.slut}}</td>
         <td ng-attr-id="sjukfall-{{index}}-column-langd-{{$index}}">{{::intyg.dagar}} dagar</td>
         <td ng-attr-id="sjukfall-{{index}}-column-grad-{{$index}}" class="nowrap">
           <span ng-bind-html="::formatGrader(intyg.grader)"></span><span ng-if="!intyg.grader || intyg.grader.length <= 0" class="hidden-value">Okänt</span></td>
@@ -50,12 +55,8 @@
           <div ng-repeat="s in intyg.sysselsattning track by $index">{{::s}}</div>
           <span ng-if="!intyg.sysselsattning || intyg.sysselsattning.length <= 0" class="hidden-value">Okänt</span>
         </td>
-        <td ng-attr-id="sjukfall-{{index}}-column-vardgivare-{{$index}}">{{::intyg.vardgivareNamn}}
-          <i ng-if="intyg.otherVardgivare" class="fa fa-exclamation-triangle warning-triangle" uib-tooltip-html="'Intyget kommer från en annan vårdgivare, det kommer inte att synas i Rehabstöd i övrigt.'" tooltip-popup-delay="200"></i>
-        </td>
-        <td ng-attr-id="sjukfall-{{index}}-column-vardenhet-{{$index}}">{{::intyg.vardenhetNamn}}
-          <i ng-if="intyg.otherVardenhet" class="fa fa-exclamation-triangle warning-triangle" uib-tooltip-html="'Intyget kommer från en annan vårdenhet, det kommer inte att synas i Rehabstöd i övrigt.'" tooltip-popup-delay="200"></i>
-        </td>
+        <td ng-attr-id="sjukfall-{{index}}-column-vardenhet-{{$index}}" ng-if="historyItem.isActive">{{::intyg.vardenhetNamn}}</td>
+        <td ng-attr-id="sjukfall-{{index}}-column-vardgivare-{{$index}}" ng-if="historyItem.isActive">{{::intyg.vardgivareNamn}}</td>
         <td ng-if="hasFeature('SRS')" ng-attr-id="sjukfall-{{index}}-column-risk-{{$index}}" class="column-risk">
           <rhs-risk-indicator category="intyg.riskSignal.riskKategori"
                               description="intyg.riskSignal.riskDescription"></rhs-risk-indicator>
@@ -64,6 +65,12 @@
           <button ng-if="!intyg.otherVardgivare && !intyg.otherVardenhet" class="btn btn-default" ng-attr-id="sjukfall-{{index}}-show-intyg-{{intyg.id}}"
                   ng-click="onLoadIntyg({'intyg': intyg})"><b><i class="glyphicon glyphicon-eye-open"></i> Visa intyg</b>
           </button>
+        </td>
+        <td ng-if="historyItem.isActive"><i ng-if="intyg.otherVardgivare || intyg.otherVardenhet"
+               class="fa fa-exclamation-triangle warning-triangle"
+               uib-tooltip-html="'Intyget kommer från en annan vårdenhet eller vårdgivare, det kommer inte att synas i Rehabstöd i övrigt.'"
+               tooltip-placement="auto top"
+               tooltip-popup-delay="300"></i>
         </td>
       </tr>
       </tbody>
