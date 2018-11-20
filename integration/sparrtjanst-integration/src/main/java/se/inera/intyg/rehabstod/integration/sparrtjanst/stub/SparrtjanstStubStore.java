@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
+import com.google.common.base.Strings;
 import org.springframework.stereotype.Component;
 
 /**
@@ -71,11 +72,12 @@ public class SparrtjanstStubStore {
     }
 
     public boolean isBlockedAtDate(String personId, LocalDate queryDateFrom, LocalDate queryDateTo,
-                                   String vardGivareId, String vardEnhetId) {
+            String vardGivareId, String vardEnhetId) {
         return getAllForPerson(personId).stream()
                 .filter(blockData -> {
-                    boolean vardGivare = blockData.getVardGivareId() == null || blockData.getVardGivareId().equals(vardGivareId);
-                    boolean vardEnhet = blockData.getVardEnhetId() == null || blockData.getVardEnhetId().equals(vardEnhetId);
+                    boolean vardGivare = Strings.isNullOrEmpty(blockData.getVardGivareId())
+                            || blockData.getVardGivareId().equals(vardGivareId);
+                    boolean vardEnhet = Strings.isNullOrEmpty(blockData.getVardEnhetId()) || blockData.getVardEnhetId().equals(vardEnhetId);
 
                     return vardGivare && vardEnhet;
                 })
