@@ -35,6 +35,9 @@ import se.inera.intyg.schemas.contract.Personnummer;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2017-09-05.
@@ -56,11 +59,18 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
         Iterator<SjukfallEnhet> i = sjukfallList.iterator();
 
+        List<Personnummer> personnummerList = sjukfallList.stream()
+                .map(se -> Personnummer.createPersonnummer(se.getPatient().getId()).get())
+                .distinct()
+                .collect(Collectors.toList());
+
+        Map<Personnummer, PersonSvar> personSvarMap = puService.getPersons(personnummerList);
+
         while (i.hasNext()) {
             SjukfallEnhet item = i.next();
 
-            Personnummer pnr = Personnummer.createValidatedPersonnummerWithDash(item.getPatient().getId()).orElse(null);
-            if (pnr == null || !pnr.verifyControlDigit()) {
+            Optional<Personnummer> pnr = Personnummer.createPersonnummer(item.getPatient().getId());
+            if (!pnr.isPresent() || !pnr.get().verifyControlDigit()) {
                 i.remove();
                 LOG.warn("Problem parsing a personnummer when looking up patient in PU service. Removing from list of sjukfall.");
                 continue;
@@ -70,7 +80,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             // since we're ignoring PU-service problems.
             item.getPatient().setNamn(null);
 
-            PersonSvar personSvar = puService.getPerson(pnr);
+            PersonSvar personSvar = personSvarMap.get(pnr.get());
             boolean patientFound = personSvar != null && personSvar.getStatus() == PersonSvar.Status.FOUND;
             if (patientFound && personSvar.getPerson().isSekretessmarkering()) {
 
@@ -93,18 +103,25 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
         Iterator<SjukfallEnhet> i = sjukfallList.iterator();
 
+        List<Personnummer> personnummerList = sjukfallList.stream()
+                .map(sf -> Personnummer.createPersonnummer(sf.getPatient().getId()).get())
+                .distinct()
+                .collect(Collectors.toList());
+
+        Map<Personnummer, PersonSvar> personSvarMap = puService.getPersons(personnummerList);
+
         while (i.hasNext()) {
             SjukfallEnhet item = i.next();
 
-            Personnummer pnr = Personnummer.createValidatedPersonnummerWithDash(item.getPatient().getId()).orElse(null);
-            if (pnr == null || !pnr.verifyControlDigit()) {
+            Optional<Personnummer> pnr = Personnummer.createPersonnummer(item.getPatient().getId());
+            if (!pnr.isPresent() || !pnr.get().verifyControlDigit()) {
                 i.remove();
                 LOG.warn("Problem parsing a personnummer when looking up patient in PU service. Removing from list of sjukfall.");
                 continue;
             }
 
-            PersonSvar personSvar = puService.getPerson(pnr);
-            if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
+            PersonSvar personSvar = personSvarMap.get(pnr.get());
+            if (personSvar != null && personSvar.getStatus() == PersonSvar.Status.FOUND) {
                 if (personSvar.getPerson().isSekretessmarkering()) {
 
                     // RS-US-GE-002: RS-15 => Om patienten är sekretessmarkerad, skall namnet bytas ut mot placeholder.
@@ -122,7 +139,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                     item.getPatient()
                             .setNamn(joinNames(personSvar));
                 }
-            } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
+            } else if (personSvar != null && personSvar.getStatus() == PersonSvar.Status.ERROR) {
                 throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
             } else {
                 item.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_UNKNOWN);
@@ -150,11 +167,11 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
         }
         PatientData firstPatientDataItem = patientSjukfall.get(0).getIntyg().get(0);
         String pnr = firstPatientDataItem.getPatient().getId();
-        Personnummer personnummer = Personnummer.createValidatedPersonnummerWithDash(pnr)
+        Personnummer personnummer = Personnummer.createPersonnummer(pnr)
                 .orElseThrow(() -> new IllegalArgumentException("Unparsable personnummer"));
 
         if (!personnummer.verifyControlDigit()) {
-            throw new IllegalArgumentException("Personnummer '" + personnummer.getPnrHash()
+            throw new IllegalArgumentException("Personnummer '" + personnummer.getPersonnummerHash()
                     + "' has invalid control digit, not showing patient details");
         }
 

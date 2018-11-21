@@ -77,7 +77,7 @@ public class BaseExportServiceTest {
     public void testDiagnoseListToStringNull() {
         String diagnoseString = baseExportService.diagnoseListToString(null);
 
-        String expected = "-";
+        String expected = "";
 
         assertEquals(expected, diagnoseString);
     }
@@ -87,7 +87,7 @@ public class BaseExportServiceTest {
         List<Diagnos> diagnoses = new ArrayList<>();
         String diagnoseString = baseExportService.diagnoseListToString(diagnoses);
 
-        String expected = "-";
+        String expected = "";
 
         assertEquals(expected, diagnoseString);
     }
@@ -98,7 +98,7 @@ public class BaseExportServiceTest {
         diagnoses.add(new Diagnos("J20V", "J20", "Test"));
         String diagnoseString = baseExportService.diagnoseListToString(diagnoses);
 
-        String expected = "J20V";
+        String expected = ", J20V";
 
         assertEquals(expected, diagnoseString);
     }
@@ -110,7 +110,7 @@ public class BaseExportServiceTest {
         diagnoses.add(new Diagnos("J21V", "J21", "Test2"));
         String diagnoseString = baseExportService.diagnoseListToString(diagnoses);
 
-        String expected = "J20V, J21V";
+        String expected = ", J20V, J21V";
 
         assertEquals(expected, diagnoseString);
     }

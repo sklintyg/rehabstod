@@ -1,5 +1,5 @@
 .header {
-  background-color: $rhs-header-bg;
+  background-color: $rs-color-04;
   color: #fff;
   padding: 5px 0 15px 0; // don't change this setup. it's needed for IE8 flow on smaller screens to work
 
@@ -59,4 +59,14 @@ div.headerbox-user-profile {
 
 .select-care-unit-modal {
   margin-top: 30px;
+
+  .modal-body {
+    overflow-y: auto;
+    min-height: 200px;
+    max-height: 200px;
+
+    @media (min-height: 400px) {
+      max-height: calc(100vh - 220px);
+    }
+  }
 }

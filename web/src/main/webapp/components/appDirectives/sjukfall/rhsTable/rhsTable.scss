@@ -29,11 +29,12 @@ rhs-table {
   thead {
     background-color: #fff;
     > th {
-      color: $blue-color;
+      color: $rs-color-03;
     }
 
   }
 
+  //When extra column lakare is shown - we have less space to work with
   .show-lakare-column {
     tbody {
       tr.rhs-table-row {
@@ -42,7 +43,7 @@ rhs-table {
           .column-diagnos-beskrivning {
 
             @media (min-width: $screen-md-min) {
-              max-width: 100px;
+              max-width: 80px;
             }
 
             @media (min-width: $screen-lg-min) {
@@ -50,21 +51,22 @@ rhs-table {
             }
 
             @media (min-width: 1400px) {
-              max-width: 150px;
+              max-width: 120px;
             }
 
             @media (min-width: 1600px) {
               max-width: calc(100vw - 1300px);
+            }
 
-              &.anonymous-mode {
-                max-width: calc(100vw - 1000px);
-              }
+            &.anonymous-mode {
+              max-width: calc(100vw - 1100px);
             }
           }
         }
       }
     }
   }
+
 
   tbody {
 
@@ -83,26 +85,33 @@ rhs-table {
         .column-diagnos-beskrivning {
           white-space: nowrap;
           text-overflow: ellipsis;
-          min-width: 40px;
+          min-width: 20px;
           max-width: 100px;
           overflow: hidden;
           display: inline-block;
           vertical-align: middle;
+          padding-bottom: 1px; //compensate for dotted bottom border of diagnose code values.
+          &:empty {
+            min-width: 1px;
+          }
 
+          &.anonymous-mode {
+            max-width: calc(100vw - 800px);
+          }
           @media (min-width: $screen-md-min) {
-            max-width: 150px;
+            max-width: 120px;
           }
 
           @media (min-width: $screen-lg-min) {
-            max-width: 200px;
+            max-width: 160px;
           }
 
           @media (min-width: 1400px) {
-            max-width: 300px;
+            max-width: 260px;
           }
 
           @media (min-width: 1600px) {
-            max-width: calc(100vw - 1200px);
+            max-width: calc(100vw - 1300px);
           }
         }
       }

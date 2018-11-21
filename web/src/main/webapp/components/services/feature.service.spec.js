@@ -31,12 +31,23 @@ describe('Service: FeatureService', function() {
         UserModel = _UserModel_;
 
         UserModel.set({
-            features: ['test']
+            features: {
+                'test': {
+                    'global': true
+                },
+                'test-2': {
+                    'global': false
+                }
+            }
         });
     }));
 
     it('Has feature', function() {
         expect(featureService.hasFeature('test')).toBeTruthy();
+    });
+
+    it('Missing globally active', function() {
+        expect(featureService.hasFeature('test-2')).toBeFalsy();
     });
 
     it('Missing feature', function() {

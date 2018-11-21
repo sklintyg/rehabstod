@@ -8,9 +8,9 @@ rhs-patient-history-table {
   .arrow_box {
     position: relative;
     background: #ffffff;
-    border: 1px solid $inactive-element-color;
+    border: 1px solid $rs-color-07;
     &.selected {
-      border: 2px solid $blue-color;
+      border: 2px solid $rs-color-03;
     }
 
     &:after, &:before {
@@ -33,12 +33,12 @@ rhs-patient-history-table {
 
     &:before {
       border-color: rgba(0, 131, 145, 0);
-      border-right-color: $inactive-element-color;
+      border-right-color: $rs-color-07;
       border-width: 12px;
       margin-top: -12px;
     }
     &.selected:before {
-      border-right-color: $blue-color;
+      border-right-color: $rs-color-03;
     }
 
   }
@@ -84,17 +84,6 @@ rhs-patient-history-table {
         }
       }
 
-      .column-extra-diagnoses {
-        width: 200px;
-
-        @media (min-width: $screen-xl-min) {
-          width: 250px;
-        }
-
-        @media (max-width: $screen-md-max) {
-          width: 80px;
-        }
-      }
 
       .column-showintyg {
         width: 110px;
@@ -138,7 +127,7 @@ rhs-patient-history-table {
       }
 
       thead > tr > th {
-        color: $blue-color;
+        color: $rs-color-03;
         font-size: 14px;
         padding-left: 5px;
       }
@@ -154,6 +143,7 @@ rhs-patient-history-table {
             vertical-align: top;
             padding: 5px 2px 2px 5px;
             line-height: 20px;
+            font-size: 12px;
             &.nowrap {
               white-space: nowrap;
             }
@@ -175,7 +165,7 @@ rhs-patient-history-table {
               }
 
               @media (min-width: $screen-xl-min) {
-                max-width: calc(100vw - 1400px);
+                max-width: calc(100vw - 1200px);
               }
 
             }
@@ -206,7 +196,7 @@ rhs-patient-history-table {
       margin: 0;
       padding: 0 5px;
       background-color: transparent;
-      color: $blue-color;
+      color: $rs-color-03;
       outline: none;
       top: 15px;
       right: 10px;

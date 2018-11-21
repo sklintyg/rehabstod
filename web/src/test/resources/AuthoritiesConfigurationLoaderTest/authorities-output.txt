@@ -34,4 +34,3 @@ Privilege { name='VISA_SJUKFALL', desc='Visa Sjukfall', intygstyper= [], request
 TitleCode { titleCode='204090', groupPrescriptionCode='9100009', role=
 Role { name='LAKARE', desc='Läkare', privileges= [
 Privilege { name='VISA_SJUKFALL', desc='Visa Sjukfall', intygstyper= [], requestOrigins= []}]}}]
-SekretessmarkeringAllowed:[]

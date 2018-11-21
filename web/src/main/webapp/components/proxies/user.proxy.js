@@ -42,19 +42,19 @@ angular.module('rehabstodApp').factory('UserProxy',
                 timeout: networkConfig.defaultTimeout
             };
             $log.debug('REST call: _changeSelectedUnit ' + restPath);
-            $http.post(restPath, dto, config).success(function(data) {
+            $http.post(restPath, dto, config).then(function(response) {
                 $log.debug(restPath + ' - success');
 
-                if (typeof data !== 'undefined') {
-                    promise.resolve(data);
+                if (typeof response !== 'undefined') {
+                    promise.resolve(response.data);
                 } else {
                     $log.debug('JSON response syntax error. Rejected.');
                     promise.reject(null);
                 }
-            }).error(function(data, status) {
-                $log.error('error ' + status);
+            }, function(response) {
+                $log.error('error ' + response.status);
                 // Let calling code handle the error of no data response
-                promise.reject(data);
+                promise.reject(response.data);
             });
 
             return promise.promise;
@@ -76,19 +76,19 @@ angular.module('rehabstodApp').factory('UserProxy',
                 },
                 timeout: networkConfig.defaultTimeout
             };
-            $http.post(restPath, dto, config).success(function(data) {
+            $http.post(restPath, dto, config).then(function(response) {
                 $log.debug(restPath + ' - success');
 
-                if (typeof data !== 'undefined') {
-                    promise.resolve(data);
+                if (typeof response !== 'undefined') {
+                    promise.resolve(response.data);
                 } else {
                     $log.debug('JSON response syntax error. Rejected.');
                     promise.reject(null);
                 }
-            }).error(function(data, status) {
-                $log.error('error ' + status);
+            }, function(response) {
+                $log.error('error ' + response.status);
                 // Let calling code handle the error of no data response
-                promise.reject(data);
+                promise.reject(response.data);
             });
 
             return promise.promise;

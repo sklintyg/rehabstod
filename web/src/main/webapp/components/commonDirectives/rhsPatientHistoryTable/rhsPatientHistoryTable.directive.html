@@ -18,15 +18,14 @@
     <thead>
     <tr>
       <th id="header-column-number" class="column-number">#</th>
-      <th id="header-column-diagnose" class="column-diagnose">Diagnos</th>
-      <th id="header-column-extra-diagnoses" class="column-extra-diagnoses">Bidiagnoser</th>
+      <th id="header-column-diagnose" class="column-diagnose">Diagnos/diagnoser</th>
       <th id="header-column-startdate" class="column-startdate">Startdatum</th>
       <th id="header-column-enddate" class="column-enddate">Slutdatum</th>
       <th id="header-column-length" class="column-length">Längd</th>
       <th id="header-column-grade" class="column-grade">Grad</th>
       <th id="header-column-doctor" class="column-doctor">Läkare</th>
       <th id="header-column-occupation" class="column-occupation">Sysselsättning</th>
-      <th id="header-column-risk" class="column-risk" ng-if="hasFeature('srs')">Risk</th>
+      <th id="header-column-risk" class="column-risk" ng-if="hasFeature('SRS')">Risk</th>
       <th id="header-column-show-intyg" class="column-showintyg"></th>
     </tr>
     </thead>
@@ -37,13 +36,7 @@
       <td ng-attr-id="sjukfall-{{index}}-column-diagnose-{{$index}}" class="nowrap">
         <span uib-tooltip-html="getToolTip(intyg.diagnos)" tooltip-popup-delay="200" class="patient-history-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnos.intygsVarde}}</span><div
           class="diagnos hidden-xs hidden-sm hidden-md">{{::intyg.diagnos.beskrivning}}</div>
-      </td>
-      <td ng-attr-id="sjukfall-{{index}}-column-bidiagnoses-{{$index}}" class="nowrap">
-        <div ng-repeat="d in intyg.bidiagnoser">
-          <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="patient-history-dialog-tooltip">{{::d.intygsVarde}}</span><div
-            class="bidiagnos hidden-xs hidden-sm hidden-md">{{::d.beskrivning}}</div>
-        </div>
-        <span ng-if="intyg.bidiagnoser.length < 1">-</span>
+        <span ng-repeat="d in intyg.bidiagnoser">, <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="patient-history-dialog-tooltip">{{::d.intygsVarde}}</span></span>
       </td>
       <td ng-attr-id="sjukfall-{{index}}-column-startdatum-{{$index}}" class="nowrap">{{::intyg.start}}</td>
       <td ng-attr-id="sjukfall-{{index}}-column-slutdatum-{{$index}}" class="nowrap">{{::intyg.slut}}</td>
@@ -54,7 +47,7 @@
       <td ng-attr-id="sjukfall-{{index}}-column-sysselsattning-{{$index}}">
         <div ng-repeat="s in intyg.sysselsattning track by $index">{{::s}}</div>
       </td>
-      <td ng-if="hasFeature('srs')" ng-attr-id="sjukfall-{{index}}-column-risk-{{$index}}" class="column-risk">
+      <td ng-if="hasFeature('SRS')" ng-attr-id="sjukfall-{{index}}-column-risk-{{$index}}" class="column-risk">
         <rhs-risk-indicator category="intyg.riskSignal.riskKategori" description="intyg.riskSignal.riskDescription"></rhs-risk-indicator>
       </td>
       <td><button class="btn btn-default" ng-attr-id="sjukfall-{{index}}-show-intyg-{{intyg.id}}" ng-click="onLoadIntyg({'intyg': intyg})"><b><i class="glyphicon glyphicon-eye-open"></i> Visa intyg</b></button></td>

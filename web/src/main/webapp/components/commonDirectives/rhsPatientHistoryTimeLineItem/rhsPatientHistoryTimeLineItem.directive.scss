@@ -21,10 +21,10 @@ rhs-patient-history-time-line-item {
 
     //All line should have the same stroke color
     line {
-      stroke: $blue-color;
+      stroke: $rs-color-03;
     }
     rect {
-      fill: $blue-color;
+      fill: $rs-color-03;
     }
 
     g.date-circle {
@@ -33,22 +33,22 @@ rhs-patient-history-time-line-item {
         cursor: pointer;
         top: 0;
         left: 0;
-        fill: #fff;
-        stroke: $blue-color;
+        fill: $rs-color-01;
+        stroke: $rs-color-03;
         stroke-width: 2px;
         &.selected {
-          fill: $blue-color-accent;
+          fill: $rs-color-02;
           cursor: default;
         }
       }
 
       text {
         cursor: pointer;
-        fill: $blue-color;
+        fill: $rs-color-03;
         stroke: none;
 
         &.selected {
-          fill: #fff;
+          fill: $rs-color-01;
           cursor: default;
         }
       }
@@ -57,7 +57,7 @@ rhs-patient-history-time-line-item {
 
     g.year-label {
       text {
-        fill: #000;
+        fill: $rs-color-10;
         stroke: none;
       }
     }

@@ -22,17 +22,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.security.common.model.Feature;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.integration.srs.service.SRSIntegrationService;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
-import se.inera.intyg.rehabstod.service.feature.RehabstodFeature;
-import se.inera.intyg.rehabstod.service.feature.RehabstodFeatureServiceImpl;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -42,9 +43,6 @@ import java.util.stream.Collectors;
 public class RiskPredictionServiceImpl implements RiskPredictionService {
 
     private static final Logger LOG = LoggerFactory.getLogger(RiskPredictionServiceImpl.class);
-
-    @Autowired
-    private RehabstodFeatureServiceImpl featureService;
 
     @Autowired
     private UserService userService;
@@ -121,7 +119,10 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
      * Either the global feature "srs" or pilot feature needs to be active.
      */
     private boolean isSrsFeatureActive() {
-        return featureService.getActiveFeatures(userService.getUser().getValdVardenhet().getId()).contains(RehabstodFeature.SRS.getName());
+        return Optional.ofNullable(userService.getUser().getFeatures())
+                .map(features -> features.get(AuthoritiesConstants.FEATURE_SRS))
+                .map(Feature::getGlobal)
+                .orElse(false);
     }
 
     private List<RiskSignal> getRiskSignals(List<String> intygIds) {

@@ -17,17 +17,9 @@
   line-height: 18px;
   &[disabled], &[disabled]:hover {
     opacity: 1;
-    background: $rhs-button-disabled-bg !important;
-    color: $rhs-button-disabled-color;
-    border-color: $rhs-button-disabled-border !important;
-  }
-}
-
-.btn-link {
-  color: #008391;
-
-  &:hover {
-    color: #31b2be;
+    background: $rs-color-06 !important;
+    color: $rs-color-08;
+    border-color: $rs-color-07 !important;
   }
 }
 
@@ -50,13 +42,17 @@
 .alert {
   max-width: 600px;
   padding-right: 22px;
-
-  a {
-    text-decoration: underline;
-  }
 }
 
 .alert-danger a {
   color: #A94442;
+}
+
+a:focus {
+  text-decoration: none;
+}
+
+a:focus:hover {
+  text-decoration: underline;
 }
 

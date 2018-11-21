@@ -18,35 +18,46 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.PropertiesFactoryBean;
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import org.apache.cxf.Bus;
+import org.apache.cxf.feature.LoggingFeature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.core.io.FileSystemResource;
-
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
-
 import se.inera.intyg.infra.cache.metrics.CacheStatisticsService;
 import se.inera.intyg.infra.cache.metrics.CacheStatisticsServiceImpl;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.filters.PdlConsentGivenAssuranceFilter;
 import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 @Configuration
-@PropertySource({ "file:${rehabstod.config.file}", "file:${credentials.file}", "classpath:version.properties" })
+@PropertySource({ "classpath:default.properties",
+                  "file:${rehabstod.config.file}",
+                  "file:${credentials.file}",
+                  "classpath:version.properties"})
 @ImportResource({ "classpath:META-INF/cxf/cxf.xml", "classpath:securityContext.xml" })
 public class ApplicationConfig {
 
-    @Value("${rehabstod.features.file}")
-    private String rehabstodFeatureFile;
+    @Autowired
+    private Bus bus;
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigInDev() {
         return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @PostConstruct
+    public Bus init() {
+        bus.setFeatures(new ArrayList<>(Arrays.asList(loggingFeature())));
+        return bus;
     }
 
     @Bean
@@ -82,10 +93,10 @@ public class ApplicationConfig {
         return new DiagnosFactory();
     }
 
-    @Bean(name = "featureProperties")
-    public PropertiesFactoryBean featureProperties() {
-        PropertiesFactoryBean bean = new PropertiesFactoryBean();
-        bean.setLocation(new FileSystemResource(rehabstodFeatureFile));
-        return bean;
+    @Bean
+    public LoggingFeature loggingFeature() {
+        LoggingFeature loggingFeature = new LoggingFeature();
+        loggingFeature.setPrettyLogging(true);
+        return loggingFeature;
     }
 }

@@ -22,8 +22,6 @@ knownRoles:
   - &kr010 LAKARE
   - &kr020 REHABKOORDINATOR
 
-sekretessmarkeringAllowed: []
-
 # ====================================================================================================
 #   Definitioner av ingångar, roller, privilegier, yrkesroller och befattnings-/gruppförskrivarkoder
 # ====================================================================================================

@@ -34,19 +34,19 @@ angular.module('rehabstodApp').factory('SjukfallSummaryProxy',
             var config =  {
                 timeout: networkConfig.defaultTimeout
             };
-            $http.get(restPath, config).success(function(data) {
-                if(!ObjectHelper.isDefined(data)) {
-                    promise.reject({ errorCode: data, message: 'invalid data'});
+            $http.get(restPath, config).then(function(response) {
+                if(!ObjectHelper.isDefined(response.data)) {
+                    promise.reject({ errorCode: response.data, message: 'invalid data'});
                 } else {
-                    promise.resolve(data);
+                    promise.resolve(response.data);
                 }
-            }).error(function(data, status) {
-                $log.error('error ' + status);
+            }, function(response) {
+                $log.error('error ' + response.status);
                 // Let calling code handle the error of no data response
-                if(data === null) {
-                    promise.reject({errorCode: data, message: 'no response'});
+                if(response.data === null) {
+                    promise.reject({errorCode: response.data, message: 'no response'});
                 } else {
-                    promise.reject(data);
+                    promise.reject(response.data);
                 }
             });
 

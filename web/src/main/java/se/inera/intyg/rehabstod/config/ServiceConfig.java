@@ -27,8 +27,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.context.support.ServletContextAttributeExporter;
-import se.inera.intyg.infra.security.common.service.PilotService;
-import se.inera.intyg.infra.security.common.service.PilotServiceImpl;
 import se.inera.intyg.rehabstod.service.monitoring.HealthCheckService;
 import se.inera.intyg.rehabstod.service.monitoring.InternalPingForConfigurationResponderImpl;
 
@@ -49,6 +47,9 @@ public class ServiceConfig {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private Bus bus;
+
     @Bean
     public ServletContextAttributeExporter contextAttributes() {
         final Map<String, Object> attributes = new HashMap<>();
@@ -65,16 +66,9 @@ public class ServiceConfig {
 
     @Bean
     public EndpointImpl pingForConfigurationEndpoint() {
-        Bus bus = (Bus) applicationContext.getBean(Bus.DEFAULT_BUS_ID);
         Object implementor = pingForConfigurationResponder();
         EndpointImpl endpoint = new EndpointImpl(bus, implementor);
         endpoint.publish("/internal-ping-for-configuration");
         return endpoint;
     }
-
-    @Bean
-    public PilotService getPilotService() {
-        return new PilotServiceImpl();
-    }
-
 }

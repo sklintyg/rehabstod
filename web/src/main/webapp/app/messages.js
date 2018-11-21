@@ -97,8 +97,8 @@ var rhsMessages = {
         // Filter
         'label.filter.show' : 'Visa sökfilter',
         'label.filter.hide' : 'Dölj sökfilter',
-        'label.filter.diagnos' : 'Huvuddiagnosfilter',
-        'label.filter.diagnos.help' : 'Filtrerar på huvuddiagnos uppdelat på kapitel. Diagnoskapitel som saknar data är inte valbara.',
+        'label.filter.diagnos' : 'Diagnosfilter',
+        'label.filter.diagnos.help' : 'Filtrerar på den diagnos som skrivs ut först för sjukfallet uppdelat på kapitel. Diagnoskapitel som saknar data är inte valbara.',
         'label.filter.lakare' : 'Välj läkare',
         'label.filter.lakare.help' : 'Filtrerar på den läkare som har utfärdat det aktiva intyget. Endast läkare som utfärdat aktiva intyg visas i listan.',
         'label.filter.langd' : 'Välj sjukskrivningslängd',
@@ -136,10 +136,8 @@ var rhsMessages = {
         'label.table.column.patient.namn': 'Namn',
         'label.table.column.patient.alder': 'Ålder',
         'label.table.column.patient.konshow': 'Kön',
-        'label.table.column.diagnos.intygsvarde': 'Diagnos',
-        'label.table.column.diagnos.intygsvarde.help': 'Huvuddiagnos i nuvarande intyg. För muspekaren över koden för att se vilken diagnos den motsvarar.',
-        'label.table.column.bidiagnosershow': 'Bidiagnoser',
-        'label.table.column.bidiagnosershow.help': 'Bidiagnos(er) i nuvarande intyg. För muspekaren över koden för att se vilken diagnos den motsvarar.',
+        'label.table.column.diagnos.intygsvarde': 'Diagnos/diagnoser',
+        'label.table.column.diagnos.intygsvarde.help': 'Diagnos/diagnoser i nuvarande intyg. Om det finns flera diagnoser så är den som anges först den som påverkar arbetsförmågan mest. För muspekaren över koden att se vilken diagnos den motsvarar.',
         'label.table.column.start': 'Startdatum',
         'label.table.column.start.help': 'Datum då sjukfallet började på ${enhet}. Alla intyg för samma patient som följer på varandra med max ${glapp} dagars uppehåll räknas till samma sjukfall. Max antal dagars uppehåll mellan intyg kan ställas in i filtret.',
         'label.table.column.slut': 'Slutdatum',
@@ -177,8 +175,8 @@ var rhsMessages = {
         'modal.pdlconsent.userapproval': 'Jag förstår och godkänner.',
 
         // Role switching
-        'label.role.switch.notloggedin': 'Observera! Du har behörigheten Rehabkoordinator på någon/några av dina enheter. Var uppmärksam om att din roll kommer skifta från Läkare till Rehabkoordinator när du väljer att logga in på en sådan enhet.',
-        'label.role.switch.loggedin': 'Observera! Du har olika behörigheter på olika enheter. Var uppmärksam om att din roll kan komma att skifta mellan Läkare och Rehabkoordinator beroende på vilken enhet du väljer att byta till.',
+        'label.role.switch.notloggedin': 'Du har behörigheten Rehabkoordinator på någon/några av dina enheter. Var uppmärksam om att din roll kommer skifta från Läkare till Rehabkoordinator när du väljer att logga in på en sådan enhet.',
+        'label.role.switch.loggedin': 'Du har olika behörigheter på olika enheter. Var uppmärksam om att din roll kan komma att skifta mellan Läkare och Rehabkoordinator beroende på vilken enhet du väljer att byta till.',
 
         // Patient History Dialog
         'label.patienthistory.loading' : 'Hämtar sjukfall för patient...',
@@ -225,8 +223,8 @@ var rhsMessages = {
         'faq.sickness.5.title' : 'Varför kan jag inte få upp information om vad en diagnoskod i sjukfallstabellen betyder?',
         'faq.sickness.5.body' : '<p>Det finns två olika anledningar till att betydelsen av en diagnoskod inte kan visas när du för muspekaren över den:</p>' +
             '<ol>' +
-            '<li>Huvuddiagnoskoden som läkaren har angett i intyget är inte giltig och går inte att slå upp i något av kodverken för diagnoser (ICD-10-SE och KSH97-P).</li>' +
-            '<li>Läkaren har felaktigt angett flera diagnoskoder i fältet för huvuddiagnos i intyget, och det går därför inte är separera koderna och slå upp kodernas betydelse.</li>' +
+            '<li>Diagnoskoden som läkaren har angett i intyget är inte giltig och går inte att slå upp i något av kodverken för diagnoser (ICD-10-SE och KSH97-P).</li>' +
+            '<li>Läkaren har felaktigt angett flera diagnoskoder i ett och samma fält i intyget och det går därför inte att utläsa och slå upp kodernas betydelse.</li>' +
             '</ol>',
 
         'faq.sickness.6.title' : 'Varför ser rehabkoordinatorn fler sjukfall i Rehabstöd än vad läkaren kan se?',

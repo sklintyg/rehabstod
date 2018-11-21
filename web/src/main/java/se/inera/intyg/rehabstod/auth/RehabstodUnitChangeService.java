@@ -25,8 +25,8 @@ import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
-import se.inera.intyg.rehabstod.service.feature.RehabstodFeatureServiceImpl;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -42,9 +42,6 @@ public class RehabstodUnitChangeService {
     @Autowired
     private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
-    @Autowired
-    private RehabstodFeatureServiceImpl rehabstodFeatureService;
-
     public boolean changeValdVardenhet(String enhetId, RehabstodUser user) {
         boolean ok = user.changeValdVardenhet(enhetId);
 
@@ -58,7 +55,7 @@ public class RehabstodUnitChangeService {
                 boolean hasSystemRoleForSelectedUnit = enhetIdList.stream().anyMatch(s -> s.equals(enhetId));
                 if (hasSystemRoleForSelectedUnit || hasImplicitAccessToSubUnit(user, enhetIdList)) {
                     updateUsersRoleTo(user, AuthoritiesConstants.ROLE_KOORDINATOR);
-                } else  {
+                } else {
                     // If no systemRole for this unit, we must change back to ROLE_LAKARE.
                     updateUsersRoleTo(user, AuthoritiesConstants.ROLE_LAKARE);
                 }
@@ -85,12 +82,11 @@ public class RehabstodUnitChangeService {
         Role role = commonAuthoritiesResolver.getRole(roleKey);
         user.getRoles().put(roleKey, role);
         user.setFeatures(
-                rehabstodFeatureService.getActiveFeatures(user.getValdVardenhet().getId(), user.getValdVardgivare().getId()));
+                commonAuthoritiesResolver.getFeatures(Arrays.asList(user.getValdVardenhet().getId(), user.getValdVardgivare().getId())));
     }
 
     private boolean hasSystemRoles(RehabstodUser user) {
         return user.getSystemRoles() != null && user.getSystemRoles().size() > 0;
     }
-
 
 }

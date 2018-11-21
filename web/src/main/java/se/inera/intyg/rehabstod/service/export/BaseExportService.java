@@ -19,15 +19,16 @@
 package se.inera.intyg.rehabstod.service.export;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import se.inera.intyg.infra.security.common.service.CommonFeatureService;
+import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
-import se.inera.intyg.rehabstod.service.feature.RehabstodFeature;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
@@ -37,11 +38,11 @@ import se.inera.intyg.rehabstod.web.model.LangdIntervall;
  */
 public abstract class BaseExportService {
 
-    protected static final String MINA_PAGAENDE_SJUKFALL = "Mina sjukfall";
-    protected static final String PA_ENHETEN = "- De pågående sjukfall där jag utfärdat det nuvarande intyget";
-    protected static final String ALLA_SJUKFALL = "Alla sjukfall";
-    protected static final String SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN = "- Alla pågående sjukfall på enheten";
-    protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Huvuddiagnosfilter";
+    protected static final String MINA_PAGAENDE_SJUKFALL = "Sjukfall";
+    protected static final String PA_ENHETEN = "- Pågående sjukfall där jag utfärdat det nuvarande intyget";
+    protected static final String ALLA_SJUKFALL = "Sjukfall";
+    protected static final String SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN = "- Pågående sjukfall på enheten";
+    protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Valda diagnoser";
     protected static final String SELECTION_VALUE_ALLA = "Alla";
     protected static final String FILTER_TITLE_VALDA_LAKARE = "Valda läkare";
     protected static final String FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
@@ -66,8 +67,7 @@ public abstract class BaseExportService {
     protected static final String TABLEHEADER_ALDER = "Ålder";
     protected static final String TABLEHEADER_NAMN = "Namn";
     protected static final String TABLEHEADER_KON = "Kön";
-    protected static final String TABLEHEADER_NUVARANDE_DIAGNOS = "Diagnos";
-    protected static final String TABLEHEADER_BIDIAGNOSER = "Bidiagnoser";
+    protected static final String TABLEHEADER_NUVARANDE_DIAGNOS = "Diagnos/diagnoser";
     protected static final String TABLEHEADER_STARTDATUM = "Startdatum";
     protected static final String TABLEHEADER_SLUTDATUM = "Slutdatum";
     protected static final String TABLEHEADER_SJUKSKRIVNINGSLANGD = "Längd";
@@ -88,9 +88,6 @@ public abstract class BaseExportService {
     @Autowired
     protected DiagnosKapitelService diagnosKapitelService;
 
-    @Autowired
-    protected CommonFeatureService featureService;
-
     protected boolean notEmpty(PrintSjukfallRequest req) {
         return req.getFritext() != null && req.getFritext().trim().length() > 0;
     }
@@ -99,9 +96,9 @@ public abstract class BaseExportService {
         if (biDiagnoser != null && !biDiagnoser.isEmpty()) {
             return biDiagnoser.stream()
                     .map(Diagnos::getIntygsVarde)
-                    .collect(Collectors.joining(", "));
+                    .collect(Collectors.joining(", ", ", ", ""));
         } else {
-            return "-";
+            return "";
         }
 
     }
@@ -122,7 +119,9 @@ public abstract class BaseExportService {
     }
 
     protected boolean isSrsFeatureActive(RehabstodUser user) {
-        return featureService.getActiveFeatures(user.getValdVardenhet().getId()).contains(RehabstodFeature.SRS.getName());
+        return Optional.ofNullable(user.getFeatures())
+                .map(features -> features.get(AuthoritiesConstants.FEATURE_SRS))
+                .map(Feature::getGlobal).orElse(false);
     }
 
     protected String getRiskKategoriDesc(RiskSignal risksignal) {

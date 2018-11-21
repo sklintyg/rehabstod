@@ -34,7 +34,7 @@ angular.module('rehabstodApp')
             $scope.menuItems.push({
                 id: 'about-faq',
                 link: 'app.about.faq',
-                label: 'Vanliga frågor'
+                label: 'Vanliga frågor och svar'
             });
             $scope.menuItems.push({
                 id: 'about-support',

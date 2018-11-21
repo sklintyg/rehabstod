@@ -34,10 +34,10 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
-import se.riv.population.residentmaster.types.v1.JaNejTYPE;
-import se.riv.population.residentmaster.types.v1.NamnTYPE;
-import se.riv.population.residentmaster.types.v1.PersonpostTYPE;
-import se.riv.population.residentmaster.types.v1.ResidentType;
+import se.riv.strategicresourcemanagement.persons.person.v3.IIType;
+import se.riv.strategicresourcemanagement.persons.person.v3.NamePartType;
+import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
+import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -292,23 +292,32 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     }
 
     private void addToPuStub(Patient patient) {
-        ResidentType resident = new ResidentType();
+        PersonRecordType resident = new PersonRecordType();
 
-        resident.setSekretessmarkering(JaNejTYPE.N);
+        resident.setProtectedPersonIndicator(false);
 
-        PersonpostTYPE personPost = new PersonpostTYPE();
-        Personnummer pnr = Personnummer.createValidatedPersonnummerWithDash(patient.getPersonId().getExtension())
+        Personnummer pnr = Personnummer.createPersonnummer(patient.getPersonId().getExtension())
                 .orElseThrow(() -> new IllegalStateException("Invalid personnummer!"));
-        personPost.setPersonId(pnr.getPersonnummerWithoutDash());
+        resident.setPersonalIdentity(buildIIType(pnr.getPersonnummer()));
 
-        NamnTYPE namn = new NamnTYPE();
-        namn.setFornamn("");
-        namn.setEfternamn(patient.getFullstandigtNamn());
+        NameType namn = new NameType();
+        namn.setGivenName(buildNamePartType(""));
+        namn.setSurname(buildNamePartType(patient.getFullstandigtNamn()));
+        resident.setName(namn);
 
-        personPost.setNamn(namn);
-
-        resident.setPersonpost(personPost);
         residentStore.addResident(resident);
+    }
+
+    private NamePartType buildNamePartType(String val) {
+        NamePartType namePartType = new NamePartType();
+        namePartType.setName(val);
+        return namePartType;
+    }
+
+    private IIType buildIIType(String extension) {
+        IIType iiType = new IIType();
+        iiType.setExtension(extension);
+        return iiType;
     }
 
     private Patient buildPerson(String pnr) {

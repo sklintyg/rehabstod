@@ -21,6 +21,11 @@ rhs-date-range-picker {
     display: inline-block;
     margin-top: 3px;
     color: #555;
+    background-color: #fff;
+
+    &[disabled] {
+      cursor: pointer;
+    }
 
     &[disabled] {
       cursor: pointer;
@@ -56,8 +61,8 @@ rhs-date-range-picker {
 
   .first-date-selected,
   .last-date-selected {
-    background-color: $rhs-second-accent-color !important;
-    border: 1px solid $rhs-primary-accent-color;
+    background-color: $rs-color-02 !important;
+    border: 1px solid $rs-color-03;
     padding: 5px 0 !important;
   }
 

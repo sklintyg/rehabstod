@@ -69,6 +69,9 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     private static final String LOGO_PATH = "classpath:pdf-assets/rehab_pdf_logo.png";
     private static final String UNICODE_CAPABLE_FONT_PATH = "/pdf-assets/FreeSans.ttf";
+    private static final int ELLIPSIZE_AT_LIMIT = 20;
+    private static final int ELLIPSIZE_AT_LIMIT_ANONYMOUS = 40;
+    private static final String ELLIPSIZE_SUFFIX = "...";
 
     private PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
@@ -147,40 +150,14 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     private Element getFilterDesc(PrintSjukfallRequest printRequest, RehabstodUser user) {
 
-        // Diagnoser
-        Paragraph valdaDiagnoser = new Paragraph(FILTER_TITLE_VALDA_DIAGNOSER, PdfExportConstants.FRONTPAGE_H3);
-        com.itextpdf.text.List diagnosLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
-        if (printRequest.getDiagnosGrupper() != null) {
-            printRequest.getDiagnosGrupper()
-                    .forEach(dg -> diagnosLista.add(new ListItem(getDiagnosKapitelDisplayValue(dg), PdfExportConstants.FRONTPAGE_NORMAL)));
-        } else {
-            diagnosLista.add(new ListItem(SELECTION_VALUE_ALLA, PdfExportConstants.FRONTPAGE_NORMAL));
-        }
-        valdaDiagnoser.add(diagnosLista);
+        // Fritext
+        Paragraph valdFritext = new Paragraph(FILTER_TITLE_FRITEXTFILTER, PdfExportConstants.FRONTPAGE_H3);
+        valdFritext.add(new Paragraph(StringUtil.isNullOrEmpty(printRequest.getFritext()) ? "-" : printRequest.getFritext(),
+                PdfExportConstants.FRONTPAGE_NORMAL));
 
-        // Lakare
-        Paragraph valdaLakare = new Paragraph(FILTER_TITLE_VALDA_LAKARE, PdfExportConstants.FRONTPAGE_H3);
-        com.itextpdf.text.List lakarLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
-        if (printRequest.getLakare() != null) {
-
-            printRequest.getLakare().forEach(dg -> lakarLista.add(new ListItem(dg, PdfExportConstants.FRONTPAGE_NORMAL)));
-        } else {
-            lakarLista.add(new ListItem(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : SELECTION_VALUE_ALLA,
-                    PdfExportConstants.FRONTPAGE_NORMAL));
-        }
-        valdaLakare.add(lakarLista);
-
-        // Sjukskrivningslangd
-        Paragraph valdSjukskrivninglangd = new Paragraph(FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD, PdfExportConstants.FRONTPAGE_H3);
-        Paragraph sjukskrivningslangdVarden = new Paragraph();
-        sjukskrivningslangdVarden.add(new Chunk("Mellan ", PdfExportConstants.FRONTPAGE_NORMAL));
-        sjukskrivningslangdVarden
-                .add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMin()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
-        sjukskrivningslangdVarden.add(new Chunk(" och ", PdfExportConstants.FRONTPAGE_NORMAL));
-        sjukskrivningslangdVarden
-                .add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMax()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
-        sjukskrivningslangdVarden.add(new Chunk(" dagar.", PdfExportConstants.FRONTPAGE_NORMAL));
-        valdSjukskrivninglangd.add(sjukskrivningslangdVarden);
+        // Visa Patientuppgifter
+        Paragraph visaPatientUppgifter = new Paragraph(FILTER_TITLE_VISAPATIENTUPPGIFTER, PdfExportConstants.FRONTPAGE_H3);
+        visaPatientUppgifter.add(new Phrase(printRequest.isShowPatientId() ? " Ja" : " Nej", PdfExportConstants.FRONTPAGE_NORMAL));
 
         // Ålder
         Paragraph valdAlder = new Paragraph(FILTER_TITLE_VALD_ALDER, PdfExportConstants.FRONTPAGE_H3);
@@ -194,29 +171,55 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         alderVarden.add(new Chunk(" år.", PdfExportConstants.FRONTPAGE_NORMAL));
         valdAlder.add(alderVarden);
 
+        // Diagnoser
+        Paragraph valdaDiagnoser = new Paragraph(FILTER_TITLE_VALDA_DIAGNOSER, PdfExportConstants.FRONTPAGE_H3);
+        com.itextpdf.text.List diagnosLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+        if (printRequest.getDiagnosGrupper() != null) {
+            printRequest.getDiagnosGrupper()
+                    .forEach(dg -> diagnosLista.add(new ListItem(getDiagnosKapitelDisplayValue(dg), PdfExportConstants.FRONTPAGE_NORMAL)));
+        } else {
+            diagnosLista.add(new ListItem(SELECTION_VALUE_ALLA, PdfExportConstants.FRONTPAGE_NORMAL));
+        }
+        valdaDiagnoser.add(diagnosLista);
+
         // Slutdddatum
-        Paragraph valdSluttdaum = new Paragraph(FILTER_TITLE_VALD_SLUTDATUM, PdfExportConstants.FRONTPAGE_H3);
-        Paragraph sluttdaumVarden = new Paragraph(getFilterDate(printRequest.getSlutdatumIntervall()), PdfExportConstants.FRONTPAGE_NORMAL);
-        valdSluttdaum.add(sluttdaumVarden);
+        Paragraph valdSlutdatum = new Paragraph(FILTER_TITLE_VALD_SLUTDATUM, PdfExportConstants.FRONTPAGE_H3);
+        Paragraph slutdatumVarden = new Paragraph(getFilterDate(printRequest.getSlutdatumIntervall()), PdfExportConstants.FRONTPAGE_NORMAL);
+        valdSlutdatum.add(slutdatumVarden);
 
-        // Fritext
-        Paragraph valdFritext = new Paragraph(FILTER_TITLE_FRITEXTFILTER, PdfExportConstants.FRONTPAGE_H3);
-        valdFritext.add(new Paragraph(StringUtil.isNullOrEmpty(printRequest.getFritext()) ? "-" : printRequest.getFritext(),
-                PdfExportConstants.FRONTPAGE_NORMAL));
+        // Sjukskrivningslangd
+        Paragraph valdSjukskrivninglangd = new Paragraph(FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD, PdfExportConstants.FRONTPAGE_H3);
+        Paragraph sjukskrivningslangdVarden = new Paragraph();
+        sjukskrivningslangdVarden.add(new Chunk("Mellan ", PdfExportConstants.FRONTPAGE_NORMAL));
+        sjukskrivningslangdVarden
+                .add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMin()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
+        sjukskrivningslangdVarden.add(new Chunk(" och ", PdfExportConstants.FRONTPAGE_NORMAL));
+        sjukskrivningslangdVarden
+                .add(new Chunk(String.valueOf(printRequest.getLangdIntervall().getMax()), PdfExportConstants.FRONTPAGE_NORMAL_BOLD));
+        sjukskrivningslangdVarden.add(new Chunk(" dagar.", PdfExportConstants.FRONTPAGE_NORMAL));
+        valdSjukskrivninglangd.add(sjukskrivningslangdVarden);
 
-        // Visa Patientuppgifter
-        Paragraph visaPatientUppgifter = new Paragraph(FILTER_TITLE_VISAPATIENTUPPGIFTER, PdfExportConstants.FRONTPAGE_H3);
-        visaPatientUppgifter.add(new Phrase(printRequest.isShowPatientId() ? " Ja" : " Nej", PdfExportConstants.FRONTPAGE_NORMAL));
+        // Lakare
+        Paragraph valdaLakare = new Paragraph(FILTER_TITLE_VALDA_LAKARE, PdfExportConstants.FRONTPAGE_H3);
+        com.itextpdf.text.List lakarLista = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
+        if (printRequest.getLakare() != null) {
+
+            printRequest.getLakare().forEach(dg -> lakarLista.add(new ListItem(dg, PdfExportConstants.FRONTPAGE_NORMAL)));
+        } else {
+            lakarLista.add(new ListItem(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : SELECTION_VALUE_ALLA,
+                    PdfExportConstants.FRONTPAGE_NORMAL));
+        }
+        valdaLakare.add(lakarLista);
 
         // Lagg ihop undergrupperna till filter
         Paragraph filter = new Paragraph(VALDA_FILTER, PdfExportConstants.FRONTPAGE_H2);
-        filter.add(valdaDiagnoser);
-        filter.add(valdaLakare);
-        filter.add(valdSjukskrivninglangd);
-        filter.add(valdAlder);
-        filter.add(valdSluttdaum);
         filter.add(valdFritext);
         filter.add(visaPatientUppgifter);
+        filter.add(valdAlder);
+        filter.add(valdaDiagnoser);
+        filter.add(valdSlutdatum);
+        filter.add(valdSjukskrivninglangd);
+        filter.add(valdaLakare);
 
         return filter;
     }
@@ -280,24 +283,29 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     private PdfPTable createTableColumns(Urval urval, boolean showPatientId, boolean showSrsRisk) {
         List<Float> tempHeaders = new ArrayList<>();
-        tempHeaders.add(0.8f); // # radnr
+        tempHeaders.add(0.5f); // # radnr
         if (showPatientId) {
-            tempHeaders.add(1.7f); // personnr
+            tempHeaders.add(1.3f); // personnr
         }
-        tempHeaders.add(0.8f); // # Ålder
+        tempHeaders.add(0.5f); // # Ålder
         if (showPatientId) {
-            tempHeaders.add(3f); // namn
+            tempHeaders.add(2f); // namn
         }
-        tempHeaders.add(0.8f); // Kön
-        tempHeaders.add(1f); // Diagnos
-        tempHeaders.add(1.5f); // Bidiagnoser
-        tempHeaders.add(1.5f); // Startdatum
-        tempHeaders.add(1.5f); // Slutdatum
-        tempHeaders.add(1.5f); // Längd
-        tempHeaders.add(0.8f); // Antal
+        tempHeaders.add(0.7f); // Kön
+
+        if (showPatientId) {
+            tempHeaders.add(2.1f); // Diagnos
+        } else {
+            tempHeaders.add(3.4f); // Diagnos extra bred eftersom vi inte visar patientinfo
+        }
+
+        tempHeaders.add(1.1f); // Startdatum
+        tempHeaders.add(1.1f); // Slutdatum
+        tempHeaders.add(1.0f); // Längd
+        tempHeaders.add(0.45f); // Antal
         tempHeaders.add(2f); // Grader
         if (Urval.ALL.equals(urval)) {
-            tempHeaders.add(3f); // Läkare
+            tempHeaders.add(2f); // Läkare
         }
         if (showSrsRisk) {
             tempHeaders.add(1f); // Srs Risk
@@ -335,7 +343,6 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
         addCell(table, TABLEHEADER_KON, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_NUVARANDE_DIAGNOS, PdfExportConstants.TABLE_HEADER_FONT);
-        addCell(table, TABLEHEADER_BIDIAGNOSER, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_STARTDATUM, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_SLUTDATUM, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_SJUKSKRIVNINGSLANGD, PdfExportConstants.TABLE_HEADER_FONT);
@@ -376,9 +383,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
                 addCell(table, is.getPatient().getNamn());
             }
             addCell(table, is.getPatient().getKon().getDescription());
-            addCell(table, is.getDiagnos().getIntygsVarde());
-            addCell(table, diagnoseListToString(is.getBiDiagnoser()));
-
+            addCell(table, getCompoundDiagnoseText(is, showPatientId));
             addCell(table, is.getStart() != null ? YearMonthDateFormatter.print(is.getStart()) : "?");
             addCell(table, is.getSlut() != null ? YearMonthDateFormatter.print(is.getSlut()) : "?");
             addCell(table, getlangdText(is));
@@ -395,6 +400,30 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
         return table;
 
+    }
+
+    private String getCompoundDiagnoseText(SjukfallEnhet sf, boolean showPatientId) {
+        String dignosKodSpace = sf.getDiagnos().getKod() + " ";
+
+        StringBuilder b = new StringBuilder();
+        b.append(dignosKodSpace);
+        b.append(ellipsize(sf.getDiagnos().getBeskrivning(), dignosKodSpace.length(), showPatientId));
+        b.append(diagnoseListToString(sf.getBiDiagnoser()));
+        return b.toString();
+    }
+
+    private String ellipsize(String namn, int dignosKodLength, boolean showPatientId) {
+        if (StringUtil.isNullOrEmpty(namn)) {
+            return "";
+        }
+
+        int maxLength = showPatientId ? ELLIPSIZE_AT_LIMIT : ELLIPSIZE_AT_LIMIT_ANONYMOUS;
+        maxLength -= dignosKodLength; // Ta bort längden för diagnoskoden
+        if (namn.length() > maxLength) {
+            return namn.substring(0, maxLength) + ELLIPSIZE_SUFFIX;
+        } else {
+            return namn;
+        }
     }
 
     private void addCell(PdfPTable table, Phrase p) {

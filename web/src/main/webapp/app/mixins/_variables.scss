@@ -1,16 +1,19 @@
-$rhs-primary-accent-color: #008391;
-$rhs-second-accent-color: #00A1B0;
-
-$rhs-header-bg: #212633;
-
-$rhs-primary-text-color: #333;
-$rhs-secondary-text-color: #999;
-$rhs-link-color: #378998;
-$rhs-link-external-color: #0F6EDC;
+$rs-color-01: #FFFFFF;
+$rs-color-02: #00A1B0;
+$rs-color-03: #008391;
+$rs-color-04: #212633;
+$rs-color-05: #000000;
+$rs-color-06: #EFEFEF;
+$rs-color-07: #CCCCCC;
+$rs-color-08: #999999;
+$rs-color-09: #666666;
+$rs-color-10: #333333;
+$rs-color-11: #337AB7;
+$rs-color-12: #2E6EA5;
+$rs-color-13: #286090;
+$rs-color-14: #E6E5E5;
 
 $default-border-radius: 5px;
-
-
 
 $form-group-margin-bottom: 10px;
 
@@ -26,14 +29,8 @@ $rhs-font-size-th: 14px;
 // Buttons
 $rhs-font-buttons: "Arial Rounded MT Bold", sans-serif;
 $rhs-button-padding: 8px 20px;
-$rhs-button-disabled-bg: #F0F0F0;
-$rhs-button-disabled-color: #9B9B9B;
-$rhs-button-disabled-border: #D3D3D3;
 $rhs-button-letter-spacing: 0.06px;
 
-
-$blue-color: $rhs-primary-accent-color;
-$blue-color-accent: $rhs-second-accent-color;
 $inactive-element-color: #ccc;
 $background-gray-color: #efefef;
 $background-darkergray-color: #aaa;
@@ -57,15 +54,19 @@ $font-size-h3: $rhs-font-size-h3;
 $font-size-h4: $rhs-font-size-h4;
 $headings-line-height:    1.5;
 
-$text-color: $rhs-primary-text-color;
-$link-color: $rhs-link-color;
-$link-hover-color: $rhs-link-color;
+$text-color: $rs-color-10;
+$link-color: $rs-color-03;
+$link-hover-color: $rs-color-03;
 
-$navbar-default-link-hover-color: #fff;
-$navbar-default-link-hover-bg: #24a1af;
+$navbar-default-color:             $rs-color-10;
+$navbar-default-link-color:        $rs-color-10;
+$navbar-default-bg:                $rs-color-06;
 
-$navbar-default-link-active-color: $navbar-default-link-hover-color;
-$navbar-default-link-active-bg: $navbar-default-link-hover-bg;
+$navbar-default-link-hover-color: $rs-color-10;
+$navbar-default-link-hover-bg: $rs-color-08;
+
+$navbar-default-link-active-color: $rs-color-01;
+$navbar-default-link-active-bg: $rs-color-02;
 
 
 //Alerts overrides
@@ -90,10 +91,10 @@ $alert-success-bg: #DFF0D8;
 $alert-success-border: #DFF0D8;
 
 // Buttons
-$btn-default-color: #666;
-$btn-default-bg: #FFF;
-$btn-default-border: #CCC;
+$btn-default-color: $rs-color-09;
+$btn-default-bg: $rs-color-01;
+$btn-default-border: $rs-color-07;
 
-$btn-primary-color: #FFF;
-$btn-primary-bg: #337AB7;
-$btn-primary-border: #2E6EA5;
+$btn-primary-color: $rs-color-01;
+$btn-primary-bg: $rs-color-11;
+$btn-primary-border: $rs-color-12;

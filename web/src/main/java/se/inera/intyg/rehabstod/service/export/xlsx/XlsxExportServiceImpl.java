@@ -93,18 +93,23 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         }
 
         addFilterMainHeader(sheet, rowNumber++, VALDA_FILTER);
+
+        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_FRITEXTFILTER, notEmpty(req) ? req.getFritext() : "-");
+        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VISAPATIENTUPPGIFTER, req.isShowPatientId() ? " Ja" : " Nej");
+        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_ALDER,
+                req.getAldersIntervall().getMin() + " - " + req.getAldersIntervall().getMax() + " år");
+        rowNumber = addDiagnosKapitel(sheet, rowNumber++, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper()); // NOSONAR
+        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SLUTDATUM, getFilterDate(req.getSlutdatumIntervall()));
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD,
                 req.getLangdIntervall().getMin() + " - " + req.getLangdIntervall().getMax() + " dagar");
         rowNumber = addLakareList(sheet, rowNumber++, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), user); // NOSONAR
-        rowNumber = addDiagnosKapitel(sheet, rowNumber++, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper()); // NOSONAR
-        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_ALDER,
-                req.getAldersIntervall().getMin() + " - " + req.getAldersIntervall().getMax() + " år");
-        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SLUTDATUM, getFilterDate(req.getSlutdatumIntervall()));
-        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_FRITEXTFILTER, notEmpty(req) ? req.getFritext() : "-");
-        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VISAPATIENTUPPGIFTER, req.isShowPatientId() ? " Ja" : " Nej");
+
+        // Inställningar
         addFilterMainHeader(sheet, rowNumber++, H2_SJUKFALLSINSTALLNING);
         addFilterHeader(sheet, rowNumber++, MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG, req.getMaxIntygsGlapp() + " dagar");
         rowNumber += FILTER_SPACING;
+
+        // Sortering
         addFilterMainHeader(sheet, rowNumber++, VALD_SORTERING_PA_TABELLEN);
         addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, req.getSortering().getKolumn());
         addFilterHeader(sheet, rowNumber++, SORTERING_RIKTNING, req.getSortering().getOrder());
@@ -135,7 +140,6 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         }
         tempHeaders.add(TABLEHEADER_KON);
         tempHeaders.add(TABLEHEADER_NUVARANDE_DIAGNOS);
-        tempHeaders.add(TABLEHEADER_BIDIAGNOSER);
         tempHeaders.add(TABLEHEADER_STARTDATUM);
         tempHeaders.add(TABLEHEADER_SLUTDATUM);
         tempHeaders.add(TABLEHEADER_SJUKSKRIVNINGSLANGD);
@@ -286,8 +290,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
                 createDataCell(row, colIndex++, sf.getPatient().getNamn());
             }
             createDataCell(row, colIndex++, sf.getPatient().getKon().getDescription());
-            createDataCell(row, colIndex++, sf.getDiagnos().getKod());
-            createDataCell(row, colIndex++, diagnoseListToString(sf.getBiDiagnoser()));
+            createDataCell(row, colIndex++, getCompoundDiagnoseText(sf));
             createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getStart()));
             createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getSlut()));
             createDataCell(row, colIndex++, String.format(FORMAT_ANTAL_DAGAR, sf.getDagar()));
@@ -307,6 +310,14 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         }
         // Makes sure the "namn" column isn't excessively wide due to the filter.
         sheet.setColumnWidth(2, 7000);
+    }
+
+    private String getCompoundDiagnoseText(SjukfallEnhet sf) {
+        StringBuilder b = new StringBuilder();
+        b.append(sf.getDiagnos().getKod()).append(" ");
+        b.append(sf.getDiagnos().getBeskrivning());
+        b.append(diagnoseListToString(sf.getBiDiagnoser()));
+        return b.toString();
     }
 
     private XSSFRichTextString buildPersonnummerRichText(Patient patient) {

@@ -59,11 +59,11 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
 }
 
 h1 {
-  color: $blue-color;
+  color: $rs-color-03;
 }
 
 h2 {
-  color: $blue-color;
+  color: $rs-color-03;
   line-height: 20px;
   padding-top: 30px;
 }
@@ -89,16 +89,8 @@ a {
   cursor: pointer;
 }
 
-.external-link {
-  color: $rhs-link-external-color;
-
-  &:hover, &:focus {
-    color: $rhs-link-external-color;
-  }
-}
-
 .col-head {
-  color: $blue-color;
+  color: $rs-color-03;
   font-size: 20px;
   padding-bottom: 10px;
 }
