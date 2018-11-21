@@ -18,26 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,7 +27,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
@@ -84,6 +63,27 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
  * Created by Magnus Ekstrand on 2016-02-24.
  */
@@ -92,6 +92,7 @@ public class SjukfallServiceTest {
     // CHECKSTYLE:OFF MagicNumber
 
     private static final int MAX_DAGAR_SEDAN_AVSLUT = 0;
+
     private final String vgId = "vg1";
     private final String vgId2 = "vg2";
     private final String vgId3 = "vg3";
@@ -103,6 +104,7 @@ public class SjukfallServiceTest {
     private final String lakareId2 = "IFV1239877878-104B";
     private final String lakareNamn2 = "Åsa Andersson";
     private final String patientId1 = "19121212-1212";
+
     private int intygsIdCounter = 1;
 
     private Integer intygsGlapp = 5;
@@ -161,18 +163,21 @@ public class SjukfallServiceTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
-    public void init() throws IOException {
+    public void init() {
         when(integrationService.getIntygsDataForCareUnit(anyString(), anyInt())).thenReturn(new ArrayList<>());
         when(integrationService.getIntygsDataForCareUnitAndPatient(anyString(), anyString(), anyInt())).thenReturn(new ArrayList<>());
+        when(integrationService.getAllIntygsDataForPatient(anyString())).thenReturn(createIntygsData());
 
         doReturn(createSjukfallEnhetList()).when(sjukfallEngine).beraknaSjukfallForEnhet(anyListOf(se.inera.intyg.infra.sjukfall.dto.IntygData.class),
                 any(se.inera.intyg.infra.sjukfall.dto.IntygParametrar.class));
+
         when(statisticsCalculator.getSjukfallSummary(anyListOf(SjukfallEnhet.class))).thenReturn(
             new SjukfallSummary(0, Collections.emptyList(), new ArrayList<>(), new ArrayList<>()));
+
         when(employeeNameService.getEmployeeHsaName(anyString())).thenReturn("Tolvan Tolvansson");
+
         when(userPreferencesService.getPreferenceValue(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG)).thenReturn("5");
 
-        when(integrationService.getAllIntygsDataForPatient(anyString())).thenReturn(createIntygsData());
         when(hsaOrganizationsService.getVardgivareInfo(anyString()))
                 .thenAnswer(i -> new se.inera.intyg.infra.integration.hsa.model.Vardgivare((String) i.getArguments()[0],
                         i.getArguments()[0] + "-VGNAME"));
@@ -280,6 +285,82 @@ public class SjukfallServiceTest {
         assertTrue(patientResponse.getSjfMetaData().isSamtyckeFinns());
     }
 
+    @Test
+    /*
+     * Testet ska visa att intyg inom samma vårdgivare och samma enhet, fast utanför glappet,
+     * ska resultera i två sjukfall med ett intyg vardera i sig.
+     */
+    public void testGetByPatient_inomVardgivareOchInomEnhet() {
+        List<IntygsData> data = new ArrayList<IntygsData>() {{
+            add(createIntygsData(vgId, enhetsId, lakareId1, patientId1, false,
+                    activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
+            add(createIntygsData(vgId, enhetsId, lakareId1, patientId1, false,
+                    activeDate.minusDays(17), activeDate.minusDays(8), activeDate.minusDays(17).atStartOfDay()));
+        }};
+
+        when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
+        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId, enhetsId)).thenReturn(true);
+
+        List<String> vgHsaId = new ArrayList<>();
+        vgHsaId.add(vgId);
+
+        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId);
+
+        assertEquals(2, patientResponse.getSjukfallList().size());
+        assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
+        assertEquals(1, patientResponse.getSjukfallList().get(1).getIntyg().size());
+    }
+
+    @Test
+    /*
+     * Testet ska visa att intyg inom samma vårdgivare fast på olika enheter och utanför glappet,
+     * ska resultera i ett sjukfall (det aktiva) med ett intyg i sig.
+     */
+    public void testGetByPatient_inomVardgivareOchUtanforEnhet() {
+        List<IntygsData> data = new ArrayList<IntygsData>() {{
+            add(createIntygsData(vgId, enhetsId, lakareId1, patientId1, false,
+                    activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
+            add(createIntygsData(vgId, enhetsId2, lakareId1, patientId1, false,
+                    activeDate.minusDays(17), activeDate.minusDays(8), activeDate.minusDays(17).atStartOfDay()));
+        }};
+
+        when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
+        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId, enhetsId)).thenReturn(true);
+
+        List<String> vgHsaId = new ArrayList<>();
+        vgHsaId.add(vgId);
+
+        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId);
+
+        assertEquals(1, patientResponse.getSjukfallList().size());
+        assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
+    }
+
+    @Test
+    /*
+     * Testet ska visa att intyg inom samma vårdgivare fast på olika enheter men innanför glappet,
+     * ska resultera i ett sjukfall (det aktiva) med två intyg i sig.
+     */
+    public void testGetByPatient_inomVardgivareOchUtanforEnhetMenInomGlappet() {
+        List<IntygsData> data = new ArrayList<IntygsData>() {{
+            add(createIntygsData(vgId, enhetsId, lakareId1, patientId1, false,
+                    activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
+            add(createIntygsData(vgId, enhetsId2, lakareId1, patientId1, false,
+                    activeDate.minusDays(10), activeDate.minusDays(2), activeDate.minusDays(10).atStartOfDay()));
+        }};
+
+        when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
+        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId, enhetsId)).thenReturn(true);
+
+        List<String> vgHsaId = new ArrayList<>();
+        vgHsaId.add(vgId);
+
+        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId);
+
+        assertEquals(1, patientResponse.getSjukfallList().size());
+        assertEquals(2, patientResponse.getSjukfallList().get(0).getIntyg().size());
+    }
+
     // - - - Private scope - - -
 
     private List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> createSjukfallEnhetList() {
@@ -347,12 +428,20 @@ public class SjukfallServiceTest {
         return createIntygsData(vgId, enhetsId, lakareId, patiendId, false);
     }
 
-    private IntygsData createIntygsData(String vgId, String enhetsId, String lakareId, String patiendId, boolean harSparr) {
+    private IntygsData createIntygsData(String vgId, String enhetsId, String lakareId, String patientId, boolean harSparr) {
+        LocalDate startdatum = activeDate.minusDays(15);
+        LocalDate slutdatum = activeDate.plusDays(15);
+
+        return createIntygsData(vgId, enhetsId, lakareId, patientId, harSparr, startdatum, slutdatum, activeDate.atStartOfDay());
+    }
+
+    private IntygsData createIntygsData(String vgId, String enhetsId, String lakareId, String patientId, boolean harSparr,
+                                        LocalDate startDatum, LocalDate slutDatum, LocalDateTime signeringsDatum) {
 
         se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient patient =
                 new se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient();
         PersonId personId = new PersonId();
-        personId.setExtension(patiendId);
+        personId.setExtension(patientId);
         patient.setFullstandigtNamn("name");
         patient.setPersonId(personId);
 
@@ -378,8 +467,8 @@ public class SjukfallServiceTest {
         hosPersonal.setEnhet(enhet);
 
         Formaga formaga = new Formaga();
-        formaga.setSlutdatum(activeDate.plusDays(15));
-        formaga.setStartdatum(activeDate.minusDays(15));
+        formaga.setSlutdatum(slutDatum);
+        formaga.setStartdatum(startDatum);
 
         Arbetsformaga arbetsformaga = new Arbetsformaga();
         arbetsformaga.getFormaga().add(formaga);
@@ -389,7 +478,7 @@ public class SjukfallServiceTest {
         intygsData.setPatient(patient);
         intygsData.setSkapadAv(hosPersonal);
 
-        intygsData.setSigneringsTidpunkt(activeDate.atStartOfDay());
+        intygsData.setSigneringsTidpunkt(signeringsDatum);
         intygsData.setArbetsformaga(arbetsformaga);
         intygsData.setDiagnoskod("J20");
 

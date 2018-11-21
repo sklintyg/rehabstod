@@ -26,68 +26,62 @@ import se.inera.intyg.infra.sjukfall.dto.IntygData;
 public class IntygAccessControlMetaData {
 
     private IntygData intygData;
+
     private boolean inomVardgivare;
+    private boolean inomVardenhet;
+    private boolean includeBasedOnSamtycke;
+
     private boolean sparr;
     private boolean kraverSamtycke;
-    private boolean includeBasedOnSamtycke;
     private boolean bidrarTillAktivtSjukfall;
 
-    public IntygAccessControlMetaData() {
+    private IntygAccessControlMetaData() {
     }
 
-    public IntygAccessControlMetaData(IntygData intygData, boolean inomVardgivare, boolean includeBasedOnSamtycke) {
+    public IntygAccessControlMetaData(IntygData intygData, boolean inomVardgivare,
+                                      boolean inomVardenhet, boolean includeBasedOnSamtycke) {
         this.intygData = intygData;
         this.inomVardgivare = inomVardgivare;
-        this.kraverSamtycke = !inomVardgivare;
+        this.inomVardenhet = inomVardenhet;
         this.includeBasedOnSamtycke = includeBasedOnSamtycke;
+
+        this.kraverSamtycke = !inomVardgivare;
     }
 
     public IntygData getIntygData() {
         return intygData;
     }
 
-    public void setIntygData(IntygData intygData) {
-        this.intygData = intygData;
-    }
-
     public boolean isInomVardgivare() {
         return inomVardgivare;
     }
 
-    public void setInomVardgivare(boolean inomVardgivare) {
-        this.inomVardgivare = inomVardgivare;
+    public boolean isInomVardenhet() {
+        return inomVardenhet;
     }
 
     public boolean isSparr() {
         return sparr;
     }
 
-    public void setSparr(boolean sparr) {
-        this.sparr = sparr;
-    }
-
-    public boolean isKraverSamtycke() {
-        return kraverSamtycke;
-    }
-
-    public void setKraverSamtycke(boolean kraverSamtycke) {
-        this.kraverSamtycke = kraverSamtycke;
-    }
-
     public boolean isBidrarTillAktivtSjukfall() {
         return bidrarTillAktivtSjukfall;
-    }
-
-    public void setBidrarTillAktivtSjukfall(boolean bidrarTillAktivtSjukfall) {
-        this.bidrarTillAktivtSjukfall = bidrarTillAktivtSjukfall;
     }
 
     public boolean isIncludeBasedOnSamtycke() {
         return includeBasedOnSamtycke;
     }
 
-    public void setIncludeBasedOnSamtycke(boolean includeBasedOnSamtycke) {
-        this.includeBasedOnSamtycke = includeBasedOnSamtycke;
+    public boolean isKraverSamtycke() {
+        return kraverSamtycke;
+    }
+
+    public void setSparr(boolean sparr) {
+        this.sparr = sparr;
+    }
+
+    public void setBidrarTillAktivtSjukfall(boolean bidrarTillAktivtSjukfall) {
+        this.bidrarTillAktivtSjukfall = bidrarTillAktivtSjukfall;
     }
 
     // Convenience methods

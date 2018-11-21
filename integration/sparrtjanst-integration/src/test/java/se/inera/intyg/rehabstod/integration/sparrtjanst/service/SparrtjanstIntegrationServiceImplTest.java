@@ -18,18 +18,12 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.client.SparrtjanstClientService;
@@ -40,6 +34,11 @@ import se.riv.informationsecurity.authorization.blocking.v4.CheckResultType;
 import se.riv.informationsecurity.authorization.blocking.v4.CheckStatusType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultCodeType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultType;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -94,9 +93,9 @@ public class SparrtjanstIntegrationServiceImplTest {
         intygData3.setVardenhetId(VE_HSA_ID);
         intygData3.setVardgivareId(VG_HSA_ID);
 
-        aclList.put(INTYGS_ID_1, new IntygAccessControlMetaData(intygData1, false, false));
-        aclList.put(INTYGS_ID_2, new IntygAccessControlMetaData(intygData2, false, false));
-        aclList.put(INTYGS_ID_3, new IntygAccessControlMetaData(intygData3, true, false));
+        aclList.put(INTYGS_ID_1, new IntygAccessControlMetaData(intygData1, false, false, false));
+        aclList.put(INTYGS_ID_2, new IntygAccessControlMetaData(intygData2, false, false, false));
+        aclList.put(INTYGS_ID_3, new IntygAccessControlMetaData(intygData3, true, true, false));
 
         intygList.add(intygData1);
         intygList.add(intygData2);

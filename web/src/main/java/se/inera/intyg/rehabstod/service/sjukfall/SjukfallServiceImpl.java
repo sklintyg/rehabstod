@@ -18,20 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
@@ -59,6 +51,12 @@ import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -243,9 +241,12 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         //decorate with VG names
         decorateWithVardgivarNamn(data);
+
         // Create initial map linked to each intyg by intygsId
         data.forEach(intygData -> intygAccessMetaData.put(intygData.getIntygId(),
-                new IntygAccessControlMetaData(intygData, currentVardgivarHsaId.equals(intygData.getVardgivareId()),
+                new IntygAccessControlMetaData(intygData,
+                        currentVardgivarHsaId.equals(intygData.getVardgivareId()),
+                        enhetsId.equals(intygData.getVardenhetId()),
                         vgHsaIds.contains(intygData.getVardgivareId()))));
 
         // Decorate intygAccessMetaData with "spärr" info
@@ -261,8 +262,8 @@ public class SjukfallServiceImpl implements SjukfallService {
         // Decorate intygAccessMetaData with the consent info
         boolean haveConsent = samtyckestjanstIntegrationService.checkForConsent(patientId, lakareId, currentVardgivarHsaId, enhetsId);
 
-        // skapa listorna med vilka vårdgivare som hade intyg SKULLE funnits i aktivt sjukfall men som inte kommer med
-        // pga spärr inre/yttrespärr.
+        // skapa listorna med vilka vårdgivare som har intyg som SKULLE funnits i aktivt sjukfall
+        // men som inte kommer med pga spärr inre/yttrespärr.
         SjfMetaData sjfMetaData = createSjfMetaData(intygAccessMetaData, haveConsent);
 
         // Final run, where all intyg not cleared (sparr/samtycke) to be included have been removed
@@ -360,12 +361,19 @@ public class SjukfallServiceImpl implements SjukfallService {
             return false;
         }
 
-        // 3. Om Samtycke krävs - måste också samtycke vara givet
+        // 3. Tar bort intyg på samma vårdgivare men som är utanför aktuell enhet och som inte bidrar till det aktiva sjukfall
+        if (intygAccessControlMetaData.isInomVardgivare()
+                && !intygAccessControlMetaData.isInomVardenhet()
+                && !intygAccessControlMetaData.isBidrarTillAktivtSjukfall()) {
+            return false;
+        }
+
+        // 4. Om Samtycke krävs - måste också samtycke vara givet
         if (intygAccessControlMetaData.isKraverSamtycke() && !haveConsent) {
             return false;
         }
 
-        // 4. Om samtycke finns måste aktivt val för att ta med i sjufakll gjorts
+        // 5. Om samtycke finns måste aktivt val för att ta med i sjufakll gjorts
         if (intygAccessControlMetaData.isKraverSamtycke() && haveConsent && !intygAccessControlMetaData.isIncludeBasedOnSamtycke()) {
             return false;
         }
