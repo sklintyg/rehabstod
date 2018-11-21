@@ -38,11 +38,11 @@ public final class PdlLogUtil {
     }
 
     public static LogPatient getLogPatient(PatientData patientData) {
-        // INTYG-4647: Inget patientnamn vid PDL-logging.
         return new LogPatient.Builder(
                 patientData.getPatient().getId(), patientData.getVardenhetId(), patientData.getVardgivareId())
                 .enhetsNamn(patientData.getVardenhetNamn())
                 .vardgivareNamn(patientData.getVardgivareNamn())
+                .patientNamn(patientData.getPatient().getNamn())
                 .build();
     }
 
