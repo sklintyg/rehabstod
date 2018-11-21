@@ -24,39 +24,12 @@
 
     <include resource="logback-ocp-base.xml"/>
 
-    <logger name="org.apache.cxf" level="INFO" />
-
-    <logger name="se.inera.certificate.web" level="WARN"/>
-
-    <logger name="se.inera.intyg" level="DEBUG" />
-
-    <logger name="se.inera.intyg.common.fk7263" level="DEBUG" />
-
-    <logger name="se.inera.intyg.common.ts_bas" level="DEBUG" />
-
-    <logger name="se.inera.intyg.common.ts_diabetes" level="DEBUG" />
-
-    <logger name="se.inera.certificate.modules.fkparent" level="DEBUG" />
-
-    <logger name="se.inera.certificate.modules.luse" level="DEBUG" />
-
-    <logger name="se.inera.intyg.intygstjanst.web.service.impl.MonitoringLogServiceImpl" level="INFO" additivity="false">
+    <logger name="se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService" level="info" additivity="false">
         <appender-ref ref="MONITORING" />
     </logger>
 
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="VALIDATION"/>
-    </root>
-
     <root level="WARN">
         <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="VALIDATION"/>
-    </root>
-
-    <root level="ERROR">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="VALIDATION"/>
     </root>
 
 </configuration>
