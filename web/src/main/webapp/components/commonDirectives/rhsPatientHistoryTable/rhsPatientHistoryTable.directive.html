@@ -13,6 +13,7 @@
   </button>
 
   <div ng-if="historyItem.expanded">
+    <div class="table-responsive">
     <table id="patient-sjukfall-table" class="table table-striped">
       <thead>
       <tr>
@@ -75,6 +76,7 @@
       </tr>
       </tbody>
     </table>
+    </div>
 
     <div class="extra-diagnoser" ng-if="historyItem.isActive" ng-switch="extraDiagnoser.available">
       <div ng-switch-when="false" class="text-center">
