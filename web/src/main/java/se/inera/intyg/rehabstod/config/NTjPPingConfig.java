@@ -18,17 +18,12 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import org.apache.cxf.Bus;
-import org.apache.cxf.jaxws.EndpointImpl;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.Profile;
-import se.inera.intyg.rehabstod.service.monitoring.ntjp.stub.NTjPPingForConfigurationStub;
+
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 
 /**
@@ -41,26 +36,11 @@ public class NTjPPingConfig {
     @Value("${itintegration.monitoring.pingforconfiguration.url}")
     private String ntjpWsPingUrl;
 
-    @Autowired
-    private ApplicationContext applicationContext;
-
-    @Autowired
-    private Bus bus;
-
     @Bean
     public PingForConfigurationResponderInterface ntjpPingWebServiceClient() {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(ntjpWsPingUrl);
         proxyFactoryBean.setServiceClass(PingForConfigurationResponderInterface.class);
         return (PingForConfigurationResponderInterface) proxyFactoryBean.create();
-    }
-
-    @Bean
-    @Profile(value = { "dev", "wc-hsa-stub" })
-    public EndpointImpl ntjpStubResponder() {
-        NTjPPingForConfigurationStub ntjpPingForConfigurationStub = applicationContext.getBean(NTjPPingForConfigurationStub.class);
-        EndpointImpl endpoint = new EndpointImpl(bus, ntjpPingForConfigurationStub);
-        endpoint.publish("/stubs/itintegration/monitoring/PingForConfiguration/1/rivtabp20");
-        return endpoint;
     }
 }
