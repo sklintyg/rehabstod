@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp')
     .controller('SelectUnitPageCtrl',
-        function($scope, $state, $http, UserModel, UserProxy) {
+        function($scope, $state, $http, UserModel, UserProxy, $window) {
             'use strict';
 
             $scope.user = UserModel.get();
@@ -30,7 +30,7 @@ angular.module('rehabstodApp')
 
                     $state.go('app.sjukfall.start');
                 }, function() {
-                    //Handle errors
+                    $window.location.href = '/error.jsp?reason=login.failed';
                 });
             };
         });
