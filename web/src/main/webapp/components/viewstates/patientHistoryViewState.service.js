@@ -36,8 +36,16 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
 
     var _vgViewState = {};
 
-    var _vgMedSparrBoxState = {
-        skipStart: false
+    var _extraBoxStates = {
+        sparradInom:{
+            skipStart: false
+        },
+        osparradAndra:{
+            skipStart: false
+        },
+        sparradAndra:{
+            skipStart: false
+        }
     };
 
     function _hasSamtycke() {
@@ -213,7 +221,7 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
         setVgMedSparrViewState: _setVgMedSparrViewState,
         getVgMedSparrViewState: _getVgMedSparrViewState,
         getVgMedSparrViewStateById: _getVgMedSparrViewStateById,
-        vgMedSparrBoxState: _vgMedSparrBoxState,
+        extraBoxStates: _extraBoxStates,
         hasSamtycke: _hasSamtycke
     };
 } ]);

@@ -90,7 +90,9 @@
           <div class="col-md-4">
             <rhs-info-box info-expr="extraDiagnoser.sparradInfoInomVardgivare"
                           box-title="label.extradiagnoser.sparradinom.title"
-                          label-truthy="label.extradiagnoser.sparradinom" label-falsy="label.extradiagnoser.empty">
+                          label-truthy="label.extradiagnoser.sparradinom"
+                          label-falsy="label.extradiagnoser.empty"
+                          box-state="patientHistoryViewState.extraBoxStates.sparradInom">
               <rhs-blocked-list model="patientHistoryViewState.getSjfMetaData().vardenheterInomVGMedSparr"
                                 list-label="label.extradiagnoser.sparradinom.list.title"></rhs-blocked-list>
             </rhs-info-box>
@@ -98,15 +100,17 @@
           <div class="col-md-4">
             <rhs-info-box info-expr="extraDiagnoser.osparradInfoAndraVardgivare"
                           box-title="label.extradiagnoser.osparradandra.title"
-                          label-truthy="label.extradiagnoser.osparradandra" label-falsy="label.extradiagnoser.empty"
-                          box-state="patientHistoryViewState.vgMedSparrBoxState">
+                          label-truthy="label.extradiagnoser.osparradandra"
+                          label-falsy="label.extradiagnoser.empty"
+                          box-state="patientHistoryViewState.extraBoxStates.osparradAndra">
               <rhs-unblocked-flow class="flex-fill" patient="patient"></rhs-unblocked-flow>
             </rhs-info-box>
           </div>
           <div class="col-md-4">
             <rhs-info-box info-expr="extraDiagnoser.sparradInfoAndraVardgivare"
                           box-title="label.extradiagnoser.sparradandra.title"
-                          label-truthy="label.extradiagnoser.sparradandra" label-falsy="label.extradiagnoser.empty">
+                          label-truthy="label.extradiagnoser.sparradandra" label-falsy="label.extradiagnoser.empty"
+                          box-state="patientHistoryViewState.extraBoxStates.sparradAndra">
               <rhs-blocked-list model="patientHistoryViewState.getSjfMetaData().andraVardgivareMedSparr"
                                 list-label="label.extradiagnoser.sparradandra.list.title"></rhs-blocked-list>
             </rhs-info-box>

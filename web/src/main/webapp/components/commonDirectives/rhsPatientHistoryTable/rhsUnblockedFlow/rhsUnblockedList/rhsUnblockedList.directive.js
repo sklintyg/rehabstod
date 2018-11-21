@@ -30,8 +30,6 @@ angular.module('rehabstodApp').directive('rhsUnblockedList',
 
             $scope.patientHistoryViewState = patientHistoryViewState;
 
-            patientHistoryViewState.vgMedSparrBoxState.skipStart = true;
-
             patientHistoryViewState.setVgMedSparrViewState($scope.patientHistoryViewState.getSjfMetaData().kraverSamtycke);
 
             $scope.fetch = function(vardgivareId) {

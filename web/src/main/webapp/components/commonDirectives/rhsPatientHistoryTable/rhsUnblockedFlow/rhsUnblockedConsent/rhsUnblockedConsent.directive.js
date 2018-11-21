@@ -28,8 +28,6 @@ angular.module('rehabstodApp').directive('rhsUnblockedConsent',
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedConsent/rhsUnblockedConsent.directive.html',
         link: function($scope) {
 
-            patientHistoryViewState.vgMedSparrBoxState.skipStart = true;
-
             $scope.vardgivareUtanSamtycke = patientHistoryViewState.getSjfMetaData().kraverSamtycke;
 
             var vardgivareUtanSamtyckeNames = $scope.vardgivareUtanSamtycke.map(function(vg) {
@@ -50,8 +48,7 @@ angular.module('rehabstodApp').directive('rhsUnblockedConsent',
                     onlyCurrentUser: $scope.consent.onlyCurrentUser === 'ONLYCURRENT',
                     days: $scope.consent.days
                 }).then(function(response) {
-                    if(response.responseCode === 'OK')
-                    {
+                    if(response.responseCode === 'OK') {
                         var patientSjfMeta = patientHistoryViewState.getSjfMetaData();
                         patientSjfMeta.samtyckeFinns = true;
                         $rootScope.$broadcast('rhsUnblockedFlow.next');
