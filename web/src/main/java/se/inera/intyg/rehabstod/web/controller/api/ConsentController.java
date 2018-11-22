@@ -36,7 +36,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.ConsentService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
-import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.schemas.contract.Personnummer;
 
 import java.time.LocalDate;
