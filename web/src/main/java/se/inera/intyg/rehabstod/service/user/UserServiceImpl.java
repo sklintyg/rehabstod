@@ -29,6 +29,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
  */
 @Service
 public class UserServiceImpl implements UserService {
+
     @Override
     public RehabstodUser getUser() {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
