@@ -18,12 +18,20 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
@@ -53,12 +61,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -235,6 +237,14 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         LOG.debug("Calling HSA - fetching information about the current care unit.");
         Vardenhet currentVardenhet = hsaOrganizationsService.getVardenhet(currentVardenhetId);
+        String tempParentVardenhetId = null;
+        try {
+            tempParentVardenhetId = hsaOrganizationsService.getParentUnit(currentVardenhetId);
+        } catch (HsaServiceCallException e) {
+            LOG.info("Couldn't find parentId", e);
+        }
+
+        final String parentVardenhetId = tempParentVardenhetId;
 
         LOG.debug("Calling Intygstjänsten - fetching certificate information about patient.");
         List<IntygsData> intygsData =
@@ -252,7 +262,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         data.forEach(intygData -> intygAccessMetaData.put(intygData.getIntygId(),
                 new IntygAccessControlMetaData(intygData,
                         currentVardgivareId.equals(intygData.getVardgivareId()),
-                        isEnhetInomVardenhet(currentVardenhet, intygData.getVardenhetId()),
+                        isEnhetInomVardenhetOrParentEnhet(currentVardenhet, parentVardenhetId, intygData.getVardenhetId()),
                         vgHsaIds.contains(intygData.getVardgivareId()))));
 
         // Decorate intygAccessMetaData with "spärr" info
@@ -389,9 +399,14 @@ public class SjukfallServiceImpl implements SjukfallService {
         return true;
     }
 
-    private boolean isEnhetInomVardenhet(Vardenhet vardenhet, String enhetsId) {
+    private boolean isEnhetInomVardenhetOrParentEnhet(Vardenhet vardenhet, String parentVardenhetId, String enhetsId) {
         // Do the obvious check
         if (vardenhet.getId().equals(enhetsId)) {
+            return true;
+        }
+
+        // Check if parentEnhet
+        if (enhetsId.equals(parentVardenhetId)) {
             return true;
         }
 
