@@ -23,7 +23,7 @@
     <div ng-if="tab.fixed">
       <div ng-show="tab.active" class="modal-body">
         <div rhs-spinner show-spinner="showSpinner" label="label.patienthistory.loading">
-
+          <rhs-day-in-rehab-chain items="timeline"></rhs-day-in-rehab-chain>
           <div ng-repeat="item in timeline">
 
             <!-- special case: gap between years that have sjukfall -->

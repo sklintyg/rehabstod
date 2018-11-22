@@ -28,8 +28,8 @@
         <th id="header-column-vardenhet" ng-if="historyItem.isActive">Vårdenhet</th>
         <th id="header-column-vardgivare" ng-if="historyItem.isActive">Vårdgivare</th>
         <th id="header-column-risk" class="column-risk" ng-if="hasFeature('SRS')">Risk</th>
-        <th id="header-column-show-intyg" class="column-showintyg"></th>
         <th id="header-column-show-source-warning" class="column-show-source-warning" ng-if="historyItem.isActive"></th>
+        <th id="header-column-show-intyg" class="column-showintyg"></th>
       </tr>
       </thead>
 
@@ -62,16 +62,16 @@
           <rhs-risk-indicator category="intyg.riskSignal.riskKategori"
                               description="intyg.riskSignal.riskDescription"></rhs-risk-indicator>
         </td>
+        <td ng-if="historyItem.isActive"><i ng-if="intyg.otherVardgivare || intyg.otherVardenhet"
+                                            class="fa fa-exclamation-triangle warning-triangle"
+                                            uib-tooltip-html="'Intyget kommer från en annan vårdenhet eller vårdgivare, det kommer inte att synas i Rehabstöd i övrigt.'"
+                                            tooltip-placement="auto top"
+                                            tooltip-popup-delay="300"></i>
+        </td>
         <td>
           <button ng-if="!intyg.otherVardgivare && !intyg.otherVardenhet" class="btn btn-default" ng-attr-id="sjukfall-{{index}}-show-intyg-{{intyg.id}}"
                   ng-click="onLoadIntyg({'intyg': intyg})"><b><i class="glyphicon glyphicon-eye-open"></i> Visa intyg</b>
           </button>
-        </td>
-        <td ng-if="historyItem.isActive"><i ng-if="intyg.otherVardgivare || intyg.otherVardenhet"
-               class="fa fa-exclamation-triangle warning-triangle"
-               uib-tooltip-html="'Intyget kommer från en annan vårdenhet eller vårdgivare, det kommer inte att synas i Rehabstöd i övrigt.'"
-               tooltip-placement="auto top"
-               tooltip-popup-delay="300"></i>
         </td>
       </tr>
       </tbody>
