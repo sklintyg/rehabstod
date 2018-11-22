@@ -105,7 +105,7 @@ public class SjukfallController {
     public ResponseEntity<List<SjukfallEnhet>> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
 
         // Get user from session
-        RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
+        RehabstodUser user = userService.getUser();
 
         // Fetch sjukfall
         SjukfallEnhetResponse response = getSjukfallForCareUnit(user, request);
@@ -122,7 +122,7 @@ public class SjukfallController {
     public ResponseEntity<SjukfallPatientResponse> getSjukfallForPatient(@RequestBody GetSjukfallForPatientRequest request) {
 
         // Get user from session
-        RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
+        RehabstodUser user = userService.getUser();
 
         Optional<Personnummer> personnummerOptional = Personnummer.createPersonnummer(request.getPatientId());
         Collection<String> vardgivareIds = user.getSjfPatientVardgivareForPatient(personnummerOptional.get().getPersonnummer());
@@ -173,7 +173,7 @@ public class SjukfallController {
     public ResponseEntity<ByteArrayResource> getSjukfallForCareUnitAsPdf(@ModelAttribute PrintSjukfallRequest request) {
         try {
             // Get user from session
-            RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
+            RehabstodUser user = userService.getUser();
 
             // Fetch sjukfall
             List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request).getSjukfallList();
@@ -200,7 +200,7 @@ public class SjukfallController {
     public ResponseEntity<ByteArrayResource> getSjukfallForCareUnitAsXLSX(@ModelAttribute PrintSjukfallRequest request) {
         try {
             // Get user from session
-            RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
+            RehabstodUser user = userService.getUser();
 
             // Fetch sjukfall
             List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request).getSjukfallList();
@@ -225,7 +225,7 @@ public class SjukfallController {
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
     public SjukfallSummary getUnitCertificateSummary() {
         // Get user from session
-        RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
+        RehabstodUser user = userService.getUser();
 
         String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         String mottagningsId = getMottagningsId(user);
@@ -248,7 +248,7 @@ public class SjukfallController {
     public ResponseEntity<Collection<String>> addVgToPatientView(@RequestBody AddVgToPatientViewRequest request) {
 
         // Get logged in user
-        RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
+        RehabstodUser user = userService.getUser();
 
         try {
             Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());

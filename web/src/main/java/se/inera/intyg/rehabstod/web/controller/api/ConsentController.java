@@ -72,7 +72,7 @@ public class ConsentController {
         RegisterExtendedConsentResponse response;
 
         // Get logged in user
-        RehabstodUser user = ControllerUtil.getRehabstodUser(userService);
+        RehabstodUser user = userService.getUser();
 
         LocalDate today = LocalDate.now();
 

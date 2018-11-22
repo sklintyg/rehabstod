@@ -27,6 +27,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
@@ -66,6 +67,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -90,7 +92,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class SjukfallServiceTest {
     // CHECKSTYLE:OFF MagicNumber
-
     private static final int MAX_DAGAR_SEDAN_AVSLUT = 0;
 
     private final String vgId = "vg1";
@@ -179,8 +180,10 @@ public class SjukfallServiceTest {
         when(userPreferencesService.getPreferenceValue(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG)).thenReturn("5");
 
         when(hsaOrganizationsService.getVardgivareInfo(anyString()))
-                .thenAnswer(i -> new se.inera.intyg.infra.integration.hsa.model.Vardgivare((String) i.getArguments()[0],
-                        i.getArguments()[0] + "-VGNAME"));
+                .thenAnswer(i -> createVardgivare((String) i.getArguments()[0], i.getArguments()[0] + "-VGNAME"));
+
+        when(hsaOrganizationsService.getVardenhet(anyString()))
+                .thenAnswer(i -> createVardenhet((String) i.getArguments()[0],i.getArguments()[0] + "-VENAME"));
 
         doNothing().when(sjukfallEmployeeNameResolver).enrichWithHsaEmployeeNames(anyListOf(SjukfallEnhet.class));
         doNothing().when(sjukfallEmployeeNameResolver).updateDuplicateDoctorNamesWithHsaId(anyListOf(SjukfallEnhet.class));
@@ -245,7 +248,8 @@ public class SjukfallServiceTest {
     public void testGetByPatient_utanSamtycke() {
         List<String> vgHsaId = new ArrayList<>();
 
-        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId);
+        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1,
+                Urval.ALL, parameters, vgHsaId);
 
         assertEquals(1, patientResponse.getSjukfallList().size());
         assertEquals(3, patientResponse.getSjukfallList().get(0).getIntyg().size());
@@ -265,7 +269,8 @@ public class SjukfallServiceTest {
         List<String> vgHsaId = new ArrayList<>();
         vgHsaId.add(vgId2);
 
-        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId);
+        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1,
+                Urval.ALL, parameters, vgHsaId);
 
         assertEquals(1, patientResponse.getSjukfallList().size());
         assertEquals(4, patientResponse.getSjukfallList().get(0).getIntyg().size());
@@ -304,11 +309,40 @@ public class SjukfallServiceTest {
         List<String> vgHsaId = new ArrayList<>();
         vgHsaId.add(vgId);
 
-        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId);
+        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1,
+                Urval.ALL, parameters, vgHsaId);
 
         assertEquals(2, patientResponse.getSjukfallList().size());
         assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
         assertEquals(1, patientResponse.getSjukfallList().get(1).getIntyg().size());
+    }
+
+    @Test
+    /*
+     * Testet ska visa att intyg inom samma vårdgivare och samma enhet fast där intyget är skrivet på
+     * en underenhet ska resultera i ett sjukfall med ett intyg vardera i sig.
+     */
+    public void testGetByPatient_whenInomVardgivareOchInomEnhet_andMottagning() {
+        List<IntygsData> data = new ArrayList<IntygsData>() {{
+            add(createIntygsData(vgId, mottagningsId, lakareId1, patientId1, false,
+                    activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
+        }};
+
+        when(hsaOrganizationsService.getVardenhet(anyString()))
+                .thenAnswer(i -> createVardenhet((String) i.getArguments()[0],i.getArguments()[0] + "-VENAME",
+                        createMottagning(mottagningsId, mottagningsId + "-UENAME", (String) i.getArguments()[0])));
+
+        when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
+        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId, enhetsId)).thenReturn(true);
+
+        List<String> vgHsaId = new ArrayList<>();
+        vgHsaId.add(vgId);
+
+        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1,
+                Urval.ALL, parameters, vgHsaId);
+
+        assertEquals(1, patientResponse.getSjukfallList().size());
+        assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
     }
 
     @Test
@@ -330,7 +364,8 @@ public class SjukfallServiceTest {
         List<String> vgHsaId = new ArrayList<>();
         vgHsaId.add(vgId);
 
-        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId);
+        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1,
+                Urval.ALL, parameters, vgHsaId);
 
         assertEquals(1, patientResponse.getSjukfallList().size());
         assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
@@ -355,7 +390,8 @@ public class SjukfallServiceTest {
         List<String> vgHsaId = new ArrayList<>();
         vgHsaId.add(vgId);
 
-        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId);
+        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1,
+                Urval.ALL, parameters, vgHsaId);
 
         assertEquals(1, patientResponse.getSjukfallList().size());
         assertEquals(2, patientResponse.getSjukfallList().get(0).getIntyg().size());
@@ -401,7 +437,8 @@ public class SjukfallServiceTest {
         return intygsData;
     }
 
-    private se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet createSjukfallEnhet(String lakareId, String lakareNamn, String enhetsId, String patiendId) {
+    private se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet createSjukfallEnhet(String lakareId, String lakareNamn,
+                                                                                String enhetsId, String patiendId) {
 
         Vardgivare vardgivare = new Vardgivare(vgId, "vg");
 
@@ -491,6 +528,43 @@ public class SjukfallServiceTest {
         }
 
         return intygsData;
+    }
+
+    private se.inera.intyg.infra.integration.hsa.model.Vardgivare createVardgivare(String id, String namn) {
+        return new se.inera.intyg.infra.integration.hsa.model.Vardgivare(id, namn);
+    }
+
+    private se.inera.intyg.infra.integration.hsa.model.Vardenhet createVardenhet(String id, String namn) {
+        return createVardenhet(id, namn, new ArrayList<>());
+    }
+
+    private se.inera.intyg.infra.integration.hsa.model.Vardenhet createVardenhet(String id, String namn, Mottagning mottagning) {
+        if (mottagning == null) {
+            return createVardenhet(id, namn, new ArrayList<>());
+        }
+
+        List<Mottagning> mottagningar = Arrays.asList(mottagning);
+        return createVardenhet(id, namn, mottagningar);
+    }
+
+    private se.inera.intyg.infra.integration.hsa.model.Vardenhet createVardenhet(String id, String namn, List<Mottagning> mottagningar) {
+        se.inera.intyg.infra.integration.hsa.model.Vardenhet vardenhet =
+                new se.inera.intyg.infra.integration.hsa.model.Vardenhet(id, namn);
+
+        if (mottagningar == null) {
+            mottagningar = new ArrayList<>();
+        }
+
+        vardenhet.setMottagningar(mottagningar);
+        return vardenhet;
+    }
+
+    private se.inera.intyg.infra.integration.hsa.model.Mottagning createMottagning(String id, String namn, String parentId) {
+        Mottagning mottagning = new Mottagning();
+        mottagning.setId(id);
+        mottagning.setNamn(namn);
+        mottagning.setParentHsaId(parentId);
+        return mottagning;
     }
 
     class SjukfallEngineMapperTest extends SjukfallEngineMapper {

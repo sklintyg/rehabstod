@@ -24,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.integration.hsa.model.Mottagning;
+import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
@@ -102,6 +104,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     @Autowired
     private HsaOrganizationsService hsaOrganizationsService;
+
 
     @Override
     @PrometheusTimeMethod
@@ -217,12 +220,12 @@ public class SjukfallServiceImpl implements SjukfallService {
         return rehabstodSjukfall;
     }
 
-    private FilteredSjukFallByPatientResult getFilteredSjukfallByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId,
-                                                                         String patientId, Urval urval, IntygParametrar parameters,
-                                                                         Collection<String> vgHsaIds) {
+    private FilteredSjukFallByPatientResult getFilteredSjukfallByPatient(String currentVardgivareId, String currentVardenhetId,
+                                                                         String lakareId, String patientId, Urval urval,
+                                                                         IntygParametrar parameters, Collection<String> vgHsaIds) {
 
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardgivarHsaId), "currentVardgivarHsaId may not be null or empty");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(enhetsId), "enhetsId may not be null or empty");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardgivareId), "currentVardgivareId may not be null or empty");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardenhetId), "currentVardenhetId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(lakareId), "lakareId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
         Preconditions.checkArgument(urval != null, "urval may not be null");
@@ -230,7 +233,10 @@ public class SjukfallServiceImpl implements SjukfallService {
         List<se.inera.intyg.infra.sjukfall.dto.SjukfallPatient> sjukfallList;
         Map<String, IntygAccessControlMetaData> intygAccessMetaData = new HashMap<>();
 
-        LOG.debug("Calling Intygstjänsten - fetching certificate information by patient.");
+        LOG.debug("Calling HSA - fetching information about the current care unit.");
+        Vardenhet currentVardenhet = hsaOrganizationsService.getVardenhet(currentVardenhetId);
+
+        LOG.debug("Calling Intygstjänsten - fetching certificate information about patient.");
         List<IntygsData> intygsData =
                 intygstjanstIntegrationService.getAllIntygsDataForPatient(patientId);
 
@@ -245,13 +251,13 @@ public class SjukfallServiceImpl implements SjukfallService {
         // Create initial map linked to each intyg by intygsId
         data.forEach(intygData -> intygAccessMetaData.put(intygData.getIntygId(),
                 new IntygAccessControlMetaData(intygData,
-                        currentVardgivarHsaId.equals(intygData.getVardgivareId()),
-                        enhetsId.equals(intygData.getVardenhetId()),
+                        currentVardgivareId.equals(intygData.getVardgivareId()),
+                        isEnhetInomVardenhet(currentVardenhet, intygData.getVardenhetId()),
                         vgHsaIds.contains(intygData.getVardgivareId()))));
 
         // Decorate intygAccessMetaData with "spärr" info
-        sparrtjanstIntegrationService.decorateWithBlockStatus(currentVardgivarHsaId, enhetsId, lakareId, patientId, intygAccessMetaData,
-                data);
+        sparrtjanstIntegrationService.decorateWithBlockStatus(currentVardgivareId, currentVardenhetId,
+                lakareId, patientId, intygAccessMetaData, data);
 
         // Make an initial calculation using _all_ available intyg...
         sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parameters);
@@ -260,7 +266,8 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         // Make a call to the check for consent service
         // Decorate intygAccessMetaData with the consent info
-        boolean haveConsent = samtyckestjanstIntegrationService.checkForConsent(patientId, lakareId, currentVardgivarHsaId, enhetsId);
+        boolean haveConsent = samtyckestjanstIntegrationService.checkForConsent(patientId, lakareId,
+                currentVardgivareId, currentVardenhetId);
 
         // skapa listorna med vilka vårdgivare som har intyg som SKULLE funnits i aktivt sjukfall
         // men som inte kommer med pga spärr inre/yttrespärr.
@@ -272,7 +279,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
         List<SjukfallPatient> rehabstodSjukfall = sjukfallList.stream()
-                .map(o -> sjukfallEngineMapper.map(o, currentVardgivarHsaId, enhetsId))
+                .map(o -> sjukfallEngineMapper.map(o, currentVardgivareId, currentVardenhetId))
                 .collect(Collectors.toList());
 
         return new FilteredSjukFallByPatientResult(rehabstodSjukfall, sjfMetaData);
@@ -282,6 +289,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         data.stream().forEach(
                 intygData -> intygData.setVardgivareNamn(getVardgivarNamn(intygData.getVardgivareId())));
     }
+
 
     private String getVardgivarNamn(String vardgivareId) {
         try {
@@ -379,6 +387,22 @@ public class SjukfallServiceImpl implements SjukfallService {
         }
 
         return true;
+    }
+
+    private boolean isEnhetInomVardenhet(Vardenhet vardenhet, String enhetsId) {
+        // Do the obvious check
+        if (vardenhet.getId().equals(enhetsId)) {
+            return true;
+        }
+
+        // Search among sub units
+        List<Mottagning> mottagningar = vardenhet.getMottagningar();
+        if (mottagningar == null || mottagningar.isEmpty()) {
+            return false;
+        }
+
+        return mottagningar.stream()
+                .anyMatch(unit -> unit.getId().equals(enhetsId));
     }
 
 }

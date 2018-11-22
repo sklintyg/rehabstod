@@ -22,10 +22,8 @@ package se.inera.intyg.rehabstod.web.controller.api.util;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
-import se.inera.intyg.rehabstod.service.user.UserService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -79,15 +77,6 @@ public final class ControllerUtil {
 
     public static int getMaxDagarSedanSjukfallAvslut(RehabstodUser user) {
         return Integer.parseInt(user.getPreferences().get(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT));
-    }
-
-    public static RehabstodUser getRehabstodUser(UserService userService) {
-        RehabstodUser user = userService.getUser();
-
-        if (user == null) {
-            throw new AuthoritiesException("No user in session");
-        }
-        return user;
     }
 
 }
