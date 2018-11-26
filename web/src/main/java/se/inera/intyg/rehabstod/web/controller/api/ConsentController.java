@@ -93,7 +93,7 @@ public class ConsentController {
             response = createResponse(RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId());
 
             LOG.debug("PDL logging - log registration of consent.");
-            logRegistrationOfConsent(user, personnummer.get(), ActivityType.READ, ResourceType.RESOURCE_TYPE_SAMTYCKE);
+            logRegistrationOfConsent(user, personnummer.get(), ActivityType.CREATE, ResourceType.RESOURCE_TYPE_SAMTYCKE);
 
         } catch (Exception e) {
             LOG.error("Error giving consent", e);
