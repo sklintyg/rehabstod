@@ -28,6 +28,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
+import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
@@ -67,7 +69,7 @@ public class ConsentControllerTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Mock
-    LogService logService;
+    LogService logServiceMock;
 
     @Mock
     private UserService userServiceMock;
@@ -102,6 +104,7 @@ public class ConsentControllerTest {
 
         verify(consentServiceMock).giveConsent(eq(personnummer.get()), eq(false),
                 eq(null), eq(consentFrom), eq(consentTo), any(RehabstodUser.class));
+        verify(logServiceMock).logConsent(eq(personnummer.get()), eq(ActivityType.CREATE), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
     }
 
     @Test
