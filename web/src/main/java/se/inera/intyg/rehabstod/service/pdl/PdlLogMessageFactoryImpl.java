@@ -27,7 +27,6 @@ import se.inera.intyg.infra.logmessages.PdlLogMessage;
 import se.inera.intyg.infra.logmessages.PdlResource;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataLogMessage;
-import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataPrintLogMessage;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogPatient;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -143,12 +142,16 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
     }
 
     private PdlLogMessage getLogMessageTypeForActivityType(ActivityType activityType) {
-        if (activityType.equals(ActivityType.READ)) {
-            return SjukfallDataLogMessage.build();
-        } else if (activityType.equals(ActivityType.PRINT)) {
-            return SjukfallDataPrintLogMessage.build();
+        switch (activityType) {
+            case READ:
+                return SjukfallDataLogMessage.build();
+            case CREATE:
+                return SjukfallDataLogMessage.build(ActivityType.CREATE);
+            case PRINT:
+                return SjukfallDataLogMessage.build(ActivityType.PRINT);
+            default:
+                throw new IllegalArgumentException("No LogMessage type for activityType " + activityType.name() + " defined");
         }
-        throw new IllegalArgumentException("No LogMessage type for activityType " + activityType.name() + " defined");
     }
 
     private void populateWithCurrentUserAndCareUnit(PdlLogMessage logMsg, LogUser user) {

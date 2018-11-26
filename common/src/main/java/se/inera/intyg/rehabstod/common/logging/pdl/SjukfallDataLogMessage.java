@@ -33,7 +33,22 @@ public abstract class SjukfallDataLogMessage {
 
     }
 
+    /**
+     * Creates a PdlLogMessage object injected with
+     * ActivityType.READ and ActivityPurpose.CARE_TREATMENT.
+     * @return a PdlLogMessage object
+     */
     public static PdlLogMessage build() {
-        return new PdlLogMessage(ActivityType.READ, ActivityPurpose.CARE_TREATMENT);
+        return build(ActivityType.READ);
     }
+
+    /**
+     * Creates a PdlLogMessage object injected with the provided
+     * activityType and ActivityPurpose.CARE_TREATMENT.
+     * @return a PdlLogMessage object
+     */
+    public static PdlLogMessage build(ActivityType activityType) {
+        return new PdlLogMessage(activityType, ActivityPurpose.CARE_TREATMENT);
+    }
+
 }
