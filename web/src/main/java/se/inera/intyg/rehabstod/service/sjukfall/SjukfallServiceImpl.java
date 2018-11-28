@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
+
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
@@ -237,14 +237,6 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         LOG.debug("Calling HSA - fetching information about the current care unit.");
         Vardenhet currentVardenhet = hsaOrganizationsService.getVardenhet(currentVardenhetId);
-        String tempParentVardenhetId = null;
-        try {
-            tempParentVardenhetId = hsaOrganizationsService.getParentUnit(currentVardenhetId);
-        } catch (HsaServiceCallException e) {
-            LOG.info("Couldn't find parentId", e);
-        }
-
-        final String parentVardenhetId = tempParentVardenhetId;
 
         LOG.debug("Calling Intygstjänsten - fetching certificate information about patient.");
         List<IntygsData> intygsData =
@@ -262,9 +254,14 @@ public class SjukfallServiceImpl implements SjukfallService {
         data.forEach(intygData -> intygAccessMetaData.put(intygData.getIntygId(),
                 new IntygAccessControlMetaData(intygData,
                         currentVardgivareId.equals(intygData.getVardgivareId()),
-                        isEnhetInomVardenhetOrParentEnhet(currentVardenhet, parentVardenhetId, intygData.getVardenhetId()),
+                        isIntygIssuedOnEnhetOrMottagning(currentVardenhet, intygData.getVardenhetId()),
                         vgHsaIds.contains(intygData.getVardgivareId()))));
 
+        //Assert that at least 1 intyg for this patient is issued on the current enhet-context (see INTYG-7686)
+        if (intygAccessMetaData.size() > 0
+                && intygAccessMetaData.entrySet().stream().noneMatch(intyg -> intyg.getValue().isInomVardenhet())) {
+            throw new SjukfallServiceException("At least one intyg must be issued on current unit!");
+        }
         // Decorate intygAccessMetaData with "spärr" info
         sparrtjanstIntegrationService.decorateWithBlockStatus(currentVardgivareId, currentVardenhetId,
                 lakareId, patientId, intygAccessMetaData, data);
@@ -399,14 +396,9 @@ public class SjukfallServiceImpl implements SjukfallService {
         return true;
     }
 
-    private boolean isEnhetInomVardenhetOrParentEnhet(Vardenhet vardenhet, String parentVardenhetId, String enhetsId) {
+    private boolean isIntygIssuedOnEnhetOrMottagning(Vardenhet vardenhet, String intygEnhetsId) {
         // Do the obvious check
-        if (vardenhet.getId().equals(enhetsId)) {
-            return true;
-        }
-
-        // Check if parentEnhet
-        if (enhetsId.equals(parentVardenhetId)) {
+        if (vardenhet.getId().equals(intygEnhetsId)) {
             return true;
         }
 
@@ -417,7 +409,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         }
 
         return mottagningar.stream()
-                .anyMatch(unit -> unit.getId().equals(enhetsId));
+                .anyMatch(unit -> unit.getId().equals(intygEnhetsId));
     }
 
 }
