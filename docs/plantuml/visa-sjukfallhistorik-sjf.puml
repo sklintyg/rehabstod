@@ -2,52 +2,67 @@
 actor Läkare
 participant rhs as "Rehabstöd"
 participant sfm as "Sjukfallsmotor"
-participant st as "Spärrtjänsten"
 participant it as "Intygstjänsten"
+participant st as "Spärrtjänsten"
+participant pu as "PU"
+participant hsa as "HSA"
+participant samtycke as "Samtyckestjänsten"
+participant logg as "Loggtjänsten"
+participant srs as "SRS-tjänsten"
 
 Läkare -> rhs: Väljer att visa sjukfallshistorik\nför patient på Vårdenhet
 activate rhs
-    rhs -> it: ListActiveSickLeavesForCareUnit(enhet, personId)
+    rhs -> it: listSickLeavesForPerson(personId)
     activate it
     it -> it: Läser upp patientens\nsamtliga intyg över alla VG
     it --> rhs: Lista av patientens samtliga intyg
     deactivate it
 
-|||
+    rhs -> hsa: Hämta vårdgivarnamn/vårdenhetsnamn för varje intyg mha GetUnit v1
+    activate hsa
+    hsa --> rhs: GetUnitResponseType
+    deactivate hsa
 
-    rhs -> rhs: Kontrollera om det finns intyg på annan VG
-
-    rhs -> rhs: Kontrollera om det finns intyg\npå annan VE inom vår VG
-|||
-    alt Om det finns info på annan VG
-    rhs -> st: CheckConsent v2
+    rhs -> st: Kontrollera spärr via CheckBlocks v4
     activate st
-    st --> rhs: Har consent?
+    st --> rhs: CheckBlocksResponseType
     deactivate st
+    rhs -> rhs: Uppdatera sjukfallen med spärrstatus
 
-    rhs -> rhs: För varje intyg, plocka fram patientId, vgId,\nveId och signeringsdatum
-    rhs -> st: CheckBlocks v4
-    activate st
-    st --> rhs: Blocks...
-    deactivate st
-
-    rhs -> rhs: Ta reda på VILKA vg som har ospärrad info\nlägg på Response, skall synkas mot "hämtade"\nVG i sessionen.
-    rhs -> rhs: Märk upp vilka intyg i intygslistan som ej kan visas pga saknad consent.
-
-
-    rhs -> rhs: Märk upp vilka intyg i intygslistan som är "blocked"
-    rhs -> rhs: Plocka fram eventuella existerande "Hämtade" VG\nfrån användarsessionen
-
-
-    rhs -> sfm: Skicka in _samtliga_ intyg oavsett spärr/consent
+    rhs -> sfm: Skicka in ALLA intyg oavsett spärr/samtyckesstatus
     sfm --> rhs: Bruttosjukfall.
 
-    rhs -> rhs: Notera _vilka_ intyg i det _aktiva_ sjukfallet som saknar consent/har spärr, lägg åt sidan
+    rhs -> samtycke: Kontrollera samtyckesstatus för de intyg som kräver samtycke för att få visas via CheckConsent v2
+    activate samtycke
+    samtycke --> rhs: samtyckesstatus
+    deactivate samtycke
 
-    rhs -> sfm: Skicka in _nettolistan_ av intyg för att\nfå verkliga sjukfall
+    rhs -> rhs: Uppdatera sjukfallen med vilka intyg som har\nhar registrerade samtycken / saknar samtycken
+
+     rhs -> rhs: Filtrera bort sjukfall med spärr eller saknar samtycke.
+     rhs -> rhs: Sammanställ klientsvar med sjukfall\noch metadataobjekt\nmed info om vad som filtrerats bort samt vilka samtycken\nsom är registrerade och valda.
+
+    rhs -> sfm: Skicka in nettolistan av intyg för att\nfå verkliga sjukfall
     sfm --> rhs: Nettosjukfall
-end
-    rhs -> rhs: Sammanställ svar med lista av sjukfall\nsamt metadataobjekt med info om vad som plockats väck.
+
+     alt Om SRS-stöd är aktiverat
+        rhs -> srs: getRiskPredictionForCertificate för varje intyg
+         activate srs
+        srs --> rhs: RiskPredictionForCertificate
+         deactivate srs
+     end
+
+
+      rhs --> pu: GetPerson för varje sjukfalls patient
+    activate pu
+      pu --> rhs: PersonSvar
+     deactivate pu
+     rhs -> rhs: Uppdatera lista med namn och sekretessstatus
+
+     rhs --> logg: PDL loggning av faktisk visad information
+    activate logg
+      logg --> rhs: Result
+     deactivate logg
 
     rhs -> Läkare: Visar patientens sjukfallshistorik\ninkl SJF
 deactivate rhs
