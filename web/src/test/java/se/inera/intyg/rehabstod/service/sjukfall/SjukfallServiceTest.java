@@ -363,9 +363,9 @@ public class SjukfallServiceTest {
             add(createIntygsData(vgId, enhetsId, lakareId1, patientId1, false,
                     activeDate.minusDays(20), activeDate.minusDays(15), activeDate.minusDays(20).atStartOfDay()));
         }};
-
-        when(hsaOrganizationsService.getVardenhet(eq(mottagningsId))).thenReturn(createVardenhet(mottagningsId, "mottagning"));
-        when(hsaOrganizationsService.getParentUnit(eq(mottagningsId))).thenReturn(enhetsId);
+        //Koppla mottagningen till enheten
+        when(hsaOrganizationsService.getVardenhet(eq(mottagningsId)))
+                .thenReturn(createVardenhet(enhetsId, "parentunit", createMottagning(mottagningsId, "mottagning", enhetsId)));
 
         when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
         when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId, mottagningsId)).thenReturn(true);
@@ -379,6 +379,30 @@ public class SjukfallServiceTest {
         assertEquals(2, patientResponse.getSjukfallList().size());
         assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
         assertEquals(1, patientResponse.getSjukfallList().get(1).getIntyg().size());
+    }
+
+    @Test(expected = SjukfallServiceException.class)
+    /*
+     * Testet ska visa att om inget intyg är utfärdat på den enhet användarens är inloggad på, så skall fel kastas (see INTYG-7686)
+     */
+    public void testGetByPatient_whenNoIntygInCurrentLogedInUnitThrowsException() throws HsaServiceCallException {
+        List<IntygsData> data = new ArrayList<IntygsData>() {{
+            add(createIntygsData(vgId, mottagningsId, lakareId1, patientId1, false,
+                    activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
+            add(createIntygsData(vgId, enhetsId, lakareId1, patientId1, false,
+                    activeDate.minusDays(20), activeDate.minusDays(15), activeDate.minusDays(20).atStartOfDay()));
+        }};
+        //Koppla mottagningen till enheten
+        when(hsaOrganizationsService.getVardenhet(eq(mottagningsId)))
+                .thenReturn(createVardenhet(enhetsId, "parentunit", createMottagning(mottagningsId, "mottagning", enhetsId)));
+
+        when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
+
+        List<String> vgHsaId = new ArrayList<>();
+        vgHsaId.add(vgId);
+
+        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, "enhetX", lakareId1, patientId1,
+                Urval.ALL, parameters, vgHsaId);
     }
 
     @Test
