@@ -446,11 +446,12 @@
           <br>
           <div class="panel panel-body panel-default">
             <h4>Spärrtjänst Stub Management</h4>
+            <p>Datum anges som åååå-mm-dd</p>
             <input type="text" name="patientId" ng-model="SPT.patientId" size="18"  maxlength="12" placeholder="personnnr (utan -)">
-            <input type="text" name="spt.from" ng-model="SPT.from" size="18" placeholder="from åååå-mm-dd">
-            <input type="text" name="spt.to" ng-model="SPT.to" size="18" placeholder="tom åååå-mm-dd">
-            <input type="text" name="spt.vardgivare" ng-model="SPT.vardgivare" size="18" placeholder="Vårdgivarens HsaId">
-            <input type="text" name="spt.vardenhet" ng-model="SPT.vardenhet" size="18" placeholder="Vårdenhetens HsaId">
+            <input type="text" name="spt.from" ng-model="SPT.from" maxlength="10" size="10" placeholder="from">
+            <input type="text" name="spt.to" ng-model="SPT.to" maxlength="10" size="10" placeholder="tom">
+            <input type="text" name="spt.vardgivare" ng-model="SPT.vardgivare" size="32" placeholder="Vårdgivarens HsaId">
+            <input type="text" name="spt.vardenhet" ng-model="SPT.vardenhet" size="32" placeholder="Vårdenhetens HsaId">
             <div class="btn-group btn-group-sm" role="group">
 
               <button type="button" class="btn btn-small btn-primary"
@@ -490,12 +491,13 @@
           <br>
           <div class="panel panel-body panel-default">
             <h4>Samtycke Stub Management</h4>
+            <p>Datum anges som åååå-mm-dd</p>
             <input type="text" name="patientId" ng-model="SAMTYCKE.patientId" size="18"  maxlength="12" placeholder="personnnr (utan -)">
-            <input type="text" name="samtycke.from" ng-model="SAMTYCKE.from" size="18" placeholder="from åååå-mm-dd">
-            <input type="text" name="samtycke.to" ng-model="SAMTYCKE.to" size="18" placeholder="tom åååå-mm-dd">
-            <input type="text" name="samtycke.vgHsaId" ng-model="SAMTYCKE.vgHsaId" size="18" placeholder="vgHsaId">
-            <input type="text" name="samtycke.veHsaId" ng-model="SAMTYCKE.veHsaId" size="18" placeholder="veHsaId">
-            <input type="text" name="samtycke.veHsaId" ng-model="SAMTYCKE.userHsaId" size="18" placeholder="läkarens hsaId">
+            <input type="text" name="samtycke.from" ng-model="SAMTYCKE.from" maxlength="10" size="10" placeholder="from">
+            <input type="text" name="samtycke.to" ng-model="SAMTYCKE.to" maxlength="10" size="10" placeholder="tom"><br>
+            <input type="text" name="samtycke.vgHsaId" ng-model="SAMTYCKE.vgHsaId" size="32" placeholder="vgHsaId">
+            <input type="text" name="samtycke.veHsaId" ng-model="SAMTYCKE.veHsaId" size="32" placeholder="veHsaId">
+            <input type="text" name="samtycke.veHsaId" ng-model="SAMTYCKE.userHsaId" size="32" placeholder="läkarens hsaId">
             <div class="btn-group btn-group-sm" role="group">
 
               <button type="button" class="btn btn-small btn-primary"
