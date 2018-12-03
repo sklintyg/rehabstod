@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,8 @@ public class ConsentController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConsentController.class);
 
+    public static final int MAX_DAYS_FOR_CONSENT = 365;
+
     @Autowired
     private ConsentService consentService;
 
@@ -73,18 +76,25 @@ public class ConsentController {
         // Get logged in user
         RehabstodUser user = userService.getUser();
 
-        LocalDate today = LocalDate.now();
-
-        // CHECKSTYLE:OFF MagicNumber
-        LocalDateTime consentFrom = today.atStartOfDay();
-        LocalDateTime consentTo = today.plusDays(request.getDays()).atTime(23, 59, 59);
-        // CHECKSTYLE:ON MagicNumber
-
         try {
-            Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
+            LocalDate today = LocalDate.now();
 
+            // CHECKSTYLE:OFF MagicNumber
+            LocalDateTime consentFrom = today.atStartOfDay();
+            LocalDateTime consentTo = today.plusDays(request.getDays()).atTime(23, 59, 59);
+            // CHECKSTYLE:ON MagicNumber
+
+            // Business rule: RS-VR-007
+            // Ett samtycke får inte gälla längre än 1 år framåt i tiden
+            if (consentTo.minusDays(MAX_DAYS_FOR_CONSENT).isAfter(consentFrom)) {
+                return createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(),
+                        "Ett samtycke får inte gälla längre än 1 år framåt i tiden");
+            }
+
+            Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
             if (!personnummer.isPresent()) {
-                throw new RuntimeException("error parsing personnummer");
+                return createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(),
+                        "Felaktigt personnummer");
             }
 
             consentService.giveConsent(personnummer.get(), request.isOnlyCurrentUser(), null,
@@ -92,13 +102,11 @@ public class ConsentController {
 
             response = createResponse(RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId());
 
-            LOG.debug("PDL logging - log registration of consent.");
+            LOG.debug("PDL logging - log registration of consent");
             logRegistrationOfConsent(user, personnummer.get(), ActivityType.CREATE, ResourceType.RESOURCE_TYPE_SAMTYCKE);
 
         } catch (Exception e) {
-            LOG.error("Error giving consent", e);
-            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId());
-            response.setResponseMessage(e.getMessage());
+            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(), e.getMessage());
         }
 
         return response;
@@ -106,10 +114,23 @@ public class ConsentController {
 
     private RegisterExtendedConsentResponse createResponse(RegisterExtendedConsentResponse.ResponseCode responseCode,
                                                            String registeredBy) {
+        return createResponse(responseCode, registeredBy, null);
+    }
+
+    private RegisterExtendedConsentResponse createResponse(RegisterExtendedConsentResponse.ResponseCode responseCode,
+                                                           String registeredBy,
+                                                           String responseMessage) {
+        Preconditions.checkNotNull(responseCode);
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(registeredBy));
 
         RegisterExtendedConsentResponse response = new RegisterExtendedConsentResponse();
         response.setResponseCode(responseCode);
         response.setRegisteredBy(registeredBy);
+
+        if (!Strings.isNullOrEmpty(responseMessage)) {
+            response.setResponseMessage(responseMessage);
+        }
+
         return response;
     }
 

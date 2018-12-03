@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import com.google.common.base.Strings;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,11 +45,13 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -108,6 +111,29 @@ public class ConsentControllerTest {
     }
 
     @Test
+    public void testRegisterExtendedConsent_invalidPersonnummer() {
+        RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest("21121212-1212"));
+
+        assertEquals(LAKARE_ID, response.getRegisteredBy());
+        assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
+        assertTrue(!Strings.isNullOrEmpty(response.getResponseMessage()));
+
+        verifyZeroInteractions(consentServiceMock);
+    }
+
+    @Test
+    public void testRegisterExtendedConsent_invalidConsentBoundary() {
+        RegisterExtendedConsentResponse response = testee.registerConsent(
+                buildRequest(PERSON_ID, ConsentController.MAX_DAYS_FOR_CONSENT));
+
+        assertEquals(LAKARE_ID, response.getRegisteredBy());
+        assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
+        assertTrue(!Strings.isNullOrEmpty(response.getResponseMessage()));
+
+        verifyZeroInteractions(consentServiceMock);
+    }
+
+    @Test
     public void testRegisterExtendedConsent_error() {
         when(consentServiceMock.giveConsent(any(), anyBoolean(), anyString(), any(), any(), any()))
                 .thenThrow(new RuntimeException("error"));
@@ -116,6 +142,8 @@ public class ConsentControllerTest {
 
         assertEquals(LAKARE_ID, response.getRegisteredBy());
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
+        assertTrue(!Strings.isNullOrEmpty(response.getResponseMessage()));
+
         verify(consentServiceMock).giveConsent(any(), anyBoolean(), anyString(), any(), any(), any());
     }
 
@@ -133,9 +161,13 @@ public class ConsentControllerTest {
     }
 
     private RegisterExtendedConsentRequest buildRequest(String personId) {
+        return buildRequest(personId, DAYS);
+    }
+
+    private RegisterExtendedConsentRequest buildRequest(String personId, int days) {
         RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
         request.setPatientId(personId);
-        request.setDays(DAYS);
+        request.setDays(days);
         return request;
     }
 
