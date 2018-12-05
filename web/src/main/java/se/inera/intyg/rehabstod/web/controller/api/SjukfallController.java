@@ -124,8 +124,10 @@ public class SjukfallController {
         // Get user from session
         RehabstodUser user = userService.getUser();
 
-        Optional<Personnummer> personnummerOptional = Personnummer.createPersonnummer(request.getPatientId());
-        Collection<String> vardgivareIds = user.getSjfPatientVardgivareForPatient(personnummerOptional.get().getPersonnummer());
+        Personnummer personnummer = Personnummer.createPersonnummer(request.getPatientId())
+                .orElseThrow(() -> new IllegalArgumentException("Could not parse personnummer: " + request.getPatientId()));
+
+        Collection<String> vardgivareIds = user.getSjfPatientVardgivareForPatient(personnummer.getPersonnummer());
 
         // Fetch sjukfall
         SjukfallPatientResponse response = getSjukfallForPatient(user, request.getPatientId(), request.getAktivtDatum(), vardgivareIds);

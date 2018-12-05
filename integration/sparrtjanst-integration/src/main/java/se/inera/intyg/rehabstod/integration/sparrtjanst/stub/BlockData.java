@@ -18,13 +18,17 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.stub;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
 /**
  * Created by marced on 2018-10-01.
  */
-public class BlockData {
+public class BlockData implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String personId;
     private LocalDate blockFrom;
     private LocalDate blockTo;

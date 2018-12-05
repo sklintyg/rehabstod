@@ -22,12 +22,15 @@ import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.AssertionTypeType;
 import se.riv.informationsecurity.authorization.consent.v2.ScopeType;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * @author Magnus Ekstrand on 2018-10-17.
  */
-public class ConsentData {
+public class ConsentData implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String assertionId;
     private String vardgivareId;

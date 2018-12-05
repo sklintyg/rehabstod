@@ -18,32 +18,85 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.stub;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-
 import com.google.common.base.Strings;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
- * Simple in-memory store for blocks.
+ * Simple embedded redis cache store for blocks.
  * Created by marced on 2018-10-01.
  */
 @Component
 public class SparrtjanstStubStore {
+
     private static final String VE_TSTNMT2321000156_105Q = "TSTNMT2321000156-105Q";
     private static final String VE_CENTRUM_VAST = "centrum-vast";
     private static final String VG1 = "TSTNMT2321000156-105M";
     private static final String VG2 = "vastmanland";
 
-
-    private List<BlockData> repository = new ArrayList<>();
+    // Inject the template as ValueOperations
+    @Resource(name = "rediscache")
+    private ValueOperations<String, BlockData> valueOps;
 
     @PostConstruct
     public void init() {
         generateDefaultData();
+    }
+
+    public void add(BlockData data) {
+        valueOps.setIfAbsent(assembleCacheKey(data), data);
+    }
+
+    public List<BlockData> getAll() {
+        Set<String> keys = valueOps.getOperations().keys(assemblePattern("*"));
+        return valueOps.multiGet(keys);
+    }
+
+    public void remove(String personId) {
+        Set<String> keys = valueOps.getOperations().keys(assemblePattern("*" + personId));
+        valueOps.getOperations().delete(keys);
+    }
+
+    public void removeAll() {
+        Set<String> keys = valueOps.getOperations().keys(assemblePattern("*"));
+        valueOps.getOperations().delete(keys);
+    }
+
+    public List<BlockData> getAllForPerson(String personId) {
+        Set<String> keys = valueOps.getOperations().keys(assemblePattern("*" + personId));
+        return valueOps.multiGet(keys);
+    }
+
+    public boolean isBlockedAtDate(String personId, LocalDate queryDateFrom, LocalDate queryDateTo,
+                                   String vardGivareId, String vardEnhetId) {
+        return getAllForPerson(personId).stream()
+            .filter(blockData -> {
+                boolean isVg = Strings.isNullOrEmpty(blockData.getVardGivareId()) || blockData.getVardGivareId().equals(vardGivareId);
+                boolean isVe = Strings.isNullOrEmpty(blockData.getVardEnhetId()) || blockData.getVardEnhetId().equals(vardEnhetId);
+                return isVg && isVe;
+            })
+            .anyMatch(blockData -> isWithinInterval(blockData, queryDateFrom) || isWithinInterval(blockData, queryDateTo));
+    }
+
+    private String assemblePattern(String pattern) {
+        return SparrtjanstStubConfiguration.CACHE_NAME + pattern;
+    }
+
+    private String assembleCacheKey(BlockData data) {
+        return assembleCacheKey(data.getVardGivareId(), data.getVardEnhetId(), data.getPersonId());
+    }
+
+    private String assembleCacheKey(String vgHsaId, String veHsaId, String patientId) {
+        return Stream.of(SparrtjanstStubConfiguration.CACHE_NAME, vgHsaId, veHsaId, patientId)
+                .collect(Collectors.joining(":"));
     }
 
     // CHECKSTYLE:OFF MagicNumber
@@ -54,35 +107,10 @@ public class SparrtjanstStubStore {
         LocalDate blockFrom = LocalDate.now().minusDays(days);
         LocalDate blockTo = LocalDate.now().plusDays(days);
 
-        repository.add(new BlockData(pnr, blockFrom, blockTo, VG1, VE_TSTNMT2321000156_105Q));
-        repository.add(new BlockData(pnr, blockFrom, blockTo, VG2, VE_CENTRUM_VAST));
+        add(new BlockData(pnr, blockFrom, blockTo, VG1, VE_TSTNMT2321000156_105Q));
+        add(new BlockData(pnr, blockFrom, blockTo, VG2, VE_CENTRUM_VAST));
     }
     // CHECKSTYLE:ON MagicNumber
-
-    public List<BlockData> getAll() {
-        return repository;
-    }
-
-    public void removeAll() {
-        repository.clear();
-    }
-
-    public List<BlockData> getAllForPerson(String personId) {
-        return repository.stream().filter(blockData -> blockData.getPersonId().equals(personId)).collect(Collectors.toList());
-    }
-
-    public boolean isBlockedAtDate(String personId, LocalDate queryDateFrom, LocalDate queryDateTo,
-            String vardGivareId, String vardEnhetId) {
-        return getAllForPerson(personId).stream()
-                .filter(blockData -> {
-                    boolean vardGivare = Strings.isNullOrEmpty(blockData.getVardGivareId())
-                            || blockData.getVardGivareId().equals(vardGivareId);
-                    boolean vardEnhet = Strings.isNullOrEmpty(blockData.getVardEnhetId()) || blockData.getVardEnhetId().equals(vardEnhetId);
-
-                    return vardGivare && vardEnhet;
-                })
-                .anyMatch(blockData -> isWithinInterval(blockData, queryDateFrom) || isWithinInterval(blockData, queryDateTo));
-    }
 
     private boolean isWithinInterval(BlockData blockData, LocalDate queryDate) {
         // Either touches start/end or is in within
@@ -90,11 +118,4 @@ public class SparrtjanstStubStore {
                 || (queryDate.isAfter(blockData.getBlockFrom()) && queryDate.isBefore(blockData.getBlockTo()));
     }
 
-    public void add(BlockData data) {
-        repository.add(data);
-    }
-
-    public void remove(String personId) {
-        repository.removeIf(blockData -> blockData.getPersonId().equals(personId));
-    }
 }
