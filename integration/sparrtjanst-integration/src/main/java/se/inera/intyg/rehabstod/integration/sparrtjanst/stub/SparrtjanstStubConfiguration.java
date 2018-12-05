@@ -16,8 +16,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.config;
+package se.inera.intyg.rehabstod.integration.sparrtjanst.stub;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -26,18 +29,29 @@ import org.springframework.context.annotation.Profile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * Createt by marced on 2018-10-01.
- */
+import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
+
 @Configuration
-@ComponentScan({"se.inera.intyg.rehabstod.integration.sparrtjanst"})
+@ComponentScan("se.inera.intyg.rehabstod.integration.sparrtjanst.stub")
 @ImportResource("classpath:sparrtjanst-stub-context.xml")
-@Profile({"rhs-sparrtjanst-stub"})
+@Profile("rhs-sparrtjanst-stub")
 public class SparrtjanstStubConfiguration {
+
+    public static final String CACHE_NAME = "sparrtjanstStubCache";
+
+    private String cacheExpirySeconds = "3600";
+
+    @Autowired
+    private RedisCacheOptionsSetter redisCacheOptionsSetter;
+
+    @PostConstruct
+    public void init() {
+        redisCacheOptionsSetter.createCache(CACHE_NAME, cacheExpirySeconds);
+    }
+
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
 
 }
-

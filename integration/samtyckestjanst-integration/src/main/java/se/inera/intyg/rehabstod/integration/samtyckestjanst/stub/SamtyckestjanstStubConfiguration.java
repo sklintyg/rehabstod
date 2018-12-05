@@ -19,17 +19,33 @@
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
+import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
+
+import javax.annotation.PostConstruct;
 
 @Configuration
 @ComponentScan("se.inera.intyg.rehabstod.integration.samtyckestjanst.stub")
 @ImportResource("classpath:samtyckestjanst-stub-context.xml")
 @Profile("rhs-samtyckestjanst-stub")
 public class SamtyckestjanstStubConfiguration {
+
+    public static final String CACHE_NAME = "samtyckestjanstStubCache";
+
+    private String cacheExpirySeconds = "3600";
+
+    @Autowired
+    private RedisCacheOptionsSetter redisCacheOptionsSetter;
+
+    @PostConstruct
+    public void init() {
+        redisCacheOptionsSetter.createCache(CACHE_NAME, cacheExpirySeconds);
+    }
 
     @Bean
     public ObjectMapper objectMapper() {

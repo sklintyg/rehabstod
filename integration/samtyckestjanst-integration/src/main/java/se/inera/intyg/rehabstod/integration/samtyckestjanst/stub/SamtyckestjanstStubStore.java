@@ -18,53 +18,62 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
-import com.google.common.base.Strings;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * Simple in-memory store for consents.
+ * Simple embedded redis cache store for consents.
  * Created by Magnus Ekstrand on 2018-10-10.
  */
 @Component
 public class SamtyckestjanstStubStore {
 
-    private Set<ConsentData> repository = new HashSet<>();
+    // Inject the template as ValueOperations
+    @Resource(name = "rediscache")
+    private ValueOperations<String, ConsentData> valueOps;
 
     public void add(ConsentData data) {
-        repository.add(data);
+        valueOps.setIfAbsent(assembleCacheKey(data), data);
     }
 
     public List<ConsentData> getAll() {
-        return repository.stream().collect(Collectors.toList());
-    }
-
-    public List<ConsentData> getConsents(String vgHsaId, String veHsaId, String patientId) {
-        return repository.stream()
-                .filter(consent -> consent.getPatientId().equals(patientId)
-                        && consent.getVardgivareId().equals(vgHsaId)
-                        && consent.getVardenhetId().equals(veHsaId))
-                .collect(Collectors.toList());
+        Set<String> keys = valueOps.getOperations().keys(assemblePattern("*"));
+        return valueOps.multiGet(keys);
     }
 
     public boolean hasConsent(String vgHsaId, String veHsaId, String patientId, LocalDate queryDate) {
-        return getConsents(vgHsaId, veHsaId, patientId).stream()
-                .anyMatch(consent -> isWithinInterval(consent, queryDate));
-    }
-
-    public void removeAll() {
-        repository.clear();
+        ConsentData consentData = valueOps.get(assembleCacheKey(vgHsaId, veHsaId, patientId));
+        return consentData != null && isWithinInterval(consentData, queryDate);
     }
 
     public void remove(String personId) {
-        if (!Strings.isNullOrEmpty(personId)) {
-            repository.removeIf(consent -> consent.getPatientId().equals(personId));
-        }
+        Set<String> keys = valueOps.getOperations().keys(assemblePattern("*" + personId));
+        valueOps.getOperations().delete(keys);
+    }
+
+    public void removeAll() {
+        Set<String> keys = valueOps.getOperations().keys(assemblePattern("*"));
+        valueOps.getOperations().delete(keys);
+    }
+
+    private String assemblePattern(String pattern) {
+        return SamtyckestjanstStubConfiguration.CACHE_NAME + pattern;
+    }
+
+    private String assembleCacheKey(ConsentData data) {
+        return assembleCacheKey(data.getVardgivareId(), data.getVardenhetId(), data.getPatientId());
+    }
+
+    private String assembleCacheKey(String vgHsaId, String veHsaId, String patientId) {
+        return Stream.of(SamtyckestjanstStubConfiguration.CACHE_NAME, vgHsaId, veHsaId, patientId)
+                .collect(Collectors.joining(":"));
     }
 
     private boolean isWithinInterval(ConsentData consent, LocalDate queryDate) {
