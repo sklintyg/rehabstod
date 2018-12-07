@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
@@ -55,6 +57,14 @@ public class SamtyckestjanstStubRestApi {
             @QueryParam("from") String from,
             @QueryParam("to") String to) {
 
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(personId));
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(vgHsaId));
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(veHsaId));
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(userHsaId));
+
+        LocalDateTime consentFrom = Strings.isNullOrEmpty(from) ? LocalDate.now().atStartOfDay() : LocalDate.parse(from).atStartOfDay();
+        LocalDateTime consentTo = Strings.isNullOrEmpty(to) ? null : LocalDate.parse(to).atStartOfDay();
+
         ActorType actorType = new ActorType();
         actorType.setEmployeeId(userHsaId);
 
@@ -69,8 +79,8 @@ public class SamtyckestjanstStubRestApi {
 
         ConsentData consentData = new ConsentData.Builder(assertionId, vgHsaId, veHsaId, pnr.getPersonnummer(), actionType)
                 .employeeId(userHsaId)
-                .consentFrom(LocalDate.parse(from).atStartOfDay())
-                .consentTo(LocalDate.parse(to).atStartOfDay())
+                .consentFrom(consentFrom)
+                .consentTo(consentTo)
                 .build();
 
         store.add(consentData);
@@ -80,6 +90,8 @@ public class SamtyckestjanstStubRestApi {
     @DELETE
     @Path("/consent/{personId}")
     public Response removeConsentForPerson(@PathParam("personId") String personId) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(personId));
+
         Personnummer pnr = parsePersonId(personId);
         store.remove(pnr.getPersonnummer());
         return Response.ok().build();
@@ -100,6 +112,10 @@ public class SamtyckestjanstStubRestApi {
             @QueryParam("vardgivareId") String vgHsaId,
             @QueryParam("vardenhetId") String veHsaId
     ) {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(personId));
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(vgHsaId));
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(veHsaId));
+
         Personnummer pnr = parsePersonId(personId);
         return Response.ok(store.hasConsent(vgHsaId, veHsaId, pnr.getPersonnummer(), LocalDate.now())).build();
     }
@@ -109,7 +125,6 @@ public class SamtyckestjanstStubRestApi {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllConsent() {
         return Response.ok(store.getAll()).build();
-
     }
 
     private Personnummer parsePersonId(String personId) {

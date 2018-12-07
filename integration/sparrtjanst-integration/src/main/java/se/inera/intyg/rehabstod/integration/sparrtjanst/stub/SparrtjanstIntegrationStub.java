@@ -20,14 +20,8 @@ package se.inera.intyg.rehabstod.integration.sparrtjanst.stub;
 
 // CHECKSTYLE:OFF LineLength
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.google.common.base.Joiner;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksType;
@@ -36,6 +30,10 @@ import se.riv.informationsecurity.authorization.blocking.v4.CheckResultType;
 import se.riv.informationsecurity.authorization.blocking.v4.CheckStatusType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultCodeType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultType;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 // CHECKSTYLE:ON LineLength
 

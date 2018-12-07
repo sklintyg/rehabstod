@@ -18,15 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
 import se.inera.intyg.infra.integration.hsa.model.AbstractVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
@@ -36,6 +27,15 @@ import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.service.Urval;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author pebe on 2015-08-11.
@@ -83,6 +83,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
      */
     public RehabstodUser(IntygUser intygUser, boolean pdlConsentGiven, boolean isLakare) {
         super(intygUser.getHsaId());
+
         this.privatLakareAvtalGodkand = intygUser.isPrivatLakareAvtalGodkand();
         this.personId = intygUser.getPersonId();
 
@@ -147,9 +148,6 @@ public class RehabstodUser extends IntygUser implements Serializable {
         return (int) getVardgivare().stream().flatMap(vg -> vg.getHsaIds().stream()).count();
     }
 
-
-
-
     /**
      * If the currently selected vardenhet is not null and is an underenhet/mottagning, this method returns true.
      *
@@ -199,7 +197,6 @@ public class RehabstodUser extends IntygUser implements Serializable {
         if (!sjfPatientVardgivare.containsKey(patientId)) {
             sjfPatientVardgivare.put(patientId, new HashSet<>());
         }
-
         return sjfPatientVardgivare.get(patientId);
     }
 

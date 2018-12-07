@@ -19,6 +19,9 @@
 package se.inera.intyg.rehabstod.integration.sparrtjanst.stub;
 
 import com.google.common.base.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +45,12 @@ public class SparrtjanstStubStore {
     private static final String VG1 = "TSTNMT2321000156-105M";
     private static final String VG2 = "vastmanland";
 
-    // Inject the template as ValueOperations
+    // inject the actual template
+    @Autowired
+    @Qualifier("rediscache")
+    private RedisTemplate<Object, Object> redisTemplate;
+
+    // inject the template as ValueOperations
     @Resource(name = "rediscache")
     private ValueOperations<String, BlockData> valueOps;
 
@@ -52,7 +60,7 @@ public class SparrtjanstStubStore {
     }
 
     public void add(BlockData data) {
-        valueOps.setIfAbsent(assembleCacheKey(data), data);
+        valueOps.set(assembleCacheKey(data), data);
     }
 
     public List<BlockData> getAll() {

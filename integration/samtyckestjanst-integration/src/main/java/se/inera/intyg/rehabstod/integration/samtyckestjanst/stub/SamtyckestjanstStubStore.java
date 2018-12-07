@@ -18,6 +18,9 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
@@ -35,12 +38,17 @@ import java.util.stream.Stream;
 @Component
 public class SamtyckestjanstStubStore {
 
-    // Inject the template as ValueOperations
+    // inject the actual template
+    @Autowired
+    @Qualifier("rediscache")
+    private RedisTemplate<Object, Object> redisTemplate;
+
+    // inject the template as ValueOperations
     @Resource(name = "rediscache")
     private ValueOperations<String, ConsentData> valueOps;
 
     public void add(ConsentData data) {
-        valueOps.setIfAbsent(assembleCacheKey(data), data);
+        valueOps.set(assembleCacheKey(data), data);
     }
 
     public List<ConsentData> getAll() {

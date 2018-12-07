@@ -85,7 +85,6 @@ public abstract class BaseRestIntegrationTest {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.baseURI = System.getProperty("integration.tests.baseUrl", "http://localhost:8790/");
         RestAssured.config = RestAssured.config().sessionConfig(RestAssured.config().getSessionConfig().sessionIdName("SESSION"));
-
     }
 
     /**
@@ -105,6 +104,23 @@ public abstract class BaseRestIntegrationTest {
         }
     }
 
+    protected void selectUnitByHsaId(String unitHsaId) {
+        ChangeSelectedUnitRequest req = new ChangeSelectedUnitRequest(unitHsaId);
+        try {
+            selectUnit(objectMapper.writeValueAsString(req));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void sleep(long milllis) {
+        try {
+            Thread.sleep(milllis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     private String getAuthSession(String credentialsJson) {
         Response response = given().contentType(ContentType.URLENC).and().redirects().follow(false).and()
                 .formParam(USER_JSON_FORM_PARAMETER, credentialsJson).expect()
@@ -113,15 +129,6 @@ public abstract class BaseRestIntegrationTest {
 
         assertNotNull(response.sessionId());
         return response.sessionId();
-    }
-
-    protected void selectUnitByHsaId(String unitHsaId) {
-        ChangeSelectedUnitRequest req = new ChangeSelectedUnitRequest(unitHsaId);
-        try {
-            selectUnit(objectMapper.writeValueAsString(req));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private void selectUnit(String changeUnitAsJson) throws JsonProcessingException {
