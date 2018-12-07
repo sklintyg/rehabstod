@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<md:EntityDescriptor xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" xmlns:ds="http://www.w3.org/2000/09/xmldsig#"  xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"  entityID="https://idp2.acctest.sakerhetstjanst.inera.se:443/idp/saml">
+<md:EntityDescriptor xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" entityID="https://idp2.acctest.sakerhetstjanst.inera.se:443/idp/saml">
   <md:Extensions>
     <mdattr:EntityAttributes>
       <saml:Attribute Name="urn:oasis:names:tc:SAML:attribute:assurance-certification" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri">
@@ -22,32 +22,32 @@
         </ds:X509Data>
       </ds:KeyInfo>
     </md:KeyDescriptor>
-    <md:ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://idp2.acctest.sakerhetstjanst.inera.se:443/idp/saml/artifact/SOAP"  index="1" isDefault="false"/>
+    <md:ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://idp2.acctest.sakerhetstjanst.inera.se:443/idp/saml/artifact/SOAP" index="1" isDefault="false"/>
     <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://idp2.acctest.sakerhetstjanst.inera.se:443/idp/saml/slo/HTTP-POST"/>
     <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://idp2.acctest.sakerhetstjanst.inera.se:443/idp/saml/slo/HTTP-Redirect"/>
     <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
     <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</md:NameIDFormat>
     <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://idp2.acctest.sakerhetstjanst.inera.se:443/idp/saml/sso/HTTP-Redirect"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/employeeHsaId"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="employeeHsaId"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/systemRole"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="systemRole"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/commissionName"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="assignmentName"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/groupPrescriptionCode"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="groupPrescriptionCode"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/healthCareUnitName"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="careUnitName"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/commissionRight"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="commissionRight"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/healthCareUnitHsaId"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="careUnitHsaId"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/healthCareProviderName"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="careProviderName"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/mail"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="mail"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/employeeHsaId" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="employeeHsaId"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/systemRole" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="systemRole"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/commissionName" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="assignmentName"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/groupPrescriptionCode" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="groupPrescriptionCode"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/healthCareUnitName" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="careUnitName"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/commissionRight" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="commissionRight"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/healthCareUnitHsaId" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="careUnitHsaId"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/healthCareProviderName" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="careProviderName"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/mail" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="mail"/>
     <saml:Attribute Name="urn:sambi:names:attribute:levelOfAssurance" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="levelOfAssurance"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/paTitleCode"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="titleCode"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/paTitleCode" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="titleCode"/>
     <saml:Attribute Name="urn:sambi:names:attribute:x509IssuerName" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="x509IssuerName"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/givenName"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="givenName"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/surname"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="middleAndSurname"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/commissionHsaId"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="assignmentHsaId"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/commissionPurpose"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="commissionPurpose"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/healthCareProviderHsaId"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="careProviderHsaId"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/personalIdentityNumber"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="personalIdentityNumber"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/healthcareProfessionalLicense"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="title"/>
-    <saml:Attribute Name="http://sambi.se/attributes/1/personalPrescriptionCode"  NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="personalPrescriptionCode"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/givenName" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="givenName"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/surname" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="middleAndSurname"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/commissionHsaId" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="assignmentHsaId"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/commissionPurpose" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="commissionPurpose"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/healthCareProviderHsaId" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="careProviderHsaId"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/personalIdentityNumber" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="personalIdentityNumber"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/healthcareProfessionalLicense" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="title"/>
+    <saml:Attribute Name="http://sambi.se/attributes/1/personalPrescriptionCode" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="personalPrescriptionCode"/>
     <saml:Attribute Name="urn:sambi:names:attribute:authnMethod" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="authnMethod"/>
   </md:IDPSSODescriptor>
   <md:Organization>

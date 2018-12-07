@@ -11,7 +11,7 @@ export DB_PORT=$DATABASE_PORT
 export ACTIVEMQ_BROKER_USERNAME=${ACTIVEMQ_BROKER_USERNAME:-admin}
 export ACTIVEMQ_BROKER_PASSWORD=${ACTIVEMQ_BROKER_PASSWORD:-admin}
 
-export SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-qa,rhs-security-test,testability-api,caching-enabled,redis-sentinel}
+export SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod,caching-enabled,redis-sentinel}
 
 export CATALINA_OPTS_APPEND="\
 -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE \
