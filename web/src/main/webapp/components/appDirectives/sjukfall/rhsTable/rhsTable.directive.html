@@ -1,54 +1,63 @@
-<div class="rhs-table" st-set-filter="rhsSearchfilter" st-set-sort="rhsSort" st-table="displayedCollection" st-safe-src="model.get()" infinite-scroll="showMoreInTable()" infinite-scroll-container="'.rhs-body'" infinite-scroll-distance="2">
+<div class="rhs-table" st-set-filter="rhsSearchfilter" st-set-sort="rhsSort" st-table="displayedCollection"
+     st-safe-src="model.get()" infinite-scroll="showMoreInTable()" infinite-scroll-container="'.rhs-body'"
+     infinite-scroll-distance="2">
 
-  <rhs-export></rhs-export>
-  <rhs-table-search-connector></rhs-table-search-connector>
-  <rhs-reset-limit on-change="resetLimit()" scroll-element=".rhs-table" padding-top="57"></rhs-reset-limit>
+    <rhs-export></rhs-export>
+    <rhs-table-search-connector></rhs-table-search-connector>
+    <rhs-reset-limit on-change="resetLimit()" scroll-element=".rhs-table" padding-top="57"></rhs-reset-limit>
 
-  <rhs-table-number-of-rows total-rows="model.get().length"></rhs-table-number-of-rows>
+    <rhs-table-number-of-rows total-rows="model.get().length"></rhs-table-number-of-rows>
 
-    <table class="table table-striped" rhs-table-fixed-header="rhs-table-header-fixed-top" data-ng-class="{'show-lakare-column': showLakareColumn}" fixed-header="rhs-table-fixed-header" normal-header="rhs-table-normal-header"  padding-top="46">
-      <thead class="hidden" rhs-table-header id="rhs-table-fixed-header" user="user"></thead>
-      <thead rhs-table-header id="rhs-table-normal-header" user="user"></thead>
-      <tbody id="rhs-table-body">
-        <tr id="sjukfall-row-{{$index}}" ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id" class="rhs-table-row" ng-click="showPatientHistory(row.patient)" ng-class="{'nyligen-avslutad-row' : row.nyligenAvslutat}">
-          <td class="column-number">{{$index + 1}}</td>
-          <td class="column-patient-id" ng-if="filterViewState.get().showPatientId">{{::row.patient.id}}</td>
-          <td class="column-patient-alder">{{::row.patient.alder}} år</td>
-          <td class="column-patient-name" ng-if="filterViewState.get().showPatientId">{{::row.patient.namn}}</td>
-          <td class="column-patient-kon">{{::row.patient.konShow}}</td>
-          <td class="column-diagnos">
-            <span uib-tooltip-html="getToolTip(row.diagnos)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnos.intygsVarde}}</span>
-            <span class="column-diagnos-beskrivning hidden-sm" ng-class="{'anonymous-mode' : !filterViewState.get().showPatientId}" ng-bind-html="row.diagnos.beskrivning"></span>
-            <span ng-repeat="d in row.biDiagnoser track by $index">,
+    <table class="table table-striped" rhs-table-fixed-header="rhs-table-header-fixed-top"
+           data-ng-class="{'show-lakare-column': showLakareColumn}" fixed-header="rhs-table-fixed-header"
+           normal-header="rhs-table-normal-header" padding-top="46">
+        <thead class="hidden" rhs-table-header id="rhs-table-fixed-header" user="user"></thead>
+        <thead rhs-table-header id="rhs-table-normal-header" user="user"></thead>
+        <tbody id="rhs-table-body">
+        <tr id="sjukfall-row-{{$index}}" ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id"
+            class="rhs-table-row" ng-click="showPatientHistory(row.patient)"
+            ng-class="{'nyligen-avslutad-row' : row.nyligenAvslutat}">
+            <td class="column-number">{{$index + 1}}</td>
+            <td class="column-patient-id" ng-if="filterViewState.get().showPatientId">{{::row.patient.id}}</td>
+            <td class="column-patient-alder">{{::row.patient.alder}} år</td>
+            <td class="column-patient-name" ng-if="filterViewState.get().showPatientId">{{::row.patient.namn}}</td>
+            <td class="column-patient-kon">{{::row.patient.konShow}}</td>
+            <td class="column-diagnos">
+                <span uib-tooltip-html="getToolTip(row.diagnos)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnos.intygsVarde}}</span>
+                <span class="column-diagnos-beskrivning hidden-sm"
+                      ng-class="{'anonymous-mode' : !filterViewState.get().showPatientId}"
+                      ng-bind-html="row.diagnos.beskrivning"></span>
+                <span ng-repeat="d in row.biDiagnoser track by $index">,
               <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::d.intygsVarde}}</span>
             </span>
-          </td>
+            </td>
 
-          <td class="column-start start-date">{{::row.start}}</td>
-          <td class="column-slut end-date"><span>{{::row.slut}}</span></td>
-          <td class="column-dagar">{{::row.dagarShow}}</td>
-          <td class="column-antal">{{::row.intyg}}</td>
-          <td class="column-grad" ng-bind-html="::row.gradShow"></td>
-          <td ng-if="hasFeature('SRS')" class="column-risk">
-            <rhs-risk-indicator category="row.riskSignal.riskKategori" description="row.riskSignal.riskDescription"></rhs-risk-indicator>
-          </td>
-          <td ng-if="showLakareColumn">{{::row.lakare.namn}}</td>
+            <td class="column-start start-date">{{::row.start}}</td>
+            <td class="column-slut end-date"><span>{{::row.slut}}</span></td>
+            <td class="column-dagar">{{::row.dagarShow}}</td>
+            <td class="column-antal">{{::row.intyg}}</td>
+            <td class="column-grad" ng-bind-html="::row.gradShow"></td>
+            <td ng-if="hasFeature('SRS')" class="column-risk">
+                <rhs-risk-indicator category="row.riskSignal.riskKategori"
+                                    description="row.riskSignal.riskDescription"></rhs-risk-indicator>
+            </td>
+            <td ng-if="showLakareColumn">{{::row.lakare.namn}}</td>
         </tr>
 
-      </tbody>
+        </tbody>
     </table>
 
-  <div ng-if="!displayedCollection.length" class="rhs-table-no-result">
+    <div ng-if="!displayedCollection.length" class="rhs-table-no-result">
     <span ng-if="!model.get().length && !model.hasError()">
-      <span ng-if="user.isLakare" message key="label.table.no-result.lakare"></span>
-      <span ng-if="!user.isLakare" message key="label.table.no-result.rehab"></span>
+        <span ng-if="user.isLakare"><span message key="label.table.no-result.lakare"></span><span>{{ user.valdVardenhet.namn }}</span></span>
+        <span ng-if="!user.isLakare"><span message key="label.table.no-result.rehab"></span><span>{{ user.valdVardenhet.namn }}</span></span>
     </span>
-    <span ng-if="model.get().length">
+        <span ng-if="model.get().length">
       {{::'label.table.no-filter-result' | message}}
     </span>
-    <span ng-if="model.hasError()">
+        <span ng-if="model.hasError()">
       {{::'server.error.getsjukfall.title' | message}}
     </span>
 
-  </div>
+    </div>
 </div>
