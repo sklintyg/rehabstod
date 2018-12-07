@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import org.junit.Test;
-
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
+import org.junit.After;
+import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -40,6 +40,11 @@ public class SjfIT extends BaseRestIntegrationTest {
     private static final String JSONSCHEMA_PATIENT = "jsonschema/rhs-sjukfallpatient-response-schema.json";
     private static final String JSONSCHEMA_CONSENT = "jsonschema/rhs-registerextendedconsent-response-schema.json";
 
+    @After
+    public void cleanup() {
+        sleep(200);
+    }
+
     @Test
     public void testGetSjukfallByPatient() {
         String patientId = "20121212-1212";
@@ -48,30 +53,20 @@ public class SjfIT extends BaseRestIntegrationTest {
 
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
 
-        GetSjukfallRequest request = new GetSjukfallRequest();
-        request.setPatientId(patientId);
+        // reset samtycke
+        given().contentType(ContentType.JSON)
+                .expect().statusCode(OK)
+                .when().delete("services/api/stub/samtyckestjanst-api/consent");
 
         // reset samtycke
         given().contentType(ContentType.JSON)
                 .expect().statusCode(OK)
                 .when().delete("services/api/stub/samtyckestjanst-api/consent");
 
-
-        // Kollar att inget samtycke finns
-        given().contentType(ContentType.JSON).and().body(request)
-                .expect().statusCode(OK)
-                .when().post(API_ENDPOINT_PATIENT).then()
-                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
-                .body("sjfMetaData.samtyckeFinns", equalTo(false))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
-                .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOther + "' }.includedInSjukfall",
-                        equalTo(false))
-                .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOwn + "' }.includedInSjukfall",
-                        equalTo(false));
-
+        GetSjukfallRequest request = new GetSjukfallRequest();
+        request.setPatientId(patientId);
 
         // Registerar samtycke
-
         RegisterExtendedConsentRequest consentRequest = new RegisterExtendedConsentRequest();
         consentRequest.setDays(1);
         consentRequest.setPatientId(patientId);
@@ -81,7 +76,6 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().post(API_ENDPOINT_CONSENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_CONSENT))
                 .body("responseCode", equalTo("OK"));
-
 
         // Kollar att samtycke finns
         given().contentType(ContentType.JSON).and().body(request)
@@ -104,7 +98,6 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .expect().statusCode(OK)
                 .when().post(API_ENDPOINT_INCLUDE_VG);
 
-
         // Kollar att vårdgivaren kommer med
         given().contentType(ContentType.JSON).and().body(request)
                 .expect().statusCode(OK)
@@ -116,7 +109,6 @@ public class SjfIT extends BaseRestIntegrationTest {
                         equalTo(true))
                 .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOwn + "' }.includedInSjukfall",
                         equalTo(false));
-
 
     }
 }

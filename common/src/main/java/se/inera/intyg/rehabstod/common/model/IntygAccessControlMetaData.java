@@ -44,7 +44,6 @@ public class IntygAccessControlMetaData {
         this.inomVardgivare = inomVardgivare;
         this.inomVardenhet = inomVardenhet;
         this.includeBasedOnSamtycke = includeBasedOnSamtycke;
-
         this.kraverSamtycke = !inomVardgivare;
     }
 

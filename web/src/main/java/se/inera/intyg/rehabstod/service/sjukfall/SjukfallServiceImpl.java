@@ -18,20 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
@@ -61,6 +53,12 @@ import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -136,12 +134,12 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     @Override
     @PrometheusTimeMethod
-    public SjukfallPatientResponse getByPatient(String currentVardgivarHsaId, String enhetsId, String lakareId,
+    public SjukfallPatientResponse getByPatient(String currentVardgivarId, String enhetsId, String lakareId,
                                                 String patientId, Urval urval, IntygParametrar parameters,
                                                 Collection<String> vgHsaIds) {
 
         FilteredSjukFallByPatientResult result =
-                getFilteredSjukfallByPatient(currentVardgivarHsaId, enhetsId, lakareId, patientId, urval, parameters, vgHsaIds);
+                getFilteredSjukfallByPatient(currentVardgivarId, enhetsId, lakareId, patientId, urval, parameters, vgHsaIds);
 
         final List<SjukfallPatient> rehabstodSjukfall = result.getRehabstodSjukfall();
 
@@ -222,12 +220,12 @@ public class SjukfallServiceImpl implements SjukfallService {
         return rehabstodSjukfall;
     }
 
-    private FilteredSjukFallByPatientResult getFilteredSjukfallByPatient(String currentVardgivareId, String currentVardenhetId,
+    private FilteredSjukFallByPatientResult getFilteredSjukfallByPatient(String vardgivareId, String enhetsId,
                                                                          String lakareId, String patientId, Urval urval,
                                                                          IntygParametrar parameters, Collection<String> vgHsaIds) {
 
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardgivareId), "currentVardgivareId may not be null or empty");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardenhetId), "currentVardenhetId may not be null or empty");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(vardgivareId), "vardgivareId may not be null or empty");
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(enhetsId), "enhetsId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(lakareId), "lakareId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
         Preconditions.checkArgument(urval != null, "urval may not be null");
@@ -236,7 +234,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         Map<String, IntygAccessControlMetaData> intygAccessMetaData = new HashMap<>();
 
         LOG.debug("Calling HSA - fetching information about the current care unit.");
-        Vardenhet currentVardenhet = hsaOrganizationsService.getVardenhet(currentVardenhetId);
+        Vardenhet currentVardenhet = hsaOrganizationsService.getVardenhet(enhetsId);
 
         LOG.debug("Calling Intygstjänsten - fetching certificate information about patient.");
         List<IntygsData> intygsData =
@@ -253,7 +251,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         // Create initial map linked to each intyg by intygsId
         data.forEach(intygData -> intygAccessMetaData.put(intygData.getIntygId(),
                 new IntygAccessControlMetaData(intygData,
-                        currentVardgivareId.equals(intygData.getVardgivareId()),
+                        vardgivareId.equals(intygData.getVardgivareId()),
                         isIntygIssuedOnEnhetOrMottagning(currentVardenhet, intygData.getVardenhetId()),
                         vgHsaIds.contains(intygData.getVardgivareId()))));
 
@@ -262,8 +260,9 @@ public class SjukfallServiceImpl implements SjukfallService {
                 && intygAccessMetaData.entrySet().stream().noneMatch(intyg -> intyg.getValue().isInomVardenhet())) {
             throw new SjukfallServiceException("At least one intyg must be issued on current unit!");
         }
+
         // Decorate intygAccessMetaData with "spärr" info
-        sparrtjanstIntegrationService.decorateWithBlockStatus(currentVardgivareId, currentVardenhetId,
+        sparrtjanstIntegrationService.decorateWithBlockStatus(vardgivareId, enhetsId,
                 lakareId, patientId, intygAccessMetaData, data);
 
         // Make an initial calculation using _all_ available intyg...
@@ -271,10 +270,9 @@ public class SjukfallServiceImpl implements SjukfallService {
         // ... and check which intyg is contributing to the aktive sjukfall
         updateAccessMetaDataWithContributingStatus(sjukfallList, intygAccessMetaData, parameters);
 
-        // Make a call to the check for consent service
-        // Decorate intygAccessMetaData with the consent info
+        // Make a call to consent service to see if there is a consent registered
         boolean haveConsent = samtyckestjanstIntegrationService.checkForConsent(patientId, lakareId,
-                currentVardgivareId, currentVardenhetId);
+                vardgivareId, enhetsId);
 
         // skapa listorna med vilka vårdgivare som har intyg som SKULLE funnits i aktivt sjukfall
         // men som inte kommer med pga spärr inre/yttrespärr.
@@ -286,7 +284,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
         List<SjukfallPatient> rehabstodSjukfall = sjukfallList.stream()
-                .map(o -> sjukfallEngineMapper.map(o, currentVardgivareId, currentVardenhetId))
+                .map(o -> sjukfallEngineMapper.map(o, vardgivareId, enhetsId))
                 .collect(Collectors.toList());
 
         return new FilteredSjukFallByPatientResult(rehabstodSjukfall, sjfMetaData);
@@ -296,7 +294,6 @@ public class SjukfallServiceImpl implements SjukfallService {
         data.stream().forEach(
                 intygData -> intygData.setVardgivareNamn(getVardgivarNamn(intygData.getVardgivareId())));
     }
-
 
     private String getVardgivarNamn(String vardgivareId) {
         try {

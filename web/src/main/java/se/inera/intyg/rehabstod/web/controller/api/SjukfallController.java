@@ -260,7 +260,6 @@ public class SjukfallController {
             }
 
             user.addSjfPatientVardgivare(personnummer.get().getPersonnummer(), request.getVardgivareId());
-
             return ResponseEntity.ok(user.getSjfPatientVardgivare().get(personnummer.get().getPersonnummer()));
 
         } catch (Exception e) {
@@ -321,8 +320,8 @@ public class SjukfallController {
     private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, String patientId, LocalDate date,
                                                           Collection<String> vgHsaId) {
 
+        String currentVardgivarId = user.getValdVardgivare().getId();
         String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-        String currentVardgivarHsaId = user.getValdVardgivare().getId();
         String lakareId = user.getHsaId();
         Urval urval = user.getUrval();
 
@@ -330,7 +329,7 @@ public class SjukfallController {
                 ControllerUtil.getMaxGlapp(user), ControllerUtil.getMaxDagarSedanSjukfallAvslut(user), date);
 
         LOG.debug("Calling the 'sjukfall' service to get a list of detailed 'sjukfall' for one patient.");
-        return sjukfallService.getByPatient(currentVardgivarHsaId, enhetsId, lakareId, patientId, urval, parameters, vgHsaId);
+        return sjukfallService.getByPatient(currentVardgivarId, enhetsId, lakareId, patientId, urval, parameters, vgHsaId);
     }
 
     private void logSjukfallData(RehabstodUser user, List<SjukfallEnhet> sjukfallList,

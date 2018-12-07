@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import org.junit.After;
 import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
@@ -49,6 +50,11 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
     // Use Tolvan Tolvansson since he exist in the stubbed data.
     private static final String PNR_TOLVAN_TOLVANSSON = "19121212-1212";
+
+    @After
+    public void cleanup() {
+        sleep(200);
+    }
 
     @Test
     public void testRegisterConsent() {
