@@ -1,20 +1,20 @@
 [
   {
     "key": "ineraNationellKundservice",
-    "url": "http://www.inera.se/felanmalan",
+    "url": "https://www.inera.se/felanmalan",
     "text": "Ineras kundservice",
     "target": "_blank"
   },
   {
     "key": "ineraNationellKundserviceFelanmalan",
-    "url": "http://www.inera.se/felanmalan",
+    "url": "https://www.inera.se/felanmalan",
     "text": "Kontaktinformation till Kundservice",
     "target": "_blank"
   },
   {
     "key": "ptsCookies",
     "url": "https://pts.se/sv/privat/internet/integritet/kakor-cookies/",
-    "text": "Kommunikationsmyndigheten PTS sida om kakor",
+    "text": "Post- och telestyrelsens webbplats.",
     "target": "_blank"
   },
   {
