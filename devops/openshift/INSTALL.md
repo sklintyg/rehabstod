@@ -1,7 +1,7 @@
 
 # OPENSHIFT INSTALLATION GUIDE
 
-Installation of web application rehabstod on openshift.
+Installation of Web application rehabstod on openshift.
 
 ## 1 Pre-Installation Requirements
 
@@ -25,15 +25,15 @@ Provided elsewhere:
 
 For all backing services their actual addresses and user accounts have to be known prior to start the installation procedure.  
 
-### 1.3 Integration / Firewall
+### 1.2 Integration / Firewall
 
 Rehabstöd communicates in/out with the Inera Service Platform and thus needs firewall rules for that access.
 
-### 1.4 Certificates
+### 1.3 Certificates
 
 Rehabstöd needs certificates, keystores and truststores for communicating over Tjänsteplattformen. The operations provider is responsible for installing these certificates in the appropriate OpenShift "secret", see detailed instructions in the OpenShift section.
 
-### 1.5 Message Queues
+### 1.4 Message Queues
 
 Two queues needs are required and depending on permissions those may be implicitly created by the application. The `<env>` placeholder shall be substituted with the actual name of the environment such as `stage` or `prod`.
 
@@ -75,7 +75,7 @@ To run database migration tool:
 
 1. All Pre-Installation Requirements are fulfilled, se above
 2. Check if a database migration is required
-3. Ensure that the env secret and secret-envvar are up to date
+3. Ensure that the secrets env, certifikat and secret-envvar are up to date
 4. Ensure that the configmap and configmap-envvar are up to date
 5. Check that deployment works as expected 
 6. Fine-tune memory settings for container and java process
@@ -151,32 +151,40 @@ Open _&lt;env>/secret-vars.yaml_ and replace `<value>` with expected values:
 
 Open _&lt;env>/configmap-vars.yaml_ and replace `<value>` with expected values. You may also need to update name of keystore/truststore files as well as their type (JKS or PKCS12)
 
+    WEBCERT_VIEW_URLTEMPLATE: <value>
     REDIS_HOST: <value>
     REDIS_PORT: <value>
     REDIS_SENTINEL_MASTER_NAME: <value>
-    BROKER_AMQ_TCP_PORT: tcp://<value>:<value>
+    ACTIVEMQ_BROKER_URL: "tcp://<value>:<value>"
+    PDL_LOGGING_QUEUE_NAME: <value>
+    AGGREGATED_PDL_LOGGING_QUEUE_NAME: <value>
+    DATABASE_PORT: "3306"
+    DATABASE_SERVER: <value>
     NTJP_WS_CERTIFICATE_TYPE: <value>
     NTJP_WS_TRUSTSTORE_TYPE: <value>
-    SAKERHETSTJANST_SAML_IDP_METADATA_URL: https://idp2.acctest.sakerhetstjanst.inera.se:443/idp/saml
+    SAKERHETSTJANST_SAML_IDP_METADATA_URL: "https://idp2.acctest.sakerhetstjanst.inera.se:443/idp/saml"
     SAKERHETSTJANST_SAML_KEYSTORE_ALIAS: <value>
-    SAKERHETSTJANST_SAML_KEYSTORE_FILE: file://${CERTIFICATE_FOLDER}/<value>
-    SAKERHETSTJANST_SAML_TRUSTSTORE_FILE: file://${CERTIFICATE_FOLDER}/<value>
-    NTJP_WS_CERTIFICATE_FILE: ${CERTIFICATE_FOLDER}/<value>
-    NTJP_WS_TRUSTSTORE_FILE: ${CERTIFICATE_FOLDER}/<value>
+    SAKERHETSTJANST_SAML_KEYSTORE_FILE: "file://${certificate.folder}/<value>"
+    SAKERHETSTJANST_SAML_TRUSTSTORE_FILE: "file://${certificate.folder}/<value>"
+    NTJP_WS_CERTIFICATE_FILE: "${certificate.folder}/<value>"
+    NTJP_WS_TRUSTSTORE_FILE: "${certificate.folder}/<value>"
+    IT_WS_CERTIFICATE_FILE: <value>
+    IT_WS_TRUSTSTORE_TYPE: [ "JKS" | "PKCS12" ]
    
-Note: Other properties might be used to define a `<value>`. As an example is the path to certificates indicated by the `CERTIFICATE_FOLDER` property and the truststore file might be defined like:
+Note: Other properties might be used to define a `<value>`. As an example is the path to certificates indicated by the `certificate.folder` property and the truststore file might be defined like:
  
-	NTJP_WS_TRUSTSTORE_FILE: ${CERTIFICATE_FOLDER}/truststore.jks
+	NTJP_WS_TRUSTSTORE_FILE: "${certificate.folder}/truststore.jks"
     
         
 The _&lt;env>/config/recipients.json_ file may need to be updated with any new intyg recipients.
     
 ##### 2.4.1 Redis Sentinel Configuration
 
-Redis sentinel needs at least three URL:s passed in order to work correctly. These are specified in the _redis.host_ and _redis.port_ properties respectively:
+Redis sentinel needs at least three URL:s passed in order to work correctly. These are specified in the `REDIS_HOST` and `REDIS_PORT` variables respectively:
 
-    redis.host=host1;host2;host3
-    redis.port=26379;26379;26379
+    REDIS_HOST: "host1;host2;host3"
+    REDIS_PORT: "26379;26379;26379"
+    REDIS_SENTINEL_MASTER_NAME: "master"
     
 ### 2.5 Prepare Certificates
 
@@ -213,14 +221,14 @@ If this hasn't been done previously, you may **temporarily** copy keystores into
 ### 2.7 Deploy
 We're all set for deploying the application. As stated in the pre-reqs, the "deploytemplate-webapp" must be installed in the OpenShift project.
 
-**NOTE 1** You need to reference the correct docker image from the Nexus!! You must replace \<replaceme\> with a correct path to the image to deploy!!
+**NOTE 1** You need to reference the correct docker image from the Nexus!!
 
 **NOTE 2** Please specify the `DATABASE_NAME` actual MySQL database. Default is **rehabstod**.
 
 Run the following command to create a deployment:
 
     > oc process deploytemplate-webapp \
-        -p APP_NAME=rehabstod-<env> \
+        -p APP_NAME=rehabstod[-<env>] \
         -p IMAGE=docker.drift.inera.se/intyg/rehabstod-test:<version> \
         -p STAGE=<env> 
         -p DATABASE_NAME=<value> \
@@ -230,7 +238,7 @@ Run the following command to create a deployment:
         
 Alternatively, it's possible to use the deploytemplate-webapp file locally:
 
-    > oc process -f deploytemplate-webapp.yaml -p APP_NAME=rehabstod-<env> ...
+    > oc process -f deploytemplate-webapp.yaml -p APP_NAME=rehabstod[-<env>] ...
 
 ### 2.8 Verify
 The pod(s) running rehabstod should become available within a few minutes use **oc** or Web Console to checkout the logs for progress:
@@ -238,6 +246,6 @@ The pod(s) running rehabstod should become available within a few minutes use **
 	> oc logs dc/rehabstod-<env>
 
 ### 2.9 Routes
-Rehabstöd should _only_ be accessible from inside of the OpenShift project using its _service_ name (e.g. http://rehabstod-&lt;env>:8080) and from Nationella tjänsteplattformen. E.g. take care when setting up an OpenShift route so the intygsyjanst servcie isn't publicly addressable from the Internet.
+Rehabstöd should _only_ be accessible from inside of the OpenShift project using its _service_ name (e.g. http://rehabstod[-&lt;env>]:8080) and from Nationella tjänsteplattformen. E.g. take care when setting up an OpenShift route so the intygsyjanst servcie isn't publicly addressable from the Internet.
 
 The security measures based on mutual TLS and PKI should nevertheless stop any attempts from unsolicited callers.
