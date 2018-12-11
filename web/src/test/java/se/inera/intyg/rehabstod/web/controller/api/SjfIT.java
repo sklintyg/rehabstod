@@ -18,10 +18,11 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
 import org.junit.After;
 import org.junit.Test;
+
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
@@ -76,6 +77,8 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().post(API_ENDPOINT_CONSENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_CONSENT))
                 .body("responseCode", equalTo("OK"));
+
+        sleep(200);
 
         // Kollar att samtycke finns
         given().contentType(ContentType.JSON).and().body(request)
