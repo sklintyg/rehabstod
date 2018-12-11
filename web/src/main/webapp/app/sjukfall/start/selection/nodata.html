@@ -6,8 +6,8 @@
 
 
   <div class="alert alert-info">
-    <span ng-if="user.isLakare" message key="label.stat.nosjukfall.lakare"></span>
-    <span ng-if="!user.isLakare" message key="label.stat.nosjukfall.rehab"></span>
+    <span ng-if="user.isLakare" message key="label.stat.nosjukfall.lakare" param="user.valdVardenhet.namn"></span>
+    <span ng-if="!user.isLakare" message key="label.stat.nosjukfall.rehab" param="user.valdVardenhet.namn"></span>
   </div>
 
 </div>
