@@ -82,7 +82,7 @@ public class HeaderEventHandler extends PdfPageEventHelper {
         Phrase printedBy = new Phrase("", PdfExportConstants.TABLE_CELL_NORMAL);
         printedBy.add(new Chunk("Utskrift av " + userName));
         printedBy.add(Chunk.NEWLINE);
-        printedBy.add(new Chunk(enhetsNamn));
+        printedBy.add(new Chunk("Rehabstöd - " + enhetsNamn));
         printedBy.add(Chunk.NEWLINE);
         printedBy.add(new Chunk(YearMonthDateFormatter.print(now)));
         printedBy.add(new Chunk(" - "));
