@@ -18,20 +18,21 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.stub;
 
-import com.google.common.base.Strings;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import com.google.common.base.Strings;
 
 /**
  * Simple embedded redis cache store for blocks.
@@ -47,11 +48,11 @@ public class SparrtjanstStubStore {
 
     // inject the actual template
     @Autowired
-    @Qualifier("rediscache")
+    @Qualifier("SparrtjanstRediscacheTemplate")
     private RedisTemplate<Object, Object> redisTemplate;
 
     // inject the template as ValueOperations
-    @Resource(name = "rediscache")
+    @Resource(name = "SparrtjanstRediscacheTemplate")
     private ValueOperations<String, BlockData> valueOps;
 
     @PostConstruct

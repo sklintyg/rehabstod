@@ -200,8 +200,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         timeSimulator = LocalDateTime.now();
         for (int intygsIndex = 0; intygsIndex < intygPerPatient; intygsIndex++) {
 
-            intygsDataList.add(buildIntygsData(patient, hosPerson));
-            // Add random nr of days glapp between intyg
+            intygsDataList.add(buildFixedIntygsData(patient, hosPerson));
             timeSimulator = LocalDateTime.now().minusDays(20L * (intygsIndex + 1L));
         }
     }
@@ -227,6 +226,16 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private int getAge(Patient patient) {
         int yearBorn = Integer.parseInt(patient.getPersonId().getExtension().substring(0, 4));
         return LocalDate.now().getYear() - yearBorn;
+    }
+
+    private IntygsData buildFixedIntygsData(Patient patient, HosPersonal hosPerson) {
+        IntygsData intygsData = buildIntygsData(patient, hosPerson);
+
+        Arbetsformaga arbetsformaga = new Arbetsformaga();
+        arbetsformaga.getFormaga().addAll(getSjukskrivningsPerioder());
+        intygsData.setArbetsformaga(arbetsformaga);
+
+        return intygsData;
     }
 
     private IntygsData buildIntygsData(Patient patient, HosPersonal hosPerson) {
@@ -255,6 +264,19 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         intygsData.setArbetsformaga(arbetsformaga);
 
         return intygsData;
+    }
+
+    private List<Formaga> getSjukskrivningsPerioder() {
+        List<Formaga> sjukskrivningsgradList = new ArrayList<>();
+
+        // Add 1 .. 4 perioder
+        int antalPerioder = 2;
+
+        for (int i = 0; i < antalPerioder; i++) {
+            int periodLength = 8;
+            sjukskrivningsgradList.add(buildSjukskrivningsGrad(getNextSjukskrivningsgrad(), periodLength));
+        }
+        return sjukskrivningsgradList;
     }
 
     private List<Formaga> getRandomSjukskrivningsPerioder() {
