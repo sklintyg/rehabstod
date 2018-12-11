@@ -18,16 +18,20 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
-import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import javax.annotation.PostConstruct;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 
 @Configuration
 @ComponentScan("se.inera.intyg.rehabstod.integration.samtyckestjanst.stub")
@@ -42,6 +46,9 @@ public class SamtyckestjanstStubConfiguration {
     @Autowired
     private RedisCacheOptionsSetter redisCacheOptionsSetter;
 
+    @Autowired
+    private JedisConnectionFactory jedisConnectionFactory;
+
     @PostConstruct
     public void init() {
         redisCacheOptionsSetter.createCache(CACHE_NAME, cacheExpirySeconds);
@@ -50,6 +57,14 @@ public class SamtyckestjanstStubConfiguration {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
+    }
+
+    @Bean(name = "SamtyckeRediscacheTemplate")
+    RedisTemplate<Object, Object> redisTemplate() {
+        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(jedisConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        return redisTemplate;
     }
 
 }

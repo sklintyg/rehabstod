@@ -18,18 +18,18 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.stereotype.Component;
 
 /**
  * Simple embedded redis cache store for consents.
@@ -40,11 +40,11 @@ public class SamtyckestjanstStubStore {
 
     // inject the actual template
     @Autowired
-    @Qualifier("rediscache")
+    @Qualifier("SamtyckeRediscacheTemplate")
     private RedisTemplate<Object, Object> redisTemplate;
 
     // inject the template as ValueOperations
-    @Resource(name = "rediscache")
+    @Resource(name = "SamtyckeRediscacheTemplate")
     private ValueOperations<String, ConsentData> valueOps;
 
     public void add(ConsentData data) {
