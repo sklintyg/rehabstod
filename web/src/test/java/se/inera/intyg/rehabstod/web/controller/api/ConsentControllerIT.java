@@ -19,19 +19,20 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 
+import java.util.Map;
+
+import org.junit.After;
+import org.junit.Test;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import org.junit.After;
-import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.schemas.contract.Personnummer;
-
-import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -39,6 +40,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static se.inera.intyg.rehabstod.web.controller.api.ConsentController.MAX_DAYS_FOR_CONSENT;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-28.
@@ -140,6 +142,31 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
         request.setDays(30);
 
         Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)
+                .when().post(API_ENDPOINT)
+                .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
+                .extract().response();
+
+        assertNotNull(response);
+
+        RegisterExtendedConsentResponse result = response.body().as(RegisterExtendedConsentResponse.class);
+        assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, result.getResponseCode());
+        assertTrue(!Strings.isNullOrEmpty(result.getResponseMessage()));
+    }
+
+    @Test
+    public void testRegisterConsentMoreThanMaxDays() {
+        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
+        given().contentType(ContentType.JSON).expect().statusCode(OK).when().delete(API_ENDPOINT_STUB);
+
+        // 1. Register a consent
+        RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
+        request.setPatientId(PNR_TOLVAN_TOLVANSSON);
+        request.setDays(MAX_DAYS_FOR_CONSENT + 1);
+
+        Response response;
+
+        response = given().contentType(ContentType.JSON).and().body(request)
+                .expect().statusCode(OK)
                 .when().post(API_ENDPOINT)
                 .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
                 .extract().response();

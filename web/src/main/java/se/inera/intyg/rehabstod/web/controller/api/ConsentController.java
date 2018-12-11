@@ -18,8 +18,10 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -38,10 +43,6 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.schemas.contract.Personnummer;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/consent")
@@ -86,7 +87,7 @@ public class ConsentController {
 
             // Business rule: RS-VR-007
             // Ett samtycke får inte gälla längre än 1 år framåt i tiden
-            if (consentTo.minusDays(MAX_DAYS_FOR_CONSENT).isAfter(consentFrom)) {
+            if (request.getDays() > MAX_DAYS_FOR_CONSENT) {
                 return createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(),
                         "Ett samtycke får inte gälla längre än 1 år framåt i tiden");
             }
