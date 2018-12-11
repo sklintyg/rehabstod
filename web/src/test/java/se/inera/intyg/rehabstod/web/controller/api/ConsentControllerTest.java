@@ -18,7 +18,10 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import com.google.common.base.Strings;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,6 +30,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import com.google.common.base.Strings;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
@@ -39,10 +44,6 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.schemas.contract.Personnummer;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -111,6 +112,28 @@ public class ConsentControllerTest {
     }
 
     @Test
+    public void testRegisterExtendedConsentMaxDays() {
+        LocalDateTime result = LocalDateTime.now();
+
+        when(consentServiceMock.giveConsent(any(), anyBoolean(), anyString(), any(), any(), any()))
+                .thenReturn(result);
+
+        RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest(PERSON_ID, ConsentController.MAX_DAYS_FOR_CONSENT));
+
+        LocalDateTime consentFrom = LocalDate.now().atStartOfDay();
+        LocalDateTime consentTo = LocalDate.now().plusDays(ConsentController.MAX_DAYS_FOR_CONSENT).atTime(23, 59, 59);
+
+        assertEquals(LAKARE_ID, response.getRegisteredBy());
+        assertEquals(RegisterExtendedConsentResponse.ResponseCode.OK, response.getResponseCode());
+
+        Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
+
+        verify(consentServiceMock).giveConsent(eq(personnummer.get()), eq(false),
+                eq(null), eq(consentFrom), eq(consentTo), any(RehabstodUser.class));
+        verify(logServiceMock).logConsent(eq(personnummer.get()), eq(ActivityType.CREATE), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
+    }
+
+    @Test
     public void testRegisterExtendedConsent_invalidPersonnummer() {
         RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest("21121212-1212"));
 
@@ -124,7 +147,7 @@ public class ConsentControllerTest {
     @Test
     public void testRegisterExtendedConsent_invalidConsentBoundary() {
         RegisterExtendedConsentResponse response = testee.registerConsent(
-                buildRequest(PERSON_ID, ConsentController.MAX_DAYS_FOR_CONSENT));
+                buildRequest(PERSON_ID, ConsentController.MAX_DAYS_FOR_CONSENT + 1));
 
         assertEquals(LAKARE_ID, response.getRegisteredBy());
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
