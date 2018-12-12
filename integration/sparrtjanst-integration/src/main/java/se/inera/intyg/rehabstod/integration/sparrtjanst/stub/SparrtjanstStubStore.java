@@ -48,11 +48,11 @@ public class SparrtjanstStubStore {
 
     // inject the actual template
     @Autowired
-    @Qualifier("SparrtjanstRediscacheTemplate")
+    @Qualifier("rediscache")
     private RedisTemplate<Object, Object> redisTemplate;
 
     // inject the template as ValueOperations
-    @Resource(name = "SparrtjanstRediscacheTemplate")
+    @Resource(name = "rediscache")
     private ValueOperations<String, BlockData> valueOps;
 
     @PostConstruct
