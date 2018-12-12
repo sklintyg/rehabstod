@@ -26,9 +26,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
@@ -46,9 +43,6 @@ public class SparrtjanstStubConfiguration {
     @Autowired
     private RedisCacheOptionsSetter redisCacheOptionsSetter;
 
-    @Autowired
-    private JedisConnectionFactory jedisConnectionFactory;
-
     @PostConstruct
     public void init() {
         redisCacheOptionsSetter.createCache(CACHE_NAME, cacheExpirySeconds);
@@ -57,14 +51,6 @@ public class SparrtjanstStubConfiguration {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
-    }
-
-    @Bean(name = "SparrtjanstRediscacheTemplate")
-    RedisTemplate<Object, Object> redisTemplate() {
-        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(jedisConnectionFactory);
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        return redisTemplate;
     }
 
 }

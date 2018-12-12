@@ -40,11 +40,11 @@ public class SamtyckestjanstStubStore {
 
     // inject the actual template
     @Autowired
-    @Qualifier("SamtyckeRediscacheTemplate")
+    @Qualifier("rediscache")
     private RedisTemplate<Object, Object> redisTemplate;
 
     // inject the template as ValueOperations
-    @Resource(name = "SamtyckeRediscacheTemplate")
+    @Resource(name = "rediscache")
     private ValueOperations<String, ConsentData> valueOps;
 
     public void add(ConsentData data) {
