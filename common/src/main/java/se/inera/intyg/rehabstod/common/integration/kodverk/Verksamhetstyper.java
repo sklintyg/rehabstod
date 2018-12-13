@@ -37,7 +37,7 @@ public final class Verksamhetstyper {
     }
 
     static {
-        Map<String, String> map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         map.put("10", "Barn- och ungdomsverksamhet");
         map.put("11", "Medicinsk verksamhet");
         map.put("12", "Laboratorieverksamhet");

@@ -55,7 +55,7 @@ public class LangdIntervall {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof LangdIntervall)) {
             return false;
         }
         LangdIntervall that = (LangdIntervall) o;

@@ -18,23 +18,19 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos.dto;
 
+import java.util.Optional;
+
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.util.Optional;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Created by marced on 08/02/16.
  */
 //CHECKSTYLE:OFF MagicNumber
 public class DiagnosKapitelTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void testConstructor() {
@@ -63,11 +59,9 @@ public class DiagnosKapitelTest {
 
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testBadFormatConstructor() {
-        thrown.expect(IllegalArgumentException.class);
         DiagnosKapitel interval = new DiagnosKapitel("A00-D8En grupp av diagnoser");
-
     }
 
     @Test

@@ -93,7 +93,7 @@ public class BlockData implements Serializable {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof BlockData)) {
             return false;
         }
         BlockData blockData = (BlockData) o;

@@ -23,9 +23,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -68,9 +66,6 @@ public class ConsentControllerTest {
     private static final String VARDENHETS_ID = "VEA";
 
     private static final int DAYS = 30;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     LogService logServiceMock;

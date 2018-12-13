@@ -18,17 +18,10 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.util.Collections;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -45,6 +38,11 @@ import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
  * Created by marced on 01/02/16.
  */
@@ -52,9 +50,6 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest
 public class UserControllerTest {
 
     private static final String HSA_ID = "abcdefghijkl";
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     RehabstodUser rehabUserMock;
@@ -106,11 +101,10 @@ public class UserControllerTest {
         verify(rehabstodUnitChangeService).changeValdVardenhet(eq(req.getId()), eq(rehabUserMock));
     }
 
-    @Test
+    @Test(expected = AuthoritiesException.class)
     public void testChangeEnhetFails() {
         ChangeSelectedUnitRequest req = new ChangeSelectedUnitRequest("123");
         when(rehabstodUnitChangeService.changeValdVardenhet(eq(req.getId()), eq(rehabUserMock))).thenReturn(false);
-        thrown.expect(AuthoritiesException.class);
 
         userController.changeSelectedUnitOnUser(req);
 

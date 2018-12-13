@@ -60,7 +60,7 @@ public class Lakare {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Lakare)) {
             return false;
         }
 

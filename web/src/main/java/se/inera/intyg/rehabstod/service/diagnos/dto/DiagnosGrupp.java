@@ -24,6 +24,8 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Splitter;
+
 /**
  * @author marced on 14/03/16.
  */
@@ -75,7 +77,8 @@ public class DiagnosGrupp {
      */
     private List<DiagnosKapitel> convertToKapitelList(String kapitelListString) {
         List<DiagnosKapitel> list = new ArrayList<>();
-        final String[] arr = kapitelListString.split(KAPITELLIST_SEPARATOR);
+
+        final Iterable<String> arr = Splitter.onPattern(KAPITELLIST_SEPARATOR).split(kapitelListString);
 
         for (String kapitelId : arr) {
             list.add(new DiagnosKapitel(kapitelId));
@@ -106,7 +109,7 @@ public class DiagnosGrupp {
             return true;
         }
 
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof DiagnosGrupp)) {
             return false;
         }
 

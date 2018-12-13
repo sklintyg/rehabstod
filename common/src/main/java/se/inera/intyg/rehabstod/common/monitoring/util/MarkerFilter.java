@@ -18,18 +18,19 @@
  */
 package se.inera.intyg.rehabstod.common.monitoring.util;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.filter.AbstractMatcherFilter;
-import ch.qos.logback.core.spi.FilterReply;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.filter.AbstractMatcherFilter;
+import ch.qos.logback.core.spi.FilterReply;
+
 public class MarkerFilter extends AbstractMatcherFilter<ILoggingEvent> {
-    private List<Marker> markersToMatch = new ArrayList();
+    private List<Marker> markersToMatch = new ArrayList<>();
 
     @Override
     public void start() {

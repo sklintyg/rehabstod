@@ -37,7 +37,7 @@ public final class Vardformer {
     }
 
     static {
-        Map<String, String> map = new HashMap();
+        Map<String, String> map = new HashMap<>();
         map.put("01", "Öppenvård");
         map.put("02", "Slutenvård");
         map.put("03", "Hemsjukvård");

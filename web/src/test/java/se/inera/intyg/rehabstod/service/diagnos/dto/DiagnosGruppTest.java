@@ -18,22 +18,18 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos.dto;
 
+import java.util.Arrays;
+
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * Created by marced on 14/03/16.
  */
 public class DiagnosGruppTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void testConstructor() {
@@ -59,9 +55,8 @@ public class DiagnosGruppTest {
         assertTrue(grupp.getKapitelList().containsAll(Arrays.asList(expected1, expected2, expected3)));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testBadFormatConstructor() {
-        thrown.expect(IllegalArgumentException.class);
         DiagnosKapitel grupp = new DiagnosKapitel("A00 D00En grupp av diagnoser");
 
     }

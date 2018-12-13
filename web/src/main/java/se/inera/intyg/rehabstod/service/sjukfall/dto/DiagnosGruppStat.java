@@ -55,7 +55,7 @@ public class DiagnosGruppStat {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof DiagnosGruppStat)) {
             return false;
         }
         DiagnosGruppStat that = (DiagnosGruppStat) o;

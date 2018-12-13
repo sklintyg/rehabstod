@@ -18,12 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos.dto;
 
-import se.inera.intyg.rehabstod.common.util.StringUtil;
-
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import se.inera.intyg.rehabstod.common.util.StringUtil;
 
 /**
  * Represents an group of diagnoses ("DiagnosKaptiel") in an range interval, e.g "A00-C49" which would include also a
@@ -130,7 +130,7 @@ public class DiagnosKapitel {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof DiagnosKapitel)) {
             return false;
         }
         DiagnosKapitel that = (DiagnosKapitel) o;

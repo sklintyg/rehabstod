@@ -18,12 +18,20 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.srs;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -36,16 +44,9 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -117,7 +118,7 @@ public class RiskPredictionServiceImplTest {
     public void testInteractionWithSRSWhenFeatureActive() {
         String intygsId = UUID.randomUUID().toString();
 
-        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyList())).thenReturn(buildRiskSignalList(intygsId));
+        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyListOf(String.class))).thenReturn(buildRiskSignalList(intygsId));
         List<SjukfallEnhet> sjukfallEnhetList = buildSjukfallEnhetList(intygsId);
         testee.updateWithRiskPredictions(sjukfallEnhetList);
 
@@ -129,14 +130,14 @@ public class RiskPredictionServiceImplTest {
         assertEquals(2, sjukfallEnhet.getRiskSignal().getRiskKategori());
         assertEquals("beskrivning", sjukfallEnhet.getRiskSignal().getRiskDescription());
 
-        verify(srsIntegrationService, times(1)).getRiskPreditionerForIntygsId(anyList());
+        verify(srsIntegrationService, times(1)).getRiskPreditionerForIntygsId(anyListOf(String.class));
     }
 
     @Test
     public void testPatientDataInteractionWithSRSWhenFeatureActive() {
         String intygsId = UUID.randomUUID().toString();
 
-        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyList())).thenReturn(buildRiskSignalList(intygsId));
+        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyListOf(String.class))).thenReturn(buildRiskSignalList(intygsId));
         List<SjukfallPatient> sjukfallPatientList = buildSjukfallPatientList(intygsId);
         testee.updateSjukfallPatientListWithRiskPredictions(sjukfallPatientList);
 
@@ -147,18 +148,18 @@ public class RiskPredictionServiceImplTest {
         assertEquals(2, patientData.getRiskSignal().getRiskKategori());
         assertEquals("beskrivning", patientData.getRiskSignal().getRiskDescription());
 
-        verify(srsIntegrationService, times(1)).getRiskPreditionerForIntygsId(anyList());
+        verify(srsIntegrationService, times(1)).getRiskPreditionerForIntygsId(anyListOf(String.class));
     }
 
     @Test(expected = SRSServiceException.class)
     public void testExpectedExceptionIsThrownWhenCallToSRSFails() {
-        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyList())).thenThrow(new RuntimeException("FEL FEL FEL"));
+        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyListOf(String.class))).thenThrow(new RuntimeException("FEL FEL FEL"));
         testee.updateWithRiskPredictions(buildSjukfallEnhetList(UUID.randomUUID().toString()));
     }
 
     @Test(expected = SRSServiceException.class)
     public void testPatientListExpectedExceptionIsThrownWhenCallToSRSFails() {
-        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyList())).thenThrow(new RuntimeException("FEL FEL FEL"));
+        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyListOf(String.class))).thenThrow(new RuntimeException("FEL FEL FEL"));
         testee.updateSjukfallPatientListWithRiskPredictions(buildSjukfallPatientList(UUID.randomUUID().toString()));
     }
 
@@ -172,7 +173,7 @@ public class RiskPredictionServiceImplTest {
                 new RiskSignal(intygsId, 0, "beskrivning0")
         );
 
-        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyList())).thenReturn(riskSignals);
+        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyListOf(String.class))).thenReturn(riskSignals);
         List<SjukfallEnhet> sjukfallEnhetList = buildSjukfallEnhetList(intygsId);
         testee.updateWithRiskPredictions(sjukfallEnhetList);
 

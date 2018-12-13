@@ -20,6 +20,13 @@ package se.inera.intyg.rehabstod.service.sjukfall.testdata;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
 import se.inera.intyg.rehabstod.service.sjukfall.testdata.builders.ArbetsformagaT;
 import se.inera.intyg.rehabstod.service.sjukfall.testdata.builders.EnhetT;
 import se.inera.intyg.rehabstod.service.sjukfall.testdata.builders.FormagaT;
@@ -38,13 +45,6 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 /**
  * Created by Magnus Ekstrand on 2016-02-11.
  */
@@ -54,7 +54,7 @@ public class IntygsDataLineMapper {
 
 
     public IntygsDataLineMapper() {
-        fields = new HashSet();
+        fields = new HashSet<>();
     }
 
     public static List<IntygsData> map(List<String> lines) {
@@ -72,7 +72,7 @@ public class IntygsDataLineMapper {
 
     private List<IntygsData> map(Set<String[]> fields) {
 
-        List<IntygsData> intygsData = new ArrayList();
+        List<IntygsData> intygsData = new ArrayList<>();
         FormagaFieldSetMapper ffsm = new FormagaFieldSetMapper();
 
         // CHECKSTYLE:OFF MagicNumber
@@ -179,7 +179,7 @@ public class IntygsDataLineMapper {
     class FormagaFieldSetMapper {
 
         public List<Formaga> map(String arbetsformaga) {
-            List<Formaga> formagaList = new ArrayList();
+            List<Formaga> formagaList = new ArrayList<>();
             String[] formagor = arbetsformaga.replace("[", "").replace("]", "").split("\\|");
 
             for (String formaga : formagor) {

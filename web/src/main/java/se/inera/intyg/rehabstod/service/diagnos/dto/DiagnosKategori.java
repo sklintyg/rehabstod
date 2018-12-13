@@ -18,12 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos.dto;
 
-import se.inera.intyg.rehabstod.common.util.StringUtil;
-
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import se.inera.intyg.rehabstod.common.util.StringUtil;
 
 /**
  * Created by marced on 08/02/16.
@@ -72,7 +72,7 @@ public class DiagnosKategori {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof DiagnosKategori)) {
             return false;
         }
         DiagnosKategori that = (DiagnosKategori) o;

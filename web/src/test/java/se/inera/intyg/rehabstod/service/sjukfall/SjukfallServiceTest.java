@@ -28,9 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -162,9 +160,6 @@ public class SjukfallServiceTest {
     @InjectMocks
     private SjukfallServiceImpl testee = new SjukfallServiceImpl();
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Before
     public void init() {
         when(integrationService.getIntygsDataForCareUnit(anyString(), anyInt())).thenReturn(new ArrayList<>());
@@ -191,9 +186,8 @@ public class SjukfallServiceTest {
         doNothing().when(sjukfallEmployeeNameResolver).updateDuplicateDoctorNamesWithHsaId(anyListOf(SjukfallEnhet.class));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testWhenNoUrvalSet() {
-        thrown.expect(IllegalArgumentException.class);
         testee.getByUnit(enhetsId, null, "", null, parameters);
     }
 

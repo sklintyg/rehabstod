@@ -55,7 +55,7 @@ public class Sortering {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Sortering)) {
             return false;
         }
 

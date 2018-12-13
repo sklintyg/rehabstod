@@ -18,10 +18,14 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,6 +33,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
@@ -58,23 +63,18 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyCollectionOf;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
@@ -89,7 +89,7 @@ public class SjukfallControllerTest {
     private final Vardenhet DEFAULT_VARDENHET = new Vardenhet("ve123", "Vardenhet_123");
     private final Vardgivare DEFAULT_VARDGIVARE = new Vardgivare("vg987", "Vardgivare_987");
 
-    private final List<Vardenhet> vardenheter = new ArrayList() {{
+    private final List<Vardenhet> vardenheter = new ArrayList<Vardenhet>() {{
         add(DEFAULT_VARDENHET);
         add(new Vardenhet("ve234", "Vardenhet_234"));
         add(new Vardenhet("ve345", "Vardenhet_345"));
@@ -97,14 +97,11 @@ public class SjukfallControllerTest {
         add(new Vardenhet("ve567", "Vardenhet_567"));
     }};
 
-    private final List<Vardgivare> vardgivare = new ArrayList() {{
+    private final List<Vardgivare> vardgivare = new ArrayList<Vardgivare>() {{
         add(DEFAULT_VARDGIVARE);
         add(new Vardgivare("vg876", "Vardgivare_876"));
         add(new Vardgivare("vg765", "Vardgivare_765"));
     }};
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     RehabstodUser rehabstodUserMock;
@@ -151,7 +148,7 @@ public class SjukfallControllerTest {
 
         // When
         mockStatic(PDLActivityStore.class);
-        when(PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
+        when(PDLActivityStore.getActivitiesNotInStore(anyString(), anyListOf(SjukfallEnhet.class), eq(ActivityType.READ),
             eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class))).thenReturn(toLog);
         when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(IntygParametrar.class)))
                 .thenReturn(new SjukfallEnhetResponse(result, false));
@@ -161,7 +158,7 @@ public class SjukfallControllerTest {
 
         // Verify
         verifyStatic();
-        PDLActivityStore.getActivitiesNotInStore(anyString(), any(List.class), eq(ActivityType.READ),
+        PDLActivityStore.getActivitiesNotInStore(anyString(), anyListOf(SjukfallEnhet.class), eq(ActivityType.READ),
             eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class));
 
         verify(sjukfallServiceMock).getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(IntygParametrar.class));

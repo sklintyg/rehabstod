@@ -82,7 +82,7 @@ public class Diagnos {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof Diagnos)) {
             return false;
         }
 
