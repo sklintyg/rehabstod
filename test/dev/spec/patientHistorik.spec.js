@@ -25,7 +25,7 @@ var specHelper = rhsTestTools.helpers.spec;
 var startPage = rhsTestTools.pages.startPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
-fdescribe('Flöde som läkare', function() {
+describe('Flöde som läkare', function() {
 
     // Logga in
     beforeEach(function() {
