@@ -193,11 +193,19 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         // Annan vårdgivare
         addToIntygsDataFixedDates(2, tolvan, utanInloggning, intygsDataList);
         addToIntygsDataFixedDates(2, tolvan, hosPersonList.get(3), intygsDataList);
+
+        addToIntygsDataFixedDates(1, tolvan, hosPersonList.get(8), intygsDataList, LocalDateTime.now().minusDays(100));
     }
 
     private void addToIntygsDataFixedDates(Integer intygPerPatient, Patient patient, HosPersonal hosPerson,
                                            List<IntygsData> intygsDataList) {
-        timeSimulator = LocalDateTime.now();
+
+        addToIntygsDataFixedDates(intygPerPatient, patient, hosPerson, intygsDataList, LocalDateTime.now());
+    }
+
+    private void addToIntygsDataFixedDates(Integer intygPerPatient, Patient patient, HosPersonal hosPerson,
+                                           List<IntygsData> intygsDataList, LocalDateTime startDate) {
+        timeSimulator = startDate;
         for (int intygsIndex = 0; intygsIndex < intygPerPatient; intygsIndex++) {
 
             intygsDataList.add(buildFixedIntygsData(patient, hosPerson));

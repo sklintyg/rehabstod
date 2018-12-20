@@ -18,12 +18,19 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
@@ -53,12 +60,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -311,16 +312,18 @@ public class SjukfallServiceImpl implements SjukfallService {
         Map<String, SjfSamtyckeFinnsMetaData> vardgivareSamtycke = new HashMap<>();
 
         intygAccessMetaData.forEach((intygsId, iacm) -> {
-            if (iacm.isBidrarTillAktivtSjukfall()) {
-                String vardgivareId = iacm.getIntygData().getVardgivareId();
-                String vardgivareNamn = iacm.getIntygData().getVardgivareNamn();
+            String vardgivareId = iacm.getIntygData().getVardgivareId();
+            String vardgivareNamn = iacm.getIntygData().getVardgivareNamn();
 
-                if (iacm.inreSparr()) {
-                    metadata.getVardenheterInomVGMedSparr().add(iacm.getIntygData().getVardenhetNamn());
-                }
-                if (iacm.yttreSparr()) {
-                    metadata.getAndraVardgivareMedSparr().add(vardgivareNamn);
-                } else if (iacm.isKraverSamtycke()) {
+            if (iacm.inreSparr()) {
+                metadata.getVardenheterInomVGMedSparr().add(iacm.getIntygData().getVardenhetNamn());
+            }
+            if (iacm.yttreSparr()) {
+                metadata.getAndraVardgivareMedSparr().add(vardgivareNamn);
+            }
+
+            if (iacm.isBidrarTillAktivtSjukfall()) {
+                if (!iacm.yttreSparr() && iacm.isKraverSamtycke()) {
                     if (!vardgivareSamtycke.containsKey(vardgivareId)) {
                         SjfSamtyckeFinnsMetaData sjfSamtyckeFinnsMetaData = new SjfSamtyckeFinnsMetaData();
                         sjfSamtyckeFinnsMetaData.setVardgivareId(vardgivareId);

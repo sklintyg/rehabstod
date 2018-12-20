@@ -43,8 +43,10 @@ public class SparrtjanstStubStore {
 
     private static final String VE_TSTNMT2321000156_105Q = "TSTNMT2321000156-105Q";
     private static final String VE_CENTRUM_VAST = "centrum-vast";
+    private static final String VE_3 = "IFV1239877878-103H";
     private static final String VG1 = "TSTNMT2321000156-105M";
     private static final String VG2 = "vastmanland";
+    private static final String VG3 = "ifv-testdata";
 
     // inject the actual template
     @Autowired
@@ -118,6 +120,7 @@ public class SparrtjanstStubStore {
 
         add(new BlockData(pnr, blockFrom, blockTo, VG1, VE_TSTNMT2321000156_105Q));
         add(new BlockData(pnr, blockFrom, blockTo, VG2, VE_CENTRUM_VAST));
+        add(new BlockData(pnr, LocalDate.now().minusDays(120), blockTo, VG3, VE_3));
     }
     // CHECKSTYLE:ON MagicNumber
 

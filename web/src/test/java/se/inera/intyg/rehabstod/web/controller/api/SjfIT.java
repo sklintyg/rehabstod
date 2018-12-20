@@ -80,7 +80,7 @@ public class SjfIT extends BaseRestIntegrationTest {
 
         sleep(200);
 
-        // Kollar att samtycke finns
+        // Kollar att samtycke finns och hur många som har spärr
         given().contentType(ContentType.JSON).and().body(request)
                 .expect().statusCode(OK)
                 .when().post(API_ENDPOINT_PATIENT).then()
@@ -90,7 +90,9 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOther + "' }.includedInSjukfall",
                         equalTo(false))
                 .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOwn + "' }.includedInSjukfall",
-                        equalTo(false));
+                        equalTo(false))
+                .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
+                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2));
 
         // Inkludera vårdgivare
         AddVgToPatientViewRequest includeInSjukfallRequest = new AddVgToPatientViewRequest();
@@ -111,7 +113,9 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOther + "' }.includedInSjukfall",
                         equalTo(true))
                 .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOwn + "' }.includedInSjukfall",
-                        equalTo(false));
+                        equalTo(false))
+                .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
+                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2));
 
     }
 }
