@@ -68,7 +68,7 @@ public class SjukfallIntygDataGeneratorTest {
 
         final int intygPerPatientOtherCareUnit = intygPerPatient * 2; // Vi skapar upp intyg på andra vårdgivare för sjf
         final int intygTolvan = intygPerPatient + intygPerPatientOtherCareUnit + 6; // Tolvan är gammal och ges då fyra extra intyg
-        final int intygLillTolvan = intygPerPatient + 8; //sjf användare
+        final int intygLillTolvan = intygPerPatient + 9; //sjf användare
         int expectedAntalIntyg = numberOfPatients * (intygPerPatient + intygPerPatientOtherCareUnit) + intygTolvan + intygLillTolvan;
 
         assertEquals(expectedAntalIntyg, intygsData.size());
