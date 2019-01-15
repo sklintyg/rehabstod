@@ -37,7 +37,8 @@
         "required": [
           "vardenheterInomVGMedSparr",
           "andraVardgivareMedSparr"
-        ]      },
+        ]
+      },
       "sjukfallList": {
         "items": {
           "diagnos": {

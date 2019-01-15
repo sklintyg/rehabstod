@@ -29,7 +29,7 @@ public class IntygAccessControlMetaData {
 
     private boolean inomVardgivare;
     private boolean inomVardenhet;
-    private boolean includeBasedOnSamtycke;
+    private boolean includedBasedOnSamtycke;
 
     private boolean sparr;
     private boolean kraverSamtycke;
@@ -39,11 +39,11 @@ public class IntygAccessControlMetaData {
     }
 
     public IntygAccessControlMetaData(IntygData intygData, boolean inomVardgivare,
-                                      boolean inomVardenhet, boolean includeBasedOnSamtycke) {
+                                      boolean inomVardenhet, boolean includedBasedOnSamtycke) {
         this.intygData = intygData;
         this.inomVardgivare = inomVardgivare;
         this.inomVardenhet = inomVardenhet;
-        this.includeBasedOnSamtycke = includeBasedOnSamtycke;
+        this.includedBasedOnSamtycke = includedBasedOnSamtycke;
         this.kraverSamtycke = !inomVardgivare;
     }
 
@@ -67,8 +67,8 @@ public class IntygAccessControlMetaData {
         return bidrarTillAktivtSjukfall;
     }
 
-    public boolean isIncludeBasedOnSamtycke() {
-        return includeBasedOnSamtycke;
+    public boolean isIncludedBasedOnSamtycke() {
+        return includedBasedOnSamtycke;
     }
 
     public boolean isKraverSamtycke() {

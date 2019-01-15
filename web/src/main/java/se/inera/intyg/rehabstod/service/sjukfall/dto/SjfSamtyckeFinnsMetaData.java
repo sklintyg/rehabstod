@@ -23,6 +23,7 @@ public class SjfSamtyckeFinnsMetaData {
     private String vardgivareId;
     private String vardgivareNamn;
     private boolean includedInSjukfall;
+    private boolean bidrarTillAktivtSjukfall;
 
     public String getVardgivareId() {
         return vardgivareId;
@@ -46,5 +47,13 @@ public class SjfSamtyckeFinnsMetaData {
 
     public void setIncludedInSjukfall(boolean includedInSjukfall) {
         this.includedInSjukfall = includedInSjukfall;
+    }
+
+    public boolean isBidrarTillAktivtSjukfall() {
+        return bidrarTillAktivtSjukfall;
+    }
+
+    public void setBidrarTillAktivtSjukfall(boolean bidrarTillAktivtSjukfall) {
+        this.bidrarTillAktivtSjukfall = bidrarTillAktivtSjukfall;
     }
 }

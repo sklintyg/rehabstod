@@ -18,15 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +25,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
@@ -73,6 +63,16 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -99,11 +99,14 @@ public class SjukfallServiceTest {
     private final String vgId3 = "vg3";
     private final String enhetsId = "IFV1239877878-1042";
     private final String enhetsId2 = "enhet2";
+    private final String enhetsId3 = "enhet2";
     private final String mottagningsId = "Mottagning-1";
     private final String lakareId1 = "IFV1239877878-1049";
     private final String lakareNamn1 = "Jan Nilsson";
     private final String lakareId2 = "IFV1239877878-104B";
     private final String lakareNamn2 = "Åsa Andersson";
+    private final String lakareId3 = "TSTNMT2321000156-103F";
+    private final String lakareNamn3 = "Leonie Koehl";
     private final String patientId1 = "19121212-1212";
 
     private int intygsIdCounter = 1;
@@ -286,11 +289,11 @@ public class SjukfallServiceTest {
         assertTrue(patientResponse.getSjfMetaData().isSamtyckeFinns());
     }
 
-    @Test
     /*
      * Testet ska visa att intyg inom samma vårdgivare och samma enhet, fast utanför glappet,
      * ska resultera i två sjukfall med ett intyg vardera i sig.
      */
+    @Test
     public void testGetByPatient_inomVardgivareOchInomEnhet() {
         List<IntygsData> data = new ArrayList<IntygsData>() {{
             add(createIntygsData(vgId, enhetsId, lakareId1, patientId1, false,
@@ -313,11 +316,11 @@ public class SjukfallServiceTest {
         assertEquals(1, patientResponse.getSjukfallList().get(1).getIntyg().size());
     }
 
-    @Test
     /*
      * Testet ska visa att intyg inom samma vårdgivare och samma enhet fast där intyget är skrivet på
      * en underenhet ska resultera i ett sjukfall med ett intyg vardera i sig.
      */
+    @Test
     public void testGetByPatient_whenInomVardgivareOchInomEnhet_andMottagning() {
         List<IntygsData> data = new ArrayList<IntygsData>() {{
             add(createIntygsData(vgId, enhetsId, lakareId1, patientId1, false,
@@ -345,11 +348,11 @@ public class SjukfallServiceTest {
         assertEquals(1, patientResponse.getSjukfallList().get(1).getIntyg().size());
     }
 
-    @Test
     /*
      * Testet ska visa att intyg inom samma vårdgivare och där användaren är inloggad på en mottagning,
      * så ska intyg på enheten komma med.
      */
+    @Test
     public void testGetByPatient_whenInomVardgivareOchInomMottagning_andParent() throws HsaServiceCallException {
         List<IntygsData> data = new ArrayList<IntygsData>() {{
             add(createIntygsData(vgId, mottagningsId, lakareId1, patientId1, false,
@@ -375,11 +378,12 @@ public class SjukfallServiceTest {
         assertEquals(1, patientResponse.getSjukfallList().get(1).getIntyg().size());
     }
 
-    @Test(expected = SjukfallServiceException.class)
     /*
-     * Testet ska visa att om inget intyg är utfärdat på den enhet användarens är inloggad på, så skall fel kastas (see INTYG-7686)
+     * Testet ska visa att om inget intyg är utfärdat på den enhet användaren är inloggad på,
+     * så skall fel kastas (see INTYG-7686)
      */
-    public void testGetByPatient_whenNoIntygInCurrentLogedInUnitThrowsException() throws HsaServiceCallException {
+    @Test(expected = SjukfallServiceException.class)
+    public void testGetByPatient_whenNoIntygAtCurrentLoggedInUnitThrowsException() throws HsaServiceCallException {
         List<IntygsData> data = new ArrayList<IntygsData>() {{
             add(createIntygsData(vgId, mottagningsId, lakareId1, patientId1, false,
                     activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
@@ -399,11 +403,11 @@ public class SjukfallServiceTest {
                 Urval.ALL, parameters, vgHsaId);
     }
 
-    @Test
     /*
      * Testet ska visa att intyg inom samma vårdgivare fast på olika enheter och utanför glappet,
      * ska resultera i ett sjukfall (det aktiva) med ett intyg i sig.
      */
+    @Test
     public void testGetByPatient_inomVardgivareOchUtanforEnhet() {
         List<IntygsData> data = new ArrayList<IntygsData>() {{
             add(createIntygsData(vgId, enhetsId, lakareId1, patientId1, false,
@@ -425,11 +429,11 @@ public class SjukfallServiceTest {
         assertEquals(1, patientResponse.getSjukfallList().get(0).getIntyg().size());
     }
 
-    @Test
     /*
      * Testet ska visa att intyg inom samma vårdgivare fast på olika enheter men innanför glappet,
      * ska resultera i ett sjukfall (det aktiva) med två intyg i sig.
      */
+    @Test
     public void testGetByPatient_inomVardgivareOchUtanforEnhetMenInomGlappet() {
         List<IntygsData> data = new ArrayList<IntygsData>() {{
             add(createIntygsData(vgId, enhetsId, lakareId1, patientId1, false,
@@ -449,6 +453,47 @@ public class SjukfallServiceTest {
 
         assertEquals(1, patientResponse.getSjukfallList().size());
         assertEquals(2, patientResponse.getSjukfallList().get(0).getIntyg().size());
+    }
+
+    /*
+     * Testet ska visa att alla vårdgivare som en patient har något intyg på
+     * ska finnas med i SjfMetaData oavsett om intygen i sig ingår i det
+     * aktiva sjukfallet eller inte.
+     */
+    @Test
+    public void testGetByPatient_allaVardgivareMedIntygSkaFinnas() {
+        List<IntygsData> data = new ArrayList<IntygsData>() {{
+            add(createIntygsData(vgId, enhetsId, lakareId1, patientId1, false,
+                    activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
+            add(createIntygsData(vgId, enhetsId2, lakareId1, patientId1, false,
+                    activeDate.minusDays(10), activeDate.minusDays(2), activeDate.minusDays(10).atStartOfDay()));
+            add(createIntygsData(vgId2, enhetsId, lakareId1, patientId1, false,
+                    activeDate.minusDays(20), activeDate.minusDays(10), activeDate.minusDays(20).atStartOfDay()));
+            add(createIntygsData(vgId3, enhetsId3, lakareId3, patientId1, false,
+                    activeDate.minusDays(30), activeDate.minusDays(22), activeDate.minusDays(30).atStartOfDay()));
+        }};
+
+        when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
+        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId, enhetsId)).thenReturn(true);
+
+        List<String> vgHsaId = new ArrayList<>();
+        vgHsaId.add(vgId);
+
+        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId, enhetsId, lakareId1, patientId1,
+                Urval.ALL, parameters, vgHsaId);
+
+        assertEquals(1, patientResponse.getSjukfallList().size());
+        assertEquals(2, patientResponse.getSjukfallList().get(0).getIntyg().size());
+
+        // Except vgId, we expect that both vgId2 and vgId3 are present.
+        // Every vårdgivare shall be present, not just the ones that contributes
+        // to the active sjukfall (INTYG-7912).
+        Collection<SjfSamtyckeFinnsMetaData> metaData = patientResponse.getSjfMetaData().getKraverSamtycke();
+        assertEquals(2, metaData.size());
+        assertTrue(metaData.stream().anyMatch(md -> md.getVardgivareId().equals(vgId2)));
+        assertTrue(metaData.stream().anyMatch(md -> md.getVardgivareId().equals(vgId3)));
+        assertTrue(metaData.stream().filter(md -> md.getVardgivareId().equals(vgId2) && md.isBidrarTillAktivtSjukfall()).count() > 0);
+        assertTrue(metaData.stream().filter(md -> md.getVardgivareId().equals(vgId3) && !md.isBidrarTillAktivtSjukfall()).count() == 0);
     }
 
     // - - - Private scope - - -
