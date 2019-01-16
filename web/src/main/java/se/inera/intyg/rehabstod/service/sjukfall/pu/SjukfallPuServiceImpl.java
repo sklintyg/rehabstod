@@ -18,26 +18,28 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.pu;
 
-import com.google.common.base.Joiner;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.common.base.Joiner;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.services.PUService;
 import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2017-09-05.
@@ -94,6 +96,36 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                 i.remove();
             }
         }
+    }
+
+    @Override
+    public List<IntygData> filterSekretessForPatientHistory(List<IntygData> intygsData, String vardgivareId, String enhetsId) {
+        String pnr = intygsData.get(0).getPatientId();
+        Personnummer personnummer = getPersonNummer(pnr);
+
+        List<IntygData> filteredIntyg = intygsData;
+
+        PersonSvar personSvar = puService.getPerson(personnummer);
+
+        if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
+            if (personSvar.getPerson().isSekretessmarkering()) {
+                filteredIntyg = filterOnVardgivareAndEnhet(intygsData, vardgivareId, enhetsId);
+            }
+        } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
+            throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
+        } else {
+            filteredIntyg = filterOnVardgivareAndEnhet(intygsData, vardgivareId, enhetsId);
+        }
+
+        return filteredIntyg;
+    }
+
+    private List<IntygData> filterOnVardgivareAndEnhet(List<IntygData> intygsData, String vardgivareId, String enhetsId) {
+        return intygsData.stream()
+                .filter(intygData ->
+                        intygData.getVardgivareId().equals(vardgivareId)
+                                && intygData.getVardenhetId().equals(enhetsId))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -167,13 +199,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
         }
         PatientData firstPatientDataItem = patientSjukfall.get(0).getIntyg().get(0);
         String pnr = firstPatientDataItem.getPatient().getId();
-        Personnummer personnummer = Personnummer.createPersonnummer(pnr)
-                .orElseThrow(() -> new IllegalArgumentException("Unparsable personnummer"));
-
-        if (!personnummer.verifyControlDigit()) {
-            throw new IllegalArgumentException("Personnummer '" + personnummer.getPersonnummerHash()
-                    + "' has invalid control digit, not showing patient details");
-        }
+        Personnummer personnummer = getPersonNummer(pnr);
 
         PersonSvar personSvar = puService.getPerson(personnummer);
 
@@ -210,6 +236,18 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                     .flatMap(ps -> ps.getIntyg().stream())
                     .forEach(i -> i.getPatient().setNamn("Namn okänt"));
         }
+    }
+
+    private Personnummer getPersonNummer(String pnr) {
+        Personnummer personnummer = Personnummer.createPersonnummer(pnr)
+                .orElseThrow(() -> new IllegalArgumentException("Unparsable personnummer"));
+
+        if (!personnummer.verifyControlDigit()) {
+            throw new IllegalArgumentException("Personnummer '" + personnummer.getPersonnummerHash()
+                    + "' has invalid control digit, not showing patient details");
+        }
+
+        return personnummer;
     }
 
     private String joinNames(PersonSvar personSvar) {

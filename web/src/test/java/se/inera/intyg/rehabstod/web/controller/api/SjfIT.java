@@ -94,6 +94,28 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
                 .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2));
 
+        String puSekretessUrl = "services/api/pu-api/person/" + patientId + "/sekretessmarkerad?value=";
+
+        // Sätter sekretess markerad
+        given().contentType(ContentType.JSON)
+                .expect().statusCode(OK)
+                .when().get(puSekretessUrl + "true");
+
+        // Kollar att ingen sjf info kommer med
+        given().contentType(ContentType.JSON).and().body(request)
+                .expect().statusCode(OK)
+                .when().post(API_ENDPOINT_PATIENT).then()
+                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
+                .body("sjfMetaData.samtyckeFinns", equalTo(false))
+                .body("sjfMetaData.kraverSamtycke.size()", equalTo(0))
+                .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(0))
+                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(0));
+
+        // Tar bort sekretess markerad
+        given().contentType(ContentType.JSON)
+                .expect().statusCode(OK)
+                .when().get(puSekretessUrl + "false");
+
         // Inkludera vårdgivare
         AddVgToPatientViewRequest includeInSjukfallRequest = new AddVgToPatientViewRequest();
         includeInSjukfallRequest.setPatientId(patientId);

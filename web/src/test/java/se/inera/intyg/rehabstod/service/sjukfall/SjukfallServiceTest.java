@@ -76,6 +76,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyListOf;
@@ -165,6 +166,7 @@ public class SjukfallServiceTest {
         when(integrationService.getIntygsDataForCareUnit(anyString(), anyInt())).thenReturn(new ArrayList<>());
         when(integrationService.getIntygsDataForCareUnitAndPatient(anyString(), anyString(), anyInt())).thenReturn(new ArrayList<>());
         when(integrationService.getAllIntygsDataForPatient(anyString())).thenReturn(createIntygsData());
+        when(sjukfallPuService.filterSekretessForPatientHistory(anyListOf(IntygData.class), anyString(), anyString())).thenAnswer(returnsFirstArg());
 
         doReturn(createSjukfallEnhetList()).when(sjukfallEngine).beraknaSjukfallForEnhet(anyListOf(se.inera.intyg.infra.sjukfall.dto.IntygData.class),
                 any(se.inera.intyg.infra.sjukfall.dto.IntygParametrar.class));
