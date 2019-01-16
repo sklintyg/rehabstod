@@ -23,20 +23,22 @@ describe('Directive: rhsPatientHistoryTable', function() {
         // FAKE DATA WHILE BACKEND IS BUILT
         sjfMetaData.vardenheterInomVGMedSparr = [];
         var i = 0;
-        for(; i < 20; i++){
-            sjfMetaData.vardenheterInomVGMedSparr.push('Vardenhetmedlangtnamnochmassaandraproblem ' + (i + 1));
+        for(; i < 5; i++){
+            sjfMetaData.vardenheterInomVGMedSparr.push('Vardenhet-med-sparr-' + (i + 1));
         }
 
         sjfMetaData.andraVardgivareMedSparr = [];
-        for(i = 0; i < 20; i++){
-            sjfMetaData.andraVardgivareMedSparr.push('Vardgivaremedlangtnamnochmassaandraproblem ' + (i + 1));
+        for(i = 0; i < 3; i++){
+            sjfMetaData.andraVardgivareMedSparr.push('Vardgivare-med-sparr-' + (i + 1));
         }
 
         sjfMetaData.kraverSamtycke = [];
-        for(i = 0; i < 20; i++){
+        for(i = 0; i < 3; i++){
             sjfMetaData.kraverSamtycke.push({
-                id: i + 1,
-                name: 'Vardgivaremedlangtnamnochmassaandraproblem ' + (i + 1),
+                vardgivareId: i + 1,
+                vardgivareNamn: 'Vardgivare-som-kraver-samtycke-' + (i + 1),
+                includedInSjukfall: false,
+                bidrarTillAktivtSjukfall: false,
                 loading: false,
                 fetched: false
             });
@@ -52,6 +54,16 @@ describe('Directive: rhsPatientHistoryTable', function() {
         elementScope = element.isolateScope() || element.scope();
 
     }));
+
+    it('should render correct number of sjukskrivningsgrader', function() {
+
+        // Assert
+        expect(elementScope.formatGrader([100])).toEqual('100%');
+        expect(elementScope.formatGrader([100,25])).toEqual('100% &#10142; 25%');
+        expect(elementScope.formatGrader([100,25,50])).toEqual('100% &#10142; 50%');
+        expect(elementScope.formatGrader([100,25,75,50])).toEqual('100% &#10142; 50%');
+
+    });
 
     it('should render correct number of sjukskrivningsgrader', function() {
 

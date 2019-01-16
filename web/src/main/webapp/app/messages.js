@@ -74,7 +74,6 @@ var rhsMessages = {
         'label.sjukfall.start.srs.header': 'Var kan jag hitta mer information om Stöd för rätt sjukskrivning (SRS)?',
         'label.sjukfall.start.srs.body': 'Om du vill se mer information om SRS, t.ex. hur prediktionen räknas ut, fler åtgärder, mer nationell statistik så kan du gå till SRS webbplats. När du klickar på länken nedan öppnas SRS webbplats i ett nytt fönster.',
 
-
         // Sjukfall Stat
         'label.sjukfall.stat.totalt' : 'Antal sjukfall',
         'label.sjukfall.stat.gender' : 'Könsfördelning',
@@ -82,7 +81,6 @@ var rhsMessages = {
         'label.sjukfall.stat.sickleavedegree' : 'Sjukskrivningsgrad',
         'label.stat.nosjukfall.rehab' : 'Det finns inga pågående sjukfall på %0',
         'label.stat.nosjukfall.lakare' : 'Du har inga pågående sjukfall på %0',
-
 
 
         // Sjukfall Result
@@ -181,21 +179,26 @@ var rhsMessages = {
         'label.role.switch.loggedin': 'Du har olika behörigheter på olika enheter. Var uppmärksam om att din roll kan komma att skifta mellan Läkare och Rehabkoordinator beroende på vilken enhet du väljer att byta till.',
 
         // Patient History Dialog
-        'label.patienthistory.loading' : 'Hämtar sjukfall för patient...',
+        'label.patienthistory.loading': 'Hämtar sjukfall för patient...',
 
         'label.extradiagnoser.none': 'Det finns för tillfället ingen ytterligare information att inhämta från andra vårdgivare samt ingen spärrad information på andra vårdenheter.',
         'label.extradiagnoser.empty': 'Det finns för tillfället ingen information i denna kategori att inhämta.',
 
-        'label.extradiagnoser.sparradinom.title' : 'Spärrad information hos din vårdgivare',
-        'label.extradiagnoser.sparradinom' : '<p>Det finns spärrad information hos en annan vårdenhet inom din vårdgivare. Endast patienten kan få spärren hävd genom att kontakta den enhet där spärren sattes.</p>Du kan klicka nedan för att visa vilka vårdenheter som har spärrad information hos sig.',
+        'label.extradiagnoser.sparradinom.title': 'Spärrad information hos din vårdgivare',
+        'label.extradiagnoser.sparradinom': '<p>Det finns spärrad information hos en annan vårdenhet inom din vårdgivare. Endast patienten kan få spärren hävd genom att kontakta den enhet där spärren sattes.</p>Du kan klicka nedan för att visa vilka vårdenheter som har spärrad information hos sig.',
         'label.extradiagnoser.sparradinom.list.title': 'Vårdenheter',
 
-        'label.extradiagnoser.osparradandra.title' : 'Ospärrad information hos annan vårdgivare',
-        'label.extradiagnoser.osparradandra' : '<p>Det finns ospärrad information hos annan vårdgivare.</p>Du kan klicka nedan för att visa vilka vårdgivare som har denna information. Men patientens samtycke krävs för att du ska kunna ta del av den faktiska informationen.',
+        'label.extradiagnoser.osparradandra.title': 'Ospärrad information hos annan vårdgivare',
+        'label.extradiagnoser.osparradandra': '<p>Det finns ospärrad information hos annan vårdgivare.</p>Du kan klicka nedan för att visa vilka vårdgivare som har denna information. Men patientens samtycke krävs för att du ska kunna ta del av den faktiska informationen.',
 
-        'label.extradiagnoser.sparradandra.title' : 'Spärrad information hos andra vårdgivare',
-        'label.extradiagnoser.sparradandra' : '<p>Det finns spärrad information hos andra vårdgivare. Endast patienten kan få spärren hävd genom att kontakta den enhet där spärren sattes.</p>Du kan klicka nedan för att visa vilka vårdgivare som har spärrad information hos sig.',
+        'label.extradiagnoser.sparradandra.title': 'Spärrad information hos andra vårdgivare',
+        'label.extradiagnoser.sparradandra': '<p>Det finns spärrad information hos andra vårdgivare. Endast patienten kan få spärren hävd genom att kontakta den enhet där spärren sattes.</p>Du kan klicka nedan för att visa vilka vårdgivare som har spärrad information hos sig.',
         'label.extradiagnoser.sparradandra.list.title': 'Vårdgivare',
+
+        // Patient History - Hämta vårdgivare dialog
+        'label.patienthistory.vardgivare.title': 'Ingen information hämtad',
+        'label.patienthistory.vardgivare.body': 'Vårdgivarens intyg tillhör inte pågående sjukfall och inhämtas därför inte.',
+        'label.patienthistory.vardgivare.button': 'Stäng',
 
         //Rest 500 exception error messages:
         'server.error.default.title' : 'Ett fel uppstod',
@@ -207,8 +210,6 @@ var rhsMessages = {
         'server.error.getsummary.text': 'Statistik för enheten kan inte visas',
         'server.error.giveconsent.title' : 'Kunde inte lämna medgivande om PDL-loggning',
         'server.error.loadpatienthistory.text': 'Sjukfallshistorik kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
-
-
 
         // FAQ
         'faq.sickness.1.title' : 'Vad är ett sjukfall?',

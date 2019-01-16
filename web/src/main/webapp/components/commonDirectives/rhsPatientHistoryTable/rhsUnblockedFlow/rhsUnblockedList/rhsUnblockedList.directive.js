@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsUnblockedList',
-    function($rootScope, $timeout, patientHistoryProxy, patientHistoryViewState) {
+    function($rootScope, $uibModal, $timeout, patientHistoryProxy, patientHistoryViewState) {
     'use strict';
 
     return {
@@ -32,7 +32,7 @@ angular.module('rehabstodApp').directive('rhsUnblockedList',
 
             patientHistoryViewState.setVgMedSparrViewState($scope.patientHistoryViewState.getSjfMetaData().kraverSamtycke);
 
-            $scope.fetch = function(vardgivareId) {
+            $scope.fetchVg = function(vardgivareId) {
 
                 var vardgivare = patientHistoryViewState.getVgMedSparrViewStateById(vardgivareId);
                 vardgivare.loading = true;
@@ -43,6 +43,18 @@ angular.module('rehabstodApp').directive('rhsUnblockedList',
                     $rootScope.$broadcast('patientHistory.update');
                 }, function() {
                     vardgivare.loading = false;
+                });
+            };
+
+            $scope.openFetchVgDialog = function() {
+                $uibModal.open({
+                    templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedList/rhsUnblockedList.dialog.html',
+                    keyboard: true,
+                    size: 'md'
+                }).result.then(function(){
+                    console.log("DISMISS1");
+                }, function(){
+                    console.log("DISMISS2");
                 });
             };
         }

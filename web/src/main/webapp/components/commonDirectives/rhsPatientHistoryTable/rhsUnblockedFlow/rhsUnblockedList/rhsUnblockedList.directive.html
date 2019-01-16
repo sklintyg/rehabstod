@@ -11,7 +11,10 @@
         </div>
         <div ng-switch-when="false">
           <span ng-switch="vardgivare.includedInSjukfall">
-            <a ng-switch-when="false" href ng-click="fetch(vardgivare.vardgivareId)">Hämta</a>
+            <span ng-switch-when="false">
+              <a ng-if="vardgivare.bidrarTillAktivtSjukfall" href ng-click="fetchVg(vardgivare.vardgivareId)">Hämta</a>
+              <a ng-if="!vardgivare.bidrarTillAktivtSjukfall" href ng-click="openFetchVgDialog()">Hämta</a>
+            </span>
             <i ng-switch-when="true" class="fa fa-check"></i>
           </span>
         </div>
