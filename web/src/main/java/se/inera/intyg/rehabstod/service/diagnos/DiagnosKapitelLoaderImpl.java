@@ -22,11 +22,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
+import javax.annotation.PostConstruct;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
@@ -37,18 +42,31 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 public class DiagnosKapitelLoaderImpl implements DiagnosKapitelLoader {
 
     @Value("${rhs.diagnoskapitel.file}")
-    private Resource diagnosKapitelFile;
+    private String diagnosKapitelFile;
+
+    @Autowired
+    ResourceLoader resourceLoader;
+
+    @PostConstruct
+    void initialize() {
+        // FIXME: Legacy support, can be removed when local config has been substituted by refdata (INTYG-7701)
+        if (!ResourceUtils.isUrl(diagnosKapitelFile)) {
+            diagnosKapitelFile = "file://" + diagnosKapitelFile;
+        }
+    }
 
     @Override
     public List<DiagnosKapitel> loadDiagnosKapitel() throws IOException {
 
-        LineIterator it = FileUtils.lineIterator(diagnosKapitelFile.getFile(), "UTF-8");
+        Resource resource = resourceLoader.getResource(diagnosKapitelFile);
+
+        LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "UTF-8");
 
         List<DiagnosKapitel> list = new ArrayList<>();
         try {
 
             while (it.hasNext()) {
-                String line = it.nextLine();
+                final String line = it.nextLine();
                 list.add(new DiagnosKapitel(line));
             }
         } finally {

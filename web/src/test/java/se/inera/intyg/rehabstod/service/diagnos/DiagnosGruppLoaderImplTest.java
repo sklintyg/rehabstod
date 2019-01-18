@@ -18,28 +18,35 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.test.util.ReflectionTestUtils;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
 
 /**
  * Created by eriklupander on 2016-04-14.
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = DiagnosGruppLoaderImpl.class)
 public class DiagnosGruppLoaderImplTest {
 
-    private DiagnosGruppLoaderImpl testee = new DiagnosGruppLoaderImpl();
+    @Autowired
+    private DiagnosGruppLoaderImpl testee;
 
     @Test
     public void testLoadDiagnosGrupp() throws IOException {
-        ReflectionTestUtils.setField(testee, "diagnosGruppFile", loadTestResource());
+        ReflectionTestUtils.setField(testee, "diagnosGruppFile", "classpath:DiagnosGruppLoaderTest/diagnosgrupper.txt");
         List<DiagnosGrupp> diagnosGrupper = testee.loadDiagnosGrupper();
         assertNotNull(diagnosGrupper);
         assertEquals(7, diagnosGrupper.size());
@@ -47,7 +54,7 @@ public class DiagnosGruppLoaderImplTest {
 
     @Test
     public void testLoadDiagnosGruppEmptyFile() throws IOException {
-        ReflectionTestUtils.setField(testee, "diagnosGruppFile", new ClassPathResource("DiagnosGruppLoaderTest/diagnosgrupper_tom.txt"));
+        ReflectionTestUtils.setField(testee, "diagnosGruppFile", "classpath:DiagnosGruppLoaderTest/diagnosgrupper_tom.txt");
         List<DiagnosGrupp> diagnosGrupper = testee.loadDiagnosGrupper();
         assertNotNull(diagnosGrupper);
         assertEquals(0, diagnosGrupper.size());
@@ -55,12 +62,7 @@ public class DiagnosGruppLoaderImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testLoadDiagnosGruppInvaludFileThrowsException() throws IOException {
-        ReflectionTestUtils.setField(testee, "diagnosGruppFile", new ClassPathResource("DiagnosGruppLoaderTest/diagnosgrupper_invalid.txt"));
+        ReflectionTestUtils.setField(testee, "diagnosGruppFile", "classpath:DiagnosGruppLoaderTest/diagnosgrupper_invalid.txt");
         testee.loadDiagnosGrupper();
-    }
-
-    private Resource loadTestResource() {
-        Resource res = new ClassPathResource("DiagnosGruppLoaderTest/diagnosgrupper.txt");
-        return res;
     }
 }

@@ -18,16 +18,20 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKod;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.LineIterator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
+
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKod;
 
 /**
  * Created by martin on 10/02/16.
@@ -36,16 +40,19 @@ import java.util.Map;
 public class DiagnosKoderLoaderImpl implements DiagnosKoderLoader {
 
     @Value("${rhs.diagnoskod.ksh97_kat.file}")
-    private Resource diagnosKodKS97KatFile;
+    private String diagnosKodKS97KatFile;
 
     @Value("${rhs.diagnoskod.ksh97_kod.file}")
-    private Resource diagnosKodKS97KodFile;
+    private String diagnosKodKS97KodFile;
 
     @Value("${rhs.diagnoskod.ksh97_kxx.file}")
-    private Resource diagnosKodKS97KxxFile;
+    private String diagnosKodKS97KxxFile;
 
     @Value("${rhs.diagnoskod.ksh97p_kod.file}")
-    private Resource diagnosKodKS97PKodFile;
+    private String diagnosKodKS97PKodFile;
+
+    @Autowired
+    ResourceLoader resourceLoader;
 
     @Override
     public Map<String, String> loadDiagnosKoder() throws IOException {
@@ -59,16 +66,20 @@ public class DiagnosKoderLoaderImpl implements DiagnosKoderLoader {
         return map;
     }
 
-    private Map<String, String> loadDiagnosFile(Resource resource) throws IOException {
-        LineIterator it = FileUtils.lineIterator(resource.getFile(), "ISO-8859-1");
+    private Map<String, String> loadDiagnosFile(final String file) throws IOException {
+
+        // FIXME: Legacy support, can be removed when local config has been substituted by refdata (INTYG-7701)
+        String location = ResourceUtils.isUrl(file) ? file : "file://" + file;
+        Resource resource = resourceLoader.getResource(location);
+
+        LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "ISO-8859-1");
 
         Map<String, String> map = new HashMap<>();
         try {
-
             while (it.hasNext()) {
-                String line = it.nextLine();
+                final String line = it.nextLine();
 
-                DiagnosKod kod = new DiagnosKod(line);
+                final DiagnosKod kod = new DiagnosKod(line);
 
                 if (kod.getCleanedCode() != null) {
                     map.put(kod.getCleanedCode(), kod.getName());
@@ -79,5 +90,4 @@ public class DiagnosKoderLoaderImpl implements DiagnosKoderLoader {
         }
         return map;
     }
-
 }
