@@ -18,15 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +25,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.infra.integration.hsa.exception.HsaServiceCallException;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
@@ -72,6 +62,15 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -326,7 +325,6 @@ public class SjukfallServiceTest {
                     activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
             add(createIntygsData(vgId, mottagningsId, lakareId1, patientId1, false,
                     activeDate.minusDays(20), activeDate.minusDays(15), activeDate.minusDays(20).atStartOfDay()));
-
         }};
 
         when(hsaOrganizationsService.getVardenhet(anyString()))
@@ -359,6 +357,7 @@ public class SjukfallServiceTest {
             add(createIntygsData(vgId, enhetsId, lakareId1, patientId1, false,
                     activeDate.minusDays(20), activeDate.minusDays(15), activeDate.minusDays(20).atStartOfDay()));
         }};
+
         //Koppla mottagningen till enheten
         when(hsaOrganizationsService.getVardenhet(eq(mottagningsId)))
                 .thenReturn(createVardenhet(enhetsId, "parentunit", createMottagning(mottagningsId, "mottagning", enhetsId)));
