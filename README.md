@@ -65,3 +65,14 @@ För att köra Protractor-testerna måste Intygstjänsten och Rehabstöd vara ig
 För att ta bort stubbad intygstjänst och köra mot en riktig (lokal) sådan så gå in i /web/build.gradle och plocka bort "rhs-it-stub" ur gretty-konfigurationen, dvs:
 
     '-Dspring.profiles.active=dev,rhs-srs-stub,caching-enabled',   // rhs-it-stub,
+
+### Köra med SAML aktiverat.
+
+Starta riktig ActiveMQ, MySQL och Redis.
+
+MySQL kan behöva följande först:
+
+    CREATE USER 'rehabstod'@'localhost' IDENTIFIED BY 'rehabstod';
+    GRANT ALL PRIVILEGES ON *.* TO 'rehabstod'@'localhost' IDENTIFIED BY 'rehabstod' WITH GRANT OPTION;
+    FLUSH PRIVILEGES;
+    CREATE DATABASE rehabstod CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

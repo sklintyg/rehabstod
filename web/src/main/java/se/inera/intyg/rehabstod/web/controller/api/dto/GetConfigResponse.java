@@ -18,9 +18,11 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-import java.util.List;
-
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by marced on 2016-01-18.
@@ -29,12 +31,16 @@ public class GetConfigResponse {
     private List<DiagnosKapitel> diagnosKapitelList;
     private String webcertViewIntygTemplateUrl;
     private String version;
+    private String defaultIDP;
+    private Map<String, String> idpMap = new HashMap<>();
 
     public GetConfigResponse(List<DiagnosKapitel> diagnosKapitelList, String webcertViewIntygTemplateUrl,
-            String version) {
+            String version, String defaultIDP, Map<String, String> idpMap) {
         this.diagnosKapitelList = diagnosKapitelList;
         this.webcertViewIntygTemplateUrl = webcertViewIntygTemplateUrl;
         this.version = version;
+        this.defaultIDP = defaultIDP;
+        this.idpMap = idpMap;
     }
 
     public List<DiagnosKapitel> getDiagnosKapitelList() {
@@ -57,4 +63,19 @@ public class GetConfigResponse {
         this.version = version;
     }
 
+    public String getDefaultIDP() {
+        return defaultIDP;
+    }
+
+    public void setDefaultIDP(String defaultIDP) {
+        this.defaultIDP = defaultIDP;
+    }
+
+    public Map<String, String> getIdpMap() {
+        return idpMap;
+    }
+
+    public void setIdpMap(Map<String, String> idpMap) {
+        this.idpMap = idpMap;
+    }
 }

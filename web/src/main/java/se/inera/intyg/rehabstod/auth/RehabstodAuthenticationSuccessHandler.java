@@ -1,0 +1,53 @@
+/*
+ * Copyright (C) 2019 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package se.inera.intyg.rehabstod.auth;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public class RehabstodAuthenticationSuccessHandler extends
+        SimpleUrlAuthenticationSuccessHandler {
+
+    @Value("${sakerhetstjanst.saml.idp.metadata.url}")
+    private String defaultIdpEntityId;
+
+    public RehabstodAuthenticationSuccessHandler(String defaultTargetUrl) {
+        super(defaultTargetUrl);
+    }
+
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request,
+            HttpServletResponse response, Authentication authentication)
+            throws ServletException, IOException {
+        super.onAuthenticationSuccess(request, response, authentication);
+
+        // If the IdP used was OTHER than our default IDP, stuff a Set-Cookie with the EntityID of the IdP
+        // into the response.
+        if (authentication.isAuthenticated()) {
+            response.addCookie(new Cookie("selectedSambiIdp", "some-value"));
+        }
+    }
+}
