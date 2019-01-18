@@ -24,22 +24,25 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.pu.model.Person;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.services.PUService;
 import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.Lakare;
@@ -57,6 +60,8 @@ public class SjukfallPuServiceImplTest {
 
     private static final String TOLVANSSON_PNR = "19121212-1212";
     private static final String TOLVANSSON_PNR_INVALID = "19121212-1211";
+    private static final String VARDGIVARE_1 = "vg-1";
+    private static final String VARDGIVARE_2 = "vg-2";
     private static final String ENHET_1 = "enhet-1";
     private static final String ENHET_2 = "enhet-2";
     private static final String LAKARE1_HSA_ID = "lakare-1";
@@ -358,11 +363,10 @@ public class SjukfallPuServiceImplTest {
         assertEquals(0, sjukfallList.size());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = RuntimeException.class)
     public void testEnrichPatientWhenPersonnummerHasInvalidDigit() {
         RehabstodUser lakare = buildLakare(ENHET_1);
         when(userService.getUser()).thenReturn(lakare);
-        when(puService.getPerson(createPnr(TOLVANSSON_PNR_INVALID))).thenReturn(PersonSvar.error());
 
         List<SjukfallPatient> sjukfallPatientList = buildPatientSjukfallList(TOLVANSSON_PNR_INVALID);
         testee.enrichWithPatientNameAndFilterSekretess(sjukfallPatientList);
@@ -395,6 +399,14 @@ public class SjukfallPuServiceImplTest {
         assertEquals(0, patientSjukfallList.size());
     }
 
+    @Test
+    public void testThatPersonnummerListOnlyConsistsOfValidPatientIDs() {
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList(TOLVANSSON_PNR, TOLVANSSON_PNR_INVALID);
+        List<Personnummer> personnummerList = testee.getPersonnummerList(sjukfallList);
+        assertEquals(1, personnummerList.size());
+        assertEquals(TOLVANSSON_PNR, personnummerList.get(0).getOriginalPnr());
+    }
+
     private List<SjukfallPatient> buildPatientSjukfallList(String pnr) {
         List<SjukfallPatient> sjukfallList = new ArrayList<>();
         sjukfallList.add(buildPatientSjukfall(pnr));
@@ -407,16 +419,17 @@ public class SjukfallPuServiceImplTest {
         return sjukfallPatient;
     }
 
-    private List<PatientData> buildIntyg(String pnr) {
+    private List<PatientData> buildIntyg(String... personnummer) {
         List<PatientData> patientData = new ArrayList<>();
-        patientData.add(buildPatientData(pnr));
+        Arrays.stream(personnummer)
+                .forEach(pnr -> patientData.add(buildPatientData(pnr, "Patient-" + pnr)));
         return patientData;
     }
 
-    private PatientData buildPatientData(String pnr) {
+    private PatientData buildPatientData(String pnr, String namn) {
         PatientData patientData = new PatientData();
         patientData.setVardenhetId(ENHET_1);
-        patientData.setPatient(buildPatient(pnr));
+        patientData.setPatient(buildPatient(pnr, namn));
         patientData.setLakare(new Lakare(LAKARE1_HSA_ID, LAKARE1_NAMN));
         return patientData;
     }
@@ -464,18 +477,35 @@ public class SjukfallPuServiceImplTest {
                 "Gatan 1", "11212", "Orten");
     }
 
-    private List<SjukfallEnhet> buildSjukfallList(String pnr) {
+    private List<IntygData> buildIntygList(String pnr) {
+        List<IntygData> intygData = new ArrayList<>();
+        intygData.add(buildIntyg(pnr, VARDGIVARE_1, ENHET_1));
+        intygData.add(buildIntyg(pnr, VARDGIVARE_1, ENHET_2));
+        intygData.add(buildIntyg(pnr, VARDGIVARE_2, ENHET_1));
+        return intygData;
+    }
+
+    private List<SjukfallEnhet> buildSjukfallList(String... personnummer) {
         List<SjukfallEnhet> sjukfallList = new ArrayList<>();
-        sjukfallList.add(buildSjukfall(pnr));
+        Arrays.stream(personnummer)
+                .forEach(pnr -> sjukfallList.add(buildSjukfall(pnr, "Patient-" + pnr)));
         return sjukfallList;
     }
 
-    private SjukfallEnhet buildSjukfall(String pnr) {
+    private SjukfallEnhet buildSjukfall(String pnr, String namn) {
         SjukfallEnhet sjukfall = new SjukfallEnhet();
-        sjukfall.setPatient(buildPatient(pnr));
+        sjukfall.setPatient(buildPatient(pnr, namn));
         sjukfall.setVardEnhetId(ENHET_1);
         sjukfall.setLakare(new Lakare(LAKARE1_HSA_ID, LAKARE1_NAMN));
         return sjukfall;
+    }
+
+    private IntygData buildIntyg(String pnr, String vardgivare, String enhet) {
+        IntygData intygData = new IntygData();
+        intygData.setPatientId(pnr);
+        intygData.setVardgivareId(vardgivare);
+        intygData.setVardenhetId(enhet);
+        return intygData;
     }
 
     private Map<Personnummer, PersonSvar> buildPersonMap() {
@@ -484,8 +514,8 @@ public class SjukfallPuServiceImplTest {
         return persons;
     }
 
-    private Patient buildPatient(String pnr) {
-        return new Patient(pnr, "Tolvan Tolvansson");
+    private Patient buildPatient(String pnr, String namn) {
+        return new Patient(pnr, namn);
     }
 
     private Personnummer createPnr(String pnr) {

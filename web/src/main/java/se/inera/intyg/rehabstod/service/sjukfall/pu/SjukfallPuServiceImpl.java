@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.pu;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,12 +60,8 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
         Iterator<SjukfallEnhet> i = sjukfallList.iterator();
 
-        List<Personnummer> personnummerList = sjukfallList.stream()
-                .map(se -> Personnummer.createPersonnummer(se.getPatient().getId()).get())
-                .distinct()
-                .collect(Collectors.toList());
-
-        Map<Personnummer, PersonSvar> personSvarMap = puService.getPersons(personnummerList);
+        // Call the PU service to get patient information
+        Map<Personnummer, PersonSvar> personSvarMap = puService.getPersons(getPersonnummerList(sjukfallList));
 
         while (i.hasNext()) {
             SjukfallEnhet item = i.next();
@@ -103,12 +100,8 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
         Iterator<SjukfallEnhet> i = sjukfallList.iterator();
 
-        List<Personnummer> personnummerList = sjukfallList.stream()
-                .map(sf -> Personnummer.createPersonnummer(sf.getPatient().getId()).get())
-                .distinct()
-                .collect(Collectors.toList());
-
-        Map<Personnummer, PersonSvar> personSvarMap = puService.getPersons(personnummerList);
+        // Call the PU service to get patient information
+        Map<Personnummer, PersonSvar> personSvarMap = puService.getPersons(getPersonnummerList(sjukfallList));
 
         while (i.hasNext()) {
             SjukfallEnhet item = i.next();
@@ -167,13 +160,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
         }
         PatientData firstPatientDataItem = patientSjukfall.get(0).getIntyg().get(0);
         String pnr = firstPatientDataItem.getPatient().getId();
-        Personnummer personnummer = Personnummer.createPersonnummer(pnr)
-                .orElseThrow(() -> new IllegalArgumentException("Unparsable personnummer"));
-
-        if (!personnummer.verifyControlDigit()) {
-            throw new IllegalArgumentException("Personnummer '" + personnummer.getPersonnummerHash()
-                    + "' has invalid control digit, not showing patient details");
-        }
+        Personnummer personnummer = getPersonnummer(pnr);
 
         PersonSvar personSvar = puService.getPerson(personnummer);
 
@@ -210,6 +197,48 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                     .flatMap(ps -> ps.getIntyg().stream())
                     .forEach(i -> i.getPatient().setNamn("Namn okänt"));
         }
+    }
+
+    /**
+     * Method will return as list of valid Personnumer. Any invalid patient IDs in
+     * sjukfallList will be removed.
+     */
+    @VisibleForTesting
+    List<Personnummer> getPersonnummerList(List<SjukfallEnhet> sjukfallList) {
+        LOG.debug("Building a list of Personnummer by extracting patient IDs from a 'sjukfall' list.");
+        return getPersonnummerListOfOptionals(sjukfallList).stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    private List<Optional<Personnummer>> getPersonnummerListOfOptionals(List<SjukfallEnhet> sjukfallList) {
+        return sjukfallList.stream()
+                .map(se -> getPersonnummerWrapper(se.getPatient().getId()))
+                .collect(Collectors.toList());
+    }
+
+    private Optional<Personnummer> getPersonnummerWrapper(String pnr) {
+        Personnummer personnummer = null;
+        try {
+            personnummer = getPersonnummer(pnr);
+        } catch (Exception e) {
+            LOG.info(e.getMessage());
+        }
+
+        return Optional.ofNullable(personnummer);
+    }
+
+    private Personnummer getPersonnummer(String pnr) {
+        Personnummer personnummer = Personnummer.createPersonnummer(pnr)
+                .orElseThrow(() -> new RuntimeException("Found unparsable personnummer '" + pnr + "'"));
+
+        if (!personnummer.verifyControlDigit()) {
+            throw new RuntimeException("Found personnummer '" + personnummer.getPersonnummerHash() + "' with invalid control digit");
+        }
+
+        return personnummer;
     }
 
     private String joinNames(PersonSvar personSvar) {
