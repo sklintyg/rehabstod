@@ -18,17 +18,20 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import org.apache.commons.io.FileUtils;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.util.ResourceUtils;
 
 /**
  * Loads skatteverkets testpersonnummer from .csv file.
@@ -40,12 +43,20 @@ import java.util.List;
 public class PersonnummerLoaderImpl implements PersonnummerLoader {
 
     @Value("${rhs.stub.personnummer.file}")
-    private String testPersonnummerFile;
+    private String location;
+
+    @PostConstruct
+    void initialize() {
+        // FIXME: Legacy support, can be removed when local config has been substituted by refdata (INTYG-7701)
+        if (!ResourceUtils.isUrl(location)) {
+            location = "file://" + location;
+        }
+    }
 
     @Override
     public List<String> readTestPersonnummer() throws IOException {
-        Resource resource = getResource(testPersonnummerFile);
-        LineIterator it = FileUtils.lineIterator(resource.getFile(), "UTF-8");
+        Resource resource = getResource(location);
+        LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "UTF-8");
 
         List<String> personnummerList = new ArrayList<>();
         try {

@@ -19,8 +19,12 @@
 package se.inera.intyg.rehabstod.service.diagnos;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
@@ -32,9 +36,12 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by eriklupander on 2016-04-14.
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = DiagnosKoderLoaderImpl.class)
 public class DiagnosKoderLoaderImplTest {
 
-    private DiagnosKoderLoaderImpl testee = new DiagnosKoderLoaderImpl();
+    @Autowired
+    private DiagnosKoderLoaderImpl testee;
 
     @Test
     public void testLoadDiagnosKoder() throws IOException {
@@ -51,7 +58,7 @@ public class DiagnosKoderLoaderImplTest {
         ReflectionTestUtils.setField(testee, "diagnosKodKS97PKodFile", loadDiagnosKodFile("KSH97P_KOD.ANS"));
     }
 
-    private Resource loadDiagnosKodFile(String file) {
-        return new ClassPathResource("DiagnosKoderLoaderTest/" + file);
+    private String loadDiagnosKodFile(String file) {
+        return "classpath:DiagnosKoderLoaderTest/" + file;
     }
 }

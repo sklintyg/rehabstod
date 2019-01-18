@@ -18,16 +18,20 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.LineIterator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
+
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
 
 /**
  * Created by marced on 14/03/16.
@@ -37,7 +41,10 @@ import java.util.List;
 public class DiagnosGruppLoaderImpl implements DiagnosGruppLoader {
 
     @Value("${rhs.diagnosgrupper.file}")
-    private Resource diagnosGruppFile;
+    private String diagnosGruppFile;
+
+    @Autowired
+    ResourceLoader resourceLoader;
 
     @Override
     public List<DiagnosGrupp> loadDiagnosGrupper() throws IOException {
@@ -45,14 +52,20 @@ public class DiagnosGruppLoaderImpl implements DiagnosGruppLoader {
         return getDiagnosGrupperInternal(diagnosGruppFile);
     }
 
-    private List<DiagnosGrupp> getDiagnosGrupperInternal(Resource resource) throws IOException {
-        LineIterator it = FileUtils.lineIterator(resource.getFile(), "UTF-8");
+    private List<DiagnosGrupp> getDiagnosGrupperInternal(String file) throws IOException {
+
+        // FIXME: Legacy support, can be removed when local config has been substituted by refdata (INTYG-7701)
+        String location = ResourceUtils.isUrl(file) ? file : "file://" + file;
+
+        Resource resource = resourceLoader.getResource(location);
+
+        LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "UTF-8");
 
         List<DiagnosGrupp> list = new ArrayList<>();
         try {
 
             while (it.hasNext()) {
-                String line = it.nextLine();
+                final String line = it.nextLine();
                 list.add(new DiagnosGrupp(line));
             }
         } finally {

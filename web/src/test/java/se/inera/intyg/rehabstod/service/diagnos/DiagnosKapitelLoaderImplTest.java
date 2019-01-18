@@ -18,28 +18,35 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.test.util.ReflectionTestUtils;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
 /**
  * Created by eriklupander on 2016-04-14.
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = DiagnosKapitelLoaderImpl.class)
 public class DiagnosKapitelLoaderImplTest {
 
-    private DiagnosKapitelLoaderImpl testee = new DiagnosKapitelLoaderImpl();
+    @Autowired
+    private DiagnosKapitelLoaderImpl testee;
 
     @Test
     public void testLoadDiagnosKapitel() throws IOException {
-        ReflectionTestUtils.setField(testee, "diagnosKapitelFile", loadTestResource());
+        ReflectionTestUtils.setField(testee, "diagnosKapitelFile", "classpath:DiagnosKapitelLoaderTest/diagnoskapitel.txt");
         List<DiagnosKapitel> diagnosKapitel = testee.loadDiagnosKapitel();
         assertNotNull(diagnosKapitel);
         assertEquals(22, diagnosKapitel.size());
@@ -47,7 +54,7 @@ public class DiagnosKapitelLoaderImplTest {
 
     @Test
     public void testLoadDiagnosKapitelEmptyFile() throws IOException {
-        ReflectionTestUtils.setField(testee, "diagnosKapitelFile", new ClassPathResource("DiagnosKapitelLoaderTest/diagnoskapitel_tom.txt"));
+        ReflectionTestUtils.setField(testee, "diagnosKapitelFile", "classpath:DiagnosKapitelLoaderTest/diagnoskapitel_tom.txt");
         List<DiagnosKapitel> diagnosKapitel = testee.loadDiagnosKapitel();
         assertNotNull(diagnosKapitel);
         assertEquals(0, diagnosKapitel.size());
@@ -55,12 +62,8 @@ public class DiagnosKapitelLoaderImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testLoadDiagnosKapitelInvaludFileThrowsException() throws IOException {
-        ReflectionTestUtils.setField(testee, "diagnosKapitelFile", new ClassPathResource("DiagnosKapitelLoaderTest/diagnoskapitel_invalid.txt"));
+        ReflectionTestUtils.setField(testee, "diagnosKapitelFile", "classpath:DiagnosKapitelLoaderTest/diagnoskapitel_invalid.txt");
         testee.loadDiagnosKapitel();
     }
 
-    private Resource loadTestResource() {
-        Resource res = new ClassPathResource("DiagnosKapitelLoaderTest/diagnoskapitel.txt");
-        return res;
-    }
 }
