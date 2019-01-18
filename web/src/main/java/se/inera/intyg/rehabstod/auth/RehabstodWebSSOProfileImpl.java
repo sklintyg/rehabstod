@@ -34,6 +34,7 @@ import org.springframework.security.saml.context.SAMLMessageContext;
 import org.springframework.security.saml.websso.WebSSOProfileOptions;
 
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
+import se.inera.intyg.infra.security.common.model.AuthConstants;
 
 /**
  * Created by eriklupander on 2016-05-30.
@@ -69,11 +70,10 @@ public class RehabstodWebSSOProfileImpl extends org.springframework.security.sam
         AuthnRequest authnRequest = super.getAuthnRequest(context, options, assertionConsumer, bindingService);
 
         // Only specify attributeConsumingServiceIndex for SITHS-based authentications.
-        //if (options.getAuthnContexts().contains(AuthConstants.URN_OASIS_NAMES_TC_SAML_2_0_AC_CLASSES_TLSCLIENT)) {
-        //    authnRequest.setAttributeConsumingServiceIndex(1);
-        //}
+        if (options.getAuthnContexts().contains(AuthConstants.URN_OASIS_NAMES_TC_SAML_2_0_AC_CLASSES_TLSCLIENT)) {
+            authnRequest.setAttributeConsumingServiceIndex(1);
+        }
         authnRequest.setConditions(buildConditions());
-
         return authnRequest;
     }
 

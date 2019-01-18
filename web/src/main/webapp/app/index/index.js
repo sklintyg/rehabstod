@@ -8,7 +8,8 @@ angular.module('rehabstodApp').config(function($stateProvider) {
             },
             'navbar@': {},
             'app@': {
-                templateUrl: '/app/index/index.body.html'
+                templateUrl: '/app/index/index.body.html',
+                controller: 'IndexCtrl'
             }
 
         }

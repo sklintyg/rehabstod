@@ -169,7 +169,6 @@
       <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
       <security:custom-filter position="PRE_AUTH_FILTER" ref="fakeAuthFilter"/>
       <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
-      <!-- <security:request-cache ref="httpSessionRequestCache" /> -->
       <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
     </security:http>
     <!-- Other unauthenticated requests will be returned as http status 403. -->
@@ -198,7 +197,6 @@
       <security:headers/>
       <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
       <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
-      <!-- <security:request-cache ref="httpSessionRequestCache" /> -->
       <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
     </security:http>
     <security:http  use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
@@ -235,7 +233,6 @@
         <security:filter-chain pattern="/saml/logout/**" filters="samlLogoutFilter"/>
         <security:filter-chain pattern="/saml/SSO/**" filters="samlWebSSOProcessingFilter"/>
         <security:filter-chain pattern="/saml/SingleLogout/**" filters="samlLogoutProcessingFilter"/>
-        <!-- <security:filter-chain pattern="/saml/discovery" filters="samlDiscoveryFilter"/> -->
       </security:filter-chain-map>
     </bean>
 
@@ -244,17 +241,6 @@
           class="se.inera.intyg.rehabstod.auth.RehabstodAuthenticationSuccessHandler">
       <constructor-arg index="0" value="/"/>
     </bean>
-    <!--
-        <bean id="httpSessionRequestCache" class="org.springframework.security.web.savedrequest.NullRequestCache">
-        </bean>
-
-         Handler deciding where to redirect user after successful login
-    <bean id="successRedirectHandler"
-          class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
-      <property name="defaultTargetUrl" value="/#/app"/>
-      <property name="requestCache" ref="httpSessionRequestCache" />
-    </bean>
-     -->
 
     <!-- Central storage of cryptographic keys -->
     <bean id="keyManager" class="org.springframework.security.saml.key.JKSKeyManager">
@@ -277,15 +263,12 @@
           <property name="authnContexts">
                <set>
                  <value>urn:oasis:names:tc:SAML:2.0:ac:classes:TLSClient</value>
+                 <value>http://id.sambi.se/loa/loa3</value>
                </set>
           </property>
         </bean>
       </property>
     </bean>
-
-    <!-- TODO Determine if this one is really needed. It's supposed to make the HTTP-client more configurable...
-    <bean class="org.springframework.security.saml.trust.httpclient.TLSProtocolConfigurer"/>
-    -->
 
     <!-- IDP Metadata configuration - paths to metadata of IDPs in circle of trust is here -->
     <!-- Do no forget to call initalize method on providers -->
@@ -299,7 +282,7 @@
             <constructor-arg>
               <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
                 <constructor-arg>
-                  <value type="java.io.File">${config.dir}/sp-sakerhetstjanst-wc.xml</value>
+                  <value type="java.io.File">${config.dir}/sp-localhost.xml</value>
                 </constructor-arg>
                 <property name="parserPool" ref="parserPool"/>
               </bean>
@@ -319,9 +302,11 @@
                 <property name="requireArtifactResolveSigned" value="true"/>
                 <property name="requireLogoutRequestSigned" value="false"/>
                 <property name="requireLogoutResponseSigned" value="false"/>
+
                 <property name="idpDiscoveryEnabled" value="true" />
-                <property name="idpDiscoveryResponseURL" value="/saml/login/alias/defaultAlias?disco=true" />
-                <property name="idpDiscoveryURL" value="https://fed.sambi.se/trial/ds"/>
+                <property name="idpDiscoveryResponseURL" value="${sambi.discovery.response.url}" />
+                <property name="idpDiscoveryURL" value="${sambi.discovery.url}"/>
+
               </bean>
             </constructor-arg>
           </bean>
@@ -341,9 +326,6 @@
             <constructor-arg>
               <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
                 <property name="alias" value="defaultAlias"/>
-                <property name="idpDiscoveryEnabled" value="true" />
-                <property name="idpDiscoveryResponseURL" value="/saml/login/alias/defaultAlias?disco=true" />
-                <property name="idpDiscoveryURL" value="https://fed.sambi.se/trial/ds"/>
               </bean>
             </constructor-arg>
 
@@ -355,13 +337,7 @@
         </list>
       </constructor-arg>
       <property name="refreshCheckInterval" value="86400000"/>
-
     </bean>
-
-    <!-- SAML discovery filter
-    <bean id="samlDiscoveryFilter" class="org.springframework.security.saml.SAMLDiscovery" />
-
-    -->
 
     <!-- SAML Authentication Provider responsible for validating of received SAML messages over SITHS or e-leg -->
     <bean id="samlAuthenticationProvider" class="org.springframework.security.saml.SAMLAuthenticationProvider">
