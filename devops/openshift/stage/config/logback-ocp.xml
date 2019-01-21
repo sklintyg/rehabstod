@@ -24,6 +24,24 @@
 
     <include resource="logback-ocp-base.xml"/>
 
+    <logger name="com.fasterxml.jackson" level="off" />
+
+    <logger name="org.apache.cxf" level="off" />
+
+    <logger name="org.hibernate.engine.jdbc.spi.SqlExceptionHelper" level="off" />
+
+    <logger name="org.springframework.transaction" level="info" />
+
+    <logger name="se.inera.intyg.schemas.contract.Personnummer" level="info" />
+
+    <logger name="se.inera.intyg.infra.integration" level="info" />
+
+    <logger name="se.inera.intyg.infra.sjukfall" level="info" />
+
+    <logger name="se.inera.intyg.rehabstod" level="info" />
+
+    <logger name="se.inera.intyg.rehabstod.service.pdl" level="warn" />
+
     <logger name="se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService" level="info" additivity="false">
         <appender-ref ref="MONITORING" />
     </logger>

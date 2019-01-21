@@ -245,6 +245,12 @@ public class SjukfallServiceImpl implements SjukfallService {
                 .map(o -> intygstjanstMapper.map(o))
                 .collect(Collectors.toList());
 
+        // Remove intyg from other units for sekretess patients
+        List<IntygData> filtretedData = sjukfallPuService.filterSekretessForPatientHistory(data, vardgivareId, enhetsId);
+
+        boolean haveSekretess = filtretedData.size() != data.size();
+        data = filtretedData;
+
         //decorate with VG names
         decorateWithVardgivarNamn(data);
 
@@ -262,9 +268,13 @@ public class SjukfallServiceImpl implements SjukfallService {
             throw new SjukfallServiceException("At least one intyg must be issued on current unit!");
         }
 
-        // Decorate intygAccessMetaData with block ("spärr") info
-        sparrtjanstIntegrationService.decorateWithBlockStatus(vardgivareId, enhetsId,
-                lakareId, patientId, intygAccessMetaData, data);
+        boolean haveConsent = false;
+
+        // Hoppa över spärr och samtyckestjänsten om det är sekretess
+        if (!haveSekretess) {
+            // Decorate intygAccessMetaData with "spärr" info
+            sparrtjanstIntegrationService.decorateWithBlockStatus(vardgivareId, enhetsId,
+                    lakareId, patientId, intygAccessMetaData, data);
 
         // Make an initial calculation using _all_ available intyg...
         sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parameters);
@@ -272,9 +282,10 @@ public class SjukfallServiceImpl implements SjukfallService {
         // ... and check which intyg is contributing to the active sjukfall
         updateAccessMetaDataWithContributingStatus(sjukfallList, intygAccessMetaData, parameters);
 
-        // Make a call to consent service to see if there is a consent registered
-        boolean haveConsent = samtyckestjanstIntegrationService.checkForConsent(patientId, lakareId,
-                vardgivareId, enhetsId);
+            // Make a call to consent service to see if there is a consent registered
+            haveConsent = samtyckestjanstIntegrationService.checkForConsent(patientId, lakareId,
+                    vardgivareId, enhetsId);
+        }
 
         // Skapa listorna med vilka vårdgivare som har intyg som SKULLE funnits i aktivt sjukfall
         // men som inte kommer med pga spärr inre/yttrespärr.
