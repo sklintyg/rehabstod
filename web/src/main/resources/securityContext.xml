@@ -282,7 +282,7 @@
             <constructor-arg>
               <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
                 <constructor-arg>
-                  <value type="java.io.File">${config.dir}/sp-localhost.xml</value>
+                  <value type="java.io.File">${config.dir}/sp-sambi.xml</value>
                 </constructor-arg>
                 <property name="parserPool" ref="parserPool"/>
               </bean>
@@ -318,7 +318,7 @@
             <constructor-arg>
               <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
                 <constructor-arg>
-                  <value type="java.io.File">${config.dir}/idp-sambi-trial.xml</value>
+                  <value type="java.io.File">${config.dir}/idp-sambi.xml</value>
                 </constructor-arg>
                 <property name="parserPool" ref="parserPool"/>
               </bean>
@@ -332,7 +332,6 @@
             <property name="metadataTrustCheck" value="false"/>
           </bean>
           <!-- END IDENTITY PROVIDER BEAN FOR SITHS -->
-
 
         </list>
       </constructor-arg>

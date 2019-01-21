@@ -31,11 +31,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Customized authentication success handler that sets a Cookie with the EntityID of the IdP used for this login.
+ *
+ * The cookie is set only if the selected IdP is NOT the defaultIDP.
+ *
+ * @author eriklupander
+ */
 public class RehabstodAuthenticationSuccessHandler extends
         SimpleUrlAuthenticationSuccessHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RehabstodAuthenticationSuccessHandler.class);
-    public static final int MAX_AGE = 999999999;
+    private static final int MAX_AGE = 999999999;
+    static final String SELECTED_SAMBI_IDP = "selectedSambiIdp";
 
     @Value("${sakerhetstjanst.saml.idp.metadata.url}")
     private String defaultIdpEntityId;
@@ -55,7 +63,7 @@ public class RehabstodAuthenticationSuccessHandler extends
             String remoteEntityId = ((SAMLCredential) authentication.getCredentials()).getRemoteEntityID();
             if (!defaultIdpEntityId.equals(remoteEntityId)) {
                 LOGGER.info("User logged in using SAMBI, setting cookie: selectedSambiIdp={}", remoteEntityId);
-                Cookie cookie = new Cookie("selectedSambiIdp", remoteEntityId);
+                Cookie cookie = new Cookie(SELECTED_SAMBI_IDP, remoteEntityId);
                 cookie.setHttpOnly(false);
                 cookie.setMaxAge(MAX_AGE);
                 cookie.setPath("/");

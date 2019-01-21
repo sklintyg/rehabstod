@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import com.google.common.base.Strings;
 import org.opensaml.common.SAMLException;
 import org.opensaml.saml2.core.Audience;
 import org.opensaml.saml2.core.AudienceRestriction;
@@ -51,7 +52,8 @@ public class RehabstodWebSSOProfileImpl extends org.springframework.security.sam
      * Returns AuthnRequest SAML message to be used to demand authentication from an IDP described using
      * idpEntityDescriptor, with an expected response to the assertionConsumer address.
      *
-     * This overridden version explicitly sets the attributeConsumingServiceIndex for better control over IdP behaviour.
+     * This overridden version explicitly sets the attributeConsumingServiceIndex for better control over IdP behaviour
+     * and allows specification of OIDC and SAML audience restrictions.
      *
      * @param context           message context
      * @param options           preferences of message creation
@@ -79,17 +81,21 @@ public class RehabstodWebSSOProfileImpl extends org.springframework.security.sam
 
     private Conditions buildConditions() {
         AudienceRestriction audienceRestriction = new AudienceRestrictionBuilder().buildObject();
-        Audience audience = new AudienceBuilder().buildObject();
-        audience.setAudienceURI(idpEntityId);
-        audienceRestriction.getAudiences().add(audience);
 
-        Audience audience2 = new AudienceBuilder().buildObject();
-        audience2.setAudienceURI(oidcIdentity);
-        audienceRestriction.getAudiences().add(audience2);
+        addAudienceIfApplicable(audienceRestriction, idpEntityId);
+        addAudienceIfApplicable(audienceRestriction, oidcIdentity);
 
         Conditions conditions = new ConditionsBuilder().buildObject();
         conditions.getConditions().add(audienceRestriction);
 
         return conditions;
+    }
+
+    private void addAudienceIfApplicable(AudienceRestriction audienceRestriction, String audienceValue) {
+        if (!Strings.isNullOrEmpty(audienceValue)) {
+            Audience audience = new AudienceBuilder().buildObject();
+            audience.setAudienceURI(audienceValue);
+            audienceRestriction.getAudiences().add(audience);
+        }
     }
 }

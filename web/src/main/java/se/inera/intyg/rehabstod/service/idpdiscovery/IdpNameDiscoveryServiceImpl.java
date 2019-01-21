@@ -18,7 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.idpdiscovery;
 
+import org.opensaml.saml2.metadata.Organization;
 import org.opensaml.saml2.metadata.impl.EntityDescriptorImpl;
+import org.opensaml.xml.XMLObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +33,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * This class parses the loaded SAML metadata and produces a HashMap with EntityID => Name of the
+ * IdP's contained within the metadata.
+ *
+ * @author eriklupander
+ */
 @Service
 public class IdpNameDiscoveryServiceImpl implements IdpNameDiscoveryService {
 
     private static final Logger LOG = LoggerFactory.getLogger(IdpNameDiscoveryServiceImpl.class);
 
+    private final CachingMetadataManager cachingMetadataManager;
+
     @Autowired(required = false)
-    private CachingMetadataManager cachingMetadataManager;
+    public IdpNameDiscoveryServiceImpl(CachingMetadataManager cachingMetadataManager) {
+        this.cachingMetadataManager = cachingMetadataManager;
+    }
 
     @Override
     public Map<String, String> buildIdpNameMap() {
@@ -52,40 +65,64 @@ public class IdpNameDiscoveryServiceImpl implements IdpNameDiscoveryService {
         List<ExtendedMetadataDelegate> availableProviders = cachingMetadataManager.getAvailableProviders();
 
         try {
-            List<Pair<String, String>> listOfPairs = availableProviders.stream().flatMap(provider -> {
-                try {
-                    if (provider.getMetadata() != null && provider.getMetadata().getOrderedChildren() != null) {
-                        return provider.getMetadata().getOrderedChildren().stream();
-                    }
-                } catch (Exception ignored) {
-
-                }
-                return Stream.empty();
-            })
+            return availableProviders.stream()
+                    .flatMap(filterNullsAndProduceStream())
                     .filter(child -> child instanceof EntityDescriptorImpl)
-                    .map(child -> {
-                        EntityDescriptorImpl edi = (EntityDescriptorImpl) child;
-                        if (edi.getIDPSSODescriptor("urn:oasis:names:tc:SAML:2.0:protocol") != null) {
-                            if (edi.getOrganization() != null && edi.getOrganization().getDisplayNames() != null) {
-                                return Pair.of(edi.getEntityID(), edi.getOrganization().getDisplayNames().stream()
-                                        .findFirst().get().getName().getLocalString());
-                            } else {
-                                return Pair.of(edi.getEntityID(), edi.getEntityID());
-                            }
-                        }
-                        return null;
-                    })
+                    .map(mapToPair())
                     .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
 
-            Map<String, String> idps = new HashMap<>();
-            listOfPairs.stream().forEach(pair -> {
-                idps.put(pair.getFirst(), pair.getSecond());
-            });
-
-            return idps;
         } catch (Exception e) {
+            LOG.error("Error building map for IdP EntityID => Display name: " + e.getMessage() + ". Returning empty map.");
             return new HashMap<>();
         }
+    }
+
+    private Function<XMLObject, Pair<String, String>> mapToPair() {
+        return child -> {
+            EntityDescriptorImpl edi = (EntityDescriptorImpl) child;
+            if (edi.getIDPSSODescriptor("urn:oasis:names:tc:SAML:2.0:protocol") != null) {
+                Organization organization = edi.getOrganization();
+                if (organization != null && organization.getDisplayNames() != null) {
+                    return Pair.of(edi.getEntityID(), resolveDisplayName(edi));
+                } else {
+                    return Pair.of(edi.getEntityID(), edi.getEntityID());
+                }
+            }
+            return null;
+        };
+    }
+
+    private String resolveDisplayName(EntityDescriptorImpl edi) {
+        Organization organization = edi.getOrganization();
+        if (organization != null) {
+
+            // Try displaynames first
+            if (organization.getDisplayNames() != null && organization.getDisplayNames().stream().findFirst().isPresent()) {
+                return organization.getDisplayNames().stream()
+                        .findFirst().get().getName().getLocalString();
+            }
+            // Then try organization name
+            if (organization.getOrganizationNames() != null && organization.getOrganizationNames().stream().findFirst().isPresent()) {
+                return organization.getOrganizationNames().stream().findFirst().get().getName().getLocalString();
+            }
+        }
+        // Finally, just use the EntityID.
+        return edi.getEntityID();
+
+    }
+
+    private Function<ExtendedMetadataDelegate, Stream<? extends XMLObject>> filterNullsAndProduceStream() {
+        return provider -> {
+            try {
+                XMLObject metadata = provider.getMetadata();
+                if (metadata != null && metadata.getOrderedChildren() != null) {
+                    return metadata.getOrderedChildren().stream();
+                }
+            } catch (Exception ignored) {
+                // Ignore exception, empty stream is returned below.
+            }
+            return Stream.empty();
+        };
     }
 }

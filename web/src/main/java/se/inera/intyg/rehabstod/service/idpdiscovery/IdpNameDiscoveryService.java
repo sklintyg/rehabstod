@@ -22,6 +22,11 @@ import java.util.Map;
 
 public interface IdpNameDiscoveryService {
 
+    /**
+     * Builds a Map with EntityID => Display name of IdP's loaded from SAML metadata.
+     *
+     * @return
+     */
     Map<String, String> buildIdpNameMap();
 
 }
