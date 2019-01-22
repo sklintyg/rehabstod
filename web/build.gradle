@@ -80,22 +80,13 @@ gretty {
     inplaceMode = 'hard'
     enableNaming = true
 
-//    jvmArgs = [
-//            '-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,caching-enabled',
-//               '-Dconfig.file=' + projectDir + '/src/main/resources/dev.properties',
-//               '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
-//               '-Dresources.folder=/' +projectDir + '/../src/main/resources'
-//               ]
+    jvmArgs = [
+            '-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,caching-enabled',
+               '-Dconfig.file=' + projectDir + '/src/main/resources/dev.properties',
+               '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
+               '-Dresources.folder=/' +projectDir + '/../src/main/resources'
+               ]
 
-    /***************** Konfiguration för att köra med SITHS och HSA aktiverat lokalt. *******************/
-        jvmArgs = [
-                '-Dspring.profiles.active=test,rhs-security-test,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,wc-pu-stub,wc-hsa-stub,caching-enabled',
-                '-Dconfig.folder=' + projectDir + '/../../rehabstod-konfiguration/sambi',
-                '-Dconfig.file=' + projectDir + '/../../rehabstod-konfiguration/sambi/rehabstod.properties',
-                '-Dfeatures.file=' + projectDir + '/../../rehabstod-konfiguration/sambi/features.properties',
-                '-Dcredentials.file=' + projectDir + '/../../rehabstod-konfiguration/sambi/credentials.properties',
-                '-Dresources.folder=/' +projectDir + '/../src/main/resources'
-        ]
 }
 
 dependencies {
