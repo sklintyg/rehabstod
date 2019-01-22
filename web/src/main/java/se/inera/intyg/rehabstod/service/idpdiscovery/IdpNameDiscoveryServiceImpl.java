@@ -48,12 +48,8 @@ public class IdpNameDiscoveryServiceImpl implements IdpNameDiscoveryService {
 
     private static final Logger LOG = LoggerFactory.getLogger(IdpNameDiscoveryServiceImpl.class);
 
-    private final CachingMetadataManager cachingMetadataManager;
-
     @Autowired(required = false)
-    public IdpNameDiscoveryServiceImpl(CachingMetadataManager cachingMetadataManager) {
-        this.cachingMetadataManager = cachingMetadataManager;
-    }
+    private CachingMetadataManager cachingMetadataManager;
 
     @Override
     public Map<String, String> buildIdpNameMap() {

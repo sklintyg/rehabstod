@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns="http://www.w3.org/2000/09/xmldsig#"
+                     ID="https___rehabstod.intygstjanster.se"
+                     entityID="https://rehabstod.intygstjanster.se">
+    <md:SPSSODescriptor AuthnRequestsSigned="false" WantAssertionsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <md:Extensions>
+            <idpdisc:DiscoveryResponse
+                    xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+                    Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol"
+                    Location="https://rehabstod.intygstjanster.se/saml/login?disco=true" index="1" />
+        </md:Extensions>
+        <md:KeyDescriptor>
+            <KeyInfo><X509Data>
+                <X509Certificate>FIXME!!!!</X509Certificate>
+            </X509Data></KeyInfo>
+        </md:KeyDescriptor>
+        <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://rehabstod.intygstjanster.se/saml/SingleLogout/alias/defaultAlias"/>
+        <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://rehabstod.intygstjanster.se/saml/SingleLogout/alias/defaultAlias"/>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</md:NameIDFormat>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</md:NameIDFormat>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</md:NameIDFormat>
+        <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName</md:NameIDFormat>
+        <md:AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://rehabstod.intygstjanster.se/saml/SSO/alias/defaultAlias" index="0" isDefault="true"/>
+        <md:AttributeConsumingService index="1">
+            <md:ServiceName xml:lang="sv">TestSP med HSA-uppslag</md:ServiceName>
+            <md:RequestedAttribute Name="http://sambi.se/attributes/1/employeeHsaId" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="employeeHsaId" isRequired="true"/>
+            <md:RequestedAttribute Name="urn:sambi:names:attribute:authnMethod" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" FriendlyName="authnMethod" isRequired="true"/>
+        </md:AttributeConsumingService>
+    </md:SPSSODescriptor>
+    <md:Organization>
+        <md:OrganizationName xml:lang="sv">Inera AB</md:OrganizationName>
+        <md:OrganizationDisplayName xml:lang="sv">Inera AB</md:OrganizationDisplayName>
+        <md:OrganizationURL xml:lang="sv">https://inera.se</md:OrganizationURL>
+    </md:Organization>
+    <md:ContactPerson xml:lang="sv" contactType="technical">
+        <md:Company>Inera AB</md:Company>
+        <md:GivenName>Ulf</md:GivenName>
+        <md:SurName>Pettersson</md:SurName>
+        <md:EmailAddress>ulf.pettersson@inera.se</md:EmailAddress>
+    </md:ContactPerson>
+    <md:ContactPerson xml:lang="en" contactType="technical">
+        <md:Company>Inera AB</md:Company>
+        <md:GivenName>Ulf</md:GivenName>
+        <md:SurName>Pettersson</md:SurName>
+        <md:EmailAddress>ulf.pettersson@inera.se</md:EmailAddress>
+    </md:ContactPerson>
+    <md:ContactPerson xml:lang="sv" contactType="support">
+        <md:Company>Inera AB</md:Company>
+        <md:GivenName>Ulf</md:GivenName>
+        <md:SurName>Pettersson</md:SurName>
+        <md:EmailAddress>ulf.pettersson@inera.se</md:EmailAddress>
+    </md:ContactPerson>
+    <md:ContactPerson xml:lang="en" contactType="support">
+        <md:Company>Inera AB</md:Company>
+        <md:GivenName>Ulf</md:GivenName>
+        <md:SurName>Pettersson</md:SurName>
+        <md:EmailAddress>ulf.pettersson@inera.se</md:EmailAddress>
+    </md:ContactPerson>
+</md:EntityDescriptor>

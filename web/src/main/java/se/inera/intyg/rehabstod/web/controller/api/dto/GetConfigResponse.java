@@ -32,16 +32,19 @@ public class GetConfigResponse {
     private String webcertViewIntygTemplateUrl;
     private String version;
     private String defaultIDP;
+    private String defaultAlias;
     private Map<String, String> idpMap = new HashMap<>();
 
-    public GetConfigResponse(List<DiagnosKapitel> diagnosKapitelList, String webcertViewIntygTemplateUrl,
-            String version, String defaultIDP, Map<String, String> idpMap) {
-        this.diagnosKapitelList = diagnosKapitelList;
-        this.webcertViewIntygTemplateUrl = webcertViewIntygTemplateUrl;
-        this.version = version;
-        this.defaultIDP = defaultIDP;
-        this.idpMap = idpMap;
-    }
+
+
+//    public GetConfigResponse(List<DiagnosKapitel> diagnosKapitelList, String webcertViewIntygTemplateUrl,
+//            String version, String defaultIDP, String defaMap<String, String> idpMap) {
+//        this.diagnosKapitelList = diagnosKapitelList;
+//        this.webcertViewIntygTemplateUrl = webcertViewIntygTemplateUrl;
+//        this.version = version;
+//        this.defaultIDP = defaultIDP;
+//        this.idpMap = idpMap;
+//    }
 
     public List<DiagnosKapitel> getDiagnosKapitelList() {
         return diagnosKapitelList;
@@ -77,5 +80,62 @@ public class GetConfigResponse {
 
     public void setIdpMap(Map<String, String> idpMap) {
         this.idpMap = idpMap;
+    }
+
+    public static final class GetConfigResponseBuilder {
+        private List<DiagnosKapitel> diagnosKapitelList;
+        private String webcertViewIntygTemplateUrl;
+        private String version;
+        private String defaultIDP;
+        private String defaultAlias;
+        private Map<String, String> idpMap = new HashMap<>();
+
+        private GetConfigResponseBuilder() {
+        }
+
+        public static GetConfigResponseBuilder aGetConfigResponse() {
+            return new GetConfigResponseBuilder();
+        }
+
+        public GetConfigResponseBuilder withDiagnosKapitelList(List<DiagnosKapitel> diagnosKapitelList) {
+            this.diagnosKapitelList = diagnosKapitelList;
+            return this;
+        }
+
+        public GetConfigResponseBuilder withWebcertViewIntygTemplateUrl(String webcertViewIntygTemplateUrl) {
+            this.webcertViewIntygTemplateUrl = webcertViewIntygTemplateUrl;
+            return this;
+        }
+
+        public GetConfigResponseBuilder withVersion(String version) {
+            this.version = version;
+            return this;
+        }
+
+        public GetConfigResponseBuilder withDefaultIDP(String defaultIDP) {
+            this.defaultIDP = defaultIDP;
+            return this;
+        }
+
+        public GetConfigResponseBuilder withDefaultAlias(String defaultAlias) {
+            this.defaultAlias = defaultAlias;
+            return this;
+        }
+
+        public GetConfigResponseBuilder withIdpMap(Map<String, String> idpMap) {
+            this.idpMap = idpMap;
+            return this;
+        }
+
+        public GetConfigResponse build() {
+            GetConfigResponse getConfigResponse = new GetConfigResponse();
+            getConfigResponse.setWebcertViewIntygTemplateUrl(webcertViewIntygTemplateUrl);
+            getConfigResponse.setVersion(version);
+            getConfigResponse.setDefaultIDP(defaultIDP);
+            getConfigResponse.setIdpMap(idpMap);
+            getConfigResponse.diagnosKapitelList = this.diagnosKapitelList;
+            getConfigResponse.defaultAlias = this.defaultAlias;
+            return getConfigResponse;
+        }
     }
 }

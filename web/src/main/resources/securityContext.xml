@@ -291,7 +291,7 @@
 
             <constructor-arg>
               <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
-                <property name="alias" value="defaultAlias"/>
+                <property name="alias" value="${sakerhetstjanst.saml.default.alias}"/>
                 <property name="local" value="true"/>
                 <property name="securityProfile" value="metaiop"/>
                 <property name="sslSecurityProfile" value="metaiop"/>
