@@ -18,8 +18,9 @@ angular.module('rehabstodApp')
                 $scope.hasStoredLogin = typeof storedIdpEntityId !== 'undefined';
 
                 if ($scope.hasStoredLogin) {
-                    $scope.sambiUrl = DEFAULT_LOGIN_URL + '?idp=' + storedIdpEntityId;
-                    $scope.sambiLabel = resolveIdpName(storedIdpEntityId);
+                    var decodedIdpEntityId = decodeURIComponent(storedIdpEntityId);
+                    $scope.sambiUrl = DEFAULT_LOGIN_URL + '?idp=' + decodedIdpEntityId;
+                    $scope.sambiLabel = resolveIdpName(decodedIdpEntityId);
                 } else {
                     $scope.sambiUrl = '/saml/login/discovery';
                     $scope.sambiLabel = 'Logga in via Sambi';

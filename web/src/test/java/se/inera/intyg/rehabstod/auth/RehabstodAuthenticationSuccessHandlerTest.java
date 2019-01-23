@@ -32,6 +32,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -58,19 +59,14 @@ public class RehabstodAuthenticationSuccessHandlerTest {
     @Test
     public void testSetsCookie() throws ServletException, IOException {
         when(auth.isAuthenticated()).thenReturn(true);
-        when(credential.getRemoteEntityID()).thenReturn("other-idp");
+        when(credential.getRemoteEntityID()).thenReturn("https://trial-idp-01.sambi.se/saml2/idp/metadata.php");
         when(auth.getCredentials()).thenReturn(credential);
         testee.onAuthenticationSuccess(req, resp, auth);
         ArgumentCaptor<Cookie> captor = ArgumentCaptor.forClass(Cookie.class);
 
         verify(resp, times(1)).addCookie(captor.capture());
         assertEquals(SELECTED_SAMBI_IDP, captor.getValue().getName());
+        assertEquals("https://trial-idp-01.sambi.se/saml2/idp/metadata.php", URLDecoder.decode(captor.getValue().getValue()));
         assertEquals("/", captor.getValue().getPath());
-    }
-
-    @Test
-    public void testCleanEntityID() {
-        String cleaned = testee.cleanEntityID("\"entity-id\"");
-        assertEquals("entity-id", cleaned);
     }
 }

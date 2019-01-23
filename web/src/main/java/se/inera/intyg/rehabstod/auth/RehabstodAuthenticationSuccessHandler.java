@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +30,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 /**
  * Customized authentication success handler that sets a Cookie with the EntityID of the IdP used for this login.
@@ -64,11 +64,11 @@ public class RehabstodAuthenticationSuccessHandler extends
             String remoteEntityId = ((SAMLCredential) authentication.getCredentials()).getRemoteEntityID();
 
             if (remoteEntityId != null) {
-                remoteEntityId = cleanEntityID(remoteEntityId);
 
                 if (!defaultIdpEntityId.equals(remoteEntityId)) {
                     LOGGER.info("User logged in using SAMBI, setting cookie: selectedSambiIdp={}", remoteEntityId);
-                    Cookie cookie = new Cookie(SELECTED_SAMBI_IDP, remoteEntityId);
+                    Cookie cookie = new Cookie(SELECTED_SAMBI_IDP, URLEncoder.encode(remoteEntityId, "UTF-8"));
+                    cookie.setVersion(0);
                     cookie.setHttpOnly(false);
                     cookie.setMaxAge(MAX_AGE);
                     cookie.setPath("/");
@@ -81,18 +81,5 @@ public class RehabstodAuthenticationSuccessHandler extends
         }
 
         super.onAuthenticationSuccess(request, response, authentication);
-    }
-
-    @VisibleForTesting
-    String cleanEntityID(String remoteEntityId) {
-        String cleanedEntityID = remoteEntityId;
-        // Somehow, the entityID somehow may get leading and trailing "
-        if (cleanedEntityID.startsWith("\"")) {
-            cleanedEntityID = cleanedEntityID.substring(1);
-        }
-        if (cleanedEntityID.endsWith("\"")) {
-            cleanedEntityID = cleanedEntityID.substring(0, cleanedEntityID.length() - 1);
-        }
-        return cleanedEntityID;
     }
 }
