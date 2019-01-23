@@ -67,4 +67,10 @@ public class RehabstodAuthenticationSuccessHandlerTest {
         assertEquals(SELECTED_SAMBI_IDP, captor.getValue().getName());
         assertEquals("/", captor.getValue().getPath());
     }
+
+    @Test
+    public void testCleanEntityID() {
+        String cleaned = testee.cleanEntityID("\"entity-id\"");
+        assertEquals("entity-id", cleaned);
+    }
 }

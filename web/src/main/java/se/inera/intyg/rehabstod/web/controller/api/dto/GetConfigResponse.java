@@ -35,19 +35,12 @@ public class GetConfigResponse {
     private String defaultAlias;
     private Map<String, String> idpMap = new HashMap<>();
 
-
-
-//    public GetConfigResponse(List<DiagnosKapitel> diagnosKapitelList, String webcertViewIntygTemplateUrl,
-//            String version, String defaultIDP, String defaMap<String, String> idpMap) {
-//        this.diagnosKapitelList = diagnosKapitelList;
-//        this.webcertViewIntygTemplateUrl = webcertViewIntygTemplateUrl;
-//        this.version = version;
-//        this.defaultIDP = defaultIDP;
-//        this.idpMap = idpMap;
-//    }
-
     public List<DiagnosKapitel> getDiagnosKapitelList() {
         return diagnosKapitelList;
+    }
+
+    public void setDiagnosKapitelList(List<DiagnosKapitel> diagnosKapitelList) {
+        this.diagnosKapitelList = diagnosKapitelList;
     }
 
     public String getWebcertViewIntygTemplateUrl() {
@@ -72,6 +65,14 @@ public class GetConfigResponse {
 
     public void setDefaultIDP(String defaultIDP) {
         this.defaultIDP = defaultIDP;
+    }
+
+    public String getDefaultAlias() {
+        return defaultAlias;
+    }
+
+    public void setDefaultAlias(String defaultAlias) {
+        this.defaultAlias = defaultAlias;
     }
 
     public Map<String, String> getIdpMap() {
@@ -129,12 +130,12 @@ public class GetConfigResponse {
 
         public GetConfigResponse build() {
             GetConfigResponse getConfigResponse = new GetConfigResponse();
-            getConfigResponse.setWebcertViewIntygTemplateUrl(webcertViewIntygTemplateUrl);
-            getConfigResponse.setVersion(version);
-            getConfigResponse.setDefaultIDP(defaultIDP);
-            getConfigResponse.setIdpMap(idpMap);
-            getConfigResponse.diagnosKapitelList = this.diagnosKapitelList;
+            getConfigResponse.defaultIDP = this.defaultIDP;
             getConfigResponse.defaultAlias = this.defaultAlias;
+            getConfigResponse.idpMap = this.idpMap;
+            getConfigResponse.version = this.version;
+            getConfigResponse.diagnosKapitelList = this.diagnosKapitelList;
+            getConfigResponse.webcertViewIntygTemplateUrl = this.webcertViewIntygTemplateUrl;
             return getConfigResponse;
         }
     }
