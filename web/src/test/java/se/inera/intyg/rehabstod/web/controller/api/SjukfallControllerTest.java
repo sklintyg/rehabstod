@@ -18,12 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +27,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
@@ -62,6 +55,12 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -222,7 +221,8 @@ public class SjukfallControllerTest {
 
         // When
         mockStatic(PDLActivityStore.class);
-        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
+        when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), anyString(),
+                any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class), anyCollectionOf(String.class)))
                 .thenReturn(new SjukfallPatientResponse(result, new SjfMetaData(), false));
 
         // Then
@@ -230,7 +230,7 @@ public class SjukfallControllerTest {
 
         // Verify
         verify(sjukfallServiceMock).getByPatient(eq(DEFAULT_VARDGIVARE.getId()), eq(DEFAULT_VARDENHET.getId()), anyString(),
-                eq(patientId), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class));
+                eq(patientId), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class), anyCollectionOf(String.class));
 
         verifyStatic();
         PDLActivityStore.isActivityInStore(anyString(), eq(patientId), eq(ActivityType.READ),
@@ -257,7 +257,7 @@ public class SjukfallControllerTest {
         // When
         mockStatic(PDLActivityStore.class);
         when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), anyString(),
-                any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
+                any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class), anyCollectionOf(String.class)))
                 .thenReturn(new SjukfallPatientResponse(result, new SjfMetaData(), false));
 
         // Then
@@ -265,7 +265,7 @@ public class SjukfallControllerTest {
 
         // Verify
         verify(sjukfallServiceMock).getByPatient(eq(DEFAULT_VARDGIVARE.getId()), eq(DEFAULT_VARDENHET.getId()), anyString(),
-                eq(patientId), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class));
+                eq(patientId), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class), anyCollectionOf(String.class));
 
         verifyStatic(atLeastOnce());
         PDLActivityStore.isActivityInStore(anyString(), eq(patientId), eq(ActivityType.READ),
@@ -293,7 +293,8 @@ public class SjukfallControllerTest {
         when(userServiceMock.getUser()).thenReturn(user);
 
         when(sjukfallServiceMock
-                .getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
+                .getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class),
+                        any(IntygParametrar.class), anyCollectionOf(String.class), anyCollectionOf(String.class)))
                 .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false));
 
         testee.getSjukfallForPatient(request);
@@ -330,7 +331,8 @@ public class SjukfallControllerTest {
         when(userServiceMock.getUser()).thenReturn(user);
 
         when(sjukfallServiceMock
-                .getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
+                .getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class),
+                        any(IntygParametrar.class), anyCollectionOf(String.class), anyCollectionOf(String.class)))
                 .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false));
 
         testee.getSjukfallForPatient(request);
@@ -368,7 +370,8 @@ public class SjukfallControllerTest {
         when(userServiceMock.getUser()).thenReturn(user);
 
         when(sjukfallServiceMock
-                .getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class)))
+                .getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class),
+                        any(IntygParametrar.class), anyCollectionOf(String.class), anyCollectionOf(String.class)))
                 .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false));
 
         testee.getSjukfallForPatient(request);

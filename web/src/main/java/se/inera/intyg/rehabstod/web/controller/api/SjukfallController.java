@@ -48,6 +48,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.controller.api.dto.AddVeToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallForPatientRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
@@ -127,10 +128,12 @@ public class SjukfallController {
         Personnummer personnummer = Personnummer.createPersonnummer(request.getPatientId())
                 .orElseThrow(() -> new IllegalArgumentException("Could not parse personnummer: " + request.getPatientId()));
 
-        Collection<String> vardgivareIds = user.getSjfPatientVardgivareForPatient(personnummer.getPersonnummer());
+        Collection<String> vardgivareIds = user.getSjfPatientVardgivare(personnummer.getPersonnummer());
+        Collection<String> vardenhetIds = user.getSjfPatientVardenhet(personnummer.getPersonnummer());
 
         // Fetch sjukfall
-        SjukfallPatientResponse response = getSjukfallForPatient(user, request.getPatientId(), request.getAktivtDatum(), vardgivareIds);
+        SjukfallPatientResponse response =
+                getSjukfallForPatient(user, request.getPatientId(), request.getAktivtDatum(), vardgivareIds, vardenhetIds);
         List<SjukfallPatient> sjukfall = response.getSjukfallList();
 
         // All filtrering av samtycke och spärrar har redan gjorts! De sjukfall vi har tillgång till
@@ -239,7 +242,7 @@ public class SjukfallController {
     }
 
     /**
-     * Register vardgivare to be include in patient view sjukfall calculations during session.
+     * Register a 'vardgivare' to be included in the calculation of the patient sjukfall view.
      *
      * @param request
      * @return
@@ -248,13 +251,11 @@ public class SjukfallController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<String>> addVgToPatientView(@RequestBody AddVgToPatientViewRequest request) {
-
         // Get logged in user
         RehabstodUser user = userService.getUser();
 
         try {
             Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
-
             if (!personnummer.isPresent()) {
                 throw new RuntimeException("error parsing personnummer");
             }
@@ -263,7 +264,35 @@ public class SjukfallController {
             return ResponseEntity.ok(user.getSjfPatientVardgivare().get(personnummer.get().getPersonnummer()));
 
         } catch (Exception e) {
-            LOG.error("Error giving consent", e);
+            LOG.error("Error adding 'vardgivare' to be included in calculation of a patients sjukfall", e);
+            return  ResponseEntity.unprocessableEntity().body(new ArrayList<>());
+        }
+    }
+
+    /**
+     * Register a 'vardenhet' to be included in the calculation of the patient sjukfall view.
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/patient/addVardenhet", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<String>> addVeToPatientView(@RequestBody AddVeToPatientViewRequest request) {
+        // Get logged in user
+        RehabstodUser user = userService.getUser();
+
+        try {
+            Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
+            if (!personnummer.isPresent()) {
+                throw new RuntimeException("error parsing personnummer");
+            }
+
+            user.addSjfPatientVardenhet(personnummer.get().getPersonnummer(), request.getVardenhetId());
+            return ResponseEntity.ok(user.getSjfPatientVardenhet().get(personnummer.get().getPersonnummer()));
+
+        } catch (Exception e) {
+            LOG.error("Error adding 'vardenhet' to be included in calculation of a patients sjukfall", e);
             return  ResponseEntity.unprocessableEntity().body(new ArrayList<>());
         }
     }
@@ -318,7 +347,7 @@ public class SjukfallController {
     }
 
     private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, String patientId, LocalDate date,
-                                                          Collection<String> vgHsaId) {
+                                                          Collection<String> vgHsaId, Collection<String> veHsaId) {
 
         String currentVardgivarId = user.getValdVardgivare().getId();
         String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
@@ -329,7 +358,7 @@ public class SjukfallController {
                 ControllerUtil.getMaxGlapp(user), ControllerUtil.getMaxDagarSedanSjukfallAvslut(user), date);
 
         LOG.debug("Calling the 'sjukfall' service to get a list of detailed 'sjukfall' for one patient.");
-        return sjukfallService.getByPatient(currentVardgivarId, enhetsId, lakareId, patientId, urval, parameters, vgHsaId);
+        return sjukfallService.getByPatient(currentVardgivarId, enhetsId, lakareId, patientId, urval, parameters, vgHsaId, veHsaId);
     }
 
     private void logSjukfallData(RehabstodUser user, List<SjukfallEnhet> sjukfallList,

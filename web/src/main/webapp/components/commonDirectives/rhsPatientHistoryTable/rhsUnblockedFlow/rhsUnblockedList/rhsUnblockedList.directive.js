@@ -51,11 +51,9 @@ angular.module('rehabstodApp').directive('rhsUnblockedList',
                     templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedList/rhsUnblockedList.dialog.html',
                     keyboard: true,
                     size: 'md'
-                }).result.then(function(){
-                    console.log("DISMISS1");
-                }, function(){
-                    console.log("DISMISS2");
-                });
+                }).result.then(
+                    function(){}, function(){}
+                );
             };
         }
     };

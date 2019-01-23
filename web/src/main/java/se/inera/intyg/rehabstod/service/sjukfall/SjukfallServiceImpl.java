@@ -40,7 +40,8 @@ import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.FilteredSjukFallByPatientResult;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfSamtyckeFinnsMetaData;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaDataItem;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaDataItemType;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
@@ -123,12 +124,14 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(rehabstodSjukfall);
         sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(rehabstodSjukfall);
+
         boolean srsError = false;
         try {
             riskPredictionService.updateWithRiskPredictions(rehabstodSjukfall);
         } catch (SRSServiceException e) {
             srsError = true;
         }
+
         return new SjukfallEnhetResponse(rehabstodSjukfall, srsError);
     }
 
@@ -136,10 +139,11 @@ public class SjukfallServiceImpl implements SjukfallService {
     @PrometheusTimeMethod
     public SjukfallPatientResponse getByPatient(String currentVardgivarId, String enhetsId, String lakareId,
                                                 String patientId, Urval urval, IntygParametrar parameters,
-                                                Collection<String> vgHsaIds) {
+                                                Collection<String> vgHsaIds, Collection<String> veHsaIds) {
 
         FilteredSjukFallByPatientResult result =
-                getFilteredSjukfallByPatient(currentVardgivarId, enhetsId, lakareId, patientId, urval, parameters, vgHsaIds);
+                getFilteredSjukfallByPatient(currentVardgivarId, enhetsId, lakareId, patientId,
+                        urval, parameters, vgHsaIds, veHsaIds);
 
         final List<SjukfallPatient> rehabstodSjukfall = result.getRehabstodSjukfall();
 
@@ -220,9 +224,9 @@ public class SjukfallServiceImpl implements SjukfallService {
         return rehabstodSjukfall;
     }
 
-    private FilteredSjukFallByPatientResult getFilteredSjukfallByPatient(String vardgivareId, String enhetsId,
-                                                                         String lakareId, String patientId, Urval urval,
-                                                                         IntygParametrar parameters, Collection<String> vgHsaIds) {
+    private FilteredSjukFallByPatientResult getFilteredSjukfallByPatient(String vardgivareId, String enhetsId, String lakareId,
+                                                                         String patientId, Urval urval, IntygParametrar parameters,
+                                                                         Collection<String> vgHsaIds, Collection<String> veHsaIds) {
 
         Preconditions.checkArgument(!Strings.isNullOrEmpty(vardgivareId), "vardgivareId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(enhetsId), "enhetsId may not be null or empty");
@@ -240,29 +244,29 @@ public class SjukfallServiceImpl implements SjukfallService {
         List<IntygsData> intygsData =
                 intygstjanstIntegrationService.getAllIntygsDataForPatient(patientId);
 
-
+        //Map to sjukfall DTO
         List<IntygData> data = intygsData.stream()
                 .map(o -> intygstjanstMapper.map(o))
                 .collect(Collectors.toList());
 
-        // Remove intyg from other units for sekretess patients
-        List<IntygData> filtretedData = sjukfallPuService.filterSekretessForPatientHistory(data, vardgivareId, enhetsId);
+        // Remove intyg from other units for patients with sekretess
+        List<IntygData> filteredData = sjukfallPuService.filterSekretessForPatientHistory(data, vardgivareId, enhetsId);
 
-        boolean haveSekretess = filtretedData.size() != data.size();
-        data = filtretedData;
+        boolean haveSekretess = filteredData.size() != data.size();
+        data = filteredData;
 
-        //decorate with VG names
+        //Decorate with VG names
         decorateWithVardgivarNamn(data);
 
-        // Create initial map linked to each intyg by intygsId
+        //Create initial map linked to each intyg by intygsId
         data.forEach(intygData -> intygAccessMetaData.put(intygData.getIntygId(),
                 new IntygAccessControlMetaData(intygData,
                         vardgivareId.equals(intygData.getVardgivareId()),
                         isIntygIssuedOnEnhetOrMottagning(currentVardenhet, intygData.getVardenhetId()),
-                        vgHsaIds.contains(intygData.getVardgivareId()))));
+                        includedBaseOnSamtycke(vgHsaIds, veHsaIds, intygData))));
 
         //Assert that at least one intyg for this patient is issued
-        // on the current unit (see INTYG-7686)
+        //on the current unit (see INTYG-7686)
         if (intygAccessMetaData.size() > 0
                 && intygAccessMetaData.entrySet().stream().noneMatch(intyg -> intyg.getValue().isInomVardenhet())) {
             throw new SjukfallServiceException("At least one intyg must be issued on current unit!");
@@ -276,11 +280,11 @@ public class SjukfallServiceImpl implements SjukfallService {
             sparrtjanstIntegrationService.decorateWithBlockStatus(vardgivareId, enhetsId,
                     lakareId, patientId, intygAccessMetaData, data);
 
-        // Make an initial calculation using _all_ available intyg...
-        sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parameters);
+            // Make an initial calculation using _all_ available intyg...
+            sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parameters);
 
-        // ... and check which intyg is contributing to the active sjukfall
-        updateAccessMetaDataWithContributingStatus(sjukfallList, intygAccessMetaData, parameters);
+            // ... and check which intyg is contributing to the active sjukfall
+            updateAccessMetaDataWithContributingStatus(sjukfallList, intygAccessMetaData, parameters);
 
             // Make a call to consent service to see if there is a consent registered
             haveConsent = samtyckestjanstIntegrationService.checkForConsent(patientId, lakareId,
@@ -305,6 +309,10 @@ public class SjukfallServiceImpl implements SjukfallService {
         return new FilteredSjukFallByPatientResult(rehabstodSjukfall, sjfMetaData);
     }
 
+    private boolean includedBaseOnSamtycke(Collection<String> vgHsaIds, Collection<String> veHsaIds, IntygData intygData) {
+        return vgHsaIds.contains(intygData.getVardgivareId()) || veHsaIds.contains(intygData.getVardenhetId());
+    }
+
     private void decorateWithVardgivarNamn(List<IntygData> data) {
         data.stream().forEach(
                 intygData -> intygData.setVardgivareNamn(getVardgivarNamn(intygData.getVardgivareId())));
@@ -323,34 +331,44 @@ public class SjukfallServiceImpl implements SjukfallService {
     private SjfMetaData createSjfMetaData(Map<String, IntygAccessControlMetaData> intygAccessMetaData, boolean haveConsent) {
         SjfMetaData metadata = new SjfMetaData();
 
-        Map<String, SjfSamtyckeFinnsMetaData> vardgivareSamtycke = new HashMap<>();
+        Map<String, SjfMetaDataItem> samtyckeFinnsMetaDataMap = new HashMap<>();
 
         intygAccessMetaData.forEach((intygsId, iacm) -> {
-            String vardgivareId = iacm.getIntygData().getVardgivareId();
-            String vardgivareNamn = iacm.getIntygData().getVardgivareNamn();
-
             if (iacm.inreSparr()) {
                 metadata.getVardenheterInomVGMedSparr().add(iacm.getIntygData().getVardenhetNamn());
             }
+
             if (iacm.yttreSparr()) {
-                metadata.getAndraVardgivareMedSparr().add(vardgivareNamn);
+                metadata.getAndraVardgivareMedSparr().add(iacm.getIntygData().getVardgivareNamn());
             }
 
-            //
-            if (!iacm.yttreSparr() && iacm.isKraverSamtycke()) {
-                if (vardgivareSamtycke.containsKey(vardgivareId)) {
-                    SjfSamtyckeFinnsMetaData sjfSamtyckeFinnsMetaData = vardgivareSamtycke.get(vardgivareId);
-                    if (!sjfSamtyckeFinnsMetaData.isBidrarTillAktivtSjukfall()) {
-                        sjfSamtyckeFinnsMetaData.setBidrarTillAktivtSjukfall(iacm.isBidrarTillAktivtSjukfall());
+            if (iacm.isKraverSamtycke()) {
+                String id = "";
+                String namn = "";
+                SjfMetaDataItemType type = null;
+
+                if (iacm.isInomVardgivare() && !iacm.isInomVardenhet()) {
+                    // Annan enhet inom samma vårdgivare
+                    id = iacm.getIntygData().getVardenhetId();
+                    namn = iacm.getIntygData().getVardenhetNamn();
+                    type = SjfMetaDataItemType.VARDENHET;
+                } else {
+                    id = iacm.getIntygData().getVardgivareId();
+                    namn = iacm.getIntygData().getVardgivareNamn();
+                    type = SjfMetaDataItemType.VARDGIVARE;
+                }
+
+                if (samtyckeFinnsMetaDataMap.containsKey(id)) {
+                    SjfMetaDataItem sjfMetaDataItem = samtyckeFinnsMetaDataMap.get(id);
+                    if (!sjfMetaDataItem.isBidrarTillAktivtSjukfall()) {
+                        sjfMetaDataItem.setBidrarTillAktivtSjukfall(iacm.isBidrarTillAktivtSjukfall());
                     }
                 } else {
-                    SjfSamtyckeFinnsMetaData sjfSamtyckeFinnsMetaData = new SjfSamtyckeFinnsMetaData();
-                    sjfSamtyckeFinnsMetaData.setVardgivareId(vardgivareId);
-                    sjfSamtyckeFinnsMetaData.setVardgivareNamn(vardgivareNamn);
-                    sjfSamtyckeFinnsMetaData.setIncludedInSjukfall(iacm.isIncludedBasedOnSamtycke());
-                    sjfSamtyckeFinnsMetaData.setBidrarTillAktivtSjukfall(iacm.isBidrarTillAktivtSjukfall());
+                    SjfMetaDataItem sjfMetaDataItem = new SjfMetaDataItem(id, namn, type);
+                    sjfMetaDataItem.setIncludedInSjukfall(iacm.isIncludedBasedOnSamtycke());
+                    sjfMetaDataItem.setBidrarTillAktivtSjukfall(iacm.isBidrarTillAktivtSjukfall());
 
-                    vardgivareSamtycke.put(vardgivareId, sjfSamtyckeFinnsMetaData);
+                    samtyckeFinnsMetaDataMap.put(id, sjfMetaDataItem);
                 }
             }
 
@@ -358,7 +376,7 @@ public class SjukfallServiceImpl implements SjukfallService {
             if (iacm.isBidrarTillAktivtSjukfall()) {
                 if (!iacm.yttreSparr() && iacm.isKraverSamtycke()) {
                     if (!vardgivareSamtycke.containsKey(vardgivareId)) {
-                        SjfSamtyckeFinnsMetaData sjfSamtyckeFinnsMetaData = new SjfSamtyckeFinnsMetaData();
+                        SjfMetaDataItem sjfSamtyckeFinnsMetaData = new SjfMetaDataItem();
                         sjfSamtyckeFinnsMetaData.setVardgivareId(vardgivareId);
                         sjfSamtyckeFinnsMetaData.setVardgivareNamn(vardgivareNamn);
                         sjfSamtyckeFinnsMetaData.setIncludedInSjukfall(iacm.isIncludeBasedOnSamtycke());
@@ -370,7 +388,7 @@ public class SjukfallServiceImpl implements SjukfallService {
             */
         });
 
-        metadata.setKraverSamtycke(vardgivareSamtycke.values());
+        metadata.setKraverSamtycke(samtyckeFinnsMetaDataMap.values());
         metadata.setSamtyckeFinns(haveConsent);
 
         return metadata;
@@ -405,25 +423,25 @@ public class SjukfallServiceImpl implements SjukfallService {
             return false;
         }
 
-        // 2. Tar bort intyg på andra vårdgivare som inte bidrar till det aktiva sjukfallet
-        if (!intygAccessControlMetaData.isInomVardgivare() && !intygAccessControlMetaData.isBidrarTillAktivtSjukfall()) {
-            return false;
-        }
-
-        // 3. Tar bort intyg på samma vårdgivare men som är utanför aktuell enhet och som inte bidrar till det aktiva sjukfall
-        if (intygAccessControlMetaData.isInomVardgivare()
-                && !intygAccessControlMetaData.isInomVardenhet()
-                && !intygAccessControlMetaData.isBidrarTillAktivtSjukfall()) {
-            return false;
-        }
-
-        // 4. Om Samtycke krävs - måste också samtycke vara givet
+        // 2. Om Samtycke krävs - måste också samtycke vara givet
         if (intygAccessControlMetaData.isKraverSamtycke() && !haveConsent) {
             return false;
         }
 
-        // 5. Om samtycke finns måste aktivt val för att ta med i sjufakll gjorts
+        // 3. Om samtycke finns måste aktivt val för att ta med i sjufakll gjorts
         if (intygAccessControlMetaData.isKraverSamtycke() && haveConsent && !intygAccessControlMetaData.isIncludedBasedOnSamtycke()) {
+            return false;
+        }
+
+        // 4. Tar bort intyg på andra vårdgivare som inte bidrar till det aktiva sjukfallet
+        if (!intygAccessControlMetaData.isInomVardgivare() && !intygAccessControlMetaData.isBidrarTillAktivtSjukfall()) {
+            return false;
+        }
+
+        // 5. Tar bort intyg på samma vårdgivare men som är utanför aktuell enhet och som inte bidrar till det aktiva sjukfallet
+        if (intygAccessControlMetaData.isInomVardgivare()
+                && !intygAccessControlMetaData.isInomVardenhet()
+                && !intygAccessControlMetaData.isBidrarTillAktivtSjukfall()) {
             return false;
         }
 

@@ -24,6 +24,7 @@ import org.junit.Test;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.AddVeToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
@@ -35,6 +36,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class SjfIT extends BaseRestIntegrationTest {
 
     private static final String API_ENDPOINT_INCLUDE_VG = "api/sjukfall/patient/addVardgivare";
+    private static final String API_ENDPOINT_INCLUDE_VE = "api/sjukfall/patient/addVardenhet";
     private static final String API_ENDPOINT_PATIENT = "api/sjukfall/patient";
     private static final String API_ENDPOINT_CONSENT = "api/consent";
 
@@ -49,15 +51,19 @@ public class SjfIT extends BaseRestIntegrationTest {
     @Test
     public void testGetSjukfallByPatient() {
         String patientId = "20121212-1212";
-        String vgIdOther = "TSTNMT2321000156-1061";
-        String vgIdOwn = "vastmanland";
+
+        // Vårdgivare
+        String vgOther_id = "TSTNMT2321000156-1061";
+        String vgOtherBlocked_id = "vastmanland";
+        String vgOtherBlocked_name = "Landstinget Västmanland";
+
+        // Vårdenheter inom samma vårdgivare
+        String veOther_id = "TSTNMT2321000156-105P";
+        String veOther_name = "Rehabstöd Enhet 2";
+        String veOtherBlocked_id = "TSTNMT2321000156-105Q";
+        String veOtherBlocked_name = "Rehabstöd Enhet 3";
 
         RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-
-        // reset samtycke
-        given().contentType(ContentType.JSON)
-                .expect().statusCode(OK)
-                .when().delete("services/api/stub/samtyckestjanst-api/consent");
 
         // reset samtycke
         given().contentType(ContentType.JSON)
@@ -86,10 +92,14 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
-                .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOther + "' }.includedInSjukfall",
+                .body("sjfMetaData.kraverSamtycke.size()", equalTo(5))
+                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
                         equalTo(false))
-                .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOwn + "' }.includedInSjukfall",
+                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOtherBlocked_id + "' }.includedInSjukfall",
+                        equalTo(false))
+                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
+                        equalTo(false))
+                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
                         equalTo(false))
                 .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
                 .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2));
@@ -117,11 +127,11 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().get(puSekretessUrl + "false");
 
         // Inkludera vårdgivare
-        AddVgToPatientViewRequest includeInSjukfallRequest = new AddVgToPatientViewRequest();
-        includeInSjukfallRequest.setPatientId(patientId);
-        includeInSjukfallRequest.setVardgivareId(vgIdOther);
+        AddVgToPatientViewRequest includeVgInSjukfallRequest = new AddVgToPatientViewRequest();
+        includeVgInSjukfallRequest.setPatientId(patientId);
+        includeVgInSjukfallRequest.setVardgivareId(vgOther_id);
 
-        given().contentType(ContentType.JSON).and().body(includeInSjukfallRequest)
+        given().contentType(ContentType.JSON).and().body(includeVgInSjukfallRequest)
                 .expect().statusCode(OK)
                 .when().post(API_ENDPOINT_INCLUDE_VG);
 
@@ -131,10 +141,42 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
-                .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOther + "' }.includedInSjukfall",
+                .body("sjfMetaData.kraverSamtycke.size()", equalTo(5))
+                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
                         equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.find { it.vardgivareId == '" + vgIdOwn + "' }.includedInSjukfall",
+                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOtherBlocked_id + "' }.includedInSjukfall",
+                        equalTo(false))
+                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
+                        equalTo(false))
+                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
+                        equalTo(false))
+                .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
+                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2));
+
+
+        // Inkludera vårdenhet
+        AddVeToPatientViewRequest includeVeInSjukfallRequest = new AddVeToPatientViewRequest();
+        includeVeInSjukfallRequest.setPatientId(patientId);
+        includeVeInSjukfallRequest.setVardenhetId(veOther_id);
+
+        given().contentType(ContentType.JSON).and().body(includeVeInSjukfallRequest)
+                .expect().statusCode(OK)
+                .when().post(API_ENDPOINT_INCLUDE_VE);
+
+        // Kollar att vårdenheten kommer med
+        given().contentType(ContentType.JSON).and().body(request)
+                .expect().statusCode(OK)
+                .when().post(API_ENDPOINT_PATIENT).then()
+                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
+                .body("sjfMetaData.samtyckeFinns", equalTo(true))
+                .body("sjfMetaData.kraverSamtycke.size()", equalTo(5))
+                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
+                        equalTo(true))
+                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOtherBlocked_id + "' }.includedInSjukfall",
+                        equalTo(false))
+                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
+                        equalTo(true))
+                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
                         equalTo(false))
                 .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
                 .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2));

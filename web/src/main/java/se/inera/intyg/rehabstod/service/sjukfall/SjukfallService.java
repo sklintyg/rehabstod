@@ -44,8 +44,21 @@ public interface SjukfallService {
     SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId, String lakareId,
                                     Urval urval, IntygParametrar parameters);
 
-    SjukfallPatientResponse getByPatient(String currentVardgivarId, String enhetsId, String lakareId, String patientId,
-                                         Urval urval, IntygParametrar parameters, Collection<String> vgHsaIds);
+    /**
+     *
+     * @param currentVardgivarId The identifier of the current care giver
+     * @param enhetsId The care unit identifier
+     * @param lakareId The physician's identifier
+     * @param patientId The patient's identifier
+     * @param urval
+     * @param parameters
+     * @param vgHsaIds Identifiers of care givers that shall be included in the calculation of the active 'sjukfall'
+     * @param veHsaIds Identifiers of care units that shall be included in the calculation of the active 'sjukfall'
+     * @return
+     */
+    SjukfallPatientResponse getByPatient(String currentVardgivarId, String enhetsId, String lakareId,
+                                         String patientId, Urval urval, IntygParametrar parameters,
+                                         Collection<String> vgHsaIds, Collection<String> veHsaIds);
 
     SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId,
                                Urval urval, IntygParametrar parameters);

@@ -17,13 +17,19 @@
             "minItems": 0,
             "type": "array",
             "items": {
-              "vardgivareId": {
+              "itemType": {
+                "type": "object"
+              },
+              "itemId": {
                 "type": "string"
               },
-              "vardgivareNamn": {
+              "itemName": {
                 "type": "string"
               },
               "includedInSjukfall": {
+                "type": "boolean"
+              },
+              "bidrarTillAktivtSjukfall": {
                 "type": "boolean"
               }
             }
@@ -36,7 +42,8 @@
         "additionalProperties": false,
         "required": [
           "vardenheterInomVGMedSparr",
-          "andraVardgivareMedSparr"
+          "andraVardgivareMedSparr",
+          "kraverSamtycke"
         ]
       },
       "sjukfallList": {

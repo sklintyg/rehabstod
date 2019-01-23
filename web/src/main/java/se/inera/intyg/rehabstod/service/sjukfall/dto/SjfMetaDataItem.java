@@ -18,27 +18,32 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
-public class SjfSamtyckeFinnsMetaData {
+public class SjfMetaDataItem {
 
-    private String vardgivareId;
-    private String vardgivareNamn;
+    private SjfMetaDataItemType itemType;
+
+    private String itemId;
+    private String itemName;
+
     private boolean includedInSjukfall;
     private boolean bidrarTillAktivtSjukfall;
 
-    public String getVardgivareId() {
-        return vardgivareId;
+    public SjfMetaDataItem(String itemId, String itemName, SjfMetaDataItemType itemType) {
+        this.itemId = itemId;
+        this.itemName = itemName;
+        this.itemType = itemType;
     }
 
-    public void setVardgivareId(String vardgivareId) {
-        this.vardgivareId = vardgivareId;
+    public String getItemId() {
+        return itemId;
     }
 
-    public String getVardgivareNamn() {
-        return vardgivareNamn;
+    public String getItemName() {
+        return itemName;
     }
 
-    public void setVardgivareNamn(String vardgivareNamn) {
-        this.vardgivareNamn = vardgivareNamn;
+    public SjfMetaDataItemType getItemType() {
+        return itemType;
     }
 
     public boolean isIncludedInSjukfall() {

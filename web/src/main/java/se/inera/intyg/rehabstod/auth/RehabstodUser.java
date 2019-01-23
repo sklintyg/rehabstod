@@ -52,6 +52,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
 
     private RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
     private Map<String, Set<String>> sjfPatientVardgivare = new HashMap<>();
+    private Map<String, Set<String>> sjfPatientVardenhet = new HashMap<>();
 
     /**
      * Typically used by unit tests.
@@ -193,7 +194,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
         return sjfPatientVardgivare;
     }
 
-    public Collection<String> getSjfPatientVardgivareForPatient(String patientId) {
+    public Collection<String> getSjfPatientVardgivare(String patientId) {
         if (!sjfPatientVardgivare.containsKey(patientId)) {
             sjfPatientVardgivare.put(patientId, new HashSet<>());
         }
@@ -201,11 +202,26 @@ public class RehabstodUser extends IntygUser implements Serializable {
     }
 
     public void addSjfPatientVardgivare(String patientId, String vardgivarId) {
-        getSjfPatientVardgivareForPatient(patientId).add(vardgivarId);
+        getSjfPatientVardgivare(patientId).add(vardgivarId);
+    }
+
+    public Map<String, Set<String>> getSjfPatientVardenhet() {
+        return sjfPatientVardenhet;
+    }
+
+    public Collection<String> getSjfPatientVardenhet(String patientId) {
+        if (!sjfPatientVardenhet.containsKey(patientId)) {
+            sjfPatientVardenhet.put(patientId, new HashSet<>());
+        }
+        return sjfPatientVardenhet.get(patientId);
+    }
+
+    public void addSjfPatientVardenhet(String patientId, String vardenhetId) {
+        getSjfPatientVardenhet(patientId).add(vardenhetId);
     }
 
     /**
-     * In rehabstöd, isLakare is an immutable field that must be set when logging in. This is due to us
+     * In Rehabstöd, isLakare is an immutable field that must be set when logging in. This is due to us
      * sometimes changing the ROLE of a doctor to be a Rehabkoordinator based on systemRoles.
      *
      * @return

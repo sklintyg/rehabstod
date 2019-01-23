@@ -28,7 +28,7 @@ public class SjfMetaData {
 
     private Collection<String> vardenheterInomVGMedSparr = new HashSet<>();
     private Collection<String> andraVardgivareMedSparr = new HashSet<>();
-    private Collection<SjfSamtyckeFinnsMetaData> kraverSamtycke = new HashSet<>();
+    private Collection<SjfMetaDataItem> kraverSamtycke = new HashSet<>();
     private boolean samtyckeFinns;
 
     public SjfMetaData() {
@@ -56,11 +56,11 @@ public class SjfMetaData {
         this.andraVardgivareMedSparr = andraVardgivareMedSparr;
     }
 
-    public Collection<SjfSamtyckeFinnsMetaData> getKraverSamtycke() {
+    public Collection<SjfMetaDataItem> getKraverSamtycke() {
         return kraverSamtycke;
     }
 
-    public void setKraverSamtycke(Collection<SjfSamtyckeFinnsMetaData> kraverSamtycke) {
+    public void setKraverSamtycke(Collection<SjfMetaDataItem> kraverSamtycke) {
         this.kraverSamtycke = kraverSamtycke;
     }
 
