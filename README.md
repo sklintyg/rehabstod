@@ -65,3 +65,28 @@ För att köra Protractor-testerna måste Intygstjänsten och Rehabstöd vara ig
 För att ta bort stubbad intygstjänst och köra mot en riktig (lokal) sådan så gå in i /web/build.gradle och plocka bort "rhs-it-stub" ur gretty-konfigurationen, dvs:
 
     '-Dspring.profiles.active=dev,rhs-srs-stub,caching-enabled',   // rhs-it-stub,
+
+### Köra med SAML aktiverat.
+
+Starta riktig ActiveMQ, MySQL och Redis.
+
+MySQL kan behöva följande först:
+
+    CREATE USER 'rehabstod'@'localhost' IDENTIFIED BY 'rehabstod';
+    GRANT ALL PRIVILEGES ON *.* TO 'rehabstod'@'localhost' IDENTIFIED BY 'rehabstod' WITH GRANT OPTION;
+    FLUSH PRIVILEGES;
+    CREATE DATABASE rehabstod CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+    
+Byt ut grettys JVM-args mot följande:
+
+        /***************** Konfiguration för att köra med SITHS och HSA aktiverat lokalt. *******************/
+            jvmArgs = [
+                    '-Dspring.profiles.active=test,rhs-security-test,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,wc-pu-stub,wc-hsa-stub,caching-enabled',
+                    '-Dconfig.folder=' + projectDir + '/../devops/openshift/test/config',
+                    '-Dconfig.file=' + projectDir + '/../devops/openshift/test/config/rehabstod.properties',
+                    '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
+                    '-Dresources.folder=/' +projectDir + '/../src/main/resources'
+            ]
+            
+**OBS!** Man behöver gå in i sp-sambi.xml i devops/openshift/test och ändra entityID och URL:ar att peka på "http://localhost:8790".
+

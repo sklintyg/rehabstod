@@ -169,7 +169,6 @@
       <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
       <security:custom-filter position="PRE_AUTH_FILTER" ref="fakeAuthFilter"/>
       <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
-      <security:request-cache ref="httpSessionRequestCache" />
       <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
     </security:http>
     <!-- Other unauthenticated requests will be returned as http status 403. -->
@@ -198,7 +197,6 @@
       <security:headers/>
       <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
       <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
-      <security:request-cache ref="httpSessionRequestCache" />
       <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
     </security:http>
     <security:http  use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
@@ -238,14 +236,10 @@
       </security:filter-chain-map>
     </bean>
 
-    <bean id="httpSessionRequestCache" class="org.springframework.security.web.savedrequest.NullRequestCache">
-    </bean>
-
     <!-- Handler deciding where to redirect user after successful login -->
     <bean id="successRedirectHandler"
-          class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
-      <property name="defaultTargetUrl" value="/#/app"/>
-      <property name="requestCache" ref="httpSessionRequestCache" />
+          class="se.inera.intyg.rehabstod.auth.RehabstodAuthenticationSuccessHandler">
+      <constructor-arg index="0" value="/"/>
     </bean>
 
     <!-- Central storage of cryptographic keys -->
@@ -269,14 +263,12 @@
           <property name="authnContexts">
                <set>
                  <value>urn:oasis:names:tc:SAML:2.0:ac:classes:TLSClient</value>
+                 <value>http://id.sambi.se/loa/loa3</value>
                </set>
           </property>
         </bean>
       </property>
     </bean>
-
-    <!-- TODO Determine if this one is really needed. It's supposed to make the HTTP-client more configurable... -->
-    <bean class="org.springframework.security.saml.trust.httpclient.TLSProtocolConfigurer"/>
 
     <!-- IDP Metadata configuration - paths to metadata of IDPs in circle of trust is here -->
     <!-- Do no forget to call initalize method on providers -->
@@ -290,7 +282,7 @@
             <constructor-arg>
               <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
                 <constructor-arg>
-                  <value type="java.io.File">${config.dir}/sp-sakerhetstjanst.xml</value>
+                  <value type="java.io.File">${config.dir}/sp-sambi.xml</value>
                 </constructor-arg>
                 <property name="parserPool" ref="parserPool"/>
               </bean>
@@ -299,7 +291,7 @@
 
             <constructor-arg>
               <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
-                <property name="alias" value="defaultAlias"/>
+                <property name="alias" value="${sakerhetstjanst.saml.default.alias}"/>
                 <property name="local" value="true"/>
                 <property name="securityProfile" value="metaiop"/>
                 <property name="sslSecurityProfile" value="metaiop"/>
@@ -308,8 +300,13 @@
                 <property name="signingKey" value="${sakerhetstjanst.saml.keystore.alias}"/>
                 <property name="encryptionKey" value="${sakerhetstjanst.saml.keystore.alias}"/>
                 <property name="requireArtifactResolveSigned" value="true"/>
-                <property name="requireLogoutRequestSigned" value="false"/>
+                <property name="requireLogoutRequestSigned" value="true"/>
                 <property name="requireLogoutResponseSigned" value="false"/>
+
+                <property name="idpDiscoveryEnabled" value="true" />
+                <property name="idpDiscoveryResponseURL" value="${sambi.discovery.response.url}" />
+                <property name="idpDiscoveryURL" value="${sambi.discovery.url}"/>
+
               </bean>
             </constructor-arg>
           </bean>
@@ -321,7 +318,7 @@
             <constructor-arg>
               <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
                 <constructor-arg>
-                  <value type="java.io.File">${config.dir}/idp-sakerhetstjanst.xml</value>
+                  <value type="java.io.File">${config.dir}/idp-sambi.xml</value>
                 </constructor-arg>
                 <property name="parserPool" ref="parserPool"/>
               </bean>
@@ -332,15 +329,13 @@
               </bean>
             </constructor-arg>
 
-            <property name="metadataTrustCheck" value="true"/>
+            <property name="metadataTrustCheck" value="false"/>
           </bean>
           <!-- END IDENTITY PROVIDER BEAN FOR SITHS -->
-
 
         </list>
       </constructor-arg>
       <property name="refreshCheckInterval" value="86400000"/>
-
     </bean>
 
     <!-- SAML Authentication Provider responsible for validating of received SAML messages over SITHS or e-leg -->

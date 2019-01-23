@@ -11,8 +11,17 @@
     "version": {
       "type": "string"
     },
+    "defaultIDP": {
+      "type": "string"
+    },
+    "defaultAlias": {
+      "type": "string"
+    },
     "webcertViewIntygTemplateUrl": {
       "type": "string"
+    },
+    "idpMap": {
+      "type": "object"
     }
 
   },

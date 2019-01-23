@@ -1,0 +1,21 @@
+@startuml
+Användare -/ Browser: Väljer "Logga in med Sambi"
+Browser -> Rehabstöd: /saml/login/discovery
+
+Rehabstöd -> Browser: 302 till Discovery
+Browser -> Discovery: Omdirigeras till discovery med ?entityID=
+Användare -/ Browser: Väljer IdP i listan
+
+Browser -> Discovery: IdP väljs
+Discovery -> Browser: 302 till Rehabstöd med ?idp=<valid idp>
+Browser -> Rehabstöd: Omdirigering /saml/login?idp=<vald idp>
+Rehabstöd -> Browser: 302 till IdP
+Browser -> IdP: Startar autentisering
+Användare -/ IdP: Användaren autentiserar sig med PIN etc
+IdP -> Browser: 302 med SAMLResponse
+Browser -> Rehabstöd: POST:ar in SAMLResponse
+Rehabstöd -> Rehabstöd: Auktoriserar användaren
+Rehabstöd -> Browser: Välkommen in!
+Användare -/ Browser: Börjar arbeta
+
+@enduml

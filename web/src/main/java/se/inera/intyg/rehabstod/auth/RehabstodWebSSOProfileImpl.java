@@ -18,11 +18,19 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import com.google.common.base.Strings;
 import org.opensaml.common.SAMLException;
+import org.opensaml.saml2.core.Audience;
+import org.opensaml.saml2.core.AudienceRestriction;
 import org.opensaml.saml2.core.AuthnRequest;
+import org.opensaml.saml2.core.Conditions;
+import org.opensaml.saml2.core.impl.AudienceBuilder;
+import org.opensaml.saml2.core.impl.AudienceRestrictionBuilder;
+import org.opensaml.saml2.core.impl.ConditionsBuilder;
 import org.opensaml.saml2.metadata.AssertionConsumerService;
 import org.opensaml.saml2.metadata.SingleSignOnService;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.saml.context.SAMLMessageContext;
 import org.springframework.security.saml.websso.WebSSOProfileOptions;
 
@@ -33,11 +41,19 @@ import se.inera.intyg.infra.security.common.model.AuthConstants;
  * Created by eriklupander on 2016-05-30.
  */
 public class RehabstodWebSSOProfileImpl extends org.springframework.security.saml.websso.WebSSOProfileImpl {
+
+    @Value("${oidc.rp.identity}")
+    private String oidcIdentity;
+
+    @Value("${sakerhetstjanst.saml.idp.metadata.url}")
+    private String idpEntityId;
+
     /**
      * Returns AuthnRequest SAML message to be used to demand authentication from an IDP described using
      * idpEntityDescriptor, with an expected response to the assertionConsumer address.
      *
-     * This overridden version explicitly sets the attributeConsumingServiceIndex for better control over IdP behaviour.
+     * This overridden version explicitly sets the attributeConsumingServiceIndex for better control over IdP behaviour
+     * and allows specification of OIDC and SAML audience restrictions.
      *
      * @param context           message context
      * @param options           preferences of message creation
@@ -59,7 +75,27 @@ public class RehabstodWebSSOProfileImpl extends org.springframework.security.sam
         if (options.getAuthnContexts().contains(AuthConstants.URN_OASIS_NAMES_TC_SAML_2_0_AC_CLASSES_TLSCLIENT)) {
             authnRequest.setAttributeConsumingServiceIndex(1);
         }
-
+        authnRequest.setConditions(buildConditions());
         return authnRequest;
+    }
+
+    private Conditions buildConditions() {
+        AudienceRestriction audienceRestriction = new AudienceRestrictionBuilder().buildObject();
+
+        addAudienceIfApplicable(audienceRestriction, idpEntityId);
+        addAudienceIfApplicable(audienceRestriction, oidcIdentity);
+
+        Conditions conditions = new ConditionsBuilder().buildObject();
+        conditions.getConditions().add(audienceRestriction);
+
+        return conditions;
+    }
+
+    private void addAudienceIfApplicable(AudienceRestriction audienceRestriction, String audienceValue) {
+        if (!Strings.isNullOrEmpty(audienceValue)) {
+            Audience audience = new AudienceBuilder().buildObject();
+            audience.setAudienceURI(audienceValue);
+            audienceRestriction.getAudiences().add(audience);
+        }
     }
 }

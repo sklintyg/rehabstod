@@ -87,15 +87,6 @@ gretty {
                '-Dresources.folder=/' +projectDir + '/../src/main/resources'
                ]
 
-    /***************** Konfiguration för att köra med SITHS och HSA aktiverat lokalt. *******************/
-    //    jvmArgs = [
-    //            '-Dspring.profiles.active=dev,rhs-security-test,rhs-srs-stub',
-    //            '-Drehabstod.config.folder=' + projectDir + '/../../rehabstod-konfiguration/demo',
-    //            '-Drehabstod.config.file=' + projectDir + '/../../rehabstod-konfiguration/demo/rehabstod.properties',
-    //            '-Drehabstod.features.file=' + projectDir + '/../../rehabstod-konfiguration/demo/features.properties',
-    //            '-Dcredentials.file=' + projectDir + '/../../rehabstod-konfiguration/demo/credentials.properties',
-    //            '-Drehabstod.resources.folder=/' +projectDir + '/../src/main/resources'
-    //    ]
 }
 
 dependencies {
