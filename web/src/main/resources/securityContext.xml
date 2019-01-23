@@ -301,7 +301,7 @@
                 <property name="encryptionKey" value="${sakerhetstjanst.saml.keystore.alias}"/>
                 <property name="requireArtifactResolveSigned" value="true"/>
                 <property name="requireLogoutRequestSigned" value="true"/>
-                <property name="requireLogoutResponseSigned" value="true"/>
+                <property name="requireLogoutResponseSigned" value="false"/>
 
                 <property name="idpDiscoveryEnabled" value="true" />
                 <property name="idpDiscoveryResponseURL" value="${sambi.discovery.response.url}" />
