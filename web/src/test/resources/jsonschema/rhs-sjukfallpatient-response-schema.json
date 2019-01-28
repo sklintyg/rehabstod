@@ -34,6 +34,27 @@
               }
             }
           },
+          "kraverInteSamtycke": {
+            "minItems": 0,
+            "type": "array",
+            "items": {
+              "itemType": {
+                "type": "object"
+              },
+              "itemId": {
+                "type": "string"
+              },
+              "itemName": {
+                "type": "string"
+              },
+              "includedInSjukfall": {
+                "type": "boolean"
+              },
+              "bidrarTillAktivtSjukfall": {
+                "type": "boolean"
+              }
+            }
+          },
           "samtyckeFinns": {
             "type": "boolean"
           }
@@ -43,7 +64,8 @@
         "required": [
           "vardenheterInomVGMedSparr",
           "andraVardgivareMedSparr",
-          "kraverSamtycke"
+          "kraverSamtycke",
+          "kraverInteSamtycke"
         ]
       },
       "sjukfallList": {
@@ -100,16 +122,13 @@
             "minItems": 0,
             "type": "array",
             "items": {
-              "vardgivareId": {
+              "vardenhetId": {
                 "type": "string"
               },
               "vardgivareNamn": {
                 "type": "string"
               },
               "vardenhetNamn": {
-                "type": "string"
-              },
-              "vardenhetId": {
                 "type": "string"
               },
               "patient": {

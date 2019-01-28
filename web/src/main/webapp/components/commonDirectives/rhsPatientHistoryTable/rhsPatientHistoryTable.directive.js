@@ -36,14 +36,16 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
 
             var patientSjfMetaData = patientHistoryViewState.getSjfMetaData();
 
-            var veInomVGMedSparrCount = patientSjfMetaData.vardenheterInomVGMedSparr.length;
+            var andraVardenheterInomVgUtanSparr = patientSjfMetaData.kraverInteSamtycke.length;
+            var andraVardenheterInomVgMedSparr = patientSjfMetaData.vardenheterInomVGMedSparr.length;
             var andraVardgivareUtanSparr = patientSjfMetaData.kraverSamtycke.length;
             var andraVardgivareMedSparr = patientSjfMetaData.andraVardgivareMedSparr.length;
 
             $scope.extraDiagnoser = {
                 patientSjfMetaData: patientSjfMetaData,
-                available: veInomVGMedSparrCount > 0 || andraVardgivareMedSparr > 0 || andraVardgivareUtanSparr > 0,
-                sparradInfoInomVardgivare: veInomVGMedSparrCount > 0,
+                available: andraVardenheterInomVgUtanSparr > 0 || andraVardenheterInomVgMedSparr > 0 || andraVardgivareMedSparr > 0 || andraVardgivareUtanSparr > 0,
+                osparradInfoInomVardgivare: andraVardenheterInomVgUtanSparr > 0,
+                sparradInfoInomVardgivare: andraVardenheterInomVgMedSparr > 0,
                 osparradInfoAndraVardgivare: andraVardgivareUtanSparr > 0,
                 sparradInfoAndraVardgivare: andraVardgivareMedSparr > 0,
                 samtyckeFinns: patientHistoryViewState.hasSamtycke()

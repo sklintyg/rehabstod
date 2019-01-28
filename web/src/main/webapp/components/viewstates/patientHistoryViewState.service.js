@@ -34,10 +34,15 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
 
     var _sjfMetaData = {};
 
-    var _vgViewState = {};
+    var _kraverSamtyckeViewState = {};
+
+    var _kraverInteSamtyckeViewState = {};
 
     var _extraBoxStates = {
         sparradInom:{
+            skipStart: false
+        },
+        osparradInom:{
             skipStart: false
         },
         osparradAndra:{
@@ -52,27 +57,28 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
         return _sjfMetaData.samtyckeFinns;
     }
 
-    function _setVgMedSparrViewState(vg) {
-        _vgViewState = vg;
-        _vgViewState = _vgViewState.map(function(vg) {
-            vg.loading = false;
-            return vg;
+    function _setKraverSamtyckeViewState(kraverSamtycke) {
+        _kraverSamtyckeViewState = kraverSamtycke;
+        _kraverSamtyckeViewState = _kraverSamtyckeViewState.map(function(item) {
+            item.loading = false;
+            return item;
         });
     }
 
-    function _getVgMedSparrViewState() {
-        return _vgViewState;
+    function _getKraverSamtyckeViewState() {
+        return _kraverSamtyckeViewState;
     }
 
-    function _getVgMedSparrViewStateById(vgId) {
-        var result = null;
-        _vgViewState.forEach(function(item){
-            if(item.vardgivareId === vgId){
-                result = item;
-            }
+    function _setKraverInteSamtyckeViewState(kraverInteSamtycke) {
+        _kraverInteSamtyckeViewState = kraverInteSamtycke;
+        _kraverInteSamtyckeViewState = _kraverInteSamtyckeViewState.map(function(item) {
+            item.loading = false;
+            return item;
         });
+    }
 
-        return result;
+    function _getKraverInteSamtyckeViewState() {
+        return _kraverInteSamtyckeViewState;
     }
 
     function _setSjfMetaData(sjfMetaData) {
@@ -218,9 +224,10 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
         selectTimelineItem: _selectTimelineItem,
         setSjfMetaData: _setSjfMetaData,
         getSjfMetaData: _getSjfMetaData,
-        setVgMedSparrViewState: _setVgMedSparrViewState,
-        getVgMedSparrViewState: _getVgMedSparrViewState,
-        getVgMedSparrViewStateById: _getVgMedSparrViewStateById,
+        setKraverSamtyckeViewState: _setKraverSamtyckeViewState,
+        getKraverSamtyckeViewState: _getKraverSamtyckeViewState,
+        setKraverInteSamtyckeViewState: _setKraverInteSamtyckeViewState,
+        getKraverInteSamtyckeViewState: _getKraverInteSamtyckeViewState,
         extraBoxStates: _extraBoxStates,
         hasSamtycke: _hasSamtycke
     };

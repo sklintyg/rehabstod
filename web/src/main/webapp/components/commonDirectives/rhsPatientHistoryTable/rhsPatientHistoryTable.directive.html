@@ -89,7 +89,30 @@
           </div>
         </div>
         <div class="row extra-intyginfo">
-          <div class="col-md-4">
+          <div class="col-md-6">
+            <rhs-info-box info-expr="extraDiagnoser.osparradInfoInomVardgivare"
+                          box-title="label.extradiagnoser.osparradinom.title"
+                          label-truthy="label.extradiagnoser.osparradinom"
+                          label-falsy="label.extradiagnoser.empty"
+                          box-state="patientHistoryViewState.extraBoxStates.osparradInom">
+              <rhs-unblocked-flow class="flex-fill" patient="patient" must-have-consent="false"></rhs-unblocked-flow>
+            </rhs-info-box>
+          </div>
+          <div class="col-md-6">
+            <rhs-info-box info-expr="extraDiagnoser.osparradInfoAndraVardgivare"
+                          box-title="label.extradiagnoser.osparradandra.title"
+                          label-truthy="label.extradiagnoser.osparradandra"
+                          label-falsy="label.extradiagnoser.empty"
+                          box-state="patientHistoryViewState.extraBoxStates.osparradAndra">
+              <rhs-unblocked-flow class="flex-fill" patient="patient" must-have-consent="true"></rhs-unblocked-flow>
+            </rhs-info-box>
+          </div>
+        </div>
+        <div class="row extra-intyginfo">
+          <p>&nbsp;</p>
+        </div>
+        <div class="row extra-intyginfo">
+          <div class="col-md-6">
             <rhs-info-box info-expr="extraDiagnoser.sparradInfoInomVardgivare"
                           box-title="label.extradiagnoser.sparradinom.title"
                           label-truthy="label.extradiagnoser.sparradinom"
@@ -99,16 +122,7 @@
                                 list-label="label.extradiagnoser.sparradinom.list.title"></rhs-blocked-list>
             </rhs-info-box>
           </div>
-          <div class="col-md-4">
-            <rhs-info-box info-expr="extraDiagnoser.osparradInfoAndraVardgivare"
-                          box-title="label.extradiagnoser.osparradandra.title"
-                          label-truthy="label.extradiagnoser.osparradandra"
-                          label-falsy="label.extradiagnoser.empty"
-                          box-state="patientHistoryViewState.extraBoxStates.osparradAndra">
-              <rhs-unblocked-flow class="flex-fill" patient="patient"></rhs-unblocked-flow>
-            </rhs-info-box>
-          </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <rhs-info-box info-expr="extraDiagnoser.sparradInfoAndraVardgivare"
                           box-title="label.extradiagnoser.sparradandra.title"
                           label-truthy="label.extradiagnoser.sparradandra"

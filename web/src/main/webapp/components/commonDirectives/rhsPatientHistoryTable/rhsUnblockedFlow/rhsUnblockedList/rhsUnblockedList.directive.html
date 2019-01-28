@@ -1,19 +1,21 @@
-<h5>Vårdgivare att hämta information ifrån</h5>
+<h5>
+  <span ng-if="!mustHaveConsent" message key="label.extradiagnoser.osparradinom.list.title"></span>
+  <span ng-if="mustHaveConsent" message key="label.extradiagnoser.osparradandra.list.title"></span></h5>
 
 <div class="scrollable-list">
   <table class="table table-striped">
     <tbody>
-    <tr ng-repeat="vardgivare in patientHistoryViewState.getVgMedSparrViewState()">
-      <td ng-attr-id="osparrad-{{index}}-column-number-{{$index}}">{{vardgivare.vardgivareNamn}}</td>
-      <td ng-switch="vardgivare.loading">
+    <tr ng-repeat="item in sjfMetaDataItems">
+      <td ng-attr-id="osparrad-{{index}}-column-number-{{$index}}">{{item.itemName}}</td>
+      <td ng-switch="item.loading">
         <div ng-switch-when="true">
           <img class="fa-spin list-spinner" aria-labelledby="loading-message" src="/assets/images/ajax-loader.gif" />
         </div>
         <div ng-switch-when="false">
-          <span ng-switch="vardgivare.includedInSjukfall">
+          <span ng-switch="item.includedInSjukfall">
             <span ng-switch-when="false">
-              <a ng-if="vardgivare.bidrarTillAktivtSjukfall" href ng-click="fetchVg(vardgivare.vardgivareId)">Hämta</a>
-              <a ng-if="!vardgivare.bidrarTillAktivtSjukfall" href ng-click="openFetchVgDialog()">Hämta</a>
+              <a ng-if="item.bidrarTillAktivtSjukfall" href ng-click="fetchItem(item.itemId)">Hämta</a>
+              <a ng-if="!item.bidrarTillAktivtSjukfall" href ng-click="openFetchDialog()">Hämta</a>
             </span>
             <i ng-switch-when="true" class="fa fa-check"></i>
           </span>

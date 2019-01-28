@@ -30,8 +30,8 @@ angular.module('rehabstodApp').directive('rhsUnblockedConsent',
 
             $scope.vardgivareUtanSamtycke = patientHistoryViewState.getSjfMetaData().kraverSamtycke;
 
-            var vardgivareUtanSamtyckeNames = $scope.vardgivareUtanSamtycke.map(function(vg) {
-                return vg.vardgivareNamn;
+            var vardgivareUtanSamtyckeNames = $scope.vardgivareUtanSamtycke.map(function(item) {
+                return item.itemName;
             });
 
             $scope.vardgivareMedInfo = vardgivareUtanSamtyckeNames.join(', ');

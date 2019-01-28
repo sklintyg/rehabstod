@@ -35,7 +35,7 @@ describe('Directive: rhsPatientHistoryTable', function() {
         sjfMetaData.kraverSamtycke = [];
         for(i = 0; i < 3; i++){
             sjfMetaData.kraverSamtycke.push({
-                vardgivareId: i + 1,
+                vardenhetId: i + 1,
                 vardgivareNamn: 'Vardgivare-som-kraver-samtycke-' + (i + 1),
                 includedInSjukfall: false,
                 bidrarTillAktivtSjukfall: false,

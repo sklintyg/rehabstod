@@ -110,6 +110,51 @@ angular.module('rehabstodApp').factory('patientHistoryProxy',
             return promise.promise;
         }
 
+        /*
+         * Get history from another VE, within the same VG, for the specified patient
+         */
+        function _getFromVE(patient, vardenhetId) {
+
+            var promise = $q.defer();
+
+            var query = {
+                patientId: patient.id,
+                vardenhetId: vardenhetId
+            };
+
+            var restPath = '/api/sjukfall/patient/addVardenhet';
+
+            var config = {
+                timeout: networkConfig.defaultTimeout
+            };
+
+            $log.debug('Requesting extra patient history from VE for patient');
+
+            $http.post(restPath, query, config).then(function(response) {
+                if (!ObjectHelper.isDefined(response.data)) {
+                    promise.reject({
+                        errorCode: response.data,
+                        message: 'invalid data'
+                    });
+                } else {
+                    promise.resolve(response.data);
+                }
+            }, function(response) {
+                $log.error('error ' + response.status);
+                // Let calling code handle the error of no data response
+                if (response === null) {
+                    promise.reject({
+                        errorCode: response,
+                        message: 'no response'
+                    });
+                } else {
+                    promise.reject(response.data);
+                }
+            });
+
+            return promise.promise;
+        }
+
         function _giveConsent(vgConsent) {
 
             var promise = $q.defer();
@@ -145,13 +190,14 @@ angular.module('rehabstodApp').factory('patientHistoryProxy',
                     promise.reject(response.data);
                 }
             });
-            
+
             return promise.promise;
         }
 
         // Return public API for the service
         return {
             get: _get,
+            getFromVE: _getFromVE,
             getFromVG: _getFromVG,
             giveConsent: _giveConsent
         };

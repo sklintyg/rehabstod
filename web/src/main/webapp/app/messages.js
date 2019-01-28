@@ -184,21 +184,26 @@ var rhsMessages = {
         'label.extradiagnoser.none': 'Det finns för tillfället ingen ytterligare information att inhämta från andra vårdgivare samt ingen spärrad information på andra vårdenheter.',
         'label.extradiagnoser.empty': 'Det finns för tillfället ingen information i denna kategori att inhämta.',
 
+        'label.extradiagnoser.osparradinom.title': 'Ospärrad information inom vårdgivare',
+        'label.extradiagnoser.osparradinom': '<p>Det finns ospärrad information hos en annan vårdenhet inom användarens vårdgivare.</p>Du kan klicka nedan för att visa vilka vårdenheter som har denna information och få möjlighet att inhämta den.',
+        'label.extradiagnoser.osparradinom.list.title': 'Vårdenheter att hämta information ifrån',
+
         'label.extradiagnoser.sparradinom.title': 'Spärrad information hos din vårdgivare',
         'label.extradiagnoser.sparradinom': '<p>Det finns spärrad information hos en annan vårdenhet inom din vårdgivare. Endast patienten kan få spärren hävd genom att kontakta den enhet där spärren sattes.</p>Du kan klicka nedan för att visa vilka vårdenheter som har spärrad information hos sig.',
         'label.extradiagnoser.sparradinom.list.title': 'Vårdenheter',
 
         'label.extradiagnoser.osparradandra.title': 'Ospärrad information hos annan vårdgivare',
         'label.extradiagnoser.osparradandra': '<p>Det finns ospärrad information hos annan vårdgivare.</p>Du kan klicka nedan för att visa vilka vårdgivare som har denna information. Men patientens samtycke krävs för att du ska kunna ta del av den faktiska informationen.',
+        'label.extradiagnoser.osparradandra.list.title': 'Vårdgivare att hämta information ifrån',
 
         'label.extradiagnoser.sparradandra.title': 'Spärrad information hos andra vårdgivare',
         'label.extradiagnoser.sparradandra': '<p>Det finns spärrad information hos andra vårdgivare. Endast patienten kan få spärren hävd genom att kontakta den enhet där spärren sattes.</p>Du kan klicka nedan för att visa vilka vårdgivare som har spärrad information hos sig.',
         'label.extradiagnoser.sparradandra.list.title': 'Vårdgivare',
 
-        // Patient History - Hämta vårdgivare dialog
-        'label.patienthistory.vardgivare.title': 'Ingen information hämtad',
-        'label.patienthistory.vardgivare.body': 'Vårdgivarens intyg tillhör inte pågående sjukfall och inhämtas därför inte.',
-        'label.patienthistory.vardgivare.button': 'Stäng',
+        // Patient History - Dialog för ingen information
+        'label.patienthistory.dialog.title': 'Ingen information hämtad',
+        'label.patienthistory.dialog.body': 'Vårdgivarens intyg tillhör inte pågående sjukfall och inhämtas därför inte.',
+        'label.patienthistory.dialog.button': 'Stäng',
 
         //Rest 500 exception error messages:
         'server.error.default.title' : 'Ett fel uppstod',

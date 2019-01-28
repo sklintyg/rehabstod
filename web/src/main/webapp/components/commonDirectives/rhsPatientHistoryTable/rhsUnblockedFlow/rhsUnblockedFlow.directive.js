@@ -23,13 +23,14 @@ angular.module('rehabstodApp').directive('rhsUnblockedFlow',
     return {
         restrict: 'E',
         scope: {
-            patient: '='
+            patient: '=',
+            mustHaveConsent: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedFlow.directive.html',
         link: function($scope) {
 
             $scope.step = 'list';
-            if(!patientHistoryViewState.hasSamtycke()){
+            if($scope.mustHaveConsent && !patientHistoryViewState.hasSamtycke()){
                 $scope.step = 'consent';
             }
 

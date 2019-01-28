@@ -92,14 +92,15 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(5))
+                .body("sjfMetaData.kraverSamtycke.size()", equalTo(3))
+                .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(2))
                 .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
                         equalTo(false))
                 .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOtherBlocked_id + "' }.includedInSjukfall",
                         equalTo(false))
-                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
+                .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
                         equalTo(false))
-                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
+                .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
                         equalTo(false))
                 .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
                 .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2));
@@ -118,6 +119,7 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(false))
                 .body("sjfMetaData.kraverSamtycke.size()", equalTo(0))
+                .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(0))
                 .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(0))
                 .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(0));
 
@@ -141,14 +143,15 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(5))
+                .body("sjfMetaData.kraverSamtycke.size()", equalTo(3))
+                .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(2))
                 .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
                         equalTo(true))
                 .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOtherBlocked_id + "' }.includedInSjukfall",
                         equalTo(false))
-                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
+                .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
                         equalTo(false))
-                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
+                .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
                         equalTo(false))
                 .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
                 .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2));
@@ -169,14 +172,15 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(5))
+                .body("sjfMetaData.kraverSamtycke.size()", equalTo(3))
+                .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(2))
                 .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
                         equalTo(true))
                 .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOtherBlocked_id + "' }.includedInSjukfall",
                         equalTo(false))
-                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
+                .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
                         equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
+                .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
                         equalTo(false))
                 .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
                 .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2));
