@@ -60,7 +60,8 @@ angular.module('rehabstodApp').directive('rhsUnblockedList',
                 patient: '=',
                 mustHaveConsent: '='
             },
-            templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedList/rhsUnblockedList.directive.html',
+            templateUrl: '/components/commonDirectives' +
+                '/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedList/rhsUnblockedList.directive.html',
             link: function($scope) {
 
                 $scope.patientHistoryViewState = patientHistoryViewState;
@@ -107,7 +108,8 @@ angular.module('rehabstodApp').directive('rhsUnblockedList',
 
                 $scope.openFetchDialog = function() {
                     $uibModal.open({
-                        templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedList/rhsUnblockedList.dialog.html',
+                        templateUrl: '/components/commonDirectives' +
+                            '/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedList/rhsUnblockedList.dialog.html',
                         keyboard: true,
                         size: 'md'
                     }).result.then(
@@ -115,5 +117,5 @@ angular.module('rehabstodApp').directive('rhsUnblockedList',
                     );
                 };
             }
-    };
+        };
 });

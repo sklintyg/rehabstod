@@ -36,18 +36,18 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
 
             var patientSjfMetaData = patientHistoryViewState.getSjfMetaData();
 
-            var andraVardenheterInomVgUtanSparr = patientSjfMetaData.kraverInteSamtycke.length;
-            var andraVardenheterInomVgMedSparr = patientSjfMetaData.vardenheterInomVGMedSparr.length;
-            var andraVardgivareUtanSparr = patientSjfMetaData.kraverSamtycke.length;
-            var andraVardgivareMedSparr = patientSjfMetaData.andraVardgivareMedSparr.length;
+            var andraVeInomVgUtanSparr = patientSjfMetaData.kraverInteSamtycke.length;
+            var andraVeInomVgMedSparr = patientSjfMetaData.vardenheterInomVGMedSparr.length;
+            var andraVgUtanSparr = patientSjfMetaData.kraverSamtycke.length;
+            var andraVgMedSparr = patientSjfMetaData.andraVardgivareMedSparr.length;
 
             $scope.extraDiagnoser = {
                 patientSjfMetaData: patientSjfMetaData,
-                available: andraVardenheterInomVgUtanSparr > 0 || andraVardenheterInomVgMedSparr > 0 || andraVardgivareMedSparr > 0 || andraVardgivareUtanSparr > 0,
-                osparradInfoInomVardgivare: andraVardenheterInomVgUtanSparr > 0,
-                sparradInfoInomVardgivare: andraVardenheterInomVgMedSparr > 0,
-                osparradInfoAndraVardgivare: andraVardgivareUtanSparr > 0,
-                sparradInfoAndraVardgivare: andraVardgivareMedSparr > 0,
+                available: andraVeInomVgUtanSparr > 0 || andraVeInomVgMedSparr > 0 || andraVgMedSparr > 0 || andraVgUtanSparr > 0,
+                osparradInfoInomVardgivare: andraVeInomVgUtanSparr > 0,
+                sparradInfoInomVardgivare: andraVeInomVgMedSparr > 0,
+                osparradInfoAndraVardgivare: andraVgUtanSparr > 0,
+                sparradInfoAndraVardgivare: andraVgMedSparr > 0,
                 samtyckeFinns: patientHistoryViewState.hasSamtycke()
             };
 

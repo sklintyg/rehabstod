@@ -56,9 +56,11 @@ public interface SjukfallService {
      * @param veHsaIds Identifiers of care units that shall be included in the calculation of the active 'sjukfall'
      * @return
      */
+    // CHECKSTYLE:OFF ParameterNumber
     SjukfallPatientResponse getByPatient(String currentVardgivarId, String enhetsId, String lakareId,
                                          String patientId, Urval urval, IntygParametrar parameters,
                                          Collection<String> vgHsaIds, Collection<String> veHsaIds);
+    // CHECKSTYLE:ON ParameterNumber
 
     SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId,
                                Urval urval, IntygParametrar parameters);

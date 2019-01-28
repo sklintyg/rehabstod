@@ -28,15 +28,27 @@ describe('Directive: rhsPatientHistoryTable', function() {
         }
 
         sjfMetaData.andraVardgivareMedSparr = [];
-        for(i = 0; i < 3; i++){
+        for(i = 0; i < 5; i++){
             sjfMetaData.andraVardgivareMedSparr.push('Vardgivare-med-sparr-' + (i + 1));
         }
 
         sjfMetaData.kraverSamtycke = [];
-        for(i = 0; i < 3; i++){
+        for(i = 0; i < 5; i++){
             sjfMetaData.kraverSamtycke.push({
-                vardenhetId: i + 1,
-                vardgivareNamn: 'Vardgivare-som-kraver-samtycke-' + (i + 1),
+                itemId: i + 1,
+                itemName: 'Vardgivare-som-kraver-samtycke-' + (i + 1),
+                includedInSjukfall: false,
+                bidrarTillAktivtSjukfall: false,
+                loading: false,
+                fetched: false
+            });
+        }
+
+        sjfMetaData.kraverInteSamtycke = [];
+        for(i = 0; i < 5; i++){
+            sjfMetaData.kraverInteSamtycke.push({
+                itemId: i + 1,
+                itemName: 'VardEnhet-som-inte-kraver-samtycke-' + (i + 1),
                 includedInSjukfall: false,
                 bidrarTillAktivtSjukfall: false,
                 loading: false,

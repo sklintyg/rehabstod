@@ -137,6 +137,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     @Override
     @PrometheusTimeMethod
+    // CHECKSTYLE:OFF ParameterNumber
     public SjukfallPatientResponse getByPatient(String currentVardgivarId, String enhetsId, String lakareId,
                                                 String patientId, Urval urval, IntygParametrar parameters,
                                                 Collection<String> vgHsaIds, Collection<String> veHsaIds) {
@@ -161,6 +162,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         return new SjukfallPatientResponse(rehabstodSjukfall, result.getSjfMetaData(), srsError);
     }
+    // CHECKSTYLE:ON ParameterNumber
 
     @Override
     @PrometheusTimeMethod
@@ -224,6 +226,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         return rehabstodSjukfall;
     }
 
+    // CHECKSTYLE:OFF ParameterNumber
     private FilteredSjukFallByPatientResult getFilteredSjukfallByPatient(String vardgivareId, String enhetsId, String lakareId,
                                                                          String patientId, Urval urval, IntygParametrar parameters,
                                                                          Collection<String> vgHsaIds, Collection<String> veHsaIds) {
@@ -309,6 +312,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         return new FilteredSjukFallByPatientResult(rehabstodSjukfall, sjfMetaData);
     }
+    // CHECKSTYLE:ON ParameterNumber
 
     private boolean shouldBeIncludedInCalculationOfSjukfall(Collection<String> vgHsaIds, Collection<String> veHsaIds, IntygData intygData) {
         return vgHsaIds.contains(intygData.getVardgivareId()) || veHsaIds.contains(intygData.getVardenhetId());
