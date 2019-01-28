@@ -40,7 +40,9 @@ describe('Controller: PatientHistoryController', function() {
         sjfMetaData: {
             vardenheterInomVGMedSparr: ['Vardenhet 1', 'Vardenhet 2'],
             andraVardgivareMedSparr: ['Vardgivare 1', 'Vardgivare 2'],
-            andraVardgivareUtanSparr: ['Vardgivare 1', 'Vardgivare 2']
+            andraVardgivareUtanSparr: ['Vardgivare 1', 'Vardgivare 2'],
+            kraverSamtycke: [],
+            kraverInteSamtycke: []
         }
     };
     var scenario2 = {
@@ -48,7 +50,9 @@ describe('Controller: PatientHistoryController', function() {
         sjfMetaData: {
             vardenheterInomVGMedSparr: ['Vardenhet 1', 'Vardenhet 2'],
             andraVardgivareMedSparr: ['Vardgivare 1', 'Vardgivare 2'],
-            andraVardgivareUtanSparr: ['Vardgivare 1', 'Vardgivare 2']
+            andraVardgivareUtanSparr: ['Vardgivare 1', 'Vardgivare 2'],
+            kraverSamtycke: [],
+            kraverInteSamtycke: []
         }
     };
 
