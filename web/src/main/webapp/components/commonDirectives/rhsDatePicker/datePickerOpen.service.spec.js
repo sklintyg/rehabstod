@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-xdescribe('DatePickerOpenService', function() {
+describe('DatePickerOpenService', function() {
     'use strict';
 
     var pickerState;
     var DatePickerOpenService;
 
-    beforeEach(angular.mock.module('common'), function(/*$provide*/){
+    beforeEach(angular.mock.module('rehabstodApp'), function(/*$provide*/){
     });
 
     beforeEach(angular.mock.inject(['datePickerOpenService',

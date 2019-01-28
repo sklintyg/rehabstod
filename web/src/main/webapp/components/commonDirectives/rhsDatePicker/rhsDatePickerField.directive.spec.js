@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-xdescribe('DatePickerFieldDirective', function() {
+describe('DatePickerFieldDirective', function() {
     'use strict';
 
     var $scope, tpl, inputElement;
@@ -32,14 +32,14 @@ xdescribe('DatePickerFieldDirective', function() {
     }
 
     beforeEach(angular.mock.module('htmlTemplates'));
-    beforeEach(angular.mock.module('common'), function(){
+    beforeEach(angular.mock.module('rehabstodApp'), function(){
     });
     beforeEach(angular.mock.inject(['$rootScope', '$compile',
         function($rootScope, $compile) {
 
             tpl = angular.element(
                 '<div ng-form="testForm">' +
-                '<span rhs-date-picker target-model="model" dom-id="test" add-date-parser="loose"></span>' +
+                '<rhs-date-picker target-model="model" dom-id="test" add-date-parser="loose"></rhs-date-picker>' +
                 '</div>'
             );
 

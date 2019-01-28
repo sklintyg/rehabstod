@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-xdescribe('DateUtilsService', function() {
+describe('DateUtilsService', function() {
     'use strict';
 
     var DateUtilsService;
 
-    beforeEach(angular.mock.module('common'), function(/*$provide*/){
+    beforeEach(angular.mock.module('rehabstodApp'), function(/*$provide*/){
 
     });
 
