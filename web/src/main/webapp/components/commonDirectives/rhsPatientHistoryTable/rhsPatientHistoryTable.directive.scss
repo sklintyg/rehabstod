@@ -226,6 +226,10 @@ rhs-patient-history-table {
   .hidden-value {
     font-style: italic;
   }
+
+  .extra-info-padding-top {
+    padding-top: $grid-gutter-width;
+  }
 }
 
 @media (min-width: 992px) {

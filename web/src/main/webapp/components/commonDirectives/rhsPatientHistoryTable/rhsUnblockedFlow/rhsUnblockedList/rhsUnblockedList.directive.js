@@ -64,12 +64,6 @@ angular.module('rehabstodApp').directive('rhsUnblockedList',
                 '/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedList/rhsUnblockedList.directive.html',
             link: function($scope) {
 
-                $scope.patientHistoryViewState = patientHistoryViewState;
-
-                patientHistoryViewState.setKraverSamtyckeViewState($scope.patientHistoryViewState.getSjfMetaData().kraverSamtycke);
-
-                patientHistoryViewState.setKraverInteSamtyckeViewState($scope.patientHistoryViewState.getSjfMetaData().kraverInteSamtycke);
-
                 $scope.sjfMetaDataItems = $scope.mustHaveConsent ? _getVgSomKraverSamtycke() : _getVeInomSammaVardgivare();
 
                 $scope.fetchItem = function(itemId) {

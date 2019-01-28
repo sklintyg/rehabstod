@@ -83,6 +83,9 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
 
     function _setSjfMetaData(sjfMetaData) {
         _sjfMetaData = sjfMetaData;
+
+        _setKraverSamtyckeViewState(sjfMetaData.kraverSamtycke);
+        _setKraverInteSamtyckeViewState(sjfMetaData.kraverInteSamtycke);
     }
 
     function _getSjfMetaData() {
@@ -224,9 +227,7 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
         selectTimelineItem: _selectTimelineItem,
         setSjfMetaData: _setSjfMetaData,
         getSjfMetaData: _getSjfMetaData,
-        setKraverSamtyckeViewState: _setKraverSamtyckeViewState,
         getKraverSamtyckeViewState: _getKraverSamtyckeViewState,
-        setKraverInteSamtyckeViewState: _setKraverInteSamtyckeViewState,
         getKraverInteSamtyckeViewState: _getKraverInteSamtyckeViewState,
         extraBoxStates: _extraBoxStates,
         hasSamtycke: _hasSamtycke
