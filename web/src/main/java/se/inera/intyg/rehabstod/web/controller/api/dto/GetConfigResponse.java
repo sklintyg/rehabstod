@@ -83,6 +83,7 @@ public class GetConfigResponse {
         this.idpMap = idpMap;
     }
 
+
     public static final class GetConfigResponseBuilder {
         private List<DiagnosKapitel> diagnosKapitelList;
         private String webcertViewIntygTemplateUrl;
@@ -130,12 +131,12 @@ public class GetConfigResponse {
 
         public GetConfigResponse build() {
             GetConfigResponse getConfigResponse = new GetConfigResponse();
-            getConfigResponse.defaultIDP = this.defaultIDP;
-            getConfigResponse.defaultAlias = this.defaultAlias;
-            getConfigResponse.idpMap = this.idpMap;
-            getConfigResponse.version = this.version;
-            getConfigResponse.diagnosKapitelList = this.diagnosKapitelList;
-            getConfigResponse.webcertViewIntygTemplateUrl = this.webcertViewIntygTemplateUrl;
+            getConfigResponse.setDiagnosKapitelList(diagnosKapitelList);
+            getConfigResponse.setWebcertViewIntygTemplateUrl(webcertViewIntygTemplateUrl);
+            getConfigResponse.setVersion(version);
+            getConfigResponse.setDefaultIDP(defaultIDP);
+            getConfigResponse.setDefaultAlias(defaultAlias);
+            getConfigResponse.setIdpMap(idpMap);
             return getConfigResponse;
         }
     }

@@ -77,7 +77,6 @@ public class RehabstodAuthenticationSuccessHandler extends
             } else {
                 LOGGER.warn("Unable to set Cookie for selectedSambiIdp, could not extract remoteEntityID from the SAML credential.");
             }
-
         }
 
         super.onAuthenticationSuccess(request, response, authentication);

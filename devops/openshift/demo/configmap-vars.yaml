@@ -3,6 +3,7 @@ data:
   BROKER_AMQ_TCP_PORT: tcp://activemq-amq-tcp:61616
   NTJP_WS_CERTIFICATE_TYPE: JKS
   NTJP_WS_TRUSTSTORE_TYPE: JKS
+  SAKERHETSTJANST_SAML_KEYSTORE_ALIAS: 'verifiering.rehabstod.intygstjanster.sjunet.org'
   SPARRTJANST_CHECKBLOCKS_ENDPOINT_URL: 'http://localhost:8080/services/stubs/informationsecurity/authorization/blocking/CheckBlocks/4/rivtabp21'
   SAMTYCKESTJANST_CHECKCONSENT_ENDPOINT_URL: 'http://localhost:8080/services/stubs/informationsecurity/authorization/consent/CheckConsent/2/rivtabp21'
   SAMTYCKESTJANST_REGISTEREXTENDEDCONSENT_ENDPOINT_URL: 'http://localhost:8080/services/stubs/informationsecurity/authorization/consent/RegisterExtendedConsent/2/rivtabp21'
