@@ -44,7 +44,7 @@ public class RehabstodAuthenticationSuccessHandler extends
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RehabstodAuthenticationSuccessHandler.class);
     private static final int MAX_AGE = 999999999;
-    static final String SELECTED_SAMBI_IDP = "selectedSambiIdp";
+    static final String SELECTED_SAMBI_IDP = "selectedSambiIdpRS";
 
     @Value("${sakerhetstjanst.saml.idp.metadata.url}")
     private String defaultIdpEntityId;
@@ -66,7 +66,7 @@ public class RehabstodAuthenticationSuccessHandler extends
             if (remoteEntityId != null) {
 
                 if (!defaultIdpEntityId.equals(remoteEntityId)) {
-                    LOGGER.info("User logged in using SAMBI, setting cookie: selectedSambiIdp={}", remoteEntityId);
+                    LOGGER.info("User logged in using SAMBI, setting cookie: selectedSambiIdpRS={}", remoteEntityId);
                     Cookie cookie = new Cookie(SELECTED_SAMBI_IDP, URLEncoder.encode(remoteEntityId, "UTF-8"));
                     cookie.setVersion(0);
                     cookie.setHttpOnly(false);
@@ -75,7 +75,7 @@ public class RehabstodAuthenticationSuccessHandler extends
                     response.addCookie(cookie);
                 }
             } else {
-                LOGGER.warn("Unable to set Cookie for selectedSambiIdp, could not extract remoteEntityID from the SAML credential.");
+                LOGGER.warn("Unable to set Cookie for selectedSambiIdpRS, could not extract remoteEntityID from the SAML credential.");
             }
         }
 

@@ -3,7 +3,7 @@ angular.module('rehabstodApp')
         function ($scope, $cookies, APP_CONFIG) {
             'use strict';
 
-            var SELECTED_SAMBI_IDP_KEY = 'selectedSambiIdp';
+            var SELECTED_SAMBI_IDP_KEY = 'selectedSambiIdpRS';
             var DEFAULT_LOGIN_URL = '/saml/login/alias/' + APP_CONFIG.defaultAlias;
 
             $scope.resetCookie = function () {
