@@ -340,37 +340,39 @@ public class SjukfallServiceImpl implements SjukfallService {
         Map<String, SjfMetaDataItem> kraverInteSamtyckeDataMap = new HashMap<>();
 
         intygAccessMetaData.forEach((intygsId, iacm) -> {
-            if (iacm.inreSparr()) {
-                metadata.getVardenheterInomVGMedSparr().add(iacm.getIntygData().getVardenhetNamn());
-            }
+                if (iacm.inreSparr()) {
+                    metadata.getVardenheterInomVGMedSparr().add(iacm.getIntygData().getVardenhetNamn());
+                } else {
+                    /*
+                     * INTYG-7911:
+                     * Intyg som finns på annan vårdenhet men inom samma vårdgivare kräver inte samtycke
+                     * men ska inte heller inhämtas automatisk vid beräkning av det aktiva sjukfallet.
+                     */
+                    if (!iacm.isKraverSamtycke() && !iacm.isInomVardenhet()) {
+                        String id = iacm.getIntygData().getVardenhetId();
+                        String namn = iacm.getIntygData().getVardenhetNamn();
+                        SjfMetaDataItemType type = SjfMetaDataItemType.VARDENHET;
 
-            if (iacm.yttreSparr()) {
-                metadata.getAndraVardgivareMedSparr().add(iacm.getIntygData().getVardgivareNamn());
-            }
-
-            if (iacm.isKraverSamtycke()) {
-                // INTYG-7912: Intyg som finns på annan vårdgivare kräver alltid samtycke.
-
-                String id = iacm.getIntygData().getVardgivareId();
-                String namn = iacm.getIntygData().getVardgivareNamn();
-                SjfMetaDataItemType type = SjfMetaDataItemType.VARDGIVARE;
-
-                addSjfMetaDataItemToMap(id, namn, type, iacm, kraverSamtyckeDataMap);
-
-            } else {
-                if (iacm.isInomVardgivare() && !iacm.isInomVardenhet()) {
-                    // INTYG-7911: Intyg som finns på annan vårdenhet men inom samma vårdgivare
-                    // kräver inte samtycke men ska inte heller inhämtas automatisk vid beräkning
-                    // av det aktiva sjukfallet.
-
-                    String id = iacm.getIntygData().getVardenhetId();
-                    String namn = iacm.getIntygData().getVardenhetNamn();
-                    SjfMetaDataItemType type = SjfMetaDataItemType.VARDENHET;
-
-                    addSjfMetaDataItemToMap(id, namn, type, iacm, kraverInteSamtyckeDataMap);
+                        addSjfMetaDataItemToMap(id, namn, type, iacm, kraverInteSamtyckeDataMap);
+                    }
                 }
-            }
-        });
+
+                if (iacm.yttreSparr()) {
+                    metadata.getAndraVardgivareMedSparr().add(iacm.getIntygData().getVardgivareNamn());
+                } else {
+                    /*
+                     * INTYG-7912:
+                     * Intyg som finns på annan vårdgivare kräver alltid samtycke.
+                     */
+                    if (iacm.isKraverSamtycke()) {
+                        String id = iacm.getIntygData().getVardgivareId();
+                        String namn = iacm.getIntygData().getVardgivareNamn();
+                        SjfMetaDataItemType type = SjfMetaDataItemType.VARDGIVARE;
+
+                        addSjfMetaDataItemToMap(id, namn, type, iacm, kraverSamtyckeDataMap);
+                    }
+                }
+            });
 
         metadata.setKraverInteSamtycke(kraverInteSamtyckeDataMap.values());
         metadata.setKraverSamtycke(kraverSamtyckeDataMap.values());

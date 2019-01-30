@@ -260,17 +260,14 @@ public class SjukfallServiceTest {
 
         assertEquals(1, patientResponse.getSjukfallList().size());
         assertEquals(2, patientResponse.getSjukfallList().get(0).getIntyg().size());
-        assertEquals(2, patientResponse.getSjfMetaData().getKraverSamtycke().size());
-        assertEquals(1, patientResponse.getSjfMetaData().getAndraVardgivareMedSparr().size());
-        assertEquals(1, patientResponse.getSjfMetaData().getVardenheterInomVGMedSparr().size());
 
         SjfMetaData metaData = patientResponse.getSjfMetaData();
 
-        assertFalse(metaData.isSamtyckeFinns());
-        assertSjfMetaData(vgId2, SjfMetaDataItemType.VARDGIVARE, false, metaData);
-        assertSjfMetaData(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
-        assertSjfMetaData(enhetsId1_2, SjfMetaDataItemType.VARDENHET, false, metaData);
-        assertSjfMetaData(enhetsId1_3, SjfMetaDataItemType.VARDENHET, false, metaData);
+        assertSjfMetaData(false, metaData);
+
+        assertSjfMetaDataItem(vgId2, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+        assertSjfMetaDataItem(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+        assertSjfMetaDataItem(enhetsId1_2, SjfMetaDataItemType.VARDENHET, false, metaData);
     }
 
     /*
@@ -290,39 +287,24 @@ public class SjukfallServiceTest {
         SjukfallPatientResponse patientResponse =
                 testee.getByPatient(vgId1, enhetsId1_1, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
 
+
         assertEquals(1, patientResponse.getSjukfallList().size());
         assertEquals(3, patientResponse.getSjukfallList().get(0).getIntyg().size());
-        assertEquals(2, patientResponse.getSjfMetaData().getKraverSamtycke().size());
-        assertEquals(2, patientResponse.getSjfMetaData().getKraverInteSamtycke().size());
 
         SjfMetaData metaData = patientResponse.getSjfMetaData();
 
-        assertTrue(metaData.isSamtyckeFinns());
-        assertSjfMetaData(vgId2, SjfMetaDataItemType.VARDGIVARE, true, metaData);
-        assertSjfMetaData(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
-        assertSjfMetaData(enhetsId1_2, SjfMetaDataItemType.VARDENHET, false, metaData);
-        assertSjfMetaData(enhetsId1_3, SjfMetaDataItemType.VARDENHET, false, metaData);
-    }
+        assertSjfMetaData(true, metaData);
 
-    private static void assertSjfMetaData(String id, SjfMetaDataItemType type, boolean isIncludedInSjukfall, SjfMetaData metaData) {
-        switch (type) {
-            case VARDGIVARE:
-                assertTrue(metaData.getKraverSamtycke().stream()
-                        .anyMatch(md -> md.getItemId().equals(id) && md.isIncludedInSjukfall() == isIncludedInSjukfall));
-                break;
-            case VARDENHET:
-                assertTrue(metaData.getKraverInteSamtycke().stream()
-                        .anyMatch(md -> md.getItemId().equals(id) && md.isIncludedInSjukfall() == isIncludedInSjukfall));
-                break;
-            default:
-                fail();
-        }
+        assertSjfMetaDataItem(vgId2, SjfMetaDataItemType.VARDGIVARE, true, metaData);
+        assertSjfMetaDataItem(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+        assertSjfMetaDataItem(enhetsId1_2, SjfMetaDataItemType.VARDENHET, false, metaData);
     }
 
     /*
      * Testet ska visa att intyg inom samma vårdgivare och samma enhet inklusive
      * registrerade andra vårdenheter inom vårdgivaren ska resultera i ett sjukfall
-     * med tre intyg i sig.
+     * med tre intyg i sig. Testet visar också att intyg med spärr på annan vårdenhet
+     * inte kommer med.
      */
     @Test
     public void testGetByPatient_medSamtyckeForVardenhet() {
@@ -339,16 +321,14 @@ public class SjukfallServiceTest {
 
         assertEquals(1, patientResponse.getSjukfallList().size());
         assertEquals(3, patientResponse.getSjukfallList().get(0).getIntyg().size());
-        assertEquals(2, patientResponse.getSjfMetaData().getKraverSamtycke().size());
-        assertEquals(2, patientResponse.getSjfMetaData().getKraverInteSamtycke().size());
 
         SjfMetaData metaData = patientResponse.getSjfMetaData();
 
-        assertFalse(metaData.isSamtyckeFinns());
-        assertSjfMetaData(vgId2, SjfMetaDataItemType.VARDGIVARE, false, metaData);
-        assertSjfMetaData(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
-        assertSjfMetaData(enhetsId1_2, SjfMetaDataItemType.VARDENHET, true, metaData);
-        assertSjfMetaData(enhetsId1_3, SjfMetaDataItemType.VARDENHET, true, metaData);
+        assertSjfMetaData(false, metaData);
+
+        assertSjfMetaDataItem(vgId2, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+        assertSjfMetaDataItem(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+        assertSjfMetaDataItem(enhetsId1_2, SjfMetaDataItemType.VARDENHET, true, metaData);
     }
 
     /*
@@ -495,7 +475,7 @@ public class SjukfallServiceTest {
         SjfMetaData metaData = patientResponse.getSjfMetaData();
 
         assertFalse(metaData.isSamtyckeFinns());
-        assertSjfMetaData(enhetsId1_2, SjfMetaDataItemType.VARDENHET, true, metaData);
+        assertSjfMetaDataItem(enhetsId1_2, SjfMetaDataItemType.VARDENHET, true, metaData);
 
     }
 
@@ -529,7 +509,7 @@ public class SjukfallServiceTest {
         SjfMetaData metaData = patientResponse.getSjfMetaData();
 
         assertTrue(metaData.isSamtyckeFinns());
-        assertSjfMetaData(enhetsId1_2, SjfMetaDataItemType.VARDENHET, true, metaData);
+        assertSjfMetaDataItem(enhetsId1_2, SjfMetaDataItemType.VARDENHET, true, metaData);
 
     }
 
@@ -568,8 +548,8 @@ public class SjukfallServiceTest {
 
         assertTrue(metaData.isSamtyckeFinns());
         assertEquals(2, metaData.getKraverSamtycke().size());
-        assertSjfMetaData(vgId2, SjfMetaDataItemType.VARDGIVARE, false, metaData);
-        assertSjfMetaData(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+        assertSjfMetaDataItem(vgId2, SjfMetaDataItemType.VARDGIVARE, false, metaData);
+        assertSjfMetaDataItem(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
 
         assertTrue(metaData.getKraverSamtycke().stream()
                 .filter(md -> md.getItemId().equals(vgId2) && md.isBidrarTillAktivtSjukfall()).count() > 0);
@@ -578,6 +558,30 @@ public class SjukfallServiceTest {
     }
 
     // - - - Private scope - - -
+
+    // This method asserts test data created in method createIntygsData
+    private static void assertSjfMetaData(boolean finnsSamtycke, SjfMetaData metaData) {
+        assertEquals(finnsSamtycke, metaData.isSamtyckeFinns());
+        assertEquals(1, metaData.getAndraVardgivareMedSparr().size());
+        assertEquals(1, metaData.getVardenheterInomVGMedSparr().size());
+        assertEquals(2, metaData.getKraverSamtycke().size());
+        assertEquals(1, metaData.getKraverInteSamtycke().size());
+    }
+
+    private static void assertSjfMetaDataItem(String itemId, SjfMetaDataItemType itemType, boolean isIncludedInSjukfall, SjfMetaData metaData) {
+        switch (itemType) {
+            case VARDGIVARE:
+                assertTrue(metaData.getKraverSamtycke().stream()
+                        .anyMatch(md -> md.getItemId().equals(itemId) && md.isIncludedInSjukfall() == isIncludedInSjukfall));
+                break;
+            case VARDENHET:
+                assertTrue(metaData.getKraverInteSamtycke().stream()
+                        .anyMatch(md -> md.getItemId().equals(itemId) && md.isIncludedInSjukfall() == isIncludedInSjukfall));
+                break;
+            default:
+                fail();
+        }
+    }
 
     private List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> createSjukfallEnhetList() {
         List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> sjukfallList = new ArrayList<>();
