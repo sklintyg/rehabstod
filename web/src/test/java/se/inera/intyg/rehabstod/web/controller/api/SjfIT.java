@@ -92,7 +92,7 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(3))
+                .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
                 .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(2))
                 .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
                         equalTo(false))
@@ -143,7 +143,7 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(3))
+                .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
                 .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(2))
                 .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
                         equalTo(true))
@@ -172,7 +172,7 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
                 .body("sjfMetaData.samtyckeFinns", equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(3))
+                .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
                 .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(2))
                 .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
                         equalTo(true))

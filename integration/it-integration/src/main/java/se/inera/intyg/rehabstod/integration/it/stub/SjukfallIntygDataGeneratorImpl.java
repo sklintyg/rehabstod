@@ -18,24 +18,11 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
 import se.inera.intyg.infra.integration.pu.stub.StubResidentStore;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.schemas.contract.Personnummer;
@@ -53,6 +40,18 @@ import se.riv.strategicresourcemanagement.persons.person.v3.NamePartType;
 import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Queue;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * Can generate a suitable amount of intygsdata.
  *
@@ -65,7 +64,7 @@ import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 @Profile({ "dev", "rhs-it-stub" })
 public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerator {
 
-    public static final String VE_TSTNMT2321000156_105_N = "TSTNMT2321000156-105N";
+    public static final String VE_TSTNMT2321000156_105N = "TSTNMT2321000156-105N";
     public static final String VE_TSTNMT2321000156_105P = "TSTNMT2321000156-105P";
     public static final String VE_TSTNMT2321000156_105Q = "TSTNMT2321000156-105Q";
     public static final String VE_CENTRUM_VAST = "centrum-vast";
@@ -207,7 +206,6 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
                                            List<IntygsData> intygsDataList, LocalDateTime startDate) {
         timeSimulator = startDate;
         for (int intygsIndex = 0; intygsIndex < intygPerPatient; intygsIndex++) {
-
             intygsDataList.add(buildFixedIntygsData(patient, hosPerson));
             timeSimulator = LocalDateTime.now().minusDays(20L * (intygsIndex + 1L));
         }
@@ -491,9 +489,9 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
         enhet = new Enhet();
         HsaId hsaId = new HsaId();
-        hsaId.setExtension(VE_TSTNMT2321000156_105_N);
+        hsaId.setExtension(VE_TSTNMT2321000156_105N);
         enhet.setEnhetsId(hsaId);
-        enhet.setEnhetsnamn("Rehabstöd Enhet ");
+        enhet.setEnhetsnamn("Rehabstöd Enhet 1");
         enhet.setVardgivare(vg);
 
         enhet2 = new Enhet();

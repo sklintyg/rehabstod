@@ -18,18 +18,12 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.client.SparrtjanstClientService;
@@ -39,6 +33,10 @@ import se.riv.informationsecurity.authorization.blocking.v4.CheckBlocksResultTyp
 import se.riv.informationsecurity.authorization.blocking.v4.CheckResultType;
 import se.riv.informationsecurity.authorization.blocking.v4.CheckStatusType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultCodeType;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by marced on 2018-09-28.
@@ -54,6 +52,7 @@ public class SparrtjanstIntegrationServiceImpl implements SparrtjanstIntegration
     @Override
     public void decorateWithBlockStatus(String currentVardgivarHsaId, String currentVardenhetHsaId, String userHsaId, String patientId,
             Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> intygLista) {
+
         Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardgivarHsaId), "vgHsaId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardenhetHsaId), "veHsaId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(userHsaId), "userHsaId may not be null or empty");

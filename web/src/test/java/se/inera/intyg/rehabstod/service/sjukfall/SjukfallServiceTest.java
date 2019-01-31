@@ -303,8 +303,10 @@ public class SjukfallServiceTest {
     /*
      * Testet ska visa att intyg inom samma vårdgivare och samma enhet inklusive
      * registrerade andra vårdenheter inom vårdgivaren ska resultera i ett sjukfall
-     * med tre intyg i sig. Testet visar också att intyg med spärr på annan vårdenhet
-     * inte kommer med.
+     * med 4 intyg i sig.
+     *
+     * Testet visar också att intyg med spärr på annan vårdenhet VE inte kommer med medan
+     * intyg utan spärr på samma vårdenhet VE kommer med.
      */
     @Test
     public void testGetByPatient_medSamtyckeForVardenhet() {
@@ -320,7 +322,7 @@ public class SjukfallServiceTest {
                 testee.getByPatient(vgId1, enhetsId1_1, lakareId1, patientId1, Urval.ALL, parameters, vgHsaId, veHsaId);
 
         assertEquals(1, patientResponse.getSjukfallList().size());
-        assertEquals(3, patientResponse.getSjukfallList().get(0).getIntyg().size());
+        assertEquals(4, patientResponse.getSjukfallList().get(0).getIntyg().size());
 
         SjfMetaData metaData = patientResponse.getSjfMetaData();
 
@@ -565,7 +567,7 @@ public class SjukfallServiceTest {
         assertEquals(1, metaData.getAndraVardgivareMedSparr().size());
         assertEquals(1, metaData.getVardenheterInomVGMedSparr().size());
         assertEquals(2, metaData.getKraverSamtycke().size());
-        assertEquals(1, metaData.getKraverInteSamtycke().size());
+        assertEquals(2, metaData.getKraverInteSamtycke().size());
     }
 
     private static void assertSjfMetaDataItem(String itemId, SjfMetaDataItemType itemType, boolean isIncludedInSjukfall, SjfMetaData metaData) {
@@ -613,7 +615,11 @@ public class SjukfallServiceTest {
         intygsData.add(createIntygsData(vgId1, enhetsId1_1, lakareId1, patientId1));
         intygsData.add(createIntygsData(vgId1, enhetsId1_1, lakareId1, patientId1));
         intygsData.add(createIntygsData(vgId1, enhetsId1_2, lakareId1, patientId1));
+
+        // Lägg till intyg på annan vårdenhet. Ett utan spärr och ett med spärr.
+        intygsData.add(createIntygsData(vgId1, enhetsId1_3, lakareId1, patientId1));
         intygsData.add(createIntygsData(vgId1, enhetsId1_3, lakareId1, patientId1, true));
+
         intygsData.add(createIntygsData(vgId2, enhetsId2, lakareId1, patientId1));
         intygsData.add(createIntygsData(vgId3, enhetsId3, lakareId1, patientId1));
         intygsData.add(createIntygsData(vgId3, enhetsId3, lakareId1, patientId1, true));
@@ -627,7 +633,7 @@ public class SjukfallServiceTest {
         Vardgivare vardgivare = new Vardgivare(vgId1, "vg");
 
         se.inera.intyg.infra.sjukfall.dto.Vardenhet vardenhet =
-            new se.inera.intyg.infra.sjukfall.dto.Vardenhet(enhetsId, "enhet-" + enhetsId);
+            new se.inera.intyg.infra.sjukfall.dto.Vardenhet(enhetsId, "ve-" + enhetsId);
 
         se.inera.intyg.infra.sjukfall.dto.Lakare lakare =
             new se.inera.intyg.infra.sjukfall.dto.Lakare(lakareId, lakareNamn);
@@ -668,10 +674,10 @@ public class SjukfallServiceTest {
 
 
         HosPersonal hosPersonal = new HosPersonal();
-        HsaId hsaId = new HsaId();
-        hsaId.setExtension(lakareId);
+        HsaId hospId = new HsaId();
+        hospId.setExtension(lakareId);
+        hosPersonal.setPersonalId(hospId);
         hosPersonal.setFullstandigtNamn("lakare");
-        hosPersonal.setPersonalId(hsaId);
 
         se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare vardgivare =
                 new se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare();
@@ -680,9 +686,10 @@ public class SjukfallServiceTest {
         vardgivare.setVardgivarId(vardgivarHsaId);
 
         Enhet enhet = new Enhet();
-        HsaId enhetId = new HsaId();
-        enhetId.setExtension(enhetsId);
-        enhet.setEnhetsId(enhetId);
+        HsaId veId = new HsaId();
+        veId.setExtension(enhetsId);
+        enhet.setEnhetsId(veId);
+        enhet.setEnhetsnamn("ve-" + enhetsId);
         enhet.setVardgivare(vardgivare);
 
         hosPersonal.setEnhet(enhet);
