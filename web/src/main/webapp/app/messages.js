@@ -181,7 +181,7 @@ var rhsMessages = {
         // Patient History Dialog
         'label.patienthistory.loading': 'Hämtar sjukfall för patient...',
 
-        'label.extradiagnoser.none': 'Det finns för tillfället ingen ytterligare information att inhämta från andra vårdgivare samt ingen spärrad information på andra vårdenheter.',
+        'label.extradiagnoser.none': 'Det finns för tillfället ingen ytterligare information att inhämta från andra vårdenheter eller andra vårdgivare.',
         'label.extradiagnoser.empty': 'Det finns för tillfället ingen information i denna kategori att inhämta.',
 
         'label.extradiagnoser.osparradinom.title': 'Ospärrad information inom vårdgivare',
