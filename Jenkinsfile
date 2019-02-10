@@ -3,10 +3,6 @@
 def buildVersion = "1.10.0.${BUILD_NUMBER}"
 def infraVersion = "3.10.0.+"
 
-// Common is not used by Rehabstod but is defined since the
-// OpenShift pipeline template depends on this property
-def commonVersion = "3.8.0.+"
-
 stage('checkout') {
     node {
         git url: "https://github.com/sklintyg/rehabstod.git", branch: GIT_BRANCH
@@ -50,8 +46,7 @@ stage('restAssured') {
 stage('protractor') {
     node {
         try {
-            sh(script: 'rm -rf test/node_modules/rehabstod-testtools') // Without this, node does not always recognize that a new version is available.
-            shgradle "protractorTests -Dprotractor.env=build-server"
+            shgradle "protractorTests -Dprotractor.env=build-server -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion}"
         } finally {
             publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'test/reports', \
                 reportFiles: 'index.html', reportName: 'Protractor results'

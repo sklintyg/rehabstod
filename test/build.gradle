@@ -11,9 +11,8 @@ node {
     version = '10.15.1'
     download = true
     distBaseUrl = 'https://build-inera.nordicmedtest.se/node/'
+    workDir = rootProject.projectDir
 }
-
-tasks.npmInstall.inputs.files("$projectDir/rehabstodTestTools/package.json")
 
 task protractorTests(type: NodeTask, dependsOn: npmInstall) {
     outputs.upToDateWhen { false }
