@@ -1,8 +1,8 @@
 {
     "name": "e2e-test",
     "version": "0.0.1",
+    "private": true,
     "dependencies": {
-        "common-testtools": "^0.4.0",
         "rehabstod-testtools": "file:rehabstodTestTools",
         "sleep": "^5.2.4"
     },
@@ -15,11 +15,8 @@
         "grunt-protractor-webdriver": "^0.2.5",
         "http-backend-proxy": "^1.4.3",
         "jasmine-reporters": "^2.3.2",
-        "protractor-cucumber-framework": "^1.0.0",
-        "protractor-jasmine2-screenshot-reporter": "^0.5.0",
-        "winston": "^2.4.4"
+        "protractor-jasmine2-screenshot-reporter": "^0.5.0"
     },
-    "engine": "node >= 6.9.1",
     "scripts": {
         "install": "node node_modules/protractor/bin/webdriver-manager update"
     }

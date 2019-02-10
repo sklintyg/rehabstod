@@ -7,10 +7,6 @@ idea {
     }
 }
 
-grunt {
-    colors = System.properties['gruntColors'] ? System.properties['gruntColors'].toBoolean() : true
-}
-
 node {
     version = '10.15.1'
     download = true
