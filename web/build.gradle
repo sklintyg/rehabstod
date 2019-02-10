@@ -29,7 +29,7 @@ node {
     version = '10.15.1'
     download = true
     distBaseUrl = 'https://build-inera.nordicmedtest.se/node/'
-    workDir = rootProject.projectDir
+    workDir = file("${rootProject.projectDir}/nodejs")
 }
 
 if (project.hasProperty('rehabstod.useMinifiedJavaScript')) {
