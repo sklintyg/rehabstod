@@ -12,7 +12,7 @@ node {
     download = true
     distBaseUrl = 'https://build-inera.nordicmedtest.se/node/'
     workDir = projectDir
-    nodeModulesDir = projectDir
+    nodeModulesDir = file("${project.projectDir}")
 }
 
 tasks.npmInstall.inputs.files("$projectDir/rehabstodTestTools/package.json")
