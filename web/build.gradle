@@ -27,9 +27,12 @@ grunt {
 
 node {
     version = '10.15.1'
+    npmVersion = '6.4.1'
     download = true
     distBaseUrl = 'https://build-inera.nordicmedtest.se/node/'
-    workDir = file("${rootProject.projectDir}/nodejs")
+    workDir = file("${rootProject.projectDir}/.gradle/nodejs")
+    npmWorkDir = file("${rootProject.projectDir}/.gradle/npm")
+    nodeModulesDir = file("${project.projectDir}")
 }
 
 if (project.hasProperty('rehabstod.useMinifiedJavaScript')) {
