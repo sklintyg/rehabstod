@@ -8,8 +8,8 @@ idea {
 }
 
 node {
-    version = '10.15.1'
-    npmVersion = '6.4.1'
+    version = "${nodeJsVersion}"
+    npmVersion = "${npmVersion}"
     download = true
     distBaseUrl = 'https://build-inera.nordicmedtest.se/node/'
     workDir = file("${rootProject.projectDir}/.gradle/nodejs")
