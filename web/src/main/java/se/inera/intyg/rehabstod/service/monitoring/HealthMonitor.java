@@ -38,6 +38,7 @@ import javax.jms.JMSException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -187,7 +188,8 @@ public class HealthMonitor extends Collector {
     }
 
     private boolean pingIntygstjanst() {
-        return doHttpLookup(itMetricsUrl) == 200;
+
+        return doHttpLookup(itMetricsUrl) == HttpServletResponse.SC_OK;
     }
 
     private int doHttpLookup(String url) {
