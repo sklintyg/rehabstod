@@ -13,8 +13,6 @@ module.exports = function(config) {
         logLevel: config.LOG_ERROR,
         singleRun: true,
 
-        browsers: [ 'PhantomJS' ],
-
         // coverage reporter generates the coverage
         reporters: ['progress', 'coverage'],
 

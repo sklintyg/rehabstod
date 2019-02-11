@@ -82,7 +82,17 @@ module.exports = function(config) {
         // - Safari (only Mac)
         // - PhantomJS
         // - IE (only Windows)
-        browsers: ['PhantomJS'],
+        browsers: ['ChromeHeadlessNoSandbox'],
+        customLaunchers: {
+            ChromeHeadlessNoSandbox: {
+                base: 'ChromeHeadless',
+                flags: [
+                    '--no-sandbox', // required to run without privileges in docker
+                    '--disable-web-security',
+                    '--disable-gpu'
+                ]
+            }
+        },
 
         coverageReporter: {
             reporters: [
@@ -91,6 +101,13 @@ module.exports = function(config) {
                 { type: 'lcovonly', subdir: '.', file: 'lcov.info' }
             ]
         },
+
+        plugins : [
+            'karma-chrome-launcher',
+            'karma-coverage',
+            'karma-jasmine',
+            'karma-ng-html2js-preprocessor'
+        ],
 
         // Continuous Integration mode
         // if true, it capture browsers, run tests and exit
