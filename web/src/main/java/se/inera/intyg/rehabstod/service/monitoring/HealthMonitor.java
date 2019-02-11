@@ -38,6 +38,9 @@ import javax.jms.JMSException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Time;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -130,9 +133,8 @@ public class HealthMonitor extends Collector {
     @Qualifier("rediscache")
     private RedisTemplate<Object, Object> redisTemplate;
 
-    // Pings intygstjansten
-    @Autowired
-    private IntygstjanstClientService intygstjanstClientService;
+    @Value("${it.ping.url}")
+    private String itMetricsUrl;
 
     // Runs a lua script to count number of keys matching our session keys.
     private RedisScript<Long> redisScript;
@@ -185,11 +187,17 @@ public class HealthMonitor extends Collector {
     }
 
     private boolean pingIntygstjanst() {
+        return doHttpLookup(itMetricsUrl) == 200;
+    }
+
+    private int doHttpLookup(String url) {
         try {
-            PingForConfigurationResponseType pingResponse = intygstjanstClientService.pingForConfiguration();
-            return pingResponse != null;
-        } catch (Exception e) {
-            return false;
+            HttpURLConnection httpConnection = (HttpURLConnection) new URL(url).openConnection();
+            int respCode = httpConnection.getResponseCode();
+            httpConnection.disconnect();
+            return respCode;
+        } catch (IOException e) {
+            return 0;
         }
     }
 
