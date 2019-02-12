@@ -44,7 +44,7 @@ debug-konfiguration i din utvecklingsmiljö.
 För att testa applikationen i ett mer prodlikt läge kan man även starta med en flagga för att köra i minifierat läge då css/js är packade och sammanslagna genom att starta:
 
     $ cd rehabstod
-    $ ./gradlew clean appRunWar -Prehabstod.useMinifiedJavaScript
+    $ ./gradlew clean appRunWar -PuseMinifiedJavaScript
 
 ### Köra integrationstester
 Vi har integrationstester skrivna med [REST-Assured](https://github.com/jayway/rest-assured)

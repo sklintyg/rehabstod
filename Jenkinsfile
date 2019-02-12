@@ -13,7 +13,7 @@ stage('checkout') {
 stage('build') {
     node {
         try {
-            shgradle "--refresh-dependencies clean build testReport sonarqube -PcodeQuality -Prehabstod.useMinifiedJavaScript \
+            shgradle "--refresh-dependencies clean build testReport sonarqube -PcodeQuality -PuseMinifiedJavaScript \
                       -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion}"
         } finally {
             publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'build/reports/allTests', \
@@ -56,7 +56,7 @@ stage('protractor') {
 
 stage('tag and upload') {
     node {
-        shgradle "uploadArchives tagRelease -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion} -Prehabstod.useMinifiedJavaScript"
+        shgradle "uploadArchives tagRelease -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion} -PuseMinifiedJavaScript"
     }
 }
 

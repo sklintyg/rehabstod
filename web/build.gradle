@@ -31,7 +31,7 @@ node {
     nodeModulesDir = file("${project.projectDir}")
 }
 
-if (project.hasProperty('rehabstod.useMinifiedJavaScript')) {
+if (project.hasProperty('useMinifiedJavaScript')) {
     war {
         webAppDirName = 'build/webapp'
     }
