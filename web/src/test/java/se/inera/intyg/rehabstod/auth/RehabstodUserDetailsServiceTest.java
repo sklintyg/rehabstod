@@ -89,8 +89,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class RehabstodUserDetailsServiceTest {
 
-    protected static final String AUTHORITIES_CONFIGURATION_FILE = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
-    protected static final String FEATURES_CONFIGURATION_FILE = "AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    protected static final String AUTHORITIES_CONFIGURATION_FILE = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    protected static final String FEATURES_CONFIGURATION_FILE = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
 
     protected static final SecurityConfigurationLoader CONFIGURATION_LOADER = new SecurityConfigurationLoader(
             AUTHORITIES_CONFIGURATION_FILE, FEATURES_CONFIGURATION_FILE);
