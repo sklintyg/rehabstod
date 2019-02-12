@@ -84,7 +84,7 @@ gretty {
             '-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,caching-enabled',
                '-Dconfig.file=' + projectDir + '/src/main/resources/dev.properties',
                '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
-               '-Dresources.folder=' +projectDir + '/../src/main/resources'
+               '-Dresources.folder=classpath:'
                ]
 
 }
@@ -136,4 +136,6 @@ dependencies {
     testCompile "org.springframework:spring-test:${springContextVersion}"
     testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "javax.jms:jms-api:${javaxJmsVersion}"
+
+    gretty "se.inera.intyg.refdata:refdata:${refDataVersion}"
 }

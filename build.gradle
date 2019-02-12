@@ -6,6 +6,7 @@ plugins {
 
 ext {
     intygInfraVersion = System.properties['infraVersion'] ?: '0-SNAPSHOT'
+    refDataVersion = System.properties['refDataVersion'] ?: '1.0.0.+'
 
     rehabilitationSchemaVersion = "1.1.2"
     blockingSchemaVersion = "4.0"
@@ -72,6 +73,7 @@ allprojects {
         compile "ch.qos.logback:logback-classic:${logbackVersion}"
         compile "org.slf4j:slf4j-api:${slf4jVersion}"
 
+        testCompile "se.inera.intyg.refdata:refdata:${refDataVersion}"
         testCompile 'junit:junit:4.+'
         testCompile "org.mockito:mockito-core:${mockitoAllVersion}"
     }
