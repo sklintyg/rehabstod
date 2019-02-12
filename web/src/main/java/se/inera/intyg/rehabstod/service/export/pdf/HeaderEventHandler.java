@@ -89,6 +89,7 @@ public class HeaderEventHandler extends PdfPageEventHelper {
         printedBy.add(new Chunk(HourMinuteFormatter.print(now)));
 
         PdfPCell cell = new PdfPCell(printedBy);
+        cell.setLeading(2f, 1f);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
         cell.setBorder(Rectangle.NO_BORDER);
