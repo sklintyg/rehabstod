@@ -41,9 +41,9 @@ import static org.junit.Assert.*;
 @RunWith(MockitoJUnitRunner.class)
 public class SecurityConfigurationLoaderMinimalTest {
 
-    private static final String AUTHORITIES_CONFIGURATION_TEST_FILE = "AuthoritiesConfigurationLoaderTest/authorities-test-minimal.yaml";
-    private static final String FEATURES_CONFIGURATION_TEST_FILE = "AuthoritiesConfigurationLoaderTest/features-test.yaml";
-    private static final String AUTHORITIES_CONFIGURATION_OUTPUT_FILE = "AuthoritiesConfigurationLoaderTest/authorities-output-minimal.txt";
+    private static final String AUTHORITIES_CONFIGURATION_TEST_FILE = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test-minimal.yaml";
+    private static final String FEATURES_CONFIGURATION_TEST_FILE = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    private static final String AUTHORITIES_CONFIGURATION_OUTPUT_FILE = "classpath:AuthoritiesConfigurationLoaderTest/authorities-output-minimal.txt";
 
     @InjectMocks
     SecurityConfigurationLoader loader = new SecurityConfigurationLoader(AUTHORITIES_CONFIGURATION_TEST_FILE,

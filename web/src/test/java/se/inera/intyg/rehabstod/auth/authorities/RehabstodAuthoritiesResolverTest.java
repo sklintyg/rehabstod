@@ -44,8 +44,8 @@ import static org.junit.Assert.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class RehabstodAuthoritiesResolverTest {
 
-    private String authoritiesConfigurationFile = "AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
-    private String featuresConfigurationsFile = "AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    private String authoritiesConfigurationFile = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    private String featuresConfigurationsFile = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
 
     @Mock
     private HsaPersonService hsaPersonService;
