@@ -3,7 +3,7 @@
 - name: Remove refdata
   shell: rm -f {{ tomcat_lib }}/refdata*.jar
 
-- name: Get latest refdata version  IntygModuleApiControllerIT
+- name: Get latest refdata version
   shell: curl -s https://build-inera.nordicmedtest.se/nexus/repository/public/se/inera/intyg/refdata/refdata/maven-metadata.xml | grep '<latest>.*</latest>' | sed 's/.*<latest>\(.*\)<\/latest>.*/\1/g'
   register: latest_refdata
 
