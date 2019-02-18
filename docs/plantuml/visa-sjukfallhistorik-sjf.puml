@@ -18,29 +18,44 @@ activate rhs
     it --> rhs: Lista av patientens samtliga intyg
     deactivate it
 
-    rhs -> hsa: Hämta vårdgivarnamn/vårdenhetsnamn för varje intyg mha GetUnit v1
+    rhs -> hsa: Hämta vårdgivarnamn för varje intyg mha GetUnit v1
     activate hsa
     hsa --> rhs: GetUnitResponseType
     deactivate hsa
 
-    rhs -> st: Kontrollera spärr via CheckBlocks v4
-    activate st
-    st --> rhs: CheckBlocksResponseType
-    deactivate st
-    rhs -> rhs: Uppdatera sjukfallen med spärrstatus
+    rhs -> pu: GetPerson för patienten
+    activate pu
+    pu --> rhs: PersonSvar
+    deactivate pu
 
-    rhs -> sfm: Skicka in ALLA intyg oavsett spärr/samtyckesstatus
-    sfm --> rhs: Bruttosjukfall.
+    alt Om patienten är sekretssmarkerad
+        rhs -> rhs: Filtrera bort alla intyg som inte ligger på den aktiva enheten.
+    end
 
-    rhs -> samtycke: Kontrollera samtyckesstatus för de intyg som kräver samtycke för att få visas via CheckConsent v2
-    activate samtycke
-    samtycke --> rhs: samtyckesstatus
-    deactivate samtycke
+    alt Om patienten ej är sekretssmarkerad
+        rhs -> st: Kontrollera spärr via CheckBlocks v4
+        activate st
+        st --> rhs: CheckBlocksResponseType
+        deactivate st
+        rhs -> rhs: Uppdatera intygen med spärrstatus
 
-    rhs -> rhs: Uppdatera sjukfallen med vilka intyg som har\nhar registrerade samtycken / saknar samtycken
+        rhs -> sfm: Skicka in ALLA intyg oavsett spärr/samtyckesstatus
+        sfm --> rhs: Bruttosjukfall.
 
-     rhs -> rhs: Filtrera bort sjukfall med spärr eller saknar samtycke.
-     rhs -> rhs: Sammanställ klientsvar med sjukfall\noch metadataobjekt\nmed info om vad som filtrerats bort samt vilka samtycken\nsom är registrerade och valda.
+        rhs -> samtycke: Kontrollera samtyckesstatus för enheten/läkaren mot patieten för att få visa intyg utanför vårdgivaren via CheckConsent v2
+        activate samtycke
+        samtycke --> rhs: samtyckesstatus
+        deactivate samtycke
+
+        opt Om samtycke saknas
+            rhs -> rhs: Filtrera bort intyg från andra vårdgivare
+        end
+
+        rhs -> rhs: Filtrera bort intyg med spärr
+        rhs -> rhs: Filtrera bort intyg utanför den nuvarande enhet där användaren inte aktivt valt att ta med vårdgivaren/enheten
+    end
+
+    rhs -> rhs: Sammanställ klientsvar med sjukfall\noch metadataobjekt\nmed info om vad som filtrerats bort samt vilka samtycken\nsom är registrerade och valda.
 
     rhs -> sfm: Skicka in nettolistan av intyg för att\nfå verkliga sjukfall
     sfm --> rhs: Nettosjukfall
@@ -53,7 +68,7 @@ activate rhs
      end
 
 
-      rhs --> pu: GetPerson för varje sjukfalls patient
+      rhs --> pu: GetPerson för patienten
     activate pu
       pu --> rhs: PersonSvar
      deactivate pu
