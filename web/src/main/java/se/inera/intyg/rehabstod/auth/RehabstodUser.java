@@ -220,6 +220,11 @@ public class RehabstodUser extends IntygUser implements Serializable {
         getSjfPatientVardenhet(patientId).add(vardenhetId);
     }
 
+    public void clearSjfData() {
+        sjfPatientVardenhet.clear();
+        sjfPatientVardgivare.clear();
+    }
+
     /**
      * In Rehabstöd, isLakare is an immutable field that must be set when logging in. This is due to us
      * sometimes changing the ROLE of a doctor to be a Rehabkoordinator based on systemRoles.

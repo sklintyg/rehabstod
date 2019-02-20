@@ -127,8 +127,26 @@ public class UserController {
     @RequestMapping(value = "/preferences", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, String> updatePref(@RequestBody Map<String, String> keyValueMap) {
-        userPreferencesService.updatePreferences(RehabstodUserPreferences.fromFrontend(keyValueMap));
+
+        RehabstodUserPreferences oldPreferences = userPreferencesService.getAllPreferences();
+        RehabstodUserPreferences newPreferences = RehabstodUserPreferences.fromFrontend(keyValueMap);
+
+        // Update preferences with new values
+        userPreferencesService.updatePreferences(newPreferences);
         LOG.debug("Updating user pref with values {}", keyValueMap);
+
+        // Check if preferences has changed
+        if (hasPreferencesChanged(oldPreferences, newPreferences,
+                RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG,
+                RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT)) {
+
+            // INTYG-8139: clear user values if above preferences has changed.
+            // This will force user to fetch some of the information yet again in order to
+            // recalculate the patient history view.
+            RehabstodUser user = getRehabstodUser();
+            user.clearSjfData();
+        }
+
         return getAllPrefs();
     }
 
@@ -144,6 +162,29 @@ public class UserController {
             throw new AuthoritiesException("No user in session");
         }
         return user;
+    }
+
+    private boolean hasPreferencesChanged(RehabstodUserPreferences oldPreferences,
+                                          RehabstodUserPreferences newPreferences,
+                                          RehabstodUserPreferences.Preference... preferences) {
+
+        if (oldPreferences == null && newPreferences != null) {
+            return true;
+        }
+        if (oldPreferences != null && newPreferences == null) {
+            return false;
+        }
+        if (preferences == null || preferences.length == 0) {
+            return false;
+        }
+
+        for (RehabstodUserPreferences.Preference preference : preferences) {
+            if (!oldPreferences.get(preference).equals(newPreferences.get(preference))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
