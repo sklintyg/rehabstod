@@ -66,7 +66,7 @@ angular.module('rehabstodApp').factory('UserProxy',
             var config =  {
                 timeout: networkConfig.defaultTimeout
             };
-            $log.debug('REST call: _changeSelectedUnit ' + restPath);
+            $log.debug('REST call: _saveSettings ' + restPath);
             $http.post(restPath, dto, config).then(function(response) {
                 $log.debug(restPath + ' - success');
 
