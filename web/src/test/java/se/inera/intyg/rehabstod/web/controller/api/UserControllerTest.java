@@ -18,15 +18,12 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import java.util.Collections;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
@@ -37,6 +34,9 @@ import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceReposit
 import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
+
+import java.util.Collections;
+import java.util.HashMap;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -75,12 +75,14 @@ public class UserControllerTest {
     @Before
     public void before() {
         when(commonAuthoritiesResolver.getFeatures(any())).thenReturn(Collections.emptyMap());
-        when(userService.getUser()).thenReturn(rehabUserMock);
+        when(rehabstodUnitChangeService.changeValdVardenhet("123", rehabUserMock)).thenReturn(true);
         when(rehabUserMock.getValdVardenhet()).thenReturn(new Vardenhet("123", "enhet"));
         when(rehabUserMock.getValdVardgivare()).thenReturn(new Vardenhet("456", "vardgivare"));
         when(rehabUserMock.getHsaId()).thenReturn(HSA_ID);
+        when(rehabUserMock.getSjfPatientVardenhet()).thenReturn(new HashMap<>());
+        when(rehabUserMock.getSjfPatientVardgivare()).thenReturn(new HashMap<>());
         when(rehabUserMock.getPreferences()).thenReturn(RehabstodUserPreferences.empty());
-        when(rehabstodUnitChangeService.changeValdVardenhet("123", rehabUserMock)).thenReturn(true);
+        when(userService.getUser()).thenReturn(rehabUserMock);
     }
 
     @Test
@@ -110,6 +112,26 @@ public class UserControllerTest {
 
         verify(userService).getUser();
         verify(rehabstodUnitChangeService).changeValdVardenhet(eq(req.getId()), eq(rehabUserMock));
+    }
+
+    @Test
+    public void clearAddedVardgivareAndVardeneheterWhenPreferencesHasChanged() {
+        when(userPreferencesService.getAllPreferences()).thenReturn(defaultPreferences());
+
+        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "6");
+        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "14");
+
+        userController.updatePref(preferences.toFrontendMap());
+
+        verify(rehabUserMock).clearSjfData();
+    }
+
+    private RehabstodUserPreferences defaultPreferences() {
+        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
+        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "14");
+        return preferences;
     }
 
 }
