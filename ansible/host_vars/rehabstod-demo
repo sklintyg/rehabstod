@@ -1,5 +1,0 @@
-# Configuration repository
-environment_name: "demo"
-
-database_provisioning_username: root
-database_provisioning_password: inera

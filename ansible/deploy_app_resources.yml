@@ -1,8 +1,0 @@
----
-# This playbook provisions application resources for Rehabstöd 
-
-- hosts: rehabstod-tomcat
-  become: yes 
-
-  roles:
-    - app-resources

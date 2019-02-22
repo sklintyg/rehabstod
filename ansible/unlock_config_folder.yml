@@ -1,8 +1,0 @@
----
-# This playbook unlocks the config repo folder
-
-- hosts: rehabstod-tomcat
-  become: yes 
-  
-  roles:
-    - unlock-config-folder
