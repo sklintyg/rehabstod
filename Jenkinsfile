@@ -24,7 +24,7 @@ stage('build') {
 
 stage('tag') {
     node {
-        shgradle "uploadArchives tagRelease -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion} -PuseMinifiedJavaScript"
+        shgradle "tagRelease -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion} -PuseMinifiedJavaScript"
     }
 }
 
