@@ -2,6 +2,7 @@
 
 def buildVersion = "1.10.0.${BUILD_NUMBER}"
 def infraVersion = "3.10.0.+"
+def refDataVersion = "1.0-SNAPSHOT"
 
 stage('checkout') {
     node {
@@ -35,6 +36,7 @@ stage('propagate') {
         build job: "rehabstod-dintyg-build", wait: false, parameters: [
                 [$class: 'StringParameterValue', name: 'REHABSTOD_BUILD_VERSION', value: buildVersion],
                 [$class: 'StringParameterValue', name: 'INFRA_VERSION', value: infraVersion],
+                [$class: 'StringParameterValue', name: 'REF_DATA_VERSION', value: refDataVersion],
                 [$class: 'StringParameterValue', name: 'GIT_REF', value: gitRef],
                 [$class: 'StringParameterValue', name: 'RELEASE_FLAG', value: releaseFlag]
         ]
