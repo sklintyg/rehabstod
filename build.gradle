@@ -6,7 +6,7 @@ plugins {
 
 ext {
     intygInfraVersion = System.properties['infraVersion'] ?: '0-SNAPSHOT'
-    refDataVersion = System.properties['refDataVersion'] ?: '0-SNAPSHOT'
+    refDataVersion = System.properties['refDataVersion'] ?: '1.0-SNAPSHOT'
 
     rehabilitationSchemaVersion = "1.1.2"
     blockingSchemaVersion = "4.0"
@@ -68,6 +68,7 @@ allprojects {
 
     repositories {
         mavenLocal()
+        maven { url "https://build-inera.nordicmedtest.se/nexus/repository/snapshots/" }
         maven { url "https://build-inera.nordicmedtest.se/nexus/repository/releases/" }
         maven { url "http://repo.maven.apache.org/maven2" }
     }
