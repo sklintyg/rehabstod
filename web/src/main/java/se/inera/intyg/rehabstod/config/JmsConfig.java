@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import javax.jms.ConnectionFactory;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.jms.core.JmsTemplate;
-
-import javax.jms.ConnectionFactory;
 
 /**
  * Created by eriklupander on 2016-02-18.
@@ -44,9 +44,6 @@ public class JmsConfig {
 
     @Value("${pdl.logging.queue.name}")
     private String loggingQueueName;
-
-    @Value("${aggregated.pdl.logging.queue.name}")
-    private String aggregatedLoggingQueueName;
 
     @Bean
     public JmsTransactionManager jmsTransactionManager() {
@@ -67,15 +64,6 @@ public class JmsConfig {
     public JmsTemplate jmsPDLLogTemplate() {
         JmsTemplate jmsTemplate = new JmsTemplate();
         jmsTemplate.setDefaultDestinationName(loggingQueueName);
-        jmsTemplate.setConnectionFactory(connectionFactory());
-        jmsTemplate.setSessionTransacted(true);
-        return jmsTemplate;
-    }
-
-    @Bean
-    public JmsTemplate jmsAggregatedPDLLogTemplate() {
-        JmsTemplate jmsTemplate = new JmsTemplate();
-        jmsTemplate.setDefaultDestinationName(aggregatedLoggingQueueName);
         jmsTemplate.setConnectionFactory(connectionFactory());
         jmsTemplate.setSessionTransacted(true);
         return jmsTemplate;

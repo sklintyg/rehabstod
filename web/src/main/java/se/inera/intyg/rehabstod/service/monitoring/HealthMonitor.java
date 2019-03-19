@@ -105,10 +105,6 @@ public class HealthMonitor extends Collector {
             .help("Number of waiting pdl log messages")
             .register();
 
-    private static final Gauge PDL_AGGREGATED_QUEUE_DEPTH = Gauge.build()
-            .name(PREFIX + "pdl_aggregated_queue_depth" + VALUE)
-            .help("Number of waiting aggregated pdl log messages")
-            .register();
     private static final long MILLIS_PER_SECOND = 1000L;
 
     private static final String CURR_TIME_SQL = "SELECT CURRENT_TIME()";
@@ -122,10 +118,6 @@ public class HealthMonitor extends Collector {
     @Autowired
     @Qualifier("jmsPDLLogTemplate")
     private JmsTemplate jmsPDLLogTemplate;
-
-    @Autowired
-    @Qualifier("jmsAggregatedPDLLogTemplate")
-    private JmsTemplate jmsAggregatedPDLLogTemplate;
 
     @Autowired
     private ConnectionFactory connectionFactory;
@@ -156,7 +148,6 @@ public class HealthMonitor extends Collector {
         JMS_ACCESSIBLE.set(checkJmsConnection() ? 0 : 1);
         IT_ACCESSIBLE.set(pingIntygstjanst() ? 0 : 1);
         PDL_QUEUE_DEPTH.set(checkQueueDepth(jmsPDLLogTemplate));
-        PDL_AGGREGATED_QUEUE_DEPTH.set(checkQueueDepth(jmsAggregatedPDLLogTemplate));
 
         return Collections.emptyList();
     }
