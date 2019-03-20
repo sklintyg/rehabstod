@@ -77,11 +77,11 @@ Software artifacts are located at, and downloaded from:
 * From Installing Client - [https://build-inera.nordicmedtest.se/nexus/repository/releases/se/inera/intyg/rehabstod/rehabstod/maven-metadata.xml](https://build-inera.nordicmedtest.se/nexus/repository/releases/se/inera/intyg/rehabstod/rehabstod/maven-metadata.xml)
 * From OpenShift Cluster - docker.drift.inera.se/intyg/
 
-### 1.7 Access to OpenShift Cluster
+### 2.7 Access to OpenShift Cluster
 
 The OpenShift user account must have the right permissions to process, create, delete and replace objects, and most certainly a VPN account and connection is required in order to access the OpenShift Cluster.
 
-### 1.8 Client Software Tools
+### 2.8 Client Software Tools
 
 The installation client must have **git** and **oc** (OpenShift Client) installed and if a database schema migration is required then **java** (Java 8) and **tar** is required in order to execute the migration tool (liquibase runner).
 
