@@ -5,7 +5,11 @@ Installation of Web application Rehabstöd (RS) on OpenShift.
 
 ## 1 Updates since 2019-1 (release notes)
 
-### 1.1 Configuration properties
+### 1.1 Database schema
+
+Database schema doesn't need any updates.
+
+### 1.2 Configuration properties
 
 The configuration property `AGGREGATED_PDL_LOGGING_QUEUE_NAME` is no longer in use.
 
@@ -13,7 +17,7 @@ The following configuration properties have been added:
 
 * `REFDATA_URL` -- Location of reference data, see below
 
-### 1.2 Configuration of reference data
+### 1.3 Configuration of reference data
 
 The main update is activation of the new reference data concept (master data for shared configurations). Refdata is provided as a JAR file and configured with the `REFDATA_URL` and `RESOURCES_FOLDER` parameters. Normally the default value of `RESOURCES_FOLDER` should be set to  `classpath:`. Three configuration updates is required in order to activate the new refdata:
 
