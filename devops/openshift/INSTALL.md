@@ -103,7 +103,7 @@ To run database migration tool:
 1. All Pre-Installation Requirements are fulfilled, se above
 2. Check if a database migration is required
 3. Ensure that the secrets `rehabstod-env`, `rehabstod-certifikat` and `rehabstod-secret-envvar` are up to date
-4. Ensure that the config maps `rehabstod-config` and `rehabstod-configmap-envvar` are up to date5. Check that deployment works as expected 
+4. Ensure that the config maps `rehabstod-config` and `rehabstod-configmap-envvar` are up to date. Check that deployment works as expected 
 6. Fine-tune memory settings for container and java process
 7. Setup policies for number of replicas, auto-scaling and rolling upgrade strategy
 
