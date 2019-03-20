@@ -167,8 +167,8 @@ Open _&lt;env>/secret-vars.yaml_ and and assign correct values:
 	ACTIVEMQ_BROKER_USERNAME: "<username>"
 	ACTIVEMQ_BROKER_PASSWORD: "<password>"
 	REDIS_PASSWORD: "<password>"
-	DATABASE_USERNAME: "<username>"
-	DATABASE_PASSWORD: "<password>"	
+	DB_USERNAME: "<username>"
+	DB_PASSWORD: "<password>"	
 	NTJP_WS_CERTIFICATE_PASSWORD: "<password>"
 	NTJP_WS_KEY_MANAGER_PASSWORD: "<password>"
 	NTJP_WS_TRUSTSTORE_PASSWORD: "<password>"
@@ -182,6 +182,7 @@ Open _&lt;env>/configmap-vars.yaml_ and replace example `<value>` with expected 
 
 
 	SPRING_PROFILES_ACTIVE: "prod,caching-enabled,redis-sentinel"
+	REFDATA_URL: "file://localhost/opt/statistik/env/refdata-1.0.0.65.jar"
 	RESOURCES_FOLDER: "classpath:"
 	WEBCERT_VIEW_URLTEMPLATE: "https://webcert.intygstjanster.se/visa/intyg/{intygsId}/readonly?enhet={enhet}"
 	REDIS_HOST: "<hostname1[;hostname2;...]>"
