@@ -150,7 +150,7 @@ Use **oc** to login and select the actual project, e.g:
     password: ******
     > oc project <name>
 
-#### 3.3.3 Ensure that the latest deployment template is installed
+##### 3.3.3 Ensure that the latest deployment template is installed
 
 A template for the deployment can be dowloaded from [deploytemplate-webapp.yaml](https://github.com/sklintyg/tools/blob/develop/devops/openshift/deploytemplate-webapp.yaml). This needs to be updated regarding assigned computing resources, i.e. the requested and limited amount of CPU needs to be increased as well as the Java memory heap settings, see `JAVA_OPTS`.
 
