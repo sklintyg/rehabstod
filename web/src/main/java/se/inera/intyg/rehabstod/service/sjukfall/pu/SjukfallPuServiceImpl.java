@@ -35,6 +35,7 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ import java.util.stream.Collectors;
 @Service
 public class SjukfallPuServiceImpl implements SjukfallPuService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SjukfallPuServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
     @Autowired
     private PUService puService;
@@ -58,9 +59,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
     @Override
     public void filterSekretessForSummary(List<SjukfallEnhet> sjukfallList) {
         RehabstodUser user = userService.getUser();
-
-        // Call the PU service to get patient information.
-        Map<Personnummer, PersonSvar> personSvarMap = puService.getPersons(getPersonnummerList(sjukfallList));
+        Map<Personnummer, PersonSvar> personSvarMap = fetchPersons(sjukfallList);
 
         // Iterate over 'sjukfallList' and remove invalid items
         Iterator<SjukfallEnhet> i = sjukfallList.iterator();
@@ -70,31 +69,42 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             // If invalid personnummer, remove the last element returned by the iterator
             Optional<Personnummer> pnr = getPersonnummerOfOptional(item.getPatient().getId());
             if (!pnr.isPresent()) {
-                i.remove();
-                LOG.warn("Problem parsing personnummer '{}' returned by PU service. Removing from list of sjukfall.",
+                LOG.warn("Removing item from list of sjukfall. Problem parsing personnummer '{}' returned by PU service.",
                         item.getPatient().getId());
+                i.remove();
                 continue;
             }
 
-            // Explicitly null out patient name after we're done getting the pnr for querying, no leaks from here
-            // since we're ignoring PU-service problems.
+            // Explicitly null out patient name after we're done getting the pnr for querying,
+            // no leaks from here since we're ignoring PU-service problems.
             item.getPatient().setNamn(null);
 
             // Parse response from PU service
             PersonSvar personSvar = personSvarMap.get(pnr.get());
-            boolean patientFound = personSvar != null && personSvar.getStatus() == PersonSvar.Status.FOUND;
-            if (patientFound && personSvar.getPerson().isSekretessmarkering()) {
-
-                // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE, då får vi ej visa
-                // sjukfall för s-märkt patient.
-                if (!hasLakareRoleAndIsLakare(user, item.getLakare().getHsaId())
-                        || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
+            if (personSvar == null) {
+                LOG.info("Removing item from list of sjukfall. PU service returned an empty response for person '{}'",
+                        pnr.get().getPersonnummerHash());
+                i.remove();
+            } else {
+                if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
+                    if (personSvar.getPerson().isSekretessmarkering()) {
+                        // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE,
+                        // då får vi ej visa sjukfall för s-märkt patient.
+                        if (!hasLakareRoleAndIsLakare(user, item.getLakare().getHsaId())
+                                || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
+                            i.remove();
+                        }
+                    } else if (personSvar.getPerson().isAvliden()) {
+                        // The patient is dead...remove...
+                        i.remove();
+                    }
+                } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
+                    throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
+                } else {
+                    LOG.info("Removing item from list of sjukfall. PU service returned an unexpected status response for person '{}'",
+                            pnr.get().getPersonnummerHash());
                     i.remove();
                 }
-
-            } else if (patientFound && personSvar.getPerson().isAvliden()) {
-                // The patient is dead...remove...
-                i.remove();
             }
         }
     }
@@ -107,7 +117,6 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
         List<IntygData> filteredIntyg = intygsData;
 
         PersonSvar personSvar = puService.getPerson(personnummer);
-
         if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
             if (personSvar.getPerson().isSekretessmarkering()) {
                 filteredIntyg = filterOnVardgivareAndEnhet(intygsData, vardgivareId, enhetsId);
@@ -123,11 +132,8 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
     @Override
     public void enrichWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList) {
-
         RehabstodUser user = userService.getUser();
-
-        // Call the PU service to get patient information
-        Map<Personnummer, PersonSvar> personSvarMap = puService.getPersons(getPersonnummerList(sjukfallList));
+        Map<Personnummer, PersonSvar> personSvarMap = fetchPersons(sjukfallList);
 
         // Iterate over 'sjukfallList' and remove invalid items
         Iterator<SjukfallEnhet> i = sjukfallList.iterator();
@@ -169,6 +175,19 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                 item.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_UNKNOWN);
             }
         }
+    }
+
+    private Map<Personnummer, PersonSvar> fetchPersons(List<SjukfallEnhet> sjukfallList) {
+        // Call the PU service to get patient information.
+        // If an error occur when calling the PU service an empty map will be returned.
+        Map<Personnummer, PersonSvar> personSvarMap = puService.getPersons(getPersonnummerList(sjukfallList));
+
+        // Empty map indicates an error when calling the PU service,
+        // clear the list of sjukfall.
+        if (personSvarMap.isEmpty()) {
+            throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
+        }
+        return personSvarMap;
     }
 
     @Override
@@ -228,7 +247,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
      */
     @VisibleForTesting
     List<Personnummer> getPersonnummerList(List<SjukfallEnhet> sjukfallList) {
-        LOG.debug("Building a list of Personnummer by extracting patient IDs from a 'sjukfall' list.");
+                                    LOG.debug("Building a list of Personnummer by extracting patient IDs from a 'sjukfall' list.");
         return getPersonnummerListOfOptionals(sjukfallList).stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)

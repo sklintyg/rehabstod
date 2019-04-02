@@ -80,11 +80,14 @@ public class SjukfallPuServiceImplTest {
     public void init() {
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
                 buildPersonSvar(TOLVANSSON_PNR, false, false));
+
+        when(puService.getPersons(Arrays.asList(createPnr(TOLVANSSON_PNR)))).thenReturn(
+                buildPersonMap(buildPersonSvar(TOLVANSSON_PNR, false, false)));
+
     }
 
     @Test
     public void testNoFilterWhenUserIsVardadmin() {
-
         when(userService.getUser()).thenReturn(buildVardadmin());
 
         mockPersonSvar(false, false);
@@ -96,7 +99,6 @@ public class SjukfallPuServiceImplTest {
 
     @Test
     public void testSekretessmarkeradIsFilteredWhenUserIsVardadmin() {
-
         when(userService.getUser()).thenReturn(buildVardadmin());
 
         mockPersonSvar(true, false);
@@ -191,22 +193,13 @@ public class SjukfallPuServiceImplTest {
         assertEquals(0, sjukfallList.size());
     }
 
-    private void mockPersonSvar(boolean avliden, boolean sekretess) {
-        Map<Personnummer, PersonSvar> personSvarMap = new HashMap<>();
-        personSvarMap.put(createPnr(TOLVANSSON_PNR), buildPersonSvar(TOLVANSSON_PNR, sekretess, avliden));
-        when(puService.getPersons(anyListOf(Personnummer.class))).thenReturn(personSvarMap);
-    }
+    @Test(expected = IllegalStateException.class)
+    public void testFilterSekretessForSummaryWhenPuServiceThrowsException() {
+        RehabstodUser rehabstodUser = buildLakare(ENHET_1);
+        when(userService.getUser()).thenReturn(rehabstodUser);
+        when(puService.getPersons(anyListOf(Personnummer.class))).thenReturn(new HashMap());
 
-    private void mockPersonSvarError() {
-        Map<Personnummer, PersonSvar> personSvarMap = new HashMap<>();
-        personSvarMap.put(createPnr(TOLVANSSON_PNR), PersonSvar.error());
-        when(puService.getPersons(anyListOf(Personnummer.class))).thenReturn(personSvarMap);
-    }
-
-    private void mockPersonSvarNotFound() {
-        Map<Personnummer, PersonSvar> personSvarMap = new HashMap<>();
-        personSvarMap.put(createPnr(TOLVANSSON_PNR), PersonSvar.notFound());
-        when(puService.getPersons(anyListOf(Personnummer.class))).thenReturn(personSvarMap);
+        testee.filterSekretessForSummary(buildSjukfallList(TOLVANSSON_PNR));
     }
 
     @Test
@@ -239,10 +232,7 @@ public class SjukfallPuServiceImplTest {
         RehabstodUser rehabstodUser = buildLakareAsRehabkoordinator(ENHET_1);
         when(userService.getUser()).thenReturn(rehabstodUser);
         when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
-
-        when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
-                buildPersonSvar(TOLVANSSON_PNR, true, false));
-
+        when(puService.getPersons(Arrays.asList(createPnr(TOLVANSSON_PNR)))).thenReturn(buildPersonMap());
         List<SjukfallEnhet> sjukfallList = buildSjukfallList(TOLVANSSON_PNR);
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
         assertEquals(1, sjukfallList.size());
@@ -262,9 +252,17 @@ public class SjukfallPuServiceImplTest {
         assertEquals(0, sjukfallList.size());
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testFilterSekretessForSummaryWhenPuIsUnavailable() {
+        when(puService.getPersons(anyListOf(Personnummer.class))).thenReturn(new HashMap<>());
+
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList(TOLVANSSON_PNR);
+        testee.filterSekretessForSummary(sjukfallList);
+        assertEquals(0, sjukfallList.size());
+    }
 
     @Test(expected = IllegalStateException.class)
-    public void testExceptionIsThrownWhenPuUnavailable() {
+    public void testExceptionIsThrownWhenPersonSvarIncludesAnError() {
         mockPersonSvarError();
         testee.enrichWithPatientNamesAndFilterSekretess(buildSjukfallList(TOLVANSSON_PNR));
     }
@@ -378,19 +376,17 @@ public class SjukfallPuServiceImplTest {
         assertEquals("Fornamn Efternamn", patientSjukfallList.get(0).getIntyg().get(0).getPatient().getNamn());
     }
 
-    @Test
-    public void testFilterWhenPersonnummerHasInvalidDigit() {
+    @Test(expected = IllegalStateException.class)
+    public void testFilterSekretessForSummaryWhenPersonnummerHasInvalidDigit() {
         RehabstodUser lakare = buildLakare(ENHET_1);
         when(userService.getUser()).thenReturn(lakare);
-        when(puService.getPerson(createPnr(TOLVANSSON_PNR_INVALID))).thenReturn(PersonSvar.error());
+        when(puService.getPersons(Arrays.asList(createPnr(TOLVANSSON_PNR_INVALID)))).thenReturn(new HashMap<>());
 
-        List<SjukfallEnhet> sjukfallList = buildSjukfallList(TOLVANSSON_PNR_INVALID);
-        testee.filterSekretessForSummary(sjukfallList);
-        assertEquals(0, sjukfallList.size());
+        testee.filterSekretessForSummary(buildSjukfallList(TOLVANSSON_PNR_INVALID));
     }
 
     @Test
-    public void testFilterForSummaryWhenPatientAvliden() {
+    public void testFilterSekretessForSummaryWhenPatientAvliden() {
         RehabstodUser lakare = buildLakare(ENHET_1);
         when(userService.getUser()).thenReturn(lakare);
         mockPersonSvar(true, false);
@@ -400,15 +396,13 @@ public class SjukfallPuServiceImplTest {
         assertEquals(0, sjukfallList.size());
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void testEnrichPatientsWhenPersonnummerHasInvalidDigit() {
         RehabstodUser lakare = buildLakare(ENHET_1);
         when(userService.getUser()).thenReturn(lakare);
-        when(puService.getPerson(createPnr(TOLVANSSON_PNR_INVALID))).thenReturn(PersonSvar.error());
+        when(puService.getPersons(Arrays.asList(createPnr(TOLVANSSON_PNR_INVALID)))).thenReturn(new HashMap<>());
 
-        List<SjukfallEnhet> sjukfallList = buildSjukfallList(TOLVANSSON_PNR_INVALID);
-        testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
-        assertEquals(0, sjukfallList.size());
+        testee.enrichWithPatientNamesAndFilterSekretess(buildSjukfallList(TOLVANSSON_PNR_INVALID));
     }
 
     @Test(expected = RuntimeException.class)
@@ -453,6 +447,23 @@ public class SjukfallPuServiceImplTest {
         List<Personnummer> personnummerList = testee.getPersonnummerList(sjukfallList);
         assertEquals(1, personnummerList.size());
         assertEquals(TOLVANSSON_PNR, personnummerList.get(0).getOriginalPnr());
+    }
+
+    private void mockPersonSvar(boolean avliden, boolean sekretess) {
+        when(puService.getPersons(anyListOf(Personnummer.class))).
+                thenReturn(buildPersonMap(buildPersonSvar(TOLVANSSON_PNR, sekretess, avliden)));
+    }
+
+    private void mockPersonSvarError() {
+        Map<Personnummer, PersonSvar> personSvarMap = new HashMap<>();
+        personSvarMap.put(createPnr(TOLVANSSON_PNR), PersonSvar.error());
+        when(puService.getPersons(anyListOf(Personnummer.class))).thenReturn(personSvarMap);
+    }
+
+    private void mockPersonSvarNotFound() {
+        Map<Personnummer, PersonSvar> personSvarMap = new HashMap<>();
+        personSvarMap.put(createPnr(TOLVANSSON_PNR), PersonSvar.notFound());
+        when(puService.getPersons(anyListOf(Personnummer.class))).thenReturn(personSvarMap);
     }
 
     private List<SjukfallPatient> buildPatientSjukfallList(String pnr) {
@@ -554,6 +565,15 @@ public class SjukfallPuServiceImplTest {
         intygData.setVardgivareId(vardgivare);
         intygData.setVardenhetId(enhet);
         return intygData;
+    }
+
+    private Map<Personnummer, PersonSvar> buildPersonMap(PersonSvar... arr) {
+        Map<Personnummer, PersonSvar> persons = new HashMap<>();
+        Arrays.stream(arr).forEach(ps -> {
+            Personnummer pnr = ps.getPerson() == null ? null : ps.getPerson().getPersonnummer();
+            persons.put(pnr, ps);
+        });
+        return persons;
     }
 
     private Map<Personnummer, PersonSvar> buildPersonMap() {
