@@ -22,6 +22,7 @@ stage('build') {
     }
 }
 
+/*
 stage('deploy') {
     node {
         util.run {
@@ -56,6 +57,7 @@ stage('protractor') {
         }
     }
 }
+*/
 
 stage('tag and upload') {
     node {
