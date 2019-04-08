@@ -232,6 +232,7 @@
         <security:filter-chain pattern="/saml/logout/**" filters="samlLogoutFilter"/>
         <security:filter-chain pattern="/saml/SSO/**" filters="samlWebSSOProcessingFilter"/>
         <security:filter-chain pattern="/saml/SingleLogout/**" filters="samlLogoutProcessingFilter"/>
+        <security:filter-chain pattern="/saml/metadata/**" filters="metadataDisplayFilter"/>
       </security:filter-chain-map>
     </bean>
 
@@ -261,13 +262,14 @@
           <property name="includeScoping" value="false"/>
           <property name="authnContexts">
                <set>
-                 <value>urn:oasis:names:tc:SAML:2.0:ac:classes:TLSClient</value>
                  <value>http://id.sambi.se/loa/loa3</value>
                </set>
           </property>
         </bean>
       </property>
     </bean>
+
+    <bean id="metadataDisplayFilter" class="org.springframework.security.saml.metadata.MetadataDisplayFilter"/>
 
     <!-- IDP Metadata configuration - paths to metadata of IDPs in circle of trust is here -->
     <!-- Do no forget to call initalize method on providers -->

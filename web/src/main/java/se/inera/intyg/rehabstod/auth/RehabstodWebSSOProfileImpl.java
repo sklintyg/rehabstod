@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-import com.google.common.base.Strings;
 import org.opensaml.common.SAMLException;
 import org.opensaml.saml2.core.Audience;
 import org.opensaml.saml2.core.AudienceRestriction;
@@ -34,13 +33,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.saml.context.SAMLMessageContext;
 import org.springframework.security.saml.websso.WebSSOProfileOptions;
 
+import com.google.common.base.Strings;
+
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
-import se.inera.intyg.infra.security.common.model.AuthConstants;
 
 /**
  * Created by eriklupander on 2016-05-30.
  */
 public class RehabstodWebSSOProfileImpl extends org.springframework.security.saml.websso.WebSSOProfileImpl {
+
+    public static final String HTTP_ID_SAMBI_SE_LOA_LOA3 = "http://id.sambi.se/loa/loa3";
 
     @Value("${oidc.rp.identity}")
     private String oidcIdentity;
@@ -55,24 +57,30 @@ public class RehabstodWebSSOProfileImpl extends org.springframework.security.sam
      * This overridden version explicitly sets the attributeConsumingServiceIndex for better control over IdP behaviour
      * and allows specification of OIDC and SAML audience restrictions.
      *
-     * @param context           message context
-     * @param options           preferences of message creation
-     * @param assertionConsumer assertion consumer where the IDP should respond
-     * @param bindingService    service used to deliver the request
+     * @param context
+     *            message context
+     * @param options
+     *            preferences of message creation
+     * @param assertionConsumer
+     *            assertion consumer where the IDP should respond
+     * @param bindingService
+     *            service used to deliver the request
      * @return authnRequest ready to be sent to IDP
-     * @throws SAMLException             error creating the message
-     * @throws MetadataProviderException error retreiving metadata
+     * @throws SAMLException
+     *             error creating the message
+     * @throws MetadataProviderException
+     *             error retreiving metadata
      */
     @Override
     @PrometheusTimeMethod
     protected AuthnRequest getAuthnRequest(SAMLMessageContext context, WebSSOProfileOptions options,
-                                           AssertionConsumerService assertionConsumer,
-                                           SingleSignOnService bindingService) throws SAMLException, MetadataProviderException {
+            AssertionConsumerService assertionConsumer,
+            SingleSignOnService bindingService) throws SAMLException, MetadataProviderException {
 
         AuthnRequest authnRequest = super.getAuthnRequest(context, options, assertionConsumer, bindingService);
 
         // Only specify attributeConsumingServiceIndex for SITHS-based authentications.
-        if (options.getAuthnContexts().contains(AuthConstants.URN_OASIS_NAMES_TC_SAML_2_0_AC_CLASSES_TLSCLIENT)) {
+        if (options.getAuthnContexts().contains(HTTP_ID_SAMBI_SE_LOA_LOA3)) {
             authnRequest.setAttributeConsumingServiceIndex(1);
         }
         authnRequest.setConditions(buildConditions());
