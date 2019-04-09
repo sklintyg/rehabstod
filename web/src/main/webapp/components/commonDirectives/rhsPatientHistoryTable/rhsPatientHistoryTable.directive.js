@@ -51,6 +51,15 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
                 samtyckeFinns: patientHistoryViewState.hasSamtycke()
             };
 
+            /*
+            $scope.extraBoxStates = {
+                osparradAndra: !(patientHistoryViewState.extraBoxStates.osparradAndra ||
+                    andraVgUtanSparr > 0 || patientSjfMetaData.blockingServiceError),
+                sparradAndra: !(patientHistoryViewState.extraBoxStates.sparradAndra ||
+                    andraVgMedSparr || patientSjfMetaData.blockingServiceError)
+            }*/
+
+
             $scope.getToolTip = function(diagnos) {
                 var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
                     messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
@@ -87,6 +96,7 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
             $scope.hasFeature = function(feature) {
                 return featureService.hasFeature(feature);
             };
+
         }
     };
 } ]);

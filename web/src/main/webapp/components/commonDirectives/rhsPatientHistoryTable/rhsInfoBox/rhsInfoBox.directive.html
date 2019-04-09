@@ -6,12 +6,15 @@
         <ng-transclude class="flex-fill"></ng-transclude>
       </div>
       <div ng-switch-when="false" class="flex-fill">
-        <div class="message-wrapper flex-fill" ng-if="labelTruthy"><span message key="{{::labelTruthy}}"></span></div>
-        <rhs-box-button rhs-click="next()">Visa mig</rhs-box-button>
+        <div class="message-wrapper flex-fill">
+          <div ng-if="!serviceError"><span message key="{{::labelTruthy}}"></span></div>
+          <div ng-if="serviceError" class="alert alert-danger"><span message key="{{::labelError}}"></span></div>
+        </div>
+        <rhs-box-button rhs-click="next()" btn-disabled="serviceError">Visa mig</rhs-box-button>
       </div>
     </div>
   </div>
-  <div class="message-wrapper" ng-switch-default>
+  <div ng-switch-default class="message-wrapper">
     {{::labelFalsy |message}}
   </div>
 </div>

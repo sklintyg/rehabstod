@@ -253,6 +253,7 @@ public class SjukfallServiceImpl implements SjukfallService {
                 .collect(Collectors.toList());
 
         // Remove intyg from other units for patients with sekretess
+        LOG.debug("Calling PU - fetching information about patients 'sekretess' status.");
         List<IntygData> filteredData = sjukfallPuService.filterSekretessForPatientHistory(data, vardgivareId, enhetsId);
 
         boolean haveSekretess = filteredData.size() != data.size();
@@ -276,13 +277,16 @@ public class SjukfallServiceImpl implements SjukfallService {
             throw new SjukfallServiceException("At least one intyg must be issued on current unit!");
         }
 
+        SjfMetaData sjfMetaData = new SjfMetaData();
         boolean haveConsent = false;
 
         // Hoppa över spärr och samtyckestjänsten om det är sekretess
         if (!haveSekretess) {
-            // Decorate intygAccessMetaData with "spärr" info
-            sparrtjanstIntegrationService.decorateWithBlockStatus(vardgivareId, enhetsId,
-                    lakareId, patientId, intygAccessMetaData, data);
+            List<IntygData> intygOnOtherUnits = filterByOtherUnitsOnly(vardgivareId, enhetsId, data);
+
+            // Decorate intygAccessMetaData with blocking info
+            decorateWithBlockStatus(vardgivareId, enhetsId, lakareId, patientId,
+                    intygAccessMetaData, intygOnOtherUnits, sjfMetaData);
 
             // Make an initial calculation using _all_ available intyg...
             sjukfallList = sjukfallEngine.beraknaSjukfallForPatient(data, parameters);
@@ -290,14 +294,15 @@ public class SjukfallServiceImpl implements SjukfallService {
             // ... and check which intyg is contributing to the active sjukfall
             updateAccessMetaDataWithContributingStatus(sjukfallList, intygAccessMetaData, parameters);
 
-            // Make a call to consent service to see if there is a consent registered
-            haveConsent = samtyckestjanstIntegrationService.checkForConsent(patientId, lakareId,
-                    vardgivareId, enhetsId);
+            // ...and do we have a consent to fetch data from other care units
+            haveConsent = checkForConsent(vardgivareId, enhetsId, lakareId, patientId,
+                    intygAccessMetaData, intygOnOtherUnits, sjfMetaData);
+
         }
 
         // Skapa listorna med vilka vårdgivare som har intyg som SKULLE funnits i aktivt sjukfall
         // men som inte kommer med pga spärr inre/yttrespärr.
-        SjfMetaData sjfMetaData = createSjfMetaData(intygAccessMetaData, haveConsent);
+        updateSjfMetaData(sjfMetaData, intygAccessMetaData, haveConsent);
 
         // Remove all intyg that shouldn't be included in the calculation
         data = filterByAcessMetaData(data, intygAccessMetaData, haveConsent);
@@ -312,10 +317,72 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         return new FilteredSjukFallByPatientResult(rehabstodSjukfall, sjfMetaData);
     }
+
+
     // CHECKSTYLE:ON ParameterNumber
 
-    private boolean shouldBeIncludedInCalculationOfSjukfall(Collection<String> vgHsaIds, Collection<String> veHsaIds, IntygData intygData) {
-        return vgHsaIds.contains(intygData.getVardgivareId()) || veHsaIds.contains(intygData.getVardenhetId());
+    private void addSjfMetaDataItemToMap(String id, String namn, SjfMetaDataItemType type,
+                                         IntygAccessControlMetaData iacm, Map<String, SjfMetaDataItem> dataMap) {
+        if (dataMap.containsKey(id)) {
+            SjfMetaDataItem sjfMetaDataItem = dataMap.get(id);
+            if (!sjfMetaDataItem.isBidrarTillAktivtSjukfall()) {
+                sjfMetaDataItem.setBidrarTillAktivtSjukfall(iacm.isBidrarTillAktivtSjukfall());
+            }
+        } else {
+            SjfMetaDataItem sjfMetaDataItem = new SjfMetaDataItem(id, namn, type);
+            sjfMetaDataItem.setIncludedInSjukfall(iacm.isInkluderadVidBerakningAvSjukfall());
+            sjfMetaDataItem.setBidrarTillAktivtSjukfall(iacm.isBidrarTillAktivtSjukfall());
+
+            dataMap.put(id, sjfMetaDataItem);
+        }
+    }
+
+    private boolean checkForConsent(String vardgivareId, String enhetsId, String lakareId, String patientId,
+                                    Map<String, IntygAccessControlMetaData> intygAccessMetaData,
+                                    List<IntygData> intygOnOtherUnits,
+                                    SjfMetaData sjfMetaData) {
+
+        boolean haveConsent = false;
+
+        try {
+            // Make a call to consent service to see if there is a consent registered
+            LOG.debug("Calling Samtyckestjänsten - checking for consent.");
+            haveConsent = samtyckestjanstIntegrationService.checkForConsent(patientId, lakareId, vardgivareId, enhetsId);
+        } catch (Exception e) {
+            LOG.error("INTEGRATION_CONSENT_SERVICE: Fatal error - message is '{}'", e.getMessage());
+
+            // INTYG-8405: Om Samtyckestjänsten inte är tillgänglig ska efterfrågad information hanteras som spärrad.
+            declineAccessToSjfData(intygAccessMetaData, intygOnOtherUnits);
+            // Tell stakeholders there were a problem when callling Samtyckestjänsten
+            sjfMetaData.setConsentServiceError(true);
+        }
+
+        return haveConsent;
+    }
+
+    private void declineAccessToSjfData(Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> intygOnOtherUnits) {
+        intygOnOtherUnits.
+                forEach(intygData -> {
+                    intygAccessMetaData.get(intygData.getIntygId()).setSparr(true);
+                });
+    }
+
+    private void decorateWithBlockStatus(String vardgivareId, String enhetsId, String lakareId, String patientId,
+                                         Map<String, IntygAccessControlMetaData> intygAccessMetaData,
+                                         List<IntygData> intygOnOtherUnits,
+                                         SjfMetaData sjfMetaData) {
+        try {
+            LOG.debug("Calling Spärrstjänsten - checking for blocking statuses.");
+            sparrtjanstIntegrationService.decorateWithBlockStatus(vardgivareId, enhetsId,
+                    lakareId, patientId, intygAccessMetaData, intygOnOtherUnits);
+        } catch (Exception e) {
+            LOG.error("INTEGRATION_BLOCKING_SERVICE: Fatal error - message is '{}'", e.getMessage());
+
+            // INTYG-8405: Om Spärrtjänsten inte är tillgänglig ska efterfrågad information hanteras som spärrad.
+            declineAccessToSjfData(intygAccessMetaData, intygOnOtherUnits);
+            // Tell stakeholders there were a problem when callling Spärrtjänsten
+            sjfMetaData.setBlockingServiceError(true);
+        }
     }
 
     private void decorateWithVardgivarNamn(List<IntygData> data) {
@@ -333,68 +400,23 @@ public class SjukfallServiceImpl implements SjukfallService {
         }
     }
 
-    private SjfMetaData createSjfMetaData(Map<String, IntygAccessControlMetaData> intygAccessMetaData, boolean haveConsent) {
-        SjfMetaData metadata = new SjfMetaData();
-
-        Map<String, SjfMetaDataItem> kraverSamtyckeDataMap = new HashMap<>();
-        Map<String, SjfMetaDataItem> kraverInteSamtyckeDataMap = new HashMap<>();
-
-        intygAccessMetaData.forEach((intygsId, iacm) -> {
-                if (iacm.inreSparr()) {
-                    metadata.getVardenheterInomVGMedSparr().add(iacm.getIntygData().getVardenhetNamn());
-                } else {
-                    /*
-                     * INTYG-7911:
-                     * Intyg som finns på annan vårdenhet men inom samma vårdgivare kräver inte samtycke
-                     * men ska inte heller inhämtas automatisk vid beräkning av det aktiva sjukfallet.
-                     */
-                    if (!iacm.isKraverSamtycke() && !iacm.isInomVardenhet()) {
-                        String id = iacm.getIntygData().getVardenhetId();
-                        String namn = iacm.getIntygData().getVardenhetNamn();
-                        SjfMetaDataItemType type = SjfMetaDataItemType.VARDENHET;
-
-                        addSjfMetaDataItemToMap(id, namn, type, iacm, kraverInteSamtyckeDataMap);
-                    }
-                }
-
-                if (iacm.yttreSparr()) {
-                    metadata.getAndraVardgivareMedSparr().add(iacm.getIntygData().getVardgivareNamn());
-                } else {
-                    /*
-                     * INTYG-7912:
-                     * Intyg som finns på annan vårdgivare kräver alltid samtycke.
-                     */
-                    if (iacm.isKraverSamtycke()) {
-                        String id = iacm.getIntygData().getVardgivareId();
-                        String namn = iacm.getIntygData().getVardgivareNamn();
-                        SjfMetaDataItemType type = SjfMetaDataItemType.VARDGIVARE;
-
-                        addSjfMetaDataItemToMap(id, namn, type, iacm, kraverSamtyckeDataMap);
-                    }
-                }
-            });
-
-        metadata.setKraverInteSamtycke(kraverInteSamtyckeDataMap.values());
-        metadata.setKraverSamtycke(kraverSamtyckeDataMap.values());
-        metadata.setSamtyckeFinns(haveConsent);
-
-        return metadata;
+    private List<IntygData> filterByAcessMetaData(List<IntygData> data,
+                                                  Map<String, IntygAccessControlMetaData> intygAccessMetaData,
+                                                  boolean haveConsent) {
+        return data.stream()
+                .filter(intygData -> shouldInclude(intygAccessMetaData.get(intygData.getIntygId()), haveConsent))
+                .collect(Collectors.toList());
     }
 
-    private void addSjfMetaDataItemToMap(String id, String namn, SjfMetaDataItemType type,
-                                         IntygAccessControlMetaData iacm, Map<String, SjfMetaDataItem> dataMap) {
-        if (dataMap.containsKey(id)) {
-            SjfMetaDataItem sjfMetaDataItem = dataMap.get(id);
-            if (!sjfMetaDataItem.isBidrarTillAktivtSjukfall()) {
-                sjfMetaDataItem.setBidrarTillAktivtSjukfall(iacm.isBidrarTillAktivtSjukfall());
-            }
-        } else {
-            SjfMetaDataItem sjfMetaDataItem = new SjfMetaDataItem(id, namn, type);
-            sjfMetaDataItem.setIncludedInSjukfall(iacm.isInkluderadVidBerakningAvSjukfall());
-            sjfMetaDataItem.setBidrarTillAktivtSjukfall(iacm.isBidrarTillAktivtSjukfall());
-
-            dataMap.put(id, sjfMetaDataItem);
-        }
+    private List<IntygData> filterByOtherUnitsOnly(String currentVardgivarHsaId,
+                                                   String currentVardenhetHsaId,
+                                                   List<IntygData> intygList) {
+        return intygList.stream()
+                .filter(
+                        intygData -> !(currentVardgivarHsaId.equals(intygData.getVardgivareId())
+                                && currentVardenhetHsaId.equals(intygData.getVardenhetId()))
+                )
+                .collect(Collectors.toList());
     }
 
     private void updateAccessMetaDataWithContributingStatus(List<se.inera.intyg.infra.sjukfall.dto.SjukfallPatient> sjukfallList,
@@ -413,11 +435,55 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     }
 
-    private List<IntygData> filterByAcessMetaData(List<IntygData> data, Map<String, IntygAccessControlMetaData> intygAccessMetaData,
-                                                  boolean haveConsent) {
-        return data.stream()
-                .filter(intygData -> shouldInclude(intygAccessMetaData.get(intygData.getIntygId()), haveConsent))
-                .collect(Collectors.toList());
+    private void updateSjfMetaData(final SjfMetaData sjfMetaData,
+                                   final Map<String, IntygAccessControlMetaData> intygAccessMetaData,
+                                   boolean haveConsent) {
+
+        Map<String, SjfMetaDataItem> kraverSamtyckeDataMap = new HashMap<>();
+        Map<String, SjfMetaDataItem> kraverInteSamtyckeDataMap = new HashMap<>();
+
+        intygAccessMetaData.forEach((intygsId, iacm) -> {
+            if (iacm.inreSparr()) {
+                sjfMetaData.getVardenheterInomVGMedSparr().add(iacm.getIntygData().getVardenhetNamn());
+            } else {
+                /*
+                 * INTYG-7911:
+                 * Intyg som finns på annan vårdenhet men inom samma vårdgivare kräver inte samtycke
+                 * men ska inte heller inhämtas automatisk vid beräkning av det aktiva sjukfallet.
+                 */
+                if (!iacm.isKraverSamtycke() && !iacm.isInomVardenhet()) {
+                    String id = iacm.getIntygData().getVardenhetId();
+                    String namn = iacm.getIntygData().getVardenhetNamn();
+                    SjfMetaDataItemType type = SjfMetaDataItemType.VARDENHET;
+
+                    addSjfMetaDataItemToMap(id, namn, type, iacm, kraverInteSamtyckeDataMap);
+                }
+            }
+
+            if (iacm.yttreSparr()) {
+                sjfMetaData.getAndraVardgivareMedSparr().add(iacm.getIntygData().getVardgivareNamn());
+            } else {
+                /*
+                 * INTYG-7912:
+                 * Intyg som finns på annan vårdgivare kräver alltid samtycke.
+                 */
+                if (iacm.isKraverSamtycke()) {
+                    String id = iacm.getIntygData().getVardgivareId();
+                    String namn = iacm.getIntygData().getVardgivareNamn();
+                    SjfMetaDataItemType type = SjfMetaDataItemType.VARDGIVARE;
+
+                    addSjfMetaDataItemToMap(id, namn, type, iacm, kraverSamtyckeDataMap);
+                }
+            }
+        });
+
+        sjfMetaData.setKraverInteSamtycke(kraverInteSamtyckeDataMap.values());
+        sjfMetaData.setKraverSamtycke(kraverSamtyckeDataMap.values());
+        sjfMetaData.setSamtyckeFinns(haveConsent);
+    }
+
+    private boolean shouldBeIncludedInCalculationOfSjukfall(Collection<String> vgHsaIds, Collection<String> veHsaIds, IntygData intygData) {
+        return vgHsaIds.contains(intygData.getVardgivareId()) || veHsaIds.contains(intygData.getVardenhetId());
     }
 
     private boolean shouldInclude(IntygAccessControlMetaData iacm, boolean haveConsent) {

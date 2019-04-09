@@ -28,10 +28,20 @@ angular.module('rehabstodApp').directive('rhsInfoBox',
             boxTitle: '@',
             labelTruthy: '@',
             labelFalsy: '@',
+            labelError: '@?',
+            serviceError: '@?', // if true the call to the consent service failed
             boxState: '=?' // allows to set skipStart to skip the "Visa mig" section
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsInfoBox/rhsInfoBox.directive.html',
         link: function($scope) {
+
+            if(!$scope.labelError){
+                $scope.labelError = '';
+            }
+
+            if(!$scope.serviceError){
+                $scope.serviceError = false;
+            }
 
             // Box state is optional so set defaults if its not provided
             if(!$scope.boxState){

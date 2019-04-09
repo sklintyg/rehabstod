@@ -57,6 +57,12 @@
           },
           "samtyckeFinns": {
             "type": "boolean"
+          },
+          "blockingServiceError": {
+            "type": "boolean"
+          },
+          "consentServiceError": {
+            "type": "boolean"
           }
         },
         "type": "object",
@@ -65,7 +71,10 @@
           "vardenheterInomVGMedSparr",
           "andraVardgivareMedSparr",
           "kraverSamtycke",
-          "kraverInteSamtycke"
+          "kraverInteSamtycke",
+          "samtyckeFinns",
+          "blockingServiceError",
+          "consentServiceError"
         ]
       },
       "sjukfallList": {
