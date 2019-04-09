@@ -18,14 +18,13 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.integration.sparrtjanst.exception.SparrtjanstIntegrationException;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.util.SparrtjanstUtil;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
@@ -33,11 +32,17 @@ import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksType;
 import se.riv.informationsecurity.authorization.blocking.v4.InformationEntityType;
 
+import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by marced 2018-09-28.
  */
 @Service
 public class SparrtjanstClientServiceImpl implements SparrtjanstClientService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
     @Autowired
     private CheckBlocksResponderInterface service;
@@ -58,7 +63,12 @@ public class SparrtjanstClientServiceImpl implements SparrtjanstClientService {
         checkBlockRequest.setAccessingActor(SparrtjanstUtil.buildAccessingActorType(vgHsaId, veHsaId, userHsaId));
         checkBlockRequest.getInformationEntities().addAll(createInformationEntitiesFromIntygList(intygLista));
 
-        return service.checkBlocks(logicalAddress, checkBlockRequest);
+        try {
+            return service.checkBlocks(logicalAddress, checkBlockRequest);
+        } catch (Exception e) {
+            LOG.error("SPÄRR: Failure when calling Spärrtjänsten and the checkBlocks servcie.");
+            throw new SparrtjanstIntegrationException(e.getMessage());
+        }
     }
 
     private List<InformationEntityType> createInformationEntitiesFromIntygList(List<IntygData> intygLista) {

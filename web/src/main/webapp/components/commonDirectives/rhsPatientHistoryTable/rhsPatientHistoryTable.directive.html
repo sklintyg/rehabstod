@@ -84,50 +84,65 @@
       </div>
       <div ng-switch-when="true" class="extra-diagnoser__wrapper">
         <div class="row">
-          <div class="col-md-12 text-center">
+          <div class="col-md-12 text-center extra-intyginfo-heading">
             <h3>Ytterligare intygsinformation</h3>
           </div>
         </div>
-        <div class="row extra-intyginfo">
-          <div class="col-md-6">
-            <rhs-info-box info-expr="extraDiagnoser.osparradInfoInomVardgivare"
-                          box-title="label.extradiagnoser.osparradinom.title"
-                          label-truthy="label.extradiagnoser.osparradinom"
-                          label-falsy="label.extradiagnoser.empty"
-                          box-state="patientHistoryViewState.extraBoxStates.osparradInom">
-              <rhs-unblocked-flow class="flex-fill" patient="patient" must-have-consent="false"></rhs-unblocked-flow>
-            </rhs-info-box>
+        <div ng-switch="extraDiagnoser.patientSjfMetaData.blockingServiceError">
+          <div ng-switch-when="true">
+            <div class="row col-md-12">
+              <div class="alert alert-danger">
+                Tyvärr kan information från andra vårdenheter och vårdgivare inte inhämtas på grund av ett tekniskt fel. Försök igen om en stund.
+              </div>
+            </div>
           </div>
-          <div class="col-md-6">
-            <rhs-info-box info-expr="extraDiagnoser.osparradInfoAndraVardgivare"
-                          box-title="label.extradiagnoser.osparradandra.title"
-                          label-truthy="label.extradiagnoser.osparradandra"
-                          label-falsy="label.extradiagnoser.empty"
-                          box-state="patientHistoryViewState.extraBoxStates.osparradAndra">
-              <rhs-unblocked-flow class="flex-fill" patient="patient" must-have-consent="true"></rhs-unblocked-flow>
-            </rhs-info-box>
-          </div>
-        </div>
-        <div class="row extra-intyginfo extra-info-padding-top">
-          <div class="col-md-6">
-            <rhs-info-box info-expr="extraDiagnoser.sparradInfoInomVardgivare"
-                          box-title="label.extradiagnoser.sparradinom.title"
-                          label-truthy="label.extradiagnoser.sparradinom"
-                          label-falsy="label.extradiagnoser.empty"
-                          box-state="patientHistoryViewState.extraBoxStates.sparradInom">
-              <rhs-blocked-list model="patientHistoryViewState.getSjfMetaData().vardenheterInomVGMedSparr"
-                                list-label="label.extradiagnoser.sparradinom.list.title"></rhs-blocked-list>
-            </rhs-info-box>
-          </div>
-          <div class="col-md-6">
-            <rhs-info-box info-expr="extraDiagnoser.sparradInfoAndraVardgivare"
-                          box-title="label.extradiagnoser.sparradandra.title"
-                          label-truthy="label.extradiagnoser.sparradandra"
-                          label-falsy="label.extradiagnoser.empty"
-                          box-state="patientHistoryViewState.extraBoxStates.sparradAndra">
-              <rhs-blocked-list model="patientHistoryViewState.getSjfMetaData().andraVardgivareMedSparr"
-                                list-label="label.extradiagnoser.sparradandra.list.title"></rhs-blocked-list>
-            </rhs-info-box>
+          <div ng-switch-when="false">
+            <div class="row extra-intyginfo">
+              <div class="col-md-6">
+                <rhs-info-box info-expr="extraDiagnoser.osparradInfoInomVardgivare"
+                              box-title="label.extradiagnoser.osparradinom.title"
+                              label-truthy="label.extradiagnoser.osparradinom"
+                              label-falsy="label.extradiagnoser.empty"
+                              box-state="patientHistoryViewState.extraBoxStates.osparradInom">
+                  <rhs-unblocked-flow class="flex-fill" patient="patient" must-have-consent="false"></rhs-unblocked-flow>
+                </rhs-info-box>
+              </div>
+              <div class="col-md-6">
+                <rhs-info-box info-expr="extraDiagnoser.osparradInfoAndraVardgivare"
+                              box-title="label.extradiagnoser.osparradandra.title"
+                              label-truthy="label.extradiagnoser.osparradandra"
+                              label-falsy="label.extradiagnoser.empty"
+                              label-error="label.extradiagnoser.error"
+                              service-error="extraDiagnoser.patientSjfMetaData.blockingServiceError"
+                              box-state="patientHistoryViewState.extraBoxStates.osparradAndra">
+                  <rhs-unblocked-flow class="flex-fill" patient="patient" must-have-consent="true"></rhs-unblocked-flow>
+                </rhs-info-box>
+              </div>
+            </div>
+            <div class="row extra-intyginfo extra-intyginfo-padding-top">
+              <div class="col-md-6">
+                <rhs-info-box info-expr="extraDiagnoser.sparradInfoInomVardgivare"
+                              box-title="label.extradiagnoser.sparradinom.title"
+                              label-truthy="label.extradiagnoser.sparradinom"
+                              label-falsy="label.extradiagnoser.empty"
+                              box-state="patientHistoryViewState.extraBoxStates.sparradInom">
+                  <rhs-blocked-list model="extraDiagnoser.patientSjfMetaData.vardenheterInomVGMedSparr"
+                                    list-label="label.extradiagnoser.sparradinom.list.title"></rhs-blocked-list>
+                </rhs-info-box>
+              </div>
+              <div class="col-md-6">
+                <rhs-info-box info-expr="extraDiagnoser.sparradInfoAndraVardgivare"
+                              box-title="label.extradiagnoser.sparradandra.title"
+                              label-truthy="label.extradiagnoser.sparradandra"
+                              label-falsy="label.extradiagnoser.empty"
+                              label-error="label.extradiagnoser.error"
+                              service-error="extraDiagnoser.patientSjfMetaData.blockingServiceError"
+                              box-state="patientHistoryViewState.extraBoxStates.sparradAndra">
+                  <rhs-blocked-list model="extraDiagnoser.patientSjfMetaData.andraVardgivareMedSparr"
+                                    list-label="label.extradiagnoser.sparradandra.list.title"></rhs-blocked-list>
+                </rhs-info-box>
+              </div>
+            </div>
           </div>
         </div>
       </div>

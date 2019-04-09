@@ -59,25 +59,12 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
         final CheckConsentResponseType response =
                 samtyckestjanstClientService.checkConsent(currentVardgivarHsaId, currentEnhetsId, userHsaId, patientId);
 
-        if (response == null || response.getCheckResult() == null) {
-            throw new SamtyckestjanstIntegrationException("Failed to get response from CheckConsent service");
-        }
-
         // OK = OK
         // INFO = Some of the request information resouces ha an validation error, but a response should still have been
         // provided
         CheckResultType checkResultType = response.getCheckResult();
         if (checkResultType.getResult().getResultCode() != ResultCodeType.OK) {
-            if (checkResultType.getResult().getResultCode() == ResultCodeType.INFO) {
-                LOG.warn(String.format(
-                        "checkForConsent received INFO result with resultText '%s' - a partially valid response is still expected.",
-                        checkResultType.getResult().getResultText()));
-            } else {
-                throw new SamtyckestjanstIntegrationException(
-                        String.format("checkForConsent failed with resultCode %s and resultText '%s'",
-                                checkResultType.getResult().getResultCode(),
-                                checkResultType.getResult().getResultText()));
-            }
+            throwException(checkResultType.getResult());
         }
 
         return checkResultType.isHasConsent();
@@ -104,27 +91,26 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
                 samtyckestjanstClientService.registerExtendedConsent(vgHsaId, veHsaId, userHsaId, patientId,
                         representedBy, consentFrom, consentTo, registrationAction);
 
-        if (response == null || response.getResult() == null) {
-            throw new SamtyckestjanstIntegrationException("Failed to get response from RegisterExtendedConsent service");
-        }
-
         // OK = OK
         // INFO = Some of the request information resouces ha an validation error, but a response should still have been
         // provided
         ResultType resultType = response.getResult();
         if (resultType.getResultCode() != ResultCodeType.OK) {
-            if (resultType.getResultCode() == ResultCodeType.INFO) {
-                LOG.warn(String.format(
-                        "registerConsent received INFO result with resultText '%s' - a partially valid response is still expected.",
-                        resultType.getResultText()));
-            } else {
-                throw new SamtyckestjanstIntegrationException(
-                        String.format("registerConsent failed with resultCode %s and resultText '%s'",
-                                resultType.getResultCode(),
-                                resultType.getResultText()));
-            }
+            throwException(resultType);
         }
     }
     // CHECKSTYLE:ON ParameterNumber
+
+    private void logPartiallyValidResponse(ResultType result) {
+        LOG.warn("Consent service responded with result code INFO and resultText '{}' - a partially valid response is still expected.",
+                result.getResultText());
+    }
+
+    private void throwException(ResultType result) {
+        throw new SamtyckestjanstIntegrationException(
+                String.format("Consent service failed with resultCode %s and resultText '%s'",
+                        result.getResultCode(),
+                        result.getResultText()));
+    }
 
 }

@@ -18,14 +18,13 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.client;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
+import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Strings;
+import se.inera.intyg.rehabstod.integration.samtyckestjanst.exception.SamtyckestjanstIntegrationException;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.util.SamtyckestjanstUtil;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
@@ -38,11 +37,17 @@ import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.AssertionTypeType;
 import se.riv.informationsecurity.authorization.consent.v2.ScopeType;
 
+import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 /**
  * Created by Magnus Ekstrand 2018-10-10.
  */
 @Service
 public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
     private static final ScopeType SCOPE_TYPE = ScopeType.NATIONAL_LEVEL;
     private static final AssertionTypeType ASSERTION_TYPE = AssertionTypeType.CONSENT;
@@ -68,7 +73,12 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
         checkConsentType.setPatientId(SamtyckestjanstUtil.buildIITypeForPersonOrSamordningsnummer(personnummer));
         checkConsentType.setAccessingActor(SamtyckestjanstUtil.buildAccessingActorType(vgHsaId, veHsaId, userHsaId));
 
-        return checkConsentservice.checkConsent(logicalAddress, checkConsentType);
+        try {
+            return checkConsentservice.checkConsent(logicalAddress, checkConsentType);
+        } catch (Exception e) {
+            LOG.error("SAMTYCKE: Failure when calling Samtyckestjänsten and the checkConsent service.");
+            throw new SamtyckestjanstIntegrationException(e.getMessage());
+        }
     }
 
 
@@ -130,7 +140,12 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
 
         registerExtendedConsentType.setRegistrationAction(registrationAction);
 
-        return registerExtendedConsentService.registerExtendedConsent(logicalAddress, registerExtendedConsentType);
+        try {
+            return registerExtendedConsentService.registerExtendedConsent(logicalAddress, registerExtendedConsentType);
+        } catch (Exception e) {
+            LOG.error("SAMTYCKE: Failure when calling Samtyckestjänsten and the registerExtendedConsent service.");
+            throw new SamtyckestjanstIntegrationException(e.getMessage());
+        }
     }
     // CHECKSTYLE:ON ParameterNumber
 

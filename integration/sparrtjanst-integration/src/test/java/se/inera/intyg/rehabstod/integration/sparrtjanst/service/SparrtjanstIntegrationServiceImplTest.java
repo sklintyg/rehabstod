@@ -62,9 +62,10 @@ public class SparrtjanstIntegrationServiceImplTest {
     private static final String INTYGS_ID_1 = "intyg1";
     private static final String INTYGS_ID_2 = "intyg2";
     private static final String INTYGS_ID_3 = "intyg3";
+
     private Map<String, IntygAccessControlMetaData> aclList;
     private List<IntygData> intygList;
-    private List<IntygData> intygListToCheck;
+    private List<IntygData> intygOnOtherUnitsList;
 
     @Mock
     private SparrtjanstClientService sparrtjanstClientService;
@@ -76,7 +77,7 @@ public class SparrtjanstIntegrationServiceImplTest {
     public void setup() {
         aclList = new HashMap<>();
         intygList = new ArrayList<>();
-        intygListToCheck = new ArrayList<>();
+        intygOnOtherUnitsList = new ArrayList<>();
 
         IntygData intygData1 = new IntygData();
         intygData1.setIntygId(INTYGS_ID_1);
@@ -101,20 +102,20 @@ public class SparrtjanstIntegrationServiceImplTest {
         intygList.add(intygData2);
         intygList.add(intygData3);
 
-        intygListToCheck.add(intygData1);
-        intygListToCheck.add(intygData2);
+        intygOnOtherUnitsList.add(intygData1);
+        intygOnOtherUnitsList.add(intygData2);
     }
 
     @Test
-    public void decorateDoesNotHaveSparr() throws Exception {
+    public void decorateDoesNotHaveSparr() {
 
         CheckBlocksResponseType response = createResponse(ResultCodeType.OK, CheckStatusType.OK);
         when(sparrtjanstClientService.getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID),
                 anyListOf(IntygData.class))).thenReturn(response);
 
-        testee.decorateWithBlockStatus(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygList);
+        testee.decorateWithBlockStatus(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygOnOtherUnitsList);
 
-        verify(sparrtjanstClientService).getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), eq(intygListToCheck));
+        verify(sparrtjanstClientService).getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), eq(intygOnOtherUnitsList));
 
         assertFalse(aclList.get(INTYGS_ID_1).isSparr());
         assertFalse(aclList.get(INTYGS_ID_2).isSparr());
@@ -122,15 +123,15 @@ public class SparrtjanstIntegrationServiceImplTest {
     }
 
     @Test
-    public void decorateHasSparr() throws Exception {
+    public void decorateHasSparr() {
 
         CheckBlocksResponseType response = createResponse(ResultCodeType.OK, CheckStatusType.BLOCKED);
         when(sparrtjanstClientService.getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID),
                 anyListOf(IntygData.class))).thenReturn(response);
 
-        testee.decorateWithBlockStatus(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygList);
+        testee.decorateWithBlockStatus(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygOnOtherUnitsList);
 
-        verify(sparrtjanstClientService).getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), eq(intygListToCheck));
+        verify(sparrtjanstClientService).getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), eq(intygOnOtherUnitsList));
 
         assertTrue(aclList.get(INTYGS_ID_1).isSparr());
         assertTrue(aclList.get(INTYGS_ID_2).isSparr());
@@ -138,31 +139,24 @@ public class SparrtjanstIntegrationServiceImplTest {
     }
 
     @Test(expected = SparrtjanstIntegrationException.class)
-    public void shouldThrowSparrtjanstIntegrationExceptionOnErrorResponse() throws Exception {
+    public void shouldThrowSparrtjanstIntegrationExceptionOnErrorResponse() {
 
         CheckBlocksResponseType response = createResponse(ResultCodeType.ERROR, CheckStatusType.BLOCKED);
         when(sparrtjanstClientService.getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID),
                 anyListOf(IntygData.class))).thenReturn(response);
 
-        testee.decorateWithBlockStatus(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygList);
-
-        verify(sparrtjanstClientService).getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), eq(intygListToCheck));
-
+        testee.decorateWithBlockStatus(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygOnOtherUnitsList);
     }
 
     @Test(expected = SparrtjanstIntegrationException.class)
-    public void shouldThrowSparrtjanstIntegrationExceptionWhenResponseRowsMismatch() throws Exception {
+    public void shouldThrowSparrtjanstIntegrationExceptionWhenResponseRowsMismatch() {
 
         CheckBlocksResponseType response = createResponse(ResultCodeType.OK, CheckStatusType.BLOCKED);
         response.getCheckBlocksResult().getCheckResults().remove(0);
         when(sparrtjanstClientService.getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID),
                 anyListOf(IntygData.class))).thenReturn(response);
 
-        testee.decorateWithBlockStatus(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygList);
-
-
-        verify(sparrtjanstClientService).getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID), eq(intygListToCheck));
-
+        testee.decorateWithBlockStatus(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygOnOtherUnitsList);
     }
 
     private CheckBlocksResponseType createResponse(ResultCodeType code, CheckStatusType rowResult) {
@@ -185,7 +179,6 @@ public class SparrtjanstIntegrationServiceImplTest {
         resultType.setResult(result);
         response.setCheckBlocksResult(resultType);
         return response;
-
     }
 
 }
