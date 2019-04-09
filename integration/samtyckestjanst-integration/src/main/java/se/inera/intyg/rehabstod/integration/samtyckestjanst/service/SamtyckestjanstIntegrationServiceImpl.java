@@ -101,11 +101,6 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
     }
     // CHECKSTYLE:ON ParameterNumber
 
-    private void logPartiallyValidResponse(ResultType result) {
-        LOG.warn("Consent service responded with result code INFO and resultText '{}' - a partially valid response is still expected.",
-                result.getResultText());
-    }
-
     private void throwException(ResultType result) {
         throw new SamtyckestjanstIntegrationException(
                 String.format("Consent service failed with resultCode %s and resultText '%s'",

@@ -18,10 +18,8 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Optional;
-
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -43,6 +38,10 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.schemas.contract.Personnummer;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/consent")
@@ -77,37 +76,40 @@ public class ConsentController {
         // Get logged in user
         RehabstodUser user = userService.getUser();
 
-        try {
-            LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now();
 
-            // CHECKSTYLE:OFF MagicNumber
-            LocalDateTime consentFrom = today.atStartOfDay();
-            LocalDateTime consentTo = today.plusDays(request.getDays()).atTime(23, 59, 59);
-            // CHECKSTYLE:ON MagicNumber
+        // CHECKSTYLE:OFF MagicNumber
+        LocalDateTime consentFrom = today.atStartOfDay();
+        LocalDateTime consentTo = today.plusDays(request.getDays()).atTime(23, 59, 59);
+        // CHECKSTYLE:ON MagicNumber
 
-            // Business rule: RS-VR-007
-            // Ett samtycke får inte gälla längre än 1 år framåt i tiden
-            if (request.getDays() > MAX_DAYS_FOR_CONSENT) {
-                return createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(),
-                        "Ett samtycke får inte gälla längre än 1 år framåt i tiden");
-            }
+        // Business rule: RS-VR-007
+        // Ett samtycke får inte gälla längre än 1 år framåt i tiden
+        if (request.getDays() > MAX_DAYS_FOR_CONSENT) {
+            return createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(),
+                    "Ett samtycke får inte gälla längre än 1 år framåt i tiden");
+        }
 
-            Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
-            if (!personnummer.isPresent()) {
-                return createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(),
-                        "Felaktigt personnummer");
-            }
+        Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
+        if (!personnummer.isPresent()) {
+            return createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(),
+                    "Felaktigt personnummer");
+        }
 
-            consentService.giveConsent(personnummer.get(), request.isOnlyCurrentUser(), null,
-                    consentFrom, consentTo, user);
+        // Try to register consent
+        LocalDateTime consentDataTime = consentService.giveConsent(
+                personnummer.get(), request.isOnlyCurrentUser(), null, consentFrom, consentTo, user);
 
-            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId());
+        if (consentDataTime == null) {
+            String errMsg = "Det gick inte att registrera samtycke";
+            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(), errMsg);
+        } else {
+            // Call to consent service executed OK
+            String msg = String.format("Samtycke registrerat vid tidpunkt '%s'", consentDataTime.toString());
+            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId(), msg);
 
             LOG.debug("PDL logging - log registration of consent");
             logRegistrationOfConsent(user, personnummer.get(), ActivityType.CREATE, ResourceType.RESOURCE_TYPE_SAMTYCKE);
-
-        } catch (Exception e) {
-            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(), e.getMessage());
         }
 
         return response;
