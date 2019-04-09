@@ -18,22 +18,26 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.time.LocalDateTime;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.ActorType;
 
+import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
+
 /**
  * @author Magnus Ekstrand on 2018-10-25.
  */
 @Service("consentService")
 public class ConsentServiceImpl implements ConsentService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
     @Autowired
     private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
@@ -49,9 +53,16 @@ public class ConsentServiceImpl implements ConsentService {
         String vgHsaId = user.getValdVardgivare().getId();
         String veHsaId = user.getValdVardenhet().getId();
 
-        samtyckestjanstIntegrationService.registerConsent(vgHsaId, veHsaId,
-                personnummer, userHsaId, representedBy,
-                consentFrom, consentTo, registrationAction);
+        try {
+            LOG.debug("Calling Samtyckestjänsten - registering consent.");
+            samtyckestjanstIntegrationService.registerConsent(vgHsaId, veHsaId,
+                    personnummer, userHsaId, representedBy,
+                    consentFrom, consentTo, registrationAction);
+
+        } catch (Exception e) {
+            LOG.error("INTEGRATION_CONSENT_SERVICE: Fatal error - message is '{}'", e.getMessage());
+            registrationDate = null;
+        }
 
         return registrationDate;
     }

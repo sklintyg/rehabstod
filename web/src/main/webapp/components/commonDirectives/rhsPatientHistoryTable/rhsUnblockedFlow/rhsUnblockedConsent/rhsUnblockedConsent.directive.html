@@ -4,8 +4,9 @@
 <div class="flex-fill">
   <div class="rhs-info-box--section rhs-info-box--spacing">
     <div class="rhs-checkbox">
-      <label class="control-label" for="rhs-extra-consent"><input id="rhs-extra-consent" type="checkbox"
-                                                                  ng-model="consent.confirm"> Patienten samtycker till att du får hämta information från andra vårdgivare i</label>
+      <label class="control-label" for="rhs-extra-consent">
+        <input id="rhs-extra-consent" type="checkbox"
+               ng-model="consent.confirm"> Patienten samtycker till att du får hämta information från andra vårdgivare i</label>
     </div>
     <div class="rhs-info-box__sub-section">
       <rhs-numeric-range-input external-model="consent.days" min="1" max="365" control-disabled="!consent.confirm"
@@ -16,9 +17,14 @@
 
 <h5 class="rhs-info-box--spacing">Vem har samtycke?</h5>
 <div class="message-wrapper">
-  <label class="control-label"><input type="radio" ng-model="consent.onlyCurrentUser" ng-disabled="!consent.confirm"
-                                      value="ONLYCURRENT" /> Bara jag</label>&nbsp; <label class="control-label"><input
-    type="radio" ng-model="consent.onlyCurrentUser" ng-disabled="!consent.confirm" value="ALL" /> All behörig personal på
-  vårdenheten</label>
+  <label class="control-label">
+    <input type="radio" ng-model="consent.onlyCurrentUser"
+           ng-disabled="!consent.confirm" value="ONLYCURRENT" /> Bara jag</label>&nbsp;
+  <label class="control-label">
+    <input type="radio" ng-model="consent.onlyCurrentUser"
+           ng-disabled="!consent.confirm" value="ALL" /> All behörig personal på vårdenheten</label>
+</div>
+<div class="message-wrapper" ng-if="consent.confirm && consent.error">
+  <div class="alert alert-danger"><span message key="{{::labelError}}"></span></div>
 </div>
 <rhs-box-button rhs-click="next()" btn-disabled="!consent.confirm">Hämta information</rhs-box-button>

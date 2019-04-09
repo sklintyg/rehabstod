@@ -79,7 +79,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
         RegisterExtendedConsentResponse result = response.body().as(RegisterExtendedConsentResponse.class);
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.OK, result.getResponseCode());
-        assertTrue(Strings.isNullOrEmpty(result.getResponseMessage()));
+        assertTrue(!Strings.isNullOrEmpty(result.getResponseMessage()));
         assertEquals(DEFAULT_LAKARE.getHsaId(), result.getRegisteredBy());
 
         // 2. Do check that consent is in the store
@@ -118,7 +118,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
         RegisterExtendedConsentResponse result = response.body().as(RegisterExtendedConsentResponse.class);
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.OK, result.getResponseCode());
-        assertTrue(Strings.isNullOrEmpty(result.getResponseMessage()));
+        assertTrue(!Strings.isNullOrEmpty(result.getResponseMessage()));
         assertEquals(DEFAULT_LAKARE.getHsaId(), result.getRegisteredBy());
 
         // 2. Do check that consent is in the store

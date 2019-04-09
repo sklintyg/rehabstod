@@ -196,6 +196,7 @@ var rhsMessages = {
         'label.extradiagnoser.osparradandra.title': 'Ospärrad information hos annan vårdgivare',
         'label.extradiagnoser.osparradandra': '<p>Det finns ospärrad information hos annan vårdgivare.</p>Du kan klicka nedan för att visa vilka vårdgivare som har denna information. Men patientens samtycke krävs för att du ska kunna ta del av den faktiska informationen.',
         'label.extradiagnoser.osparradandra.list.title': 'Vårdgivare att hämta information ifrån',
+        'label.extradiagnoser.osparradandra.error': 'Tyvärr kan samtycke inte registreras på grund av ett tekniskt fel. Försök igen om en stund.',
 
         'label.extradiagnoser.sparradandra.title': 'Spärrad information hos andra vårdgivare',
         'label.extradiagnoser.sparradandra': '<p>Det finns spärrad information hos andra vårdgivare. Endast patienten kan få spärren hävd genom att kontakta den enhet där spärren sattes.</p>Du kan klicka nedan för att visa vilka vårdgivare som har spärrad information hos sig.',
