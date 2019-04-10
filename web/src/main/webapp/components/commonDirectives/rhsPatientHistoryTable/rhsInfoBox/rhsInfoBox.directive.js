@@ -29,7 +29,7 @@ angular.module('rehabstodApp').directive('rhsInfoBox',
             labelTruthy: '@',
             labelFalsy: '@',
             labelError: '@?',
-            serviceError: '@?', // if true the call to the consent service failed
+            serviceError: '=?', // if true the call to the consent service failed
             boxState: '=?' // allows to set skipStart to skip the "Visa mig" section
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsInfoBox/rhsInfoBox.directive.html',
