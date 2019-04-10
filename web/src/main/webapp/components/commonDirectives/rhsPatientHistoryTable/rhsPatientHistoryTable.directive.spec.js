@@ -78,15 +78,4 @@ describe('Directive: rhsPatientHistoryTable', function() {
 
     });
 
-    it('should render correct number of sjukskrivningsgrader', function() {
-        // Assert
-        expect(elementScope.formatGrader([100])).toEqual('100%');
-        expect(elementScope.formatGrader([100,25])).toEqual('100% &#10142; 25%');
-        expect(elementScope.formatGrader([100,25,50])).toEqual('100% &#10142; 50%');
-        expect(elementScope.formatGrader([100,25,75,50])).toEqual('100% &#10142; 50%');
-
-    });
-
-
-
 });
