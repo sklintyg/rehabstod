@@ -66,7 +66,7 @@ public class SparrtjanstClientServiceImpl implements SparrtjanstClientService {
         try {
             return service.checkBlocks(logicalAddress, checkBlockRequest);
         } catch (Exception e) {
-            LOG.error("SPÄRR: Failure when calling Spärrtjänsten and the checkBlocks servcie.");
+            LOG.error("SPÄRR: Failure when calling Spärrtjänsten and the checkBlocks service.");
             throw new SparrtjanstIntegrationException(e.getMessage());
         }
     }
