@@ -87,11 +87,6 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         servlet.setLoadOnStartup(1);
         servlet.addMapping("/");
 
-        // LogMDCServletFilter
-        FilterRegistration.Dynamic logMdcFilter = servletContext.addFilter("logMDCServletFilter",
-                DelegatingFilterProxy.class);
-        logMdcFilter.addMappingForUrlPatterns(null, false, "/*");
-
         // Spring session filter
         FilterRegistration.Dynamic springSessionRepositoryFilter = servletContext.addFilter("springSessionRepositoryFilter",
                 DelegatingFilterProxy.class);
@@ -101,6 +96,11 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         FilterRegistration.Dynamic requestContextHolderUpdateFilter = servletContext.addFilter("requestContextHolderUpdateFilter",
                 RequestContextHolderUpdateFilter.class);
         requestContextHolderUpdateFilter.addMappingForUrlPatterns(null, false, "/*");
+
+        // LogMDCServletFilter
+        FilterRegistration.Dynamic logMdcFilter = servletContext.addFilter("logMDCServletFilter",
+                DelegatingFilterProxy.class);
+        logMdcFilter.addMappingForUrlPatterns(null, false, "/*");
 
         // Session Timeout filter
         FilterRegistration.Dynamic sessionTimeoutFilter = servletContext.addFilter("sessionTimeoutFilter", SessionTimeoutFilter.class);

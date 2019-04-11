@@ -227,7 +227,12 @@ rhs-patient-history-table {
     font-style: italic;
   }
 
-  .extra-info-padding-top {
+  .extra-intyginfo-heading {
+    padding: 15px 0px 10px 0px;
+    text-align: center;
+  }
+
+  .extra-intyginfo-padding-top {
     padding-top: $grid-gutter-width;
   }
 }

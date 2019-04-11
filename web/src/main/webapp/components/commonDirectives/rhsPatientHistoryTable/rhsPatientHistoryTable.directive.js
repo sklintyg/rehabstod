@@ -87,6 +87,7 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
             $scope.hasFeature = function(feature) {
                 return featureService.hasFeature(feature);
             };
+
         }
     };
 } ]);

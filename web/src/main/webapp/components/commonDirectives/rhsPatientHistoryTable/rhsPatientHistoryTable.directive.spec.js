@@ -57,6 +57,8 @@ describe('Directive: rhsPatientHistoryTable', function() {
         }
 
         sjfMetaData.samtyckeFinns = false;
+        sjfMetaData.blockingServiceError = false;
+        sjfMetaData.consentServiceError = false;
 
         _patientHistoryViewState_.setSjfMetaData(sjfMetaData);
 
@@ -68,7 +70,6 @@ describe('Directive: rhsPatientHistoryTable', function() {
     }));
 
     it('should render correct number of sjukskrivningsgrader', function() {
-
         // Assert
         expect(elementScope.formatGrader([100])).toEqual('100%');
         expect(elementScope.formatGrader([100,25])).toEqual('100% &#10142; 25%');
@@ -76,17 +77,5 @@ describe('Directive: rhsPatientHistoryTable', function() {
         expect(elementScope.formatGrader([100,25,75,50])).toEqual('100% &#10142; 50%');
 
     });
-
-    it('should render correct number of sjukskrivningsgrader', function() {
-
-        // Assert
-        expect(elementScope.formatGrader([100])).toEqual('100%');
-        expect(elementScope.formatGrader([100,25])).toEqual('100% &#10142; 25%');
-        expect(elementScope.formatGrader([100,25,50])).toEqual('100% &#10142; 50%');
-        expect(elementScope.formatGrader([100,25,75,50])).toEqual('100% &#10142; 50%');
-
-    });
-
-
 
 });

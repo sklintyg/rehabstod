@@ -32,6 +32,9 @@ public class SjfMetaData {
     private Collection<SjfMetaDataItem> kraverInteSamtycke = new HashSet<>();
 
     private boolean samtyckeFinns;
+    private boolean blockingServiceError;
+    private boolean consentServiceError;
+
 
     public SjfMetaData() {
 
@@ -80,5 +83,21 @@ public class SjfMetaData {
 
     public void setSamtyckeFinns(boolean samtyckeFinns) {
         this.samtyckeFinns = samtyckeFinns;
+    }
+
+    public boolean isBlockingServiceError() {
+        return blockingServiceError;
+    }
+
+    public void setBlockingServiceError(boolean blockingServiceError) {
+        this.blockingServiceError = blockingServiceError;
+    }
+
+    public boolean isConsentServiceError() {
+        return consentServiceError;
+    }
+
+    public void setConsentServiceError(boolean consentServiceError) {
+        this.consentServiceError = consentServiceError;
     }
 }
