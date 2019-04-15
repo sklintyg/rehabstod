@@ -76,7 +76,7 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
         try {
             return checkConsentservice.checkConsent(logicalAddress, checkConsentType);
         } catch (Exception e) {
-            LOG.error("SAMTYCKE: Failure when calling Samtyckestjänsten and the checkConsent service.");
+            LOG.error("CONSENT_SERVICE: Failure when calling Samtyckestjänsten and the checkConsent service.");
             throw new SamtyckestjanstIntegrationException(e.getMessage());
         }
     }
@@ -143,7 +143,7 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
         try {
             return registerExtendedConsentService.registerExtendedConsent(logicalAddress, registerExtendedConsentType);
         } catch (Exception e) {
-            LOG.error("SAMTYCKE: Failure when calling Samtyckestjänsten and the registerExtendedConsent service.");
+            LOG.error("SAMTYCKESTJÄNSTEN: Failure when calling Samtyckestjänsten and the registerExtendedConsent service.");
             throw new SamtyckestjanstIntegrationException(e.getMessage());
         }
     }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.config;
+package se.inera.intyg.rehabstod.integration.sparrtjanst.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,10 @@ import se.inera.intyg.rehabstod.integration.sparrtjanst.stub.SparrtjanstStubConf
  * Created by marced on 2018-10-01.
  */
 @Configuration
-@ComponentScan("se.inera.intyg.rehabstod.integration.sparrtjanst")
+@ComponentScan({
+        "se.inera.intyg.rehabstod.integration.sparrtjanst.client",
+        "se.inera.intyg.rehabstod.integration.sparrtjanst.service"
+})
 @ImportResource("classpath:sparrtjanst-services-config.xml")
 @Import(SparrtjanstStubConfiguration.class)
 public class SparrtjanstConfiguration {
@@ -39,3 +42,4 @@ public class SparrtjanstConfiguration {
     }
 
 }
+
