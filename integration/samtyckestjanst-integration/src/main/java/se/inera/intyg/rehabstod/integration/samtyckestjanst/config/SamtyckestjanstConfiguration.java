@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.config;
+package se.inera.intyg.rehabstod.integration.samtyckestjanst.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,10 @@ import se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.Samtyckestjanst
  * Created by Magnus Ekstrand on 2018-10-16.
  */
 @Configuration
-@ComponentScan("se.inera.intyg.rehabstod.integration.samtyckestjanst")
+@ComponentScan({
+        "se.inera.intyg.rehabstod.integration.samtyckestjanst.client",
+        "se.inera.intyg.rehabstod.integration.samtyckestjanst.service"
+})
 @ImportResource("classpath:samtyckestjanst-services-config.xml")
 @Import(SamtyckestjanstStubConfiguration.class)
 public class SamtyckestjanstConfiguration {
