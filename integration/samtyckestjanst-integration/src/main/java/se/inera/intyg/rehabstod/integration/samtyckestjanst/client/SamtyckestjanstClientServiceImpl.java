@@ -81,7 +81,6 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
         }
     }
 
-
     /**
      * @see SamtyckestjanstClientService#registerExtendedConsent(String, String, String, Personnummer, String,
      *                                                              LocalDateTime, LocalDateTime, ActionType) registerConsent
