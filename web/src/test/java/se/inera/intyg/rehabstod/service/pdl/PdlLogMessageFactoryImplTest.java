@@ -59,6 +59,10 @@ public class PdlLogMessageFactoryImplTest {
 
         assertEquals(ActivityType.READ, pdlLogMessage.getActivityType());
         assertEquals(ActivityPurpose.CARE_TREATMENT, pdlLogMessage.getPurpose());
+
+        // INTYG-8349: Assure user name is removed for PDL-logging.
+        assertEquals("", pdlLogMessage.getUserName());
+
         assertEquals("careunit-1", pdlLogMessage.getUserCareUnit().getEnhetsId());
         assertEquals("Vårdenhet 1", pdlLogMessage.getUserCareUnit().getEnhetsNamn());
         assertEquals("caregiver-1", pdlLogMessage.getUserCareUnit().getVardgivareId());
@@ -67,10 +71,11 @@ public class PdlLogMessageFactoryImplTest {
         assertEquals(5, pdlLogMessage.getPdlResourceList().size());
         PdlResource pdlResource = pdlLogMessage.getPdlResourceList().get(0);
         assertEquals(ResourceType.RESOURCE_TYPE_SJUKFALL.getResourceTypeName(), pdlResource.getResourceType());
+
+        // INTYG-4647: Assure patient's name is removed for PDL-logging.
+        assertEquals("", pdlResource.getPatient().getPatientNamn());
         assertEquals("191212121212", pdlResource.getPatient().getPatientId());
 
-        // INTYG-4647: Removes patient name for PDL-logging.
-        assertEquals("", pdlResource.getPatient().getPatientNamn());
         assertEquals("careunit-1", pdlResource.getResourceOwner().getEnhetsId());
         assertEquals("Vårdenhet 1", pdlResource.getResourceOwner().getEnhetsNamn());
         assertEquals("caregiver-1", pdlResource.getResourceOwner().getVardgivareId());

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.pdl.dto;
+package se.inera.intyg.rehabstod.service.pdl;
 
 
 /**
@@ -24,30 +24,42 @@ package se.inera.intyg.rehabstod.service.pdl.dto;
  *
  * @author mekstrand
  */
-public final class LogPatient {
+final class LogUser {
 
-    private final String patientId;
-    private final String patientNamn;
+    private final String userId;
+    private final String userName;
+    private final String userAssignment;
+    private final String userTitle;
     private final String enhetsId;
     private final String enhetsNamn;
     private final String vardgivareId;
     private final String vardgivareNamn;
 
-    private LogPatient(Builder builder) {
-        this.patientId = builder.patientId;
-        this.patientNamn = builder.patientNamn;
+    private LogUser(Builder builder) {
+        this.userId = builder.userId;
+        this.userName = builder.userName;
+        this.userAssignment = builder.userAssignment;
+        this.userTitle = builder.userTitle;
         this.enhetsId = builder.enhetsId;
         this.enhetsNamn = builder.enhetsNamn;
         this.vardgivareId = builder.vardgivareId;
         this.vardgivareNamn = builder.vardgivareNamn;
     }
 
-    public String getPatientId() {
-        return patientId;
+    public String getUserId() {
+        return userId;
     }
 
-    public String getPatientNamn() {
-        return patientNamn;
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getUserAssignment() {
+        return userAssignment;
+    }
+
+    public String getUserTitle() {
+        return userTitle;
     }
 
     public String getEnhetsId() {
@@ -69,8 +81,10 @@ public final class LogPatient {
 
     public static class Builder {
 
-        private String patientId;
-        private String patientNamn;
+        private String userId;
+        private String userName;
+        private String userAssignment;
+        private String userTitle;
         private String enhetsId;
         private String enhetsNamn;
         private String vardgivareId;
@@ -83,22 +97,32 @@ public final class LogPatient {
          * <p>
          * Se https://bitbucket.org/rivta-domains/riv.ehr.log/raw/master/docs/TKB_ehr_log.docx
          *
-         * @param patientId    Id of the patient.
-         * @param enhetsId     HsaId of the unit owning the information.
-         * @param vardgivareId HsaId of the caregiver owning the information.
+         * @param userId       HsaId of the logged in user.
+         * @param enhetsId     HsaId of the enhet.
+         * @param vardgivareId HsaId of the vardgivare.
          */
-        public Builder(String patientId, String enhetsId, String vardgivareId) {
-            if (patientId == null || enhetsId == null || vardgivareId == null) {
-                throw new IllegalArgumentException("LogPatient builder requires all constructor arguments to be non-null");
+        public Builder(String userId, String enhetsId, String vardgivareId) {
+            if (userId == null || enhetsId == null || vardgivareId == null) {
+                throw new IllegalArgumentException("LogUser builder requires all constructor arguments to be non-null");
             }
 
-            this.patientId = patientId;
+            this.userId = userId;
             this.enhetsId = enhetsId;
             this.vardgivareId = vardgivareId;
         }
 
-        public Builder patientNamn(String patientNamn) {
-            this.patientNamn = patientNamn;
+        public Builder userName(String userName) {
+            this.userName = userName;
+            return this;
+        }
+
+        public Builder userAssignment(String userAssignment) {
+            this.userAssignment = userAssignment;
+            return this;
+        }
+
+        public Builder userTitle(String userTitle) {
+            this.userTitle = userTitle;
             return this;
         }
 
@@ -112,8 +136,8 @@ public final class LogPatient {
             return this;
         }
 
-        public LogPatient build() {
-            return new LogPatient(this);
+        public LogUser build() {
+            return new LogUser(this);
         }
     }
 }

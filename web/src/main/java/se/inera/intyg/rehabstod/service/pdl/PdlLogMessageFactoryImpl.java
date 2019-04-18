@@ -27,8 +27,6 @@ import se.inera.intyg.infra.logmessages.PdlLogMessage;
 import se.inera.intyg.infra.logmessages.PdlResource;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataLogMessage;
-import se.inera.intyg.rehabstod.service.pdl.dto.LogPatient;
-import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.List;
