@@ -24,7 +24,7 @@ package se.inera.intyg.rehabstod.service.pdl.dto;
  *
  * @author mekstrand
  */
-final public class LogPatient {
+public final class LogPatient {
 
     private final String patientId;
     private final String patientNamn;
