@@ -186,7 +186,7 @@ var rhsMessages = {
         'label.extradiagnoser.error': 'Tyvärr kan information från andra vårdgivare inte inhämtas på grund av ett tekniskt fel. Försök igen om en stund.',
 
         'label.extradiagnoser.osparradinom.title': 'Ospärrad information inom vårdgivare',
-        'label.extradiagnoser.osparradinom': '<p>Det finns ospärrad information hos en annan vårdenhet inom användarens vårdgivare.</p>Du kan klicka nedan för att visa vilka vårdenheter som har denna information och få möjlighet att inhämta den.',
+        'label.extradiagnoser.osparradinom': '<p>Det finns ospärrad information hos en annan vårdenhet inom din vårdgivare.</p>Du kan klicka nedan för att visa vilka vårdenheter som har denna information och få möjlighet att inhämta den.',
         'label.extradiagnoser.osparradinom.list.title': 'Vårdenheter att hämta information ifrån',
 
         'label.extradiagnoser.sparradinom.title': 'Spärrad information hos din vårdgivare',
