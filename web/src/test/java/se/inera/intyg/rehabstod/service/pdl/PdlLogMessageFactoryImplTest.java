@@ -28,6 +28,7 @@ import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.service.pdl.dto.LogUtil;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
@@ -52,13 +53,17 @@ public class PdlLogMessageFactoryImplTest {
 
         // Then
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
-                PdlLogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
+                LogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
                 ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
         assertNotNull(pdlLogMessage);
 
         assertEquals(ActivityType.READ, pdlLogMessage.getActivityType());
         assertEquals(ActivityPurpose.CARE_TREATMENT, pdlLogMessage.getPurpose());
+
+        // INTYG-8349: Assert user name is removed for PDL-logging.
+        assertEquals("", pdlLogMessage.getUserName());
+
         assertEquals("careunit-1", pdlLogMessage.getUserCareUnit().getEnhetsId());
         assertEquals("Vårdenhet 1", pdlLogMessage.getUserCareUnit().getEnhetsNamn());
         assertEquals("caregiver-1", pdlLogMessage.getUserCareUnit().getVardgivareId());
@@ -67,10 +72,11 @@ public class PdlLogMessageFactoryImplTest {
         assertEquals(5, pdlLogMessage.getPdlResourceList().size());
         PdlResource pdlResource = pdlLogMessage.getPdlResourceList().get(0);
         assertEquals(ResourceType.RESOURCE_TYPE_SJUKFALL.getResourceTypeName(), pdlResource.getResourceType());
+
+        // INTYG-4647: Assert patient's name is removed for PDL-logging.
+        assertEquals("", pdlResource.getPatient().getPatientNamn());
         assertEquals("191212121212", pdlResource.getPatient().getPatientId());
 
-        // INTYG-4647: Removes patient name for PDL-logging.
-        assertEquals("", pdlResource.getPatient().getPatientNamn());
         assertEquals("careunit-1", pdlResource.getResourceOwner().getEnhetsId());
         assertEquals("Vårdenhet 1", pdlResource.getResourceOwner().getEnhetsNamn());
         assertEquals("caregiver-1", pdlResource.getResourceOwner().getVardgivareId());
@@ -80,7 +86,7 @@ public class PdlLogMessageFactoryImplTest {
     @Test
     public void testBuildLogMessageWithEmptyCareGiverName() {
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(buildSjukfallListWithEmptyCareGiverName(),
-                PdlLogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
+                LogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
                         ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
         assertNotNull(pdlLogMessage);
@@ -99,7 +105,7 @@ public class PdlLogMessageFactoryImplTest {
     public void testBuildPrintLogMessage() {
         // Then
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
-                PdlLogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
+                LogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
                         ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
         assertNotNull(pdlLogMessage);
@@ -109,7 +115,7 @@ public class PdlLogMessageFactoryImplTest {
     @Test
     public void testBuildLogMessageForLakare() {
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
-                PdlLogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
+                LogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
                         ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
         assertEquals("Läkare", pdlLogMessage.getUserTitle());
@@ -124,7 +130,7 @@ public class PdlLogMessageFactoryImplTest {
         when(rolesMap.containsKey(eq("LAKARE"))).thenReturn(false);
 
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
-                PdlLogUtil.getLogUser(rehabstodUser),
+                LogUtil.getLogUser(rehabstodUser),
                         ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
         assertEquals("Rehabkoordinator", pdlLogMessage.getUserTitle());
@@ -135,7 +141,7 @@ public class PdlLogMessageFactoryImplTest {
         RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser(false);
         rehabstodUser.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_KOORDINATOR, new Role()));
         PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
-                PdlLogUtil.getLogUser(rehabstodUser),
+                LogUtil.getLogUser(rehabstodUser),
                         ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
         assertEquals("Rehabkoordinator", pdlLogMessage.getUserTitle());
@@ -144,7 +150,7 @@ public class PdlLogMessageFactoryImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testBuildWithUnknownType() {
         testee.buildLogMessage(TestDataGen.buildSjukfallList(1),
-                PdlLogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
+                LogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
                         ActivityType.EMERGENCY_ACCESS, ResourceType.RESOURCE_TYPE_SJUKFALL);
     }
 

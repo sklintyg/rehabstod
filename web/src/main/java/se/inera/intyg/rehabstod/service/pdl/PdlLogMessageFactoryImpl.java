@@ -62,6 +62,9 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
                         .map(sfe -> buildPdlLogResource(sfe, logUser, resourceType))
                         .collect(Collectors.toList()));
 
+        // Unset values due to regulations
+        unsetValues(pdlLogMessage);
+
         return pdlLogMessage;
     }
 
@@ -76,8 +79,11 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 
         // Add single resource
         pdlLogMessage.getPdlResourceList().add(
-                buildPdlLogResource(logPatient.getPatientId(), logPatient.getEnhetsId(), logPatient.getEnhetsNamn(),
-                        logPatient.getVardgivareId(), logPatient.getVardgivareNamn(), resourceType));
+                buildPdlLogResource(logPatient.getPatientId(), logPatient.getPatientNamn(), logPatient.getEnhetsId(),
+                        logPatient.getEnhetsNamn(), logPatient.getVardgivareId(), logPatient.getVardgivareNamn(), resourceType));
+
+        // Unset values due to regulations
+        unsetValues(pdlLogMessage);
 
         return pdlLogMessage;
     }
@@ -92,14 +98,15 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
     }
 
     private PdlResource buildPdlLogResource(String patientId,
+                                            String patientName,
                                             String vardenhetId,
                                             String vardenhetNamn,
                                             String vardgivareId,
                                             String vardgivareNamn,
                                             ResourceType resourceType) {
 
-        Patient patient = getPatient(patientId);
-        Enhet enhet = getEnhet(vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn);
+        Patient patient = createPatient(patientId, patientName);
+        Enhet enhet = createEnhet(vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn);
 
         PdlResource pdlResource = new PdlResource();
         pdlResource.setPatient(patient);
@@ -107,6 +114,14 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         pdlResource.setResourceType(resourceType.getResourceTypeName());
 
         return pdlResource;
+    }
+
+    private Enhet createEnhet(String vardenhetId, String vardenhetNamn, String vardgivareId, String vardgivareNamn) {
+        return new Enhet(vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn);
+    }
+
+    private Patient createPatient(String patientId, String patientName) {
+        return new Patient(patientId.replace("-", "").replace("+", ""), patientName);
     }
 
     private String getConditionalValue(String preferred, String alternative) {
@@ -119,19 +134,11 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         String vardgivareId = getConditionalValue(sfe.getVardGivareId(), user.getVardgivareId());
         String vardgivareNamn = getConditionalValue(sfe.getVardGivareNamn(), user.getVardgivareNamn());
 
-        return getEnhet(vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn);
-    }
-
-    private Enhet getEnhet(String vardenhetId, String vardenhetNamn, String vardgivareId, String vardgivareNamn) {
-        return new Enhet(vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn);
+        return createEnhet(vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn);
     }
 
     private Patient getPatient(SjukfallEnhet sfe) {
-        return getPatient(sfe.getPatient().getId());
-    }
-
-    private Patient getPatient(String patientId) {
-        return new Patient(patientId.replace("-", "").replace("+", ""), "");
+        return createPatient(sfe.getPatient().getId(), sfe.getPatient().getNamn());
     }
 
     private PdlLogMessage getLogMessage(ActivityType activityType) {
@@ -162,6 +169,16 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 
         Enhet vardenhet = new Enhet(user.getEnhetsId(), user.getEnhetsNamn(), user.getVardgivareId(), user.getVardgivareNamn());
         logMsg.setUserCareUnit(vardenhet);
+    }
+
+    private void unsetValues(final PdlLogMessage logMessage) {
+        // INTYG-8349: Inget användarnamn vid PDL-logging
+        logMessage.setUserName("");
+
+        // INTYG-4647: Inget patientnamn vid PDL-logging
+        logMessage.getPdlResourceList().forEach(pdlResource ->
+            pdlResource.setPatient(createPatient(pdlResource.getPatient().getPatientId(), ""))
+        );
     }
 
 }
