@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.pdl;
+package se.inera.intyg.rehabstod.service.pdl.dto;
 
 import org.junit.Test;
 
@@ -27,18 +27,19 @@ import static org.junit.Assert.fail;
 /**
  * Created by eriklupander on 2017-01-31.
  */
-public class LogUserTest {
+public class LogPatientTest {
 
-    public void testBuildLogUserWithRequiredValues() {
-        LogUser logUser = new LogUser.Builder("1", "2", "3").build();
-        assertNotNull(logUser);
-        assertEquals("1", logUser.getUserId());
-        assertEquals("2", logUser.getEnhetsId());
-        assertEquals("3", logUser.getVardgivareId());
+    @Test
+    public void testBuildLogPatientWithRequiredValues() {
+        LogPatient logPatient = new LogPatient.Builder("1", "2", "3").build();
+        assertNotNull(logPatient);
+        assertEquals("1", logPatient.getPatientId());
+        assertEquals("2", logPatient.getEnhetsId());
+        assertEquals("3", logPatient.getVardgivareId());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testBuildLogUserWithNullRequiredValues() {
+    public void testBuildLogPatientWithNullRequiredValues() {
         new LogUser.Builder("1", "2", null);
         fail("This assert should be unreachable!");
     }

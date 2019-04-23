@@ -33,6 +33,8 @@ import se.inera.intyg.infra.logmessages.PdlLogMessage;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
+import se.inera.intyg.rehabstod.service.pdl.dto.LogPatient;
+import se.inera.intyg.rehabstod.service.pdl.dto.LogUtil;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -78,7 +80,7 @@ public class LogServiceImpl implements LogService {
             return;
         }
         PdlLogMessage pdlLogMessage =
-            pdlLogMessageFactory.buildLogMessage(sjukfallList, PdlLogUtil.getLogUser(userService.getUser()), activityType, resourceType);
+            pdlLogMessageFactory.buildLogMessage(sjukfallList, LogUtil.getLogUser(userService.getUser()), activityType, resourceType);
         send(pdlLogMessage);
     }
 
@@ -89,8 +91,8 @@ public class LogServiceImpl implements LogService {
             return;
         }
         PdlLogMessage pdlLogMessage =
-                pdlLogMessageFactory.buildLogMessage(PdlLogUtil.getLogPatient(patientData),
-                        PdlLogUtil.getLogUser(userService.getUser()), activityType, resourceType);
+                pdlLogMessageFactory.buildLogMessage(LogUtil.getLogPatient(patientData),
+                        LogUtil.getLogUser(userService.getUser()), activityType, resourceType);
         send(pdlLogMessage);
     }
 
@@ -110,7 +112,7 @@ public class LogServiceImpl implements LogService {
 
         PdlLogMessage pdlLogMessage =
                 pdlLogMessageFactory.buildLogMessage(logPatient,
-                        PdlLogUtil.getLogUser(user), activityType, resourceType);
+                        LogUtil.getLogUser(user), activityType, resourceType);
         send(pdlLogMessage);
     }
 

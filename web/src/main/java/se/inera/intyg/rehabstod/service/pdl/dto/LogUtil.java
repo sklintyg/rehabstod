@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.pdl;
+package se.inera.intyg.rehabstod.service.pdl.dto;
 
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -26,20 +26,19 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 /**
  * @author Magnus Ekstrand on 2018-11-14.
  */
-public final class PdlLogUtil {
+public final class LogUtil {
 
     public static final String PDL_TITEL_LAKARE = "Läkare";
     public static final String PDL_TITEL_REHABSTOD = "Rehabkoordinator";
 
 
-    private PdlLogUtil() {
+    private LogUtil() {
     }
 
     public static LogPatient getLogPatient(PatientData patientData) {
-        // INTYG-4647: Inget patientnamn vid PDL-logging.
         return new LogPatient.Builder(
                 patientData.getPatient().getId(), patientData.getVardenhetId(), patientData.getVardgivareId())
-                .patientNamn("")
+                .patientNamn(patientData.getPatient().getNamn())
                 .enhetsNamn(patientData.getVardenhetNamn())
                 .vardgivareNamn(patientData.getVardgivareNamn())
                 .build();
@@ -49,9 +48,8 @@ public final class PdlLogUtil {
         SelectableVardenhet valdVardgivare = user.getValdVardgivare();
         SelectableVardenhet valdVardenhet = user.getValdVardenhet();
 
-        // INTYG-8349: Inget användarnamn vid PDL-logging.
         return new LogUser.Builder(user.getHsaId(), valdVardenhet.getId(), valdVardgivare.getId())
-                .userName("")
+                .userName(user.getNamn())
                 .userAssignment(user.getSelectedMedarbetarUppdragNamn())
                 .userTitle(resolveUserTitle(user))
                 .enhetsNamn(valdVardenhet.getNamn())

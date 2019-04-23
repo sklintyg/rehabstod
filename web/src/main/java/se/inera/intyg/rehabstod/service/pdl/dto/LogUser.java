@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.pdl;
+package se.inera.intyg.rehabstod.service.pdl.dto;
 
 
 /**
@@ -24,7 +24,7 @@ package se.inera.intyg.rehabstod.service.pdl;
  *
  * @author mekstrand
  */
-final class LogUser {
+public class LogUser {
 
     private final String userId;
     private final String userName;
