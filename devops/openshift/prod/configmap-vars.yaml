@@ -1,26 +1,29 @@
 apiVersion: v1
 data:
-  SPRING_PROFILES_ACTIVE: "prod,caching-enabled,redis-sentinel"
-  RESOURCES_FOLDER: "classpath:"
-  WEBCERT_VIEW_URLTEMPLATE: "https://webcert.intygstjanster.se/visa/intyg/{intygsId}/readonly?enhet={enhet}"
-  REDIS_HOST: "ind-pint-redis1.ind1.sth.basefarm.net;ind-pint-redis2.ind1.sth.basefarm.net;ind-pint-redis3.ind1.sth.basefarm.net"
-  REDIS_PORT: "26379;26379;26379"
-  REDIS_SENTINEL_MASTER_NAME: "ind-pint-redis"
-  ACTIVEMQ_BROKER_URL: "failover:(tcp://ind-pint-activemq1.ind1.sth.basefarm.net:61616,tcp://ind-pint-activemq2.ind1.sth.basefarm.net:61616)?jms.nonBlockingRedelivery=true&jms.redeliveryPolicy.useExponentialBackOff=true&jms.redeliveryPolicy.backOffMultiplier=2&jms.redeliveryPolicy.maximumRedeliveries=30&jms.redeliveryPolicy.maximumRedeliveryDelay=3600000&jms.redeliveryPolicy.initialRedeliveryDelay=60000"
-  PDL_LOGGING_QUEUE_NAME: "webcert.log.queue"
-  NTJP_WS_CERTIFICATE_TYPE: "JKS"
-  NTJP_WS_TRUSTSTORE_TYPE: "JKS"
-  DB_SEREVR: "ind-pint-mysqlvip.ind1.sth.basefarm.net"
-  DB_NAME: "${database.name}"
+  ACTIVEMQ_BROKER_URL: failover:(tcp://ind-pint-activemq1.ind1.sth.basefarm.net:61616,tcp://ind-pint-activemq2.ind1.sth.basefarm.net:61616)?jms.nonBlockingRedelivery=true&jms.redeliveryPolicy.useExponentialBackOff=true&jms.redeliveryPolicy.backOffMultiplier=2&jms.redeliveryPolicy.maximumRedeliveries=30&jms.redeliveryPolicy.maximumRedeliveryDelay=3600000&jms.redeliveryPolicy.initialRedeliveryDelay=60000
+  AGGREGATED_PDL_LOGGING_QUEUE_NAME: webcert.aggregated.log.queue
+  DATABASE_PORT: "3306"
+  DATABASE_SERVER: 10.252.5.157
+  IT_WS_CERTIFICATE_FILE: ${certificate.folder}/truststore.jks
+  IT_WS_TRUSTSTORE_TYPE: JKS
+  NTJP_WS_CERTIFICATE_FILE: ${certificate.folder}/rehabstod.intygstjanster.sjunet.org.jks
+  NTJP_WS_CERTIFICATE_TYPE: JKS
+  NTJP_WS_TRUSTSTORE_FILE: ${certificate.folder}/truststore.jks
+  NTJP_WS_TRUSTSTORE_TYPE: JKS
+  PDL_LOGGING_QUEUE_NAME: webcert.log.queue
+  REDIS_HOST: ind-pint-redis1.ind1.sth.basefarm.net;ind-pint-redis2.ind1.sth.basefarm.net;ind-pint-redis3.ind1.sth.basefarm.net
+  REDIS_PORT: 26379;26379;26379
+  REDIS_SENTINEL_MASTER_NAME: ind-pint-redis
   SAKERHETSTJANST_SAML_IDP_METADATA_URL: https://idp2.sakerhetstjanst.inera.se:443/idp/saml
   SAKERHETSTJANST_SAML_KEYSTORE_ALIAS: rehabstod.intygstjanster.sjunet.org
   SAKERHETSTJANST_SAML_KEYSTORE_FILE: file://${certificate.folder}/rehabstod.intygstjanster.sjunet.org.jks
   SAKERHETSTJANST_SAML_TRUSTSTORE_FILE: file://${certificate.folder}/truststore.jks
-  NTJP_WS_CERTIFICATE_FILE: "${certificate.folder}/rehabstod.intygstjanster.sjunet.org.jks"
-  NTJP_WS_TRUSTSTORE_FILE: "${certificate.folder}/truststore.jks"
-  IT_WS_CERTIFICATE_FILE: "${certificate.folder}/truststore.jks"
-  IT_WS_TRUSTSTORE_TYPE: "JKS"
+  WEBCERT_VIEW_URLTEMPLATE: https://webcert.intygstjanster.se/visa/intyg/{intygsId}/readonly?enhet={enhet}
 kind: ConfigMap
 metadata:
+  creationTimestamp: 2019-04-16T18:08:22Z
   name: rehabstod-configmap-envvar
-type: Opaque
+  namespace: pintyg
+  resourceVersion: "76021224"
+  selfLink: /api/v1/namespaces/pintyg/configmaps/rehabstod-configmap-envvar
+  uid: 9f256a25-6072-11e9-935a-005056a1387d
