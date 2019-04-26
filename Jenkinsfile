@@ -5,7 +5,7 @@ def infraVersion = "3.9.0.+"
 
 // Common is not used by Rehabstod but is defined since the
 // OpenShift pipeline template depends on this property
-def commonVersion = "3.8.0.+"
+def commonVersion = "3.9.0.+"
 
 stage('checkout') {
     node {
@@ -26,44 +26,9 @@ stage('build') {
     }
 }
 
-stage('deploy') {
+stage('tag') {
     node {
-        util.run {
-            ansiblePlaybook extraVars: [version: buildVersion, ansible_ssh_port: "22", deploy_from_repo: "false"], \
-                installation: 'ansible-yum', inventory: 'ansible/inventory/rehabstod/test', playbook: 'ansible/deploy.yml'
-            util.waitForServer('https://rehabstod.inera.nordicmedtest.se/version.jsp')
-        }
-    }
-}
-
-stage('restAssured') {
-    node {
-        try {
-            shgradle "restAssuredTest -DbaseUrl=http://rehabstod.inera.nordicmedtest.se/ -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion}"
-        } finally {
-            publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'web/build/reports/tests/restAssuredTest', \
-                reportFiles: 'index.html', reportName: 'RestAssured results'
-        }
-    }
-}
-
-stage('protractor') {
-    node {
-        try {
-            sh(script: 'rm -rf test/node_modules/rehabstod-testtools') // Without this, node does not always recognize that a new version is available.
-            wrap([$class: 'Xvfb']) {
-                shgradle "protractorTests -Dprotractor.env=build-server -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion}"
-            }
-        } finally {
-            publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'test/reports', \
-                reportFiles: 'index.html', reportName: 'Protractor results'
-        }
-    }
-}
-
-stage('tag and upload') {
-    node {
-        shgradle "uploadArchives tagRelease -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion} -PuseMinifiedJavaScript"
+        shgradle "tagRelease -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion} -PuseMinifiedJavaScript"
     }
 }
 
@@ -77,5 +42,11 @@ stage('propagate') {
                 [$class: 'StringParameterValue', name: 'GIT_REF', value: gitRef],
                 [$class: 'StringParameterValue', name: 'RELEASE_FLAG', value: releaseFlag]
         ]
+    }
+}
+
+stage('notify') {
+    node {
+        util.notifySuccess()
     }
 }
