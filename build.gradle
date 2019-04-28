@@ -12,7 +12,7 @@ ext {
     internalMonitoringSchemaVersion = "1.0.2"
     srsSchemasVersion = "0.0.7"
 
-    schemasContractVersion = "2.1.7"
+    schemasContractVersion = "2.1.8"
 
     activemqVersion = "5.13.0"
     commonsCodecVersion = "1.10"
