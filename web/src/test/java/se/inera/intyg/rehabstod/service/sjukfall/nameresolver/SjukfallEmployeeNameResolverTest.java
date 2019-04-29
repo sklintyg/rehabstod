@@ -18,18 +18,21 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.nameresolver;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.web.model.Lakare;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
+import se.inera.intyg.rehabstod.web.model.Lakare;
+import se.inera.intyg.rehabstod.web.model.PatientData;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -100,6 +103,35 @@ public class SjukfallEmployeeNameResolverTest {
         assertEquals(lakareNamn3Alt, sjukfallList.get(4).getLakare().getNamn());
     }
 
+    @Test
+    public void testEnrichSjukfallPaientWithHsaEmployeeNamesNoRecord() {
+        List<SjukfallPatient> sjukfallList = createSjukfallPatientList();
+        when(employeeNameService.getEmployeeHsaName(lakareId1)).thenReturn(lakareNamn3Alt);
+        testee.enrichSjukfallPaientWithHsaEmployeeNames(sjukfallList);
+        assertEquals(lakareNamn3Alt, sjukfallList.get(0).getIntyg().get(0).getLakare().getNamn());
+    }
+
+    @Test
+    public void testEnrichSjukfallPaientWithHsaEmployeeNames() {
+        List<SjukfallPatient> sjukfallList = createSjukfallPatientList();
+        when(employeeNameService.getEmployeeHsaName(lakareId1)).thenReturn(null);
+        testee.enrichSjukfallPaientWithHsaEmployeeNames(sjukfallList);
+        assertEquals(lakareId1, sjukfallList.get(0).getIntyg().get(0).getLakare().getNamn());
+    }
+
+    private List<SjukfallPatient> createSjukfallPatientList() {
+        List<SjukfallPatient> sjukfallList = new ArrayList<>();
+
+        sjukfallList.add(createSjukfallPatient(lakareId1, lakareNamn1));
+        sjukfallList.add(createSjukfallPatient(lakareId1, lakareNamn1));
+        sjukfallList.add(createSjukfallPatient(lakareId2, lakareNamn2));
+        sjukfallList.add(createSjukfallPatient(lakareId2, lakareNamn2));
+        sjukfallList.add(createSjukfallPatient(lakareId3, lakareNamn3));
+        sjukfallList.add(createSjukfallPatient(lakareId3, lakareNamn3));
+
+        return sjukfallList;
+    }
+
     private List<SjukfallEnhet> createSjukfallList() {
         List<SjukfallEnhet> sjukfallList = new ArrayList<>();
 
@@ -111,6 +143,21 @@ public class SjukfallEmployeeNameResolverTest {
         sjukfallList.add(createSjukfall(lakareId3, lakareNamn3));
 
         return sjukfallList;
+    }
+
+    private SjukfallPatient createSjukfallPatient(String lakareId, String lakareNamn) {
+        SjukfallPatient sjukfall = new SjukfallPatient();
+
+        List<PatientData> intyg = new ArrayList<>();
+        sjukfall.setIntyg(intyg);
+
+        PatientData patientData = new PatientData();
+        intyg.add(patientData);
+
+        Lakare lakare = new Lakare(lakareId, lakareNamn);
+        patientData.setLakare(lakare);
+
+        return sjukfall;
     }
 
     private SjukfallEnhet createSjukfall(String lakareId, String lakareNamn) {
