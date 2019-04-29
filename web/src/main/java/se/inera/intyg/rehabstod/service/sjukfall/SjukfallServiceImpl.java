@@ -280,7 +280,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         SjfMetaData sjfMetaData = new SjfMetaData();
         boolean haveConsent = false;
 
-        // Hoppa över spärr och samtyckestjänsten om det är sekretess
+        // Hoppa över spärr- och samtyckestjänsten om det är sekretess
         if (!haveSekretess) {
             List<IntygData> intygOnOtherUnits = filterByOtherUnitsOnly(vardgivareId, enhetsId, data);
 
@@ -445,34 +445,32 @@ public class SjukfallServiceImpl implements SjukfallService {
         intygAccessMetaData.forEach((intygsId, iacm) -> {
             if (iacm.inreSparr()) {
                 sjfMetaData.getVardenheterInomVGMedSparr().add(iacm.getIntygData().getVardenhetNamn());
-            } else {
-                /*
-                 * INTYG-7911:
-                 * Intyg som finns på annan vårdenhet men inom samma vårdgivare kräver inte samtycke
-                 * men ska inte heller inhämtas automatisk vid beräkning av det aktiva sjukfallet.
-                 */
-                if (!iacm.isKraverSamtycke() && !iacm.isInomVardenhet()) {
-                    String id = iacm.getIntygData().getVardenhetId();
-                    String namn = iacm.getIntygData().getVardenhetNamn();
-                    SjfMetaDataItemType type = SjfMetaDataItemType.VARDENHET;
-
-                    addSjfMetaDataItemToMap(id, namn, type, iacm, kraverInteSamtyckeDataMap);
-                }
-            }
-
-            if (iacm.yttreSparr()) {
+            } else if (iacm.yttreSparr()) {
                 sjfMetaData.getAndraVardgivareMedSparr().add(iacm.getIntygData().getVardgivareNamn());
             } else {
-                /*
-                 * INTYG-7912:
-                 * Intyg som finns på annan vårdgivare kräver alltid samtycke.
-                 */
                 if (iacm.isKraverSamtycke()) {
+                    /*
+                     * INTYG-7912:
+                     * Intyg som finns på annan vårdgivare kräver alltid samtycke.
+                     */
                     String id = iacm.getIntygData().getVardgivareId();
                     String namn = iacm.getIntygData().getVardgivareNamn();
                     SjfMetaDataItemType type = SjfMetaDataItemType.VARDGIVARE;
 
                     addSjfMetaDataItemToMap(id, namn, type, iacm, kraverSamtyckeDataMap);
+                } else {
+                    if (!iacm.isInomVardenhet()) {
+                        /*
+                         * INTYG-7911:
+                         * Intyg som finns på annan vårdenhet men inom samma vårdgivare kräver inte samtycke
+                         * men ska inte heller inhämtas automatisk vid beräkning av det aktiva sjukfallet.
+                         */
+                        String id = iacm.getIntygData().getVardenhetId();
+                        String namn = iacm.getIntygData().getVardenhetNamn();
+                        SjfMetaDataItemType type = SjfMetaDataItemType.VARDENHET;
+
+                        addSjfMetaDataItemToMap(id, namn, type, iacm, kraverInteSamtyckeDataMap);
+                    }
                 }
             }
         });

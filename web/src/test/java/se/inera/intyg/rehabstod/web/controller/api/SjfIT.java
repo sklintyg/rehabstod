@@ -103,11 +103,13 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
                         equalTo(false))
                 .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
-                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2));
+                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2))
+                .body("sjfMetaData.blockingServiceError", equalTo(false))
+                .body("sjfMetaData.consentServiceError", equalTo(false));
 
         String puSekretessUrl = "services/api/pu-api/person/" + patientId + "/sekretessmarkerad?value=";
 
-        // Sätter sekretess markerad
+        // Sätter sekretessmarkerad
         given().contentType(ContentType.JSON)
                 .expect().statusCode(OK)
                 .when().get(puSekretessUrl + "true");
@@ -121,7 +123,9 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .body("sjfMetaData.kraverSamtycke.size()", equalTo(0))
                 .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(0))
                 .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(0))
-                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(0));
+                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(0))
+                .body("sjfMetaData.blockingServiceError", equalTo(false))
+                .body("sjfMetaData.consentServiceError", equalTo(false));
 
         // Tar bort sekretess markerad
         given().contentType(ContentType.JSON)
@@ -154,7 +158,9 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
                         equalTo(false))
                 .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
-                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2));
+                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2))
+                .body("sjfMetaData.blockingServiceError", equalTo(false))
+                .body("sjfMetaData.consentServiceError", equalTo(false));
 
 
         // Inkludera vårdenhet
@@ -183,7 +189,8 @@ public class SjfIT extends BaseRestIntegrationTest {
                 .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
                         equalTo(false))
                 .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
-                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2));
-
+                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2))
+                .body("sjfMetaData.blockingServiceError", equalTo(false))
+                .body("sjfMetaData.consentServiceError", equalTo(false));
     }
 }

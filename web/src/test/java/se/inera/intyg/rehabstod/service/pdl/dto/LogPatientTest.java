@@ -16,27 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.common.monitoring.util;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+package se.inera.intyg.rehabstod.service.pdl.dto;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 /**
- * Created by marced on 14/04/16.
+ * Created by eriklupander on 2017-01-31.
  */
-public class HashUtilityTest {
+public class LogPatientTest {
 
     @Test
-    public void testHashEmpty() throws Exception {
-        assertEquals(HashUtility.EMPTY, HashUtility.hash(null));
-
+    public void testBuildLogPatientWithRequiredValues() {
+        LogPatient logPatient = new LogPatient.Builder("1", "2", "3").build();
+        assertNotNull(logPatient);
+        assertEquals("1", logPatient.getPatientId());
+        assertEquals("2", logPatient.getEnhetsId());
+        assertEquals("3", logPatient.getVardgivareId());
     }
 
-    @Test
-    public void testHash() throws Exception {
-        assertNotEquals("ABC", HashUtility.hash("ABC"));
-
+    @Test(expected = IllegalArgumentException.class)
+    public void testBuildLogPatientWithNullRequiredValues() {
+        new LogUser.Builder("1", "2", null);
+        fail("This assert should be unreachable!");
     }
 }

@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp')
     .value('networkConfig', {
-        defaultTimeout: 30000
+        defaultTimeout: 90000
     })
     .value('chartColors', {
         base: '#57843B',

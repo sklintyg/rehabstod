@@ -18,11 +18,6 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.WebApplicationInitializer;
@@ -33,7 +28,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
-
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.security.filter.RequestContextHolderUpdateFilter;
 import se.inera.intyg.infra.security.filter.SecurityHeadersFilter;
@@ -42,13 +36,22 @@ import se.inera.intyg.rehabstod.common.monitoring.util.LogbackConfiguratorContex
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
+import se.inera.intyg.rehabstod.integration.samtyckestjanst.config.SamtyckestjanstClientConfiguration;
+import se.inera.intyg.rehabstod.integration.samtyckestjanst.config.SamtyckestjanstConfiguration;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstStubConfiguration;
+import se.inera.intyg.rehabstod.integration.sparrtjanst.config.SparrtjanstClientConfiguration;
+import se.inera.intyg.rehabstod.integration.sparrtjanst.config.SparrtjanstConfiguration;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.stub.SparrtjanstStubConfiguration;
 import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.srs.stub.SRSIntegrationStubConfiguration;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfig;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
+
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
 
 import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_CHECK_URI;
 import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_EXTEND;
@@ -65,12 +68,15 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
 
         appContext.register(ApplicationConfig.class, CacheConfigurationFromInfra.class, HsaConfiguration.class,
-                PuConfiguration.class, ServiceConfig.class, IntygstjanstIntegrationConfiguration.class,
+                PuConfiguration.class, ServiceConfig.class,
+                IntygstjanstIntegrationConfiguration.class,
                 IntygstjanstIntegrationClientConfiguration.class,
                 IntygstjanstIntegrationStubConfiguration.class,
                 SamtyckestjanstConfiguration.class,
+                SamtyckestjanstClientConfiguration.class,
                 SamtyckestjanstStubConfiguration.class,
                 SparrtjanstConfiguration.class,
+                SparrtjanstClientConfiguration.class,
                 SparrtjanstStubConfiguration.class,
                 SRSIntegrationConfiguration.class,
                 SRSIntegrationClientConfiguration.class,
