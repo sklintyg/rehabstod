@@ -18,9 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.nameresolver;
 
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
 import java.util.List;
+
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 /**
  * Created by eriklupander on 2017-02-23.
@@ -28,6 +29,8 @@ import java.util.List;
 public interface SjukfallEmployeeNameResolver {
 
     void enrichWithHsaEmployeeNames(List<SjukfallEnhet> sjukfallList);
+
+    void enrichSjukfallPaientWithHsaEmployeeNames(List<SjukfallPatient> sjukfallList);
 
     void updateDuplicateDoctorNamesWithHsaId(List<SjukfallEnhet> sjukfallList);
 

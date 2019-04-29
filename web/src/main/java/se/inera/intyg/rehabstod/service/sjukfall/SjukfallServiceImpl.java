@@ -18,12 +18,19 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
@@ -54,12 +61,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -149,6 +150,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         final List<SjukfallPatient> rehabstodSjukfall = result.getRehabstodSjukfall();
 
         sjukfallPuService.enrichWithPatientNameAndFilterSekretess(rehabstodSjukfall);
+        sjukfallEmployeeNameResolver.enrichSjukfallPaientWithHsaEmployeeNames(rehabstodSjukfall);
         boolean srsError = false;
         try {
             riskPredictionService.updateSjukfallPatientListWithRiskPredictions(rehabstodSjukfall);
