@@ -47,11 +47,16 @@ public class SjukfallEmployeeNameResolverImpl implements SjukfallEmployeeNameRes
     @Override
     public void enrichSjukfallPaientWithHsaEmployeeNames(List<SjukfallPatient> sjukfallList) {
         sjukfallList.forEach(sf -> {
-            sf.getIntyg().forEach(i -> updateEmployeeName(i.getLakare()));
+            if (sf.getIntyg() != null) {
+                sf.getIntyg().forEach(i -> updateEmployeeName(i.getLakare()));
+            }
         });
     }
 
     private void updateEmployeeName(Lakare lakare) {
+        if (lakare == null) {
+            return;
+        }
         String employeeHsaName = employeeNameService.getEmployeeHsaName(lakare.getHsaId());
         if (employeeHsaName != null) {
             lakare.setNamn(employeeHsaName);
