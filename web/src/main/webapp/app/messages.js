@@ -180,6 +180,7 @@ var rhsMessages = {
 
         // Patient History Dialog
         'label.patienthistory.loading': 'Hämtar sjukfall för patient...',
+        'label.patienthistory.empty': 'Tyvärr finns det inga giltiga intyg att visa i det här sjukfallet för tillfället. Det beror på att intygen har makulerats.',
 
         'label.extradiagnoser.none': 'Det finns för tillfället ingen ytterligare information att inhämta från andra vårdenheter eller andra vårdgivare.',
         'label.extradiagnoser.empty': 'Det finns för tillfället ingen information i denna kategori att inhämta.',
