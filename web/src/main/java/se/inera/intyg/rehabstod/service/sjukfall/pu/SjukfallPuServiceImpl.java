@@ -113,6 +113,10 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
     @Override
     public List<IntygData> filterSekretessForPatientHistory(List<IntygData> intygsData, String vardgivareId, String enhetsId) {
+        if (intygsData.isEmpty()) {
+            return intygsData;
+        }
+
         String pnr = intygsData.get(0).getPatientId();
         Personnummer personnummer = getPersonnummer(pnr);
 
