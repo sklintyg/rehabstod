@@ -17,6 +17,7 @@ web/src/main/webapp/app/app.css
 web/.sass-cache/
 *.map
 
+.vscode/
 .idea/
 *.iml
 *.DS_Store
