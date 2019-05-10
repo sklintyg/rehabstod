@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import com.google.common.base.Strings;
 import org.opensaml.common.SAMLException;
 import org.opensaml.saml2.core.Audience;
 import org.opensaml.saml2.core.AudienceRestriction;
@@ -32,9 +33,6 @@ import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.saml.context.SAMLMessageContext;
 import org.springframework.security.saml.websso.WebSSOProfileOptions;
-
-import com.google.common.base.Strings;
-
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 
 /**
@@ -44,11 +42,11 @@ public class RehabstodWebSSOProfileImpl extends org.springframework.security.sam
 
     public static final String HTTP_ID_SAMBI_SE_LOA_LOA3 = "http://id.sambi.se/loa/loa3";
 
-    @Value("${oidc.rp.identity}")
-    private String oidcIdentity;
+    @Value("${oidc.op.identity}")
+    private String opIdentity;
 
-    @Value("${sakerhetstjanst.saml.idp.metadata.url}")
-    private String idpEntityId;
+    @Value("${oidc.client.id}")
+    private String rpIdentity;
 
     /**
      * Returns AuthnRequest SAML message to be used to demand authentication from an IDP described using
@@ -90,8 +88,8 @@ public class RehabstodWebSSOProfileImpl extends org.springframework.security.sam
     private Conditions buildConditions() {
         AudienceRestriction audienceRestriction = new AudienceRestrictionBuilder().buildObject();
 
-        addAudienceIfApplicable(audienceRestriction, idpEntityId);
-        addAudienceIfApplicable(audienceRestriction, oidcIdentity);
+        addAudienceIfApplicable(audienceRestriction, rpIdentity);
+        addAudienceIfApplicable(audienceRestriction, opIdentity);
 
         Conditions conditions = new ConditionsBuilder().buildObject();
         conditions.getConditions().add(audienceRestriction);

@@ -27,6 +27,7 @@ import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
+import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.infra.security.siths.BaseUserDetailsService;
@@ -35,6 +36,8 @@ import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleEx
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
+import se.inera.intyg.rehabstod.service.user.TokenExchangeService;
+import se.inera.intyg.rehabstod.service.user.TokenServiceException;
 
 import java.util.List;
 
@@ -53,6 +56,9 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
 
     @Autowired
     private RehabstodUnitChangeService rehabstodUnitChangeService;
+
+    @Autowired
+    private TokenExchangeService tokenExchangeService;
 
     // =====================================================================================
     // ~ Protected scope
@@ -73,6 +79,19 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         RehabstodUserPreferences preferences = RehabstodUserPreferences
                 .fromBackend(anvandarPreferenceRepository.getAnvandarPreference(intygUser.getHsaId()));
         rehabstodUser.setPreferences(preferences);
+
+        // Get AccessToken to use in Webcert iFrame, but only when SITHS authentication is performed.
+        // This only works with Inera IdP, so needs to be modified if other IdP's should be used.
+        if (AuthenticationMethod.SITHS.equals(rehabstodUser.getAuthenticationMethod())) {
+            try {
+                RehabstodUserTokens tokens = tokenExchangeService.exchange(credential);
+                rehabstodUser.setTokens(tokens);
+            } catch (TokenServiceException exception) {
+                // Couldn't get AccessToken. Log and continue since this is not vital for Rehabstod.
+                // User will not be able to use "Visa Intyg".
+                LOG.error("Unable to get AccessToken for user {} with reason {}", rehabstodUser.getHsaId(), exception.getMessage());
+            }
+        }
 
         return rehabstodUser;
     }

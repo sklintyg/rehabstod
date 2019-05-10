@@ -16,12 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.auth;
+package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 
-@RunWith(MockitoJUnitRunner.class)
-public class RehabstodAuthenticationSuccessHandlerTest {
+/**
+ * Reponse dto for the getAccessToken api.
+ */
+public class GetAccessTokenResponse {
 
+    private String accessToken;
+
+    public GetAccessTokenResponse(RehabstodUser user) {
+        this.accessToken = user.getTokens() != null ? user.getTokens().getAccessToken() : null;
+    }
+
+    public String getAccessToken() {
+        return this.accessToken;
+    }
 }

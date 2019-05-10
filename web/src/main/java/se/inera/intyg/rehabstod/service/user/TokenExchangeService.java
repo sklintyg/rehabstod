@@ -16,17 +16,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.idpdiscovery;
+package se.inera.intyg.rehabstod.service.user;
 
-import java.util.Map;
+import org.springframework.security.saml.SAMLCredential;
+import se.inera.intyg.rehabstod.auth.RehabstodUserTokens;
 
-public interface IdpNameDiscoveryService {
+public interface TokenExchangeService {
 
     /**
-     * Builds a Map with EntityID => Display name of IdP's loaded from SAML metadata.
+     * Given a SAMLCredential, exchange the underlying assertion for a JWT token.
      *
+     * @param samlCredential
+     *            SAML Credential
      * @return
+     *         RehabstodUserTokens with access and refresh token.
      */
-    Map<String, String> buildIdpNameMap();
+    RehabstodUserTokens exchange(SAMLCredential samlCredential);
 
+    /**
+     * Request new access token for a users given refresh token.
+     * 
+     * @param tokens
+     *            RehabstodUserTokens that includes a refresh token
+     * @return
+     *         A new RehabUserTokens with updated access token and expire time
+     */
+    RehabstodUserTokens refresh(RehabstodUserTokens tokens);
 }

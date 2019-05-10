@@ -14,7 +14,8 @@ dependencies {
     compile "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
     compile "org.springframework:spring-context-support:${springContextVersion}"
     compile "org.springframework:spring-webmvc:${springContextVersion}"
-
+    compile "org.apache.httpcomponents:httpclient:${apacheHttpClientVersion}"
+    
     testCompile "junit:junit:${junitVersion}"
     testCompile "org.mockito:mockito-all:${mockitoAllVersion}"
     testCompile "org.aspectj:aspectjweaver:${aspectjWeaverVersion}"

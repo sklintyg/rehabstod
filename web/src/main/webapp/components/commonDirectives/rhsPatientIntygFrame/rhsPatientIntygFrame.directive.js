@@ -18,22 +18,60 @@
  */
 
 angular.module('rehabstodApp').directive('rhsPatientIntygFrame',
-        ['$sce', 'APP_CONFIG', 'UserModel',
-            function($sce, APP_CONFIG, UserModel) {
-                    'use strict';
+    ['$sce', 'APP_CONFIG', 'UserModel',
+        function($sce, APP_CONFIG, UserModel) {
+            'use strict';
 
-                    return {
-                        restrict: 'E',
-                        scope: {
-                            tab: '='
-                        },
-                        templateUrl: '/components/commonDirectives/rhsPatientIntygFrame/rhsPatientIntygFrame.directive.html',
-                        link: function($scope) {
-                            var viewUrl = APP_CONFIG.webcertViewIntygTemplateUrl.replace('{intygsId}', $scope.tab.intygsId).replace('{enhet}',
-                                    UserModel.get().valdVardenhet.id);
+            return {
+                restrict: 'E',
+                scope: {
+                    tab: '='
+                },
+                templateUrl: '/components/commonDirectives/rhsPatientIntygFrame/rhsPatientIntygFrame.directive.html',
+                link: function($scope, $element) {
 
-                            $scope.url = $sce.trustAsResourceUrl(viewUrl);
-                        }
+                    if ($scope.tab.accessToken) {
+                        var url = $sce.trustAsResourceUrl(APP_CONFIG.webcertViewIntygTemplateUrl);
+                        var enhet = UserModel.get().valdVardenhet.id;
+                        var frameName = 'h_' + $scope.tab.intygsId.replace(/-/g, '');
 
-                    };
-                } ]);
+                        var iframeDiv = $element[0].querySelector('.wc_iframe');
+
+                        var form = document.createElement('form');
+
+                        form.method = 'post';
+                        form.action = url;
+                        form.target = frameName;
+
+                        var nodeCertId = document.createElement('input');
+                        nodeCertId.name = 'certId';
+                        nodeCertId.value = $scope.tab.intygsId;
+                        nodeCertId.type = 'hidden';
+                        form.appendChild(nodeCertId);
+
+                        var nodeEnhet = document.createElement('input');
+                        nodeEnhet.name = 'enhet';
+                        nodeEnhet.value = enhet;
+                        nodeEnhet.type = 'hidden';
+                        form.appendChild(nodeEnhet);
+
+                        var nodeAccessToken = document.createElement('input');
+                        nodeAccessToken.name = 'access_token';
+                        nodeAccessToken.value = $scope.tab.accessToken;
+                        nodeAccessToken.type = 'hidden';
+                        form.appendChild(nodeAccessToken);
+
+                        // To be sent, the form needs to be attached to the main document.
+                        form.style.display = 'none';
+                        iframeDiv.append(form);
+
+                        var iframeTemp = document.createElement('div');
+
+                        iframeTemp.innerHTML = '<iframe name="' + frameName + '"></iframe>';
+                        iframeDiv.append(iframeTemp.firstChild);
+
+                        form.submit();
+                    }
+                }
+            };
+        }]);
