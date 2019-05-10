@@ -18,12 +18,21 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.pu;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Joiner;
+import java.lang.invoke.MethodHandles;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.services.PUService;
 import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
@@ -34,13 +43,6 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
-
-import java.lang.invoke.MethodHandles;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2017-09-05.
@@ -111,6 +113,10 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
     @Override
     public List<IntygData> filterSekretessForPatientHistory(List<IntygData> intygsData, String vardgivareId, String enhetsId) {
+        if (intygsData.isEmpty()) {
+            return intygsData;
+        }
+
         String pnr = intygsData.get(0).getPatientId();
         Personnummer personnummer = getPersonnummer(pnr);
 
@@ -178,6 +184,10 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
     }
 
     private Map<Personnummer, PersonSvar> fetchPersons(List<SjukfallEnhet> sjukfallList) {
+        if (sjukfallList.isEmpty()) {
+            return new HashMap<>();
+        }
+
         // Call the PU service to get patient information.
         // If an error occur when calling the PU service an empty map will be returned.
         Map<Personnummer, PersonSvar> personSvarMap = puService.getPersons(getPersonnummerList(sjukfallList));

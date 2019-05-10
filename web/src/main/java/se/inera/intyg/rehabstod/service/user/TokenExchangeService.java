@@ -35,7 +35,7 @@ public interface TokenExchangeService {
 
     /**
      * Request new access token for a users given refresh token.
-     * 
+     *
      * @param tokens
      *            RehabstodUserTokens that includes a refresh token
      * @return

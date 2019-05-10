@@ -18,15 +18,17 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.nameresolver;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.web.model.Lakare;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
+import se.inera.intyg.rehabstod.web.model.Lakare;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 /**
  * Created by eriklupander on 2017-02-23.
@@ -39,14 +41,28 @@ public class SjukfallEmployeeNameResolverImpl implements SjukfallEmployeeNameRes
 
     @Override
     public void enrichWithHsaEmployeeNames(List<SjukfallEnhet> sjukfallList) {
-        sjukfallList.stream().forEach(sf -> {
-            String employeeHsaName = employeeNameService.getEmployeeHsaName(sf.getLakare().getHsaId());
-            if (employeeHsaName != null) {
-                sf.getLakare().setNamn(employeeHsaName);
-            } else {
-                sf.getLakare().setNamn(sf.getLakare().getHsaId());
+        sjukfallList.forEach(sf -> updateEmployeeName(sf.getLakare()));
+    }
+
+    @Override
+    public void enrichSjukfallPaientWithHsaEmployeeNames(List<SjukfallPatient> sjukfallList) {
+        sjukfallList.forEach(sf -> {
+            if (sf.getIntyg() != null) {
+                sf.getIntyg().forEach(i -> updateEmployeeName(i.getLakare()));
             }
         });
+    }
+
+    private void updateEmployeeName(Lakare lakare) {
+        if (lakare == null) {
+            return;
+        }
+        String employeeHsaName = employeeNameService.getEmployeeHsaName(lakare.getHsaId());
+        if (employeeHsaName != null) {
+            lakare.setNamn(employeeHsaName);
+        } else {
+            lakare.setNamn(lakare.getHsaId());
+        }
     }
 
     @Override
@@ -60,14 +76,14 @@ public class SjukfallEmployeeNameResolverImpl implements SjukfallEmployeeNameRes
 
             // Make sure there are no two doctors in the list with the same name, but different hsaId's
             Map<String, List<Lakare>> collect = sjukfallList.stream()
-                    .map(sf -> sf.getLakare())
-                    .collect(Collectors.groupingBy(lakare -> lakare.getNamn()));
+                    .map(SjukfallEnhet::getLakare)
+                    .collect(Collectors.groupingBy(Lakare::getNamn));
 
             for (Map.Entry<String, List<Lakare>> entry : collect.entrySet()) {
 
-                double numberOfUnique = entry.getValue().stream().map(l -> l.getHsaId()).distinct().count();
+                double numberOfUnique = entry.getValue().stream().map(Lakare::getHsaId).distinct().count();
                 if (numberOfUnique > 1) {
-                    entry.getValue().stream().forEach(lakare -> {
+                    entry.getValue().forEach(lakare -> {
                         lakare.setNamn(lakare.getNamn() + " (" + lakare.getHsaId() + ")");
                     });
                 }

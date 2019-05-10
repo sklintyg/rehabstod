@@ -35,7 +35,8 @@ angular.module('rehabstodApp').directive('rhsPatientIntygFrame',
                         var enhet = UserModel.get().valdVardenhet.id;
                         var frameName = 'h_' + $scope.tab.intygsId.replace(/-/g, '');
 
-                        var iframeDiv = $element[0].querySelector('.wc_iframe');
+                        // var iframeDiv = $element[0].querySelector('.wc_iframe');
+                        var iframeDiv = angular.element($element[0].querySelector( '.wc_iframe' ) );
 
                         var form = document.createElement('form');
 
