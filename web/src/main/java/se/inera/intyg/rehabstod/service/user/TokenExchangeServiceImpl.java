@@ -67,7 +67,7 @@ public class TokenExchangeServiceImpl implements TokenExchangeService {
 
     @Override
     public RehabstodUserTokens exchange(SAMLCredential samlCredential) {
-        LOG.debug("SAML Token exchange initiated.");
+        LOG.debug("SAML assertion token exchange initiated.");
 
         try {
             String assertionString = XMLHelper.nodeToString(SAMLUtil.marshallMessage(samlCredential.getAuthenticationAssertion()));
@@ -80,7 +80,7 @@ public class TokenExchangeServiceImpl implements TokenExchangeService {
 
     @Override
     public RehabstodUserTokens refresh(RehabstodUserTokens tokens) {
-        LOG.debug("SAML Token refresh initiated.");
+        LOG.debug("Access Token refresh initiated.");
         return sendTokenRequest(REFRESH_TOKEN, REFRESH_TOKEN, tokens.getRefreshToken());
     }
 
@@ -105,6 +105,8 @@ public class TokenExchangeServiceImpl implements TokenExchangeService {
             tokens.setAccessToken(jsonNode.get("access_token").textValue());
             tokens.setRefreshToken(jsonNode.get("refresh_token").textValue());
             tokens.setAccessTokenExpiration(LocalDateTime.now().plusSeconds(jsonNode.get("expires_in").intValue()));
+
+            LOG.info("Token exchange for {} successful.", grantType);
 
             return tokens;
         } catch (Exception exception) {
