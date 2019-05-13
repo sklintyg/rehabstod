@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.RehabstodUserTokens;
 
 /**
  * Reponse dto for the getAccessToken api.
@@ -27,8 +27,8 @@ public class GetAccessTokenResponse {
 
     private String accessToken;
 
-    public GetAccessTokenResponse(RehabstodUser user) {
-        this.accessToken = user.getTokens() != null ? user.getTokens().getAccessToken() : null;
+    public GetAccessTokenResponse(RehabstodUserTokens tokens) {
+        this.accessToken = tokens != null ? tokens.getAccessToken() : null;
     }
 
     public String getAccessToken() {

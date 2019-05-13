@@ -74,6 +74,7 @@ public class TokenExchangeServiceImpl implements TokenExchangeService {
             String assertion = Base64.getEncoder().encodeToString(assertionString.getBytes(Charset.forName("UTF-8")));
             return sendTokenRequest(BEARER_VALUE, ASSERTION, assertion);
         } catch (Exception e) {
+            // Also handles nullpointers
             throw new TokenServiceException(e.getMessage());
         }
     }
@@ -81,6 +82,10 @@ public class TokenExchangeServiceImpl implements TokenExchangeService {
     @Override
     public RehabstodUserTokens refresh(RehabstodUserTokens tokens) {
         LOG.debug("Access Token refresh initiated.");
+
+        if (tokens == null) {
+            throw new TokenServiceException("Unable to refresh token due to missing tokens.");
+        }
         return sendTokenRequest(REFRESH_TOKEN, REFRESH_TOKEN, tokens.getRefreshToken());
     }
 

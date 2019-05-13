@@ -31,6 +31,12 @@ public class RehabstodUserTokens implements Serializable {
     public RehabstodUserTokens() {
     }
 
+    public RehabstodUserTokens(String accessToken, String refreshToken, LocalDateTime accessTokenExpiration) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.accessTokenExpiration = accessTokenExpiration;
+    }
+
     public LocalDateTime getAccessTokenExpiration() {
         return accessTokenExpiration;
     }

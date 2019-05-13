@@ -87,10 +87,10 @@ public class UserController {
         // Check if Tokens are available and refresh access token if applicable
         RehabstodUserTokens tokens = user.getTokens();
         if (tokens != null) {
-            if (LocalDateTime.now().minusMinutes(ACCESSTOKEN_EXPIRE_LIMIT_MINUTES).isAfter(tokens.getAccessTokenExpiration())) {
+            if (LocalDateTime.now().plusMinutes(ACCESSTOKEN_EXPIRE_LIMIT_MINUTES).isAfter(tokens.getAccessTokenExpiration())) {
                 try {
-                    RehabstodUserTokens refreshedTokens = tokenExchangeService.refresh(tokens);
-                    user.setTokens(refreshedTokens);
+                    tokens = tokenExchangeService.refresh(tokens);
+                    user.setTokens(tokens);
                 } catch (TokenServiceException exception) {
                     // Couldn't get AccessToken. Log and continue since this is not vital for Rehabstod.
                     // User will not be able to use "Visa Intyg".
@@ -98,7 +98,7 @@ public class UserController {
                 }
             }
         }
-        return new GetAccessTokenResponse(user);
+        return new GetAccessTokenResponse(tokens);
     }
 
     /**

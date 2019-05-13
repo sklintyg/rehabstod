@@ -36,7 +36,7 @@ angular.module('rehabstodApp').directive('rhsPatientIntygFrame',
                         var frameName = 'h_' + $scope.tab.intygsId.replace(/-/g, '');
 
                         // var iframeDiv = $element[0].querySelector('.wc_iframe');
-                        var iframeDiv = angular.element($element[0].querySelector( '.wc_iframe' ) );
+                        var iframeDiv = angular.element($element[0].querySelector('.wc_iframe'));
 
                         var form = document.createElement('form');
 
@@ -66,8 +66,9 @@ angular.module('rehabstodApp').directive('rhsPatientIntygFrame',
                         form.style.display = 'none';
                         iframeDiv.append(form);
 
+                        // This iframe needs to be added in this awkward way due to limitations in dynamic name attribute for this element.
+                        // @See https://mudge.name/2012/01/29/naming-dynamically-created-iframes.html
                         var iframeTemp = document.createElement('div');
-
                         iframeTemp.innerHTML = '<iframe name="' + frameName + '"></iframe>';
                         iframeDiv.append(iframeTemp.firstChild);
 
