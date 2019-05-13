@@ -1,11 +1,5 @@
 .rhs-export {
-  position: absolute;
-  right: 0;
-  top: -25px;
-
-  @media (max-width: $screen-sm-max) {
-    top: -15px;
-  }
+  display: block;
 
   .dropdown-menu > li > a {
     padding-left: 10px;
