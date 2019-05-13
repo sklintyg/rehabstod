@@ -31,14 +31,19 @@ import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
+import se.inera.intyg.rehabstod.auth.RehabstodUserTokens;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
+import se.inera.intyg.rehabstod.service.user.TokenExchangeService;
+import se.inera.intyg.rehabstod.service.user.TokenServiceException;
 import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetAccessTokenResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetUserResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GivePdlLoggingConsentRequest;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -49,6 +54,7 @@ import static se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService.PDL_CONS
 public class UserController {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+    private static final int ACCESSTOKEN_EXPIRE_LIMIT_MINUTES = 10;
 
     @Autowired
     private UserService userService;
@@ -65,10 +71,34 @@ public class UserController {
     @Autowired
     private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
+    @Autowired
+    private TokenExchangeService tokenExchangeService;
+
     @RequestMapping(value = "", method = RequestMethod.GET)
     public GetUserResponse getUser() {
         RehabstodUser user = getRehabstodUser();
         return new GetUserResponse(user);
+    }
+
+    @RequestMapping(value = "/accesstoken", method = RequestMethod.GET)
+    public GetAccessTokenResponse getAccessToken() {
+        RehabstodUser user = getRehabstodUser();
+
+        // Check if Tokens are available and refresh access token if applicable
+        RehabstodUserTokens tokens = user.getTokens();
+        if (tokens != null) {
+            if (LocalDateTime.now().plusMinutes(ACCESSTOKEN_EXPIRE_LIMIT_MINUTES).isAfter(tokens.getAccessTokenExpiration())) {
+                try {
+                    tokens = tokenExchangeService.refresh(tokens);
+                    user.setTokens(tokens);
+                } catch (TokenServiceException exception) {
+                    // Couldn't get AccessToken. Log and continue since this is not vital for Rehabstod.
+                    // User will not be able to use "Visa Intyg".
+                    LOG.error("Unable to refresh AccessToken for user {} with reason {}", user.getHsaId(), exception.getMessage());
+                }
+            }
+        }
+        return new GetAccessTokenResponse(tokens);
     }
 
     /**
@@ -85,7 +115,7 @@ public class UserController {
         LOG.debug("Attempting to change selected unit for user '{}', currently selected unit is '{}'", user.getHsaId(),
                 user.getValdVardenhet() != null ? user.getValdVardenhet().getId() : "<null>");
 
-        //boolean changeSuccess = user.changeValdVardenhet(changeSelectedEnhetRequest.getId());
+        // boolean changeSuccess = user.changeValdVardenhet(changeSelectedEnhetRequest.getId());
         // INTYG-5068: Do systemRole check here for Lakare???
         boolean changeSuccess = rehabstodUnitChangeService.changeValdVardenhet(changeSelectedEnhetRequest.getId(), user);
 
@@ -165,8 +195,8 @@ public class UserController {
     }
 
     private boolean hasPreferencesChanged(RehabstodUserPreferences oldPreferences,
-                                          RehabstodUserPreferences newPreferences,
-                                          RehabstodUserPreferences.Preference... preferences) {
+            RehabstodUserPreferences newPreferences,
+            RehabstodUserPreferences.Preference... preferences) {
 
         if (oldPreferences == null && newPreferences != null) {
             return true;

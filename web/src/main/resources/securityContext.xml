@@ -232,6 +232,7 @@
         <security:filter-chain pattern="/saml/logout/**" filters="samlLogoutFilter"/>
         <security:filter-chain pattern="/saml/SSO/**" filters="samlWebSSOProcessingFilter"/>
         <security:filter-chain pattern="/saml/SingleLogout/**" filters="samlLogoutProcessingFilter"/>
+        <security:filter-chain pattern="/saml/metadata/**" filters="metadataDisplayFilter"/>
       </security:filter-chain-map>
     </bean>
 
@@ -243,14 +244,14 @@
 
     <!-- Central storage of cryptographic keys -->
     <bean id="keyManager" class="org.springframework.security.saml.key.JKSKeyManager">
-      <constructor-arg value="${sakerhetstjanst.saml.keystore.file}"/>
-      <constructor-arg type="java.lang.String" value="${sakerhetstjanst.saml.keystore.password}"/>
+      <constructor-arg value="${saml.keystore.file}"/>
+      <constructor-arg type="java.lang.String" value="${saml.keystore.password}"/>
       <constructor-arg>
         <map>
-          <entry key="${sakerhetstjanst.saml.keystore.alias}" value="${sakerhetstjanst.saml.keystore.password}"/>
+          <entry key="${saml.keystore.alias}" value="${saml.keystore.password}"/>
         </map>
       </constructor-arg>
-      <constructor-arg type="java.lang.String" value="${sakerhetstjanst.saml.keystore.alias}"/>
+      <constructor-arg type="java.lang.String" value="${saml.keystore.alias}"/>
     </bean>
 
 
@@ -261,13 +262,14 @@
           <property name="includeScoping" value="false"/>
           <property name="authnContexts">
                <set>
-                 <value>urn:oasis:names:tc:SAML:2.0:ac:classes:TLSClient</value>
                  <value>http://id.sambi.se/loa/loa3</value>
                </set>
           </property>
         </bean>
       </property>
     </bean>
+
+    <bean id="metadataDisplayFilter" class="org.springframework.security.saml.metadata.MetadataDisplayFilter"/>
 
     <!-- IDP Metadata configuration - paths to metadata of IDPs in circle of trust is here -->
     <!-- Do no forget to call initalize method on providers -->
@@ -281,7 +283,7 @@
             <constructor-arg>
               <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
                 <constructor-arg>
-                  <value type="java.io.File">${config.dir}/sp-sambi.xml</value>
+                  <value type="java.io.File">${saml.sp.metadata.file}</value>
                 </constructor-arg>
                 <property name="parserPool" ref="parserPool"/>
               </bean>
@@ -290,22 +292,19 @@
 
             <constructor-arg>
               <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
-                <property name="alias" value="${sakerhetstjanst.saml.default.alias}"/>
+                <property name="alias" value="defaultAlias"/>
                 <property name="local" value="true"/>
                 <property name="securityProfile" value="metaiop"/>
                 <property name="sslSecurityProfile" value="metaiop"/>
                 <property name="signMetadata" value="true"/>
                 <!-- The signingKey and encryptionKey refers to the _aliases_ of the key in the keystore defined in the keyManager bean -->
-                <property name="signingKey" value="${sakerhetstjanst.saml.keystore.alias}"/>
-                <property name="encryptionKey" value="${sakerhetstjanst.saml.keystore.alias}"/>
+                <property name="signingKey" value="${saml.keystore.alias}"/>
+                <property name="encryptionKey" value="${saml.keystore.alias}"/>
                 <property name="requireArtifactResolveSigned" value="true"/>
                 <property name="requireLogoutRequestSigned" value="true"/>
                 <property name="requireLogoutResponseSigned" value="false"/>
 
-                <property name="idpDiscoveryEnabled" value="true" />
-                <property name="idpDiscoveryResponseURL" value="${sambi.discovery.response.url}" />
-                <property name="idpDiscoveryURL" value="${sambi.discovery.url}"/>
-
+                <property name="idpDiscoveryEnabled" value="false" />
               </bean>
             </constructor-arg>
           </bean>
@@ -317,14 +316,14 @@
             <constructor-arg>
               <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
                 <constructor-arg>
-                  <value type="java.io.File">${config.dir}/idp-sambi.xml</value>
+                  <value type="java.io.File">${saml.idp.metadata.file}</value>
                 </constructor-arg>
                 <property name="parserPool" ref="parserPool"/>
               </bean>
             </constructor-arg>
             <constructor-arg>
               <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
-                <property name="alias" value="${sakerhetstjanst.saml.default.alias}"/>
+                <property name="alias" value="defaultAlias"/>
               </bean>
             </constructor-arg>
 
@@ -385,7 +384,8 @@
 
     <!-- SAML 2.0 WebSSO Assertion Consumer -->
     <bean id="webSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerImpl">
-      <property name="responseSkew" value="${sakerhetstjanst.saml.responseSkew}"/>
+      <property name="responseSkew" value="${saml.responseSkew}"/>
+      <property name="releaseDOM" value="false"/>
     </bean>
 
     <!-- SAML 2.0 Holder-of-Key WebSSO Assertion Consumer -->

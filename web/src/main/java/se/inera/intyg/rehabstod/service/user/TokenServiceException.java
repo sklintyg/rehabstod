@@ -16,17 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.idpdiscovery;
+package se.inera.intyg.rehabstod.service.user;
 
-import java.util.Map;
+import se.inera.intyg.rehabstod.service.exceptions.ServiceException;
 
-public interface IdpNameDiscoveryService {
+/**
+ * Created by Magnus Ekstrand on 2016-04-12.
+ */
+public class TokenServiceException extends ServiceException {
+    /**
+     * Constructs an {@code ServiceException} with the specified message and root
+     * cause.
+     *
+     * @param msg
+     *            the detail message
+     * @param t
+     *            the root cause
+     */
+    public TokenServiceException(String msg, Throwable t) {
+        super(msg, t);
+    }
 
     /**
-     * Builds a Map with EntityID => Display name of IdP's loaded from SAML metadata.
+     * Constructs an {@code ServiceException} with the specified message and no
+     * root cause.
      *
-     * @return
+     * @param msg
+     *            the detail message
      */
-    Map<String, String> buildIdpNameMap();
-
+    public TokenServiceException(String msg) {
+        super(msg);
+    }
 }

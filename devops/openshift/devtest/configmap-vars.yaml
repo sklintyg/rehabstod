@@ -5,13 +5,12 @@ data:
   REHABSTOD_HOST_URL: http://rehabstod-test
   SRS_HOST_URL: http://localhost:8080/services
   STATISTIK_SJUNET_HOST_URL: https://statistik.intygstjanster.sjunet.org
-  WEBCERT_VIEW_URLTEMPLATE: https://webcert.inera.nordicmedtest.se/visa/intyg/{intygsId}/readonly?enhet={enhet}
+  WEBCERT_VIEW_URLLOGOUT: https://webcert.inera.nordicmedtest.se/logout
+  WEBCERT_VIEW_URLTEMPLATE: https://webcert.inera.nordicmedtest.se/oauth/token/read
 
-  SAKERHETSTJANST_SAML_IDP_METADATA_URL: https://idp2.acctest.sakerhetstjanst.inera.se:443/idp/saml
-  SAKERHETSTJANST_SAML_KEYSTORE_ALIAS: test.intygstjanster.sjunet.org
-  SAKERHETSTJANST_SAML_KEYSTORE_FILE: file://${certificate.folder}/test.intygstjanster.sjunet.org.jks
-  SAKERHETSTJANST_SAML_TRUSTSTORE_FILE: file://${certificate.folder}/truststore.jks
-  
+  SAML_KEYSTORE_ALIAS: test.intygstjanster.sjunet.org
+  SAML_KEYSTORE_FILE: file://${certificate.folder}/test.intygstjanster.sjunet.org.jks
+
   NTJP_WS_CERTIFICATE_FILE:
   NTJP_WS_CERTIFICATE_TYPE: PKCS12
   NTJP_WS_TRUSTSTORE_FILE:

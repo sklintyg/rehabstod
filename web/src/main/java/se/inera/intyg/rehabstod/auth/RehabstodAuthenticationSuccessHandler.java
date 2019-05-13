@@ -18,36 +18,21 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.saml.SAMLCredential;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URLEncoder;
 
 /**
- * Customized authentication success handler that sets a Cookie with the EntityID of the IdP used for this login.
+ * Customized authentication success handler.
+ * Place custom logic here
  *
- * The cookie is set only if the selected IdP is NOT the defaultIDP.
- *
- * @author eriklupander
  */
 public class RehabstodAuthenticationSuccessHandler extends
         SimpleUrlAuthenticationSuccessHandler {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(RehabstodAuthenticationSuccessHandler.class);
-    private static final int MAX_AGE = 999999999;
-    static final String SELECTED_SAMBI_IDP = "selectedSambiIdpRS";
-
-    @Value("${sakerhetstjanst.saml.idp.metadata.url}")
-    private String defaultIdpEntityId;
 
     public RehabstodAuthenticationSuccessHandler(String defaultTargetUrl) {
         super(defaultTargetUrl);
@@ -57,28 +42,6 @@ public class RehabstodAuthenticationSuccessHandler extends
     public void onAuthenticationSuccess(HttpServletRequest request,
             HttpServletResponse response, Authentication authentication)
             throws ServletException, IOException {
-        // If the IdP used was OTHER than our default IDP, stuff a Set-Cookie with the EntityID of the IdP
-        // into the response.
-        // This MUST be done prior to calling super.
-        if (authentication.isAuthenticated() && authentication.getCredentials() instanceof SAMLCredential) {
-            String remoteEntityId = ((SAMLCredential) authentication.getCredentials()).getRemoteEntityID();
-
-            if (remoteEntityId != null) {
-
-                if (!defaultIdpEntityId.equals(remoteEntityId)) {
-                    LOGGER.info("User logged in using SAMBI, setting cookie: selectedSambiIdpRS={}", remoteEntityId);
-                    Cookie cookie = new Cookie(SELECTED_SAMBI_IDP, URLEncoder.encode(remoteEntityId, "UTF-8"));
-                    cookie.setVersion(0);
-                    cookie.setHttpOnly(false);
-                    cookie.setMaxAge(MAX_AGE);
-                    cookie.setPath("/");
-                    response.addCookie(cookie);
-                }
-            } else {
-                LOGGER.warn("Unable to set Cookie for selectedSambiIdpRS, could not extract remoteEntityID from the SAML credential.");
-            }
-        }
-
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }

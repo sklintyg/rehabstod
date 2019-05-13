@@ -18,6 +18,7 @@ ext {
     schemasContractVersion = "2.1.8"
 
     activemqVersion = "5.13.0"
+    apacheHttpClientVersion = "4.5.1"
     commonsCodecVersion = "1.10"
     commonsIoVersion = "2.4"
     commonsLang3Version = "3.8.1"

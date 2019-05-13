@@ -188,9 +188,10 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
         return _tabs;
     }
 
-    function _addTab(intygsId, title, isFixed, isActive) {
+    function _addTab(intygsId, title, isFixed, isActive, accessToken) {
 
         var newTab = {
+            accessToken: accessToken,
             intygsId: intygsId,
             title: title,
             fixed: isFixed,

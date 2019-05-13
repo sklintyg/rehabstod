@@ -28,6 +28,3 @@ tools/soapUI/logs/soapui-rehabstod-logfile.txt
 
 test/node-v*
 test/reports
-
-*.jks
-*.p12
