@@ -44,6 +44,8 @@ import java.security.cert.X509Certificate;
 @ComponentScan("se.inera.intyg.infra.security.authorities")
 public class SecurityConfig {
 
+    private static final int RESTTEMPLATE_TIMEOUT_MS = 10000;
+
     /**
      * Creates a RestTemplate whose underlying HTTP client accepts self-signed certificates.
      */
@@ -62,6 +64,9 @@ public class SecurityConfig {
                 .setSSLSocketFactory(csf)
                 .build();
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setConnectionRequestTimeout(RESTTEMPLATE_TIMEOUT_MS);
+        requestFactory.setConnectTimeout(RESTTEMPLATE_TIMEOUT_MS);
+        requestFactory.setReadTimeout(RESTTEMPLATE_TIMEOUT_MS);
         requestFactory.setHttpClient(httpClient);
         return new RestTemplate(requestFactory);
     }
