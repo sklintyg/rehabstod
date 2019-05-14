@@ -22,10 +22,34 @@ App-wide special styles
   padding-bottom: 120px;
 }
 
+.header-wrapper, .navbar-wrapper .navbar, .app-wrapper, .footer-wrapper {
+  padding: 0 50px;
+
+  @media (max-width: 1024px) {
+    padding: 0 35px;
+  }
+
+  > * {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+}
+
+.header-wrapper {
+  background-color: $rs-color-28;
+}
+.navbar-wrapper {
+  background-color: $rs-color-06;
+}
+.footer-wrapper {
+  background-color: $rs-color-25;
+}
+
 html,
 body,
 .container-fluid {
   text-align: left;
+  padding: 0;
 }
 
 #rhs-start-stat-panel {
