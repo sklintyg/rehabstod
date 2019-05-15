@@ -20,9 +20,7 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by marced on 2016-01-18.
@@ -30,10 +28,8 @@ import java.util.Map;
 public class GetConfigResponse {
     private List<DiagnosKapitel> diagnosKapitelList;
     private String webcertViewIntygTemplateUrl;
+    private String webcertViewIntygLogoutUrl;
     private String version;
-    private String defaultIDP;
-    private String defaultAlias;
-    private Map<String, String> idpMap = new HashMap<>();
 
     public List<DiagnosKapitel> getDiagnosKapitelList() {
         return diagnosKapitelList;
@@ -59,38 +55,19 @@ public class GetConfigResponse {
         this.version = version;
     }
 
-    public String getDefaultIDP() {
-        return defaultIDP;
+    public void setWebcertViewIntygLogoutUrl(String webcertViewIntygLogoutUrl) {
+        this.webcertViewIntygLogoutUrl = webcertViewIntygLogoutUrl;
     }
 
-    public void setDefaultIDP(String defaultIDP) {
-        this.defaultIDP = defaultIDP;
+    public String getWebcertViewIntygLogoutUrl() {
+        return webcertViewIntygLogoutUrl;
     }
-
-    public String getDefaultAlias() {
-        return defaultAlias;
-    }
-
-    public void setDefaultAlias(String defaultAlias) {
-        this.defaultAlias = defaultAlias;
-    }
-
-    public Map<String, String> getIdpMap() {
-        return idpMap;
-    }
-
-    public void setIdpMap(Map<String, String> idpMap) {
-        this.idpMap = idpMap;
-    }
-
 
     public static final class GetConfigResponseBuilder {
         private List<DiagnosKapitel> diagnosKapitelList;
         private String webcertViewIntygTemplateUrl;
+        private String webcertViewIntygLogoutUrl;
         private String version;
-        private String defaultIDP;
-        private String defaultAlias;
-        private Map<String, String> idpMap = new HashMap<>();
 
         private GetConfigResponseBuilder() {
         }
@@ -109,23 +86,13 @@ public class GetConfigResponse {
             return this;
         }
 
+        public GetConfigResponseBuilder withWebcertViewIntygLogoutUrl(String webcertViewIntygLogoutUrl) {
+            this.webcertViewIntygLogoutUrl = webcertViewIntygLogoutUrl;
+            return this;
+        }
+
         public GetConfigResponseBuilder withVersion(String version) {
             this.version = version;
-            return this;
-        }
-
-        public GetConfigResponseBuilder withDefaultIDP(String defaultIDP) {
-            this.defaultIDP = defaultIDP;
-            return this;
-        }
-
-        public GetConfigResponseBuilder withDefaultAlias(String defaultAlias) {
-            this.defaultAlias = defaultAlias;
-            return this;
-        }
-
-        public GetConfigResponseBuilder withIdpMap(Map<String, String> idpMap) {
-            this.idpMap = idpMap;
             return this;
         }
 
@@ -133,10 +100,8 @@ public class GetConfigResponse {
             GetConfigResponse getConfigResponse = new GetConfigResponse();
             getConfigResponse.setDiagnosKapitelList(diagnosKapitelList);
             getConfigResponse.setWebcertViewIntygTemplateUrl(webcertViewIntygTemplateUrl);
+            getConfigResponse.setWebcertViewIntygLogoutUrl(webcertViewIntygLogoutUrl);
             getConfigResponse.setVersion(version);
-            getConfigResponse.setDefaultIDP(defaultIDP);
-            getConfigResponse.setDefaultAlias(defaultAlias);
-            getConfigResponse.setIdpMap(idpMap);
             return getConfigResponse;
         }
     }

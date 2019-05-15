@@ -30,16 +30,24 @@ import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
+import se.inera.intyg.rehabstod.auth.RehabstodUserTokens;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
+import se.inera.intyg.rehabstod.service.user.TokenExchangeService;
 import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetAccessTokenResponse;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -68,6 +76,9 @@ public class UserControllerTest {
 
     @Mock
     private UserPreferencesService userPreferencesService;
+
+    @Mock
+    TokenExchangeService tokenExchangeService;
 
     @InjectMocks
     private UserController userController = new UserController();
@@ -125,6 +136,52 @@ public class UserControllerTest {
         userController.updatePref(preferences.toFrontendMap());
 
         verify(rehabUserMock).clearSjfData();
+    }
+
+    @Test
+    public void testGetAccessTokenWithResponseNoRefresh() {
+        String oldAccessToken = "abc123";
+
+        // Previous access token expires in 1800 seconds
+        when(rehabUserMock.getTokens())
+                .thenReturn(new RehabstodUserTokens(oldAccessToken, "cba321", LocalDateTime.now().plusSeconds(1800)));
+
+        GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
+        verify(tokenExchangeService, never())
+                .refresh(any(RehabstodUserTokens.class));
+        assertEquals(oldAccessToken, accessTokenResponse.getAccessToken());
+
+    }
+
+    @Test
+    public void testGetAccessTokenNoResponse() {
+        when(rehabUserMock.getTokens()).thenReturn(null);
+
+        GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
+        verify(tokenExchangeService, never())
+                .refresh(any(RehabstodUserTokens.class));
+        assertNull(accessTokenResponse.getAccessToken());
+    }
+
+    @Test
+    public void testGetAccessTokenWithResponseWithRefresh() {
+        String refreshToken = "cba321";
+        String oldAccessToken = "abc123";
+        String newAccessToken = "abc456";
+        RehabstodUserTokens oldRehabstodUserTokens = new RehabstodUserTokens(oldAccessToken, refreshToken,
+                LocalDateTime.now().plusSeconds(30));
+        RehabstodUserTokens newRehabstodUserTokens = new RehabstodUserTokens(newAccessToken, refreshToken,
+                LocalDateTime.now().plusSeconds(3600));
+
+        // Previous access token expires in 30 seconds
+        when(rehabUserMock.getTokens()).thenReturn(oldRehabstodUserTokens);
+        when(tokenExchangeService.refresh(any(RehabstodUserTokens.class)))
+                .thenReturn(newRehabstodUserTokens);
+
+        GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
+        verify(tokenExchangeService, times(1))
+                .refresh(any(RehabstodUserTokens.class));
+        assertEquals(newAccessToken, accessTokenResponse.getAccessToken());
     }
 
     private RehabstodUserPreferences defaultPreferences() {

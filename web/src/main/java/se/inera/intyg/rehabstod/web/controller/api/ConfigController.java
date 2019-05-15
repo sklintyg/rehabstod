@@ -25,10 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 import se.inera.intyg.infra.dynamiclink.service.DynamicLinkService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
-import se.inera.intyg.rehabstod.service.idpdiscovery.IdpNameDiscoveryService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetConfigResponse;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -39,18 +37,14 @@ import java.util.Map;
 public class ConfigController {
 
     private static final String WEBCERT_VIEW_INTYG_URL_TEMPLATE = "webcert.view.urltemplate";
+    private static final String WEBCERT_VIEW_INTYG_URL_LOGOUT = "webcert.view.urllogout";
     private static final String PROJECT_VERSION_PROPERTY = "project.version";
-    private static final String DEFAULT_IDP_PROPERTY = "sakerhetstjanst.saml.idp.metadata.url";
-    private static final String DEFAULT_SAML_ALIAS = "sakerhetstjanst.saml.default.alias";
 
     @Autowired
     private DiagnosKapitelService diagnosKapitelService;
 
     @Autowired
     private DynamicLinkService dynamicLinkService;
-
-    @Autowired(required = false)
-    private IdpNameDiscoveryService idpNameDiscoveryService;
 
     /**
      * Note - using Environment injection instead of @Value since the latter has some issues when injected into the
@@ -61,20 +55,12 @@ public class ConfigController {
 
     @RequestMapping(value = "")
     public GetConfigResponse getConfig() {
-        Map<String, String> idpNameMap;
-        if (idpNameDiscoveryService != null) {
-            idpNameMap = idpNameDiscoveryService.buildIdpNameMap();
-        } else {
-            idpNameMap = new HashMap<>();
-        }
 
         return GetConfigResponse.GetConfigResponseBuilder.aGetConfigResponse()
                 .withDiagnosKapitelList(diagnosKapitelService.getDiagnosKapitelList())
                 .withWebcertViewIntygTemplateUrl(env.getProperty(WEBCERT_VIEW_INTYG_URL_TEMPLATE))
+                .withWebcertViewIntygLogoutUrl(env.getProperty(WEBCERT_VIEW_INTYG_URL_LOGOUT))
                 .withVersion(env.getProperty(PROJECT_VERSION_PROPERTY))
-                .withDefaultIDP(env.getProperty(DEFAULT_IDP_PROPERTY))
-                .withDefaultAlias(env.getProperty(DEFAULT_SAML_ALIAS))
-                .withIdpMap(idpNameMap)
                 .build();
     }
 

@@ -61,6 +61,7 @@ import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleEx
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
+import se.inera.intyg.rehabstod.service.user.TokenExchangeService;
 import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
 import se.riv.infrastructure.directory.v1.PaTitleType;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
@@ -130,6 +131,9 @@ public class RehabstodUserDetailsServiceTest {
 
     @Mock
     private RehabstodUnitChangeService rehabstodUnitChangeService;
+
+    @Mock
+    private TokenExchangeService tokenExchangeService;
 
     @BeforeClass
     public static void setupAuthoritiesConfiguration() throws Exception {

@@ -52,11 +52,11 @@
 
   <!-- Site content here -->
   <div class="content-wrapper">
-    <div ui-view="header"></div>
-    <div ui-view="navbar"></div>
-    <div ui-view="app"></div>
+    <div ui-view="header" class="header-wrapper"></div>
+    <div ui-view="navbar" class="navbar-wrapper"></div>
+    <div ui-view="app" class="app-wrapper"></div>
   </div>
-  <div ui-view="footer"></div>
+  <div ui-view="footer" class="footer-wrapper"></div>
 
   <!-- build:js({src/main/webapp,node_modules}) app/vendor.js -->
   <!-- bower:js -->

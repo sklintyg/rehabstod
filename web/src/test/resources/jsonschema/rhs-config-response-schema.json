@@ -11,24 +11,19 @@
     "version": {
       "type": "string"
     },
-    "defaultIDP": {
-      "type": "string"
-    },
-    "defaultAlias": {
-      "type": "string"
-    },
     "webcertViewIntygTemplateUrl": {
       "type": "string"
     },
-    "idpMap": {
-      "type": "object"
+    "webcertViewIntygLogoutUrl": {
+      "type": "string"
     }
 
   },
   "required": [
     "diagnosKapitelList",
     "version",
-    "webcertViewIntygTemplateUrl"
+    "webcertViewIntygTemplateUrl",
+    "webcertViewIntygLogoutUrl"
   ],
   "title": "GetConfigResponse transport model",
   "type": "object",

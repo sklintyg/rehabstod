@@ -67,6 +67,15 @@ rhs-patient-history-table {
       }
     }
 
+    .patient-sjukfall-table-container {
+      display: flex;
+      position: relative;
+    }
+
+    .table-responsive {
+      flex: 1 1 0;
+    }
+
     table {
       margin: 15px 0 0 0;
 
@@ -75,18 +84,14 @@ rhs-patient-history-table {
       }
 
       .column-diagnose {
-        @media (max-width: ($screen-xl-min - 1)) {
-          width: 250px;
-        }
-
-        @media (max-width: $screen-md-max) {
-          width: 200px;
-        }
+        max-width: 350px;
       }
 
-
       .column-showintyg {
-        width: 110px;
+        position: absolute;
+        width: 130px;
+        right: 0;
+        border-top: none !important;
       }
       .column-startdate,
       .column-enddate {
@@ -141,11 +146,21 @@ rhs-patient-history-table {
 
           td {
             vertical-align: middle;
-            padding: 5px 2px 2px 5px;
+            padding: 5px 15px 2px 5px;
             line-height: 20px;
             font-size: 12px;
             &.nowrap {
               white-space: nowrap;
+            }
+
+            &.column-diagnos {
+              // Stop table-layout assigning extra width to this column
+              width: 1px;
+            }
+
+            .diagnos-container {
+              display: flex;
+              max-width: 350px;
             }
 
             .diagnos, .bidiagnos {
@@ -155,26 +170,6 @@ rhs-patient-history-table {
               vertical-align: middle;
               display: inline-block;
               padding-left: 5px;
-            }
-
-            .diagnos {
-              max-width: 200px;
-
-              @media (max-width: $screen-md-max) {
-                max-width: 150px;
-              }
-
-              @media (min-width: $screen-xl-min) {
-                max-width: calc(100vw - 1200px);
-              }
-
-            }
-            .bidiagnos {
-              max-width: 100px;
-
-              @media (min-width: $screen-xl-min) {
-                max-width: 200px;
-              }
             }
 
             .patient-history-dialog-tooltip {
@@ -187,6 +182,11 @@ rhs-patient-history-table {
 
       }
 
+    }
+
+    .space-column-showintyg {
+      width: 130px;
+      flex: 0 0 auto;
     }
 
     .chevron-toggle-button {

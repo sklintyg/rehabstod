@@ -54,6 +54,8 @@ public class RehabstodUser extends IntygUser implements Serializable {
     private Map<String, Set<String>> sjfPatientVardgivare = new HashMap<>();
     private Map<String, Set<String>> sjfPatientVardenhet = new HashMap<>();
 
+    private RehabstodUserTokens tokens;
+
     /**
      * Typically used by unit tests.
      */
@@ -75,12 +77,13 @@ public class RehabstodUser extends IntygUser implements Serializable {
      * changing units without losing the original "isLakare" information. See INTYG-5068.
      *
      * @param intygUser
-     *      User principal, typically constructed in the {@link org.springframework.security.saml.userdetails.SAMLUserDetailsService}
-     *      implementor.
+     *            User principal, typically constructed in the
+     *            {@link org.springframework.security.saml.userdetails.SAMLUserDetailsService}
+     *            implementor.
      * @param pdlConsentGiven
-     *      Whether the user has given PDL logging consent.
+     *            Whether the user has given PDL logging consent.
      * @param isLakare
-     *      Wheter the user is LAKARE or not. Immutable once set.
+     *            Wheter the user is LAKARE or not. Immutable once set.
      */
     public RehabstodUser(IntygUser intygUser, boolean pdlConsentGiven, boolean isLakare) {
         super(intygUser.getHsaId());
@@ -131,13 +134,12 @@ public class RehabstodUser extends IntygUser implements Serializable {
             return Urval.ALL;
         }
 
-       return null;
+        return null;
     }
 
     public Map<String, List<PDLActivityEntry>> getStoredActivities() {
         return storedActivities;
     }
-
 
     public Urval getDefaultUrval() {
         return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE) ? Urval.ISSUED_BY_ME : Urval.ALL;
@@ -230,7 +232,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
      * sometimes changing the ROLE of a doctor to be a Rehabkoordinator based on systemRoles.
      *
      * @return
-     *      true if doctor, false if not.
+     *         true if doctor, false if not.
      */
     @Override
     public boolean isLakare() {
@@ -250,16 +252,26 @@ public class RehabstodUser extends IntygUser implements Serializable {
                 .flatMap(vg -> vg.getVardenheter().stream())
                 .map(AbstractVardenhet::getId)
                 .anyMatch(enhetId -> SystemRolesParser.parseEnhetsIdsFromSystemRoles(systemRoles).stream()
-                        .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(enhetId))
-        );
+                        .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(enhetId)));
+    }
+
+    public RehabstodUserTokens getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(RehabstodUserTokens tokens) {
+        this.tokens = tokens;
     }
 
     // CHECKSTYLE:OFF NeedBraces
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RehabstodUser)) return false;
-        if (!super.equals(o)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof RehabstodUser))
+            return false;
+        if (!super.equals(o))
+            return false;
         RehabstodUser that = (RehabstodUser) o;
         return pdlConsentGiven == that.pdlConsentGiven
                 && isLakare == that.isLakare

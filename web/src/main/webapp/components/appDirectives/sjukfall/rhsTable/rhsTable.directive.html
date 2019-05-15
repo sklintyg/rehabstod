@@ -23,13 +23,15 @@
             <td class="column-patient-name" ng-if="filterViewState.get().showPatientId">{{::row.patient.namn}}</td>
             <td class="column-patient-kon">{{::row.patient.konShow}}</td>
             <td class="column-diagnos">
-                <span uib-tooltip-html="getToolTip(row.diagnos)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnos.intygsVarde}}</span>
-                <span class="column-diagnos-beskrivning hidden-sm"
-                      ng-class="{'anonymous-mode' : !filterViewState.get().showPatientId}"
-                      ng-bind-html="row.diagnos.beskrivning"></span>
-                <span ng-repeat="d in row.biDiagnoser track by $index">,
-              <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::d.intygsVarde}}</span>
-            </span>
+                <div class="diagnos-container">
+                    <span uib-tooltip-html="getToolTip(row.diagnos)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnos.intygsVarde}}</span>&nbsp;
+                    <span class="column-diagnos-beskrivning hidden-sm"
+                          ng-class="{'anonymous-mode' : !filterViewState.get().showPatientId}"
+                          ng-bind-html="row.diagnos.beskrivning"></span>
+                    <span ng-repeat="d in row.biDiagnoser track by $index">,
+                      <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::d.intygsVarde}}</span>
+                    </span>
+                </div>
             </td>
 
             <td class="column-start start-date">{{::row.start}}</td>

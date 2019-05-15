@@ -34,6 +34,10 @@ h1 .rhs-tooltip-headline {
 rhs-filter {
   display: block;
   margin: 20px 0 20px;
+
+  .box {
+    max-width: 1375px;
+  }
 }
 
 .rhs-filter-slider {

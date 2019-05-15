@@ -18,9 +18,23 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.web.client.RestTemplate;
+
+import javax.net.ssl.SSLContext;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 
 /**
  * Created by eriklupander on 2016-05-18.
@@ -29,4 +43,32 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableRedisHttpSession
 @ComponentScan("se.inera.intyg.infra.security.authorities")
 public class SecurityConfig {
+
+    private static final int RESTTEMPLATE_TIMEOUT_MS = 10000;
+
+    /**
+     * Creates a RestTemplate whose underlying HTTP client accepts self-signed certificates.
+     */
+    @Bean
+    RestTemplate restTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+        TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+
+        SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
+                .loadTrustMaterial(null, acceptingTrustStrategy)
+                .build();
+
+        SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
+
+        CloseableHttpClient httpClient = HttpClients.custom()
+                .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+                .setSSLSocketFactory(csf)
+                .build();
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setConnectionRequestTimeout(RESTTEMPLATE_TIMEOUT_MS);
+        requestFactory.setConnectTimeout(RESTTEMPLATE_TIMEOUT_MS);
+        requestFactory.setReadTimeout(RESTTEMPLATE_TIMEOUT_MS);
+        requestFactory.setHttpClient(httpClient);
+        return new RestTemplate(requestFactory);
+    }
+
 }

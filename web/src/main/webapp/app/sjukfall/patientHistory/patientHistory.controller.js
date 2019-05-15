@@ -18,59 +18,92 @@
  */
 
 angular.module('rehabstodApp').controller('patientHistoryController',
-        function($scope, $uibModalInstance, $state, patientHistoryProxy, SjukfallFilterViewState, patientHistoryViewState, patient) {
-            'use strict';
+    function($scope, $http, $uibModalInstance, $state, APP_CONFIG, patientHistoryProxy, SjukfallFilterViewState,
+        patientHistoryViewState, patient) {
+        'use strict';
 
-            //Create initial default details tab (cannot be closed)
-            patientHistoryViewState.reset();
-            patientHistoryViewState.addTab('', 'Sjukfall', true, true);
+        //Create initial default details tab (cannot be closed)
+        patientHistoryViewState.reset();
+        patientHistoryViewState.addTab('', 'Sjukfall', true, true);
 
-            //expose tabs model to view
-            $scope.tabs = patientHistoryViewState.getTabs();
+        //expose tabs model to view
+        $scope.tabs = patientHistoryViewState.getTabs();
 
-            $scope.errorMessageKey = '';
-            $scope.patient = patient;
-            $scope.showPatientId = SjukfallFilterViewState.get().showPatientId;
-            $scope.showSpinner = true;
-            //Constant needed in template
-            $scope.radius = 30;
+        $scope.errorMessageKey = '';
+        $scope.patient = patient;
+        $scope.showPatientId = SjukfallFilterViewState.get().showPatientId;
+        $scope.showSpinner = true;
+        //Constant needed in template
+        $scope.radius = 30;
 
-            $scope.loadIntyg = function(intyg) {
-                //Either select or create new tab if not already opened..
-                var existingTab = patientHistoryViewState.getTabById(intyg.intygsId);
-                if (existingTab) {
-                    patientHistoryViewState.selectTab(existingTab);
-                } else {
-                    patientHistoryViewState.addTab(intyg.intygsId, intyg.start, false, false);
-                }
-
-            };
-
-            $scope.onSelectSjukfall = function(timelineItem) {
-                patientHistoryViewState.selectTimelineItem(timelineItem);
-            };
-
-            $scope.close = function() {
-                $uibModalInstance.close();
-            };
-
-            function updatePatientSjukfall(patient) {
-                //Start by requesting data
-                patientHistoryProxy.get(patient).then(function(sjukfallResponse) {
-                    $scope.showSpinner = false;
-                    patientHistoryViewState.setTimelineItems(sjukfallResponse.sjukfallList);
-                    patientHistoryViewState.setSjfMetaData(sjukfallResponse.sjfMetaData);
-
-                    $scope.timeline = patientHistoryViewState.getTimelineItems();
-                }, function() {
-                    $scope.showSpinner = false;
-                    $scope.errorMessageKey = 'server.error.loadpatienthistory.text';
-                });
+        $scope.loadIntyg = function(intyg) {
+            //Either select or create new tab if not already opened..
+            var existingTab = patientHistoryViewState.getTabById(intyg.intygsId);
+            if (existingTab) {
+                patientHistoryViewState.selectTab(existingTab);
+            } else {
+                patientHistoryViewState.addTab(intyg.intygsId, intyg.start, false, false, $scope.accessToken);
             }
 
-            $scope.$on('patientHistory.update', function(){
-                updatePatientSjukfall(patient);
-            });
+        };
 
+        $scope.onSelectSjukfall = function(timelineItem) {
+            patientHistoryViewState.selectTimelineItem(timelineItem);
+        };
+
+        $scope.close = function() {
+            wcLogout();
+            $uibModalInstance.close();
+        };
+
+        function updatePatientSjukfall(patient) {
+            //Start by requesting data
+            patientHistoryProxy.get(patient).then(function(sjukfallResponse) {
+                $scope.showSpinner = false;
+                patientHistoryViewState.setTimelineItems(sjukfallResponse.sjukfallList);
+                patientHistoryViewState.setSjfMetaData(sjukfallResponse.sjfMetaData);
+
+                $scope.timeline = patientHistoryViewState.getTimelineItems();
+            }, function() {
+                $scope.showSpinner = false;
+                $scope.errorMessageKey = 'server.error.loadpatienthistory.text';
+            });
+        }
+
+        $scope.$on('patientHistory.update', function() {
             updatePatientSjukfall(patient);
         });
+
+        updatePatientSjukfall(patient);
+
+        function fetchAccessToken() {
+            $http.get('/api/user/accesstoken').then(function(response) {
+                $scope.accessToken = response.data.accessToken;
+            }, function() {
+                $scope.accessToken = '';
+            });
+
+        }
+
+        fetchAccessToken();
+
+        function wcLogout() {
+
+            var logoutUrl = APP_CONFIG.webcertViewIntygLogoutUrl;
+
+            var form = document.createElement('form');
+
+            form.method = 'post';
+            form.action = logoutUrl;
+            form.target = 'wc_logout';
+
+            // To be sent, the form needs to be attached to the main document.
+            form.style.display = 'none';
+            document.body.appendChild(form);
+
+            form.submit();
+
+            // Once the form is sent, remove it.
+            document.body.removeChild(form);
+        }
+    });
