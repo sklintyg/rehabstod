@@ -39,6 +39,7 @@
             <td class="column-dagar">{{::row.dagarShow}}</td>
             <td class="column-antal">{{::row.intyg}}</td>
             <td class="column-grad" ng-bind-html="::row.gradShow"></td>
+            <td class="column-obesvaradeKompl" ng-bind-html="::row.obesvaradeKomplShow"></td>
             <td ng-if="hasFeature('SRS')" class="column-risk">
                 <rhs-risk-indicator category="row.riskSignal.riskKategori"
                                     description="row.riskSignal.riskDescription"></rhs-risk-indicator>

@@ -39,6 +39,13 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', function(moment, _) {
                 return false;
             }
 
+            //Kompletteringsstatus (null = don't filter at all, 0 = must be exactly 0 to pass, otherwise must be > 0)
+            if (angular.isNumber(filterParams.komplettering) &&
+                (((filterParams.komplettering === 0) && actual.obesvaradeKompl > 0) ||
+                    ((filterParams.komplettering > 0) && actual.obesvaradeKompl < 1))) {
+                return false;
+            }
+
             //Sjukskrivningslangd
             if (!range(actual.dagar, filterParams.sjukskrivningslangd[0], filterParams.sjukskrivningslangd[1])) {
                 return false;

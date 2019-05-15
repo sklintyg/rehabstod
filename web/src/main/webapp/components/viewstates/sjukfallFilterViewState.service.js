@@ -18,13 +18,14 @@
  */
 
 angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
-    'DiagnosKapitelModel', 'LakareModel', 'APP_CONFIG',
-    function(DiagnosKapitelModel, LakareModel, APP_CONFIG) {
+    'DiagnosKapitelModel', 'LakareModel', 'KompletteringModel', 'APP_CONFIG',
+    function(DiagnosKapitelModel, LakareModel, KompletteringModel, APP_CONFIG) {
         'use strict';
 
         var state = {
             diagnosKapitelModel: DiagnosKapitelModel,
             lakareModel: LakareModel,
+            kompletteringModel: KompletteringModel, //null = show all, 0 = exactly 0 and 1 means all > 0
             showPatientId: true,
             slutdatumModel: {
                 from: null,
@@ -35,6 +36,11 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
         //Kanske initiera diagnoskapitelmodellen samtidigt som UserModel i appmain eller något?
         state.diagnosKapitelModel.set(APP_CONFIG.diagnosKapitelList);
 
+        state.kompletteringModel.set([
+            {id: null, displayValue: 'Visa alla', defaultSelected: true},
+            {id: 0, displayValue: 'Visa sjukfall utan obesvarade kompletteringar'},
+            {id: 1, displayValue: 'Visa sjukfall med obesvarade kompletteringar'}]);
+
 
         function _reset() {
             state.diagnosKapitelModel.reset();
@@ -43,6 +49,7 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
             state.slutdatumModel.from = null;
             state.slutdatumModel.to = null;
             state.lakareModel.reset();
+            state.kompletteringModel.reset();
             state.showPatientId = true;
             state.freeTextModel = '';
         }
@@ -58,9 +65,15 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
                 this.push(value.id);
             }, selectedLakare);
 
+            var selectedKompletteringOptions = [];
+            angular.forEach(state.kompletteringModel.getSelected(), function(value) {
+                this.push(value.id);
+            }, selectedKompletteringOptions);
+
             return {
                 diagnosKapitel: selectedDiagnosKapitel,
                 lakare: selectedLakare,
+                komplettering: selectedKompletteringOptions.length === 1 ? selectedKompletteringOptions[0] : null,
                 sjukskrivningslangd: [state.sjukskrivningslangdModel[0],
                     state.sjukskrivningslangdModel[1] > 365 ? null : state.sjukskrivningslangdModel[1]],
                 alder: [state.aldersModel[0],
