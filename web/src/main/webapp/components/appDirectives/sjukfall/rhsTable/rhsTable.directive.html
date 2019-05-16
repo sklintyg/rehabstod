@@ -8,6 +8,9 @@
 
     <rhs-table-number-of-rows total-rows="model.get().length"></rhs-table-number-of-rows>
 
+    <div class="clearfix"></div>
+
+    <div class="table-responsive">
     <table class="table table-striped" rhs-table-fixed-header="rhs-table-header-fixed-top"
            data-ng-class="{'show-lakare-column': showLakareColumn}" fixed-header="rhs-table-fixed-header"
            normal-header="rhs-table-normal-header" padding-top="46">
@@ -49,6 +52,7 @@
 
         </tbody>
     </table>
+    </div>
 
     <div ng-if="!displayedCollection.length" class="rhs-table-no-result">
     <span ng-if="!model.get().length && !model.hasError()">
