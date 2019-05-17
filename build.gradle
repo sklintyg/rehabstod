@@ -14,7 +14,7 @@ ext {
     monitoringSchemaVersion = "1.0.0.3"
     internalMonitoringSchemaVersion = "1.0.2"
     srsSchemasVersion = "0.0.7"
-
+    intygClinicalprocessSchemasVersion = "1.0.18"
     schemasContractVersion = "2.1.8"
 
     activemqVersion = "5.13.0"

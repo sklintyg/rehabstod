@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').factory('SjukfallModel',
-    function($parse, $filter, SjukfallFilterViewState) {
+    function($parse, $filter, SjukfallFilterViewState, SjukfallViewState) {
         'use strict';
 
         var data = [];
@@ -82,7 +82,10 @@ angular.module('rehabstodApp').factory('SjukfallModel',
         }
 
         function _getObesvaradeKomplShow(obesvaradeKompl) {
-
+            if (SjukfallViewState.get().kompletteringInfoError) {
+                //indicate no value due to error
+                return '';
+            }
             return (obesvaradeKompl > 0) ? 'Obesvarad (' + obesvaradeKompl + ')' : '-';
         }
 

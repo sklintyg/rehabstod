@@ -25,6 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
@@ -44,6 +45,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaDataItemType;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
+import se.inera.intyg.rehabstod.service.sjukfall.komplettering.KompletteringInfoDecorator;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
@@ -161,6 +163,9 @@ public class SjukfallServiceTest {
 
     @Mock
     private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+
+    @Mock
+    private KompletteringInfoDecorator kompletteringInfoDecorator;
 
     @InjectMocks
     private SjukfallServiceImpl testee = new SjukfallServiceImpl();

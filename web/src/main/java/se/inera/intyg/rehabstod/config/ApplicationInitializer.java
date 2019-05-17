@@ -45,6 +45,9 @@ import se.inera.intyg.rehabstod.integration.sparrtjanst.stub.SparrtjanstStubConf
 import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.srs.stub.SRSIntegrationStubConfiguration;
+import se.inera.intyg.rehabstod.integration.wc.config.WcClientConfiguration;
+import se.inera.intyg.rehabstod.integration.wc.config.WcIntegrationConfiguration;
+import se.inera.intyg.rehabstod.integration.wc.stub.WcIntegrationStubConfiguration;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfig;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
 
@@ -72,6 +75,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
                 IntygstjanstIntegrationConfiguration.class,
                 IntygstjanstIntegrationClientConfiguration.class,
                 IntygstjanstIntegrationStubConfiguration.class,
+                WcClientConfiguration.class,
+                WcIntegrationConfiguration.class,
+                WcIntegrationStubConfiguration.class,
                 SamtyckestjanstConfiguration.class,
                 SamtyckestjanstClientConfiguration.class,
                 SamtyckestjanstStubConfiguration.class,

@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +71,7 @@ public class SjukfallEngineMapper {
             to.setSlutOmDagar(ChronoUnit.DAYS.between(today, from.getSlut()));
             to.setDagar(from.getDagar());
             to.setIntyg(from.getIntyg());
-            //TODO: set actual value
-            to.setObesvaradeKompl(new Random().nextInt(3));
+            to.setIntygLista(from.getIntygLista());
             to.setAktivGrad(from.getAktivGrad());
             to.setGrader(from.getGrader());
             to.setAktivIntygsId(from.getAktivIntygsId());

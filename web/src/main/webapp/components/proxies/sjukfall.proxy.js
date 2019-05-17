@@ -41,7 +41,9 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
                 if (!ObjectHelper.isDefined(response.data)) {
                     promise.reject({errorCode: response.data, message: 'invalid data'});
                 } else {
-                    promise.resolve({data: response.data, srsError: response.headers('SRS_UNAVAILABLE') === 'true'});
+                    promise.resolve({data: response.data,
+                        srsError: response.headers('SRS_UNAVAILABLE') === 'true',
+                        kompletteringInfoError: response.headers('KOMPLETTERING_INFO_UNAVAILABLE') === 'true'});
                 }
             }, function(response) {
                 $log.error('error ' + response.status);
