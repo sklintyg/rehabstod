@@ -79,6 +79,10 @@ rhs-patient-history-table {
     table {
       margin: 15px 0 0 0;
 
+      td {
+        height: 55px;
+      }
+
       .column-number {
         width: 20px;
       }
@@ -92,6 +96,10 @@ rhs-patient-history-table {
         width: 130px;
         right: 0;
         border-top: none !important;
+        button {
+          position: relative;
+          top: 5px;
+        }
       }
       .column-startdate,
       .column-enddate {
