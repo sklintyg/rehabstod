@@ -18,6 +18,11 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import javax.servlet.FilterRegistration;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.WebApplicationInitializer;
@@ -28,6 +33,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
+
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.security.filter.RequestContextHolderUpdateFilter;
 import se.inera.intyg.infra.security.filter.SecurityHeadersFilter;
@@ -48,11 +54,6 @@ import se.inera.intyg.rehabstod.integration.srs.stub.SRSIntegrationStubConfigura
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfig;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
 
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
-
 import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_CHECK_URI;
 import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_EXTEND;
 import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_REQUEST_MAPPING;
@@ -69,6 +70,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 
         appContext.register(ApplicationConfig.class, CacheConfigurationFromInfra.class, HsaConfiguration.class,
                 PuConfiguration.class, ServiceConfig.class,
+                IaConfiguration.class, JobConfig.class,
                 IntygstjanstIntegrationConfiguration.class,
                 IntygstjanstIntegrationClientConfiguration.class,
                 IntygstjanstIntegrationStubConfiguration.class,

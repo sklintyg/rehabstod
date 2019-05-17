@@ -18,9 +18,10 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-
 import java.util.List;
+
+import se.inera.intyg.infra.integration.ia.model.Banner;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
 /**
  * Created by marced on 2016-01-18.
@@ -30,6 +31,7 @@ public class GetConfigResponse {
     private String webcertViewIntygTemplateUrl;
     private String webcertViewIntygLogoutUrl;
     private String version;
+    private List<Banner> banners;
 
     public List<DiagnosKapitel> getDiagnosKapitelList() {
         return diagnosKapitelList;
@@ -63,46 +65,11 @@ public class GetConfigResponse {
         return webcertViewIntygLogoutUrl;
     }
 
-    public static final class GetConfigResponseBuilder {
-        private List<DiagnosKapitel> diagnosKapitelList;
-        private String webcertViewIntygTemplateUrl;
-        private String webcertViewIntygLogoutUrl;
-        private String version;
+    public List<Banner> getBanners() {
+        return banners;
+    }
 
-        private GetConfigResponseBuilder() {
-        }
-
-        public static GetConfigResponseBuilder aGetConfigResponse() {
-            return new GetConfigResponseBuilder();
-        }
-
-        public GetConfigResponseBuilder withDiagnosKapitelList(List<DiagnosKapitel> diagnosKapitelList) {
-            this.diagnosKapitelList = diagnosKapitelList;
-            return this;
-        }
-
-        public GetConfigResponseBuilder withWebcertViewIntygTemplateUrl(String webcertViewIntygTemplateUrl) {
-            this.webcertViewIntygTemplateUrl = webcertViewIntygTemplateUrl;
-            return this;
-        }
-
-        public GetConfigResponseBuilder withWebcertViewIntygLogoutUrl(String webcertViewIntygLogoutUrl) {
-            this.webcertViewIntygLogoutUrl = webcertViewIntygLogoutUrl;
-            return this;
-        }
-
-        public GetConfigResponseBuilder withVersion(String version) {
-            this.version = version;
-            return this;
-        }
-
-        public GetConfigResponse build() {
-            GetConfigResponse getConfigResponse = new GetConfigResponse();
-            getConfigResponse.setDiagnosKapitelList(diagnosKapitelList);
-            getConfigResponse.setWebcertViewIntygTemplateUrl(webcertViewIntygTemplateUrl);
-            getConfigResponse.setWebcertViewIntygLogoutUrl(webcertViewIntygLogoutUrl);
-            getConfigResponse.setVersion(version);
-            return getConfigResponse;
-        }
+    public void setBanners(List<Banner> banners) {
+        this.banners = banners;
     }
 }

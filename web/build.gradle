@@ -81,7 +81,7 @@ gretty {
     enableNaming = true
 
     jvmArgs = [
-            '-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,caching-enabled,rhs-security-test',
+            '-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,caching-enabled,rhs-security-test,ia-stub',
                '-Dconfig.folder=' + projectDir + '/../devops/dev',
                '-Dconfig.file=' + projectDir + '/src/main/resources/dev.properties',
                '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
@@ -105,6 +105,7 @@ dependencies {
     compile "se.inera.intyg.infra:hsa-integration:${intygInfraVersion}"
     compile "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
     compile "se.inera.intyg.infra:pu-integration:${intygInfraVersion}"
+    compile "se.inera.intyg.infra:ia-integration:${intygInfraVersion}"
     compile "se.inera.intyg.infra:security-filter:${intygInfraVersion}"
     compile "se.inera.intyg.infra:security-siths:${intygInfraVersion}"
     compile "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
@@ -122,6 +123,9 @@ dependencies {
     compile "org.springframework:spring-jms:${springContextVersion}"
     compile "org.springframework.session:spring-session:${springSessionVersion}"
     compile "wsdl4j:wsdl4j:${wsdl4jVersion}"
+
+    compile "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
+    compile "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
 
     compile "org.apache.activemq:activemq-spring:${activemqVersion}"
     compile "mysql:mysql-connector-java:${mysqlVersion}"
