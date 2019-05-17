@@ -18,16 +18,18 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 import se.inera.intyg.infra.dynamiclink.service.DynamicLinkService;
+import se.inera.intyg.infra.integration.ia.services.IABannerService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetConfigResponse;
-
-import java.util.Map;
 
 /**
  * Created by marced on 2016-02-09.
@@ -46,6 +48,9 @@ public class ConfigController {
     @Autowired
     private DynamicLinkService dynamicLinkService;
 
+    @Autowired
+    private IABannerService iaBannerService;
+
     /**
      * Note - using Environment injection instead of @Value since the latter has some issues when injected into the
      * context of this @RestController.
@@ -56,12 +61,14 @@ public class ConfigController {
     @RequestMapping(value = "")
     public GetConfigResponse getConfig() {
 
-        return GetConfigResponse.GetConfigResponseBuilder.aGetConfigResponse()
-                .withDiagnosKapitelList(diagnosKapitelService.getDiagnosKapitelList())
-                .withWebcertViewIntygTemplateUrl(env.getProperty(WEBCERT_VIEW_INTYG_URL_TEMPLATE))
-                .withWebcertViewIntygLogoutUrl(env.getProperty(WEBCERT_VIEW_INTYG_URL_LOGOUT))
-                .withVersion(env.getProperty(PROJECT_VERSION_PROPERTY))
-                .build();
+        GetConfigResponse configResponse = new GetConfigResponse();
+        configResponse.setDiagnosKapitelList(diagnosKapitelService.getDiagnosKapitelList());
+        configResponse.setWebcertViewIntygTemplateUrl(env.getProperty(WEBCERT_VIEW_INTYG_URL_TEMPLATE));
+        configResponse.setWebcertViewIntygLogoutUrl(env.getProperty(WEBCERT_VIEW_INTYG_URL_LOGOUT));
+        configResponse.setVersion(env.getProperty(PROJECT_VERSION_PROPERTY));
+        configResponse.setBanners(iaBannerService.getCurrentBanners());
+
+        return configResponse;
     }
 
     @RequestMapping(value = "/links", produces = "application/json")
