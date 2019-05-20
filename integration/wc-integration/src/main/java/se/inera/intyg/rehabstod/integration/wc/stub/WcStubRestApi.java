@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.integration.wc.stub;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -27,7 +28,7 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Created by marced on 2018-10-01.
+ * Created by marced on 2010-05-20.
  */
 public class WcStubRestApi {
 
@@ -35,11 +36,25 @@ public class WcStubRestApi {
     private WcStubStore store;
 
     @GET
-    @Path("/")
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllAdditions() {
-        return Response.ok(store.getKompletteringsdata()).build();
+    public Response getAdditionsForIntygsId(@PathParam("id") String intygsId) {
+        return Response.ok(store.getAddition(intygsId)).build();
 
+    }
+
+    @GET
+    @Path("/active")
+    public Response activatePuStub() {
+        store.setActive(true);
+        return Response.ok().build();
+    }
+
+    @GET
+    @Path("/inactive")
+    public Response deactivatePuStub() {
+        store.setActive(false);
+        return Response.ok().build();
     }
 
 }

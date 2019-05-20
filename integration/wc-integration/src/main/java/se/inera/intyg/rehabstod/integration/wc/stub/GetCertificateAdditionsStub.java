@@ -20,20 +20,18 @@ package se.inera.intyg.rehabstod.integration.wc.stub;
 
 // CHECKSTYLE:OFF LineLength
 
-import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AdditionType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.IntygAdditionsType;
-import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.StatusType;
 import se.riv.clinicalprocess.healthcond.certificate.types.v3.IntygId;
 import se.riv.clinicalprocess.healthcond.certificate.v3.ResultCodeType;
 
@@ -59,19 +57,14 @@ public class GetCertificateAdditionsStub implements GetCertificateAdditionsRespo
     }
 
     private Collection<IntygAdditionsType> getItems(GetCertificateAdditionsType getCertificateAdditionsType) {
-        return getCertificateAdditionsType.getIntygsId().stream().map(intyg -> getResultForIntyg(intyg)).collect(Collectors.toList());
+        return getCertificateAdditionsType.getIntygsId().stream()
+                .map(this::getResultForIntyg)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     private IntygAdditionsType getResultForIntyg(IntygId intyg) {
-        IntygAdditionsType item = new IntygAdditionsType();
-        item.setIntygsId(intyg);
-
-        AdditionType addition = new AdditionType();
-        addition.setId("1");
-        addition.setSkapad(LocalDateTime.now());
-        addition.setStatus(StatusType.OBESVARAD);
-        item.getAddition().add(addition);
-        return item;
+        return store.getAddition(intyg.getExtension());
     }
 
 }
