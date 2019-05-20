@@ -185,6 +185,9 @@
               "otherVardenhet": {
                 "type": "boolean"
               },
+              "obesvaradeKompl": {
+                "type": "integer"
+              },
               "additionalItems": false
             }
           }
@@ -201,11 +204,15 @@
       },
       "srsError": {
         "type": "boolean"
+      },
+      "kompletteringInfoError": {
+        "type": "boolean"
       }
     },
     "required": [
       "sjfMetaData",
       "sjukfallList",
-      "srsError"
+      "srsError",
+      "kompletteringInfoError"
     ]
 }

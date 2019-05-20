@@ -86,6 +86,7 @@ public class WcIntegrationServiceImpl implements WcIntegrationService {
         for (IntygAdditionsType intyg : additions) {
             int antalObesvarade = 0;
             for (AdditionType item : intyg.getAddition()) {
+                // Implements RS-VR-051 and RS-VR-052
                 if (OBESVARAD.equals(item.getStatus()) && item.getSkapad().isAfter(earliestValidDate)) {
                     antalObesvarade++;
                 }

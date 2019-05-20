@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import se.inera.intyg.rehabstod.integration.wc.service.WcIntegrationService;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 @Service
 public class KompletteringInfoDecoratorImpl implements KompletteringInfoDecorator {
@@ -36,7 +37,7 @@ public class KompletteringInfoDecoratorImpl implements KompletteringInfoDecorato
     private WcIntegrationService wcIntegrationService;
 
     @Override
-    public void updateSjukfallEnhetKompetteringar(List<SjukfallEnhet> sjukfallList) {
+    public void updateSjukfallEnhetKompletteringar(List<SjukfallEnhet> sjukfallList) {
 
         final List<String> idList = sjukfallList.stream()
                 .flatMap(sfe -> sfe.getIntygLista().stream())
@@ -49,6 +50,25 @@ public class KompletteringInfoDecoratorImpl implements KompletteringInfoDecorato
                         sjukfallEnhet.getIntygLista().stream()
                                 .mapToInt(intygsId -> Optional.ofNullable(perIntyg.get(intygsId)).orElse(0))
                                 .sum()));
+    }
+
+    @Override
+    public void updateSjukfallPatientKompletteringar(List<SjukfallPatient> patientSjukfallList) {
+
+        // Get all intygsidn to query for kompletteringsinfo, excluding sjf intyg
+        final List<String> idList = patientSjukfallList.stream()
+                .flatMap(sjukfallPatient -> sjukfallPatient.getIntyg().stream())
+                .filter(patientData -> !patientData.isOtherVardgivare() && !patientData.isOtherVardenhet())
+                .map(patientData -> patientData.getIntygsId())
+                .collect(Collectors.toList());
+
+        final Map<String, Integer> perIntyg = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
+
+        patientSjukfallList.stream()
+                .forEach(sjukfallPatient -> sjukfallPatient.getIntyg()
+                        .stream().forEach(
+                                patientData -> patientData.setObesvaradeKompl(perIntyg.get(patientData.getIntygsId()))));
+
     }
 
 }

@@ -30,11 +30,14 @@ public class SjukfallPatientResponse {
     private final SjfMetaData sjfMetaData;
     private List<SjukfallPatient> sjukfallList;
     private boolean srsError = false;
+    private boolean kompletteringInfoError = false;
 
-    public SjukfallPatientResponse(List<SjukfallPatient> rehabstodSjukfall, SjfMetaData sjfMetaData, boolean srsError) {
+    public SjukfallPatientResponse(List<SjukfallPatient> rehabstodSjukfall, SjfMetaData sjfMetaData, boolean srsError,
+            boolean kompletteringInfoError) {
         this.sjukfallList = rehabstodSjukfall;
         this.sjfMetaData = sjfMetaData;
         this.srsError = srsError;
+        this.kompletteringInfoError = kompletteringInfoError;
     }
 
     public List<SjukfallPatient> getSjukfallList() {
@@ -47,5 +50,9 @@ public class SjukfallPatientResponse {
 
     public SjfMetaData getSjfMetaData() {
         return sjfMetaData;
+    }
+
+    public boolean isKompletteringInfoError() {
+        return kompletteringInfoError;
     }
 }

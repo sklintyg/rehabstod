@@ -32,28 +32,31 @@ h1 .rhs-tooltip-headline {
 }
 
 
-.flex-row {
-  display: flex;
-  align-items: center;
-  @media (max-width: $screen-md-min) {
-    display: block;
-  }
-  .flex-col {
-    padding-right: 10px;
-    min-width: 1%;
-    flex-wrap: wrap;
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    &.eager {
-      flex: 2 0 auto;
-    }
-  }
-}
+
 
 
 
 rhs-filter {
+
+  .flex-row {
+    display: flex;
+    align-items: center;
+    @media (max-width: $screen-md-min) {
+      display: block;
+    }
+    .flex-col {
+      padding-right: 10px;
+      min-width: 1%;
+      flex-wrap: wrap;
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      &.eager {
+        flex: 2 0 auto;
+      }
+    }
+  }
+
   display: block;
   margin: 20px 0 20px;
 

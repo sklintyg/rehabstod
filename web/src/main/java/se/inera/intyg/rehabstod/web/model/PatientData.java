@@ -55,6 +55,7 @@ public class PatientData {
     private boolean aktivtIntyg;
 
     private String intygsId;
+    private Integer obesvaradeKompl;
 
     private RiskSignal riskSignal;
 
@@ -213,5 +214,13 @@ public class PatientData {
 
     public void setOtherVardenhet(boolean otherVardenhet) {
         this.otherVardenhet = otherVardenhet;
+    }
+
+    public Integer getObesvaradeKompl() {
+        return obesvaradeKompl;
+    }
+
+    public void setObesvaradeKompl(Integer obesvaradeKompl) {
+        this.obesvaradeKompl = obesvaradeKompl;
     }
 }

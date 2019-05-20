@@ -18,10 +18,13 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.komplettering;
 
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
 import java.util.List;
 
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+
 public interface KompletteringInfoDecorator {
-    void updateSjukfallEnhetKompetteringar(List<SjukfallEnhet> sjukfallList);
+    void updateSjukfallEnhetKompletteringar(List<SjukfallEnhet> sjukfallList);
+
+    void updateSjukfallPatientKompletteringar(List<SjukfallPatient> rehabstodSjukfall);
 }

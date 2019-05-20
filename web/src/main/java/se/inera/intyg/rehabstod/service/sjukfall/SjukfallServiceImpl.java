@@ -134,7 +134,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         boolean kompletteringInfoError = false;
         try {
-            kompletteringInfoDecorator.updateSjukfallEnhetKompetteringar(rehabstodSjukfall);
+            kompletteringInfoDecorator.updateSjukfallEnhetKompletteringar(rehabstodSjukfall);
         } catch (WcIntegrationException e) {
             kompletteringInfoError = true;
         }
@@ -164,6 +164,14 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         sjukfallPuService.enrichWithPatientNameAndFilterSekretess(rehabstodSjukfall);
         sjukfallEmployeeNameResolver.enrichSjukfallPaientWithHsaEmployeeNames(rehabstodSjukfall);
+
+        boolean kompletteringInfoError = false;
+        try {
+            kompletteringInfoDecorator.updateSjukfallPatientKompletteringar(rehabstodSjukfall);
+        } catch (WcIntegrationException e) {
+            kompletteringInfoError = true;
+        }
+
         boolean srsError = false;
         try {
             riskPredictionService.updateSjukfallPatientListWithRiskPredictions(rehabstodSjukfall);
@@ -175,7 +183,7 @@ public class SjukfallServiceImpl implements SjukfallService {
             monitoringLogService.logUserViewedSjukfall(lakareId, rehabstodSjukfall.size(), enhetsId);
         }
 
-        return new SjukfallPatientResponse(rehabstodSjukfall, result.getSjfMetaData(), srsError);
+        return new SjukfallPatientResponse(rehabstodSjukfall, result.getSjfMetaData(), srsError, kompletteringInfoError);
     }
     // CHECKSTYLE:ON ParameterNumber
 
