@@ -56,7 +56,8 @@ function _run(options, json, baseUrl) {
 
     if(options.json) {
         options.headers = {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'accept': 'application/json'
         };
     } else {
         var postData = options.body;

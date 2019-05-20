@@ -59,5 +59,36 @@ module.exports = {
                 body: {"consentGiven": false}
             };
         return restClient.run(options, 'json', env.REHABSTOD_URL);
+    },
+    createBanners: function(message, priority) {
+        var toDate = new Date();
+        toDate.setFullYear(toDate.getFullYear() + 1);
+
+        var banner = {
+            message: message,
+            priority: priority,
+            application: 'REHABSTOD',
+            createdAt: new Date().toISOString().substring(0, 19),
+            displayFrom: new Date().toISOString().substring(0, 19),
+            displayTo: toDate.toISOString().substring(0, 19)
+        };
+
+        var options = {
+            url: 'services/api/ia-api/banner',
+            method: 'PUT',
+            body: banner
+        };
+        return restClient.run(options, 'json', env.REHABSTOD_URL).then(function(test) {
+            //console.log(test)
+        }, function(test2) {
+            //console.log(test2);
+        });
+    },
+    clearBanners: function() {
+        var options = {
+            url: '/services/api/ia-api/cache',
+            method: 'DELETE'
+        };
+        return restClient.run(options, 'json', env.REHABSTOD_URL);
     }
 };
