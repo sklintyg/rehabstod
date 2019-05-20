@@ -117,6 +117,21 @@
                 });
         };
         // End PU stub operations ============================================
+        $scope.WCStub = {
+            latestEvent: ''
+        };
+        $scope.setWCStubState = function(state) {
+            $http({
+                url: '/api/stub/wc-api/' + state,
+                method: 'GET',
+                transformResponse: [function (data) { return data; }]
+            }).then(
+                function success(response) {
+                    $scope.WCStub.latestEvent = 'WC stub is now: ' + state;
+                }, function error(response) {
+                    $scope.WCStub.latestEvent = 'Error while setting state to ' + state + '. Error: ' + response.status;
+                });
+        }
         // Intygsadmin stub operations ============================================
         var iAdateFormat =  'YYYY-MM-DDTHH:mm:ss';
         $scope.IA = {
@@ -563,6 +578,30 @@
         </div>
 
         <h2>Stub Management</h2>
+
+
+        <div class="content row">
+          <div class="panel panel-body panel-default">
+            <h4>WC-Stub (kompletteringar)</h4>
+
+            <div class="btn-group btn-group-sm" role="group">
+
+              <button type="button" class="btn btn-small btn-danger"
+                      ng-click="setWCStubState('inactive')">
+                Inaktivera
+              </button>
+              <button type="button" class="btn btn-small btn-success"
+                      ng-click="setWCStubState('active')">
+                Aktivera
+              </button>
+            </div>
+
+            <div>Senaste operation: <pre>{{WCStub.latestEvent}}</pre> </div>
+          </div>
+        </div>
+
+
+
         <div class="content row">
 
           <div class="panel panel-body panel-default">

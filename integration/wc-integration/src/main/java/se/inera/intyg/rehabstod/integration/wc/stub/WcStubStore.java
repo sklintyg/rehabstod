@@ -126,8 +126,11 @@ public class WcStubStore {
                 + " to WcStubStore");
     }
 
-    void setActive(boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 
+    public boolean isActive() {
+        return this.active;
+    }
 }

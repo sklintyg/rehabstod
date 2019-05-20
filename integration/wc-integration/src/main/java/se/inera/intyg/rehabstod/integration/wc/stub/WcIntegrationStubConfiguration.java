@@ -27,26 +27,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
-
-import javax.annotation.PostConstruct;
 
 @Configuration
 @ComponentScan({ "se.inera.intyg.rehabstod.integration.wc.stub" })
 @Profile({ "rhs-wc-stub" })
 public class WcIntegrationStubConfiguration {
+
     public static final String CACHE_NAME = "WcIntegrationStubCache";
-
-    private String cacheExpirySeconds = "3600";
-
-    @Autowired
-    private RedisCacheOptionsSetter redisCacheOptionsSetter;
-
-    @PostConstruct
-    public void init() {
-        redisCacheOptionsSetter.createCache(CACHE_NAME, cacheExpirySeconds);
-    }
-
 
     @Autowired
     private GetCertificateAdditionsStub getCertificateAdditionsStub;
