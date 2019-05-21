@@ -158,9 +158,10 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, String> updatePref(@RequestBody Map<String, String> keyValueMap) {
 
-        RehabstodUserPreferences oldPreferences = userPreferencesService.getAllPreferences();
         RehabstodUserPreferences newPreferences = RehabstodUserPreferences.fromFrontend(keyValueMap);
+        newPreferences.validate();
 
+        RehabstodUserPreferences oldPreferences = userPreferencesService.getAllPreferences();
         // Update preferences with new values
         userPreferencesService.updatePreferences(newPreferences);
         LOG.debug("Updating user pref with values {}", keyValueMap);
