@@ -138,6 +138,20 @@ public class UserControllerTest {
         verify(rehabUserMock).clearSjfData();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void validateInvalidMaxDagarMellanIntygPreference() {
+        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "91");
+        preferences.validate();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void validateInvalidMaxDagarSedanSjukfallPreference() {
+        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "-1");
+        preferences.validate();
+    }
+
     @Test
     public void testGetAccessTokenWithResponseNoRefresh() {
         String oldAccessToken = "abc123";

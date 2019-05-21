@@ -28,6 +28,11 @@ public final class RehabstodUserPreferences implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private static final int MIN_DAYS = 0;
+    private static final int MAX_DAYS_INTYG = 90;
+    private static final int MAX_DAYS_SJUKLFALL = 14;
+
+
     private final Map<Preference, String> map;
 
     private RehabstodUserPreferences(Map<Preference, String> map) {
@@ -97,6 +102,19 @@ public final class RehabstodUserPreferences implements Serializable {
     public int hashCode() {
         return map != null ? map.hashCode() : 0;
     }
+
+    public void validate() {
+        validateIntRange(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, MIN_DAYS, MAX_DAYS_INTYG);
+        validateIntRange(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, MIN_DAYS, MAX_DAYS_SJUKLFALL);
+    }
+
+    private void validateIntRange(Preference p, int min, int max) {
+        int value = Integer.parseInt(map.get(p));
+        if (value < min || value > max) {
+            throw new IllegalArgumentException("Input (" + p.getBackendKeyName() + ") out of range: " + value);
+        }
+    }
+
     // CHECKSTYLE:ON NeedBraces
 
     public enum Preference {
