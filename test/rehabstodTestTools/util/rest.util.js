@@ -70,7 +70,7 @@ module.exports = {
     },
     clearBanners: function() {
         var options = {
-            url: '/services/api/ia-api/cache',
+            url: 'services/api/ia-api/cache',
             method: 'DELETE'
         };
         return restClient.run(options, 'json', env.REHABSTOD_URL);
