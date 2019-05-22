@@ -85,7 +85,7 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
             });
 
             //send request
-            $window.jQuery('<form action="' + restPath + '" target="_blank" method="post">' + inputs + '</form>')
+            $window.jQuery('<form action="' + restPath + '" target="_blank" accept-charset="utf-8" enctype="application/x-www-form-urlencoded" method="post">' + inputs + '</form>')
                 .appendTo('body').submit().remove();
         }
 
