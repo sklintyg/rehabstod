@@ -71,6 +71,7 @@ public final class TestDataGen {
         req.setLangdIntervall(buildLangdIntervall());
         req.setAldersIntervall(buildAlderIntervall());
         req.setSlutdatumIntervall(buildDatumIntervall());
+        req.setKomplettering(1);
         req.setSortering(buildSortering());
         req.setShowPatientId(true);
         return req;
@@ -152,6 +153,7 @@ public final class TestDataGen {
         sf.setPatient(buildPatient());
         sf.setDiagnos(buildDiagnos());
         sf.setGrader(buildGrader());
+        sf.setObesvaradeKompl(2);
 
         sf.setAktivGrad(75);
         sf.setDagar(65);

@@ -106,6 +106,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD,
                 req.getLangdIntervall().getMin() + " - " + req.getLangdIntervall().getMax() + " dagar");
         rowNumber = addLakareList(sheet, rowNumber++, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), user); // NOSONAR
+        rowNumber = addKompletteringsStatus(sheet, rowNumber++, FILTER_TITLE_KOMPLETTERINGSSTATUS, req.getKomplettering()); // NOSONAR
 
         // Inställningar
         String maxGlapp = user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG);
@@ -132,6 +133,13 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         return baos.toByteArray();
     }
 
+    private int addKompletteringsStatus(XSSFSheet sheet, int currentRowNumber, String filterTitleKompletteringsstatus,
+            Integer komplettering) {
+        int rowNumber = currentRowNumber;
+        addFilterHeader(sheet, rowNumber++, filterTitleKompletteringsstatus, getKompletteringFilterDisplayValue(komplettering));
+        return rowNumber;
+    }
+
     private String[] initHeaders(PrintSjukfallRequest req, Urval urval, boolean showSrs) {
         List<String> tempHeaders = new ArrayList<>();
         tempHeaders.add(TABLEHEADER_NR);
@@ -149,6 +157,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         tempHeaders.add(TABLEHEADER_SJUKSKRIVNINGSLANGD);
         tempHeaders.add(TABLEHEADER_ANTAL);
         tempHeaders.add(TABLEHEADER_SJUKSKRIVNINGSGRAD);
+        tempHeaders.add(TABLEHEADER_KOMPLETTERINGSSTATUS);
         if (urval != Urval.ISSUED_BY_ME) {
             tempHeaders.add(TABLEHEADER_NUVARANDE_LAKARE);
         }
@@ -300,6 +309,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
             createDataCell(row, colIndex++, String.format(FORMAT_ANTAL_DAGAR, sf.getDagar()));
             createDataCell(row, colIndex++, Integer.toString(sf.getIntyg()));
             createRichTextDataCell(row, colIndex++, buildGraderRichText(sf));
+            createDataCell(row, colIndex++, getKompletteringStatusFormat(sf.getObesvaradeKompl()));
             if (urval != Urval.ISSUED_BY_ME) {
                 createDataCell(row, colIndex++, sf.getLakare().getNamn());
             }

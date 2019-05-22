@@ -93,6 +93,7 @@ public class PdfExportServiceImplTest {
         isf.setSlut(isf.getStart().plusDays(index));
         isf.setDagar(index * 2 + index % 3);
         isf.setIntyg(1);
+        isf.setObesvaradeKompl(2);
         isf.setGrader(index % 3 == 0 ? Arrays.asList(25, 50) : Arrays.asList(50, 75));
         isf.setAktivGrad(50);
         isf.setRiskSignal( new RiskSignal("", 2, "Lätt"));

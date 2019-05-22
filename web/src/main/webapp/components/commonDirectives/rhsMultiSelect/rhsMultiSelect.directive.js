@@ -73,6 +73,10 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
                         });
                     }
                     item.selected = !item.selected;
+
+                    if ($scope.xorMode) {
+                        $scope.isOpen = false;
+                    }
                 };
 
                 $scope.dropdownToggle = function(open) {

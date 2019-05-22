@@ -18,13 +18,25 @@
  */
 package se.inera.intyg.rehabstod.service.export.xlsx;
 
-import com.google.common.collect.ImmutableMap;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import com.google.common.collect.ImmutableMap;
+
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.security.common.model.Role;
@@ -33,16 +45,6 @@ import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by eriklupander on 2016-02-24.
@@ -109,7 +111,7 @@ public class XlsxExportServiceImplTest {
         byte[] data = testee.export(TestDataGen.buildSjukfallList(2), TestDataGen.buildPrintRequest(), user, 2);
         assertNotNull(data);
         assertTrue(data.length > 0);
-        // IOUtils.write(data, new FileOutputStream(new File("/Users/eriklupander/intyg/dev.xlsx")));
+        //IOUtils.write(data, new FileOutputStream(new File("./dev.xlsx")));
     }
 
     @Test
