@@ -1,0 +1,10 @@
+service-banner {
+  display: block;
+
+  .alert {
+    border-radius: 0;
+    margin-bottom: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+}

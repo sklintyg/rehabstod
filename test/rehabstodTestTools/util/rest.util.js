@@ -59,5 +59,20 @@ module.exports = {
                 body: {"consentGiven": false}
             };
         return restClient.run(options, 'json', env.REHABSTOD_URL);
+    },
+    createBanners: function(banner) {
+        var options = {
+            url: 'services/api/ia-api/banner',
+            method: 'PUT',
+            body: banner
+        };
+        return restClient.run(options, 'json', env.REHABSTOD_URL);
+    },
+    clearBanners: function() {
+        var options = {
+            url: 'services/api/ia-api/cache',
+            method: 'DELETE'
+        };
+        return restClient.run(options, 'json', env.REHABSTOD_URL);
     }
 };
