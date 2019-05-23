@@ -1,6 +1,10 @@
 <button class="btn btn-link btn-link-minimal" id="rhs-filter-hide-btn" ng-click="showSearchFilter = !showSearchFilter"
         ng-switch="showSearchFilter">
-  <span ng-switch-when="false" message key="label.filter.show"></span><span ng-switch-when="true" message key="label.filter.hide"></span>
+
+  <span ng-switch-when="false"><span message key="label.filter.show"></span></span>
+  <span ng-switch-when="true"><span message key="label.filter.hide"></span></span>
+  <i class="glyphicon"
+     data-ng-class="[{'glyphicon-chevron-down': !showSearchFilter}, {'glyphicon-chevron-up': showSearchFilter}]"></i>
 </button>
 
 <div class="rhs-filter" ng-if="showSearchFilter">
