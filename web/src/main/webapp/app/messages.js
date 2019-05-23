@@ -34,7 +34,6 @@ var rhsMessages = {
         'common.print': 'Skriv ut',
         'common.close': 'Stäng',
         'common.date': 'Datum',
-        'common.reset': 'Återställ',
         'common.approve': 'Godkänn',
 
         'common.label.loading': 'Laddar',
@@ -95,7 +94,7 @@ var rhsMessages = {
         // Filter
         'label.filter.show' : 'Visa sökfilter',
         'label.filter.hide' : 'Dölj sökfilter',
-        'label.filter.diagnos' : 'Diagnosfilter',
+        'label.filter.diagnos' : 'Välj diagnos',
         'label.filter.diagnos.help' : 'Filtrerar på den diagnos som skrivs ut först för sjukfallet uppdelat på kapitel. Diagnoskapitel som saknar data är inte valbara.',
         'label.filter.lakare' : 'Välj läkare',
         'label.filter.lakare.help' : 'Filtrerar på den läkare som har utfärdat det aktiva intyget. Endast läkare som utfärdat aktiva intyg visas i listan.',
@@ -113,6 +112,7 @@ var rhsMessages = {
         'label.filter.personuppgifter': 'Visa personuppgifter',
         'label.filter.personuppgifter.help': 'Visar eller döljer patienternas namn och personnummer i tabellen. ',
         'label.filter.allselected' : 'Alla valda',
+        'label.filter.reset': 'Återställ filter',
 
         // Settings
         'settings.modal.header' : 'Inställningar',
