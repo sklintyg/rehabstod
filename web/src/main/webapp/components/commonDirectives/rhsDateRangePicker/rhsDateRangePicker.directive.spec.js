@@ -73,7 +73,7 @@ describe('Directive: RhsDateRangePicker', function() {
         $scope.$digest();
 
         // Assert
-        expect(element.find('input').val()).toEqual('Intervall');
+        expect(element.find('input').val()).toEqual('2017-02-01 till 2017-04-01');
     });
 
     it('Show reset value', function() {
@@ -84,7 +84,7 @@ describe('Directive: RhsDateRangePicker', function() {
         $scope.$digest();
 
         // Assert
-        expect(element.find('input').val()).toEqual('Intervall');
+        expect(element.find('input').val()).toEqual('2017-02-01 till 2017-04-01');
 
 
         // Reset

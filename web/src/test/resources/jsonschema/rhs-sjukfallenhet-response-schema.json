@@ -132,6 +132,9 @@
       "intyg": {
         "type": "integer"
       },
+      "obesvaradeKompl": {
+        "type": "integer"
+      },
       "aktivGrad": {
         "type": "integer"
       },
@@ -170,6 +173,7 @@
       "dagar",
       "nyligenAvslutat",
       "intyg",
+      "obesvaradeKompl",
       "aktivGrad",
       "grader"
     ]

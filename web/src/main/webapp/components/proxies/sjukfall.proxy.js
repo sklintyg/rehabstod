@@ -41,7 +41,9 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
                 if (!ObjectHelper.isDefined(response.data)) {
                     promise.reject({errorCode: response.data, message: 'invalid data'});
                 } else {
-                    promise.resolve({data: response.data, srsError: response.headers('SRS_UNAVAILABLE') === 'true'});
+                    promise.resolve({data: response.data,
+                        srsError: response.headers('SRS_UNAVAILABLE') === 'true',
+                        kompletteringInfoError: response.headers('KOMPLETTERING_INFO_UNAVAILABLE') === 'true'});
                 }
             }, function(response) {
                 $log.error('error ' + response.status);
@@ -71,6 +73,7 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
             inputs += _addInput('sortering.order', query.sortering.order);
             inputs += _addInput('fritext', query.fritext);
             inputs += _addInput('showPatientId', query.showPatientId);
+            inputs += _addInput('komplettering', query.komplettering);
 
             angular.forEach(query.lakare, function(item) {
                 inputs += _addInput('lakare', item);

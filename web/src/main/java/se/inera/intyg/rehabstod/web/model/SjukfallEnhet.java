@@ -46,6 +46,11 @@ public class SjukfallEnhet {
 
     private int dagar;
     private int intyg;
+    private int obesvaradeKompl;
+
+    @JsonIgnore
+    private List<String> intygLista;
+
     private int aktivGrad;
 
     private List<Integer> grader;
@@ -201,5 +206,21 @@ public class SjukfallEnhet {
 
     public void setNyligenAvslutat(boolean nyligenAvslutat) {
         this.nyligenAvslutat = nyligenAvslutat;
+    }
+
+    public int getObesvaradeKompl() {
+        return obesvaradeKompl;
+    }
+
+    public void setObesvaradeKompl(int obesvaradeKompl) {
+        this.obesvaradeKompl = obesvaradeKompl;
+    }
+
+    public List<String> getIntygLista() {
+        return intygLista;
+    }
+
+    public void setIntygLista(List<String> intygLista) {
+        this.intygLista = intygLista;
     }
 }

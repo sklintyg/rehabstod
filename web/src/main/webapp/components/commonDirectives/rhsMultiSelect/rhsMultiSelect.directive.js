@@ -28,7 +28,8 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
             scope: {
                 noneSelectedTitle: '@',
                 highLightEnabled: '=',
-                itemsModel: '='
+                itemsModel: '=',
+                xorMode: '='
             },
 
             templateUrl: '/components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.html',
@@ -64,7 +65,18 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
                 };
 
                 $scope.toggleItem = function(item) {
+                    if ($scope.xorMode) {
+                        angular.forEach($scope.items, function(it) {
+                            if (it !== item) {
+                                it.selected = false;
+                            }
+                        });
+                    }
                     item.selected = !item.selected;
+
+                    if ($scope.xorMode) {
+                        $scope.isOpen = false;
+                    }
                 };
 
                 $scope.dropdownToggle = function(open) {

@@ -84,6 +84,16 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
 
             };
 
+            $scope.formatKomplettering = function(obesvaradeKompl) {
+                if($scope.patientHistoryViewState.getKompletteringInfoError()) {
+                    return '';
+                } else if (!angular.isNumber(obesvaradeKompl)) {
+                    return '<span class="hidden-value">Okänt</span>';
+                } else {
+                    return (obesvaradeKompl > 0) ? 'Obesvarad (' + obesvaradeKompl + ')' : '-';
+                }
+            };
+
             $scope.hasFeature = function(feature) {
                 return featureService.hasFeature(feature);
             };

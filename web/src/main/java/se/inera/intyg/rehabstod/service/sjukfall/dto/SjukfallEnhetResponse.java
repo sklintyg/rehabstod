@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
 import java.util.List;
+
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /**
  * Encapsulates the response for sjukfall on a unit with a flag indicating whether SRS predictions could be fetched.
@@ -30,9 +30,12 @@ public class SjukfallEnhetResponse {
     private List<SjukfallEnhet> sjukfallList;
     private boolean srsError = false;
 
-    public SjukfallEnhetResponse(List<SjukfallEnhet> sjukfallList, boolean srsError) {
+    private boolean kompletteringInfoError = false;
+
+    public SjukfallEnhetResponse(List<SjukfallEnhet> sjukfallList, boolean srsError, boolean kompletteringInfoError) {
         this.sjukfallList = sjukfallList;
         this.srsError = srsError;
+        this.kompletteringInfoError = kompletteringInfoError;
     }
 
     public List<SjukfallEnhet> getSjukfallList() {
@@ -41,5 +44,9 @@ public class SjukfallEnhetResponse {
 
     public boolean isSrsError() {
         return srsError;
+    }
+
+    public boolean isKompletteringInfoError() {
+        return kompletteringInfoError;
     }
 }

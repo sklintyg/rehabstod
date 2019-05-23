@@ -52,6 +52,7 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
             skipStart: false
         }
     };
+    var _isKompletteringInfoError = false;
 
     function _hasSamtycke() {
         return _sjfMetaData.samtyckeFinns;
@@ -79,6 +80,14 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
 
     function _getKraverInteSamtyckeViewState() {
         return _kraverInteSamtyckeViewState;
+    }
+
+    function _setKompletteringInfoError(isError) {
+       _isKompletteringInfoError = isError;
+    }
+
+    function _getKompletteringInfoError() {
+        return _isKompletteringInfoError;
     }
 
     function _setSjfMetaData(sjfMetaData) {
@@ -231,6 +240,8 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
         getKraverSamtyckeViewState: _getKraverSamtyckeViewState,
         getKraverInteSamtyckeViewState: _getKraverInteSamtyckeViewState,
         extraBoxStates: _extraBoxStates,
-        hasSamtycke: _hasSamtycke
+        hasSamtycke: _hasSamtycke,
+        setKompletteringInfoError: _setKompletteringInfoError,
+        getKompletteringInfoError: _getKompletteringInfoError
     };
 } ]);

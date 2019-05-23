@@ -81,7 +81,7 @@ gretty {
     enableNaming = true
 
     jvmArgs = [
-            '-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,caching-enabled,rhs-security-test,ia-stub',
+            '-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,caching-enabled,rhs-security-test,rhs-wc-stub,ia-stub',
                '-Dconfig.folder=' + projectDir + '/../devops/dev',
                '-Dconfig.file=' + projectDir + '/src/main/resources/dev.properties',
                '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
@@ -95,6 +95,7 @@ dependencies {
     compile project(":rehabstod-samtyckestjanst-integration")
     compile project(":rehabstod-sparrtjanst-integration")
     compile project(":rehabstod-srs-integration")
+    compile project(":rehabstod-wc-integration")
     compile project(":rehabstod-persistence")
 
     compile "se.riv.clinicalprocess.healthcond.monitoring:clinicalprocess-healthcond-monitoring-schemas:${internalMonitoringSchemaVersion}"

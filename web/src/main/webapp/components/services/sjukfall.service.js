@@ -44,8 +44,9 @@ angular.module('rehabstodApp').factory('SjukfallService',
 
                 return SjukfallProxy.get(query).then(function(response) {
                     _normalizeRiskSignals(response.data);
-                    SjukfallModel.set(response.data);
+                    SjukfallViewState.setKompletteringInfoError(response.kompletteringInfoError);
                     SjukfallViewState.setSrsError(response.srsError);
+                    SjukfallModel.set(response.data);
                     loading = false;
                 }, function(errorData) {
                     $log.debug('Failed to get sjukfall.');
@@ -100,6 +101,7 @@ angular.module('rehabstodApp').factory('SjukfallService',
                     min: filterState.slutdatum.from === null ? '' : moment(filterState.slutdatum.from).format('YYYY-MM-DD'),
                     max: filterState.slutdatum.to === null ? '' : moment(filterState.slutdatum.to).format('YYYY-MM-DD')
                 },
+                komplettering: filterState.komplettering,
                 lakare: filterState.lakare,
                 diagnosGrupper: filterState.diagnosKapitel,
                 personnummer: personnummer

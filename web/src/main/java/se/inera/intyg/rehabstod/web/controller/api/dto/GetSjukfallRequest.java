@@ -42,6 +42,7 @@ public class GetSjukfallRequest {
 
     private String patientId;
     private String fritext;
+    private Integer komplettering;
 
     /** The sole constructor. **/
     public GetSjukfallRequest() {
@@ -126,5 +127,13 @@ public class GetSjukfallRequest {
 
     public void setShowPatientId(boolean showPatientId) {
         this.showPatientId = showPatientId;
+    }
+
+    public Integer getKomplettering() {
+        return komplettering;
+    }
+
+    public void setKomplettering(Integer komplettering) {
+        this.komplettering = komplettering;
     }
 }

@@ -29,6 +29,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import se.inera.intyg.infra.integration.pu.stub.StubResidentStore;
+import se.inera.intyg.rehabstod.integration.wc.stub.WcStubStore;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 import static org.junit.Assert.assertEquals;
@@ -43,6 +44,8 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SjukfallIntygDataGeneratorTest {
+    @Mock
+    private WcStubStore wcStubStore;
 
     @Mock
     private StubResidentStore residentStore;

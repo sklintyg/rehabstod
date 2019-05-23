@@ -45,6 +45,10 @@ public abstract class BaseExportService {
     protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Valda diagnoser";
     protected static final String SELECTION_VALUE_ALLA = "Alla";
     protected static final String FILTER_TITLE_VALDA_LAKARE = "Valda läkare";
+    protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS = "Kompletteringsstatus";
+    protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA = "Visa alla";
+    protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN = "Visa sjukfall utan obesvarade kompletteringar";
+    protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_MED = "Visa sjukfall med obesvarade kompletteringar";
     protected static final String FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
     protected static final String FILTER_TITLE_VALD_ALDER = "Åldersspann";
     protected static final String FILTER_TITLE_VALD_SLUTDATUM = "Slutdatum";
@@ -73,6 +77,7 @@ public abstract class BaseExportService {
     protected static final String TABLEHEADER_SJUKSKRIVNINGSLANGD = "Längd";
     protected static final String TABLEHEADER_ANTAL = "Antal";
     protected static final String TABLEHEADER_SJUKSKRIVNINGSGRAD = "Grad";
+    protected static final String TABLEHEADER_KOMPLETTERINGSSTATUS = "Kompletteringar";
     protected static final String TABLEHEADER_NUVARANDE_LAKARE = "Läkare";
     protected static final String TABLEHEADER_SRS_RISK = "Risk";
 
@@ -116,6 +121,22 @@ public abstract class BaseExportService {
         }
 
         return "-";
+    }
+
+    protected String getKompletteringFilterDisplayValue(Integer komplettering) {
+        if (komplettering == null) {
+            return FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA;
+        } else {
+            return komplettering == 0 ? FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN : FILTER_TITLE_KOMPLETTERINGSSTATUS_MED;
+        }
+    }
+
+    protected String getKompletteringStatusFormat(int obesvaradeKompl) {
+        if (obesvaradeKompl == 0) {
+            return "-";
+        } else {
+            return "Obesvarade(" + obesvaradeKompl + ")";
+        }
     }
 
     protected boolean isSrsFeatureActive(RehabstodUser user) {

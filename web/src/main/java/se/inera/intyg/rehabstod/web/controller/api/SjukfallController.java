@@ -18,6 +18,22 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +48,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
@@ -59,21 +76,6 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 /**
  * Created by Magnus Ekstrand on 03/02/16.
  */
@@ -84,6 +86,7 @@ public class SjukfallController {
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallController.class);
 
     private static final String SRS_UNAVAILABLE_HEADER = "SRS_UNAVAILABLE";
+    private static final String KOMPLETTERING_INFO_UNAVAILABLE_HEADER = "KOMPLETTERING_INFO_UNAVAILABLE";
 
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm");
 
@@ -116,7 +119,7 @@ public class SjukfallController {
         LOG.debug("PDL logging - log which 'sjukfall' that will be displayed to the user.");
         logSjukfallData(user, sjukfall, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
         logSjukfallData(user, filterHavingRiskSignal(sjukfall), ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
-        return buildSjukfallEnhetResponse(response.isSrsError(), sjukfall);
+        return buildSjukfallEnhetResponse(response.isSrsError(), response.isKompletteringInfoError(), sjukfall);
     }
 
     @RequestMapping(value = "/patient", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -412,11 +415,12 @@ public class SjukfallController {
     }
 
     // -- Response builders
-    private ResponseEntity<List<SjukfallEnhet>> buildSjukfallEnhetResponse(boolean srsError, List<SjukfallEnhet> payload) {
-        if (!srsError) {
+    private ResponseEntity<List<SjukfallEnhet>> buildSjukfallEnhetResponse(boolean srsError, boolean kompletteringInfoError,
+            List<SjukfallEnhet> payload) {
+        if (!srsError && !kompletteringInfoError) {
             return new ResponseEntity<>(payload, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(payload, buildSrsUnavailableHeader(), HttpStatus.OK);
+            return new ResponseEntity<>(payload, buildServicesUnavailableHeader(srsError, kompletteringInfoError), HttpStatus.OK);
         }
     }
 
@@ -424,13 +428,18 @@ public class SjukfallController {
         if (!srsError) {
             return new ResponseEntity<>(payload, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(payload, buildSrsUnavailableHeader(), HttpStatus.OK);
+            return new ResponseEntity<>(payload, buildServicesUnavailableHeader(srsError, false), HttpStatus.OK);
         }
     }
 
-    private HttpHeaders buildSrsUnavailableHeader() {
+    private HttpHeaders buildServicesUnavailableHeader(boolean srsError, boolean kompletteringInfoError) {
         HttpHeaders headers = new HttpHeaders();
-        headers.put(SRS_UNAVAILABLE_HEADER, Collections.singletonList("true"));
+        if (srsError) {
+            headers.put(SRS_UNAVAILABLE_HEADER, Collections.singletonList("true"));
+        }
+        if (kompletteringInfoError) {
+            headers.put(KOMPLETTERING_INFO_UNAVAILABLE_HEADER, Collections.singletonList("true"));
+        }
         return headers;
     }
 }

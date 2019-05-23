@@ -216,6 +216,12 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         }
         valdaLakare.add(lakarLista);
 
+        // Kompletteringsstatus
+        Paragraph valdKompletteringsstatus = new Paragraph(FILTER_TITLE_KOMPLETTERINGSSTATUS, PdfExportConstants.FRONTPAGE_H3);
+        valdKompletteringsstatus.add(
+                new Paragraph("- " + getKompletteringFilterDisplayValue(printRequest.getKomplettering()),
+                        PdfExportConstants.FRONTPAGE_NORMAL));
+
         // Lagg ihop undergrupperna till filter
         Paragraph filter = new Paragraph(VALDA_FILTER, PdfExportConstants.FRONTPAGE_H2);
         filter.add(valdFritext);
@@ -225,6 +231,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         filter.add(valdSlutdatum);
         filter.add(valdSjukskrivninglangd);
         filter.add(valdaLakare);
+        filter.add(valdKompletteringsstatus);
 
         return filter;
     }
@@ -309,6 +316,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         tempHeaders.add(1.0f); // Längd
         tempHeaders.add(0.45f); // Antal
         tempHeaders.add(2f); // Grader
+        tempHeaders.add(1.5f); // Kompletteringsstatus
         if (Urval.ALL.equals(urval)) {
             tempHeaders.add(2f); // Läkare
         }
@@ -353,6 +361,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         addCell(table, TABLEHEADER_SJUKSKRIVNINGSLANGD, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_ANTAL, PdfExportConstants.TABLE_HEADER_FONT);
         addCell(table, TABLEHEADER_SJUKSKRIVNINGSGRAD, PdfExportConstants.TABLE_HEADER_FONT);
+        addCell(table, TABLEHEADER_KOMPLETTERINGSSTATUS, PdfExportConstants.TABLE_HEADER_FONT);
         if (Urval.ALL.equals(urval)) {
             addCell(table, TABLEHEADER_NUVARANDE_LAKARE, PdfExportConstants.TABLE_HEADER_FONT);
         }
@@ -394,6 +403,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             addCell(table, getlangdText(is));
             addCell(table, is.getIntyg());
             addCell(table, getGrader(is));
+            addCell(table, getKompletteringStatusFormat(is.getObesvaradeKompl()));
             if (Urval.ALL.equals(urval)) {
                 addCell(table, is.getLakare().getNamn());
             }

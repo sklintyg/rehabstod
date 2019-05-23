@@ -71,6 +71,7 @@ public class SjukfallEngineMapper {
             to.setSlutOmDagar(ChronoUnit.DAYS.between(today, from.getSlut()));
             to.setDagar(from.getDagar());
             to.setIntyg(from.getIntyg());
+            to.setIntygLista(from.getIntygLista());
             to.setAktivGrad(from.getAktivGrad());
             to.setGrader(from.getGrader());
             to.setAktivIntygsId(from.getAktivIntygsId());

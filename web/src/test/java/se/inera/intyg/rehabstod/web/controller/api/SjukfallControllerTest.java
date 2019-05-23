@@ -150,7 +150,7 @@ public class SjukfallControllerTest {
         when(PDLActivityStore.getActivitiesNotInStore(anyString(), anyListOf(SjukfallEnhet.class), eq(ActivityType.READ),
             eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class))).thenReturn(toLog);
         when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(IntygParametrar.class)))
-                .thenReturn(new SjukfallEnhetResponse(result, false));
+                .thenReturn(new SjukfallEnhetResponse(result, false, false));
 
         // Then
         testee.getSjukfallForCareUnit(request);
@@ -187,7 +187,7 @@ public class SjukfallControllerTest {
             eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class))).thenReturn(toLog);
 
         when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(IntygParametrar.class)))
-                .thenReturn(new SjukfallEnhetResponse(allSjukFall, false));
+                .thenReturn(new SjukfallEnhetResponse(allSjukFall, false, false));
         when(pdfExportServiceMock.export(eq(finalList), eq(request), eq(rehabstodUserMock), eq(allSjukFall.size()))).thenReturn(new byte[0]);
 
         // Then
@@ -223,7 +223,7 @@ public class SjukfallControllerTest {
         mockStatic(PDLActivityStore.class);
         when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), anyString(),
                 any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class), anyCollectionOf(String.class)))
-                .thenReturn(new SjukfallPatientResponse(result, new SjfMetaData(), false));
+                .thenReturn(new SjukfallPatientResponse(result, new SjfMetaData(), false, false));
 
         // Then
         testee.getSjukfallForPatient(request);
@@ -258,7 +258,7 @@ public class SjukfallControllerTest {
         mockStatic(PDLActivityStore.class);
         when(sjukfallServiceMock.getByPatient(anyString(), anyString(), anyString(), anyString(),
                 any(Urval.class), any(IntygParametrar.class), anyCollectionOf(String.class), anyCollectionOf(String.class)))
-                .thenReturn(new SjukfallPatientResponse(result, new SjfMetaData(), false));
+                .thenReturn(new SjukfallPatientResponse(result, new SjfMetaData(), false, false));
 
         // Then
         testee.getSjukfallForPatient(request);
@@ -295,7 +295,7 @@ public class SjukfallControllerTest {
         when(sjukfallServiceMock
                 .getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class),
                         any(IntygParametrar.class), anyCollectionOf(String.class), anyCollectionOf(String.class)))
-                .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false));
+                .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false, false));
 
         testee.getSjukfallForPatient(request);
 
@@ -333,7 +333,7 @@ public class SjukfallControllerTest {
         when(sjukfallServiceMock
                 .getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class),
                         any(IntygParametrar.class), anyCollectionOf(String.class), anyCollectionOf(String.class)))
-                .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false));
+                .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false, false));
 
         testee.getSjukfallForPatient(request);
 
@@ -372,7 +372,7 @@ public class SjukfallControllerTest {
         when(sjukfallServiceMock
                 .getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class),
                         any(IntygParametrar.class), anyCollectionOf(String.class), anyCollectionOf(String.class)))
-                .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false));
+                .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false, false));
 
         testee.getSjukfallForPatient(request);
 
@@ -406,7 +406,7 @@ public class SjukfallControllerTest {
 
         // When
         when(sjukfallServiceMock.getByUnit(anyString(), isNull(String.class), anyString(), any(Urval.class), any(IntygParametrar.class)))
-                .thenReturn(new SjukfallEnhetResponse(finalList, false));
+                .thenReturn(new SjukfallEnhetResponse(finalList, false, false));
 
         testee.getSjukfallForCareUnit(request);
 

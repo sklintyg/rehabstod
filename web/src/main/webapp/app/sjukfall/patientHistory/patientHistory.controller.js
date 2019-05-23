@@ -30,6 +30,7 @@ angular.module('rehabstodApp').controller('patientHistoryController',
         $scope.tabs = patientHistoryViewState.getTabs();
 
         $scope.errorMessageKey = '';
+        $scope.patientHistoryViewState = patientHistoryViewState;
         $scope.patient = patient;
         $scope.showPatientId = SjukfallFilterViewState.get().showPatientId;
         $scope.showSpinner = true;
@@ -58,10 +59,12 @@ angular.module('rehabstodApp').controller('patientHistoryController',
 
         function updatePatientSjukfall(patient) {
             //Start by requesting data
+
             patientHistoryProxy.get(patient).then(function(sjukfallResponse) {
                 $scope.showSpinner = false;
                 patientHistoryViewState.setTimelineItems(sjukfallResponse.sjukfallList);
                 patientHistoryViewState.setSjfMetaData(sjukfallResponse.sjfMetaData);
+                patientHistoryViewState.setKompletteringInfoError(sjukfallResponse.kompletteringInfoError);
 
                 $scope.timeline = patientHistoryViewState.getTimelineItems();
             }, function() {

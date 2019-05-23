@@ -63,6 +63,8 @@ $rhs-table-hover-bg: #bce4e8; //30% opacity of of specified color 00A1B0
 
 
 // Bootstrap variables (Here we override bootstraps default values with RHS custom variables defined above, or just directly..)
+//Change from 992 to 1024 as this is a specified breakpoint, below 1024 we have no specs
+$screen-md: 1024px;
 
 $icon-font-path: '../bower_components/bootstrap-sass/assets/fonts/bootstrap/';
 $fa-font-path: '../bower_components/font-awesome/fonts';

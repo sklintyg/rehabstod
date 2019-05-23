@@ -22,7 +22,8 @@ angular.module('rehabstodApp').factory('SjukfallViewState', [
         'use strict';
 
         var state = {
-            srsError: false
+            srsError: false,
+            kompletteringInfoError: false
         };
 
         function _reset() {
@@ -36,13 +37,17 @@ angular.module('rehabstodApp').factory('SjukfallViewState', [
         function _setSrsError(_srsError) {
             state.srsError = _srsError;
         }
+        function _setKompletteringInfoError(_kompletteringInfoError) {
+            state.kompletteringInfoError = _kompletteringInfoError;
+        }
 
         _reset();
 
         return {
             reset: _reset,
             get: _getState,
-            setSrsError: _setSrsError
+            setSrsError: _setSrsError,
+            setKompletteringInfoError: _setKompletteringInfoError
         };
     }])
 ;

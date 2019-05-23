@@ -26,6 +26,7 @@ angular.module('rehabstodApp')
         $scope.SjukfallViewState = SjukfallViewState;
         $scope.user = UserModel.get();
         $scope.srsError = false;
+        $scope.kompletteringInfoError = false;
 
         loadSjukfall();
 
@@ -46,6 +47,9 @@ angular.module('rehabstodApp')
 
         $scope.$watch('SjukfallViewState.get().srsError', function (val) {
             $scope.srsError = val;
+        });
+        $scope.$watch('SjukfallViewState.get().kompletteringInfoError', function (val) {
+            $scope.kompletteringInfoError = val;
         });
 
         function loadSjukfall() {

@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').factory('SjukfallModel',
-    function($parse, $filter, SjukfallFilterViewState) {
+    function($parse, $filter, SjukfallFilterViewState, SjukfallViewState) {
         'use strict';
 
         var data = [];
@@ -81,11 +81,21 @@ angular.module('rehabstodApp').factory('SjukfallModel',
             return items.join(' &#10142; ');
         }
 
+        function _getObesvaradeKomplShow(obesvaradeKompl) {
+            if (SjukfallViewState.get().kompletteringInfoError) {
+                //indicate no value due to error
+                return '';
+            }
+            return (obesvaradeKompl > 0) ? 'Obesvarad (' + obesvaradeKompl + ')' : '-';
+        }
+
+
         function _updateQuickSearchContent() {
             angular.forEach(data, function(item) {
                 item.patient.konShow = _getKon(item.patient.kon);
                 item.dagarShow = _getDagar(item.dagar);
                 item.gradShow = _getGradShow(item.aktivGrad, item.grader);
+                item.obesvaradeKomplShow = _getObesvaradeKomplShow(item.obesvaradeKompl);
                 item.quickSearchString = '';
 
                 //We dont want to be able to quicksearch for patientname/personnr etc if in anonymous mode
@@ -101,6 +111,7 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                 _addQuickSearchContentFromProperty(item, 'start');
                 _addQuickSearchContentFromProperty(item, 'slut');
                 _addQuickSearchContent(item, item.dagarShow);
+                _addQuickSearchContent(item, item.obesvaradeKomplShow);
                 _addQuickSearchContentFromProperty(item, 'intyg');
                 _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join('%,') + '%' : '');
                 _addQuickSearchContentFromProperty(item, 'lakare.namn');

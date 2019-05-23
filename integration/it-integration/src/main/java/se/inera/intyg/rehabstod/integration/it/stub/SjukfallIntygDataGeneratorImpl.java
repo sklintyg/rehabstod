@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import se.inera.intyg.infra.integration.pu.stub.StubResidentStore;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
+import se.inera.intyg.rehabstod.integration.wc.stub.WcStubStore;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
@@ -127,7 +128,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private PersonnummerLoader personnummerLoader;
     @Autowired
     private StubResidentStore residentStore;
-
+    @Autowired
+    private WcStubStore wcStore;
     @PostConstruct
     public void init() {
         initDiagnoser();
@@ -216,10 +218,17 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         timeSimulator = LocalDateTime.now().minusDays(ThreadLocalRandom.current().nextInt(60, 120));
         for (int intygsIndex = 0; intygsIndex < intygPerPatient; intygsIndex++) {
 
-            intygsDataList.add(buildIntygsData(patient, hosPerson));
+            IntygsData intygData = buildIntygsData(patient, hosPerson);
+            intygsDataList.add(intygData);
             // Add random nr of days glapp between intyg
             timeSimulator = timeSimulator.plusDays(ThreadLocalRandom.current().nextInt(0, 10));
 
+            //For 25% of intyg, add at least 1 obesvarad komplettering
+            int randomNumberOfObesvaradeKompletteringar = 0;
+            if (ThreadLocalRandom.current().nextInt(0, 100) < 25) {
+                randomNumberOfObesvaradeKompletteringar = ThreadLocalRandom.current().nextInt(1, 3);
+            }
+            addToWcStubStore(intygData, randomNumberOfObesvaradeKompletteringar);
         }
         // Once for each patient > 50 years old, add a 2 really old intyg to get som history
         if (getAge(patient) > 50) {
@@ -227,6 +236,10 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
             intygsDataList.add(buildIntygsData(patient, hosPerson));
             intygsDataList.add(buildIntygsData(patient, hosPerson));
         }
+    }
+
+     private void addToWcStubStore(IntygsData intygsData, int nrObesvaradeKompletteringar) {
+        wcStore.addAddition(intygsData.getIntygsId(), intygsData.getSigneringsTidpunkt(), nrObesvaradeKompletteringar);
     }
 
     private int getAge(Patient patient) {

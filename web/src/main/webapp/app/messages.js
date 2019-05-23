@@ -34,7 +34,6 @@ var rhsMessages = {
         'common.print': 'Skriv ut',
         'common.close': 'Stäng',
         'common.date': 'Datum',
-        'common.reset': 'Återställ',
         'common.approve': 'Godkänn',
 
         'common.label.loading': 'Laddar',
@@ -95,7 +94,7 @@ var rhsMessages = {
         // Filter
         'label.filter.show' : 'Visa sökfilter',
         'label.filter.hide' : 'Dölj sökfilter',
-        'label.filter.diagnos' : 'Diagnosfilter',
+        'label.filter.diagnos' : 'Välj diagnos',
         'label.filter.diagnos.help' : 'Filtrerar på den diagnos som skrivs ut först för sjukfallet uppdelat på kapitel. Diagnoskapitel som saknar data är inte valbara.',
         'label.filter.lakare' : 'Välj läkare',
         'label.filter.lakare.help' : 'Filtrerar på den läkare som har utfärdat det aktiva intyget. Endast läkare som utfärdat aktiva intyg visas i listan.',
@@ -105,12 +104,15 @@ var rhsMessages = {
         'label.filter.alder.help' : 'Filtrerar på patientens nuvarande ålder.',
         'label.filter.slutdatum' : 'Välj slutdatum',
         'label.filter.slutdatum.help' : 'Filtrerar på slutdatum för det sjukfall som det aktiva intyget ingår i. Det är möjligt att välja ett intervall genom att klicka på två olika datum, eller ett enskilt datum genom att klicka på samma datum två gånger.',
+        'label.filter.komplettering-status': 'Välj kompletteringsstatus',
+        'label.filter.komplettering-status.help': 'Filtrerar på sjukfall med eller utan obesvarade kompletteringar. ',
         'label.filter.filter' : 'Fritextfilter',
         'label.filter.filter.help' : 'Filtrerar på all synlig text i tabellen.',
         'label.filter.filter.placeholder' : 'Hitta sjukfall som innehåller...',
         'label.filter.personuppgifter': 'Visa personuppgifter',
         'label.filter.personuppgifter.help': 'Visar eller döljer patienternas namn och personnummer i tabellen. ',
         'label.filter.allselected' : 'Alla valda',
+        'label.filter.reset': 'Återställ filter',
 
         // Settings
         'settings.modal.header' : 'Inställningar',
@@ -143,6 +145,8 @@ var rhsMessages = {
         'label.table.column.slut.help': 'Slutdatum för sjukfallet, dvs. den sista dagen då det finns ett giltigt intyg.',
         'label.table.column.aktivgrad': 'Grad',
         'label.table.column.aktivgrad.help': 'Sjukskrivningsgrad i nuvarande intyg. Om det innehåller flera grader anges de ordnade i tidsföljd med markering av den just nu gällande graden.',
+        'label.table.column.obesvaradekompl': 'Komplettering',
+        'label.table.column.obesvaradekompl.help': 'Visar om det finns intyg i sjukfallet som har obesvarade kompletteringsbegäran och hur många det är.',
         'label.table.column.lakare.namn': 'Läkare',
         'label.table.column.lakare.namn.help': 'Läkaren som utfärdat nuvarande intyg. Namnet hämtas från HSA-katalogen. Om det inte går att slå upp läkaren i HSA-katalogen visas bara HSA-id.',
         'label.table.column.dagar': 'Längd',

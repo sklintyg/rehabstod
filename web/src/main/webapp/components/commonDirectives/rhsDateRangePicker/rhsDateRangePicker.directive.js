@@ -167,7 +167,8 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
                         return fromDate.format('YYYY-MM-DD');
                     }
 
-                    return 'Intervall';
+                    return fromDate.format('YYYY-MM-DD') + ' till ' + moment(model.to).format('YYYY-MM-DD');
+
                 }
             }
         };

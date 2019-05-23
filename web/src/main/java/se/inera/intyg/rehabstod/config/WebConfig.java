@@ -40,7 +40,8 @@ import java.util.Properties;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan({ "se.inera.intyg.rehabstod.web", "se.inera.intyg.rehabstod.common.service.stub",
+@ComponentScan({ "se.inera.intyg.rehabstod.web",
+        "se.inera.intyg.rehabstod.integration.wc.stub.api",
         "se.inera.intyg.rehabstod.integration.srs.stub.api" })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
