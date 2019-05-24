@@ -2,7 +2,9 @@ rhs-table {
   display: block;
 
 }
-
+.floating-scroll-container {
+  overflow: auto;
+}
 .fa-sort {
   color: $background-darkergray-color;
 }
