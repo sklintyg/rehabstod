@@ -32,6 +32,7 @@ module.exports = function(config) {
             'src/main/webapp/bower_components/moment/moment.js',
             'src/main/webapp/bower_components/jquery-date-range-picker/src/jquery.daterangepicker.js',
             'src/main/webapp/bower_components/lodash/lodash.js',
+            'src/main/webapp/bower_components/floating-scroll/dist/jquery.floatingscroll.min.js',
             // endbower
             'src/main/webapp/bower_components/angular-mocks/angular-mocks.js',
             'src/main/webapp/app/**/*.module.js',
