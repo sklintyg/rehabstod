@@ -1,6 +1,6 @@
 <div
     data-ng-repeat="banner in banners"
     class="alert {{::banner.bannerClass}}"
-    data-ng-bind-html="::banner.message"
   >
+  <div class="text-container" data-ng-bind-html="::banner.message"></div>
 </div>
