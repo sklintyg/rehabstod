@@ -21,7 +21,6 @@ package se.inera.intyg.rehabstod.integration.wc.stub;
 // CHECKSTYLE:OFF LineLength
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,13 +57,20 @@ public class GetCertificateAdditionsStub implements GetCertificateAdditionsRespo
 
     private Collection<IntygAdditionsType> getItems(GetCertificateAdditionsType getCertificateAdditionsType) {
         return getCertificateAdditionsType.getIntygsId().stream()
-                .map(this::getResultForIntyg)
-                .filter(Objects::nonNull)
+                .map(this::getResultForIntygId)
                 .collect(Collectors.toList());
     }
 
-    private IntygAdditionsType getResultForIntyg(IntygId intyg) {
-        return store.getAddition(intyg.getExtension());
+    private IntygAdditionsType getResultForIntygId(IntygId intyg) {
+        // To match the behaviour of actual WC responder implementation, we should return a result for all intygids queried for.
+        final IntygAdditionsType addition = store.getAddition(intyg.getExtension());
+        if (addition != null) {
+            return addition;
+        } else {
+            IntygAdditionsType noResult = new IntygAdditionsType();
+            noResult.setIntygsId(intyg);
+            return noResult;
+        }
     }
 
 }

@@ -52,24 +52,24 @@
     <div class="row">
 
       <!-- SJUKSKRIVNINGSLÄNGD -->
-      <div class="col-md-4 col-xs-6">
+      <div class="col-md-3 col-sm-6">
         <div class="form-group">
           <label class="control-label"><span message key="label.filter.langd"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                             field-help-text="label.filter.langd.help"></span></label>
           <div class="form-inline">
-            <span>Från&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().sjukskrivningslangdModel[0]" min="1"
+            Från&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().sjukskrivningslangdModel[0]" min="1"
                                                      max="filterViewState.get().sjukskrivningslangdModel[1]" display-max-value-as="365+"
-                                                     input-id="rhs-filter-langd-from" /></span>
+                                                     input-id="rhs-filter-langd-from" />
 
-            <span>till&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().sjukskrivningslangdModel[1]"
+            till&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().sjukskrivningslangdModel[1]"
                                                      min="filterViewState.get().sjukskrivningslangdModel[0]" max="366"
-                                                     display-max-value-as="365+" input-id="rhs-filter-langd-to" />&nbsp;dagar</span>
+                                                     display-max-value-as="365+" input-id="rhs-filter-langd-to" />&nbsp;dagar
           </div>
         </div>
       </div>
 
       <!-- SLUTDATUM -->
-      <div class="col-md-3 col-md-pull-1 col-xs-6">
+      <div class="col-md-3 col-sm-6">
         <div class="form-group">
           <label class="control-label"><span message key="label.filter.slutdatum"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                                 field-help-text="label.filter.slutdatum.help"></span></label>
@@ -78,30 +78,25 @@
       </div>
 
       <!-- ÅLDER -->
-      <div class="col-md-4 col-md-pull-1 col-xs-12">
+      <div class="col-md-3 col-sm-6">
         <div class="form-group">
           <label class="control-label"><span message key="label.filter.alder"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                             field-help-text="label.filter.alder.help"></span></label>
           <div class="form-inline">
-            <span>Från&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().aldersModel[0]" min="0"
+            Från&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().aldersModel[0]" min="0"
                                                      max="filterViewState.get().aldersModel[1]" display-max-value-as="100+"
-                                                     input-id="rhs-filter-alder-from" /></span>
+                                                     input-id="rhs-filter-alder-from" />
 
-            <span>till&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().aldersModel[1]"
+            till&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().aldersModel[1]"
                                                      min="filterViewState.get().aldersModel[0]" max="101" display-max-value-as="100+"
-                                                     input-id="rhs-filter-alder-to" />&nbsp;år</span>
+                                                     input-id="rhs-filter-alder-to" />&nbsp;år
           </div>
         </div>
       </div>
-
-    </div>
-
-
-    <div class="row">
       <!-- PERSONUPPGIFTER -->
-      <div class="col-xs-8">
+      <div class="col-md-3 col-sm-6">
         <div class="rhs-checkbox form-group">
-          <label class="control-label">&nbsp;</label>
+          <label class="control-label">&nbsp;</label><br>
           <label for="rhs-filter-showPatientIdToggle"><input id="rhs-filter-showPatientIdToggle" type="checkbox"
                                                              ng-model="filterViewState.get().showPatientId">
             <span message key="label.filter.personuppgifter"></span> <span class="rhs-tooltip" rhs-tooltip
@@ -109,8 +104,13 @@
                                                                            alignment="auto top"></span> </label>
         </div>
       </div>
+
+    </div>
+
+
+    <div class="row">
       <!-- ÅTERSTÄLL FILTER -->
-      <div class="col-xs-4">
+      <div class="col-xs-12">
         <div class="form-group">
           <label class="control-label">&nbsp;</label>
           <button id="rhs-filter-reset-btn" ng-click="onResetFilterClick()" class="btn btn-default pull-right"
