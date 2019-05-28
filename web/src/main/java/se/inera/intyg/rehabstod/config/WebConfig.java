@@ -18,9 +18,12 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import java.util.List;
+import java.util.Properties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.ViewResolver;
@@ -35,14 +38,12 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 
-import java.util.List;
-import java.util.Properties;
-
 @EnableWebMvc
 @Configuration
 @ComponentScan({ "se.inera.intyg.rehabstod.web",
         "se.inera.intyg.rehabstod.integration.wc.stub.api",
-        "se.inera.intyg.rehabstod.integration.srs.stub.api" })
+        "se.inera.intyg.rehabstod.integration.srs.stub.api"})
+@ImportResource({ "classpath:META-INF/cxf/cxf.xml" })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     private static final int SECONDS_IN_HOUR = 3600;

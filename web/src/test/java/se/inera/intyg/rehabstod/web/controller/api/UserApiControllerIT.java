@@ -19,17 +19,15 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Test;
-
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -44,7 +42,8 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testGetAnvandare() {
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
+        SessionData sd = getAuthSession(DEFAULT_LAKARE);
+        RestAssured.sessionId = sd.getSessionId();
         given().expect().statusCode(OK).when().get(USER_API_ENDPOINT).
                 then().
                 body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json")).
@@ -59,10 +58,10 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
         FakeCredentials user = new FakeCredentials.FakeCredentialsBuilder("eva",
                 "centrum-vast").legitimeradeYrkesgrupper(LAKARE).build();
 
-        RestAssured.sessionId = getAuthSession(user);
+        SessionData sd = getAuthSession(user);
 
         //Ingen vardgivare skall vara vald som default eftersom denna user har flera att välja på.
-        given().expect().statusCode(OK)
+        sd.begin().expect().statusCode(OK)
                 .when()
                 .get(USER_API_ENDPOINT)
                 .then()
@@ -72,7 +71,7 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
                 .body("valdVardenhet", equalTo(null));
 
         //Man skall nu heller inte få gå mot apiet(med vissa undantag) utan att ha någon vardenhet vald
-        given().expect().statusCode(SERVER_ERROR).when().get(SJUKFALLSUMMARY_API_ENDPOINT);
+        sd.begin().expect().statusCode(SERVER_ERROR).when().get(SJUKFALLSUMMARY_API_ENDPOINT);
     }
 
     @Test
@@ -91,15 +90,16 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
             .systemRoles(Arrays.asList("INTYG;Rehab-TSTNMT2321000156-105N", "INTYG;Rehab-TSTNMT2321000156-105P"))
             .build();
 
-        RestAssured.sessionId = getAuthSession(user);
+        SessionData sd = getAuthSession(user);
 
         // An improvement of this would be to call hsaStub rest api to add testa data as we want it to
         // avoid "magic" ids and the dependency to bootstrapped data?
         final String vardEnhetToChangeTo = "TSTNMT2321000156-105P";
         ChangeSelectedUnitRequest changeRequest = new ChangeSelectedUnitRequest(vardEnhetToChangeTo);
 
-        given().contentType(ContentType.JSON).and()
-                .body(changeRequest).when().post(USER_API_ENDPOINT + "/andraenhet")
+        sd.begin()
+                .body(changeRequest)
+                .when().post(USER_API_ENDPOINT + "/andraenhet")
                 .then()
                 .statusCode(OK)
                 .body(matchesJsonSchemaInClasspath("jsonschema/rhs-user-response-schema.json"))
@@ -119,27 +119,27 @@ public class UserApiControllerIT extends BaseRestIntegrationTest {
             .systemRoles(Arrays.asList("INTYG;Rehab-TSTNMT2321000156-105N"))
             .build();
 
-        RestAssured.sessionId = getAuthSession(user);
+        SessionData sd = getAuthSession(user);
 
         // An improvement of this would be to call hsaStub rest api to add testa data as we want it to
         // avoid "magic" ids and the dependency to bootstrapped data?
         final String vardEnhetToChangeTo = "non-existing-vardenehet-id";
         ChangeSelectedUnitRequest changeRequest = new ChangeSelectedUnitRequest(vardEnhetToChangeTo);
 
-        given().contentType(ContentType.JSON).and().body(changeRequest).expect().statusCode(SERVER_ERROR).when()
+        sd.begin().body(changeRequest).expect().statusCode(SERVER_ERROR).when()
                 .post(USER_API_ENDPOINT + "/andraenhet");
     }
 
     @Test
     public void testSetAndGetPreferenceForUser() {
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
+        SessionData sd = getAuthSession(DEFAULT_LAKARE);
         Map<String, String> preferences = new HashMap<>();
         preferences.put(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG.getFrontendKeyName(), "7");
 
-        given().contentType(ContentType.JSON).and().body(preferences).expect().statusCode(OK).when()
+        sd.begin().body(preferences).expect().statusCode(OK).when()
         .post(USER_API_ENDPOINT + "/preferences");
 
-        given().expect().statusCode(OK).when().get(USER_API_ENDPOINT).
+        sd.begin().expect().statusCode(OK).when().get(USER_API_ENDPOINT).
                 then().
                 body("preferences." + Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG.getFrontendKeyName(), equalTo("7"));
     }

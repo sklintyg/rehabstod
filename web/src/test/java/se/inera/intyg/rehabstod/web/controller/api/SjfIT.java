@@ -18,16 +18,15 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import com.jayway.restassured.http.ContentType;
 import org.junit.After;
 import org.junit.Test;
-
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.AddVeToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
+
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -63,10 +62,10 @@ public class SjfIT extends BaseRestIntegrationTest {
         String veOtherBlocked_id = "TSTNMT2321000156-105Q";
         String veOtherBlocked_name = "Rehabstöd Enhet 3";
 
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
+        SessionData sd = getAuthSession(DEFAULT_LAKARE);
 
         // reset samtycke
-        given().contentType(ContentType.JSON)
+        sd.begin()
                 .expect().statusCode(OK)
                 .when().delete("services/api/stub/samtyckestjanst-api/consent");
 
@@ -78,7 +77,7 @@ public class SjfIT extends BaseRestIntegrationTest {
         consentRequest.setDays(1);
         consentRequest.setPatientId(patientId);
 
-        given().contentType(ContentType.JSON).and().body(consentRequest)
+        sd.begin().body(consentRequest)
                 .expect().statusCode(OK)
                 .when().post(API_ENDPOINT_CONSENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_CONSENT))
@@ -87,7 +86,8 @@ public class SjfIT extends BaseRestIntegrationTest {
         sleep(200);
 
         // Kollar att samtycke finns och hur många som har spärr
-        given().contentType(ContentType.JSON).and().body(request)
+        sd.begin()
+                .body(request)
                 .expect().statusCode(OK)
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
@@ -110,12 +110,13 @@ public class SjfIT extends BaseRestIntegrationTest {
         String puSekretessUrl = "services/api/pu-api/person/" + patientId + "/sekretessmarkerad?value=";
 
         // Sätter sekretessmarkerad
-        given().contentType(ContentType.JSON)
+        sd.begin()
                 .expect().statusCode(OK)
                 .when().get(puSekretessUrl + "true");
 
         // Kollar att ingen sjf info kommer med
-        given().contentType(ContentType.JSON).and().body(request)
+        sd.begin()
+                .body(request)
                 .expect().statusCode(OK)
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
@@ -137,12 +138,14 @@ public class SjfIT extends BaseRestIntegrationTest {
         includeVgInSjukfallRequest.setPatientId(patientId);
         includeVgInSjukfallRequest.setVardgivareId(vgOther_id);
 
-        given().contentType(ContentType.JSON).and().body(includeVgInSjukfallRequest)
+        sd.begin()
+                .body(includeVgInSjukfallRequest)
                 .expect().statusCode(OK)
                 .when().post(API_ENDPOINT_INCLUDE_VG);
 
         // Kollar att vårdgivaren kommer med
-        given().contentType(ContentType.JSON).and().body(request)
+        sd.begin()
+                .body(request)
                 .expect().statusCode(OK)
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
@@ -168,12 +171,14 @@ public class SjfIT extends BaseRestIntegrationTest {
         includeVeInSjukfallRequest.setPatientId(patientId);
         includeVeInSjukfallRequest.setVardenhetId(veOther_id);
 
-        given().contentType(ContentType.JSON).and().body(includeVeInSjukfallRequest)
+        sd.begin()
+                .body(includeVeInSjukfallRequest)
                 .expect().statusCode(OK)
                 .when().post(API_ENDPOINT_INCLUDE_VE);
 
         // Kollar att vårdenheten kommer med
-        given().contentType(ContentType.JSON).and().body(request)
+        sd.begin()
+                .body(request)
                 .expect().statusCode(OK)
                 .when().post(API_ENDPOINT_PATIENT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))

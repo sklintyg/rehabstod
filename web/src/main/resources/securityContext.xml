@@ -124,7 +124,7 @@
   <beans profile="!rhs-security-test">
     <beans profile="dev,rhs-security-dev">
       <security:http use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
-        <security:csrf disabled="true"/>
+        <security:csrf request-matcher-ref="csrfRequestMatcher" token-repository-ref="csrfTokenRepository"/>
         <security:access-denied-handler error-page="/welcome.html"/>
         <security:logout logout-url="/logout" logout-success-url="/welcome.html" invalidate-session="true"/>
         <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
@@ -173,7 +173,7 @@
     <!-- Other unauthenticated requests will be returned as http status 403. -->
     <!-- This will allow frontend to act correctly on ajax requests          -->
     <security:http use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
-      <security:csrf disabled="true"/>
+      <security:csrf request-matcher-ref="csrfRequestMatcher" token-repository-ref="csrfTokenRepository"/>
       <security:logout logout-url="/logout" logout-success-url="/welcome.html" invalidate-session="true"/>
       <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
       <security:custom-filter position="PRE_AUTH_FILTER" ref="fakeAuthFilter"/>
@@ -199,7 +199,7 @@
       <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
     </security:http>
     <security:http  use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
-      <security:csrf disabled="true"/>
+      <security:csrf request-matcher-ref="csrfRequestMatcher" token-repository-ref="csrfTokenRepository"/>
       <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
     </security:http>
     <security:authentication-manager alias="authenticationManager">

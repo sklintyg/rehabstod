@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsHeader',
-        function($uibModal) {
+        function($uibModal, $window) {
             'use strict';
 
             return {
@@ -34,8 +34,6 @@ angular.module('rehabstodApp').directive('rhsHeader',
                      */
 
                     $scope.user = UserModel.get();
-
-                    $scope.logoutLocation = UserModel.getLogoutLocation();
 
                     $scope.showUnit = function() {
                         var user = UserModel.get();
@@ -55,6 +53,14 @@ angular.module('rehabstodApp').directive('rhsHeader',
                             // Removes angular error "Possibly unhandled rejection:
                             // backdrop click" when clicking outside of modal
                         }).result.then(function(){}, function(){});
+                    };
+
+                    $scope.logout = function($event) {
+                        if ($event) {
+                            $event.preventDefault();
+                        }
+                        $window.jQuery('<form action="' + UserModel.getLogoutLocation() + '" method="post" />')
+                            .appendTo('body').submit().remove();
                     };
                 }
             };
