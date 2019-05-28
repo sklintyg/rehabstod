@@ -39,7 +39,7 @@ function post(options, baseUrl) {
     browser.manage().getCookie("XSRF-TOKEN").then(function(csrf) {
         options.headers['X-XSRF-TOKEN'] = csrf.value;
         var cookie = 'XSRF-TOKEN=' + csrf.value;
-        options.headers['Cookie'] = (options.sessiondId) ? ('SESSION=' + options.sessiondId + '; ' + cookie) : cookie;
+        options.headers['Cookie'] = (options.sessionId) ? ('SESSION=' + options.sessionId + '; ' + cookie) : cookie;
     }).finally(function() {
         request(options, function(error, message) {
             if (error || message.statusCode >= 400) {
@@ -75,7 +75,7 @@ function _run(options, json, baseUrl) {
     }
 
     browser.manage().getCookie("SESSION").then(function(session) {
-        options.sessiondId = session.value;
+        options.sessionId = session.value;
     }).finally(function() {
         return browser.controlFlow().execute(function() {
             return post(options, baseUrl);
