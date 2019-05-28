@@ -94,7 +94,7 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
         }
 
         function _addInput(name, item) {
-            return '<input type="hidden" name="' + name + '" value="' + item + '" />';
+            return item !== null ? '<input type="hidden" name="' + name + '" value="' + item + '" />' : '';
         }
 
         // Return public API for the service
