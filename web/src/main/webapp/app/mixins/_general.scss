@@ -30,7 +30,7 @@ App-wide special styles
   }
 
   > * {
-    max-width: 1600px;
+    max-width: $rs-max-width;
     margin: 0 auto;
   }
 }
