@@ -35,18 +35,25 @@ function post(options, baseUrl) {
         baseUrl = browser.baseUrl;
     }
     options.url = baseUrl + options.url;
-    request(options, function(error, message) {
-        if (error || message.statusCode >= 400) {
-            if(message) {
-                console.log('Error message:', message.statusCode, message.statusMessage/*, body*/);
+
+    browser.manage().getCookie("XSRF-TOKEN").then(function(csrf) {
+        options.headers['X-XSRF-TOKEN'] = csrf.value;
+        var cookie = 'XSRF-TOKEN=' + csrf.value;
+        options.headers['Cookie'] = (options.sessionId) ? ('SESSION=' + options.sessionId + '; ' + cookie) : cookie;
+    }).finally(function() {
+        request(options, function(error, message) {
+            if (error || message.statusCode >= 400) {
+                if(message) {
+                    console.log('Error message:', message.statusCode, message.statusMessage, options/*, body*/);
+                }
+                defer.reject({
+                    error: error,
+                    message: message
+                });
+            } else {
+                defer.fulfill(message);
             }
-            defer.reject({
-                error: error,
-                message: message
-            });
-        } else {
-            defer.fulfill(message);
-        }
+        });
     });
     return defer.promise;
 }
@@ -67,8 +74,12 @@ function _run(options, json, baseUrl) {
         };
     }
 
-    return browser.controlFlow().execute(function() {
-        return post(options, baseUrl);
+    browser.manage().getCookie("SESSION").then(function(session) {
+        options.sessionId = session.value;
+    }).finally(function() {
+        return browser.controlFlow().execute(function() {
+            return post(options, baseUrl);
+        });
     });
 }
 

@@ -22,6 +22,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import com.jayway.restassured.specification.RequestSpecification;
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +33,6 @@ import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 import static com.jayway.restassured.RestAssured.given;
 import static java.util.Arrays.asList;
@@ -58,6 +59,9 @@ public abstract class BaseRestIntegrationTest {
     protected static final String DEFAULT_VG_HSAID = "TSTNMT2321000156-105M";
     protected static final String DEFAULT_VE_HSAID = "TSTNMT2321000156-105N";
     protected static final String DEFAULT_LAKARE_HSAID = "TSTNMT2321000156-105R";
+    protected static final String X_XSRF_TOKEN = "X-XSRF-TOKEN";
+    protected static final String XSRF_TOKEN = "XSRF-TOKEN";
+
 
     protected static final FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder(
             DEFAULT_LAKARE_HSAID, DEFAULT_VE_HSAID).legitimeradeYrkesgrupper(LAKARE)
@@ -75,6 +79,34 @@ public abstract class BaseRestIntegrationTest {
     public static final int OK = HttpStatus.OK.value();
     public static final int SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR.value();
     public static final int FORBIDDEN = HttpStatus.FORBIDDEN.value();
+
+    protected static class SessionData {
+        String sessionId;
+        String csrf;
+
+        public String getSessionId() {
+            return sessionId;
+        }
+
+        public String getCsrf() {
+            return csrf;
+        }
+
+        public RequestSpecification begin() {
+            return given()
+                    .sessionId(getSessionId())
+                    .cookie(XSRF_TOKEN, getCsrf())
+                    .header(X_XSRF_TOKEN, getCsrf())
+                    .contentType(ContentType.JSON);
+        }
+
+        static SessionData of(Response response) {
+            SessionData sd = new SessionData();
+            sd.sessionId = response.getSessionId();
+            sd.csrf = response.getCookie(XSRF_TOKEN);
+            return sd;
+        }
+    }
 
     /**
      * Common setup for all tests.
@@ -94,7 +126,7 @@ public abstract class BaseRestIntegrationTest {
      *            who to log in as
      * @return sessionId for the now authorized user session
      */
-    protected String getAuthSession(FakeCredentials fakeCredentials) {
+    protected SessionData getAuthSession(FakeCredentials fakeCredentials) {
         String credentialsJson;
         try {
             credentialsJson = objectMapper.writeValueAsString(fakeCredentials);
@@ -104,10 +136,10 @@ public abstract class BaseRestIntegrationTest {
         }
     }
 
-    protected void selectUnitByHsaId(String unitHsaId) {
+    protected void selectUnitByHsaId(SessionData sd, String unitHsaId) {
         ChangeSelectedUnitRequest req = new ChangeSelectedUnitRequest(unitHsaId);
         try {
-            selectUnit(objectMapper.writeValueAsString(req));
+            selectUnit(sd, objectMapper.writeValueAsString(req));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -121,18 +153,17 @@ public abstract class BaseRestIntegrationTest {
         }
     }
 
-    private String getAuthSession(String credentialsJson) {
+    private SessionData getAuthSession(String credentialsJson) {
         Response response = given().contentType(ContentType.URLENC).and().redirects().follow(false).and()
                 .formParam(USER_JSON_FORM_PARAMETER, credentialsJson).expect()
                 .statusCode(HttpServletResponse.SC_FOUND).when()
                 .post(FAKE_LOGIN_URI).then().extract().response();
-
         assertNotNull(response.sessionId());
-        return response.sessionId();
+        return SessionData.of(response);
     }
 
-    private void selectUnit(String changeUnitAsJson) throws JsonProcessingException {
-        Response response = given().contentType(ContentType.JSON).and()
+    private void selectUnit(SessionData sd, String changeUnitAsJson) throws JsonProcessingException {
+        Response response = sd.begin()
                 .body(changeUnitAsJson).expect().statusCode(OK)
                 .when()
                 .post(CHANGE_UNIT_URL).then().extract().response();

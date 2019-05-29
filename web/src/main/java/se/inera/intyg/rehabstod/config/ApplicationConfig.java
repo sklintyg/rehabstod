@@ -18,27 +18,22 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import javax.annotation.PostConstruct;
-
 import org.apache.cxf.Bus;
 import org.apache.cxf.feature.LoggingFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
-
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
-
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.security.filter.PrincipalUpdatedFilter;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
@@ -51,7 +46,6 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
         "file:${config.file}",
         "file:${credentials.file}",
         "classpath:version.properties" })
-@ImportResource({ "classpath:META-INF/cxf/cxf.xml", "classpath:securityContext.xml" })
 @Import(MonitoringConfiguration.class)
 public class ApplicationConfig implements TransactionManagementConfigurer {
 
@@ -100,6 +94,7 @@ public class ApplicationConfig implements TransactionManagementConfigurer {
 
         return new JacksonJaxbJsonProvider();
     }
+
 
     @Bean
     public DiagnosFactory diagnosFactory() {

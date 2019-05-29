@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.net.ssl.SSLContext;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
@@ -26,15 +34,16 @@ import org.apache.http.impl.client.HttpClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.web.client.RestTemplate;
-
-import javax.net.ssl.SSLContext;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 
 /**
  * Created by eriklupander on 2016-05-18.
@@ -42,6 +51,7 @@ import java.security.cert.X509Certificate;
 @Configuration
 @EnableRedisHttpSession
 @ComponentScan("se.inera.intyg.infra.security.authorities")
+@ImportResource({ "classpath:securityContext.xml" })
 public class SecurityConfig {
 
     private static final int RESTTEMPLATE_TIMEOUT_MS = 10000;
@@ -69,6 +79,27 @@ public class SecurityConfig {
         requestFactory.setReadTimeout(RESTTEMPLATE_TIMEOUT_MS);
         requestFactory.setHttpClient(httpClient);
         return new RestTemplate(requestFactory);
+    }
+
+    @Bean
+    public CsrfTokenRepository csrfTokenRepository() {
+        CookieCsrfTokenRepository repository = new CookieCsrfTokenRepository();
+        // allow client side scripts to access csrf cookies
+        repository.setCookieHttpOnly(false);
+        return repository;
+    }
+
+    @Bean
+    public RequestMatcher csrfRequestMatcher() {
+        return new OrRequestMatcher(antMatchers("/api/**", HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE));
+    }
+
+    //
+    private List<RequestMatcher> antMatchers(String path, HttpMethod... methods) {
+        return Stream.of(methods)
+                .map(Enum::name)
+                .map(m -> new AntPathRequestMatcher(path, m, false))
+                .collect(Collectors.toList());
     }
 
 }

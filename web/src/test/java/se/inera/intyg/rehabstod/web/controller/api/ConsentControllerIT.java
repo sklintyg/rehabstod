@@ -21,9 +21,9 @@ package se.inera.intyg.rehabstod.web.controller.api;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import java.util.Map;
 import org.junit.After;
 import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
@@ -31,9 +31,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRe
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-import java.util.Map;
 
-import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
@@ -59,8 +57,9 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testRegisterConsent() {
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-        given().contentType(ContentType.JSON).expect().statusCode(OK).when().delete(API_ENDPOINT_STUB);
+        SessionData sd = getAuthSession(DEFAULT_LAKARE);
+
+        sd.begin().contentType(ContentType.JSON).expect().statusCode(OK).when().delete(API_ENDPOINT_STUB);
 
         // 1. Register a consent
         RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
@@ -69,7 +68,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
         Response response = null;
 
-        response = given().contentType(ContentType.JSON).and().body(request)
+        response = sd.begin().contentType(ContentType.JSON).and().body(request)
                 .expect().statusCode(OK)
                 .when().post(API_ENDPOINT)
                 .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
@@ -87,9 +86,9 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
                 "vardgivareId", DEFAULT_VG_HSAID,
                 "vardenhetId", DEFAULT_VE_HSAID);
 
-        response = given().contentType(ContentType.JSON)
-                .and().queryParameters(parameters)
-                .and().body(request)
+        response = sd.begin()
+                .queryParameters(parameters)
+                .body(request)
                 .expect().statusCode(OK)
                 .when().get(API_ENDPOINT_STUB + "/" + PNR_TOLVAN_TOLVANSSON)
                 .then().extract().response();
@@ -100,8 +99,9 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testRegisterConsentForCurrentUserOnly() throws Exception {
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-        given().contentType(ContentType.JSON).expect().statusCode(OK).when().delete(API_ENDPOINT_STUB);
+        SessionData sd = getAuthSession(DEFAULT_LAKARE);
+
+        sd.begin().expect().statusCode(OK).when().delete(API_ENDPOINT_STUB);
 
         // 1. Register a consent
         RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
@@ -109,7 +109,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
         request.setPatientId(PNR_TOLVAN_TOLVANSSON);
         request.setDays(7);
 
-        Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)
+        Response response = sd.begin().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)
                 .when().post(API_ENDPOINT)
                 .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
                 .extract().response();
@@ -122,7 +122,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
         assertEquals(DEFAULT_LAKARE.getHsaId(), result.getRegisteredBy());
 
         // 2. Do check that consent is in the store
-        given().contentType(ContentType.JSON).and().body(request)
+        sd.begin().body(request)
                 .expect().statusCode(OK)
                 .when().get(API_ENDPOINT_STUB).then()
                 .body("vardgivareId[0]", equalTo(DEFAULT_VG_HSAID))
@@ -134,13 +134,14 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testRegisterConsentWithNoPatientId() {
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-        given().contentType(ContentType.JSON).expect().statusCode(OK).when().delete(API_ENDPOINT_STUB);
+        SessionData sd = getAuthSession(DEFAULT_LAKARE);
+
+        sd.begin().expect().statusCode(OK).when().delete(API_ENDPOINT_STUB);
 
         RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
         request.setDays(30);
 
-        Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)
+        Response response = sd.begin().body(request).expect().statusCode(OK)
                 .when().post(API_ENDPOINT)
                 .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
                 .extract().response();
@@ -154,8 +155,9 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testRegisterConsentMoreThanMaxDays() {
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
-        given().contentType(ContentType.JSON).expect().statusCode(OK).when().delete(API_ENDPOINT_STUB);
+        SessionData sd = getAuthSession(DEFAULT_LAKARE);
+
+        sd.begin().expect().statusCode(OK).when().delete(API_ENDPOINT_STUB);
 
         // 1. Register a consent
         RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
@@ -164,7 +166,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
         Response response;
 
-        response = given().contentType(ContentType.JSON).and().body(request)
+        response = sd.begin().body(request)
                 .expect().statusCode(OK)
                 .when().post(API_ENDPOINT)
                 .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))

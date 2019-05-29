@@ -19,8 +19,8 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import java.util.Collection;
 import org.junit.After;
 import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
@@ -28,7 +28,6 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
-import java.util.Collection;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
@@ -66,49 +65,50 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testGetSjukfallSummary() {
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
+        SessionData sd = getAuthSession(DEFAULT_LAKARE);
 
-        given().expect().statusCode(OK).when().get(API_ENDPOINT + "/summary").then()
+        sd.begin().expect().statusCode(OK).when().get(API_ENDPOINT + "/summary").then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_SUMMARY));
     }
 
     @Test
     public void testGetSjukfallNotAllowedIfPdlConsentNotGiven() {
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE_NO_CONSENT);
+        SessionData sd = getAuthSession(DEFAULT_LAKARE_NO_CONSENT);
         GetSjukfallRequest request = new GetSjukfallRequest();
 
-        given().contentType(ContentType.JSON).and().body(request).expect().statusCode(SERVER_ERROR).when().post(API_ENDPOINT);
+        sd.begin().body(request).expect().statusCode(SERVER_ERROR).when().post(API_ENDPOINT);
     }
 
     @Test
     public void testGetSjukfallByEnhet() {
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
+        SessionData sd = getAuthSession(DEFAULT_LAKARE);
         GetSjukfallRequest request = new GetSjukfallRequest();
 
-        given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT).then()
+        sd.begin().body(request).expect().statusCode(OK).when().post(API_ENDPOINT).then()
                 .body(matchesJsonSchemaInClasspath(JSONSCHEMA_ENHET));
 
     }
 
     @Test
     public void testGetSjukfallByPatient() {
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
+        SessionData sd = getAuthSession(DEFAULT_LAKARE);
 
         GetSjukfallRequest request = new GetSjukfallRequest();
         request.setPatientId(PNR_TOLVAN_TOLVANSSON);
 
-        given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK).when().post(API_ENDPOINT + "/patient").then()
+        sd.begin().body(request).expect().statusCode(OK).when().post(API_ENDPOINT + "/patient").then()
             .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT));
 
     }
 
     @Test
     public void testGetSjukfallOnEnhetWithUnderenheter() {
-        RestAssured.sessionId = getAuthSession(EVA_H_LAKARE);
 
-        int centrumVastCount = getAntalOnEnhet("centrum-vast");
-        int akutenCount = getAntalOnEnhet("akuten");
-        int dialysCount = getAntalOnEnhet("dialys");
+        SessionData sd = getAuthSession(EVA_H_LAKARE);
+
+        int centrumVastCount = getAntalOnEnhet(sd, "centrum-vast");
+        int akutenCount = getAntalOnEnhet(sd, "akuten");
+        int dialysCount = getAntalOnEnhet(sd, "dialys");
 
         assertTrue(akutenCount > 0);
         assertTrue(dialysCount > 0);
@@ -117,13 +117,13 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
 
     @Test
     public void testIncludeVgInSjukfall() {
-        RestAssured.sessionId = getAuthSession(DEFAULT_LAKARE);
+        SessionData sd = getAuthSession(DEFAULT_LAKARE);
 
         AddVgToPatientViewRequest request = new AddVgToPatientViewRequest();
         request.setPatientId(PNR_TOLVAN_TOLVANSSON);
         request.setVardgivareId("vg1");
 
-        Response response = given().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)
+        Response response = sd.begin().body(request).expect().statusCode(OK)
                 .when().post(API_ENDPOINT + "/patient/addVardgivare")
                 .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-include-vg-in-sjukfall-response-schema.json"))
                 .extract().response();
@@ -134,12 +134,11 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         assertEquals(1, result.size());
     }
 
-    private int getAntalOnEnhet(String enhetId) {
-        selectUnitByHsaId(enhetId);
+    private int getAntalOnEnhet(SessionData sd, String enhetId) {
+        selectUnitByHsaId(sd, enhetId);
         GetSjukfallRequest request = new GetSjukfallRequest();
 
-        Response response = given()
-                .contentType(ContentType.JSON).and()
+        Response response = sd.begin()
                 .body(request)
                 .expect().statusCode(OK)
                 .when().post(API_ENDPOINT)
