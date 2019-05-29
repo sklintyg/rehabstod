@@ -74,7 +74,7 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
             inputs += _addInput('fritext', query.fritext);
             inputs += _addInput('showPatientId', query.showPatientId);
             inputs += _addInput('komplettering', query.komplettering);
-            inputs += _addInput('_csrf', $cookies.get("XSRF-TOKEN"));
+            inputs += _addInput('_csrf', $cookies.get('XSRF-TOKEN'));
 
             angular.forEach(query.lakare, function(item) {
                 inputs += _addInput('lakare', item);
