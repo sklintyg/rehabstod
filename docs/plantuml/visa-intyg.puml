@@ -28,13 +28,17 @@ activate Webcert
     activate Intygstjänst
     Intygstjänst --> Webcert: IntygData
     deactivate Intygstjänst
+    Webcert -> Webcert: Renderar intyget till Webbläsaren via UV-ramverket
+    Webcert --> Webbläsare: Intyget visas i Readonly-läge
+    Webbläsare --> Webcert: Kompletteringsinfo för intyget hämtas
+    Webcert --> Webbläsare: Kompletteringsinfo visas i högerflik
     alt SRS-pilot aktiv
+    Webbläsare --> Webcert: Srsinfo för intygets huvuddiagnos hämtas
         Webcert -> SRS: GetSRSInformationForDiagnosis
         activate SRS
         SRS --> Webcert: SRS-information
         deactivate SRS
+        Webcert --> Webbläsare: SrsInfo visas i högerflik
     end
-    Webcert -> Webcert: Renderar intyget till Webbläsaren via UV-ramverket
-    Webcert --> Webbläsare: Intyget visas i Readonly-läge
     deactivate Webcert
 @enduml

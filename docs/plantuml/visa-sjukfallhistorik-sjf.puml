@@ -55,10 +55,22 @@ activate rhs
         rhs -> rhs: Filtrera bort intyg utanför den nuvarande enhet där användaren inte aktivt valt att ta med vårdgivaren/enheten
     end
 
-    rhs -> rhs: Sammanställ klientsvar med sjukfall\noch metadataobjekt\nmed info om vad som filtrerats bort samt vilka samtycken\nsom är registrerade och valda.
+    rhs -> rhs: Sammanställ klientsvar med sjukfall och metadataobjekt med info om vad som filtrerats bort samt\nvilka samtycken som är registrerade och valda.
 
     rhs -> sfm: Skicka in nettolistan av intyg för att\nfå verkliga sjukfall
     sfm --> rhs: Nettosjukfall
+
+     rhs --> pu: GetPerson för patienten
+    activate pu
+      pu --> rhs: PersonSvar
+     deactivate pu
+     rhs -> rhs: Uppdatera lista med namn och sekretessstatus
+
+    rhs -> wc: GetCertificateAdditions för varje intyg (utfärdade på nuvarande VG/VE)
+     activate wc
+    wc --> rhs: GetCertificateAdditions
+    rhs -> rhs: Uppdatera sjukfallens ingående intyg med kompletteringsstatus
+    deactivate wc
 
      alt Om SRS-stöd är aktiverat
         rhs -> srs: getRiskPredictionForCertificate för varje intyg
@@ -66,13 +78,6 @@ activate rhs
         srs --> rhs: RiskPredictionForCertificate
          deactivate srs
      end
-
-
-      rhs --> pu: GetPerson för patienten
-    activate pu
-      pu --> rhs: PersonSvar
-     deactivate pu
-     rhs -> rhs: Uppdatera lista med namn och sekretessstatus
 
      rhs --> logg: PDL loggning av faktisk visad information
     activate logg
