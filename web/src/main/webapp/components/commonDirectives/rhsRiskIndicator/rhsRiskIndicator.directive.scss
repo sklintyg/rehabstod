@@ -1,8 +1,42 @@
+
+$srs-risk-indicator-diameter: 10px;
 rhs-risk-indicator {
-  display: block;
+
+  font-size: 0; /*To get rid of spacing between the indicators when using inline-block*/
 
   .rhs-table-tooltip {
-    border-bottom: 0;
+    width: 3*$srs-risk-indicator-diameter+2;
+    border-bottom: 0 !important; /* overrides the dotted tooltip bottom */
     cursor: help;
   }
+
+  .rhs-srs-risk-indicator {
+    vertical-align: middle;
+    margin-bottom: 2px; /* to vert. center it a bit more */
+    margin-right: 1px;
+    margin-top: 0;
+    margin-left: 0;
+    background-color: #EDEDED;
+    display: inline-block;
+    width: $srs-risk-indicator-diameter;
+    height: $srs-risk-indicator-diameter;
+    border: 1px solid #22263E;
+    border-radius: $srs-risk-indicator-diameter/2;
+  }
+  .rhs-srs-risk-indicator:last-child {
+    margin-right: 0;
+  }
+
+  .rhs-srs-risk-one > .rhs-srs-risk-indicator.filled {
+    background-color: #FFE200;
+  }
+
+  .rhs-srs-risk-two > .rhs-srs-risk-indicator.filled {
+    background-color: #FF9300;
+  }
+
+  .rhs-srs-risk-three > .rhs-srs-risk-indicator.filled {
+    background-color: #FF0000;
+  }
+
 }

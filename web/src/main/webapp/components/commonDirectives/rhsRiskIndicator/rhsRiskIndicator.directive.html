@@ -1,10 +1,21 @@
-<span class="rhs-table-tooltip"
-      ng-if="category > 1"
+<div class="rhs-table-tooltip"
+      ng-if="category > 0"
       uib-tooltip-html="description"
       tooltip-popup-delay="200"
-      tooltip-placement="top-right"
-      ng-switch="category">
-  <img ng-switch-when="2" ng-src="/assets/images/risk2.png" height="18" />
-  <img ng-switch-when="3" ng-src="/assets/images/risk3.png" height="18" />
-  <img ng-switch-when="4" ng-src="/assets/images/risk4.png" height="18" />
-</span>
+      tooltip-placement="top-right">
+  <div class="rhs-srs-risk-one" ng-if="category == 1">
+    <div class="rhs-srs-risk-indicator filled">&nbsp;</div>
+    <div class="rhs-srs-risk-indicator"></div>
+    <div class="rhs-srs-risk-indicator"></div>
+  </div>
+  <div class="rhs-srs-risk-two" ng-if="category == 2">
+    <div class="rhs-srs-risk-indicator filled"></div>
+    <div class="rhs-srs-risk-indicator filled"></div>
+    <div class="rhs-srs-risk-indicator"></div>
+  </div>
+  <div class="rhs-srs-risk-three" ng-if="category == 3">
+    <div class="rhs-srs-risk-indicator filled"></div>
+    <div class="rhs-srs-risk-indicator filled"></div>
+    <div class="rhs-srs-risk-indicator filled"></div>
+  </div>
+</div>
