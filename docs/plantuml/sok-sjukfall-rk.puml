@@ -27,6 +27,12 @@ activate Rehabstöd
     deactivate PU
     Rehabstöd -> Rehabstöd: Filtrera sjukfall och patienter baserat på sekretessstatus
 
+    Rehabstöd -> WC: GetCertificateAdditions för varje intyg (utfärdade på nuvarande VG/VE)
+     activate WC
+    WC --> Rehabstöd: GetCertificateAdditions
+    Rehabstöd -> Rehabstöd: Uppdatera sjukfallens ingående intyg med kompletteringsstatus
+    deactivate WC
+
     Rehabstöd -> Rehabkoordinator: Visar sjukfall på vårdenheten
 deactivate Rehabstöd
 @enduml
