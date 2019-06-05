@@ -28,15 +28,15 @@ rhs-risk-indicator {
   }
 
   .rhs-srs-risk-one > .rhs-srs-risk-indicator.filled {
-    background-color: #FFE200;
+    background-color: $srs-risk-indicator-moderate;
   }
 
   .rhs-srs-risk-two > .rhs-srs-risk-indicator.filled {
-    background-color: #FF9300;
+    background-color: $srs-risk-indicator-high;
   }
 
   .rhs-srs-risk-three > .rhs-srs-risk-indicator.filled {
-    background-color: #FF0000;
+    background-color: $srs-risk-indicator-very-high;
   }
 
 }
