@@ -68,7 +68,7 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
         for (RiskSignal riskSignal : prediktioner) {
 
             // Don't add if there is no risk signal, we don't want PDL logging in that case.
-            if (riskSignal.getRiskKategori() < 2) {
+            if (riskSignal.getRiskKategori() < 1) {
                 continue;
             }
             for (SjukfallEnhet sjukfallEnhet : rehabstodSjukfall) {
@@ -101,7 +101,7 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
         for (RiskSignal riskSignal : prediktioner) {
 
             // Do not add risk signals if response was 1, that means SRS had no prediction at all for the intygsId.
-            if (riskSignal.getRiskKategori() < 2) {
+            if (riskSignal.getRiskKategori() < 1) {
                 continue;
             }
 
