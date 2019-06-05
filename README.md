@@ -66,6 +66,28 @@ För att ta bort stubbad intygstjänst och köra mot en riktig (lokal) sådan s�
 
     '-Dspring.profiles.active=dev,rhs-srs-stub,caching-enabled',   // rhs-it-stub,
 
+### Testa Visa intyg lokalt
+Med fake-inloggning fungerar inte den automatiska authentiseringen mellan RS-WC när intyget skall visas i iframen i patienthistoriken.
+För att testa lokalt kan man göra så här:
+
+1. Ändra i gretty-konfigurationens aktiva profiler (-Dspring.profiles.active=) så att RS kör mot en riktig IT och WC, dvs ta bort profilerna
+   
+    - `rhs-it-stub`
+    - `rhs-wc-stub`
+    
+2. Starta igång IT,WC och RS. För RS är det bäst att används localtest.me (tex rs.localtest.me:8790/welcome.html) för att man skall kunna vara inloggad i RS/WC samtidigt - navigerar man mot localhost i både wc/rs så krockar session-cookies.
+3. Använd i samtliga följande steg en user som finns i både WC/RS fake-inloggning som `Tóth Gergő Mészáros`
+4. I WC - skapa, signera och skicka intyget till FK
+5. i wc ärendeverktyg (/pubapp/simulator/index.html) skall du nu kunna lägga en komplettering på det nyskapade intyget.
+6. Logga in på samma user i RS, du skall se 1 sjukfall med 1 obbesvarad komplettering i sjukfallslistan. Tryck upp PatientHistoriken.
+7. _**Innan**_ man klickar på Visa intyg, växla till WC fliken och välj samma användare, bocka i READONLY och klicka på login.
+8. Växla till RS och visa intyget. Det skall nu visas och även kompletteringen skall även dyka upp.
+
+Vid stängning av patienthistoriken loggas man ut ur WC, så steg 7 behövs göras om mellan varje öppning.
+Vill man se något i SRS fliken måste man även se till att intygets diagnos är en diagnos som SRS-stubben har info om.
+  
+
+
 ### Köra med SAML aktiverat.
 
 Starta riktig ActiveMQ, MySQL och Redis.
