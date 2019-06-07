@@ -103,6 +103,10 @@ module.exports = function(config) {
             ]
         },
 
+        jasmine: {
+            random: false
+        },
+
         plugins : [
             'karma-chrome-launcher',
             'karma-coverage',
