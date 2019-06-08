@@ -83,17 +83,7 @@ module.exports = function(config) {
         // - Safari (only Mac)
         // - PhantomJS
         // - IE (only Windows)
-        browsers: ['ChromeHeadlessNoSandbox'],
-        customLaunchers: {
-            ChromeHeadlessNoSandbox: {
-                base: 'ChromeHeadless',
-                flags: [
-                    '--no-sandbox', // required to run without privileges in docker
-                    '--disable-web-security',
-                    '--disable-gpu'
-                ]
-            }
-        },
+        browsers: ['PhantomJS'],
 
         coverageReporter: {
             reporters: [
@@ -108,7 +98,7 @@ module.exports = function(config) {
         },
 
         plugins : [
-            'karma-chrome-launcher',
+            'karma-phantomjs-launcher',
             'karma-coverage',
             'karma-jasmine',
             'karma-ng-html2js-preprocessor'
