@@ -18,34 +18,25 @@
  */
 package se.inera.intyg.rehabstod.service.monitoring;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.sql.Time;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
+import io.prometheus.client.Collector;
+import io.prometheus.client.Gauge;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
-import javax.jms.JMSException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.data.redis.core.script.RedisScript;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.stereotype.Component;
-
-import io.prometheus.client.Collector;
-import io.prometheus.client.Gauge;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 
 /**
  * Exposes health metrics as Prometheus values. To simplify any 3rd party scraping applications, all metrics produced
@@ -80,11 +71,6 @@ public class HealthMonitor extends Collector {
             .help("Current uptime in seconds")
             .register();
 
-    private static final Gauge LOGGED_IN_USERS = Gauge.build()
-            .name(PREFIX + "logged_in_users" + VALUE)
-            .help("Current number of logged in users")
-            .register();
-
     private static final Gauge DB_ACCESSIBLE = Gauge.build()
             .name(PREFIX + "db_accessible" + NORMAL)
             .help("0 == OK 1 == NOT OK")
@@ -107,7 +93,7 @@ public class HealthMonitor extends Collector {
 
     private static final long MILLIS_PER_SECOND = 1000L;
 
-    private static final String CURR_TIME_SQL = "SELECT CURRENT_TIME()";
+    private static final String PING_SQL = "SELECT 1";
 
     @Value("${app.name}")
     private String appName;
@@ -122,20 +108,19 @@ public class HealthMonitor extends Collector {
     @Autowired
     private ConnectionFactory connectionFactory;
 
-    @Autowired
-    @Qualifier("rediscache")
-    private RedisTemplate<Object, Object> redisTemplate;
-
     @Value("${it.ping.url}")
     private String itMetricsUrl;
 
-    // Runs a lua script to count number of keys matching our session keys.
-    private RedisScript<Long> redisScript;
+    @FunctionalInterface
+    interface Tester {
+        void run() throws Exception;
+    }
 
+    /**
+     * Registers this class as a prometheus collector.
+     */
     @PostConstruct
     public void init() {
-        redisScript = new DefaultRedisScript<>(
-                "return #redis.call('keys','spring:session:" + appName + ":index:*')", Long.class);
         this.register();
     }
 
@@ -143,8 +128,7 @@ public class HealthMonitor extends Collector {
     public List<MetricFamilySamples> collect() {
         long secondsSinceStart = (System.currentTimeMillis() - START_TIME) / MILLIS_PER_SECOND;
         UPTIME.set(secondsSinceStart);
-        LOGGED_IN_USERS.set(countSessions());
-        DB_ACCESSIBLE.set(checkTimeFromDb() ? 0 : 1);
+        DB_ACCESSIBLE.set(checkDbConnection() ? 0 : 1);
         JMS_ACCESSIBLE.set(checkJmsConnection() ? 0 : 1);
         IT_ACCESSIBLE.set(pingIntygstjanst() ? 0 : 1);
         PDL_QUEUE_DEPTH.set(checkQueueDepth(jmsPDLLogTemplate));
@@ -152,46 +136,35 @@ public class HealthMonitor extends Collector {
         return Collections.emptyList();
     }
 
-    private int countSessions() {
-        Long numberOfUsers = redisTemplate.execute(redisScript, Collections.emptyList());
-        return numberOfUsers.intValue();
-    }
-
     private boolean checkJmsConnection() {
-        try {
+        return invoke(() -> {
             Connection connection = connectionFactory.createConnection();
             connection.close();
-        } catch (JMSException e) {
-            return false;
-        }
-        return true;
+        });
     }
 
-    private boolean checkTimeFromDb() {
-        Time timestamp;
-        try {
-            Query query = entityManager.createNativeQuery(CURR_TIME_SQL);
-            timestamp = (Time) query.getSingleResult();
-        } catch (Exception e) {
-            return false;
-        }
-        return timestamp != null;
+    private boolean checkDbConnection() {
+        return invoke(() -> entityManager.createNativeQuery(PING_SQL).getSingleResult());
     }
 
     private boolean pingIntygstjanst() {
-
-        return doHttpLookup(itMetricsUrl) == HttpServletResponse.SC_OK;
-    }
-
-    private int doHttpLookup(String url) {
-        try {
-            HttpURLConnection httpConnection = (HttpURLConnection) new URL(url).openConnection();
+        return invoke(() -> {
+            HttpURLConnection httpConnection = (HttpURLConnection) new URL(itMetricsUrl).openConnection();
             int respCode = httpConnection.getResponseCode();
             httpConnection.disconnect();
-            return respCode;
-        } catch (IOException e) {
-            return 0;
+            if (respCode != HttpServletResponse.SC_OK) {
+                throw new RuntimeException();
+            }
+        });
+    }
+
+    private boolean invoke(Tester tester) {
+        try {
+            tester.run();
+        } catch (Exception e) {
+            return false;
         }
+        return true;
     }
 
     private long checkQueueDepth(JmsTemplate tpl) {
