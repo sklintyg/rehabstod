@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.integration.srs.model;
 
+import java.time.LocalDateTime;
+
 /**
  * Created by eriklupander on 2017-11-01.
  */
@@ -26,14 +28,16 @@ public class RiskSignal {
     private String intygsId;
     private int riskKategori;
     private String riskDescription;
+    private LocalDateTime berakningstidpunkt;
 
     private RiskSignal() {
     }
 
-    public RiskSignal(String intygsId, int riskKategori, String riskDescription) {
+    public RiskSignal(String intygsId, int riskKategori, String riskDescription, LocalDateTime berakningstidpunkt) {
         this.intygsId = intygsId;
         this.riskKategori = riskKategori;
         this.riskDescription = riskDescription;
+        this.berakningstidpunkt = berakningstidpunkt;
     }
 
     public String getIntygsId() {
@@ -46,5 +50,9 @@ public class RiskSignal {
 
     public String getRiskDescription() {
         return riskDescription;
+    }
+
+    public LocalDateTime getBerakningstidpunkt() {
+        return berakningstidpunkt;
     }
 }

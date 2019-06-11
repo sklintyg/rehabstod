@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.srs;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -164,13 +167,12 @@ public class RiskPredictionServiceImplTest {
     }
 
     @Test
-    public void testRiskLevelOneIsFilteredOut() {
+    public void testRiskLevelZeroIsFilteredOut() {
         String intygsId = UUID.randomUUID().toString();
-
+        LocalDateTime now = LocalDateTime.now();
         List<RiskSignal> riskSignals = Arrays.asList(
-                new RiskSignal(intygsId, 2, "beskrivning2"),
-                new RiskSignal(intygsId, 1, "beskrivning1"),
-                new RiskSignal(intygsId, 0, "beskrivning0")
+                new RiskSignal(intygsId, 1, "beskrivning1", now),
+                new RiskSignal(intygsId, 0, "beskrivning0", now)
         );
 
         when(srsIntegrationService.getRiskPreditionerForIntygsId(anyListOf(String.class))).thenReturn(riskSignals);
@@ -178,11 +180,33 @@ public class RiskPredictionServiceImplTest {
         testee.updateWithRiskPredictions(sjukfallEnhetList);
 
         assertEquals(1, sjukfallEnhetList.size());
+        assertEquals(1, sjukfallEnhetList.get(0).getRiskSignal().getRiskKategori());
+    }
+
+    @Test
+    public void testGetLatestRiskLevel() {
+        String intygsId = UUID.randomUUID().toString();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime earlier = LocalDateTime.now().minus(1, ChronoUnit.HOURS);
+        LocalDateTime earliest = LocalDateTime.now().minus(1, ChronoUnit.DAYS);
+        List<RiskSignal> riskSignals = Arrays.asList(
+                new RiskSignal(intygsId, 1, "beskrivning1", earlier),
+                new RiskSignal(intygsId, 2, "beskrivning2", now),
+                new RiskSignal(intygsId, 3, "beskrivning1", earliest),
+                new RiskSignal(intygsId, 0, "beskrivning0", now)
+        );
+
+        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyListOf(String.class))).thenReturn(riskSignals);
+        List<SjukfallEnhet> sjukfallEnhetList = buildSjukfallEnhetList(intygsId);
+        testee.updateWithRiskPredictions(sjukfallEnhetList);
+
+        assertEquals(1, sjukfallEnhetList.size());
+        assertEquals(2, sjukfallEnhetList.get(0).getRiskSignal().getRiskKategori());
     }
 
     private List<RiskSignal> buildRiskSignalList(String intygsId) {
         List<RiskSignal> list = new ArrayList<>();
-        list.add(new RiskSignal(intygsId, 2, "beskrivning"));
+        list.add(new RiskSignal(intygsId, 2, "beskrivning", LocalDateTime.now()));
         return list;
     }
 
@@ -190,6 +214,7 @@ public class RiskPredictionServiceImplTest {
     private List<SjukfallEnhet> buildSjukfallEnhetList(String intygsId) {
         List<SjukfallEnhet> list = new ArrayList<>();
         SjukfallEnhet se = new SjukfallEnhet();
+        se.setIntygLista(Arrays.asList(intygsId));
         se.setAktivIntygsId(intygsId);
         list.add(se);
         return list;

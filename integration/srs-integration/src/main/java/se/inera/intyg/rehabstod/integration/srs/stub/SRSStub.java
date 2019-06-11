@@ -76,27 +76,25 @@ public class SRSStub implements GetRiskPredictionForCertificateResponderInterfac
     private Risksignal buildRiskSignal(int index) {
         Risksignal riskSignal = new Risksignal();
         riskSignal.setRiskkategori(getRiskInt(index));
-        riskSignal.setBeskrivning(getRiskBeskrivning(riskSignal.getRiskkategori().intValue()));
+        riskSignal.setBeskrivning(getRiskBeskrivning(riskSignal.getRiskkategori()));
         return riskSignal;
     }
 
     private String getRiskBeskrivning(int risk) {
         switch (risk) {
         case ONE:
-            return "";
+            return "Måttlig risk att sjukfallet varar i mer än 90 dagar";
         case TWO:
-            return "Lätt förhöjd risk att sjukfallet varar i mer än 90 dagar";
+            return "Hög risk att sjukfallet varar i mer än 90 dagar";
         case THREE:
-            return "Måttlig förhöjd risk att sjukfallet varar i mer än 90 dagar";
-        case FOUR:
-            return "Stark förhöjd risk att sjukfallet vara i mer än 90 dagar";
+            return "Mycket hög risk att sjukfallet varar i mer än 90 dagar";
         default:
-            throw new IllegalArgumentException("Only risks 1,2,3 and 4 are possible");
+            throw new IllegalArgumentException("Only risks 1,2 and 3 are possible");
         }
     }
 
     // Package public for unit-tests
-    BigInteger getRiskInt(int index) {
-        return BigInteger.valueOf(index % FOUR + ONE);
+    Integer getRiskInt(int index) {
+        return index % THREE + ONE;
     }
 }

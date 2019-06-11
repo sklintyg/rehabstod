@@ -76,7 +76,7 @@ public class SRSIntegrationServiceImplTest {
         RiskPrediktion rp = new RiskPrediktion();
         rp.setIntygsId(intygsId);
         Risksignal signal = new Risksignal();
-        signal.setRiskkategori(BigInteger.ONE);
+        signal.setRiskkategori(1);
         signal.setBeskrivning("Beskrivning");
         rp.setRisksignal(signal);
         result.add(rp);
