@@ -45,8 +45,8 @@ public class SRSIntegrationServiceImpl implements SRSIntegrationService {
 
         return srsClientService.getRiskPrediktionForCertificate(intygsIdn)
                 .stream()
-                .map(rp -> new RiskSignal(rp.getIntygsId(), rp.getRisksignal().getRiskkategori().intValue(),
-                        rp.getRisksignal().getBeskrivning()))
+                .map(rp -> new RiskSignal(rp.getIntygsId(), rp.getRisksignal().getRiskkategori(),
+                        rp.getRisksignal().getBeskrivning(), rp.getRisksignal().getBerakningstidpunkt()))
                 .collect(Collectors.toList());
     }
 }

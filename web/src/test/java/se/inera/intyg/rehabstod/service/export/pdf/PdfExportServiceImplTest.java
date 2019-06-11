@@ -24,6 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -96,7 +97,7 @@ public class PdfExportServiceImplTest {
         isf.setObesvaradeKompl(2);
         isf.setGrader(index % 3 == 0 ? Arrays.asList(25, 50) : Arrays.asList(50, 75));
         isf.setAktivGrad(50);
-        isf.setRiskSignal( new RiskSignal("", 2, "Lätt"));
+        isf.setRiskSignal( new RiskSignal("", 2, "Lätt", isf.getStart().atTime(12,0)));
 
         return isf;
     }

@@ -57,6 +57,7 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -477,7 +478,7 @@ public class SjukfallControllerTest {
     private static SjukfallEnhet createSjukFallEnhet(String personNummer, boolean includeRisk) {
         SjukfallEnhet isf = createSjukFallEnhet(personNummer);
         if (includeRisk) {
-            isf.setRiskSignal(new RiskSignal("intyg-1", 3, "Descr."));
+            isf.setRiskSignal(new RiskSignal("intyg-1", 3, "Descr.", isf.getStart().atTime(12,0)));
         }
         return isf;
     }
@@ -496,7 +497,7 @@ public class SjukfallControllerTest {
             pd.setVardgivareNamn(vardgivare.getNamn());
 
             if (a < numberOfIntygHavingRisk) {
-                pd.setRiskSignal(new RiskSignal("intyg-123", 3, "desc"));
+                pd.setRiskSignal(new RiskSignal("intyg-123", 3, "desc", LocalDateTime.now()));
             }
             sp.getIntyg().add(pd);
         }

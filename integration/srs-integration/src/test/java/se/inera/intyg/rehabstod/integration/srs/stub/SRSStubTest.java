@@ -37,7 +37,6 @@ public class SRSStubTest {
         assertEquals(1, testee.getRiskInt(0).intValue());
         assertEquals(2, testee.getRiskInt(1).intValue());
         assertEquals(3, testee.getRiskInt(2).intValue());
-        assertEquals(4, testee.getRiskInt(3).intValue());
-        assertEquals(1, testee.getRiskInt(4).intValue());
+        assertEquals(1, testee.getRiskInt(3).intValue());
     }
 }
