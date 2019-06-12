@@ -26,8 +26,6 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertifi
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.Risksignal;
 
-import java.math.BigInteger;
-
 /**
  * Stub for SRS. Will round-robin risk categories so first intygsId queried gets 1, the next 2...3...4...1...2...3...
  *
