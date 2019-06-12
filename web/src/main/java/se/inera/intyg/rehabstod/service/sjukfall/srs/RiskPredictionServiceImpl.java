@@ -35,9 +35,6 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalUnit;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +47,7 @@ import java.util.stream.Collectors;
 public class RiskPredictionServiceImpl implements RiskPredictionService {
 
     private static final Logger LOG = LoggerFactory.getLogger(RiskPredictionServiceImpl.class);
+    protected static final int MAX_AGE_DAYS = 90;
 
     @Autowired
     private UserService userService;
@@ -66,12 +64,14 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
         if (rehabstodSjukfall == null || rehabstodSjukfall.size() == 0) {
             return;
         }
-        List<String> intygIds = rehabstodSjukfall.stream().flatMap((sfe)->CollectionUtils.emptyIfNull(sfe.getIntygLista()).stream()).collect(Collectors.toList());
-        List<RiskSignal> risker = rehabstodSjukfall.stream().map((sfe)->sfe.getRiskSignal()).collect(Collectors.toList());
+        List<String> intygIds = rehabstodSjukfall
+                .stream()
+                .flatMap((sfe) -> CollectionUtils.emptyIfNull(sfe.getIntygLista()).stream())
+                .collect(Collectors.toList());
 
         // Använd endast prediktioner/risksignaler som är mindre än 90 dagar gamla och har ett relevant värde
         List<RiskSignal> prediktioner = CollectionUtils.emptyIfNull(getRiskSignals(intygIds)).stream()
-                .filter((p) -> p.getBerakningstidpunkt().isAfter(LocalDateTime.now().minus(90, ChronoUnit.DAYS)))
+                .filter((p) -> p.getBerakningstidpunkt().isAfter(LocalDateTime.now().minus(MAX_AGE_DAYS, ChronoUnit.DAYS)))
                 .filter((p) -> p.getRiskKategori() >= 1)
                 .collect(Collectors.toList());
 
@@ -83,7 +83,7 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
             // och använd i så fall den senaste
             Optional<RiskSignal> riskSignal = prediktioner.stream()
                     .filter((p) -> sjukfallEnhet.getIntygLista().stream()
-                            .filter((sjukfallsIntyg)->sjukfallsIntyg.equals(p.getIntygsId())).findAny().isPresent()
+                            .filter((sjukfallsIntyg) -> sjukfallsIntyg.equals(p.getIntygsId())).findAny().isPresent()
                     )
                     .max(Comparator.comparing(RiskSignal::getBerakningstidpunkt));
             if (riskSignal.isPresent()) {
@@ -114,8 +114,8 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
         for (RiskSignal riskSignal : prediktioner) {
 
             // Do not add risk signals if response was 1, that means SRS had no prediction at all for the intygsId.
-            if (riskSignal.getRiskKategori() < 1 ||
-                    riskSignal.getBerakningstidpunkt().isBefore(LocalDateTime.now().minus(90, ChronoUnit.DAYS))) {
+            if (riskSignal.getRiskKategori() < 1
+                    || riskSignal.getBerakningstidpunkt().isBefore(LocalDateTime.now().minus(MAX_AGE_DAYS, ChronoUnit.DAYS))) {
                 continue;
             }
 
