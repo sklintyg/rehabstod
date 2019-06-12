@@ -153,6 +153,9 @@
           },
           "riskDescription": {
             "type":"string"
+          },
+          "berakningstidpunkt": {
+            "type":"string"
           }
         },
         "required": [
