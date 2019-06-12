@@ -18,26 +18,23 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
+import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineService;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationService;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
@@ -46,6 +43,7 @@ import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
+import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.FilteredSjukFallByPatientResult;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaDataItem;
@@ -60,9 +58,17 @@ import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNa
 import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
+import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -111,6 +117,12 @@ public class SjukfallServiceImpl implements SjukfallService {
 
     @Autowired
     private HsaOrganizationsService hsaOrganizationsService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private LogService logService;
 
 
     @Override
@@ -371,6 +383,9 @@ public class SjukfallServiceImpl implements SjukfallService {
             // Make a call to consent service to see if there is a consent registered
             LOG.debug("Calling Samtyckestjänsten - checking for consent.");
             haveConsent = samtyckestjanstIntegrationService.checkForConsent(patientId, lakareId, vardgivareId, enhetsId);
+            if (haveConsent) {
+                pdlLogConsentExistRead(patientId, enhetsId);
+            }
         } catch (Exception e) {
             LOG.error("INTEGRATION_CONSENT_SERVICE: Fatal error - message is '{}'", e.getMessage());
 
@@ -381,6 +396,23 @@ public class SjukfallServiceImpl implements SjukfallService {
         }
 
         return haveConsent;
+    }
+
+    private void pdlLogConsentExistRead(String patientId, String enhetsId) {
+        final Personnummer patientPersonnummer = Personnummer.createPersonnummer(patientId)
+                .orElseThrow(() -> new IllegalArgumentException("Could not parse passed personnummer: " + patientId));
+
+        final ActivityType readActivityType = ActivityType.READ;
+        final ResourceType resourceTypeSamtycke = ResourceType.RESOURCE_TYPE_SAMTYCKE;
+        final RehabstodUser user = userService.getUser();
+
+        boolean isInStore =
+                PDLActivityStore.isActivityInStore(enhetsId, patientId, readActivityType, resourceTypeSamtycke, user.getStoredActivities());
+
+        if (!isInStore) {
+            logService.logConsentActivity(patientPersonnummer, readActivityType, resourceTypeSamtycke);
+            PDLActivityStore.addActivityToStore(enhetsId, patientId, readActivityType, resourceTypeSamtycke, user.getStoredActivities());
+        }
     }
 
     private void declineAccessToSjfData(Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> intygOnOtherUnits) {

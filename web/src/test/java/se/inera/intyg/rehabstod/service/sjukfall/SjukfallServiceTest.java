@@ -25,14 +25,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
+import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
+import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.infra.sjukfall.dto.Patient;
 import se.inera.intyg.infra.sjukfall.dto.Vardgivare;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineServiceImpl;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationServiceImpl;
@@ -41,6 +45,7 @@ import se.inera.intyg.rehabstod.integration.sparrtjanst.service.SparrtjanstInteg
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
+import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaDataItemType;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
@@ -53,10 +58,12 @@ import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
+import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
@@ -85,7 +92,9 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -95,6 +104,10 @@ import static org.mockito.Mockito.when;
 public class SjukfallServiceTest {
     // CHECKSTYLE:OFF MagicNumber
     private static final int MAX_DAGAR_SEDAN_AVSLUT = 0;
+    private static final String LAKARE_ID = "HSA-1223311";
+    private static final String LAKARE_NAMN = "Jan Itor";
+    private static final String VARDGIVARE_ID = "HSA-VG-123-77";
+    private static final String VARDENHETS_ID = "HSA-VG-123-77_VE1";
 
     private final String vgId1 = "vg1";
     private final String vgId2 = "vg2";
@@ -167,6 +180,12 @@ public class SjukfallServiceTest {
     @Mock
     private KompletteringInfoDecorator kompletteringInfoDecorator;
 
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private LogService logService;
+
     @InjectMocks
     private SjukfallServiceImpl testee = new SjukfallServiceImpl();
 
@@ -195,6 +214,8 @@ public class SjukfallServiceTest {
 
         doNothing().when(sjukfallEmployeeNameResolver).enrichWithHsaEmployeeNames(anyListOf(SjukfallEnhet.class));
         doNothing().when(sjukfallEmployeeNameResolver).updateDuplicateDoctorNamesWithHsaId(anyListOf(SjukfallEnhet.class));
+
+        when(userService.getUser()).thenReturn(buildUser());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -303,7 +324,52 @@ public class SjukfallServiceTest {
         assertSjfMetaDataItem(vgId2, SjfMetaDataItemType.VARDGIVARE, true, metaData);
         assertSjfMetaDataItem(vgId3, SjfMetaDataItemType.VARDGIVARE, false, metaData);
         assertSjfMetaDataItem(enhetsId1_2, SjfMetaDataItemType.VARDENHET, false, metaData);
+
+        Personnummer expectedPersonnummer = Personnummer.createPersonnummer(patientId1).get();
+
+        verify(logService).logConsentActivity(eq(expectedPersonnummer), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
     }
+
+    /*
+     * Testet ska visa att samtyckesläsning INTE PDL loggas om inget samtycke fanns
+     */
+    @Test
+    public void testGetByPatientNoConsentPDLLoggingIfNoConsent() {
+        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId1, enhetsId1_1)).thenReturn(false);
+
+        testee.getByPatient(vgId1, enhetsId1_1, lakareId1, patientId1, Urval.ALL, parameters, new ArrayList<>(), new ArrayList<>());
+
+        verifyZeroInteractions(logService);
+    }
+
+    /*
+     * Testet ska visa att samtyckesläsning PDL loggas om samtycke fanns
+     */
+    @Test
+    public void testGetByPatientConsentPDLLoggingIfConsentExists() {
+        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId1, enhetsId1_1)).thenReturn(true);
+
+        testee.getByPatient(vgId1, enhetsId1_1, lakareId1, patientId1, Urval.ALL, parameters, new ArrayList<>(), new ArrayList<>());
+
+        Personnummer expectedPersonnummer = Personnummer.createPersonnummer(patientId1).get();
+        verify(logService).logConsentActivity(eq(expectedPersonnummer), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
+    }
+
+    /*
+     * Testet ska visa att samtyckesläsning PDL loggas endast en gång om anropad flera gånger per user
+     */
+    @Test
+    public void testGetByPatientConsentPDLLoggingOnlyOnceIfActivityAlreadyLogged() {
+        when(samtyckestjanstIntegrationService.checkForConsent(patientId1, lakareId1, vgId1, enhetsId1_1)).thenReturn(true);
+
+        testee.getByPatient(vgId1, enhetsId1_1, lakareId1, patientId1, Urval.ALL, parameters, new ArrayList<>(), new ArrayList<>());
+        testee.getByPatient(vgId1, enhetsId1_1, lakareId1, patientId1, Urval.ALL, parameters, new ArrayList<>(), new ArrayList<>());
+
+        Personnummer expectedPersonnummer = Personnummer.createPersonnummer(patientId1).get();
+        verify(logService, times(1))
+                .logConsentActivity(eq(expectedPersonnummer), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
+    }
+
 
     /*
      * Testet ska visa att intyg inom samma vårdgivare och samma enhet inklusive
@@ -588,6 +654,20 @@ public class SjukfallServiceTest {
             default:
                 fail();
         }
+    }
+
+
+    private RehabstodUser buildUser() {
+        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
+        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "0");
+
+        RehabstodUser user = new RehabstodUser(LAKARE_ID, LAKARE_NAMN, true);
+        user.setPreferences(preferences);
+        user.setValdVardgivare(new se.inera.intyg.infra.integration.hsa.model.Vardgivare(VARDGIVARE_ID, "vårdgivare"));
+        user.setValdVardenhet(new Vardenhet(VARDENHETS_ID, "enhet"));
+
+        return user;
     }
 
     private List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> createSjukfallEnhetList() {
