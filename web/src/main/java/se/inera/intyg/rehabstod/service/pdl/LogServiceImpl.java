@@ -97,9 +97,9 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public void logConsent(Personnummer personnummer, ActivityType activityType, ResourceType resourceType) {
+    public void logConsentActivity(Personnummer personnummer, ActivityType activityType, ResourceType resourceType) {
         if (personnummer == null) {
-            LOG.debug("No personnummer for PDL logging, not logging.");
+            LOG.info("No personnummer for PDL logging, not logging logConsentActivity.");
             return;
         }
 
@@ -113,6 +113,7 @@ public class LogServiceImpl implements LogService {
         PdlLogMessage pdlLogMessage =
                 pdlLogMessageFactory.buildLogMessage(logPatient,
                         LogUtil.getLogUser(user), activityType, resourceType);
+        LOG.debug("Logging {} consent for {}", activityType.getType(), resourceType.getResourceTypeName());
         send(pdlLogMessage);
     }
 
@@ -120,16 +121,15 @@ public class LogServiceImpl implements LogService {
     private void send(PdlLogMessage pdlLogMessage) {
 
         if (jmsTemplate == null) {
-            LOG.error("Could not log list of IntygsData, PDL logging is disabled or JMS sender template is null.");
+            LOG.error("Could not log PDLMessage - PLDLogging is disabled / JMS sender template is null.");
             return;
         }
-
-        LOG.info("Logging SjukfallIntygsData for activityType {} having {}", pdlLogMessage.getActivityType().name(),
+        LOG.debug("PDLLogging activityType {} for {} resources", pdlLogMessage.getActivityType().name(),
                 pdlLogMessage.getPdlResourceList().size());
         try {
             jmsTemplate.send(new MC(pdlLogMessage));
         } catch (JmsException e) {
-            LOG.error("Could not log list of IntygsData", e);
+            LOG.error("Could not log PDLMessage", e);
             throw e;
         }
     }

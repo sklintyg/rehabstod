@@ -39,8 +39,8 @@ public interface LogService {
                          ActivityType activityType,
                          ResourceType resourceType);
 
-    void logConsent(Personnummer personnummer,
-                    ActivityType activityType,
-                    ResourceType resourceType);
+    void logConsentActivity(Personnummer personnummer,
+                            ActivityType activityType,
+                            ResourceType resourceType);
 
 }

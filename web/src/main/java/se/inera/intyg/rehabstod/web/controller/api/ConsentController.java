@@ -147,7 +147,7 @@ public class ConsentController {
                 activityType, resourceType, user.getStoredActivities());
 
         if (!isInStore) {
-            logService.logConsent(personnummer, activityType, resourceType);
+            logService.logConsentActivity(personnummer, activityType, resourceType);
             PDLActivityStore.addActivityToStore(user.getValdVardenhet().getId(), personnummer.getPersonnummer(),
                     activityType, resourceType, user.getStoredActivities());
         }

@@ -102,7 +102,7 @@ public class ConsentControllerTest {
 
         verify(consentServiceMock).giveConsent(eq(personnummer.get()), eq(false),
                 eq(null), eq(consentFrom), eq(consentTo), any(RehabstodUser.class));
-        verify(logServiceMock).logConsent(eq(personnummer.get()), eq(ActivityType.CREATE), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
+        verify(logServiceMock).logConsentActivity(eq(personnummer.get()), eq(ActivityType.CREATE), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
     }
 
     @Test
@@ -124,7 +124,7 @@ public class ConsentControllerTest {
 
         verify(consentServiceMock).giveConsent(eq(personnummer.get()), eq(false),
                 eq(null), eq(consentFrom), eq(consentTo), any(RehabstodUser.class));
-        verify(logServiceMock).logConsent(eq(personnummer.get()), eq(ActivityType.CREATE), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
+        verify(logServiceMock).logConsentActivity(eq(personnummer.get()), eq(ActivityType.CREATE), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
     }
 
     @Test
