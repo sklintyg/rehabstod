@@ -36,8 +36,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.security.filter.RequestContextHolderUpdateFilter;
-import se.inera.intyg.infra.security.filter.SecurityHeadersFilter;
 import se.inera.intyg.infra.security.filter.SessionTimeoutFilter;
+import se.inera.intyg.rehabstod.auth.RSSecurityHeadersFilter;
 import se.inera.intyg.rehabstod.common.monitoring.util.LogbackConfiguratorContextListener;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
@@ -174,7 +174,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
     }
 
     private void registerSecurityHeadersFilter(ServletContext servletContext) {
-        SecurityHeadersFilter filter = new SecurityHeadersFilter();
+        RSSecurityHeadersFilter filter = new RSSecurityHeadersFilter();
         servletContext.addFilter("securityHeadersFilter", filter).addMappingForUrlPatterns(null, true, "/*");
     }
 
