@@ -30,9 +30,10 @@ import se.inera.intyg.infra.security.filter.SecurityHeadersFilter;
 public class RSSecurityHeadersFilter extends SecurityHeadersFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-        response.setHeader("Strict-Transport-Security","max-age=31536000 ; includeSubDomains");
+        response.setHeader("Strict-Transport-Security", "max-age=31536000 ; includeSubDomains");
         response.setHeader("X-Frame-Options", "DENY");
         response.setHeader("X-XSS-Protection", "1; mode=block");
 
