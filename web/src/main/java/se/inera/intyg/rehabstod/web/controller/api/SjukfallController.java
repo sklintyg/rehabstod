@@ -314,12 +314,12 @@ public class SjukfallController {
 
     // For SjukfallEnhet
     private Predicate<SjukfallEnhet> hasRiskSignal() {
-        return se -> se.getRiskSignal() != null && se.getRiskSignal().getRiskKategori() > 1;
+        return se -> se.getRiskSignal() != null && se.getRiskSignal().getRiskKategori() >= 1;
     }
 
     // For PatientData
     private Predicate<PatientData> anyIntygHasRiskSignal() {
-        return pd -> pd.getRiskSignal() != null && pd.getRiskSignal().getRiskKategori() > 1;
+        return pd -> pd.getRiskSignal() != null && pd.getRiskSignal().getRiskKategori() >= 1;
     }
 
     private Predicate<PatientData> isNotBlocked(RehabstodUser user, SjukfallPatientResponse response) {
