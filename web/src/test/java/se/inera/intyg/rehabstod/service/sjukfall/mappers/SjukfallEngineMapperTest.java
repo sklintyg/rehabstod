@@ -18,23 +18,25 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.mappers;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
+import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.junit.Assert.assertEquals;
@@ -95,7 +97,7 @@ public class SjukfallEngineMapperTest {
 
 
         // when
-        SjukfallEnhet to = testee.map(from, 0, today);
+        SjukfallEnhet to = testee.mapToSjukfallEnhetDto(from, 0, today);
 
         // then
         assertEquals(VARDGIVAREID, to.getVardGivareId());
@@ -130,7 +132,7 @@ public class SjukfallEngineMapperTest {
 
 
         // when
-        SjukfallEnhet to = testee.map(from, 0, today);
+        SjukfallEnhet to = testee.mapToSjukfallEnhetDto(from, 0, today);
 
         // then
         assertEquals(0, to.getSlutOmDagar());
@@ -140,9 +142,10 @@ public class SjukfallEngineMapperTest {
     public void testMappingOfSjukfallPatient() {
         // given
         se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
-
+        Map<String, IntygAccessControlMetaData> intygAccessMetaData =
+                createMockIAMD(from.getSjukfallIntygList().get(0).getIntygId(), true, true);
         // when
-        SjukfallPatient to = testee.map(from, VARDGIVAREID, VARDENHETID);
+        SjukfallPatient to = testee.mapToSjukfallPatientDto(from, intygAccessMetaData);
 
         // then
         assertEquals(NEDSATTNINGSTARTDATUM, to.getStart());
@@ -161,13 +164,21 @@ public class SjukfallEngineMapperTest {
         assertEquals(1, patientData.getSysselsattning().size());
     }
 
+    private Map<String, IntygAccessControlMetaData> createMockIAMD(String intygId, boolean inomVG, boolean inomVE) {
+        Map<String, IntygAccessControlMetaData> iamd = new HashMap<>();
+        IntygAccessControlMetaData item = new IntygAccessControlMetaData(null, inomVG, inomVE, true);
+        iamd.put(intygId, item);
+        return iamd;
+    }
+
     @Test
     public void testMappingOfSjukfallPatientClearDataVardgivare() {
         // given
         se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
-
+        Map<String, IntygAccessControlMetaData> intygAccessMetaData =
+                createMockIAMD(from.getSjukfallIntygList().get(0).getIntygId(), false, true);
         // when
-        SjukfallPatient to = testee.map(from, VARDGIVAREID + "other", VARDENHETID);
+        SjukfallPatient to = testee.mapToSjukfallPatientDto(from, intygAccessMetaData);
 
         // then
         assertEquals(NEDSATTNINGSTARTDATUM, to.getStart());
@@ -190,9 +201,10 @@ public class SjukfallEngineMapperTest {
     public void testMappingOfSjukfallPatientClearDataVardenhet() {
         // given
         se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
-
+        Map<String, IntygAccessControlMetaData> intygAccessMetaData =
+                createMockIAMD(from.getSjukfallIntygList().get(0).getIntygId(), true, false);
         // when
-        SjukfallPatient to = testee.map(from, VARDGIVAREID, VARDENHETID + "other");
+        SjukfallPatient to = testee.mapToSjukfallPatientDto(from, intygAccessMetaData);
 
         // then
         assertEquals(NEDSATTNINGSTARTDATUM, to.getStart());
@@ -216,9 +228,10 @@ public class SjukfallEngineMapperTest {
     public void testMappingOfSjukfallIntyg() {
         // given
         se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg from = createSjukfallIntyg();
-
+        Map<String, IntygAccessControlMetaData> intygAccessMetaData =
+                createMockIAMD(from.getIntygId(), true, false);
         // when
-        PatientData to =  testee.map(from);
+        PatientData to =  testee.mapSjukfallIntygToPatientData(from, intygAccessMetaData.get(from.getIntygId()));
 
         // then
         assertEquals(SIGNERINGSTIDPUNKT, to.getSigneringsTidpunkt());
@@ -241,6 +254,8 @@ public class SjukfallEngineMapperTest {
         assertEquals("Skada på multipla böjmuskler och deras senor på handleds- och handnivå", to.getBidiagnoser().get(0).getNamn());
         assertEquals("Nuvarande arbete", to.getSysselsattning().get(0));
         assertEquals(getSjukskrivningsDagar(), to.getDagar());
+        assertFalse(to.isOtherVardgivare());
+        assertTrue(to.isOtherVardenhet());
     }
 
     private Diagnos createDiagnos(String orginalVarde, String diagnosKod, String diagnosNamn) {
