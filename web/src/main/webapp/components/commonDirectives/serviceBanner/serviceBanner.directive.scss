@@ -13,5 +13,19 @@ service-banner {
       max-width: $rs-max-width;
       margin: 0 auto;
     }
+
+    /* IE11 underline fix */
+    a::after {
+      text-decoration: underline;
+    }
+
+    a::after {
+      @extend .glyphicon;
+      content: '\e164';
+
+      font-size: inherit;
+      text-decoration: none;
+      margin-left: 3px;
+    }
   }
 }
