@@ -18,18 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.mappers;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
@@ -38,6 +29,16 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Magnus Ekstrand on 2017-09-01.
@@ -54,7 +55,8 @@ public class SjukfallEngineMapper {
     /**
      * Mapping from SjukfallEngine's format to Rehabstod internal format.
      */
-    public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, int maxDagarSedanAvslut, LocalDate today) {
+    public SjukfallEnhet mapToSjukfallEnhetDto(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from,
+                                               int maxDagarSedanAvslut, LocalDate today) {
         SjukfallEnhet to = new SjukfallEnhet();
 
         try {
@@ -86,8 +88,8 @@ public class SjukfallEngineMapper {
     /**
      * Mapping from SjukfallEngine's format to Rehabstod internal format.
      */
-    public SjukfallPatient map(se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from, String currentVardgivarHsaId,
-                               String currentVardenhetHsaId) {
+    public SjukfallPatient mapToSjukfallPatientDto(se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from,
+                               Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
         SjukfallPatient to = new SjukfallPatient();
 
         try {
@@ -96,16 +98,19 @@ public class SjukfallEngineMapper {
             to.setSlut(from.getSlut());
             to.setDagar(from.getDagar());
 
-            List<PatientData> patientData = mapIntyg(from.getSjukfallIntygList());
+            List<PatientData> patientData = from.getSjukfallIntygList()
+                    .stream()
+                    .map(sfi -> mapSjukfallIntygToPatientData(sfi, intygAccessMetaData.get(sfi.getIntygId())))
+                    .collect(Collectors.toList());
 
             // Sort patientData by start date with descending order
             Comparator<PatientData> dateComparator
-                = Comparator.comparing(PatientData::getStart, Comparator.reverseOrder());
+                    = Comparator.comparing(PatientData::getStart, Comparator.reverseOrder());
 
             patientData = patientData.stream().sorted(dateComparator).collect(Collectors.toList());
             to.setIntyg(patientData);
 
-            clearDataIfOtherUnit(to, currentVardgivarHsaId, currentVardenhetHsaId);
+            clearDataOnIntygIfOtherUnit(to);
 
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
@@ -117,7 +122,8 @@ public class SjukfallEngineMapper {
     /**
      * Mapping from SjukfallEngine's format to Rehabstod internal format.
      */
-    public PatientData map(se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg from) {
+    public PatientData mapSjukfallIntygToPatientData(se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg from,
+                                                     IntygAccessControlMetaData iacm) {
         PatientData to = new PatientData();
 
         try {
@@ -140,6 +146,11 @@ public class SjukfallEngineMapper {
             to.setLakare(buildLakare(from.getLakareId(), from.getLakareNamn()));
             to.setSysselsattning(from.getSysselsattning());
             to.setAktivtIntyg(from.isAktivtIntyg());
+
+            if (iacm != null) {
+                to.setOtherVardgivare(!iacm.isInomVardgivare());
+                to.setOtherVardenhet(!iacm.isInomVardenhet());
+            }
 
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
@@ -177,25 +188,13 @@ public class SjukfallEngineMapper {
             .collect(Collectors.toList());
     }
 
-    private List<PatientData> mapIntyg(List<se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg> from) {
-        return from.stream().map(this::map).collect(Collectors.toList());
-    }
 
+    private void clearDataOnIntygIfOtherUnit(SjukfallPatient sjukfallPatient) {
 
-    private void clearDataIfOtherUnit(SjukfallPatient sjukfallPatient, String currentVardgivarHsaId, String currentVardenhetHsaId) {
-
-        sjukfallPatient.getIntyg().stream()
-                .filter(patientData -> !patientData.getVardgivareId().equals(currentVardgivarHsaId)
-                        || !patientData.getVardenhetId().equals(currentVardenhetHsaId))
-                .forEach(patientData -> {
-                    clearPatientData(patientData);
-
-                    if (patientData.getVardgivareId().equals(currentVardgivarHsaId)) {
-                        patientData.setOtherVardenhet(true);
-                    } else {
-                        patientData.setOtherVardgivare(true);
-                    }
-                });
+        sjukfallPatient.getIntyg()
+                .stream()
+                .filter(patientData -> patientData.isOtherVardgivare() || patientData.isOtherVardenhet())
+                .forEach(this::clearPatientData);
 
 
         Optional<PatientData> firstWithDiagnos = sjukfallPatient.getIntyg().stream()

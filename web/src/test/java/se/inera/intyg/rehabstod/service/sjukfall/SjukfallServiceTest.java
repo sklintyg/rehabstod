@@ -851,7 +851,7 @@ public class SjukfallServiceTest {
         private final String patinetNamn = "Tolvan Tolvansson";
 
         @Override
-        public SjukfallEnhet map(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, int maxDagarSedanAvslut, LocalDate today) {
+        public SjukfallEnhet mapToSjukfallEnhetDto(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, int maxDagarSedanAvslut, LocalDate today) {
             se.inera.intyg.infra.sjukfall.dto.Vardgivare vardgivare =
                 new se.inera.intyg.infra.sjukfall.dto.Vardgivare(vardgivareId, vardgivareNamn);
 
@@ -866,17 +866,17 @@ public class SjukfallServiceTest {
             from.setPatient(patient);
             from.setDiagnosKod(diagnosKod);
 
-            return super.map(from, maxDagarSedanAvslut, today);
+            return super.mapToSjukfallEnhetDto(from, maxDagarSedanAvslut, today);
         }
 
         @Override
-        public SjukfallPatient map(se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from, String vgId, String enhetId) {
-            return super.map(from, vgId, enhetId);
+        public SjukfallPatient mapToSjukfallPatientDto(se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from, Map<String, IntygAccessControlMetaData> intygAccessMetaData) {
+            return super.mapToSjukfallPatientDto(from, intygAccessMetaData);
         }
 
         @Override
-        public PatientData map(se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg from) {
-            return super.map(from);
+        public PatientData mapSjukfallIntygToPatientData(se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg from, IntygAccessControlMetaData iacm) {
+            return super.mapSjukfallIntygToPatientData(from, iacm);
         }
 
         @Override
