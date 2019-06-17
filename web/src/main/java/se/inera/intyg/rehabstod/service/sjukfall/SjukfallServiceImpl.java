@@ -241,7 +241,9 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
         List<SjukfallEnhet> rehabstodSjukfall = sjukfallList.stream()
-                .map(o -> sjukfallEngineMapper.map(o, parameters.getMaxAntalDagarSedanSjukfallAvslut(), parameters.getAktivtDatum()))
+                .map(o -> sjukfallEngineMapper.mapToSjukfallEnhetDto(o,
+                        parameters.getMaxAntalDagarSedanSjukfallAvslut(),
+                        parameters.getAktivtDatum()))
                 .collect(Collectors.toList());
 
         if (urval.equals(Urval.ISSUED_BY_ME)) {
@@ -347,7 +349,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         LOG.debug("Mapping response from calculation engine to internal objects.");
         List<SjukfallPatient> rehabstodSjukfall = sjukfallList.stream()
-                .map(o -> sjukfallEngineMapper.map(o, vardgivareId, enhetsId))
+                .map(o -> sjukfallEngineMapper.mapToSjukfallPatientDto(o, intygAccessMetaData))
                 .collect(Collectors.toList());
 
         return new FilteredSjukFallByPatientResult(rehabstodSjukfall, sjfMetaData);
