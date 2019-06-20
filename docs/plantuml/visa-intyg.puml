@@ -1,44 +1,59 @@
 @startuml
-actor Webbläsare
-participant Rehabstöd
-participant Webcert
-participant Intygstjänst
-participant SRS
+actor Webbläsare as b
+participant Rehabstöd as rs
+participant Webcert as wc
+participant Intygstjänst as it
+participant IdP as idp
 
+b -> rs: Användaren loggar in
+rs -> idp: SAML-intyg växlas mot AccesToken/RefreshToken vid lyckad inloggning
+activate idp
+    idp -> idp: IdPn säkerställer att SAML-intyg\när giltigt och får biljettväxlas
+    idp -> rs: IdP returnerar AccessToken/RefreshToken
+deactivate idp
+rs -> b: Användaren är inloggad
 
-    Webbläsare -> Rehabstöd: Väljer att visa intyg
-activate Rehabstöd
-    Rehabstöd -> Rehabstöd: Bygger upp URL till Webcert
-    Rehabstöd --> Webbläsare: Överhopps-URL
-deactivate Rehabstöd
-
-Webbläsare -> Webcert: Öppnar Webcert i iFrame
-activate Webcert
-    Webcert -> Webcert: Validerar session mot SÄK
-    Webcert -> Intygstjänst: Anropa GetCertificateType
-    activate Intygstjänst
-    Intygstjänst --> Webcert: Svarar med intygstypen
-    deactivate Intygstjänst
-    Webcert -> Webcert: Sätter vårdenhet på sessionen.
-    Webcert -> Webbläsare: Omdirigerar till intygsvyn
-    deactivate Webcert
-    Webbläsare -> Webcert: Öppnar intygsvyn
-    activate Webcert
-    Webcert -> Intygstjänst: GetCertificate (Hämtar intyget)
-    activate Intygstjänst
-    Intygstjänst --> Webcert: IntygData
-    deactivate Intygstjänst
-    Webcert -> Webcert: Renderar intyget till Webbläsaren via UV-ramverket
-    Webcert --> Webbläsare: Intyget visas i Readonly-läge
-    Webbläsare --> Webcert: Kompletteringsinfo för intyget hämtas
-    Webcert --> Webbläsare: Kompletteringsinfo visas i högerflik
-    alt SRS-pilot aktiv
-    Webbläsare --> Webcert: Srsinfo för intygets huvuddiagnos hämtas
-        Webcert -> SRS: GetSRSInformationForDiagnosis
-        activate SRS
-        SRS --> Webcert: SRS-information
-        deactivate SRS
-        Webcert --> Webbläsare: SrsInfo visas i högerflik
+b -> rs: Väljer att visa patientvy
+activate rs
+    alt AccessToken på väg att gå ut
+        rs -> idp: Hämta ny AccessToken mha RefreshToken
+        activate idp
+            idp -> idp: Validera RefreshToken\noch skapa ny AccessToken
+            idp -> rs: Returnera ny AccessToken
+         deactivate idp
     end
-    deactivate Webcert
+    rs -> rs: Bygger upp formulär\nmed intygsid, vårdenhet och\nAccessToken för POST till Webcert
+    rs --> b: Patientvy renderas
+deactivate rs
+
+b -> wc: Klickar Visa intyg\nDetta gör POST på ett\nformulär till Webcert som öppnar resultatet i en iFrame
+activate wc
+    wc -> wc: Validerar AccessToken och skapar session
+    wc -> Intygstjänst: Anropa GetCertificateType
+    activate Intygstjänst
+    Intygstjänst --> wc: Svarar med intygstypen
+    deactivate Intygstjänst
+    wc -> wc: Sätter vårdenhet på sessionen.
+    wc -> b: Omdirigerar till intygsvyn
+    deactivate wc
+    b -> wc: Öppnar intygsvyn
+    activate wc
+    wc -> Intygstjänst: GetCertificate (Hämtar intyget)
+    activate Intygstjänst
+    Intygstjänst --> wc: IntygData
+    deactivate Intygstjänst
+    wc -> wc: Renderar intyget till Webbläsaren via UV-ramverket
+    wc --> b: Intyget visas i Webcerts Readonly-läge\n(med eventuellt tillhörande information)
+    deactivate wc
+
+    b -> rs: Användaren stänger patientvyn
+    activate rs
+        rs -> b: Redirect till lokal logout\ni Webcert via dold iFrame
+    deactivate rs
+    b -> wc: Lokal logout
+    activate wc
+    wc -> wc: Avslutar sessionen
+    wc -> b: HTTP 200 med tom sida returneras\n till den dolda iframen.
+
+    deactivate wc
 @enduml
