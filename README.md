@@ -25,7 +25,7 @@ för att starta applikationen lokalt.
 
 Gå sedan till `/web` och kör
 
-    $ grunt server
+    $ grunt serve
 
 Nu går det att öppna en webbläsare och surfa till 
 
