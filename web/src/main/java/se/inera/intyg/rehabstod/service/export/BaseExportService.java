@@ -83,12 +83,12 @@ public abstract class BaseExportService {
 
     protected static final String FORMAT_ANTAL_DAGAR = "%d dagar";
     protected static final String UNICODE_RIGHT_ARROW_SYMBOL = "\u2192";
-    private static final int SRS_RISK_LOW = 2;
-    private static final String SRS_RISK_LOW_DESC = "Låg";
-    private static final int SRS_RISK_MED = 3;
-    private static final String SRS_RISK_MED_DESC = "Medel";
-    private static final int SRS_RISK_HIGH = 4;
-    private static final String SRS_RISK_HIGH_DESC = "Hög";
+    private static final int SRS_RISK_LOW = 1;
+    private static final String SRS_RISK_LOW_DESC = "Måttlig";
+    private static final int SRS_RISK_MED = 2;
+    private static final String SRS_RISK_MED_DESC = "Hög";
+    private static final int SRS_RISK_HIGH = 3;
+    private static final String SRS_RISK_HIGH_DESC = "Mycket hög";
 
     @Autowired
     protected DiagnosKapitelService diagnosKapitelService;
@@ -157,7 +157,7 @@ public abstract class BaseExportService {
             }
 
         }
-        return "";
+        return "Ej beräknad";
     }
 
 }
