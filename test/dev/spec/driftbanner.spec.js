@@ -39,7 +39,7 @@ describe('Driftbanner', function() {
     });
 
     it('Skapa banner', function() {
-        testdataHelper.createBanners("message", "HIGH");
+        testdataHelper.createBanners("message", "HOG");
         browser.refresh();
         expect(banners.count()).toBe(1);
         expect(banners.getText()).toEqual(['message']);
