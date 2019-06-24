@@ -28,11 +28,11 @@ angular.module('rehabstodApp').directive('serviceBanner', function() {
 
       function getClass(priority) {
         switch(priority) {
-        case 'HIGH':
+        case 'HOG':
           return 'alert-danger';
-        case 'MEDIUM':
+        case 'MEDEL':
           return 'alert-warning';
-        case 'LOW':
+        case 'LAG':
           return 'alert-info';
         }
       }
