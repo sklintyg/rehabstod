@@ -87,7 +87,7 @@ public class UserController {
         // Check if Tokens are available and refresh access token if applicable
         RehabstodUserTokens tokens = user.getTokens();
         if (tokens != null) {
-            if (LocalDateTime.now().plusMinutes(ACCESSTOKEN_EXPIRE_LIMIT_MINUTES).isAfter(tokens.getAccessTokenExpiration())) {
+            if (LocalDateTime.now(ZoneId.systemDefault()).plusMinutes(ACCESSTOKEN_EXPIRE_LIMIT_MINUTES).isAfter(tokens.getAccessTokenExpiration())) {
                 try {
                     tokens = tokenExchangeService.refresh(tokens);
                     user.setTokens(tokens);

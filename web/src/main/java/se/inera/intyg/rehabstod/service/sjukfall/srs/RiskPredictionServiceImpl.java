@@ -71,7 +71,7 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
 
         // Använd endast prediktioner/risksignaler som är mindre än 90 dagar gamla och har ett relevant värde
         List<RiskSignal> prediktioner = CollectionUtils.emptyIfNull(getRiskSignals(intygIds)).stream()
-                .filter((p) -> p.getBerakningstidpunkt().isAfter(LocalDateTime.now().minus(MAX_AGE_DAYS, ChronoUnit.DAYS)))
+                .filter((p) -> p.getBerakningstidpunkt().isAfter(LocalDateTime.now(ZoneId.systemDefault()).minus(MAX_AGE_DAYS, ChronoUnit.DAYS)))
                 .filter((p) -> p.getRiskKategori() >= 1)
                 .collect(Collectors.toList());
 
@@ -115,7 +115,7 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
 
             // Do not add risk signals if response was 1, that means SRS had no prediction at all for the intygsId.
             if (riskSignal.getRiskKategori() < 1
-                    || riskSignal.getBerakningstidpunkt().isBefore(LocalDateTime.now().minus(MAX_AGE_DAYS, ChronoUnit.DAYS))) {
+                    || riskSignal.getBerakningstidpunkt().isBefore(LocalDateTime.now(ZoneId.systemDefault()).minus(MAX_AGE_DAYS, ChronoUnit.DAYS))) {
                 continue;
             }
 

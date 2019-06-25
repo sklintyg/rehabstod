@@ -42,7 +42,7 @@ public class PingForConfigurationResponderStub implements PingForConfigurationRe
     public PingForConfigurationResponseType pingForConfiguration(String s, PingForConfigurationType pingForConfigurationType) {
         PingForConfigurationResponseType responseType = new PingForConfigurationResponseType();
         responseType.setVersion("stubbed-version");
-        responseType.setPingDateTime(LocalDateTime.now().toString());
+        responseType.setPingDateTime(LocalDateTime.now(ZoneId.systemDefault()).toString());
         return responseType;
     }
 }

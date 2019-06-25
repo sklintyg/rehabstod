@@ -76,7 +76,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
     private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
 
-    private LocalDateTime timeSimulator = LocalDateTime.now();
+    private LocalDateTime timeSimulator = LocalDateTime.now(ZoneId.systemDefault());
 
     private Queue<Patient> seededPatients = new ArrayDeque<>();
     private Enhet enhet;
@@ -195,13 +195,13 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         addToIntygsDataFixedDates(2, tolvan, utanInloggning, intygsDataList);
         addToIntygsDataFixedDates(2, tolvan, hosPersonList.get(3), intygsDataList);
 
-        addToIntygsDataFixedDates(1, tolvan, hosPersonList.get(8), intygsDataList, LocalDateTime.now().minusDays(100));
+        addToIntygsDataFixedDates(1, tolvan, hosPersonList.get(8), intygsDataList, LocalDateTime.now(ZoneId.systemDefault()).minusDays(100));
     }
 
     private void addToIntygsDataFixedDates(Integer intygPerPatient, Patient patient, HosPersonal hosPerson,
                                            List<IntygsData> intygsDataList) {
 
-        addToIntygsDataFixedDates(intygPerPatient, patient, hosPerson, intygsDataList, LocalDateTime.now());
+        addToIntygsDataFixedDates(intygPerPatient, patient, hosPerson, intygsDataList, LocalDateTime.now(ZoneId.systemDefault()));
     }
 
     private void addToIntygsDataFixedDates(Integer intygPerPatient, Patient patient, HosPersonal hosPerson,
@@ -209,13 +209,13 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         timeSimulator = startDate;
         for (int intygsIndex = 0; intygsIndex < intygPerPatient; intygsIndex++) {
             intygsDataList.add(buildFixedIntygsData(patient, hosPerson));
-            timeSimulator = LocalDateTime.now().minusDays(20L * (intygsIndex + 1L));
+            timeSimulator = LocalDateTime.now(ZoneId.systemDefault()).minusDays(20L * (intygsIndex + 1L));
         }
     }
 
     private void addToIntygsData(Integer intygPerPatient, Patient patient, HosPersonal hosPerson, List<IntygsData> intygsDataList) {
         // Start by resetting time to 60-120 days back in time..
-        timeSimulator = LocalDateTime.now().minusDays(ThreadLocalRandom.current().nextInt(60, 120));
+        timeSimulator = LocalDateTime.now(ZoneId.systemDefault()).minusDays(ThreadLocalRandom.current().nextInt(60, 120));
         for (int intygsIndex = 0; intygsIndex < intygPerPatient; intygsIndex++) {
 
             IntygsData intygData = buildIntygsData(patient, hosPerson);

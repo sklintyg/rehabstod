@@ -77,7 +77,7 @@ public class SRSStub implements GetRiskPredictionForCertificateResponderInterfac
         Risksignal riskSignal = new Risksignal();
         riskSignal.setRiskkategori(getRiskInt(index));
         riskSignal.setBeskrivning(getRiskBeskrivning(riskSignal.getRiskkategori()));
-        riskSignal.setBerakningstidpunkt(LocalDateTime.now());
+        riskSignal.setBerakningstidpunkt(LocalDateTime.now(ZoneId.systemDefault()));
         return riskSignal;
     }
 

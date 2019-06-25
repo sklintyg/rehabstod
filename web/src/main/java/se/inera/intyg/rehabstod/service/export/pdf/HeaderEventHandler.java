@@ -77,7 +77,7 @@ public class HeaderEventHandler extends PdfPageEventHelper {
     }
 
     private PdfPCell printedBy(String userName, String enhetsNamn) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
 
         Phrase printedBy = new Phrase("", PdfExportConstants.TABLE_CELL_NORMAL);
         printedBy.add(new Chunk("Utskrift av " + userName));
