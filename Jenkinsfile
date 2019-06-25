@@ -1,7 +1,7 @@
 #!groovy
 
-def buildVersion = "1.10.0.${BUILD_NUMBER}"
-def infraVersion = "3.10.0.+"
+def buildVersion = "1.11.0.${BUILD_NUMBER}"
+def infraVersion = "3.11.0.+"
 def refDataVersion = "1.0-SNAPSHOT"
 
 stage('checkout') {
