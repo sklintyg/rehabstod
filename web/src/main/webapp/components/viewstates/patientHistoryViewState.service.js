@@ -95,6 +95,22 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
 
         _setKraverSamtyckeViewState(sjfMetaData.kraverSamtycke);
         _setKraverInteSamtyckeViewState(sjfMetaData.kraverInteSamtycke);
+
+        var kraverInteSamtyckeLength = _sjfMetaData.kraverInteSamtycke.filter(function(value) {
+            return value.includedInSjukfall;
+        }).length;
+
+        if (kraverInteSamtyckeLength > 0) {
+            _extraBoxStates.osparradInom.skipStart = true;
+        }
+
+        var kraverSamtyckeLength = _sjfMetaData.kraverSamtycke.filter(function(value) {
+            return value.includedInSjukfall;
+        }).length;
+
+        if (kraverSamtyckeLength > 0) {
+            _extraBoxStates.osparradAndra.skipStart = true;
+        }
     }
 
     function _getSjfMetaData() {
@@ -176,6 +192,10 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', [ '$filter', f
     function _reset() {
         _tabs = [];
         _timeline = [];
+        _extraBoxStates.sparradInom.skipStart = false;
+        _extraBoxStates.osparradInom.skipStart = false;
+        _extraBoxStates.osparradAndra.skipStart = false;
+        _extraBoxStates.sparradAndra.skipStart = false;
     }
 
     function _selectTab(tab) {
