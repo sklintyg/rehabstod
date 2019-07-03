@@ -1,5 +1,5 @@
 apply plugin: 'war'
-apply plugin: 'org.akhikhl.gretty'
+apply plugin: 'org.gretty'
 apply plugin: 'com.moowork.grunt'
 
 war.rootSpec.exclude "logback.xml"
@@ -67,9 +67,9 @@ task zipResources(type: ArchiveDirectoryTask) {
 build.dependsOn zipResources
 
 gretty {
+    servletContainer = 'jetty9'
     contextPath = '/'
     contextConfigFile = "${projectDir}/src/main/resources/jetty-web.xml"
-    // logbackConfigFile = "${projectDir}/src/main/resources/logback.xml"
 
     integrationTestTask = null
     scanInterval = 0
