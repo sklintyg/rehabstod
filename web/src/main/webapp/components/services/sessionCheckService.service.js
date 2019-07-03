@@ -20,7 +20,7 @@
 /* global JSON */
 
 angular.module('rehabstodApp').factory('sessionCheckService',
-    ['$http', '$log', '$interval', '$window', function($http, $log, $interval, $window) {
+    ['$http', '$log', '$interval', '$window', 'UserModel', function($http, $log, $interval, $window, UserModel) {
         'use strict';
 
         var pollPromise;
@@ -53,7 +53,8 @@ angular.module('rehabstodApp').factory('sessionCheckService',
                     if (response.data.authenticated === false) {
                         $log.debug('No longer authenticated - redirecting to loggedout');
                         _stopPolling();
-                        $window.location.href = '/error.jsp?reason=inactivity-timeout';
+                        $window.jQuery('<form action="' + UserModel.getLogoutLocation() + '" method="post" />')
+                            .appendTo('body').submit().remove();
                     }
                 } else {
                     $log.debug('_getSessionInfo returned unexpected data:' + response.data);
