@@ -42,18 +42,8 @@ if (project.hasProperty('useMinifiedJavaScript')) {
 
 war.dependsOn createVersionPropertyFile
 
-task bowerInstall(type: NodeTask, dependsOn:npmInstall) {
-    script = file('node_modules/bower/bin/bower')
-    args = ["--config.storage.cache=${gradle.getGradleUserHomeDir()}/caches/bower/cache",
-            "--config.storage.packages=${gradle.getGradleUserHomeDir()}/caches/bower/packages",
-            "--config.storage.registry=${gradle.getGradleUserHomeDir()}/caches/bower/registry",
-            'install']
-    inputs.files file('bower.json')
-    outputs.files file('src/main/webapp/bower_components')
-}
-
-grunt_build.dependsOn bowerInstall
-grunt_build_no_minify.dependsOn bowerInstall
+grunt_build.dependsOn npmInstall
+grunt_build_no_minify.dependsOn npmInstall
 
 task zipResources(type: ArchiveDirectoryTask) {
     sourcePath "../src/main/resources"
