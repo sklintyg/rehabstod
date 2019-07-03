@@ -1,6 +1,6 @@
 plugins {
-    id "se.inera.intyg.plugin.common" version "1.0.70" apply false
-    id "org.akhikhl.gretty" version "1.4.2" apply false
+    id "se.inera.intyg.plugin.common" version "2.0.6" apply false
+    id "org.gretty" version "2.3.1" apply false
     id "com.moowork.node" version "1.2.0" apply false
 }
 
@@ -73,6 +73,7 @@ allprojects {
         maven { url "https://build-inera.nordicmedtest.se/nexus/repository/snapshots/" }
         maven { url "https://build-inera.nordicmedtest.se/nexus/repository/releases/" }
         maven { url "http://repo.maven.apache.org/maven2" }
+        jcenter()
     }
 
     dependencies {
