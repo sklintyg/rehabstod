@@ -26,6 +26,9 @@ angular.module('rehabstodApp').factory('sessionCheckService',
         var pollPromise;
         var extendSessionPromise;
 
+        // logout use when seconds remains (to be able to follow the normal logout flow)
+        var logoutWhenSecondsleft = 80;
+
         //one every minute
         var msPollingInterval = 60 * 1000;
 
@@ -50,7 +53,7 @@ angular.module('rehabstodApp').factory('sessionCheckService',
                 $log.debug('<= _getSessionInfo success');
                 if (response.data) {
                     $log.debug('session status  = ' + JSON.stringify(response.data));
-                    if (response.data.authenticated === false) {
+                    if (response.data.authenticated === false || response.data.secondsUntilExpire < logoutWhenSecondsleft) {
                         $log.debug('No longer authenticated - redirecting to loggedout');
                         _stopPolling();
                         $window.jQuery('<form action="' + UserModel.getLogoutLocation() + '" method="post" />')
