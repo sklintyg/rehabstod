@@ -34,7 +34,7 @@ public class SjfMetaData {
     private boolean samtyckeFinns;
     private boolean blockingServiceError;
     private boolean consentServiceError;
-
+    private boolean haveSekretess;
 
     public SjfMetaData() {
 
@@ -99,5 +99,13 @@ public class SjfMetaData {
 
     public void setConsentServiceError(boolean consentServiceError) {
         this.consentServiceError = consentServiceError;
+    }
+
+    public boolean isHaveSekretess() {
+        return haveSekretess;
+    }
+
+    public void setHaveSekretess(boolean haveSekretess) {
+        this.haveSekretess = haveSekretess;
     }
 }

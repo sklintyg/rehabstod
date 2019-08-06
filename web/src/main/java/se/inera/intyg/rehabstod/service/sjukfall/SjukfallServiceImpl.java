@@ -315,6 +315,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         }
 
         SjfMetaData sjfMetaData = new SjfMetaData();
+        sjfMetaData.setHaveSekretess(haveSekretess);
         boolean haveConsent = false;
 
         // Hoppa över spärr- och samtyckestjänsten om det är sekretess

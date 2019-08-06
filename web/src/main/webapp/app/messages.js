@@ -186,6 +186,7 @@ var rhsMessages = {
         'label.patienthistory.loading': 'Hämtar sjukfall för patient...',
         'label.patienthistory.empty': 'Tyvärr finns det inga giltiga intyg att visa i det här sjukfallet för tillfället. Det beror på att intygen har makulerats.',
 
+        'label.extradiagnoser.sekretess': 'För patient med skyddade personuppgifter kan ingen ytterligare information hämtas från andra vårdenheter eller andra vårdgivare.',
         'label.extradiagnoser.none': 'Det finns för tillfället ingen ytterligare information att inhämta från andra vårdenheter eller andra vårdgivare.',
         'label.extradiagnoser.empty': 'Det finns för tillfället ingen information i denna kategori att inhämta.',
         'label.extradiagnoser.error': 'Tyvärr kan information från andra vårdgivare inte inhämtas på grund av ett tekniskt fel. Försök igen om en stund.',
