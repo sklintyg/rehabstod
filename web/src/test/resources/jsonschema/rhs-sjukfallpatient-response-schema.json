@@ -63,6 +63,9 @@
           },
           "consentServiceError": {
             "type": "boolean"
+          },
+          "haveSekretess": {
+            "type": "boolean"
           }
         },
         "type": "object",
@@ -74,7 +77,8 @@
           "kraverInteSamtycke",
           "samtyckeFinns",
           "blockingServiceError",
-          "consentServiceError"
+          "consentServiceError",
+          "haveSekretess"
         ]
       },
       "sjukfallList": {

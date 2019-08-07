@@ -88,8 +88,9 @@
     </div>
 
     <div class="extra-diagnoser" ng-if="historyItem.isActive" ng-switch="extraDiagnoser.available">
-      <div ng-switch-when="false" class="text-center">
-        <span message key="label.extradiagnoser.none"></span>
+      <div ng-switch-when="false" ng-switch="extraDiagnoser.sekretess" class="text-center">
+        <span ng-switch-when="true" message key="label.extradiagnoser.sekretess"></span>
+        <span ng-switch-when="false" message key="label.extradiagnoser.none"></span>
       </div>
       <div ng-switch-when="true" class="extra-diagnoser__wrapper">
         <div class="row">
