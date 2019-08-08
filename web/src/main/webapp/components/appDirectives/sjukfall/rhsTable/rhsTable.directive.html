@@ -17,55 +17,53 @@
         <thead class="hidden" rhs-table-header columns="columnsForTable" id="rhs-table-fixed-header"></thead>
         <thead rhs-table-header columns="columnsForTable" id="rhs-table-normal-header"></thead>
         <tbody id="rhs-table-body">
-        <tr id="sjukfall-row-{{$index}}" ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id"
-            class="rhs-table-row" ng-click="showPatientHistory(row.patient)"
-            ng-class="{'nyligen-avslutad-row' : row.nyligenAvslutat}">
-            <td class="column-number">{{$index + 1}}</td>
+            <tr id="sjukfall-row-{{$index}}" ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id"
+                class="rhs-table-row" ng-click="showPatientHistory(row.patient)"
+                ng-class="{'nyligen-avslutad-row' : row.nyligenAvslutat}">
+                <td class="column-number">{{$index + 1}}</td>
 
-            <td data-ng-repeat="column in columnsForTable">
-                <div data-ng-if="column.id === 'patient.id'" class="column-patient-id">{{::row.patient.id}}</div>
-                <div data-ng-if="column.id === 'patient.alder'" class="column-patient-alder">{{::row.patient.alder}} år</div>
-                <div data-ng-if="column.id === 'patient.namn'" class="column-patient-name">{{::row.patient.namn}}</div>
-                <div data-ng-if="column.id === 'patient.konShow'" class="column-patient-kon">{{::row.patient.konShow}}</div>
-                <div data-ng-if="column.id === 'diagnos.intygsVarde'" class="column-diagnos">
-                    <div class="diagnos-container">
-                        <span uib-tooltip-html="getToolTip(row.diagnos)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnos.intygsVarde}}</span>&nbsp;
-                        <span class="column-diagnos-beskrivning hidden-sm"
-                              ng-bind-html="row.diagnos.beskrivning"></span>
-                        <span ng-repeat="d in row.biDiagnoser track by $index">,
-                          <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::d.intygsVarde}}</span>
-                        </span>
+                <td data-ng-repeat="column in columnsForTable">
+                    <div data-ng-if="column.id === 'patient.id'" class="column-patient-id">{{::row.patient.id}}</div>
+                    <div data-ng-if="column.id === 'patient.alder'" class="column-patient-alder">{{::row.patient.alder}} år</div>
+                    <div data-ng-if="column.id === 'patient.namn'" class="column-patient-name">{{::row.patient.namn}}</div>
+                    <div data-ng-if="column.id === 'patient.konShow'" class="column-patient-kon">{{::row.patient.konShow}}</div>
+                    <div data-ng-if="column.id === 'diagnos.intygsVarde'" class="column-diagnos">
+                        <div class="diagnos-container">
+                            <span uib-tooltip-html="getToolTip(row.diagnos)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnos.intygsVarde}}</span>&nbsp;
+                            <span class="column-diagnos-beskrivning hidden-sm"
+                                  ng-bind-html="row.diagnos.beskrivning"></span>
+                            <span ng-repeat="d in row.biDiagnoser track by $index">,
+                              <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::d.intygsVarde}}</span>
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <div data-ng-if="column.id === 'start'" class="column-start start-date">{{::row.start}}</div>
-                <div data-ng-if="column.id === 'slut'" class="column-slut end-date"><span>{{::row.slut}}</span></div>
-                <div data-ng-if="column.id === 'dagar'" class="column-dagar">{{::row.dagarShow}}</div>
-                <div data-ng-if="column.id === 'intyg'" class="column-antal">{{::row.intyg}}</div>
-                <div data-ng-if="column.id === 'aktivGrad'" class="column-grad" ng-bind-html="::row.gradShow"></div>
-                <div data-ng-if="column.id === 'obesvaradeKompl'" class="column-obesvaradeKompl" ng-bind-html="::row.obesvaradeKomplShow"></div>
-                <div data-ng-if="column.id === 'riskSignal.riskKategori'" class="column-risk">
-                    <rhs-risk-indicator category="row.riskSignal.riskKategori"
-                                        description="row.riskSignal.riskDescription"></rhs-risk-indicator>
-                </div>
-                <div data-ng-if="column.id === 'lakare.namn'">{{::row.lakare.namn}}</div>
-            </td>
-        </tr>
-
+                    <div data-ng-if="column.id === 'start'" class="column-start start-date">{{::row.start}}</div>
+                    <div data-ng-if="column.id === 'slut'" class="column-slut end-date"><span>{{::row.slut}}</span></div>
+                    <div data-ng-if="column.id === 'dagar'" class="column-dagar">{{::row.dagarShow}}</div>
+                    <div data-ng-if="column.id === 'intyg'" class="column-antal">{{::row.intyg}}</div>
+                    <div data-ng-if="column.id === 'aktivGrad'" class="column-grad" ng-bind-html="::row.gradShow"></div>
+                    <div data-ng-if="column.id === 'obesvaradeKompl'" class="column-obesvaradeKompl" ng-bind-html="::row.obesvaradeKomplShow"></div>
+                    <div data-ng-if="column.id === 'riskSignal.riskKategori'" class="column-risk">
+                        <rhs-risk-indicator category="row.riskSignal.riskKategori"
+                                            description="row.riskSignal.riskDescription"></rhs-risk-indicator>
+                    </div>
+                    <div data-ng-if="column.id === 'lakare.namn'">{{::row.lakare.namn}}</div>
+                </td>
+            </tr>
         </tbody>
     </table>
     </div>
 
     <div ng-if="!displayedCollection.length" class="rhs-table-no-result">
-    <span ng-if="!model.get().length && !model.hasError()">
-        <span ng-if="user.isLakare" message key="label.table.no-result.lakare" param="user.valdVardenhet.namn"></span>
-        <span ng-if="!user.isLakare" message key="label.table.no-result.rehab" param="user.valdVardenhet.namn"></span>
-    </span>
-        <span ng-if="model.get().length">
-      {{::'label.table.no-filter-result' | message}}
-    </span>
-        <span ng-if="model.hasError()">
-      {{::'server.error.getsjukfall.title' | message}}
-    </span>
-
+        <span ng-if="!model.get().length && !model.hasError()">
+            <span ng-if="user.isLakare" message key="label.table.no-result.lakare" param="user.valdVardenhet.namn"></span>
+            <span ng-if="!user.isLakare" message key="label.table.no-result.rehab" param="user.valdVardenhet.namn"></span>
+        </span>
+            <span ng-if="model.get().length">
+          {{::'label.table.no-filter-result' | message}}
+        </span>
+            <span ng-if="model.hasError()">
+          {{::'server.error.getsjukfall.title' | message}}
+        </span>
     </div>
 </div>

@@ -90,7 +90,7 @@ angular.module('rehabstodApp').factory('UserService',
         return columns;
       }
 
-      function _getSelectedColumns(allColumns, preferenceKey) {
+      function _getSelectedColumns(allColumns, preferenceKey, onlyPreferences) {
         var user = UserModel.get();
         var columns = user.preferences[preferenceKey];
         var allSelected = !columns;
@@ -101,7 +101,7 @@ angular.module('rehabstodApp').factory('UserService',
             return false;
           }
 
-          if ((column.id === 'patient.id' || column.id === 'patient.namn') && !SjukfallFilterViewState.get().showPatientId) {
+          if (!onlyPreferences && (column.id === 'patient.id' || column.id === 'patient.namn') && !SjukfallFilterViewState.get().showPatientId) {
             return false;
           }
 

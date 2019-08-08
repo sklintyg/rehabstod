@@ -1,12 +1,10 @@
-<div class="pull-right">
-  <span ng-if="showIcon"
-        class="rhs-tooltip"
-        rhs-tooltip
-        icon="fa-exclamation-circle"
-        field-help-text="label.table.anpassa.help"
-        alignment="auto top"></span>
+<span ng-if="showIcon"
+      class="rhs-tooltip"
+      rhs-tooltip
+      icon="fa-exclamation-circle"
+      field-help-text="label.table.anpassa.help"
+      alignment="auto top"></span>
 
-  <button class="btn btn-link" data-ng-click="openDialog()">
-    {{::'label.table.anpassa' | message}}
-  </button>
-</div>
+<a href data-ng-click="openDialog()">
+  {{::'label.table.anpassa' | message}}
+</a>

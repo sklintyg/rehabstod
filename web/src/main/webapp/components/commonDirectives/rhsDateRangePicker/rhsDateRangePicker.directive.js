@@ -25,7 +25,8 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
             restrict: 'E',
             scope: {
                 model: '=',
-                id: '@'
+                id: '@',
+                disabled: '='
             },
             templateUrl: '/components/commonDirectives/rhsDateRangePicker/rhsDateRangePicker.directive.html',
             link: function($scope, element) {
@@ -129,6 +130,9 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
 
 
                 $scope.open = function($event) {
+                    if ($scope.disabled) {
+                        return;
+                    }
                     $event.preventDefault();
                     $event.stopPropagation();
                     inputElement.data('dateRangePicker').open();

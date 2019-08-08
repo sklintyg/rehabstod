@@ -1,5 +1,5 @@
 <div class="form-control" data-ng-click="open($event)">
-  <input disabled="disabled" type="text" data-ng-model="inputdate" placeholder="{{'label.filter.allselected' | message}}">
+  <input disabled="disabled" type="text" data-ng-model="inputdate" placeholder="{{'label.filter.allselected' | message}}" ng-class="{'disabled-input': disabled}">
   <i class="fa fa-calendar"></i>
   <div id="{{ id }}-inline-container"></div>
 </div>

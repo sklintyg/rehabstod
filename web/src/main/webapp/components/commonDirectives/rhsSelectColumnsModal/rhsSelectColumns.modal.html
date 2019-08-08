@@ -26,9 +26,11 @@
     <span message key="{{::translationBaseKey}}body"></span>
   </p>
 
-  <div data-ng-repeat="column in columns">
-    <input id="rhs-toggle-column-{{::column.id}}" type="checkbox" ng-model="column.checked">
-    <label for="rhs-toggle-column-{{::column.id}}" ng-bind-html="::getLabel(column.id) | message"></label>
+  <div data-ng-repeat="column in columns" class="rhs-toggle-row">
+    <label>
+      <input id="rhs-toggle-column-{{::column.id}}" type="checkbox" ng-model="column.checked">
+      <span ng-bind-html="::getLabel(column.id) | message"></span>
+    </label>
   </div>
 
   <div ng-if="nonSelected" class="alert alert-warning">

@@ -26,6 +26,11 @@ rhs-date-range-picker {
 
     &[disabled] {
       cursor: pointer;
+
+      &.disabled-input {
+        cursor: not-allowed;
+        background-color: #eee;
+      }
     }
 
     &:focus {
