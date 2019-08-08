@@ -28,6 +28,11 @@ rhs-table {
   font-size: 12px;
   position: relative;
 
+  .table {
+    width: auto;
+    max-width: auto;
+  }
+
   thead {
     background-color: #fff;
     > th {
