@@ -26,13 +26,15 @@ describe('Directive: rhsTableHeaderColumn', function () {
 
     var $compile;
     var $scope;
+    var $timeout;
     var elementScope;
     var element;
 
     // Initialize the controller and a mock scope
-    beforeEach(inject(function (_$compile_, $rootScope) {
+    beforeEach(inject(function (_$compile_, $rootScope, _$timeout_) {
         $scope = $rootScope.$new();
         $compile = _$compile_;
+        $timeout = _$timeout_;
 
         var tableCtrl = {
             getFilteredCollection: function() { return []; },
@@ -61,6 +63,8 @@ describe('Directive: rhsTableHeaderColumn', function () {
     });
 
     it('should add header class', function() {
+        $timeout.flush();
+        $scope.$digest();
         expect(element.hasClass('rhs-table-head')).toBeTruthy();
     });
 });

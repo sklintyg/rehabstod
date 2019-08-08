@@ -44,6 +44,7 @@
 @import 'appDirectives/sjukfall/rhsFilter/rhsFilter.scss';
 @import 'appDirectives/sjukfall/rhsTable/rhsTable.scss';
 @import 'appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.scss';
+@import 'appDirectives/sjukfall/rhsTableSelectColumns/rhsTableSelectColumns.scss';
 @import 'commonDirectives/rhsBoxButton/rhsBoxButton.directive.scss';
 @import 'commonDirectives/rhsChartLegend/rhsChartLegend.directive.scss';
 @import 'commonDirectives/rhsCookieBanner/rhsCookieBanner.directive.scss';
@@ -68,6 +69,7 @@
 @import 'commonDirectives/rhsPatientIntygFrame/rhsPatientIntygFrame.directive.scss';
 @import 'commonDirectives/rhsPieChart/rhsPieChart.directive.scss';
 @import 'commonDirectives/rhsRiskIndicator/rhsRiskIndicator.directive.scss';
+@import 'commonDirectives/rhsSelectColumnsModal/rhsSelectColumns.modal.scss';
 @import 'commonDirectives/rhsSpinner/rhsSpinner.scss';
 @import 'commonDirectives/rhsStatPanel/rhsStatPanel.scss';
 @import 'commonDirectives/rhsTableNumberOfRows/rhsTableNumberOfRows.scss';

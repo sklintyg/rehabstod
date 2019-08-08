@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp')
     .directive('rhsTableHeaderColumn',
-    function() {
+    function($timeout) {
         'use strict';
 
         return {
@@ -34,7 +34,9 @@ angular.module('rehabstodApp')
             link: function($scope, element) {
                 $scope.label = 'label.table.column.' + $scope.column.toLowerCase();
 
-                element.addClass('rhs-table-head');
+                $timeout(function() {
+                    element.addClass('rhs-table-head');
+                });
 
                 element.find('span[st-sort]').bind('click', function sortClick () {
                     $('body, thead *').css('cursor', 'wait');

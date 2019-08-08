@@ -42,12 +42,16 @@ describe('Service: SjukfallService', function() {
     describe('Test Sjukfall', function() {
         // Initialize the controller and a mock scope
         beforeEach(inject(
-            function(_SjukfallModel_, _messageService_, _SjukfallService_, _SjukfallProxy_, _SjukfallFilterViewState_) {
+            function(_SjukfallModel_, _messageService_, _SjukfallService_, _SjukfallProxy_, _SjukfallFilterViewState_, featureService) {
                 SjukfallService = _SjukfallService_;
                 SjukfallProxy = _SjukfallProxy_;
                 SjukfallModel = _SjukfallModel_;
                 SjukfallFilterViewState = _SjukfallFilterViewState_;
                 messageService = _messageService_;
+
+                featureService.hasFeature = function() {
+                    return false;
+                };
             }));
 
         it('Success', function() {

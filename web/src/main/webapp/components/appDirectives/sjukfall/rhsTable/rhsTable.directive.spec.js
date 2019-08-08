@@ -26,20 +26,19 @@ describe('Directive: rhsTable', function () {
         beforeEach(module('rehabstodApp'));
 
         var scope;
-        var SjukfallModel;
-        var SjukfallFilterViewState;
 
         // Initialize the controller and a mock scope
-        beforeEach(inject(function ($controller, $rootScope, _SjukfallModel_, _SjukfallFilterViewState_) {
+        beforeEach(inject(function ($controller, $rootScope, _SjukfallModel_, _SjukfallFilterViewState_, _featureService_) {
             scope = $rootScope.$new();
 
-            SjukfallModel = _SjukfallModel_;
-            SjukfallFilterViewState = _SjukfallFilterViewState_;
+            _featureService_.hasFeature = function() {
+                return false;
+            };
 
             $controller('RhsTableCtrl', {
                 $scope: scope,
                 SjukfallModel: _SjukfallModel_,
-                SjukfallFilterViewState: SjukfallFilterViewState
+                SjukfallFilterViewState: _SjukfallFilterViewState_
             });
         }));
 

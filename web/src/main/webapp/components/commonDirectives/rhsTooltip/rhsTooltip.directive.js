@@ -28,7 +28,8 @@ angular.module('rehabstodApp').directive('rhsTooltip',
                     fieldHelpText: '@',
                     msgParams: '=',
                     tooltipClass: '@',
-                    alignment: '@'
+                    alignment: '@',
+                    icon: '@'
                 },
                 controller: function($scope) {
                     $scope.getMessage = function(key, msgParams) {
@@ -36,6 +37,7 @@ angular.module('rehabstodApp').directive('rhsTooltip',
                     };
 
                     $scope.align = $scope.alignment ? $scope.alignment : 'auto top';
+                    $scope.iconShown = $scope.icon ? $scope.icon : 'fa-question-circle';
                 },
                 templateUrl: '/components/commonDirectives/rhsTooltip/rhsTooltip.directive.html'
             };

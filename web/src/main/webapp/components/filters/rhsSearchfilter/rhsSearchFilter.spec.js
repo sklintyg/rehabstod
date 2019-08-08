@@ -95,6 +95,12 @@ describe('Filter: RhsSearchFilter', function() {
     // load the controller's module
     beforeEach(module('rehabstodApp'));
 
+    beforeEach(inject(function (_featureService_) {
+        _featureService_.hasFeature = function() {
+            return false;
+        };
+    }));
+
     it('has a rhsSuffix filter', inject(function($filter) {
         expect($filter('rhsSearchfilter')).not.toBeNull();
     }));

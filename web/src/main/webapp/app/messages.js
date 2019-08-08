@@ -166,6 +166,14 @@ var rhsMessages = {
         'label.table.column.sort.desc': 'Fallande',
         'label.table.column.sort.asc': 'Stigande',
         'label.table.diagnosbeskrivning.okand': 'Diagnoskod ${kod} är okänd och har ingen beskrivning',
+        'label.table.anpassa': 'Anpassa tabellen',
+        'label.table.anpassa.help': 'Du har anpassat innehållet i tabellen, vilket påverkar vilka filterval du kan göra.',
+
+        // Table modal
+        'label.table.custom.modal.sjukfall.title': 'Anpassa tabellen',
+        'label.table.custom.modal.sjukfall.body': 'Välj vilka kolumner du vill se i sjukfallstabellen. Dina ändringar kommer att sparas tillsvidare. Du kan ändra dessa när du vill. Kolumner som du väljer att ta bort kan du inte filtrera på.',
+        'label.table.custom.modal.sjukfall.selectone': 'Var god välj minst en kolumn för att kunna se sjukfallstabellen.',
+        'label.table.custom.modal.sjukfall.error': '<p>Kunde inte spara dina ändringar på grund av ett tekniskt fel. Försök igen om en stund.</p><p>Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.</p>',
 
         // Export
         'label.export.button' : 'Spara som',
