@@ -26,6 +26,7 @@ angular.module('rehabstodApp')
             restrict: 'A',
             scope: {
                 hideHelp: '@',
+                disableSort: '@',
                 msgParams: '=',
                 column: '@',
                 defaultSort: '@'

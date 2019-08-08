@@ -17,12 +17,12 @@
         <thead class="hidden" rhs-table-header columns="columnsForTable" id="rhs-table-fixed-header"></thead>
         <thead rhs-table-header columns="columnsForTable" id="rhs-table-normal-header"></thead>
         <tbody id="rhs-table-body">
-            <tr id="sjukfall-row-{{$index}}" ng-repeat="row in displayedCollection | limitTo: limit track by row.patient.id"
+            <tr id="sjukfall-row-{{rowIndex}}" ng-repeat="(rowIndex, row) in displayedCollection | limitTo: limit track by row.patient.id"
                 class="rhs-table-row" ng-click="showPatientHistory(row.patient)"
                 ng-class="{'nyligen-avslutad-row' : row.nyligenAvslutat}">
-                <td class="column-number">{{$index + 1}}</td>
 
                 <td data-ng-repeat="column in columnsForTable">
+                    <div data-ng-if="column.id === 'number'" class="column-number">{{rowIndex + 1}}</div>
                     <div data-ng-if="column.id === 'patient.id'" class="column-patient-id">{{::row.patient.id}}</div>
                     <div data-ng-if="column.id === 'patient.alder'" class="column-patient-alder">{{::row.patient.alder}} år</div>
                     <div data-ng-if="column.id === 'patient.namn'" class="column-patient-name">{{::row.patient.namn}}</div>

@@ -133,6 +133,7 @@ var rhsMessages = {
         'label.gender.undefined': '-',
 
         // Table (NOTE: the parts after label.table.column must match sjukfallmodels json, as we use this to get sortorder descriptions)
+        'label.table.column.number': '#',
         'label.table.column.patient.id': 'Person&shy;nummer',
         'label.table.column.patient.namn': 'Namn',
         'label.table.column.patient.alder': 'Ålder',

@@ -1,8 +1,8 @@
 <tr>
-  <th class="rhs-table-head column-number">#</th
-  ><th data-ng-repeat="column in columns"
+  <th data-ng-repeat="column in columns"
        class="{{::column.classes}}"
        rhs-table-header-column
        data-column="{{::column.id}}"
-       hide-help="{{::column.hideHelp}}"></th>
+       hide-help="{{::column.hideHelp}}"
+        disable-sort="{{::column.disableSort}}"></th>
 </tr>

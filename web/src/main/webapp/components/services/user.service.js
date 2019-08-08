@@ -24,6 +24,12 @@ angular.module('rehabstodApp').factory('UserService',
       function _getAllSjukfallTableColumns() {
         var columns = [
           {
+            id: 'number',
+            hideHelp: true,
+            disableSort: true,
+            classes: 'column-number'
+          },
+          {
             id: 'patient.id',
             hideHelp: true,
             classes: 'column-patient-id text-nowrap'
