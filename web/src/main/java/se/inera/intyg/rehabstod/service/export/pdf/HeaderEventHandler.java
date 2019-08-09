@@ -56,7 +56,7 @@ public class HeaderEventHandler implements IEventHandler {
     this.logo = logo;
     this.footerFontSize = footerFontSize;
     LocalDateTime now = LocalDateTime.now();
-    this.printedByText = String.format("%s                 %s - %s               Utskrift av %s",
+    this.printedByText = String.format("%s %s                %s               Utskrift av %s",
         YearMonthDateFormatter.print(now), HourMinuteFormatter.print(now), enhetsNamn, userName);
   }
 

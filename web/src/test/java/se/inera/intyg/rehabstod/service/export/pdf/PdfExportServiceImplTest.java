@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -78,7 +79,7 @@ public class PdfExportServiceImplTest {
         Lakare lakare = new Lakare("123456-0987", "Hr Doktor");
         isf.setLakare(lakare);
 
-        Patient patient = new Patient(personNummer, "patient " + personNummer);
+        Patient patient = new Patient(personNummer, "patientförnamn patientefternamn " + personNummer);
         patient.setAlder(50 + index / 2);
         patient.setKon(index % 2 == 0 ? Gender.M : Gender.F);
         isf.setPatient(patient);
@@ -89,16 +90,17 @@ public class PdfExportServiceImplTest {
         diagnos.setKapitel("M00-M99");
         isf.setDiagnos(diagnos);
 
-        final Diagnos bd1 = new Diagnos("B16", "B16", "bidiagnosnamn");
-        final Diagnos bd2 = new Diagnos("B17", "B17", "bidiagnosnamn");
-        isf.setBiDiagnoser(Arrays.asList(bd1, bd2));
-
+        if (new Random().nextBoolean()) {
+            final Diagnos bd1 = new Diagnos("B16", "B16", "bidiagnosnamn");
+            final Diagnos bd2 = new Diagnos("B17", "B17", "bidiagnosnamn");
+            isf.setBiDiagnoser(Arrays.asList(bd1, bd2));
+        }
         isf.setStart(LocalDate.now().plusDays(index));
         isf.setSlut(isf.getStart().plusDays(index));
         isf.setDagar(index * 2 + index % 3);
-        isf.setIntyg(1);
+        isf.setIntyg(index % 3 + 1);
         isf.setObesvaradeKompl(2);
-        isf.setGrader(index % 3 == 0 ? Arrays.asList(25, 50) : Arrays.asList(50, 75));
+        isf.setGrader(index % 3 == 0 ? Arrays.asList(25, 50) : Arrays.asList(50, 75, 100, 25));
         isf.setAktivGrad(50);
         isf.setRiskSignal( new RiskSignal("", 2, "Lätt", isf.getStart().atTime(12,0)));
 
@@ -204,7 +206,7 @@ public class PdfExportServiceImplTest {
     private List<SjukfallEnhet> createSjukFallList() {
         List<SjukfallEnhet> list = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            list.add(createSjukFall(i, "19121212-" + i));
+            list.add(createSjukFall(i, "19121212-" + (i + 1000)));
         }
         return list;
     }
