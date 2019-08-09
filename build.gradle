@@ -28,7 +28,7 @@ ext {
     hibernateEntityManagerVersion = "4.3.11.Final"
     hibernateJpaVersion = "1.0.0.Final"
     hikariCPVersion = "2.3.5"
-    itextVersion = "5.5.8"
+    itextVersion = "7.1.7"
     jacksonVersion = "2.9.7"
     javaxJmsVersion = "1.1-rev-1"
     javaxMailVersion = "1.5.2"
@@ -70,9 +70,18 @@ allprojects {
 
     repositories {
         mavenLocal()
-        maven { url "https://build-inera.nordicmedtest.se/nexus/repository/snapshots/" }
-        maven { url "https://build-inera.nordicmedtest.se/nexus/repository/releases/" }
-        maven { url "http://repo.maven.apache.org/maven2" }
+        maven {
+            url "https://build-inera.nordicmedtest.se/nexus/repository/releases/"
+            mavenContent {
+                releasesOnly()
+            }
+        }
+        maven {
+            url "https://build-inera.nordicmedtest.se/nexus/repository/snapshots/"
+            mavenContent {
+                snapshotsOnly()
+            }
+        }
         jcenter()
     }
 

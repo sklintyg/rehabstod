@@ -18,9 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Font;
-
 /**
  * @author Magnus Ekstrand on 2016-04-12.
  */
@@ -28,7 +25,7 @@ public final class PdfExportConstants {
     /**
      * Fonts that will be used in Rehab export PDF.
      */
-    public static final Font TABLE_HEADER_FONT = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.WHITE);
+    /*public static final Font TABLE_HEADER_FONT = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, BaseColor.WHITE);
     public static final Font TABLE_CELL_BOLD = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
     public static final Font TABLE_CELL_NORMAL = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL);
     public static final Font TABLE_CELL_SMALL = new Font(Font.FontFamily.HELVETICA, 7, Font.NORMAL);
@@ -39,7 +36,7 @@ public final class PdfExportConstants {
 
     public static final Font FRONTPAGE_NORMAL = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL);
     public static final Font FRONTPAGE_NORMAL_BOLD = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
-
+*/
 
     // constructors
 

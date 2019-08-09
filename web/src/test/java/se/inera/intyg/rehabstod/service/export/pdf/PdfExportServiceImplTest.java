@@ -23,6 +23,8 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
@@ -142,6 +145,8 @@ public class PdfExportServiceImplTest {
         f.setGlobal(true);
         f.setName(AuthoritiesConstants.FEATURE_SRS);
         user.setFeatures(Collections.singletonMap(AuthoritiesConstants.FEATURE_SRS, f));
+        RehabstodUserPreferences preferences = RehabstodUserPreferences.fromBackend(Collections.emptyMap());
+        user.setPreferences(preferences);
 
         DiagnosKapitel diagnosKapitel = mock(DiagnosKapitel.class);
         when(diagnosKapitel.getName()).thenReturn("Diagnoskapitlets namn");
@@ -166,7 +171,7 @@ public class PdfExportServiceImplTest {
         final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
         assertTrue(export.length > 0);
 
-        //Files.write(Paths.get("./test_all.pdf"), export);
+        Files.write(Paths.get("./test_all.pdf"), export);
     }
 
     @Test
