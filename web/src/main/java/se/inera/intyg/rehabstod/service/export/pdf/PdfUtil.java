@@ -18,45 +18,56 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
+import com.itextpdf.kernel.colors.DeviceRgb;
+import com.itextpdf.layout.borders.Border;
+import com.itextpdf.layout.borders.SolidBorder;
+import com.itextpdf.layout.element.Cell;
+
 /**
  * Helper functions for transforming millimeters to itext 7 points.
  */
 public final class PdfUtil {
-    private static final String ELLIPSIZE_SUFFIX = "...";
-    private static final float PPI = 72f;
-    private static final float MM_PER_TUM = 25.4f;
 
-    private PdfUtil() {
+  public static final Border TABLE_SEPARATOR_BORDER = new SolidBorder(new DeviceRgb(0x99, 0x99, 0x99), 1);
+  private static final String ELLIPSIZE_SUFFIX = "...";
+  private static final float PPI = 72f;
+  private static final float MM_PER_TUM = 25.4f;
 
+  private PdfUtil() {
+
+  }
+
+  /**
+   * Konverterar från millimeter till iText7 points.
+   */
+  public static float millimetersToPoints(final float value) {
+    return inchesToPoints(millimetersToInches(value));
+  }
+
+  /**
+   * Konverterar från millimeter till tum.
+   */
+  private static float millimetersToInches(final float value) {
+    return value / MM_PER_TUM;
+  }
+
+  /**
+   * Konverterar från tum till iText 7 points.
+   */
+  private static float inchesToPoints(final float value) {
+    return value * PPI;
+  }
+
+  public static String ellipsize(String value, int maxlength) {
+    if (value != null && value.length() > maxlength) {
+      return value.substring(0, maxlength) + ELLIPSIZE_SUFFIX;
+    } else {
+      return value;
     }
+  }
 
-    /**
-     * Konverterar från millimeter till iText7 points.
-     */
-    public static float millimetersToPoints(final float value) {
-        return inchesToPoints(millimetersToInches(value));
-    }
-
-    /**
-     * Konverterar från millimeter till tum.
-     */
-    private static float millimetersToInches(final float value) {
-        return value / MM_PER_TUM;
-    }
-
-    /**
-     * Konverterar från tum till iText 7 points.
-     */
-    private static float inchesToPoints(final float value) {
-        return value * PPI;
-    }
-
-    public static String ellipsize(String value, int maxlength) {
-        if (value != null && value.length() > maxlength) {
-            return value.substring(0, maxlength) + ELLIPSIZE_SUFFIX;
-        } else {
-            return value;
-        }
-    }
+  public static Cell aCell() {
+    return new Cell().setBorder(Border.NO_BORDER);
+  }
 
 }

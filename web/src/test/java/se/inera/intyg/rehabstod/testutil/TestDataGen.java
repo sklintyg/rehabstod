@@ -109,7 +109,7 @@ public final class TestDataGen {
     public static List<String> buildLakare() {
         List<Lakare> lakare = new ArrayList<>();
         lakare.add(createLakare("IFV1239877878-1049", "Jan Nilsson"));
-        lakare.add(createLakare("IFV1239877878-1255", "Ove Mörtzwitz-HansenDöppflerschantz"));
+        lakare.add(createLakare("IFV1239877878-1255", "Ove Mörtzwitz-HansenDöppflerschantz låååångtnamnsomintefårplats"));
 
         return lakare.stream().map(l -> l.getNamn()).collect(Collectors.toList());
     }

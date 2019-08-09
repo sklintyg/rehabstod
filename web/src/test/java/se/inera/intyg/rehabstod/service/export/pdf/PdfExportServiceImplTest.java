@@ -76,17 +76,17 @@ public class PdfExportServiceImplTest {
     private static SjukfallEnhet createSjukFall(int index, String personNummer) {
         SjukfallEnhet isf = new SjukfallEnhet();
 
-        Lakare lakare = new Lakare("123456-0987", "Hr Doktor");
+        Lakare lakare = new Lakare("123456-0987", "David Abrahamsdotter Hansson Movitz");
         isf.setLakare(lakare);
 
-        Patient patient = new Patient(personNummer, "patientförnamn patientefternamn " + personNummer);
+        Patient patient = new Patient(personNummer, "Hans-Christin Hanson-Püslinghof namnetsombarafortsätter " + personNummer );
         patient.setAlder(50 + index / 2);
         patient.setKon(index % 2 == 0 ? Gender.M : Gender.F);
         isf.setPatient(patient);
 
         // Not really interested in these properties, but the sjukfall equals /hashcode will fail without them
         Diagnos diagnos = new Diagnos("M16", "M16", "diagnosnamn");
-        diagnos.setBeskrivning("Diagnosnamn som kan vara ganska långt i vissa fall");
+        diagnos.setBeskrivning("Diagnosnamn som kan vara ganska långt i vissa fall - till slut får det inte plats");
         diagnos.setKapitel("M00-M99");
         isf.setDiagnos(diagnos);
 

@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.service.export.pdf;
 
 import static com.itextpdf.io.font.PdfEncodings.IDENTITY_H;
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfUtil.aCell;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfUtil.millimetersToPoints;
 
 import com.itextpdf.io.image.ImageDataFactory;
@@ -34,33 +35,27 @@ import com.itextpdf.kernel.pdf.xobject.PdfImageXObject;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
 import com.itextpdf.layout.borders.Border;
-import com.itextpdf.layout.borders.SolidBorder;
-import com.itextpdf.layout.element.BlockElement;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Div;
 import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.layout.property.VerticalAlignment;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
-import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
+import se.inera.intyg.rehabstod.service.export.pdf.PdfStyle.PdfStyleBuilder;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.Sortering;
@@ -90,10 +85,8 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
   private static final int ELLIPSIZE_AT_LIMIT = 20;
   private static final int ELLIPSIZE_AT_LIMIT_ANONYMOUS = 40;
   private static final String ELLIPSIZE_SUFFIX = "...";
-  private static final Color FILTER_TABLE_BACKGROUND_COLOR = new DeviceRgb(0xEF, 0xEF, 0xEF);
-  private static final float FILTER_TABLE_MIN_HEIGHT = 25f;
-  private static final Border TABLE_SEPARATOR_BORDER = new SolidBorder(new DeviceRgb(0x99, 0x99, 0x99), 1);
-  private static final String NO_FILTER_VALUES_SELECTED_PLACEHOLDER = "-";
+
+
   private static final float FILTER_HEADER_FONTSIZE = 7.5f;
   private static final Color PAGE_HEADER_FONTCOLOR = new DeviceRgb(0x00, 0x83, 0x91);
   private static final float DEFAULT_FONT_SIZE = 7.5f;
@@ -101,30 +94,10 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
   private static final float PAGE_HEADER_FONTSIZE = 7.5f;
   private PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
-  private PdfFont regularFont;
-  private PdfFont boldFont;
   private PdfImageXObject logoImage;
-  private Style defaultParagraphStyle;
-  private Style pageHeaderStyle;
-  private Style filterCellHeaderParagraphStyle;
-  private Style filterCellStyle;
-  private Style filterCellStyleBold;
 
-  private static Cell aCell() {
-    return new Cell().setBorder(Border.NO_BORDER);
-  }
+  private PdfStyle style;
 
-  private static Paragraph aParagraph(String text) {
-    return new Paragraph(text);
-  }
-
-  private static Cell aSjukFallCell(float widthPercentage) {
-    return new Cell()
-        .setBorder(Border.NO_BORDER)
-        .setBorderTop(TABLE_SEPARATOR_BORDER)
-        .setBorderBottom(TABLE_SEPARATOR_BORDER)
-        .setWidth(UnitValue.createPercentValue(widthPercentage));
-  }
 
   @Override
   @PrometheusTimeMethod
@@ -133,6 +106,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
     try {
+      initFontStyles();
 
       // Load icons for observandum
       this.logoImage = new PdfImageXObject(
@@ -141,7 +115,6 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
       // Initialize PDF writer
       PdfWriter writer = new PdfWriter(bos);
 
-      setupStyles();
       PdfDocument pdf = new PdfDocument(writer);
       // Initialize document
       Document document = new Document(pdf, PageSize.A4.rotate(), false);
@@ -151,7 +124,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
           millimetersToPoints(PAGE_MARGIN_BOTTOM),
           millimetersToPoints(PAGE_MARGIN_LEFT));
 
-      document.setFont(regularFont)
+      document.setFont(style.getRegularFont())
           .setFontSize(DEFAULT_FONT_SIZE);
 
       // Initialize event handlers for header, footer etc.
@@ -159,7 +132,8 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
           new HeaderEventHandler(logoImage, user.getNamn(), user.getValdVardenhet().getNamn(), FOOTER_FONT_SIZE));
 
       // On first page, add filter settings
-      document.add(buildFilterSettings(printSjukfallRequest, user));
+      FilterTableBuilder filterTableBuilder = new FilterTableBuilder(diagnosKapitelService, style);
+      document.add(filterTableBuilder.buildFilterSettings(printSjukfallRequest, user));
 
       // Add table with all sjukfall (could span several pages)
       document
@@ -183,257 +157,42 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
       boolean srsFeatureActive) {
 
     Div root = new Div().setFillAvailableArea(true);
-    root.add(new Paragraph(SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN).addStyle(pageHeaderStyle));
+    root.add(new Paragraph(SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN).addStyle(style.getPageHeaderStyle()));
 
     Table tableAbove = new Table(2);
     tableAbove.setWidth(UnitValue.createPercentValue(100f));
 
     Cell showingCell = aCell().
         add(new Paragraph(String.format("Antal sjukfall på enheten: %d              Presenterade sjukfall: %d", total, sjukfallList.size()))
-            .addStyle(pageHeaderStyle));
+            .addStyle(style.getPageHeaderStyle()));
     Cell sortedByCell = aCell().
         add(new Paragraph(getSorteringDesc(printSjukfallRequest.getSortering()))
-            .addStyle(pageHeaderStyle)).setTextAlignment(TextAlignment.RIGHT);
+            .addStyle(style.getPageHeaderStyle())).setTextAlignment(TextAlignment.RIGHT);
 
     tableAbove.addCell(showingCell);
     tableAbove.addCell(sortedByCell);
     root.add(tableAbove);
 
-    Table t = new Table(5)
-        .setWidth(UnitValue.createPercentValue(100f));
-    for (int i = 0; i < sjukfallList.size(); i++) {
-      SjukfallEnhet sf = sjukfallList.get(i);
-
-      Cell c1 = aSjukFallCell(13f).setBorderLeft(TABLE_SEPARATOR_BORDER)
-          .add(buildSjukfallCellTable(
-              Arrays.asList("#", "Personnr", "Ålder"),
-              Arrays.asList(
-                  aParagraph(String.valueOf(i + 1)),
-                  aParagraph(sf.getPatient().getId()),
-                  aParagraph(String.valueOf(sf.getPatient().getAlder()) + " år"))));
-
-      Cell c2 = aSjukFallCell(30f)
-          .add(buildSjukfallCellTable(
-              Arrays.asList("Namn", "Kön", "Diagnoser"),
-              Arrays.asList(
-                  aParagraph(sf.getPatient().getNamn()),
-                  aParagraph(sf.getPatient().getKon().getDescription()),
-                  aParagraph(getCompoundDiagnoseText(sf)))));
-
-      Cell c3 = aSjukFallCell(15f)
-          .add(buildSjukfallCellTable(
-              Arrays.asList("Startdatum", "Slutdatum", "Längd"),
-              Arrays.asList(
-                  aParagraph(YearMonthDateFormatter.print(sf.getStart())),
-                  aParagraph(YearMonthDateFormatter.print(sf.getSlut())),
-                  aParagraph(String.format(FORMAT_ANTAL_DAGAR, sf.getDagar())))));
-
-      Cell c4 = aSjukFallCell(22)
-          .add(buildSjukfallCellTable(
-              Arrays.asList("Antal", "Grad", "Komplettering"),
-              Arrays.asList(
-                  aParagraph(String.valueOf(sf.getIntyg())),
-                  getGrader(sf),
-                  aParagraph(String.valueOf(sf.getObesvaradeKompl())))));
-      Cell c5 = aSjukFallCell(20).setBorderRight(TABLE_SEPARATOR_BORDER)
-          .add(buildSjukfallCellTable(Arrays.asList("Läkare"),
-              Arrays.asList(
-                  aParagraph(ellipsize(sf.getLakare().getNamn(), 30)))));
-
-      t.addCell(c1);
-      t.addCell(c2);
-      t.addCell(c3);
-      t.addCell(c4);
-      t.addCell(c5);
-    }
-
-    root.add(t);
+    SjukfallTableBuilder sjukfallTableBuilder = new SjukfallTableBuilder(style);
+    root.add(sjukfallTableBuilder.buildsjukfallTable(sjukfallList));
 
     return root;
 
 
   }
 
-  private String getCompoundDiagnoseText(SjukfallEnhet sf) {
-    String dignosKodSpace = sf.getDiagnos().getKod() + " ";
-
-    StringBuilder b = new StringBuilder();
-    b.append(dignosKodSpace);
-    final String bidiagnoser = diagnoseListToString(sf.getBiDiagnoser());
-    b.append(ellipsize(sf.getDiagnos().getBeskrivning(), 40 - bidiagnoser.length()));
-    b.append(bidiagnoser);
-    return b.toString();
-  }
-
-  private Paragraph getGrader(SjukfallEnhet is) {
-    boolean first = true;
-    Paragraph grader = new Paragraph();
-    for (Integer grad : is.getGrader()) {
-      if (!first) {
-        grader.add(new Text(UNICODE_RIGHT_ARROW_SYMBOL + " ").addStyle(filterCellStyle));
-      }
-      grader.add(new Text(grad.toString() + "% ").addStyle(grad == is.getAktivGrad() ? filterCellStyleBold : filterCellStyle));
-      first = false;
-    }
-    return grader;
-  }
-
-  private Table buildSjukfallCellTable(List<String> headerTexts, List<Paragraph> values) {
-
-    Table table = new Table(2).setKeepTogether(true);
-    table.setBorder(Border.NO_BORDER);
-
-    for (int i = 0; i < headerTexts.size(); i++) {
-      Cell header = aCell().add(new Paragraph(headerTexts.get(i)).addStyle(filterCellHeaderParagraphStyle)).addStyle(filterCellStyle);
-      Cell value = aCell().add(values.get(i)).addStyle(filterCellStyle);
-      table.addCell(header).addCell(value);
-    }
-    return table;
-  }
 
   private void writePageNumbers(PdfDocument pdf, Document document) {
     int n = pdf.getNumberOfPages();
     Paragraph footer;
     for (int page = 1; page <= n; page++) {
       footer = new Paragraph(String.format("Sida %s (%s)", page, n));
-      footer.setFont(regularFont).setFontSize(FOOTER_FONT_SIZE);
+      footer.setFont(style.getRegularFont()).setFontSize(FOOTER_FONT_SIZE);
       document.showTextAligned(footer, pdf.getPage(page).getPageSize().getWidth() / 2, millimetersToPoints(PAGE_MARGIN_BOTTOM), page,
           TextAlignment.CENTER, VerticalAlignment.TOP, 0);
     }
   }
 
-  private BlockElement buildFilterSettings(PrintSjukfallRequest printRequest, RehabstodUser user) {
-    String maxGlapp = user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG);
-
-    Table table = new Table(5)
-        .setWidth(UnitValue.createPercentValue(100f))
-        .setBackgroundColor(FILTER_TABLE_BACKGROUND_COLOR)
-        .setMinHeight(millimetersToPoints(FILTER_TABLE_MIN_HEIGHT))
-        .setPadding(millimetersToPoints(2.5f))
-        .setMarginTop(10f)
-        .setBorder(Border.NO_BORDER);
-
-    Cell titleCell = new Cell(1, 5)
-        .addStyle(pageHeaderStyle)
-        .setBorder(Border.NO_BORDER)
-        .add(new Paragraph("Valda filter och sjukfallsinställningar").addStyle(pageHeaderStyle));
-    table.addCell(titleCell);
-
-    table.addCell(getDiagnosFilterCell(printRequest));
-    table.addCell(getLakareFilterCell(printRequest, user));
-    table.addCell(getSjukskrivningFilterCell(printRequest));
-    table.addCell(getKompletteringFilterCell(printRequest));
-    table.addCell(buildFilterCell(false, MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG, Arrays.asList(String.format("%s dagar", maxGlapp))));
-
-    return table;
-
-  }
-
-  private Cell getKompletteringFilterCell(PrintSjukfallRequest printRequest) {
-    //komplettering
-    String komplettering = getKompletteringFilterDisplayValue(printRequest.getKomplettering());
-
-    //visa patientuppgifter
-    String patientuppgifter = printRequest.isShowPatientId() ? " Ja" : " Nej";
-
-    //fritext
-    String fritext =
-        StringUtil.isNullOrEmpty(printRequest.getFritext()) ? NO_FILTER_VALUES_SELECTED_PLACEHOLDER
-            : ellipsize(printRequest.getFritext(), 20);
-
-    return buildFilterCellMulti(false,
-        Arrays.asList(FILTER_TITLE_KOMPLETTERINGSSTATUS, FILTER_TITLE_VISAPATIENTUPPGIFTER, FILTER_TITLE_FRITEXTFILTER),
-        Arrays.asList(komplettering, patientuppgifter, fritext));
-  }
-
-  private Cell getSjukskrivningFilterCell(PrintSjukfallRequest printRequest) {
-    //sjukskrivningslängd
-    String sjukskrivning = String
-        .format("Mellan %s och %s dagar", printRequest.getLangdIntervall().getMin(), printRequest.getLangdIntervall().getMax());
-
-    //slutdatum
-    String slutdatum = getFilterDate(printRequest.getSlutdatumIntervall());
-
-    //aldersspann
-    String alderspann = String
-        .format("Mellan %s och %s år", printRequest.getAldersIntervall().getMin(), printRequest.getAldersIntervall().getMax());
-
-    return buildFilterCellMulti(false,
-        Arrays.asList(FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD, FILTER_TITLE_VALD_SLUTDATUM, FILTER_TITLE_VALD_ALDER),
-        Arrays.asList(sjukskrivning, slutdatum, alderspann));
-  }
-
-  private Cell getDiagnosFilterCell(PrintSjukfallRequest printRequest) {
-    final List<String> diagnoses = printRequest.getDiagnosGrupper() != null ? printRequest.getDiagnosGrupper().stream()
-        .map(dg -> getDiagnosKapitelDisplayValue(dg)).collect(Collectors.toList()) : Arrays.asList(NO_FILTER_VALUES_SELECTED_PLACEHOLDER);
-
-    return buildFilterCell(true, FILTER_TITLE_VALDA_DIAGNOSER, diagnoses);
-  }
-
-  private Cell getLakareFilterCell(PrintSjukfallRequest printRequest, RehabstodUser user) {
-
-    final List<String> lakare = printRequest.getLakare() != null ? printRequest.getLakare()
-        : Arrays.asList(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : SELECTION_VALUE_ALLA);
-
-    return buildFilterCell(false, FILTER_TITLE_VALDA_LAKARE, lakare);
-  }
-
-  private String getDiagnosKapitelDisplayValue(String diagnosKapitel) {
-    StringBuilder b = new StringBuilder(diagnosKapitel);
-    if (b.length() > 0) {
-      b.append(": ");
-    }
-    b.append(diagnosKapitelService.getDiagnosKapitel(diagnosKapitel).getName());
-
-    return ellipsize(b.toString(), 50);
-  }
-
-  private String ellipsize(String value, int maxlength) {
-    if (value != null && value.length() > maxlength) {
-      return value.substring(0, maxlength) + ELLIPSIZE_SUFFIX;
-    } else {
-      return value;
-    }
-  }
-
-  private Cell buildFilterCell(boolean isFirstCell, String headerText, List<String> values) {
-    Cell cell = getFilterCell(isFirstCell);
-    Table table = new Table(1);
-    table.setBorder(Border.NO_BORDER);
-
-    Paragraph headerParagraph = new Paragraph(headerText);
-    headerParagraph.addStyle(filterCellHeaderParagraphStyle);
-    Cell header = new Cell().add(headerParagraph).addStyle(filterCellStyle);
-    table.addCell(header);
-    values.forEach(value -> table.addCell(new Cell().add(new Paragraph(value).addStyle(defaultParagraphStyle)).addStyle(filterCellStyle)));
-
-    cell.add(table);
-
-    return cell;
-  }
-
-
-  private Cell buildFilterCellMulti(boolean isFirstCell, List<String> headerTexts, List<String> values) {
-    Cell cell = getFilterCell(isFirstCell);
-
-    Table table = new Table(2);
-    table.setBorder(Border.NO_BORDER);
-
-    for (int i = 0; i < headerTexts.size(); i++) {
-      Cell header = new Cell().add(new Paragraph(headerTexts.get(i)).addStyle(filterCellHeaderParagraphStyle)).addStyle(filterCellStyle);
-      Cell value = new Cell().add(new Paragraph(values.get(i))).addStyle(filterCellStyle);
-      table.addCell(header).addCell(value);
-    }
-
-    cell.add(table);
-
-    return cell;
-  }
-
-
-  private Cell getFilterCell(boolean isFirstCell) {
-    return isFirstCell ? aCell().setBorderRight(TABLE_SEPARATOR_BORDER) : aCell().setBorderLeft(TABLE_SEPARATOR_BORDER);
-  }
 
   private String getSorteringDesc(Sortering sortering) {
     if (sortering == null || StringUtil.isNullOrEmpty(sortering.getKolumn())) {
@@ -587,45 +346,47 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
 
     */
-  private void setupStyles() {
+  private void initFontStyles() {
     try {
-      this.regularFont = PdfFontFactory
+      PdfFont regularFont = PdfFontFactory
           .createFont(IOUtils.toByteArray(new ClassPathResource(REGULAR_UNICODE_CAPABLE_FONT_PATH).getInputStream()), IDENTITY_H,
               true);
-      this.boldFont = PdfFontFactory
+      PdfFont boldFont = PdfFontFactory
           .createFont(IOUtils.toByteArray(new ClassPathResource(BOLD_UNICODE_CAPABLE_FONT_PATH).getInputStream()), IDENTITY_H,
               true);
 
-      this.defaultParagraphStyle = new Style()
+      Style defaultParagraphStyle = new Style()
           .setFont(regularFont)
           .setFontSize(DEFAULT_FONT_SIZE)
           .setFontColor(DEFAULT_FONT_COLOR);
 
-      this.pageHeaderStyle = new Style()
+      Style pageHeaderStyle = new Style()
           .setFont(boldFont)
           .setFontSize(PAGE_HEADER_FONTSIZE)
           .setFontColor(PAGE_HEADER_FONTCOLOR);
 
-      this.filterCellHeaderParagraphStyle = new Style()
+      Style cellHeaderParagraphStyle = new Style()
           .setFont(boldFont)
           .setFontSize(FILTER_HEADER_FONTSIZE)
           .setFontColor(DEFAULT_FONT_COLOR);
 
-      this.filterCellStyle = new Style()
+      Style cellStyle = new Style()
           .setFont(regularFont)
           .setFontSize(DEFAULT_FONT_SIZE)
           .setFontColor(DEFAULT_FONT_COLOR)
           .setBorder(Border.NO_BORDER);
 
-      this.filterCellStyleBold = new Style()
+      Style cellStyleBold = new Style()
           .setFont(boldFont)
           .setFontSize(DEFAULT_FONT_SIZE)
           .setFontColor(DEFAULT_FONT_COLOR)
           .setBorder(Border.NO_BORDER);
-
+      this.style = new PdfStyleBuilder().setDefaultParagraphStyle(defaultParagraphStyle).setCellStyle(cellStyle)
+          .setPageHeaderStyle(pageHeaderStyle).setCellHeaderParagraphStyle(cellHeaderParagraphStyle).setCellStyleBold(cellStyleBold)
+          .setCellStyle(cellStyle).setBoldFont(boldFont).setRegularFont(regularFont).createPdfStyle();
 
     } catch (IOException e) {
-      throw new IllegalArgumentException("Could not load font: " + e.getMessage());
+      throw new IllegalArgumentException("Could not load fonts / styles: " + e.getMessage());
     }
   }
 }
