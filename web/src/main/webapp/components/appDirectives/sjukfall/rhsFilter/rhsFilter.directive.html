@@ -11,7 +11,7 @@
     <div class="row">
       <!-- DIAGNOS -->
       <div class="col-md-3 col-xs-6">
-        <fieldset class="form-group search-filter-diagnos" ng-disabled="filterInactive('diagnos.intygsVarde')">
+        <fieldset class="form-group search-filter-diagnos" ng-disabled="filterInactive('dxs')">
           <label class="control-label"><span message key="label.filter.diagnos"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                               field-help-text="label.filter.diagnos.help"></span></label>
           <rhs-multi-select items-model="filterViewState.get().diagnosKapitelModel"
@@ -20,7 +20,7 @@
       </div>
       <!-- LÄKARE (optional) -->
       <div ng-if="user.urval === 'ALL'" class="col-md-3 col-xs-6">
-        <fieldset class="form-group" ng-disabled="filterInactive('lakare.namn')">
+        <fieldset class="form-group" ng-disabled="filterInactive('doctor')">
           <label class="control-label"><span message key="label.filter.lakare"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                              field-help-text="label.filter.lakare.help"></span></label>
           <rhs-multi-select id="rhs-filter-lakare" items-model="filterViewState.get().lakareModel"
@@ -29,7 +29,7 @@
       </div>
       <!-- KOMPLETTERING -->
       <div class="col-md-3 col-xs-6">
-        <fieldset class="form-group" ng-disabled="filterInactive('obesvaradeKompl')">
+        <fieldset class="form-group" ng-disabled="filterInactive('kompletteringar')">
           <label class="control-label"><span message key="label.filter.komplettering-status"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                                            field-help-text="label.filter.komplettering-status.help"></span></label>
           <rhs-multi-select id="rhs-filter-komplettering-status" items-model="filterViewState.get().kompletteringModel"
@@ -53,7 +53,7 @@
 
       <!-- SJUKSKRIVNINGSLÄNGD -->
       <div class="col-md-3 col-sm-6">
-        <fieldset class="form-group" ng-disabled="filterInactive('dagar')">
+        <fieldset class="form-group" ng-disabled="filterInactive('days')">
           <label class="control-label"><span message key="label.filter.langd"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                             field-help-text="label.filter.langd.help"></span></label>
           <div class="form-inline">
@@ -70,16 +70,16 @@
 
       <!-- SLUTDATUM -->
       <div class="col-md-3 col-sm-6">
-        <fieldset class="form-group" ng-disabled="filterInactive('slut')">
+        <fieldset class="form-group" ng-disabled="filterInactive('endDate')">
           <label class="control-label"><span message key="label.filter.slutdatum"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                                 field-help-text="label.filter.slutdatum.help"></span></label>
-          <rhs-date-range-picker id="slutdatum-range-picker" disabled="filterInactive('slut')" model="filterViewState.get().slutdatumModel"></rhs-date-range-picker>
+          <rhs-date-range-picker id="slutdatum-range-picker" disabled="filterInactive('endDate')" model="filterViewState.get().slutdatumModel"></rhs-date-range-picker>
         </fieldset>
       </div>
 
       <!-- ÅLDER -->
       <div class="col-md-3 col-sm-6">
-        <fieldset class="form-group" ng-disabled="filterInactive('patient.alder')">
+        <fieldset class="form-group" ng-disabled="filterInactive('patientAge')">
           <label class="control-label"><span message key="label.filter.alder"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                             field-help-text="label.filter.alder.help"></span></label>
           <div class="form-inline">
@@ -95,20 +95,18 @@
       </div>
       <!-- PERSONUPPGIFTER -->
       <div class="col-md-3 col-sm-6">
-        <fieldset class="rhs-checkbox form-group" ng-disabled="filterInactive('patient.id', 'patient.namn')">
+        <fieldset class="rhs-checkbox form-group" ng-disabled="filterInactive('patientId', 'patientName')">
           <label class="control-label">&nbsp;</label><br>
           <label for="rhs-filter-showPatientIdToggle">
-            <input ng-if="!filterInactive('patient.id', 'patient.namn')" id="rhs-filter-showPatientIdToggle" type="checkbox"
+            <input ng-if="!filterInactive('patientId', 'patientName')" id="rhs-filter-showPatientIdToggle" type="checkbox"
                                                              ng-model="filterViewState.get().showPatientId">
-            <input ng-if="filterInactive('patient.id', 'patient.namn')" type="checkbox">
+            <input ng-if="filterInactive('patientId', 'patientName')" type="checkbox">
             <span message key="label.filter.personuppgifter"></span>
             <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.personuppgifter.help" alignment="auto top"></span>
           </label>
         </fieldset>
       </div>
-
     </div>
-
 
     <div class="row">
       <!-- ÅTERSTÄLL FILTER -->

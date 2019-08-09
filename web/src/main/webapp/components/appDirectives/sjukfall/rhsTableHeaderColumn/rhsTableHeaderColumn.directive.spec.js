@@ -48,7 +48,7 @@ describe('Directive: rhsTableHeaderColumn', function () {
             }
         };
 
-        element = angular.element('<th rhs-table-header-column column="sortValue"></th>');
+        element = angular.element('<th rhs-table-header-column label-key="sortValue" column="sortValue"></th>');
         element.data('$stTableController', tableCtrl);
         var rowElement = $compile(element)($scope);
 

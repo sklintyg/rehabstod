@@ -30,65 +30,78 @@ angular.module('rehabstodApp').factory('UserService',
             classes: 'column-number'
           },
           {
-            id: 'patient.id',
+            id: 'patientId',
+            dataColumn: 'patient.id',
             hideHelp: true,
             classes: 'column-patient-id text-nowrap'
           },
           {
-            id: 'patient.alder',
+            id: 'patientAge',
+            dataColumn: 'patient.alder',
             hideHelp: true,
             classes: 'column-patient-age text-nowrap'
           },
           {
-            id: 'patient.namn',
+            id: 'patientName',
+            dataColumn: 'patient.namn',
             hideHelp: true,
             classes: 'column-patient-name text-nowrap'
           },
           {
-            id: 'patient.konShow',
+            id: 'gender',
+            dataColumn: 'patient.konShow',
             hideHelp: true,
             classes: 'column-patient-kon text-nowrap'
           },
           {
-            id: 'diagnos.intygsVarde',
+            id: 'dxs',
+            dataColumn: 'diagnos.intygsVarde',
             classes: 'column-diagnos'
           },
           {
-            id: 'start',
+            id: 'startDate',
+            dataColumn: 'start',
             classes: 'column-start'
           },
           {
-            id: 'slut',
+            id: 'endDate',
+            dataColumn: 'slut',
             classes: 'column-slut'
           },
           {
-            id: 'dagar',
+            id: 'days',
+            dataColumn: 'dagar',
             classes: 'column-dagar'
           },
           {
-            id: 'intyg',
+            id: 'antal',
+            dataColumn: 'intyg',
             classes: 'column-antal'
           },
           {
-            id: 'aktivGrad',
+            id: 'degree',
+            dataColumn: 'aktivGrad',
             classes: 'column-grad'
           },
           {
-            id: 'obesvaradeKompl',
+            id: 'kompletteringar',
+            dataColumn: 'obesvaradeKompl',
             classes: 'column-obesvaradeKompl'
           }
         ];
 
         if (featureService.hasFeature('SRS')) {
           columns.push({
-            id: 'riskSignal.riskKategori',
+            id: 'srs',
+            dataColumn: 'riskSignal.riskKategori',
             classes: ''
           });
         }
 
         if (UserModel.get().urval !== 'ISSUED_BY_ME') {
           columns.push({
-            id: 'lakare.namn',
+            id: 'doctor',
+            dataColumn: 'lakare.namn',
             classes: ''
           });
         }
@@ -107,7 +120,7 @@ angular.module('rehabstodApp').factory('UserService',
             return false;
           }
 
-          if (!onlyPreferences && (column.id === 'patient.id' || column.id === 'patient.namn') && !SjukfallFilterViewState.get().showPatientId) {
+          if (!onlyPreferences && (column.id === 'patientId' || column.id === 'patientName') && !SjukfallFilterViewState.get().showPatientId) {
             return false;
           }
 

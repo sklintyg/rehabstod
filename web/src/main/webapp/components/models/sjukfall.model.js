@@ -103,30 +103,30 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                 _.each(columns, function(column) {
                   /*jshint maxcomplexity:14 */
                   switch (column.id) {
-                  case 'patient.id':
-                  case 'patient.namn':
-                  case 'patient.konShow':
-                  case 'start':
-                  case 'slut':
-                  case 'intyg':
-                  case 'lakare.namn':
-                    _addQuickSearchContentFromProperty(item, column.id);
+                  case 'patientId':
+                  case 'patientName':
+                  case 'gender':
+                  case 'startDate':
+                  case 'endDate':
+                  case 'antal':
+                  case 'doctor':
+                    _addQuickSearchContentFromProperty(item, column.dataColumn);
                     break;
-                  case 'diagnos.intygsVarde':
+                  case 'dxs':
                     _addQuickSearchContentFromProperty(item, 'diagnos.intygsVarde');
                     _addQuickSearchContentFromProperty(item, 'diagnos.beskrivning');
                     _addQuickSearchContent(item, _getBiDiagnoserSearch(item.biDiagnoser));
                     break;
-                  case 'patient.alder':
+                  case 'patientAge':
                     _addQuickSearchContent(item, item.patient.alder);
                     break;
-                  case 'dagar':
+                  case 'days':
                     _addQuickSearchContent(item, item.dagarShow);
                     break;
-                  case 'obesvaradeKompl':
+                  case 'kompletteringar':
                     _addQuickSearchContent(item, item.obesvaradeKomplShow);
                     break;
-                  case 'aktivGrad':
+                  case 'degree':
                     _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join('%,') + '%' : '');
                     break;
                   }

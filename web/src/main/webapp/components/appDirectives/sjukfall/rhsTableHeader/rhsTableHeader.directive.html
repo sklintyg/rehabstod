@@ -2,7 +2,8 @@
   <th data-ng-repeat="column in columns"
        class="{{::column.classes}}"
        rhs-table-header-column
-       data-column="{{::column.id}}"
+       data-column="{{::column.dataColumn}}"
+       label-key="{{::column.id}}"
        hide-help="{{::column.hideHelp}}"
         disable-sort="{{::column.disableSort}}"></th>
 </tr>

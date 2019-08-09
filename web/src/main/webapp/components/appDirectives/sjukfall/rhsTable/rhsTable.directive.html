@@ -23,11 +23,11 @@
 
                 <td data-ng-repeat="column in columnsForTable">
                     <div data-ng-if="column.id === 'number'" class="column-number">{{rowIndex + 1}}</div>
-                    <div data-ng-if="column.id === 'patient.id'" class="column-patient-id">{{::row.patient.id}}</div>
-                    <div data-ng-if="column.id === 'patient.alder'" class="column-patient-alder">{{::row.patient.alder}} år</div>
-                    <div data-ng-if="column.id === 'patient.namn'" class="column-patient-name">{{::row.patient.namn}}</div>
-                    <div data-ng-if="column.id === 'patient.konShow'" class="column-patient-kon">{{::row.patient.konShow}}</div>
-                    <div data-ng-if="column.id === 'diagnos.intygsVarde'" class="column-diagnos">
+                    <div data-ng-if="column.id === 'patientId'" class="column-patient-id">{{::row.patient.id}}</div>
+                    <div data-ng-if="column.id === 'patientAge'" class="column-patient-alder">{{::row.patient.alder}} år</div>
+                    <div data-ng-if="column.id === 'patientName'" class="column-patient-name">{{::row.patient.namn}}</div>
+                    <div data-ng-if="column.id === 'gender'" class="column-patient-kon">{{::row.patient.konShow}}</div>
+                    <div data-ng-if="column.id === 'dxs'" class="column-diagnos">
                         <div class="diagnos-container">
                             <span uib-tooltip-html="getToolTip(row.diagnos)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnos.intygsVarde}}</span>&nbsp;
                             <span class="column-diagnos-beskrivning hidden-sm"
@@ -37,17 +37,17 @@
                             </span>
                         </div>
                     </div>
-                    <div data-ng-if="column.id === 'start'" class="column-start start-date">{{::row.start}}</div>
-                    <div data-ng-if="column.id === 'slut'" class="column-slut end-date"><span>{{::row.slut}}</span></div>
-                    <div data-ng-if="column.id === 'dagar'" class="column-dagar">{{::row.dagarShow}}</div>
-                    <div data-ng-if="column.id === 'intyg'" class="column-antal">{{::row.intyg}}</div>
-                    <div data-ng-if="column.id === 'aktivGrad'" class="column-grad" ng-bind-html="::row.gradShow"></div>
-                    <div data-ng-if="column.id === 'obesvaradeKompl'" class="column-obesvaradeKompl" ng-bind-html="::row.obesvaradeKomplShow"></div>
-                    <div data-ng-if="column.id === 'riskSignal.riskKategori'" class="column-risk">
+                    <div data-ng-if="column.id === 'startDate'" class="column-start start-date">{{::row.start}}</div>
+                    <div data-ng-if="column.id === 'endDate'" class="column-slut end-date"><span>{{::row.slut}}</span></div>
+                    <div data-ng-if="column.id === 'days'" class="column-dagar">{{::row.dagarShow}}</div>
+                    <div data-ng-if="column.id === 'antal'" class="column-antal">{{::row.intyg}}</div>
+                    <div data-ng-if="column.id === 'degree'" class="column-grad" ng-bind-html="::row.gradShow"></div>
+                    <div data-ng-if="column.id === 'kompletteringar'" class="column-obesvaradeKompl" ng-bind-html="::row.obesvaradeKomplShow"></div>
+                    <div data-ng-if="column.id === 'srs'" class="column-risk">
                         <rhs-risk-indicator category="row.riskSignal.riskKategori"
                                             description="row.riskSignal.riskDescription"></rhs-risk-indicator>
                     </div>
-                    <div data-ng-if="column.id === 'lakare.namn'">{{::row.lakare.namn}}</div>
+                    <div data-ng-if="column.id === 'doctor'">{{::row.lakare.namn}}</div>
                 </td>
             </tr>
         </tbody>
