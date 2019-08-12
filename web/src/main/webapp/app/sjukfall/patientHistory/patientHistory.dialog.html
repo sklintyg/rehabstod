@@ -33,6 +33,7 @@
               Därför är den kolumnen tom. Om problemet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <span dynamiclink key="ineraNationellKundservice"></span>.
             </div>
           </div>
+          <rhs-patient-table-select-columns></rhs-patient-table-select-columns>
 
           <div ng-repeat="item in timeline">
 
@@ -54,7 +55,7 @@
               <rhs-patient-history-time-line-item history-item="item" index="$index" is-last="$last"
                                                   on-select="onSelectSjukfall(item)" class="pull-left history-timeline"></rhs-patient-history-time-line-item>
 
-              <rhs-patient-history-table history-item="item" patient="patient" index="$index" on-select="onSelectSjukfall(item)"
+              <rhs-patient-history-table columns="tableColumns" history-item="item" patient="patient" index="$index" on-select="onSelectSjukfall(item)"
                                          on-load-intyg="loadIntyg(intyg)"
                                          class="pull-left history-table"></rhs-patient-history-table>
             </div>

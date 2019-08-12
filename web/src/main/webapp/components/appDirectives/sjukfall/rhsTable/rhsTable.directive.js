@@ -19,19 +19,23 @@
 
 angular.module('rehabstodApp')
     .controller('RhsTableCtrl',
-        ['$scope', '$uibModal', 'SjukfallFilterViewState', 'SjukfallModel', 'UserModel', 'messageService',
-            'featureService', '$document',
             function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService,
-                featureService, $document) {
+                featureService, $document, UserService) {
                 'use strict';
 
-                $scope.filter = SjukfallFilterViewState;
+                $scope.preferenceKey = UserService.sjukfallTableKey;
                 $scope.model = SjukfallModel;
                 $scope.user = UserModel.get();
-
-                $scope.showLakareColumn = $scope.user.urval !== 'ISSUED_BY_ME';
-
                 $scope.displayedCollection = [].concat($scope.model.get());
+                $scope.columns = UserService.getAllSjukfallTableColumns();
+                $scope.columnsForTable = [];
+
+                $scope.$watch(function() {
+                  return SjukfallFilterViewState.get().showPatientId + UserModel.get().preferences[$scope.preferenceKey];
+                }, function() {
+                  $scope.columnsForTable = UserService.getSelectedColumns($scope.columns, $scope.preferenceKey);
+                  SjukfallModel.updateQuickSearchContent();
+                });
 
                 $scope.getToolTip = function(diagnos) {
                     var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
@@ -63,10 +67,6 @@ angular.module('rehabstodApp')
                     $scope.limit = 100;
                 };
 
-                $scope.hasFeature = function(feature) {
-                    return featureService.hasFeature(feature);
-                };
-
                 $scope.resetLimit();
 
                 $document.on('scroll', handleScroll);
@@ -87,7 +87,7 @@ angular.module('rehabstodApp')
                     header.css('left', left + 'px');
                 }
             }
-        ])
+        )
     .directive('rhsTable',
         function() {
             'use strict';

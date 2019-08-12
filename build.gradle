@@ -59,8 +59,8 @@ ext {
     powermockFullVersion = "1.6.4"
     unitilsCoreVersion = "3.3"
 
-    nodeJsVersion = "10.15.1"
-    npmVersion = "6.4.1"
+    nodeJsVersion = "10.16.2"
+    npmVersion = "6.10.3"
 }
 
 allprojects {

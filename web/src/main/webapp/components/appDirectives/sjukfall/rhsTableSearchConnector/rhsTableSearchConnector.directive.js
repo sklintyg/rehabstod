@@ -18,35 +18,35 @@
  */
 
 angular.module('rehabstodApp').directive('rhsTableSearchConnector',
-    ['$timeout', 'SjukfallFilterViewState', 'sessionCheckService',
         function($timeout, SjukfallFilterViewState, sessionCheckService) {
             'use strict';
 
             return {
                 restrict: 'E',
                 require: '^stTable',
+                scope: {
+                    columns: '='
+                },
                 link: function($scope, element, attr, table) {
 
-                    var onFilterstateUpdated = function(newFilterParameters) {
+                    var onFilterstateUpdated = function() {
                         $timeout(function() {
-                            table.search(newFilterParameters, 'customSearch');
+                            table.search(SjukfallFilterViewState.getCurrentFilterState(), 'customSearch');
                         });
                         //Indicate that the user has interacted with the filter
                         sessionCheckService.registerUserAction();
-
                     };
 
                     //Watch for changes in current filter state
                     $scope.filterViewState = SjukfallFilterViewState;
                     $scope.$watch('filterViewState.getCurrentFilterState()', onFilterstateUpdated, true);
+                    $scope.$watchCollection('columns', onFilterstateUpdated);
 
                     $scope.table = table;
                     $scope.$watch('table.getFilteredCollection()', function() {
                         //Indicate that the user has interacted with the table, either by chaing filter that triggered new content, or by sorting it
                         sessionCheckService.registerUserAction();
                     }, true);
-
-
                 }
             };
-        }]);
+        });

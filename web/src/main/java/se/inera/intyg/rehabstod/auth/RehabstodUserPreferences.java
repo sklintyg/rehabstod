@@ -120,7 +120,9 @@ public final class RehabstodUserPreferences implements Serializable {
     public enum Preference {
         PDL_CONSENT_GIVEN("user_pdl_consent_given", "pdlConsentGiven", "false"),
         MAX_ANTAL_DAGAR_MELLAN_INTYG("maxAntalDagarMellanIntyg", "maxAntalDagarMellanIntyg", "5"),
-        MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT("maxAntalDagarSedanSjukfallAvslut", "maxAntalDagarSedanSjukfallAvslut", "0");
+        MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT("maxAntalDagarSedanSjukfallAvslut", "maxAntalDagarSedanSjukfallAvslut", "0"),
+        SJUKFALL_TABLE_COLUMNS("sjukfall_table_columns", "sjukfallTableColumns", ""),
+        PATIENT_TABLE_COLUMNS("patient_table_columns", "patientTableColumns", "");
 
         private final String backendKeyName;
         private final String defaultValue;

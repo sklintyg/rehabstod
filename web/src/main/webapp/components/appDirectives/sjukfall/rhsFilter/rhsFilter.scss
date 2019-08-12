@@ -67,22 +67,37 @@ rhs-filter {
     padding: 20px 20px 15px;
   }
 
+  fieldset[disabled] {
+    .btn {
+      &, &:hover {
+        background-color: #eee;
+        opacity: 1;
+      }
+    }
+
+    &.rhs-checkbox {
+      label {
+        cursor: not-allowed;
+
+        .rhs-tooltip {
+          cursor: help;
+        }
+      }
+    }
+  }
+
   .rhs-checkbox {
     label,
     input {
       cursor: pointer;
+      white-space: nowrap;
+      vertical-align: middle;
+      padding-top: 3px;
+
+      input {
+        vertical-align: text-top;
+      }
     }
   }
-
-  .rhs-checkbox label, input {
-    white-space: nowrap;
-    vertical-align: middle;
-    padding-top: 3px;
-
-    input {
-      vertical-align: text-top;
-    }
-  }
-
 }
 
