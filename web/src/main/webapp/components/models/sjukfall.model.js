@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').factory('SjukfallModel',
-    function($parse, $filter, SjukfallViewState, UserService, _) {
+    function($parse, $filter, SjukfallViewState, TableService, _) {
         'use strict';
 
         var data = [];
@@ -98,7 +98,7 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                 item.obesvaradeKomplShow = _getObesvaradeKomplShow(item.obesvaradeKompl);
                 item.quickSearchString = '';
 
-                var columns = UserService.getSelectedSjukfallColumns();
+                var columns = TableService.getSelectedSjukfallColumns();
 
                 _.each(columns, function(column) {
                   /*jshint maxcomplexity:14 */

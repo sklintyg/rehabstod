@@ -20,20 +20,20 @@
 angular.module('rehabstodApp')
     .controller('RhsTableCtrl',
             function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService,
-                featureService, $document, UserService) {
+                featureService, $document, TableService) {
                 'use strict';
 
-                $scope.preferenceKey = UserService.sjukfallTableKey;
+                $scope.preferenceKey = TableService.sjukfallTableKey;
                 $scope.model = SjukfallModel;
                 $scope.user = UserModel.get();
                 $scope.displayedCollection = [].concat($scope.model.get());
-                $scope.columns = UserService.getAllSjukfallTableColumns();
+                $scope.columns = TableService.getAllSjukfallTableColumns();
                 $scope.columnsForTable = [];
 
                 $scope.$watch(function() {
                   return SjukfallFilterViewState.get().showPatientId + UserModel.get().preferences[$scope.preferenceKey];
                 }, function() {
-                  $scope.columnsForTable = UserService.getSelectedColumns($scope.columns, $scope.preferenceKey);
+                  $scope.columnsForTable = TableService.getSelectedColumns($scope.columns, $scope.preferenceKey);
                   SjukfallModel.updateQuickSearchContent();
                 });
 

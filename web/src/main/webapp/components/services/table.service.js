@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').factory('UserService',
+angular.module('rehabstodApp').factory('TableService',
     function(UserModel, SjukfallFilterViewState, featureService) {
       'use strict';
 

@@ -20,7 +20,7 @@
 angular.module('rehabstodApp')
     .controller('RhsFilterCtrl',
         function($scope, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel,
-            UserModel, StringHelper, UserService, _) {
+            UserModel, StringHelper, TableService, _) {
             'use strict';
 
             $scope.filterViewState = SjukfallFilterViewState;
@@ -47,9 +47,9 @@ angular.module('rehabstodApp')
             };
 
             $scope.$watch(function() {
-              return UserModel.get().preferences[UserService.sjukfallTableKey];
+              return UserModel.get().preferences[TableService.sjukfallTableKey];
             }, function() {
-              columns = UserService.getSelectedSjukfallColumns(true);
+              columns = TableService.getSelectedSjukfallColumns(true);
             }, true);
 
             $scope.filterInactive = function(field, field2) {
