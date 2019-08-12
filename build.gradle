@@ -59,8 +59,8 @@ ext {
     powermockFullVersion = "1.6.4"
     unitilsCoreVersion = "3.3"
 
-    nodeJsVersion = "10.15.1"
-    npmVersion = "6.4.1"
+    nodeJsVersion = "10.16.2"
+    npmVersion = "6.10.3"
 }
 
 allprojects {
@@ -70,9 +70,18 @@ allprojects {
 
     repositories {
         mavenLocal()
-        maven { url "https://build-inera.nordicmedtest.se/nexus/repository/snapshots/" }
-        maven { url "https://build-inera.nordicmedtest.se/nexus/repository/releases/" }
-        maven { url "http://repo.maven.apache.org/maven2" }
+        maven {
+            url "https://build-inera.nordicmedtest.se/nexus/repository/releases/"
+            mavenContent {
+                releasesOnly()
+            }
+        }
+        maven {
+            url "https://build-inera.nordicmedtest.se/nexus/repository/snapshots/"
+            mavenContent {
+                snapshotsOnly()
+            }
+        }
         jcenter()
     }
 
