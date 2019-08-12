@@ -29,7 +29,7 @@ var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
 describe('Hantera tabellen', function() {
 
-    beforeEach(function() {
+    beforeAll(function() {
         browser.ignoreSynchronization = false;
         specHelper.login();
         startPage.clickMyUnit();
@@ -63,8 +63,26 @@ describe('Hantera tabellen', function() {
             expect(afterSort).toBe(columnPatientValueFirst);
 
         });
+    });
 
+    it('anpassa tabellen', function() {
+        sjukfallPage.anpassaTableLink.click();
+        sjukfallPage.toggleColumn('days');
+        sjukfallPage.anpassaTableSaveBtn.click();
 
+        expect(sjukfallPage.langdFromInput().isEnabled()).toBeFalsy();
+        expect(sjukfallPage.anpassaTableTooltip.isPresent()).toBeTruthy();
+        expect(sjukfallPage.getSjukfallRowColumn(0, 'days').isPresent()).toBeFalsy();
+    });
+
+    it('återställ tabellen', function() {
+        sjukfallPage.anpassaTableLink.click();
+        sjukfallPage.toggleColumn('days');
+        sjukfallPage.anpassaTableSaveBtn.click();
+
+        expect(sjukfallPage.langdFromInput().isEnabled()).toBeTruthy();
+        expect(sjukfallPage.anpassaTableTooltip.isPresent()).toBeFalsy();
+        expect(sjukfallPage.getSjukfallRowColumn(0, 'days').isPresent()).toBeTruthy();
     });
 
 });

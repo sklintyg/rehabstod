@@ -25,10 +25,10 @@ var specHelper = rhsTestTools.helpers.spec;
 var startPage = rhsTestTools.pages.startPage;
 var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
-describe('Flöde som läkare', function() {
+describe('Patientvyn', function() {
 
     // Logga in
-    beforeEach(function() {
+    beforeAll(function() {
         specHelper.login();
         startPage.clickMyUnit();
         expect(sjukfallPage.isAt()).toBeTruthy();
@@ -40,6 +40,24 @@ describe('Flöde som läkare', function() {
             expect(sjukfallPage.patientModal.isDisplayed()).toBeTruthy();
             expect(sjukfallPage.patientSjukfallTable.isDisplayed()).toBeTruthy();
             expect(sjukfallPage.getPatientSjukfallRow(0, 0).isDisplayed()).toBeTruthy();
+        });
+
+        it('anpassa tabellen', function() {
+            sjukfallPage.anpassaPatientTableLink.click();
+            sjukfallPage.toggleColumn('number');
+            sjukfallPage.anpassaTableSaveBtn.click();
+
+            expect(sjukfallPage.anpassaPatientTableTooltip.isPresent()).toBeTruthy();
+            expect(sjukfallPage.getPatientSjukfallRow(0, 0).isPresent()).toBeFalsy();
+        });
+
+        it('återställ tabellen', function() {
+            sjukfallPage.anpassaPatientTableLink.click();
+            sjukfallPage.toggleColumn('number');
+            sjukfallPage.anpassaTableSaveBtn.click();
+
+            expect(sjukfallPage.anpassaPatientTableTooltip.isPresent()).toBeFalsy();
+            expect(sjukfallPage.getPatientSjukfallRow(0, 0).isPresent()).toBeTruthy();
         });
     });
 

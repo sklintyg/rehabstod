@@ -19,22 +19,26 @@
 
 angular.module('rehabstodApp')
     .directive('rhsTableHeaderColumn',
-    function() {
+    function($timeout) {
         'use strict';
 
         return {
             restrict: 'A',
             scope: {
                 hideHelp: '@',
+                disableSort: '@',
                 msgParams: '=',
                 column: '@',
+                labelKey: '@',
                 defaultSort: '@'
             },
             templateUrl: '/components/appDirectives/sjukfall/rhsTableHeaderColumn/rhsTableHeaderColumn.directive.html',
             link: function($scope, element) {
-                $scope.label = 'label.table.column.' + $scope.column.toLowerCase();
+                $scope.label = 'label.table.column.' + $scope.labelKey.toLowerCase();
 
-                element.addClass('rhs-table-head');
+                $timeout(function() {
+                    element.addClass('rhs-table-head');
+                });
 
                 element.find('span[st-sort]').bind('click', function sortClick () {
                     $('body, thead *').css('cursor', 'wait');

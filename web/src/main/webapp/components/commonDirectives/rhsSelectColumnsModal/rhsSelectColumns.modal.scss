@@ -1,0 +1,29 @@
+.rhs-select-columns-body {
+
+  .rhs-toggle-row {
+    &:hover {
+      background-color: $rs-color-06;
+    }
+
+    margin: 0 -15px;
+  }
+
+  label {
+    @extend %rs-typo-05;
+    font-weight: normal;
+    width: 100%;
+    margin-bottom: 0;
+    cursor: pointer;
+    padding: 8px 20px;
+
+    input {
+      vertical-align: text-top;
+      margin: 2px 0 0;
+    }
+  }
+
+  .alert {
+    margin-bottom: 0;
+    margin-top: 10px;
+  }
+}

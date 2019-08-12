@@ -1,0 +1,10 @@
+rhs-table-select-columns {
+  display: block;
+  margin-right: 20px;
+  margin-top: 8px;
+  float: right;
+
+  a, .fa {
+    @extend %rs-typo-06;
+  }
+}

@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').factory('SjukfallModel',
-    function($parse, $filter, SjukfallFilterViewState, SjukfallViewState) {
+    function($parse, $filter, SjukfallViewState, UserService, _) {
         'use strict';
 
         var data = [];
@@ -98,23 +98,40 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                 item.obesvaradeKomplShow = _getObesvaradeKomplShow(item.obesvaradeKompl);
                 item.quickSearchString = '';
 
-                //We dont want to be able to quicksearch for patientname/personnr etc if in anonymous mode
-                if (SjukfallFilterViewState.get().showPatientId) {
-                    _addQuickSearchContentFromProperty(item, 'patient.id');
-                    _addQuickSearchContentFromProperty(item, 'patient.namn');
-                }
-                _addQuickSearchContent(item, item.patient.alder);
-                _addQuickSearchContentFromProperty(item, 'patient.konShow');
-                _addQuickSearchContentFromProperty(item, 'diagnos.intygsVarde');
-                _addQuickSearchContentFromProperty(item, 'diagnos.beskrivning');
-                _addQuickSearchContent(item, _getBiDiagnoserSearch(item.biDiagnoser));
-                _addQuickSearchContentFromProperty(item, 'start');
-                _addQuickSearchContentFromProperty(item, 'slut');
-                _addQuickSearchContent(item, item.dagarShow);
-                _addQuickSearchContent(item, item.obesvaradeKomplShow);
-                _addQuickSearchContentFromProperty(item, 'intyg');
-                _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join('%,') + '%' : '');
-                _addQuickSearchContentFromProperty(item, 'lakare.namn');
+                var columns = UserService.getSelectedColumns(UserService.getAllSjukfallTableColumns(), UserService.sjukfallTableKey);
+
+                _.each(columns, function(column) {
+                  /*jshint maxcomplexity:14 */
+                  switch (column.id) {
+                  case 'patientId':
+                  case 'patientName':
+                  case 'gender':
+                  case 'startDate':
+                  case 'endDate':
+                  case 'antal':
+                  case 'doctor':
+                    _addQuickSearchContentFromProperty(item, column.dataColumn);
+                    break;
+                  case 'dxs':
+                    _addQuickSearchContentFromProperty(item, 'diagnos.intygsVarde');
+                    _addQuickSearchContentFromProperty(item, 'diagnos.beskrivning');
+                    _addQuickSearchContent(item, _getBiDiagnoserSearch(item.biDiagnoser));
+                    break;
+                  case 'patientAge':
+                    _addQuickSearchContent(item, item.patient.alder);
+                    break;
+                  case 'days':
+                    _addQuickSearchContent(item, item.dagarShow);
+                    break;
+                  case 'kompletteringar':
+                    _addQuickSearchContent(item, item.obesvaradeKomplShow);
+                    break;
+                  case 'degree':
+                    _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join('%,') + '%' : '');
+                    break;
+                  }
+                });
+
             });
         }
 

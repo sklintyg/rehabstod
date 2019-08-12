@@ -20,14 +20,14 @@
 angular.module('rehabstodApp')
     .controller('RhsFilterCtrl',
         function($scope, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel,
-            UserModel, StringHelper) {
+            UserModel, StringHelper, UserService, _) {
             'use strict';
 
             $scope.filterViewState = SjukfallFilterViewState;
             $scope.user = UserModel.get();
             $scope.showSearchFilter = true;
-            $scope.position = 'bottom';
             $scope.model = SjukfallModel;
+            var columns;
 
             $scope.$watchCollection('model.get()', function(value) {
                 //Update contents on those models of filtercomponents that depends on the searchresults contents, i.e
@@ -42,13 +42,22 @@ angular.module('rehabstodApp')
 
             });
 
-            //Make sure quicksearch has correct content after toggling show patient identity columns
-            $scope.$watch('filterViewState.get().showPatientId', function() {
-                SjukfallModel.updateQuickSearchContent();
-            });
-
             $scope.onResetFilterClick = function() {
                 $scope.filterViewState.reset();
+            };
+
+            $scope.$watch(function() {
+              return UserModel.get().preferences[UserService.sjukfallTableKey];
+            }, function() {
+              columns = UserService.getSelectedColumns(UserService.getAllSjukfallTableColumns(), UserService.sjukfallTableKey, true);
+            }, true);
+
+            $scope.filterInactive = function(field, field2) {
+              var column = _.find(columns, function(column) {
+                return column.id === field || (field2 && column.id === field2);
+              });
+
+              return !column;
             };
         }
     )

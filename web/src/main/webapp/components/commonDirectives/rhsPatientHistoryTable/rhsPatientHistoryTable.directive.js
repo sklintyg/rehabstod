@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel', 'messageService', 'featureService', 'patientHistoryViewState',
+angular.module('rehabstodApp').directive('rhsPatientHistoryTable',
     function(UserModel, messageService, featureService, patientHistoryViewState) {
     'use strict';
 
@@ -27,7 +27,8 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
             patient: '=',
             index: '=',
             onSelect: '&',
-            onLoadIntyg: '&'
+            onLoadIntyg: '&',
+            columns: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsPatientHistoryTable.directive.html',
         link: function($scope) {
@@ -40,6 +41,16 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
             var andraVeInomVgMedSparr = patientSjfMetaData.vardenheterInomVGMedSparr.length;
             var andraVgUtanSparr = patientSjfMetaData.kraverSamtycke.length;
             var andraVgMedSparr = patientSjfMetaData.andraVardgivareMedSparr.length;
+
+            $scope.$watchCollection('columns', function() {
+                if (!$scope.historyItem.isActive) {
+                    $scope.filteredColumns = $scope.columns.filter(function(column) {
+                        return !angular.isFunction(column.filter) || column.filter($scope.historyItem.isActive);
+                    });
+                } else {
+                    $scope.filteredColumns = $scope.columns;
+                }
+            });
 
             $scope.extraDiagnoser = {
                 patientSjfMetaData: patientSjfMetaData,
@@ -101,4 +112,4 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable', [ 'UserModel'
 
         }
     };
-} ]);
+} );

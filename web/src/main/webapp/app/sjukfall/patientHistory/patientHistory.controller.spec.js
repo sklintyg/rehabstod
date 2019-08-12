@@ -64,9 +64,13 @@ describe('Controller: PatientHistoryController', function() {
 
     // Initialize the controller and a mock scope
     beforeEach(inject(
-        function($controller, $rootScope, $state, _$httpBackend_, _patientHistoryProxy_, _patientHistoryViewState_) {
+        function($controller, $rootScope, $state, _$httpBackend_, _patientHistoryProxy_, _patientHistoryViewState_, _featureService_) {
             scope = $rootScope.$new();
             $httpBackend = _$httpBackend_;
+            _featureService_.hasFeature = function() {
+                return false;
+            };
+
             $controller('patientHistoryController', {
                 $scope: scope,
                 $uibModalInstance: {},
