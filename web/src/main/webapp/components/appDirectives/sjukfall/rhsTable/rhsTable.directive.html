@@ -21,7 +21,7 @@
                 class="rhs-table-row" ng-click="showPatientHistory(row.patient)"
                 ng-class="{'nyligen-avslutad-row' : row.nyligenAvslutat}">
 
-                <td data-ng-repeat="column in columnsForTable">
+                <td data-ng-repeat="column in columnsForTable" ng-attr-id="sjukfall-{{rowIndex}}-column-{{::column.id}}">
                     <div data-ng-if="column.id === 'number'" class="column-number">{{rowIndex + 1}}</div>
                     <div data-ng-if="column.id === 'patientId'" class="column-patient-id">{{::row.patient.id}}</div>
                     <div data-ng-if="column.id === 'patientAge'" class="column-patient-alder">{{::row.patient.alder}} år</div>

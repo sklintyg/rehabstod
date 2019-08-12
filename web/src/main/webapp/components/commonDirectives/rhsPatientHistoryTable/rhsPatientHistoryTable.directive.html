@@ -29,7 +29,7 @@
         <tbody>
         <tr ng-repeat="(rowIndex, intyg) in historyItem.sjukfall.intyg">
           <td data-ng-repeat="column in filteredColumns"
-              ng-attr-id="sjukfall-{{index}}-column-{{::column.id}}}-{{::rowIndex}}">
+              ng-attr-id="intyg-{{index}}-column-{{::column.id}}-{{::rowIndex}}">
             <div data-ng-if="column.id === 'number'">{{rowIndex + 1}}</div>
             <div data-ng-if="column.id === 'diagnose'" class="nowrap column-diagnos">
               <div class="diagnos-container">

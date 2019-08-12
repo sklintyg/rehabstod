@@ -41,6 +41,14 @@ var RehabstodSjukfallPage = RehabstodBasePage._extend({
 
         this.patientModal = element(by.id('rhs-patient-modal'));
         this.patientSjukfallTable = element(by.id('patient-sjukfall-table'));
+
+        this.anpassaPatientTableLink = element(by.id('rhs-patient-table-select-columns-link'));
+        this.anpassaPatientTableTooltip = element(by.id('rhs-patient-table-select-columns-tooltip'));
+
+        this.anpassaTableLink = element(by.id('rhs-table-select-columns-link'));
+        this.anpassaTableTooltip = element(by.id('rhs-table-select-columns-tooltip'));
+
+        this.anpassaTableSaveBtn = element(by.id('save-dialog'));
     },
     get: function () {
         this.getPage('appsjukfall');
@@ -81,8 +89,14 @@ var RehabstodSjukfallPage = RehabstodBasePage._extend({
     clickTableRow: function(index) {
         return element(by.id('sjukfall-row-' + index)).click();
     },
+    getSjukfallRowColumn: function(rowIndex, column) {
+        return element(by.id('sjukfall-' + rowIndex + '-column-' + column));
+    },
     getPatientSjukfallRow: function(sjukfallIndex, rowIndex) {
-        return element(by.id('sjukfall-' + sjukfallIndex + '-column-number-' + rowIndex));
+        return element(by.id('intyg-' + sjukfallIndex + '-column-number-' + rowIndex));
+    },
+    toggleColumn: function(column) {
+        return element(by.id('rhs-toggle-column-' + column)).click();
     }
 });
 

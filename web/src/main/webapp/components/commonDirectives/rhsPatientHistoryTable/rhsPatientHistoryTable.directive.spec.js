@@ -17,6 +17,7 @@ describe('Directive: rhsPatientHistoryTable', function() {
         $compile = _$compile_;
         $scope = $rootScope.$new();
         $scope.item = {};
+        $scope.columns = [];
 
         _featureService_.hasFeature = function() {
             return false;
@@ -66,7 +67,7 @@ describe('Directive: rhsPatientHistoryTable', function() {
 
         _patientHistoryViewState_.setSjfMetaData(sjfMetaData);
 
-        element = $compile(' <rhs-patient-history-table history-item="item" index="1" on-select=""/>')($scope);
+        element = $compile(' <rhs-patient-history-table columns="columns" history-item="item" index="1" on-select=""/>')($scope);
         $scope.$digest();
 
         elementScope = element.isolateScope() || element.scope();
