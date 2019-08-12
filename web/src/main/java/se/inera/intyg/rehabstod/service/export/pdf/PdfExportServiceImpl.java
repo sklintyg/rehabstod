@@ -19,6 +19,9 @@
 package se.inera.intyg.rehabstod.service.export.pdf;
 
 import static com.itextpdf.io.font.PdfEncodings.IDENTITY_H;
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.TABLE_TITLE_MINA_SJUKFALL;
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.TABLE_TITLE_PA_ENHETEN;
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.TABLE_TITLE_PREFIX;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfUtil.aCell;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfUtil.millimetersToPoints;
 
@@ -48,7 +51,6 @@ import java.io.IOException;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -75,24 +77,18 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
   public static final float PAGE_MARGIN_RIGHT = 6.5f;
   public static final float PAGE_MARGIN_BOTTOM = 6.5f;
   public static final float PAGE_MARGIN_LEFT = 6.5f;
+  protected static final String TEMPLATESTRING_TABLE_METADATA = "Antal sjukfall på enheten: %d              Presenterade sjukfall: %d";
+  protected static final String TEMPLATESTRING_TABLE_SORTORDER = "Tabellen är sorterad enligt %s i %s ordning";
   private static final float FOOTER_FONT_SIZE = 6.0f;
-  private static final Color TABLE_HEADER_BASE_COLOR = new DeviceRgb(70, 87, 97);
-  private static final Color TABLE_EVEN_ROW_COLOR = new DeviceRgb(255, 255, 255);
-  private static final Color TABLE_ODD_ROW_COLOR = new DeviceRgb(220, 220, 220);
   private static final String LOGO_PATH = "pdf-assets/rehab_pdf_logo.png";
   private static final String REGULAR_UNICODE_CAPABLE_FONT_PATH = "/pdf-assets/FreeSans.ttf";
   private static final String BOLD_UNICODE_CAPABLE_FONT_PATH = "/pdf-assets/FreeSansBold.ttf";
-  private static final int ELLIPSIZE_AT_LIMIT = 20;
-  private static final int ELLIPSIZE_AT_LIMIT_ANONYMOUS = 40;
-  private static final String ELLIPSIZE_SUFFIX = "...";
-
-
   private static final float FILTER_HEADER_FONTSIZE = 7.5f;
   private static final Color PAGE_HEADER_FONTCOLOR = new DeviceRgb(0x00, 0x83, 0x91);
   private static final float DEFAULT_FONT_SIZE = 7.5f;
   private static final Color DEFAULT_FONT_COLOR = new DeviceRgb(0x00, 0x0, 0x0);
   private static final float PAGE_HEADER_FONTSIZE = 7.5f;
-  private PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+  private static final float TABLE_MARGIN_TOP = millimetersToPoints(6.5f);
 
   private PdfImageXObject logoImage;
 
@@ -137,7 +133,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
       // Add table with all sjukfall (could span several pages)
       document
-          .add(createSjukfallTable(sjukfallList, user.getUrval(), total, printSjukfallRequest, isSrsFeatureActive(user)));
+          .add(createSjukfallTable(sjukfallList, user, total, printSjukfallRequest, isSrsFeatureActive(user)));
 
       //We now know how many pages the document will have, so we can write that now
       writePageNumbers(pdf, document);
@@ -152,18 +148,21 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     return bos.toByteArray();
   }
 
-  private IBlockElement createSjukfallTable(List<SjukfallEnhet> sjukfallList, Urval urval, int total,
+  private IBlockElement createSjukfallTable(List<SjukfallEnhet> sjukfallList, RehabstodUser user, int total,
       PrintSjukfallRequest printSjukfallRequest,
       boolean srsFeatureActive) {
 
     Div root = new Div().setFillAvailableArea(true);
-    root.add(new Paragraph(SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN).addStyle(style.getPageHeaderStyle()));
+    StringBuilder tableTitle = new StringBuilder(TABLE_TITLE_PREFIX);
+    tableTitle.append(user.getUrval() == Urval.ALL ? TABLE_TITLE_PA_ENHETEN : TABLE_TITLE_MINA_SJUKFALL);
+
+    root.add(new Paragraph(tableTitle.toString()).addStyle(style.getPageHeaderStyle()).setMarginTop(TABLE_MARGIN_TOP));
 
     Table tableAbove = new Table(2);
     tableAbove.setWidth(UnitValue.createPercentValue(100f));
 
     Cell showingCell = aCell().
-        add(new Paragraph(String.format("Antal sjukfall på enheten: %d              Presenterade sjukfall: %d", total, sjukfallList.size()))
+        add(new Paragraph(String.format(TEMPLATESTRING_TABLE_METADATA, total, sjukfallList.size()))
             .addStyle(style.getPageHeaderStyle()));
     Cell sortedByCell = aCell().
         add(new Paragraph(getSorteringDesc(printSjukfallRequest.getSortering()))
@@ -174,7 +173,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     root.add(tableAbove);
 
     SjukfallTableBuilder sjukfallTableBuilder = new SjukfallTableBuilder(style);
-    root.add(sjukfallTableBuilder.buildsjukfallTable(sjukfallList));
+    root.add(sjukfallTableBuilder.buildsjukfallTable(sjukfallList, user, printSjukfallRequest, srsFeatureActive));
 
     return root;
 
@@ -199,8 +198,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
       return "(Ingen sortering vald)";
     }
 
-    String template = "Tabellen är sorterad enligt %s i %s ordning";
-    return String.format(template, sortering.getKolumn(), sortering.getOrder());
+    return String.format(TEMPLATESTRING_TABLE_SORTORDER, sortering.getKolumn(), sortering.getOrder().toLowerCase());
 
   }
 

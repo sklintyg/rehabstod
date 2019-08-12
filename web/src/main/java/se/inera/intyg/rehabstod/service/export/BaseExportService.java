@@ -36,26 +36,25 @@ import se.inera.intyg.rehabstod.web.model.LangdIntervall;
  */
 public abstract class BaseExportService {
 
-  public static final String FILTER_TITLE_VALDA_DIAGNOSER = "Diagnoser";
-  public static final String SELECTION_VALUE_ALLA = "Alla";
-  public static final String FILTER_TITLE_VALDA_LAKARE = "Läkare";
-  public static final String FILTER_TITLE_KOMPLETTERINGSSTATUS = "Kompletteringsstatus";
-  public static final String FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
-  public static final String FILTER_TITLE_VALD_ALDER = "Åldersspann";
-  public static final String FILTER_TITLE_VALD_SLUTDATUM = "Slutdatum";
-  public static final String FILTER_TITLE_FRITEXTFILTER = "Fritextsök";
-  public static final String FILTER_TITLE_VISAPATIENTUPPGIFTER = "Visa personuppgifter";
-  public static final String MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG = "Max dagar mellan intyg";
-  public static final String UNICODE_RIGHT_ARROW_SYMBOL = "\u2192";
   protected static final String MINA_PAGAENDE_SJUKFALL = "Sjukfall";
   protected static final String PA_ENHETEN = "- Pågående sjukfall där jag utfärdat det nuvarande intyget";
   protected static final String ALLA_SJUKFALL = "Sjukfall";
-  protected static final String SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN = "Pågående sjukfall på enheten";
+  protected static final String SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN = "- Pågående sjukfall på enheten";
+  protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Valda diagnoser";
+  protected static final String SELECTION_VALUE_ALLA = "Alla";
+  protected static final String FILTER_TITLE_VALDA_LAKARE = "Valda läkare";
+  protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS = "Kompletteringsstatus";
   protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA = "Visa alla";
-  protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN = "Inga obesvarade kompletteringar";
-  protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_MED = "Med obesvarade kompletteringar";
+  protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN = "Visa sjukfall utan obesvarade kompletteringar";
+  protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_MED = "Visa sjukfall med obesvarade kompletteringar";
+  protected static final String FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
+  protected static final String FILTER_TITLE_VALD_ALDER = "Åldersspann";
+  protected static final String FILTER_TITLE_VALD_SLUTDATUM = "Slutdatum";
+  protected static final String FILTER_TITLE_FRITEXTFILTER = "Fritextfilter";
+  protected static final String FILTER_TITLE_VISAPATIENTUPPGIFTER = "Visa personuppgifter";
   protected static final String VALDA_FILTER = "Valda filter";
   protected static final String H2_SJUKFALLSINSTALLNING = "Sjukfallsinställning";
+  protected static final String MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG = "Max dagar mellan intyg";
   protected static final String VALD_SORTERING_PA_TABELLEN = "Vald sortering";
   protected static final String SORTERING_KOLUMN = "Kolumn: ";
   protected static final String SORTERING_RIKTNING = "Riktning: ";
@@ -64,6 +63,7 @@ public abstract class BaseExportService {
   protected static final String ANTAL_EXPORTEN_VISAR = "Tabellen visar: ";
   protected static final String ANTAL_TOTALT_MINA = "Totalt: ";
   protected static final String ANTAL_TOTALT_PA_ENHETEN = "Totalt på enheten: ";
+
   protected static final String TABLEHEADER_NR = "#";
   protected static final String TABLEHEADER_PERSONNUMMER = "Personnummer";
   protected static final String TABLEHEADER_ALDER = "Ålder";
@@ -78,7 +78,9 @@ public abstract class BaseExportService {
   protected static final String TABLEHEADER_KOMPLETTERINGSSTATUS = "Kompletteringar";
   protected static final String TABLEHEADER_NUVARANDE_LAKARE = "Läkare";
   protected static final String TABLEHEADER_SRS_RISK = "Risk";
-  public static final String FORMAT_ANTAL_DAGAR = "%d dagar";
+
+  protected static final String FORMAT_ANTAL_DAGAR = "%d dagar";
+  protected static final String UNICODE_RIGHT_ARROW_SYMBOL = "\u2192";
   private static final int SRS_RISK_LOW = 1;
   private static final String SRS_RISK_LOW_DESC = "Måttlig";
   private static final int SRS_RISK_MED = 2;
@@ -115,16 +117,16 @@ public abstract class BaseExportService {
     return "-";
   }
 
-  public static String getKompletteringFilterDisplayValue(Integer komplettering) {
+  protected boolean notEmpty(PrintSjukfallRequest req) {
+    return req.getFritext() != null && req.getFritext().trim().length() > 0;
+  }
+
+  protected String getKompletteringFilterDisplayValue(Integer komplettering) {
     if (komplettering == null) {
       return FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA;
     } else {
       return komplettering == 0 ? FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN : FILTER_TITLE_KOMPLETTERINGSSTATUS_MED;
     }
-  }
-
-  protected boolean notEmpty(PrintSjukfallRequest req) {
-    return req.getFritext() != null && req.getFritext().trim().length() > 0;
   }
 
   protected String getKompletteringStatusFormat(int obesvaradeKompl) {
@@ -141,7 +143,7 @@ public abstract class BaseExportService {
         .map(Feature::getGlobal).orElse(false);
   }
 
-  protected String getRiskKategoriDesc(RiskSignal risksignal) {
+  public static String getRiskKategoriDesc(RiskSignal risksignal) {
     if (risksignal != null) {
       switch (risksignal.getRiskKategori()) {
         case SRS_RISK_LOW:

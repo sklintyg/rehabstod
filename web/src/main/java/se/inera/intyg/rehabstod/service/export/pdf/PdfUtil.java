@@ -67,7 +67,11 @@ public final class PdfUtil {
   }
 
   public static Cell aCell() {
-    return new Cell().setBorder(Border.NO_BORDER);
+    return aCell(1);
+  }
+
+  public static Cell aCell(int colspan) {
+    return new Cell(1, colspan).setBorder(Border.NO_BORDER);
   }
 
 }

@@ -18,9 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-import static se.inera.intyg.rehabstod.service.export.BaseExportService.FORMAT_ANTAL_DAGAR;
-import static se.inera.intyg.rehabstod.service.export.BaseExportService.UNICODE_RIGHT_ARROW_SYMBOL;
 import static se.inera.intyg.rehabstod.service.export.BaseExportService.diagnoseListToString;
+import static se.inera.intyg.rehabstod.service.export.BaseExportService.getRiskKategoriDesc;
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FORMAT_ANTAL_DAGAR;
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.UNICODE_RIGHT_ARROW_SYMBOL;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfUtil.TABLE_SEPARATOR_BORDER;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfUtil.aCell;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfUtil.ellipsize;
@@ -32,29 +33,35 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.UnitValue;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
+import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.export.ExportFields;
+import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /**
  * Encapsulates the logic of building the "sjukfall" table in the pdf.
  */
-public class SjukfallTableBuilder {
+class SjukfallTableBuilder {
 
-  protected static final float TABLE_TOTAL_WIDTH = 100f;
-  protected static final float WIDTH_COLUMN_1 = 13f;
-  protected static final float WIDTH_COLUMN_2 = 30f;
-  protected static final float WIDTH_COLUMN_3 = 15f;
-  protected static final float WIDTH_COLUMN_4 = 22f;
-  protected static final float WIDTH_COLUMN_5 = 20f;
-  protected static final int MAXLENGTH_PATIENT_NAMN = 40;
-  protected static final int MAXLENGTH_LAKARE_NAMN = 30;
-  protected static final int MAXLENGTH_DIAGNOS = 40;
-  protected static final int TOTAL_NUM_COLUMNS = 5;
+  protected static final String TEMPLATE_ALDER = "%d år";
+  private static final float TABLE_TOTAL_WIDTH = 100f;
+  private static final float WIDTH_COLUMN_1 = 13f;
+  private static final float WIDTH_COLUMN_2 = 30f;
+  private static final float WIDTH_COLUMN_3 = 15f;
+  private static final float WIDTH_COLUMN_4 = 22f;
+  private static final float WIDTH_COLUMN_5 = 20f;
+  private static final int MAXLENGTH_PATIENT_NAMN = 40;
+  private static final int MAXLENGTH_LAKARE_NAMN = 30;
+  private static final int MAXLENGTH_DIAGNOS = 40;
+  private static final int TOTAL_NUM_COLUMNS = 5;
   private PdfStyle style;
 
-  public SjukfallTableBuilder(PdfStyle style) {
+  SjukfallTableBuilder(PdfStyle style) {
     this.style = style;
   }
 
@@ -70,48 +77,87 @@ public class SjukfallTableBuilder {
         .setWidth(UnitValue.createPercentValue(widthPercentage));
   }
 
-  public BlockElement buildsjukfallTable(List<SjukfallEnhet> sjukfallList) {
+  BlockElement buildsjukfallTable(List<SjukfallEnhet> sjukfallList, RehabstodUser user,
+      PrintSjukfallRequest printSjukfallRequest, boolean srsFeatureActive) {
+
+    //TODO: Get from user preferences
+    String jsonString = "number|patientId|patientAge|patientName|gender|dxs|startDate|endDate|days|antal|degree|kompletteringar|doctor|srs";
+    final List<ExportFields> enabledFields = ExportFields.fromJson(jsonString);
+
     Table table = new Table(TOTAL_NUM_COLUMNS)
         .setWidth(UnitValue.createPercentValue(TABLE_TOTAL_WIDTH));
     for (int i = 0; i < sjukfallList.size(); i++) {
       SjukfallEnhet sf = sjukfallList.get(i);
 
-      Cell c1 = aSjukFallCell(WIDTH_COLUMN_1).setBorderLeft(TABLE_SEPARATOR_BORDER)
-          .add(buildSjukfallCellTable(
-              Arrays.asList("#", "Personnr", "Ålder"),
-              Arrays.asList(
-                  aParagraph(String.valueOf(i + 1)),
-                  aParagraph(sf.getPatient().getId()),
-                  aParagraph(String.valueOf(sf.getPatient().getAlder()) + " år"))));
+      // Column 1 - PatientId is not only controlled by user preference enabledFields toggling
+      List<ExportFields> c1Headers = new ArrayList<>();
+      List<Paragraph> c1Values = new ArrayList<>();
+      c1Headers.add(ExportFields.LINE_NR);
+      c1Values.add(aParagraph(String.valueOf(i + 1)));
+      if (printSjukfallRequest.isShowPatientId()) {
+        c1Headers.add(ExportFields.PATIENT_ID);
+        c1Values.add(aParagraph(sf.getPatient().getId()));
+      }
+      c1Headers.add(ExportFields.PATIENT_AGE);
+      c1Values.add(aParagraph(String.format(TEMPLATE_ALDER, sf.getPatient().getAlder())));
+
+      Cell c1 = aSjukFallCell(WIDTH_COLUMN_1)
+          .setBorderLeft(TABLE_SEPARATOR_BORDER)
+          .add(buildSjukfallCellTable(enabledFields, c1Headers, c1Values));
+
+      // Column 2 - Patient name is not only controlled by user preference enabledFields toggling
+      List<ExportFields> c2Headers = new ArrayList<>();
+      List<Paragraph> c2Values = new ArrayList<>();
+      if (printSjukfallRequest.isShowPatientId()) {
+        c2Headers.add(ExportFields.PATIENT_NAME);
+        c2Values.add(aParagraph(ellipsize(sf.getPatient().getNamn(), MAXLENGTH_PATIENT_NAMN)));
+      }
+      c2Headers.add(ExportFields.PATIENT_GENDER);
+      c2Values.add(aParagraph(sf.getPatient().getKon().getDescription()));
+      c2Headers.add(ExportFields.DIAGNOSE);
+      c2Values.add(aParagraph(getCompoundDiagnoseText(sf)));
 
       Cell c2 = aSjukFallCell(WIDTH_COLUMN_2)
-          .add(buildSjukfallCellTable(
-              Arrays.asList("Namn", "Kön", "Diagnoser"),
-              Arrays.asList(
-                  aParagraph(ellipsize(sf.getPatient().getNamn(), MAXLENGTH_PATIENT_NAMN)),
-                  aParagraph(sf.getPatient().getKon().getDescription()),
-                  aParagraph(getCompoundDiagnoseText(sf)))));
+          .add(buildSjukfallCellTable(enabledFields, c2Headers, c2Values));
 
       Cell c3 = aSjukFallCell(WIDTH_COLUMN_3)
-          .add(buildSjukfallCellTable(
-              Arrays.asList("Startdatum", "Slutdatum", "Längd"),
+          .add(buildSjukfallCellTable(enabledFields,
+              Arrays.asList(
+                  ExportFields.STARTDATE,
+                  ExportFields.ENDDATE,
+                  ExportFields.DAYS),
               Arrays.asList(
                   aParagraph(YearMonthDateFormatter.print(sf.getStart())),
                   aParagraph(YearMonthDateFormatter.print(sf.getSlut())),
                   aParagraph(String.format(FORMAT_ANTAL_DAGAR, sf.getDagar())))));
 
       Cell c4 = aSjukFallCell(WIDTH_COLUMN_4)
-          .add(buildSjukfallCellTable(
-              Arrays.asList("Antal", "Grad", "Komplettering"),
+          .add(buildSjukfallCellTable(enabledFields,
+              Arrays.asList(
+                  ExportFields.NR_OF_INTYG,
+                  ExportFields.GRADER,
+                  ExportFields.KOMPLETTERINGAR),
               Arrays.asList(
                   aParagraph(String.valueOf(sf.getIntyg())),
                   getGrader(sf),
                   aParagraph(String.valueOf(sf.getObesvaradeKompl())))));
-      
+
+      // Column 5 - Lakare and SRS are not only controlled by user preference enabledFields toggling
+      List<ExportFields> c5Headers = new ArrayList<>();
+      List<Paragraph> c5Values = new ArrayList<>();
+
+      if (user.getUrval().equals(Urval.ALL)) {
+        c5Headers.add(ExportFields.LAKARE);
+        c5Values.add(aParagraph(ellipsize(sf.getLakare().getNamn(), MAXLENGTH_LAKARE_NAMN)));
+      }
+
+      if (srsFeatureActive) {
+        c5Headers.add(ExportFields.SRS);
+        c5Values.add(aParagraph(getRiskKategoriDesc(sf.getRiskSignal())));
+      }
+
       Cell c5 = aSjukFallCell(WIDTH_COLUMN_5).setBorderRight(TABLE_SEPARATOR_BORDER)
-          .add(buildSjukfallCellTable(Arrays.asList("Läkare"),
-              Arrays.asList(
-                  aParagraph(ellipsize(sf.getLakare().getNamn(), MAXLENGTH_LAKARE_NAMN)))));
+          .add(buildSjukfallCellTable(enabledFields, c5Headers, c5Values));
 
       table.addCell(c1);
       table.addCell(c2);
@@ -145,16 +191,18 @@ public class SjukfallTableBuilder {
     return grader;
   }
 
-  private Table buildSjukfallCellTable(List<String> headerTexts, List<Paragraph> values) {
+  private Table buildSjukfallCellTable(List<ExportFields> enabledFields, List<ExportFields> headerFields, List<Paragraph> values) {
 
     Table table = new Table(2).setKeepTogether(true);
     table.setBorder(Border.NO_BORDER);
 
-    for (int i = 0; i < headerTexts.size(); i++) {
-      Cell header = aCell().add(new Paragraph(headerTexts.get(i)).addStyle(style.getCellHeaderParagraphStyle())).addStyle(
-          style.getCellStyle());
-      Cell value = aCell().add(values.get(i)).addStyle(style.getCellStyle());
-      table.addCell(header).addCell(value);
+    for (int i = 0; i < headerFields.size(); i++) {
+      if (enabledFields.contains(headerFields.get(i))) {
+        Cell header = aCell(1).add(new Paragraph(headerFields.get(i).getLabel()).addStyle(style.getCellHeaderParagraphStyle())).addStyle(
+            style.getCellStyle());
+        Cell value = aCell(1).add(values.get(i)).addStyle(style.getCellStyle());
+        table.addCell(header).addCell(value);
+      }
     }
     return table;
   }
