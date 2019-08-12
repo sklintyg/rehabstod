@@ -109,6 +109,70 @@ angular.module('rehabstodApp').factory('UserService',
         return columns;
       }
 
+      function _getAllPatientTableColumns() {
+        var columns = [
+          {
+            id: 'number',
+            classes: 'column-number'
+          },
+          {
+            id: 'diagnose',
+            classes: 'column-diagnose'
+          },
+          {
+            id: 'startdate',
+            classes: 'column-startdate'
+          },
+          {
+            id: 'enddate',
+            classes: 'column-enddate'
+          },
+          {
+            id: 'length',
+            classes: 'column-length'
+          },
+          {
+            id: 'grade',
+            classes: 'column-grade'
+          },
+          {
+            id: 'obesvaradekompl',
+            classes: 'column-obesvaradeKompl'
+          },
+          {
+            id: 'doctor',
+            classes: 'column-doctor'
+          },
+          {
+            id: 'occupation',
+            classes: 'column-occupation'
+          },
+          {
+            id: 'vardenhet',
+            classes: '',
+            filter: function(isActive) {
+              return isActive;
+            }
+          },
+          {
+            id: 'vardgivare',
+            classes: '',
+            filter: function(isActive) {
+              return isActive;
+            }
+          }
+        ];
+
+        if (featureService.hasFeature('SRS')) {
+          columns.push({
+            id: 'risk',
+            classes: 'column-risk'
+          });
+        }
+
+        return columns;
+      }
+
       function _getSelectedColumns(allColumns, preferenceKey, onlyPreferences) {
         var user = UserModel.get();
         var columns = user.preferences[preferenceKey];
@@ -131,6 +195,8 @@ angular.module('rehabstodApp').factory('UserService',
       return {
         getSelectedColumns: _getSelectedColumns,
         getAllSjukfallTableColumns: _getAllSjukfallTableColumns,
-        sjukfallTableKey: 'sjukfallTableColumns'
+        getAllPatientTableColumns: _getAllPatientTableColumns,
+        sjukfallTableKey: 'sjukfallTableColumns',
+        patientTableKey: 'patientTableColumns'
       };
     });

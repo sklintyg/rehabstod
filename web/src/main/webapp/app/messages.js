@@ -132,7 +132,7 @@ var rhsMessages = {
         'label.gender.female.plural': 'Kvinnor',
         'label.gender.undefined': '-',
 
-        // Table (NOTE: the parts after label.table.column must match sjukfallmodels json, as we use this to get sortorder descriptions)
+        // Table
         'label.table.column.number': '#',
         'label.table.column.patientid': 'Person&shy;nummer',
         'label.table.column.patientname': 'Namn',
@@ -169,12 +169,33 @@ var rhsMessages = {
         'label.table.diagnosbeskrivning.okand': 'Diagnoskod ${kod} är okänd och har ingen beskrivning',
         'label.table.anpassa': 'Anpassa tabellen',
         'label.table.anpassa.help': 'Du har anpassat innehållet i tabellen, vilket påverkar vilka filterval du kan göra.',
+        'label.table.anpassa.patient': 'Anpassa tabellen i denna vy',
+        'label.table.anpassa.patient.help': 'Observera att du har anpassat vilka kolumner som syns i tabellen.',
+
+        // Patient table
+        'label.patient.table.column.number': '#',
+        'label.patient.table.column.diagnose': 'Diagnos/diagnoser',
+        'label.patient.table.column.startdate': 'Startdatum',
+        'label.patient.table.column.enddate': 'Slutdatum',
+        'label.patient.table.column.length': 'Längd',
+        'label.patient.table.column.grade': 'Grad',
+        'label.patient.table.column.obesvaradekompl': 'Komplettering',
+        'label.patient.table.column.doctor': 'Läkare',
+        'label.patient.table.column.occupation': 'Sysselsättning',
+        'label.patient.table.column.vardenhet': 'Vårdenhet',
+        'label.patient.table.column.vardgivare': 'Vårdgivare',
+        'label.patient.table.column.risk': 'Risk',
 
         // Table modal
         'label.table.custom.modal.sjukfall.title': 'Anpassa tabellen',
         'label.table.custom.modal.sjukfall.body': 'Välj vilka kolumner du vill se i sjukfallstabellen. Dina ändringar kommer att sparas tillsvidare. Du kan ändra dessa när du vill. Kolumner som du väljer att ta bort kan du inte filtrera på.',
         'label.table.custom.modal.sjukfall.selectone': 'Var god välj minst en kolumn för att kunna se sjukfallstabellen.',
         'label.table.custom.modal.sjukfall.error': '<p>Kunde inte spara dina ändringar på grund av ett tekniskt fel. Försök igen om en stund.</p><p>Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.</p>',
+
+        'label.table.custom.modal.patient.title': 'Anpassa tabellerna',
+        'label.table.custom.modal.patient.body': 'Välj vilka kolumner du vill se i sjukfallet. Dina ändringar kommer att sparas tillsvidare. Du kan ändra dessa när du vill.',
+        'label.table.custom.modal.patient.selectone': 'Var god välj minst en kolumn för att kunna se sjukfallen.',
+        'label.table.custom.modal.patient.error': '<p>Kunde inte spara dina ändringar på grund av ett tekniskt fel. Försök igen om en stund.</p><p>Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.</p>',
 
         // Export
         'label.export.button' : 'Spara som',

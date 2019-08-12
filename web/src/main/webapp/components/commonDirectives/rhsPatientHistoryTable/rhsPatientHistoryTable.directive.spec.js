@@ -12,11 +12,15 @@ describe('Directive: rhsPatientHistoryTable', function() {
 
     // Store references to $rootScope and $compile
     // so they are available to all tests in this describe block
-    beforeEach(inject(function(_$compile_, $rootScope, _patientHistoryViewState_) {
+    beforeEach(inject(function(_$compile_, $rootScope, _patientHistoryViewState_, _featureService_) {
         // The injector unwraps the underscores (_) from around the parameter names when matching
         $compile = _$compile_;
         $scope = $rootScope.$new();
         $scope.item = {};
+
+        _featureService_.hasFeature = function() {
+            return false;
+        };
 
         var sjfMetaData = {};
 
