@@ -87,6 +87,7 @@ class SjukfallTableBuilder {
         .setWidth(UnitValue.createPercentValue(TABLE_TOTAL_WIDTH));
     for (int i = 0; i < sjukfallList.size(); i++) {
       SjukfallEnhet sf = sjukfallList.get(i);
+      boolean avslutat = sf.isNyligenAvslutat();
 
       // Column 1 - PatientId is not only controlled by user preference enabledFields toggling
       List<ExportFields> c1Headers = new ArrayList<>();
@@ -102,7 +103,7 @@ class SjukfallTableBuilder {
 
       Cell c1 = aSjukFallCell(WIDTH_COLUMN_1)
           .setBorderLeft(TABLE_SEPARATOR_BORDER)
-          .add(buildSjukfallCellTable(enabledFields, c1Headers, c1Values));
+          .add(buildSjukfallCellTable(enabledFields, c1Headers, c1Values, avslutat));
 
       // Column 2 - Patient name is not only controlled by user preference enabledFields toggling
       List<ExportFields> c2Headers = new ArrayList<>();
@@ -117,7 +118,7 @@ class SjukfallTableBuilder {
       c2Values.add(aParagraph(getCompoundDiagnoseText(sf)));
 
       Cell c2 = aSjukFallCell(WIDTH_COLUMN_2)
-          .add(buildSjukfallCellTable(enabledFields, c2Headers, c2Values));
+          .add(buildSjukfallCellTable(enabledFields, c2Headers, c2Values, avslutat));
 
       Cell c3 = aSjukFallCell(WIDTH_COLUMN_3)
           .add(buildSjukfallCellTable(enabledFields,
@@ -128,7 +129,7 @@ class SjukfallTableBuilder {
               Arrays.asList(
                   aParagraph(YearMonthDateFormatter.print(sf.getStart())),
                   aParagraph(YearMonthDateFormatter.print(sf.getSlut())),
-                  aParagraph(String.format(FORMAT_ANTAL_DAGAR, sf.getDagar())))));
+                  aParagraph(String.format(FORMAT_ANTAL_DAGAR, sf.getDagar()))), avslutat));
 
       Cell c4 = aSjukFallCell(WIDTH_COLUMN_4)
           .add(buildSjukfallCellTable(enabledFields,
@@ -139,7 +140,7 @@ class SjukfallTableBuilder {
               Arrays.asList(
                   aParagraph(String.valueOf(sf.getIntyg())),
                   getGrader(sf),
-                  aParagraph(String.valueOf(sf.getObesvaradeKompl())))));
+                  aParagraph(String.valueOf(sf.getObesvaradeKompl()))), avslutat));
 
       // Column 5 - Lakare and SRS are not only controlled by user preference enabledFields toggling
       List<ExportFields> c5Headers = new ArrayList<>();
@@ -156,7 +157,7 @@ class SjukfallTableBuilder {
       }
 
       Cell c5 = aSjukFallCell(WIDTH_COLUMN_5).setBorderRight(TABLE_SEPARATOR_BORDER)
-          .add(buildSjukfallCellTable(enabledFields, c5Headers, c5Values));
+          .add(buildSjukfallCellTable(enabledFields, c5Headers, c5Values, avslutat));
 
       table.addCell(c1);
       table.addCell(c2);
@@ -190,7 +191,8 @@ class SjukfallTableBuilder {
     return grader;
   }
 
-  private Table buildSjukfallCellTable(List<ExportFields> enabledFields, List<ExportFields> headerFields, List<Paragraph> values) {
+  private Table buildSjukfallCellTable(List<ExportFields> enabledFields, List<ExportFields> headerFields, List<Paragraph> values,
+      boolean avslutat) {
 
     Table table = new Table(2).setKeepTogether(true);
     table.setBorder(Border.NO_BORDER);
@@ -198,8 +200,8 @@ class SjukfallTableBuilder {
     for (int i = 0; i < headerFields.size(); i++) {
       if (enabledFields.contains(headerFields.get(i))) {
         Cell header = aCell(1).add(new Paragraph(headerFields.get(i).getLabel()).addStyle(style.getCellHeaderParagraphStyle())).addStyle(
-            style.getCellStyle());
-        Cell value = aCell(1).add(values.get(i)).addStyle(style.getCellStyle());
+            avslutat ? style.getCellStyleItalic() : style.getCellStyle());
+        Cell value = aCell(1).add(values.get(i)).addStyle(avslutat ? style.getCellStyleItalic() : style.getCellStyle());
         table.addCell(header).addCell(value);
       }
     }

@@ -99,6 +99,7 @@ public class PdfExportServiceImplTest {
     isf.setGrader(index % 3 == 0 ? Arrays.asList(25, 50) : Arrays.asList(50, 75, 100, 25));
     isf.setAktivGrad(50);
     isf.setRiskSignal(new RiskSignal("", new Random().nextInt(2), "Lätt", isf.getStart().atTime(12, 0)));
+    isf.setNyligenAvslutat(new Random().nextInt(100) > 80);
 
     return isf;
   }
