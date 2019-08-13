@@ -59,10 +59,10 @@
             <span ng-if="user.isLakare" message key="label.table.no-result.lakare" param="user.valdVardenhet.namn"></span>
             <span ng-if="!user.isLakare" message key="label.table.no-result.rehab" param="user.valdVardenhet.namn"></span>
         </span>
-            <span ng-if="model.get().length">
+        <span ng-if="model.get().length">
           {{::'label.table.no-filter-result' | message}}
         </span>
-            <span ng-if="model.hasError()">
+        <span ng-if="model.hasError()">
           {{::'server.error.getsjukfall.title' | message}}
         </span>
     </div>

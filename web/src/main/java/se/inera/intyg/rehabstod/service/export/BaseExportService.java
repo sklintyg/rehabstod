@@ -64,21 +64,6 @@ public abstract class BaseExportService {
   protected static final String ANTAL_TOTALT_MINA = "Totalt: ";
   protected static final String ANTAL_TOTALT_PA_ENHETEN = "Totalt på enheten: ";
 
-  protected static final String TABLEHEADER_NR = "#";
-  protected static final String TABLEHEADER_PERSONNUMMER = "Personnummer";
-  protected static final String TABLEHEADER_ALDER = "Ålder";
-  protected static final String TABLEHEADER_NAMN = "Namn";
-  protected static final String TABLEHEADER_KON = "Kön";
-  protected static final String TABLEHEADER_NUVARANDE_DIAGNOS = "Diagnos/diagnoser";
-  protected static final String TABLEHEADER_STARTDATUM = "Startdatum";
-  protected static final String TABLEHEADER_SLUTDATUM = "Slutdatum";
-  protected static final String TABLEHEADER_SJUKSKRIVNINGSLANGD = "Längd";
-  protected static final String TABLEHEADER_ANTAL = "Antal";
-  protected static final String TABLEHEADER_SJUKSKRIVNINGSGRAD = "Grad";
-  protected static final String TABLEHEADER_KOMPLETTERINGSSTATUS = "Kompletteringar";
-  protected static final String TABLEHEADER_NUVARANDE_LAKARE = "Läkare";
-  protected static final String TABLEHEADER_SRS_RISK = "Risk";
-
   protected static final String FORMAT_ANTAL_DAGAR = "%d dagar";
   protected static final String UNICODE_RIGHT_ARROW_SYMBOL = "\u2192";
   private static final int SRS_RISK_LOW = 1;

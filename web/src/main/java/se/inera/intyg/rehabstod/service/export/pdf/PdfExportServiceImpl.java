@@ -57,6 +57,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
+import se.inera.intyg.rehabstod.service.export.ExportField;
 import se.inera.intyg.rehabstod.service.export.pdf.PdfStyle.PdfStyleBuilder;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -198,7 +199,9 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
       return "(Ingen sortering vald)";
     }
 
-    return String.format(TEMPLATESTRING_TABLE_SORTORDER, sortering.getKolumn(), sortering.getOrder().toLowerCase());
+    ExportField sortField = ExportField.fromJsonId(sortering.getKolumn());
+
+    return String.format(TEMPLATESTRING_TABLE_SORTORDER, sortField.getLabelPdf(), sortering.getOrder().toLowerCase());
 
   }
 
