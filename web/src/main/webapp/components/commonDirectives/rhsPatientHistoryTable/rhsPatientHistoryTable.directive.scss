@@ -131,12 +131,7 @@ rhs-patient-history-table {
       }
 
       .column-risk {
-        width: 20px;
-        text-align: center;
-
-        @media (max-width: $screen-md-max) {
-          width: 10px;
-        }
+        width: 35px;
       }
 
       thead > tr > th {

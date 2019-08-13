@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
-    function($scope, $uibModalInstance, UserProxy, UserModel, SjukfallService) {
+    function($scope, $uibModalInstance, UserProxy, UserModel, SjukfallService, _) {
         'use strict';
 
         /**
@@ -61,10 +61,13 @@ angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
 
         $scope.save = function() {
 
+            var perferences = UserModel.get().preferences;
             var settingData = convertArrayToObject($scope.settings);
 
+            var settingsToSave = _.assign(perferences, settingData);
+
             $scope.saving = true;
-            UserProxy.saveSettings(settingData).then(function(preferences) {
+            UserProxy.saveSettings(settingsToSave).then(function(preferences) {
                 $scope.saving = false;
                 UserModel.get().preferences = preferences;
                 $uibModalInstance.close($scope.settingsModel);

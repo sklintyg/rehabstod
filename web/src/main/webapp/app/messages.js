@@ -210,6 +210,8 @@ var rhsMessages = {
         'label.table.custom.modal.patient.selectone': 'Var god välj minst en kolumn för att kunna se sjukfallen.',
         'label.table.custom.modal.patient.error': '<p>Kunde inte spara dina ändringar på grund av ett tekniskt fel. Försök igen om en stund.</p><p>Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.</p>',
 
+        'label.table.custom.modal.link': 'klicka här för att anpassa tabellen',
+
         // Export
         'label.export.button' : 'Spara som',
         'label.export.pdf' : 'PDF',
