@@ -22,79 +22,71 @@ package se.inera.intyg.rehabstod.service.export.pdf;
  * Created by marced on 25/02/16.
  */
 
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfExportServiceImpl.PAGE_MARGIN_LEFT;
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfExportServiceImpl.PAGE_MARGIN_RIGHT;
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfExportServiceImpl.PAGE_MARGIN_TOP;
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfUtil.millimetersToPoints;
+
+import com.itextpdf.kernel.events.Event;
+import com.itextpdf.kernel.events.IEventHandler;
+import com.itextpdf.kernel.events.PdfDocumentEvent;
+import com.itextpdf.kernel.geom.Rectangle;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.pdf.xobject.PdfImageXObject;
+import com.itextpdf.layout.Canvas;
+import com.itextpdf.layout.property.TextAlignment;
 import java.time.LocalDateTime;
-
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfPageEventHelper;
-import com.itextpdf.text.pdf.PdfWriter;
-
 import se.inera.intyg.rehabstod.common.util.HourMinuteFormatter;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 
-public class HeaderEventHandler extends PdfPageEventHelper {
-    private static final int TOP_MARGIN_TO_HEADER = 20;
-    private static final float LOGO_SCALE_FACTOR = 30.0f;
-    private String userName;
-    private String enhetsNamn;
-    private Image logo;
+public class HeaderEventHandler implements IEventHandler {
 
-    public HeaderEventHandler(Image logo, String userName, String enhetsNamn) {
-        this.logo = logo;
-        this.userName = userName;
-        this.enhetsNamn = enhetsNamn;
+
+  protected static final float LOGO_WIDTH = 25f;
+  protected static final float LOGO_ESTIMATED_HEIGHT = 15f;
+
+  private PdfImageXObject logo;
+  private float footerFontSize;
+  private String printedByText;
+
+
+  public HeaderEventHandler(PdfImageXObject logo, String userName, String enhetsNamn, float footerFontSize) {
+    this.logo = logo;
+    this.footerFontSize = footerFontSize;
+    LocalDateTime now = LocalDateTime.now();
+    this.printedByText = String.format("%s %s                %s               Utskrift av %s",
+        YearMonthDateFormatter.print(now), HourMinuteFormatter.print(now), enhetsNamn, userName);
+  }
+
+
+  @Override
+  public void handleEvent(Event event) {
+    if (!(event instanceof PdfDocumentEvent)) {
+      return;
     }
 
-    @Override
-    public void onEndPage(PdfWriter writer, Document document) {
+    PdfDocumentEvent docEvent = (PdfDocumentEvent) event;
+    PdfDocument pdf = docEvent.getDocument();
+    PdfPage page = docEvent.getPage();
 
-        // Create the header table
-        PdfPTable table = new PdfPTable(2);
-        table.setTotalWidth(document.getPageSize().getWidth() - (document.leftMargin() + document.rightMargin()));
+    Rectangle pageSize = page.getPageSize();
+    PdfCanvas pdfCanvas = new PdfCanvas(page.newContentStreamBefore(), page.getResources(), pdf);
+    Canvas canvas = new Canvas(pdfCanvas, pdf, pageSize);
 
-        // Add out 2 cells
-        table.addCell(getLogoCell());
-        table.addCell(printedBy(userName, enhetsNamn));
+    // Logotyp
+    pdfCanvas.addXObject(logo, millimetersToPoints(PAGE_MARGIN_LEFT), pageSize.getTop() - PAGE_MARGIN_TOP - LOGO_ESTIMATED_HEIGHT,
+        millimetersToPoints(LOGO_WIDTH));
 
-        // write the table
-        table.writeSelectedRows(0, -1, document.leftMargin(), document.getPageSize().getTop() - TOP_MARGIN_TO_HEADER,
-                writer.getDirectContent());
+    renderPrintedBy(pageSize, canvas);
 
-    }
+    pdfCanvas.release();
+  }
 
-    private PdfPCell getLogoCell() {
-        float scalePercentage = LOGO_SCALE_FACTOR;
-        logo.scalePercent(scalePercentage);
-        PdfPCell imageCell = new PdfPCell(logo, false);
-        imageCell.setBorder(Rectangle.NO_BORDER);
-        return imageCell;
-    }
-
-    private PdfPCell printedBy(String userName, String enhetsNamn) {
-        LocalDateTime now = LocalDateTime.now();
-
-        Phrase printedBy = new Phrase("", PdfExportConstants.TABLE_CELL_NORMAL);
-        printedBy.add(new Chunk("Utskrift av " + userName));
-        printedBy.add(Chunk.NEWLINE);
-        printedBy.add(new Chunk("Rehabstöd - " + enhetsNamn));
-        printedBy.add(Chunk.NEWLINE);
-        printedBy.add(new Chunk(YearMonthDateFormatter.print(now)));
-        printedBy.add(new Chunk(" - "));
-        printedBy.add(new Chunk(HourMinuteFormatter.print(now)));
-
-        PdfPCell cell = new PdfPCell(printedBy);
-        cell.setLeading(2f, 1f);
-        cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        cell.setVerticalAlignment(Element.ALIGN_BOTTOM);
-        cell.setBorder(Rectangle.NO_BORDER);
-
-        return cell;
-    }
-
+  private void renderPrintedBy(Rectangle pageSize, Canvas canvas) {
+    canvas.setFontSize(footerFontSize);
+    canvas.showTextAligned(printedByText, pageSize.getWidth() - millimetersToPoints(PAGE_MARGIN_RIGHT),
+        pageSize.getTop() - footerFontSize - PAGE_MARGIN_TOP, TextAlignment.RIGHT);
+  }
 }
