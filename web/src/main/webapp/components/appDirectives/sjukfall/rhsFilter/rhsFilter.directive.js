@@ -49,7 +49,7 @@ angular.module('rehabstodApp')
             $scope.$watch(function() {
               return UserModel.get().preferences[UserService.sjukfallTableKey];
             }, function() {
-              columns = UserService.getSelectedColumns(UserService.getAllSjukfallTableColumns(), UserService.sjukfallTableKey, true);
+              columns = UserService.getSelectedSjukfallColumns(true);
             }, true);
 
             $scope.filterInactive = function(field, field2) {
