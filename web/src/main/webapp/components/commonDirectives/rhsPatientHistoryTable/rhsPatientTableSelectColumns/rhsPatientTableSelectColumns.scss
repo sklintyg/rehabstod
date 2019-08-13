@@ -1,6 +1,5 @@
 rhs-patient-table-select-columns {
-  display: block;
-  text-align: right;
+  display: inline-block;
 
   a, .fa {
     @extend %rs-typo-06;

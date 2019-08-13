@@ -25,12 +25,15 @@ angular.module('rehabstodApp')
             return {
                 restrict: 'E',
                 scope: {
+                    labelKey: '@'
                 },
                 controller: function($scope, $uibModal, UserModel, UserService) {
 
+                    $scope.label = $scope.labelKey ? $scope.labelKey : 'label.table.anpassa.patient';
+
                     var preferenceKey = UserService.patientTableKey;
 
-                    $scope.showIcon =  !!UserModel.get().preferences[preferenceKey];
+                    $scope.showIcon = $scope.labelKey ? false : !!UserModel.get().preferences[preferenceKey];
 
                     $scope.openDialog = function() {
                         $uibModal.open({
