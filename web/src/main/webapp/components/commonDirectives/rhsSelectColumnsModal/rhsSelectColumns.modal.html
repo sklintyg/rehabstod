@@ -31,6 +31,10 @@
       <input id="rhs-toggle-column-{{::column.id}}" type="checkbox" ng-model="column.checked">
       <span ng-bind-html="::getLabel(column.id) | message"></span>
     </label>
+    <span class="rhs-move-column">
+      <i class="glyphicon glyphicon-arrow-up" data-ng-click="moveUp(column)"></i>
+      <i class="glyphicon glyphicon-arrow-down" data-ng-click="moveDown(column)"></i>
+    </span>
   </div>
 
   <div ng-if="nonSelected" class="alert alert-warning">

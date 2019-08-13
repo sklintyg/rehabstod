@@ -183,17 +183,25 @@ angular.module('rehabstodApp').factory('TableService',
         var allSelected = !columns;
         var columnsSelected = columns ? columns.split('|') : [];
 
-        return allColumns.filter(function (column) {
-          if (!allSelected && columnsSelected.indexOf(column.id) === -1) {
-            return false;
-          }
+        var columns;
+        if (allSelected) {
+          columns = allColumns
+        } else {
+          var allColumnsMap = _.keyBy(allColumns, 'id');
 
-          if (!onlyPreferences && (column.id === 'patientId' || column.id === 'patientName') && !SjukfallFilterViewState.get().showPatientId) {
-            return false;
-          }
+          columns = columnsSelected.map(function(column) {
+            return allColumnsMap[column];
+          });
+        }
 
-          return true;
-        });
+        return columns
+          .filter(function(column) {
+            if (!onlyPreferences && (column.id === 'patientId' || column.id === 'patientName') && !SjukfallFilterViewState.get().showPatientId) {
+              return false;
+            }
+
+            return true;
+          });
       }
 
       function _getSelectedSjukfallColumns(onlyPreferences) {

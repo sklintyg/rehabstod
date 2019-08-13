@@ -42,6 +42,43 @@ angular.module('rehabstodApp').controller('rhsSelectColumnsModalController',
         );
       };
 
+      $scope.moveUp = function(column) {
+        var index = _.findIndex($scope.columns, ['id', column.id]);
+
+        if (index === 0) {
+          return;
+        }
+
+        move($scope.columns, index, index - 1);
+      };
+
+      $scope.moveDown = function(column) {
+        var index = _.findIndex($scope.columns, ['id', column.id]);
+
+        if (index === $scope.columns.length - 1) {
+          return;
+        }
+
+        move($scope.columns, index, index + 1);
+      };
+
+      function move(arr, old_index, new_index) {
+        while (old_index < 0) {
+          old_index += arr.length;
+        }
+        while (new_index < 0) {
+          new_index += arr.length;
+        }
+        if (new_index >= arr.length) {
+          var k = new_index - arr.length;
+          while ((k--) + 1) {
+            arr.push(undefined);
+          }
+        }
+        arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+        return arr;
+      }
+
       $scope.getLabel = function(column) {
         return columnTranslationKey + column.toLowerCase();
       };

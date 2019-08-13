@@ -35,7 +35,7 @@ angular.module('rehabstodApp').controller('patientHistoryController',
           return UserModel.get().preferences[TableService.patientTableKey];
         }, function() {
           $scope.tableColumns = TableService.getSelectedColumns(allColumns, TableService.patientTableKey, true);
-        });
+        }, true);
 
         $scope.errorMessageKey = '';
         $scope.patientHistoryViewState = patientHistoryViewState;
