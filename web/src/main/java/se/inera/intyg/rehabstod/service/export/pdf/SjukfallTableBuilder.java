@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.ExportFields;
@@ -80,9 +81,7 @@ class SjukfallTableBuilder {
   BlockElement buildsjukfallTable(List<SjukfallEnhet> sjukfallList, RehabstodUser user,
       PrintSjukfallRequest printSjukfallRequest, boolean srsFeatureActive) {
 
-    //TODO: Get from user preferences
-    String jsonString = "number|patientId|patientAge|patientName|gender|dxs|startDate|endDate|days|antal|degree|kompletteringar|doctor|srs";
-    final List<ExportFields> enabledFields = ExportFields.fromJson(jsonString);
+    final List<ExportFields> enabledFields = ExportFields.fromJson(user.getPreferences().get(Preference.SJUKFALL_TABLE_COLUMNS));
 
     Table table = new Table(TOTAL_NUM_COLUMNS)
         .setWidth(UnitValue.createPercentValue(TABLE_TOTAL_WIDTH));

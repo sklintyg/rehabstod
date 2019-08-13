@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.service.export;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.EnumSet;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 
@@ -29,8 +29,8 @@ public class ExportFieldsTest {
 
   @Test
   public void fromJson() {
-    assertEquals(ExportFields.fromJson(""), EnumSet.allOf(ExportFields.class));
-    assertEquals(ExportFields.fromJson(null), EnumSet.allOf(ExportFields.class));
+    assertEquals(ExportFields.fromJson(""), Arrays.asList(ExportFields.values()));
+    assertEquals(ExportFields.fromJson(null), Arrays.asList(ExportFields.values()));
     assertTrue(ExportFields.fromJson("unknown").isEmpty());
 
     final List<ExportFields> exportFields = ExportFields.fromJson(

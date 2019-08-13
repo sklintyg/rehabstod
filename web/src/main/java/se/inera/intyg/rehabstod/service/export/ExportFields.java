@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 public enum ExportFields {
@@ -39,7 +38,7 @@ public enum ExportFields {
   DAYS("days", "Längd"),
   NR_OF_INTYG("antal", "Antal intyg"),
   GRADER("degree", "Grad"),
-  KOMPLETTERINGAR("Komplettering", "Komplettering"),
+  KOMPLETTERINGAR("Kompletteringar", "Komplettering"),
   LAKARE("doctor", "Läkare"),
   SRS("srs", "Risk");
 
