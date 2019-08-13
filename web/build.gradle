@@ -103,7 +103,7 @@ dependencies {
 
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
     compile "com.googlecode.json-simple:json-simple:${jsonSimpleVersion}"
-    compile "com.itextpdf:itextpdf:${itextVersion}"
+    compile "com.itextpdf:itext7-core:${itextVersion}"
     compile "org.apache.commons:commons-lang3:${commonsLang3Version}"
     compile "org.apache.poi:poi-ooxml:${poiVersion}"
     compile "org.apache.poi:poi:${poiVersion}"

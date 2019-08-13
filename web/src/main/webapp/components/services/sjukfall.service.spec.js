@@ -87,7 +87,7 @@ describe('Service: SjukfallService', function() {
 
             var expectedQuery = {
                 sortering: {
-                    kolumn: messageService.getProperty('label.table.column.' + sortState.kolumn),
+                    kolumn: messageService.getProperty('label.table.column.sort.' + sortState.kolumn),
                     order: messageService.getProperty('label.table.column.sort.' + sortState.order)
                 },
                 maxIntygsGlapp: 5,
