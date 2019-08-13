@@ -200,8 +200,9 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     }
 
     ExportField sortField = ExportField.fromJsonId(sortering.getKolumn());
+    String text = sortField == null ? sortering.getKolumn() : sortField.getLabelPdf();
 
-    return String.format(TEMPLATESTRING_TABLE_SORTORDER, sortField.getLabelPdf(), sortering.getOrder().toLowerCase());
+    return String.format(TEMPLATESTRING_TABLE_SORTORDER, text, sortering.getOrder().toLowerCase());
 
   }
 

@@ -322,12 +322,6 @@ public class SjukfallController {
         return pd -> pd.getRiskSignal() != null && pd.getRiskSignal().getRiskKategori() >= 1;
     }
 
-    private Predicate<PatientData> isNotBlocked(RehabstodUser user, SjukfallPatientResponse response) {
-        return pd -> user.getValdVardgivare().getId().equals(pd.getVardgivareId())
-                && !user.getValdVardenhet().getId().equals(pd.getVardenhetId())
-                && !response.getSjfMetaData().getVardenheterInomVGMedSparr().contains(pd.getVardenhetId());
-    }
-
     private HttpHeaders getHttpHeaders(String contentType, long contentLength, String filenameExtension, RehabstodUser user) {
         HttpHeaders respHeaders = new HttpHeaders();
         respHeaders.set(HttpHeaders.CONTENT_TYPE, contentType);

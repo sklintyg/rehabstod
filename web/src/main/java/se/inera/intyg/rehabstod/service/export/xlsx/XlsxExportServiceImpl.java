@@ -121,8 +121,9 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         addFilterMainHeader(sheet, rowNumber++, VALD_SORTERING_PA_TABELLEN);
         if (req.getSortering() != null) {
             ExportField sortField = ExportField.fromJsonId(req.getSortering().getKolumn());
+            String text = sortField == null ? req.getSortering().getKolumn() : sortField.getLabelXlsx();
 
-            addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, sortField.getLabelXlsx());
+            addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, text);
             addFilterHeader(sheet, rowNumber++, SORTERING_RIKTNING, req.getSortering().getOrder());
         } else {
             addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, SORTERING_INGEN);
@@ -147,7 +148,9 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     }
 
     private List<ExportField> getTableColumns(RehabstodUser user, boolean showPatientId, boolean showSrs) {
-        List<ExportField> enabledFields = new ArrayList<>(ExportField.fromJson(user.getPreferences().get(Preference.SJUKFALL_TABLE_COLUMNS)));
+        List<ExportField> enabledFields = new ArrayList<>(
+            ExportField.fromJson(user.getPreferences().get(Preference.SJUKFALL_TABLE_COLUMNS))
+        );
 
         if (user.getUrval() == Urval.ISSUED_BY_ME) {
             enabledFields.remove(ExportField.LAKARE);

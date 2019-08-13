@@ -22,10 +22,11 @@ angular.module('rehabstodApp').directive('rhsTableHeader',
         'use strict';
 
         return {
-            restrict: 'A',
-            scope: {
-                columns: '='
-            },
-            templateUrl: '/components/appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.directive.html'
+          restrict: 'A',
+          scope: {
+            user: '=',
+            columns: '='
+          },
+          templateUrl: '/components/appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.directive.html'
         };
     });

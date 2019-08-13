@@ -19,8 +19,6 @@
 package se.inera.intyg.rehabstod.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -36,8 +34,6 @@ import se.inera.intyg.infra.integration.hsa.stub.HsaServiceStub;
 @ImportResource("classpath:hsa-stub-context.xml")
 @Profile({ "dev", "wc-hsa-stub" })
 public class HsaStubConfiguration {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(HsaStubConfiguration.class);
 
     @Bean
     HsaServiceStub hsaServiceStub() {

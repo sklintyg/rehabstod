@@ -14,8 +14,8 @@
     <div rhs-floating-scroll scroll-parent-element-id="rhs-body" class="floating-scroll-container">
     <table class="table table-striped" rhs-table-fixed-header="rhs-table-header-fixed-top"
            fixed-header="rhs-table-fixed-header" normal-header="rhs-table-normal-header" padding-top="46">
-        <thead class="hidden" rhs-table-header columns="columnsForTable" id="rhs-table-fixed-header"></thead>
-        <thead rhs-table-header columns="columnsForTable" id="rhs-table-normal-header"></thead>
+        <thead class="hidden" rhs-table-header user="user" columns="columnsForTable" id="rhs-table-fixed-header"></thead>
+        <thead rhs-table-header  user="user" columns="columnsForTable" id="rhs-table-normal-header"></thead>
         <tbody id="rhs-table-body">
             <tr id="sjukfall-row-{{rowIndex}}" ng-repeat="(rowIndex, row) in displayedCollection | limitTo: limit track by row.patient.id"
                 class="rhs-table-row" ng-click="showPatientHistory(row.patient)"

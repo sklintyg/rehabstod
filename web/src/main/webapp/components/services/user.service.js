@@ -64,6 +64,7 @@ angular.module('rehabstodApp').factory('UserService',
           {
             id: 'startDate',
             dataColumn: 'start',
+            defaultSort: true,
             classes: 'column-start'
           },
           {
