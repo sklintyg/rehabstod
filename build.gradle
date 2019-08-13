@@ -8,13 +8,12 @@ ext {
     intygInfraVersion = System.properties['infraVersion'] ?: '0-SNAPSHOT'
     refDataVersion = System.properties['refDataVersion'] ?: '1.0-SNAPSHOT'
 
-    rehabilitationSchemaVersion = "1.1.2"
-    blockingSchemaVersion = "4.0"
-    consentSchemaVersion = "2.0"
-    monitoringSchemaVersion = "1.0.0.3"
-    internalMonitoringSchemaVersion = "1.0.2"
-    srsSchemasVersion = "0.0.7"
-    intygClinicalprocessSchemasVersion = "1.0.21"
+    rehabilitationSchemaVersion = "1.1.3"
+    blockingSchemaVersion = "4.0.1"
+    consentSchemaVersion = "2.0.1"
+    rivtaItintegrationMonitoringSchemasVersion = "1.0.0.5"
+    internalMonitoringSchemaVersion = "1.0.4"
+    intygClinicalprocessSchemasVersion = "1.0.22"
     schemasContractVersion = "2.1.8"
 
     activemqVersion = "5.13.0"
