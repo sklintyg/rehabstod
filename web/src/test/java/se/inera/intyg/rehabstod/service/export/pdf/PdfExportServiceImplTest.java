@@ -23,8 +23,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -160,7 +158,7 @@ public class PdfExportServiceImplTest {
     user.setRoles(roles);
     final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
     assertTrue(export.length > 0);
-    Files.write(Paths.get("./test_issued_by_me.pdf"), export);
+    //Files.write(Paths.get("./test_issued_by_me.pdf"), export);
   }
 
   @Test
@@ -171,7 +169,7 @@ public class PdfExportServiceImplTest {
     final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
     assertTrue(export.length > 0);
 
-    Files.write(Paths.get("./test_all.pdf"), export);
+    //Files.write(Paths.get("./test_all.pdf"), export);
   }
   @Test
   public void testExportAllEmptyFilter() throws Exception {
@@ -189,7 +187,7 @@ public class PdfExportServiceImplTest {
     final byte[] export = testee.export(createSjukFallList(), pr, user, 3);
     assertTrue(export.length > 0);
 
-    Files.write(Paths.get("./test_all_no_filters.pdf"), export);
+    //Files.write(Paths.get("./test_all_no_filters.pdf"), export);
   }
 
   @Test
@@ -202,7 +200,7 @@ public class PdfExportServiceImplTest {
     final byte[] export = testee.export(createSjukFallList(), request, user, 3);
     assertTrue(export.length > 0);
 
-    Files.write(Paths.get("./test_all_no_patient_id.pdf"), export);
+    //Files.write(Paths.get("./test_all_no_patient_id.pdf"), export);
   }
 
   @Test
