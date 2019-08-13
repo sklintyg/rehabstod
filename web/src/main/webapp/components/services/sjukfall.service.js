@@ -78,8 +78,10 @@ angular.module('rehabstodApp').factory('SjukfallService',
 
         function _exportResult(type, personnummer, sortState) {
             var sort = {
-                kolumn: _stripHtmlEntities(messageService.getProperty('label.table.column.sort.' + angular.lowercase(sortState.kolumn))),
-                order: messageService.getProperty('label.table.column.sort.' + sortState.order)
+                kolumn: sortState.kolumn ? _stripHtmlEntities(
+                    messageService.getProperty('label.table.column.sort.' + angular.lowercase(sortState.kolumn)))
+                    : null,
+                order: sortState.order ? messageService.getProperty('label.table.column.sort.' + sortState.order) : null
             };
 
             var filterState = SjukfallFilterViewState.getCurrentFilterState();

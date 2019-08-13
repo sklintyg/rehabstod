@@ -118,8 +118,13 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
         // Sortering
         addFilterMainHeader(sheet, rowNumber++, VALD_SORTERING_PA_TABELLEN);
-        addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, req.getSortering().getKolumn());
-        addFilterHeader(sheet, rowNumber++, SORTERING_RIKTNING, req.getSortering().getOrder());
+        if (req.getSortering() != null) {
+            addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, req.getSortering().getKolumn());
+            addFilterHeader(sheet, rowNumber++, SORTERING_RIKTNING, req.getSortering().getOrder());
+        } else {
+            addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, SORTERING_INGEN);
+        }
+
         rowNumber += FILTER_SPACING;
         addFilterMainHeader(sheet, rowNumber++, ANTAL_VISAR_ANTAL_PAGAENDE_SJUKFALL);
         addFilterHeader(sheet, rowNumber++, ANTAL_EXPORTEN_VISAR, String.valueOf(sjukfallList.size()));

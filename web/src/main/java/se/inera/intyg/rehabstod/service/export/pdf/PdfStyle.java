@@ -31,17 +31,21 @@ public class PdfStyle {
   private Style cellHeaderParagraphStyle;
   private Style cellStyle;
   private Style cellStyleBold;
+  private Style cellStyleItalic;
 
+  // CHECKSTYLE:OFF ParameterNumber
   public PdfStyle(PdfFont boldFont, PdfFont regularFont, Style pageHeaderStyle, Style defaultParagraphStyle,
-      Style cellHeaderParagraphStyle, Style cellStyle, Style cellStyleBold) {
+      Style cellHeaderParagraphStyle, Style cellStyle, Style cellStyleItalic, Style cellStyleBold) {
     this.boldFont = boldFont;
     this.regularFont = regularFont;
     this.pageHeaderStyle = pageHeaderStyle;
     this.defaultParagraphStyle = defaultParagraphStyle;
     this.cellHeaderParagraphStyle = cellHeaderParagraphStyle;
     this.cellStyle = cellStyle;
+    this.cellStyleItalic = cellStyleItalic;
     this.cellStyleBold = cellStyleBold;
   }
+  // CHECKSTYLE:ON ParameterNumber
 
   public PdfFont getBoldFont() {
     return boldFont;
@@ -71,7 +75,12 @@ public class PdfStyle {
     return cellStyleBold;
   }
 
-  public static class PdfStyleBuilder {
+  public Style getCellStyleItalic() {
+    return cellStyleItalic;
+  }
+
+
+  public static final class PdfStyleBuilder {
 
     private PdfFont boldFont;
     private PdfFont regularFont;
@@ -80,45 +89,58 @@ public class PdfStyle {
     private Style cellHeaderParagraphStyle;
     private Style cellStyle;
     private Style cellStyleBold;
+    private Style cellStyleItalic;
 
-    public PdfStyleBuilder setBoldFont(PdfFont boldFont) {
+    private PdfStyleBuilder() {
+    }
+
+    public static PdfStyleBuilder aPdfStyle() {
+      return new PdfStyleBuilder();
+    }
+
+    public PdfStyleBuilder withBoldFont(PdfFont boldFont) {
       this.boldFont = boldFont;
       return this;
     }
 
-    public PdfStyleBuilder setRegularFont(PdfFont regularFont) {
+    public PdfStyleBuilder withRegularFont(PdfFont regularFont) {
       this.regularFont = regularFont;
       return this;
     }
 
-    public PdfStyleBuilder setPageHeaderStyle(Style pageHeaderStyle) {
+    public PdfStyleBuilder withPageHeaderStyle(Style pageHeaderStyle) {
       this.pageHeaderStyle = pageHeaderStyle;
       return this;
     }
 
-    public PdfStyleBuilder setDefaultParagraphStyle(Style defaultParagraphStyle) {
+    public PdfStyleBuilder withDefaultParagraphStyle(Style defaultParagraphStyle) {
       this.defaultParagraphStyle = defaultParagraphStyle;
       return this;
     }
 
-    public PdfStyleBuilder setCellHeaderParagraphStyle(Style cellHeaderParagraphStyle) {
+    public PdfStyleBuilder withCellHeaderParagraphStyle(Style cellHeaderParagraphStyle) {
       this.cellHeaderParagraphStyle = cellHeaderParagraphStyle;
       return this;
     }
 
-    public PdfStyleBuilder setCellStyle(Style cellStyle) {
+    public PdfStyleBuilder withCellStyle(Style cellStyle) {
       this.cellStyle = cellStyle;
       return this;
     }
 
-    public PdfStyleBuilder setCellStyleBold(Style cellStyleBold) {
+    public PdfStyleBuilder withCellStyleBold(Style cellStyleBold) {
       this.cellStyleBold = cellStyleBold;
       return this;
     }
 
-    public PdfStyle createPdfStyle() {
+    public PdfStyleBuilder withCellStyleItalic(Style cellStyleItalic) {
+      this.cellStyleItalic = cellStyleItalic;
+      return this;
+    }
+
+    public PdfStyle build() {
       return new PdfStyle(boldFont, regularFont, pageHeaderStyle, defaultParagraphStyle, cellHeaderParagraphStyle, cellStyle,
-          cellStyleBold);
+          cellStyleItalic, cellStyleBold);
     }
   }
 }
