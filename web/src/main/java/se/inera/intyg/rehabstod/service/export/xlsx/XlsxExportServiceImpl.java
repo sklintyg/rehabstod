@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -42,6 +43,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
+import se.inera.intyg.rehabstod.service.export.ExportField;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -76,7 +78,6 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     private XSSFFont boldFont12;
     private XSSFFont defaultFont11;
     private XSSFFont boldFont11;
-    private String[] headers;
 
     // api
 
@@ -85,7 +86,6 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     public byte[] export(List<SjukfallEnhet> sjukfallList, PrintSjukfallRequest req, RehabstodUser user, int total)
             throws IOException {
 
-        headers = initHeaders(req, user.getUrval(), isSrsFeatureActive(user));
         XSSFWorkbook wb = new XSSFWorkbook();
         setupFonts(wb);
         XSSFSheet sheet = wb.createSheet(SHEET_TITLE_SJUKFALL);
@@ -101,14 +101,16 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         addFilterMainHeader(sheet, rowNumber++, VALDA_FILTER);
 
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_FRITEXTFILTER, notEmpty(req) ? req.getFritext() : "-");
-        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VISAPATIENTUPPGIFTER, req.isShowPatientId() ? " Ja" : " Nej");
+        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VISAPATIENTUPPGIFTER, req.isShowPatientId() ? "Ja" : "Nej");
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_ALDER,
                 req.getAldersIntervall().getMin() + " - " + req.getAldersIntervall().getMax() + " år");
-        rowNumber = addDiagnosKapitel(sheet, rowNumber++, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper()); // NOSONAR
+        rowNumber = addDiagnosKapitel(sheet, rowNumber, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper()); // NOSONAR
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SLUTDATUM, getFilterDate(req.getSlutdatumIntervall()));
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD, getLangdintervall(req.getLangdIntervall()));
-        rowNumber = addLakareList(sheet, rowNumber++, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), user); // NOSONAR
-        rowNumber = addKompletteringsStatus(sheet, rowNumber++, FILTER_TITLE_KOMPLETTERINGSSTATUS, req.getKomplettering()); // NOSONAR
+        if (user.getUrval() != Urval.ISSUED_BY_ME) {
+            rowNumber = addLakareList(sheet, rowNumber, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), user); // NOSONAR
+        }
+        rowNumber = addKompletteringsStatus(sheet, rowNumber, FILTER_TITLE_KOMPLETTERINGSSTATUS, req.getKomplettering()); // NOSONAR
 
         // Inställningar
         String maxGlapp = user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG);
@@ -119,7 +121,10 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         // Sortering
         addFilterMainHeader(sheet, rowNumber++, VALD_SORTERING_PA_TABELLEN);
         if (req.getSortering() != null) {
-            addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, req.getSortering().getKolumn());
+            Optional<ExportField> sortField = ExportField.fromJsonId(req.getSortering().getKolumn());
+            String text = sortField.isPresent() ? sortField.get().getLabelXlsx() : req.getSortering().getKolumn();
+
+            addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, text);
             addFilterHeader(sheet, rowNumber++, SORTERING_RIKTNING, req.getSortering().getOrder());
         } else {
             addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, SORTERING_INGEN);
@@ -131,13 +136,37 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         addFilterHeader(sheet, rowNumber++, user.getUrval() == Urval.ISSUED_BY_ME ? ANTAL_TOTALT_MINA : ANTAL_TOTALT_PA_ENHETEN,
                 String.valueOf(total));
 
-        rowNumber += 3;
-        addTableHeaderRows(sheet, rowNumber++);
-        addDataRows(sheet, rowNumber, sjukfallList, user.getUrval(), req.isShowPatientId(), isSrsFeatureActive(user));
+        rowNumber += FILTER_SPACING;
+
+        List<ExportField> tableColumns = getTableColumns(user, req.isShowPatientId(), isSrsFeatureActive(user));
+
+        addTableHeaderRows(sheet, tableColumns, rowNumber++);
+        addDataRows(sheet, rowNumber, sjukfallList, tableColumns);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         wb.write(baos);
         return baos.toByteArray();
+    }
+
+    private List<ExportField> getTableColumns(RehabstodUser user, boolean showPatientId, boolean showSrs) {
+        List<ExportField> enabledFields = new ArrayList<>(
+            ExportField.fromJson(user.getPreferences().get(Preference.SJUKFALL_TABLE_COLUMNS))
+        );
+
+        if (user.getUrval() == Urval.ISSUED_BY_ME) {
+            enabledFields.remove(ExportField.LAKARE);
+        }
+
+        if (!showSrs) {
+            enabledFields.remove(ExportField.SRS);
+        }
+
+        if (!showPatientId) {
+            enabledFields.remove(ExportField.PATIENT_NAME);
+            enabledFields.remove(ExportField.PATIENT_ID);
+        }
+
+        return enabledFields;
     }
 
     private String getLangdintervall(LangdIntervall intervall) {
@@ -156,36 +185,6 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         addFilterHeader(sheet, rowNumber++, filterTitleKompletteringsstatus, getKompletteringFilterDisplayValue(komplettering));
         return rowNumber;
     }
-
-    private String[] initHeaders(PrintSjukfallRequest req, Urval urval, boolean showSrs) {
-        List<String> tempHeaders = new ArrayList<>();
-        tempHeaders.add(TABLEHEADER_NR);
-        if (req.isShowPatientId()) {
-            tempHeaders.add(TABLEHEADER_PERSONNUMMER);
-            tempHeaders.add(TABLEHEADER_ALDER);
-            tempHeaders.add(TABLEHEADER_NAMN);
-        } else {
-            tempHeaders.add(TABLEHEADER_ALDER);
-        }
-        tempHeaders.add(TABLEHEADER_KON);
-        tempHeaders.add(TABLEHEADER_NUVARANDE_DIAGNOS);
-        tempHeaders.add(TABLEHEADER_STARTDATUM);
-        tempHeaders.add(TABLEHEADER_SLUTDATUM);
-        tempHeaders.add(TABLEHEADER_SJUKSKRIVNINGSLANGD);
-        tempHeaders.add(TABLEHEADER_ANTAL);
-        tempHeaders.add(TABLEHEADER_SJUKSKRIVNINGSGRAD);
-        tempHeaders.add(TABLEHEADER_KOMPLETTERINGSSTATUS);
-        if (urval != Urval.ISSUED_BY_ME) {
-            tempHeaders.add(TABLEHEADER_NUVARANDE_LAKARE);
-        }
-
-        if (showSrs) {
-            tempHeaders.add(TABLEHEADER_SRS_RISK);
-        }
-        return tempHeaders.toArray(new String[tempHeaders.size()]);
-    }
-
-    // private scope
 
     private int addLakareList(XSSFSheet sheet, int currentRowNumber, String filterTitle, List<String> lakareList, RehabstodUser user) {
         int rowNumber = currentRowNumber;
@@ -295,52 +294,71 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         createMergedCellFromColumn(FILTER_VALUE_COLUMN, filterTextStyle, sheet, row);
     }
 
-    private void addTableHeaderRows(XSSFSheet sheet, int rowIndex) {
-
+    private void addTableHeaderRows(XSSFSheet sheet, List<ExportField> tableColumns, int rowIndex) {
         XSSFRow row = sheet.createRow(rowIndex);
-        for (int a = 0; a < headers.length; a++) {
-            createHeaderCell(row, a, headers[a]);
+
+        int index = 0;
+        for (ExportField column: tableColumns) {
+            createHeaderCell(row, index++, column.getLabelXlsx());
         }
     }
 
-    private void addDataRows(XSSFSheet sheet, int rowIndex, List<SjukfallEnhet> sjukfallList, Urval urval, boolean showPatientId,
-            boolean showSrs) {
+    private void addDataRows(XSSFSheet sheet, int rowIndex, List<SjukfallEnhet> sjukfallList, List<ExportField> tableColumns) {
         for (int a = 0; a < sjukfallList.size(); a++) {
             XSSFRow row = sheet.createRow(rowIndex + a);
             SjukfallEnhet sf = sjukfallList.get(a);
 
             int colIndex = 0;
-            createDataCell(row, colIndex++, Integer.toString(a + 1));
-            if (showPatientId) {
-                createRichTextDataCell(row, colIndex++, buildPersonnummerRichText(sf.getPatient()));
+            for (ExportField column: tableColumns) {
+                switch (column) {
+                    case LINE_NR:
+                        createDataCell(row, colIndex++, Integer.toString(a + 1));
+                        break;
+                    case PATIENT_ID:
+                        createRichTextDataCell(row, colIndex++, buildPersonnummerRichText(sf.getPatient()));
+                        break;
+                    case PATIENT_AGE:
+                        createDataCell(row, colIndex++, Integer.toString(sf.getPatient().getAlder()) + " år");
+                        break;
+                    case PATIENT_NAME:
+                        createDataCell(row, colIndex++, sf.getPatient().getNamn());
+                        break;
+                    case PATIENT_GENDER:
+                        createDataCell(row, colIndex++, sf.getPatient().getKon().getDescription());
+                        break;
+                    case DIAGNOSE:
+                        createDataCell(row, colIndex++, getCompoundDiagnoseText(sf));
+                        break;
+                    case STARTDATE:
+                        createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getStart()));
+                        break;
+                    case ENDDATE:
+                        createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getSlut()));
+                        break;
+                    case DAYS:
+                        createDataCell(row, colIndex++, String.format(FORMAT_ANTAL_DAGAR, sf.getDagar()));
+                        break;
+                    case NR_OF_INTYG:
+                        createDataCell(row, colIndex++, Integer.toString(sf.getIntyg()));
+                        break;
+                    case GRADER:
+                        createRichTextDataCell(row, colIndex++, buildGraderRichText(sf));
+                        break;
+                    case KOMPLETTERINGAR:
+                        createDataCell(row, colIndex++, getKompletteringStatusFormat(sf.getObesvaradeKompl()));
+                        break;
+                    case LAKARE:
+                        createDataCell(row, colIndex++, sf.getLakare().getNamn());
+                        break;
+                    case SRS:
+                        createDataCell(row, colIndex++, getRiskKategoriDesc(sf.getRiskSignal()));
+                        break;
+                }
             }
-            createDataCell(row, colIndex++, Integer.toString(sf.getPatient().getAlder()) + " år");
-
-            if (showPatientId) {
-                createDataCell(row, colIndex++, sf.getPatient().getNamn());
-            }
-            createDataCell(row, colIndex++, sf.getPatient().getKon().getDescription());
-            createDataCell(row, colIndex++, getCompoundDiagnoseText(sf));
-            createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getStart()));
-            createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getSlut()));
-            createDataCell(row, colIndex++, String.format(FORMAT_ANTAL_DAGAR, sf.getDagar()));
-            createDataCell(row, colIndex++, Integer.toString(sf.getIntyg()));
-            createRichTextDataCell(row, colIndex++, buildGraderRichText(sf));
-            createDataCell(row, colIndex++, getKompletteringStatusFormat(sf.getObesvaradeKompl()));
-            if (urval != Urval.ISSUED_BY_ME) {
-                createDataCell(row, colIndex++, sf.getLakare().getNamn());
-            }
-
-            if (showSrs) {
-                createDataCell(row, colIndex++, getRiskKategoriDesc(sf.getRiskSignal()));
-            }
-
         }
-        for (int a = 0; a < headers.length; a++) {
+        for (int a = 0; a < tableColumns.size(); a++) {
             sheet.autoSizeColumn(a);
         }
-        // Makes sure the "namn" column isn't excessively wide due to the filter.
-        sheet.setColumnWidth(2, 7000);
     }
 
     private String getCompoundDiagnoseText(SjukfallEnhet sf) {

@@ -21,6 +21,9 @@ angular.module('rehabstodApp').factory('UserService',
     function(UserModel, SjukfallFilterViewState, featureService) {
       'use strict';
 
+      var sjukfallTableKey = 'sjukfallTableColumns';
+      var patientTableKey = 'patientTableColumns';
+
       function _getAllSjukfallTableColumns() {
         var columns = [
           {
@@ -61,6 +64,7 @@ angular.module('rehabstodApp').factory('UserService',
           {
             id: 'startDate',
             dataColumn: 'start',
+            defaultSort: true,
             classes: 'column-start'
           },
           {
@@ -192,11 +196,16 @@ angular.module('rehabstodApp').factory('UserService',
         });
       }
 
+      function _getSelectedSjukfallColumns(onlyPreferences) {
+        return _getSelectedColumns(_getAllSjukfallTableColumns(), sjukfallTableKey, onlyPreferences);
+      }
+
       return {
         getSelectedColumns: _getSelectedColumns,
+        getSelectedSjukfallColumns: _getSelectedSjukfallColumns,
         getAllSjukfallTableColumns: _getAllSjukfallTableColumns,
         getAllPatientTableColumns: _getAllPatientTableColumns,
-        sjukfallTableKey: 'sjukfallTableColumns',
-        patientTableKey: 'patientTableColumns'
+        sjukfallTableKey: sjukfallTableKey,
+        patientTableKey: patientTableKey
       };
     });

@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').directive('rhsTableSearchConnector',
-        function($timeout, SjukfallFilterViewState, sessionCheckService) {
+        function($timeout, SjukfallFilterViewState, sessionCheckService, UserService, _) {
             'use strict';
 
             return {
@@ -31,6 +31,9 @@ angular.module('rehabstodApp').directive('rhsTableSearchConnector',
 
                     var onFilterstateUpdated = function() {
                         $timeout(function() {
+                            var columnsByKey = _.keyBy(UserService.getSelectedSjukfallColumns(), 'id');
+                            SjukfallFilterViewState.resetIfColumnsHidden(columnsByKey);
+
                             table.search(SjukfallFilterViewState.getCurrentFilterState(), 'customSearch');
                         });
                         //Indicate that the user has interacted with the filter

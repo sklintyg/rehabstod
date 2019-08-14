@@ -1,8 +1,5 @@
 rhs-table-select-columns {
-  display: block;
-  margin-right: 20px;
-  margin-top: 8px;
-  float: right;
+  display: inline-block;
 
   a, .fa {
     @extend %rs-typo-06;

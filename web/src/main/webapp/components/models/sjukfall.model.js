@@ -98,7 +98,7 @@ angular.module('rehabstodApp').factory('SjukfallModel',
                 item.obesvaradeKomplShow = _getObesvaradeKomplShow(item.obesvaradeKompl);
                 item.quickSearchString = '';
 
-                var columns = UserService.getSelectedColumns(UserService.getAllSjukfallTableColumns(), UserService.sjukfallTableKey);
+                var columns = UserService.getSelectedSjukfallColumns();
 
                 _.each(columns, function(column) {
                   /*jshint maxcomplexity:14 */
