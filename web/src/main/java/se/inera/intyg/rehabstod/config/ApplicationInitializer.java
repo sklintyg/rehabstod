@@ -101,6 +101,13 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         servlet.setLoadOnStartup(1);
         servlet.addMapping("/");
 
+        // NOTE: The characterEncoding filter must run before any invocation to request.getParameter()
+        FilterRegistration.Dynamic characterEncodingFilter = servletContext.addFilter("characterEncodingFilter",
+            CharacterEncodingFilter.class);
+        characterEncodingFilter.addMappingForUrlPatterns(null, false, "/*");
+        characterEncodingFilter.setInitParameter("encoding", "UTF-8");
+        characterEncodingFilter.setInitParameter("forceEncoding", "true");
+
         // Spring session filter
         FilterRegistration.Dynamic springSessionRepositoryFilter = servletContext.addFilter("springSessionRepositoryFilter",
                 DelegatingFilterProxy.class);
@@ -148,15 +155,6 @@ public class ApplicationInitializer implements WebApplicationInitializer {
                 SESSION_STATUS_CHECK_URI + "," + SESSION_STATUS_REQUEST_MAPPING + SESSION_STATUS_EXTEND
                         + ",/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary,/api/stub");
 
-        FilterRegistration.Dynamic characterEncodingFilter = servletContext.addFilter("characterEncodingFilter",
-                CharacterEncodingFilter.class);
-        characterEncodingFilter.addMappingForUrlPatterns(null, false, "/*");
-        characterEncodingFilter.setInitParameter("encoding", "UTF-8");
-        characterEncodingFilter.setInitParameter("forceEncoding", "true");
-
-        // NOTE: The characterEncoding filter must run before the hiddenHttpMethodFilter, otherwise the setEncoding will
-        // be done too late, as the hiddenHttpMethodFilter internally uses request.getParameter which will parse the
-        // parameters using a default encoding which may not be UTF-8 in e.g in tomcat it's ISO-8859-1.
         FilterRegistration.Dynamic hiddenHttpMethodFilter = servletContext.addFilter("hiddenHttpMethodFilter",
                 HiddenHttpMethodFilter.class);
         hiddenHttpMethodFilter.addMappingForUrlPatterns(null, false, "/*");

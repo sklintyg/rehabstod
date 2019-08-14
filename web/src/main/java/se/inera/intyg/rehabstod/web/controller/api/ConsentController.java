@@ -116,11 +116,6 @@ public class ConsentController {
     }
 
     private RegisterExtendedConsentResponse createResponse(RegisterExtendedConsentResponse.ResponseCode responseCode,
-                                                           String registeredBy) {
-        return createResponse(responseCode, registeredBy, null);
-    }
-
-    private RegisterExtendedConsentResponse createResponse(RegisterExtendedConsentResponse.ResponseCode responseCode,
                                                            String registeredBy,
                                                            String responseMessage) {
         Preconditions.checkNotNull(responseCode);

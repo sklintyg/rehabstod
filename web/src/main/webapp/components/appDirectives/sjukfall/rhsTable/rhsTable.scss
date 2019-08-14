@@ -33,6 +33,13 @@ rhs-table {
     max-width: auto;
   }
 
+  .rhs-select-columns-container {
+    display: block;
+    margin-right: 20px;
+    margin-top: 8px;
+    float: right;
+  }
+
   thead {
     background-color: #fff;
     > th {

@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
-    'DiagnosKapitelModel', 'LakareModel', 'KompletteringModel', 'APP_CONFIG',
+angular.module('rehabstodApp').factory('SjukfallFilterViewState',
     function(DiagnosKapitelModel, LakareModel, KompletteringModel, APP_CONFIG) {
         'use strict';
 
@@ -52,6 +51,33 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
             state.kompletteringModel.reset();
             state.showPatientId = true;
             state.freeTextModel = '';
+        }
+
+        function _resetIfColumnsHidden(columnsByKey) {
+          if (!columnsByKey.dxs) {
+            state.diagnosKapitelModel.reset();
+          }
+
+          if (!columnsByKey.days) {
+            state.sjukskrivningslangdModel = [1, 366];
+          }
+
+          if (!columnsByKey.doctor) {
+            state.lakareModel.reset();
+          }
+
+          if (!columnsByKey.kompletteringar) {
+            state.kompletteringModel.reset();
+          }
+
+          if (!columnsByKey.patientAge) {
+            state.aldersModel = [0, 101];
+          }
+
+          if (!columnsByKey.endDate) {
+            state.slutdatumModel.from = null;
+            state.slutdatumModel.to = null;
+          }
         }
 
         function _getCurrentFilterState() {
@@ -93,8 +119,9 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState', [
 
         return {
             reset: _reset,
+            resetIfColumnsHidden: _resetIfColumnsHidden,
             getCurrentFilterState: _getCurrentFilterState,
             get: _getState
         };
-    }])
+    })
 ;

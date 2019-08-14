@@ -49,6 +49,7 @@ import com.itextpdf.layout.property.VerticalAlignment;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
+import se.inera.intyg.rehabstod.service.export.ExportField;
 import se.inera.intyg.rehabstod.service.export.pdf.PdfStyle.PdfStyleBuilder;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -198,7 +200,10 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
       return "(Ingen sortering vald)";
     }
 
-    return String.format(TEMPLATESTRING_TABLE_SORTORDER, sortering.getKolumn(), sortering.getOrder().toLowerCase());
+    Optional<ExportField> sortField = ExportField.fromJsonId(sortering.getKolumn());
+    String text = sortField.isPresent() ? sortField.get().getLabelPdf() : sortering.getKolumn();
+
+    return String.format(TEMPLATESTRING_TABLE_SORTORDER, text, sortering.getOrder().toLowerCase());
 
   }
 

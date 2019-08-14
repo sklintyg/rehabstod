@@ -72,15 +72,9 @@ angular.module('rehabstodApp').factory('SjukfallService',
             });
         }
 
-        function _stripHtmlEntities(html) {
-            return StringHelper.replaceAll(html,'&shy;','');
-        }
-
         function _exportResult(type, personnummer, sortState) {
             var sort = {
-                kolumn: sortState.kolumn ? _stripHtmlEntities(
-                    messageService.getProperty('label.table.column.sort.' + angular.lowercase(sortState.kolumn)))
-                    : null,
+                kolumn: sortState.kolumn ? messageService.getProperty('label.table.column.sort.' + sortState.kolumn.toLowerCase()) : null,
                 order: sortState.order ? messageService.getProperty('label.table.column.sort.' + sortState.order) : null
             };
 

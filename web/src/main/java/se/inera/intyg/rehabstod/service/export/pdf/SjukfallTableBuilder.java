@@ -40,7 +40,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 import se.inera.intyg.rehabstod.service.Urval;
-import se.inera.intyg.rehabstod.service.export.ExportFields;
+import se.inera.intyg.rehabstod.service.export.ExportField;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
@@ -81,7 +81,7 @@ class SjukfallTableBuilder {
   BlockElement buildsjukfallTable(List<SjukfallEnhet> sjukfallList, RehabstodUser user,
       PrintSjukfallRequest printSjukfallRequest, boolean srsFeatureActive) {
 
-    final List<ExportFields> enabledFields = ExportFields.fromJson(user.getPreferences().get(Preference.SJUKFALL_TABLE_COLUMNS));
+    final List<ExportField> enabledFields = ExportField.fromJson(user.getPreferences().get(Preference.SJUKFALL_TABLE_COLUMNS));
 
     Table table = new Table(TOTAL_NUM_COLUMNS)
         .setWidth(UnitValue.createPercentValue(TABLE_TOTAL_WIDTH));
@@ -90,15 +90,15 @@ class SjukfallTableBuilder {
       boolean avslutat = sf.isNyligenAvslutat();
 
       // Column 1 - PatientId is not only controlled by user preference enabledFields toggling
-      List<ExportFields> c1Headers = new ArrayList<>();
+      List<ExportField> c1Headers = new ArrayList<>();
       List<Paragraph> c1Values = new ArrayList<>();
-      c1Headers.add(ExportFields.LINE_NR);
+      c1Headers.add(ExportField.LINE_NR);
       c1Values.add(aParagraph(String.valueOf(i + 1)));
       if (printSjukfallRequest.isShowPatientId()) {
-        c1Headers.add(ExportFields.PATIENT_ID);
+        c1Headers.add(ExportField.PATIENT_ID);
         c1Values.add(aParagraph(sf.getPatient().getId()));
       }
-      c1Headers.add(ExportFields.PATIENT_AGE);
+      c1Headers.add(ExportField.PATIENT_AGE);
       c1Values.add(aParagraph(String.format(TEMPLATE_ALDER, sf.getPatient().getAlder())));
 
       Cell c1 = aSjukFallCell(WIDTH_COLUMN_1)
@@ -106,15 +106,15 @@ class SjukfallTableBuilder {
           .add(buildSjukfallCellTable(enabledFields, c1Headers, c1Values, avslutat));
 
       // Column 2 - Patient name is not only controlled by user preference enabledFields toggling
-      List<ExportFields> c2Headers = new ArrayList<>();
+      List<ExportField> c2Headers = new ArrayList<>();
       List<Paragraph> c2Values = new ArrayList<>();
       if (printSjukfallRequest.isShowPatientId()) {
-        c2Headers.add(ExportFields.PATIENT_NAME);
+        c2Headers.add(ExportField.PATIENT_NAME);
         c2Values.add(aParagraph(ellipsize(sf.getPatient().getNamn(), MAXLENGTH_PATIENT_NAMN)));
       }
-      c2Headers.add(ExportFields.PATIENT_GENDER);
+      c2Headers.add(ExportField.PATIENT_GENDER);
       c2Values.add(aParagraph(sf.getPatient().getKon().getDescription()));
-      c2Headers.add(ExportFields.DIAGNOSE);
+      c2Headers.add(ExportField.DIAGNOSE);
       c2Values.add(aParagraph(getCompoundDiagnoseText(sf)));
 
       Cell c2 = aSjukFallCell(WIDTH_COLUMN_2)
@@ -123,9 +123,9 @@ class SjukfallTableBuilder {
       Cell c3 = aSjukFallCell(WIDTH_COLUMN_3)
           .add(buildSjukfallCellTable(enabledFields,
               Arrays.asList(
-                  ExportFields.STARTDATE,
-                  ExportFields.ENDDATE,
-                  ExportFields.DAYS),
+                  ExportField.STARTDATE,
+                  ExportField.ENDDATE,
+                  ExportField.DAYS),
               Arrays.asList(
                   aParagraph(YearMonthDateFormatter.print(sf.getStart())),
                   aParagraph(YearMonthDateFormatter.print(sf.getSlut())),
@@ -134,25 +134,25 @@ class SjukfallTableBuilder {
       Cell c4 = aSjukFallCell(WIDTH_COLUMN_4)
           .add(buildSjukfallCellTable(enabledFields,
               Arrays.asList(
-                  ExportFields.NR_OF_INTYG,
-                  ExportFields.GRADER,
-                  ExportFields.KOMPLETTERINGAR),
+                  ExportField.NR_OF_INTYG,
+                  ExportField.GRADER,
+                  ExportField.KOMPLETTERINGAR),
               Arrays.asList(
                   aParagraph(String.valueOf(sf.getIntyg())),
                   getGrader(sf),
                   aParagraph(String.valueOf(sf.getObesvaradeKompl()))), avslutat));
 
       // Column 5 - Lakare and SRS are not only controlled by user preference enabledFields toggling
-      List<ExportFields> c5Headers = new ArrayList<>();
+      List<ExportField> c5Headers = new ArrayList<>();
       List<Paragraph> c5Values = new ArrayList<>();
 
       if (user.getUrval().equals(Urval.ALL)) {
-        c5Headers.add(ExportFields.LAKARE);
+        c5Headers.add(ExportField.LAKARE);
         c5Values.add(aParagraph(ellipsize(sf.getLakare().getNamn(), MAXLENGTH_LAKARE_NAMN)));
       }
 
       if (srsFeatureActive) {
-        c5Headers.add(ExportFields.SRS);
+        c5Headers.add(ExportField.SRS);
         c5Values.add(aParagraph(getRiskKategoriDesc(sf.getRiskSignal())));
       }
 
@@ -191,7 +191,7 @@ class SjukfallTableBuilder {
     return grader;
   }
 
-  private Table buildSjukfallCellTable(List<ExportFields> enabledFields, List<ExportFields> headerFields, List<Paragraph> values,
+  private Table buildSjukfallCellTable(List<ExportField> enabledFields, List<ExportField> headerFields, List<Paragraph> values,
       boolean avslutat) {
 
     Table table = new Table(2).setKeepTogether(true);
@@ -199,7 +199,7 @@ class SjukfallTableBuilder {
 
     for (int i = 0; i < headerFields.size(); i++) {
       if (enabledFields.contains(headerFields.get(i))) {
-        Cell header = aCell(1).add(new Paragraph(headerFields.get(i).getLabel()).addStyle(style.getCellHeaderParagraphStyle())).addStyle(
+        Cell header = aCell(1).add(new Paragraph(headerFields.get(i).getLabelPdf()).addStyle(style.getCellHeaderParagraphStyle())).addStyle(
             avslutat ? style.getCellStyleItalic() : style.getCellStyle());
         Cell value = aCell(1).add(values.get(i)).addStyle(avslutat ? style.getCellStyleItalic() : style.getCellStyle());
         table.addCell(header).addCell(value);
