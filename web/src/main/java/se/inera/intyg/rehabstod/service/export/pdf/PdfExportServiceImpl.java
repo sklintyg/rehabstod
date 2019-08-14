@@ -49,6 +49,7 @@ import com.itextpdf.layout.property.VerticalAlignment;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -199,8 +200,8 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
       return "(Ingen sortering vald)";
     }
 
-    ExportField sortField = ExportField.fromJsonId(sortering.getKolumn());
-    String text = sortField == null ? sortering.getKolumn() : sortField.getLabelPdf();
+    Optional<ExportField> sortField = ExportField.fromJsonId(sortering.getKolumn());
+    String text = sortField.isPresent() ? sortField.get().getLabelPdf() : sortering.getKolumn();
 
     return String.format(TEMPLATESTRING_TABLE_SORTORDER, text, sortering.getOrder().toLowerCase());
 

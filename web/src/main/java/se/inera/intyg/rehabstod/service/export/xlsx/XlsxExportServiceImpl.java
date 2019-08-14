@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
@@ -103,13 +104,13 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VISAPATIENTUPPGIFTER, req.isShowPatientId() ? "Ja" : "Nej");
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_ALDER,
                 req.getAldersIntervall().getMin() + " - " + req.getAldersIntervall().getMax() + " år");
-        rowNumber = addDiagnosKapitel(sheet, rowNumber++, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper()); // NOSONAR
+        rowNumber = addDiagnosKapitel(sheet, rowNumber, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper()); // NOSONAR
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SLUTDATUM, getFilterDate(req.getSlutdatumIntervall()));
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD, getLangdintervall(req.getLangdIntervall()));
         if (user.getUrval() != Urval.ISSUED_BY_ME) {
-            rowNumber = addLakareList(sheet, rowNumber++, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), user); // NOSONAR
+            rowNumber = addLakareList(sheet, rowNumber, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), user); // NOSONAR
         }
-        rowNumber = addKompletteringsStatus(sheet, rowNumber++, FILTER_TITLE_KOMPLETTERINGSSTATUS, req.getKomplettering()); // NOSONAR
+        rowNumber = addKompletteringsStatus(sheet, rowNumber, FILTER_TITLE_KOMPLETTERINGSSTATUS, req.getKomplettering()); // NOSONAR
 
         // Inställningar
         String maxGlapp = user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG);
@@ -120,8 +121,8 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         // Sortering
         addFilterMainHeader(sheet, rowNumber++, VALD_SORTERING_PA_TABELLEN);
         if (req.getSortering() != null) {
-            ExportField sortField = ExportField.fromJsonId(req.getSortering().getKolumn());
-            String text = sortField == null ? req.getSortering().getKolumn() : sortField.getLabelXlsx();
+            Optional<ExportField> sortField = ExportField.fromJsonId(req.getSortering().getKolumn());
+            String text = sortField.isPresent() ? sortField.get().getLabelXlsx() : req.getSortering().getKolumn();
 
             addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, text);
             addFilterHeader(sheet, rowNumber++, SORTERING_RIKTNING, req.getSortering().getOrder());
@@ -135,7 +136,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         addFilterHeader(sheet, rowNumber++, user.getUrval() == Urval.ISSUED_BY_ME ? ANTAL_TOTALT_MINA : ANTAL_TOTALT_PA_ENHETEN,
                 String.valueOf(total));
 
-        rowNumber += 3;
+        rowNumber += FILTER_SPACING;
 
         List<ExportField> tableColumns = getTableColumns(user, req.isShowPatientId(), isSrsFeatureActive(user));
 
@@ -358,8 +359,6 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         for (int a = 0; a < tableColumns.size(); a++) {
             sheet.autoSizeColumn(a);
         }
-        // Makes sure the "namn" column isn't excessively wide due to the filter.
-        sheet.setColumnWidth(2, 7000);
     }
 
     private String getCompoundDiagnoseText(SjukfallEnhet sf) {

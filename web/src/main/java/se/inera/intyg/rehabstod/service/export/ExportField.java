@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public enum ExportField {
@@ -73,13 +74,12 @@ public enum ExportField {
     return enabledFields;
   }
 
-  public static ExportField fromJsonId(String jsonId) {
+  public static Optional<ExportField> fromJsonId(String jsonId) {
     EnumSet<ExportField> allFields = EnumSet.allOf(ExportField.class);
 
     return allFields.stream()
         .filter(ef -> ef.getJsonId().equalsIgnoreCase(jsonId))
-        .findAny()
-        .orElse(null);
+        .findAny();
   }
 
   public String getJsonId() {
