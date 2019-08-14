@@ -3,7 +3,9 @@
      infinite-scroll-distance="2">
 
     <rhs-export></rhs-export>
-    <rhs-table-select-columns preference-key="preferenceKey" columns="columns"></rhs-table-select-columns>
+    <div class="rhs-select-columns-container">
+        <rhs-table-select-columns preference-key="preferenceKey" columns="columns"></rhs-table-select-columns>
+    </div>
     <rhs-table-search-connector columns="columnsForTable"></rhs-table-search-connector>
     <rhs-reset-limit on-change="resetLimit()" scroll-element=".rhs-table" padding-top="57"></rhs-reset-limit>
 
@@ -11,7 +13,11 @@
 
     <div class="clearfix"></div>
 
-    <div rhs-floating-scroll scroll-parent-element-id="rhs-body" class="floating-scroll-container">
+    <div data-ng-if="columnsForTable.length === 0" class="alert alert-warning">
+        När du tidigare anpassade tabellen valde du bort samtliga kolumner och kan därför inte se den nu. För att lägga till kolumner igen, <rhs-table-select-columns label-key="label.table.custom.modal.link" preference-key="preferenceKey" columns="columns"></rhs-table-select-columns>.
+    </div>
+
+    <div data-ng-if="columnsForTable.length > 0" rhs-floating-scroll scroll-parent-element-id="rhs-body" class="floating-scroll-container">
     <table class="table table-striped" rhs-table-fixed-header="rhs-table-header-fixed-top"
            fixed-header="rhs-table-fixed-header" normal-header="rhs-table-normal-header" padding-top="46">
         <thead class="hidden" rhs-table-header user="user" columns="columnsForTable" id="rhs-table-fixed-header"></thead>

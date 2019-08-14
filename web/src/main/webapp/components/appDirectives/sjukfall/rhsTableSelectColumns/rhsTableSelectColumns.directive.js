@@ -25,12 +25,14 @@ angular.module('rehabstodApp')
             return {
                 restrict: 'E',
                 scope: {
+                    labelKey: '@',
                     preferenceKey: '=',
                     columns: '='
                 },
                 controller: function($scope, $uibModal, UserModel) {
 
-                    $scope.showIcon =  !!UserModel.get().preferences[$scope.preferenceKey];
+                    $scope.label = $scope.labelKey ? $scope.labelKey : 'label.table.anpassa';
+                    showIcon();
 
                     $scope.openDialog = function() {
                         $uibModal.open({
@@ -54,9 +56,13 @@ angular.module('rehabstodApp')
                             // Removes angular error "Possibly unhandled rejection:
                             // backdrop click" when clicking outside of modal
                         }).result.then(function(){
-                            $scope.showIcon = !!UserModel.get().preferences[$scope.preferenceKey];
+                            showIcon();
                         }, function(){});
                     };
+
+                    function showIcon() {
+                        $scope.showIcon = $scope.labelKey ? false : !!UserModel.get().preferences[$scope.preferenceKey];
+                    }
                 },
                 templateUrl: '/components/appDirectives/sjukfall/rhsTableSelectColumns/rhsTableSelectColumns.directive.html'
             };
