@@ -11,47 +11,34 @@
         visibility: visible;
       }
     }
-
-    &.ng-move {
-      transition: all linear 0.5s;
-      opacity:0;
-
-      &.ng-move-active {
-        opacity: 1;
-      }
-    }
   }
 
   .rhs-move-column {
     display: inline-block;
-    width: 29%;
+    width: 49%;
     padding-right: 20px;
     visibility: hidden;
     text-align: right;
 
-    i {
-      padding: 10px;
+    a {
+      padding: 10px 0;
+      margin: 0 10px;
+      display: inline-block;
 
-      &:hover {
-        cursor: pointer;
+      &.inactive {
+        color: $rs-color-08;
 
-        &.inactive {
+        &:hover {
           cursor: not-allowed;
         }
       }
     }
-
-    .inactive {
-      color: $rs-color-08;
-    }
   }
-
-
 
   label {
     @extend %rs-typo-05;
     font-weight: normal;
-    width: 70%;
+    width: 50%;
     margin-bottom: 0;
     cursor: pointer;
     padding: 8px 20px;
