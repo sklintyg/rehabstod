@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').factory('TableService',
-    function(UserModel, SjukfallFilterViewState, featureService) {
+    function(UserModel, SjukfallFilterViewState, featureService, _) {
       'use strict';
 
       var sjukfallTableKey = 'sjukfallTableColumns';
@@ -179,13 +179,13 @@ angular.module('rehabstodApp').factory('TableService',
 
       function _getSelectedColumns(allColumns, preferenceKey, onlyPreferences) {
         var user = UserModel.get();
-        var columns = user.preferences[preferenceKey];
-        var allSelected = !columns;
-        var columnsSelected = columns ? columns.split('|') : [];
+        var selectedColumns = user.preferences[preferenceKey];
+        var allSelected = !selectedColumns;
+        var columnsSelected = selectedColumns ? selectedColumns.split('|') : [];
 
         var columns;
         if (allSelected) {
-          columns = allColumns
+          columns = allColumns;
         } else {
           var allColumnsMap = _.keyBy(allColumns, 'id');
 

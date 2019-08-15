@@ -27,7 +27,13 @@ angular.module('rehabstodApp').controller('rhsSelectColumnsModalController',
 
         var settingsToSave = UserModel.get().preferences;
         var selectedColumns = getColumns();
-        settingsToSave[preferenceKey] = selectedColumns.length === columns.length  ?  '' : getColumns().join('|');
+
+        var selectedColumnsString = selectedColumns.join('|');
+        var defaultColumnsString = columns.map(function(column) {
+          return column.id;
+        }).join('|');
+
+        settingsToSave[preferenceKey] = selectedColumnsString === defaultColumnsString  ?  '' : selectedColumnsString;
 
         UserProxy.saveSettings(settingsToSave).then(
             function(preferences) {
@@ -62,30 +68,26 @@ angular.module('rehabstodApp').controller('rhsSelectColumnsModalController',
         move($scope.columns, index, index + 1);
       };
 
-      function move(arr, old_index, new_index) {
-        while (old_index < 0) {
-          old_index += arr.length;
+      function move(arr, oldIndex, newIndex) {
+        while (oldIndex < 0) {
+          oldIndex += arr.length;
         }
-        while (new_index < 0) {
-          new_index += arr.length;
+        while (newIndex < 0) {
+          newIndex += arr.length;
         }
-        if (new_index >= arr.length) {
-          var k = new_index - arr.length;
+        if (newIndex >= arr.length) {
+          var k = newIndex - arr.length;
           while ((k--) + 1) {
             arr.push(undefined);
           }
         }
-        arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+        arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
         return arr;
       }
 
       $scope.getLabel = function(column) {
         return columnTranslationKey + column.toLowerCase();
       };
-
-      $scope.$watch('columns', function() {
-        checkSelected();
-      }, true);
 
       function getColumns() {
         return $scope.columns.filter(function(column) {
@@ -96,27 +98,47 @@ angular.module('rehabstodApp').controller('rhsSelectColumnsModalController',
       }
 
       function init() {
+        $scope.columns = _.cloneDeep(columns);
         var selectedColumns = UserModel.get().preferences[preferenceKey] || '';
-
         var selectAll = selectedColumns === '';
-        selectedColumns = selectedColumns.split('|');
 
-        _.each($scope.columns, function(column) {
-          column.checked = selectAll || selectedColumns.indexOf(column.id) !== -1;
-        });
+        if (selectAll) {
+          _.each($scope.columns, function(column) {
+            column.checked = true;
+          });
+        } else {
+          var selectedColumnsArray = selectedColumns.split('|');
+          var selectedColumnsIndexByKey = {};
+          _.each(selectedColumnsArray, function(column, index) {
+            selectedColumnsIndexByKey[column] = index;
+          });
 
-        checkSelected();
+          $scope.columns.sort(function(c1, c2) {
+            var index1 = selectedColumnsIndexByKey[c1.id];
+            var index2 = selectedColumnsIndexByKey[c2.id];
+
+            index1 = index1 === undefined ? 1000 : index1;
+            index2 = index2 === undefined ? 1000 : index2;
+
+            return index1 - index2;
+          });
+
+          _.each($scope.columns, function(column) {
+            column.checked = selectedColumnsIndexByKey[column.id] !== undefined;
+          });
+        }
+
+        $scope.checkSelected();
       }
 
-      function checkSelected() {
+      $scope.checkSelected = function() {
         $scope.nonSelected = $scope.columns.filter(function(column) {
           return column.checked;
         }).length === 0;
-      }
+      };
 
       $scope.translationBaseKey = modalTextTranslationKey;
       $scope.nonSelected = true;
-      $scope.columns = columns;
 
       init();
     }

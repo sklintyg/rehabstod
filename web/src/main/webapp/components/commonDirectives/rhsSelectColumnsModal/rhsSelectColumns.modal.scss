@@ -1,6 +1,9 @@
 .rhs-select-columns-body {
 
   .rhs-toggle-row {
+    margin: 0 -15px;
+    opacity: 1;
+
     &:hover {
       background-color: $rs-color-06;
 
@@ -9,7 +12,14 @@
       }
     }
 
-    margin: 0 -15px;
+    &.ng-move {
+      transition: all linear 0.5s;
+      opacity:0;
+
+      &.ng-move-active {
+        opacity: 1;
+      }
+    }
   }
 
   .rhs-move-column {
@@ -19,10 +29,24 @@
     visibility: hidden;
     text-align: right;
 
-    i:hover {
-      cursor: pointer;
+    i {
+      padding: 10px;
+
+      &:hover {
+        cursor: pointer;
+
+        &.inactive {
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    .inactive {
+      color: $rs-color-08;
     }
   }
+
+
 
   label {
     @extend %rs-typo-05;

@@ -158,6 +158,16 @@ public class SjukfallServiceImpl implements SjukfallService {
             srsError = true;
         }
 
+        if (rehabstodSjukfall != null) {
+            rehabstodSjukfall.sort((d1, d2) -> {
+                if (d2.getStart().equals(d1.getStart())) {
+                    return 0;
+                }
+
+                return d2.getStart().isAfter(d1.getStart()) ? 1 : -1;
+            });
+        }
+
         return new SjukfallEnhetResponse(rehabstodSjukfall, srsError, kompletteringInfoError);
     }
 
