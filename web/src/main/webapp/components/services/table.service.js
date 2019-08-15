@@ -178,15 +178,14 @@ angular.module('rehabstodApp').factory('TableService',
       }
 
       function _getSelectedColumns(allColumns, preferenceKey, onlyPreferences) {
-        var user = UserModel.get();
-        var selectedColumns = user.preferences[preferenceKey];
+        var selectedColumns = UserModel.get().preferences[preferenceKey];
         var allSelected = !selectedColumns;
-        var columnsSelected = selectedColumns ? selectedColumns.split('|') : [];
-
         var columns;
+
         if (allSelected) {
           columns = allColumns;
         } else {
+          var columnsSelected = selectedColumns ? selectedColumns.split('|') : [];
           var allColumnsMap = _.keyBy(allColumns, 'id');
 
           columns = columnsSelected.map(function(column) {
@@ -194,9 +193,13 @@ angular.module('rehabstodApp').factory('TableService',
           });
         }
 
+        if (onlyPreferences) {
+          return columns;
+        }
+
         return columns
           .filter(function(column) {
-            if (!onlyPreferences && (column.id === 'patientId' || column.id === 'patientName') && !SjukfallFilterViewState.get().showPatientId) {
+            if ((column.id === 'patientId' || column.id === 'patientName') && !SjukfallFilterViewState.get().showPatientId) {
               return false;
             }
 
