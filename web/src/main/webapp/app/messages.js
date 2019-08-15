@@ -117,6 +117,14 @@ var rhsMessages = {
         // Settings
         'settings.modal.header' : 'Inställningar',
 
+        'settings.modal.pdlconsentgiven.title' : 'PDL-godkännande',
+        'settings.modal.pdlconsentgiven.help' : '',
+        'settings.modal.pdlconsentgiven.description' : 'Har godkänt att loggning sker i enlighet med PDL:',
+
+        'settings.modal.standardenhet.title' : 'Förvald enhet',
+        'settings.modal.standardenhet.description' : 'Välj en enhet som du automatiskt ska bli inloggad på vid start av Rehabstöd:',
+        'settings.modal.standardenhet.help' : 'Att ha en förvald enhet gör att du inte behöver välja en enhet när du loggar in i Rehabstöd. Att ha en förvald enhet är frivilligt och du förlorar inte möjligheten att byta till en annan av dina enheter.',
+
         'settings.modal.maxantaldagarmellanintyg.title' : 'Antal dagar mellan intyg',
         'settings.modal.maxantaldagarmellanintyg.help' : 'Välj hur många dagars uppehåll det maximalt får vara mellan två intyg för att de ska räknas till samma sjukfall. Välj 0-90 dagar.',
         'settings.modal.maxantaldagarmellanintyg.description' : 'Välj max antal dagars uppehåll mellan intygen:',

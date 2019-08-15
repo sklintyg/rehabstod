@@ -149,6 +149,9 @@ public class UserController {
         // Update current user context.
         user.setPdlConsentGiven(pdlLoggingConsentRequest.isConsentGiven());
 
+        //also update the user preference store
+        user.setPreferences(userPreferencesService.getAllPreferences());
+
         LOG.debug(String.format("User %s has now set PDL logging consent to '%s' ", user.getHsaId(), user.isPdlConsentGiven()));
 
         return new GetUserResponse(user);
@@ -166,7 +169,7 @@ public class UserController {
         userPreferencesService.updatePreferences(newPreferences);
         LOG.debug("Updating user pref with values {}", keyValueMap);
 
-        // Check if preferences has changed
+        // Check if preferences has changed for sjukfallresult related settings
         if (hasPreferencesChanged(oldPreferences, newPreferences,
                 RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG,
                 RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT)) {

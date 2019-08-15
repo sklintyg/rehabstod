@@ -34,16 +34,15 @@ angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
             return newObject;
         }
 
-        function addSetting(settingData, property, defaultValue, min, max) {
+        function addSetting(settingData, property, typeConfig) {
             $scope.settings.push({
                 id: 'setting-' + property.toLowerCase(),
                 property: property,
                 title: 'settings.modal.' + property + '.title',
                 description: 'settings.modal.' + property + '.description',
-                help: 'settings.modal.' + property + '.help',
-                min: min,
-                max: max,
-                value: settingData[property] ? settingData[property] : defaultValue
+                help: typeConfig.showHelp ? 'settings.modal.' + property + '.help' : null,
+                typeConfig: typeConfig,
+                value: settingData[property] ? settingData[property] : typeConfig.defaultValue
             });
         }
 
@@ -71,7 +70,9 @@ angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
                 $scope.saving = false;
                 UserModel.get().preferences = preferences;
                 $uibModalInstance.close($scope.settingsModel);
-                SjukfallService.loadSjukfall(true, true);
+                if (UserModel.isPdlConsentGiven()) {
+                  SjukfallService.loadSjukfall(true, true);
+                }
             }, function() {
                 //Handle errors
                 $scope.saving = false;
@@ -83,7 +84,34 @@ angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
          * Run
          */
         var oldSettingData = UserModel.get().preferences;
-        addSetting(oldSettingData, 'maxAntalDagarMellanIntyg', 5, 0, 90);
-        addSetting(oldSettingData, 'maxAntalDagarSedanSjukfallAvslut', 0, 0, 14);
+      addSetting(oldSettingData, 'pdlConsentGiven',
+          {
+            type: 'BOOL_READONLY',
+            defaultValue: false,
+            showHelp: false
+          });
+      addSetting(oldSettingData, 'maxAntalDagarMellanIntyg',
+          {
+            type: 'INT_RANGE',
+            showHelp: true,
+            min: 0,
+            max: 90,
+            defaultValue: 5
+          });
+      addSetting(oldSettingData, 'standardenhet',
+          {
+            type: 'UNIT_SELECT',
+            showHelp: true,
+            vardgivare: UserModel.get().vardgivare,
+            defaultValue: null
+          });
+      addSetting(oldSettingData, 'maxAntalDagarSedanSjukfallAvslut',
+          {
+            type: 'INT_RANGE',
+            showHelp: true,
+            min: 0,
+            max: 14,
+            defaultValue: 0
+          });
     }
 );
