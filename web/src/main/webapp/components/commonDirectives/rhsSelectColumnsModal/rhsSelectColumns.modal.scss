@@ -1,17 +1,44 @@
 .rhs-select-columns-body {
 
   .rhs-toggle-row {
+    margin: 0 -15px;
+    opacity: 1;
+
     &:hover {
       background-color: $rs-color-06;
-    }
 
-    margin: 0 -15px;
+      .rhs-move-column {
+        visibility: visible;
+      }
+    }
+  }
+
+  .rhs-move-column {
+    display: inline-block;
+    width: 49%;
+    padding-right: 20px;
+    visibility: hidden;
+    text-align: right;
+
+    a {
+      padding: 10px 0;
+      margin: 0 10px;
+      display: inline-block;
+
+      &.inactive {
+        color: $rs-color-08;
+
+        &:hover {
+          cursor: not-allowed;
+        }
+      }
+    }
   }
 
   label {
     @extend %rs-typo-05;
     font-weight: normal;
-    width: 100%;
+    width: 50%;
     margin-bottom: 0;
     cursor: pointer;
     padding: 8px 20px;

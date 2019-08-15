@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').factory('UserService',
-    function(UserModel, SjukfallFilterViewState, featureService) {
+angular.module('rehabstodApp').factory('TableService',
+    function(UserModel, SjukfallFilterViewState, featureService, _) {
       'use strict';
 
       var sjukfallTableKey = 'sjukfallTableColumns';
@@ -178,22 +178,33 @@ angular.module('rehabstodApp').factory('UserService',
       }
 
       function _getSelectedColumns(allColumns, preferenceKey, onlyPreferences) {
-        var user = UserModel.get();
-        var columns = user.preferences[preferenceKey];
-        var allSelected = !columns;
-        var columnsSelected = columns ? columns.split('|') : [];
+        var selectedColumns = UserModel.get().preferences[preferenceKey];
+        var allSelected = !selectedColumns;
+        var columns;
 
-        return allColumns.filter(function (column) {
-          if (!allSelected && columnsSelected.indexOf(column.id) === -1) {
-            return false;
-          }
+        if (allSelected) {
+          columns = allColumns;
+        } else {
+          var columnsSelected = selectedColumns ? selectedColumns.split('|') : [];
+          var allColumnsMap = _.keyBy(allColumns, 'id');
 
-          if (!onlyPreferences && (column.id === 'patientId' || column.id === 'patientName') && !SjukfallFilterViewState.get().showPatientId) {
-            return false;
-          }
+          columns = columnsSelected.map(function(column) {
+            return allColumnsMap[column];
+          });
+        }
 
-          return true;
-        });
+        if (onlyPreferences) {
+          return columns;
+        }
+
+        return columns
+          .filter(function(column) {
+            if ((column.id === 'patientId' || column.id === 'patientName') && !SjukfallFilterViewState.get().showPatientId) {
+              return false;
+            }
+
+            return true;
+          });
       }
 
       function _getSelectedSjukfallColumns(onlyPreferences) {

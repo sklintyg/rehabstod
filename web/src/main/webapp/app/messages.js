@@ -201,12 +201,12 @@ var rhsMessages = {
 
         // Table modal
         'label.table.custom.modal.sjukfall.title': 'Anpassa tabellen',
-        'label.table.custom.modal.sjukfall.body': 'Välj vilka kolumner du vill se i sjukfallstabellen. Dina ändringar kommer att sparas tillsvidare. Du kan ändra dessa när du vill. Kolumner som du väljer att ta bort kan du inte filtrera på.',
+        'label.table.custom.modal.sjukfall.body': 'Välj vilka kolumner du vill se i sjukfallstabellen och i vilken ordning dessa ska ligga. Dina ändringar kommer att sparas tillsvidare. Du kan ändra dessa när du vill. Kolumner som du väljer att ta bort kan du inte filtrera på.',
         'label.table.custom.modal.sjukfall.selectone': 'Var god välj minst en kolumn för att kunna se sjukfallstabellen.',
         'label.table.custom.modal.sjukfall.error': '<p>Kunde inte spara dina ändringar på grund av ett tekniskt fel. Försök igen om en stund.</p><p>Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.</p>',
 
         'label.table.custom.modal.patient.title': 'Anpassa tabellerna',
-        'label.table.custom.modal.patient.body': 'Välj vilka kolumner du vill se i sjukfallet. Dina ändringar kommer att sparas tillsvidare. Du kan ändra dessa när du vill.',
+        'label.table.custom.modal.patient.body': 'Välj vilka kolumner du vill se i sjukfallet och i vilken ordning dessa ska ligga. Dina ändringar kommer att sparas tillsvidare. Du kan ändra dessa när du vill.',
         'label.table.custom.modal.patient.selectone': 'Var god välj minst en kolumn för att kunna se sjukfallen.',
         'label.table.custom.modal.patient.error': '<p>Kunde inte spara dina ändringar på grund av ett tekniskt fel. Försök igen om en stund.</p><p>Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.</p>',
 

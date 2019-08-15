@@ -27,11 +27,11 @@ angular.module('rehabstodApp')
                 scope: {
                     labelKey: '@'
                 },
-                controller: function($scope, $uibModal, UserModel, UserService) {
+                controller: function($scope, $uibModal, UserModel, TableService) {
 
                     $scope.label = $scope.labelKey ? $scope.labelKey : 'label.table.anpassa.patient';
 
-                    var preferenceKey = UserService.patientTableKey;
+                    var preferenceKey = TableService.patientTableKey;
 
                     $scope.showIcon = $scope.labelKey ? false : !!UserModel.get().preferences[preferenceKey];
 
@@ -42,7 +42,7 @@ angular.module('rehabstodApp')
                             size: 'md',
                             resolve: {
                                 columns: function() {
-                                    return UserService.getAllPatientTableColumns();
+                                    return TableService.getAllPatientTableColumns();
                                 },
                                 preferenceKey: function() {
                                     return preferenceKey;
