@@ -45,6 +45,9 @@ var RehabstodBasePage = Class._extend({
     clickBytVardenhet: function() {
         element(by.id('rhs-header-other-locations')).click();
     },
+    openSettings: function() {
+        element(by.id('rhs-header-settings')).click();
+    },
     clickCloseBytVardenhet: function() {
         this.closeBytVardenhet().click();
     },

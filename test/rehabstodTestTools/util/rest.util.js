@@ -45,6 +45,14 @@ module.exports = {
         };
         return restClient.run(options, 'urlenc');
     },
+    setPreferences: function(preferences) {
+        var options = {
+            url: 'api/user/preferences',
+            method: 'POST',
+            body: preferences
+        };
+        return restClient.run(options, 'json', env.REHABSTOD_URL);
+    },
     getUser: function(id) {
         var options = {
             url: 'api/user',

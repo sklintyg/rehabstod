@@ -5,7 +5,7 @@
   </button>
   <ul aria-labelledby="rhs-select-unit-dropdown-btn" role="menu" uib-dropdown-menu>
     <li ng-class="{'disabled': item === selectedItem}" ng-repeat='item in items'>
-      <a class="rhs-select-unit-dropdown-link" href="" ng-click='item.disabled || (onSelectItem(item))' tabindex="0">
+      <a ng-attr-id="rhs-select-unit-dropdown-link-{{item.id}}" class="rhs-select-unit-dropdown-link" href="" ng-click='item.disabled || (onSelectItem(item))' tabindex="0">
         {{item.label}}
       </a>
     </li>
