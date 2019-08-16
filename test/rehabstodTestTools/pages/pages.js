@@ -32,7 +32,8 @@ var startPage = require('./start.page.js');
 var sjukfallPage = require('./sjukfall.page.js');
 var aboutPage = require('./about.page.js');
 var errorPage = require('./error.page.js');
-var pdlConsentPage = require('./pdlconsent.page')
+var pdlConsentPage = require('./pdlconsent.page');
+var settingsDialog = require('./settings.dialog');
 
 module.exports = {
     'rehabstodBase': rehabstodBase,
@@ -42,5 +43,6 @@ module.exports = {
     'sjukfallPage': sjukfallPage,
     'aboutPage': aboutPage,
     'errorPage': errorPage,
-    'pdlConsentPage': pdlConsentPage
+    'pdlConsentPage': pdlConsentPage,
+    'settings': settingsDialog
 };

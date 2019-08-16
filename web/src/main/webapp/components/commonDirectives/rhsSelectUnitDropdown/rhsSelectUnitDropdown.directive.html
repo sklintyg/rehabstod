@@ -1,0 +1,14 @@
+<div class="btn-group rhs-select-unit-dropdown" is-open="status.isopen" keyboard-nav uib-dropdown>
+  <button class="btn btn-default" id="rhs-select-unit-dropdown-btn" type="button" uib-dropdown-toggle>
+    <span class="item-label" id="rhs-select-unit-dropdown-btn-label">{{selectedItem.label}}</span> <span
+      class="caret"></span>
+  </button>
+  <ul aria-labelledby="rhs-select-unit-dropdown-btn" role="menu" uib-dropdown-menu>
+    <li ng-class="{'disabled': item === selectedItem}" ng-repeat='item in items'>
+      <a ng-attr-id="rhs-select-unit-dropdown-link-{{item.id}}" class="rhs-select-unit-dropdown-link" href="" ng-click='item.disabled || (onSelectItem(item))' tabindex="0">
+        {{item.label}}
+      </a>
+    </li>
+
+  </ul>
+</div>

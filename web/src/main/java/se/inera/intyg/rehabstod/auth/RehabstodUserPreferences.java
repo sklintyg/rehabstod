@@ -90,8 +90,12 @@ public final class RehabstodUserPreferences implements Serializable {
     // CHECKSTYLE:OFF NeedBraces
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof RehabstodUserPreferences)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof RehabstodUserPreferences)) {
+            return false;
+        }
 
         RehabstodUserPreferences that = (RehabstodUserPreferences) o;
 
@@ -119,6 +123,7 @@ public final class RehabstodUserPreferences implements Serializable {
 
     public enum Preference {
         PDL_CONSENT_GIVEN("user_pdl_consent_given", "pdlConsentGiven", "false"),
+        DEFAULT_LOGIN_HSA_UNIT_ID("default_login_hsa_unit_id", "standardenhet", ""),
         MAX_ANTAL_DAGAR_MELLAN_INTYG("maxAntalDagarMellanIntyg", "maxAntalDagarMellanIntyg", "5"),
         MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT("maxAntalDagarSedanSjukfallAvslut", "maxAntalDagarSedanSjukfallAvslut", "0"),
         SJUKFALL_TABLE_COLUMNS("sjukfall_table_columns", "sjukfallTableColumns", ""),

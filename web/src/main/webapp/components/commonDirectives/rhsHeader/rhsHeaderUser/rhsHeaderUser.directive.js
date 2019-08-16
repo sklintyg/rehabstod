@@ -49,7 +49,7 @@ angular.module('rehabstodApp').directive('rhsHeaderUser',
                             animation: true,
                             templateUrl: '/components/commonDirectives/rhsHeader/rhsHeaderUser/rhsSettingsModal/rhsSettingsModal.html',
                             controller: 'RhsSettingsModalCtrl',
-                            size: 'md',
+                            size: 'lg',
                             windowClass: 'settings-modal'
                         });
 

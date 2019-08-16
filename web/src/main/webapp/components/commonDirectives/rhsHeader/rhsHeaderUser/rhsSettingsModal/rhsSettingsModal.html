@@ -2,21 +2,35 @@
   <button class="close" data-dismiss="modal" data-ng-click="cancel()">×</button>
   <h4 class="modal-title">{{::'settings.modal.header' | message}}</h4>
 </div>
-<div class="modal-body rhs-settings-modal">
+<div class="modal-body rhs-settings-modal" id="rhs-settings-modal">
 
   <div class="form-group" ng-repeat="setting in settings">
     <h3>
-      <span message key="{{::setting.title}}" disable-highlight-words="true"></span>
-      <i uib-tooltip="{{::setting.help | lowercase | message}}" class="fa fa-question-circle"></i>
+      <span message key="{{::setting.title}}"></span>
+      <i ng-if="::setting.help" uib-tooltip="{{::setting.help | lowercase | message}}" class="fa fa-question-circle"></i>
     </h3>
     <div class="row">
-      <div class="col-md-8">
-        <span message key="{{::setting.description}}" disable-highlight-words="true"></span>
+      <div class="col-xs-12 col-sm-6 col-md-7">
+        <span message key="{{::setting.description}}"></span>
       </div>
-      <div class="col-md-4">
-        <rhs-numeric-range-input external-model="setting.value"
-                                 min="setting.min"
-                                 max="setting.max"></rhs-numeric-range-input>
+      <div class="col-xs-12 col-sm-6 col-md-5" ng-switch="setting.typeConfig.type">
+
+        <rhs-numeric-range-input ng-switch-when="INT_RANGE"
+                                 external-model="setting.value"
+                                 min="setting.typeConfig.min"
+                                 max="setting.typeConfig.max"></rhs-numeric-range-input>
+
+        <rhs-select-unit-dropdown ng-switch-when="UNIT_SELECT"
+                                 value="setting.value"
+                                 vardgivare="setting.typeConfig.vardgivare"></rhs-select-unit-dropdown>
+
+        <span ng-switch-when="BOOL_READONLY">
+          <span ng-switch="setting.value">
+            <span ng-switch-when="true">Ja</span>
+            <span ng-switch-when="false">Nej</span>
+          </span>
+        </span>
+
       </div>
     </div>
   </div>

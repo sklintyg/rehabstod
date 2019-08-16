@@ -1,0 +1,27 @@
+.rhs-select-unit-dropdown {
+  display: block;
+
+  .caret {
+    float: right;
+    margin-top: 8px;
+    margin-left: 8px;
+  }
+
+  .dropdown-menu > li > a {
+    padding-left: 10px;
+  }
+
+  .item-label {
+    display: inline-block;
+  }
+
+  @media (max-width: $screen-md-min) {
+    .item-label {
+      max-width: 200px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+}
+
+

@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import java.util.List;
 import org.opensaml.saml2.core.Assertion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,15 +32,15 @@ import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.infra.security.siths.BaseUserDetailsService;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
+import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.inera.intyg.rehabstod.service.user.TokenExchangeService;
 import se.inera.intyg.rehabstod.service.user.TokenServiceException;
-
-import java.util.List;
 
 /**
  * @author andreaskaltenbach
@@ -70,15 +71,32 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         IntygUser intygUser = super.buildUserPrincipal(credential);
         RehabstodUser rehabstodUser = new RehabstodUser(intygUser, isPdlConsentGiven(intygUser.getHsaId()), intygUser.isLakare());
 
+          RehabstodUserPreferences preferences = RehabstodUserPreferences
+                .fromBackend(anvandarPreferenceRepository.getAnvandarPreference(intygUser.getHsaId()));
+        rehabstodUser.setPreferences(preferences);
+
+
+        final String savedDefaultLoginHsaUnitId = rehabstodUser.getPreferences().get(Preference.DEFAULT_LOGIN_HSA_UNIT_ID);
+        boolean usedDefaultUnit = false;
+        if (!StringUtil.isNullOrEmpty(savedDefaultLoginHsaUnitId)) {
+            if (!rehabstodUnitChangeService.changeValdVardenhet(savedDefaultLoginHsaUnitId, rehabstodUser)) {
+                LOG.info("User " + rehabstodUser.getHsaId() + " had " + savedDefaultLoginHsaUnitId
+                    + " as default_login_hsa_unit_id - but failed to change to that unit (no longer access to it?). "
+                    + "Deleting the faulty preference now.");
+                final AnvandarPreference defaultUnitPref = anvandarPreferenceRepository
+                    .findByHsaIdAndKey(rehabstodUser.getHsaId(), Preference.DEFAULT_LOGIN_HSA_UNIT_ID.getBackendKeyName());
+                anvandarPreferenceRepository.delete(defaultUnitPref);
+            } else {
+                usedDefaultUnit = true;
+                LOG.debug("Selected stored default_login_hsa_unit_id for User " + rehabstodUser.getHsaId());
+            }
+        }
         // INTYG-5068: Explicitly changing vardenhet on session creation to possibly appyl REHABKOORDINATOR role for
         // this unit in case the user is LAKARE and has systemRole Rehab- for the current unit.
         // This is only performed if there were a unit selected, e.g. user only has access to a single unit.
-        if (rehabstodUser.getValdVardenhet() != null) {
+        if (!usedDefaultUnit && rehabstodUser.getValdVardenhet() != null) {
             rehabstodUnitChangeService.changeValdVardenhet(rehabstodUser.getValdVardenhet().getId(), rehabstodUser);
         }
-        RehabstodUserPreferences preferences = RehabstodUserPreferences
-                .fromBackend(anvandarPreferenceRepository.getAnvandarPreference(intygUser.getHsaId()));
-        rehabstodUser.setPreferences(preferences);
 
         // Get AccessToken to use in Webcert iFrame, but only when SITHS authentication is performed.
         // This only works with Inera IdP, so needs to be modified if other IdP's should be used.
