@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
@@ -36,10 +37,6 @@ import se.inera.intyg.rehabstod.web.model.LangdIntervall;
  */
 public abstract class BaseExportService {
 
-  protected static final String MINA_PAGAENDE_SJUKFALL = "Sjukfall";
-  protected static final String PA_ENHETEN = "- Pågående sjukfall där jag utfärdat det nuvarande intyget";
-  protected static final String ALLA_SJUKFALL = "Sjukfall";
-  protected static final String SAMTLIGA_PAGAENDE_FALL_PA_ENHETEN = "- Pågående sjukfall på enheten";
   protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Valda diagnoser";
   protected static final String SELECTION_VALUE_ALLA = "Alla";
   protected static final String FILTER_TITLE_VALDA_LAKARE = "Valda läkare";
@@ -58,7 +55,6 @@ public abstract class BaseExportService {
   protected static final String VALD_SORTERING_PA_TABELLEN = "Vald sortering";
   protected static final String SORTERING_KOLUMN = "Kolumn: ";
   protected static final String SORTERING_RIKTNING = "Riktning: ";
-  protected static final String SORTERING_INGEN = "Ingen";
   protected static final String ANTAL_VISAR_ANTAL_PAGAENDE_SJUKFALL = "Antal pågående sjukfall";
   protected static final String ANTAL_EXPORTEN_VISAR = "Tabellen visar: ";
   protected static final String ANTAL_TOTALT_MINA = "Totalt: ";
@@ -104,6 +100,15 @@ public abstract class BaseExportService {
 
   protected boolean notEmpty(PrintSjukfallRequest req) {
     return req.getFritext() != null && req.getFritext().trim().length() > 0;
+  }
+
+  protected boolean shouldShowSortering(PrintSjukfallRequest req, List<ExportField> displayedFields) {
+    if (req.getSortering() == null || StringUtil.isNullOrEmpty(req.getSortering().getKolumn())) {
+      return false;
+    }
+    final Optional<ExportField> sortColumn = ExportField.fromJsonId(req.getSortering().getKolumn());
+    return sortColumn.isPresent() && displayedFields.contains(sortColumn.get());
+
   }
 
   protected String getKompletteringFilterDisplayValue(Integer komplettering) {

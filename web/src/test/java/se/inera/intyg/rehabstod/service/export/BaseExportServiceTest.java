@@ -18,18 +18,18 @@
  */
 package se.inera.intyg.rehabstod.service.export;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Test;
-
-import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
-import se.inera.intyg.rehabstod.web.model.Diagnos;
-import se.inera.intyg.rehabstod.web.model.LangdIntervall;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.junit.Test;
+import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
+import se.inera.intyg.rehabstod.web.model.Diagnos;
+import se.inera.intyg.rehabstod.web.model.LangdIntervall;
+import se.inera.intyg.rehabstod.web.model.Sortering;
 
 public class BaseExportServiceTest {
 
@@ -143,4 +143,28 @@ public class BaseExportServiceTest {
 
         assertFalse(notEmpty);
     }
+
+    @Test
+    public void testShouldShowSort() {
+        PrintSjukfallRequest request = new PrintSjukfallRequest();
+        List<ExportField> fields = Arrays.asList(ExportField.DAYS, ExportField.DIAGNOSE);
+
+        assertFalse(baseExportService.shouldShowSortering(request, fields));
+
+        Sortering sortering = new Sortering();
+        sortering.setKolumn(null);
+        request.setSortering(sortering);
+
+        assertFalse(baseExportService.shouldShowSortering(request, fields));
+        sortering.setKolumn("");
+        assertFalse(baseExportService.shouldShowSortering(request, fields));
+
+        sortering.setKolumn(ExportField.ENDDATE.getJsonId());
+        assertFalse(baseExportService.shouldShowSortering(request, fields));
+
+        sortering.setKolumn(ExportField.DIAGNOSE.getJsonId());
+        assertTrue(baseExportService.shouldShowSortering(request, fields));
+
+    }
+
 }

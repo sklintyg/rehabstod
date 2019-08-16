@@ -119,15 +119,15 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         rowNumber += FILTER_SPACING;
 
         // Sortering
-        addFilterMainHeader(sheet, rowNumber++, VALD_SORTERING_PA_TABELLEN);
-        if (req.getSortering() != null) {
+        boolean displaySortorder = shouldShowSortering(req,
+            ExportField.fromJson(user.getPreferences().get(Preference.SJUKFALL_TABLE_COLUMNS)));
+        if (displaySortorder) {
+            addFilterMainHeader(sheet, rowNumber++, VALD_SORTERING_PA_TABELLEN);
             Optional<ExportField> sortField = ExportField.fromJsonId(req.getSortering().getKolumn());
             String text = sortField.isPresent() ? sortField.get().getLabelXlsx() : req.getSortering().getKolumn();
 
             addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, text);
             addFilterHeader(sheet, rowNumber++, SORTERING_RIKTNING, req.getSortering().getOrder());
-        } else {
-            addFilterHeader(sheet, rowNumber++, SORTERING_KOLUMN, SORTERING_INGEN);
         }
 
         rowNumber += FILTER_SPACING;
