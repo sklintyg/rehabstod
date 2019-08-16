@@ -55,7 +55,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.common.util.StringUtil;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.service.export.ExportField;
@@ -160,18 +160,22 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
     root.add(new Paragraph(tableTitle.toString()).addStyle(style.getPageHeaderStyle()).setMarginTop(TABLE_MARGIN_TOP));
 
-    Table tableAbove = new Table(2);
+    boolean displaySortorder = shouldShowSortering(printSjukfallRequest,
+        ExportField.fromJson(user.getPreferences().get(Preference.SJUKFALL_TABLE_COLUMNS)));
+
+    Table tableAbove = new Table(displaySortorder ? 2 : 1);
     tableAbove.setWidth(UnitValue.createPercentValue(100f));
 
     Cell showingCell = aCell().
         add(new Paragraph(String.format(TEMPLATESTRING_TABLE_METADATA, total, sjukfallList.size()))
             .addStyle(style.getPageHeaderStyle()));
-    Cell sortedByCell = aCell().
-        add(new Paragraph(getSorteringDesc(printSjukfallRequest.getSortering()))
-            .addStyle(style.getPageHeaderStyle())).setTextAlignment(TextAlignment.RIGHT);
-
     tableAbove.addCell(showingCell);
-    tableAbove.addCell(sortedByCell);
+    if (displaySortorder) {
+      Cell sortedByCell = aCell().
+          add(new Paragraph(getSorteringDesc(printSjukfallRequest.getSortering()))
+              .addStyle(style.getPageHeaderStyle())).setTextAlignment(TextAlignment.RIGHT);
+      tableAbove.addCell(sortedByCell);
+    }
     root.add(tableAbove);
 
     SjukfallTableBuilder sjukfallTableBuilder = new SjukfallTableBuilder(style);
@@ -196,15 +200,10 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
 
 
   private String getSorteringDesc(Sortering sortering) {
-    if (sortering == null || StringUtil.isNullOrEmpty(sortering.getKolumn())) {
-      return "(Ingen sortering vald)";
-    }
-
     Optional<ExportField> sortField = ExportField.fromJsonId(sortering.getKolumn());
     String text = sortField.isPresent() ? sortField.get().getLabelPdf() : sortering.getKolumn();
 
     return String.format(TEMPLATESTRING_TABLE_SORTORDER, text, sortering.getOrder().toLowerCase());
-
   }
 
   private void initFontStyles() {
