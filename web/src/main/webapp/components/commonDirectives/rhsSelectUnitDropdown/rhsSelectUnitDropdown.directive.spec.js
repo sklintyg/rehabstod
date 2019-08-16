@@ -46,7 +46,8 @@ describe('Directive: RhsSelectUnitDropdown', function() {
     };
 
     element =
-        $compile('<rhs-select-unit-dropdown value="setting.value" config="setting.typeConfig"/>')($scope);
+        $compile('<rhs-select-unit-dropdown value="setting.value" vardgivare="setting.typeConfig.vardgivare"/>')(
+            $scope);
     $scope.$digest();
 
     elementScope = element.isolateScope() || element.scope();

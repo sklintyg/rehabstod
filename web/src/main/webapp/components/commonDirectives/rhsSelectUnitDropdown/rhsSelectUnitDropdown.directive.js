@@ -25,16 +25,14 @@ angular.module('rehabstodApp').directive('rhsSelectUnitDropdown',
         restrict: 'E',
         scope: {
           value: '=',
-          config: '='
+          vardgivare: '='
         },
 
         templateUrl: '/components/commonDirectives/rhsSelectUnitDropdown/rhsSelectUnitDropdown.directive.html',
         link: function($scope) {
 
-          // Toggle display state for dropdown options in template
-          $scope.isOpen = false;
-
           function buildItems(vardgivare) {
+            //Add initial "none selected" option
             var items = [{id: null, label: 'Ingen standardenhet'}];
 
             _.each(vardgivare, function(vg) {
@@ -48,8 +46,8 @@ angular.module('rehabstodApp').directive('rhsSelectUnitDropdown',
             return items;
           }
 
-          //Template need access to a generic flat items array with id/label
-          $scope.items = buildItems($scope.config.vardgivare);
+          //Template expects a generic flat id/label items array
+          $scope.items = buildItems($scope.vardgivare);
 
           $scope.selectedItem = _.find($scope.items, function(item) {
             return item.id === $scope.value;
@@ -58,7 +56,7 @@ angular.module('rehabstodApp').directive('rhsSelectUnitDropdown',
           $scope.onSelectItem = function(item) {
             $scope.selectedItem = item;
             $scope.value = item.id;
-          }
+          };
         }
       };
     });
