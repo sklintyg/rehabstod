@@ -72,12 +72,15 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     private XSSFCellStyle filterHeaderStyle;
     private XSSFCellStyle filterTextStyle;
     private XSSFCellStyle stripedDarker;
+    private XSSFCellStyle stripedDarkerItalic;
     private XSSFCellStyle stripedLighter;
+    private XSSFCellStyle stripedLighterItalic;
     private XSSFFont boldFont16;
     private XSSFFont defaultFont12;
     private XSSFFont boldFont12;
     private XSSFFont defaultFont11;
     private XSSFFont boldFont11;
+    private XSSFFont italicFont11;
 
     // api
 
@@ -114,8 +117,11 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
         // Inställningar
         String maxGlapp = user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG);
+        String avslutadeDagar = user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT);
+
         addFilterMainHeader(sheet, rowNumber++, H2_SJUKFALLSINSTALLNING);
-        addFilterHeader(sheet, rowNumber++, MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG, maxGlapp + " dagar");
+        addFilterHeader(sheet, rowNumber++, MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG, String.format(TEMPLATESTRING_GLAPPDAGAR, maxGlapp));
+        addFilterHeader(sheet, rowNumber++, FILTER_TITLE_AVSLUTADE_SJUKFALL, String.format(TEMPLATESTRING_DAGAR_AVSLUTADE, avslutadeDagar));
         rowNumber += FILTER_SPACING;
 
         // Sortering
@@ -302,51 +308,52 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         for (int a = 0; a < sjukfallList.size(); a++) {
             XSSFRow row = sheet.createRow(rowIndex + a);
             SjukfallEnhet sf = sjukfallList.get(a);
+            boolean avslutat = sf.isNyligenAvslutat();
 
             int colIndex = 0;
             for (ExportField column : tableColumns) {
                 switch (column) {
                     case LINE_NR:
-                        createDataCell(row, colIndex++, Integer.toString(a + 1));
+                        createDataCell(row, colIndex++, Integer.toString(a + 1), avslutat);
                         break;
                     case PATIENT_ID:
-                        createRichTextDataCell(row, colIndex++, buildPersonnummerRichText(sf.getPatient()));
+                        createRichTextDataCell(row, colIndex++, buildPersonnummerRichText(sf.getPatient()), avslutat);
                         break;
                     case PATIENT_AGE:
-                        createDataCell(row, colIndex++, Integer.toString(sf.getPatient().getAlder()) + " år");
+                        createDataCell(row, colIndex++, Integer.toString(sf.getPatient().getAlder()) + " år", avslutat);
                         break;
                     case PATIENT_NAME:
-                        createDataCell(row, colIndex++, sf.getPatient().getNamn());
+                        createDataCell(row, colIndex++, sf.getPatient().getNamn(), avslutat);
                         break;
                     case PATIENT_GENDER:
-                        createDataCell(row, colIndex++, sf.getPatient().getKon().getDescription());
+                        createDataCell(row, colIndex++, sf.getPatient().getKon().getDescription(), avslutat);
                         break;
                     case DIAGNOSE:
-                        createDataCell(row, colIndex++, getCompoundDiagnoseText(sf));
+                        createDataCell(row, colIndex++, getCompoundDiagnoseText(sf), avslutat);
                         break;
                     case STARTDATE:
-                        createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getStart()));
+                        createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getStart()), avslutat);
                         break;
                     case ENDDATE:
-                        createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getSlut()));
+                        createDataCell(row, colIndex++, YearMonthDateFormatter.print(sf.getSlut()), avslutat);
                         break;
                     case DAYS:
-                        createDataCell(row, colIndex++, String.format(FORMAT_ANTAL_DAGAR, sf.getDagar()));
+                        createDataCell(row, colIndex++, String.format(FORMAT_ANTAL_DAGAR, sf.getDagar()), avslutat);
                         break;
                     case NR_OF_INTYG:
-                        createDataCell(row, colIndex++, Integer.toString(sf.getIntyg()));
+                        createDataCell(row, colIndex++, Integer.toString(sf.getIntyg()), avslutat);
                         break;
                     case GRADER:
-                        createRichTextDataCell(row, colIndex++, buildGraderRichText(sf));
+                        createRichTextDataCell(row, colIndex++, buildGraderRichText(sf), avslutat);
                         break;
                     case KOMPLETTERINGAR:
-                        createDataCell(row, colIndex++, getKompletteringStatusFormat(sf.getObesvaradeKompl()));
+                        createDataCell(row, colIndex++, getKompletteringStatusFormat(sf.getObesvaradeKompl()), avslutat);
                         break;
                     case LAKARE:
-                        createDataCell(row, colIndex++, sf.getLakare().getNamn());
+                        createDataCell(row, colIndex++, sf.getLakare().getNamn(), avslutat);
                         break;
                     case SRS:
-                        createDataCell(row, colIndex++, getRiskKategoriDesc(sf.getRiskSignal()));
+                        createDataCell(row, colIndex++, getRiskKategoriDesc(sf.getRiskSignal()), avslutat);
                         break;
                 }
             }
@@ -410,16 +417,24 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         return richTextString;
     }
 
-    private void createDataCell(XSSFRow row, int colIndex, String value) {
+    private void createDataCell(XSSFRow row, int colIndex, String value, boolean avslutad) {
         XSSFCell cell = row.createCell(colIndex);
         cell.setCellValue(value);
-        cell.setCellStyle(row.getRowNum() % 2 == 0 ? stripedDarker : stripedLighter);
+        setDataCellStyle(cell, row, avslutad);
     }
 
-    private void createRichTextDataCell(XSSFRow row, int colIndex, XSSFRichTextString value) {
+    private void createRichTextDataCell(XSSFRow row, int colIndex, XSSFRichTextString value, boolean avslutad) {
         XSSFCell cell = row.createCell(colIndex);
         cell.setCellValue(value);
-        cell.setCellStyle(row.getRowNum() % 2 == 0 ? stripedDarker : stripedLighter);
+        setDataCellStyle(cell, row, avslutad);
+    }
+
+    private void setDataCellStyle(XSSFCell cell, XSSFRow row, boolean avslutad) {
+        if (avslutad) {
+            cell.setCellStyle(row.getRowNum() % 2 == 0 ? stripedDarkerItalic : stripedLighterItalic);
+        } else {
+            cell.setCellStyle(row.getRowNum() % 2 == 0 ? stripedDarker : stripedLighter);
+        }
     }
 
     private void createHeaderCell(XSSFRow row, int colIndex, String value) {
@@ -437,6 +452,8 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         defaultFont12 = buildFont(wb, 12, HELVETICA, false, false);
         boldFont11 = buildFont(wb, 11, HELVETICA, true, false);
         defaultFont11 = buildFont(wb, 11, HELVETICA, false, false);
+        italicFont11 = buildFont(wb, 11, HELVETICA, false, false);
+        italicFont11.setItalic(true);
 
         boldStyle = wb.createCellStyle();
         boldStyle.setFont(boldFont11);
@@ -448,10 +465,18 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         stripedDarker.setFillForegroundColor(new XSSFColor(new java.awt.Color(230, 230, 230)));
         stripedDarker.setFillPattern(CellStyle.SOLID_FOREGROUND);
 
+        stripedDarkerItalic = wb.createCellStyle();
+        stripedDarkerItalic.cloneStyleFrom(stripedDarker);
+        stripedDarkerItalic.setFont(italicFont11);
+
         stripedLighter = wb.createCellStyle();
         stripedLighter.setFont(defaultFont11);
         stripedLighter.setFillForegroundColor(new XSSFColor(new java.awt.Color(244, 244, 244)));
         stripedLighter.setFillPattern(CellStyle.SOLID_FOREGROUND);
+
+        stripedLighterItalic = wb.createCellStyle();
+        stripedLighterItalic.cloneStyleFrom(stripedLighter);
+        stripedLighterItalic.setFont(italicFont11);
 
         filterTextStyle = wb.createCellStyle();
         filterTextStyle.setFont(defaultFont12);

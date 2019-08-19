@@ -52,6 +52,9 @@ public abstract class BaseExportService {
     protected static final String VALDA_FILTER = "Valda filter";
     protected static final String H2_SJUKFALLSINSTALLNING = "Sjukfallsinställning";
     protected static final String MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG = "Max dagar mellan intyg";
+    protected static final String FILTER_TITLE_AVSLUTADE_SJUKFALL = "Visa avslutade sjukfall";
+    protected static final String TEMPLATESTRING_GLAPPDAGAR = "%s dagar";
+    protected static final String TEMPLATESTRING_DAGAR_AVSLUTADE = "%s dagar";
     protected static final String VALD_SORTERING_PA_TABELLEN = "Vald sortering";
     protected static final String SORTERING_KOLUMN = "Kolumn: ";
     protected static final String SORTERING_RIKTNING = "Riktning: ";
