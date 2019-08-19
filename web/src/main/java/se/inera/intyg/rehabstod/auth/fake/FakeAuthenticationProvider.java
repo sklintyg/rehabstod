@@ -18,6 +18,9 @@
  */
 package se.inera.intyg.rehabstod.auth.fake;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.AttributeStatement;
 import org.opensaml.saml2.core.NameID;
@@ -35,10 +38,6 @@ import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.rehabstod.auth.BaseFakeAuthenticationProvider;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * @author andreaskaltenbach
@@ -65,7 +64,7 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
         updateFeatures(details);
 
         ExpiringUsernameAuthenticationToken result = new ExpiringUsernameAuthenticationToken(null, details, credential,
-                new ArrayList<>());
+            new ArrayList<>());
         result.setDetails(details);
 
         return result;
@@ -76,7 +75,7 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
             IntygUser user = (IntygUser) details;
             if (user.getValdVardenhet() != null) {
                 user.setFeatures(commonAuthoritiesResolver
-                        .getFeatures(Arrays.asList(user.getValdVardenhet().getId(), user.getValdVardgivare().getId())));
+                    .getFeatures(Arrays.asList(user.getValdVardenhet().getId(), user.getValdVardgivare().getId())));
             } else {
                 user.setFeatures(commonAuthoritiesResolver.getFeatures(Collections.emptyList()));
             }
@@ -89,7 +88,7 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
             FakeCredentials credentials = (FakeCredentials) token.getCredentials();
             if (user.getNamn() == null || user.getNamn().isEmpty()) {
                 user.setNamn(credentials.getForNamn() + " "
-                        + credentials.getEfterNamn());
+                    + credentials.getEfterNamn());
             }
 
             if (credentials.isPdlConsentGiven() != null) {
@@ -116,7 +115,7 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
         AttributeStatement attributeStatement = new AttributeStatementBuilder().buildObject();
         assertion.getAttributeStatements().add(attributeStatement);
         attributeStatement.getAttributes()
-                .add(createAttribute(BaseSakerhetstjanstAssertion.HSA_ID_ATTRIBUTE, ((FakeCredentials) token.getCredentials()).getHsaId()));
+            .add(createAttribute(BaseSakerhetstjanstAssertion.HSA_ID_ATTRIBUTE, ((FakeCredentials) token.getCredentials()).getHsaId()));
 
         NameID nameId = new NameIDBuilder().buildObject();
         nameId.setValue(token.getCredentials().toString());

@@ -18,12 +18,12 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static se.inera.intyg.rehabstod.integration.it.stub.SjukfallIntygDataGeneratorImpl.UE_AKUTEN;
 import static se.inera.intyg.rehabstod.integration.it.stub.SjukfallIntygDataGeneratorImpl.UE_DIALYS;
 import static se.inera.intyg.rehabstod.integration.it.stub.SjukfallIntygDataGeneratorImpl.VE_CENTRUM_VAST;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by eriklupander on 2016-02-01.

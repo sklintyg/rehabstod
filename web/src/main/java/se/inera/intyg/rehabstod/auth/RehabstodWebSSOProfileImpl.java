@@ -55,25 +55,19 @@ public class RehabstodWebSSOProfileImpl extends org.springframework.security.sam
      * This overridden version explicitly sets the attributeConsumingServiceIndex for better control over IdP behaviour
      * and allows specification of OIDC and SAML audience restrictions.
      *
-     * @param context
-     *            message context
-     * @param options
-     *            preferences of message creation
-     * @param assertionConsumer
-     *            assertion consumer where the IDP should respond
-     * @param bindingService
-     *            service used to deliver the request
+     * @param context message context
+     * @param options preferences of message creation
+     * @param assertionConsumer assertion consumer where the IDP should respond
+     * @param bindingService service used to deliver the request
      * @return authnRequest ready to be sent to IDP
-     * @throws SAMLException
-     *             error creating the message
-     * @throws MetadataProviderException
-     *             error retreiving metadata
+     * @throws SAMLException error creating the message
+     * @throws MetadataProviderException error retreiving metadata
      */
     @Override
     @PrometheusTimeMethod
     protected AuthnRequest getAuthnRequest(SAMLMessageContext context, WebSSOProfileOptions options,
-            AssertionConsumerService assertionConsumer,
-            SingleSignOnService bindingService) throws SAMLException, MetadataProviderException {
+        AssertionConsumerService assertionConsumer,
+        SingleSignOnService bindingService) throws SAMLException, MetadataProviderException {
 
         AuthnRequest authnRequest = super.getAuthnRequest(context, options, assertionConsumer, bindingService);
 

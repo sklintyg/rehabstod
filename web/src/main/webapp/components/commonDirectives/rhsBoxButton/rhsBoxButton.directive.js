@@ -18,19 +18,19 @@
  */
 
 angular.module('rehabstodApp').directive('rhsBoxButton',
-    [ 'messageService',
-        function() {
-            'use strict';
+    ['messageService',
+      function() {
+        'use strict';
 
-            return {
-                restrict: 'E',
-                transclude: true,
-                scope: {
-                    rhsClick: '&',
-                    btnDisabled: '='
-                },
-                controller: function() {
-                },
-                templateUrl: '/components/commonDirectives/rhsBoxButton/rhsBoxButton.directive.html'
-            };
-        }]);
+        return {
+          restrict: 'E',
+          transclude: true,
+          scope: {
+            rhsClick: '&',
+            btnDisabled: '='
+          },
+          controller: function() {
+          },
+          templateUrl: '/components/commonDirectives/rhsBoxButton/rhsBoxButton.directive.html'
+        };
+      }]);

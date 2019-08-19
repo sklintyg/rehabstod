@@ -18,6 +18,12 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 import java.util.Collection;
@@ -27,13 +33,6 @@ import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
-
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Basic test suite that verifies that the endpoint (/api/sjukfall) is available
@@ -68,7 +67,7 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         SessionData sd = getAuthSession(DEFAULT_LAKARE);
 
         sd.begin().expect().statusCode(OK).when().get(API_ENDPOINT + "/summary").then()
-                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_SUMMARY));
+            .body(matchesJsonSchemaInClasspath(JSONSCHEMA_SUMMARY));
     }
 
     @Test
@@ -85,7 +84,7 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         GetSjukfallRequest request = new GetSjukfallRequest();
 
         sd.begin().body(request).expect().statusCode(OK).when().post(API_ENDPOINT).then()
-                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_ENHET));
+            .body(matchesJsonSchemaInClasspath(JSONSCHEMA_ENHET));
 
     }
 
@@ -124,9 +123,9 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         request.setVardgivareId("vg1");
 
         Response response = sd.begin().body(request).expect().statusCode(OK)
-                .when().post(API_ENDPOINT + "/patient/addVardgivare")
-                .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-include-vg-in-sjukfall-response-schema.json"))
-                .extract().response();
+            .when().post(API_ENDPOINT + "/patient/addVardgivare")
+            .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-include-vg-in-sjukfall-response-schema.json"))
+            .extract().response();
 
         assertNotNull(response);
 
@@ -139,12 +138,12 @@ public class SjukfallControllerIT extends BaseRestIntegrationTest {
         GetSjukfallRequest request = new GetSjukfallRequest();
 
         Response response = sd.begin()
-                .body(request)
-                .expect().statusCode(OK)
-                .when().post(API_ENDPOINT)
-                .then()
-                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_ENHET))
-                .extract().response();
+            .body(request)
+            .expect().statusCode(OK)
+            .when().post(API_ENDPOINT)
+            .then()
+            .body(matchesJsonSchemaInClasspath(JSONSCHEMA_ENHET))
+            .extract().response();
 
         SjukfallEnhet[] resultList = response.body().as(SjukfallEnhet[].class);
         return resultList.length;

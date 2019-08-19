@@ -18,14 +18,13 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
+import java.io.IOException;
+import java.util.Map;
+import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by martin on 10/02/16.

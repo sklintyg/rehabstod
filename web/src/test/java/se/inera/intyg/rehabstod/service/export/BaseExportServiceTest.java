@@ -33,7 +33,8 @@ import se.inera.intyg.rehabstod.web.model.Sortering;
 
 public class BaseExportServiceTest {
 
-    private BaseExportService baseExportService = new BaseExportService() {};
+    private BaseExportService baseExportService = new BaseExportService() {
+    };
 
 
     @Test

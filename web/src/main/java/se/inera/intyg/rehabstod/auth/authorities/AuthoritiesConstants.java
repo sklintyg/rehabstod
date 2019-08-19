@@ -39,7 +39,6 @@ public final class AuthoritiesConstants {
 
     public static final String FEATURE_SRS = "SRS";
 
-
     // constructors
 
     private AuthoritiesConstants() {

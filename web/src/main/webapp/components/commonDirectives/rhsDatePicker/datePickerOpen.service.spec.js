@@ -18,83 +18,83 @@
  */
 
 describe('DatePickerOpenService', function() {
-    'use strict';
+  'use strict';
 
-    var pickerState;
-    var DatePickerOpenService;
+  var pickerState;
+  var DatePickerOpenService;
 
-    beforeEach(angular.mock.module('rehabstodApp'), function(/*$provide*/){
+  beforeEach(angular.mock.module('rehabstodApp'), function(/*$provide*/) {
+  });
+
+  beforeEach(angular.mock.inject(['datePickerOpenService',
+    function(_DatePickerOpenService_) {
+      DatePickerOpenService = _DatePickerOpenService_;
+
+      pickerState = {
+        isOpen: false
+      };
+    }
+  ]));
+
+  describe('update', function() {
+
+    it('can open new datepicker with no previous', function() {
+
+      pickerState.isOpen = true;
+      DatePickerOpenService.openDatePicker = null;
+
+      DatePickerOpenService.update(pickerState);
+
+      expect(DatePickerOpenService.openDatePicker).not.toBeNull();
+      expect(DatePickerOpenService.openDatePicker.isOpen).toBeTruthy();
+      expect(pickerState.isOpen).toBeTruthy();
     });
 
-    beforeEach(angular.mock.inject(['datePickerOpenService',
-        function(_DatePickerOpenService_) {
-            DatePickerOpenService = _DatePickerOpenService_;
+    it('can open new datepicker with previous', function() {
 
-            pickerState = {
-                isOpen: false
-            };
-        }
-    ]));
+      pickerState.isOpen = true;
+      var previousPickerState = {isOpen: true};
+      DatePickerOpenService.openDatePicker = previousPickerState;
 
-    describe('update', function(){
+      DatePickerOpenService.update(pickerState);
 
-        it('can open new datepicker with no previous', function(){
-
-            pickerState.isOpen = true;
-            DatePickerOpenService.openDatePicker = null;
-
-            DatePickerOpenService.update(pickerState);
-
-            expect(DatePickerOpenService.openDatePicker).not.toBeNull();
-            expect(DatePickerOpenService.openDatePicker.isOpen).toBeTruthy();
-            expect(pickerState.isOpen).toBeTruthy();
-        });
-
-        it('can open new datepicker with previous', function(){
-
-            pickerState.isOpen = true;
-            var previousPickerState = { isOpen: true };
-            DatePickerOpenService.openDatePicker = previousPickerState;
-
-            DatePickerOpenService.update(pickerState);
-
-            expect(DatePickerOpenService.openDatePicker).not.toBeNull();
-            expect(previousPickerState.isOpen).toBeFalsy();
-            expect(DatePickerOpenService.openDatePicker.isOpen).toBeTruthy();
-            expect(pickerState.isOpen).toBeTruthy();
-        });
-
-        it('can close with same datepicker as previous', function(){
-
-            pickerState.isOpen = false;
-            DatePickerOpenService.openDatePicker = pickerState;
-
-            DatePickerOpenService.update(pickerState);
-
-            expect(DatePickerOpenService.openDatePicker).toBeNull();
-            expect(pickerState.isOpen).toBeFalsy();
-        });
-
-        it('can open with same datepicker as previous', function(){
-
-            pickerState.isOpen = true;
-            DatePickerOpenService.openDatePicker = pickerState;
-
-            DatePickerOpenService.update(pickerState);
-
-            expect(DatePickerOpenService.openDatePicker).toBe(pickerState);
-            expect(pickerState.isOpen).toBeTruthy();
-        });
-
-        it('can close datepicker without previous', function(){
-
-            pickerState.isOpen = false;
-            DatePickerOpenService.openDatePicker = null;
-
-            DatePickerOpenService.update(pickerState);
-
-            expect(DatePickerOpenService.openDatePicker).toBeNull();
-            expect(pickerState.isOpen).toBeFalsy();
-        });
+      expect(DatePickerOpenService.openDatePicker).not.toBeNull();
+      expect(previousPickerState.isOpen).toBeFalsy();
+      expect(DatePickerOpenService.openDatePicker.isOpen).toBeTruthy();
+      expect(pickerState.isOpen).toBeTruthy();
     });
+
+    it('can close with same datepicker as previous', function() {
+
+      pickerState.isOpen = false;
+      DatePickerOpenService.openDatePicker = pickerState;
+
+      DatePickerOpenService.update(pickerState);
+
+      expect(DatePickerOpenService.openDatePicker).toBeNull();
+      expect(pickerState.isOpen).toBeFalsy();
+    });
+
+    it('can open with same datepicker as previous', function() {
+
+      pickerState.isOpen = true;
+      DatePickerOpenService.openDatePicker = pickerState;
+
+      DatePickerOpenService.update(pickerState);
+
+      expect(DatePickerOpenService.openDatePicker).toBe(pickerState);
+      expect(pickerState.isOpen).toBeTruthy();
+    });
+
+    it('can close datepicker without previous', function() {
+
+      pickerState.isOpen = false;
+      DatePickerOpenService.openDatePicker = null;
+
+      DatePickerOpenService.update(pickerState);
+
+      expect(DatePickerOpenService.openDatePicker).toBeNull();
+      expect(pickerState.isOpen).toBeFalsy();
+    });
+  });
 });

@@ -18,19 +18,19 @@
  */
 
 angular.module('rehabstodApp')
-    .controller('SelectUnitPageCtrl',
-        function($scope, $state, $http, UserModel, UserProxy, $window) {
-            'use strict';
+.controller('SelectUnitPageCtrl',
+    function($scope, $state, $http, UserModel, UserProxy, $window) {
+      'use strict';
 
-            $scope.user = UserModel.get();
+      $scope.user = UserModel.get();
 
-            $scope.onUnitSelected = function(enhet) {
-                UserProxy.changeSelectedUnit(enhet.id).then(function(updatedUserModel) {
-                    UserModel.set(updatedUserModel);
+      $scope.onUnitSelected = function(enhet) {
+        UserProxy.changeSelectedUnit(enhet.id).then(function(updatedUserModel) {
+          UserModel.set(updatedUserModel);
 
-                    $state.go('app.sjukfall.start');
-                }, function() {
-                    $window.location.href = '/error.jsp?reason=login.failed';
-                });
-            };
+          $state.go('app.sjukfall.start');
+        }, function() {
+          $window.location.href = '/error.jsp?reason=login.failed';
         });
+      };
+    });

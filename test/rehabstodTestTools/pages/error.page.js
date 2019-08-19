@@ -25,16 +25,16 @@
 'use strict';
 
 module.exports = {
-    isAt: function isAt() {
-        return element(by.id('rhsErrorApp')).isPresent();
-        //return true;
-    },
+  isAt: function isAt() {
+    return element(by.id('rhsErrorApp')).isPresent();
+    //return true;
+  },
 
-    isMedarbetaruppdragSaknasShowing: function isMedarbetaruppdragSaknasShowing() {
-        return element(by.id('error-medarbetaruppdrag-saknas')).isPresent();
-    },
+  isMedarbetaruppdragSaknasShowing: function isMedarbetaruppdragSaknasShowing() {
+    return element(by.id('error-medarbetaruppdrag-saknas')).isPresent();
+  },
 
-    isTeknisktFelShowing: function isTeknisktFelShowing() {
-        return element(by.id('error-tekniskt-fel')).isPresent();
-    }
+  isTeknisktFelShowing: function isTeknisktFelShowing() {
+    return element(by.id('error-tekniskt-fel')).isPresent();
+  }
 };

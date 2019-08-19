@@ -18,13 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.util.Collection;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
-
-import java.util.Collection;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -42,27 +41,23 @@ public interface SjukfallService {
      * included in the response.
      */
     SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId, String lakareId,
-                                    Urval urval, IntygParametrar parameters);
+        Urval urval, IntygParametrar parameters);
 
     /**
-     *
      * @param currentVardgivarId The identifier of the current care giver
      * @param enhetsId The care unit identifier
      * @param lakareId The physician's identifier
      * @param patientId The patient's identifier
-     * @param urval
-     * @param parameters
      * @param vgHsaIds Identifiers of care givers that shall be included in the calculation of the active 'sjukfall'
      * @param veHsaIds Identifiers of care units that shall be included in the calculation of the active 'sjukfall'
-     * @return
      */
     // CHECKSTYLE:OFF ParameterNumber
     SjukfallPatientResponse getByPatient(String currentVardgivarId, String enhetsId, String lakareId,
-                                         String patientId, Urval urval, IntygParametrar parameters,
-                                         Collection<String> vgHsaIds, Collection<String> veHsaIds);
+        String patientId, Urval urval, IntygParametrar parameters,
+        Collection<String> vgHsaIds, Collection<String> veHsaIds);
     // CHECKSTYLE:ON ParameterNumber
 
     SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId,
-                               Urval urval, IntygParametrar parameters);
+        Urval urval, IntygParametrar parameters);
 
 }

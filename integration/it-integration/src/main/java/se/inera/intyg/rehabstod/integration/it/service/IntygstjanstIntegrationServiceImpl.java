@@ -21,12 +21,10 @@ package se.inera.intyg.rehabstod.integration.it.service;
 // CHECKSTYLE:OFF LineLength
 
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
@@ -34,7 +32,6 @@ import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.integration.it.exception.IntygstjanstIntegrationException;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
 
 // CHECKSTYLE:ON LineLength
 
@@ -65,7 +62,7 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
 
         String errorMessage = "An error occured fetching sick leave certificates for patient on a care unit. Error type: {}. Error msg: {}";
         return getIntygsData(intygstjanstClientService.getSjukfallForUnitAndPatient(unitId, patientId, maxAntalDagarSedanSjukfallAvslut),
-                errorMessage);
+            errorMessage);
     }
 
     @Override
@@ -84,7 +81,7 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
         }
 
         if (responseType.getResultCode()
-                != se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum.OK) {
+            != se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum.OK) {
             LOG.error(errorMessage, responseType.getResultCode(), responseType.getComment());
             throw new IntygstjanstIntegrationException();
         }
@@ -99,7 +96,7 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
         }
 
         if (responseType.getResult().getResultCode()
-                != se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ResultCodeEnum.OK) {
+            != se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ResultCodeEnum.OK) {
             LOG.error(errorMessage, responseType.getResult().getResultCode(), responseType.getResult().getResultMessage());
             throw new IntygstjanstIntegrationException();
         }

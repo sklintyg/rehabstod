@@ -63,195 +63,197 @@ import se.inera.intyg.rehabstod.web.model.LangdIntervall;
  */
 class FilterTableBuilder {
 
-  protected static final String PATIENTUPPGIFTER_VISAS = "Visas";
-  protected static final String PATIENTUPPGIFTER_VISAS_EJ = "Visas ej";
-  protected static final String LANGD_OVER_ONE_YEAR = "366";
-  protected static final String LANGD_OVER_ONE_YEAR_DISPLAYVALUE = "365+";
-  private static final float TABLE_WIDTH = 100f;
-  private static final float TABLE_PADDING = 2.5f;
-  private static final float TABLE_MARGIN_TOP = 10f;
-  private static final String FILTER_TITLE_FILTERSECTION = "Valda filter";
-  private static final String FILTER_TITLE_SETTINGSSECTION = "Sjukfallsinställningar";
-  private static final int MAXLENGTH_FRITEXT = 30;
-  private static final String TEMPLATESTRING_SJUKSKRIVNINGSLANGD = "Mellan %s och %s dagar";
-  private static final String TEMPLATESTRING_ALDERSINTERVALL = "Mellan %s och %s år";
-  private static final int MAXLENGTH_FILTERDIAGNOS = 50;
-  private static final int MAXLENGTH_LAKARNAMN = 30;
-  private static final String TEMPLATESTRING_GLAPPDAGAR = "%s dagar";
-  private static final String TEMPLATESTRING_DAGAR_AVSLUTADE = "%s dagar";
-  private static final String NO_FILTER_VALUES_SELECTED_PLACEHOLDER = "-";
-  private static final Color FILTER_TABLE_BACKGROUND_COLOR = new DeviceRgb(0xEF, 0xEF, 0xEF);
-  private static final float FILTER_TABLE_MIN_HEIGHT = 25f;
-  private DiagnosKapitelService diagnosKapitelService;
-  private PdfStyle style;
+    protected static final String PATIENTUPPGIFTER_VISAS = "Visas";
+    protected static final String PATIENTUPPGIFTER_VISAS_EJ = "Visas ej";
+    protected static final String LANGD_OVER_ONE_YEAR = "366";
+    protected static final String LANGD_OVER_ONE_YEAR_DISPLAYVALUE = "365+";
+    private static final float TABLE_WIDTH = 100f;
+    private static final float TABLE_PADDING = 2.5f;
+    private static final float TABLE_MARGIN_TOP = 10f;
+    private static final String FILTER_TITLE_FILTERSECTION = "Valda filter";
+    private static final String FILTER_TITLE_SETTINGSSECTION = "Sjukfallsinställningar";
+    private static final int MAXLENGTH_FRITEXT = 30;
+    private static final String TEMPLATESTRING_SJUKSKRIVNINGSLANGD = "Mellan %s och %s dagar";
+    private static final String TEMPLATESTRING_ALDERSINTERVALL = "Mellan %s och %s år";
+    private static final int MAXLENGTH_FILTERDIAGNOS = 50;
+    private static final int MAXLENGTH_LAKARNAMN = 30;
+    private static final String TEMPLATESTRING_GLAPPDAGAR = "%s dagar";
+    private static final String TEMPLATESTRING_DAGAR_AVSLUTADE = "%s dagar";
+    private static final String NO_FILTER_VALUES_SELECTED_PLACEHOLDER = "-";
+    private static final Color FILTER_TABLE_BACKGROUND_COLOR = new DeviceRgb(0xEF, 0xEF, 0xEF);
+    private static final float FILTER_TABLE_MIN_HEIGHT = 25f;
+    private DiagnosKapitelService diagnosKapitelService;
+    private PdfStyle style;
 
-  // CHECKSTYLE:OFF MagicNumber
+    // CHECKSTYLE:OFF MagicNumber
 
-  FilterTableBuilder(DiagnosKapitelService diagnosKapitelService, PdfStyle style) {
-    this.diagnosKapitelService = diagnosKapitelService;
-    this.style = style;
-  }
-
-  BlockElement buildFilterSettings(PrintSjukfallRequest printRequest, RehabstodUser user) {
-
-    int nrFilterColumns = user.getUrval() == Urval.ALL ? 4 : 3;
-
-    Table table = new Table(nrFilterColumns)
-        .setWidth(UnitValue.createPercentValue(TABLE_WIDTH))
-        .setBackgroundColor(FILTER_TABLE_BACKGROUND_COLOR)
-        .setMinHeight(millimetersToPoints(FILTER_TABLE_MIN_HEIGHT))
-        .setPadding(millimetersToPoints(TABLE_PADDING))
-        .setMarginTop(TABLE_MARGIN_TOP)
-        .setBorder(Border.NO_BORDER);
-
-    table.addCell(new Cell(1, nrFilterColumns)
-        .addStyle(style.getPageHeaderStyle())
-        .setBorder(Border.NO_BORDER)
-        .add(new Paragraph(FILTER_TITLE_FILTERSECTION).addStyle(style.getPageHeaderStyle())));
-
-    table.addCell(getDiagnosFilterCell(printRequest));
-    if (user.getUrval() == Urval.ALL) {
-      table.addCell(getLakareFilterCell(printRequest, user));
-    }
-    table.addCell(getSjukskrivningFilterCell(printRequest));
-    table.addCell(getKompletteringFilterCell(printRequest));
-
-    // Settings
-    table.addCell(new Cell(1, nrFilterColumns)
-        .addStyle(style.getPageHeaderStyle())
-        .setBorder(Border.NO_BORDER)
-        .add(new Paragraph(FILTER_TITLE_SETTINGSSECTION).addStyle(style.getPageHeaderStyle())));
-
-    table.addCell(buildFilterCellMulti(true, 1,
-        Arrays.asList(FILTER_TITLE_MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG),
-        Arrays.asList(String.format(TEMPLATESTRING_GLAPPDAGAR, user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG)))));
-    table.addCell(buildFilterCellMulti(false, nrFilterColumns - 1,
-        Arrays.asList(FILTER_TITLE_AVSLUTADE_SJUKFALL),
-        Arrays.asList(
-            String.format(TEMPLATESTRING_DAGAR_AVSLUTADE, user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT)))));
-
-    return table;
-
-  }
-
-  private Cell getKompletteringFilterCell(PrintSjukfallRequest printRequest) {
-    //komplettering
-    String komplettering = getKompletteringFilterDisplayValue(printRequest.getKomplettering());
-
-    //visa patientuppgifter
-    String patientuppgifter = printRequest.isShowPatientId() ? PATIENTUPPGIFTER_VISAS : PATIENTUPPGIFTER_VISAS_EJ;
-
-    //fritext
-    String fritext =
-        StringUtil.isNullOrEmpty(printRequest.getFritext()) ? NO_FILTER_VALUES_SELECTED_PLACEHOLDER
-            : ellipsize(printRequest.getFritext(), MAXLENGTH_FRITEXT);
-
-    return buildFilterCellMulti(false, 1,
-        Arrays.asList(FILTER_TITLE_KOMPLETTERINGSSTATUS, FILTER_TITLE_PATIENTUPPGIFTER, FILTER_TITLE_FRITEXT),
-        Arrays.asList(komplettering, patientuppgifter, fritext));
-  }
-
-  private Cell getSjukskrivningFilterCell(PrintSjukfallRequest printRequest) {
-    //sjukskrivningslängd
-    String sjukskrivning = getSjukskrivningsintervalDescription(printRequest.getLangdIntervall());
-
-    //slutdatum
-    String slutdatum = getFilterDate(printRequest.getSlutdatumIntervall());
-
-    //aldersspann
-    String alderspann = printRequest.getAldersIntervall() == null ? NO_FILTER_VALUES_SELECTED_PLACEHOLDER : String
-        .format(TEMPLATESTRING_ALDERSINTERVALL, printRequest.getAldersIntervall().getMin(), printRequest.getAldersIntervall().getMax());
-
-    return buildFilterCellMulti(false, 1,
-        Arrays.asList(FILTER_TITLE_SJUKSKRIVNINGSLANGD, FILTER_TITLE_SLUTDATUM, FILTER_TITLE_ALDERSPANN),
-        Arrays.asList(sjukskrivning, slutdatum, alderspann));
-  }
-
-  private String getSjukskrivningsintervalDescription(LangdIntervall intervall) {
-    if (intervall == null) {
-      return NO_FILTER_VALUES_SELECTED_PLACEHOLDER;
+    FilterTableBuilder(DiagnosKapitelService diagnosKapitelService, PdfStyle style) {
+        this.diagnosKapitelService = diagnosKapitelService;
+        this.style = style;
     }
 
-    String minDesc = LANGD_OVER_ONE_YEAR.equals(intervall.getMin()) ? LANGD_OVER_ONE_YEAR_DISPLAYVALUE : intervall.getMin();
-    String maxDesc = LANGD_OVER_ONE_YEAR.equals(intervall.getMax()) ? LANGD_OVER_ONE_YEAR_DISPLAYVALUE : intervall.getMax();
-    return String.format(TEMPLATESTRING_SJUKSKRIVNINGSLANGD, minDesc, maxDesc);
-  }
+    BlockElement buildFilterSettings(PrintSjukfallRequest printRequest, RehabstodUser user) {
 
-  private Cell getLakareFilterCell(PrintSjukfallRequest printRequest, RehabstodUser user) {
+        int nrFilterColumns = user.getUrval() == Urval.ALL ? 4 : 3;
 
-    final List<String> lakare = printRequest.getLakare() != null ? printRequest.getLakare()
-        : Arrays.asList(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : FILTER_SELECTION_VALUE_ALLA);
+        Table table = new Table(nrFilterColumns)
+            .setWidth(UnitValue.createPercentValue(TABLE_WIDTH))
+            .setBackgroundColor(FILTER_TABLE_BACKGROUND_COLOR)
+            .setMinHeight(millimetersToPoints(FILTER_TABLE_MIN_HEIGHT))
+            .setPadding(millimetersToPoints(TABLE_PADDING))
+            .setMarginTop(TABLE_MARGIN_TOP)
+            .setBorder(Border.NO_BORDER);
 
-    List<String> truncated = lakare.stream().map(name -> ellipsize(name, MAXLENGTH_LAKARNAMN)).collect(Collectors.toList());
-    return buildFilterCell(false, FILTER_TITLE_LAKARE, truncated);
-  }
+        table.addCell(new Cell(1, nrFilterColumns)
+            .addStyle(style.getPageHeaderStyle())
+            .setBorder(Border.NO_BORDER)
+            .add(new Paragraph(FILTER_TITLE_FILTERSECTION).addStyle(style.getPageHeaderStyle())));
 
-  private Cell getDiagnosFilterCell(PrintSjukfallRequest printRequest) {
-    final List<String> diagnoses = printRequest.getDiagnosGrupper() != null ? printRequest.getDiagnosGrupper().stream()
-        .map(dg -> getDiagnosKapitelDisplayValue(dg)).collect(Collectors.toList()) : Arrays.asList(NO_FILTER_VALUES_SELECTED_PLACEHOLDER);
+        table.addCell(getDiagnosFilterCell(printRequest));
+        if (user.getUrval() == Urval.ALL) {
+            table.addCell(getLakareFilterCell(printRequest, user));
+        }
+        table.addCell(getSjukskrivningFilterCell(printRequest));
+        table.addCell(getKompletteringFilterCell(printRequest));
 
-    return buildFilterCell(true, FILTER_TITLE_DIAGNOSER, diagnoses);
-  }
+        // Settings
+        table.addCell(new Cell(1, nrFilterColumns)
+            .addStyle(style.getPageHeaderStyle())
+            .setBorder(Border.NO_BORDER)
+            .add(new Paragraph(FILTER_TITLE_SETTINGSSECTION).addStyle(style.getPageHeaderStyle())));
 
-  protected String getKompletteringFilterDisplayValue(Integer komplettering) {
-    if (komplettering == null) {
-      return FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA;
-    } else {
-      return komplettering == 0 ? FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN : FILTER_TITLE_KOMPLETTERINGSSTATUS_MED;
-    }
-  }
+        table.addCell(buildFilterCellMulti(true, 1,
+            Arrays.asList(FILTER_TITLE_MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG),
+            Arrays.asList(String.format(TEMPLATESTRING_GLAPPDAGAR, user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG)))));
+        table.addCell(buildFilterCellMulti(false, nrFilterColumns - 1,
+            Arrays.asList(FILTER_TITLE_AVSLUTADE_SJUKFALL),
+            Arrays.asList(
+                String
+                    .format(TEMPLATESTRING_DAGAR_AVSLUTADE, user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT)))));
 
-  private String getDiagnosKapitelDisplayValue(String diagnosKapitel) {
-    StringBuilder b = new StringBuilder(diagnosKapitel);
-    if (b.length() > 0) {
-      b.append(": ");
-    }
-    b.append(diagnosKapitelService.getDiagnosKapitel(diagnosKapitel).getName());
+        return table;
 
-    return ellipsize(b.toString(), MAXLENGTH_FILTERDIAGNOS);
-  }
-
-  private Cell buildFilterCell(boolean isFirstCell, String headerText, List<String> values) {
-    Cell cell = getFilterCell(isFirstCell);
-    Table table = new Table(1);
-    table.setBorder(Border.NO_BORDER);
-
-    Paragraph headerParagraph = new Paragraph(headerText);
-    headerParagraph.addStyle(style.getCellHeaderParagraphStyle());
-    Cell header = new Cell().add(headerParagraph).addStyle(style.getCellStyle());
-    table.addCell(header);
-    values.forEach(value -> table
-        .addCell(new Cell().add(new Paragraph(value).addStyle(style.getDefaultParagraphStyle())).addStyle(style.getCellStyle())));
-
-    cell.add(table);
-
-    return cell;
-  }
-
-
-  private Cell getFilterCell(boolean isFirstCell) {
-    return getFilterCell(isFirstCell, 1);
-  }
-
-  private Cell getFilterCell(boolean isFirstCell, int colspan) {
-    return isFirstCell ? aCell(colspan).setBorderRight(TABLE_SEPARATOR_BORDER) : aCell(colspan).setBorderLeft(TABLE_SEPARATOR_BORDER);
-  }
-
-  private Cell buildFilterCellMulti(boolean isFirstCell, int colspan, List<String> headerTexts, List<String> values) {
-    Cell cell = getFilterCell(isFirstCell, colspan);
-
-    Table table = new Table(2);
-    table.setBorder(Border.NO_BORDER);
-
-    for (int i = 0; i < headerTexts.size(); i++) {
-      Cell header = new Cell().add(new Paragraph(headerTexts.get(i)).addStyle(style.getCellHeaderParagraphStyle()))
-          .addStyle(style.getCellStyle());
-      Cell value = new Cell().add(new Paragraph(values.get(i))).addStyle(style.getCellStyle());
-      table.addCell(header).addCell(value);
     }
 
-    cell.add(table);
+    private Cell getKompletteringFilterCell(PrintSjukfallRequest printRequest) {
+        //komplettering
+        String komplettering = getKompletteringFilterDisplayValue(printRequest.getKomplettering());
 
-    return cell;
-  }
+        //visa patientuppgifter
+        String patientuppgifter = printRequest.isShowPatientId() ? PATIENTUPPGIFTER_VISAS : PATIENTUPPGIFTER_VISAS_EJ;
+
+        //fritext
+        String fritext =
+            StringUtil.isNullOrEmpty(printRequest.getFritext()) ? NO_FILTER_VALUES_SELECTED_PLACEHOLDER
+                : ellipsize(printRequest.getFritext(), MAXLENGTH_FRITEXT);
+
+        return buildFilterCellMulti(false, 1,
+            Arrays.asList(FILTER_TITLE_KOMPLETTERINGSSTATUS, FILTER_TITLE_PATIENTUPPGIFTER, FILTER_TITLE_FRITEXT),
+            Arrays.asList(komplettering, patientuppgifter, fritext));
+    }
+
+    private Cell getSjukskrivningFilterCell(PrintSjukfallRequest printRequest) {
+        //sjukskrivningslängd
+        String sjukskrivning = getSjukskrivningsintervalDescription(printRequest.getLangdIntervall());
+
+        //slutdatum
+        String slutdatum = getFilterDate(printRequest.getSlutdatumIntervall());
+
+        //aldersspann
+        String alderspann = printRequest.getAldersIntervall() == null ? NO_FILTER_VALUES_SELECTED_PLACEHOLDER : String
+            .format(TEMPLATESTRING_ALDERSINTERVALL, printRequest.getAldersIntervall().getMin(), printRequest.getAldersIntervall().getMax());
+
+        return buildFilterCellMulti(false, 1,
+            Arrays.asList(FILTER_TITLE_SJUKSKRIVNINGSLANGD, FILTER_TITLE_SLUTDATUM, FILTER_TITLE_ALDERSPANN),
+            Arrays.asList(sjukskrivning, slutdatum, alderspann));
+    }
+
+    private String getSjukskrivningsintervalDescription(LangdIntervall intervall) {
+        if (intervall == null) {
+            return NO_FILTER_VALUES_SELECTED_PLACEHOLDER;
+        }
+
+        String minDesc = LANGD_OVER_ONE_YEAR.equals(intervall.getMin()) ? LANGD_OVER_ONE_YEAR_DISPLAYVALUE : intervall.getMin();
+        String maxDesc = LANGD_OVER_ONE_YEAR.equals(intervall.getMax()) ? LANGD_OVER_ONE_YEAR_DISPLAYVALUE : intervall.getMax();
+        return String.format(TEMPLATESTRING_SJUKSKRIVNINGSLANGD, minDesc, maxDesc);
+    }
+
+    private Cell getLakareFilterCell(PrintSjukfallRequest printRequest, RehabstodUser user) {
+
+        final List<String> lakare = printRequest.getLakare() != null ? printRequest.getLakare()
+            : Arrays.asList(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : FILTER_SELECTION_VALUE_ALLA);
+
+        List<String> truncated = lakare.stream().map(name -> ellipsize(name, MAXLENGTH_LAKARNAMN)).collect(Collectors.toList());
+        return buildFilterCell(false, FILTER_TITLE_LAKARE, truncated);
+    }
+
+    private Cell getDiagnosFilterCell(PrintSjukfallRequest printRequest) {
+        final List<String> diagnoses = printRequest.getDiagnosGrupper() != null ? printRequest.getDiagnosGrupper().stream()
+            .map(dg -> getDiagnosKapitelDisplayValue(dg)).collect(Collectors.toList())
+            : Arrays.asList(NO_FILTER_VALUES_SELECTED_PLACEHOLDER);
+
+        return buildFilterCell(true, FILTER_TITLE_DIAGNOSER, diagnoses);
+    }
+
+    protected String getKompletteringFilterDisplayValue(Integer komplettering) {
+        if (komplettering == null) {
+            return FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA;
+        } else {
+            return komplettering == 0 ? FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN : FILTER_TITLE_KOMPLETTERINGSSTATUS_MED;
+        }
+    }
+
+    private String getDiagnosKapitelDisplayValue(String diagnosKapitel) {
+        StringBuilder b = new StringBuilder(diagnosKapitel);
+        if (b.length() > 0) {
+            b.append(": ");
+        }
+        b.append(diagnosKapitelService.getDiagnosKapitel(diagnosKapitel).getName());
+
+        return ellipsize(b.toString(), MAXLENGTH_FILTERDIAGNOS);
+    }
+
+    private Cell buildFilterCell(boolean isFirstCell, String headerText, List<String> values) {
+        Cell cell = getFilterCell(isFirstCell);
+        Table table = new Table(1);
+        table.setBorder(Border.NO_BORDER);
+
+        Paragraph headerParagraph = new Paragraph(headerText);
+        headerParagraph.addStyle(style.getCellHeaderParagraphStyle());
+        Cell header = new Cell().add(headerParagraph).addStyle(style.getCellStyle());
+        table.addCell(header);
+        values.forEach(value -> table
+            .addCell(new Cell().add(new Paragraph(value).addStyle(style.getDefaultParagraphStyle())).addStyle(style.getCellStyle())));
+
+        cell.add(table);
+
+        return cell;
+    }
+
+
+    private Cell getFilterCell(boolean isFirstCell) {
+        return getFilterCell(isFirstCell, 1);
+    }
+
+    private Cell getFilterCell(boolean isFirstCell, int colspan) {
+        return isFirstCell ? aCell(colspan).setBorderRight(TABLE_SEPARATOR_BORDER) : aCell(colspan).setBorderLeft(TABLE_SEPARATOR_BORDER);
+    }
+
+    private Cell buildFilterCellMulti(boolean isFirstCell, int colspan, List<String> headerTexts, List<String> values) {
+        Cell cell = getFilterCell(isFirstCell, colspan);
+
+        Table table = new Table(2);
+        table.setBorder(Border.NO_BORDER);
+
+        for (int i = 0; i < headerTexts.size(); i++) {
+            Cell header = new Cell().add(new Paragraph(headerTexts.get(i)).addStyle(style.getCellHeaderParagraphStyle()))
+                .addStyle(style.getCellStyle());
+            Cell value = new Cell().add(new Paragraph(values.get(i))).addStyle(style.getCellStyle());
+            table.addCell(header).addCell(value);
+        }
+
+        cell.add(table);
+
+        return cell;
+    }
 }

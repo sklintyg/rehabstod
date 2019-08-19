@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
 import se.inera.intyg.rehabstod.service.sjukfall.testdata.builders.ArbetsformagaT;
 import se.inera.intyg.rehabstod.service.sjukfall.testdata.builders.EnhetT;
 import se.inera.intyg.rehabstod.service.sjukfall.testdata.builders.FormagaT;
@@ -96,16 +95,17 @@ public class IntygsDataLineMapper {
         return intygsData;
     }
 
-    private IntygsData intygsData(String intygsId, Patient patient, HosPersonal skapadAv, String diagnoskod, Arbetsformaga arbetsformaga, boolean enkeltIntyg, LocalDateTime signeringsTidpunkt) {
+    private IntygsData intygsData(String intygsId, Patient patient, HosPersonal skapadAv, String diagnoskod, Arbetsformaga arbetsformaga,
+        boolean enkeltIntyg, LocalDateTime signeringsTidpunkt) {
         return new IntygsDataT.IntygsDataBuilder()
-                .intygsId(intygsId)
-                .patient(patient)
-                .skapadAv(skapadAv)
-                .diagnoskod(diagnoskod)
-                .arbetsformaga(arbetsformaga)
-                .enkeltIntyg(enkeltIntyg)
-                .signeringsTidpunkt(signeringsTidpunkt)
-                .build();
+            .intygsId(intygsId)
+            .patient(patient)
+            .skapadAv(skapadAv)
+            .diagnoskod(diagnoskod)
+            .arbetsformaga(arbetsformaga)
+            .enkeltIntyg(enkeltIntyg)
+            .signeringsTidpunkt(signeringsTidpunkt)
+            .build();
     }
 
     private IIType id() {

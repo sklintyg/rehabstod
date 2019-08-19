@@ -18,36 +18,37 @@
  */
 
 angular.module('rehabstodApp').factory('SjukfallViewState', [
-    function() {
-        'use strict';
+  function() {
+    'use strict';
 
-        var state = {
-            srsError: false,
-            kompletteringInfoError: false
-        };
+    var state = {
+      srsError: false,
+      kompletteringInfoError: false
+    };
 
-        function _reset() {
-            state.srsError = false;
-        }
+    function _reset() {
+      state.srsError = false;
+    }
 
-        function _getState() {
-            return state;
-        }
+    function _getState() {
+      return state;
+    }
 
-        function _setSrsError(_srsError) {
-            state.srsError = _srsError;
-        }
-        function _setKompletteringInfoError(_kompletteringInfoError) {
-            state.kompletteringInfoError = _kompletteringInfoError;
-        }
+    function _setSrsError(_srsError) {
+      state.srsError = _srsError;
+    }
 
-        _reset();
+    function _setKompletteringInfoError(_kompletteringInfoError) {
+      state.kompletteringInfoError = _kompletteringInfoError;
+    }
 
-        return {
-            reset: _reset,
-            get: _getState,
-            setSrsError: _setSrsError,
-            setKompletteringInfoError: _setKompletteringInfoError
-        };
-    }])
+    _reset();
+
+    return {
+      reset: _reset,
+      get: _getState,
+      setSrsError: _setSrsError,
+      setKompletteringInfoError: _setKompletteringInfoError
+    };
+  }])
 ;

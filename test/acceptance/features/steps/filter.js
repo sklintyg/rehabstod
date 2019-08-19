@@ -22,24 +22,24 @@
 
 module.exports = function() {
 
-    this.Given(/^jag anger "(\d+)" i fritextfältet$/, function(fritext) {
-        return element(by.id('rhs-filter-free-text-input')).sendKeys(fritext);
+  this.Given(/^jag anger "(\d+)" i fritextfältet$/, function(fritext) {
+    return element(by.id('rhs-filter-free-text-input')).sendKeys(fritext);
+  });
+
+  this.Given(/^ska det endast visas rader med '(\d+)' i texten$/, function(fritext) {
+
+    var tabs = element.all(by.css('tr.rhs-table-row')).map(function(elm) {
+      return elm.getText();
     });
 
-    this.Given(/^ska det endast visas rader med '(\d+)' i texten$/, function(fritext) {
+    tabs.then(function(result) {
+      var promiseArr = [];
+      for (var i = 0; i < result.length; i++) {
+        promiseArr.push(expect(result[i]).to.eventually.contain(fritext));
+      }
+      return Promise.all(promiseArr);
 
-        var tabs = element.all(by.css('tr.rhs-table-row')).map(function(elm) {
-            return elm.getText();
-        });
-
-        tabs.then(function(result) {
-            var promiseArr = [];
-            for (var i = 0; i < result.length; i++) {
-                promiseArr.push(expect(result[i]).to.eventually.contain(fritext));
-            }
-            return Promise.all(promiseArr);
-
-        });
     });
+  });
 
 };

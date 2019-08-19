@@ -27,6 +27,7 @@ import java.time.format.DateTimeFormatter;
  * Created by eriklupander on 2016-09-02.
  */
 public final class HourMinuteFormatter {
+
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     private HourMinuteFormatter() {

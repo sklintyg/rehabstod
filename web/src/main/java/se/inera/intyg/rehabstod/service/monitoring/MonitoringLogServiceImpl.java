@@ -21,7 +21,6 @@ package se.inera.intyg.rehabstod.service.monitoring;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.common.monitoring.util.LogMarkers;
 

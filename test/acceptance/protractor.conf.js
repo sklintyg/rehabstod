@@ -23,72 +23,72 @@ var winston = require('winston');
 
 exports.config = {
 
-    allScriptsTimeout: 10000,
-    seleniumAddress: 'http://selenium1.nordicmedtest.se:4444/wd/hub',
-    framework: 'custom',
-    frameworkPath: require.resolve('protractor-cucumber-framework'),
-    specs: [
-        'features/*.feature'
-    ],
-    capabilities: {
-        browserName: 'firefox',
-        version: '',
-        platform: 'ANY'
-    },
-    cucumberOpts: {
-        format: ['json:./node_modules/common-testtools/cucumber-html-report/acc_results.json', 'pretty'],
-        require: ['features/steps/**/*.js', 'features/support/**/*.js']
-    },
-    onPrepare: function() {
+  allScriptsTimeout: 10000,
+  seleniumAddress: 'http://selenium1.nordicmedtest.se:4444/wd/hub',
+  framework: 'custom',
+  frameworkPath: require.resolve('protractor-cucumber-framework'),
+  specs: [
+    'features/*.feature'
+  ],
+  capabilities: {
+    browserName: 'firefox',
+    version: '',
+    platform: 'ANY'
+  },
+  cucumberOpts: {
+    format: ['json:./node_modules/common-testtools/cucumber-html-report/acc_results.json', 'pretty'],
+    require: ['features/steps/**/*.js', 'features/support/**/*.js']
+  },
+  onPrepare: function() {
 
-        browser.ignoreSynchronization = false;
+    browser.ignoreSynchronization = false;
 
-        global.chai = require('chai');
+    global.chai = require('chai');
 
-        global.chaiAsPromised = require('chai-as-promised');
-        global.chai.use(global.chaiAsPromised);
+    global.chaiAsPromised = require('chai-as-promised');
+    global.chai.use(global.chaiAsPromised);
 
-        global.expect = global.chai.expect;
-        global.should = global.chai.should();
+    global.expect = global.chai.expect;
+    global.should = global.chai.should();
 
-        global.rhsTestTools = require('rehabstod-testtools');
+    global.rhsTestTools = require('rehabstod-testtools');
 
-        browser.baseUrl = process.env.REHABSTOD_URL;
-        console.log('process.env.REHABSTOD_URL: ' + process.env.REHABSTOD_URL);
+    browser.baseUrl = process.env.REHABSTOD_URL;
+    console.log('process.env.REHABSTOD_URL: ' + process.env.REHABSTOD_URL);
 
-        //Set window size
-        browser.manage().window().setSize(1600, 1000);
-        global.user = {};
-        global.logger = new(winston.Logger)({
-            transports: [
-                new(winston.transports.Console)({
-                    colorize: true,
-                    timestamp: formatLocalDate,
-                    formatter: function(options) {
-                        // Return string will be passed to logger.
-                        return options.timestamp() + ' ' + options.level.toUpperCase() + ' ' + (undefined !== options.message ? options.message : '') +
-                            (options.meta && Object.keys(options.meta).length ? '\n\t' + JSON.stringify(options.meta) : '');
-                    }
-                })
-            ]
-        });
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-    }
+    //Set window size
+    browser.manage().window().setSize(1600, 1000);
+    global.user = {};
+    global.logger = new (winston.Logger)({
+      transports: [
+        new (winston.transports.Console)({
+          colorize: true,
+          timestamp: formatLocalDate,
+          formatter: function(options) {
+            // Return string will be passed to logger.
+            return options.timestamp() + ' ' + options.level.toUpperCase() + ' ' + (undefined !== options.message ? options.message : '') +
+                (options.meta && Object.keys(options.meta).length ? '\n\t' + JSON.stringify(options.meta) : '');
+          }
+        })
+      ]
+    });
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  }
 };
 
 function formatLocalDate() {
-    var now = new Date(),
-        tzo = -now.getTimezoneOffset(),
-        dif = tzo >= 0 ? '+' : '-',
-        pad = function(num) {
-            var norm = Math.abs(Math.floor(num));
-            return (norm < 10 ? '0' : '') + norm;
-        };
-    return now.getFullYear() +
-        '-' +
-        pad(now.getMonth() +
-            1) +
-        '-' +
-        pad(now.getDate()) +
-        'T' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds()) + dif + pad(tzo / 60) + ':' + pad(tzo % 60);
+  var now = new Date(),
+      tzo = -now.getTimezoneOffset(),
+      dif = tzo >= 0 ? '+' : '-',
+      pad = function(num) {
+        var norm = Math.abs(Math.floor(num));
+        return (norm < 10 ? '0' : '') + norm;
+      };
+  return now.getFullYear() +
+      '-' +
+      pad(now.getMonth() +
+          1) +
+      '-' +
+      pad(now.getDate()) +
+      'T' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds()) + dif + pad(tzo / 60) + ':' + pad(tzo % 60);
 }

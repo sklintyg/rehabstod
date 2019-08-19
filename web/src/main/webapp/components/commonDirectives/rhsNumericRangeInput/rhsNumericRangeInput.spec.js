@@ -1,209 +1,204 @@
 describe('Directive: RhsNumericRangeInput', function() {
-    'use strict';
+  'use strict';
 
-    // load the controller's module
-    beforeEach(module('rehabstodApp'));
-    beforeEach(module('htmlTemplates'));
+  // load the controller's module
+  beforeEach(module('rehabstodApp'));
+  beforeEach(module('htmlTemplates'));
 
-    var $compile;
-    var $scope;
+  var $compile;
+  var $scope;
 
-    var element;
-    var elementScope;
+  var element;
+  var elementScope;
 
+  // Store references to $rootScope and $compile
+  // so they are available to all tests in this describe block
+  beforeEach(inject(function(_$compile_, $rootScope) {
+    // The injector unwraps the underscores (_) from around the parameter names when matching
+    $compile = _$compile_;
+    $scope = $rootScope.$new();
+    $scope.max = 10;
 
-    // Store references to $rootScope and $compile
-    // so they are available to all tests in this describe block
-    beforeEach(inject(function(_$compile_, $rootScope) {
-        // The injector unwraps the underscores (_) from around the parameter names when matching
-        $compile = _$compile_;
-        $scope = $rootScope.$new();
-        $scope.max = 10;
+    element =
+        $compile(
+            angular.element(
+                ' <rhs-numeric-range-input external-model="externalModel" min="0" max="10" display-max-value-as="Mer än 10"/>'))(
+            $scope);
+    $scope.$digest();
 
-        element =
-            $compile(
-                angular.element(' <rhs-numeric-range-input external-model="externalModel" min="0" max="10" display-max-value-as="Mer än 10"/>'))(
-                $scope);
-        $scope.$digest();
+    elementScope = element.isolateScope() || element.scope();
+  }));
 
-        elementScope = element.isolateScope() || element.scope();
-    }));
+  it('should correctly initialize internal model', function() {
 
-    it('should correctly initialize internal model', function() {
+    // Assert
+    expect(elementScope.inputModel).toEqual(elementScope.externalModel);
 
-        // Assert
-        expect(elementScope.inputModel).toEqual(elementScope.externalModel);
+  });
 
+  it('should increase when UP is clicked', function() {
+    //Arrange
+    elementScope.min = 0;
+    elementScope.externalModel = 5;
+    elementScope.max = 10;
 
-    });
+    //Act
+    elementScope.onClickUp();
 
-    it('should increase when UP is clicked', function() {
-        //Arrange
-        elementScope.min = 0;
-        elementScope.externalModel = 5;
-        elementScope.max = 10;
+    // Assert
+    expect(elementScope.externalModel).toEqual(6);
+  });
 
-        //Act
-        elementScope.onClickUp();
+  it('should NOT increase MAX is reached and UP is clicked', function() {
+    //Arrange
+    elementScope.min = 0;
+    elementScope.externalModel = 10;
+    elementScope.max = 10;
 
-        // Assert
-        expect(elementScope.externalModel).toEqual(6);
-    });
+    //Act
+    elementScope.onClickUp();
 
-    it('should NOT increase MAX is reached and UP is clicked', function() {
-        //Arrange
-        elementScope.min = 0;
-        elementScope.externalModel = 10;
-        elementScope.max = 10;
+    // Assert
+    expect(elementScope.externalModel).toEqual(10);
+  });
 
-        //Act
-        elementScope.onClickUp();
+  it('should decrease when DOWN is clicked', function() {
+    //Arrange
+    elementScope.min = 0;
+    elementScope.externalModel = 5;
+    elementScope.max = 10;
 
-        // Assert
-        expect(elementScope.externalModel).toEqual(10);
-    });
+    //Act
+    elementScope.onClickDown();
 
-    it('should decrease when DOWN is clicked', function() {
-        //Arrange
-        elementScope.min = 0;
-        elementScope.externalModel = 5;
-        elementScope.max = 10;
+    // Assert
+    expect(elementScope.externalModel).toEqual(4);
+  });
 
-        //Act
-        elementScope.onClickDown();
+  it('should NOT decrease MIN is reached and DOWN is clicked', function() {
+    //Arrange
+    elementScope.min = 0;
+    elementScope.externalModel = 0;
+    elementScope.max = 10;
 
-        // Assert
-        expect(elementScope.externalModel).toEqual(4);
-    });
+    //Act
+    elementScope.onClickDown();
 
-    it('should NOT decrease MIN is reached and DOWN is clicked', function() {
-        //Arrange
-        elementScope.min = 0;
-        elementScope.externalModel = 0;
-        elementScope.max = 10;
+    // Assert
+    expect(elementScope.externalModel).toEqual(0);
+  });
 
-        //Act
-        elementScope.onClickDown();
+  it('should display max replacement when max is reached', function() {
+    //Arrange
+    elementScope.min = 0;
+    elementScope.externalModel = 10;
+    elementScope.displayMaxValueAs = 'ett värde';
+    elementScope.max = 10;
+    $scope.$digest();
 
-        // Assert
-        expect(elementScope.externalModel).toEqual(0);
-    });
+    // Assert
+    expect(elementScope.inputModel).toEqual('ett värde');
+  });
 
-    it('should display max replacement when max is reached', function() {
-        //Arrange
-        elementScope.min = 0;
-        elementScope.externalModel = 10;
-        elementScope.displayMaxValueAs = 'ett värde';
-        elementScope.max = 10;
-        $scope.$digest();
+  it('should update when manually entering a valid range value', function() {
+    //Arrange
+    elementScope.min = 0;
+    elementScope.externalModel = 5;
+    elementScope.max = 10;
 
-        // Assert
-        expect(elementScope.inputModel).toEqual('ett värde');
-    });
+    //Act
+    elementScope.inputModel = '8';
+    elementScope.onManualChange();
+    $scope.$digest();
 
-    it('should update when manually entering a valid range value', function() {
-        //Arrange
-        elementScope.min = 0;
-        elementScope.externalModel = 5;
-        elementScope.max = 10;
+    // Assert
+    expect(elementScope.inputModel).toEqual(8);
+    expect(elementScope.externalModel).toEqual(8);
+  });
 
+  it('should set max value when a value above max is entered', function() {
+    //Arrange
+    elementScope.min = 0;
+    elementScope.externalModel = 5;
+    elementScope.displayMaxValueAs = 'Mer';
+    elementScope.max = 10;
 
-        //Act
-        elementScope.inputModel = '8';
-        elementScope.onManualChange();
-        $scope.$digest();
+    //Act
+    elementScope.inputModel = '118';
+    elementScope.onManualChange();
+    $scope.$digest();
 
-        // Assert
-        expect(elementScope.inputModel).toEqual(8);
-        expect(elementScope.externalModel).toEqual(8);
-    });
+    // Assert
+    expect(elementScope.inputModel).toEqual('Mer');
+    expect(elementScope.externalModel).toEqual(10);
+  });
 
-    it('should set max value when a value above max is entered', function() {
-        //Arrange
-        elementScope.min = 0;
-        elementScope.externalModel = 5;
-        elementScope.displayMaxValueAs = 'Mer';
-        elementScope.max = 10;
+  it('should set min value when a value below min is entered', function() {
+    //Arrange
+    elementScope.min = 2;
+    elementScope.externalModel = 5;
+    elementScope.displayMaxValueAs = 'Mer';
+    elementScope.max = 10;
 
+    //Act
+    elementScope.inputModel = '1';
+    elementScope.onManualChange();
+    $scope.$digest();
 
-        //Act
-        elementScope.inputModel = '118';
-        elementScope.onManualChange();
-        $scope.$digest();
+    // Assert
+    expect(elementScope.inputModel).toEqual(2);
+    expect(elementScope.externalModel).toEqual(2);
+  });
 
-        // Assert
-        expect(elementScope.inputModel).toEqual('Mer');
-        expect(elementScope.externalModel).toEqual(10);
-    });
+  it('remove non numeric values in input', function() {
+    //Arrange
+    elementScope.min = 0;
+    elementScope.externalModel = 5;
+    elementScope.max = 10;
 
-    it('should set min value when a value below min is entered', function() {
-        //Arrange
-        elementScope.min = 2;
-        elementScope.externalModel = 5;
-        elementScope.displayMaxValueAs = 'Mer';
-        elementScope.max = 10;
+    //Act
+    elementScope.inputModel = 'osk';
+    elementScope.onManualChange();
+    $scope.$digest();
 
+    // Assert
+    expect(elementScope.inputModel).toEqual(5);
+    expect(elementScope.externalModel).toEqual(5);
+  });
 
-        //Act
-        elementScope.inputModel = '1';
-        elementScope.onManualChange();
-        $scope.$digest();
+  it('should handle showmaxreplace value as MAX update when manually entering', function() {
+    //Arrange
+    elementScope.min = 0;
+    elementScope.externalModel = 8;
+    elementScope.inputModel = 5;
+    elementScope.displayMaxValueAs = 'Mer';
+    elementScope.max = 10;
 
-        // Assert
-        expect(elementScope.inputModel).toEqual(2);
-        expect(elementScope.externalModel).toEqual(2);
-    });
+    //Act
+    elementScope.inputModel = 'Mer';
+    elementScope.onManualChange();
+    $scope.$digest();
 
-    it('remove non numeric values in input', function() {
-        //Arrange
-        elementScope.min = 0;
-        elementScope.externalModel = 5;
-        elementScope.max = 10;
+    // Assert
+    expect(elementScope.externalModel).toEqual(10);
+  });
 
+  it('should handle show previous value when entering only a "-"', function() {
+    //Arrange
+    elementScope.min = 0;
+    elementScope.externalModel = 8;
+    elementScope.inputModel = 5;
+    elementScope.displayMaxValueAs = 'Mer';
+    elementScope.max = 10;
 
-        //Act
-        elementScope.inputModel = 'osk';
-        elementScope.onManualChange();
-        $scope.$digest();
+    //Act
+    elementScope.inputModel = '-';
+    elementScope.onManualChange();
+    $scope.$digest();
 
-        // Assert
-        expect(elementScope.inputModel).toEqual(5);
-        expect(elementScope.externalModel).toEqual(5);
-    });
-
-    it('should handle showmaxreplace value as MAX update when manually entering', function() {
-        //Arrange
-        elementScope.min = 0;
-        elementScope.externalModel = 8;
-        elementScope.inputModel = 5;
-        elementScope.displayMaxValueAs = 'Mer';
-        elementScope.max = 10;
-
-        //Act
-        elementScope.inputModel = 'Mer';
-        elementScope.onManualChange();
-        $scope.$digest();
-
-        // Assert
-        expect(elementScope.externalModel).toEqual(10);
-    });
-
-    it('should handle show previous value when entering only a "-"', function() {
-        //Arrange
-        elementScope.min = 0;
-        elementScope.externalModel = 8;
-        elementScope.inputModel = 5;
-        elementScope.displayMaxValueAs = 'Mer';
-        elementScope.max = 10;
-
-        //Act
-        elementScope.inputModel = '-';
-        elementScope.onManualChange();
-        $scope.$digest();
-
-        // Assert
-        expect(elementScope.externalModel).toEqual(8);
-        expect(elementScope.inputModel).toEqual(8);
-    });
+    // Assert
+    expect(elementScope.externalModel).toEqual(8);
+    expect(elementScope.inputModel).toEqual(8);
+  });
 
 });

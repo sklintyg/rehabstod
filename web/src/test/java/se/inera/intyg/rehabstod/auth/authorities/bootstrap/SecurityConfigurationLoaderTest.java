@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities.bootstrap;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -35,15 +43,6 @@ import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.infra.security.common.model.Title;
 import se.inera.intyg.infra.security.common.model.TitleCode;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 //CHECKSTYLE:OFF MagicNumber
 @RunWith(MockitoJUnitRunner.class)
 public class SecurityConfigurationLoaderTest {
@@ -54,7 +53,7 @@ public class SecurityConfigurationLoaderTest {
 
     @InjectMocks
     SecurityConfigurationLoader loader = new SecurityConfigurationLoader(AUTHORITIES_CONFIGURATION_TEST_FILE,
-            FEATURES_CONFIGURATION_TEST_FILE);
+        FEATURES_CONFIGURATION_TEST_FILE);
 
     @Before
     public void setupAuthoritiesConfiguration() {

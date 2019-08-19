@@ -21,9 +21,8 @@ package se.inera.intyg.rehabstod.service.diagnos.dto;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
 import java.util.Optional;
+import org.junit.Test;
 
 /**
  * Created by marced on 09/02/16.

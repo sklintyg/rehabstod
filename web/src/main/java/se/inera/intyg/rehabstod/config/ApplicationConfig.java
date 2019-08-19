@@ -42,10 +42,10 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource({ "classpath:default.properties",
-        "file:${config.file}",
-        "file:${credentials.file}",
-        "classpath:version.properties" })
+@PropertySource({"classpath:default.properties",
+    "file:${config.file}",
+    "file:${credentials.file}",
+    "classpath:version.properties"})
 @Import(MonitoringConfiguration.class)
 public class ApplicationConfig implements TransactionManagementConfigurer {
 

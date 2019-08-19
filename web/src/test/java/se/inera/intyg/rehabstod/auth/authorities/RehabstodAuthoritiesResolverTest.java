@@ -18,6 +18,9 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,10 +34,6 @@ import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfiguration
 import se.inera.intyg.infra.security.common.model.Privilege;
 import se.inera.intyg.infra.security.common.model.RequestOrigin;
 import se.inera.intyg.infra.security.common.model.Title;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Should _only_ contain asserts specific to the Rehabstöd authorities-test.yaml file.
@@ -52,7 +51,7 @@ public class RehabstodAuthoritiesResolverTest {
 
     @Spy
     private SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationFile,
-            featuresConfigurationsFile);
+        featuresConfigurationsFile);
 
     @InjectMocks
     private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();

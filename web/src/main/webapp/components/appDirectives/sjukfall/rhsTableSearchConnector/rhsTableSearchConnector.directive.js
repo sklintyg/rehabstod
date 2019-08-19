@@ -18,38 +18,38 @@
  */
 
 angular.module('rehabstodApp').directive('rhsTableSearchConnector',
-        function($timeout, SjukfallFilterViewState, sessionCheckService, TableService, _) {
-            'use strict';
+    function($timeout, SjukfallFilterViewState, sessionCheckService, TableService, _) {
+      'use strict';
 
-            return {
-                restrict: 'E',
-                require: '^stTable',
-                scope: {
-                    columns: '='
-                },
-                link: function($scope, element, attr, table) {
+      return {
+        restrict: 'E',
+        require: '^stTable',
+        scope: {
+          columns: '='
+        },
+        link: function($scope, element, attr, table) {
 
-                    var onFilterstateUpdated = function() {
-                        $timeout(function() {
-                            var columnsByKey = _.keyBy(TableService.getSelectedSjukfallColumns(), 'id');
-                            SjukfallFilterViewState.resetIfColumnsHidden(columnsByKey);
+          var onFilterstateUpdated = function() {
+            $timeout(function() {
+              var columnsByKey = _.keyBy(TableService.getSelectedSjukfallColumns(), 'id');
+              SjukfallFilterViewState.resetIfColumnsHidden(columnsByKey);
 
-                            table.search(SjukfallFilterViewState.getCurrentFilterState(), 'customSearch');
-                        });
-                        //Indicate that the user has interacted with the filter
-                        sessionCheckService.registerUserAction();
-                    };
+              table.search(SjukfallFilterViewState.getCurrentFilterState(), 'customSearch');
+            });
+            //Indicate that the user has interacted with the filter
+            sessionCheckService.registerUserAction();
+          };
 
-                    //Watch for changes in current filter state
-                    $scope.filterViewState = SjukfallFilterViewState;
-                    $scope.$watch('filterViewState.getCurrentFilterState()', onFilterstateUpdated, true);
-                    $scope.$watchCollection('columns', onFilterstateUpdated);
+          //Watch for changes in current filter state
+          $scope.filterViewState = SjukfallFilterViewState;
+          $scope.$watch('filterViewState.getCurrentFilterState()', onFilterstateUpdated, true);
+          $scope.$watchCollection('columns', onFilterstateUpdated);
 
-                    $scope.table = table;
-                    $scope.$watch('table.getFilteredCollection()', function() {
-                        //Indicate that the user has interacted with the table, either by chaing filter that triggered new content, or by sorting it
-                        sessionCheckService.registerUserAction();
-                    }, true);
-                }
-            };
-        });
+          $scope.table = table;
+          $scope.$watch('table.getFilteredCollection()', function() {
+            //Indicate that the user has interacted with the table, either by chaing filter that triggered new content, or by sorting it
+            sessionCheckService.registerUserAction();
+          }, true);
+        }
+      };
+    });

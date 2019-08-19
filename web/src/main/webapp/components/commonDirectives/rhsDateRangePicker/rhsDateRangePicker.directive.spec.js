@@ -18,84 +18,83 @@
  */
 
 describe('Directive: RhsDateRangePicker', function() {
-    'use strict';
+  'use strict';
 
-    // load the controller's module
-    beforeEach(module('rehabstodApp'));
-    beforeEach(module('htmlTemplates'));
+  // load the controller's module
+  beforeEach(module('rehabstodApp'));
+  beforeEach(module('htmlTemplates'));
 
-    var $compile;
-    var $scope;
-    var element;
-    var elementScope;
+  var $compile;
+  var $scope;
+  var element;
+  var elementScope;
 
-    // Store references to $rootScope and $compile
-    // so they are available to all tests in this describe block
-    beforeEach(inject(function(_$compile_, $rootScope, $timeout) {
-        // The injector unwraps the underscores (_) from around the parameter names when matching
-        $compile = _$compile_;
-        $scope = $rootScope.$new();
+  // Store references to $rootScope and $compile
+  // so they are available to all tests in this describe block
+  beforeEach(inject(function(_$compile_, $rootScope, $timeout) {
+    // The injector unwraps the underscores (_) from around the parameter names when matching
+    $compile = _$compile_;
+    $scope = $rootScope.$new();
 
-        $scope.slutdatum = {from: null, to: null};
+    $scope.slutdatum = {from: null, to: null};
 
-        element =
-            $compile('<rhs-date-range-picker id="slutdatum" model="slutdatum" />')(
-                $scope);
+    element =
+        $compile('<rhs-date-range-picker id="slutdatum" model="slutdatum" />')(
+            $scope);
 
-        $timeout.flush();
-        $scope.$digest();
+    $timeout.flush();
+    $scope.$digest();
 
-        elementScope = element.isolateScope() || element.scope();
+    elementScope = element.isolateScope() || element.scope();
 
-    }));
+  }));
 
-    it('should be empty when no date is selected', function() {
-        // Assert
-        expect(element.find('input').val()).toEqual('');
-    });
+  it('should be empty when no date is selected', function() {
+    // Assert
+    expect(element.find('input').val()).toEqual('');
+  });
 
-    it('Show one date', function() {
+  it('Show one date', function() {
 
-        $scope.slutdatum.from = new Date(2017, 1, 1);
-        $scope.slutdatum.to = new Date(2017, 1, 1);
+    $scope.slutdatum.from = new Date(2017, 1, 1);
+    $scope.slutdatum.to = new Date(2017, 1, 1);
 
-        $scope.$digest();
+    $scope.$digest();
 
-        // Assert
-        expect(element.find('input').val()).toEqual('2017-02-01');
-    });
+    // Assert
+    expect(element.find('input').val()).toEqual('2017-02-01');
+  });
 
-    it('Show interval', function() {
+  it('Show interval', function() {
 
-        $scope.slutdatum.from = new Date(2017, 1, 1);
-        $scope.slutdatum.to = new Date(2017, 3, 1);
+    $scope.slutdatum.from = new Date(2017, 1, 1);
+    $scope.slutdatum.to = new Date(2017, 3, 1);
 
-        $scope.$digest();
+    $scope.$digest();
 
-        // Assert
-        expect(element.find('input').val()).toEqual('2017-02-01 till 2017-04-01');
-    });
+    // Assert
+    expect(element.find('input').val()).toEqual('2017-02-01 till 2017-04-01');
+  });
 
-    it('Show reset value', function() {
+  it('Show reset value', function() {
 
-        $scope.slutdatum.from = new Date(2017, 1, 1);
-        $scope.slutdatum.to = new Date(2017, 3, 1);
+    $scope.slutdatum.from = new Date(2017, 1, 1);
+    $scope.slutdatum.to = new Date(2017, 3, 1);
 
-        $scope.$digest();
+    $scope.$digest();
 
-        // Assert
-        expect(element.find('input').val()).toEqual('2017-02-01 till 2017-04-01');
+    // Assert
+    expect(element.find('input').val()).toEqual('2017-02-01 till 2017-04-01');
 
+    // Reset
+    $scope.slutdatum.from = null;
+    $scope.slutdatum.to = null;
 
-        // Reset
-        $scope.slutdatum.from = null;
-        $scope.slutdatum.to = null;
+    $scope.$digest();
 
-        $scope.$digest();
+    // Assert
+    expect(element.find('input').val()).toEqual('');
 
-        // Assert
-        expect(element.find('input').val()).toEqual('');
-
-    });
+  });
 
 });

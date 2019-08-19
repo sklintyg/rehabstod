@@ -27,19 +27,19 @@ import org.junit.Test;
 
 public class ExportFieldsTest {
 
-  @Test
-  public void fromJson() {
-    assertEquals(ExportField.fromJson(""), Arrays.asList(ExportField.values()));
-    assertEquals(ExportField.fromJson(null), Arrays.asList(ExportField.values()));
-    assertTrue(ExportField.fromJson("unknown").isEmpty());
+    @Test
+    public void fromJson() {
+        assertEquals(ExportField.fromJson(""), Arrays.asList(ExportField.values()));
+        assertEquals(ExportField.fromJson(null), Arrays.asList(ExportField.values()));
+        assertTrue(ExportField.fromJson("unknown").isEmpty());
 
-    final List<ExportField> exportFields = ExportField.fromJson(
-        ExportField.KOMPLETTERINGAR.getJsonId() + "|" + ExportField.DAYS.getJsonId() + "|apa|" + ExportField.GRADER.getJsonId());
-    assertEquals(3, exportFields.size());
-    assertEquals((ExportField.KOMPLETTERINGAR), exportFields.get(0));
-    assertEquals((ExportField.DAYS), exportFields.get(1));
-    assertEquals((ExportField.GRADER), exportFields.get(2));
+        final List<ExportField> exportFields = ExportField.fromJson(
+            ExportField.KOMPLETTERINGAR.getJsonId() + "|" + ExportField.DAYS.getJsonId() + "|apa|" + ExportField.GRADER.getJsonId());
+        assertEquals(3, exportFields.size());
+        assertEquals((ExportField.KOMPLETTERINGAR), exportFields.get(0));
+        assertEquals((ExportField.DAYS), exportFields.get(1));
+        assertEquals((ExportField.GRADER), exportFields.get(2));
 
 
-  }
+    }
 }

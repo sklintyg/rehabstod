@@ -42,10 +42,8 @@ public final class SystemRolesParser {
     /**
      * Parses supplied systemRoles into careUnitId's.
      *
-     * @param systemRoles
-     *      List of systemRoles, e.g. "Rehab-[careUnitId]"
-     * @return
-     *      List of careUnitIds.
+     * @param systemRoles List of systemRoles, e.g. "Rehab-[careUnitId]"
+     * @return List of careUnitIds.
      */
     public static List<String> parseEnhetsIdsFromSystemRoles(List<String> systemRoles) {
         List<String> idList = new ArrayList<>();

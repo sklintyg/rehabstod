@@ -19,10 +19,10 @@
 
 angular.module('rehabstodApp').controller('HeaderController',
     function(sessionCheckService) {
-        'use strict';
+      'use strict';
 
-        //Expose 'now' as a model property for the template to render as todays date
-        sessionCheckService.startPolling();
+      //Expose 'now' as a model property for the template to render as todays date
+      sessionCheckService.startPolling();
 
     }
 );

@@ -21,7 +21,6 @@ package se.inera.intyg.rehabstod.service.diagnos;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
-
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKod;
 
 /**

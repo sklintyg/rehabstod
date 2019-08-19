@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
-import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
-
 import java.util.List;
+import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 /**
  * Created by marced on 2018-10-02.
  */
 public class FilteredSjukFallByPatientResult {
+
     private final List<SjukfallPatient> rehabstodSjukfall;
     private final SjfMetaData sjfMetaData;
 

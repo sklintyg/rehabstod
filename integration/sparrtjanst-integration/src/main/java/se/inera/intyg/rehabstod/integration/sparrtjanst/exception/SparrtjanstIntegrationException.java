@@ -22,6 +22,7 @@ package se.inera.intyg.rehabstod.integration.sparrtjanst.exception;
  * Created by marced on 2018-09-26.
  */
 public class SparrtjanstIntegrationException extends RuntimeException {
+
     public SparrtjanstIntegrationException(String message) {
         super(message);
     }

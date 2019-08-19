@@ -28,131 +28,131 @@
  */
 angular.module('rehabstodApp').factory('messageService',
     function($rootScope) {
-        'use strict';
+      'use strict';
 
-        var _messageResources = null;
-        var _links = null;
+      var _messageResources = null;
+      var _links = null;
 
-        function _propertyExists(key, language, fallbackToDefaultLanguage) {
-            var value;
+      function _propertyExists(key, language, fallbackToDefaultLanguage) {
+        var value;
 
-            if (!language) {
-                language = $rootScope.lang;
-                if (!language && fallbackToDefaultLanguage) {
-                    language = $rootScope.DEFAULT_LANG;
-                }
-            }
-
-            if (language) {
-                value = _getPropertyInLanguage(language, key, null);
-                if (value === null || value === undefined) {
-                    value = false;
-                }
-            } else {
-                value = false;
-            }
-
-            return value;
+        if (!language) {
+          language = $rootScope.lang;
+          if (!language && fallbackToDefaultLanguage) {
+            language = $rootScope.DEFAULT_LANG;
+          }
         }
 
-        function _getProperty(key, variables, defaultValue, language, fallbackToDefaultLanguage) {
-            var value;
-
-            if (!language) {
-                language = $rootScope.lang;
-                if (!language && fallbackToDefaultLanguage) {
-                    language = $rootScope.DEFAULT_LANG;
-                }
-            }
-
-            if (language) {
-                value = _getPropertyInLanguage(language, key, variables);
-                if (value === null || value === undefined) {
-                    value = defaultValue === null || defaultValue === undefined ?
-                        '[Missing "' + key + '"]' : defaultValue;
-                }
-            } else {
-                value = '[Missing language]';
-            }
-
-            return value;
+        if (language) {
+          value = _getPropertyInLanguage(language, key, null);
+          if (value === null || value === undefined) {
+            value = false;
+          }
+        } else {
+          value = false;
         }
 
-        function _getPropertyInLanguage(lang, key, variables) {
-            _checkResources();
-            var message = _messageResources[lang][key];
+        return value;
+      }
 
-            // Replace standard parameterized values.
-            angular.forEach(variables, function(value, key) {
-                var regexp = new RegExp('\\$\\{' + key + '\\}', 'g');
-                message = message.replace(regexp, value);
-            });
+      function _getProperty(key, variables, defaultValue, language, fallbackToDefaultLanguage) {
+        var value;
 
-            // Find <LINK: dynamic links and replace
-            var regex2 = /<LINK:(.*?)>/gi, result;
+        if (!language) {
+          language = $rootScope.lang;
+          if (!language && fallbackToDefaultLanguage) {
+            language = $rootScope.DEFAULT_LANG;
+          }
+        }
 
-            while ( (result = regex2.exec(message)) ) {
-                 var replace = result[0];
-                 var linkKey = result[1];
+        if (language) {
+          value = _getPropertyInLanguage(language, key, variables);
+          if (value === null || value === undefined) {
+            value = defaultValue === null || defaultValue === undefined ?
+                '[Missing "' + key + '"]' : defaultValue;
+          }
+        } else {
+          value = '[Missing language]';
+        }
 
-                var dynamicLink = _buildDynamicLink(linkKey);
+        return value;
+      }
 
-                var regexp = new RegExp(replace, 'g');
-                message = message.replace(regexp, dynamicLink);
+      function _getPropertyInLanguage(lang, key, variables) {
+        _checkResources();
+        var message = _messageResources[lang][key];
+
+        // Replace standard parameterized values.
+        angular.forEach(variables, function(value, key) {
+          var regexp = new RegExp('\\$\\{' + key + '\\}', 'g');
+          message = message.replace(regexp, value);
+        });
+
+        // Find <LINK: dynamic links and replace
+        var regex2 = /<LINK:(.*?)>/gi, result;
+
+        while ((result = regex2.exec(message))) {
+          var replace = result[0];
+          var linkKey = result[1];
+
+          var dynamicLink = _buildDynamicLink(linkKey);
+
+          var regexp = new RegExp(replace, 'g');
+          message = message.replace(regexp, dynamicLink);
+        }
+
+        return message;
+      }
+
+      function _buildDynamicLink(linkKey) {
+        var link = _links[linkKey];
+
+        if (!angular.isDefined(link)) {
+          return 'WARNING: could not resolve dynamic link: ' + linkKey;
+        }
+
+        var dynamicLink = '<a class="external-link" href="' + link.url + '"';
+        dynamicLink += link.tooltip ? ' title="' + link.tooltip + '"' : '';
+        dynamicLink += link.target ? ' target="' + link.target + '">' : '>';
+        dynamicLink += link.text;
+
+        if (link.target) {
+          dynamicLink += ' <i class="glyphicon glyphicon-new-window"></i></a>';
+        }
+
+        dynamicLink += '</a>';
+
+        return dynamicLink;
+      }
+
+      function _addResources(resources) {
+        _checkResources();
+        angular.extend(_messageResources.sv, resources.sv);
+        angular.extend(_messageResources.en, resources.en);
+      }
+
+      function _addLinks(links) {
+        _links = links;
+      }
+
+      function _checkResources() {
+        if (_messageResources === null) {
+          _messageResources = {
+            'sv': {
+              'initial.key': 'Initial nyckel'
+            },
+            'en': {
+              'initial.key': 'Initial key'
             }
-
-            return message;
+          };
         }
+      }
 
-        function _buildDynamicLink(linkKey) {
-            var link = _links[linkKey];
-
-            if (!angular.isDefined(link)) {
-                return 'WARNING: could not resolve dynamic link: ' + linkKey;
-            }
-
-            var dynamicLink = '<a class="external-link" href="' + link.url + '"';
-            dynamicLink += link.tooltip ? ' title="' + link.tooltip + '"' : '';
-            dynamicLink += link.target ? ' target="' + link.target + '">' : '>';
-            dynamicLink += link.text;
-
-            if (link.target) {
-                dynamicLink += ' <i class="glyphicon glyphicon-new-window"></i></a>';
-            }
-
-            dynamicLink += '</a>';
-
-            return dynamicLink;
-        }
-
-        function _addResources(resources) {
-            _checkResources();
-            angular.extend(_messageResources.sv, resources.sv);
-            angular.extend(_messageResources.en, resources.en);
-        }
-
-        function _addLinks(links) {
-            _links = links;
-        }
-
-        function _checkResources() {
-            if (_messageResources === null) {
-                _messageResources = {
-                    'sv': {
-                        'initial.key': 'Initial nyckel'
-                    },
-                    'en': {
-                        'initial.key': 'Initial key'
-                    }
-                };
-            }
-        }
-
-        return {
-            propertyExists: _propertyExists,
-            getProperty: _getProperty,
-            addResources: _addResources,
-            addLinks: _addLinks
-        };
+      return {
+        propertyExists: _propertyExists,
+        getProperty: _getProperty,
+        addResources: _addResources,
+        addLinks: _addLinks
+      };
     }
 );

@@ -18,54 +18,54 @@
  */
 
 angular.module('rehabstodApp')
-    .controller('AppPageCtrl',
-        function($scope, $rootScope, $uibModal, messageService) {
-            'use strict';
+.controller('AppPageCtrl',
+    function($scope, $rootScope, $uibModal, messageService) {
+      'use strict';
 
-            $scope.showErrorDialog = function(msgConfig) {
-                $uibModal.open({
-                    templateUrl: '/app/error/restErrorDialog.html',
-                    controller: 'restErrorDialogCtrl',
-                    size: 'md',
-                    resolve: {
-                        msgConfig: function() {
-                            return msgConfig;
-                        }
-                    }
-                });
-            };
-
-            $scope.showPdlConsentDialog = function(msgConfig) {
-                $uibModal.open({
-                    windowClass: 'rhs-pdlconsent-modal',
-                    templateUrl: '/app/pdlconsent/pdlconsentdialog.html',
-                    controller: 'pdlConsentDialogCtrl',
-                    size: 'md',
-                    resolve: {
-                        msgConfig: function() {
-                            return msgConfig;
-                        }
-                    }
-                });
-            };
-
-            var unregisterFn = $rootScope.$on('rehab.rest.exception', function(event, msgConfig) {
-                 var texts = {
-                     title: messageService.getProperty(msgConfig.errorTitleKey),
-                     body: messageService.getProperty(msgConfig.errorTextKey)
-                 };
-                 $scope.showErrorDialog(texts);
-             });
-
-            var unregisterFn2 = $rootScope.$on('show.pdl.consent', function(event, msgConfig) {
-                var texts = {
-                    body: messageService.getProperty(msgConfig.bodyTextKey)
-                };
-                $scope.showPdlConsentDialog(texts);
-            });
-             //rootscope on event listeners aren't unregistered automatically when 'this' directives
-             //scope is destroyed, so let's take care of that.
-             $scope.$on('$destroy', unregisterFn);
-             $scope.$on('$destroy', unregisterFn2);
-
+      $scope.showErrorDialog = function(msgConfig) {
+        $uibModal.open({
+          templateUrl: '/app/error/restErrorDialog.html',
+          controller: 'restErrorDialogCtrl',
+          size: 'md',
+          resolve: {
+            msgConfig: function() {
+              return msgConfig;
+            }
+          }
         });
+      };
+
+      $scope.showPdlConsentDialog = function(msgConfig) {
+        $uibModal.open({
+          windowClass: 'rhs-pdlconsent-modal',
+          templateUrl: '/app/pdlconsent/pdlconsentdialog.html',
+          controller: 'pdlConsentDialogCtrl',
+          size: 'md',
+          resolve: {
+            msgConfig: function() {
+              return msgConfig;
+            }
+          }
+        });
+      };
+
+      var unregisterFn = $rootScope.$on('rehab.rest.exception', function(event, msgConfig) {
+        var texts = {
+          title: messageService.getProperty(msgConfig.errorTitleKey),
+          body: messageService.getProperty(msgConfig.errorTextKey)
+        };
+        $scope.showErrorDialog(texts);
+      });
+
+      var unregisterFn2 = $rootScope.$on('show.pdl.consent', function(event, msgConfig) {
+        var texts = {
+          body: messageService.getProperty(msgConfig.bodyTextKey)
+        };
+        $scope.showPdlConsentDialog(texts);
+      });
+      //rootscope on event listeners aren't unregistered automatically when 'this' directives
+      //scope is destroyed, so let's take care of that.
+      $scope.$on('$destroy', unregisterFn);
+      $scope.$on('$destroy', unregisterFn2);
+
+    });

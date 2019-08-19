@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
@@ -25,9 +27,6 @@ import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * This is a helper class that manages user vardenhet changes, basically implementing the requirement
@@ -71,7 +70,7 @@ public class RehabstodUnitChangeService {
         if (user.getValdVardenhet() instanceof Mottagning) {
             Mottagning m = (Mottagning) user.getValdVardenhet();
             return systemRoleEnhetIdList.stream()
-                    .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(m.getParentHsaId()));
+                .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(m.getParentHsaId()));
         }
         return false;
     }
@@ -82,7 +81,7 @@ public class RehabstodUnitChangeService {
         Role role = commonAuthoritiesResolver.getRole(roleKey);
         user.getRoles().put(roleKey, role);
         user.setFeatures(
-                commonAuthoritiesResolver.getFeatures(Arrays.asList(user.getValdVardenhet().getId(), user.getValdVardgivare().getId())));
+            commonAuthoritiesResolver.getFeatures(Arrays.asList(user.getValdVardenhet().getId(), user.getValdVardgivare().getId())));
     }
 
     private boolean hasSystemRoles(RehabstodUser user) {

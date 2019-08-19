@@ -20,15 +20,14 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 
 // CHECKSTYLE:OFF LineLength
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
 
 // CHECKSTYLE:ON LineLength
 

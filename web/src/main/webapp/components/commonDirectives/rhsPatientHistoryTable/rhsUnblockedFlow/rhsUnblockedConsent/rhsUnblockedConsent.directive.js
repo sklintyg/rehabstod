@@ -18,55 +18,55 @@
  */
 angular.module('rehabstodApp').directive('rhsUnblockedConsent',
     function($rootScope, patientHistoryViewState, patientHistoryProxy) {
-    'use strict';
+      'use strict';
 
-    return {
+      return {
         restrict: 'E',
         scope: {
-            patient: '=',
-            labelError: '@'
+          patient: '=',
+          labelError: '@'
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedConsent/rhsUnblockedConsent.directive.html',
         link: function($scope) {
-            $scope.vardgivareUtanSamtycke = patientHistoryViewState.getSjfMetaData().kraverSamtycke;
+          $scope.vardgivareUtanSamtycke = patientHistoryViewState.getSjfMetaData().kraverSamtycke;
 
-            var vardgivareUtanSamtyckeNames = $scope.vardgivareUtanSamtycke.map(function(item) {
-                return item.itemName;
-            });
+          var vardgivareUtanSamtyckeNames = $scope.vardgivareUtanSamtycke.map(function(item) {
+            return item.itemName;
+          });
 
-            $scope.vardgivareMedInfo = vardgivareUtanSamtyckeNames.join(', ');
+          $scope.vardgivareMedInfo = vardgivareUtanSamtyckeNames.join(', ');
 
-            $scope.consent = {
-                confirm: false,
-                onlyCurrentUser: 'ONLYCURRENT',
-                days: 7,
-                error: false
-            };
+          $scope.consent = {
+            confirm: false,
+            onlyCurrentUser: 'ONLYCURRENT',
+            days: 7,
+            error: false
+          };
 
-            $scope.$watch('consent.confirm', function(newValue, oldValue) {
-                    if (oldValue && !newValue) {
-                        $scope.consent.error = false;
-                    }
+          $scope.$watch('consent.confirm', function(newValue, oldValue) {
+                if (oldValue && !newValue) {
+                  $scope.consent.error = false;
                 }
-            );
+              }
+          );
 
-            $scope.next = function() {
-                patientHistoryProxy.giveConsent({
-                    patientId: $scope.patient.id,
-                    onlyCurrentUser: $scope.consent.onlyCurrentUser === 'ONLYCURRENT',
-                    days: $scope.consent.days
-                }).then(function(response) {
-                    var patientSjfMeta = patientHistoryViewState.getSjfMetaData();
-                    if(response.responseCode === 'OK') {
-                        patientSjfMeta.samtyckeFinns = true;
-                        $scope.consent.error = false;
-                        $rootScope.$broadcast('rhsUnblockedFlow.next');
-                    } else {
-                        patientSjfMeta.samtyckeFinns = false;
-                        $scope.consent.error = true;
-                    }
-                });
-            };
+          $scope.next = function() {
+            patientHistoryProxy.giveConsent({
+              patientId: $scope.patient.id,
+              onlyCurrentUser: $scope.consent.onlyCurrentUser === 'ONLYCURRENT',
+              days: $scope.consent.days
+            }).then(function(response) {
+              var patientSjfMeta = patientHistoryViewState.getSjfMetaData();
+              if (response.responseCode === 'OK') {
+                patientSjfMeta.samtyckeFinns = true;
+                $scope.consent.error = false;
+                $rootScope.$broadcast('rhsUnblockedFlow.next');
+              } else {
+                patientSjfMeta.samtyckeFinns = false;
+                $scope.consent.error = true;
+              }
+            });
+          };
         }
-    };
-});
+      };
+    });

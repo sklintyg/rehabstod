@@ -18,6 +18,11 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService.PDL_CONSENT_GIVEN;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +47,6 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAccessTokenResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetUserResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GivePdlLoggingConsentRequest;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Map;
-
-import static se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService.PDL_CONSENT_GIVEN;
 
 @RestController
 @RequestMapping("/api/user")
@@ -103,9 +102,6 @@ public class UserController {
 
     /**
      * Changes the selected care unit in the security context for the logged in user.
-     *
-     * @param changeSelectedEnhetRequest
-     * @return
      */
     @RequestMapping(value = "/andraenhet", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public GetUserResponse changeSelectedUnitOnUser(@RequestBody ChangeSelectedUnitRequest changeSelectedEnhetRequest) {
@@ -113,7 +109,7 @@ public class UserController {
         RehabstodUser user = getRehabstodUser();
 
         LOG.debug("Attempting to change selected unit for user '{}', currently selected unit is '{}'", user.getHsaId(),
-                user.getValdVardenhet() != null ? user.getValdVardenhet().getId() : "<null>");
+            user.getValdVardenhet() != null ? user.getValdVardenhet().getId() : "<null>");
 
         // boolean changeSuccess = user.changeValdVardenhet(changeSelectedEnhetRequest.getId());
         // INTYG-5068: Do systemRole check here for Lakare???
@@ -121,11 +117,11 @@ public class UserController {
 
         if (!changeSuccess) {
             throw new AuthoritiesException(String.format("Could not change active unit: Unit '%s' is not present in the MIUs for user '%s'",
-                    changeSelectedEnhetRequest.getId(), user.getHsaId()));
+                changeSelectedEnhetRequest.getId(), user.getHsaId()));
         }
 
         user.setFeatures(
-                commonAuthoritiesResolver.getFeatures(Arrays.asList(user.getValdVardenhet().getId(), user.getValdVardgivare().getId())));
+            commonAuthoritiesResolver.getFeatures(Arrays.asList(user.getValdVardenhet().getId(), user.getValdVardgivare().getId())));
 
         LOG.debug("Selected vardenhet is now '{}'", user.getValdVardenhet().getId());
 
@@ -140,7 +136,7 @@ public class UserController {
         AnvandarPreference pdlConsentGiven = anvandarPreferenceRepository.findByHsaIdAndKey(user.getHsaId(), PDL_CONSENT_GIVEN);
         if (pdlConsentGiven == null) {
             pdlConsentGiven = new AnvandarPreference(user.getHsaId(), PDL_CONSENT_GIVEN,
-                    Boolean.toString(pdlLoggingConsentRequest.isConsentGiven()));
+                Boolean.toString(pdlLoggingConsentRequest.isConsentGiven()));
         } else {
             pdlConsentGiven.setValue(Boolean.toString(pdlLoggingConsentRequest.isConsentGiven()));
         }
@@ -158,7 +154,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/preferences", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, String> updatePref(@RequestBody Map<String, String> keyValueMap) {
 
         RehabstodUserPreferences newPreferences = RehabstodUserPreferences.fromFrontend(keyValueMap);
@@ -171,8 +167,8 @@ public class UserController {
 
         // Check if preferences has changed for sjukfallresult related settings
         if (hasPreferencesChanged(oldPreferences, newPreferences,
-                RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG,
-                RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT)) {
+            RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG,
+            RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT)) {
 
             // INTYG-8139: clear user values if above preferences has changed.
             // This will force user to fetch some of the information yet again in order to
@@ -199,8 +195,8 @@ public class UserController {
     }
 
     private boolean hasPreferencesChanged(RehabstodUserPreferences oldPreferences,
-            RehabstodUserPreferences newPreferences,
-            RehabstodUserPreferences.Preference... preferences) {
+        RehabstodUserPreferences newPreferences,
+        RehabstodUserPreferences.Preference... preferences) {
 
         if (oldPreferences == null && newPreferences != null) {
             return true;

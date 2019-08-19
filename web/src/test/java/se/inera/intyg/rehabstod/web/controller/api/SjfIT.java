@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.Matchers.equalTo;
+
 import com.jayway.restassured.http.ContentType;
 import org.junit.After;
 import org.junit.Test;
@@ -26,11 +30,6 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.AddVeToPatientViewRequest
 import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
-
-
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.hamcrest.Matchers.equalTo;
 
 public class SjfIT extends BaseRestIntegrationTest {
 
@@ -66,8 +65,8 @@ public class SjfIT extends BaseRestIntegrationTest {
 
         // reset samtycke
         sd.begin()
-                .expect().statusCode(OK)
-                .when().delete("services/api/stub/samtyckestjanst-api/consent");
+            .expect().statusCode(OK)
+            .when().delete("services/api/stub/samtyckestjanst-api/consent");
 
         GetSjukfallRequest request = new GetSjukfallRequest();
         request.setPatientId(patientId);
@@ -78,60 +77,60 @@ public class SjfIT extends BaseRestIntegrationTest {
         consentRequest.setPatientId(patientId);
 
         sd.begin().body(consentRequest)
-                .expect().statusCode(OK)
-                .when().post(API_ENDPOINT_CONSENT).then()
-                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_CONSENT))
-                .body("responseCode", equalTo("OK"));
+            .expect().statusCode(OK)
+            .when().post(API_ENDPOINT_CONSENT).then()
+            .body(matchesJsonSchemaInClasspath(JSONSCHEMA_CONSENT))
+            .body("responseCode", equalTo("OK"));
 
         sleep(200);
 
         // Kollar att samtycke finns och hur många som har spärr
         sd.begin()
-                .body(request)
-                .expect().statusCode(OK)
-                .when().post(API_ENDPOINT_PATIENT).then()
-                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
-                .body("sjfMetaData.samtyckeFinns", equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
-                .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(2))
-                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
-                        equalTo(false))
-                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOtherBlocked_id + "' }.includedInSjukfall",
-                        equalTo(false))
-                .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
-                        equalTo(false))
-                .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
-                        equalTo(false))
-                .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
-                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2))
-                .body("sjfMetaData.blockingServiceError", equalTo(false))
-                .body("sjfMetaData.consentServiceError", equalTo(false));
+            .body(request)
+            .expect().statusCode(OK)
+            .when().post(API_ENDPOINT_PATIENT).then()
+            .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
+            .body("sjfMetaData.samtyckeFinns", equalTo(true))
+            .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
+            .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(2))
+            .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
+                equalTo(false))
+            .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOtherBlocked_id + "' }.includedInSjukfall",
+                equalTo(false))
+            .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
+                equalTo(false))
+            .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
+                equalTo(false))
+            .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
+            .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2))
+            .body("sjfMetaData.blockingServiceError", equalTo(false))
+            .body("sjfMetaData.consentServiceError", equalTo(false));
 
         String puSekretessUrl = "services/api/pu-api/person/" + patientId + "/sekretessmarkerad?value=";
 
         // Sätter sekretessmarkerad
         sd.begin()
-                .expect().statusCode(OK)
-                .when().get(puSekretessUrl + "true");
+            .expect().statusCode(OK)
+            .when().get(puSekretessUrl + "true");
 
         // Kollar att ingen sjf info kommer med
         sd.begin()
-                .body(request)
-                .expect().statusCode(OK)
-                .when().post(API_ENDPOINT_PATIENT).then()
-                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
-                .body("sjfMetaData.samtyckeFinns", equalTo(false))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(0))
-                .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(0))
-                .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(0))
-                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(0))
-                .body("sjfMetaData.blockingServiceError", equalTo(false))
-                .body("sjfMetaData.consentServiceError", equalTo(false));
+            .body(request)
+            .expect().statusCode(OK)
+            .when().post(API_ENDPOINT_PATIENT).then()
+            .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
+            .body("sjfMetaData.samtyckeFinns", equalTo(false))
+            .body("sjfMetaData.kraverSamtycke.size()", equalTo(0))
+            .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(0))
+            .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(0))
+            .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(0))
+            .body("sjfMetaData.blockingServiceError", equalTo(false))
+            .body("sjfMetaData.consentServiceError", equalTo(false));
 
         // Tar bort sekretess markerad
         given().contentType(ContentType.JSON)
-                .expect().statusCode(OK)
-                .when().get(puSekretessUrl + "false");
+            .expect().statusCode(OK)
+            .when().get(puSekretessUrl + "false");
 
         // Inkludera vårdgivare
         AddVgToPatientViewRequest includeVgInSjukfallRequest = new AddVgToPatientViewRequest();
@@ -139,32 +138,31 @@ public class SjfIT extends BaseRestIntegrationTest {
         includeVgInSjukfallRequest.setVardgivareId(vgOther_id);
 
         sd.begin()
-                .body(includeVgInSjukfallRequest)
-                .expect().statusCode(OK)
-                .when().post(API_ENDPOINT_INCLUDE_VG);
+            .body(includeVgInSjukfallRequest)
+            .expect().statusCode(OK)
+            .when().post(API_ENDPOINT_INCLUDE_VG);
 
         // Kollar att vårdgivaren kommer med
         sd.begin()
-                .body(request)
-                .expect().statusCode(OK)
-                .when().post(API_ENDPOINT_PATIENT).then()
-                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
-                .body("sjfMetaData.samtyckeFinns", equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
-                .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(2))
-                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
-                        equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOtherBlocked_id + "' }.includedInSjukfall",
-                        equalTo(false))
-                .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
-                        equalTo(false))
-                .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
-                        equalTo(false))
-                .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
-                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2))
-                .body("sjfMetaData.blockingServiceError", equalTo(false))
-                .body("sjfMetaData.consentServiceError", equalTo(false));
-
+            .body(request)
+            .expect().statusCode(OK)
+            .when().post(API_ENDPOINT_PATIENT).then()
+            .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
+            .body("sjfMetaData.samtyckeFinns", equalTo(true))
+            .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
+            .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(2))
+            .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
+                equalTo(true))
+            .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOtherBlocked_id + "' }.includedInSjukfall",
+                equalTo(false))
+            .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
+                equalTo(false))
+            .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
+                equalTo(false))
+            .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
+            .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2))
+            .body("sjfMetaData.blockingServiceError", equalTo(false))
+            .body("sjfMetaData.consentServiceError", equalTo(false));
 
         // Inkludera vårdenhet
         AddVeToPatientViewRequest includeVeInSjukfallRequest = new AddVeToPatientViewRequest();
@@ -172,30 +170,30 @@ public class SjfIT extends BaseRestIntegrationTest {
         includeVeInSjukfallRequest.setVardenhetId(veOther_id);
 
         sd.begin()
-                .body(includeVeInSjukfallRequest)
-                .expect().statusCode(OK)
-                .when().post(API_ENDPOINT_INCLUDE_VE);
+            .body(includeVeInSjukfallRequest)
+            .expect().statusCode(OK)
+            .when().post(API_ENDPOINT_INCLUDE_VE);
 
         // Kollar att vårdenheten kommer med
         sd.begin()
-                .body(request)
-                .expect().statusCode(OK)
-                .when().post(API_ENDPOINT_PATIENT).then()
-                .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
-                .body("sjfMetaData.samtyckeFinns", equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
-                .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(2))
-                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
-                        equalTo(true))
-                .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOtherBlocked_id + "' }.includedInSjukfall",
-                        equalTo(false))
-                .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
-                        equalTo(true))
-                .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
-                        equalTo(false))
-                .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
-                .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2))
-                .body("sjfMetaData.blockingServiceError", equalTo(false))
-                .body("sjfMetaData.consentServiceError", equalTo(false));
+            .body(request)
+            .expect().statusCode(OK)
+            .when().post(API_ENDPOINT_PATIENT).then()
+            .body(matchesJsonSchemaInClasspath(JSONSCHEMA_PATIENT))
+            .body("sjfMetaData.samtyckeFinns", equalTo(true))
+            .body("sjfMetaData.kraverSamtycke.size()", equalTo(2))
+            .body("sjfMetaData.kraverInteSamtycke.size()", equalTo(2))
+            .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOther_id + "' }.includedInSjukfall",
+                equalTo(true))
+            .body("sjfMetaData.kraverSamtycke.find { it.itemId == '" + vgOtherBlocked_id + "' }.includedInSjukfall",
+                equalTo(false))
+            .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOther_id + "' }.includedInSjukfall",
+                equalTo(true))
+            .body("sjfMetaData.kraverInteSamtycke.find { it.itemId == '" + veOtherBlocked_id + "' }.includedInSjukfall",
+                equalTo(false))
+            .body("sjfMetaData.vardenheterInomVGMedSparr.size()", equalTo(1))
+            .body("sjfMetaData.andraVardgivareMedSparr.size()", equalTo(2))
+            .body("sjfMetaData.blockingServiceError", equalTo(false))
+            .body("sjfMetaData.consentServiceError", equalTo(false));
     }
 }

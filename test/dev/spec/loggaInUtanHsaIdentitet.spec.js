@@ -29,26 +29,26 @@ var WelcomePage = rhsTestTools.pages.welcomePage;
 
 describe('Logga in som Hans Hosplösa ', function() {
 
-    beforeEach(function() {
-        browser.ignoreSynchronization = false;
-    });
+  beforeEach(function() {
+    browser.ignoreSynchronization = false;
+  });
 
-    it('Öppna och försök logga in som Hans Hosplösa', function() {
-        var userJson = {
-            forNamn: 'Hans',
-            efterNamn: 'Hosplösa',
-            hsaId: 'hans-hosplosa',
-            enhetId: 'TSTNMT2321000156-105F',
-            forskrivarKod: '9300005'
-        };
+  it('Öppna och försök logga in som Hans Hosplösa', function() {
+    var userJson = {
+      forNamn: 'Hans',
+      efterNamn: 'Hosplösa',
+      hsaId: 'hans-hosplosa',
+      enhetId: 'TSTNMT2321000156-105F',
+      forskrivarKod: '9300005'
+    };
 
-        WelcomePage.get();
-        specHelper.waitForAngularTestability();
-        WelcomePage.loginByJSON(JSON.stringify(userJson));
-        specHelper.waitForAngularTestability();
-        expect(errorPage.isAt()).toBeTruthy();
-        expect(errorPage.isTeknisktFelShowing()).toBeTruthy();
-        expect(errorPage.isMedarbetaruppdragSaknasShowing()).toBeFalsy();
-    });
+    WelcomePage.get();
+    specHelper.waitForAngularTestability();
+    WelcomePage.loginByJSON(JSON.stringify(userJson));
+    specHelper.waitForAngularTestability();
+    expect(errorPage.isAt()).toBeTruthy();
+    expect(errorPage.isTeknisktFelShowing()).toBeTruthy();
+    expect(errorPage.isMedarbetaruppdragSaknasShowing()).toBeFalsy();
+  });
 
 });

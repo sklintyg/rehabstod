@@ -18,57 +18,57 @@
  */
 
 angular.module('rehabstodApp')
-    .controller('RhsFilterCtrl',
-        function($scope, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel,
-            UserModel, StringHelper, TableService, _) {
-            'use strict';
+.controller('RhsFilterCtrl',
+    function($scope, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel,
+        UserModel, StringHelper, TableService, _) {
+      'use strict';
 
-            $scope.filterViewState = SjukfallFilterViewState;
-            $scope.user = UserModel.get();
-            $scope.showSearchFilter = true;
-            $scope.model = SjukfallModel;
-            var columns;
+      $scope.filterViewState = SjukfallFilterViewState;
+      $scope.user = UserModel.get();
+      $scope.showSearchFilter = true;
+      $scope.model = SjukfallModel;
+      var columns;
 
-            $scope.$watchCollection('model.get()', function(value) {
-                //Update contents on those models of filtercomponents that depends on the searchresults contents, i.e
-                // uniqueness of lakare diagnoskapitel.
-                var lakare = $filter('rhsUnique')(value, 'lakare.namn');
-                if (!angular.equals($scope.filterViewState.get().lakareModel.getNames(), lakare)) {
-                    $scope.filterViewState.get().lakareModel.set(lakare.sort(StringHelper.swedishStringSortImpl(true, false)));
-                }
-
-                $scope.filterViewState.get().diagnosKapitelModel.setActivDiagnosKapitelIdlist(
-                    $filter('rhsUnique')(value, 'diagnos.kapitel'));
-
-            });
-
-            $scope.onResetFilterClick = function() {
-                $scope.filterViewState.reset();
-            };
-
-            $scope.$watch(function() {
-              return UserModel.get().preferences[TableService.sjukfallTableKey];
-            }, function() {
-              columns = TableService.getSelectedSjukfallColumns(true);
-            }, true);
-
-            $scope.filterInactive = function(field, field2) {
-              var column = _.find(columns, function(column) {
-                return column.id === field || (field2 && column.id === field2);
-              });
-
-              return !column;
-            };
+      $scope.$watchCollection('model.get()', function(value) {
+        //Update contents on those models of filtercomponents that depends on the searchresults contents, i.e
+        // uniqueness of lakare diagnoskapitel.
+        var lakare = $filter('rhsUnique')(value, 'lakare.namn');
+        if (!angular.equals($scope.filterViewState.get().lakareModel.getNames(), lakare)) {
+          $scope.filterViewState.get().lakareModel.set(lakare.sort(StringHelper.swedishStringSortImpl(true, false)));
         }
-    )
-    .directive('rhsFilter',
-        function() {
-            'use strict';
 
-            return {
-                restrict: 'E',
-                scope: {},
-                controller: 'RhsFilterCtrl',
-                templateUrl: '/components/appDirectives/sjukfall/rhsFilter/rhsFilter.directive.html'
-            };
+        $scope.filterViewState.get().diagnosKapitelModel.setActivDiagnosKapitelIdlist(
+            $filter('rhsUnique')(value, 'diagnos.kapitel'));
+
+      });
+
+      $scope.onResetFilterClick = function() {
+        $scope.filterViewState.reset();
+      };
+
+      $scope.$watch(function() {
+        return UserModel.get().preferences[TableService.sjukfallTableKey];
+      }, function() {
+        columns = TableService.getSelectedSjukfallColumns(true);
+      }, true);
+
+      $scope.filterInactive = function(field, field2) {
+        var column = _.find(columns, function(column) {
+          return column.id === field || (field2 && column.id === field2);
         });
+
+        return !column;
+      };
+    }
+)
+.directive('rhsFilter',
+    function() {
+      'use strict';
+
+      return {
+        restrict: 'E',
+        scope: {},
+        controller: 'RhsFilterCtrl',
+        templateUrl: '/components/appDirectives/sjukfall/rhsFilter/rhsFilter.directive.html'
+      };
+    });

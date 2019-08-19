@@ -22,6 +22,7 @@ package se.inera.intyg.rehabstod.service.sjukfall.dto;
  * Created by marced on 15/03/16.
  */
 public class SickLeaveDegreeStat {
+
     private int id;
     private String name;
     private int count;

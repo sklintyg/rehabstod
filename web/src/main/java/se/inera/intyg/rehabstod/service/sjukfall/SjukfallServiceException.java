@@ -30,7 +30,7 @@ public class SjukfallServiceException extends ServiceException {
      * cause.
      *
      * @param msg the detail message
-     * @param t   the root cause
+     * @param t the root cause
      */
     public SjukfallServiceException(String msg, Throwable t) {
         super(msg, t);

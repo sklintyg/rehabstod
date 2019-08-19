@@ -19,63 +19,63 @@
 
 angular.module('rehabstodApp').factory('KompletteringModel',
     function() {
-        'use strict';
+      'use strict';
 
-        var data = [];
+      var data = [];
 
-        function _init() {
-            data.splice(0, data.length);
-            return data;
-        }
+      function _init() {
+        data.splice(0, data.length);
+        return data;
+      }
 
-        //resets selection/disabled states
-        function _reset() {
-            angular.forEach(data, function(item) {
-                item.selected = !!item.defaultSelected;
-                item.disabled = false;
+      //resets selection/disabled states
+      function _reset() {
+        angular.forEach(data, function(item) {
+          item.selected = !!item.defaultSelected;
+          item.disabled = false;
+        });
+        return data;
+      }
+
+      return {
+
+        reset: _reset,
+
+        set: function(options) {
+          _init();
+          angular.forEach(options, function(item) {
+            data.push({
+              id: item.id,
+              displayValue: item.displayValue,
+              defaultSelected: item.defaultSelected,
+              selected: !!item.defaultSelected,
+              disabled: false
             });
-            return data;
-        }
+          });
+        },
+        get: function() {
+          return data;
+        },
 
-        return {
+        getNames: function() {
+          var names = [];
 
-            reset: _reset,
+          angular.forEach(data, function(value) {
+            names.push(value.id);
+          });
 
-            set: function(options) {
-                _init();
-                angular.forEach(options, function(item) {
-                    data.push({
-                        id: item.id,
-                        displayValue: item.displayValue,
-                        defaultSelected: item.defaultSelected,
-                        selected: !!item.defaultSelected,
-                        disabled: false
-                    });
-                });
-            },
-            get: function() {
-                return data;
-            },
+          return names;
+        },
 
-            getNames: function() {
-                var names = [];
-
-                angular.forEach(data, function(value) {
-                    names.push(value.id);
-                });
-
-                return names;
-            },
-
-            getSelected: function() {
-                var selected = [];
-                angular.forEach(data, function(value) {
-                    if (value.selected) {
-                        selected.push(value);
-                    }
-                });
-                return selected;
+        getSelected: function() {
+          var selected = [];
+          angular.forEach(data, function(value) {
+            if (value.selected) {
+              selected.push(value);
             }
-        };
+          });
+          return selected;
+        }
+      };
     }
 );

@@ -18,27 +18,27 @@
  */
 
 angular.module('rehabstodApp').directive('rhsTooltip',
-    [ 'messageService',
-        function(messageService) {
-            'use strict';
+    ['messageService',
+      function(messageService) {
+        'use strict';
 
-            return {
-                restrict: 'A',
-                scope: {
-                    fieldHelpText: '@',
-                    msgParams: '=',
-                    tooltipClass: '@',
-                    alignment: '@',
-                    icon: '@'
-                },
-                controller: function($scope) {
-                    $scope.getMessage = function(key, msgParams) {
-                        return messageService.getProperty(key, msgParams);
-                    };
-
-                    $scope.align = $scope.alignment ? $scope.alignment : 'auto top';
-                    $scope.iconShown = $scope.icon ? $scope.icon : 'fa-question-circle';
-                },
-                templateUrl: '/components/commonDirectives/rhsTooltip/rhsTooltip.directive.html'
+        return {
+          restrict: 'A',
+          scope: {
+            fieldHelpText: '@',
+            msgParams: '=',
+            tooltipClass: '@',
+            alignment: '@',
+            icon: '@'
+          },
+          controller: function($scope) {
+            $scope.getMessage = function(key, msgParams) {
+              return messageService.getProperty(key, msgParams);
             };
-        }]);
+
+            $scope.align = $scope.alignment ? $scope.alignment : 'auto top';
+            $scope.iconShown = $scope.icon ? $scope.icon : 'fa-question-circle';
+          },
+          templateUrl: '/components/commonDirectives/rhsTooltip/rhsTooltip.directive.html'
+        };
+      }]);

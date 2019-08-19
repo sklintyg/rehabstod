@@ -22,22 +22,22 @@
 var restUtil = require('./../util/rest.util.js');
 
 module.exports = {
-    createBanners: function(message, prio) {
-        var toDate = new Date();
-        toDate.setFullYear(toDate.getFullYear() + 1);
+  createBanners: function(message, prio) {
+    var toDate = new Date();
+    toDate.setFullYear(toDate.getFullYear() + 1);
 
-        var banner = {
-            message: message,
-            priority: prio,
-            application: 'REHABSTOD',
-            createdAt: new Date().toISOString().substring(0, 19),
-            displayFrom: new Date().toISOString().substring(0, 19),
-            displayTo: toDate.toISOString().substring(0, 19)
-        };
+    var banner = {
+      message: message,
+      priority: prio,
+      application: 'REHABSTOD',
+      createdAt: new Date().toISOString().substring(0, 19),
+      displayFrom: new Date().toISOString().substring(0, 19),
+      displayTo: toDate.toISOString().substring(0, 19)
+    };
 
-        return restUtil.createBanners(banner);
-    },
-    clearBanners: function() {
-        return restUtil.clearBanners();
-    }
+    return restUtil.createBanners(banner);
+  },
+  clearBanners: function() {
+    return restUtil.clearBanners();
+  }
 };

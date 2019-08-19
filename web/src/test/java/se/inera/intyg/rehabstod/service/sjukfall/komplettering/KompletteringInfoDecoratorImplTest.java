@@ -28,14 +28,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.rehabstod.integration.wc.service.WcIntegrationService;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -98,7 +96,7 @@ public class KompletteringInfoDecoratorImplTest {
         final SjukfallPatient sjukfall0 = createSjukfallPatient(createPatientData("0", false, false));
         final SjukfallPatient sjukfall1 = createSjukfallPatient(createPatientData("1", false, false));
         final SjukfallPatient sjukfall23 = createSjukfallPatient(createPatientData("2", false, false),
-                createPatientData("3", false, false));
+            createPatientData("3", false, false));
         // Should be 0 because not queried for (because other vg and/or ve rule)
         final SjukfallPatient sjukfall4 = createSjukfallPatient(createPatientData("4", true, false));
         final SjukfallPatient sjukfall5 = createSjukfallPatient(createPatientData("5", false, true));

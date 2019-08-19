@@ -21,6 +21,9 @@ package se.inera.intyg.rehabstod.integration.sparrtjanst.stub;
 // CHECKSTYLE:OFF LineLength
 
 import com.google.common.base.Joiner;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;
@@ -30,10 +33,6 @@ import se.riv.informationsecurity.authorization.blocking.v4.CheckResultType;
 import se.riv.informationsecurity.authorization.blocking.v4.CheckStatusType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultCodeType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultType;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 // CHECKSTYLE:ON LineLength
 
@@ -61,10 +60,10 @@ public class SparrtjanstIntegrationStub implements CheckBlocksResponderInterface
             String vardGivareId = parameters.getInformationEntities().get(i).getInformationCareProviderId();
             String vardEnhetId = parameters.getInformationEntities().get(i).getInformationCareUnitId();
             singleResult
-                    .setStatus(store.isBlockedAtDate(parameters.getPatientId().getExtension(), queryDateFrom, queryDateTo,
-                            vardGivareId, vardEnhetId)
-                            ? CheckStatusType.BLOCKED
-                            : CheckStatusType.OK);
+                .setStatus(store.isBlockedAtDate(parameters.getPatientId().getExtension(), queryDateFrom, queryDateTo,
+                    vardGivareId, vardEnhetId)
+                    ? CheckStatusType.BLOCKED
+                    : CheckStatusType.OK);
 
             resultList.add(singleResult);
         }

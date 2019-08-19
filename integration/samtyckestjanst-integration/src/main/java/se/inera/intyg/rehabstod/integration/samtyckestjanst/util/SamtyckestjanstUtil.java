@@ -20,11 +20,10 @@ package se.inera.intyg.rehabstod.integration.samtyckestjanst.util;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.util.Optional;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.v2.AccessingActorType;
 import se.riv.informationsecurity.authorization.consent.v2.IIType;
-
-import java.util.Optional;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
@@ -44,8 +43,7 @@ public final class SamtyckestjanstUtil {
     /**
      * Controls if a civic registration number is a 'samordningsnummer' or not.
      *
-     * @param personNummer
-     *            the civic registration number
+     * @param personNummer the civic registration number
      * @return true if the civic registration number is a 'samordningsnummer', otherwise false
      */
     private static boolean isSamordningsNummer(Personnummer personNummer) {

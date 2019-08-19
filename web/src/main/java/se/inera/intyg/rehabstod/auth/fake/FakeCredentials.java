@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.auth.fake;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -119,18 +118,19 @@ public class FakeCredentials implements Serializable {
     @Override
     public String toString() {
         return "FakeCredentials{"
-                + "hsaId='" + hsaId + '\''
-                + ", fornamn='" + forNamn + '\''
-                + ", efternamn='" + efterNamn + '\''
-                + ", lakare=" + isLakare()
-                + ", systemRoles=" + "[" + (systemRoles == null ? "" : String.join(",", systemRoles)) + "]"
-                + '}';
+            + "hsaId='" + hsaId + '\''
+            + ", fornamn='" + forNamn + '\''
+            + ", efternamn='" + efterNamn + '\''
+            + ", lakare=" + isLakare()
+            + ", systemRoles=" + "[" + (systemRoles == null ? "" : String.join(",", systemRoles)) + "]"
+            + '}';
     }
 
     // ~ Builder class
     // ~====================================================================================
 
     public static class FakeCredentialsBuilder {
+
         private String hsaId;
         private String forNamn;
         private String efterNamn;

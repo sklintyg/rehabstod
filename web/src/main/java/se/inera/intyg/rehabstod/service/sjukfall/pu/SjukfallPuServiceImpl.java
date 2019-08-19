@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.pu;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,14 +27,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Joiner;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.services.PUService;
 import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
@@ -72,7 +70,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             Optional<Personnummer> pnr = getPersonnummerOfOptional(item.getPatient().getId());
             if (!pnr.isPresent()) {
                 LOG.warn("Removing item from list of sjukfall. Problem parsing personnummer '{}' returned by PU service.",
-                        item.getPatient().getId());
+                    item.getPatient().getId());
                 i.remove();
                 continue;
             }
@@ -85,7 +83,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             PersonSvar personSvar = personSvarMap.get(pnr.get());
             if (personSvar == null) {
                 LOG.info("Removing item from list of sjukfall. PU service returned an empty response for person '{}'",
-                        pnr.get().getPersonnummerHash());
+                    pnr.get().getPersonnummerHash());
                 i.remove();
             } else {
                 if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
@@ -93,7 +91,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                         // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE,
                         // då får vi ej visa sjukfall för s-märkt patient.
                         if (!hasLakareRoleAndIsLakare(user, item.getLakare().getHsaId())
-                                || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
+                            || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
                             i.remove();
                         }
                     } else if (personSvar.getPerson().isAvliden()) {
@@ -104,7 +102,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                     throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
                 } else {
                     LOG.info("Removing item from list of sjukfall. PU service returned an unexpected status response for person '{}'",
-                            pnr.get().getPersonnummerHash());
+                        pnr.get().getPersonnummerHash());
                     i.remove();
                 }
             }
@@ -151,7 +149,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             if (!pnr.isPresent()) {
                 i.remove();
                 LOG.warn("Problem parsing personnummer '{}' returned by PU service. Removing from list of sjukfall.",
-                        item.getPatient().getId());
+                    item.getPatient().getId());
                 continue;
             }
 
@@ -166,7 +164,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                     // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE, då får vi ej visa
                     // sjukfall för s-märkt patient. Dessutom kan det vara en läkare med roll REHABKOORDINATOR.
                     if (!hasLakareRoleAndIsLakare(user, item.getLakare().getHsaId())
-                            || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
+                        || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
                         i.remove();
                     }
 
@@ -227,27 +225,27 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
             if (personSvar.getPerson().isSekretessmarkering()) {
                 if (!(hasLakareRoleAndIsLakare(user, firstPatientDataItem.getLakare().getHsaId())
-                        && userService.isUserLoggedInOnEnhetOrUnderenhet(firstPatientDataItem.getVardenhetId()))) {
+                    && userService.isUserLoggedInOnEnhetOrUnderenhet(firstPatientDataItem.getVardenhetId()))) {
                     throw new IllegalStateException("Cannot show patient details for patient having sekretessmarkering");
                 }
                 // Uppdatera namnet på samtliga ingående intyg i sjukfallet till "Sekretessmarkering"
                 // om användaren får lov att se sjukfallen.
                 patientSjukfall.stream()
-                        .flatMap(ps -> ps.getIntyg().stream())
-                        .forEach(i -> i.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_PLACEHOLDER));
+                    .flatMap(ps -> ps.getIntyg().stream())
+                    .forEach(i -> i.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_PLACEHOLDER));
             } else {
                 // Uppdatera namnet på samtliga ingående intyg i sjukfallet om patienten EJ är s-märkt.
                 patientSjukfall.stream()
-                        .flatMap(ps -> ps.getIntyg().stream())
-                        .forEach(i -> i.getPatient().setNamn(joinNames(personSvar)));
+                    .flatMap(ps -> ps.getIntyg().stream())
+                    .forEach(i -> i.getPatient().setNamn(joinNames(personSvar)));
             }
 
         } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
             throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
         } else {
             patientSjukfall.stream()
-                    .flatMap(ps -> ps.getIntyg().stream())
-                    .forEach(i -> i.getPatient().setNamn("Namn okänt"));
+                .flatMap(ps -> ps.getIntyg().stream())
+                .forEach(i -> i.getPatient().setNamn("Namn okänt"));
         }
     }
 
@@ -257,18 +255,18 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
      */
     @VisibleForTesting
     List<Personnummer> getPersonnummerList(List<SjukfallEnhet> sjukfallList) {
-                                    LOG.debug("Building a list of Personnummer by extracting patient IDs from a 'sjukfall' list.");
+        LOG.debug("Building a list of Personnummer by extracting patient IDs from a 'sjukfall' list.");
         return getPersonnummerListOfOptionals(sjukfallList).stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .distinct()
-                .collect(Collectors.toList());
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .distinct()
+            .collect(Collectors.toList());
     }
 
     private List<Optional<Personnummer>> getPersonnummerListOfOptionals(List<SjukfallEnhet> sjukfallList) {
         return sjukfallList.stream()
-                .map(se -> getPersonnummerOfOptional(se.getPatient().getId()))
-                .collect(Collectors.toList());
+            .map(se -> getPersonnummerOfOptional(se.getPatient().getId()))
+            .collect(Collectors.toList());
     }
 
     private Optional<Personnummer> getPersonnummerOfOptional(String pnr) {
@@ -284,7 +282,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
     private Personnummer getPersonnummer(String pnr) {
         Personnummer personnummer = Personnummer.createPersonnummer(pnr)
-                .orElseThrow(() -> new RuntimeException("Found unparsable personnummer '" + pnr + "'"));
+            .orElseThrow(() -> new RuntimeException("Found unparsable personnummer '" + pnr + "'"));
 
         if (!personnummer.verifyControlDigit()) {
             throw new RuntimeException("Found personnummer '" + personnummer.getPersonnummerHash() + "' with invalid control digit");
@@ -295,10 +293,10 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
     private List<IntygData> filterOnVardgivareAndEnhet(List<IntygData> intygsData, String vardgivareId, String enhetsId) {
         return intygsData.stream()
-                .filter(intygData ->
-                        intygData.getVardgivareId().equals(vardgivareId)
-                                && intygData.getVardenhetId().equals(enhetsId))
-                .collect(Collectors.toList());
+            .filter(intygData ->
+                intygData.getVardgivareId().equals(vardgivareId)
+                    && intygData.getVardenhetId().equals(enhetsId))
+            .collect(Collectors.toList());
     }
 
     // This is a hack to sort out the requirement that a Doctor MAY have systemRole making the Doctor a REHABKOORDINATOR.
@@ -306,15 +304,15 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
     // This method explicitly checks to the user is both a doc and has the requisite role.
     private boolean hasLakareRoleAndIsLakare(RehabstodUser user, String issuingDoctorHsaId) {
         return (user.isLakare() && user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE))
-                || (user.isLakare() && !user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE)
-                && user.getHsaId().equalsIgnoreCase(issuingDoctorHsaId));
+            || (user.isLakare() && !user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE)
+            && user.getHsaId().equalsIgnoreCase(issuingDoctorHsaId));
     }
 
     private String joinNames(PersonSvar personSvar) {
         return Joiner.on(' ').skipNulls()
-                .join(personSvar.getPerson().getFornamn(),
-                        personSvar.getPerson().getMellannamn(),
-                        personSvar.getPerson().getEfternamn());
+            .join(personSvar.getPerson().getFornamn(),
+                personSvar.getPerson().getMellannamn(),
+                personSvar.getPerson().getEfternamn());
     }
 
 }

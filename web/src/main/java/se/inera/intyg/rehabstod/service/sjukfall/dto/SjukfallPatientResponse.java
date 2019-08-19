@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
 import java.util.List;
-
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 /**
@@ -33,7 +32,7 @@ public class SjukfallPatientResponse {
     private boolean kompletteringInfoError = false;
 
     public SjukfallPatientResponse(List<SjukfallPatient> rehabstodSjukfall, SjfMetaData sjfMetaData, boolean srsError,
-            boolean kompletteringInfoError) {
+        boolean kompletteringInfoError) {
         this.sjukfallList = rehabstodSjukfall;
         this.sjfMetaData = sjfMetaData;
         this.srsError = srsError;

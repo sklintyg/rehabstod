@@ -19,72 +19,72 @@
 
 angular.module('rehabstodApp').factory('StringHelper',
     function() {
-        'use strict';
-        var swedishAlphabet = '-.()0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÅåÄäÖö';
+      'use strict';
+      var swedishAlphabet = '-.()0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÅåÄäÖö';
 
-        function escapeRegExp(str) {
-            return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
-        }
+      function escapeRegExp(str) {
+        return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1');
+      }
 
-        function swedishStringSorter(dir, caseSensitive) {
-            return function(a, b) {
-                return compareSwedishString(dir, caseSensitive, a, b);
-            };
-        }
-
-        function compareSwedishString(dir, caseSensitive, a, b) {
-            var pos = 0,
-                min = Math.min(a.length, b.length);
-            dir = dir || 1;
-            caseSensitive = caseSensitive || false;
-            if (!caseSensitive) {
-                a = a.toLowerCase();
-                b = b.toLowerCase();
-            }
-            while (a.charAt(pos) === b.charAt(pos) && pos < min) {
-                pos++;
-            }
-
-            var charA = a.charAt(pos);
-            var charB = b.charAt(pos);
-
-            if (charA === charB) {
-                return 0;
-            }
-
-            return _compareChars(charA, charB, dir);
-        }
-
-        function _compareChars(charA, charB, dir) {
-            var indexA = swedishAlphabet.indexOf(charA);
-            var indexB = swedishAlphabet.indexOf(charB);
-
-            if (indexA === -1 && indexB === -1) {
-                return charA > charB ? dir : -dir;
-            }
-
-            if (indexA === -1) {
-                indexA = swedishAlphabet.length;
-            }
-
-            if (indexB === -1) {
-                indexB = swedishAlphabet.length;
-            }
-
-            return indexA > indexB ? dir : -dir;
-        }
-        
-        return {
-            replaceAll: function(str, search, replacement) {
-                return str.replace(new RegExp(escapeRegExp(search), 'g'), replacement);
-            },
-            swedishStringSortImpl: function(asc, caseSensitive) {
-                return swedishStringSorter(asc === true ? 1 : -1, caseSensitive);
-            },
-            compareSwedishString: function(asc, caseSensitive, a, b) {
-                return compareSwedishString(asc === true ? 1 : -1, caseSensitive, a, b);
-            }
+      function swedishStringSorter(dir, caseSensitive) {
+        return function(a, b) {
+          return compareSwedishString(dir, caseSensitive, a, b);
         };
+      }
+
+      function compareSwedishString(dir, caseSensitive, a, b) {
+        var pos = 0,
+            min = Math.min(a.length, b.length);
+        dir = dir || 1;
+        caseSensitive = caseSensitive || false;
+        if (!caseSensitive) {
+          a = a.toLowerCase();
+          b = b.toLowerCase();
+        }
+        while (a.charAt(pos) === b.charAt(pos) && pos < min) {
+          pos++;
+        }
+
+        var charA = a.charAt(pos);
+        var charB = b.charAt(pos);
+
+        if (charA === charB) {
+          return 0;
+        }
+
+        return _compareChars(charA, charB, dir);
+      }
+
+      function _compareChars(charA, charB, dir) {
+        var indexA = swedishAlphabet.indexOf(charA);
+        var indexB = swedishAlphabet.indexOf(charB);
+
+        if (indexA === -1 && indexB === -1) {
+          return charA > charB ? dir : -dir;
+        }
+
+        if (indexA === -1) {
+          indexA = swedishAlphabet.length;
+        }
+
+        if (indexB === -1) {
+          indexB = swedishAlphabet.length;
+        }
+
+        return indexA > indexB ? dir : -dir;
+      }
+
+      return {
+        replaceAll: function(str, search, replacement) {
+          return str.replace(new RegExp(escapeRegExp(search), 'g'), replacement);
+        },
+        swedishStringSortImpl: function(asc, caseSensitive) {
+          return swedishStringSorter(asc === true ? 1 : -1, caseSensitive);
+        },
+        compareSwedishString: function(asc, caseSensitive, a, b) {
+          return compareSwedishString(asc === true ? 1 : -1, caseSensitive, a, b);
+        }
+      };
 
     }
 );

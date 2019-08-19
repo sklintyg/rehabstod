@@ -19,90 +19,90 @@
 
 angular.module('rehabstodApp').directive('rhsMultiSelect',
     function($window) {
-        'use strict';
+      'use strict';
 
-        var $win = angular.element($window);
+      var $win = angular.element($window);
 
-        return {
-            restrict: 'E',
-            scope: {
-                noneSelectedTitle: '@',
-                highLightEnabled: '=',
-                itemsModel: '=',
-                xorMode: '='
-            },
+      return {
+        restrict: 'E',
+        scope: {
+          noneSelectedTitle: '@',
+          highLightEnabled: '=',
+          itemsModel: '=',
+          xorMode: '='
+        },
 
-            templateUrl: '/components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.html',
-            link: function($scope, element) {
+        templateUrl: '/components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.html',
+        link: function($scope, element) {
 
-                var calculateDropdownHeight = function() {
-                    if ($scope.isOpen) {
-                        var dropdown = element.find('.dropdown-menu');
+          var calculateDropdownHeight = function() {
+            if ($scope.isOpen) {
+              var dropdown = element.find('.dropdown-menu');
 
-                        var offsetTop = dropdown.offset().top - $win.scrollTop();
+              var offsetTop = dropdown.offset().top - $win.scrollTop();
 
-                        var height = $window.innerHeight - offsetTop - 20;
+              var height = $window.innerHeight - offsetTop - 20;
 
-                        dropdown.css('max-height', Math.max(height, 100));
-                    }
-                };
-
-                $scope.isOpen = false;
-
-                //Template just need access to the array
-                $scope.items = $scope.itemsModel.get();
-
-                //Calculate title based on whether item(s) are selected or not.
-                $scope.getTitle = function() {
-                    var nrItemsSelected = $scope.itemsModel.getSelected().length;
-                    if (nrItemsSelected === 0) {
-                        return $scope.noneSelectedTitle;
-                    } else if (nrItemsSelected === 1) {
-                        return $scope.itemsModel.getSelected()[0].displayValue;
-                    } else {
-                        return nrItemsSelected + ' valda';
-                    }
-                };
-
-                $scope.toggleItem = function(item) {
-                    if ($scope.xorMode) {
-                        angular.forEach($scope.items, function(it) {
-                            if (it !== item) {
-                                it.selected = false;
-                            }
-                        });
-                    }
-                    item.selected = !item.selected;
-
-                    if ($scope.xorMode) {
-                        $scope.isOpen = false;
-                    }
-                };
-
-                $scope.dropdownToggle = function(open) {
-                    $scope.isOpen = open;
-                    calculateDropdownHeight();
-                };
-
-                $win.on('resize', calculateDropdownHeight);
-
-                $scope.$on('$destroy', function() {
-                    $win.unbind('resize', calculateDropdownHeight);
-                });
-
-                //Listen to focusout events, that will bubble to this directives root element.
-                //If the element receiveing the focus (event.relatedTarget) is not structurally under this directive
-                //root node, we have for example tabbed to another component. In that case, we should close the dropdown.
-                element.on('focusout', function(event) {
-                    if (!element[0].contains(event.relatedTarget)) {
-                        $scope.isOpen = false;
-                        //Wer'e not in angular land here(i.e within a digest loop) - so we need to inform
-                        //angular of this change.
-                        $scope.$apply();
-                    }
-                });
+              dropdown.css('max-height', Math.max(height, 100));
             }
-        };
+          };
+
+          $scope.isOpen = false;
+
+          //Template just need access to the array
+          $scope.items = $scope.itemsModel.get();
+
+          //Calculate title based on whether item(s) are selected or not.
+          $scope.getTitle = function() {
+            var nrItemsSelected = $scope.itemsModel.getSelected().length;
+            if (nrItemsSelected === 0) {
+              return $scope.noneSelectedTitle;
+            } else if (nrItemsSelected === 1) {
+              return $scope.itemsModel.getSelected()[0].displayValue;
+            } else {
+              return nrItemsSelected + ' valda';
+            }
+          };
+
+          $scope.toggleItem = function(item) {
+            if ($scope.xorMode) {
+              angular.forEach($scope.items, function(it) {
+                if (it !== item) {
+                  it.selected = false;
+                }
+              });
+            }
+            item.selected = !item.selected;
+
+            if ($scope.xorMode) {
+              $scope.isOpen = false;
+            }
+          };
+
+          $scope.dropdownToggle = function(open) {
+            $scope.isOpen = open;
+            calculateDropdownHeight();
+          };
+
+          $win.on('resize', calculateDropdownHeight);
+
+          $scope.$on('$destroy', function() {
+            $win.unbind('resize', calculateDropdownHeight);
+          });
+
+          //Listen to focusout events, that will bubble to this directives root element.
+          //If the element receiveing the focus (event.relatedTarget) is not structurally under this directive
+          //root node, we have for example tabbed to another component. In that case, we should close the dropdown.
+          element.on('focusout', function(event) {
+            if (!element[0].contains(event.relatedTarget)) {
+              $scope.isOpen = false;
+              //Wer'e not in angular land here(i.e within a digest loop) - so we need to inform
+              //angular of this change.
+              $scope.$apply();
+            }
+          });
+        }
+      };
     });
 
 

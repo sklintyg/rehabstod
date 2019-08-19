@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities.validation;
 
+import static org.junit.Assert.assertTrue;
+
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,8 +28,6 @@ import se.inera.intyg.infra.security.authorities.validation.AuthExpectationSpecI
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by marced on 14/04/16.

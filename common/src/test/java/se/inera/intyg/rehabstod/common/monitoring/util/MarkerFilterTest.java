@@ -22,16 +22,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.spi.LoggingEvent;
+import ch.qos.logback.core.spi.FilterReply;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MarkerFactory;
-
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.spi.LoggingEvent;
-import ch.qos.logback.core.spi.FilterReply;
 
 /**
  * Created by marced on 14/04/16.
@@ -70,7 +69,7 @@ public class MarkerFilterTest {
         markerFilter.setMarker(MARKER_NAME);
         markerFilter.start();
         ch.qos.logback.classic.Logger logbackLogger = (ch.qos.logback.classic.Logger) LoggerFactory
-                .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+            .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 
         LoggingEvent event = new LoggingEvent("fqcn", logbackLogger, Level.DEBUG, "a message", null, null);
         final FilterReply reply = markerFilter.decide(event);
@@ -82,7 +81,7 @@ public class MarkerFilterTest {
     public void testDecideWithoutStarted() {
         markerFilter.setMarkers("olle,pelle");
         ch.qos.logback.classic.Logger logbackLogger = (ch.qos.logback.classic.Logger) LoggerFactory
-                .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+            .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 
         LoggingEvent event = new LoggingEvent("fqcn", logbackLogger, Level.DEBUG, "a message", null, null);
         final FilterReply reply = markerFilter.decide(event);
@@ -96,7 +95,7 @@ public class MarkerFilterTest {
         markerFilter.setMarker(MARKER_NAME);
         markerFilter.start();
         ch.qos.logback.classic.Logger logbackLogger = (ch.qos.logback.classic.Logger) LoggerFactory
-                .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+            .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 
         LoggingEvent event = new LoggingEvent("fqcn", logbackLogger, Level.DEBUG, "a message", null, null);
         event.setMarker(MarkerFactory.getMarker("unknownmarker"));
@@ -111,7 +110,7 @@ public class MarkerFilterTest {
         markerFilter.setMarker(MARKER_NAME);
         markerFilter.start();
         ch.qos.logback.classic.Logger logbackLogger = (ch.qos.logback.classic.Logger) LoggerFactory
-                .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+            .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
 
         LoggingEvent event = new LoggingEvent("fqcn", logbackLogger, Level.DEBUG, "a message", null, null);
         event.setMarker(MarkerFactory.getMarker(MARKER_NAME));

@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.logmessages.ActivityType;
@@ -30,9 +32,6 @@ import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataLogMessage;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogPatient;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-03-03.
@@ -49,18 +48,18 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 
     @Override
     public PdlLogMessage buildLogMessage(List<SjukfallEnhet> sjukfallList,
-                                         LogUser logUser,
-                                         ActivityType activityType,
-                                         ResourceType resourceType) {
+        LogUser logUser,
+        ActivityType activityType,
+        ResourceType resourceType) {
 
         PdlLogMessage pdlLogMessage = getLogMessage(activityType);
         populateWithCurrentUserAndCareUnit(pdlLogMessage, logUser);
 
         // Add resources
         pdlLogMessage.getPdlResourceList().addAll(
-                sjukfallList.stream()
-                        .map(sfe -> buildPdlLogResource(sfe, logUser, resourceType))
-                        .collect(Collectors.toList()));
+            sjukfallList.stream()
+                .map(sfe -> buildPdlLogResource(sfe, logUser, resourceType))
+                .collect(Collectors.toList()));
 
         // Unset values due to regulations
         unsetValues(pdlLogMessage);
@@ -70,17 +69,17 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
 
     @Override
     public PdlLogMessage buildLogMessage(LogPatient logPatient,
-                                         LogUser logUser,
-                                         ActivityType activityType,
-                                         ResourceType resourceType) {
+        LogUser logUser,
+        ActivityType activityType,
+        ResourceType resourceType) {
 
         PdlLogMessage pdlLogMessage = getLogMessage(activityType);
         populateWithCurrentUserAndCareUnit(pdlLogMessage, logUser);
 
         // Add single resource
         pdlLogMessage.getPdlResourceList().add(
-                buildPdlLogResource(logPatient.getPatientId(), logPatient.getPatientNamn(), logPatient.getEnhetsId(),
-                        logPatient.getEnhetsNamn(), logPatient.getVardgivareId(), logPatient.getVardgivareNamn(), resourceType));
+            buildPdlLogResource(logPatient.getPatientId(), logPatient.getPatientNamn(), logPatient.getEnhetsId(),
+                logPatient.getEnhetsNamn(), logPatient.getVardgivareId(), logPatient.getVardgivareNamn(), resourceType));
 
         // Unset values due to regulations
         unsetValues(pdlLogMessage);
@@ -98,12 +97,12 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
     }
 
     private PdlResource buildPdlLogResource(String patientId,
-                                            String patientName,
-                                            String vardenhetId,
-                                            String vardenhetNamn,
-                                            String vardgivareId,
-                                            String vardgivareNamn,
-                                            ResourceType resourceType) {
+        String patientName,
+        String vardenhetId,
+        String vardenhetNamn,
+        String vardgivareId,
+        String vardgivareNamn,
+        ResourceType resourceType) {
 
         Patient patient = createPatient(patientId, patientName);
         Enhet enhet = createEnhet(vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn);

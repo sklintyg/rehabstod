@@ -24,14 +24,13 @@ import se.inera.intyg.rehabstod.service.exceptions.ServiceException;
  * Created by Magnus Ekstrand on 2016-04-12.
  */
 public class TokenServiceException extends ServiceException {
+
     /**
      * Constructs an {@code ServiceException} with the specified message and root
      * cause.
      *
-     * @param msg
-     *            the detail message
-     * @param t
-     *            the root cause
+     * @param msg the detail message
+     * @param t the root cause
      */
     public TokenServiceException(String msg, Throwable t) {
         super(msg, t);
@@ -41,8 +40,7 @@ public class TokenServiceException extends ServiceException {
      * Constructs an {@code ServiceException} with the specified message and no
      * root cause.
      *
-     * @param msg
-     *            the detail message
+     * @param msg the detail message
      */
     public TokenServiceException(String msg) {
         super(msg);

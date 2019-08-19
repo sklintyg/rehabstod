@@ -22,7 +22,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 
 /**
@@ -49,14 +48,12 @@ public class DiagnosKapitel {
 
     private String name;
 
-
     // constructors
 
     /**
      * Constructor that only accepts a diagnose code interval source string in the form "AXX-BXXSome description".
      * This is mainly to accommodate simple ingestion of config from a flat file.
      *
-     * @param rangeString
      * @see DiagnosKapitel#VALID_DIAGNOSKAPITEL_ROW_FORMAT
      */
     public DiagnosKapitel(String rangeString) {
@@ -67,7 +64,7 @@ public class DiagnosKapitel {
             this.name = matcher.group(GROUP_NAME);
         } else {
             throw new IllegalArgumentException("rangeString argument '" + rangeString + "' does not match expected format of "
-                    + VALID_DIAGNOSKAPITEL_ROW_FORMAT.pattern());
+                + VALID_DIAGNOSKAPITEL_ROW_FORMAT.pattern());
         }
     }
 
@@ -76,7 +73,6 @@ public class DiagnosKapitel {
         this.to = to;
         this.name = name;
     }
-
 
     // getters and setters
 
@@ -91,7 +87,6 @@ public class DiagnosKapitel {
     public DiagnosKategori getTo() {
         return to;
     }
-
 
     // api
 
@@ -109,9 +104,6 @@ public class DiagnosKapitel {
 
     /**
      * Determines if a given diagnosKategori is considered to be included in this DiagnosKapitel.
-     *
-     * @param diagnosKategori
-     * @return
      */
     public boolean includes(Optional<DiagnosKategori> diagnosKategori) {
         if (diagnosKategori.isPresent()) {
@@ -135,8 +127,8 @@ public class DiagnosKapitel {
         }
         DiagnosKapitel that = (DiagnosKapitel) o;
         return Objects.equals(from, that.from)
-                && Objects.equals(to, that.to)
-                && Objects.equals(name, that.name);
+            && Objects.equals(to, that.to)
+            && Objects.equals(name, that.name);
     }
 
     @Override

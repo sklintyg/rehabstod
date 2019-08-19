@@ -37,115 +37,115 @@ import se.inera.intyg.rehabstod.web.model.LangdIntervall;
  */
 public abstract class BaseExportService {
 
-  protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Valda diagnoser";
-  protected static final String SELECTION_VALUE_ALLA = "Alla";
-  protected static final String FILTER_TITLE_VALDA_LAKARE = "Valda läkare";
-  protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS = "Kompletteringsstatus";
-  protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA = "Visa alla";
-  protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN = "Visa sjukfall utan obesvarade kompletteringar";
-  protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_MED = "Visa sjukfall med obesvarade kompletteringar";
-  protected static final String FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
-  protected static final String FILTER_TITLE_VALD_ALDER = "Åldersspann";
-  protected static final String FILTER_TITLE_VALD_SLUTDATUM = "Slutdatum";
-  protected static final String FILTER_TITLE_FRITEXTFILTER = "Fritextfilter";
-  protected static final String FILTER_TITLE_VISAPATIENTUPPGIFTER = "Visa personuppgifter";
-  protected static final String VALDA_FILTER = "Valda filter";
-  protected static final String H2_SJUKFALLSINSTALLNING = "Sjukfallsinställning";
-  protected static final String MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG = "Max dagar mellan intyg";
-  protected static final String VALD_SORTERING_PA_TABELLEN = "Vald sortering";
-  protected static final String SORTERING_KOLUMN = "Kolumn: ";
-  protected static final String SORTERING_RIKTNING = "Riktning: ";
-  protected static final String ANTAL_VISAR_ANTAL_PAGAENDE_SJUKFALL = "Antal pågående sjukfall";
-  protected static final String ANTAL_EXPORTEN_VISAR = "Tabellen visar: ";
-  protected static final String ANTAL_TOTALT_MINA = "Totalt: ";
-  protected static final String ANTAL_TOTALT_PA_ENHETEN = "Totalt på enheten: ";
+    protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Valda diagnoser";
+    protected static final String SELECTION_VALUE_ALLA = "Alla";
+    protected static final String FILTER_TITLE_VALDA_LAKARE = "Valda läkare";
+    protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS = "Kompletteringsstatus";
+    protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA = "Visa alla";
+    protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN = "Visa sjukfall utan obesvarade kompletteringar";
+    protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_MED = "Visa sjukfall med obesvarade kompletteringar";
+    protected static final String FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
+    protected static final String FILTER_TITLE_VALD_ALDER = "Åldersspann";
+    protected static final String FILTER_TITLE_VALD_SLUTDATUM = "Slutdatum";
+    protected static final String FILTER_TITLE_FRITEXTFILTER = "Fritextfilter";
+    protected static final String FILTER_TITLE_VISAPATIENTUPPGIFTER = "Visa personuppgifter";
+    protected static final String VALDA_FILTER = "Valda filter";
+    protected static final String H2_SJUKFALLSINSTALLNING = "Sjukfallsinställning";
+    protected static final String MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG = "Max dagar mellan intyg";
+    protected static final String VALD_SORTERING_PA_TABELLEN = "Vald sortering";
+    protected static final String SORTERING_KOLUMN = "Kolumn: ";
+    protected static final String SORTERING_RIKTNING = "Riktning: ";
+    protected static final String ANTAL_VISAR_ANTAL_PAGAENDE_SJUKFALL = "Antal pågående sjukfall";
+    protected static final String ANTAL_EXPORTEN_VISAR = "Tabellen visar: ";
+    protected static final String ANTAL_TOTALT_MINA = "Totalt: ";
+    protected static final String ANTAL_TOTALT_PA_ENHETEN = "Totalt på enheten: ";
 
-  protected static final String FORMAT_ANTAL_DAGAR = "%d dagar";
-  protected static final String UNICODE_RIGHT_ARROW_SYMBOL = "\u2192";
-  private static final int SRS_RISK_LOW = 1;
-  private static final String SRS_RISK_LOW_DESC = "Måttlig";
-  private static final int SRS_RISK_MED = 2;
-  private static final String SRS_RISK_MED_DESC = "Hög";
-  private static final int SRS_RISK_HIGH = 3;
-  private static final String SRS_RISK_HIGH_DESC = "Mycket hög";
+    protected static final String FORMAT_ANTAL_DAGAR = "%d dagar";
+    protected static final String UNICODE_RIGHT_ARROW_SYMBOL = "\u2192";
+    private static final int SRS_RISK_LOW = 1;
+    private static final String SRS_RISK_LOW_DESC = "Måttlig";
+    private static final int SRS_RISK_MED = 2;
+    private static final String SRS_RISK_MED_DESC = "Hög";
+    private static final int SRS_RISK_HIGH = 3;
+    private static final String SRS_RISK_HIGH_DESC = "Mycket hög";
 
-  @Autowired
-  protected DiagnosKapitelService diagnosKapitelService;
+    @Autowired
+    protected DiagnosKapitelService diagnosKapitelService;
 
-  public static String diagnoseListToString(List<Diagnos> biDiagnoser) {
-    if (biDiagnoser != null && !biDiagnoser.isEmpty()) {
-      return biDiagnoser.stream()
-          .map(Diagnos::getIntygsVarde)
-          .collect(Collectors.joining(", ", ", ", ""));
-    } else {
-      return "";
-    }
-
-  }
-
-  public static String getFilterDate(LangdIntervall dateIntervall) {
-    String max = dateIntervall.getMax();
-    String min = dateIntervall.getMin();
-
-    if (max != null && !max.isEmpty() && min != null && !min.isEmpty()) {
-      if (max.equals(min)) {
-        return max;
-      } else {
-        return min + " - " + max;
-      }
-    }
-
-    return "-";
-  }
-
-  protected boolean notEmpty(PrintSjukfallRequest req) {
-    return req.getFritext() != null && req.getFritext().trim().length() > 0;
-  }
-
-  protected boolean shouldShowSortering(PrintSjukfallRequest req, List<ExportField> displayedFields) {
-    if (req.getSortering() == null || StringUtil.isNullOrEmpty(req.getSortering().getKolumn())) {
-      return false;
-    }
-    final Optional<ExportField> sortColumn = ExportField.fromJsonId(req.getSortering().getKolumn());
-    return sortColumn.isPresent() && displayedFields.contains(sortColumn.get());
-
-  }
-
-  protected String getKompletteringFilterDisplayValue(Integer komplettering) {
-    if (komplettering == null) {
-      return FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA;
-    } else {
-      return komplettering == 0 ? FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN : FILTER_TITLE_KOMPLETTERINGSSTATUS_MED;
-    }
-  }
-
-  protected String getKompletteringStatusFormat(int obesvaradeKompl) {
-    if (obesvaradeKompl == 0) {
-      return "-";
-    } else {
-      return "Obesvarade(" + obesvaradeKompl + ")";
-    }
-  }
-
-  protected boolean isSrsFeatureActive(RehabstodUser user) {
-    return Optional.ofNullable(user.getFeatures())
-        .map(features -> features.get(AuthoritiesConstants.FEATURE_SRS))
-        .map(Feature::getGlobal).orElse(false);
-  }
-
-  public static String getRiskKategoriDesc(RiskSignal risksignal) {
-    if (risksignal != null) {
-      switch (risksignal.getRiskKategori()) {
-        case SRS_RISK_LOW:
-          return SRS_RISK_LOW_DESC;
-        case SRS_RISK_MED:
-          return SRS_RISK_MED_DESC;
-        case SRS_RISK_HIGH:
-          return SRS_RISK_HIGH_DESC;
-      }
+    public static String diagnoseListToString(List<Diagnos> biDiagnoser) {
+        if (biDiagnoser != null && !biDiagnoser.isEmpty()) {
+            return biDiagnoser.stream()
+                .map(Diagnos::getIntygsVarde)
+                .collect(Collectors.joining(", ", ", ", ""));
+        } else {
+            return "";
+        }
 
     }
-    return "Ej beräknad";
-  }
+
+    public static String getFilterDate(LangdIntervall dateIntervall) {
+        String max = dateIntervall.getMax();
+        String min = dateIntervall.getMin();
+
+        if (max != null && !max.isEmpty() && min != null && !min.isEmpty()) {
+            if (max.equals(min)) {
+                return max;
+            } else {
+                return min + " - " + max;
+            }
+        }
+
+        return "-";
+    }
+
+    protected boolean notEmpty(PrintSjukfallRequest req) {
+        return req.getFritext() != null && req.getFritext().trim().length() > 0;
+    }
+
+    protected boolean shouldShowSortering(PrintSjukfallRequest req, List<ExportField> displayedFields) {
+        if (req.getSortering() == null || StringUtil.isNullOrEmpty(req.getSortering().getKolumn())) {
+            return false;
+        }
+        final Optional<ExportField> sortColumn = ExportField.fromJsonId(req.getSortering().getKolumn());
+        return sortColumn.isPresent() && displayedFields.contains(sortColumn.get());
+
+    }
+
+    protected String getKompletteringFilterDisplayValue(Integer komplettering) {
+        if (komplettering == null) {
+            return FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA;
+        } else {
+            return komplettering == 0 ? FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN : FILTER_TITLE_KOMPLETTERINGSSTATUS_MED;
+        }
+    }
+
+    protected String getKompletteringStatusFormat(int obesvaradeKompl) {
+        if (obesvaradeKompl == 0) {
+            return "-";
+        } else {
+            return "Obesvarade(" + obesvaradeKompl + ")";
+        }
+    }
+
+    protected boolean isSrsFeatureActive(RehabstodUser user) {
+        return Optional.ofNullable(user.getFeatures())
+            .map(features -> features.get(AuthoritiesConstants.FEATURE_SRS))
+            .map(Feature::getGlobal).orElse(false);
+    }
+
+    public static String getRiskKategoriDesc(RiskSignal risksignal) {
+        if (risksignal != null) {
+            switch (risksignal.getRiskKategori()) {
+                case SRS_RISK_LOW:
+                    return SRS_RISK_LOW_DESC;
+                case SRS_RISK_MED:
+                    return SRS_RISK_MED_DESC;
+                case SRS_RISK_HIGH:
+                    return SRS_RISK_HIGH_DESC;
+            }
+
+        }
+        return "Ej beräknad";
+    }
 
 }

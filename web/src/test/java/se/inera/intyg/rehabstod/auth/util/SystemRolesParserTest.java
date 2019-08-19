@@ -18,14 +18,13 @@
  */
 package se.inera.intyg.rehabstod.auth.util;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static se.inera.intyg.rehabstod.auth.util.SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static se.inera.intyg.rehabstod.auth.util.SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX;
+import org.junit.Test;
 
 public class SystemRolesParserTest {
 
@@ -43,14 +42,16 @@ public class SystemRolesParserTest {
 
     @Test
     public void testParseSingleValidRole() {
-        List<String> enhetIds = SystemRolesParser.parseEnhetsIdsFromSystemRoles(Arrays.asList(HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "TSTNMT-ABC-123"));
+        List<String> enhetIds = SystemRolesParser
+            .parseEnhetsIdsFromSystemRoles(Arrays.asList(HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "TSTNMT-ABC-123"));
         assertEquals(1, enhetIds.size());
         assertEquals("TSTNMT-ABC-123", enhetIds.get(0));
     }
 
     @Test
     public void testParseTwoValidRoles() {
-        List<String> enhetIds = SystemRolesParser.parseEnhetsIdsFromSystemRoles(Arrays.asList(HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "TSTNMT-ABC-123", HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "TSTNMT-ABC-124"));
+        List<String> enhetIds = SystemRolesParser.parseEnhetsIdsFromSystemRoles(
+            Arrays.asList(HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "TSTNMT-ABC-123", HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "TSTNMT-ABC-124"));
         assertEquals(2, enhetIds.size());
         assertEquals("TSTNMT-ABC-123", enhetIds.get(0));
         assertEquals("TSTNMT-ABC-124", enhetIds.get(1));

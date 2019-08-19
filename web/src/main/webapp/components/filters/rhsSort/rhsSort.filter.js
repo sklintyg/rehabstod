@@ -18,27 +18,26 @@
  */
 
 angular.module('rehabstodApp').filter('rhsSort', function($filter, $parse, StringHelper) {
-    'use strict';
+  'use strict';
 
-    var orderBy = $filter('orderBy');
+  var orderBy = $filter('orderBy');
 
-    var customSort = function(predicte, reverse) {
-        return function(a, b) {
-            a = $parse(predicte)(a);
-            b = $parse(predicte)(b);
-            
-            return StringHelper.compareSwedishString(!reverse, false, a, b);
-        };
+  var customSort = function(predicte, reverse) {
+    return function(a, b) {
+      a = $parse(predicte)(a);
+      b = $parse(predicte)(b);
+
+      return StringHelper.compareSwedishString(!reverse, false, a, b);
     };
-    
-    
-    return function(array, predicate, reverse) {
-        if (array.length > 0) {
-            if (angular.isString($parse(predicate)(array[0]))) {
-                return array.sort(customSort(predicate, reverse));
-            }
-        }
+  };
 
-        return orderBy(array, predicate, reverse);
-    };
+  return function(array, predicate, reverse) {
+    if (array.length > 0) {
+      if (angular.isString($parse(predicate)(array[0]))) {
+        return array.sort(customSort(predicate, reverse));
+      }
+    }
+
+    return orderBy(array, predicate, reverse);
+  };
 });

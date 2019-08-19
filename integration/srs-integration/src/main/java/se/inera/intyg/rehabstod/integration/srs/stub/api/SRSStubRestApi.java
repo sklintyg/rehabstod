@@ -32,7 +32,7 @@ import se.inera.intyg.rehabstod.integration.srs.stub.SRSStub;
  *
  * If inactive, a RuntimeException will be thrown to fake problems.
  */
-@Profile({ "rhs-srs-stub" })
+@Profile({"rhs-srs-stub"})
 @RestController
 @RequestMapping("/api/stub/srs")
 public class SRSStubRestApi {

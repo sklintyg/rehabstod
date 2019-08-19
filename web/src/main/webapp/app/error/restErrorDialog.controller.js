@@ -18,8 +18,8 @@
  */
 
 angular.module('rehabstodApp')
-    .controller('restErrorDialogCtrl', function($scope, $uibModalInstance, msgConfig) {
-        'use strict';
+.controller('restErrorDialogCtrl', function($scope, $uibModalInstance, msgConfig) {
+  'use strict';
 
-        $scope.msgConfig = msgConfig;
-    });
+  $scope.msgConfig = msgConfig;
+});

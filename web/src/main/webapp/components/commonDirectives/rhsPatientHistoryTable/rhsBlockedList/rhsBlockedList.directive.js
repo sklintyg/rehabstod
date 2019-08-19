@@ -18,22 +18,22 @@
  */
 angular.module('rehabstodApp').directive('rhsBlockedList',
     function(patientHistoryViewState) {
-    'use strict';
+      'use strict';
 
-    return {
+      return {
         restrict: 'E',
         scope: {
-            model: '=',
-            listLabel: '@'
+          model: '=',
+          listLabel: '@'
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsBlockedList/rhsBlockedList.directive.html',
         link: function($scope) {
 
-            $scope.patientHistoryViewState = patientHistoryViewState;
+          $scope.patientHistoryViewState = patientHistoryViewState;
 
-            $scope.fetch = function(/*vardgivare*/) {
+          $scope.fetch = function(/*vardgivare*/) {
 
-            };
+          };
         }
-    };
-});
+      };
+    });

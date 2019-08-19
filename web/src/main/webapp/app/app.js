@@ -17,30 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').config(function($stateProvider) {
-    'use strict';
-    //This is the App's root that uses index.html as template
+  'use strict';
+  //This is the App's root that uses index.html as template
 
-    $stateProvider.state('app', {
-        abstract: true, // jshint ignore:line
-        url: '/app',
-        views: {
-            'app@': {
-                templateUrl: '/app/app.html',
-                controller: 'AppPageCtrl'
-            },
-            'header@': {
-                templateUrl: '/app/header/header.html',
-                controller: 'HeaderController'
-            },
-            'navbar@': {
-                templateUrl: '/app/navbar/navbar.html',
-                controller: 'NavbarCtrl'
-            },
-            'footer@': {
-                templateUrl: '/app/footer/footer.html',
-                controller: 'footerCtrl'
-            }
-        }
-    });
+  $stateProvider.state('app', {
+    abstract: true, // jshint ignore:line
+    url: '/app',
+    views: {
+      'app@': {
+        templateUrl: '/app/app.html',
+        controller: 'AppPageCtrl'
+      },
+      'header@': {
+        templateUrl: '/app/header/header.html',
+        controller: 'HeaderController'
+      },
+      'navbar@': {
+        templateUrl: '/app/navbar/navbar.html',
+        controller: 'NavbarCtrl'
+      },
+      'footer@': {
+        templateUrl: '/app/footer/footer.html',
+        controller: 'footerCtrl'
+      }
+    }
+  });
 
 });

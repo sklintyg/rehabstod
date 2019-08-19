@@ -20,27 +20,28 @@ package se.inera.intyg.rehabstod.service.export.pdf;
 
 final class PdfConstants {
 
-  static final String FILTER_TITLE_MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG = "Max dagar mellan intyg";
-  static final String FILTER_TITLE_AVSLUTADE_SJUKFALL = "Visa avslutade sjukfall";
-  static final String FILTER_TITLE_KOMPLETTERINGSSTATUS = "Kompletteringsstatus";
-  static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA = "Visa alla";
-  static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN = "Visa sjukfall utan obesvarade kompletteringar";
-  static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_MED = "Visa sjukfall med obesvarade kompletteringar";
-  static final String FILTER_TITLE_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
-  static final String FILTER_TITLE_ALDERSPANN = "Åldersspann";
-  static final String FILTER_TITLE_SLUTDATUM = "Slutdatum";
-  static final String FILTER_TITLE_PATIENTUPPGIFTER = "Personuppgifter";
-  static final String FILTER_TITLE_FRITEXT = "Fritextsök";
-  static final String FILTER_SELECTION_VALUE_ALLA = "Alla";
-  static final String FILTER_TITLE_LAKARE = "Läkare";
-  static final String FILTER_TITLE_DIAGNOSER = "Diagnos(er)";
-  static final String FORMAT_ANTAL_DAGAR = "%d dagar";
-  static final String UNICODE_RIGHT_ARROW_SYMBOL = "\u2192";
+    static final String FILTER_TITLE_MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG = "Max dagar mellan intyg";
+    static final String FILTER_TITLE_AVSLUTADE_SJUKFALL = "Visa avslutade sjukfall";
+    static final String FILTER_TITLE_KOMPLETTERINGSSTATUS = "Kompletteringsstatus";
+    static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA = "Visa alla";
+    static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN = "Visa sjukfall utan obesvarade kompletteringar";
+    static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_MED = "Visa sjukfall med obesvarade kompletteringar";
+    static final String FILTER_TITLE_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
+    static final String FILTER_TITLE_ALDERSPANN = "Åldersspann";
+    static final String FILTER_TITLE_SLUTDATUM = "Slutdatum";
+    static final String FILTER_TITLE_PATIENTUPPGIFTER = "Personuppgifter";
+    static final String FILTER_TITLE_FRITEXT = "Fritextsök";
+    static final String FILTER_SELECTION_VALUE_ALLA = "Alla";
+    static final String FILTER_TITLE_LAKARE = "Läkare";
+    static final String FILTER_TITLE_DIAGNOSER = "Diagnos(er)";
+    static final String FORMAT_ANTAL_DAGAR = "%d dagar";
+    static final String UNICODE_RIGHT_ARROW_SYMBOL = "\u2192";
 
-  static final String TABLE_TITLE_PREFIX = "Sjukfall";
-  static final String TABLE_TITLE_MINA_SJUKFALL = " - Pågående sjukfall där jag utfärdat det nuvarande intyget";
-  static final String TABLE_TITLE_PA_ENHETEN = " - Pågående sjukfall på enheten";
-  private PdfConstants() {
-  }
+    static final String TABLE_TITLE_PREFIX = "Sjukfall";
+    static final String TABLE_TITLE_MINA_SJUKFALL = " - Pågående sjukfall där jag utfärdat det nuvarande intyget";
+    static final String TABLE_TITLE_PA_ENHETEN = " - Pågående sjukfall på enheten";
+
+    private PdfConstants() {
+    }
 
 }

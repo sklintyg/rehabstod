@@ -37,9 +37,9 @@ describe('Ändra inställningar som Kerstin Johansson', function() {
     welcomePage.login('TSTNMT2321000156-105W_TSTNMT2321000156-105P');
     specHelper.waitForAngularTestability();
 
-
     restUtil.setPreferences({'standardenhet': null});
   }
+
   beforeEach(function() {
     resetDefaultUnit();
   });

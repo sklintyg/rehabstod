@@ -23,7 +23,6 @@ import java.time.MonthDay;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,7 +85,6 @@ public class Patient {
         this.alder = alder;
     }
 
-
     // getters and setters
 
     public String getId() {
@@ -118,7 +116,6 @@ public class Patient {
         this.alder = alder;
     }
 
-
     // api
 
     @Override
@@ -145,7 +142,6 @@ public class Patient {
         return result;
     }
 
-
     // private scope - don't touch
 
     private int getPatientAge(String patientId) {
@@ -158,14 +154,14 @@ public class Patient {
 
             if (day > SAMORDNINGSNUMMER_DAY_CONSTANT) {
                 dateString = dateString.substring(0, MONTH_PART_OF_DATE_PART)
-                        + MONTHDAY_FORMATTER.format(MonthDay.of(month, day - SAMORDNINGSNUMMER_DAY_CONSTANT));
+                    + MONTHDAY_FORMATTER.format(MonthDay.of(month, day - SAMORDNINGSNUMMER_DAY_CONSTANT));
             }
             LocalDate birthDate = LocalDate.from(DateTimeFormatter.BASIC_ISO_DATE.parse(dateString));
             Period period = Period.between(birthDate, LocalDate.now());
             age = period.getYears();
         } catch (Exception e) {
             LOG.error("patientId '" + patientId
-                    + "' cannot be parsed as a date for age-calculation (adjusting for samordningsnummer did not help)", e);
+                + "' cannot be parsed as a date for age-calculation (adjusting for samordningsnummer did not help)", e);
             age = 0;
         }
 

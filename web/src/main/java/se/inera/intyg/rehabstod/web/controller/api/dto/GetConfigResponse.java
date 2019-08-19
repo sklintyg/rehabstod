@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.List;
-
 import se.inera.intyg.infra.integration.ia.model.Banner;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
@@ -27,6 +26,7 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
  * Created by marced on 2016-01-18.
  */
 public class GetConfigResponse {
+
     private List<DiagnosKapitel> diagnosKapitelList;
     private String webcertViewIntygTemplateUrl;
     private String webcertViewIntygLogoutUrl;

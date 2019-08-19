@@ -17,56 +17,58 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe('Directive: rhsTableHeaderColumn', function () {
-    'use strict';
+describe('Directive: rhsTableHeaderColumn', function() {
+  'use strict';
 
-    // load the controller's module
-    beforeEach(module('rehabstodApp'));
-    beforeEach(module('htmlTemplates'));
+  // load the controller's module
+  beforeEach(module('rehabstodApp'));
+  beforeEach(module('htmlTemplates'));
 
-    var $compile;
-    var $scope;
-    var $timeout;
-    var elementScope;
-    var element;
+  var $compile;
+  var $scope;
+  var $timeout;
+  var elementScope;
+  var element;
 
-    // Initialize the controller and a mock scope
-    beforeEach(inject(function (_$compile_, $rootScope, _$timeout_) {
-        $scope = $rootScope.$new();
-        $compile = _$compile_;
-        $timeout = _$timeout_;
+  // Initialize the controller and a mock scope
+  beforeEach(inject(function(_$compile_, $rootScope, _$timeout_) {
+    $scope = $rootScope.$new();
+    $compile = _$compile_;
+    $timeout = _$timeout_;
 
-        var tableCtrl = {
-            getFilteredCollection: function() { return []; },
-            tableState: function() {
-                return {
-                    sort: {
-                        predicate: null,
-                        reverse: true
-                    }
-                };
-            }
+    var tableCtrl = {
+      getFilteredCollection: function() {
+        return [];
+      },
+      tableState: function() {
+        return {
+          sort: {
+            predicate: null,
+            reverse: true
+          }
         };
+      }
+    };
 
-        element = angular.element('<th rhs-table-header-column label-key="sortValue" column="sortValue"></th>');
-        element.data('$stTableController', tableCtrl);
-        var rowElement = $compile(element)($scope);
+    element = angular.element('<th rhs-table-header-column label-key="sortValue" column="sortValue"></th>');
+    element.data('$stTableController', tableCtrl);
+    var rowElement = $compile(element)($scope);
 
-        // Act
-        $scope.$digest();
+    // Act
+    $scope.$digest();
 
-        elementScope = rowElement.isolateScope() || rowElement.scope();
-    }));
+    elementScope = rowElement.isolateScope() || rowElement.scope();
+  }));
 
-    it('should set label', function() {
-        expect(elementScope.label).toEqual('label.table.column.sortvalue');
-    });
+  it('should set label', function() {
+    expect(elementScope.label).toEqual('label.table.column.sortvalue');
+  });
 
-    it('should add header class', function() {
-        $timeout.flush();
-        $scope.$digest();
-        expect(element.hasClass('rhs-table-head')).toBeTruthy();
-    });
+  it('should add header class', function() {
+    $timeout.flush();
+    $scope.$digest();
+    expect(element.hasClass('rhs-table-head')).toBeTruthy();
+  });
 });
 
 

@@ -18,20 +18,6 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import se.inera.intyg.infra.integration.pu.stub.StubResidentStore;
-import se.inera.intyg.rehabstod.integration.wc.stub.WcStubStore;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
@@ -39,11 +25,24 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import se.inera.intyg.infra.integration.pu.stub.StubResidentStore;
+import se.inera.intyg.rehabstod.integration.wc.stub.WcStubStore;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+
 /**
  * Created by eriklupander on 2016-01-31.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SjukfallIntygDataGeneratorTest {
+
     @Mock
     private WcStubStore wcStubStore;
 
@@ -84,15 +83,15 @@ public class SjukfallIntygDataGeneratorTest {
 
     private List<String> buildPersonnummerList() {
         return Arrays.asList(
-                "19791110-9291",
-                "19791123-9262",
-                "19791212-9280",
-                "19791230-9296",
-                "19800113-9297",
-                "19800124-9286",
-                "19800207-9294",
-                "19800228-9224",
-                "19800311-9255",
-                "19800321-9295");
+            "19791110-9291",
+            "19791123-9262",
+            "19791212-9280",
+            "19791230-9296",
+            "19800113-9297",
+            "19800124-9286",
+            "19800207-9294",
+            "19800228-9224",
+            "19800311-9255",
+            "19800321-9295");
     }
 }

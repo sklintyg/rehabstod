@@ -61,169 +61,170 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 @RunWith(MockitoJUnitRunner.class)
 public class PdfExportServiceImplTest {
 
-  RehabstodUser user;
+    RehabstodUser user;
 
-  @Mock
-  private DiagnosKapitelService diagnosKapitelService;
+    @Mock
+    private DiagnosKapitelService diagnosKapitelService;
 
-  @InjectMocks
-  private PdfExportService testee = new PdfExportServiceImpl();
+    @InjectMocks
+    private PdfExportService testee = new PdfExportServiceImpl();
 
-  private static SjukfallEnhet createSjukFall(int index, String personNummer) {
-    SjukfallEnhet isf = new SjukfallEnhet();
+    private static SjukfallEnhet createSjukFall(int index, String personNummer) {
+        SjukfallEnhet isf = new SjukfallEnhet();
 
-    Lakare lakare = new Lakare("123456-0987", "David Abrahamsdotter Hansson Movitz");
-    isf.setLakare(lakare);
+        Lakare lakare = new Lakare("123456-0987", "David Abrahamsdotter Hansson Movitz");
+        isf.setLakare(lakare);
 
-    Patient patient = new Patient(personNummer, "Hans-Christin Hanson-Püslinghof namnetsombarafortsätter " + personNummer);
-    patient.setAlder(50 + index / 2);
-    patient.setKon(index % 2 == 0 ? Gender.M : Gender.F);
-    isf.setPatient(patient);
+        Patient patient = new Patient(personNummer, "Hans-Christin Hanson-Püslinghof namnetsombarafortsätter " + personNummer);
+        patient.setAlder(50 + index / 2);
+        patient.setKon(index % 2 == 0 ? Gender.M : Gender.F);
+        isf.setPatient(patient);
 
-    // Not really interested in these properties, but the sjukfall equals /hashcode will fail without them
-    Diagnos diagnos = new Diagnos("M16", "M16", "diagnosnamn");
-    diagnos.setBeskrivning("Diagnosnamn som kan vara ganska långt i vissa fall - till slut får det inte plats");
-    diagnos.setKapitel("M00-M99");
-    isf.setDiagnos(diagnos);
+        // Not really interested in these properties, but the sjukfall equals /hashcode will fail without them
+        Diagnos diagnos = new Diagnos("M16", "M16", "diagnosnamn");
+        diagnos.setBeskrivning("Diagnosnamn som kan vara ganska långt i vissa fall - till slut får det inte plats");
+        diagnos.setKapitel("M00-M99");
+        isf.setDiagnos(diagnos);
 
-    if (new Random().nextBoolean()) {
-      final Diagnos bd1 = new Diagnos("B16", "B16", "bidiagnosnamn");
-      final Diagnos bd2 = new Diagnos("B17", "B17", "bidiagnosnamn");
-      isf.setBiDiagnoser(Arrays.asList(bd1, bd2));
+        if (new Random().nextBoolean()) {
+            final Diagnos bd1 = new Diagnos("B16", "B16", "bidiagnosnamn");
+            final Diagnos bd2 = new Diagnos("B17", "B17", "bidiagnosnamn");
+            isf.setBiDiagnoser(Arrays.asList(bd1, bd2));
+        }
+        isf.setStart(LocalDate.now().plusDays(index));
+        isf.setSlut(isf.getStart().plusDays(index));
+        isf.setDagar(index * 2 + index % 3);
+        isf.setIntyg(index % 3 + 1);
+        isf.setObesvaradeKompl(new Random().nextInt(4));
+        isf.setGrader(index % 3 == 0 ? Arrays.asList(25, 50) : Arrays.asList(50, 75, 100, 25));
+        isf.setAktivGrad(50);
+        isf.setRiskSignal(new RiskSignal("", new Random().nextInt(2), "Lätt", isf.getStart().atTime(12, 0)));
+        isf.setNyligenAvslutat(new Random().nextInt(100) > 80);
+
+        return isf;
     }
-    isf.setStart(LocalDate.now().plusDays(index));
-    isf.setSlut(isf.getStart().plusDays(index));
-    isf.setDagar(index * 2 + index % 3);
-    isf.setIntyg(index % 3 + 1);
-    isf.setObesvaradeKompl(new Random().nextInt(4));
-    isf.setGrader(index % 3 == 0 ? Arrays.asList(25, 50) : Arrays.asList(50, 75, 100, 25));
-    isf.setAktivGrad(50);
-    isf.setRiskSignal(new RiskSignal("", new Random().nextInt(2), "Lätt", isf.getStart().atTime(12, 0)));
-    isf.setNyligenAvslutat(new Random().nextInt(100) > 80);
 
-    return isf;
-  }
+    @Before
+    public void setUp() {
 
-  @Before
-  public void setUp() {
+        user = new RehabstodUser("HSA1111", "Johannes Nielsen-Kornbach", false);
+        user.setValdVardenhet(new SelectableVardenhet() {
+            @Override
+            public String getId() {
+                return "1111";
+            }
 
-    user = new RehabstodUser("HSA1111", "Johannes Nielsen-Kornbach", false);
-    user.setValdVardenhet(new SelectableVardenhet() {
-      @Override
-      public String getId() {
-        return "1111";
-      }
+            @Override
+            public String getNamn() {
+                return "Gläntans vårdcentral";
+            }
 
-      @Override
-      public String getNamn() {
-        return "Gläntans vårdcentral";
-      }
+            @Override
+            public List<String> getHsaIds() {
+                return null;
+            }
+        });
+        user.setValdVardgivare(new SelectableVardenhet() {
+            @Override
+            public String getId() {
+                return "VG1";
+            }
 
-      @Override
-      public List<String> getHsaIds() {
-        return null;
-      }
-    });
-    user.setValdVardgivare(new SelectableVardenhet() {
-      @Override
-      public String getId() {
-        return "VG1";
-      }
+            @Override
+            public String getNamn() {
+                return "Vardgivare1";
+            }
 
-      @Override
-      public String getNamn() {
-        return "Vardgivare1";
-      }
+            @Override
+            public List<String> getHsaIds() {
+                return null;
+            }
+        });
+        Feature f = new Feature();
+        f.setGlobal(true);
+        f.setName(AuthoritiesConstants.FEATURE_SRS);
+        user.setFeatures(Collections.singletonMap(AuthoritiesConstants.FEATURE_SRS, f));
+        RehabstodUserPreferences preferences = RehabstodUserPreferences.fromBackend(Collections.emptyMap());
+        user.setPreferences(preferences);
 
-      @Override
-      public List<String> getHsaIds() {
-        return null;
-      }
-    });
-    Feature f = new Feature();
-    f.setGlobal(true);
-    f.setName(AuthoritiesConstants.FEATURE_SRS);
-    user.setFeatures(Collections.singletonMap(AuthoritiesConstants.FEATURE_SRS, f));
-    RehabstodUserPreferences preferences = RehabstodUserPreferences.fromBackend(Collections.emptyMap());
-    user.setPreferences(preferences);
-
-    DiagnosKapitel diagnosKapitel = mock(DiagnosKapitel.class);
-    when(diagnosKapitel.getName()).thenReturn("Diagnoskapitlets namn");
-    when(diagnosKapitelService.getDiagnosKapitel(anyString())).thenReturn(diagnosKapitel);
-  }
-
-  @Test
-  public void testExportIssuedByMe() throws Exception {
-    Map<String, Role> roles = new HashMap<>();
-    roles.put(AuthoritiesConstants.ROLE_LAKARE, null);
-    user.setRoles(roles);
-    final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
-    assertTrue(export.length > 0);
-    //Files.write(Paths.get("./test_issued_by_me.pdf"), export);
-  }
-
-  @Test
-  public void testExportAll() throws Exception {
-    Map<String, Role> roles = new HashMap<>();
-    roles.put(AuthoritiesConstants.ROLE_KOORDINATOR, null);
-    user.setRoles(roles);
-    final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
-    assertTrue(export.length > 0);
-
-    //Files.write(Paths.get("./test_all.pdf"), export);
-  }
-  @Test
-  public void testExportAllEmptyFilter() throws Exception {
-    Map<String, Role> roles = new HashMap<>();
-    roles.put(AuthoritiesConstants.ROLE_KOORDINATOR, null);
-    user.setRoles(roles);
-    final PrintSjukfallRequest pr = new PrintSjukfallRequest();
-    LangdIntervall li = new LangdIntervall();
-    li.setMin("366");
-    li.setMax("366");
-    pr.setLangdIntervall(li);
-    pr.setAldersIntervall(new LangdIntervall());
-    pr.setSlutdatumIntervall(new LangdIntervall());
-
-    final byte[] export = testee.export(createSjukFallList(), pr, user, 3);
-    assertTrue(export.length > 0);
-
-    //Files.write(Paths.get("./test_all_no_filters.pdf"), export);
-  }
-
-  @Test
-  public void testExportAllAnonymous() throws Exception {
-    Map<String, Role> roles = new HashMap<>();
-    roles.put(AuthoritiesConstants.ROLE_KOORDINATOR, null);
-    user.setRoles(roles);
-    PrintSjukfallRequest request = TestDataGen.buildPrintRequest();
-    request.setShowPatientId(false);
-    final byte[] export = testee.export(createSjukFallList(), request, user, 3);
-    assertTrue(export.length > 0);
-
-    //Files.write(Paths.get("./test_all_no_patient_id.pdf"), export);
-  }
-
-  @Test
-  public void testExportAllWithoutSrs() throws Exception {
-    // Use srs as default in tests
-    user.setFeatures(Collections.emptyMap());
-
-    Map<String, Role> roles = new HashMap<>();
-    roles.put(AuthoritiesConstants.ROLE_KOORDINATOR, null);
-    user.setRoles(roles);
-    final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
-    assertTrue(export.length > 0);
-
-    // Files.write(Paths.get("./test_all.pdf"), export);
-  }
-
-  private List<SjukfallEnhet> createSjukFallList() {
-    List<SjukfallEnhet> list = new ArrayList<>();
-    for (int i = 0; i < 100; i++) {
-      list.add(createSjukFall(i, "19121212-" + (i + 1000)));
+        DiagnosKapitel diagnosKapitel = mock(DiagnosKapitel.class);
+        when(diagnosKapitel.getName()).thenReturn("Diagnoskapitlets namn");
+        when(diagnosKapitelService.getDiagnosKapitel(anyString())).thenReturn(diagnosKapitel);
     }
-    return list;
-  }
+
+    @Test
+    public void testExportIssuedByMe() throws Exception {
+        Map<String, Role> roles = new HashMap<>();
+        roles.put(AuthoritiesConstants.ROLE_LAKARE, null);
+        user.setRoles(roles);
+        final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
+        assertTrue(export.length > 0);
+        //Files.write(Paths.get("./test_issued_by_me.pdf"), export);
+    }
+
+    @Test
+    public void testExportAll() throws Exception {
+        Map<String, Role> roles = new HashMap<>();
+        roles.put(AuthoritiesConstants.ROLE_KOORDINATOR, null);
+        user.setRoles(roles);
+        final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
+        assertTrue(export.length > 0);
+
+        //Files.write(Paths.get("./test_all.pdf"), export);
+    }
+
+    @Test
+    public void testExportAllEmptyFilter() throws Exception {
+        Map<String, Role> roles = new HashMap<>();
+        roles.put(AuthoritiesConstants.ROLE_KOORDINATOR, null);
+        user.setRoles(roles);
+        final PrintSjukfallRequest pr = new PrintSjukfallRequest();
+        LangdIntervall li = new LangdIntervall();
+        li.setMin("366");
+        li.setMax("366");
+        pr.setLangdIntervall(li);
+        pr.setAldersIntervall(new LangdIntervall());
+        pr.setSlutdatumIntervall(new LangdIntervall());
+
+        final byte[] export = testee.export(createSjukFallList(), pr, user, 3);
+        assertTrue(export.length > 0);
+
+        //Files.write(Paths.get("./test_all_no_filters.pdf"), export);
+    }
+
+    @Test
+    public void testExportAllAnonymous() throws Exception {
+        Map<String, Role> roles = new HashMap<>();
+        roles.put(AuthoritiesConstants.ROLE_KOORDINATOR, null);
+        user.setRoles(roles);
+        PrintSjukfallRequest request = TestDataGen.buildPrintRequest();
+        request.setShowPatientId(false);
+        final byte[] export = testee.export(createSjukFallList(), request, user, 3);
+        assertTrue(export.length > 0);
+
+        //Files.write(Paths.get("./test_all_no_patient_id.pdf"), export);
+    }
+
+    @Test
+    public void testExportAllWithoutSrs() throws Exception {
+        // Use srs as default in tests
+        user.setFeatures(Collections.emptyMap());
+
+        Map<String, Role> roles = new HashMap<>();
+        roles.put(AuthoritiesConstants.ROLE_KOORDINATOR, null);
+        user.setRoles(roles);
+        final byte[] export = testee.export(createSjukFallList(), TestDataGen.buildPrintRequest(), user, 3);
+        assertTrue(export.length > 0);
+
+        // Files.write(Paths.get("./test_all.pdf"), export);
+    }
+
+    private List<SjukfallEnhet> createSjukFallList() {
+        List<SjukfallEnhet> list = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            list.add(createSjukFall(i, "19121212-" + (i + 1000)));
+        }
+        return list;
+    }
 
 }

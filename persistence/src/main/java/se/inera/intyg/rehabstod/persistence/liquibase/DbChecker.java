@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.rehabstod.persistence.liquibase;
 
+import java.sql.SQLException;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
 import liquibase.Liquibase;
 import liquibase.changelog.ChangeSet;
 import liquibase.database.Database;
@@ -26,15 +30,8 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
-
-import java.sql.SQLException;
-import java.util.List;
 
 public class DbChecker {
 
@@ -64,8 +61,8 @@ public class DbChecker {
                     errors.append('>').append(changeSet.toString()).append('\n');
                 }
                 throw new Error("Database version mismatch. Check liquibase status. Errors:\n" + errors.toString()
-                        + database.getDatabaseProductName()
-                        + ", " + database);
+                    + database.getDatabaseProductName()
+                    + ", " + database);
             }
         } catch (liquibase.exception.LiquibaseException | SQLException e) {
             throw new RuntimeException("Database not ok, aborting startup.", e);

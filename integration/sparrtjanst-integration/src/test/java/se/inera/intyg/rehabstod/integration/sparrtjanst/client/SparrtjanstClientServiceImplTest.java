@@ -25,7 +25,6 @@ import static org.mockito.Mockito.verify;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -33,7 +32,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.util.SparrtjanstUtil;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
@@ -68,7 +66,7 @@ public class SparrtjanstClientServiceImplTest {
         intygLista.add(createIntygData("vg1", "ve1", date1));
         intygLista.add(createIntygData("vg2", "ve2", date2));
         testee.getCheckBlocks(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID,
-                intygLista);
+            intygLista);
         verify(service).checkBlocks(eq(LOGICAL_ADDRESS), requestCapture.capture());
 
         final CheckBlocksType args = requestCapture.getValue();
@@ -98,7 +96,7 @@ public class SparrtjanstClientServiceImplTest {
 
         List<IntygData> intygLista = new ArrayList<>();
         testee.getCheckBlocks(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, "123211122",
-                intygLista);
+            intygLista);
 
     }
 

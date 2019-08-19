@@ -22,13 +22,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 
 /**
  * Created by marced on 08/02/16.
  */
 public class DiagnosKategori {
+
     static final Pattern EXTRACT_DIAGNOSKATEGORI_REGEXP = Pattern.compile("^([A-Z]{1})([0-9]{2}).?");
     private static final int KATEGORI_CHAR = 1;
     private static final int KATEGORI_NUMBER = 2;
@@ -61,7 +61,7 @@ public class DiagnosKategori {
             Matcher matcher = EXTRACT_DIAGNOSKATEGORI_REGEXP.matcher(diagnosKod);
             if (matcher.find()) {
                 return Optional
-                        .of(new DiagnosKategori(matcher.group(KATEGORI_CHAR).charAt(0), Integer.parseInt(matcher.group(KATEGORI_NUMBER))));
+                    .of(new DiagnosKategori(matcher.group(KATEGORI_CHAR).charAt(0), Integer.parseInt(matcher.group(KATEGORI_NUMBER))));
             }
         }
         return Optional.empty();

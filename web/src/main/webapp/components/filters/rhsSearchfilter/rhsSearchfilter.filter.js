@@ -18,120 +18,117 @@
  */
 
 angular.module('rehabstodApp').filter('rhsSearchfilter', function(moment, _) {
-    'use strict';
+  'use strict';
 
+  var standardComparator = function standardComparator(obj, text) {
+    text = ('' + text).toLowerCase();
+    return ('' + obj).toLowerCase().indexOf(text) > -1;
+  };
 
-    var standardComparator = function standardComparator(obj, text) {
-        text = ('' + text).toLowerCase();
-        return ('' + obj).toLowerCase().indexOf(text) > -1;
-    };
+  return function(array, expression) {
+    function customComparator(actual, filterParams, slutDatum) {
 
-    return function(array, expression) {
-        function customComparator(actual, filterParams, slutDatum) {
+      //DiagnosKapitel
+      if (!matchAny(actual.diagnos.kapitel, filterParams.diagnosKapitel)) {
+        return false;
+      }
 
-            //DiagnosKapitel
-            if (!matchAny(actual.diagnos.kapitel, filterParams.diagnosKapitel)) {
-                return false;
-            }
+      //Lakare
+      if (!matchAny(actual.lakare.namn, filterParams.lakare)) {
+        return false;
+      }
 
-            //Lakare
-            if (!matchAny(actual.lakare.namn, filterParams.lakare)) {
-                return false;
-            }
+      //Kompletteringsstatus (null = don't filter at all, 0 = must be exactly 0 to pass, otherwise must be > 0)
+      if (angular.isNumber(filterParams.komplettering) &&
+          (((filterParams.komplettering === 0) && actual.obesvaradeKompl > 0) ||
+              ((filterParams.komplettering > 0) && actual.obesvaradeKompl < 1))) {
+        return false;
+      }
 
-            //Kompletteringsstatus (null = don't filter at all, 0 = must be exactly 0 to pass, otherwise must be > 0)
-            if (angular.isNumber(filterParams.komplettering) &&
-                (((filterParams.komplettering === 0) && actual.obesvaradeKompl > 0) ||
-                    ((filterParams.komplettering > 0) && actual.obesvaradeKompl < 1))) {
-                return false;
-            }
+      //Sjukskrivningslangd
+      if (!range(actual.dagar, filterParams.sjukskrivningslangd[0], filterParams.sjukskrivningslangd[1])) {
+        return false;
+      }
 
-            //Sjukskrivningslangd
-            if (!range(actual.dagar, filterParams.sjukskrivningslangd[0], filterParams.sjukskrivningslangd[1])) {
-                return false;
-            }
+      // Ålder
+      if (!range(actual.patient.alder, filterParams.alder[0], filterParams.alder[1])) {
+        return false;
+      }
 
-            // Ålder
-            if (!range(actual.patient.alder, filterParams.alder[0], filterParams.alder[1])) {
-                return false;
-            }
+      // Slutdatum
+      if (!range(actual.slutOmDagar, slutDatum.from, slutDatum.to)) {
+        return false;
+      }
 
-            // Slutdatum
-            if (!range(actual.slutOmDagar, slutDatum.from, slutDatum.to)) {
-                return false;
-            }
+      if (filterParams.freeText.length > 0 && !passWildCardSearch(actual, filterParams.freeText)) {
+        return false;
+      }
 
-            if (filterParams.freeText.length > 0 && !passWildCardSearch(actual, filterParams.freeText)) {
-                return false;
-            }
+      return true;
+    }
 
+    function passWildCardSearch(actual, wildCard) {
+      return standardComparator(actual.quickSearchString, wildCard);
+    }
 
-            return true;
+    function range(actual, lower, higher) {
+      //number range
+      if (angular.isNumber(lower)) {
+        if (actual < lower) {
+          return false;
         }
+      }
 
-        function passWildCardSearch(actual, wildCard) {
-            return standardComparator(actual.quickSearchString, wildCard);
+      if (angular.isNumber(higher)) {
+        if (actual > higher) {
+          return false;
         }
+      }
 
-        function range(actual, lower, higher) {
-            //number range
-            if (angular.isNumber(lower)) {
-                if (actual < lower) {
-                    return false;
-                }
-            }
+      return true;
+    }
 
-            if (angular.isNumber(higher)) {
-                if (actual > higher) {
-                    return false;
-                }
-            }
+    function matchAny(actual, matchAny) {
+      if (angular.isUndefined(matchAny) || matchAny.length === 0) {
+        return true;
+      }
 
-            return true;
+      if (angular.isUndefined(actual)) {
+        return false;
+      }
+
+      for (var i = 0; i < matchAny.length; i++) {
+        if (actual.toLowerCase() === matchAny[i].toLowerCase()) {
+          return true;
         }
+      }
 
-        function matchAny(actual, matchAny) {
-            if (angular.isUndefined(matchAny) || matchAny.length === 0) {
-                return true;
-            }
+      return false;
+    }
 
-            if (angular.isUndefined(actual)) {
-                return false;
-            }
+    function processItems(array, filterParam) {
 
-            for (var i = 0; i < matchAny.length; i++) {
-                if (actual.toLowerCase() === matchAny[i].toLowerCase()) {
-                    return true;
-                }
-            }
+      var slutDatum = {};
 
-            return false;
-        }
+      if (moment.isDate(filterParam.customSearch.slutdatum.from) && moment.isDate(filterParam.customSearch.slutdatum.to)) {
 
-        function processItems(array, filterParam) {
+        // Remove time from diff calculation.
+        filterParam.customSearch.slutdatum.from.setHours(0, 0, 0, 0);
+        filterParam.customSearch.slutdatum.to.setHours(0, 0, 0, 0);
+        var today = moment().hour(0).minute(0).second(0).millisecond(0);
 
-            var slutDatum = {};
+        slutDatum = {
+          from: moment(filterParam.customSearch.slutdatum.from).diff(today, 'days'),
+          to: moment(filterParam.customSearch.slutdatum.to).diff(today, 'days')
+        };
+      }
 
-            if (moment.isDate(filterParam.customSearch.slutdatum.from) && moment.isDate(filterParam.customSearch.slutdatum.to)) {
+      return _.filter(array, function(item) {
+        return customComparator(item, filterParam.customSearch, slutDatum);
+      });
+    }
 
-                // Remove time from diff calculation.
-                filterParam.customSearch.slutdatum.from.setHours(0, 0, 0, 0);
-                filterParam.customSearch.slutdatum.to.setHours(0, 0, 0, 0);
-                var today = moment().hour(0).minute(0).second(0).millisecond(0);
-
-                slutDatum = {
-                    from: moment(filterParam.customSearch.slutdatum.from).diff(today, 'days'),
-                    to: moment(filterParam.customSearch.slutdatum.to).diff(today, 'days')
-                };
-            }
-
-            return _.filter(array, function(item) {
-                return customComparator(item, filterParam.customSearch, slutDatum);
-            });
-        }
-
-
-        return processItems(array, expression);
-    };
+    return processItems(array, expression);
+  };
 
 });

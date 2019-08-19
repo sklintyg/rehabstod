@@ -29,49 +29,49 @@ var Class = require('jclass');
  * Elements always shown in rehabstod are connected here. Header etc.
  */
 var RehabstodBasePage = Class._extend({
-    init: function() {
-        this.at = null;
-        this.doctor = element(by.css('.logged-in'));
-        // this.header = element(by.id('wcHeader'));
-        this.header = element(by.css('.headerbox-user-profile'));
-        this.navBar = element(by.css('.navbar-header'));
-    },
-    isAt: function() {
-        return this.at.isDisplayed();
-    },
-    getPage: function(page) {
-        browser.setLocation(page);
-    },
-    clickBytVardenhet: function() {
-        element(by.id('rhs-header-other-locations')).click();
-    },
-    openSettings: function() {
-        element(by.id('rhs-header-settings')).click();
-    },
-    clickCloseBytVardenhet: function() {
-        this.closeBytVardenhet().click();
-    },
-    clickSjukfall: function() {
-        this.navbarSjukfall().click();
-    },
-    clickStart: function() {
-        this.navbarStart().click();
-    },
-    navbarVardgivare: function() {
-        return element(by.id('vardgivareNameLabel'));
-    },
-    navbarVardenhet: function() {
-        return element(by.id('verksamhetsNameLabel'));
-    },
-    closeBytVardenhet: function() {
-        return element(by.id('select-care-unit-close'));
-    },
-    navbarSjukfall: function() {
-        return element(by.id('navbar-link-sjukfall'));
-    },
-    navbarStart: function() {
-        return element(by.id('navbar-link-start'));
-    }
+  init: function() {
+    this.at = null;
+    this.doctor = element(by.css('.logged-in'));
+    // this.header = element(by.id('wcHeader'));
+    this.header = element(by.css('.headerbox-user-profile'));
+    this.navBar = element(by.css('.navbar-header'));
+  },
+  isAt: function() {
+    return this.at.isDisplayed();
+  },
+  getPage: function(page) {
+    browser.setLocation(page);
+  },
+  clickBytVardenhet: function() {
+    element(by.id('rhs-header-other-locations')).click();
+  },
+  openSettings: function() {
+    element(by.id('rhs-header-settings')).click();
+  },
+  clickCloseBytVardenhet: function() {
+    this.closeBytVardenhet().click();
+  },
+  clickSjukfall: function() {
+    this.navbarSjukfall().click();
+  },
+  clickStart: function() {
+    this.navbarStart().click();
+  },
+  navbarVardgivare: function() {
+    return element(by.id('vardgivareNameLabel'));
+  },
+  navbarVardenhet: function() {
+    return element(by.id('verksamhetsNameLabel'));
+  },
+  closeBytVardenhet: function() {
+    return element(by.id('select-care-unit-close'));
+  },
+  navbarSjukfall: function() {
+    return element(by.id('navbar-link-sjukfall'));
+  },
+  navbarStart: function() {
+    return element(by.id('navbar-link-start'));
+  }
 });
 
 module.exports = RehabstodBasePage;

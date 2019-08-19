@@ -20,7 +20,6 @@ package se.inera.intyg.rehabstod.service.exception;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
-
 import se.inera.intyg.rehabstod.common.exception.RehabstodErrorCodeEnum;
 import se.inera.intyg.rehabstod.common.exception.RehabstodServiceException;
 
@@ -49,7 +48,7 @@ public final class RehabstodServiceExceptionMatcher extends TypeSafeMatcher<Reha
     @Override
     public void describeTo(Description description) {
         description.appendValue(foundErrorCode)
-                .appendText(" was not found instead of ")
-                .appendValue(expectedErrorCode);
+            .appendText(" was not found instead of ")
+            .appendValue(expectedErrorCode);
     }
 }

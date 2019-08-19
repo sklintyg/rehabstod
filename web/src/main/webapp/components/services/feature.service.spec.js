@@ -18,39 +18,39 @@
  */
 
 describe('Service: FeatureService', function() {
-    'use strict';
+  'use strict';
 
-    // load the controller's module
-    beforeEach(angular.mock.module('rehabstodApp'));
+  // load the controller's module
+  beforeEach(angular.mock.module('rehabstodApp'));
 
-    var featureService;
-    var UserModel;
+  var featureService;
+  var UserModel;
 
-    beforeEach(inject(function(_featureService_, _UserModel_) {
-        featureService = _featureService_;
-        UserModel = _UserModel_;
+  beforeEach(inject(function(_featureService_, _UserModel_) {
+    featureService = _featureService_;
+    UserModel = _UserModel_;
 
-        UserModel.set({
-            features: {
-                'test': {
-                    'global': true
-                },
-                'test-2': {
-                    'global': false
-                }
-            }
-        });
-    }));
-
-    it('Has feature', function() {
-        expect(featureService.hasFeature('test')).toBeTruthy();
+    UserModel.set({
+      features: {
+        'test': {
+          'global': true
+        },
+        'test-2': {
+          'global': false
+        }
+      }
     });
+  }));
 
-    it('Missing globally active', function() {
-        expect(featureService.hasFeature('test-2')).toBeFalsy();
-    });
+  it('Has feature', function() {
+    expect(featureService.hasFeature('test')).toBeTruthy();
+  });
 
-    it('Missing feature', function() {
-        expect(featureService.hasFeature('missing')).toBeFalsy();
-    });
+  it('Missing globally active', function() {
+    expect(featureService.hasFeature('test-2')).toBeFalsy();
+  });
+
+  it('Missing feature', function() {
+    expect(featureService.hasFeature('missing')).toBeFalsy();
+  });
 });

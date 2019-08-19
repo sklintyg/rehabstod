@@ -17,48 +17,48 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsHeaderUser',
-        function() {
-            'use strict';
+    function() {
+      'use strict';
 
-            return {
-                restrict: 'E',
-                scope: {},
-                templateUrl: '/components/commonDirectives/rhsHeader/rhsHeaderUser/rhsHeaderUser.directive.html',
-                controller: function($scope, $log, UserModel, $uibModal) {
-                    /**
-                     * Private functions
-                     */
+      return {
+        restrict: 'E',
+        scope: {},
+        templateUrl: '/components/commonDirectives/rhsHeader/rhsHeaderUser/rhsHeaderUser.directive.html',
+        controller: function($scope, $log, UserModel, $uibModal) {
+          /**
+           * Private functions
+           */
 
-                    /**
-                     * Exposed scope interaction functions
-                     */
-                    $scope.userModel = UserModel;
-                    $scope.user = UserModel.get();
-                    $scope.userExpanded = false;
+          /**
+           * Exposed scope interaction functions
+           */
+          $scope.userModel = UserModel;
+          $scope.user = UserModel.get();
+          $scope.userExpanded = false;
 
-                    $scope.toggleMenu = function($event) {
-                        $event.stopPropagation();
-                        $scope.userExpanded = !$scope.userExpanded;
-                    };
+          $scope.toggleMenu = function($event) {
+            $event.stopPropagation();
+            $scope.userExpanded = !$scope.userExpanded;
+          };
 
-                    $scope.showRoleDescription = function(role) {
-                        return role.name === 'LAKARE';
-                    };
-                    $scope.openSettingsDialog = function() {
-                        var modalInstance = $uibModal.open({
-                            animation: true,
-                            templateUrl: '/components/commonDirectives/rhsHeader/rhsHeaderUser/rhsSettingsModal/rhsSettingsModal.html',
-                            controller: 'RhsSettingsModalCtrl',
-                            size: 'lg',
-                            windowClass: 'settings-modal'
-                        });
+          $scope.showRoleDescription = function(role) {
+            return role.name === 'LAKARE';
+          };
+          $scope.openSettingsDialog = function() {
+            var modalInstance = $uibModal.open({
+              animation: true,
+              templateUrl: '/components/commonDirectives/rhsHeader/rhsHeaderUser/rhsSettingsModal/rhsSettingsModal.html',
+              controller: 'RhsSettingsModalCtrl',
+              size: 'lg',
+              windowClass: 'settings-modal'
+            });
 
-                        modalInstance.result.then(function() {
-                            $log.debug('Settings Modal closed with a selection');
-                        }, function() {
-                            $log.debug('Settings Modal cancelled');
-                        });
-                    };
-                }
-            };
-        });
+            modalInstance.result.then(function() {
+              $log.debug('Settings Modal closed with a selection');
+            }, function() {
+              $log.debug('Settings Modal cancelled');
+            });
+          };
+        }
+      };
+    });

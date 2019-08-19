@@ -28,16 +28,16 @@
 var RehabstodBasePage = require('./rehabstod.base.page.js');
 
 var RehabstodStartPageBase = RehabstodBasePage._extend({
-    init: function init() {
-        init._super.call(this);
-        this.at = element(by.id('rhs-about-page'));
-    },
-    get: function () {
-        this.getPage('about');
-    },
-    isAt: function isAt() {
-        return isAt._super.call(this);
-    }
+  init: function init() {
+    init._super.call(this);
+    this.at = element(by.id('rhs-about-page'));
+  },
+  get: function() {
+    this.getPage('about');
+  },
+  isAt: function isAt() {
+    return isAt._super.call(this);
+  }
 });
 
 module.exports = new RehabstodStartPageBase();

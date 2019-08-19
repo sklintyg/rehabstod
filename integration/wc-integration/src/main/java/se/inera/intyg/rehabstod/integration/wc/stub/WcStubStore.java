@@ -18,14 +18,13 @@
  */
 package se.inera.intyg.rehabstod.integration.wc.stub;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AdditionType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.IntygAdditionsType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.StatusType;
@@ -95,7 +91,7 @@ public class WcStubStore {
 
     private String assembleCacheKey(String intygsId) {
         return Stream.of(WcIntegrationStubConfiguration.CACHE_NAME, intygsId)
-                .collect(Collectors.joining(":"));
+            .collect(Collectors.joining(":"));
     }
 
     public void addAddition(String intygsId, LocalDateTime skapad, int antalObesvaradeKompletteringar) {
@@ -122,8 +118,8 @@ public class WcStubStore {
             throw new RuntimeException(e);
         }
         LOG.debug("Added IntygAdditionsType with " + intygAdditionsType.getAddition().size() + " additionitems for intygsId "
-                + intygAdditionsType.getIntygsId().getExtension()
-                + " to WcStubStore");
+            + intygAdditionsType.getIntygsId().getExtension()
+            + " to WcStubStore");
     }
 
     public void setActive(boolean active) {

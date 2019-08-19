@@ -22,7 +22,7 @@
  */
 
 module.exports = {
-    'spec': require('./specHelper.util.js'),
-    'testdata': require('./restTestdataHelper.util.js'),
-    'navigation': require('./navigationHelper.util.js')
+  'spec': require('./specHelper.util.js'),
+  'testdata': require('./restTestdataHelper.util.js'),
+  'navigation': require('./navigationHelper.util.js')
 };

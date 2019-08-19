@@ -20,6 +20,8 @@ package se.inera.intyg.rehabstod.integration.sparrtjanst.service;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +36,6 @@ import se.riv.informationsecurity.authorization.blocking.v4.CheckResultType;
 import se.riv.informationsecurity.authorization.blocking.v4.CheckStatusType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultCodeType;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by marced on 2018-09-28.
  */
@@ -50,7 +49,7 @@ public class SparrtjanstIntegrationServiceImpl implements SparrtjanstIntegration
 
     @Override
     public void decorateWithBlockStatus(String currentVardgivarHsaId, String currentVardenhetHsaId, String userHsaId, String patientId,
-            Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> intygOnOtherUnitsOnly) {
+        Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> intygOnOtherUnitsOnly) {
 
         Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardgivarHsaId), "vgHsaId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardenhetHsaId), "veHsaId may not be null or empty");
@@ -63,7 +62,7 @@ public class SparrtjanstIntegrationServiceImpl implements SparrtjanstIntegration
         }
 
         final CheckBlocksResponseType checkBlocksForPersonResponse = sparrtjanstClientService.getCheckBlocks(currentVardgivarHsaId,
-                currentVardenhetHsaId, userHsaId, patientId, intygOnOtherUnitsOnly);
+            currentVardenhetHsaId, userHsaId, patientId, intygOnOtherUnitsOnly);
 
         final CheckBlocksResultType response = checkBlocksForPersonResponse.getCheckBlocksResult();
         // OK   = Response is good
@@ -72,12 +71,12 @@ public class SparrtjanstIntegrationServiceImpl implements SparrtjanstIntegration
         if (response.getResult().getResultCode() != ResultCodeType.OK) {
             if (response.getResult().getResultCode() == ResultCodeType.INFO) {
                 LOG.warn("Blocking service responded with result code INFO and resultText '{}' - "
-                                + "a partially valid response is still expected.", response.getResult().getResultText());
+                    + "a partially valid response is still expected.", response.getResult().getResultText());
             } else {
                 throw new SparrtjanstIntegrationException(
-                        String.format("Blocking service failed with resultCode '%s' and resultText '%s'",
-                                response.getResult().getResultCode(),
-                                response.getResult().getResultText()));
+                    String.format("Blocking service failed with resultCode '%s' and resultText '%s'",
+                        response.getResult().getResultCode(),
+                        response.getResult().getResultText()));
             }
         }
 
@@ -85,12 +84,12 @@ public class SparrtjanstIntegrationServiceImpl implements SparrtjanstIntegration
     }
 
     private void updateBlockStatuses(Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> queryList,
-            List<CheckResultType> responseList) {
+        List<CheckResultType> responseList) {
 
         // Sanity check before processing result - we must have gotten exactly the same number of responses as in list.
         if (responseList.size() != queryList.size()) {
             throw new SparrtjanstIntegrationException(
-                    "Fatal error - expected " + queryList.size() + " results - got " + responseList.size());
+                "Fatal error - expected " + queryList.size() + " results - got " + responseList.size());
         }
 
         for (int i = 0; i < queryList.size(); i++) {
@@ -103,9 +102,9 @@ public class SparrtjanstIntegrationServiceImpl implements SparrtjanstIntegration
             // so we use rowNumber to match request/response.
             final int rowNumber = i;
             final CheckResultType checkResultType = responseList
-                    .stream()
-                    .filter(cr -> cr.getRowNumber() == rowNumber).findFirst()
-                    .orElseThrow(() -> new SparrtjanstIntegrationException("Found no result for source row " + rowNumber));
+                .stream()
+                .filter(cr -> cr.getRowNumber() == rowNumber).findFirst()
+                .orElseThrow(() -> new SparrtjanstIntegrationException("Found no result for source row " + rowNumber));
 
             // We consider all CheckStatusType's but CheckStatusType.OK as blocked.
             metadata.setSparr(!checkResultType.getStatus().equals(CheckStatusType.OK));

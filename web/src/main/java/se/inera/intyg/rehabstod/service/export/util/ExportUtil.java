@@ -18,11 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.export.util;
 
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /**
  * We need to export SjukfallEnhet in the exact same order as the personnummer list
@@ -49,8 +48,8 @@ public final class ExportUtil {
 
     private static void addSjukfallForPnr(List<SjukfallEnhet> sjukfall, List<SjukfallEnhet> finalList, String pNr) {
         Optional<SjukfallEnhet> sjukfallForPatient = sjukfall.stream()
-                .filter(is -> is.getPatient().getId().equals(pNr))
-                .findFirst();
+            .filter(is -> is.getPatient().getId().equals(pNr))
+            .findFirst();
 
         if (sjukfallForPatient.isPresent()) {
             finalList.add(sjukfallForPatient.get());

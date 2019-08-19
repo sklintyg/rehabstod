@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.rehabstod.integration.srs.stub;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by eriklupander on 2017-10-31.

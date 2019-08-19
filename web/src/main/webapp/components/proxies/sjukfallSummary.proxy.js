@@ -20,41 +20,41 @@
 angular.module('rehabstodApp').factory('SjukfallSummaryProxy',
     function($http, $log, $q,
         ObjectHelper, networkConfig) {
-        'use strict';
+      'use strict';
 
-        /*
-         * Get statistic for selected Vardenhet
-         */
-        function _get() {
+      /*
+       * Get statistic for selected Vardenhet
+       */
+      function _get() {
 
-            var promise = $q.defer();
+        var promise = $q.defer();
 
-            var restPath = '/api/sjukfall/summary';
-            //No error keys defined, we handle errors here insted of in the interceptor
-            var config =  {
-                timeout: networkConfig.defaultTimeout
-            };
-            $http.get(restPath, config).then(function(response) {
-                if(!ObjectHelper.isDefined(response.data)) {
-                    promise.reject({ errorCode: response.data, message: 'invalid data'});
-                } else {
-                    promise.resolve(response.data);
-                }
-            }, function(response) {
-                $log.error('error ' + response.status);
-                // Let calling code handle the error of no data response
-                if(response.data === null) {
-                    promise.reject({errorCode: response.data, message: 'no response'});
-                } else {
-                    promise.reject(response.data);
-                }
-            });
-
-            return promise.promise;
-        }
-
-        // Return public API for the service
-        return {
-            get: _get
+        var restPath = '/api/sjukfall/summary';
+        //No error keys defined, we handle errors here insted of in the interceptor
+        var config = {
+          timeout: networkConfig.defaultTimeout
         };
+        $http.get(restPath, config).then(function(response) {
+          if (!ObjectHelper.isDefined(response.data)) {
+            promise.reject({errorCode: response.data, message: 'invalid data'});
+          } else {
+            promise.resolve(response.data);
+          }
+        }, function(response) {
+          $log.error('error ' + response.status);
+          // Let calling code handle the error of no data response
+          if (response.data === null) {
+            promise.reject({errorCode: response.data, message: 'no response'});
+          } else {
+            promise.reject(response.data);
+          }
+        });
+
+        return promise.promise;
+      }
+
+      // Return public API for the service
+      return {
+        get: _get
+      };
     });

@@ -19,6 +19,9 @@
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.client;
 
 import com.google.common.base.Strings;
+import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +39,6 @@ import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsentR
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.AssertionTypeType;
 import se.riv.informationsecurity.authorization.consent.v2.ScopeType;
-
-import java.lang.invoke.MethodHandles;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 /**
  * Created by Magnus Ekstrand 2018-10-10.
@@ -83,18 +82,18 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
 
     /**
      * @see SamtyckestjanstClientService#registerExtendedConsent(String, String, String, Personnummer, String,
-     *                                                              LocalDateTime, LocalDateTime, ActionType) registerConsent
+     * LocalDateTime, LocalDateTime, ActionType) registerConsent
      */
     @Override
     // CHECKSTYLE:OFF ParameterNumber
     public RegisterExtendedConsentResponseType registerExtendedConsent(String vgHsaId,
-                                                                       String veHsaId,
-                                                                       String userHsaId,
-                                                                       Personnummer patientId,
-                                                                       String representedBy,
-                                                                       LocalDateTime consentFrom,
-                                                                       LocalDateTime consentTo,
-                                                                       ActionType registrationAction) {
+        String veHsaId,
+        String userHsaId,
+        Personnummer patientId,
+        String representedBy,
+        LocalDateTime consentFrom,
+        LocalDateTime consentTo,
+        ActionType registrationAction) {
 
         LocalDateTime startDate = consentFrom;
         LocalDateTime endDate = consentTo;
@@ -120,8 +119,8 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
 
         if (!Strings.isNullOrEmpty(representedBy)) {
             registerExtendedConsentType.setRepresentedBy(
-                    SamtyckestjanstUtil.buildIITypeForPersonOrSamordningsnummer(
-                            createPersonnummer(representedBy, "representedBy")));
+                SamtyckestjanstUtil.buildIITypeForPersonOrSamordningsnummer(
+                    createPersonnummer(representedBy, "representedBy")));
         }
 
         if (startDate == null) {
@@ -132,7 +131,7 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
         if (endDate != null) {
             if (endDate.isBefore(startDate)) {
                 throw new IllegalArgumentException(String.format(
-                        "a consent's start date %tF must be before its end date %tF", startDate, endDate));
+                    "a consent's start date %tF must be before its end date %tF", startDate, endDate));
             }
             registerExtendedConsentType.setEndDate(endDate);
         }
@@ -150,8 +149,8 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
 
     private Personnummer createPersonnummer(String str, String fieldName) {
         return Personnummer
-                .createPersonnummer(str)
-                .orElseThrow(() -> new IllegalArgumentException(fieldName + " must be a valid personnummer or samordningsnummer"));
+            .createPersonnummer(str)
+            .orElseThrow(() -> new IllegalArgumentException(fieldName + " must be a valid personnummer or samordningsnummer"));
     }
 
 }

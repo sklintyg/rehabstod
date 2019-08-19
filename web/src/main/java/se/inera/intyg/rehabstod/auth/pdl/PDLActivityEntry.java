@@ -20,7 +20,6 @@ package se.inera.intyg.rehabstod.auth.pdl;
 
 import java.io.Serializable;
 import java.util.Objects;
-
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 
@@ -75,13 +74,13 @@ public class PDLActivityEntry implements Serializable {
         }
         PDLActivityEntry pdlActivityEntry = (PDLActivityEntry) o;
         return Objects.equals(patientId, pdlActivityEntry.patientId)
-                && activityType == pdlActivityEntry.activityType
-                && resourceType == pdlActivityEntry.resourceType;
+            && activityType == pdlActivityEntry.activityType
+            && resourceType == pdlActivityEntry.resourceType;
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(patientId, activityType, resourceType);
+        return Objects.hash(patientId, activityType, resourceType);
     }
 
 }

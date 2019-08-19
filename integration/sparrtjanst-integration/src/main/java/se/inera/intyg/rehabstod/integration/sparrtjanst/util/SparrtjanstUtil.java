@@ -18,11 +18,9 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.util;
 
-import java.util.Optional;
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-
+import java.util.Optional;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.blocking.v4.AccessingActorType;
 import se.riv.informationsecurity.authorization.blocking.v4.IIType;
@@ -31,6 +29,7 @@ import se.riv.informationsecurity.authorization.blocking.v4.IIType;
  * Created by marced on 2018-09-26.
  */
 public final class SparrtjanstUtil {
+
     public static final String KODVERK_SAMORDNINGSNUMMER = "1.2.752.129.2.1.3.3";
     public static final String KODVERK_PERSONNUMMER = "1.2.752.129.2.1.3.1";
 
@@ -44,8 +43,7 @@ public final class SparrtjanstUtil {
     /**
      * Controls if a civic registration number is a 'samordningsnummer' or not.
      *
-     * @param personNummer
-     *            the civic registration number
+     * @param personNummer the civic registration number
      * @return true if the civic registration number is a 'samordningsnummer', otherwise false
      */
     private static boolean isSamordningsNummer(Personnummer personNummer) {

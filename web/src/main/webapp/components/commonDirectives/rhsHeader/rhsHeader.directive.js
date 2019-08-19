@@ -17,51 +17,53 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsHeader',
-        function($uibModal, $window) {
-            'use strict';
+    function($uibModal, $window) {
+      'use strict';
 
-            return {
-                restrict: 'E',
-                scope: {},
-                templateUrl: '/components/commonDirectives/rhsHeader/rhsHeader.directive.html',
-                controller: function($scope, UserModel) {
-                    /**
-                     * Private functions
-                     */
+      return {
+        restrict: 'E',
+        scope: {},
+        templateUrl: '/components/commonDirectives/rhsHeader/rhsHeader.directive.html',
+        controller: function($scope, UserModel) {
+          /**
+           * Private functions
+           */
 
-                    /**
-                     * Exposed scope interaction functions
-                     */
+          /**
+           * Exposed scope interaction functions
+           */
 
-                    $scope.user = UserModel.get();
+          $scope.user = UserModel.get();
 
-                    $scope.showUnit = function() {
-                        var user = UserModel.get();
+          $scope.showUnit = function() {
+            var user = UserModel.get();
 
-                        return user.loggedIn && user.valdVardenhet;
-                    };
+            return user.loggedIn && user.valdVardenhet;
+          };
 
-                    $scope.openInfoDialog = function($event) {
-                        if ($event) {
-                            $event.preventDefault();
-                        }
-                        $uibModal.open({
-                            templateUrl: '/components/commonDirectives/rhsHeader/rhsHeaderModal/omRehabstod.modal.html',
-                            controller: 'omRehabstodModalController',
-                            size: 'md',
-                            windowClass: 'header-om-rehabstod'
-                            // Removes angular error "Possibly unhandled rejection:
-                            // backdrop click" when clicking outside of modal
-                        }).result.then(function(){}, function(){});
-                    };
+          $scope.openInfoDialog = function($event) {
+            if ($event) {
+              $event.preventDefault();
+            }
+            $uibModal.open({
+              templateUrl: '/components/commonDirectives/rhsHeader/rhsHeaderModal/omRehabstod.modal.html',
+              controller: 'omRehabstodModalController',
+              size: 'md',
+              windowClass: 'header-om-rehabstod'
+              // Removes angular error "Possibly unhandled rejection:
+              // backdrop click" when clicking outside of modal
+            }).result.then(function() {
+            }, function() {
+            });
+          };
 
-                    $scope.logout = function($event) {
-                        if ($event) {
-                            $event.preventDefault();
-                        }
-                        $window.jQuery('<form action="' + UserModel.getLogoutLocation() + '" method="post" />')
-                            .appendTo('body').submit().remove();
-                    };
-                }
-            };
-        });
+          $scope.logout = function($event) {
+            if ($event) {
+              $event.preventDefault();
+            }
+            $window.jQuery('<form action="' + UserModel.getLogoutLocation() + '" method="post" />')
+            .appendTo('body').submit().remove();
+          };
+        }
+      };
+    });

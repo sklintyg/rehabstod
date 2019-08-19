@@ -19,14 +19,14 @@
 
 angular.module('rehabstodApp').factory('featureService',
     function(UserModel) {
-        'use strict';
+      'use strict';
 
-        function _hasFeature(feature) {
-            var userFeature = UserModel.get().features[feature];
-            return (userFeature !== undefined && userFeature.global === true);
-        }
+      function _hasFeature(feature) {
+        var userFeature = UserModel.get().features[feature];
+        return (userFeature !== undefined && userFeature.global === true);
+      }
 
-        return {
-            hasFeature: _hasFeature
-        };
+      return {
+        hasFeature: _hasFeature
+      };
     });

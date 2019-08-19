@@ -19,145 +19,143 @@
 
 angular.module('rehabstodApp').factory('SjukfallModel',
     function($parse, $filter, SjukfallViewState, TableService, _) {
-        'use strict';
+      'use strict';
 
-        var data = [];
-        var hasError = false;
+      var data = [];
+      var hasError = false;
 
-        function _reset() {
-            data = [];
-            hasError = false;
-            return data;
+      function _reset() {
+        data = [];
+        hasError = false;
+        return data;
+      }
+
+      function _getKon(kon) {
+        if (angular.isDefined(kon)) {
+          return $filter('rhsKon')(kon);
+        }
+        return '';
+      }
+
+      function _addQuickSearchContentFromProperty(item, propertyExpression) {
+        item.quickSearchString += $parse(propertyExpression)(item) + ':';
+      }
+
+      function _addQuickSearchContent(item, content) {
+        item.quickSearchString += content + ':';
+      }
+
+      function _getDagar(dagar) {
+        var suffix = ' dagar';
+        if (dagar === 1) {
+          suffix = ' dag';
         }
 
-        function _getKon(kon) {
-            if (angular.isDefined(kon)) {
-                return $filter('rhsKon')(kon);
+        return dagar + suffix;
+      }
+
+      function _getBiDiagnoserSearch(diagnoser) {
+        var asText = '';
+        if (diagnoser) {
+          angular.forEach(diagnoser, function(diagnos) {
+            asText += diagnos.intygsVarde;
+          });
+        }
+        return asText;
+      }
+
+      function _getGradShow(aktivGrad, grader) {
+
+        var items = [];
+
+        angular.forEach(grader, function(grad) {
+          if (grad === aktivGrad) {
+            this.push('<span class="rhs-table-grad-active">' + grad + '% </span>');
+          } else {
+            this.push(grad + '% ');
+          }
+        }, items);
+
+        //Add right-arrow symbol
+        return items.join(' &#10142; ');
+      }
+
+      function _getObesvaradeKomplShow(obesvaradeKompl) {
+        if (SjukfallViewState.get().kompletteringInfoError) {
+          //indicate no value due to error
+          return '';
+        }
+        return (obesvaradeKompl > 0) ? 'Obesvarad (' + obesvaradeKompl + ')' : '-';
+      }
+
+      function _updateQuickSearchContent() {
+        angular.forEach(data, function(item) {
+          item.patient.konShow = _getKon(item.patient.kon);
+          item.dagarShow = _getDagar(item.dagar);
+          item.gradShow = _getGradShow(item.aktivGrad, item.grader);
+          item.obesvaradeKomplShow = _getObesvaradeKomplShow(item.obesvaradeKompl);
+          item.quickSearchString = '';
+
+          var columns = TableService.getSelectedSjukfallColumns();
+
+          _.each(columns, function(column) {
+            /*jshint maxcomplexity:14 */
+            switch (column.id) {
+            case 'patientId':
+            case 'patientName':
+            case 'gender':
+            case 'startDate':
+            case 'endDate':
+            case 'antal':
+            case 'doctor':
+              _addQuickSearchContentFromProperty(item, column.dataColumn);
+              break;
+            case 'dxs':
+              _addQuickSearchContentFromProperty(item, 'diagnos.intygsVarde');
+              _addQuickSearchContentFromProperty(item, 'diagnos.beskrivning');
+              _addQuickSearchContent(item, _getBiDiagnoserSearch(item.biDiagnoser));
+              break;
+            case 'patientAge':
+              _addQuickSearchContent(item, item.patient.alder);
+              break;
+            case 'days':
+              _addQuickSearchContent(item, item.dagarShow);
+              break;
+            case 'kompletteringar':
+              _addQuickSearchContent(item, item.obesvaradeKomplShow);
+              break;
+            case 'degree':
+              _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join('%,') + '%' : '');
+              break;
             }
-            return '';
-        }
+          });
 
-        function _addQuickSearchContentFromProperty(item, propertyExpression) {
-            item.quickSearchString += $parse(propertyExpression)(item) + ':';
-        }
+        });
+      }
 
-        function _addQuickSearchContent(item, content) {
-            item.quickSearchString += content + ':';
-        }
+      return {
 
-        function _getDagar(dagar) {
-            var suffix = ' dagar';
-            if (dagar === 1) {
-                suffix = ' dag';
-            }
+        reset: _reset,
+        init: function() {
+          return _reset();
+        },
 
-            return dagar + suffix;
-        }
-        function _getBiDiagnoserSearch(diagnoser) {
-            var asText = '';
-            if (diagnoser) {
-                angular.forEach(diagnoser, function(diagnos) {
-                    asText += diagnos.intygsVarde;
-                });
-            }
-            return asText;
-        }
-
-
-        function _getGradShow(aktivGrad, grader) {
-
-            var items = [];
-
-            angular.forEach(grader, function(grad) {
-                if (grad === aktivGrad) {
-                    this.push('<span class="rhs-table-grad-active">' + grad + '% </span>');
-                }
-                else {
-                    this.push(grad + '% ');
-                }
-            }, items);
-
-            //Add right-arrow symbol
-            return items.join(' &#10142; ');
-        }
-
-        function _getObesvaradeKomplShow(obesvaradeKompl) {
-            if (SjukfallViewState.get().kompletteringInfoError) {
-                //indicate no value due to error
-                return '';
-            }
-            return (obesvaradeKompl > 0) ? 'Obesvarad (' + obesvaradeKompl + ')' : '-';
-        }
-
-
-        function _updateQuickSearchContent() {
-            angular.forEach(data, function(item) {
-                item.patient.konShow = _getKon(item.patient.kon);
-                item.dagarShow = _getDagar(item.dagar);
-                item.gradShow = _getGradShow(item.aktivGrad, item.grader);
-                item.obesvaradeKomplShow = _getObesvaradeKomplShow(item.obesvaradeKompl);
-                item.quickSearchString = '';
-
-                var columns = TableService.getSelectedSjukfallColumns();
-
-                _.each(columns, function(column) {
-                  /*jshint maxcomplexity:14 */
-                  switch (column.id) {
-                  case 'patientId':
-                  case 'patientName':
-                  case 'gender':
-                  case 'startDate':
-                  case 'endDate':
-                  case 'antal':
-                  case 'doctor':
-                    _addQuickSearchContentFromProperty(item, column.dataColumn);
-                    break;
-                  case 'dxs':
-                    _addQuickSearchContentFromProperty(item, 'diagnos.intygsVarde');
-                    _addQuickSearchContentFromProperty(item, 'diagnos.beskrivning');
-                    _addQuickSearchContent(item, _getBiDiagnoserSearch(item.biDiagnoser));
-                    break;
-                  case 'patientAge':
-                    _addQuickSearchContent(item, item.patient.alder);
-                    break;
-                  case 'days':
-                    _addQuickSearchContent(item, item.dagarShow);
-                    break;
-                  case 'kompletteringar':
-                    _addQuickSearchContent(item, item.obesvaradeKomplShow);
-                    break;
-                  case 'degree':
-                    _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join('%,') + '%' : '');
-                    break;
-                  }
-                });
-
-            });
-        }
-
-        return {
-
-            reset: _reset,
-            init: function() {
-                return _reset();
-            },
-
-            set: function(newData) {
-                hasError = false;
-                data = newData;
-                _updateQuickSearchContent();
-            },
-            get: function() {
-                return data;
-            },
-            setError: function() {
-                _reset();
-                hasError = true;
-            },
-            hasError: function() {
-                return hasError;
-            },
-            updateQuickSearchContent: _updateQuickSearchContent
-        };
+        set: function(newData) {
+          hasError = false;
+          data = newData;
+          _updateQuickSearchContent();
+        },
+        get: function() {
+          return data;
+        },
+        setError: function() {
+          _reset();
+          hasError = true;
+        },
+        hasError: function() {
+          return hasError;
+        },
+        updateQuickSearchContent: _updateQuickSearchContent
+      };
     }
 );

@@ -20,7 +20,6 @@ package se.inera.intyg.rehabstod.integration.sparrtjanst.service;
 
 import java.util.List;
 import java.util.Map;
-
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 
@@ -33,20 +32,14 @@ public interface SparrtjanstIntegrationService {
      * Updates the corresponding {@link IntygAccessControlMetaData} sparr attributes for each {@link IntygData} in
      * intygLista.
      *
-     * @param currentVardgivarHsaId
-     *            - The hsaId of the current vardgivare
-     * @param currentVardenhetHsaId
-     *            - The hsaId of the current varenhet
-     * @param userHsaId
-     *            - The hsaId of the current user
-     * @param patientId
-     *            - The id of the current patient
-     * @param intygAccessMetaData
-     *            -Map containing access control metadata
-     * @param intygLista
-     *            -Map containing the intyg to process
+     * @param currentVardgivarHsaId - The hsaId of the current vardgivare
+     * @param currentVardenhetHsaId - The hsaId of the current varenhet
+     * @param userHsaId - The hsaId of the current user
+     * @param patientId - The id of the current patient
+     * @param intygAccessMetaData -Map containing access control metadata
+     * @param intygLista -Map containing the intyg to process
      */
     void decorateWithBlockStatus(String currentVardgivarHsaId, String currentVardenhetHsaId, String userHsaId, String patientId,
-            Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> intygLista);
+        Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> intygLista);
 
 }

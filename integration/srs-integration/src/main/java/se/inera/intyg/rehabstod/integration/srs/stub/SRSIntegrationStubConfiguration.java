@@ -29,8 +29,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@ComponentScan({ "se.inera.intyg.rehabstod.integration.srs.stub" })
-@Profile({ "rhs-srs-stub" })
+@ComponentScan({"se.inera.intyg.rehabstod.integration.srs.stub"})
+@Profile({"rhs-srs-stub"})
 public class SRSIntegrationStubConfiguration {
 
     @Autowired

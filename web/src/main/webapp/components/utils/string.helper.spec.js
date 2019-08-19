@@ -18,72 +18,72 @@
  */
 
 describe('Helper: StringHelper', function() {
-    'use strict';
+  'use strict';
 
-    beforeEach(module('rehabstodApp'));
+  beforeEach(module('rehabstodApp'));
 
-    var StringHelper;
+  var StringHelper;
 
-    // Inject dependencies and mocks
-    beforeEach(inject(function(_StringHelper_) {
-        StringHelper = _StringHelper_;
-    }));
+  // Inject dependencies and mocks
+  beforeEach(inject(function(_StringHelper_) {
+    StringHelper = _StringHelper_;
+  }));
 
-    it('replaceAll', function() {
-        expect(StringHelper.replaceAll('A+B', '+', ' ')).toEqual('A B');
-        expect(StringHelper.replaceAll('A+B+C', '+', ' ')).toEqual('A B C');
-        expect(StringHelper.replaceAll('AB', '+', ' ')).toEqual('AB');
-        expect(StringHelper.replaceAll('A B', '+', ' ')).toEqual('A B');
-        expect(StringHelper.replaceAll('', '+', ' ')).toEqual('');
-        expect(StringHelper.replaceAll('+', '+', ' ')).toEqual(' ');
-    });
+  it('replaceAll', function() {
+    expect(StringHelper.replaceAll('A+B', '+', ' ')).toEqual('A B');
+    expect(StringHelper.replaceAll('A+B+C', '+', ' ')).toEqual('A B C');
+    expect(StringHelper.replaceAll('AB', '+', ' ')).toEqual('AB');
+    expect(StringHelper.replaceAll('A B', '+', ' ')).toEqual('A B');
+    expect(StringHelper.replaceAll('', '+', ' ')).toEqual('');
+    expect(StringHelper.replaceAll('+', '+', ' ')).toEqual(' ');
+  });
 
-    it('should handle empty or undefined array ', function() {
+  it('should handle empty or undefined array ', function() {
 
-        var arr = [];
-        arr.sort(StringHelper.swedishStringSortImpl(true, false));
-        expect(arr).toEqual([]);
-    });
+    var arr = [];
+    arr.sort(StringHelper.swedishStringSortImpl(true, false));
+    expect(arr).toEqual([]);
+  });
 
-    it('should respect swedish alphabet order - asc', function() {
+  it('should respect swedish alphabet order - asc', function() {
 
-        var arr = ['Åa', 'Bö', 'Ab', 'David', 'aröööäåöåå'];
-        arr.sort(StringHelper.swedishStringSortImpl(true, false));
-        expect(arr[0]).toEqual('Ab');
-        expect(arr[1]).toEqual('aröööäåöåå');
-        expect(arr[2]).toEqual('Bö');
-        expect(arr[3]).toEqual('David');
-        expect(arr[4]).toEqual('Åa');
+    var arr = ['Åa', 'Bö', 'Ab', 'David', 'aröööäåöåå'];
+    arr.sort(StringHelper.swedishStringSortImpl(true, false));
+    expect(arr[0]).toEqual('Ab');
+    expect(arr[1]).toEqual('aröööäåöåå');
+    expect(arr[2]).toEqual('Bö');
+    expect(arr[3]).toEqual('David');
+    expect(arr[4]).toEqual('Åa');
 
-    });
+  });
 
-    it('should respect swedish alphabet order - desc', function() {
+  it('should respect swedish alphabet order - desc', function() {
 
-        var arr = ['Åsa', 'Börje', 'Alfons', 'David'];
-        arr.sort(StringHelper.swedishStringSortImpl(false, true));
-        expect(arr[3]).toEqual('Alfons');
-        expect(arr[2]).toEqual('Börje');
-        expect(arr[1]).toEqual('David');
-        expect(arr[0]).toEqual('Åsa');
-    });
+    var arr = ['Åsa', 'Börje', 'Alfons', 'David'];
+    arr.sort(StringHelper.swedishStringSortImpl(false, true));
+    expect(arr[3]).toEqual('Alfons');
+    expect(arr[2]).toEqual('Börje');
+    expect(arr[1]).toEqual('David');
+    expect(arr[0]).toEqual('Åsa');
+  });
 
-    it('sort unknown characters last - asc', function() {
+  it('sort unknown characters last - asc', function() {
 
-        var arr = ['?', '_', 'é', 'e'];
-        arr.sort(StringHelper.swedishStringSortImpl(true, false));
-        expect(arr[0]).toEqual('e');
-        expect(arr[1]).toEqual('?');
-        expect(arr[2]).toEqual('_');
-        expect(arr[3]).toEqual('é');
-    });
+    var arr = ['?', '_', 'é', 'e'];
+    arr.sort(StringHelper.swedishStringSortImpl(true, false));
+    expect(arr[0]).toEqual('e');
+    expect(arr[1]).toEqual('?');
+    expect(arr[2]).toEqual('_');
+    expect(arr[3]).toEqual('é');
+  });
 
-    it('sort case sensitive', function () {
+  it('sort case sensitive', function() {
 
-        var arr = ['a', 'ö', 'A', 'Ö'];
-        arr.sort(StringHelper.swedishStringSortImpl(true, true));
-        expect(arr[0]).toEqual('A');
-        expect(arr[1]).toEqual('a');
-        expect(arr[2]).toEqual('Ö');
-        expect(arr[3]).toEqual('ö');
-    });
+    var arr = ['a', 'ö', 'A', 'Ö'];
+    arr.sort(StringHelper.swedishStringSortImpl(true, true));
+    expect(arr[0]).toEqual('A');
+    expect(arr[1]).toEqual('a');
+    expect(arr[2]).toEqual('Ö');
+    expect(arr[3]).toEqual('ö');
+  });
 });

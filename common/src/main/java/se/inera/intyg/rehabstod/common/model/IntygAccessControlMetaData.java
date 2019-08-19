@@ -38,9 +38,9 @@ public class IntygAccessControlMetaData {
     }
 
     public IntygAccessControlMetaData(IntygData intygData,
-                                      boolean inomVardgivare,
-                                      boolean inomVardenhet,
-                                      boolean inkluderadVidBerakningAvSjukfall) {
+        boolean inomVardgivare,
+        boolean inomVardenhet,
+        boolean inkluderadVidBerakningAvSjukfall) {
         this.intygData = intygData;
         this.inomVardgivare = inomVardgivare;
         this.inomVardenhet = inomVardenhet;

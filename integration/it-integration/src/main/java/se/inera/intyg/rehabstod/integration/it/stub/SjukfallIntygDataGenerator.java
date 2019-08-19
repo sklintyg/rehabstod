@@ -18,9 +18,8 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
 import java.util.List;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 /**
  * Created by eriklupander on 2016-02-01.

@@ -18,13 +18,12 @@
  */
 package se.inera.intyg.rehabstod.logging;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.schemas.contract.util.HashUtility;
 import ch.qos.logback.classic.pattern.ClassicConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.schemas.contract.util.HashUtility;
 
 /**
  * Logback converter that returns information about the current user.

@@ -18,125 +18,125 @@
  */
 
 describe('Directive: rhsDaysInRehabChain', function() {
-    'use strict';
+  'use strict';
 
-    // load the controller's module
-    beforeEach(module('rehabstodApp', function() {
-    }));
-    beforeEach(module('htmlTemplates'));
+  // load the controller's module
+  beforeEach(module('rehabstodApp', function() {
+  }));
+  beforeEach(module('htmlTemplates'));
 
-    var $compile;
-    var $scope;
-    var element;
+  var $compile;
+  var $scope;
+  var element;
 
-    // Store references to $scope and $compile
-    // so they are available to all tests in this describe block
-    beforeEach(inject(function(_$compile_, $rootScope) {
-        $compile = _$compile_;
-        $scope = $rootScope.$new();
+  // Store references to $scope and $compile
+  // so they are available to all tests in this describe block
+  beforeEach(inject(function(_$compile_, $rootScope) {
+    $compile = _$compile_;
+    $scope = $rootScope.$new();
 
-    }));
+  }));
 
-    function compileDirective(items) {
-        $scope.items = items;
-        element = $compile('<rhs-day-in-rehab-chain items="items"/>')($scope);
-        $scope.$digest();
+  function compileDirective(items) {
+    $scope.items = items;
+    element = $compile('<rhs-day-in-rehab-chain items="items"/>')($scope);
+    $scope.$digest();
 
-        return element.isolateScope() || element.scope();
-    }
+    return element.isolateScope() || element.scope();
+  }
 
-    function assertText(expected) {
-        expect($(element).find('#day-in-rehab-chain-text').text()).toEqual(expected);
-    }
+  function assertText(expected) {
+    expect($(element).find('#day-in-rehab-chain-text').text()).toEqual(expected);
+  }
 
-    it('Should not render anything if isActive is false', function() {
-        var items = [ {
-            'sjukfall': {
-                'start': moment().subtract(20, 'days').format('YYYY-MM-DD')
-            },
-            'isActive': false
-        } ];
+  it('Should not render anything if isActive is false', function() {
+    var items = [{
+      'sjukfall': {
+        'start': moment().subtract(20, 'days').format('YYYY-MM-DD')
+      },
+      'isActive': false
+    }];
 
-        compileDirective(items);
+    compileDirective(items);
 
-        //Assert
-        assertText('');
+    //Assert
+    assertText('');
 
-    });
+  });
 
-    it('Should handle duration under 1 year correctly', function() {
-        var items = [ {
-            'sjukfall': {
-                'start': moment().subtract(364, 'days').format('YYYY-MM-DD')
-            },
-            'isActive': true
-        } ];
+  it('Should handle duration under 1 year correctly', function() {
+    var items = [{
+      'sjukfall': {
+        'start': moment().subtract(364, 'days').format('YYYY-MM-DD')
+      },
+      'isActive': true
+    }];
 
-        compileDirective(items);
+    compileDirective(items);
 
-        //Assert
-        assertText('364 dagar');
+    //Assert
+    assertText('364 dagar');
 
-    });
+  });
 
-    it('Should handle duration of exactly 1 year correctly', function() {
-        var items = [ {
-            'sjukfall': {
-                'start': moment().subtract(1, 'years').format('YYYY-MM-DD')
-            },
-            'isActive': true
-        } ];
+  it('Should handle duration of exactly 1 year correctly', function() {
+    var items = [{
+      'sjukfall': {
+        'start': moment().subtract(1, 'years').format('YYYY-MM-DD')
+      },
+      'isActive': true
+    }];
 
-        compileDirective(items);
+    compileDirective(items);
 
-        //Assert
-        assertText('365 dagar');
+    //Assert
+    assertText('365 dagar');
 
-    });
+  });
 
-    it('Should handle duration of one year + one day correctly', function() {
-        var items = [ {
-            'sjukfall': {
-                'start': moment().subtract(1, 'years').subtract(1, 'days').format('YYYY-MM-DD')
-            },
-            'isActive': true
-        } ];
+  it('Should handle duration of one year + one day correctly', function() {
+    var items = [{
+      'sjukfall': {
+        'start': moment().subtract(1, 'years').subtract(1, 'days').format('YYYY-MM-DD')
+      },
+      'isActive': true
+    }];
 
-        compileDirective(items);
+    compileDirective(items);
 
-        //Assert
-        assertText('1 år 1 dagar');
+    //Assert
+    assertText('1 år 1 dagar');
 
-    });
+  });
 
-    it('Should handle duration over 1 year correctly', function() {
-        var items = [ {
-            'sjukfall': {
-                'start': moment().subtract(2, 'years').subtract(19, 'days').format('YYYY-MM-DD')
-            },
-            'isActive': true
-        } ];
+  it('Should handle duration over 1 year correctly', function() {
+    var items = [{
+      'sjukfall': {
+        'start': moment().subtract(2, 'years').subtract(19, 'days').format('YYYY-MM-DD')
+      },
+      'isActive': true
+    }];
 
-        compileDirective(items);
+    compileDirective(items);
 
-        //Assert
-        assertText('2 år 19 dagar');
+    //Assert
+    assertText('2 år 19 dagar');
 
-    });
+  });
 
-    it('Should handle starting today correctly', function() {
-        var items = [ {
-            'sjukfall': {
-                'start': moment().format('YYYY-MM-DD')
-            },
-            'isActive': true
-        } ];
+  it('Should handle starting today correctly', function() {
+    var items = [{
+      'sjukfall': {
+        'start': moment().format('YYYY-MM-DD')
+      },
+      'isActive': true
+    }];
 
-        compileDirective(items);
+    compileDirective(items);
 
-        //Assert
-        assertText('0 dagar');
+    //Assert
+    assertText('0 dagar');
 
-    });
+  });
 
 });

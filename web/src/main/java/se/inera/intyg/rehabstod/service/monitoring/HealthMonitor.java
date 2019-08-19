@@ -20,23 +20,22 @@ package se.inera.intyg.rehabstod.service.monitoring;
 
 import io.prometheus.client.Collector;
 import io.prometheus.client.Gauge;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.stereotype.Component;
-
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletResponse;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.stereotype.Component;
 
 /**
  * Exposes health metrics as Prometheus values. To simplify any 3rd party scraping applications, all metrics produced
@@ -67,29 +66,29 @@ public class HealthMonitor extends Collector {
     private static final long START_TIME = System.currentTimeMillis();
 
     private static final Gauge UPTIME = Gauge.build()
-            .name(PREFIX + "uptime" + VALUE)
-            .help("Current uptime in seconds")
-            .register();
+        .name(PREFIX + "uptime" + VALUE)
+        .help("Current uptime in seconds")
+        .register();
 
     private static final Gauge DB_ACCESSIBLE = Gauge.build()
-            .name(PREFIX + "db_accessible" + NORMAL)
-            .help("0 == OK 1 == NOT OK")
-            .register();
+        .name(PREFIX + "db_accessible" + NORMAL)
+        .help("0 == OK 1 == NOT OK")
+        .register();
 
     private static final Gauge JMS_ACCESSIBLE = Gauge.build()
-            .name(PREFIX + "jms_accessible" + NORMAL)
-            .help("0 == OK 1 == NOT OK")
-            .register();
+        .name(PREFIX + "jms_accessible" + NORMAL)
+        .help("0 == OK 1 == NOT OK")
+        .register();
 
     private static final Gauge IT_ACCESSIBLE = Gauge.build()
-            .name(PREFIX + "intygstjanst_accessible" + NORMAL)
-            .help("0 == OK 1 == NOT OK")
-            .register();
+        .name(PREFIX + "intygstjanst_accessible" + NORMAL)
+        .help("0 == OK 1 == NOT OK")
+        .register();
 
     private static final Gauge PDL_QUEUE_DEPTH = Gauge.build()
-            .name(PREFIX + "pdl_queue_depth" + VALUE)
-            .help("Number of waiting pdl log messages")
-            .register();
+        .name(PREFIX + "pdl_queue_depth" + VALUE)
+        .help("Number of waiting pdl log messages")
+        .register();
 
     private static final long MILLIS_PER_SECOND = 1000L;
 
@@ -113,6 +112,7 @@ public class HealthMonitor extends Collector {
 
     @FunctionalInterface
     interface Tester {
+
         void run() throws Exception;
     }
 

@@ -101,7 +101,6 @@ public class AnvandarPreference {
             return false;
         }
 
-
         AnvandarPreference that = (AnvandarPreference) o;
 
         if (!hsaId.equals(that.hsaId)) {

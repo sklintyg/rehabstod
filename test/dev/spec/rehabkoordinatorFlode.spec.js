@@ -30,62 +30,61 @@ var aboutPage = rhsTestTools.pages.aboutPage;
 
 describe('Flöde som rehabkoordinator', function() {
 
-    // Logga in
+  // Logga in
+  beforeEach(function() {
+    specHelper.login('TSTNMT2321000156-105W_TSTNMT2321000156-105P', 'TSTNMT2321000156-105P'); // Kerstin Johansson
+  });
+
+  it('Bara se knappen alla sjukfall', function() {
+    expect(startPage.fullUnit.isPresent()).toBeTruthy();
+    expect(startPage.myUnit.isPresent()).toBeFalsy();
+  });
+
+  describe('gör urval', function() {
+
     beforeEach(function() {
-        specHelper.login('TSTNMT2321000156-105W_TSTNMT2321000156-105P', 'TSTNMT2321000156-105P'); // Kerstin Johansson
+      startPage.clickFullUnit();
+      expect(sjukfallPage.isAt()).toBeTruthy();
+      expect(sjukfallPage.lakareFilter.isPresent()).toBeTruthy();
     });
 
-    it('Bara se knappen alla sjukfall', function() {
-        expect(startPage.fullUnit.isPresent()).toBeTruthy();
-        expect(startPage.myUnit.isPresent()).toBeFalsy();
+    it('gå till till sjukfall och tillbaka till start', function() {
+      // Gå till sjukfall
+      navigationHelper.goToSjukfall();
+
+      navigationHelper.goToStart();
+    });
+  });
+
+  describe('utan urval', function() {
+    it('Gå direkt till sjukfall', function() {
+      sjukfallPage.get();
+      specHelper.waitForAngularTestability();
+      expect(sjukfallPage.isAt()).toBeTruthy();
+    });
+  });
+
+  describe('gör urval och går tillbaka till start', function() {
+
+    // Gör urval
+    beforeEach(function() {
+      startPage.clickFullUnit();
+      expect(sjukfallPage.isAt()).toBeTruthy();
+
+      navigationHelper.goToStart();
     });
 
-    describe('gör urval', function() {
-
-        beforeEach(function() {
-            startPage.clickFullUnit();
-            expect(sjukfallPage.isAt()).toBeTruthy();
-            expect(sjukfallPage.lakareFilter.isPresent()).toBeTruthy();
-        });
-
-        it('gå till till sjukfall och tillbaka till start', function() {
-            // Gå till sjukfall
-            navigationHelper.goToSjukfall();
-
-            navigationHelper.goToStart();
-        });
+    it('Gå tillbaka till start och sedan försöka gå in igen utan att göra ett urval', function() {
+      // Gå till sjukfall
+      sjukfallPage.get();
+      specHelper.waitForAngularTestability();
+      expect(sjukfallPage.isAt()).toBeTruthy();
     });
+  });
 
-    describe('utan urval', function() {
-        it('Gå direkt till sjukfall', function() {
-            sjukfallPage.get();
-            specHelper.waitForAngularTestability();
-            expect(sjukfallPage.isAt()).toBeTruthy();
-        });
-    });
-
-    describe('gör urval och går tillbaka till start', function() {
-
-        // Gör urval
-        beforeEach(function() {
-            startPage.clickFullUnit();
-            expect(sjukfallPage.isAt()).toBeTruthy();
-
-            navigationHelper.goToStart();
-        });
-
-        it('Gå tillbaka till start och sedan försöka gå in igen utan att göra ett urval', function() {
-            // Gå till sjukfall
-            sjukfallPage.get();
-            specHelper.waitForAngularTestability();
-            expect(sjukfallPage.isAt()).toBeTruthy();
-        });
-    });
-
-
-    // Logga ut
-    /*afterEach(function() {
-        specHelper.logout();
-    });*/
+  // Logga ut
+  /*afterEach(function() {
+      specHelper.logout();
+  });*/
 
 });

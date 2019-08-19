@@ -36,13 +36,13 @@ var pdlConsentPage = require('./pdlconsent.page');
 var settingsDialog = require('./settings.dialog');
 
 module.exports = {
-    'rehabstodBase': rehabstodBase,
-    'welcomePage': welcomePage,
-    'selectUnitPage': selectUnitPage,
-    'startPage': startPage,
-    'sjukfallPage': sjukfallPage,
-    'aboutPage': aboutPage,
-    'errorPage': errorPage,
-    'pdlConsentPage': pdlConsentPage,
-    'settings': settingsDialog
+  'rehabstodBase': rehabstodBase,
+  'welcomePage': welcomePage,
+  'selectUnitPage': selectUnitPage,
+  'startPage': startPage,
+  'sjukfallPage': sjukfallPage,
+  'aboutPage': aboutPage,
+  'errorPage': errorPage,
+  'pdlConsentPage': pdlConsentPage,
+  'settings': settingsDialog
 };

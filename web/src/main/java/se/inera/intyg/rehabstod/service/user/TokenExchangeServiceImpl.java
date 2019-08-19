@@ -20,6 +20,9 @@ package se.inera.intyg.rehabstod.service.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.Charset;
+import java.time.LocalDateTime;
+import java.util.Base64;
 import org.opensaml.xml.util.XMLHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +39,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.rehabstod.auth.RehabstodUserTokens;
-
-import java.nio.charset.Charset;
-import java.time.LocalDateTime;
-import java.util.Base64;
 
 @Service
 public class TokenExchangeServiceImpl implements TokenExchangeService {

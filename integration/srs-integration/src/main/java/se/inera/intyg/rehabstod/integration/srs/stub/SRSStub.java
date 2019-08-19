@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.integration.srs.stub;
 
+import java.time.LocalDateTime;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateRequestType;
@@ -26,15 +27,13 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertifi
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.Risksignal;
 
-import java.time.LocalDateTime;
-
 /**
  * Stub for SRS. Will round-robin risk categories so first intygsId queried gets 1, the next 2...3...4...1...2...3...
  *
  * Created by eriklupander on 2017-10-31.
  */
 @Service
-@Profile({ "rhs-srs-stub" })
+@Profile({"rhs-srs-stub"})
 public class SRSStub implements GetRiskPredictionForCertificateResponderInterface {
 
     private static final int ONE = 1;
@@ -83,14 +82,14 @@ public class SRSStub implements GetRiskPredictionForCertificateResponderInterfac
 
     private String getRiskBeskrivning(int risk) {
         switch (risk) {
-        case ONE:
-            return "Måttlig risk att sjukfallet varar i mer än 90 dagar";
-        case TWO:
-            return "Hög risk att sjukfallet varar i mer än 90 dagar";
-        case THREE:
-            return "Mycket hög risk att sjukfallet varar i mer än 90 dagar";
-        default:
-            throw new IllegalArgumentException("Only risks 1,2 and 3 are possible");
+            case ONE:
+                return "Måttlig risk att sjukfallet varar i mer än 90 dagar";
+            case TWO:
+                return "Hög risk att sjukfallet varar i mer än 90 dagar";
+            case THREE:
+                return "Mycket hög risk att sjukfallet varar i mer än 90 dagar";
+            default:
+                throw new IllegalArgumentException("Only risks 1,2 and 3 are possible");
         }
     }
 

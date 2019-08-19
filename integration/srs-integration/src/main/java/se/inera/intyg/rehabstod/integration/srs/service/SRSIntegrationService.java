@@ -18,9 +18,8 @@
  */
 package se.inera.intyg.rehabstod.integration.srs.service;
 
-import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
-
 import java.util.List;
+import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -32,10 +31,8 @@ public interface SRSIntegrationService {
      * the native response type {@link se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion}
      * is converted into the more user-friendly {@link RiskSignal} type.
      *
-     * @param intygsIdn
-     *      1..n intygIds to query SRS for risks.
-     * @return
-     *      0..n RiskSignals.
+     * @param intygsIdn 1..n intygIds to query SRS for risks.
+     * @return 0..n RiskSignals.
      */
     List<RiskSignal> getRiskPreditionerForIntygsId(List<String> intygsIdn);
 

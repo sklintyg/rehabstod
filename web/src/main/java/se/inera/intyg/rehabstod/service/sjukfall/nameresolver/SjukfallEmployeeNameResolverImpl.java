@@ -21,10 +21,8 @@ package se.inera.intyg.rehabstod.service.sjukfall.nameresolver;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -76,8 +74,8 @@ public class SjukfallEmployeeNameResolverImpl implements SjukfallEmployeeNameRes
 
             // Make sure there are no two doctors in the list with the same name, but different hsaId's
             Map<String, List<Lakare>> collect = sjukfallList.stream()
-                    .map(SjukfallEnhet::getLakare)
-                    .collect(Collectors.groupingBy(Lakare::getNamn));
+                .map(SjukfallEnhet::getLakare)
+                .collect(Collectors.groupingBy(Lakare::getNamn));
 
             for (Map.Entry<String, List<Lakare>> entry : collect.entrySet()) {
 

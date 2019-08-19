@@ -35,7 +35,6 @@ public class SjukfallPatient {
 
     private List<PatientData> intyg;
 
-
     // - - - getters and setters
 
     public Diagnos getDiagnos() {

@@ -27,8 +27,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan({
-        "se.inera.intyg.rehabstod.integration.wc.client",
-        "se.inera.intyg.rehabstod.integration.wc.service"
+    "se.inera.intyg.rehabstod.integration.wc.client",
+    "se.inera.intyg.rehabstod.integration.wc.service"
 })
 public class WcIntegrationConfiguration {
 

@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.service.sjukfall.pu;
 
 import java.util.List;
-
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
@@ -36,15 +35,11 @@ public interface SjukfallPuService {
      * Removes sjukfall belonging to patients with sekretessmarkering. Ignores PU errors, will not exclude such
      * sjukfall. Removes patient name rather than enriching with PU info since the purpose of this method is for
      * enabling stats aggregation.
-     *
-     * @param sjukfallList
      */
     void filterSekretessForSummary(List<SjukfallEnhet> sjukfallList);
 
     /**
      * Removes intyg from other careUnits belonging to the patient with sekretessmarkering.
-     *
-     * @param intygsData
      */
     List<IntygData> filterSekretessForPatientHistory(List<IntygData> intygsData, String vardgivareId, String enhetsId);
 
@@ -52,8 +47,6 @@ public interface SjukfallPuService {
      * Filters out sjukfall if the patient has sekretessmarkering and the user doesn't have the requisite privilege.
      *
      * If the PU-service cannot be reached, an Exception must be thrown.
-     *
-     * @param sjukfallList
      */
     void enrichWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList);
 
@@ -61,8 +54,6 @@ public interface SjukfallPuService {
      * Filters out sjukfall if the patient has sekretessmarkering and the user doesn't have the requisite privilege.
      *
      * If the PU-service cannot be reached, an Exception must be thrown.
-     *
-     * @param patientSjukfall
      */
     void enrichWithPatientNameAndFilterSekretess(List<SjukfallPatient> patientSjukfall);
 }

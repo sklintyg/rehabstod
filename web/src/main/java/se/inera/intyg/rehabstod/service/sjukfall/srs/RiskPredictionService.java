@@ -18,15 +18,15 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.srs;
 
+import java.util.List;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
-
-import java.util.List;
 
 /**
  * Created by eriklupander on 2017-11-01.
  */
 public interface RiskPredictionService {
+
     void updateWithRiskPredictions(List<SjukfallEnhet> rehabstodSjukfall);
 
     void updateSjukfallPatientListWithRiskPredictions(List<SjukfallPatient> rehabstodSjukfall);

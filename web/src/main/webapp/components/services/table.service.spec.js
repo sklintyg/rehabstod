@@ -36,18 +36,18 @@ describe('Service: TableService', function() {
   var preferenceNyckel = 'tabelNyckel';
   var columns = [{
     id: 'ny'
-  },{
+  }, {
     id: 'column2'
-  },{
+  }, {
     id: 'patientId'
   }];
 
   describe('all', function() {
     var expected = [{
       id: 'ny'
-    },{
+    }, {
       id: 'column2'
-    },{
+    }, {
       id: 'patientId'
     }];
 
@@ -84,9 +84,9 @@ describe('Service: TableService', function() {
   it('sortering', function() {
     var expected = [{
       id: 'column2'
-    },{
+    }, {
       id: 'patientId'
-    },{
+    }, {
       id: 'ny'
     }];
 
@@ -102,7 +102,7 @@ describe('Service: TableService', function() {
     it('filtering', function() {
       var expected = [{
         id: 'ny'
-      },{
+      }, {
         id: 'column2'
       }];
 
@@ -117,9 +117,9 @@ describe('Service: TableService', function() {
     it('strunta i filtret', function() {
       var expected = [{
         id: 'ny'
-      },{
+      }, {
         id: 'column2'
-      },{
+      }, {
         id: 'patientId'
       }];
 

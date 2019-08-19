@@ -18,8 +18,8 @@
  */
 package se.inera.intyg.rehabstod.integration.it.client;
 
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
+import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 
 
@@ -32,8 +32,6 @@ public interface IntygstjanstClientService {
      * Method returns all sick leaves for a health care unit.
      *
      * @param unitId health care unit identifier (i.e HsaId)
-     * @param maxAntalDagarSedanSjukfallAvslut
-     * @return
      */
     ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnit(String unitId, int maxAntalDagarSedanSjukfallAvslut);
 
@@ -42,18 +40,15 @@ public interface IntygstjanstClientService {
      *
      * @param unitId health care unit identifier (i.e HsaId)
      * @param patientId patient identifier
-     * @param maxAntalDagarSedanSjukfallAvslut
-     * @return
      */
     ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnitAndPatient(String unitId,
-                                                                             String patientId,
-                                                                             int maxAntalDagarSedanSjukfallAvslut);
+        String patientId,
+        int maxAntalDagarSedanSjukfallAvslut);
 
     /**
      * Method returns all sick leaves for a patient for all health care givers and its health care units.
      *
      * @param patientId patient identifier
-     * @return
      */
     ListSickLeavesForPersonResponseType getAllSjukfallForPatient(String patientId);
 

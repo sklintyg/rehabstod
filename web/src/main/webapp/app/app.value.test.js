@@ -19,6 +19,6 @@
 
 //Define a default empty APP_CONFIG so that we don't have to mock it in every tests dependency setup
 angular.module('rehabstodApp')
-    .value('APP_CONFIG', {})
-    .value('USER_DATA', undefined)
-    .value('LINKS', []);
+.value('APP_CONFIG', {})
+.value('USER_DATA', undefined)
+.value('LINKS', []);

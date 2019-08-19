@@ -18,84 +18,84 @@
  */
 
 angular.module('rehabstodApp')
-    .controller('RhsTableCtrl',
-            function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService,
-                featureService, $document, TableService) {
-                'use strict';
+.controller('RhsTableCtrl',
+    function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService,
+        featureService, $document, TableService) {
+      'use strict';
 
-                $scope.preferenceKey = TableService.sjukfallTableKey;
-                $scope.model = SjukfallModel;
-                $scope.user = UserModel.get();
-                $scope.displayedCollection = [].concat($scope.model.get());
-                $scope.columns = TableService.getAllSjukfallTableColumns();
-                $scope.columnsForTable = [];
+      $scope.preferenceKey = TableService.sjukfallTableKey;
+      $scope.model = SjukfallModel;
+      $scope.user = UserModel.get();
+      $scope.displayedCollection = [].concat($scope.model.get());
+      $scope.columns = TableService.getAllSjukfallTableColumns();
+      $scope.columnsForTable = [];
 
-                $scope.$watch(function() {
-                  return SjukfallFilterViewState.get().showPatientId + UserModel.get().preferences[$scope.preferenceKey];
-                }, function() {
-                  $scope.columnsForTable = TableService.getSelectedColumns($scope.columns, $scope.preferenceKey);
-                  SjukfallModel.updateQuickSearchContent();
-                });
+      $scope.$watch(function() {
+        return SjukfallFilterViewState.get().showPatientId + UserModel.get().preferences[$scope.preferenceKey];
+      }, function() {
+        $scope.columnsForTable = TableService.getSelectedColumns($scope.columns, $scope.preferenceKey);
+        SjukfallModel.updateQuickSearchContent();
+      });
 
-                $scope.getToolTip = function(diagnos) {
-                    var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
-                        messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
-                    return '<b>' + diagnos.kod + '</b><br>' + desc;
-                };
+      $scope.getToolTip = function(diagnos) {
+        var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
+            messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
+        return '<b>' + diagnos.kod + '</b><br>' + desc;
+      };
 
-                $scope.showPatientHistory = function(patientModel) {
-                    $uibModal.open({
-                        windowClass: 'patient-history-dialog',
-                        templateUrl: '/app/sjukfall/patientHistory/patientHistory.dialog.html',
-                        controller: 'patientHistoryController',
-                        size: 'lg',
-                        backdrop: 'static',
-                        keyboard: false,
-                        resolve: {
-                            patient: function() {
-                                return patientModel;
-                            }
-                        }
-                    });
-                };
-
-                $scope.showMoreInTable = function() {
-                    $scope.limit += 50;
-                };
-
-                $scope.resetLimit = function() {
-                    $scope.limit = 100;
-                };
-
-                $scope.resetLimit();
-
-                $document.on('scroll', handleScroll);
-
-                $scope.$on('$destroy', function() {
-                    $document.off('scroll', handleScroll);
-                });
-
-                function handleScroll() {
-                    var scrollLeft = $document.scrollLeft();
-                    var header = $('#rhs-table-fixed-header');
-                    var left = 30;
-
-                    if (scrollLeft > 0) {
-                        left -= scrollLeft;
-                    }
-
-                    header.css('left', left + 'px');
-                }
+      $scope.showPatientHistory = function(patientModel) {
+        $uibModal.open({
+          windowClass: 'patient-history-dialog',
+          templateUrl: '/app/sjukfall/patientHistory/patientHistory.dialog.html',
+          controller: 'patientHistoryController',
+          size: 'lg',
+          backdrop: 'static',
+          keyboard: false,
+          resolve: {
+            patient: function() {
+              return patientModel;
             }
-        )
-    .directive('rhsTable',
-        function() {
-            'use strict';
-
-            return {
-                restrict: 'E',
-                scope: {},
-                controller: 'RhsTableCtrl',
-                templateUrl: '/components/appDirectives/sjukfall/rhsTable/rhsTable.directive.html'
-            };
+          }
         });
+      };
+
+      $scope.showMoreInTable = function() {
+        $scope.limit += 50;
+      };
+
+      $scope.resetLimit = function() {
+        $scope.limit = 100;
+      };
+
+      $scope.resetLimit();
+
+      $document.on('scroll', handleScroll);
+
+      $scope.$on('$destroy', function() {
+        $document.off('scroll', handleScroll);
+      });
+
+      function handleScroll() {
+        var scrollLeft = $document.scrollLeft();
+        var header = $('#rhs-table-fixed-header');
+        var left = 30;
+
+        if (scrollLeft > 0) {
+          left -= scrollLeft;
+        }
+
+        header.css('left', left + 'px');
+      }
+    }
+)
+.directive('rhsTable',
+    function() {
+      'use strict';
+
+      return {
+        restrict: 'E',
+        scope: {},
+        controller: 'RhsTableCtrl',
+        templateUrl: '/components/appDirectives/sjukfall/rhsTable/rhsTable.directive.html'
+      };
+    });

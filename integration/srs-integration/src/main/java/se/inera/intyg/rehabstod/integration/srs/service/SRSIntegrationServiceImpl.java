@@ -18,14 +18,13 @@
  */
 package se.inera.intyg.rehabstod.integration.srs.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.srs.client.SRSClientService;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by eriklupander on 2016-02-01.
@@ -44,9 +43,9 @@ public class SRSIntegrationServiceImpl implements SRSIntegrationService {
         }
 
         return srsClientService.getRiskPrediktionForCertificate(intygsIdn)
-                .stream()
-                .map(rp -> new RiskSignal(rp.getIntygsId(), rp.getRisksignal().getRiskkategori(),
-                        rp.getRisksignal().getBeskrivning(), rp.getRisksignal().getBerakningstidpunkt()))
-                .collect(Collectors.toList());
+            .stream()
+            .map(rp -> new RiskSignal(rp.getIntygsId(), rp.getRisksignal().getRiskkategori(),
+                rp.getRisksignal().getBeskrivning(), rp.getRisksignal().getBerakningstidpunkt()))
+            .collect(Collectors.toList());
     }
 }

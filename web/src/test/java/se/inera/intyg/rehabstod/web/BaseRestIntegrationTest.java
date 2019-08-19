@@ -18,6 +18,10 @@
  */
 package se.inera.intyg.rehabstod.web;
 
+import static com.jayway.restassured.RestAssured.given;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertNotNull;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
@@ -32,11 +36,6 @@ import org.springframework.http.HttpStatus;
 import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
-
-
-import static com.jayway.restassured.RestAssured.given;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Base class for "REST-ish" integrationTests using RestAssured.
@@ -64,15 +63,15 @@ public abstract class BaseRestIntegrationTest {
 
 
     protected static final FakeCredentials DEFAULT_LAKARE = new FakeCredentials.FakeCredentialsBuilder(
-            DEFAULT_LAKARE_HSAID, DEFAULT_VE_HSAID).legitimeradeYrkesgrupper(LAKARE)
-                    .pdlConsentGiven(true).build();
+        DEFAULT_LAKARE_HSAID, DEFAULT_VE_HSAID).legitimeradeYrkesgrupper(LAKARE)
+        .pdlConsentGiven(true).build();
 
     protected static final FakeCredentials DEFAULT_LAKARE_NO_CONSENT = new FakeCredentials.FakeCredentialsBuilder(
-            DEFAULT_LAKARE_HSAID, DEFAULT_VE_HSAID).legitimeradeYrkesgrupper(LAKARE)
-                    .pdlConsentGiven(false).build();
+        DEFAULT_LAKARE_HSAID, DEFAULT_VE_HSAID).legitimeradeYrkesgrupper(LAKARE)
+        .pdlConsentGiven(false).build();
 
     protected static final FakeCredentials EVA_H_LAKARE = new FakeCredentials.FakeCredentialsBuilder(
-            "eva", "centrum-vast").legitimeradeYrkesgrupper(LAKARE).pdlConsentGiven(true).build();
+        "eva", "centrum-vast").legitimeradeYrkesgrupper(LAKARE).pdlConsentGiven(true).build();
 
     protected CustomObjectMapper objectMapper = new CustomObjectMapper();
 
@@ -81,6 +80,7 @@ public abstract class BaseRestIntegrationTest {
     public static final int FORBIDDEN = HttpStatus.FORBIDDEN.value();
 
     protected static class SessionData {
+
         String sessionId;
         String csrf;
 
@@ -94,10 +94,10 @@ public abstract class BaseRestIntegrationTest {
 
         public RequestSpecification begin() {
             return given()
-                    .sessionId(getSessionId())
-                    .cookie(XSRF_TOKEN, getCsrf())
-                    .header(X_XSRF_TOKEN, getCsrf())
-                    .contentType(ContentType.JSON);
+                .sessionId(getSessionId())
+                .cookie(XSRF_TOKEN, getCsrf())
+                .header(X_XSRF_TOKEN, getCsrf())
+                .contentType(ContentType.JSON);
         }
 
         static SessionData of(Response response) {
@@ -122,8 +122,7 @@ public abstract class BaseRestIntegrationTest {
     /**
      * Log in to rehabstod using the supplied FakeCredentials.
      *
-     * @param fakeCredentials
-     *            who to log in as
+     * @param fakeCredentials who to log in as
      * @return sessionId for the now authorized user session
      */
     protected SessionData getAuthSession(FakeCredentials fakeCredentials) {
@@ -155,18 +154,18 @@ public abstract class BaseRestIntegrationTest {
 
     private SessionData getAuthSession(String credentialsJson) {
         Response response = given().contentType(ContentType.URLENC).and().redirects().follow(false).and()
-                .formParam(USER_JSON_FORM_PARAMETER, credentialsJson).expect()
-                .statusCode(HttpServletResponse.SC_FOUND).when()
-                .post(FAKE_LOGIN_URI).then().extract().response();
+            .formParam(USER_JSON_FORM_PARAMETER, credentialsJson).expect()
+            .statusCode(HttpServletResponse.SC_FOUND).when()
+            .post(FAKE_LOGIN_URI).then().extract().response();
         assertNotNull(response.sessionId());
         return SessionData.of(response);
     }
 
     private void selectUnit(SessionData sd, String changeUnitAsJson) throws JsonProcessingException {
         Response response = sd.begin()
-                .body(changeUnitAsJson).expect().statusCode(OK)
-                .when()
-                .post(CHANGE_UNIT_URL).then().extract().response();
+            .body(changeUnitAsJson).expect().statusCode(OK)
+            .when()
+            .post(CHANGE_UNIT_URL).then().extract().response();
         assertNotNull(response);
         LOG.info("Test selected unit " + changeUnitAsJson + ". Resp: " + response.statusCode());
 

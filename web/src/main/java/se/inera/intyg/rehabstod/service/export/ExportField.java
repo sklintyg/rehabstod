@@ -28,69 +28,69 @@ import java.util.stream.Stream;
 
 public enum ExportField {
 
-  LINE_NR("number", "#", "#"),
-  PATIENT_ID("patientId", "Personnr", "Personnummer"),
-  PATIENT_AGE("patientAge", "Ålder", "Ålder"),
-  PATIENT_NAME("patientName", "Namn", "Namn"),
-  PATIENT_GENDER("gender", "Kön", "Kön"),
-  DIAGNOSE("dxs", "Diagnos(er)", "Diagnos/diagnoser"),
-  STARTDATE("startDate", "Startdatum", "Startdatum"),
-  ENDDATE("endDate", "Slutdatum", "Slutdatum"),
-  DAYS("days", "Längd", "Längd"),
-  NR_OF_INTYG("antal", "Antal intyg", "Antal"),
-  GRADER("degree", "Grad", "Grad"),
-  KOMPLETTERINGAR("Kompletteringar", "Komplettering", "Kompletteringar"),
-  SRS("srs", "Risk", "Risk"),
-  LAKARE("doctor", "Läkare", "Läkare");
+    LINE_NR("number", "#", "#"),
+    PATIENT_ID("patientId", "Personnr", "Personnummer"),
+    PATIENT_AGE("patientAge", "Ålder", "Ålder"),
+    PATIENT_NAME("patientName", "Namn", "Namn"),
+    PATIENT_GENDER("gender", "Kön", "Kön"),
+    DIAGNOSE("dxs", "Diagnos(er)", "Diagnos/diagnoser"),
+    STARTDATE("startDate", "Startdatum", "Startdatum"),
+    ENDDATE("endDate", "Slutdatum", "Slutdatum"),
+    DAYS("days", "Längd", "Längd"),
+    NR_OF_INTYG("antal", "Antal intyg", "Antal"),
+    GRADER("degree", "Grad", "Grad"),
+    KOMPLETTERINGAR("Kompletteringar", "Komplettering", "Kompletteringar"),
+    SRS("srs", "Risk", "Risk"),
+    LAKARE("doctor", "Läkare", "Läkare");
 
-  private final String jsonId;
-  private final String labelPdf;
-  private final String labelXlsx;
+    private final String jsonId;
+    private final String labelPdf;
+    private final String labelXlsx;
 
-  ExportField(String jsonId, String labelPdf, String labelXlsx) {
-    this.jsonId = jsonId;
-    this.labelPdf = labelPdf;
-    this.labelXlsx = labelXlsx;
-  }
-
-  public static List<ExportField> fromJson(String jsonPreferenceString) {
-    final EnumSet<ExportField> allFields = EnumSet.allOf(ExportField.class);
-
-    if (Strings.isNullOrEmpty(jsonPreferenceString)) {
-      return Arrays.asList(ExportField.values());
+    ExportField(String jsonId, String labelPdf, String labelXlsx) {
+        this.jsonId = jsonId;
+        this.labelPdf = labelPdf;
+        this.labelXlsx = labelXlsx;
     }
-    // jsonPreferenceString is separated by "|" e.g
-    // number|patientId|patientAge|patientName|gender|dxs|startDate|endDate|days|antal|degree|kompletteringar|doctor|srs
 
-    List<ExportField> enabledFields = new ArrayList<>();
+    public static List<ExportField> fromJson(String jsonPreferenceString) {
+        final EnumSet<ExportField> allFields = EnumSet.allOf(ExportField.class);
 
-    Stream.of(jsonPreferenceString.split("\\|"))
-        .forEach(jsonId -> allFields
-            .stream()
+        if (Strings.isNullOrEmpty(jsonPreferenceString)) {
+            return Arrays.asList(ExportField.values());
+        }
+        // jsonPreferenceString is separated by "|" e.g
+        // number|patientId|patientAge|patientName|gender|dxs|startDate|endDate|days|antal|degree|kompletteringar|doctor|srs
+
+        List<ExportField> enabledFields = new ArrayList<>();
+
+        Stream.of(jsonPreferenceString.split("\\|"))
+            .forEach(jsonId -> allFields
+                .stream()
+                .filter(ef -> ef.getJsonId().equalsIgnoreCase(jsonId))
+                .findFirst()
+                .ifPresent(enabledFields::add));
+
+        return enabledFields;
+    }
+
+    public static Optional<ExportField> fromJsonId(String jsonId) {
+        EnumSet<ExportField> allFields = EnumSet.allOf(ExportField.class);
+
+        return allFields.stream()
             .filter(ef -> ef.getJsonId().equalsIgnoreCase(jsonId))
-            .findFirst()
-            .ifPresent(enabledFields::add));
+            .findAny();
+    }
 
-    return enabledFields;
-  }
+    public String getJsonId() {
+        return jsonId;
+    }
 
-  public static Optional<ExportField> fromJsonId(String jsonId) {
-    EnumSet<ExportField> allFields = EnumSet.allOf(ExportField.class);
+    public String getLabelPdf() {
+        return labelPdf;
+    }
 
-    return allFields.stream()
-        .filter(ef -> ef.getJsonId().equalsIgnoreCase(jsonId))
-        .findAny();
-  }
-
-  public String getJsonId() {
-    return jsonId;
-  }
-
-  public String getLabelPdf() {
-    return labelPdf;
-  }
-
-  public String getLabelXlsx() {
-    return labelXlsx;
-  }
+    public String getLabelXlsx() {
+        return labelXlsx;
+    }
 }

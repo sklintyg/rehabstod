@@ -24,14 +24,12 @@ import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
@@ -39,7 +37,7 @@ import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceReposit
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserPreferencesServiceTest {
-   
+
     private static final String KEY = "maxAntalDagarMellanIntyg";
     private static final String HSA_ID = "abcdefghijkl";
 

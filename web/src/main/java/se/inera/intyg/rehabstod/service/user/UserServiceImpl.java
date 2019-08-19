@@ -41,10 +41,8 @@ public class UserServiceImpl implements UserService {
     /**
      * Note - this is just a proxy for accessing {@link CareUnitAccessHelper#userIsLoggedInOnEnhetOrUnderenhet(IntygUser, String)}.
      *
-     * @param enhetsId
-     *      HSA-id of a vardenhet or mottagning.
-     * @return
-     *      True if the current IntygUser has access to the specified enhetsId including mottagningsnivå.
+     * @param enhetsId HSA-id of a vardenhet or mottagning.
+     * @return True if the current IntygUser has access to the specified enhetsId including mottagningsnivå.
      */
     @Override
     public boolean isUserLoggedInOnEnhetOrUnderenhet(String enhetsId) {

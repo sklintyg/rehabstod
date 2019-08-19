@@ -18,25 +18,25 @@
  */
 
 angular.module('rehabstodApp').directive('rhsEmulateButtonActiveState', function() {
-    'use strict';
-    return {
-        link: function(scope, element) {
+  'use strict';
+  return {
+    link: function(scope, element) {
 
-            element.bind('keydown', function onActivateBykey(event) {
-                if (event.which === 13 || event.which === 32) {
-                    element.addClass('active');
-                }
-            });
-
-            element.bind('keyup', function onDeactivateByKey(event) {
-                if (event.which === 13 || event.which === 32) {
-                    element.removeClass('active');
-                }
-            });
-
-            element.bind('mouseup blur', function() {
-                element.removeClass('active');
-            });
+      element.bind('keydown', function onActivateBykey(event) {
+        if (event.which === 13 || event.which === 32) {
+          element.addClass('active');
         }
-    };
+      });
+
+      element.bind('keyup', function onDeactivateByKey(event) {
+        if (event.which === 13 || event.which === 32) {
+          element.removeClass('active');
+        }
+      });
+
+      element.bind('mouseup blur', function() {
+        element.removeClass('active');
+      });
+    }
+  };
 });

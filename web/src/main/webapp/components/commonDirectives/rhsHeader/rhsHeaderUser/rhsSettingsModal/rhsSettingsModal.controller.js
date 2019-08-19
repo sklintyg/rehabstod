@@ -19,71 +19,71 @@
 
 angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
     function($scope, $uibModalInstance, UserProxy, UserModel, SjukfallService, _) {
-        'use strict';
+      'use strict';
 
-        /**
-         * Private functions
-         */
-        function convertArrayToObject(array) {
-            var newObject = {};
+      /**
+       * Private functions
+       */
+      function convertArrayToObject(array) {
+        var newObject = {};
 
-            _.each(array, function(value) { // jshint ignore:line
-                newObject[value.property] = value.value;
-            });
+        _.each(array, function(value) { // jshint ignore:line
+          newObject[value.property] = value.value;
+        });
 
-            return newObject;
-        }
+        return newObject;
+      }
 
-        function addSetting(settingData, property, typeConfig) {
-            $scope.settings.push({
-                id: 'setting-' + property.toLowerCase(),
-                property: property,
-                title: 'settings.modal.' + property + '.title',
-                description: 'settings.modal.' + property + '.description',
-                help: typeConfig.showHelp ? 'settings.modal.' + property + '.help' : null,
-                typeConfig: typeConfig,
-                value: settingData[property] ? settingData[property] : typeConfig.defaultValue
-            });
-        }
+      function addSetting(settingData, property, typeConfig) {
+        $scope.settings.push({
+          id: 'setting-' + property.toLowerCase(),
+          property: property,
+          title: 'settings.modal.' + property + '.title',
+          description: 'settings.modal.' + property + '.description',
+          help: typeConfig.showHelp ? 'settings.modal.' + property + '.help' : null,
+          typeConfig: typeConfig,
+          value: settingData[property] ? settingData[property] : typeConfig.defaultValue
+        });
+      }
 
-        /**
-         * Exposed scope properties
-         */
-        $scope.settings = [];
+      /**
+       * Exposed scope properties
+       */
+      $scope.settings = [];
 
-        /**
-         * Exposed scope interaction functions
-         */
-        $scope.cancel = function() {
-            $uibModalInstance.dismiss();
-        };
+      /**
+       * Exposed scope interaction functions
+       */
+      $scope.cancel = function() {
+        $uibModalInstance.dismiss();
+      };
 
-        $scope.save = function() {
+      $scope.save = function() {
 
-            var perferences = UserModel.get().preferences;
-            var settingData = convertArrayToObject($scope.settings);
+        var perferences = UserModel.get().preferences;
+        var settingData = convertArrayToObject($scope.settings);
 
-            var settingsToSave = _.assign(perferences, settingData);
+        var settingsToSave = _.assign(perferences, settingData);
 
-            $scope.saving = true;
-            UserProxy.saveSettings(settingsToSave).then(function(preferences) {
-                $scope.saving = false;
-                UserModel.get().preferences = preferences;
-                $uibModalInstance.close($scope.settingsModel);
-                if (UserModel.isPdlConsentGiven()) {
-                  SjukfallService.loadSjukfall(true, true);
-                }
-            }, function() {
-                //Handle errors
-                $scope.saving = false;
-            });
+        $scope.saving = true;
+        UserProxy.saveSettings(settingsToSave).then(function(preferences) {
+          $scope.saving = false;
+          UserModel.get().preferences = preferences;
+          $uibModalInstance.close($scope.settingsModel);
+          if (UserModel.isPdlConsentGiven()) {
+            SjukfallService.loadSjukfall(true, true);
+          }
+        }, function() {
+          //Handle errors
+          $scope.saving = false;
+        });
 
-        };
+      };
 
-        /**
-         * Run
-         */
-        var oldSettingData = UserModel.get().preferences;
+      /**
+       * Run
+       */
+      var oldSettingData = UserModel.get().preferences;
       addSetting(oldSettingData, 'pdlConsentGiven',
           {
             type: 'BOOL_READONLY',

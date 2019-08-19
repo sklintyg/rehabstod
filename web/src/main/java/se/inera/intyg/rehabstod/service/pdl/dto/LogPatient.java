@@ -83,8 +83,8 @@ public final class LogPatient {
          * <p>
          * Se https://bitbucket.org/rivta-domains/riv.ehr.log/raw/master/docs/TKB_ehr_log.docx
          *
-         * @param patientId    Id of the patient.
-         * @param enhetsId     HsaId of the unit owning the information.
+         * @param patientId Id of the patient.
+         * @param enhetsId HsaId of the unit owning the information.
          * @param vardgivareId HsaId of the caregiver owning the information.
          */
         public Builder(String patientId, String enhetsId, String vardgivareId) {

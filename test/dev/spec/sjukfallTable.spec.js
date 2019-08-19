@@ -29,60 +29,59 @@ var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
 describe('Hantera tabellen', function() {
 
-    beforeAll(function() {
-        browser.ignoreSynchronization = false;
-        specHelper.login();
-        startPage.clickMyUnit();
-        expect(sjukfallPage.isAt()).toBe(true);
+  beforeAll(function() {
+    browser.ignoreSynchronization = false;
+    specHelper.login();
+    startPage.clickMyUnit();
+    expect(sjukfallPage.isAt()).toBe(true);
+  });
+
+  it('Sortera på personnummer', function() {
+    sjukfallPage.tableHeader.element(by.css('th.column-patient-id')).click();
+
+    var columnPatientValueFirst = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
+    var columnNumberValueFirst = sjukfallPage.tableBody.all(by.css('.column-number')).first().getText();
+
+    expect(columnPatientValueFirst).toBeDefined();
+    expect(columnNumberValueFirst).toBe('1');
+
+    browser.executeScript('window.scrollTo(0,0);').then(function() {
+      sjukfallPage.tableHeader.element(by.css('th.column-patient-id')).click();
+
+      var afterSort = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
+      //After sorting twice, the first row should have changed..
+      expect(afterSort).not.toBe(columnPatientValueFirst);
+
     });
 
-    it('Sortera på personnummer', function() {
-        sjukfallPage.tableHeader.element(by.css('th.column-patient-id')).click();
+    browser.executeScript('window.scrollTo(0,0);').then(function() {
+      sjukfallPage.tableHeader.element(by.css('th.column-patient-id')).click();
 
-        var columnPatientValueFirst = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
-        var columnNumberValueFirst = sjukfallPage.tableBody.all(by.css('.column-number')).first().getText();
+      var afterSort = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
+      //After sorting again, the first row should be the same as after initial sort
+      expect(afterSort).toBe(columnPatientValueFirst);
 
-        expect(columnPatientValueFirst).toBeDefined();
-        expect(columnNumberValueFirst).toBe('1');
-
-
-        browser.executeScript('window.scrollTo(0,0);').then(function() {
-            sjukfallPage.tableHeader.element(by.css('th.column-patient-id')).click();
-
-            var afterSort = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
-            //After sorting twice, the first row should have changed..
-            expect(afterSort).not.toBe(columnPatientValueFirst);
-
-        });
-
-        browser.executeScript('window.scrollTo(0,0);').then(function() {
-            sjukfallPage.tableHeader.element(by.css('th.column-patient-id')).click();
-
-            var afterSort = sjukfallPage.tableBody.all(by.css('.column-patient-id')).first().getText();
-            //After sorting again, the first row should be the same as after initial sort
-            expect(afterSort).toBe(columnPatientValueFirst);
-
-        });
     });
+  });
 
-    it('anpassa tabellen', function() {
-        sjukfallPage.anpassaTableLink.click();
-        sjukfallPage.toggleColumn('days');
-        sjukfallPage.anpassaTableSaveBtn.click();
+  it('anpassa tabellen', function() {
+    sjukfallPage.anpassaTableLink.click();
+    sjukfallPage.toggleColumn('days');
+    sjukfallPage.anpassaTableSaveBtn.click();
 
-        expect(sjukfallPage.langdFromInput().isEnabled()).toBeFalsy();
-        expect(sjukfallPage.anpassaTableTooltip.isPresent()).toBeTruthy();
-        expect(sjukfallPage.getSjukfallRowColumn(0, 'days').isPresent()).toBeFalsy();
-    });
+    expect(sjukfallPage.langdFromInput().isEnabled()).toBeFalsy();
+    expect(sjukfallPage.anpassaTableTooltip.isPresent()).toBeTruthy();
+    expect(sjukfallPage.getSjukfallRowColumn(0, 'days').isPresent()).toBeFalsy();
+  });
 
-    it('återställ tabellen', function() {
-        sjukfallPage.anpassaTableLink.click();
-        sjukfallPage.toggleColumn('days');
-        sjukfallPage.anpassaTableSaveBtn.click();
+  it('återställ tabellen', function() {
+    sjukfallPage.anpassaTableLink.click();
+    sjukfallPage.toggleColumn('days');
+    sjukfallPage.anpassaTableSaveBtn.click();
 
-        expect(sjukfallPage.langdFromInput().isEnabled()).toBeTruthy();
-        //expect(sjukfallPage.anpassaTableTooltip.isPresent()).toBeFalsy(); // tar bort checken tills en återställknapp finns
-        expect(sjukfallPage.getSjukfallRowColumn(0, 'days').isPresent()).toBeTruthy();
-    });
+    expect(sjukfallPage.langdFromInput().isEnabled()).toBeTruthy();
+    //expect(sjukfallPage.anpassaTableTooltip.isPresent()).toBeFalsy(); // tar bort checken tills en återställknapp finns
+    expect(sjukfallPage.getSjukfallRowColumn(0, 'days').isPresent()).toBeTruthy();
+  });
 
 });

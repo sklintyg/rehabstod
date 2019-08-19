@@ -21,6 +21,8 @@ package se.inera.intyg.rehabstod.service.sjukfall.mappers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.junit.Test;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.Befattning;
@@ -34,9 +36,6 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Patient;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * @author Magnus Ekstrand on 2017-09-22.
@@ -97,7 +96,9 @@ public class IntygstjanstMapperTest {
         assertEquals(1, to.getSysselsattning().size());
         assertEquals(SYSSELSATTNING, to.getSysselsattning().get(0));
         assertTrue(!to.isEnkeltIntyg());
-    };
+    }
+
+    ;
 
     private IntygsData createIntygsData() {
         IntygsData intygsData = new IntygsData();

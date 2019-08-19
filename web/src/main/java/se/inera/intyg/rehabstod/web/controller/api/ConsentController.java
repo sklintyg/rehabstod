@@ -20,6 +20,9 @@ package se.inera.intyg.rehabstod.web.controller.api;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +41,6 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.schemas.contract.Personnummer;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/consent")
@@ -62,13 +61,10 @@ public class ConsentController {
 
     /**
      * Register a consent for a patient.
-     *
-     * @param request
-     * @return
      */
     @RequestMapping(value = "", method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     public RegisterExtendedConsentResponse registerConsent(@RequestBody RegisterExtendedConsentRequest request) {
 
         RegisterExtendedConsentResponse response;
@@ -87,18 +83,18 @@ public class ConsentController {
         // Ett samtycke får inte gälla längre än 1 år framåt i tiden
         if (request.getDays() > MAX_DAYS_FOR_CONSENT) {
             return createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(),
-                    "Ett samtycke får inte gälla längre än 1 år framåt i tiden");
+                "Ett samtycke får inte gälla längre än 1 år framåt i tiden");
         }
 
         Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
         if (!personnummer.isPresent()) {
             return createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(),
-                    "Felaktigt personnummer");
+                "Felaktigt personnummer");
         }
 
         // Try to register consent
         LocalDateTime consentDataTime = consentService.giveConsent(
-                personnummer.get(), request.isOnlyCurrentUser(), null, consentFrom, consentTo, user);
+            personnummer.get(), request.isOnlyCurrentUser(), null, consentFrom, consentTo, user);
 
         if (consentDataTime == null) {
             String errMsg = "Det gick inte att registrera samtycke";
@@ -116,8 +112,8 @@ public class ConsentController {
     }
 
     private RegisterExtendedConsentResponse createResponse(RegisterExtendedConsentResponse.ResponseCode responseCode,
-                                                           String registeredBy,
-                                                           String responseMessage) {
+        String registeredBy,
+        String responseMessage) {
         Preconditions.checkNotNull(responseCode);
         Preconditions.checkArgument(!Strings.isNullOrEmpty(registeredBy));
 
@@ -133,18 +129,18 @@ public class ConsentController {
     }
 
     private void logRegistrationOfConsent(RehabstodUser user, Personnummer personnummer,
-                                          ActivityType activityType, ResourceType resourceType) {
+        ActivityType activityType, ResourceType resourceType) {
 
         String errMsg = "Cannot make lookup in PDL activity store, %s was null.";
         Preconditions.checkNotNull(personnummer, String.format(errMsg, "enhetsId"));
 
         boolean isInStore = PDLActivityStore.isActivityInStore(user.getValdVardenhet().getId(), personnummer.getPersonnummer(),
-                activityType, resourceType, user.getStoredActivities());
+            activityType, resourceType, user.getStoredActivities());
 
         if (!isInStore) {
             logService.logConsentActivity(personnummer, activityType, resourceType);
             PDLActivityStore.addActivityToStore(user.getValdVardenhet().getId(), personnummer.getPersonnummer(),
-                    activityType, resourceType, user.getStoredActivities());
+                activityType, resourceType, user.getStoredActivities());
         }
     }
 

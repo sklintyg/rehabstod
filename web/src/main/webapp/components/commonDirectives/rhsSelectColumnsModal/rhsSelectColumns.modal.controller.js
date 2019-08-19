@@ -33,7 +33,7 @@ angular.module('rehabstodApp').controller('rhsSelectColumnsModalController',
           return column.id;
         }).join('|');
 
-        settingsToSave[preferenceKey] = selectedColumnsString === defaultColumnsString  ?  '' : selectedColumnsString;
+        settingsToSave[preferenceKey] = selectedColumnsString === defaultColumnsString ? '' : selectedColumnsString;
 
         UserProxy.saveSettings(settingsToSave).then(
             function(preferences) {

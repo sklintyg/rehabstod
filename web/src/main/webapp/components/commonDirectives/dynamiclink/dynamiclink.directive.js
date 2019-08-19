@@ -18,45 +18,45 @@
  */
 
 angular.module('rehabstodcommon.dynamiclink').directive(
-        'dynamiclink',
-        function($log, $rootScope, $sce, $compile, dynamicLinkService) {
-            'use strict';
+    'dynamiclink',
+    function($log, $rootScope, $sce, $compile, dynamicLinkService) {
+      'use strict';
 
-            return {
-                restrict: 'EA',
-                scope: {
-                    'key': '@',
-                    'linkclass': '@'
-                },
-                transclude: true,
-                template: '<a href="{{ url }}" ' +
-                    'class="external-link {{ linkclass }}" ' +
-                    'ng-attr-target="{{ target || undefined}}" ' +
-                    'uib-tooltip="{{ tooltip || undefined }}"' +
-                    'tooltip-enable="{{ !!tooltip}}"' +
-                    'tooltip-placement="auto top"' +
-                    'tooltip-append-to-body="true"' +
-                    '>' +
-                    '<span ng-bind-html="text"></span>' +
-                    '<ng-transclude></ng-transclude> ' +
-                    '<i ng-if="target" class="glyphicon glyphicon-new-window"></i></a>',
+      return {
+        restrict: 'EA',
+        scope: {
+          'key': '@',
+          'linkclass': '@'
+        },
+        transclude: true,
+        template: '<a href="{{ url }}" ' +
+            'class="external-link {{ linkclass }}" ' +
+            'ng-attr-target="{{ target || undefined}}" ' +
+            'uib-tooltip="{{ tooltip || undefined }}"' +
+            'tooltip-enable="{{ !!tooltip}}"' +
+            'tooltip-placement="auto top"' +
+            'tooltip-append-to-body="true"' +
+            '>' +
+            '<span ng-bind-html="text"></span>' +
+            '<ng-transclude></ng-transclude> ' +
+            '<i ng-if="target" class="glyphicon glyphicon-new-window"></i></a>',
 
-                link: function(scope) {
-                    scope.$watch(function() {
-                        return dynamicLinkService.getLink(scope.key);
-                    }, function(value) {
-                        if (angular.isDefined(value)) {
-                            scope.url = value.url;
-                            scope.text = $sce.trustAsHtml(value.text);
-                            scope.tooltip = value.tooltip;
-                            scope.target = value.target;
-                        } else {
-                            scope.url = '#';
-                            scope.text = $sce.trustAsHtml('WARNING: could not resolve dynamic link: ' + scope.key);
-                            scope.tooltip = null;
-                            scope.target = null;
-                        }
-                    });
-                }
-            };
-        });
+        link: function(scope) {
+          scope.$watch(function() {
+            return dynamicLinkService.getLink(scope.key);
+          }, function(value) {
+            if (angular.isDefined(value)) {
+              scope.url = value.url;
+              scope.text = $sce.trustAsHtml(value.text);
+              scope.tooltip = value.tooltip;
+              scope.target = value.target;
+            } else {
+              scope.url = '#';
+              scope.text = $sce.trustAsHtml('WARNING: could not resolve dynamic link: ' + scope.key);
+              scope.tooltip = null;
+              scope.target = null;
+            }
+          });
+        }
+      };
+    });

@@ -28,13 +28,13 @@ var aboutPage = pages.aboutPage;
 
 module.exports = {
 
-    goToStart: function(success) {
-        startPage.clickStart();
-        expect(startPage.isAt()).toBe(success || true);
-    },
+  goToStart: function(success) {
+    startPage.clickStart();
+    expect(startPage.isAt()).toBe(success || true);
+  },
 
-    goToSjukfall: function(success) {
-        startPage.clickSjukfall();
-        expect(sjukfallPage.isAt()).toBe(success || true);
-    }
+  goToSjukfall: function(success) {
+    startPage.clickSjukfall();
+    expect(sjukfallPage.isAt()).toBe(success || true);
+  }
 };

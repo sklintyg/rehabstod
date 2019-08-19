@@ -18,32 +18,32 @@
  */
 
 angular.module('rehabstodApp')
-    .directive('rhsTableHeaderColumn',
+.directive('rhsTableHeaderColumn',
     function($timeout) {
-        'use strict';
+      'use strict';
 
-        return {
-            restrict: 'A',
-            scope: {
-                hideHelp: '@',
-                disableSort: '@',
-                msgParams: '=',
-                column: '@',
-                labelKey: '@',
-                defaultSort: '@'
-            },
-            templateUrl: '/components/appDirectives/sjukfall/rhsTableHeaderColumn/rhsTableHeaderColumn.directive.html',
-            link: function($scope, element) {
-                $scope.label = 'label.table.column.' + $scope.labelKey.toLowerCase();
+      return {
+        restrict: 'A',
+        scope: {
+          hideHelp: '@',
+          disableSort: '@',
+          msgParams: '=',
+          column: '@',
+          labelKey: '@',
+          defaultSort: '@'
+        },
+        templateUrl: '/components/appDirectives/sjukfall/rhsTableHeaderColumn/rhsTableHeaderColumn.directive.html',
+        link: function($scope, element) {
+          $scope.label = 'label.table.column.' + $scope.labelKey.toLowerCase();
 
-                $timeout(function() {
-                    element.addClass('rhs-table-head');
-                });
+          $timeout(function() {
+            element.addClass('rhs-table-head');
+          });
 
-                element.find('span[st-sort]').bind('click', function sortClick () {
-                    $('body, thead *').css('cursor', 'wait');
-                });
-            }
-        };
+          element.find('span[st-sort]').bind('click', function sortClick() {
+            $('body, thead *').css('cursor', 'wait');
+          });
+        }
+      };
     });
 

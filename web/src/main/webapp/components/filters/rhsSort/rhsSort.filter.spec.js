@@ -17,49 +17,49 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe('Filter: RhsSortFilter', function () {
-    'use strict';
+describe('Filter: RhsSortFilter', function() {
+  'use strict';
 
-    // load the controller's module
-    beforeEach(module('rehabstodApp'));
+  // load the controller's module
+  beforeEach(module('rehabstodApp'));
 
-    it('has a rhsSort filter', inject(function($filter) {
-        expect($filter('rhsSort')).not.toBeNull();
-    }));
+  it('has a rhsSort filter', inject(function($filter) {
+    expect($filter('rhsSort')).not.toBeNull();
+  }));
 
-    it('sort strings ascii', inject(function (rhsSortFilter) {
-        var array = [{name: 'b'}, {name: 'a'}, {name: 'c'}];
+  it('sort strings ascii', inject(function(rhsSortFilter) {
+    var array = [{name: 'b'}, {name: 'a'}, {name: 'c'}];
 
-        expect(rhsSortFilter(array, 'name', false)).toEqual([{name: 'a'}, {name: 'b'}, {name: 'c'}]);
-        expect(rhsSortFilter(array, 'name', true)).toEqual([{name: 'c'}, {name: 'b'}, {name: 'a'}]);
-    }));
+    expect(rhsSortFilter(array, 'name', false)).toEqual([{name: 'a'}, {name: 'b'}, {name: 'c'}]);
+    expect(rhsSortFilter(array, 'name', true)).toEqual([{name: 'c'}, {name: 'b'}, {name: 'a'}]);
+  }));
 
-    it('sort strings swedish', inject(function (rhsSortFilter) {
-        var array = [{name: 'a'}, {name: 'ö'}, {name: 'ä'}, {name: 'å'}];
+  it('sort strings swedish', inject(function(rhsSortFilter) {
+    var array = [{name: 'a'}, {name: 'ö'}, {name: 'ä'}, {name: 'å'}];
 
-        expect(rhsSortFilter(array, 'name', false)).toEqual([{name: 'a'}, {name: 'å'}, {name: 'ä'}, {name: 'ö'}]);
-        expect(rhsSortFilter(array, 'name', true)).toEqual([{name: 'ö'}, {name: 'ä'}, {name: 'å'}, {name: 'a'}]);
-    }));
+    expect(rhsSortFilter(array, 'name', false)).toEqual([{name: 'a'}, {name: 'å'}, {name: 'ä'}, {name: 'ö'}]);
+    expect(rhsSortFilter(array, 'name', true)).toEqual([{name: 'ö'}, {name: 'ä'}, {name: 'å'}, {name: 'a'}]);
+  }));
 
-    it('sort number', inject(function (rhsSortFilter) {
-        var array = [{name: 1}, {name: 12}, {name: 5}, {name: 20}];
+  it('sort number', inject(function(rhsSortFilter) {
+    var array = [{name: 1}, {name: 12}, {name: 5}, {name: 20}];
 
-        expect(rhsSortFilter(array, 'name', false)).toEqual([{name: 1}, {name: 5}, {name: 12}, {name: 20}]);
-        expect(rhsSortFilter(array, 'name', true)).toEqual([{name: 20}, {name: 12}, {name: 5}, {name: 1}]);
-    }));
+    expect(rhsSortFilter(array, 'name', false)).toEqual([{name: 1}, {name: 5}, {name: 12}, {name: 20}]);
+    expect(rhsSortFilter(array, 'name', true)).toEqual([{name: 20}, {name: 12}, {name: 5}, {name: 1}]);
+  }));
 
-    it('sort mix', inject(function (rhsSortFilter) {
-        var array = [{name: '1åäö'}, {name: 'a12'}, {name: 'test'}, {name: 'b12'}];
+  it('sort mix', inject(function(rhsSortFilter) {
+    var array = [{name: '1åäö'}, {name: 'a12'}, {name: 'test'}, {name: 'b12'}];
 
-        expect(rhsSortFilter(array, 'name', false)).toEqual([{name: '1åäö'}, {name: 'a12'}, {name: 'b12'}, {name: 'test'}]);
-        expect(rhsSortFilter(array, 'name', true)).toEqual([{name: 'test'}, {name: 'b12'}, {name: 'a12'}, {name: '1åäö'}]);
-    }));
-    
-    it('always sorts case insensitive', inject(function (rhsSortFilter) {
-        var array = [{name: 'a'}, {name: 'ö'}, {name: 'A'}, {name: 'Ö'}];
+    expect(rhsSortFilter(array, 'name', false)).toEqual([{name: '1åäö'}, {name: 'a12'}, {name: 'b12'}, {name: 'test'}]);
+    expect(rhsSortFilter(array, 'name', true)).toEqual([{name: 'test'}, {name: 'b12'}, {name: 'a12'}, {name: '1åäö'}]);
+  }));
 
-        expect(rhsSortFilter(array, 'name', false)).toEqual([{name: 'a'}, {name: 'A'}, {name: 'ö'}, {name: 'Ö'}]);
-        expect(rhsSortFilter(array, 'name', true)).toEqual([{name: 'ö'}, {name: 'Ö'}, {name: 'a'}, {name: 'A'}]);
-    }));
+  it('always sorts case insensitive', inject(function(rhsSortFilter) {
+    var array = [{name: 'a'}, {name: 'ö'}, {name: 'A'}, {name: 'Ö'}];
+
+    expect(rhsSortFilter(array, 'name', false)).toEqual([{name: 'a'}, {name: 'A'}, {name: 'ö'}, {name: 'Ö'}]);
+    expect(rhsSortFilter(array, 'name', true)).toEqual([{name: 'ö'}, {name: 'Ö'}, {name: 'a'}, {name: 'A'}]);
+  }));
 
 });

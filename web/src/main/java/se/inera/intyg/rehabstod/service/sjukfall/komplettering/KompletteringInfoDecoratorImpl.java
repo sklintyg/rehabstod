@@ -22,10 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.rehabstod.integration.wc.service.WcIntegrationService;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
@@ -40,16 +38,16 @@ public class KompletteringInfoDecoratorImpl implements KompletteringInfoDecorato
     public void updateSjukfallEnhetKompletteringar(List<SjukfallEnhet> sjukfallList) {
 
         final List<String> idList = sjukfallList.stream()
-                .flatMap(sfe -> sfe.getIntygLista().stream())
-                .collect(Collectors.toList());
+            .flatMap(sfe -> sfe.getIntygLista().stream())
+            .collect(Collectors.toList());
 
         final Map<String, Integer> perIntyg = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
 
         sjukfallList.stream().forEach(
-                sjukfallEnhet -> sjukfallEnhet.setObesvaradeKompl(
-                        sjukfallEnhet.getIntygLista().stream()
-                                .mapToInt(intygsId -> Optional.ofNullable(perIntyg.get(intygsId)).orElse(0))
-                                .sum()));
+            sjukfallEnhet -> sjukfallEnhet.setObesvaradeKompl(
+                sjukfallEnhet.getIntygLista().stream()
+                    .mapToInt(intygsId -> Optional.ofNullable(perIntyg.get(intygsId)).orElse(0))
+                    .sum()));
     }
 
     @Override
@@ -57,17 +55,17 @@ public class KompletteringInfoDecoratorImpl implements KompletteringInfoDecorato
 
         // Get all intygsidn to query for kompletteringsinfo, excluding sjf intyg
         final List<String> idList = patientSjukfallList.stream()
-                .flatMap(sjukfallPatient -> sjukfallPatient.getIntyg().stream())
-                .filter(patientData -> !patientData.isOtherVardgivare() && !patientData.isOtherVardenhet())
-                .map(patientData -> patientData.getIntygsId())
-                .collect(Collectors.toList());
+            .flatMap(sjukfallPatient -> sjukfallPatient.getIntyg().stream())
+            .filter(patientData -> !patientData.isOtherVardgivare() && !patientData.isOtherVardenhet())
+            .map(patientData -> patientData.getIntygsId())
+            .collect(Collectors.toList());
 
         final Map<String, Integer> perIntyg = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
 
         patientSjukfallList.stream()
-                .forEach(sjukfallPatient -> sjukfallPatient.getIntyg()
-                        .stream().forEach(
-                                patientData -> patientData.setObesvaradeKompl(perIntyg.get(patientData.getIntygsId()))));
+            .forEach(sjukfallPatient -> sjukfallPatient.getIntyg()
+                .stream().forEach(
+                    patientData -> patientData.setObesvaradeKompl(perIntyg.get(patientData.getIntygsId()))));
 
     }
 

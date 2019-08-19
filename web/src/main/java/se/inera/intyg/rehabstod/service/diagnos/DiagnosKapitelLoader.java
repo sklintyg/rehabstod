@@ -18,10 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-
 import java.io.IOException;
 import java.util.List;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
 /**
  * @author marced on 08/02/16.

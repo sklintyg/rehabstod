@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.integration.sparrtjanst.client;
 
 import java.util.List;
-
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;
 
@@ -29,6 +28,6 @@ import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4
 public interface SparrtjanstClientService {
 
     CheckBlocksResponseType getCheckBlocks(String vgHsaId, String veHsaId, String userHsaId, String patientId,
-            List<IntygData> intygLista);
+        List<IntygData> intygLista);
 
 }

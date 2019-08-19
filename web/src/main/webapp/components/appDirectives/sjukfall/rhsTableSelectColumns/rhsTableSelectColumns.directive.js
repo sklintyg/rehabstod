@@ -18,52 +18,53 @@
  */
 
 angular.module('rehabstodApp')
-    .directive('rhsTableSelectColumns',
-        function() {
-            'use strict';
+.directive('rhsTableSelectColumns',
+    function() {
+      'use strict';
 
-            return {
-                restrict: 'E',
-                scope: {
-                    labelKey: '@',
-                    preferenceKey: '=',
-                    columns: '='
+      return {
+        restrict: 'E',
+        scope: {
+          labelKey: '@',
+          preferenceKey: '=',
+          columns: '='
+        },
+        controller: function($scope, $uibModal, UserModel) {
+
+          $scope.label = $scope.labelKey ? $scope.labelKey : 'label.table.anpassa';
+          showIcon();
+
+          $scope.openDialog = function() {
+            $uibModal.open({
+              templateUrl: '/components/commonDirectives/rhsSelectColumnsModal/rhsSelectColumns.modal.html',
+              controller: 'rhsSelectColumnsModalController',
+              size: 'md',
+              resolve: {
+                columns: function() {
+                  return $scope.columns;
                 },
-                controller: function($scope, $uibModal, UserModel) {
-
-                    $scope.label = $scope.labelKey ? $scope.labelKey : 'label.table.anpassa';
-                    showIcon();
-
-                    $scope.openDialog = function() {
-                        $uibModal.open({
-                            templateUrl: '/components/commonDirectives/rhsSelectColumnsModal/rhsSelectColumns.modal.html',
-                            controller: 'rhsSelectColumnsModalController',
-                            size: 'md',
-                            resolve: {
-                                columns: function() {
-                                    return $scope.columns;
-                                },
-                                preferenceKey: function() {
-                                    return $scope.preferenceKey;
-                                },
-                                columnTranslationKey: function() {
-                                    return 'label.table.column.';
-                                },
-                                modalTextTranslationKey: function() {
-                                    return 'label.table.custom.modal.sjukfall.';
-                                }
-                            }
-                            // Removes angular error "Possibly unhandled rejection:
-                            // backdrop click" when clicking outside of modal
-                        }).result.then(function(){
-                            showIcon();
-                        }, function(){});
-                    };
-
-                    function showIcon() {
-                        $scope.showIcon = $scope.labelKey ? false : !!UserModel.get().preferences[$scope.preferenceKey];
-                    }
+                preferenceKey: function() {
+                  return $scope.preferenceKey;
                 },
-                templateUrl: '/components/appDirectives/sjukfall/rhsTableSelectColumns/rhsTableSelectColumns.directive.html'
-            };
-        });
+                columnTranslationKey: function() {
+                  return 'label.table.column.';
+                },
+                modalTextTranslationKey: function() {
+                  return 'label.table.custom.modal.sjukfall.';
+                }
+              }
+              // Removes angular error "Possibly unhandled rejection:
+              // backdrop click" when clicking outside of modal
+            }).result.then(function() {
+              showIcon();
+            }, function() {
+            });
+          };
+
+          function showIcon() {
+            $scope.showIcon = $scope.labelKey ? false : !!UserModel.get().preferences[$scope.preferenceKey];
+          }
+        },
+        templateUrl: '/components/appDirectives/sjukfall/rhsTableSelectColumns/rhsTableSelectColumns.directive.html'
+      };
+    });

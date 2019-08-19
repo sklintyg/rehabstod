@@ -28,26 +28,24 @@ var selectUnitPage = rhsTestTools.pages.selectUnitPage;
 
 describe('Flöde som rehabkoordinator - loggar in på mottagning', function() {
 
+  // Logga in utan att välja enhet
+  beforeEach(function() {
+    browser.ignoreSynchronization = false;
+    specHelper.loginToSelectionPage('eva_centrum-vast');  // Eva Holgersson - utan att välja enhet
+  });
+  describe('Välj mottagning och verifiera att unit kontexten innehåller mottagingnsnamnet', function() {
 
-    // Logga in utan att välja enhet
+    // Gör urval
     beforeEach(function() {
-        browser.ignoreSynchronization = false;
-        specHelper.loginToSelectionPage('eva_centrum-vast');  // Eva Holgersson - utan att välja enhet
+      selectUnitPage.expandUnit('centrum-vast');
+      selectUnitPage.selectUnit('akuten');
+      expect(startPage.isAt()).toBeTruthy();
     });
-    describe('Välj mottagning och verifiera att unit kontexten innehåller mottagingnsnamnet', function() {
 
-        // Gör urval
-        beforeEach(function() {
-            selectUnitPage.expandUnit('centrum-vast');
-            selectUnitPage.selectUnit('akuten');
-            expect(startPage.isAt()).toBeTruthy();
-        });
-
-        it('skall ha med mottagning i unit kontext', function() {
-            expect(startPage.navbarVardgivare().getText()).toBe('Landstinget Västmanland');
-            expect(startPage.navbarVardenhet().getText()).toBe('Vårdcentrum i Väst - Akuten');
-        });
-
-
+    it('skall ha med mottagning i unit kontext', function() {
+      expect(startPage.navbarVardgivare().getText()).toBe('Landstinget Västmanland');
+      expect(startPage.navbarVardenhet().getText()).toBe('Vårdcentrum i Väst - Akuten');
     });
+
+  });
 });

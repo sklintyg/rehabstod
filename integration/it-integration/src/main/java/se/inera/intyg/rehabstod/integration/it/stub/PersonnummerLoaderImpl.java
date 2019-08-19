@@ -21,9 +21,7 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.PostConstruct;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.springframework.beans.factory.annotation.Value;

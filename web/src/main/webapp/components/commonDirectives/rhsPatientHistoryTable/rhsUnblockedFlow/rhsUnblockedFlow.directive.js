@@ -18,31 +18,31 @@
  */
 angular.module('rehabstodApp').directive('rhsUnblockedFlow',
     function(patientHistoryViewState) {
-    'use strict';
+      'use strict';
 
-    return {
+      return {
         restrict: 'E',
         scope: {
-            patient: '=',
-            mustHaveConsent: '='
+          patient: '=',
+          mustHaveConsent: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedFlow.directive.html',
         link: function($scope) {
 
-            $scope.step = 'list';
-            if($scope.mustHaveConsent && !patientHistoryViewState.hasSamtycke()){
-                $scope.step = 'consent';
+          $scope.step = 'list';
+          if ($scope.mustHaveConsent && !patientHistoryViewState.hasSamtycke()) {
+            $scope.step = 'consent';
+          }
+
+          $scope.$on('rhsUnblockedFlow.next', function() {
+
+            switch ($scope.step) {
+            case 'consent':
+              $scope.step = 'list';
+              break;
             }
 
-            $scope.$on('rhsUnblockedFlow.next', function() {
-
-                switch ($scope.step){
-                case 'consent':
-                    $scope.step = 'list';
-                    break;
-                }
-
-            });
+          });
         }
-    };
-});
+      };
+    });

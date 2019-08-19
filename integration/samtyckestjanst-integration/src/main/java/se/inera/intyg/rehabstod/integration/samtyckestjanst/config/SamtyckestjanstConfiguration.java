@@ -22,7 +22,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
-
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstStubConfiguration;
 
 /**
@@ -31,8 +30,8 @@ import se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.Samtyckestjanst
  */
 @Configuration
 @ComponentScan({
-        "se.inera.intyg.rehabstod.integration.samtyckestjanst.client",
-        "se.inera.intyg.rehabstod.integration.samtyckestjanst.service"
+    "se.inera.intyg.rehabstod.integration.samtyckestjanst.client",
+    "se.inera.intyg.rehabstod.integration.samtyckestjanst.service"
 })
 @ImportResource("classpath:samtyckestjanst-services-config.xml")
 @Import(SamtyckestjanstStubConfiguration.class)

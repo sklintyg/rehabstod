@@ -26,8 +26,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan({
-        "se.inera.intyg.rehabstod.integration.it.client",
-        "se.inera.intyg.rehabstod.integration.it.service" })
+    "se.inera.intyg.rehabstod.integration.it.client",
+    "se.inera.intyg.rehabstod.integration.it.service"})
 @SuppressWarnings("all")
 public class IntygstjanstIntegrationConfiguration {
+
 }

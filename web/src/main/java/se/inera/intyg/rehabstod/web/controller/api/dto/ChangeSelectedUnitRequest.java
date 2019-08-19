@@ -25,7 +25,6 @@ public class ChangeSelectedUnitRequest {
 
     private String id;
 
-
     // - - - Constructor - - -
 
     public ChangeSelectedUnitRequest() {
@@ -36,7 +35,6 @@ public class ChangeSelectedUnitRequest {
     public ChangeSelectedUnitRequest(String id) {
         this.id = id;
     }
-
 
     // - - - Getter and setter - - -
 

@@ -19,22 +19,22 @@
 
 angular.module('rehabstodApp').directive('rhsTableNumberOfRows',
     function() {
-        'use strict';
+      'use strict';
 
-        return {
-            restrict: 'E',
-            require: '^stTable',
-            scope: {
-                totalRows : '='
-            },
-            link: function ($scope, element, attr, table) {
-                $scope.rows = 0;
-                $scope.table = table;
+      return {
+        restrict: 'E',
+        require: '^stTable',
+        scope: {
+          totalRows: '='
+        },
+        link: function($scope, element, attr, table) {
+          $scope.rows = 0;
+          $scope.table = table;
 
-                $scope.$watch('table.getFilteredCollection().length', function(val) {
-                    $scope.rows = val;
-                });
-            },
-            templateUrl: '/components/commonDirectives/rhsTableNumberOfRows/rhsTableNumberOfRows.directive.html'
-        };
+          $scope.$watch('table.getFilteredCollection().length', function(val) {
+            $scope.rows = val;
+          });
+        },
+        templateUrl: '/components/commonDirectives/rhsTableNumberOfRows/rhsTableNumberOfRows.directive.html'
+      };
     });

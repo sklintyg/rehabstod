@@ -18,26 +18,26 @@
  */
 
 angular.module('rehabstodApp')
-    .config(function($stateProvider) {
-        'use strict';
-        $stateProvider
-            .state('app.sjukfall', {
-                url : '',
-                data: {
-                    rule: function(fromState, toState) {
-                        if (toState.name !== 'app.sjukfall') {
-                            return;
-                        }
+.config(function($stateProvider) {
+  'use strict';
+  $stateProvider
+  .state('app.sjukfall', {
+    url: '',
+    data: {
+      rule: function(fromState, toState) {
+        if (toState.name !== 'app.sjukfall') {
+          return;
+        }
 
-                        var to = 'app.sjukfall.start';
+        var to = 'app.sjukfall.start';
 
-                        return {
-                            to: to,
-                            params: {},
-                            options: {location: 'replace'}
-                        };
-                    }
-                }
-            });
+        return {
+          to: to,
+          params: {},
+          options: {location: 'replace'}
+        };
+      }
+    }
+  });
 
-    });
+});

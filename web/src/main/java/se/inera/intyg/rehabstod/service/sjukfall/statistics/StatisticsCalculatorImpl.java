@@ -18,6 +18,15 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.statistics;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +36,10 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.DiagnosGruppStat;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.GenderStat;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveDegreeStat;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.model.Gender;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created by marced on 04/03/16.
@@ -83,11 +82,11 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
 
     private List<SickLeaveDegreeStat> calculateSickLeaveDegrees(List<SjukfallEnhet> sjukfall) {
         Map<Integer, List<SjukfallEnhet>> byGrad = sjukfall.stream()
-                .collect(Collectors.groupingBy(SjukfallEnhet::getAktivGrad));
+            .collect(Collectors.groupingBy(SjukfallEnhet::getAktivGrad));
         return byGrad.entrySet().stream()
-                .map(entry -> new SickLeaveDegreeStat(entry.getKey(), "" + entry.getKey() + " %", entry.getValue().size()))
-                .sorted(Comparator.comparingInt(SickLeaveDegreeStat::getId))
-                .collect(Collectors.toList());
+            .map(entry -> new SickLeaveDegreeStat(entry.getKey(), "" + entry.getKey() + " %", entry.getValue().size()))
+            .sorted(Comparator.comparingInt(SickLeaveDegreeStat::getId))
+            .collect(Collectors.toList());
     }
 
     private List<GenderStat> calculateGenderStat(List<SjukfallEnhet> sjukfall) {

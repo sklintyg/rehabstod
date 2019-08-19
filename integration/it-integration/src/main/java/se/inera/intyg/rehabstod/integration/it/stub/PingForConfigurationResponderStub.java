@@ -21,7 +21,6 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 import java.time.LocalDateTime;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
@@ -35,7 +34,7 @@ import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
  * Created by eriklupander on 2016-03-29.
  */
 @Service("itPingForConfigurationWebServiceClient")
-@Profile({ "rhs-it-stub" })
+@Profile({"rhs-it-stub"})
 public class PingForConfigurationResponderStub implements PingForConfigurationResponderInterface {
 
     @Override

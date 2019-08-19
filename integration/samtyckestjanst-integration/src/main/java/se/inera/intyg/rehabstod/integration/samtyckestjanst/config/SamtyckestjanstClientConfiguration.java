@@ -28,7 +28,6 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsent.v2.rivtabp21.RegisterExtendedConsentResponderInterface;
 
@@ -76,7 +75,7 @@ public class SamtyckestjanstClientConfiguration {
         proxyFactoryBean.setAddress(registerConsentUrl);
         proxyFactoryBean.setServiceClass(RegisterExtendedConsentResponderInterface.class);
         RegisterExtendedConsentResponderInterface registerExtendedConsentResponderInterface =
-                (RegisterExtendedConsentResponderInterface) proxyFactoryBean.create();
+            (RegisterExtendedConsentResponderInterface) proxyFactoryBean.create();
         Client client = ClientProxy.getClient(registerExtendedConsentResponderInterface);
         applyTimeouts(client);
         return registerExtendedConsentResponderInterface;
@@ -100,8 +99,8 @@ public class SamtyckestjanstClientConfiguration {
             return Long.parseLong(timeout);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(
-                    "Cannot apply timeouts for SamtyckestjanstClientConfiguration, unparsable String value: " + timeout
-                            + ". Message: " + e.getMessage());
+                "Cannot apply timeouts for SamtyckestjanstClientConfiguration, unparsable String value: " + timeout
+                    + ". Message: " + e.getMessage());
         }
     }
 }

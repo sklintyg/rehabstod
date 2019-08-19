@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateResponderInterface;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 
@@ -71,7 +70,7 @@ public class SRSIntegrationClientConfiguration {
         proxyFactoryBean.setAddress(srsWsUrl);
         proxyFactoryBean.setServiceClass(GetRiskPredictionForCertificateResponderInterface.class);
         GetRiskPredictionForCertificateResponderInterface getRiskPredictionForCertificateResponderInterface = (GetRiskPredictionForCertificateResponderInterface) proxyFactoryBean
-                .create();
+            .create();
         Client client = ClientProxy.getClient(getRiskPredictionForCertificateResponderInterface);
         applyTimeouts(client);
         return getRiskPredictionForCertificateResponderInterface;
@@ -86,7 +85,7 @@ public class SRSIntegrationClientConfiguration {
         proxyFactoryBean.setServiceClass(PingForConfigurationResponderInterface.class);
 
         PingForConfigurationResponderInterface pingForConfigurationResponderInterface = (PingForConfigurationResponderInterface) proxyFactoryBean
-                .create();
+            .create();
         Client client = ClientProxy.getClient(pingForConfigurationResponderInterface);
         applyTimeouts(client);
         return pingForConfigurationResponderInterface;
@@ -111,8 +110,8 @@ public class SRSIntegrationClientConfiguration {
             return Long.parseLong(timeout);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(
-                    "Cannot apply timeouts for SRSIntegrationClientConfiguration, unparsable String value: " + timeout
-                            + ". Message: " + e.getMessage());
+                "Cannot apply timeouts for SRSIntegrationClientConfiguration, unparsable String value: " + timeout
+                    + ". Message: " + e.getMessage());
         }
     }
 }

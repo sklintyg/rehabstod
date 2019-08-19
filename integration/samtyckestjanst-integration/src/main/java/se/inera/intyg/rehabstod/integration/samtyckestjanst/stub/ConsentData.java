@@ -18,12 +18,11 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.AssertionTypeType;
 import se.riv.informationsecurity.authorization.consent.v2.ScopeType;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * @author Magnus Ekstrand on 2018-10-17.
@@ -44,7 +43,7 @@ public class ConsentData implements Serializable {
 
     private ActionType registrationAction;
 
-    private final ScopeType  scopeType = ScopeType.NATIONAL_LEVEL;
+    private final ScopeType scopeType = ScopeType.NATIONAL_LEVEL;
     private final AssertionTypeType assertionType = AssertionTypeType.CONSENT;
 
     ConsentData(Builder builder) {
@@ -120,6 +119,7 @@ public class ConsentData implements Serializable {
     }
 
     public static final class Builder {
+
         private String assertionId;
         private String vardgivareId;
         private String vardenhetId;

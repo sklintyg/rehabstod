@@ -18,13 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos.dto;
 
-import java.util.Arrays;
-
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import org.junit.Test;
 
 /**
  * Created by marced on 14/03/16.

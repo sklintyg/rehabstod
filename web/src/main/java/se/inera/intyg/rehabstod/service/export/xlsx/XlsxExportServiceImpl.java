@@ -84,7 +84,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     @Override
     @PrometheusTimeMethod
     public byte[] export(List<SjukfallEnhet> sjukfallList, PrintSjukfallRequest req, RehabstodUser user, int total)
-            throws IOException {
+        throws IOException {
 
         XSSFWorkbook wb = new XSSFWorkbook();
         setupFonts(wb);
@@ -103,7 +103,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_FRITEXTFILTER, notEmpty(req) ? req.getFritext() : "-");
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VISAPATIENTUPPGIFTER, req.isShowPatientId() ? "Ja" : "Nej");
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_ALDER,
-                req.getAldersIntervall().getMin() + " - " + req.getAldersIntervall().getMax() + " år");
+            req.getAldersIntervall().getMin() + " - " + req.getAldersIntervall().getMax() + " år");
         rowNumber = addDiagnosKapitel(sheet, rowNumber, FILTER_TITLE_VALDA_DIAGNOSER, req.getDiagnosGrupper()); // NOSONAR
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SLUTDATUM, getFilterDate(req.getSlutdatumIntervall()));
         addFilterHeader(sheet, rowNumber++, FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD, getLangdintervall(req.getLangdIntervall()));
@@ -134,7 +134,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         addFilterMainHeader(sheet, rowNumber++, ANTAL_VISAR_ANTAL_PAGAENDE_SJUKFALL);
         addFilterHeader(sheet, rowNumber++, ANTAL_EXPORTEN_VISAR, String.valueOf(sjukfallList.size()));
         addFilterHeader(sheet, rowNumber++, user.getUrval() == Urval.ISSUED_BY_ME ? ANTAL_TOTALT_MINA : ANTAL_TOTALT_PA_ENHETEN,
-                String.valueOf(total));
+            String.valueOf(total));
 
         rowNumber += FILTER_SPACING;
 
@@ -180,7 +180,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
     }
 
     private int addKompletteringsStatus(XSSFSheet sheet, int currentRowNumber, String filterTitleKompletteringsstatus,
-            Integer komplettering) {
+        Integer komplettering) {
         int rowNumber = currentRowNumber;
         addFilterHeader(sheet, rowNumber++, filterTitleKompletteringsstatus, getKompletteringFilterDisplayValue(komplettering));
         return rowNumber;
@@ -237,11 +237,6 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
     /**
      * Creates a merged span to make all filter sections the same size and style.
-     *
-     * @param fromColumn
-     * @param style
-     * @param sheet
-     * @param row
      */
     private void createMergedCellFromColumn(int fromColumn, XSSFCellStyle style, XSSFSheet sheet, XSSFRow row) {
         // Create and style cells for the span
@@ -298,7 +293,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         XSSFRow row = sheet.createRow(rowIndex);
 
         int index = 0;
-        for (ExportField column: tableColumns) {
+        for (ExportField column : tableColumns) {
             createHeaderCell(row, index++, column.getLabelXlsx());
         }
     }
@@ -309,7 +304,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
             SjukfallEnhet sf = sjukfallList.get(a);
 
             int colIndex = 0;
-            for (ExportField column: tableColumns) {
+            for (ExportField column : tableColumns) {
                 switch (column) {
                     case LINE_NR:
                         createDataCell(row, colIndex++, Integer.toString(a + 1));

@@ -23,6 +23,7 @@ import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,8 +35,6 @@ import se.inera.intyg.rehabstod.integration.it.client.IntygstjanstClientService;
 import se.inera.intyg.rehabstod.integration.it.exception.IntygstjanstIntegrationException;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
-
-import java.util.List;
 
 /**
  * Simple test.
@@ -76,7 +75,8 @@ public class IntygstjanstIntegrationServiceTest {
 
     @Test
     public void testGetIntygsDataForPatient() throws Exception {
-        when(intygstjanstClientService.getSjukfallForUnitAndPatient(HSA_ID, PATIENT_ID, MAX_DAGAR_SEDAN_AVSLUT)).thenReturn(buildResponse());
+        when(intygstjanstClientService.getSjukfallForUnitAndPatient(HSA_ID, PATIENT_ID, MAX_DAGAR_SEDAN_AVSLUT))
+            .thenReturn(buildResponse());
         List<IntygsData> intygsDataForPatient = testee.getIntygsDataForCareUnitAndPatient(HSA_ID, PATIENT_ID, MAX_DAGAR_SEDAN_AVSLUT);
         assertEquals(1, intygsDataForPatient.size());
     }
@@ -99,7 +99,8 @@ public class IntygstjanstIntegrationServiceTest {
 
     @Test(expected = IntygstjanstIntegrationException.class)
     public void testGetIntygsDataForCareUnitThrowsExceptionWhenErrorCodeMissing() throws Exception {
-        when(intygstjanstClientService.getSjukfallForUnit(eq(HSA_ID_UNKNOWN), anyInt())).thenReturn(new ListActiveSickLeavesForCareUnitResponseType());
+        when(intygstjanstClientService.getSjukfallForUnit(eq(HSA_ID_UNKNOWN), anyInt()))
+            .thenReturn(new ListActiveSickLeavesForCareUnitResponseType());
         testee.getIntygsDataForCareUnit(HSA_ID_UNKNOWN, MAX_DAGAR_SEDAN_AVSLUT);
     }
 

@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.integration.samtyckestjanst.service;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,6 @@ import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.CheckResultType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultType;
-
-import java.time.LocalDateTime;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
@@ -57,7 +56,7 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
 
         // Make call to the CheckConsent service and handle response
         final CheckConsentResponseType response =
-                samtyckestjanstClientService.checkConsent(currentVardgivarHsaId, currentEnhetsId, userHsaId, patientId);
+            samtyckestjanstClientService.checkConsent(currentVardgivarHsaId, currentEnhetsId, userHsaId, patientId);
 
         // OK = OK
         // INFO = Some of the request information resouces ha an validation error, but a response should still have been
@@ -73,13 +72,13 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
     @Override
     // CHECKSTYLE:OFF ParameterNumber
     public void registerConsent(String vgHsaId,
-                                String veHsaId,
-                                Personnummer patientId,
-                                String userHsaId,
-                                String representedBy,
-                                LocalDateTime consentFrom,
-                                LocalDateTime consentTo,
-                                ActionType registrationAction) {
+        String veHsaId,
+        Personnummer patientId,
+        String userHsaId,
+        String representedBy,
+        LocalDateTime consentFrom,
+        LocalDateTime consentTo,
+        ActionType registrationAction) {
 
         Preconditions.checkArgument(!Strings.isNullOrEmpty(vgHsaId), "vgHsaId may not be null or empty");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(veHsaId), "veHsaId may not be null or empty");
@@ -88,8 +87,8 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
 
         // Make call to the CheckConsent service and handle response
         final RegisterExtendedConsentResponseType response =
-                samtyckestjanstClientService.registerExtendedConsent(vgHsaId, veHsaId, userHsaId, patientId,
-                        representedBy, consentFrom, consentTo, registrationAction);
+            samtyckestjanstClientService.registerExtendedConsent(vgHsaId, veHsaId, userHsaId, patientId,
+                representedBy, consentFrom, consentTo, registrationAction);
 
         // OK = OK
         // INFO = Some of the request information resouces ha an validation error, but a response should still have been
@@ -103,9 +102,9 @@ public class SamtyckestjanstIntegrationServiceImpl implements SamtyckestjanstInt
 
     private void throwException(ResultType result) {
         throw new SamtyckestjanstIntegrationException(
-                String.format("Consent service failed with resultCode %s and resultText '%s'",
-                        result.getResultCode(),
-                        result.getResultText()));
+            String.format("Consent service failed with resultCode %s and resultText '%s'",
+                result.getResultCode(),
+                result.getResultText()));
     }
 
 }

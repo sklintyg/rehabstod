@@ -28,7 +28,6 @@ public class LangdIntervall {
     private String min;
     private String max;
 
-
     // getters and setters
 
     public String getMin() {
@@ -46,7 +45,6 @@ public class LangdIntervall {
     public void setMax(String max) {
         this.max = max;
     }
-
 
     // api
 
