@@ -28,27 +28,27 @@ var startPage = rhsTestTools.pages.startPage;
 
 describe('Driftbanner', function() {
 
-    var banners = $$('#service-banners .alert');
+  var banners = $$('#service-banners .alert');
 
-    beforeAll(function() {
-        browser.get('/index.html');
-    });
+  beforeAll(function() {
+    browser.get('/index.html');
+  });
 
-    it('Inga banners default', function() {
-        expect(banners.count()).toBe(0);
-    });
+  it('Inga banners default', function() {
+    expect(banners.count()).toBe(0);
+  });
 
-    it('Skapa banner', function() {
-        testdataHelper.createBanners("message", "HOG");
-        browser.refresh();
-        expect(banners.count()).toBe(1);
-        expect(banners.getText()).toEqual(['message']);
-    });
+  it('Skapa banner', function() {
+    testdataHelper.createBanners("message", "HOG");
+    browser.refresh();
+    expect(banners.count()).toBe(1);
+    expect(banners.getText()).toEqual(['message']);
+  });
 
-    it('Ta bort banner', function() {
-        testdataHelper.clearBanners();
-        browser.refresh();
+  it('Ta bort banner', function() {
+    testdataHelper.clearBanners();
+    browser.refresh();
 
-        expect(banners.count()).toBe(0);
-    });
+    expect(banners.count()).toBe(0);
+  });
 });

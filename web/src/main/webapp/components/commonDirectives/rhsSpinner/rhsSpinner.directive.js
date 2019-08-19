@@ -18,16 +18,16 @@
  */
 
 angular.module('rehabstodApp').directive('rhsSpinner',
-    ['$timeout','$window', function() {
-        'use strict';
+    ['$timeout', '$window', function() {
+      'use strict';
 
-        return {
-            restrict: 'A',
-            transclude: true,
-            scope: {
-                label: '@',
-                showSpinner: '='
-            },
-            templateUrl: '/components/commonDirectives/rhsSpinner/rhsSpinner.directive.html'
-        };
+      return {
+        restrict: 'A',
+        transclude: true,
+        scope: {
+          label: '@',
+          showSpinner: '='
+        },
+        templateUrl: '/components/commonDirectives/rhsSpinner/rhsSpinner.directive.html'
+      };
     }]);

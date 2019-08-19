@@ -40,10 +40,10 @@ import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan({ "se.inera.intyg.rehabstod.web",
-        "se.inera.intyg.rehabstod.integration.wc.stub.api",
-        "se.inera.intyg.rehabstod.integration.srs.stub.api"})
-@ImportResource({ "classpath:META-INF/cxf/cxf.xml" })
+@ComponentScan({"se.inera.intyg.rehabstod.web",
+    "se.inera.intyg.rehabstod.integration.wc.stub.api",
+    "se.inera.intyg.rehabstod.integration.srs.stub.api"})
+@ImportResource({"classpath:META-INF/cxf/cxf.xml"})
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     private static final int SECONDS_IN_HOUR = 3600;

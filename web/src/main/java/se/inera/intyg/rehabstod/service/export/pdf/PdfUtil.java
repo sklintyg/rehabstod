@@ -28,50 +28,50 @@ import com.itextpdf.layout.element.Cell;
  */
 public final class PdfUtil {
 
-  public static final Border TABLE_SEPARATOR_BORDER = new SolidBorder(new DeviceRgb(0x99, 0x99, 0x99), 1);
-  private static final String ELLIPSIZE_SUFFIX = "...";
-  private static final float PPI = 72f;
-  private static final float MM_PER_TUM = 25.4f;
+    public static final Border TABLE_SEPARATOR_BORDER = new SolidBorder(new DeviceRgb(0x99, 0x99, 0x99), 1);
+    private static final String ELLIPSIZE_SUFFIX = "...";
+    private static final float PPI = 72f;
+    private static final float MM_PER_TUM = 25.4f;
 
-  private PdfUtil() {
+    private PdfUtil() {
 
-  }
-
-  /**
-   * Konverterar från millimeter till iText7 points.
-   */
-  public static float millimetersToPoints(final float value) {
-    return inchesToPoints(millimetersToInches(value));
-  }
-
-  /**
-   * Konverterar från millimeter till tum.
-   */
-  private static float millimetersToInches(final float value) {
-    return value / MM_PER_TUM;
-  }
-
-  /**
-   * Konverterar från tum till iText 7 points.
-   */
-  private static float inchesToPoints(final float value) {
-    return value * PPI;
-  }
-
-  public static String ellipsize(String value, int maxlength) {
-    if (value != null && value.length() > maxlength) {
-      return value.substring(0, maxlength) + ELLIPSIZE_SUFFIX;
-    } else {
-      return value;
     }
-  }
 
-  public static Cell aCell() {
-    return aCell(1);
-  }
+    /**
+     * Konverterar från millimeter till iText7 points.
+     */
+    public static float millimetersToPoints(final float value) {
+        return inchesToPoints(millimetersToInches(value));
+    }
 
-  public static Cell aCell(int colspan) {
-    return new Cell(1, colspan).setBorder(Border.NO_BORDER);
-  }
+    /**
+     * Konverterar från millimeter till tum.
+     */
+    private static float millimetersToInches(final float value) {
+        return value / MM_PER_TUM;
+    }
+
+    /**
+     * Konverterar från tum till iText 7 points.
+     */
+    private static float inchesToPoints(final float value) {
+        return value * PPI;
+    }
+
+    public static String ellipsize(String value, int maxlength) {
+        if (value != null && value.length() > maxlength) {
+            return value.substring(0, maxlength) + ELLIPSIZE_SUFFIX;
+        } else {
+            return value;
+        }
+    }
+
+    public static Cell aCell() {
+        return aCell(1);
+    }
+
+    public static Cell aCell(int colspan) {
+        return new Cell(1, colspan).setBorder(Border.NO_BORDER);
+    }
 
 }

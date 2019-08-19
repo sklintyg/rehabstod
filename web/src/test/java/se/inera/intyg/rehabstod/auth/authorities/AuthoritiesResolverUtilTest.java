@@ -18,19 +18,18 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities;
 
-import org.junit.Before;
-import org.junit.Test;
-import se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil;
-import se.inera.intyg.infra.security.common.model.Privilege;
-import se.inera.intyg.infra.security.common.model.Role;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
+import se.inera.intyg.infra.security.authorities.AuthoritiesResolverUtil;
+import se.inera.intyg.infra.security.common.model.Privilege;
+import se.inera.intyg.infra.security.common.model.Role;
 
 /**
  * Created by marced on 13/04/16.
@@ -67,7 +66,7 @@ public class AuthoritiesResolverUtilTest {
     public void testPrivilegesToMapWithNullElementInList() {
         // Act
         final Map<String, Privilege> stringPrivilegeMap = AuthoritiesResolverUtil
-                .toMap(Arrays.asList(new Privilege(), null), Privilege::getName);
+            .toMap(Arrays.asList(new Privilege(), null), Privilege::getName);
 
         // Assert
         assertEquals(1, stringPrivilegeMap.size());

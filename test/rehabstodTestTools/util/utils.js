@@ -22,5 +22,5 @@
  */
 
 module.exports = {
-    'restUtil': require('./rest.util.js')
+  'restUtil': require('./rest.util.js')
 };

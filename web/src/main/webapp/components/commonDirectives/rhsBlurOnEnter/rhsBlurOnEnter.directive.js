@@ -18,15 +18,15 @@
  */
 
 angular.module('rehabstodApp').directive('rhsBlurOnEnter', function() {
-    'use strict';
-    return {
-        link: function(scope, element) {
-            element.bind('keypress', function(event) {
-                if (event.which === 13) {
-                    element.blur();
-                    event.preventDefault();
-                }
-            });
+  'use strict';
+  return {
+    link: function(scope, element) {
+      element.bind('keypress', function(event) {
+        if (event.which === 13) {
+          element.blur();
+          event.preventDefault();
         }
-    };
+      });
+    }
+  };
 });

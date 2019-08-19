@@ -24,6 +24,7 @@ import se.inera.intyg.rehabstod.web.model.Gender;
  * Created by marced on 15/03/16.
  */
 public class GenderStat {
+
     private Gender gender;
     private int count;
 

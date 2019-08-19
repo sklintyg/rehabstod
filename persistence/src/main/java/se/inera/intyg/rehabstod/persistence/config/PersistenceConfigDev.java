@@ -18,6 +18,9 @@
  */
 package se.inera.intyg.rehabstod.persistence.config;
 
+import static se.inera.intyg.rehabstod.persistence.config.PersistenceConfigBase.BASE_PACKAGES;
+
+import java.sql.SQLException;
 import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +30,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
-import java.sql.SQLException;
-
-import static se.inera.intyg.rehabstod.persistence.config.PersistenceConfigBase.BASE_PACKAGES;
 
 @Configuration
 @Profile("dev")

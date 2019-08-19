@@ -18,62 +18,64 @@
  */
 
 describe('Directive: RhsTooltip', function() {
-    'use strict';
+  'use strict';
 
-    // load the controller's module
-    beforeEach(module('rehabstodApp', function($provide) {
+  // load the controller's module
+  beforeEach(module('rehabstodApp', function($provide) {
 
-        var messageServiceStup = {
-            getProperty: function(key) {
-                return key;
-            },
-            addResources: function() {},
-            addLinks: function() {}
-        };
+    var messageServiceStup = {
+      getProperty: function(key) {
+        return key;
+      },
+      addResources: function() {
+      },
+      addLinks: function() {
+      }
+    };
 
-        $provide.value('messageService', messageServiceStup);
-    }));
-    beforeEach(module('htmlTemplates'));
+    $provide.value('messageService', messageServiceStup);
+  }));
+  beforeEach(module('htmlTemplates'));
 
-    var $compile;
-    var $scope;
-    var element;
+  var $compile;
+  var $scope;
+  var element;
 
-    // Store references to $scope and $compile
-    // so they are available to all tests in this describe block
-    beforeEach(inject(function(_$compile_, $rootScope) {
-        $compile = _$compile_;
-        $scope = $rootScope.$new();
-    }));
+  // Store references to $scope and $compile
+  // so they are available to all tests in this describe block
+  beforeEach(inject(function(_$compile_, $rootScope) {
+    $compile = _$compile_;
+    $scope = $rootScope.$new();
+  }));
 
-    function compileDirective(text, alignment) {
+  function compileDirective(text, alignment) {
 
-        var align = alignment ? 'alignment="' + alignment + '"' : '';
+    var align = alignment ? 'alignment="' + alignment + '"' : '';
 
-        element = $compile('<div rhs-tooltip field-help-text="' + text +'" ' + align + ' />')($scope);
-        $scope.$digest();
+    element = $compile('<div rhs-tooltip field-help-text="' + text + '" ' + align + ' />')($scope);
+    $scope.$digest();
 
-        return element.isolateScope() || element.scope();
-    }
+    return element.isolateScope() || element.scope();
+  }
 
-    it('Should set alignment if not provided', function() {
-        var scope = compileDirective();
+  it('Should set alignment if not provided', function() {
+    var scope = compileDirective();
 
-        expect(scope.align).toEqual('auto top');
-    });
+    expect(scope.align).toEqual('auto top');
+  });
 
-    it('Should use the alignment provided', function() {
-        var scope = compileDirective('', 'bottom');
+  it('Should use the alignment provided', function() {
+    var scope = compileDirective('', 'bottom');
 
-        expect(scope.align).toEqual('bottom');
-    });
+    expect(scope.align).toEqual('bottom');
+  });
 
-    it('Get message', function() {
-        var scope = compileDirective();
+  it('Get message', function() {
+    var scope = compileDirective();
 
-        var message = scope.getMessage('message.key');
+    var message = scope.getMessage('message.key');
 
-        expect(message).toEqual('message.key');
-    });
+    expect(message).toEqual('message.key');
+  });
 
 });

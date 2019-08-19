@@ -36,10 +36,8 @@ public interface UserService {
      *     its parent Vardenhet or one of the sibling Mottagningar.</li>
      * </ul>
      *
-     * @param enhetsId
-     *      HSA-id of a vardenhet or mottagning.
-     * @return
-     *      true if match is found.
+     * @param enhetsId HSA-id of a vardenhet or mottagning.
+     * @return true if match is found.
      */
     boolean isUserLoggedInOnEnhetOrUnderenhet(String enhetsId);
 }

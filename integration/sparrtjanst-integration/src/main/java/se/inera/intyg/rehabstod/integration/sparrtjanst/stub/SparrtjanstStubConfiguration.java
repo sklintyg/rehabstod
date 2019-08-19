@@ -18,16 +18,14 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.stub;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 
 @Configuration

@@ -19,6 +19,14 @@
 
 package se.inera.intyg.rehabstod.service.user;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import javax.xml.transform.stream.StreamSource;
 import org.apache.cxf.staxutils.StaxUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -43,15 +51,6 @@ import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import se.inera.intyg.rehabstod.auth.RehabstodUserTokens;
 
-import javax.xml.transform.stream.StreamSource;
-import java.time.LocalDateTime;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.when;
-
 @RunWith(MockitoJUnitRunner.class)
 public class TokenExchangeServiceImplTest {
 
@@ -61,7 +60,7 @@ public class TokenExchangeServiceImplTest {
     private final static String REFRESH_TOKEN = "bc1321";
     private final static int EXPIRES_IN_SECONDS = 3600;
     private final static String TOKEN_JSON = "{\"access_token\": \"" + ACCESS_TOKEN + "\", \"refresh_token\": \"" + REFRESH_TOKEN
-            + "\", \"expires_in\": " + EXPIRES_IN_SECONDS + "}";
+        + "\", \"expires_in\": " + EXPIRES_IN_SECONDS + "}";
 
     @Mock
     private RestTemplate restTemplate;
@@ -81,7 +80,7 @@ public class TokenExchangeServiceImplTest {
         ReflectionTestUtils.setField(tokenExchangeServiceImpl, "clientSecret", DUMMY);
 
         when(restTemplate.postForEntity(any(String.class), any(HttpEntity.class), eq(String.class)))
-                .thenReturn(new ResponseEntity(TOKEN_JSON, HttpStatus.OK));
+            .thenReturn(new ResponseEntity(TOKEN_JSON, HttpStatus.OK));
     }
 
     @Test
@@ -119,7 +118,7 @@ public class TokenExchangeServiceImplTest {
 
     private SAMLCredential createSamlCredential(String filename) throws Exception {
         Document doc = StaxUtils.read(new StreamSource(new ClassPathResource(
-                "TokenExchangeServiceImplTest/" + filename).getInputStream()));
+            "TokenExchangeServiceImplTest/" + filename).getInputStream()));
         UnmarshallerFactory unmarshallerFactory = Configuration.getUnmarshallerFactory();
         Unmarshaller unmarshaller = unmarshallerFactory.getUnmarshaller(Assertion.DEFAULT_ELEMENT_NAME);
 

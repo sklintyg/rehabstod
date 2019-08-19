@@ -18,10 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.testdata.builders;
 
+import java.util.List;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Formaga;
-
-import java.util.List;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-10.

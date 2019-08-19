@@ -21,100 +21,97 @@
 
 angular.module('rehabstodApp').factory('sessionCheckService',
     ['$http', '$log', '$interval', '$window', 'UserModel', function($http, $log, $interval, $window, UserModel) {
-        'use strict';
+      'use strict';
 
-        var pollPromise;
-        var extendSessionPromise;
+      var pollPromise;
+      var extendSessionPromise;
 
-        // logout use when seconds remains (to be able to follow the normal logout flow)
-        var logoutWhenSecondsleft = 80;
+      // logout use when seconds remains (to be able to follow the normal logout flow)
+      var logoutWhenSecondsleft = 80;
 
-        //one every minute
-        var msPollingInterval = 60 * 1000;
+      //one every minute
+      var msPollingInterval = 60 * 1000;
 
-        //(Max) how often should session prolong request be sent
-        var msMinExtendSessionRequestInterval = 60 * 1000;
+      //(Max) how often should session prolong request be sent
+      var msMinExtendSessionRequestInterval = 60 * 1000;
 
-        /*
-         * stop regular polling
-         */
-        function _stopPolling() {
-            if (pollPromise) {
-                $interval.cancel(pollPromise);
+      /*
+       * stop regular polling
+       */
+      function _stopPolling() {
+        if (pollPromise) {
+          $interval.cancel(pollPromise);
+        }
+      }
+
+      /*
+       * get session status from server
+       */
+      function _getSessionInfo() {
+        $log.debug('_getSessionInfo requesting session info =>');
+        $http.get('/api/session-auth-check/ping').then(function(response) {
+          $log.debug('<= _getSessionInfo success');
+          if (response.data) {
+            $log.debug('session status  = ' + JSON.stringify(response.data));
+            if (response.data.authenticated === false || response.data.secondsUntilExpire < logoutWhenSecondsleft) {
+              $log.debug('No longer authenticated - redirecting to loggedout');
+              _stopPolling();
+              $window.jQuery('<form action="' + UserModel.getLogoutLocation() + '" method="post" />')
+              .appendTo('body').submit().remove();
             }
+          } else {
+            $log.debug('_getSessionInfo returned unexpected data:' + response.data);
+          }
+
+          //Schedule new polling
+          _stopPolling();
+          pollPromise = $interval(_getSessionInfo, msPollingInterval);
+        }, function(response) {
+          $log.error('_getSessionInfo error ' + response.status);
+
+          _stopPolling();
+          //Schedule a new check
+          pollPromise = $interval(_getSessionInfo, msPollingInterval);
+        });
+      }
+
+      /*
+       * start regular polling of stats from server
+       */
+      function _startPolling() {
+        $log.debug('sessionCheckService -> Start polling');
+        _getSessionInfo();
+      }
+
+      /*
+       * Extending session by making a request to server
+       */
+      function _executeExtendSessionRequest() {
+        $log.debug('_executeExtendSessionRequest sending request now =>');
+        $http.get('/api/session-auth-check/extend').then(function(response) {
+          $log.debug('<= _executeExtendSessionRequest success:' + response.data);
+        }, function(response) {
+          $log.error('<= _executeExtendSessionRequest failed: ' + response.status);
+        }).finally(function() { // jshint ignore:line
+          //clear interval no matter the outcome of the request
+          if (extendSessionPromise) {
+            $interval.cancel(extendSessionPromise);
+            extendSessionPromise = undefined;
+          }
+        });
+      }
+
+      function _registerUserAction() {
+        if (!extendSessionPromise) {
+          extendSessionPromise = $interval(_executeExtendSessionRequest, msMinExtendSessionRequestInterval);
+          $log.debug('Extend session request scheduled.');
         }
+      }
 
-        /*
-         * get session status from server
-         */
-        function _getSessionInfo() {
-            $log.debug('_getSessionInfo requesting session info =>');
-            $http.get('/api/session-auth-check/ping').then(function(response) {
-                $log.debug('<= _getSessionInfo success');
-                if (response.data) {
-                    $log.debug('session status  = ' + JSON.stringify(response.data));
-                    if (response.data.authenticated === false || response.data.secondsUntilExpire < logoutWhenSecondsleft) {
-                        $log.debug('No longer authenticated - redirecting to loggedout');
-                        _stopPolling();
-                        $window.jQuery('<form action="' + UserModel.getLogoutLocation() + '" method="post" />')
-                            .appendTo('body').submit().remove();
-                    }
-                } else {
-                    $log.debug('_getSessionInfo returned unexpected data:' + response.data);
-                }
-
-                //Schedule new polling
-                _stopPolling();
-                pollPromise = $interval(_getSessionInfo, msPollingInterval);
-            }, function(response) {
-                $log.error('_getSessionInfo error ' + response.status);
-
-                _stopPolling();
-                //Schedule a new check
-                pollPromise = $interval(_getSessionInfo, msPollingInterval);
-            });
-        }
-
-        /*
-         * start regular polling of stats from server
-         */
-        function _startPolling() {
-            $log.debug('sessionCheckService -> Start polling');
-            _getSessionInfo();
-        }
-
-
-        /*
-         * Extending session by making a request to server
-         */
-        function _executeExtendSessionRequest() {
-            $log.debug('_executeExtendSessionRequest sending request now =>');
-            $http.get('/api/session-auth-check/extend').then(function(response) {
-                $log.debug('<= _executeExtendSessionRequest success:' + response.data);
-            }, function(response) {
-                $log.error('<= _executeExtendSessionRequest failed: ' + response.status);
-            }).finally(function() { // jshint ignore:line
-                //clear interval no matter the outcome of the request
-                if (extendSessionPromise) {
-                    $interval.cancel(extendSessionPromise);
-                    extendSessionPromise = undefined;
-                }
-            });
-        }
-
-
-        function _registerUserAction() {
-            if (!extendSessionPromise) {
-                extendSessionPromise = $interval(_executeExtendSessionRequest, msMinExtendSessionRequestInterval);
-                $log.debug('Extend session request scheduled.');
-            }
-        }
-
-
-        // Return public API for the service
-        return {
-            startPolling: _startPolling,
-            stopPolling: _stopPolling,
-            registerUserAction: _registerUserAction
-        };
+      // Return public API for the service
+      return {
+        startPolling: _startPolling,
+        stopPolling: _stopPolling,
+        registerUserAction: _registerUserAction
+      };
     }]);

@@ -24,12 +24,13 @@ import se.inera.intyg.rehabstod.service.exceptions.ServiceException;
  * Created by Magnus Ekstrand on 2016-04-12.
  */
 public class PdfExportServiceException extends ServiceException {
+
     /**
      * Constructs an {@code ServiceException} with the specified message and root
      * cause.
      *
      * @param msg the detail message
-     * @param t   the root cause
+     * @param t the root cause
      */
     public PdfExportServiceException(String msg, Throwable t) {
         super(msg, t);

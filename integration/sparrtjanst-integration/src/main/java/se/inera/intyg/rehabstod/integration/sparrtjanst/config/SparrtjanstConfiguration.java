@@ -22,7 +22,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
-
 import se.inera.intyg.rehabstod.integration.sparrtjanst.stub.SparrtjanstStubConfiguration;
 
 /**
@@ -31,8 +30,8 @@ import se.inera.intyg.rehabstod.integration.sparrtjanst.stub.SparrtjanstStubConf
  */
 @Configuration
 @ComponentScan({
-        "se.inera.intyg.rehabstod.integration.sparrtjanst.client",
-        "se.inera.intyg.rehabstod.integration.sparrtjanst.service"
+    "se.inera.intyg.rehabstod.integration.sparrtjanst.client",
+    "se.inera.intyg.rehabstod.integration.sparrtjanst.service"
 })
 @ImportResource("classpath:sparrtjanst-services-config.xml")
 @Import(SparrtjanstStubConfiguration.class)

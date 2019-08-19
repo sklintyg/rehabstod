@@ -19,109 +19,108 @@
 
 angular.module('rehabstodApp').factory('SjukfallFilterViewState',
     function(DiagnosKapitelModel, LakareModel, KompletteringModel, APP_CONFIG) {
-        'use strict';
+      'use strict';
 
-        var state = {
-            diagnosKapitelModel: DiagnosKapitelModel,
-            lakareModel: LakareModel,
-            kompletteringModel: KompletteringModel, //null = show all, 0 = exactly 0 and 1 means all > 0
-            showPatientId: true,
-            slutdatumModel: {
-                from: null,
-                to: null
-            }
-        };
+      var state = {
+        diagnosKapitelModel: DiagnosKapitelModel,
+        lakareModel: LakareModel,
+        kompletteringModel: KompletteringModel, //null = show all, 0 = exactly 0 and 1 means all > 0
+        showPatientId: true,
+        slutdatumModel: {
+          from: null,
+          to: null
+        }
+      };
 
-        //Kanske initiera diagnoskapitelmodellen samtidigt som UserModel i appmain eller något?
-        state.diagnosKapitelModel.set(APP_CONFIG.diagnosKapitelList);
+      //Kanske initiera diagnoskapitelmodellen samtidigt som UserModel i appmain eller något?
+      state.diagnosKapitelModel.set(APP_CONFIG.diagnosKapitelList);
 
-        state.kompletteringModel.set([
-            {id: null, displayValue: 'Visa alla', defaultSelected: true},
-            {id: 0, displayValue: 'Visa sjukfall utan obesvarade kompletteringar'},
-            {id: 1, displayValue: 'Visa sjukfall med obesvarade kompletteringar'}]);
+      state.kompletteringModel.set([
+        {id: null, displayValue: 'Visa alla', defaultSelected: true},
+        {id: 0, displayValue: 'Visa sjukfall utan obesvarade kompletteringar'},
+        {id: 1, displayValue: 'Visa sjukfall med obesvarade kompletteringar'}]);
 
+      function _reset() {
+        state.diagnosKapitelModel.reset();
+        state.sjukskrivningslangdModel = [1, 366];
+        state.aldersModel = [0, 101];
+        state.slutdatumModel.from = null;
+        state.slutdatumModel.to = null;
+        state.lakareModel.reset();
+        state.kompletteringModel.reset();
+        state.showPatientId = true;
+        state.freeTextModel = '';
+      }
 
-        function _reset() {
-            state.diagnosKapitelModel.reset();
-            state.sjukskrivningslangdModel = [1, 366];
-            state.aldersModel = [0, 101];
-            state.slutdatumModel.from = null;
-            state.slutdatumModel.to = null;
-            state.lakareModel.reset();
-            state.kompletteringModel.reset();
-            state.showPatientId = true;
-            state.freeTextModel = '';
+      function _resetIfColumnsHidden(columnsByKey) {
+        if (!columnsByKey.dxs) {
+          state.diagnosKapitelModel.reset();
         }
 
-        function _resetIfColumnsHidden(columnsByKey) {
-          if (!columnsByKey.dxs) {
-            state.diagnosKapitelModel.reset();
-          }
-
-          if (!columnsByKey.days) {
-            state.sjukskrivningslangdModel = [1, 366];
-          }
-
-          if (!columnsByKey.doctor) {
-            state.lakareModel.reset();
-          }
-
-          if (!columnsByKey.kompletteringar) {
-            state.kompletteringModel.reset();
-          }
-
-          if (!columnsByKey.patientAge) {
-            state.aldersModel = [0, 101];
-          }
-
-          if (!columnsByKey.endDate) {
-            state.slutdatumModel.from = null;
-            state.slutdatumModel.to = null;
-          }
+        if (!columnsByKey.days) {
+          state.sjukskrivningslangdModel = [1, 366];
         }
 
-        function _getCurrentFilterState() {
-            var selectedDiagnosKapitel = [];
-            angular.forEach(state.diagnosKapitelModel.getSelected(), function(value) {
-                this.push(value.id);
-            }, selectedDiagnosKapitel);
-
-            var selectedLakare = [];
-            angular.forEach(state.lakareModel.getSelected(), function(value) {
-                this.push(value.id);
-            }, selectedLakare);
-
-            var selectedKompletteringOptions = [];
-            angular.forEach(state.kompletteringModel.getSelected(), function(value) {
-                this.push(value.id);
-            }, selectedKompletteringOptions);
-
-            return {
-                diagnosKapitel: selectedDiagnosKapitel,
-                lakare: selectedLakare,
-                komplettering: selectedKompletteringOptions.length === 1 ? selectedKompletteringOptions[0] : null,
-                sjukskrivningslangd: [state.sjukskrivningslangdModel[0],
-                    state.sjukskrivningslangdModel[1] > 365 ? null : state.sjukskrivningslangdModel[1]],
-                alder: [state.aldersModel[0],
-                    state.aldersModel[1] > 100 ? null : state.aldersModel[1]],
-                slutdatum: state.slutdatumModel,
-                freeText: state.freeTextModel,
-                showPatientId: state.showPatientId
-            };
-
+        if (!columnsByKey.doctor) {
+          state.lakareModel.reset();
         }
 
-        function _getState() {
-            return state;
+        if (!columnsByKey.kompletteringar) {
+          state.kompletteringModel.reset();
         }
 
-        _reset();
+        if (!columnsByKey.patientAge) {
+          state.aldersModel = [0, 101];
+        }
+
+        if (!columnsByKey.endDate) {
+          state.slutdatumModel.from = null;
+          state.slutdatumModel.to = null;
+        }
+      }
+
+      function _getCurrentFilterState() {
+        var selectedDiagnosKapitel = [];
+        angular.forEach(state.diagnosKapitelModel.getSelected(), function(value) {
+          this.push(value.id);
+        }, selectedDiagnosKapitel);
+
+        var selectedLakare = [];
+        angular.forEach(state.lakareModel.getSelected(), function(value) {
+          this.push(value.id);
+        }, selectedLakare);
+
+        var selectedKompletteringOptions = [];
+        angular.forEach(state.kompletteringModel.getSelected(), function(value) {
+          this.push(value.id);
+        }, selectedKompletteringOptions);
 
         return {
-            reset: _reset,
-            resetIfColumnsHidden: _resetIfColumnsHidden,
-            getCurrentFilterState: _getCurrentFilterState,
-            get: _getState
+          diagnosKapitel: selectedDiagnosKapitel,
+          lakare: selectedLakare,
+          komplettering: selectedKompletteringOptions.length === 1 ? selectedKompletteringOptions[0] : null,
+          sjukskrivningslangd: [state.sjukskrivningslangdModel[0],
+            state.sjukskrivningslangdModel[1] > 365 ? null : state.sjukskrivningslangdModel[1]],
+          alder: [state.aldersModel[0],
+            state.aldersModel[1] > 100 ? null : state.aldersModel[1]],
+          slutdatum: state.slutdatumModel,
+          freeText: state.freeTextModel,
+          showPatientId: state.showPatientId
         };
+
+      }
+
+      function _getState() {
+        return state;
+      }
+
+      _reset();
+
+      return {
+        reset: _reset,
+        resetIfColumnsHidden: _resetIfColumnsHidden,
+        getCurrentFilterState: _getCurrentFilterState,
+        get: _getState
+      };
     })
 ;

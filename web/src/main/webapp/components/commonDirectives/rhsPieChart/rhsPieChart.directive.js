@@ -19,32 +19,32 @@
 /* globals Highcharts */
 angular.module('rehabstodApp').directive('rhsPieChart',
     [
-        function() {
-            'use strict';
+      function() {
+        'use strict';
 
-            return {
-                restrict: 'E',
-                scope: {
-                    data: '=',
-                    config: '='
-                },
-                templateUrl: '/components/commonDirectives/rhsPieChart/rhsPieChart.directive.html',
-                link: function(scope, element) {
+        return {
+          restrict: 'E',
+          scope: {
+            data: '=',
+            config: '='
+          },
+          templateUrl: '/components/commonDirectives/rhsPieChart/rhsPieChart.directive.html',
+          link: function(scope, element) {
 
-                    var chart = Highcharts.chart(element[0], scope.config);
+            var chart = Highcharts.chart(element[0], scope.config);
 
-                    //Wait for data
-                    scope.$watchCollection('data', function(newData) {
-                        if (newData) {
-                            if (chart.series[0]) {
-                                chart.series[0].setData(newData);
-                            }
-                            chart.reflow();
-                            //REHAB-221: IE will include svg elements in tab sequence if focusable=true.
-                            //We don't want that.
-                            angular.element(chart.container).find('svg').attr('focusable', false);
-                        }
-                    });
+            //Wait for data
+            scope.$watchCollection('data', function(newData) {
+              if (newData) {
+                if (chart.series[0]) {
+                  chart.series[0].setData(newData);
                 }
-            };
-        }]);
+                chart.reflow();
+                //REHAB-221: IE will include svg elements in tab sequence if focusable=true.
+                //We don't want that.
+                angular.element(chart.container).find('svg').attr('focusable', false);
+              }
+            });
+          }
+        };
+      }]);

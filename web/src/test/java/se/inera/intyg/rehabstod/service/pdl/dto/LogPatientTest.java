@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.rehabstod.service.pdl.dto;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+
+import org.junit.Test;
 
 /**
  * Created by eriklupander on 2017-01-31.

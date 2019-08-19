@@ -27,8 +27,6 @@ public interface DiagnosBeskrivningService {
     /**
      * Tries to get the description for the diagnosKod.
      * Null is retrurned if no match is found.
-     * @param diagnosKod
-     * @return
      */
     String getDiagnosBeskrivning(String diagnosKod);
 

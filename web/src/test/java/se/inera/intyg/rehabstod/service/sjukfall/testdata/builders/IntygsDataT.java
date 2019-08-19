@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.service.sjukfall.testdata.builders;
 
 import java.time.LocalDateTime;
-
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Arbetsformaga;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;

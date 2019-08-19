@@ -18,6 +18,19 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.mappers;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,20 +43,6 @@ import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static java.time.temporal.ChronoUnit.DAYS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
 
 /**
@@ -95,7 +94,6 @@ public class SjukfallEngineMapperTest {
         se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from = createSjukfallEnhet();
         LocalDate today = LocalDate.now();
 
-
         // when
         SjukfallEnhet to = testee.mapToSjukfallEnhetDto(from, 0, today);
 
@@ -130,7 +128,6 @@ public class SjukfallEngineMapperTest {
         se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from = createSjukfallEnhet();
         LocalDate today = LocalDate.now().plusDays(7L);
 
-
         // when
         SjukfallEnhet to = testee.mapToSjukfallEnhetDto(from, 0, today);
 
@@ -143,7 +140,7 @@ public class SjukfallEngineMapperTest {
         // given
         se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
         Map<String, IntygAccessControlMetaData> intygAccessMetaData =
-                createMockIAMD(from.getSjukfallIntygList().get(0).getIntygId(), true, true);
+            createMockIAMD(from.getSjukfallIntygList().get(0).getIntygId(), true, true);
         // when
         SjukfallPatient to = testee.mapToSjukfallPatientDto(from, intygAccessMetaData);
 
@@ -176,7 +173,7 @@ public class SjukfallEngineMapperTest {
         // given
         se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
         Map<String, IntygAccessControlMetaData> intygAccessMetaData =
-                createMockIAMD(from.getSjukfallIntygList().get(0).getIntygId(), false, true);
+            createMockIAMD(from.getSjukfallIntygList().get(0).getIntygId(), false, true);
         // when
         SjukfallPatient to = testee.mapToSjukfallPatientDto(from, intygAccessMetaData);
 
@@ -202,7 +199,7 @@ public class SjukfallEngineMapperTest {
         // given
         se.inera.intyg.infra.sjukfall.dto.SjukfallPatient from = createSjukfallPatient();
         Map<String, IntygAccessControlMetaData> intygAccessMetaData =
-                createMockIAMD(from.getSjukfallIntygList().get(0).getIntygId(), true, false);
+            createMockIAMD(from.getSjukfallIntygList().get(0).getIntygId(), true, false);
         // when
         SjukfallPatient to = testee.mapToSjukfallPatientDto(from, intygAccessMetaData);
 
@@ -229,9 +226,9 @@ public class SjukfallEngineMapperTest {
         // given
         se.inera.intyg.infra.sjukfall.dto.SjukfallIntyg from = createSjukfallIntyg();
         Map<String, IntygAccessControlMetaData> intygAccessMetaData =
-                createMockIAMD(from.getIntygId(), true, false);
+            createMockIAMD(from.getIntygId(), true, false);
         // when
-        PatientData to =  testee.mapSjukfallIntygToPatientData(from, intygAccessMetaData.get(from.getIntygId()));
+        PatientData to = testee.mapSjukfallIntygToPatientData(from, intygAccessMetaData.get(from.getIntygId()));
 
         // then
         assertEquals(SIGNERINGSTIDPUNKT, to.getSigneringsTidpunkt());
@@ -360,7 +357,7 @@ public class SjukfallEngineMapperTest {
     }
 
     private List<se.inera.intyg.infra.sjukfall.dto.Formaga> createFormagor() {
-         return Arrays.asList(createFormaga());
+        return Arrays.asList(createFormaga());
     }
 
     private List<String> createSysselsattningar() {

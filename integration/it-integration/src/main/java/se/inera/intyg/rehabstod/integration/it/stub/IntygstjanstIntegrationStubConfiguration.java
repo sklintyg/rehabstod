@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.cxf.Bus;
 import org.apache.cxf.jaxws.EndpointImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Configuration
-@ComponentScan({ "se.inera.intyg.rehabstod.integration.it.stub" })
-@Profile({"rhs-it-stub" })
+@ComponentScan({"se.inera.intyg.rehabstod.integration.it.stub"})
+@Profile({"rhs-it-stub"})
 public class IntygstjanstIntegrationStubConfiguration {
 
     @Autowired

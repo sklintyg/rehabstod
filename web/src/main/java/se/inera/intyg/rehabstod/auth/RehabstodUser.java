@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import se.inera.intyg.infra.integration.hsa.model.AbstractVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
@@ -27,15 +35,6 @@ import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.service.Urval;
-
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * @author pebe on 2015-08-11.
@@ -76,14 +75,11 @@ public class RehabstodUser extends IntygUser implements Serializable {
      * systemRoles for being Rehabkoordinator on one or more care units must be able to "switch" between roles when
      * changing units without losing the original "isLakare" information. See INTYG-5068.
      *
-     * @param intygUser
-     *            User principal, typically constructed in the
-     *            {@link org.springframework.security.saml.userdetails.SAMLUserDetailsService}
-     *            implementor.
-     * @param pdlConsentGiven
-     *            Whether the user has given PDL logging consent.
-     * @param isLakare
-     *            Wheter the user is LAKARE or not. Immutable once set.
+     * @param intygUser User principal, typically constructed in the
+     * {@link org.springframework.security.saml.userdetails.SAMLUserDetailsService}
+     * implementor.
+     * @param pdlConsentGiven Whether the user has given PDL logging consent.
+     * @param isLakare Wheter the user is LAKARE or not. Immutable once set.
      */
     public RehabstodUser(IntygUser intygUser, boolean pdlConsentGiven, boolean isLakare) {
         super(intygUser.getHsaId());
@@ -231,8 +227,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
      * In Rehabstöd, isLakare is an immutable field that must be set when logging in. This is due to us
      * sometimes changing the ROLE of a doctor to be a Rehabkoordinator based on systemRoles.
      *
-     * @return
-     *         true if doctor, false if not.
+     * @return true if doctor, false if not.
      */
     @Override
     public boolean isLakare() {
@@ -249,10 +244,10 @@ public class RehabstodUser extends IntygUser implements Serializable {
 
         // Check if this doctor has a
         return this.vardgivare.stream()
-                .flatMap(vg -> vg.getVardenheter().stream())
-                .map(AbstractVardenhet::getId)
-                .anyMatch(enhetId -> SystemRolesParser.parseEnhetsIdsFromSystemRoles(systemRoles).stream()
-                        .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(enhetId)));
+            .flatMap(vg -> vg.getVardenheter().stream())
+            .map(AbstractVardenhet::getId)
+            .anyMatch(enhetId -> SystemRolesParser.parseEnhetsIdsFromSystemRoles(systemRoles).stream()
+                .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(enhetId)));
     }
 
     public RehabstodUserTokens getTokens() {
@@ -266,18 +261,21 @@ public class RehabstodUser extends IntygUser implements Serializable {
     // CHECKSTYLE:OFF NeedBraces
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (!(o instanceof RehabstodUser))
+        }
+        if (!(o instanceof RehabstodUser)) {
             return false;
-        if (!super.equals(o))
+        }
+        if (!super.equals(o)) {
             return false;
+        }
         RehabstodUser that = (RehabstodUser) o;
         return pdlConsentGiven == that.pdlConsentGiven
-                && isLakare == that.isLakare
-                && Objects.equals(storedActivities, that.storedActivities)
-                && Objects.equals(preferences, that.preferences)
-                && Objects.equals(sjfPatientVardgivare, that.sjfPatientVardgivare);
+            && isLakare == that.isLakare
+            && Objects.equals(storedActivities, that.storedActivities)
+            && Objects.equals(preferences, that.preferences)
+            && Objects.equals(sjfPatientVardgivare, that.sjfPatientVardgivare);
     }
 
     @Override

@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.integration.it.service;
 
 import java.util.List;
-
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 /**

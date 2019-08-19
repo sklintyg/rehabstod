@@ -18,19 +18,19 @@
  */
 
 angular.module('rehabstodApp', [
-    'ngAnimate',
-    'ngCookies',
-    'ngResource',
-    'ngSanitize',
-    'ngStorage',
-    'ngMessages',
-    'ui.router',
-    'ui.bootstrap',
-    'smart-table',
-    'infinite-scroll',
-    'taiPlaceholder',
-    'ngStorage',
-    'lodash',
-    'rehabstodcommon.dynamiclink',
-    'smoothScroll'
+  'ngAnimate',
+  'ngCookies',
+  'ngResource',
+  'ngSanitize',
+  'ngStorage',
+  'ngMessages',
+  'ui.router',
+  'ui.bootstrap',
+  'smart-table',
+  'infinite-scroll',
+  'taiPlaceholder',
+  'ngStorage',
+  'lodash',
+  'rehabstodcommon.dynamiclink',
+  'smoothScroll'
 ]);

@@ -19,6 +19,13 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 
+import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static se.inera.intyg.rehabstod.web.controller.api.ConsentController.MAX_DAYS_FOR_CONSENT;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.jayway.restassured.http.ContentType;
@@ -30,14 +37,6 @@ import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.schemas.contract.Personnummer;
-
-
-import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static se.inera.intyg.rehabstod.web.controller.api.ConsentController.MAX_DAYS_FOR_CONSENT;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-28.
@@ -69,10 +68,10 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
         Response response = null;
 
         response = sd.begin().contentType(ContentType.JSON).and().body(request)
-                .expect().statusCode(OK)
-                .when().post(API_ENDPOINT)
-                .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
-                .extract().response();
+            .expect().statusCode(OK)
+            .when().post(API_ENDPOINT)
+            .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
+            .extract().response();
 
         assertNotNull(response);
 
@@ -83,15 +82,15 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
         // 2. Do check that consent is in the store
         Map<String, String> parameters = ImmutableMap.of(
-                "vardgivareId", DEFAULT_VG_HSAID,
-                "vardenhetId", DEFAULT_VE_HSAID);
+            "vardgivareId", DEFAULT_VG_HSAID,
+            "vardenhetId", DEFAULT_VE_HSAID);
 
         response = sd.begin()
-                .queryParameters(parameters)
-                .body(request)
-                .expect().statusCode(OK)
-                .when().get(API_ENDPOINT_STUB + "/" + PNR_TOLVAN_TOLVANSSON)
-                .then().extract().response();
+            .queryParameters(parameters)
+            .body(request)
+            .expect().statusCode(OK)
+            .when().get(API_ENDPOINT_STUB + "/" + PNR_TOLVAN_TOLVANSSON)
+            .then().extract().response();
 
         String str = response.body().as(String.class);
         assertTrue(Boolean.parseBoolean(str));
@@ -110,9 +109,9 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
         request.setDays(7);
 
         Response response = sd.begin().contentType(ContentType.JSON).and().body(request).expect().statusCode(OK)
-                .when().post(API_ENDPOINT)
-                .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
-                .extract().response();
+            .when().post(API_ENDPOINT)
+            .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
+            .extract().response();
 
         assertNotNull(response);
 
@@ -123,12 +122,12 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
         // 2. Do check that consent is in the store
         sd.begin().body(request)
-                .expect().statusCode(OK)
-                .when().get(API_ENDPOINT_STUB).then()
-                .body("vardgivareId[0]", equalTo(DEFAULT_VG_HSAID))
-                .body("vardenhetId[0]", equalTo(DEFAULT_VE_HSAID))
-                .body("employeeId[0]", equalTo(DEFAULT_LAKARE_HSAID))
-                .body("patientId[0]", equalTo(createPnr(PNR_TOLVAN_TOLVANSSON).getPersonnummer()));
+            .expect().statusCode(OK)
+            .when().get(API_ENDPOINT_STUB).then()
+            .body("vardgivareId[0]", equalTo(DEFAULT_VG_HSAID))
+            .body("vardenhetId[0]", equalTo(DEFAULT_VE_HSAID))
+            .body("employeeId[0]", equalTo(DEFAULT_LAKARE_HSAID))
+            .body("patientId[0]", equalTo(createPnr(PNR_TOLVAN_TOLVANSSON).getPersonnummer()));
 
     }
 
@@ -142,9 +141,9 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
         request.setDays(30);
 
         Response response = sd.begin().body(request).expect().statusCode(OK)
-                .when().post(API_ENDPOINT)
-                .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
-                .extract().response();
+            .when().post(API_ENDPOINT)
+            .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
+            .extract().response();
 
         assertNotNull(response);
 
@@ -167,10 +166,10 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
         Response response;
 
         response = sd.begin().body(request)
-                .expect().statusCode(OK)
-                .when().post(API_ENDPOINT)
-                .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
-                .extract().response();
+            .expect().statusCode(OK)
+            .when().post(API_ENDPOINT)
+            .then().body(matchesJsonSchemaInClasspath("jsonschema/rhs-registerextendedconsent-response-schema.json"))
+            .extract().response();
 
         assertNotNull(response);
 
@@ -181,7 +180,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
     private static Personnummer createPnr(String personId) {
         return Personnummer.createPersonnummer(personId)
-                .orElseThrow(() -> new IllegalArgumentException("Could not parse passed personnummer: " + personId));
+            .orElseThrow(() -> new IllegalArgumentException("Could not parse passed personnummer: " + personId));
     }
 
 }

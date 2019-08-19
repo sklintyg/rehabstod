@@ -18,18 +18,17 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
-import org.junit.Ignore;
-import org.junit.Test;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKod;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
+import org.junit.Ignore;
+import org.junit.Test;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKod;
 
 /**
  * Created by martin on 11/02/16.
@@ -44,7 +43,6 @@ public class DiagnosKoderFileTest {
 
     /**
      * Tests that the codes in the provided files only contains A-Z 0-9 and -.
-     * @throws IOException
      */
     @Test
     @Ignore

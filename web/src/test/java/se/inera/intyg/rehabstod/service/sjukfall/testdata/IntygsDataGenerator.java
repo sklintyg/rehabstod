@@ -18,11 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.testdata;
 
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 /**
  * Created by Magnus Ekstrand on 2016-02-10.

@@ -18,12 +18,12 @@
  */
 
 angular.module('rehabstodApp').filter('rhsSuffix', function() {
-    'use strict';
+  'use strict';
 
-    return function(input, suffix, noValue) {
+  return function(input, suffix, noValue) {
 
-        var returnValue = suffix ? input + ' ' + suffix : input;
+    var returnValue = suffix ? input + ' ' + suffix : input;
 
-        return input || input === 0 ? returnValue : noValue;
-    };
+    return input || input === 0 ? returnValue : noValue;
+  };
 });

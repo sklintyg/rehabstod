@@ -26,61 +26,61 @@ var restClient = require('./restclient.util.js');
 var env = require('./../environment.js').envConfig;
 
 module.exports = {
-    login: function(userJson) {
+  login: function(userJson) {
 
-        // login with doctor Jan Nilsson if none else is specified
-        var user = userJson || {
-            'fornamn': 'Emma',
-            'efternamn': 'Nilsson',
-            'hsaId': 'TSTNMT2321000156-105R',
-            'enhetId': 'TSTNMT2321000156-105N',
-            'lakare': true,
-            'forskrivarKod': '2481632'
-        }; 
+    // login with doctor Jan Nilsson if none else is specified
+    var user = userJson || {
+      'fornamn': 'Emma',
+      'efternamn': 'Nilsson',
+      'hsaId': 'TSTNMT2321000156-105R',
+      'enhetId': 'TSTNMT2321000156-105N',
+      'lakare': true,
+      'forskrivarKod': '2481632'
+    };
 
-        var options = {
-            url: 'fake',
-            method: 'POST',
-            body: 'userJsonDisplay=' + JSON.stringify(user)
-        };
-        return restClient.run(options, 'urlenc');
-    },
-    setPreferences: function(preferences) {
-        var options = {
-            url: 'api/user/preferences',
-            method: 'POST',
-            body: preferences
-        };
-        return restClient.run(options, 'json', env.REHABSTOD_URL);
-    },
-    getUser: function(id) {
-        var options = {
-            url: 'api/user',
-            method: 'GET'
-        };
-        return restClient.run(options, 'json', env.REHABSTOD_URL);
-    },
-    removeConsent: function() {
-        var options = {
-                url: 'api/user/giveconsent',
-                method: 'POST',
-                body: {"consentGiven": false}
-            };
-        return restClient.run(options, 'json', env.REHABSTOD_URL);
-    },
-    createBanners: function(banner) {
-        var options = {
-            url: 'services/api/ia-api/banner',
-            method: 'PUT',
-            body: banner
-        };
-        return restClient.run(options, 'json', env.REHABSTOD_URL);
-    },
-    clearBanners: function() {
-        var options = {
-            url: 'services/api/ia-api/cache',
-            method: 'DELETE'
-        };
-        return restClient.run(options, 'json', env.REHABSTOD_URL);
-    }
+    var options = {
+      url: 'fake',
+      method: 'POST',
+      body: 'userJsonDisplay=' + JSON.stringify(user)
+    };
+    return restClient.run(options, 'urlenc');
+  },
+  setPreferences: function(preferences) {
+    var options = {
+      url: 'api/user/preferences',
+      method: 'POST',
+      body: preferences
+    };
+    return restClient.run(options, 'json', env.REHABSTOD_URL);
+  },
+  getUser: function(id) {
+    var options = {
+      url: 'api/user',
+      method: 'GET'
+    };
+    return restClient.run(options, 'json', env.REHABSTOD_URL);
+  },
+  removeConsent: function() {
+    var options = {
+      url: 'api/user/giveconsent',
+      method: 'POST',
+      body: {"consentGiven": false}
+    };
+    return restClient.run(options, 'json', env.REHABSTOD_URL);
+  },
+  createBanners: function(banner) {
+    var options = {
+      url: 'services/api/ia-api/banner',
+      method: 'PUT',
+      body: banner
+    };
+    return restClient.run(options, 'json', env.REHABSTOD_URL);
+  },
+  clearBanners: function() {
+    var options = {
+      url: 'services/api/ia-api/cache',
+      method: 'DELETE'
+    };
+    return restClient.run(options, 'json', env.REHABSTOD_URL);
+  }
 };

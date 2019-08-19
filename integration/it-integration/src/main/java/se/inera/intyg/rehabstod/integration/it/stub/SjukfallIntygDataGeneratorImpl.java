@@ -18,6 +18,17 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Queue;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,18 +52,6 @@ import se.riv.strategicresourcemanagement.persons.person.v3.NamePartType;
 import se.riv.strategicresourcemanagement.persons.person.v3.NameType;
 import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
-
 /**
  * Can generate a suitable amount of intygsdata.
  *
@@ -62,7 +61,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 // CHECKSTYLE:OFF MagicNumber
 @Component
-@Profile({ "dev", "rhs-it-stub" })
+@Profile({"dev", "rhs-it-stub"})
 public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerator {
 
     public static final String VE_TSTNMT2321000156_105N = "TSTNMT2321000156-105N";
@@ -99,29 +98,29 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private int currentSysselSattningIndex = 0;
     // Merged list of codes from fk7263/lisjp schema cv types
     private List<String> sysselSattningList = Arrays.asList("NUVARANDE_ARBETE", "ARBETSLOSHET", "FORALDRALEDIGHET",
-            "ARBETSSOKANDE", "FORALDRALEDIG", "STUDIER");
+        "ARBETSSOKANDE", "FORALDRALEDIG", "STUDIER");
     private List<Integer> sjukskrivningsgrader = Arrays.asList(100, 75, 50, 25);
     private int currentSjukskrivningsgraderIndex = 0;
     private int currentHosPersonIndex = 0;
     private List<HosPersonal> hosPersonList = new ArrayList<>();
 
     private List<String> femaleNames = Arrays.asList("Eva", "Britt-Marie", "Petra", "Maria", "Anna", "Margaret", "Elisabet", "Eva",
-            "Kristina", "Birgitta", "Karin", "Elisabet", "Marie", "Ingrid", "Christina", "Linnéa", "Sofia", "Kerstin", "Marianne", "Lena",
-            "Helena", "Emma", "Johanna", "Linnea", "Inger", "Sara", "Cecilia", "Elin");
+        "Kristina", "Birgitta", "Karin", "Elisabet", "Marie", "Ingrid", "Christina", "Linnéa", "Sofia", "Kerstin", "Marianne", "Lena",
+        "Helena", "Emma", "Johanna", "Linnea", "Inger", "Sara", "Cecilia", "Elin");
     private int currentFemaleIndex = 0;
 
     private List<String> maleNames = Arrays.asList("Johan",
-            "Lars", "Karl", "Anders", "Johan", "Per", "Nils", "Carl", "Nils", "Roger", "Hans-Åke", "Vidar", "Birk", "Thomas", "Mikael",
-            "Jan", "Hans", "Sören", "Morgan", "Ahmad", "Herbert", "Lennart", "Olof", "Peter", "Gunnar", "Sven",
-            "Fredrik", "Bengt", "Bo", "Daniel", "Gustav", "Åke", "Göran", "Alexander", "Magnus");
+        "Lars", "Karl", "Anders", "Johan", "Per", "Nils", "Carl", "Nils", "Roger", "Hans-Åke", "Vidar", "Birk", "Thomas", "Mikael",
+        "Jan", "Hans", "Sören", "Morgan", "Ahmad", "Herbert", "Lennart", "Olof", "Peter", "Gunnar", "Sven",
+        "Fredrik", "Bengt", "Bo", "Daniel", "Gustav", "Åke", "Göran", "Alexander", "Magnus");
     private int currentMaleIndex = 0;
 
     private List<String> lastNames = Arrays.asList("Andersson", "Ekman", "Melin", "Holmqvist", "Pålsson", "Marklund", "Krantz-HöllerBach",
-            "Åkerblom", "Chen", "Westling", "Mahmoud", "Dalman", "Stolt", "Rönnberg", "Svedin", "Gran", "Hosseini", "Nordstrand",
-            "Karlsson", "Weibull", "Nilsson", "Eriksson", "Larsson", "Söderlind", "Olsson", "Persson", "Pullman", "Svensson", "Sollervik",
-            "Gustafsson", "Pettersson", "Lindberg", "Jonsson", "Jansson", "Hansson", "Bengtsson", "Jönsson", "von Zinken", "Carlsson",
-            "Petersson", "Lindberg", "Öfverkvist", "Wahlström", "Magnusson", "Lindström", "Gustavsson", "Olofsson", "Möller", "Sjöström",
-            "Lindgren", "Zaid", "Zetterström", "Öberg");
+        "Åkerblom", "Chen", "Westling", "Mahmoud", "Dalman", "Stolt", "Rönnberg", "Svedin", "Gran", "Hosseini", "Nordstrand",
+        "Karlsson", "Weibull", "Nilsson", "Eriksson", "Larsson", "Söderlind", "Olsson", "Persson", "Pullman", "Svensson", "Sollervik",
+        "Gustafsson", "Pettersson", "Lindberg", "Jonsson", "Jansson", "Hansson", "Bengtsson", "Jönsson", "von Zinken", "Carlsson",
+        "Petersson", "Lindberg", "Öfverkvist", "Wahlström", "Magnusson", "Lindström", "Gustavsson", "Olofsson", "Möller", "Sjöström",
+        "Lindgren", "Zaid", "Zetterström", "Öberg");
     private int currentLastNameIndex = 0;
 
     @Autowired
@@ -130,6 +129,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private StubResidentStore residentStore;
     @Autowired
     private WcStubStore wcStore;
+
     @PostConstruct
     public void init() {
         initDiagnoser();
@@ -139,12 +139,9 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     /**
      * Generate intygsdata for a given number of patients, with N intyg per patient.
      *
-     * @param numberOfPatients
-     *            Number of patients to base intyg data on.
-     * @param intygPerPatient
-     *            Number of intyg to generate intyg per patient on.
-     * @return
-     *         List of all IntygsData
+     * @param numberOfPatients Number of patients to base intyg data on.
+     * @param intygPerPatient Number of intyg to generate intyg per patient on.
+     * @return List of all IntygsData
      */
     @Override
     @PrometheusTimeMethod
@@ -199,13 +196,13 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     }
 
     private void addToIntygsDataFixedDates(Integer intygPerPatient, Patient patient, HosPersonal hosPerson,
-                                           List<IntygsData> intygsDataList) {
+        List<IntygsData> intygsDataList) {
 
         addToIntygsDataFixedDates(intygPerPatient, patient, hosPerson, intygsDataList, LocalDateTime.now());
     }
 
     private void addToIntygsDataFixedDates(Integer intygPerPatient, Patient patient, HosPersonal hosPerson,
-                                           List<IntygsData> intygsDataList, LocalDateTime startDate) {
+        List<IntygsData> intygsDataList, LocalDateTime startDate) {
         timeSimulator = startDate;
         for (int intygsIndex = 0; intygsIndex < intygPerPatient; intygsIndex++) {
             intygsDataList.add(buildFixedIntygsData(patient, hosPerson));
@@ -238,7 +235,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         }
     }
 
-     private void addToWcStubStore(IntygsData intygsData, int nrObesvaradeKompletteringar) {
+    private void addToWcStubStore(IntygsData intygsData, int nrObesvaradeKompletteringar) {
         wcStore.addAddition(intygsData.getIntygsId(), intygsData.getSigneringsTidpunkt(), nrObesvaradeKompletteringar);
     }
 
@@ -381,7 +378,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         resident.setProtectedPersonIndicator(false);
 
         Personnummer pnr = Personnummer.createPersonnummer(patient.getPersonId().getExtension())
-                .orElseThrow(() -> new IllegalStateException("Invalid personnummer!"));
+            .orElseThrow(() -> new IllegalStateException("Invalid personnummer!"));
         resident.setPersonalIdentity(buildIIType(pnr.getPersonnummer()));
 
         NameType namn = new NameType();

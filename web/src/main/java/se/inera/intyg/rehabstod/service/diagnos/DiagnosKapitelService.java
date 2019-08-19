@@ -18,9 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-
 import java.util.List;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
 /**
  * @author marced on 08/02/16.
@@ -29,17 +28,12 @@ public interface DiagnosKapitelService {
 
     /**
      * Get list of all defined {@link DiagnosKapitel}.
-     *
-     * @return
      */
     List<DiagnosKapitel> getDiagnosKapitelList();
 
     /**
      * Try to match a diagnoskod string to a DiagnosKapitel.
      * Default to a unknown kapitel if no other match.
-     *
-     * @param diagnosKod
-     * @return
      */
     DiagnosKapitel getDiagnosKapitel(String diagnosKod);
 

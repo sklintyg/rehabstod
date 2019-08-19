@@ -21,6 +21,8 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 // CHECKSTYLE:OFF LineLength
 
 import com.google.common.base.Strings;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -30,16 +32,13 @@ import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickle
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 // CHECKSTYLE:ON LineLength
 
 /**
  * Created by eriklupander on 2016-01-29.
  */
 @Service
-@Profile({ "rhs-it-stub" })
+@Profile({"rhs-it-stub"})
 public class ListActiveSickLeavesForCareUnitStub implements ListActiveSickLeavesForCareUnitResponderInterface {
 
     @Autowired
@@ -47,7 +46,7 @@ public class ListActiveSickLeavesForCareUnitStub implements ListActiveSickLeaves
 
     @Override
     public ListActiveSickLeavesForCareUnitResponseType listActiveSickLeavesForCareUnit(String logicalAddress,
-            ListActiveSickLeavesForCareUnitType parameters) {
+        ListActiveSickLeavesForCareUnitType parameters) {
         ListActiveSickLeavesForCareUnitResponseType resp = new ListActiveSickLeavesForCareUnitResponseType();
         resp.setResultCode(ResultCodeEnum.OK);
 
@@ -58,18 +57,18 @@ public class ListActiveSickLeavesForCareUnitStub implements ListActiveSickLeaves
 
         //Just interested in a specific patient?
         String personnummer = parameters.getPersonId() != null && parameters.getPersonId().getExtension() != null
-                ? parameters.getPersonId().getExtension().trim()
-                : null;
+            ? parameters.getPersonId().getExtension().trim()
+            : null;
 
         if (!Strings.isNullOrEmpty(personnummer)) {
             intygsLista.getIntygsData().addAll(sjukfallIntygStub.getIntygsData().stream()
-                    .filter(id -> enhetIds.contains(id.getSkapadAv().getEnhet().getEnhetsId().getExtension())
-                            && personnummer.equals(id.getPatient().getPersonId().getExtension()))
-                    .collect(Collectors.toList()));
+                .filter(id -> enhetIds.contains(id.getSkapadAv().getEnhet().getEnhetsId().getExtension())
+                    && personnummer.equals(id.getPatient().getPersonId().getExtension()))
+                .collect(Collectors.toList()));
         } else {
             intygsLista.getIntygsData().addAll(sjukfallIntygStub.getIntygsData().stream()
-                    .filter(id -> enhetIds.contains(id.getSkapadAv().getEnhet().getEnhetsId().getExtension()))
-                    .collect(Collectors.toList()));
+                .filter(id -> enhetIds.contains(id.getSkapadAv().getEnhet().getEnhetsId().getExtension()))
+                .collect(Collectors.toList()));
         }
 
         resp.setIntygsLista(intygsLista);

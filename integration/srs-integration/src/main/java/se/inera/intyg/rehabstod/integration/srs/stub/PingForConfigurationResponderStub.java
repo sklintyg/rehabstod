@@ -18,13 +18,12 @@
  */
 package se.inera.intyg.rehabstod.integration.srs.stub;
 
+import java.time.LocalDateTime;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
-
-import java.time.LocalDateTime;
 
 /**
  * If profile rhs-it-stub is NOT active,
@@ -35,7 +34,7 @@ import java.time.LocalDateTime;
  * Created by eriklupander on 2016-03-29.
  */
 @Service("srsPingForConfigurationWebServiceClient")
-@Profile({ "rhs-srs-stub" })
+@Profile({"rhs-srs-stub"})
 public class PingForConfigurationResponderStub implements PingForConfigurationResponderInterface {
 
     @Override

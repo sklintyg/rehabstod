@@ -97,8 +97,8 @@ public final class LogUser {
          * <p>
          * Se https://bitbucket.org/rivta-domains/riv.ehr.log/raw/master/docs/TKB_ehr_log.docx
          *
-         * @param userId       HsaId of the logged in user.
-         * @param enhetsId     HsaId of the enhet.
+         * @param userId HsaId of the logged in user.
+         * @param enhetsId HsaId of the enhet.
          * @param vardgivareId HsaId of the vardgivare.
          */
         public Builder(String userId, String enhetsId, String vardgivareId) {

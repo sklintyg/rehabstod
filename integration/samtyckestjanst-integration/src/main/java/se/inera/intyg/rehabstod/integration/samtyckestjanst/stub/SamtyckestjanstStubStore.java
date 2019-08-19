@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -81,7 +80,7 @@ public class SamtyckestjanstStubStore {
 
     private String assembleCacheKey(String vgHsaId, String veHsaId, String patientId) {
         return Stream.of(SamtyckestjanstStubConfiguration.CACHE_NAME, vgHsaId, veHsaId, patientId)
-                .collect(Collectors.joining(":"));
+            .collect(Collectors.joining(":"));
     }
 
     private boolean isWithinInterval(ConsentData consent, LocalDate queryDate) {
@@ -103,7 +102,7 @@ public class SamtyckestjanstStubStore {
         }
         // Kontrollera att queryDate är mellan start- och slutdatum.
         return queryDate.isAfter(consent.getConsentFrom().toLocalDate())
-                && queryDate.isBefore(consent.getConsentTo().toLocalDate());
+            && queryDate.isBefore(consent.getConsentTo().toLocalDate());
     }
 
 }

@@ -18,13 +18,12 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
+import java.util.List;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.schemas.contract.Personnummer;
-
-import java.util.List;
 
 /**
  * @author eriklupander on 2016-02-18.
@@ -32,15 +31,15 @@ import java.util.List;
 public interface LogService {
 
     void logSjukfallData(List<SjukfallEnhet> sjukfall,
-                         ActivityType activityType,
-                         ResourceType resourceType);
+        ActivityType activityType,
+        ResourceType resourceType);
 
     void logSjukfallData(PatientData patientData,
-                         ActivityType activityType,
-                         ResourceType resourceType);
+        ActivityType activityType,
+        ResourceType resourceType);
 
     void logConsentActivity(Personnummer personnummer,
-                            ActivityType activityType,
-                            ResourceType resourceType);
+        ActivityType activityType,
+        ResourceType resourceType);
 
 }

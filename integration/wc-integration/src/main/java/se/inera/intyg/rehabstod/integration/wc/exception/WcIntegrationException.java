@@ -22,6 +22,7 @@ package se.inera.intyg.rehabstod.integration.wc.exception;
  * Created by marced on 2018-09-26.
  */
 public class WcIntegrationException extends RuntimeException {
+
     public WcIntegrationException(String message) {
         super(message);
     }

@@ -17,75 +17,75 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 describe('DatePickerFieldDirective', function() {
-    'use strict';
+  'use strict';
 
-    var $scope, tpl, inputElement;
+  var $scope, tpl, inputElement;
 
-    function _applyValue(value) {
-        angular.element(inputElement).val(value).trigger('input');
-        $scope.$apply();
+  function _applyValue(value) {
+    angular.element(inputElement).val(value).trigger('input');
+    $scope.$apply();
+  }
+
+  function _validateOutcome(value) {
+    expect($scope.testForm.test.$viewValue).toBe(value);
+    expect($scope.testForm.test.$modelValue).toBe(value);
+  }
+
+  beforeEach(angular.mock.module('htmlTemplates'));
+  beforeEach(angular.mock.module('rehabstodApp'), function() {
+  });
+  beforeEach(angular.mock.inject(['$rootScope', '$compile',
+    function($rootScope, $compile) {
+
+      tpl = angular.element(
+          '<div ng-form="testForm">' +
+          '<rhs-date-picker target-model="model" dom-id="test" add-date-parser="loose"></rhs-date-picker>' +
+          '</div>'
+      );
+
+      $scope = $rootScope.$new();
+      $scope.model = null;
+      $compile(tpl)($scope);
+      $scope.$digest();
+
+      // Find the input control:
+      inputElement = tpl.find('input');
     }
+  ]));
 
-    function _validateOutcome(value) {
-        expect($scope.testForm.test.$viewValue).toBe(value);
-        expect($scope.testForm.test.$modelValue).toBe(value);
-    }
+  it('should allow 2016-09-12', function() {
+    _applyValue('2016-09-12');
+    _validateOutcome('2016-09-12');
+  });
 
-    beforeEach(angular.mock.module('htmlTemplates'));
-    beforeEach(angular.mock.module('rehabstodApp'), function(){
-    });
-    beforeEach(angular.mock.inject(['$rootScope', '$compile',
-        function($rootScope, $compile) {
+  it('should allow 2016-0912', function() {
+    _applyValue('2016-0912');
+    _validateOutcome('2016-09-12');
+  });
 
-            tpl = angular.element(
-                '<div ng-form="testForm">' +
-                '<rhs-date-picker target-model="model" dom-id="test" add-date-parser="loose"></rhs-date-picker>' +
-                '</div>'
-            );
+  it('should allow 201609-12', function() {
+    _applyValue('201609-12');
+    _validateOutcome('2016-09-12');
+  });
 
-            $scope = $rootScope.$new();
-            $scope.model = null;
-            $compile(tpl)($scope);
-            $scope.$digest();
+  it('should allow 2016/09/12', function() {
+    _applyValue('2016/09/12');
+    _validateOutcome('2016-09-12');
+  });
 
-            // Find the input control:
-            inputElement = tpl.find('input');
-        }
-    ]));
+  it('should allow 2016/0912', function() {
+    _applyValue('2016/0912');
+    _validateOutcome('2016-09-12');
+  });
 
-    it('should allow 2016-09-12', function() {
-        _applyValue('2016-09-12');
-        _validateOutcome('2016-09-12');
-    });
+  it('should allow 201609/12', function() {
+    _applyValue('201609/12');
+    _validateOutcome('2016-09-12');
+  });
 
-    it('should allow 2016-0912', function() {
-        _applyValue('2016-0912');
-        _validateOutcome('2016-09-12');
-    });
-
-    it('should allow 201609-12', function() {
-        _applyValue('201609-12');
-        _validateOutcome('2016-09-12');
-    });
-
-    it('should allow 2016/09/12', function() {
-        _applyValue('2016/09/12');
-        _validateOutcome('2016-09-12');
-    });
-
-    it('should allow 2016/0912', function() {
-        _applyValue('2016/0912');
-        _validateOutcome('2016-09-12');
-    });
-
-    it('should allow 201609/12', function() {
-        _applyValue('201609/12');
-        _validateOutcome('2016-09-12');
-    });
-
-    it('should allow 20160912', function() {
-        _applyValue('20160912');
-        _validateOutcome('2016-09-12');
-    });
+  it('should allow 20160912', function() {
+    _applyValue('20160912');
+    _validateOutcome('2016-09-12');
+  });
 
 });

@@ -18,43 +18,43 @@
  */
 angular.module('rehabstodApp').directive('rhsInfoBox',
     function() {
-    'use strict';
+      'use strict';
 
-    return {
+      return {
         restrict: 'E',
         transclude: true,
         scope: {
-            infoExpr: '=',
-            boxTitle: '@',
-            labelTruthy: '@',
-            labelFalsy: '@',
-            labelError: '@?',
-            serviceError: '=?', // if true the call to the consent service failed
-            boxState: '=?' // allows to set skipStart to skip the "Visa mig" section
+          infoExpr: '=',
+          boxTitle: '@',
+          labelTruthy: '@',
+          labelFalsy: '@',
+          labelError: '@?',
+          serviceError: '=?', // if true the call to the consent service failed
+          boxState: '=?' // allows to set skipStart to skip the "Visa mig" section
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsInfoBox/rhsInfoBox.directive.html',
         link: function($scope) {
 
-            if(!$scope.labelError){
-                $scope.labelError = '';
-            }
+          if (!$scope.labelError) {
+            $scope.labelError = '';
+          }
 
-            if(!$scope.serviceError){
-                $scope.serviceError = false;
-            }
+          if (!$scope.serviceError) {
+            $scope.serviceError = false;
+          }
 
-            // Box state is optional so set defaults if its not provided
-            if(!$scope.boxState){
-                $scope.boxState = { skipStart: false };
-            }
+          // Box state is optional so set defaults if its not provided
+          if (!$scope.boxState) {
+            $scope.boxState = {skipStart: false};
+          }
 
-            if(!$scope.boxState.skipStart){
-                $scope.boxState.skipStart = false;
-            }
+          if (!$scope.boxState.skipStart) {
+            $scope.boxState.skipStart = false;
+          }
 
-            $scope.next = function() {
-                $scope.boxState.skipStart = true;
-            };
+          $scope.next = function() {
+            $scope.boxState.skipStart = true;
+          };
         }
-    };
-});
+      };
+    });

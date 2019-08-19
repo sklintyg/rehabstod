@@ -29,54 +29,53 @@ var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
 describe('Hantera filtret', function() {
 
-    beforeAll(function() {
-        browser.ignoreSynchronization = false;
-        specHelper.login();
-        startPage.clickMyUnit();
-    });
+  beforeAll(function() {
+    browser.ignoreSynchronization = false;
+    specHelper.login();
+    startPage.clickMyUnit();
+  });
 
-    beforeEach(function() {
-        startPage.clickSjukfall();
-        expect(sjukfallPage.isAt()).toBe(true);
-    });
+  beforeEach(function() {
+    startPage.clickSjukfall();
+    expect(sjukfallPage.isAt()).toBe(true);
+  });
 
-    it('Göm filtret', function() {
-        expect(sjukfallPage.resetButton().isPresent()).toBeTruthy();
+  it('Göm filtret', function() {
+    expect(sjukfallPage.resetButton().isPresent()).toBeTruthy();
 
-        sjukfallPage.clickHideFilter();
+    sjukfallPage.clickHideFilter();
 
-        expect(sjukfallPage.resetButton().isPresent()).toBeFalsy();
+    expect(sjukfallPage.resetButton().isPresent()).toBeFalsy();
 
-        sjukfallPage.clickHideFilter();
-    });
+    sjukfallPage.clickHideFilter();
+  });
 
-    it('Fyll i filtret', function() {
-        sjukfallPage.langdFromInput().clear();
-        sjukfallPage.langdFromInput().sendKeys(10);
-        sjukfallPage.langdToInput().clear();
-        sjukfallPage.langdToInput().sendKeys(30);
+  it('Fyll i filtret', function() {
+    sjukfallPage.langdFromInput().clear();
+    sjukfallPage.langdFromInput().sendKeys(10);
+    sjukfallPage.langdToInput().clear();
+    sjukfallPage.langdToInput().sendKeys(30);
 
-        sjukfallPage.alderFromInput().clear();
-        sjukfallPage.alderFromInput().sendKeys(10);
-        sjukfallPage.alderToInput().clear();
-        sjukfallPage.alderToInput().sendKeys(30);
+    sjukfallPage.alderFromInput().clear();
+    sjukfallPage.alderFromInput().sendKeys(10);
+    sjukfallPage.alderToInput().clear();
+    sjukfallPage.alderToInput().sendKeys(30);
 
-        var freeTextValue = 'Hej';
+    var freeTextValue = 'Hej';
 
-        sjukfallPage.freeTextInput().sendKeys(freeTextValue);
+    sjukfallPage.freeTextInput().sendKeys(freeTextValue);
 
-        expect(sjukfallPage.freeTextInput().getAttribute('value')).toEqual(freeTextValue);
-    });
+    expect(sjukfallPage.freeTextInput().getAttribute('value')).toEqual(freeTextValue);
+  });
 
+  it('Återställ filtret', function() {
+    sjukfallPage.clickResetFilter();
 
-    it('Återställ filtret', function() {
-        sjukfallPage.clickResetFilter();
-
-        expect(sjukfallPage.freeTextInput().getAttribute('value')).toEqual('');
-        expect(sjukfallPage.langdFromInput().getAttribute('value')).toEqual('1');
-        expect(sjukfallPage.langdToInput().getAttribute('value')).toEqual('365+');
-        expect(sjukfallPage.alderFromInput().getAttribute('value')).toEqual('0');
-        expect(sjukfallPage.alderToInput().getAttribute('value')).toEqual('100+');
-    });
+    expect(sjukfallPage.freeTextInput().getAttribute('value')).toEqual('');
+    expect(sjukfallPage.langdFromInput().getAttribute('value')).toEqual('1');
+    expect(sjukfallPage.langdToInput().getAttribute('value')).toEqual('365+');
+    expect(sjukfallPage.alderFromInput().getAttribute('value')).toEqual('0');
+    expect(sjukfallPage.alderToInput().getAttribute('value')).toEqual('100+');
+  });
 
 });

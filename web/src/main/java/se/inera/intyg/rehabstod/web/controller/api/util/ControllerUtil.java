@@ -19,12 +19,6 @@
 
 package se.inera.intyg.rehabstod.web.controller.api.util;
 
-import se.inera.intyg.infra.integration.hsa.model.Mottagning;
-import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +26,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import se.inera.intyg.infra.integration.hsa.model.Mottagning;
+import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 
 /**
  * @author Magnus Ekstrand on 2018-10-24.
@@ -46,8 +45,8 @@ public final class ControllerUtil {
         final Map<List<?>, Boolean> seen = new ConcurrentHashMap<>();
         return t -> {
             final List<?> keys = Arrays.stream(keyExtractors)
-                    .map(ke -> ke.apply(t))
-                    .collect(Collectors.toList());
+                .map(ke -> ke.apply(t))
+                .collect(Collectors.toList());
             return seen.putIfAbsent(keys, Boolean.TRUE) == null;
         };
     }
@@ -65,7 +64,7 @@ public final class ControllerUtil {
                 }
             }
             throw new IllegalStateException("User object is in invalid state. "
-                    + "Current selected enhet is an underenhet, but no ID for the parent enhet was found.");
+                + "Current selected enhet is an underenhet, but no ID for the parent enhet was found.");
         } else {
             return user.getValdVardenhet().getId();
         }

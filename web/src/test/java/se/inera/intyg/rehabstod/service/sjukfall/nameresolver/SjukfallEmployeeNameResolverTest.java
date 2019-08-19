@@ -18,24 +18,22 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.nameresolver;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by eriklupander on 2017-02-24.
@@ -70,9 +68,9 @@ public class SjukfallEmployeeNameResolverTest {
     @Test
     public void testUpdateNoDuplicateDoctorNames() {
         List<SjukfallEnhet> sjukfallList = createSjukfallList()
-                .stream()
-                .filter(sf -> sf.getLakare().getNamn().equals(lakareNamn2))
-                .collect(Collectors.toList());
+            .stream()
+            .filter(sf -> sf.getLakare().getNamn().equals(lakareNamn2))
+            .collect(Collectors.toList());
 
         testee.updateDuplicateDoctorNamesWithHsaId(sjukfallList);
         assertEquals(lakareNamn2, sjukfallList.get(0).getLakare().getNamn());

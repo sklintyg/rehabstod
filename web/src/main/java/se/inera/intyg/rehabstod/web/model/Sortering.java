@@ -28,7 +28,6 @@ public class Sortering {
     private String kolumn;
     private String order;
 
-
     // getters and setters
 
     public String getKolumn() {
@@ -46,7 +45,6 @@ public class Sortering {
     public void setOrder(String order) {
         this.order = order;
     }
-
 
     // api
 

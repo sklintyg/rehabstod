@@ -18,6 +18,17 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.pu;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,18 +49,6 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by eriklupander on 2017-09-06.
@@ -79,10 +78,10 @@ public class SjukfallPuServiceImplTest {
     @Before
     public void init() {
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
-                buildPersonSvar(TOLVANSSON_PNR, false, false));
+            buildPersonSvar(TOLVANSSON_PNR, false, false));
 
         when(puService.getPersons(Arrays.asList(createPnr(TOLVANSSON_PNR)))).thenReturn(
-                buildPersonMap(buildPersonSvar(TOLVANSSON_PNR, false, false)));
+            buildPersonMap(buildPersonSvar(TOLVANSSON_PNR, false, false)));
 
     }
 
@@ -138,7 +137,7 @@ public class SjukfallPuServiceImplTest {
         when(userService.getUser()).thenReturn(rehabstodUser);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
-                buildPersonSvar(TOLVANSSON_PNR, false, false));
+            buildPersonSvar(TOLVANSSON_PNR, false, false));
 
         List<IntygData> intygData = buildIntygList(TOLVANSSON_PNR);
         List<IntygData> returnedData = testee.filterSekretessForPatientHistory(intygData, VARDGIVARE_1, ENHET_1);
@@ -151,7 +150,7 @@ public class SjukfallPuServiceImplTest {
         when(userService.getUser()).thenReturn(rehabstodUser);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
-                buildPersonSvar(TOLVANSSON_PNR, true, false));
+            buildPersonSvar(TOLVANSSON_PNR, true, false));
 
         List<IntygData> intygData = buildIntygList(TOLVANSSON_PNR);
         List<IntygData> returnedData = testee.filterSekretessForPatientHistory(intygData, VARDGIVARE_1, ENHET_1);
@@ -310,7 +309,7 @@ public class SjukfallPuServiceImplTest {
         when(userService.getUser()).thenReturn(buildVardadmin());
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
-                buildPersonSvar(TOLVANSSON_PNR, true, false));
+            buildPersonSvar(TOLVANSSON_PNR, true, false));
         testee.enrichWithPatientNameAndFilterSekretess(buildPatientSjukfallList(TOLVANSSON_PNR));
     }
 
@@ -318,7 +317,7 @@ public class SjukfallPuServiceImplTest {
     public void testGetPatientSjukfallThrowsExceptionIfPuError() {
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
-                PersonSvar.error());
+            PersonSvar.error());
         testee.enrichWithPatientNameAndFilterSekretess(buildPatientSjukfallList(TOLVANSSON_PNR));
     }
 
@@ -326,7 +325,7 @@ public class SjukfallPuServiceImplTest {
     public void testGetPatientSjukfallWhenPatientNotFoundInPu() {
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
-                PersonSvar.notFound());
+            PersonSvar.notFound());
         List<SjukfallPatient> patientSjukfallList = buildPatientSjukfallList(TOLVANSSON_PNR);
         testee.enrichWithPatientNameAndFilterSekretess(patientSjukfallList);
         assertEquals(1, patientSjukfallList.size());
@@ -339,7 +338,7 @@ public class SjukfallPuServiceImplTest {
         when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(false);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
-                buildPersonSvar(TOLVANSSON_PNR, true, false));
+            buildPersonSvar(TOLVANSSON_PNR, true, false));
 
         testee.enrichWithPatientNameAndFilterSekretess(buildPatientSjukfallList(TOLVANSSON_PNR));
     }
@@ -351,7 +350,7 @@ public class SjukfallPuServiceImplTest {
         when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
-                buildPersonSvar(TOLVANSSON_PNR, true, false));
+            buildPersonSvar(TOLVANSSON_PNR, true, false));
 
         List<SjukfallPatient> patientSjukfallList = buildPatientSjukfallList(TOLVANSSON_PNR);
         testee.enrichWithPatientNameAndFilterSekretess(patientSjukfallList);
@@ -367,7 +366,7 @@ public class SjukfallPuServiceImplTest {
         when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
-                buildPersonSvar(TOLVANSSON_PNR, false, false));
+            buildPersonSvar(TOLVANSSON_PNR, false, false));
 
         List<SjukfallPatient> patientSjukfallList = buildPatientSjukfallList(TOLVANSSON_PNR);
         testee.enrichWithPatientNameAndFilterSekretess(patientSjukfallList);
@@ -421,7 +420,7 @@ public class SjukfallPuServiceImplTest {
         when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
-                buildPersonSvar(TOLVANSSON_PNR, true, false));
+            buildPersonSvar(TOLVANSSON_PNR, true, false));
         List<SjukfallPatient> patientSjukfallList = buildPatientSjukfallList(TOLVANSSON_PNR);
         testee.enrichWithPatientNameAndFilterSekretess(patientSjukfallList);
         assertEquals(1, patientSjukfallList.size());
@@ -435,7 +434,7 @@ public class SjukfallPuServiceImplTest {
         when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
-                buildPersonSvar(TOLVANSSON_PNR, false, true));
+            buildPersonSvar(TOLVANSSON_PNR, false, true));
         List<SjukfallPatient> patientSjukfallList = buildPatientSjukfallList(TOLVANSSON_PNR);
         testee.enrichWithPatientNameAndFilterSekretess(patientSjukfallList);
         assertEquals(0, patientSjukfallList.size());
@@ -451,7 +450,7 @@ public class SjukfallPuServiceImplTest {
 
     private void mockPersonSvar(boolean avliden, boolean sekretess) {
         when(puService.getPersons(anyListOf(Personnummer.class))).
-                thenReturn(buildPersonMap(buildPersonSvar(TOLVANSSON_PNR, sekretess, avliden)));
+            thenReturn(buildPersonMap(buildPersonSvar(TOLVANSSON_PNR, sekretess, avliden)));
     }
 
     private void mockPersonSvarError() {
@@ -481,7 +480,7 @@ public class SjukfallPuServiceImplTest {
     private List<PatientData> buildIntyg(String... personnummer) {
         List<PatientData> patientData = new ArrayList<>();
         Arrays.stream(personnummer)
-                .forEach(pnr -> patientData.add(buildPatientData(pnr, "Patient-" + pnr)));
+            .forEach(pnr -> patientData.add(buildPatientData(pnr, "Patient-" + pnr)));
         return patientData;
     }
 
@@ -533,7 +532,7 @@ public class SjukfallPuServiceImplTest {
 
     private Person buildPerson(String pnr, boolean sekretess, boolean avliden) {
         return new Person(createPnr(pnr), sekretess, avliden, "Fornamn", null, "Efternamn",
-                "Gatan 1", "11212", "Orten");
+            "Gatan 1", "11212", "Orten");
     }
 
     private List<IntygData> buildIntygList(String pnr) {
@@ -547,7 +546,7 @@ public class SjukfallPuServiceImplTest {
     private List<SjukfallEnhet> buildSjukfallList(String... personnummer) {
         List<SjukfallEnhet> sjukfallList = new ArrayList<>();
         Arrays.stream(personnummer)
-                .forEach(pnr -> sjukfallList.add(buildSjukfall(pnr, "Patient-" + pnr)));
+            .forEach(pnr -> sjukfallList.add(buildSjukfall(pnr, "Patient-" + pnr)));
         return sjukfallList;
     }
 
@@ -578,7 +577,7 @@ public class SjukfallPuServiceImplTest {
 
     private Map<Personnummer, PersonSvar> buildPersonMap() {
         Map<Personnummer, PersonSvar> persons = new HashMap<>();
-        persons.put(createPnr(TOLVANSSON_PNR),  buildPersonSvar(TOLVANSSON_PNR, true, false));
+        persons.put(createPnr(TOLVANSSON_PNR), buildPersonSvar(TOLVANSSON_PNR, true, false));
         return persons;
     }
 
@@ -588,7 +587,7 @@ public class SjukfallPuServiceImplTest {
 
     private Personnummer createPnr(String pnr) {
         return Personnummer
-                .createPersonnummer(pnr)
-                .orElseThrow(() -> new IllegalArgumentException("Cannot create Personnummer object with pnr: " + pnr));
+            .createPersonnummer(pnr)
+            .orElseThrow(() -> new IllegalArgumentException("Cannot create Personnummer object with pnr: " + pnr));
     }
 }

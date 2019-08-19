@@ -18,13 +18,11 @@
  */
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsent.v2.rivtabp21.RegisterExtendedConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsentResponder.v2.RegisterExtendedConsentResponseType;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsentResponder.v2.RegisterExtendedConsentType;
@@ -42,20 +40,20 @@ public class RegisterExtendedConsentStub implements RegisterExtendedConsentRespo
 
     @Override
     public RegisterExtendedConsentResponseType registerExtendedConsent(String logicalAddress,
-                                                                       RegisterExtendedConsentType registerExtendedConsentType) {
+        RegisterExtendedConsentType registerExtendedConsentType) {
 
         validate(logicalAddress, registerExtendedConsentType);
 
         ConsentData consentData = new ConsentData.Builder(registerExtendedConsentType.getAssertionId(),
-                registerExtendedConsentType.getCareProviderId(),
-                registerExtendedConsentType.getCareUnitId(),
-                registerExtendedConsentType.getPatientId().getExtension(),
-                registerExtendedConsentType.getRegistrationAction())
-                .employeeId(registerExtendedConsentType.getEmployeeId())
-                .consentFrom(registerExtendedConsentType.getStartDate())
-                .consentTo(registerExtendedConsentType.getEndDate())
-                .representedBy(getRegisteredBy(registerExtendedConsentType.getRepresentedBy()))
-                .build();
+            registerExtendedConsentType.getCareProviderId(),
+            registerExtendedConsentType.getCareUnitId(),
+            registerExtendedConsentType.getPatientId().getExtension(),
+            registerExtendedConsentType.getRegistrationAction())
+            .employeeId(registerExtendedConsentType.getEmployeeId())
+            .consentFrom(registerExtendedConsentType.getStartDate())
+            .consentTo(registerExtendedConsentType.getEndDate())
+            .representedBy(getRegisteredBy(registerExtendedConsentType.getRepresentedBy()))
+            .build();
 
         RegisterExtendedConsentResponseType response = new RegisterExtendedConsentResponseType();
         ResultType resultType = new ResultType();

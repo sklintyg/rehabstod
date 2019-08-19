@@ -18,13 +18,12 @@
  */
 package se.inera.intyg.rehabstod.common.integration.json;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.time.LocalDate;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 /**
  * Created by eriklupander on 2016-02-01.

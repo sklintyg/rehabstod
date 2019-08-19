@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.client;
 
 import java.time.LocalDateTime;
-
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
 import se.riv.informationsecurity.authorization.consent.RegisterExtendedConsentResponder.v2.RegisterExtendedConsentResponseType;
@@ -44,9 +43,9 @@ public interface SamtyckestjanstClientService {
      * @return Status för om ett giltigt intyg gällande åtkomst för angiven aktör hittades.
      */
     CheckConsentResponseType checkConsent(String vgHsaId,
-                                          String veHsaId,
-                                          String userHsaId,
-                                          String patientId);
+        String veHsaId,
+        String userHsaId,
+        String patientId);
 
     /**
      * Tjänst som registrerar ett intyg gällande viss patient som ger direktåtkomst till patientens information
@@ -57,22 +56,21 @@ public interface SamtyckestjanstClientService {
      * @param vgHsaId Id på medarbetarens vårdgivare enligt aktuellt medarbetaruppdrag.
      * @param veHsaId Id på medarbetarens vårdenhet enligt aktuellt medarbetaruppdrag.
      * @param userHsaId Användarens Hsa-id. Anges om användaren har uppgett att samtycket
-     *                  endast ska gälla för denne och inte alla behöriga användare på vårdenheten.
+     * endast ska gälla för denne och inte alla behöriga användare på vårdenheten.
      * @param patientId Personidentitet på patienten vars samtycke skall kontrolleras.
      * @param representedBy Personidentitet på företrädare/vårdnadshavare som företräder patienten
      * @param consentFrom Samtycket gäller fr.o.m. denna tidpunkt.
      * @param consentTo Samtycket gäller t.o.m. denna tidpunkt.
      * @param registrationAction Identifierar den användare som angivit samtycket.
-     * @return
      */
     // CHECKSTYLE:OFF ParameterNumber
     RegisterExtendedConsentResponseType registerExtendedConsent(String vgHsaId,
-                                                                String veHsaId,
-                                                                String userHsaId,
-                                                                Personnummer patientId,
-                                                                String representedBy,
-                                                                LocalDateTime consentFrom,
-                                                                LocalDateTime consentTo,
-                                                                ActionType registrationAction);
+        String veHsaId,
+        String userHsaId,
+        Personnummer patientId,
+        String representedBy,
+        LocalDateTime consentFrom,
+        LocalDateTime consentTo,
+        ActionType registrationAction);
     // CHECKSTYLE:ON ParameterNumber
 }

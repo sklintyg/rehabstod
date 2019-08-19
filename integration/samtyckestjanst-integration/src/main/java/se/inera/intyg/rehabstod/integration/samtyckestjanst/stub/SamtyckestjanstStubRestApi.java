@@ -20,11 +20,9 @@ package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
-import se.inera.intyg.schemas.contract.Personnummer;
-import se.riv.informationsecurity.authorization.consent.v2.ActionType;
-import se.riv.informationsecurity.authorization.consent.v2.ActorType;
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -34,9 +32,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.inera.intyg.schemas.contract.Personnummer;
+import se.riv.informationsecurity.authorization.consent.v2.ActionType;
+import se.riv.informationsecurity.authorization.consent.v2.ActorType;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
@@ -50,12 +49,12 @@ public class SamtyckestjanstStubRestApi {
     @Path("/consent/{personId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addConsentForPerson(
-            @PathParam("personId") String personId,
-            @QueryParam("vardgivareId") String vgHsaId,
-            @QueryParam("vardenhetId") String veHsaId,
-            @QueryParam("employeeId") String userHsaId,
-            @QueryParam("from") String from,
-            @QueryParam("to") String to) {
+        @PathParam("personId") String personId,
+        @QueryParam("vardgivareId") String vgHsaId,
+        @QueryParam("vardenhetId") String veHsaId,
+        @QueryParam("employeeId") String userHsaId,
+        @QueryParam("from") String from,
+        @QueryParam("to") String to) {
 
         Preconditions.checkArgument(!Strings.isNullOrEmpty(personId));
         Preconditions.checkArgument(!Strings.isNullOrEmpty(vgHsaId));
@@ -78,10 +77,10 @@ public class SamtyckestjanstStubRestApi {
         Personnummer pnr = parsePersonId(personId);
 
         ConsentData consentData = new ConsentData.Builder(assertionId, vgHsaId, veHsaId, pnr.getPersonnummer(), actionType)
-                .employeeId(userHsaId)
-                .consentFrom(consentFrom)
-                .consentTo(consentTo)
-                .build();
+            .employeeId(userHsaId)
+            .consentFrom(consentFrom)
+            .consentTo(consentTo)
+            .build();
 
         store.add(consentData);
         return Response.ok().build();
@@ -108,9 +107,9 @@ public class SamtyckestjanstStubRestApi {
     @Path("/consent/{personId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getConsentForPerson(
-            @PathParam("personId") String personId,
-            @QueryParam("vardgivareId") String vgHsaId,
-            @QueryParam("vardenhetId") String veHsaId
+        @PathParam("personId") String personId,
+        @QueryParam("vardgivareId") String vgHsaId,
+        @QueryParam("vardenhetId") String veHsaId
     ) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(personId));
         Preconditions.checkArgument(!Strings.isNullOrEmpty(vgHsaId));
@@ -129,7 +128,7 @@ public class SamtyckestjanstStubRestApi {
 
     private Personnummer parsePersonId(String personId) {
         return Personnummer.createPersonnummer(personId)
-                .orElseThrow(() -> new IllegalStateException("Invalid personnummer!"));
+            .orElseThrow(() -> new IllegalStateException("Invalid personnummer!"));
     }
 
 }

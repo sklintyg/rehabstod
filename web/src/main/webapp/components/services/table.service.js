@@ -198,13 +198,13 @@ angular.module('rehabstodApp').factory('TableService',
         }
 
         return columns
-          .filter(function(column) {
-            if ((column.id === 'patientId' || column.id === 'patientName') && !SjukfallFilterViewState.get().showPatientId) {
-              return false;
-            }
+        .filter(function(column) {
+          if ((column.id === 'patientId' || column.id === 'patientName') && !SjukfallFilterViewState.get().showPatientId) {
+            return false;
+          }
 
-            return true;
-          });
+          return true;
+        });
       }
 
       function _getSelectedSjukfallColumns(onlyPreferences) {

@@ -18,6 +18,9 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.client;
 
+import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +34,6 @@ import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp2
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksType;
 import se.riv.informationsecurity.authorization.blocking.v4.InformationEntityType;
-
-import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by marced 2018-09-28.
@@ -52,10 +51,10 @@ public class SparrtjanstClientServiceImpl implements SparrtjanstClientService {
 
     @Override
     public CheckBlocksResponseType getCheckBlocks(String vgHsaId, String veHsaId, String userHsaId, String patientId,
-            List<IntygData> intygLista) {
+        List<IntygData> intygLista) {
 
         final Personnummer personnummer = Personnummer.createPersonnummer(patientId)
-                .orElseThrow(() -> new IllegalArgumentException("PatientId must be a valid personnummer or samordningsnummer"));
+            .orElseThrow(() -> new IllegalArgumentException("PatientId must be a valid personnummer or samordningsnummer"));
 
         CheckBlocksType checkBlockRequest = new CheckBlocksType();
 

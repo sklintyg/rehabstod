@@ -18,6 +18,18 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,19 +49,6 @@ import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAccessTokenResponse;
-
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by marced on 01/02/16.
@@ -158,11 +157,11 @@ public class UserControllerTest {
 
         // Previous access token expires in 1800 seconds
         when(rehabUserMock.getTokens())
-                .thenReturn(new RehabstodUserTokens(oldAccessToken, "cba321", LocalDateTime.now().plusSeconds(1800)));
+            .thenReturn(new RehabstodUserTokens(oldAccessToken, "cba321", LocalDateTime.now().plusSeconds(1800)));
 
         GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
         verify(tokenExchangeService, never())
-                .refresh(any(RehabstodUserTokens.class));
+            .refresh(any(RehabstodUserTokens.class));
         assertEquals(oldAccessToken, accessTokenResponse.getAccessToken());
 
     }
@@ -173,7 +172,7 @@ public class UserControllerTest {
 
         GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
         verify(tokenExchangeService, never())
-                .refresh(any(RehabstodUserTokens.class));
+            .refresh(any(RehabstodUserTokens.class));
         assertNull(accessTokenResponse.getAccessToken());
     }
 
@@ -183,18 +182,18 @@ public class UserControllerTest {
         String oldAccessToken = "abc123";
         String newAccessToken = "abc456";
         RehabstodUserTokens oldRehabstodUserTokens = new RehabstodUserTokens(oldAccessToken, refreshToken,
-                LocalDateTime.now().plusSeconds(30));
+            LocalDateTime.now().plusSeconds(30));
         RehabstodUserTokens newRehabstodUserTokens = new RehabstodUserTokens(newAccessToken, refreshToken,
-                LocalDateTime.now().plusSeconds(3600));
+            LocalDateTime.now().plusSeconds(3600));
 
         // Previous access token expires in 30 seconds
         when(rehabUserMock.getTokens()).thenReturn(oldRehabstodUserTokens);
         when(tokenExchangeService.refresh(any(RehabstodUserTokens.class)))
-                .thenReturn(newRehabstodUserTokens);
+            .thenReturn(newRehabstodUserTokens);
 
         GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
         verify(tokenExchangeService, times(1))
-                .refresh(any(RehabstodUserTokens.class));
+            .refresh(any(RehabstodUserTokens.class));
         assertEquals(newAccessToken, accessTokenResponse.getAccessToken());
     }
 

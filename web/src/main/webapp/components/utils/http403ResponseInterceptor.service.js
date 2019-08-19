@@ -32,49 +32,49 @@
  */
 angular.module('rehabstodApp').provider('http403ResponseInterceptor',
     function() {
-        'use strict';
+      'use strict';
 
-        /**
-         * Object that holds config and default values.
-         */
-        this.config = {
-            redirectUrl: '/'
-        };
+      /**
+       * Object that holds config and default values.
+       */
+      this.config = {
+        redirectUrl: '/'
+      };
 
-        /**
-         * Setter for configuring the redirectUrl
-         */
-        this.setRedirectUrl = function(url) {
-            this.config.redirectUrl = url;
-        };
+      /**
+       * Setter for configuring the redirectUrl
+       */
+      this.setRedirectUrl = function(url) {
+        this.config.redirectUrl = url;
+      };
 
-        /**
-         * Mandatory provider $get function. here we can inject the dependencies the
-         * actual implementation needs, in this case $q (and $window for redirection)
-         */
-        this.$get = [ '$q', '$window', 'UserModel', function($q, $window, UserModel) {
-            //Ref our config object
-            var config = this.config;
+      /**
+       * Mandatory provider $get function. here we can inject the dependencies the
+       * actual implementation needs, in this case $q (and $window for redirection)
+       */
+      this.$get = ['$q', '$window', 'UserModel', function($q, $window, UserModel) {
+        //Ref our config object
+        var config = this.config;
 
-            function responseError(rejection) {
-                // for 403 responses - redirect browser to configured redirect url
-                if (rejection.status === 403) {
+        function responseError(rejection) {
+          // for 403 responses - redirect browser to configured redirect url
+          if (rejection.status === 403) {
 
-                    var redirectUrl = config.redirectUrl;
-                    if (UserModel.get().authenticationScheme === UserModel.get().fakeSchemeId) {
-                        redirectUrl = '/welcome.html?utloggad';
-                    }
-
-                    UserModel.get().loggedIn = false;
-                    $window.location.href = redirectUrl;
-                }
-                // signal rejection (arguably not meaningful here since we just
-                // issued a redirect)
-                return $q.reject(rejection);
+            var redirectUrl = config.redirectUrl;
+            if (UserModel.get().authenticationScheme === UserModel.get().fakeSchemeId) {
+              redirectUrl = '/welcome.html?utloggad';
             }
 
-            return {
-                'responseError': responseError
-            };
-        }];
+            UserModel.get().loggedIn = false;
+            $window.location.href = redirectUrl;
+          }
+          // signal rejection (arguably not meaningful here since we just
+          // issued a redirect)
+          return $q.reject(rejection);
+        }
+
+        return {
+          'responseError': responseError
+        };
+      }];
     });

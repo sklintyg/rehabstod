@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,9 +27,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.infra.security.filter.SessionTimeoutFilter;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSessionStatusResponse;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * Reports basic information about the current session status.
@@ -40,7 +39,7 @@ import javax.servlet.http.HttpSession;
  * @see SessionTimeoutFilter
  * @see org.springframework.security.web.context.SecurityContextRepository SecurityContextRepository
  * @see org.springframework.security.web.context.HttpSessionSecurityContextRepository
- *      HttpSessionSecurityContextRepository
+ * HttpSessionSecurityContextRepository
  */
 
 @RestController
@@ -69,7 +68,7 @@ public class SessionStatusController {
         Long secondsLeft = (Long) request.getAttribute(SessionTimeoutFilter.SECONDS_UNTIL_SESSIONEXPIRE_ATTRIBUTE_KEY);
 
         return new GetSessionStatusResponse(session != null, hasAuthenticatedPrincipalSession(session),
-                secondsLeft == null ? 0 : secondsLeft);
+            secondsLeft == null ? 0 : secondsLeft);
     }
 
     private boolean hasAuthenticatedPrincipalSession(HttpSession session) {

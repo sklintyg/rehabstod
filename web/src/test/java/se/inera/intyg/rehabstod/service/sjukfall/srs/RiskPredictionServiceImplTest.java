@@ -18,6 +18,15 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.srs;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -26,15 +35,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -46,15 +52,6 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by eriklupander on 2017-11-01.
@@ -171,8 +168,8 @@ public class RiskPredictionServiceImplTest {
         String intygsId = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
         List<RiskSignal> riskSignals = Arrays.asList(
-                new RiskSignal(intygsId, 1, "beskrivning1", now),
-                new RiskSignal(intygsId, 0, "beskrivning0", now)
+            new RiskSignal(intygsId, 1, "beskrivning1", now),
+            new RiskSignal(intygsId, 0, "beskrivning0", now)
         );
 
         when(srsIntegrationService.getRiskPreditionerForIntygsId(anyListOf(String.class))).thenReturn(riskSignals);
@@ -190,10 +187,10 @@ public class RiskPredictionServiceImplTest {
         LocalDateTime earlier = LocalDateTime.now().minus(1, ChronoUnit.HOURS);
         LocalDateTime earliest = LocalDateTime.now().minus(1, ChronoUnit.DAYS);
         List<RiskSignal> riskSignals = Arrays.asList(
-                new RiskSignal(intygsId, 1, "beskrivning1", earlier),
-                new RiskSignal(intygsId, 2, "beskrivning2", now),
-                new RiskSignal(intygsId, 3, "beskrivning1", earliest),
-                new RiskSignal(intygsId, 0, "beskrivning0", now)
+            new RiskSignal(intygsId, 1, "beskrivning1", earlier),
+            new RiskSignal(intygsId, 2, "beskrivning2", now),
+            new RiskSignal(intygsId, 3, "beskrivning1", earliest),
+            new RiskSignal(intygsId, 0, "beskrivning0", now)
         );
 
         when(srsIntegrationService.getRiskPreditionerForIntygsId(anyListOf(String.class))).thenReturn(riskSignals);
@@ -260,7 +257,7 @@ public class RiskPredictionServiceImplTest {
         Feature f = new Feature();
         f.setGlobal(true);
         Map<String, Feature> features = Collections
-                .singletonMap(AuthoritiesConstants.FEATURE_SRS, f);
+            .singletonMap(AuthoritiesConstants.FEATURE_SRS, f);
         when(user.getFeatures()).thenReturn(features);
         return user;
     }

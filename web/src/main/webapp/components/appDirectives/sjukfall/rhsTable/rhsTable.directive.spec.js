@@ -17,41 +17,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe('Directive: rhsTable', function () {
-    'use strict';
+describe('Directive: rhsTable', function() {
+  'use strict';
 
-    describe('Controller: RhsTableCtrl', function () {
+  describe('Controller: RhsTableCtrl', function() {
 
-        // load the controller's module
-        beforeEach(module('rehabstodApp'));
+    // load the controller's module
+    beforeEach(module('rehabstodApp'));
 
-        var scope;
+    var scope;
 
-        // Initialize the controller and a mock scope
-        beforeEach(inject(function ($controller, $rootScope, _SjukfallModel_, _SjukfallFilterViewState_, _featureService_) {
-            scope = $rootScope.$new();
+    // Initialize the controller and a mock scope
+    beforeEach(inject(function($controller, $rootScope, _SjukfallModel_, _SjukfallFilterViewState_, _featureService_) {
+      scope = $rootScope.$new();
 
-            _featureService_.hasFeature = function() {
-                return false;
-            };
+      _featureService_.hasFeature = function() {
+        return false;
+      };
 
-            $controller('RhsTableCtrl', {
-                $scope: scope,
-                SjukfallModel: _SjukfallModel_,
-                SjukfallFilterViewState: _SjukfallFilterViewState_
-            });
-        }));
+      $controller('RhsTableCtrl', {
+        $scope: scope,
+        SjukfallModel: _SjukfallModel_,
+        SjukfallFilterViewState: _SjukfallFilterViewState_
+      });
+    }));
 
+    it('should return toolTip', function() {
+      var diagnos = {
+        kod: 123,
+        beskrivning: 'Hej'
+      };
 
-        it('should return toolTip', function() {
-            var diagnos = {
-                kod: 123,
-                beskrivning: 'Hej'
-            };
-
-            expect(scope.getToolTip(diagnos)).toEqual('<b>' + diagnos.kod + '</b><br>' + diagnos.beskrivning);
-        });
+      expect(scope.getToolTip(diagnos)).toEqual('<b>' + diagnos.kod + '</b><br>' + diagnos.beskrivning);
     });
+  });
 });
 
 

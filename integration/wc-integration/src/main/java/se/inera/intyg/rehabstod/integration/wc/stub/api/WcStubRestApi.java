@@ -34,7 +34,7 @@ import se.inera.intyg.rehabstod.integration.wc.stub.WcStubStore;
  *
  * If inactive, a RuntimeException will be thrown to fake problems.
  */
-@Profile({ "rhs-wc-stub" })
+@Profile({"rhs-wc-stub"})
 @RestController
 @RequestMapping("/api/stub/wc-api")
 public class WcStubRestApi {

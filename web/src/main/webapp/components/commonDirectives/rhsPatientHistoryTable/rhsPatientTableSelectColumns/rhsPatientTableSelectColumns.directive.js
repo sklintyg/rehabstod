@@ -18,50 +18,51 @@
  */
 
 angular.module('rehabstodApp')
-    .directive('rhsPatientTableSelectColumns',
-        function() {
-            'use strict';
+.directive('rhsPatientTableSelectColumns',
+    function() {
+      'use strict';
 
-            return {
-                restrict: 'E',
-                scope: {
-                    labelKey: '@'
+      return {
+        restrict: 'E',
+        scope: {
+          labelKey: '@'
+        },
+        controller: function($scope, $uibModal, UserModel, TableService) {
+
+          $scope.label = $scope.labelKey ? $scope.labelKey : 'label.table.anpassa.patient';
+
+          var preferenceKey = TableService.patientTableKey;
+
+          $scope.showIcon = $scope.labelKey ? false : !!UserModel.get().preferences[preferenceKey];
+
+          $scope.openDialog = function() {
+            $uibModal.open({
+              templateUrl: '/components/commonDirectives/rhsSelectColumnsModal/rhsSelectColumns.modal.html',
+              controller: 'rhsSelectColumnsModalController',
+              size: 'md',
+              resolve: {
+                columns: function() {
+                  return TableService.getAllPatientTableColumns();
                 },
-                controller: function($scope, $uibModal, UserModel, TableService) {
-
-                    $scope.label = $scope.labelKey ? $scope.labelKey : 'label.table.anpassa.patient';
-
-                    var preferenceKey = TableService.patientTableKey;
-
-                    $scope.showIcon = $scope.labelKey ? false : !!UserModel.get().preferences[preferenceKey];
-
-                    $scope.openDialog = function() {
-                        $uibModal.open({
-                            templateUrl: '/components/commonDirectives/rhsSelectColumnsModal/rhsSelectColumns.modal.html',
-                            controller: 'rhsSelectColumnsModalController',
-                            size: 'md',
-                            resolve: {
-                                columns: function() {
-                                    return TableService.getAllPatientTableColumns();
-                                },
-                                preferenceKey: function() {
-                                    return preferenceKey;
-                                },
-                                columnTranslationKey: function() {
-                                    return 'label.patient.table.column.';
-                                },
-                                modalTextTranslationKey: function() {
-                                    return 'label.table.custom.modal.patient.';
-                                }
-                            }
-                            // Removes angular error "Possibly unhandled rejection:
-                            // backdrop click" when clicking outside of modal
-                        }).result.then(function(){
-                            $scope.showIcon = !!UserModel.get().preferences[preferenceKey];
-                        }, function(){});
-                    };
+                preferenceKey: function() {
+                  return preferenceKey;
                 },
-                templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/' +
-                    'rhsPatientTableSelectColumns/rhsPatientTableSelectColumns.directive.html'
-            };
-        });
+                columnTranslationKey: function() {
+                  return 'label.patient.table.column.';
+                },
+                modalTextTranslationKey: function() {
+                  return 'label.table.custom.modal.patient.';
+                }
+              }
+              // Removes angular error "Possibly unhandled rejection:
+              // backdrop click" when clicking outside of modal
+            }).result.then(function() {
+              $scope.showIcon = !!UserModel.get().preferences[preferenceKey];
+            }, function() {
+            });
+          };
+        },
+        templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/' +
+            'rhsPatientTableSelectColumns/rhsPatientTableSelectColumns.directive.html'
+      };
+    });

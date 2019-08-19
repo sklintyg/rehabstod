@@ -18,18 +18,18 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos.dto;
 
+import com.google.common.base.Splitter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.base.Splitter;
-
 /**
  * @author marced on 14/03/16.
  */
 public class DiagnosGrupp {
+
     public static final Pattern VALID_DIAGNOSGRUPP_ROW_FORMAT = Pattern.compile("^([A-Z0-9-,]+):(.+)");
     private static final int DIAGNOSKAPITEL_STRING = 1;
     private static final int GROUP_NAME = 2;
@@ -51,7 +51,6 @@ public class DiagnosGrupp {
      * "AXX-BXX,CXX-CXX:Some description".
      * This is mainly to accommodate simple ingestion of config from a flat file.
      *
-     * @param diagnosGruppString
      * @see DiagnosKapitel#VALID_DIAGNOSKAPITEL_ROW_FORMAT
      */
     public DiagnosGrupp(String diagnosGruppString) {
@@ -62,8 +61,8 @@ public class DiagnosGrupp {
             this.name = matcher.group(GROUP_NAME);
         } else {
             throw new IllegalArgumentException(
-                    "rangeString argument '" + diagnosGruppString + "' does not match expected format for a diagnosGrupp definition: "
-                            + VALID_DIAGNOSGRUPP_ROW_FORMAT.pattern());
+                "rangeString argument '" + diagnosGruppString + "' does not match expected format for a diagnosGrupp definition: "
+                    + VALID_DIAGNOSGRUPP_ROW_FORMAT.pattern());
         }
     }
 
@@ -71,9 +70,6 @@ public class DiagnosGrupp {
      * Return a list of matching diagnoskapitel's.
      * The kapitelListString must have the form "AXX-BXX,CXX-CXX" and the corresponding diagnoskapitel must be defined
      * in DiagnosKapitels.
-     *
-     * @param kapitelListString
-     * @return
      */
     private List<DiagnosKapitel> convertToKapitelList(String kapitelListString) {
         List<DiagnosKapitel> list = new ArrayList<>();

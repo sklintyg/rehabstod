@@ -18,6 +18,14 @@
  */
 package se.inera.intyg.rehabstod.auth.authorities.bootstrap;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -28,14 +36,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import se.inera.intyg.infra.security.authorities.AuthoritiesConfiguration;
 import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
-import se.inera.intyg.infra.security.common.model.*;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import se.inera.intyg.infra.security.common.model.Privilege;
+import se.inera.intyg.infra.security.common.model.RequestOrigin;
+import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.infra.security.common.model.Title;
+import se.inera.intyg.infra.security.common.model.TitleCode;
 
 //CHECKSTYLE:OFF MagicNumber
 @RunWith(MockitoJUnitRunner.class)
@@ -47,7 +52,7 @@ public class SecurityConfigurationLoaderMinimalTest {
 
     @InjectMocks
     SecurityConfigurationLoader loader = new SecurityConfigurationLoader(AUTHORITIES_CONFIGURATION_TEST_FILE,
-            FEATURES_CONFIGURATION_TEST_FILE);
+        FEATURES_CONFIGURATION_TEST_FILE);
 
     @Before
     public void setupAuthoritiesConfiguration() {

@@ -28,7 +28,9 @@ public class GetSjukfallForPatientRequest {
     private LocalDate aktivtDatum;
     private String patientId;
 
-    /** The sole constructor. **/
+    /**
+     * The sole constructor.
+     **/
     public GetSjukfallForPatientRequest() {
         aktivtDatum = LocalDate.now();
     }

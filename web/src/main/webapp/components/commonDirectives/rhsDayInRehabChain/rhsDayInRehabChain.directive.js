@@ -16,34 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('rehabstodApp').directive('rhsDayInRehabChain', [ 'moment', function(moment) {
-    'use strict';
+angular.module('rehabstodApp').directive('rhsDayInRehabChain', ['moment', function(moment) {
+  'use strict';
 
-    return {
-        restrict: 'E',
-        scope: {
-            items: '='
-        },
-        templateUrl: '/components/commonDirectives/rhsDayInRehabChain/rhsDayInRehabChain.directive.html',
-        link: function($scope) {
-            $scope.shouldDisplay = function() {
-                return $scope.items && $scope.items.length > 0 && $scope.items[0].isActive;
-            };
+  return {
+    restrict: 'E',
+    scope: {
+      items: '='
+    },
+    templateUrl: '/components/commonDirectives/rhsDayInRehabChain/rhsDayInRehabChain.directive.html',
+    link: function($scope) {
+      $scope.shouldDisplay = function() {
+        return $scope.items && $scope.items.length > 0 && $scope.items[0].isActive;
+      };
 
-            $scope.getDagRehabKedja = function() {
-                if ($scope.shouldDisplay()) {
-                    var started = moment($scope.items[0].sjukfall.start);
-                    var duration = moment.duration(moment().diff(started));
-                    var years = duration.years();
-                    var durationMinusWholeYears = duration.subtract(years, 'y');
-                    var days = Math.floor(durationMinusWholeYears.asDays());
+      $scope.getDagRehabKedja = function() {
+        if ($scope.shouldDisplay()) {
+          var started = moment($scope.items[0].sjukfall.start);
+          var duration = moment.duration(moment().diff(started));
+          var years = duration.years();
+          var durationMinusWholeYears = duration.subtract(years, 'y');
+          var days = Math.floor(durationMinusWholeYears.asDays());
 
-                    return ((years > 0) ? years + ' år ' : '') + days + ' dagar';
-
-                }
-
-            };
+          return ((years > 0) ? years + ' år ' : '') + days + ' dagar';
 
         }
-    };
-} ]);
+
+      };
+
+    }
+  };
+}]);

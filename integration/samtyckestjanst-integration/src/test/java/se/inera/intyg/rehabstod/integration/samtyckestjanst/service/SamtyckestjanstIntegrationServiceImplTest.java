@@ -19,8 +19,12 @@
 
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.service;
 
-import java.util.UUID;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doAnswer;
 
+import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,17 +33,11 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.client.SamtyckestjanstClientService;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
 import se.riv.informationsecurity.authorization.consent.v2.CheckResultType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultType;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doAnswer;
 
 /**
  * @author Magnus Ekstrand on 2018-10-11.
@@ -61,16 +59,17 @@ public class SamtyckestjanstIntegrationServiceImplTest {
 
     @Before
     public void setUp() {
-        doAnswer(new Answer<CheckConsentResponseType>(){
+        doAnswer(new Answer<CheckConsentResponseType>() {
             @Override
-            public CheckConsentResponseType answer(InvocationOnMock invocation){
+            public CheckConsentResponseType answer(InvocationOnMock invocation) {
                 if (invocation.getArgumentAt(0, String.class).equals(VG_HSAID_2)
-                        && invocation.getArgumentAt(1, String.class).equals(VE_HSAID_2)) {
+                    && invocation.getArgumentAt(1, String.class).equals(VE_HSAID_2)) {
                     return createCheckConsentResponseType(true);
                 } else {
                     return createCheckConsentResponseType(false);
                 }
-            }}).when(samtyckestjanstClientService).checkConsent(anyString(), anyString(), anyString(), anyString());
+            }
+        }).when(samtyckestjanstClientService).checkConsent(anyString(), anyString(), anyString(), anyString());
     }
 
     @Test

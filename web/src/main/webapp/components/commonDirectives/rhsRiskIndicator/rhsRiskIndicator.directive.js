@@ -18,17 +18,17 @@
  */
 
 angular.module('rehabstodApp')
-    .directive('rhsRiskIndicator',
+.directive('rhsRiskIndicator',
     function() {
-        'use strict';
+      'use strict';
 
-        return {
-            restrict: 'E',
-            scope: {
-                description: '=',
-                category: '='
-            },
-            templateUrl: '/components/commonDirectives/rhsRiskIndicator/rhsRiskIndicator.directive.html'
-        };
+      return {
+        restrict: 'E',
+        scope: {
+          description: '=',
+          category: '='
+        },
+        templateUrl: '/components/commonDirectives/rhsRiskIndicator/rhsRiskIndicator.directive.html'
+      };
     });
 

@@ -27,27 +27,26 @@
  */
 angular.module('rehabstodApp').provider('restErrorResponseInterceptor',
     function() {
-        'use strict';
+      'use strict';
 
+      /**
+       * Mandatory provider $get function. here we can inject the dependencies the
+       * actual implementation needs.
+       */
+      this.$get = ['$q', '$rootScope', function($q, $rootScope) {
 
-        /**
-         * Mandatory provider $get function. here we can inject the dependencies the
-         * actual implementation needs.
-         */
-        this.$get = ['$q', '$rootScope', function($q, $rootScope) {
-
-            function responseError(rejection) {
-                if (rejection.status === 500 || rejection.status === -1) {
-                    if (rejection.config.errorMessageConfig) {
-                        $rootScope.$emit('rehab.rest.exception', rejection.config.errorMessageConfig);
-                    }
-                }
-
-                return $q.reject(rejection);
+        function responseError(rejection) {
+          if (rejection.status === 500 || rejection.status === -1) {
+            if (rejection.config.errorMessageConfig) {
+              $rootScope.$emit('rehab.rest.exception', rejection.config.errorMessageConfig);
             }
+          }
 
-            return {
-                'responseError': responseError
-            };
-        }];
+          return $q.reject(rejection);
+        }
+
+        return {
+          'responseError': responseError
+        };
+      }];
     });

@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.integration.sparrtjanst.stub;
 
+import com.google.common.base.Strings;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -25,14 +26,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
-
-import com.google.common.base.Strings;
 
 /**
  * Simple embedded redis cache store for blocks.
@@ -87,7 +85,7 @@ public class SparrtjanstStubStore {
     }
 
     public boolean isBlockedAtDate(String personId, LocalDate queryDateFrom, LocalDate queryDateTo,
-                                   String vardGivareId, String vardEnhetId) {
+        String vardGivareId, String vardEnhetId) {
         return getAllForPerson(personId).stream()
             .filter(blockData -> {
                 boolean isVg = Strings.isNullOrEmpty(blockData.getVardGivareId()) || blockData.getVardGivareId().equals(vardGivareId);
@@ -107,7 +105,7 @@ public class SparrtjanstStubStore {
 
     private String assembleCacheKey(String vgHsaId, String veHsaId, String patientId) {
         return Stream.of(SparrtjanstStubConfiguration.CACHE_NAME, vgHsaId, veHsaId, patientId)
-                .collect(Collectors.joining(":"));
+            .collect(Collectors.joining(":"));
     }
 
     // CHECKSTYLE:OFF MagicNumber
@@ -127,7 +125,7 @@ public class SparrtjanstStubStore {
     private boolean isWithinInterval(BlockData blockData, LocalDate queryDate) {
         // Either touches start/end or is in within
         return queryDate.isEqual(blockData.getBlockFrom()) || queryDate.isEqual(blockData.getBlockTo())
-                || (queryDate.isAfter(blockData.getBlockFrom()) && queryDate.isBefore(blockData.getBlockTo()));
+            || (queryDate.isAfter(blockData.getBlockFrom()) && queryDate.isBefore(blockData.getBlockTo()));
     }
 
 }

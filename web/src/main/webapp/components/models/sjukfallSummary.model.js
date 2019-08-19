@@ -19,79 +19,79 @@
 
 angular.module('rehabstodApp').factory('SjukfallSummaryModel',
     function() {
-        'use strict';
+      'use strict';
 
-        var data = {};
+      var data = {};
 
-        _reset();
+      _reset();
 
-        function _reset() {
-            data.total = null;
-            data.genders = null;
-            data.groups = [];
-            data.diagnoseGroupData = [];
-            data.genderData = [];
-            data.sickLeaveDegreeData = [];
-            data.hasError = false;
-            return data;
+      function _reset() {
+        data.total = null;
+        data.genders = null;
+        data.groups = [];
+        data.diagnoseGroupData = [];
+        data.genderData = [];
+        data.sickLeaveDegreeData = [];
+        data.hasError = false;
+        return data;
+      }
+
+      function _set(newData) {
+        data.hasError = false;
+        //reformat for charting purposes
+        data.total = newData.total;
+        data.genders = newData.genders;
+        data.groups = newData.groups;
+        data.sickLeaveDegrees = newData.sickLeaveDegrees;
+
+        data.totalData = [{
+          name: '',
+          y: newData.total
+        }];
+        data.diagnoseGroupData = [];
+        angular.forEach(data.groups, function(group) {
+          data.diagnoseGroupData.push(
+              {
+                id: group.grupp.id,
+                name: group.grupp.name,
+                y: group.count
+              });
+        });
+
+        data.genderData = [];
+        angular.forEach(data.genders, function(genderStat) {
+          data.genderData.push(
+              {
+                id: genderStat.gender,
+                name: genderStat.gender,
+                y: genderStat.count
+              });
+        });
+
+        data.sickLeaveDegreeGroupData = [];
+        angular.forEach(data.sickLeaveDegrees, function(sickLeaveDegree) {
+          data.sickLeaveDegreeGroupData.push(
+              {
+                id: sickLeaveDegree.id,
+                name: sickLeaveDegree.name,
+                y: sickLeaveDegree.count
+              });
+        });
+      }
+
+      function _get() {
+        return data;
+      }
+
+      return {
+        reset: _reset,
+        set: _set,
+        get: _get,
+
+        setError: function() {
+          _reset();
+          data.hasError = true;
         }
-
-        function _set(newData) {
-            data.hasError = false;
-            //reformat for charting purposes
-            data.total = newData.total;
-            data.genders = newData.genders;
-            data.groups = newData.groups;
-            data.sickLeaveDegrees = newData.sickLeaveDegrees;
-
-            data.totalData = [{
-                name: '',
-                y: newData.total
-            }];
-            data.diagnoseGroupData = [];
-            angular.forEach(data.groups, function(group) {
-                data.diagnoseGroupData.push(
-                    {
-                        id: group.grupp.id,
-                        name: group.grupp.name,
-                        y: group.count
-                    });
-            });
-
-            data.genderData = [];
-            angular.forEach(data.genders, function(genderStat) {
-                data.genderData.push(
-                    {
-                        id: genderStat.gender,
-                        name: genderStat.gender,
-                        y: genderStat.count
-                    });
-            });
-
-            data.sickLeaveDegreeGroupData = [];
-            angular.forEach(data.sickLeaveDegrees, function(sickLeaveDegree) {
-                data.sickLeaveDegreeGroupData.push(
-                    {
-                        id: sickLeaveDegree.id,
-                        name: sickLeaveDegree.name,
-                        y: sickLeaveDegree.count
-                    });
-            });
-        }
-
-        function _get() {
-            return data;
-        }
-
-        return {
-            reset: _reset,
-            set: _set,
-            get: _get,
-
-            setError: function() {
-                _reset();
-                data.hasError = true;
-            }
-        };
+      };
     }
 );

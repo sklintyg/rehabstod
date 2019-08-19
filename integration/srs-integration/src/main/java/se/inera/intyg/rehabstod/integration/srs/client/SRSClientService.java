@@ -18,10 +18,9 @@
  */
 package se.inera.intyg.rehabstod.integration.srs.client;
 
+import java.util.List;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
-
-import java.util.List;
 
 /**
  * Created by eriklupander on 2017-10-31.

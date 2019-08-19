@@ -22,6 +22,7 @@ package se.inera.intyg.rehabstod.web.controller.api;
  * Created by marced on 29/03/16.
  */
 public class RehabExportException extends RuntimeException {
+
     private Exception exception;
 
     public RehabExportException(String msg, Exception e) {

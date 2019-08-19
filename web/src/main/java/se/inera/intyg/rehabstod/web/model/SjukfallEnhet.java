@@ -19,10 +19,9 @@
 package se.inera.intyg.rehabstod.web.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
-
 import java.time.LocalDate;
 import java.util.List;
+import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 
 /**
  * Created by eriklupander on 2016-02-19.
@@ -60,7 +59,6 @@ public class SjukfallEnhet {
 
     private RiskSignal riskSignal;
     private boolean nyligenAvslutat;
-
 
     // - - - getters and setters
 

@@ -18,35 +18,35 @@
  */
 
 angular.module('rehabstodApp').directive('rhsFloatingScroll', function() {
-    'use strict';
-    return {
-        restrict: 'A',
-        link: function(scope, el, attrs) {
+  'use strict';
+  return {
+    restrict: 'A',
+    link: function(scope, el, attrs) {
 
-            function _requestUpdate() {
-                $(el).floatingScroll('update');
-            }
+      function _requestUpdate() {
+        $(el).floatingScroll('update');
+      }
 
-            $(el).floatingScroll('init');
-            scope.element = el[0];
+      $(el).floatingScroll('init');
+      scope.element = el[0];
 
-            // We need to update the floating scrollbar when height changes.
-            scope.$watch('element.clientHeight', function(newVal, oldVal) {
-                if (newVal !== oldVal) {
-                    _requestUpdate();
-                }
-            });
-
-            // Keep reference to element that scrolls page
-            // We also need to update the floating scrollbar when that happens.
-            var scrollSourceElement = $('#' + attrs.scrollParentElementId);
-            scrollSourceElement.on('scroll', _requestUpdate);
-
-            //Clean up jquery component and event listeners
-            scope.$on('$destroy', function() {
-                $(el).floatingScroll('destroy');
-                scrollSourceElement.off('scroll');
-            });
+      // We need to update the floating scrollbar when height changes.
+      scope.$watch('element.clientHeight', function(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          _requestUpdate();
         }
-    };
+      });
+
+      // Keep reference to element that scrolls page
+      // We also need to update the floating scrollbar when that happens.
+      var scrollSourceElement = $('#' + attrs.scrollParentElementId);
+      scrollSourceElement.on('scroll', _requestUpdate);
+
+      //Clean up jquery component and event listeners
+      scope.$on('$destroy', function() {
+        $(el).floatingScroll('destroy');
+        scrollSourceElement.off('scroll');
+      });
+    }
+  };
 });

@@ -22,11 +22,9 @@ package se.inera.intyg.rehabstod.integration.wc.stub;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsType;
@@ -40,7 +38,7 @@ import se.riv.clinicalprocess.healthcond.certificate.v3.ResultCodeType;
  * Created by marced on 2019-05-17.
  */
 @Service
-@Profile({ "rhs-wc-stub" })
+@Profile({"rhs-wc-stub"})
 public class GetCertificateAdditionsStub implements GetCertificateAdditionsResponderInterface {
 
     @Autowired
@@ -48,7 +46,7 @@ public class GetCertificateAdditionsStub implements GetCertificateAdditionsRespo
 
     @Override
     public GetCertificateAdditionsResponseType getCertificateAdditions(String logicalAddress,
-            GetCertificateAdditionsType getCertificateAdditionsType) {
+        GetCertificateAdditionsType getCertificateAdditionsType) {
         GetCertificateAdditionsResponseType response = new GetCertificateAdditionsResponseType();
         response.setResult(ResultCodeType.OK);
         response.getAdditions().addAll(getItems(getCertificateAdditionsType));
@@ -57,8 +55,8 @@ public class GetCertificateAdditionsStub implements GetCertificateAdditionsRespo
 
     private Collection<IntygAdditionsType> getItems(GetCertificateAdditionsType getCertificateAdditionsType) {
         return getCertificateAdditionsType.getIntygsId().stream()
-                .map(this::getResultForIntygId)
-                .collect(Collectors.toList());
+            .map(this::getResultForIntygId)
+            .collect(Collectors.toList());
     }
 
     private IntygAdditionsType getResultForIntygId(IntygId intyg) {

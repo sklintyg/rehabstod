@@ -18,66 +18,63 @@
  */
 
 describe('Directive: RhsStatPanel', function() {
-    'use strict';
+  'use strict';
 
-    // load the controller's module
-    beforeEach(angular.mock.module('rehabstodApp', function($provide) {
-        $provide.value('pieChartBaseConfig', { base: 'base'});
-    }));
-    beforeEach(module('htmlTemplates'));
+  // load the controller's module
+  beforeEach(angular.mock.module('rehabstodApp', function($provide) {
+    $provide.value('pieChartBaseConfig', {base: 'base'});
+  }));
+  beforeEach(module('htmlTemplates'));
 
-    var scope, compile;
-    var SjukfallSummaryModel;
-    var UserModel;
-    var pieChartBaseConfig;
-    var messageService;
-    var testData = {
-        total: 100, hasError: false, genders: [], groups: [], diagnoseGroupData: [], genderData: [], totalData: [{
-            name: '',
-            y: 100
-        }]
-    };
+  var scope, compile;
+  var SjukfallSummaryModel;
+  var UserModel;
+  var pieChartBaseConfig;
+  var messageService;
+  var testData = {
+    total: 100, hasError: false, genders: [], groups: [], diagnoseGroupData: [], genderData: [], totalData: [{
+      name: '',
+      y: 100
+    }]
+  };
 
+  // Initialize the controller and a mock scope
+  beforeEach(inject(function($compile, $rootScope, _SjukfallSummaryModel_, _UserModel_,
+      _pieChartBaseConfig_, _messageService_) {
+    compile = $compile;
+    scope = $rootScope.$new();
+    SjukfallSummaryModel = _SjukfallSummaryModel_;
+    UserModel = _UserModel_;
+    pieChartBaseConfig = _pieChartBaseConfig_;
+    messageService = _messageService_;
 
-    // Initialize the controller and a mock scope
-    beforeEach(inject(function($compile, $rootScope, _SjukfallSummaryModel_, _UserModel_,
-        _pieChartBaseConfig_, _messageService_) {
-        compile = $compile;
-        scope = $rootScope.$new();
-        SjukfallSummaryModel = _SjukfallSummaryModel_;
-        UserModel = _UserModel_;
-        pieChartBaseConfig = _pieChartBaseConfig_;
-        messageService = _messageService_;
+  }));
 
-    }));
+  it('should extend base piechart config', function() {
 
-
-    it('should extend base piechart config', function() {
-
-        // Arrange
-        spyOn(SjukfallSummaryModel, 'get').and.callFake(function() {
-            return testData;
-        });
-
-        spyOn(UserModel, 'get').and.callFake(function() {
-            return {isLakare: true};
-        });
-
-
-        // Act
-        var element = compile('<rhs-stat-panel></rhs-stat-panel>')(scope);
-        scope.$digest();
-
-        var elementScope = element.isolateScope() || element.scope();
-
-        // Assert
-        expect(SjukfallSummaryModel.get).toHaveBeenCalled();
-        expect(elementScope.model).toBe(testData);
-        expect(elementScope.totalPaEnhetStatConfig).toBeDefined();
-        expect(elementScope.genderStatConfig).toBeDefined();
-        expect(elementScope.diagnoseStatConfig).toBeDefined();
-        expect(elementScope.diagnoseStatConfig.base).toEqual('base');
-        expect(elementScope.diagnoseStatConfig.legend.labelFormatter).toBeDefined();
-        expect(elementScope.sickLeaveDegreeStatConfig.legend.labelFormatter).toBeDefined();
+    // Arrange
+    spyOn(SjukfallSummaryModel, 'get').and.callFake(function() {
+      return testData;
     });
+
+    spyOn(UserModel, 'get').and.callFake(function() {
+      return {isLakare: true};
+    });
+
+    // Act
+    var element = compile('<rhs-stat-panel></rhs-stat-panel>')(scope);
+    scope.$digest();
+
+    var elementScope = element.isolateScope() || element.scope();
+
+    // Assert
+    expect(SjukfallSummaryModel.get).toHaveBeenCalled();
+    expect(elementScope.model).toBe(testData);
+    expect(elementScope.totalPaEnhetStatConfig).toBeDefined();
+    expect(elementScope.genderStatConfig).toBeDefined();
+    expect(elementScope.diagnoseStatConfig).toBeDefined();
+    expect(elementScope.diagnoseStatConfig.base).toEqual('base');
+    expect(elementScope.diagnoseStatConfig.legend.labelFormatter).toBeDefined();
+    expect(elementScope.sickLeaveDegreeStatConfig.legend.labelFormatter).toBeDefined();
+  });
 });

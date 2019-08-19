@@ -18,19 +18,19 @@
  */
 
 angular.module('rehabstodApp')
-    .controller('footerCtrl',
-        function($scope, $uibModal) {
-            'use strict';
+.controller('footerCtrl',
+    function($scope, $uibModal) {
+      'use strict';
 
-            $scope.openInfoDialog = function($event, template) {
-                if ($event) {
-                    $event.preventDefault();
-                }
-                $uibModal.open({
-                    templateUrl: '/app/footer/footer.' + template + '.html',
-                    size: 'md',
-                    windowClass: 'footer-info-dialog-modal'
-                });
-            };
-
+      $scope.openInfoDialog = function($event, template) {
+        if ($event) {
+          $event.preventDefault();
+        }
+        $uibModal.open({
+          templateUrl: '/app/footer/footer.' + template + '.html',
+          size: 'md',
+          windowClass: 'footer-info-dialog-modal'
         });
+      };
+
+    });

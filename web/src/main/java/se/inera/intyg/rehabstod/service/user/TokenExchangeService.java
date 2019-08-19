@@ -26,20 +26,16 @@ public interface TokenExchangeService {
     /**
      * Given a SAMLCredential, exchange the underlying assertion for a JWT token.
      *
-     * @param samlCredential
-     *            SAML Credential
-     * @return
-     *         RehabstodUserTokens with access and refresh token.
+     * @param samlCredential SAML Credential
+     * @return RehabstodUserTokens with access and refresh token.
      */
     RehabstodUserTokens exchange(SAMLCredential samlCredential);
 
     /**
      * Request new access token for a users given refresh token.
      *
-     * @param tokens
-     *            RehabstodUserTokens that includes a refresh token
-     * @return
-     *         A new RehabUserTokens with updated access token and expire time
+     * @param tokens RehabstodUserTokens that includes a refresh token
+     * @return A new RehabUserTokens with updated access token and expire time
      */
     RehabstodUserTokens refresh(RehabstodUserTokens tokens);
 }

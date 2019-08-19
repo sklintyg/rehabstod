@@ -27,7 +27,7 @@ angular.module('rehabstodApp').directive('serviceBanner', function() {
     controller: function($scope, APP_CONFIG) {
 
       function getClass(priority) {
-        switch(priority) {
+        switch (priority) {
         case 'HOG':
           return 'alert-danger';
         case 'MEDEL':

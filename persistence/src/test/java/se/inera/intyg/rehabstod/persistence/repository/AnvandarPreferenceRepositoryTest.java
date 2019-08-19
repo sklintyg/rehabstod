@@ -18,6 +18,11 @@
  */
 package se.inera.intyg.rehabstod.persistence.repository;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
+import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigTest;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
-
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 
 
 /**

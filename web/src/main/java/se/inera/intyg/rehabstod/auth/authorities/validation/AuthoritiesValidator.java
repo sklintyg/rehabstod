@@ -40,9 +40,6 @@ public final class AuthoritiesValidator {
 
     /**
      * Create a expectation context with just a user and no intygstyp, i.e intygstyp doesnt' matter in validations.
-     *
-     * @param user
-     * @return
      */
     public AuthExpectationSpecification given(IntygUser user) {
         return new AuthExpectationSpecImpl(user, null);

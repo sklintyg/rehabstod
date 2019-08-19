@@ -20,28 +20,30 @@ package se.inera.intyg.rehabstod.service.export.util;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-import se.inera.intyg.rehabstod.testutil.TestDataGen;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.web.model.Patient;
-
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Test;
+import se.inera.intyg.rehabstod.testutil.TestDataGen;
+import se.inera.intyg.rehabstod.web.model.Patient;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /**
  * Created by eriklupander on 2016-02-24.
  */
 public class ExportUtilTest {
+
     // CHECKSTYLE:OFF MagicNumber
     @Test
     public void testEmptyListReturnedForNoneMatching() {
-        List<SjukfallEnhet> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr2", "pnr3"), buildNoneMatchingInternalSjukfall());
+        List<SjukfallEnhet> sjukfallList = ExportUtil
+            .sortForExport(Arrays.asList("pnr1", "pnr2", "pnr3"), buildNoneMatchingInternalSjukfall());
         assertEquals(0, sjukfallList.size());
     }
 
     @Test
     public void testListReturnedInExpectedOrder() {
-        List<SjukfallEnhet> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr2", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
+        List<SjukfallEnhet> sjukfallList = ExportUtil
+            .sortForExport(Arrays.asList("pnr1", "pnr2", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
         assertEquals(3, sjukfallList.size());
         assertEquals("pnr1", sjukfallList.get(0).getPatient().getId());
         assertEquals("pnr2", sjukfallList.get(1).getPatient().getId());
@@ -50,7 +52,8 @@ public class ExportUtilTest {
 
     @Test
     public void testListReturnedInExpectedOrderAndOneIsFilteredAway() {
-        List<SjukfallEnhet> sjukfallList = ExportUtil.sortForExport(Arrays.asList("pnr1", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
+        List<SjukfallEnhet> sjukfallList = ExportUtil
+            .sortForExport(Arrays.asList("pnr1", "pnr3"), buildMatchingInternalSjukfallInOtherOrder());
         assertEquals(2, sjukfallList.size());
         assertEquals("pnr1", sjukfallList.get(0).getPatient().getId());
         assertEquals("pnr3", sjukfallList.get(1).getPatient().getId());

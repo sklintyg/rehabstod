@@ -17,36 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsPatientHistoryTimeLineItem', function() {
-    'use strict';
+  'use strict';
 
-    return {
-        restrict: 'E',
-        scope: {
-            historyItem: '=',
-            index: '=',
-            isLast: '=',
-            onSelect: '&'
-        },
-        templateUrl: '/components/commonDirectives/rhsPatientHistoryTimeLineItem/rhsPatientHistoryTimeLineItem.directive.html',
-        link: function($scope) {
+  return {
+    restrict: 'E',
+    scope: {
+      historyItem: '=',
+      index: '=',
+      isLast: '=',
+      onSelect: '&'
+    },
+    templateUrl: '/components/commonDirectives/rhsPatientHistoryTimeLineItem/rhsPatientHistoryTimeLineItem.directive.html',
+    link: function($scope) {
 
-            $scope.radius = 30;
-            $scope.center = $scope.radius + 2;
+      $scope.radius = 30;
+      $scope.center = $scope.radius + 2;
 
-            $scope.getCircleY = function() {
-                return $scope.radius + 30;
-            };
-            $scope.getCircleTextY1 = function() {
-                return $scope.getCircleY() - 4;
-            };
-            $scope.getCircleTextY2 = function() {
-                return $scope.getCircleTextY1() + 14;
-            };
+      $scope.getCircleY = function() {
+        return $scope.radius + 30;
+      };
+      $scope.getCircleTextY1 = function() {
+        return $scope.getCircleY() - 4;
+      };
+      $scope.getCircleTextY2 = function() {
+        return $scope.getCircleTextY1() + 14;
+      };
 
-            $scope.showYear = function() {
-                return $scope.historyItem.year !== 0;
-            };
+      $scope.showYear = function() {
+        return $scope.historyItem.year !== 0;
+      };
 
-        }
-    };
+    }
+  };
 });

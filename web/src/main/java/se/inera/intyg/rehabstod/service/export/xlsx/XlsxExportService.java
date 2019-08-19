@@ -20,7 +20,6 @@ package se.inera.intyg.rehabstod.service.export.xlsx;
 
 import java.io.IOException;
 import java.util.List;
-
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;

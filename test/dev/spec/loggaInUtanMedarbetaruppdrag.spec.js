@@ -29,17 +29,17 @@ var WelcomePage = rhsTestTools.pages.welcomePage;
 
 describe('Logga in som Pelle Uppdragslös ', function() {
 
-    beforeEach(function() {
-        browser.ignoreSynchronization = false;
-    });
+  beforeEach(function() {
+    browser.ignoreSynchronization = false;
+  });
 
-    it('Öppna och stäng byt enhetsdialogen', function() {
-        WelcomePage.get();
-        specHelper.waitForAngularTestability();
-        WelcomePage.login('pelle-uppdragslos_');
-        specHelper.waitForAngularTestability();
-        expect(errorPage.isAt()).toBeTruthy();
-        expect(errorPage.isMedarbetaruppdragSaknasShowing()).toBeTruthy();
-    });
+  it('Öppna och stäng byt enhetsdialogen', function() {
+    WelcomePage.get();
+    specHelper.waitForAngularTestability();
+    WelcomePage.login('pelle-uppdragslos_');
+    specHelper.waitForAngularTestability();
+    expect(errorPage.isAt()).toBeTruthy();
+    expect(errorPage.isMedarbetaruppdragSaknasShowing()).toBeTruthy();
+  });
 
 });

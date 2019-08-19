@@ -29,14 +29,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AdditionType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsResponseType;
@@ -67,6 +65,7 @@ public class WcIntegrationServiceImplTest {
     public void setUp() throws Exception {
         ReflectionTestUtils.setField(testee, "maxDaysOld", 10);
     }
+
     @Test
     public void testGetCertificateAdditionsSuccessNoInput() {
         assertEquals(0, testee.getCertificateAdditionsForIntyg(null).size());
@@ -80,19 +79,19 @@ public class WcIntegrationServiceImplTest {
 
         // 2 that should match, and 1 besvarad and 1 obesvarad but to old
         result.getAdditions()
-                .add(createIntygAdditionType(INTYGS_ID_1, Arrays.asList(
-                        createAdditionType(StatusType.OBESVARAD, LocalDateTime.now()),
-                        createAdditionType(StatusType.OBESVARAD, LocalDateTime.now().minusDays(2)),
-                        createAdditionType(StatusType.OBESVARAD, LocalDateTime.now().minusMonths(999)),
-                        createAdditionType(StatusType.BESVARAD, LocalDateTime.now()))));
+            .add(createIntygAdditionType(INTYGS_ID_1, Arrays.asList(
+                createAdditionType(StatusType.OBESVARAD, LocalDateTime.now()),
+                createAdditionType(StatusType.OBESVARAD, LocalDateTime.now().minusDays(2)),
+                createAdditionType(StatusType.OBESVARAD, LocalDateTime.now().minusMonths(999)),
+                createAdditionType(StatusType.BESVARAD, LocalDateTime.now()))));
         // obesvarad but to old
         result.getAdditions()
-                .add(createIntygAdditionType(INTYGS_ID_2,
-                        Arrays.asList(createAdditionType(StatusType.OBESVARAD, LocalDateTime.now().minusMonths(999)))));
+            .add(createIntygAdditionType(INTYGS_ID_2,
+                Arrays.asList(createAdditionType(StatusType.OBESVARAD, LocalDateTime.now().minusMonths(999)))));
         // besvarad
         result.getAdditions()
-                .add(createIntygAdditionType(INTYGS_ID_3,
-                        Arrays.asList(createAdditionType(StatusType.BESVARAD, LocalDateTime.now()))));
+            .add(createIntygAdditionType(INTYGS_ID_3,
+                Arrays.asList(createAdditionType(StatusType.BESVARAD, LocalDateTime.now()))));
 
         when(wcClientService.getCertificateAdditions(anyList())).thenReturn(result);
 

@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.integration.wc.client;
 
 import java.util.List;
-
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsResponseType;
 
 /**

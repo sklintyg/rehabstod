@@ -19,9 +19,15 @@
 
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.client;
 
+import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+
+import com.google.common.base.Strings;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,8 +36,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import com.google.common.base.Strings;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentType;
@@ -41,12 +45,6 @@ import se.riv.informationsecurity.authorization.consent.v2.ActionType;
 import se.riv.informationsecurity.authorization.consent.v2.ActorType;
 import se.riv.informationsecurity.authorization.consent.v2.AssertionTypeType;
 import se.riv.informationsecurity.authorization.consent.v2.ScopeType;
-
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
 
 /**
  * @author Magnus Ekstrand on 2018-10-18.
@@ -146,18 +144,19 @@ public class SamtyckestjanstClientServiceImplTest {
         LocalDateTime consentTo = consentFrom.minusDays(1);
 
         try {
-            testee.registerExtendedConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PERSONNUMMER, null, consentFrom, consentTo, registrationAction);
+            testee
+                .registerExtendedConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PERSONNUMMER, null, consentFrom, consentTo, registrationAction);
             fail("Date consentTo cannot be before consentFrom");
         } catch (IllegalArgumentException e) {
-           assertTrue(e.getMessage().startsWith("a consent's start date"));
+            assertTrue(e.getMessage().startsWith("a consent's start date"));
         }
 
         try {
             testee.registerExtendedConsent(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PERSONNUMMER, null, null, consentTo, registrationAction);
             fail("Date consentTo cannot be before consentFrom. "
-                    + "If consentFrom is not supplied Then "
-                    + "   it will be set, in client, to LocalDateTime.now() "
-                    + "   and consentTo must be in the future");
+                + "If consentFrom is not supplied Then "
+                + "   it will be set, in client, to LocalDateTime.now() "
+                + "   and consentTo must be in the future");
         } catch (IllegalArgumentException e) {
             assertTrue(e.getMessage().startsWith("a consent's start date"));
         }
@@ -165,7 +164,7 @@ public class SamtyckestjanstClientServiceImplTest {
     }
 
     private ActionType createActionType(String registeredBy, LocalDateTime registeredDate,
-                                        String requestedBy, LocalDateTime requestedDate) {
+        String requestedBy, LocalDateTime requestedDate) {
 
         ActionType registrationAction = new ActionType();
         registrationAction.setRegisteredBy(createActorType(registeredBy));

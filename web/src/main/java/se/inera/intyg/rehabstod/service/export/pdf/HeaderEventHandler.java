@@ -44,49 +44,49 @@ import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 public class HeaderEventHandler implements IEventHandler {
 
 
-  protected static final float LOGO_WIDTH = 25f;
-  protected static final float LOGO_ESTIMATED_HEIGHT = 15f;
+    protected static final float LOGO_WIDTH = 25f;
+    protected static final float LOGO_ESTIMATED_HEIGHT = 15f;
 
-  private PdfImageXObject logo;
-  private float footerFontSize;
-  private String printedByText;
-
-
-  public HeaderEventHandler(PdfImageXObject logo, String userName, String enhetsNamn, float footerFontSize) {
-    this.logo = logo;
-    this.footerFontSize = footerFontSize;
-    LocalDateTime now = LocalDateTime.now();
-    this.printedByText = String.format("%s %s                %s               Utskrift av %s",
-        YearMonthDateFormatter.print(now), HourMinuteFormatter.print(now), enhetsNamn, userName);
-  }
+    private PdfImageXObject logo;
+    private float footerFontSize;
+    private String printedByText;
 
 
-  @Override
-  public void handleEvent(Event event) {
-    if (!(event instanceof PdfDocumentEvent)) {
-      return;
+    public HeaderEventHandler(PdfImageXObject logo, String userName, String enhetsNamn, float footerFontSize) {
+        this.logo = logo;
+        this.footerFontSize = footerFontSize;
+        LocalDateTime now = LocalDateTime.now();
+        this.printedByText = String.format("%s %s                %s               Utskrift av %s",
+            YearMonthDateFormatter.print(now), HourMinuteFormatter.print(now), enhetsNamn, userName);
     }
 
-    PdfDocumentEvent docEvent = (PdfDocumentEvent) event;
-    PdfDocument pdf = docEvent.getDocument();
-    PdfPage page = docEvent.getPage();
 
-    Rectangle pageSize = page.getPageSize();
-    PdfCanvas pdfCanvas = new PdfCanvas(page.newContentStreamBefore(), page.getResources(), pdf);
-    Canvas canvas = new Canvas(pdfCanvas, pdf, pageSize);
+    @Override
+    public void handleEvent(Event event) {
+        if (!(event instanceof PdfDocumentEvent)) {
+            return;
+        }
 
-    // Logotyp
-    pdfCanvas.addXObject(logo, millimetersToPoints(PAGE_MARGIN_LEFT), pageSize.getTop() - PAGE_MARGIN_TOP - LOGO_ESTIMATED_HEIGHT,
-        millimetersToPoints(LOGO_WIDTH));
+        PdfDocumentEvent docEvent = (PdfDocumentEvent) event;
+        PdfDocument pdf = docEvent.getDocument();
+        PdfPage page = docEvent.getPage();
 
-    renderPrintedBy(pageSize, canvas);
+        Rectangle pageSize = page.getPageSize();
+        PdfCanvas pdfCanvas = new PdfCanvas(page.newContentStreamBefore(), page.getResources(), pdf);
+        Canvas canvas = new Canvas(pdfCanvas, pdf, pageSize);
 
-    pdfCanvas.release();
-  }
+        // Logotyp
+        pdfCanvas.addXObject(logo, millimetersToPoints(PAGE_MARGIN_LEFT), pageSize.getTop() - PAGE_MARGIN_TOP - LOGO_ESTIMATED_HEIGHT,
+            millimetersToPoints(LOGO_WIDTH));
 
-  private void renderPrintedBy(Rectangle pageSize, Canvas canvas) {
-    canvas.setFontSize(footerFontSize);
-    canvas.showTextAligned(printedByText, pageSize.getWidth() - millimetersToPoints(PAGE_MARGIN_RIGHT),
-        pageSize.getTop() - footerFontSize - PAGE_MARGIN_TOP, TextAlignment.RIGHT);
-  }
+        renderPrintedBy(pageSize, canvas);
+
+        pdfCanvas.release();
+    }
+
+    private void renderPrintedBy(Rectangle pageSize, Canvas canvas) {
+        canvas.setFontSize(footerFontSize);
+        canvas.showTextAligned(printedByText, pageSize.getWidth() - millimetersToPoints(PAGE_MARGIN_RIGHT),
+            pageSize.getTop() - footerFontSize - PAGE_MARGIN_TOP, TextAlignment.RIGHT);
+    }
 }

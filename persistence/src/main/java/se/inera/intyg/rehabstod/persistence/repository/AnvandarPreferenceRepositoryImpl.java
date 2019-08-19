@@ -18,15 +18,14 @@
  */
 package se.inera.intyg.rehabstod.persistence.repository;
 
-import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 
 /**
  * Created by eriklupander on 2015-08-05.
@@ -39,9 +38,9 @@ public class AnvandarPreferenceRepositoryImpl implements AnvandarPreferenceRepos
     @Override
     public Map<String, String> getAnvandarPreference(String hsaId) {
         List<AnvandarPreference> anvandarMetadataList = entityManager
-                .createQuery("SELECT am FROM AnvandarPreference am WHERE am.hsaId = :hsaId", AnvandarPreference.class)
-                .setParameter("hsaId", hsaId)
-                .getResultList();
+            .createQuery("SELECT am FROM AnvandarPreference am WHERE am.hsaId = :hsaId", AnvandarPreference.class)
+            .setParameter("hsaId", hsaId)
+            .getResultList();
 
         Map<String, String> map = new HashMap<>();
         for (AnvandarPreference am : anvandarMetadataList) {
@@ -53,10 +52,10 @@ public class AnvandarPreferenceRepositoryImpl implements AnvandarPreferenceRepos
     @Override
     public boolean exists(String hsaId, String key) {
         Number number = entityManager
-                .createQuery("SELECT COUNT(am) FROM AnvandarPreference am WHERE am.hsaId = :hsaId AND am.key = :key", Number.class)
-                .setParameter("hsaId", hsaId)
-                .setParameter("key", key)
-                .getSingleResult();
+            .createQuery("SELECT COUNT(am) FROM AnvandarPreference am WHERE am.hsaId = :hsaId AND am.key = :key", Number.class)
+            .setParameter("hsaId", hsaId)
+            .setParameter("key", key)
+            .getSingleResult();
 
         return number.longValue() > 0L;
     }
@@ -65,15 +64,15 @@ public class AnvandarPreferenceRepositoryImpl implements AnvandarPreferenceRepos
     public AnvandarPreference findByHsaIdAndKey(String hsaId, String key) {
         try {
             return entityManager
-                    .createQuery("SELECT am FROM AnvandarPreference am WHERE am.hsaId = :hsaId AND am.key = :key", AnvandarPreference.class)
-                    .setParameter("hsaId", hsaId)
-                    .setParameter("key", key)
-                    .getSingleResult();
+                .createQuery("SELECT am FROM AnvandarPreference am WHERE am.hsaId = :hsaId AND am.key = :key", AnvandarPreference.class)
+                .setParameter("hsaId", hsaId)
+                .setParameter("key", key)
+                .getSingleResult();
         } catch (NoResultException nre) {
             return null;
         } catch (NonUniqueResultException nure) {
             throw new IllegalStateException(
-                    "Query for AnvandarPreference returned multiple records, should never occur. hsaId: " + hsaId + ", key: " + key);
+                "Query for AnvandarPreference returned multiple records, should never occur. hsaId: " + hsaId + ", key: " + key);
         }
     }
 }

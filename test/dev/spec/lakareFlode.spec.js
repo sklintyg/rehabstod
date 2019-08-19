@@ -28,63 +28,62 @@ var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
 describe('Flöde som läkare', function() {
 
-    // Logga in
+  // Logga in
+  beforeEach(function() {
+    specHelper.login();
+  });
+
+  it('Bara se knappen mina sjukfall', function() {
+    expect(startPage.fullUnit.isPresent()).toBeFalsy();
+    expect(startPage.myUnit.isPresent()).toBeTruthy();
+  });
+
+  describe('gör urval', function() {
+
     beforeEach(function() {
-        specHelper.login();
+      startPage.clickMyUnit();
+      expect(sjukfallPage.isAt()).toBeTruthy();
+      expect(sjukfallPage.lakareFilter.isPresent()).toBeFalsy();
     });
 
-    it('Bara se knappen mina sjukfall', function() {
-        expect(startPage.fullUnit.isPresent()).toBeFalsy();
-        expect(startPage.myUnit.isPresent()).toBeTruthy();
+    it('Ladda om sidan och var kvar på sjukfallssidan', function() {
+      browser.refresh();
+
+      expect(sjukfallPage.isAt()).toBeTruthy();
+    });
+  });
+
+  describe('inget urval', function() {
+    it('Gå direkt till sjukfall', function() {
+      sjukfallPage.get();
+      specHelper.waitForAngularTestability();
+      expect(sjukfallPage.isAt()).toBeTruthy();
     });
 
-    describe('gör urval', function() {
+  });
 
-        beforeEach(function() {
-            startPage.clickMyUnit();
-            expect(sjukfallPage.isAt()).toBeTruthy();
-            expect(sjukfallPage.lakareFilter.isPresent()).toBeFalsy();
-        });
+  describe('gör urval och går tillbaka till start', function() {
 
-        it('Ladda om sidan och var kvar på sjukfallssidan', function() {
-            browser.refresh();
+    // Gör urval
+    beforeEach(function() {
+      startPage.clickMyUnit();
+      expect(sjukfallPage.isAt()).toBeTruthy();
 
-            expect(sjukfallPage.isAt()).toBeTruthy();
-        });
+      navigationHelper.goToStart();
     });
 
-    describe('inget urval', function() {
-        it('Gå direkt till sjukfall', function() {
-            sjukfallPage.get();
-            specHelper.waitForAngularTestability();
-            expect(sjukfallPage.isAt()).toBeTruthy();
-        });
-
+    it('Gå tillbaka till start och sedan försöka gå in igen utan att göra ett urval', function() {
+      // Gå till sjukfall
+      sjukfallPage.get();
+      specHelper.waitForAngularTestability();
+      expect(sjukfallPage.isAt()).toBeTruthy();
     });
 
-    describe('gör urval och går tillbaka till start', function() {
+  });
 
-        // Gör urval
-        beforeEach(function() {
-            startPage.clickMyUnit();
-            expect(sjukfallPage.isAt()).toBeTruthy();
-
-            navigationHelper.goToStart();
-        });
-
-        it('Gå tillbaka till start och sedan försöka gå in igen utan att göra ett urval', function() {
-            // Gå till sjukfall
-            sjukfallPage.get();
-            specHelper.waitForAngularTestability();
-            expect(sjukfallPage.isAt()).toBeTruthy();
-        });
-
-    });
-
-
-    // Logga ut
-    /*afterEach(function() {
-        specHelper.logout();
-    });*/
+  // Logga ut
+  /*afterEach(function() {
+      specHelper.logout();
+  });*/
 
 });

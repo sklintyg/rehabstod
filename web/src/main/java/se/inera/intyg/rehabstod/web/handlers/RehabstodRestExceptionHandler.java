@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.web.handlers;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -40,9 +39,9 @@ public class RehabstodRestExceptionHandler {
     @ResponseBody
     public RehabstodRestExceptionResponse serviceExceptionHandler(HttpServletRequest request, RehabstodServiceException e) {
         LOG.warn("Internal exception occured! Internal error code: {} Error message: {}", e.getErrorCode(),
-                e.getMessage());
-       RehabstodRestExceptionResponse response =
-                new RehabstodRestExceptionResponse(e.getErrorCode(), e.getMessage());
+            e.getMessage());
+        RehabstodRestExceptionResponse response =
+            new RehabstodRestExceptionResponse(e.getErrorCode(), e.getMessage());
         return response;
     }
 
@@ -52,7 +51,7 @@ public class RehabstodRestExceptionHandler {
     public RehabstodRestExceptionResponse serviceExceptionHandler(HttpServletRequest request, RuntimeException re) {
         LOG.error("Unhandled RuntimeException occured!", re);
         RehabstodRestExceptionResponse response = new RehabstodRestExceptionResponse(
-                RehabstodErrorCodeEnum.UNKNOWN_INTERNAL_PROBLEM, "Unhandled runtime exception");
+            RehabstodErrorCodeEnum.UNKNOWN_INTERNAL_PROBLEM, "Unhandled runtime exception");
         return response;
     }
 

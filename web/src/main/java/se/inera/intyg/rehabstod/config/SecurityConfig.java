@@ -51,7 +51,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 @EnableRedisHttpSession
 @ComponentScan("se.inera.intyg.infra.security.authorities")
-@ImportResource({ "classpath:securityContext.xml" })
+@ImportResource({"classpath:securityContext.xml"})
 public class SecurityConfig {
 
     private static final int RESTTEMPLATE_TIMEOUT_MS = 10000;
@@ -64,15 +64,15 @@ public class SecurityConfig {
         TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
 
         SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
-                .loadTrustMaterial(null, acceptingTrustStrategy)
-                .build();
+            .loadTrustMaterial(null, acceptingTrustStrategy)
+            .build();
 
         SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
 
         CloseableHttpClient httpClient = HttpClients.custom()
-                .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
-                .setSSLSocketFactory(csf)
-                .build();
+            .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+            .setSSLSocketFactory(csf)
+            .build();
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.setConnectionRequestTimeout(RESTTEMPLATE_TIMEOUT_MS);
         requestFactory.setConnectTimeout(RESTTEMPLATE_TIMEOUT_MS);
@@ -97,9 +97,9 @@ public class SecurityConfig {
     //
     private List<RequestMatcher> antMatchers(String path, HttpMethod... methods) {
         return Stream.of(methods)
-                .map(Enum::name)
-                .map(m -> new AntPathRequestMatcher(path, m, false))
-                .collect(Collectors.toList());
+            .map(Enum::name)
+            .map(m -> new AntPathRequestMatcher(path, m, false))
+            .collect(Collectors.toList());
     }
 
 }

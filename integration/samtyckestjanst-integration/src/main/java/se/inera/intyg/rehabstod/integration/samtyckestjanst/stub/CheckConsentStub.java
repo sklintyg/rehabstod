@@ -20,6 +20,9 @@ package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
@@ -28,10 +31,6 @@ import se.riv.informationsecurity.authorization.consent.v2.AssertionTypeType;
 import se.riv.informationsecurity.authorization.consent.v2.CheckResultType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultCodeType;
 import se.riv.informationsecurity.authorization.consent.v2.ResultType;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Magnus Ekstrand on 2018-10-10.
@@ -43,17 +42,17 @@ public class CheckConsentStub implements CheckConsentResponderInterface {
 
     @Override
     public CheckConsentResponseType checkConsent(String logicalAddress,
-                                                 CheckConsentType parameters) {
+        CheckConsentType parameters) {
 
         validate(logicalAddress, parameters);
 
         CheckResultType result = new CheckResultType();
         result.setAssertionType(AssertionTypeType.CONSENT); // fast värde enl. krav
         result.setHasConsent(store.hasConsent(
-                parameters.getAccessingActor().getCareProviderId(),
-                parameters.getAccessingActor().getCareUnitId(),
-                parameters.getPatientId().getExtension(),
-                LocalDate.now()));
+            parameters.getAccessingActor().getCareProviderId(),
+            parameters.getAccessingActor().getCareUnitId(),
+            parameters.getPatientId().getExtension(),
+            LocalDate.now()));
 
         ResultType resultType = new ResultType();
         resultType.setResultCode(ResultCodeType.OK);

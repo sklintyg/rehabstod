@@ -30,64 +30,62 @@ var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
 describe('Logga in som Kerstin Johansson', function() {
 
-    beforeEach(function() {
-        specHelper.login('TSTNMT2321000156-105W_TSTNMT2321000156-105P', 'TSTNMT2321000156-105P');
-    });
+  beforeEach(function() {
+    specHelper.login('TSTNMT2321000156-105W_TSTNMT2321000156-105P', 'TSTNMT2321000156-105P');
+  });
 
-    it('Öppna och stäng byt enhetsdialogen', function() {
-        startPage.clickBytVardenhet();
+  it('Öppna och stäng byt enhetsdialogen', function() {
+    startPage.clickBytVardenhet();
 
-        expect(startPage.closeBytVardenhet().isPresent()).toBeTruthy();
+    expect(startPage.closeBytVardenhet().isPresent()).toBeTruthy();
 
-        startPage.clickCloseBytVardenhet();
+    startPage.clickCloseBytVardenhet();
 
-        expect(startPage.closeBytVardenhet().isPresent()).toBeFalsy();
-    });
+    expect(startPage.closeBytVardenhet().isPresent()).toBeFalsy();
+  });
 
-    it('Byt enhet på startsidan', function() {
-        bytEnhet();
-    });
+  it('Byt enhet på startsidan', function() {
+    bytEnhet();
+  });
 
-    it('Byt enhet på sjukfallssidan', function() {
-        startPage.clickFullUnit();
-        expect(sjukfallPage.isAt()).toBeTruthy();
+  it('Byt enhet på sjukfallssidan', function() {
+    startPage.clickFullUnit();
+    expect(sjukfallPage.isAt()).toBeTruthy();
 
-        bytEnhet();
+    bytEnhet();
 
-        expect(sjukfallPage.isAt()).toBeTruthy();
-    });
+    expect(sjukfallPage.isAt()).toBeTruthy();
+  });
 
-    it('Byt enhet på sjukfallssidan filtertåterställs', function() {
-        startPage.clickFullUnit();
-        expect(sjukfallPage.isAt()).toBeTruthy();
+  it('Byt enhet på sjukfallssidan filtertåterställs', function() {
+    startPage.clickFullUnit();
+    expect(sjukfallPage.isAt()).toBeTruthy();
 
-        var freeTextValue = 'Hej';
+    var freeTextValue = 'Hej';
 
-        sjukfallPage.freeTextInput().sendKeys(freeTextValue);
+    sjukfallPage.freeTextInput().sendKeys(freeTextValue);
 
-        expect(sjukfallPage.freeTextInput().getAttribute('value')).toEqual(freeTextValue);
-        
-        bytEnhet();
+    expect(sjukfallPage.freeTextInput().getAttribute('value')).toEqual(freeTextValue);
 
-        expect(sjukfallPage.isAt()).toBeTruthy();
-        expect(sjukfallPage.freeTextInput().getAttribute('value')).toEqual('');
-    });
+    bytEnhet();
 
+    expect(sjukfallPage.isAt()).toBeTruthy();
+    expect(sjukfallPage.freeTextInput().getAttribute('value')).toEqual('');
+  });
 
-    function bytEnhet() {
-        expect(startPage.navbarVardgivare().getText()).toBe('Rehabstöd Vårdgivare 1');
-        expect(startPage.navbarVardenhet().getText()).toBe('Rehabstöd Enhet 2');
+  function bytEnhet() {
+    expect(startPage.navbarVardgivare().getText()).toBe('Rehabstöd Vårdgivare 1');
+    expect(startPage.navbarVardenhet().getText()).toBe('Rehabstöd Enhet 2');
 
-        startPage.clickBytVardenhet();
-        element(by.id('rhs-vardenhet-selector-select-active-unit-TSTNMT2321000156-105Q-link')).click();
+    startPage.clickBytVardenhet();
+    element(by.id('rhs-vardenhet-selector-select-active-unit-TSTNMT2321000156-105Q-link')).click();
 
-        expect(startPage.navbarVardgivare().getText()).toBe('Rehabstöd Vårdgivare 1');
-        expect(startPage.navbarVardenhet().getText()).toBe('Rehabstöd Enhet 3');
-    }
+    expect(startPage.navbarVardgivare().getText()).toBe('Rehabstöd Vårdgivare 1');
+    expect(startPage.navbarVardenhet().getText()).toBe('Rehabstöd Enhet 3');
+  }
 
-
-   /* afterEach(function() {
-        console.log('logout');
-        specHelper.logout();
-    })*/
+  /* afterEach(function() {
+       console.log('logout');
+       specHelper.logout();
+   })*/
 });

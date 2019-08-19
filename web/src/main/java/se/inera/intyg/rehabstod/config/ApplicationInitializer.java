@@ -18,11 +18,14 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_CHECK_URI;
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_EXTEND;
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_REQUEST_MAPPING;
+
 import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
-
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.WebApplicationInitializer;
@@ -33,7 +36,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
-
 import se.inera.intyg.infra.monitoring.MonitoringConfiguration;
 import se.inera.intyg.infra.security.filter.RequestContextHolderUpdateFilter;
 import se.inera.intyg.infra.security.filter.SessionTimeoutFilter;
@@ -57,10 +59,6 @@ import se.inera.intyg.rehabstod.integration.wc.stub.WcIntegrationStubConfigurati
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfig;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
 
-import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_CHECK_URI;
-import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_EXTEND;
-import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_REQUEST_MAPPING;
-
 public class ApplicationInitializer implements WebApplicationInitializer {
 
     @Override
@@ -72,26 +70,26 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
 
         appContext.register(ApplicationConfig.class, CacheConfigurationFromInfra.class, HsaConfiguration.class,
-                PuConfiguration.class, ServiceConfig.class,
-                IaConfiguration.class, JobConfig.class,
-                IntygstjanstIntegrationConfiguration.class,
-                IntygstjanstIntegrationClientConfiguration.class,
-                IntygstjanstIntegrationStubConfiguration.class,
-                WcClientConfiguration.class,
-                WcIntegrationConfiguration.class,
-                WcIntegrationStubConfiguration.class,
-                SamtyckestjanstConfiguration.class,
-                SamtyckestjanstClientConfiguration.class,
-                SamtyckestjanstStubConfiguration.class,
-                SparrtjanstConfiguration.class,
-                SparrtjanstClientConfiguration.class,
-                SparrtjanstStubConfiguration.class,
-                SRSIntegrationConfiguration.class,
-                SRSIntegrationClientConfiguration.class,
-                SRSIntegrationStubConfiguration.class,
-                JmsConfig.class, NTjPPingConfig.class, SecurityConfig.class,
-                SjukfallConfig.class, EmployeeNameCacheConfig.class, DynamicLinkConfig.class, PersistenceConfig.class,
-                PersistenceConfigDev.class, MonitoringConfiguration.class);
+            PuConfiguration.class, ServiceConfig.class,
+            IaConfiguration.class, JobConfig.class,
+            IntygstjanstIntegrationConfiguration.class,
+            IntygstjanstIntegrationClientConfiguration.class,
+            IntygstjanstIntegrationStubConfiguration.class,
+            WcClientConfiguration.class,
+            WcIntegrationConfiguration.class,
+            WcIntegrationStubConfiguration.class,
+            SamtyckestjanstConfiguration.class,
+            SamtyckestjanstClientConfiguration.class,
+            SamtyckestjanstStubConfiguration.class,
+            SparrtjanstConfiguration.class,
+            SparrtjanstClientConfiguration.class,
+            SparrtjanstStubConfiguration.class,
+            SRSIntegrationConfiguration.class,
+            SRSIntegrationClientConfiguration.class,
+            SRSIntegrationStubConfiguration.class,
+            JmsConfig.class, NTjPPingConfig.class, SecurityConfig.class,
+            SjukfallConfig.class, EmployeeNameCacheConfig.class, DynamicLinkConfig.class, PersistenceConfig.class,
+            PersistenceConfigDev.class, MonitoringConfiguration.class);
 
         servletContext.addListener(new ContextLoaderListener(appContext));
 
@@ -110,17 +108,17 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 
         // Spring session filter
         FilterRegistration.Dynamic springSessionRepositoryFilter = servletContext.addFilter("springSessionRepositoryFilter",
-                DelegatingFilterProxy.class);
+            DelegatingFilterProxy.class);
         springSessionRepositoryFilter.addMappingForUrlPatterns(null, false, "/*");
 
         // Update RequestContext with spring session
         FilterRegistration.Dynamic requestContextHolderUpdateFilter = servletContext.addFilter("requestContextHolderUpdateFilter",
-                RequestContextHolderUpdateFilter.class);
+            RequestContextHolderUpdateFilter.class);
         requestContextHolderUpdateFilter.addMappingForUrlPatterns(null, false, "/*");
 
         // LogMDCServletFilter
         FilterRegistration.Dynamic logMdcFilter = servletContext.addFilter("logMDCServletFilter",
-                DelegatingFilterProxy.class);
+            DelegatingFilterProxy.class);
         logMdcFilter.addMappingForUrlPatterns(null, false, "/*");
 
         // Session Timeout filter
@@ -130,33 +128,33 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 
         // Spring security filter
         FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain",
-                DelegatingFilterProxy.class);
+            DelegatingFilterProxy.class);
         springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
 
         // principalUpdatedFilter filter
         FilterRegistration.Dynamic principalUpdatedFilter = servletContext.addFilter("principalUpdatedFilter",
-                DelegatingFilterProxy.class);
+            DelegatingFilterProxy.class);
         principalUpdatedFilter.setInitParameter("targetFilterLifecycle", "true");
         principalUpdatedFilter.addMappingForUrlPatterns(null, false, "/*");
 
         // unitSelectedAssurance filter
         FilterRegistration.Dynamic unitSelectedAssuranceFilter = servletContext.addFilter("unitSelectedAssuranceFilter",
-                DelegatingFilterProxy.class);
+            DelegatingFilterProxy.class);
         unitSelectedAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
         unitSelectedAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
         unitSelectedAssuranceFilter.setInitParameter("ignoredUrls", "/api/config,/api/user,/api/user/andraenhet");
 
         // pdlConsentGiven filter
         FilterRegistration.Dynamic pdlConsentGivenAssuranceFilter = servletContext.addFilter("pdlConsentGivenAssuranceFilter",
-                DelegatingFilterProxy.class);
+            DelegatingFilterProxy.class);
         pdlConsentGivenAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
         pdlConsentGivenAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
         pdlConsentGivenAssuranceFilter.setInitParameter("ignoredUrls",
-                SESSION_STATUS_CHECK_URI + "," + SESSION_STATUS_REQUEST_MAPPING + SESSION_STATUS_EXTEND
-                        + ",/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary,/api/stub");
+            SESSION_STATUS_CHECK_URI + "," + SESSION_STATUS_REQUEST_MAPPING + SESSION_STATUS_EXTEND
+                + ",/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary,/api/stub");
 
         FilterRegistration.Dynamic hiddenHttpMethodFilter = servletContext.addFilter("hiddenHttpMethodFilter",
-                HiddenHttpMethodFilter.class);
+            HiddenHttpMethodFilter.class);
         hiddenHttpMethodFilter.addMappingForUrlPatterns(null, false, "/*");
 
         registerSecurityHeadersFilter(servletContext);

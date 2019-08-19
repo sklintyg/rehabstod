@@ -18,26 +18,26 @@
  */
 angular.module('rehabstodApp').directive('rhsChartLegend',
     [
-        function() {
-            'use strict';
+      function() {
+        'use strict';
 
-            return {
-                restrict: 'E',
-                scope: {
-                    data: '=',
-                    config: '='
-                },
-                templateUrl: '/components/commonDirectives/rhsChartLegend/rhsChartLegend.directive.html',
-                link: function(scope) {
-                    scope.getLegendText = function(item) {
-                        return scope.config.legend.labelFormatter.apply(item);
-                    };
-
-                    scope.getLegendColorStyle = function(item) {
-                        var index = scope.data.indexOf(item);
-                        return scope.config.colors[index];
-                    };
-
-                }
+        return {
+          restrict: 'E',
+          scope: {
+            data: '=',
+            config: '='
+          },
+          templateUrl: '/components/commonDirectives/rhsChartLegend/rhsChartLegend.directive.html',
+          link: function(scope) {
+            scope.getLegendText = function(item) {
+              return scope.config.legend.labelFormatter.apply(item);
             };
-        }]);
+
+            scope.getLegendColorStyle = function(item) {
+              var index = scope.data.indexOf(item);
+              return scope.config.colors[index];
+            };
+
+          }
+        };
+      }]);

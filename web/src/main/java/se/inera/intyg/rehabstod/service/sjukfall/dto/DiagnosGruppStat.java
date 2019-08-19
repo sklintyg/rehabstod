@@ -19,13 +19,13 @@
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
 import java.util.Objects;
-
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
 
 /**
  * Created by marced on 14/03/16.
  */
 public class DiagnosGruppStat {
+
     private DiagnosGrupp grupp;
     private Long count;
 

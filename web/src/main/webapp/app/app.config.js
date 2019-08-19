@@ -18,42 +18,42 @@
  */
 
 angular
-    .module('rehabstodApp')
-    .config(
+.module('rehabstodApp')
+.config(
     /** @ngInject */
     function($stateProvider, $urlRouterProvider, $locationProvider, $uibTooltipProvider, $httpProvider,
-    http403ResponseInterceptorProvider, stConfig, $compileProvider) {
-    'use strict';
+        http403ResponseInterceptorProvider, stConfig, $compileProvider) {
+      'use strict';
 
-        // Default route is "Landing page"
-        $urlRouterProvider.otherwise('/app/index');
+      // Default route is "Landing page"
+      $urlRouterProvider.otherwise('/app/index');
 
-        // Use /#/ syntax. True = regular / syntax
-        $locationProvider.html5Mode(false);
+      // Use /#/ syntax. True = regular / syntax
+      $locationProvider.html5Mode(false);
 
-        // Tooltip config
-        $uibTooltipProvider.setTriggers({
-            'show': 'hide'
-        });
+      // Tooltip config
+      $uibTooltipProvider.setTriggers({
+        'show': 'hide'
+      });
 
-        // Configure 403 interceptor provider
-        http403ResponseInterceptorProvider.setRedirectUrl('/');
-        $httpProvider.interceptors.push('http403ResponseInterceptor');
+      // Configure 403 interceptor provider
+      http403ResponseInterceptorProvider.setRedirectUrl('/');
+      $httpProvider.interceptors.push('http403ResponseInterceptor');
 
-        // Configure restErrorResponseInterceptorProvider interceptor provider
-        $httpProvider.interceptors.push('restErrorResponseInterceptor');
+      // Configure restErrorResponseInterceptorProvider interceptor provider
+      $httpProvider.interceptors.push('restErrorResponseInterceptor');
 
-        // Add replaceAll function to all strings.
-        String.prototype.replaceAll = function(f, r) { // jshint ignore:line
-            return this.split(f).join(r);
-        };
+      // Add replaceAll function to all strings.
+      String.prototype.replaceAll = function(f, r) { // jshint ignore:line
+        return this.split(f).join(r);
+      };
 
-        stConfig.sort.skipNatural = true;
-        stConfig.sort.delay = 100;
+      stConfig.sort.skipNatural = true;
+      stConfig.sort.delay = 100;
 
-        $compileProvider.commentDirectivesEnabled(false);
-        $compileProvider.cssClassDirectivesEnabled(false);
-        $compileProvider.preAssignBindingsEnabled(true);
+      $compileProvider.commentDirectivesEnabled(false);
+      $compileProvider.cssClassDirectivesEnabled(false);
+      $compileProvider.preAssignBindingsEnabled(true);
 
-        $locationProvider.hashPrefix('');
+      $locationProvider.hashPrefix('');
     });

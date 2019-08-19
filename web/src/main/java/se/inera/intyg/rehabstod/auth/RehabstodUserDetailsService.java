@@ -71,10 +71,9 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         IntygUser intygUser = super.buildUserPrincipal(credential);
         RehabstodUser rehabstodUser = new RehabstodUser(intygUser, isPdlConsentGiven(intygUser.getHsaId()), intygUser.isLakare());
 
-          RehabstodUserPreferences preferences = RehabstodUserPreferences
-                .fromBackend(anvandarPreferenceRepository.getAnvandarPreference(intygUser.getHsaId()));
+        RehabstodUserPreferences preferences = RehabstodUserPreferences
+            .fromBackend(anvandarPreferenceRepository.getAnvandarPreference(intygUser.getHsaId()));
         rehabstodUser.setPreferences(preferences);
-
 
         final String savedDefaultLoginHsaUnitId = rehabstodUser.getPreferences().get(Preference.DEFAULT_LOGIN_HSA_UNIT_ID);
         boolean usedDefaultUnit = false;
@@ -169,7 +168,7 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         long unitsAfter = authorizedVardgivare.stream().mapToInt(vg -> vg.getVardenheter().size()).sum();
 
         LOG.debug("removeEnheterMissingRehabKoordinatorRole rehabauthorized units are: [" + String.join(",", rehabAuthorizedEnhetIds)
-                + "]. User units before filtering: " + unitsBefore + ", after: " + unitsAfter);
+            + "]. User units before filtering: " + unitsBefore + ", after: " + unitsAfter);
 
         if (unitsAfter < 1) {
             throw new MissingUnitWithRehabSystemRoleException(hsaId);

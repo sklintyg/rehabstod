@@ -26,8 +26,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan({
-        "se.inera.intyg.rehabstod.integration.srs.client",
-        "se.inera.intyg.rehabstod.integration.srs.service" })
+    "se.inera.intyg.rehabstod.integration.srs.client",
+    "se.inera.intyg.rehabstod.integration.srs.service"})
 @SuppressWarnings("all")
 public class SRSIntegrationConfiguration {
+
 }

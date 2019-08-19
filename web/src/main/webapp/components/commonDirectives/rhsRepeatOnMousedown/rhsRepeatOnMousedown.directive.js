@@ -19,78 +19,74 @@
 
 angular.module('rehabstodApp').directive('rhsRepeatOnMousedown',
     function($parse, $interval) {
-        'use strict';
+      'use strict';
 
-        //Delay (ms) between repeat action calls
-        var TICK_INTERVAL = 100;
+      //Delay (ms) between repeat action calls
+      var TICK_INTERVAL = 100;
 
-        //Delay before start repeating
-        var BEFORE_START_REPEAT_DELAY = 500;
+      //Delay before start repeating
+      var BEFORE_START_REPEAT_DELAY = 500;
 
-        return {
+      return {
 
-            restrict: 'A',
+        restrict: 'A',
 
-            link: function(scope, elem, attrs) {
+        link: function(scope, elem, attrs) {
 
-                //Get reference to repeat action callback
-                var action = $parse(attrs.rhsRepeatOnMousedown);
+          //Get reference to repeat action callback
+          var action = $parse(attrs.rhsRepeatOnMousedown);
 
-                //Start with the initial delay interval
-                var activeTickInterval = BEFORE_START_REPEAT_DELAY;
+          //Start with the initial delay interval
+          var activeTickInterval = BEFORE_START_REPEAT_DELAY;
 
-                var intervalPromise = null;
+          var intervalPromise = null;
 
-                function execute() {
-                    //Execute Repeat action
-                    action(scope);
-                    //Should we switch the repeat delay interval (going into active repeat mode)?
-                    if (activeTickInterval === BEFORE_START_REPEAT_DELAY) {
-                        //Switch to repeat mode interval
-                        activeTickInterval = TICK_INTERVAL;
-                        $interval.cancel(intervalPromise);
-                        intervalPromise = $interval(execute, activeTickInterval);
-                    }
-                }
-
-
-                //Start listening to mousedown - which in turn will start the actual behaviour of this directive
-                function bindStartAction() {
-                    elem.on('mousedown', function(e) {
-                        e.preventDefault();
-                        activeTickInterval = BEFORE_START_REPEAT_DELAY;
-                        intervalPromise = $interval(execute, activeTickInterval);
-                        bindEndAction();
-                    });
-                }
-
-
-                function bindEndAction() {
-                    //Set up when to end repeat action
-                    elem.on('mouseup', endAction);
-                    elem.on('mouseleave', endAction);
-                }
-
-
-                function endAction() {
-                    $interval.cancel(intervalPromise);
-                    unbindEndAction();
-                }
-
-                function unbindEndAction() {
-                    elem.off('mouseup', endAction);
-                    elem.off('mouseleave', endAction);
-                }
-
-
-                scope.$on('$destroy', function() {
-                    //Clean up any pending interval promise
-                    $interval.cancel(intervalPromise);
-                });
-
-                //Finally, start listening
-                bindStartAction();
-
+          function execute() {
+            //Execute Repeat action
+            action(scope);
+            //Should we switch the repeat delay interval (going into active repeat mode)?
+            if (activeTickInterval === BEFORE_START_REPEAT_DELAY) {
+              //Switch to repeat mode interval
+              activeTickInterval = TICK_INTERVAL;
+              $interval.cancel(intervalPromise);
+              intervalPromise = $interval(execute, activeTickInterval);
             }
-        };
+          }
+
+          //Start listening to mousedown - which in turn will start the actual behaviour of this directive
+          function bindStartAction() {
+            elem.on('mousedown', function(e) {
+              e.preventDefault();
+              activeTickInterval = BEFORE_START_REPEAT_DELAY;
+              intervalPromise = $interval(execute, activeTickInterval);
+              bindEndAction();
+            });
+          }
+
+          function bindEndAction() {
+            //Set up when to end repeat action
+            elem.on('mouseup', endAction);
+            elem.on('mouseleave', endAction);
+          }
+
+          function endAction() {
+            $interval.cancel(intervalPromise);
+            unbindEndAction();
+          }
+
+          function unbindEndAction() {
+            elem.off('mouseup', endAction);
+            elem.off('mouseleave', endAction);
+          }
+
+          scope.$on('$destroy', function() {
+            //Clean up any pending interval promise
+            $interval.cancel(intervalPromise);
+          });
+
+          //Finally, start listening
+          bindStartAction();
+
+        }
+      };
     });

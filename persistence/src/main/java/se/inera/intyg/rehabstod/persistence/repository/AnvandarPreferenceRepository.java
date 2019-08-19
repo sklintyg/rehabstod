@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.persistence.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 
 /**

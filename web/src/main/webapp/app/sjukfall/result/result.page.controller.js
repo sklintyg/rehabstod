@@ -18,42 +18,42 @@
  */
 
 angular.module('rehabstodApp')
-    .controller('SjukfallResultPageCtrl',
-    function ($scope, $rootScope, $state, SjukfallService, UserModel, SjukfallViewState) {
-        'use strict';
+.controller('SjukfallResultPageCtrl',
+    function($scope, $rootScope, $state, SjukfallService, UserModel, SjukfallViewState) {
+      'use strict';
 
-        $scope.sjukfallService = SjukfallService;
-        $scope.SjukfallViewState = SjukfallViewState;
-        $scope.user = UserModel.get();
-        $scope.srsError = false;
-        $scope.kompletteringInfoError = false;
+      $scope.sjukfallService = SjukfallService;
+      $scope.SjukfallViewState = SjukfallViewState;
+      $scope.user = UserModel.get();
+      $scope.srsError = false;
+      $scope.kompletteringInfoError = false;
 
+      loadSjukfall();
+
+      var unregisterFn = $rootScope.$on('SelectedUnitChanged', function(/*event, value*/) {
         loadSjukfall();
+      });
+      //rootscope on event listeners aren't unregistered automatically when 'this' directives
+      //scope is destroyed, so let's take care of that.
+      $scope.$on('$destroy', unregisterFn);
 
-        var unregisterFn = $rootScope.$on('SelectedUnitChanged', function (/*event, value*/) {
-            loadSjukfall();
-        });
-        //rootscope on event listeners aren't unregistered automatically when 'this' directives
-        //scope is destroyed, so let's take care of that.
-        $scope.$on('$destroy', unregisterFn);
+      $scope.goBack = function() {
+        $state.go('app.sjukfall.start');
+      };
 
-        $scope.goBack = function () {
-            $state.go('app.sjukfall.start');
-        };
+      $scope.$watch('sjukfallService.isLoading()', function(val) {
+        $scope.showSpinner = val;
+      });
 
-        $scope.$watch('sjukfallService.isLoading()', function (val) {
-            $scope.showSpinner = val;
-        });
+      $scope.$watch('SjukfallViewState.get().srsError', function(val) {
+        $scope.srsError = val;
+      });
+      $scope.$watch('SjukfallViewState.get().kompletteringInfoError', function(val) {
+        $scope.kompletteringInfoError = val;
+      });
 
-        $scope.$watch('SjukfallViewState.get().srsError', function (val) {
-            $scope.srsError = val;
-        });
-        $scope.$watch('SjukfallViewState.get().kompletteringInfoError', function (val) {
-            $scope.kompletteringInfoError = val;
-        });
-
-        function loadSjukfall() {
-            $scope.showSpinner = true;
-            SjukfallService.loadSjukfall(true);
-        }
+      function loadSjukfall() {
+        $scope.showSpinner = true;
+        SjukfallService.loadSjukfall(true);
+      }
     });

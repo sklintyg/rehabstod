@@ -24,13 +24,11 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AdditionType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.IntygAdditionsType;
@@ -63,17 +61,17 @@ public class WcIntegrationServiceImpl implements WcIntegrationService {
             final GetCertificateAdditionsResponseType response = wcClientService.getCertificateAdditions(intygId);
             if (response.getResult() != ResultCodeType.OK) {
                 throw new WcIntegrationException(
-                        String.format("getCertificateAdditionsForIntyg service failed with resultCode '%s'",
-                                response.getResult().name()));
+                    String.format("getCertificateAdditionsForIntyg service failed with resultCode '%s'",
+                        response.getResult().name()));
 
             }
 
             final Map<String, Integer> result = convertResult(response.getAdditions(), LocalDateTime.now().minusDays(maxDaysOld));
             LOG.debug(
-                    "Queried getCertificateAdditionsForIntyg for {} intygids, got {} items back (after converting using no older "
-                            + "than {} days, {} are left)",
-                    intygId.size(),
-                    response.getAdditions().size(), maxDaysOld, result.size());
+                "Queried getCertificateAdditionsForIntyg for {} intygids, got {} items back (after converting using no older "
+                    + "than {} days, {} are left)",
+                intygId.size(),
+                response.getAdditions().size(), maxDaysOld, result.size());
             return result;
         } catch (Exception e) {
             LOG.error("Error in getCertificateAdditionsForIntyg", e);

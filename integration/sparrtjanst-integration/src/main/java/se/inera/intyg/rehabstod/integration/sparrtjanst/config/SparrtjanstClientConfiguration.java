@@ -82,8 +82,8 @@ public class SparrtjanstClientConfiguration {
             return Long.parseLong(timeout);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(
-                    "Cannot apply timeouts for SparrtjanstClientConfiguration, unparsable String value: " + timeout
-                            + ". Message: " + e.getMessage());
+                "Cannot apply timeouts for SparrtjanstClientConfiguration, unparsable String value: " + timeout
+                    + ". Message: " + e.getMessage());
         }
     }
 }

@@ -37,11 +37,11 @@ public final class LogUtil {
 
     public static LogPatient getLogPatient(PatientData patientData) {
         return new LogPatient.Builder(
-                patientData.getPatient().getId(), patientData.getVardenhetId(), patientData.getVardgivareId())
-                .patientNamn(patientData.getPatient().getNamn())
-                .enhetsNamn(patientData.getVardenhetNamn())
-                .vardgivareNamn(patientData.getVardgivareNamn())
-                .build();
+            patientData.getPatient().getId(), patientData.getVardenhetId(), patientData.getVardgivareId())
+            .patientNamn(patientData.getPatient().getNamn())
+            .enhetsNamn(patientData.getVardenhetNamn())
+            .vardgivareNamn(patientData.getVardgivareNamn())
+            .build();
     }
 
     public static LogUser getLogUser(RehabstodUser user) {
@@ -49,12 +49,12 @@ public final class LogUtil {
         SelectableVardenhet valdVardenhet = user.getValdVardenhet();
 
         return new LogUser.Builder(user.getHsaId(), valdVardenhet.getId(), valdVardgivare.getId())
-                .userName(user.getNamn())
-                .userAssignment(user.getSelectedMedarbetarUppdragNamn())
-                .userTitle(resolveUserTitle(user))
-                .enhetsNamn(valdVardenhet.getNamn())
-                .vardgivareNamn(valdVardgivare.getNamn())
-                .build();
+            .userName(user.getNamn())
+            .userAssignment(user.getSelectedMedarbetarUppdragNamn())
+            .userTitle(resolveUserTitle(user))
+            .enhetsNamn(valdVardenhet.getNamn())
+            .vardgivareNamn(valdVardgivare.getNamn())
+            .build();
     }
 
     /**
@@ -64,7 +64,7 @@ public final class LogUtil {
      */
     private static String resolveUserTitle(RehabstodUser user) {
         return user.isLakare() && user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE)
-                ? PDL_TITEL_LAKARE : PDL_TITEL_REHABSTOD;
+            ? PDL_TITEL_LAKARE : PDL_TITEL_REHABSTOD;
     }
 
 }

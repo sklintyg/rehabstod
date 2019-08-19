@@ -20,148 +20,148 @@
 angular.module('rehabstodApp').factory('UserProxy',
     function($http, $log, $q,
         networkConfig) {
-        'use strict';
+      'use strict';
 
-        /*
-         * Get user preference settings for logged in user
-         */
-        function _getSettings() {
-            $log.debug('_getSettings');
+      /*
+       * Get user preference settings for logged in user
+       */
+      function _getSettings() {
+        $log.debug('_getSettings');
 
-            var promise = $q.defer();
+        var promise = $q.defer();
 
-            var restPath = '/api/user/preferences';
-            var config =  {
-                timeout: networkConfig.defaultTimeout
-            };
-            $log.debug('REST call: ' + restPath);
-            $http.get(restPath, config).then(function(response) {
-                $log.debug(restPath + ' - success');
-
-                if (typeof response !== 'undefined') {
-                    promise.resolve(response.data);
-                } else {
-                    $log.debug('JSON response syntax error. Rejected.');
-                    promise.reject(null);
-                }
-            }, function(response) {
-                $log.error('error ' + response.status);
-                // Let calling code handle the error of no data response
-                promise.reject(response.data);
-            });
-
-            return promise.promise;
-        }
-
-        /*
-         * Get user data for logged in user
-         */
-        function _saveSettings(settingsModel) {
-            $log.debug('_saveSettings');
-
-            var promise = $q.defer();
-
-            var restPath = '/api/user/preferences';
-            var dto = settingsModel;
-            var config =  {
-                timeout: networkConfig.defaultTimeout
-            };
-            $log.debug('REST call: _saveSettings ' + restPath);
-            $http.post(restPath, dto, config).then(function(response) {
-                $log.debug(restPath + ' - success');
-
-                if (typeof response !== 'undefined') {
-                    promise.resolve(response.data);
-                } else {
-                    $log.debug('JSON response syntax error. Rejected.');
-                    promise.reject(null);
-                }
-            }, function(response) {
-                $log.error('error ' + response.status);
-                // Let calling code handle the error of no data response
-                promise.reject(response.data);
-            });
-
-            return promise.promise;
-        }
-
-        /*
-         * Get user data for logged in user
-         */
-        function _changeSelectedUnit(newUnitId) {
-            $log.debug('_changeSelectedUnit');
-
-            var promise = $q.defer();
-
-            var restPath = '/api/user/andraenhet';
-            var dto = {
-                id: newUnitId
-            };
-            var config =  {
-                errorMessageConfig: {
-                    errorTitleKey: 'server.error.changeunit.title',
-                    errorTextKey: 'server.error.default.text'
-                },
-                timeout: networkConfig.defaultTimeout
-            };
-            $log.debug('REST call: _changeSelectedUnit ' + restPath);
-            $http.post(restPath, dto, config).then(function(response) {
-                $log.debug(restPath + ' - success');
-
-                if (typeof response !== 'undefined') {
-                    promise.resolve(response.data);
-                } else {
-                    $log.debug('JSON response syntax error. Rejected.');
-                    promise.reject(null);
-                }
-            }, function(response) {
-                $log.error('error ' + response.status);
-                // Let calling code handle the error of no data response
-                promise.reject(response.data);
-            });
-
-            return promise.promise;
-        }
-
-        function _givePdlConsent(hsaId) {
-            var promise = $q.defer();
-
-            var restPath = '/api/user/giveconsent';
-            var dto = {
-                hsaId: hsaId,
-                consentGiven: true
-            };
-
-            var config =  {
-                errorMessageConfig: {
-                    errorTitleKey: 'server.error.giveconsent.title',
-                    errorTextKey: 'server.error.default.text'
-                },
-                timeout: networkConfig.defaultTimeout
-            };
-            $http.post(restPath, dto, config).then(function(response) {
-                $log.debug(restPath + ' - success');
-
-                if (typeof response !== 'undefined') {
-                    promise.resolve(response.data);
-                } else {
-                    $log.debug('JSON response syntax error. Rejected.');
-                    promise.reject(null);
-                }
-            }, function(response) {
-                $log.error('error ' + response.status);
-                // Let calling code handle the error of no data response
-                promise.reject(response.data);
-            });
-
-            return promise.promise;
-        }
-
-        // Return public API for the service
-        return {
-            changeSelectedUnit: _changeSelectedUnit,
-            givePdlConsent: _givePdlConsent,
-            getSettings: _getSettings,
-            saveSettings: _saveSettings
+        var restPath = '/api/user/preferences';
+        var config = {
+          timeout: networkConfig.defaultTimeout
         };
+        $log.debug('REST call: ' + restPath);
+        $http.get(restPath, config).then(function(response) {
+          $log.debug(restPath + ' - success');
+
+          if (typeof response !== 'undefined') {
+            promise.resolve(response.data);
+          } else {
+            $log.debug('JSON response syntax error. Rejected.');
+            promise.reject(null);
+          }
+        }, function(response) {
+          $log.error('error ' + response.status);
+          // Let calling code handle the error of no data response
+          promise.reject(response.data);
+        });
+
+        return promise.promise;
+      }
+
+      /*
+       * Get user data for logged in user
+       */
+      function _saveSettings(settingsModel) {
+        $log.debug('_saveSettings');
+
+        var promise = $q.defer();
+
+        var restPath = '/api/user/preferences';
+        var dto = settingsModel;
+        var config = {
+          timeout: networkConfig.defaultTimeout
+        };
+        $log.debug('REST call: _saveSettings ' + restPath);
+        $http.post(restPath, dto, config).then(function(response) {
+          $log.debug(restPath + ' - success');
+
+          if (typeof response !== 'undefined') {
+            promise.resolve(response.data);
+          } else {
+            $log.debug('JSON response syntax error. Rejected.');
+            promise.reject(null);
+          }
+        }, function(response) {
+          $log.error('error ' + response.status);
+          // Let calling code handle the error of no data response
+          promise.reject(response.data);
+        });
+
+        return promise.promise;
+      }
+
+      /*
+       * Get user data for logged in user
+       */
+      function _changeSelectedUnit(newUnitId) {
+        $log.debug('_changeSelectedUnit');
+
+        var promise = $q.defer();
+
+        var restPath = '/api/user/andraenhet';
+        var dto = {
+          id: newUnitId
+        };
+        var config = {
+          errorMessageConfig: {
+            errorTitleKey: 'server.error.changeunit.title',
+            errorTextKey: 'server.error.default.text'
+          },
+          timeout: networkConfig.defaultTimeout
+        };
+        $log.debug('REST call: _changeSelectedUnit ' + restPath);
+        $http.post(restPath, dto, config).then(function(response) {
+          $log.debug(restPath + ' - success');
+
+          if (typeof response !== 'undefined') {
+            promise.resolve(response.data);
+          } else {
+            $log.debug('JSON response syntax error. Rejected.');
+            promise.reject(null);
+          }
+        }, function(response) {
+          $log.error('error ' + response.status);
+          // Let calling code handle the error of no data response
+          promise.reject(response.data);
+        });
+
+        return promise.promise;
+      }
+
+      function _givePdlConsent(hsaId) {
+        var promise = $q.defer();
+
+        var restPath = '/api/user/giveconsent';
+        var dto = {
+          hsaId: hsaId,
+          consentGiven: true
+        };
+
+        var config = {
+          errorMessageConfig: {
+            errorTitleKey: 'server.error.giveconsent.title',
+            errorTextKey: 'server.error.default.text'
+          },
+          timeout: networkConfig.defaultTimeout
+        };
+        $http.post(restPath, dto, config).then(function(response) {
+          $log.debug(restPath + ' - success');
+
+          if (typeof response !== 'undefined') {
+            promise.resolve(response.data);
+          } else {
+            $log.debug('JSON response syntax error. Rejected.');
+            promise.reject(null);
+          }
+        }, function(response) {
+          $log.error('error ' + response.status);
+          // Let calling code handle the error of no data response
+          promise.reject(response.data);
+        });
+
+        return promise.promise;
+      }
+
+      // Return public API for the service
+      return {
+        changeSelectedUnit: _changeSelectedUnit,
+        givePdlConsent: _givePdlConsent,
+        getSettings: _getSettings,
+        saveSettings: _saveSettings
+      };
     });

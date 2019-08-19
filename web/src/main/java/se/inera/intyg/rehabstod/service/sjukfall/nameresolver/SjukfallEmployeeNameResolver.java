@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.service.sjukfall.nameresolver;
 
 import java.util.List;
-
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 

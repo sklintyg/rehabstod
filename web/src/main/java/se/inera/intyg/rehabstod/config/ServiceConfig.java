@@ -18,21 +18,20 @@
  */
 package se.inera.intyg.rehabstod.config;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.context.support.ServletContextAttributeExporter;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by pebe on 2015-09-07.
  */
 @Configuration
 @ComponentScan({"se.inera.intyg.rehabstod.service", "se.inera.intyg.rehabstod.auth", "se.inera.intyg.rehabstod.common",
-        "se.inera.intyg.rehabstod.integration.it.service"})
+    "se.inera.intyg.rehabstod.integration.it.service"})
 @EnableScheduling
 public class ServiceConfig {
 

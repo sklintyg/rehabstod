@@ -29,62 +29,62 @@ var pdlConsentPage = rhsTestTools.pages.pdlConsentPage;
 var restUtil = rhsTestTools.utils.restUtil;
 
 describe('Flöde som läkare utan lämnat medgivande', function() {
-    
-    beforeEach(function() {
-        browser.ignoreSynchronization = false;
+
+  beforeEach(function() {
+    browser.ignoreSynchronization = false;
+  });
+
+  describe('Gå till sjukfall', function() {
+    it('Logga in', function() {
+      specHelper.login('peter-enkel_'); // Peter Enkel (1 enhet). Skall EJ ha pdlConsentGiven=true
+      restUtil.login({
+        'forNamn': 'Peter',
+        'efterNamn': 'Enkel',
+        'hsaId': 'peter-enkel'
+      });
+      restUtil.removeConsent('peter-enkel');
     });
 
-    describe('Gå till sjukfall', function() {
-        it('Logga in', function() {
-            specHelper.login('peter-enkel_'); // Peter Enkel (1 enhet). Skall EJ ha pdlConsentGiven=true
-            restUtil.login({
-                'forNamn': 'Peter',
-                'efterNamn': 'Enkel',
-                'hsaId': 'peter-enkel'
-            });
-            restUtil.removeConsent('peter-enkel');
-        });
+    it('Verifiera att PDL-dialogen visas', function() {
 
-        it('Verifiera att PDL-dialogen visas', function() {
-
-            startPage.clickSjukfall();
-            expect(pdlConsentPage.isAt());
-        });
-
-        it('Verifiera att klick på avbryt-knappen tar ner dialogen.', function() {
-            pdlConsentPage.cancelConsentBtn().click();
-            expect(pdlConsentPage.isAt()).toBe(false);
-        });
-
-        it('Verifiera att klick på Visa pågående sjukfall-knappen visar PDL-dialogen.', function() {
-            startPage.clickMyUnit();
-            expect(pdlConsentPage.isAt());
-        });
-
-        it('Verifiera att knappen för att lämna medgivande är oklickbar.', function() {
-            expect(pdlConsentPage.giveConsentBtn().isEnabled()).toBe(false);
-            expect(pdlConsentPage.consentCheckbox().isSelected()).toBe(false);
-        });
-
-        it('Verifiera att knappen för att lämna medgivande är blir klickbar när checkboxen klickas i.', function() {
-            pdlConsentPage.consentCheckbox().click();
-            expect(pdlConsentPage.giveConsentBtn().isEnabled()).toBe(true);
-        });
-
-        it('Verifiera att vi kommer till sjukfallssidan vid klick på den nu aktiva knappen.', function() {
-            pdlConsentPage.giveConsentBtn().sendKeys(protractor.Key.SPACE);
-            expect(sjukfallPage.isAt()).toBe(true);
-        });
-
-        it('Logga ut', function() {
-            restUtil.login({
-                'forNamn': 'Peter',
-                'efterNamn': 'Enkel',
-                'hsaId': 'peter-enkel'
-            });
-            restUtil.removeConsent('peter-enkel');
-            specHelper.logout();
-        });
+      startPage.clickSjukfall();
+      expect(pdlConsentPage.isAt());
     });
+
+    it('Verifiera att klick på avbryt-knappen tar ner dialogen.', function() {
+      pdlConsentPage.cancelConsentBtn().click();
+      expect(pdlConsentPage.isAt()).toBe(false);
+    });
+
+    it('Verifiera att klick på Visa pågående sjukfall-knappen visar PDL-dialogen.', function() {
+      startPage.clickMyUnit();
+      expect(pdlConsentPage.isAt());
+    });
+
+    it('Verifiera att knappen för att lämna medgivande är oklickbar.', function() {
+      expect(pdlConsentPage.giveConsentBtn().isEnabled()).toBe(false);
+      expect(pdlConsentPage.consentCheckbox().isSelected()).toBe(false);
+    });
+
+    it('Verifiera att knappen för att lämna medgivande är blir klickbar när checkboxen klickas i.', function() {
+      pdlConsentPage.consentCheckbox().click();
+      expect(pdlConsentPage.giveConsentBtn().isEnabled()).toBe(true);
+    });
+
+    it('Verifiera att vi kommer till sjukfallssidan vid klick på den nu aktiva knappen.', function() {
+      pdlConsentPage.giveConsentBtn().sendKeys(protractor.Key.SPACE);
+      expect(sjukfallPage.isAt()).toBe(true);
+    });
+
+    it('Logga ut', function() {
+      restUtil.login({
+        'forNamn': 'Peter',
+        'efterNamn': 'Enkel',
+        'hsaId': 'peter-enkel'
+      });
+      restUtil.removeConsent('peter-enkel');
+      specHelper.logout();
+    });
+  });
 
 });

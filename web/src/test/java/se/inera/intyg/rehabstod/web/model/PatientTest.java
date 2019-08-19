@@ -18,14 +18,13 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Magnus Ekstrand on 2017-02-21.
@@ -52,7 +51,7 @@ public class PatientTest {
     public void testPatientShortId() {
         String fullstandigtNamn = "Anders Andersson";
         String id = " 19121212 ";
-        final int expectedYear =  (int) ChronoUnit.YEARS.between(tolvanBirthdate, LocalDate.now());
+        final int expectedYear = (int) ChronoUnit.YEARS.between(tolvanBirthdate, LocalDate.now());
 
         Patient patient = createPatient(id, fullstandigtNamn);
 
@@ -101,7 +100,6 @@ public class PatientTest {
 
         Patient patient = createPatient(id, fullstandigtNamn);
 
-
         assertPatient(id, fullstandigtNamn, expectedYear, Gender.M, patient);
     }
 
@@ -114,7 +112,6 @@ public class PatientTest {
 
         assertEquals(id.trim(), patient.getId());
     }
-
 
     // private stuff - don't touch
 

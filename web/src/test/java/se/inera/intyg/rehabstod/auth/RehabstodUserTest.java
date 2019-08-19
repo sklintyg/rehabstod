@@ -18,14 +18,14 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-import com.google.common.collect.ImmutableMap;
-import org.junit.Test;
-import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-import se.inera.intyg.infra.security.common.model.Role;
-import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
-import se.inera.intyg.rehabstod.service.Urval;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static se.inera.intyg.rehabstod.auth.util.SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX;
 
+import com.google.common.collect.ImmutableMap;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -34,13 +34,12 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static se.inera.intyg.rehabstod.auth.util.SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX;
+import org.junit.Test;
+import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
+import se.inera.intyg.infra.security.common.model.Role;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
+import se.inera.intyg.rehabstod.service.Urval;
 
 /**
  * @author marced on 01/03/16.
@@ -116,7 +115,7 @@ public class RehabstodUserTest {
     @Test
     public void testRoleSwitchNotPossibleForDoctorWithoutMatchingSystemRole() {
         RehabstodUser user = setupRehabstodUserWithSystemRoles(true, new ArrayList<>(),
-                HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "some-other-unit-id");
+            HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + "some-other-unit-id");
         assertFalse(user.isRoleSwitchPossible());
     }
 

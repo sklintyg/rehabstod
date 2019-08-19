@@ -18,17 +18,16 @@
  */
 package se.inera.intyg.rehabstod.service.hsa;
 
+import static se.inera.intyg.rehabstod.config.EmployeeNameCacheConfig.EMPLOYEE_NAME_CACHE_NAME;
+
+import java.util.List;
+import javax.xml.ws.WebServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.services.HsaEmployeeService;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.riv.infrastructure.directory.v1.PersonInformationType;
-
-import javax.xml.ws.WebServiceException;
-import java.util.List;
-
-import static se.inera.intyg.rehabstod.config.EmployeeNameCacheConfig.EMPLOYEE_NAME_CACHE_NAME;
 
 
 /**

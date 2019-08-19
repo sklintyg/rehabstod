@@ -37,7 +37,6 @@ public class Lakare {
         this.namn = namn;
     }
 
-
     // - - - getters - - -
 
     public String getHsaId() {

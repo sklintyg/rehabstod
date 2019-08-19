@@ -43,7 +43,6 @@ public class Diagnos {
         this.namn = namn;
     }
 
-
     // getters and setters
 
     public String getIntygsVarde() {
@@ -73,7 +72,6 @@ public class Diagnos {
     public void setKapitel(String kapitel) {
         this.kapitel = kapitel;
     }
-
 
     // api
 

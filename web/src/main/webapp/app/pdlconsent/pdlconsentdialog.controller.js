@@ -18,34 +18,34 @@
  */
 
 angular.module('rehabstodApp')
-    .controller('pdlConsentDialogCtrl', function($scope, $uibModalInstance, $state, UserProxy, UserModel, msgConfig) {
-        'use strict';
+.controller('pdlConsentDialogCtrl', function($scope, $uibModalInstance, $state, UserProxy, UserModel, msgConfig) {
+  'use strict';
 
-        $scope.msgConfig = msgConfig;
-        $scope.user = UserModel;
+  $scope.msgConfig = msgConfig;
+  $scope.user = UserModel;
 
-        $scope.approveChecked = false;
+  $scope.approveChecked = false;
 
-        $scope.giveConsent = function() {
+  $scope.giveConsent = function() {
 
-            if (!$scope.approveChecked) {
-                return;
-            }
+    if (!$scope.approveChecked) {
+      return;
+    }
 
-            UserProxy.givePdlConsent($scope.user.hsaId).then(function(updatedUserModel) {
-                UserModel.set(updatedUserModel);
-                $uibModalInstance.close(updatedUserModel);
-                $state.go('app.sjukfall.result');
-            }, function() {
-                
-            });
-        };
+    UserProxy.givePdlConsent($scope.user.hsaId).then(function(updatedUserModel) {
+      UserModel.set(updatedUserModel);
+      $uibModalInstance.close(updatedUserModel);
+      $state.go('app.sjukfall.result');
+    }, function() {
 
-        $scope.check = function() {
-            $scope.approveChecked = !$scope.approveChecked;
-        };
-
-        $scope.closeModal = function() {
-            $uibModalInstance.close();
-        };
     });
+  };
+
+  $scope.check = function() {
+    $scope.approveChecked = !$scope.approveChecked;
+  };
+
+  $scope.closeModal = function() {
+    $uibModalInstance.close();
+  };
+});

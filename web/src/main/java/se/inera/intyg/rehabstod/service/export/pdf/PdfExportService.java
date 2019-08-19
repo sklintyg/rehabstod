@@ -18,11 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
+import java.util.List;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
-import java.util.List;
 
 /**
  * @author marced on 24/02/16.

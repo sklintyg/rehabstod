@@ -23,31 +23,31 @@
  * Created by benny on 03/11/16.
  */
 angular.module('rehabstodApp').service('datePickerOpenService', function() {
-    'use strict';
-    this.openDatePicker = null;
+  'use strict';
+  this.openDatePicker = null;
 
-    this.update = function(toggledDatePickerState) {
+  this.update = function(toggledDatePickerState) {
 
-        // Close last opened datepicker
-        if(toggledDatePickerState.isOpen === true){
+    // Close last opened datepicker
+    if (toggledDatePickerState.isOpen === true) {
 
-            if(this.openDatePicker && toggledDatePickerState !== this.openDatePicker){
-                this.openDatePicker.isOpen = false;
-                this.openDatePicker = null;
-            }
+      if (this.openDatePicker && toggledDatePickerState !== this.openDatePicker) {
+        this.openDatePicker.isOpen = false;
+        this.openDatePicker = null;
+      }
 
-            // Set this one as the last opened datepicker
-            if(this.openDatePicker === null){
-                this.openDatePicker = toggledDatePickerState;
-            }
+      // Set this one as the last opened datepicker
+      if (this.openDatePicker === null) {
+        this.openDatePicker = toggledDatePickerState;
+      }
 
-        } else {
+    } else {
 
-            if(toggledDatePickerState.isOpen === false && toggledDatePickerState === this.openDatePicker){
-                this.openDatePicker = null;
-            }
+      if (toggledDatePickerState.isOpen === false && toggledDatePickerState === this.openDatePicker) {
+        this.openDatePicker = null;
+      }
 
-        }
+    }
 
-    };
+  };
 });

@@ -18,42 +18,42 @@
  */
 
 deferredBootstrapper.bootstrap({
-    element: document.body,
-    module: 'rehabstodApp',
-    resolve: {
-        LINKS: [ '$http', function($http) {
-            'use strict';
-            return $http.get('/api/config/links');
-        } ],
-        APP_CONFIG: [ '$http', function($http) {
-            'use strict';
-            return $http.get('/api/config');
-        } ],
-        USER_DATA: ['$http', '$q', function($http, $q) {
-            'use strict';
-            var promise = $q.defer();
-            $http.get('/api/user').then(function(response) {
-                promise.resolve(response.data);
-            }, function() {
-                //resolve user as empty user object, in case we accessing the index page.
-                promise.resolve(undefined);
-            });
+  element: document.body,
+  module: 'rehabstodApp',
+  resolve: {
+    LINKS: ['$http', function($http) {
+      'use strict';
+      return $http.get('/api/config/links');
+    }],
+    APP_CONFIG: ['$http', function($http) {
+      'use strict';
+      return $http.get('/api/config');
+    }],
+    USER_DATA: ['$http', '$q', function($http, $q) {
+      'use strict';
+      var promise = $q.defer();
+      $http.get('/api/user').then(function(response) {
+        promise.resolve(response.data);
+      }, function() {
+        //resolve user as empty user object, in case we accessing the index page.
+        promise.resolve(undefined);
+      });
 
-            return promise.promise;
+      return promise.promise;
 
-        }]
-    },
-    onError: function(error) {
-        'use strict';
-        //We don't have access to any components in our app yet, since the bootstrap resolve failed, so
-        //redirect to error page with our best guess.
+    }]
+  },
+  onError: function(error) {
+    'use strict';
+    //We don't have access to any components in our app yet, since the bootstrap resolve failed, so
+    //redirect to error page with our best guess.
 
-        var reason = 'unknown';
-        //If the resolve failed with a 403 status, we're most likely not authenticated, e.g used a
-        //bookmark / deep link without logging in first.
-        if (error && error.status === 403) {
-            reason = 'denied';
-        }
-        window.location.href = '/error.jsp?reason=' + reason; // jshint ignore:line
+    var reason = 'unknown';
+    //If the resolve failed with a 403 status, we're most likely not authenticated, e.g used a
+    //bookmark / deep link without logging in first.
+    if (error && error.status === 403) {
+      reason = 'denied';
     }
+    window.location.href = '/error.jsp?reason=' + reason; // jshint ignore:line
+  }
 });

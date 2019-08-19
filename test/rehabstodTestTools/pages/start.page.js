@@ -28,24 +28,24 @@
 var RehabstodBasePage = require('./rehabstod.base.page.js');
 
 var RehabstodStartPageBase = RehabstodBasePage._extend({
-    init: function init() {
-        init._super.call(this);
-        this.at = element(by.id('rhs-start-page'));
-        this.fullUnit = element(by.id('rhs-start-page-all-btn'));
-        this.myUnit = element(by.id('rhs-start-page-mine-btn'));
-    },
-    get: function () {
-        this.getPage('start');
-    },
-    isAt: function isAt() {
-        return isAt._super.call(this);
-    },
-    clickFullUnit: function() {
-        this.fullUnit.click();
-    },
-    clickMyUnit: function() {
-        this.myUnit.click();
-    }
+  init: function init() {
+    init._super.call(this);
+    this.at = element(by.id('rhs-start-page'));
+    this.fullUnit = element(by.id('rhs-start-page-all-btn'));
+    this.myUnit = element(by.id('rhs-start-page-mine-btn'));
+  },
+  get: function() {
+    this.getPage('start');
+  },
+  isAt: function isAt() {
+    return isAt._super.call(this);
+  },
+  clickFullUnit: function() {
+    this.fullUnit.click();
+  },
+  clickMyUnit: function() {
+    this.myUnit.click();
+  }
 });
 
 module.exports = new RehabstodStartPageBase();

@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.service;
 
 import java.time.LocalDateTime;
-
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.v2.ActionType;
@@ -33,19 +32,15 @@ public interface SamtyckestjanstIntegrationService {
      * Updates the 'has consent' attribute for each {@link IntygAccessControlMetaData} in
      * intygAccessMetaData map.
      *
-     * @param patientId
-     *            - The id of the current patient
-     * @param userHsaId
-     *            - The hsaId of the current user
-     * @param currentVardgivarHsaId
-     *           - The hsaId of the current vardgivare
-     * @param currentEnhetsId
-     *           - The hsaId of the current enehet
+     * @param patientId - The id of the current patient
+     * @param userHsaId - The hsaId of the current user
+     * @param currentVardgivarHsaId - The hsaId of the current vardgivare
+     * @param currentEnhetsId - The hsaId of the current enehet
      */
     boolean checkForConsent(String patientId,
-                              String userHsaId,
-                              String currentVardgivarHsaId,
-                              String currentEnhetsId);
+        String userHsaId,
+        String currentVardgivarHsaId,
+        String currentEnhetsId);
 
     /**
      * Service that registers an extended consent for a particular patient, and thus, providing direct
@@ -53,13 +48,13 @@ public interface SamtyckestjanstIntegrationService {
      */
     // CHECKSTYLE:OFF ParameterNumber
     void registerConsent(String vgHsaId,
-                         String veHsaId,
-                         Personnummer patientId,
-                         String userHsaId,
-                         String representedBy,
-                         LocalDateTime consentFrom,
-                         LocalDateTime consentTo,
-                         ActionType registrationAction);
+        String veHsaId,
+        Personnummer patientId,
+        String userHsaId,
+        String representedBy,
+        LocalDateTime consentFrom,
+        LocalDateTime consentTo,
+        ActionType registrationAction);
     // CHECKSTYLE:ON ParameterNumber
 
 }

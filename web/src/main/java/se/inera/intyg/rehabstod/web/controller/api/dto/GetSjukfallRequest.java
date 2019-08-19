@@ -20,7 +20,6 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
@@ -44,7 +43,9 @@ public class GetSjukfallRequest {
     private String fritext;
     private Integer komplettering;
 
-    /** The sole constructor. **/
+    /**
+     * The sole constructor.
+     **/
     public GetSjukfallRequest() {
         aktivtDatum = LocalDate.now();
     }

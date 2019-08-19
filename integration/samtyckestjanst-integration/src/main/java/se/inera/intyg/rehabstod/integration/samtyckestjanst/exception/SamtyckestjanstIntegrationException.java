@@ -22,6 +22,7 @@ package se.inera.intyg.rehabstod.integration.samtyckestjanst.exception;
  * Created by Magnus Ekstrand on 2018-10-10.
  */
 public class SamtyckestjanstIntegrationException extends RuntimeException {
+
     public SamtyckestjanstIntegrationException(String message) {
         super(message);
     }

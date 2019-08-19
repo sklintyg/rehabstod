@@ -19,25 +19,25 @@
 
 angular.module('rehabstodApp').directive('rhsPatientHistoryTabs',
     ['patientHistoryViewState', function(patientHistoryViewState) {
-        'use strict';
+      'use strict';
 
-        return {
-            restrict: 'E',
-            scope: {},
-            templateUrl: '/components/commonDirectives/rhsPatientHistoryTabs/rhsPatientHistoryTabs.directive.html',
+      return {
+        restrict: 'E',
+        scope: {},
+        templateUrl: '/components/commonDirectives/rhsPatientHistoryTabs/rhsPatientHistoryTabs.directive.html',
 
-            link: function($scope) {
+        link: function($scope) {
 
-                //expose tabs model to view
-                $scope.tabs = patientHistoryViewState.getTabs();
+          //expose tabs model to view
+          $scope.tabs = patientHistoryViewState.getTabs();
 
-                $scope.onSelect = function(tab) {
-                    patientHistoryViewState.selectTab(tab);
-                };
-                $scope.onClose = function(tab) {
-                    patientHistoryViewState.closeTab(tab);
-                };
+          $scope.onSelect = function(tab) {
+            patientHistoryViewState.selectTab(tab);
+          };
+          $scope.onClose = function(tab) {
+            patientHistoryViewState.closeTab(tab);
+          };
 
-            }
-        };
+        }
+      };
     }]);

@@ -24,33 +24,34 @@ var welcomePage = rhsTestTools.pages.welcomePage;
 
 module.exports = function() {
 
-    this.Given(/^att jag är inloggad som Läkare$/, function(callback) {
-        var userObj = {
-            fornamn: 'Jan',
-            efternamn: 'Nilsson',
-            hsaId: 'IFV1239877878-1049',
-            enhetId: 'IFV1239877878-1042',
-            lakare: true
-        };
-        logInAsUserRole(userObj, 'Läkare', callback);
-    });
+  this.Given(/^att jag är inloggad som Läkare$/, function(callback) {
+    var userObj = {
+      fornamn: 'Jan',
+      efternamn: 'Nilsson',
+      hsaId: 'IFV1239877878-1049',
+      enhetId: 'IFV1239877878-1042',
+      lakare: true
+    };
+    logInAsUserRole(userObj, 'Läkare', callback);
+  });
 };
 
 function logInAsUserRole(userObj, roleName, callback, newOrigin, newUserRole) {
-    console.log('Loggar in som ' + userObj.fornamn + ' ' + userObj.efternamn + '..');
+  console.log('Loggar in som ' + userObj.fornamn + ' ' + userObj.efternamn + '..');
 
-    global.user = JSON.parse(JSON.stringify(userObj));
+  global.user = JSON.parse(JSON.stringify(userObj));
 
-    browser.ignoreSynchronization = true;
-    welcomePage.get();
-    welcomePage.loginByJSON(JSON.stringify(userObj));
+  browser.ignoreSynchronization = true;
+  welcomePage.get();
+  welcomePage.loginByJSON(JSON.stringify(userObj));
 
-    browser.ignoreSynchronization = false;
-    browser.sleep(3000);
-    expect(element(by.css('.headerbox-user-profile')).getText()).to.eventually.contain(roleName + ' - ' + userObj.fornamn + ' ' + userObj.efternamn).then(function(value) {
-        logger.info('OK - hittade : ' + value);
-    }, function(reason) {
-        callback('FEL - err: ' + reason);
-    }).then(callback);
+  browser.ignoreSynchronization = false;
+  browser.sleep(3000);
+  expect(element(by.css('.headerbox-user-profile')).getText()).to.eventually.contain(
+      roleName + ' - ' + userObj.fornamn + ' ' + userObj.efternamn).then(function(value) {
+    logger.info('OK - hittade : ' + value);
+  }, function(reason) {
+    callback('FEL - err: ' + reason);
+  }).then(callback);
 
 }

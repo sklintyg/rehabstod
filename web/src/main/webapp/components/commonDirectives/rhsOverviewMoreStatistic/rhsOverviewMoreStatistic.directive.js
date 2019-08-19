@@ -19,11 +19,11 @@
 
 angular.module('rehabstodApp').directive('rhsOverviewMoreStatistic',
     [function() {
-        'use strict';
+      'use strict';
 
-        return {
-            restrict: 'E',
-            scope: {},
-            templateUrl: '/components/commonDirectives/rhsOverviewMoreStatistic/rhsOverviewMoreStatistic.directive.html'
-        };
+      return {
+        restrict: 'E',
+        scope: {},
+        templateUrl: '/components/commonDirectives/rhsOverviewMoreStatistic/rhsOverviewMoreStatistic.directive.html'
+      };
     }]);

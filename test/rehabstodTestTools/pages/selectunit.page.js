@@ -28,23 +28,23 @@
 var RehabstodBasePage = require('./rehabstod.base.page.js');
 
 var RehabstodSelectUnitPageBase = RehabstodBasePage._extend({
-    init: function init() {
-        init._super.call(this);
-        this.at = element(by.id('rhs-select-unit-page'));
+  init: function init() {
+    init._super.call(this);
+    this.at = element(by.id('rhs-select-unit-page'));
 
-    },
-    get: function () {
-        this.getPage('start');
-    },
-    isAt: function isAt() {
-        return isAt._super.call(this);
-    },
-    selectUnit: function(hsaId) {
-            element(by.id('rhs-vardenhet-selector-select-active-unit-' + hsaId + '-link')).click();
-    },
-    expandUnit: function(hsaId) {
-        element(by.id('expand-enhet-' + hsaId)).click();
-    }
+  },
+  get: function() {
+    this.getPage('start');
+  },
+  isAt: function isAt() {
+    return isAt._super.call(this);
+  },
+  selectUnit: function(hsaId) {
+    element(by.id('rhs-vardenhet-selector-select-active-unit-' + hsaId + '-link')).click();
+  },
+  expandUnit: function(hsaId) {
+    element(by.id('expand-enhet-' + hsaId)).click();
+  }
 });
 
 module.exports = new RehabstodSelectUnitPageBase();

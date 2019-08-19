@@ -18,16 +18,16 @@
  */
 
 angular.module('rehabstodApp')
-    .config(function($stateProvider) {
-        'use strict';
-        $stateProvider
-            .state('app.sjukfall.result', {
-                url: 'sjukfall',
-                views: {
-                    'content@app': {
-                        templateUrl: '/app/sjukfall/result/result.page.html',
-                        controller: 'SjukfallResultPageCtrl'
-                    }
-                }
-            });
-    });
+.config(function($stateProvider) {
+  'use strict';
+  $stateProvider
+  .state('app.sjukfall.result', {
+    url: 'sjukfall',
+    views: {
+      'content@app': {
+        templateUrl: '/app/sjukfall/result/result.page.html',
+        controller: 'SjukfallResultPageCtrl'
+      }
+    }
+  });
+});

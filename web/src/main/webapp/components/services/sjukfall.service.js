@@ -19,100 +19,100 @@
 
 angular.module('rehabstodApp').factory('SjukfallService',
     function($log, StringHelper, messageService, SjukfallProxy, SjukfallModel, SjukfallFilterViewState, SjukfallViewState, _, UserModel) {
-        'use strict';
+      'use strict';
 
-        var loading = false;
+      var loading = false;
 
-        function _loadSjukfall(force, skipReset) {
+      function _loadSjukfall(force, skipReset) {
 
-            if (loading) {
-                return;
-            }
-
-            var empty = SjukfallModel.get().length === 0;
-
-            if (force || empty) {
-                loading = true;
-                if (!skipReset) {
-                    SjukfallFilterViewState.reset();
-                    SjukfallModel.reset();
-                }
-
-                var query = {
-                    maxIntygsGlapp: UserModel.get().preferences.maxAntalDagarMellanIntyg
-                };
-
-                return SjukfallProxy.get(query).then(function(response) {
-                    _normalizeRiskSignals(response.data);
-                    SjukfallViewState.setKompletteringInfoError(response.kompletteringInfoError);
-                    SjukfallViewState.setSrsError(response.srsError);
-                    SjukfallModel.set(response.data);
-                    loading = false;
-                }, function(errorData) {
-                    $log.debug('Failed to get sjukfall.');
-                    $log.debug(errorData);
-
-                    SjukfallModel.setError();
-                    loading = false;
-                });
-            }
+        if (loading) {
+          return;
         }
 
-        // Due to sorting problems, we explicitly set the riskKategori for sjukfall having no
-        // risk prediction to 0.
-        function _normalizeRiskSignals(sjukfall) {
-            if (sjukfall === null) {
-                return;
-            }
+        var empty = SjukfallModel.get().length === 0;
 
-            _.each(sjukfall, function(s) {
-                if (s.riskSignal === null) {
-                    s.riskSignal = {riskKategori: 0};
-                }
-            });
+        if (force || empty) {
+          loading = true;
+          if (!skipReset) {
+            SjukfallFilterViewState.reset();
+            SjukfallModel.reset();
+          }
+
+          var query = {
+            maxIntygsGlapp: UserModel.get().preferences.maxAntalDagarMellanIntyg
+          };
+
+          return SjukfallProxy.get(query).then(function(response) {
+            _normalizeRiskSignals(response.data);
+            SjukfallViewState.setKompletteringInfoError(response.kompletteringInfoError);
+            SjukfallViewState.setSrsError(response.srsError);
+            SjukfallModel.set(response.data);
+            loading = false;
+          }, function(errorData) {
+            $log.debug('Failed to get sjukfall.');
+            $log.debug(errorData);
+
+            SjukfallModel.setError();
+            loading = false;
+          });
+        }
+      }
+
+      // Due to sorting problems, we explicitly set the riskKategori for sjukfall having no
+      // risk prediction to 0.
+      function _normalizeRiskSignals(sjukfall) {
+        if (sjukfall === null) {
+          return;
         }
 
-        function _exportResult(type, personnummer, sortState) {
-            var sort = {
-                kolumn: sortState.kolumn ? messageService.getProperty('label.table.column.sort.' + sortState.kolumn.toLowerCase()) : null,
-                order: sortState.order ? messageService.getProperty('label.table.column.sort.' + sortState.order) : null
-            };
+        _.each(sjukfall, function(s) {
+          if (s.riskSignal === null) {
+            s.riskSignal = {riskKategori: 0};
+          }
+        });
+      }
 
-            var filterState = SjukfallFilterViewState.getCurrentFilterState();
-
-            var query = {
-                sortering: sort,
-                maxIntygsGlapp: UserModel.get().preferences.maxAntalDagarMellanIntyg,
-                fritext: filterState.freeText,
-                showPatientId: filterState.showPatientId,
-                aldersIntervall: {
-                    min: '' + filterState.alder[0],
-                    max: '' + (filterState.alder[1] === null? '100+' : filterState.alder[1])
-                },
-                langdIntervall: {
-                    min: '' + filterState.sjukskrivningslangd[0],
-                    max: '' + (filterState.sjukskrivningslangd[1] === null? '365+' : filterState.sjukskrivningslangd[1])
-                },
-                slutdatum: {
-                    min: filterState.slutdatum.from === null ? '' : moment(filterState.slutdatum.from).format('YYYY-MM-DD'),
-                    max: filterState.slutdatum.to === null ? '' : moment(filterState.slutdatum.to).format('YYYY-MM-DD')
-                },
-                komplettering: filterState.komplettering,
-                lakare: filterState.lakare,
-                diagnosGrupper: filterState.diagnosKapitel,
-                personnummer: personnummer
-            };
-
-            return SjukfallProxy.exportResult(type, query);
-        }
-
-        function _isLoading() {
-            return loading;
-        }
-
-        return {
-            loadSjukfall: _loadSjukfall,
-            exportResult: _exportResult,
-            isLoading: _isLoading
+      function _exportResult(type, personnummer, sortState) {
+        var sort = {
+          kolumn: sortState.kolumn ? messageService.getProperty('label.table.column.sort.' + sortState.kolumn.toLowerCase()) : null,
+          order: sortState.order ? messageService.getProperty('label.table.column.sort.' + sortState.order) : null
         };
+
+        var filterState = SjukfallFilterViewState.getCurrentFilterState();
+
+        var query = {
+          sortering: sort,
+          maxIntygsGlapp: UserModel.get().preferences.maxAntalDagarMellanIntyg,
+          fritext: filterState.freeText,
+          showPatientId: filterState.showPatientId,
+          aldersIntervall: {
+            min: '' + filterState.alder[0],
+            max: '' + (filterState.alder[1] === null ? '100+' : filterState.alder[1])
+          },
+          langdIntervall: {
+            min: '' + filterState.sjukskrivningslangd[0],
+            max: '' + (filterState.sjukskrivningslangd[1] === null ? '365+' : filterState.sjukskrivningslangd[1])
+          },
+          slutdatum: {
+            min: filterState.slutdatum.from === null ? '' : moment(filterState.slutdatum.from).format('YYYY-MM-DD'),
+            max: filterState.slutdatum.to === null ? '' : moment(filterState.slutdatum.to).format('YYYY-MM-DD')
+          },
+          komplettering: filterState.komplettering,
+          lakare: filterState.lakare,
+          diagnosGrupper: filterState.diagnosKapitel,
+          personnummer: personnummer
+        };
+
+        return SjukfallProxy.exportResult(type, query);
+      }
+
+      function _isLoading() {
+        return loading;
+      }
+
+      return {
+        loadSjukfall: _loadSjukfall,
+        exportResult: _exportResult,
+        isLoading: _isLoading
+      };
     });

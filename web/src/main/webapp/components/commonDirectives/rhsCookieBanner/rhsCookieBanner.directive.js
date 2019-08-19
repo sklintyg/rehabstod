@@ -18,55 +18,55 @@
  */
 angular.module('rehabstodApp').directive('rhsCookieBanner',
     ['$localStorage',
-        function($localStorage) {
-            'use strict';
+      function($localStorage) {
+        'use strict';
 
-            return {
-                restrict: 'E',
-                scope: {},
-                templateUrl: '/components/commonDirectives/rhsCookieBanner/rhsCookieBanner.directive.html',
-                controller: function($scope, $timeout) {
-                    $scope.isOpen = false;
-                    $scope.showDetails = false;
-                    $scope.localStorage = $localStorage;
+        return {
+          restrict: 'E',
+          scope: {},
+          templateUrl: '/components/commonDirectives/rhsCookieBanner/rhsCookieBanner.directive.html',
+          controller: function($scope, $timeout) {
+            $scope.isOpen = false;
+            $scope.showDetails = false;
+            $scope.localStorage = $localStorage;
 
-                    if (!$scope.localStorage.rhsCookieConsentGiven) {
-                        $timeout(function() {
-                            $scope.isOpen = true;
-                        }, 500);
-                    }
+            if (!$scope.localStorage.rhsCookieConsentGiven) {
+              $timeout(function() {
+                $scope.isOpen = true;
+              }, 500);
+            }
 
-                    $scope.onCookieConsentClick = function() {
-                        $scope.isOpen = false;
-                        $scope.localStorage.rhsCookieConsentGiven = true;
+            $scope.onCookieConsentClick = function() {
+              $scope.isOpen = false;
+              $scope.localStorage.rhsCookieConsentGiven = true;
 
-                    };
-                }
             };
-        }]);
+          }
+        };
+      }]);
 
 angular.module('rehabstodApp').animation('.banner-slide-in', function() {
-    'use strict';
-    return {
-        enter: function(element, done) {
-            element.css({
-                    opacity: 0,
-                    top: '-80px'
-                })
-                .animate({
-                    opacity: 1,
-                    top: '0px'
-                }, 500, done);
-        },
-        leave: function(element, done) {
-            element.css({
-                    opacity: 1,
-                    top: '0px'
-                })
-                .animate({
-                    opacity: 0,
-                    top: '-80px'
-                }, 500, done);
-        }
-    };
+  'use strict';
+  return {
+    enter: function(element, done) {
+      element.css({
+        opacity: 0,
+        top: '-80px'
+      })
+      .animate({
+        opacity: 1,
+        top: '0px'
+      }, 500, done);
+    },
+    leave: function(element, done) {
+      element.css({
+        opacity: 1,
+        top: '0px'
+      })
+      .animate({
+        opacity: 0,
+        top: '-80px'
+      }, 500, done);
+    }
+  };
 });

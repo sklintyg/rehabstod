@@ -21,7 +21,8 @@ package se.inera.intyg.rehabstod.service.export.xlsx;
 /**
  * Created by eriklupander on 2016-02-26.
  */
-public  class Pair {
+public class Pair {
+
     private Integer i1;
     private Integer i2;
 

@@ -27,38 +27,38 @@ var sjukfallPage = rhsTestTools.pages.sjukfallPage;
 
 describe('Patientvyn', function() {
 
-    // Logga in
-    beforeAll(function() {
-        specHelper.login();
-        startPage.clickMyUnit();
-        expect(sjukfallPage.isAt()).toBeTruthy();
+  // Logga in
+  beforeAll(function() {
+    specHelper.login();
+    startPage.clickMyUnit();
+    expect(sjukfallPage.isAt()).toBeTruthy();
+  });
+
+  describe('öppna patient', function() {
+    it('verifiera intygslista', function() {
+      sjukfallPage.clickTableRow(0);
+      expect(sjukfallPage.patientModal.isDisplayed()).toBeTruthy();
+      expect(sjukfallPage.patientSjukfallTable.isDisplayed()).toBeTruthy();
+      expect(sjukfallPage.getPatientSjukfallRow(0, 0).isDisplayed()).toBeTruthy();
     });
 
-    describe('öppna patient', function() {
-        it('verifiera intygslista', function() {
-            sjukfallPage.clickTableRow(0);
-            expect(sjukfallPage.patientModal.isDisplayed()).toBeTruthy();
-            expect(sjukfallPage.patientSjukfallTable.isDisplayed()).toBeTruthy();
-            expect(sjukfallPage.getPatientSjukfallRow(0, 0).isDisplayed()).toBeTruthy();
-        });
+    it('anpassa tabellen', function() {
+      sjukfallPage.anpassaPatientTableLink.click();
+      sjukfallPage.toggleColumn('number');
+      sjukfallPage.anpassaTableSaveBtn.click();
 
-        it('anpassa tabellen', function() {
-            sjukfallPage.anpassaPatientTableLink.click();
-            sjukfallPage.toggleColumn('number');
-            sjukfallPage.anpassaTableSaveBtn.click();
-
-            expect(sjukfallPage.anpassaPatientTableTooltip.isPresent()).toBeTruthy();
-            expect(sjukfallPage.getPatientSjukfallRow(0, 0).isPresent()).toBeFalsy();
-        });
-
-        it('återställ tabellen', function() {
-            sjukfallPage.anpassaPatientTableLink.click();
-            sjukfallPage.toggleColumn('number');
-            sjukfallPage.anpassaTableSaveBtn.click();
-
-            //expect(sjukfallPage.anpassaPatientTableTooltip.isPresent()).toBeFalsy(); // tar bort checken tills en återställknapp finns
-            expect(sjukfallPage.getPatientSjukfallRow(0, 0).isPresent()).toBeTruthy();
-        });
+      expect(sjukfallPage.anpassaPatientTableTooltip.isPresent()).toBeTruthy();
+      expect(sjukfallPage.getPatientSjukfallRow(0, 0).isPresent()).toBeFalsy();
     });
+
+    it('återställ tabellen', function() {
+      sjukfallPage.anpassaPatientTableLink.click();
+      sjukfallPage.toggleColumn('number');
+      sjukfallPage.anpassaTableSaveBtn.click();
+
+      //expect(sjukfallPage.anpassaPatientTableTooltip.isPresent()).toBeFalsy(); // tar bort checken tills en återställknapp finns
+      expect(sjukfallPage.getPatientSjukfallRow(0, 0).isPresent()).toBeTruthy();
+    });
+  });
 
 });

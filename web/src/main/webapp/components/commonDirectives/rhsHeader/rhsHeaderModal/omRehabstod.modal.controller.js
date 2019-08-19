@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp').controller('omRehabstodModalController',
     function($scope, APP_CONFIG) {
-        'use strict';
-        $scope.version = APP_CONFIG.version;
+      'use strict';
+      $scope.version = APP_CONFIG.version;
     }
 );

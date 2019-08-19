@@ -27,11 +27,11 @@ var helpers = require('./helpers/helpers.js'); // The order is important. Helper
 var utils = require('./util/utils.js');
 
 module.exports = {
-    envConfig: environment.envConfig,
-    //testdata: testdata,
-    //utkastTextmap: utkastTextmap,
-    //intygTemplates: intygTemplates,
-    pages: pages,
-    helpers: helpers,
-    utils: utils
+  envConfig: environment.envConfig,
+  //testdata: testdata,
+  //utkastTextmap: utkastTextmap,
+  //intygTemplates: intygTemplates,
+  pages: pages,
+  helpers: helpers,
+  utils: utils
 };

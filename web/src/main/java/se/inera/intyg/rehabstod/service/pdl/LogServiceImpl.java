@@ -20,6 +20,11 @@ package se.inera.intyg.rehabstod.service.pdl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +44,6 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.schemas.contract.Personnummer;
-
-import javax.annotation.PostConstruct;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
-import java.util.List;
 
 /**
  * Implementation of service for logging user actions according to PDL requirements.
@@ -91,8 +90,8 @@ public class LogServiceImpl implements LogService {
             return;
         }
         PdlLogMessage pdlLogMessage =
-                pdlLogMessageFactory.buildLogMessage(LogUtil.getLogPatient(patientData),
-                        LogUtil.getLogUser(userService.getUser()), activityType, resourceType);
+            pdlLogMessageFactory.buildLogMessage(LogUtil.getLogPatient(patientData),
+                LogUtil.getLogUser(userService.getUser()), activityType, resourceType);
         send(pdlLogMessage);
     }
 
@@ -105,14 +104,14 @@ public class LogServiceImpl implements LogService {
 
         RehabstodUser user = userService.getUser();
         LogPatient logPatient = new LogPatient.Builder(
-                personnummer.getPersonnummer(), user.getValdVardenhet().getId(), user.getValdVardgivare().getId())
-                .enhetsNamn(user.getValdVardenhet().getNamn())
-                .vardgivareNamn(user.getValdVardgivare().getNamn())
-                .build();
+            personnummer.getPersonnummer(), user.getValdVardenhet().getId(), user.getValdVardgivare().getId())
+            .enhetsNamn(user.getValdVardenhet().getNamn())
+            .vardgivareNamn(user.getValdVardgivare().getNamn())
+            .build();
 
         PdlLogMessage pdlLogMessage =
-                pdlLogMessageFactory.buildLogMessage(logPatient,
-                        LogUtil.getLogUser(user), activityType, resourceType);
+            pdlLogMessageFactory.buildLogMessage(logPatient,
+                LogUtil.getLogUser(user), activityType, resourceType);
         LOG.debug("Logging {} consent for {}", activityType.getType(), resourceType.getResourceTypeName());
         send(pdlLogMessage);
     }
@@ -125,7 +124,7 @@ public class LogServiceImpl implements LogService {
             return;
         }
         LOG.debug("PDLLogging activityType {} for {} resources", pdlLogMessage.getActivityType().name(),
-                pdlLogMessage.getPdlResourceList().size());
+            pdlLogMessage.getPdlResourceList().size());
         try {
             jmsTemplate.send(new MC(pdlLogMessage));
         } catch (JmsException e) {
@@ -135,6 +134,7 @@ public class LogServiceImpl implements LogService {
     }
 
     private static final class MC implements MessageCreator {
+
         private final PdlLogMessage logMsg;
         private final ObjectMapper objectMapper = new CustomObjectMapper();
 
@@ -148,7 +148,7 @@ public class LogServiceImpl implements LogService {
                 return session.createTextMessage(objectMapper.writeValueAsString(this.logMsg));
             } catch (JsonProcessingException e) {
                 throw new IllegalArgumentException("Could not serialize log message of type '" + logMsg.getClass().getName()
-                        + "' into JSON, message: " + e.getMessage(), e);
+                    + "' into JSON, message: " + e.getMessage(), e);
             }
         }
     }

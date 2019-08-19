@@ -18,10 +18,10 @@
  */
 
 angular.module('lodash', [])
-    .factory('_',
-        /** @ngInject */
-        function($window) {
-            'use strict';
-            return $window._;
-        }
-    );
+.factory('_',
+    /** @ngInject */
+    function($window) {
+      'use strict';
+      return $window._;
+    }
+);

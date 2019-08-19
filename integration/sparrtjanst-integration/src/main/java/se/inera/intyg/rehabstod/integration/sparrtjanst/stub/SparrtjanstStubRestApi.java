@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.integration.sparrtjanst.stub;
 
 import java.time.LocalDate;
-
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -29,7 +28,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -44,11 +42,11 @@ public class SparrtjanstStubRestApi {
     @Path("/person/{personId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response addBlocksForPerson(
-            @PathParam("personId") String personId,
-            @QueryParam("from") String from,
-            @QueryParam("to") String to,
-            @QueryParam("vardgivare") String vardgivare,
-            @QueryParam("vardenhet") String vardenhet) {
+        @PathParam("personId") String personId,
+        @QueryParam("from") String from,
+        @QueryParam("to") String to,
+        @QueryParam("vardgivare") String vardgivare,
+        @QueryParam("vardenhet") String vardenhet) {
         store.add(new BlockData(personId, LocalDate.parse(from), LocalDate.parse(to), vardgivare, vardenhet));
         return Response.ok().build();
     }

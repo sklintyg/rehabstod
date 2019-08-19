@@ -17,52 +17,51 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe('Directive: rhsHeaderUser', function () {
-    'use strict';
+describe('Directive: rhsHeaderUser', function() {
+  'use strict';
 
-    // load the controller's module
-    beforeEach(module('rehabstodApp'));
-    beforeEach(module('htmlTemplates'));
+  // load the controller's module
+  beforeEach(module('rehabstodApp'));
+  beforeEach(module('htmlTemplates'));
 
-    var $scope;
-    var element;
-    var elementScope;
-    var UserModel;
+  var $scope;
+  var element;
+  var elementScope;
+  var UserModel;
 
-    // Store references to $rootScope and $compile
-    // so they are available to all tests in this describe block
-    beforeEach(inject(function($compile, $rootScope, _UserModel_) {
-        // The injector unwraps the underscores (_) from around the parameter names when matching
-        $scope = $rootScope.$new();
-        UserModel = _UserModel_;
+  // Store references to $rootScope and $compile
+  // so they are available to all tests in this describe block
+  beforeEach(inject(function($compile, $rootScope, _UserModel_) {
+    // The injector unwraps the underscores (_) from around the parameter names when matching
+    $scope = $rootScope.$new();
+    UserModel = _UserModel_;
 
-        element =
-            $compile(' <rhs-header-user />')(
-                $scope);
-        $scope.$digest();
+    element =
+        $compile(' <rhs-header-user />')(
+            $scope);
+    $scope.$digest();
 
-        elementScope = element.isolateScope() || element.scope();
+    elementScope = element.isolateScope() || element.scope();
 
-    }));
+  }));
 
+  it('show description if user is lakare', function() {
+    var role = {
+      name: 'LAKARE',
+      desc: 'Läkare'
+    };
 
-    it('show description if user is lakare', function() {
-        var role = {
-            name: 'LAKARE',
-            desc: 'Läkare'
-        };
+    expect(elementScope.showRoleDescription(role)).toBeTruthy();
+  });
 
-        expect(elementScope.showRoleDescription(role)).toBeTruthy();
-    });
+  it('hide description if user is REHABKOORDINATOR', function() {
+    var role = {
+      name: 'REHABKOORDINATOR',
+      desc: 'Rehabkoordinator'
+    };
 
-    it('hide description if user is REHABKOORDINATOR', function() {
-        var role = {
-            name: 'REHABKOORDINATOR',
-            desc: 'Rehabkoordinator'
-        };
-
-        expect(elementScope.showRoleDescription(role)).toBeFalsy();
-    });
+    expect(elementScope.showRoleDescription(role)).toBeFalsy();
+  });
 });
 
 

@@ -25,24 +25,24 @@
 'use strict';
 
 module.exports = {
-    isAt: function isAt() {
-        return element(by.css('.rhs-pdlconsent-modal')).isPresent();
-    },
+  isAt: function isAt() {
+    return element(by.css('.rhs-pdlconsent-modal')).isPresent();
+  },
 
-    isTeknisktFelShowing: function isTeknisktFelShowing() {
-        return element(by.id('error-tekniskt-fel')).isPresent();
-    },
+  isTeknisktFelShowing: function isTeknisktFelShowing() {
+    return element(by.id('error-tekniskt-fel')).isPresent();
+  },
 
-    consentCheckbox: function getConsentCheckbox() {
-        return element(by.id('rhs-pdlconsent-modal-give-consent-checkbox'));
-    },
+  consentCheckbox: function getConsentCheckbox() {
+    return element(by.id('rhs-pdlconsent-modal-give-consent-checkbox'));
+  },
 
-    giveConsentBtn: function getGiveConsentBtn() {
-        return element(by.id('rhs-pdlconsent-modal-give-consent-btn'));
-    },
+  giveConsentBtn: function getGiveConsentBtn() {
+    return element(by.id('rhs-pdlconsent-modal-give-consent-btn'));
+  },
 
-    cancelConsentBtn: function getCancelConsentBtn() {
-        return element(by.id('rhs-pdlconsent-modal-cancel-btn'));
-    }
+  cancelConsentBtn: function getCancelConsentBtn() {
+    return element(by.id('rhs-pdlconsent-modal-cancel-btn'));
+  }
 
 };

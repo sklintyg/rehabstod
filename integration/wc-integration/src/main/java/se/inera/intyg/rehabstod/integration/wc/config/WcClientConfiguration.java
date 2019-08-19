@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsResponderInterface;
 
 // CHECKSTYLE:ON LineLength
@@ -82,8 +81,8 @@ public class WcClientConfiguration {
             return Long.parseLong(timeout);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException(
-                    "Cannot apply timeouts for WcClientConfiguration, unparsable String value: " + timeout
-                            + ". Message: " + e.getMessage());
+                "Cannot apply timeouts for WcClientConfiguration, unparsable String value: " + timeout
+                    + ". Message: " + e.getMessage());
         }
     }
 }

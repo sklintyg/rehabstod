@@ -18,10 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.statistics;
 
+import java.util.List;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
-import java.util.List;
 
 /**
  * @author marced on 04/03/16.
