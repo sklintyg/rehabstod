@@ -52,6 +52,10 @@ angular.module('rehabstodApp').directive('rhsSelectUnitDropdown',
           $scope.selectedItem = _.find($scope.items, function(item) {
             return item.id === $scope.value;
           });
+          if (!$scope.selectedItem) {
+            $scope.value = null;
+            $scope.selectedItem = $scope.items[0];
+          }
 
           $scope.onSelectItem = function(item) {
             $scope.selectedItem = item;

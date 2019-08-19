@@ -11,6 +11,7 @@
         id="rhs-header-settings"
         class="header-link hidden-xs"
         href
+        ng-if="userModel.isPdlConsentGiven()"
         data-ng-click="openSettingsDialog()">
       Inställningar
     </a>
@@ -19,6 +20,7 @@
       type="button"
       id="expand-usermenu-btn"
       class="btn btn-link visible-xs"
+      ng-if="userModel.isPdlConsentGiven()"
       ng-click="toggleMenu($event)">
     <i class="glyphicon"
        data-ng-class="[{'glyphicon-chevron-down': !userExpanded}, {'glyphicon-chevron-up': userExpanded}]"></i>

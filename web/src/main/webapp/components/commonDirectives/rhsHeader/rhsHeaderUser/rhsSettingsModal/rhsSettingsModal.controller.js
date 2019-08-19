@@ -34,6 +34,7 @@ angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
         return newObject;
       }
 
+
       function addSetting(settingData, property, typeConfig) {
         $scope.settings.push({
           id: 'setting-' + property.toLowerCase(),
@@ -98,13 +99,15 @@ angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
             max: 90,
             defaultValue: 5
           });
-      addSetting(oldSettingData, 'standardenhet',
-          {
-            type: 'UNIT_SELECT',
-            showHelp: true,
-            vardgivare: UserModel.get().vardgivare,
-            defaultValue: null
-          });
+      if (UserModel.get().totaltAntalVardenheter > 1) {
+        addSetting(oldSettingData, 'standardenhet',
+            {
+              type: 'UNIT_SELECT',
+              showHelp: true,
+              vardgivare: UserModel.get().vardgivare,
+              defaultValue: null
+            });
+      }
       addSetting(oldSettingData, 'maxAntalDagarSedanSjukfallAvslut',
           {
             type: 'INT_RANGE',

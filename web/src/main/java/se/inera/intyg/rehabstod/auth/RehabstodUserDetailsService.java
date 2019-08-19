@@ -87,7 +87,7 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
                 anvandarPreferenceRepository.delete(defaultUnitPref);
             } else {
                 usedDefaultUnit = true;
-                LOG.debug("Selected stored default_login_hsa_unit_id for User " + rehabstodUser.getHsaId());
+                LOG.debug("Setting default_login_hsa_unit_id " + savedDefaultLoginHsaUnitId + " for User " + rehabstodUser.getHsaId());
             }
         }
         // INTYG-5068: Explicitly changing vardenhet on session creation to possibly appyl REHABKOORDINATOR role for
