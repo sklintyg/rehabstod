@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.service.export.pdf;
 
 
-import static se.inera.intyg.rehabstod.service.export.BaseExportService.getFilterDate;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_SELECTION_VALUE_ALLA;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_ALDERSPANN;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_AVSLUTADE_SJUKFALL;
@@ -157,7 +156,7 @@ class FilterTableBuilder {
         String sjukskrivning = getSjukskrivningsintervalDescription(printRequest.getLangdIntervall());
 
         //slutdatum
-        String slutdatum = getFilterDate(printRequest.getSlutdatumIntervall());
+        String slutdatum = getSlutdatumFilterDate(printRequest.getSlutdatumIntervall());
 
         //aldersspann
         String alderspann = printRequest.getAldersIntervall() == null ? NO_FILTER_VALUES_SELECTED_PLACEHOLDER : String
@@ -185,6 +184,21 @@ class FilterTableBuilder {
 
         List<String> truncated = lakare.stream().map(name -> ellipsize(name, MAXLENGTH_LAKARNAMN)).collect(Collectors.toList());
         return buildFilterCell(false, FILTER_TITLE_LAKARE, truncated);
+    }
+
+    public static String getSlutdatumFilterDate(LangdIntervall dateIntervall) {
+        String max = dateIntervall.getMax();
+        String min = dateIntervall.getMin();
+
+        if (max != null && !max.isEmpty() && min != null && !min.isEmpty()) {
+            if (max.equals(min)) {
+                return max;
+            } else {
+                return min + " till " + max;
+            }
+        }
+
+        return "-";
     }
 
     private Cell getDiagnosFilterCell(PrintSjukfallRequest printRequest) {

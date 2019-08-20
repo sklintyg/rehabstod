@@ -79,7 +79,8 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     public static final float PAGE_MARGIN_RIGHT = 6.5f;
     public static final float PAGE_MARGIN_BOTTOM = 6.5f;
     public static final float PAGE_MARGIN_LEFT = 6.5f;
-    protected static final String TEMPLATESTRING_TABLE_METADATA = "Antal sjukfall på enheten: %d              Presenterade sjukfall: %d";
+    protected static final String TEMPLATESTRING_TABLE_METADATA =
+        "Antal sjukfall på enheten: %d              Antal presenterade sjukfall: %d";
     protected static final String TEMPLATESTRING_TABLE_SORTORDER = "Tabellen är sorterad enligt %s i %s ordning";
     private static final float FOOTER_FONT_SIZE = 6.0f;
     private static final String LOGO_PATH = "pdf-assets/rehab_pdf_logo.png";
