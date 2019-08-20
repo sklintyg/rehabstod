@@ -187,7 +187,7 @@ var rhsMessages = {
     'label.table.diagnosbeskrivning.okand': 'Diagnoskod ${kod} är okänd och har ingen beskrivning',
     'label.table.anpassa': 'Anpassa tabellen',
     'label.table.anpassa.help': 'Du har anpassat innehållet i tabellen, vilket påverkar vilka filterval du kan göra.',
-    'label.table.anpassa.patient': 'Anpassa tabellen i denna vy',
+    'label.table.anpassa.patient': 'Anpassa tabellerna',
     'label.table.anpassa.patient.help': 'Observera att du har anpassat vilka kolumner som syns i tabellen.',
 
     // Patient table

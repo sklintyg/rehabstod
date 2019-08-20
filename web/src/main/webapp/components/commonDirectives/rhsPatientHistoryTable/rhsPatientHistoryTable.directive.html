@@ -15,8 +15,8 @@
   <div ng-if="historyItem.expanded">
     <div class="patient-sjukfall-table-container">
 
-      <div data-ng-if="filteredColumns.length === 0" class="alert alert-warning">
-        När du tidigare anpassade tabellen valde du bort samtliga kolumner och kan därför inte se den nu. För att lägga till kolumner igen, <rhs-patient-table-select-columns label-key="label.table.custom.modal.link"></rhs-patient-table-select-columns>.
+      <div data-ng-if="filteredColumns.length === 0" class="alert alert-warning no-columns">
+        När du tidigare anpassade tabellen valde du bort samtliga kolumner och kan därför inte se den nu. För att lägga till kolumner igen,&nbsp;<rhs-patient-table-select-columns label-key="label.table.custom.modal.link"></rhs-patient-table-select-columns>.
       </div>
       <div class="table-responsive"  data-ng-if="filteredColumns.length > 0">
       <table id="patient-sjukfall-table" class="table table-striped">
