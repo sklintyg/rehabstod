@@ -188,7 +188,9 @@ angular.module('rehabstodApp').factory('TableService',
           var columnsSelected = selectedColumns ? selectedColumns.split('|') : [];
           var allColumnsMap = _.keyBy(allColumns, 'id');
 
-          columns = columnsSelected.map(function(column) {
+          columns = columnsSelected.filter(function(column) {
+            return !!allColumnsMap[column];
+          }).map(function(column) {
             return allColumnsMap[column];
           });
         }
