@@ -66,6 +66,15 @@ describe('Service: TableService', function() {
       expect(valda.length).toBe(3);
       expect(valda).toEqual(expected);
     });
+
+    it('extra column vald', function() {
+      UserModel.get().preferences[preferenceNyckel] = 'ny|column2|patientId|finnsInte';
+
+      var valda = TableService.getSelectedColumns(columns, preferenceNyckel);
+
+      expect(valda.length).toBe(3);
+      expect(valda).toEqual(expected);
+    });
   });
 
   it('en vald', function() {
