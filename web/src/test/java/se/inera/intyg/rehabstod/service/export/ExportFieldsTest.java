@@ -31,10 +31,12 @@ public class ExportFieldsTest {
     public void fromJson() {
         assertEquals(ExportField.fromJson(""), Arrays.asList(ExportField.values()));
         assertEquals(ExportField.fromJson(null), Arrays.asList(ExportField.values()));
-        assertTrue(ExportField.fromJson("unknown").isEmpty());
+        assertTrue(ExportField.fromJson("unknown:1").isEmpty());
+        assertTrue(ExportField.fromJson(ExportField.DAYS.getJsonId() + ":0").isEmpty());
+        assertEquals(ExportField.fromJson(ExportField.DAYS.getJsonId()), Arrays.asList(ExportField.DAYS));
 
         final List<ExportField> exportFields = ExportField.fromJson(
-            ExportField.KOMPLETTERINGAR.getJsonId() + "|" + ExportField.DAYS.getJsonId() + "|apa|" + ExportField.GRADER.getJsonId());
+            ExportField.KOMPLETTERINGAR.getJsonId() + ":1|" + ExportField.DAYS.getJsonId() + ":1|apa:1|" + ExportField.GRADER.getJsonId() + ":1");
         assertEquals(3, exportFields.size());
         assertEquals((ExportField.KOMPLETTERINGAR), exportFields.get(0));
         assertEquals((ExportField.DAYS), exportFields.get(1));

@@ -59,7 +59,7 @@ describe('Service: TableService', function() {
     });
 
     it('alla valda', function() {
-      UserModel.get().preferences[preferenceNyckel] = 'ny|column2|patientId';
+      UserModel.get().preferences[preferenceNyckel] = 'ny:1|column2:1|patientId:1';
 
       var valda = TableService.getSelectedColumns(columns, preferenceNyckel);
 
@@ -68,7 +68,7 @@ describe('Service: TableService', function() {
     });
 
     it('extra column vald', function() {
-      UserModel.get().preferences[preferenceNyckel] = 'ny|column2|patientId|finnsInte';
+      UserModel.get().preferences[preferenceNyckel] = 'ny:1|column2:1|patientId:1|finnsInte:1';
 
       var valda = TableService.getSelectedColumns(columns, preferenceNyckel);
 
@@ -82,11 +82,26 @@ describe('Service: TableService', function() {
       id: 'ny'
     }];
 
-    UserModel.get().preferences[preferenceNyckel] = 'ny';
+    UserModel.get().preferences[preferenceNyckel] = 'ny:1';
 
     var valda = TableService.getSelectedColumns(columns, preferenceNyckel);
 
     expect(valda.length).toBe(1);
+    expect(valda).toEqual(expected);
+  });
+
+  it('sortering och dold', function() {
+    var expected = [{
+      id: 'column2'
+    }, {
+      id: 'ny'
+    }];
+
+    UserModel.get().preferences[preferenceNyckel] = 'column2:1|patientId:0|ny:1';
+
+    var valda = TableService.getSelectedColumns(columns, preferenceNyckel);
+
+    expect(valda.length).toBe(2);
     expect(valda).toEqual(expected);
   });
 
@@ -99,7 +114,7 @@ describe('Service: TableService', function() {
       id: 'ny'
     }];
 
-    UserModel.get().preferences[preferenceNyckel] = 'column2|patientId|ny';
+    UserModel.get().preferences[preferenceNyckel] = 'column2:1|patientId:1|ny:1';
 
     var valda = TableService.getSelectedColumns(columns, preferenceNyckel);
 

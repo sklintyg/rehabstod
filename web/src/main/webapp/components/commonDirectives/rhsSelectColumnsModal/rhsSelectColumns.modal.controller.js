@@ -30,7 +30,7 @@ angular.module('rehabstodApp').controller('rhsSelectColumnsModalController',
 
         var selectedColumnsString = selectedColumns.join('|');
         var defaultColumnsString = columns.map(function(column) {
-          return column.id;
+          return column.id + ':1';
         }).join('|');
 
         settingsToSave[preferenceKey] = selectedColumnsString === defaultColumnsString ? '' : selectedColumnsString;
@@ -90,10 +90,9 @@ angular.module('rehabstodApp').controller('rhsSelectColumnsModalController',
       };
 
       function getColumns() {
-        return $scope.columns.filter(function(column) {
-          return column.checked;
-        }).map(function(column) {
-          return column.id;
+        return $scope.columns.map(function(column) {
+          var checked = column.checked ? '1' : '0';
+          return column.id + ':' + checked;
         });
       }
 
@@ -110,12 +109,16 @@ angular.module('rehabstodApp').controller('rhsSelectColumnsModalController',
           var selectedColumnsArray = selectedColumns.split('|');
           var selectedColumnsIndexByKey = {};
           _.each(selectedColumnsArray, function(column, index) {
-            selectedColumnsIndexByKey[column] = index;
+            var columnSplit = column.split(':');
+            selectedColumnsIndexByKey[columnSplit[0]] = {
+              index: index,
+              checked: columnSplit[1] === '1'
+            };
           });
 
           $scope.columns.sort(function(c1, c2) {
-            var index1 = selectedColumnsIndexByKey[c1.id];
-            var index2 = selectedColumnsIndexByKey[c2.id];
+            var index1 = selectedColumnsIndexByKey[c1.id].index;
+            var index2 = selectedColumnsIndexByKey[c2.id].index;
 
             index1 = index1 === undefined ? 1000 : index1;
             index2 = index2 === undefined ? 1000 : index2;
@@ -124,7 +127,7 @@ angular.module('rehabstodApp').controller('rhsSelectColumnsModalController',
           });
 
           _.each($scope.columns, function(column) {
-            column.checked = selectedColumnsIndexByKey[column.id] !== undefined;
+            column.checked = selectedColumnsIndexByKey[column.id] !== undefined && selectedColumnsIndexByKey[column.id].checked;
           });
         }
 

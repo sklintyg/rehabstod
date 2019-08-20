@@ -60,18 +60,28 @@ public enum ExportField {
             return Arrays.asList(ExportField.values());
         }
         // jsonPreferenceString is separated by "|" e.g
-        // number|patientId|patientAge|patientName|gender|dxs|startDate|endDate|days|antal|degree|kompletteringar|doctor|srs
+        // example: number:1|patientId:0|patientAge:1
 
         List<ExportField> enabledFields = new ArrayList<>();
 
         Stream.of(jsonPreferenceString.split("\\|"))
-            .forEach(jsonId -> allFields
-                .stream()
-                .filter(ef -> ef.getJsonId().equalsIgnoreCase(jsonId))
-                .findFirst()
-                .ifPresent(enabledFields::add));
+            .forEach(jsonString -> addFieldIfItExists(allFields, enabledFields, jsonString));
 
         return enabledFields;
+    }
+
+    private static void addFieldIfItExists(EnumSet<ExportField> allFields, List<ExportField> enabledFields, String jsonString) {
+        String[] jsonSplit = jsonString.split(":");
+
+        if (jsonSplit.length > 1 && jsonSplit[1].equalsIgnoreCase("0")) {
+            return;
+        }
+
+        allFields
+            .stream()
+            .filter(ef -> ef.getJsonId().equalsIgnoreCase(jsonSplit[0]))
+            .findFirst()
+            .ifPresent(enabledFields::add);
     }
 
     public static Optional<ExportField> fromJsonId(String jsonId) {
