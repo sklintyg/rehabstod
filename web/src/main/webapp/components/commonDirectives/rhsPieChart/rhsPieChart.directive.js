@@ -18,8 +18,7 @@
  */
 /* globals Highcharts */
 angular.module('rehabstodApp').directive('rhsPieChart',
-    [
-      function() {
+      function($rootScope) {
         'use strict';
 
         return {
@@ -45,6 +44,18 @@ angular.module('rehabstodApp').directive('rhsPieChart',
                 angular.element(chart.container).find('svg').attr('focusable', false);
               }
             });
+            var unregisterFn = $rootScope.$on('settings.closed', function() {
+              scope.config.plotOptions.series.animation = false;
+              chart = Highcharts.chart(element[0], scope.config);
+            });
+
+            var unregisterFn2 = $rootScope.$on('settings.open', function() {
+              chart.destroy();
+            });
+            //rootscope on event listeners aren't unregistered automatically when 'this' directives
+            //scope is destroyed, so let's take care of that.
+            scope.$on('$destroy', unregisterFn);
+            scope.$on('$destroy', unregisterFn2);
           }
         };
-      }]);
+      });
