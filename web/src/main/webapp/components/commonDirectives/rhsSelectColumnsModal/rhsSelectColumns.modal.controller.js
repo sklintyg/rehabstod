@@ -117,11 +117,11 @@ angular.module('rehabstodApp').controller('rhsSelectColumnsModalController',
           });
 
           $scope.columns.sort(function(c1, c2) {
-            var index1 = selectedColumnsIndexByKey[c1.id].index;
-            var index2 = selectedColumnsIndexByKey[c2.id].index;
+            var column1 = selectedColumnsIndexByKey[c1.id];
+            var column2 = selectedColumnsIndexByKey[c2.id];
 
-            index1 = index1 === undefined ? 1000 : index1;
-            index2 = index2 === undefined ? 1000 : index2;
+            var index1 = column1 === undefined ? 1000 : column1.index;
+            var index2 = column2 === undefined ? 1000 : column2.index;
 
             return index1 - index2;
           });
