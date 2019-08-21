@@ -1,5 +1,8 @@
-.rhs-select-unit-dropdown {
+rhs-select-unit-dropdown {
   display: block;
+}
+
+.rhs-select-unit-dropdown {
 
   .caret {
     float: right;
@@ -7,8 +10,12 @@
     margin-left: 8px;
   }
 
-  .dropdown-menu > li > a {
-    padding-left: 10px;
+  .dropdown-menu {
+    z-index: 2000;
+
+    > li > a {
+      padding-left: 10px;
+    }
   }
 
   .item-label {
@@ -23,5 +30,3 @@
     }
   }
 }
-
-
