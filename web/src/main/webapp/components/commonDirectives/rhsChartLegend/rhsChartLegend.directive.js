@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsChartLegend',
-    [
-      function() {
+      function($rootScope) {
         'use strict';
 
         return {
@@ -38,6 +37,20 @@ angular.module('rehabstodApp').directive('rhsChartLegend',
               return scope.config.colors[index];
             };
 
+            scope.hidden = false;
+
+            var unregisterFn = $rootScope.$on('settings.closed', function() {
+              scope.hidden = false;
+            });
+
+            var unregisterFn2 = $rootScope.$on('settings.open', function() {
+              scope.hidden = true;
+            });
+            //rootscope on event listeners aren't unregistered automatically when 'this' directives
+            //scope is destroyed, so let's take care of that.
+            scope.$on('$destroy', unregisterFn);
+            scope.$on('$destroy', unregisterFn2);
+
           }
         };
-      }]);
+      });
