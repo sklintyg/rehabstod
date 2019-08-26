@@ -157,11 +157,20 @@ angular.module('rehabstodApp').factory('UserProxy',
         return promise.promise;
       }
 
+      function _fetchAccessToken() {
+        return $http.get('/api/user/accesstoken').then(function(response) {
+          return response.data.accessToken;
+        }, function() {
+          return '';
+        });
+      }
+
       // Return public API for the service
       return {
         changeSelectedUnit: _changeSelectedUnit,
         givePdlConsent: _givePdlConsent,
         getSettings: _getSettings,
-        saveSettings: _saveSettings
+        saveSettings: _saveSettings,
+        fetchAccessToken: _fetchAccessToken
       };
     });

@@ -5,7 +5,13 @@
 <div>
   <p><span message key="label.sjukfall.start.merstatistik.body"></span></p>
   <div>
-    <span dynamiclink key="statistiktjanstenTooltip"></span>
+    <a href
+       data-ng-click="openStatistik()"
+       class="external-link"
+       uib-tooltip="{{ linkTooltip }}"
+       tooltip-placement="auto top"
+       tooltip-append-to-body="true"
+    >{{linkText}} <i class="glyphicon glyphicon-new-window"></i></a>
     <img src="/assets/images/intygsstatistik_64x64.png" class="statistik-icon">
   </div>
 </div>

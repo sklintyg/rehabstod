@@ -18,12 +18,60 @@
  */
 
 angular.module('rehabstodApp').directive('rhsOverviewMoreStatistic',
-    [function() {
+    function() {
       'use strict';
 
       return {
         restrict: 'E',
         scope: {},
-        templateUrl: '/components/commonDirectives/rhsOverviewMoreStatistic/rhsOverviewMoreStatistic.directive.html'
+        templateUrl: '/components/commonDirectives/rhsOverviewMoreStatistic/rhsOverviewMoreStatistic.directive.html',
+        controller: function($scope, UserProxy, UserModel, dynamicLinkService, $window) {
+          var link = dynamicLinkService.getLink('statistiktjanstenTooltip');
+
+          $scope.linkText = link.text;
+          $scope.linkTooltip = link.tooltip;
+
+          $scope.openStatistik = function() {
+            UserProxy.fetchAccessToken().then(function(token) {
+              if (token) {
+                formLogin(token);
+              } else {
+                openLink();
+              }
+            }, function() {
+              openLink();
+            });
+          };
+
+          function openLink() {
+            $window.open(link.url);
+          }
+
+          function formLogin(accessToken) {
+            var enhet = UserModel.get().valdVardenhet.id;
+            var form = document.createElement('form');
+
+            form.method = 'post';
+            form.action = link.url;
+            form.target = '_blank';
+
+            var nodeEnhet = document.createElement('input');
+            nodeEnhet.name = 'enhet';
+            nodeEnhet.value = enhet;
+            nodeEnhet.type = 'hidden';
+            form.appendChild(nodeEnhet);
+
+            var nodeAccessToken = document.createElement('input');
+            nodeAccessToken.name = 'access_token';
+            nodeAccessToken.value = accessToken;
+            nodeAccessToken.type = 'hidden';
+            form.appendChild(nodeAccessToken);
+
+            // To be sent, the form needs to be attached to the main document.
+            form.style.display = 'none';
+
+            $window.jQuery(form).appendTo('body').submit().remove();
+          }
+        }
       };
-    }]);
+    });
