@@ -31,6 +31,7 @@ import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.auth.RehabstodUserTokens;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
@@ -162,6 +163,10 @@ public class UserController {
         newPreferences.validate();
 
         RehabstodUserPreferences oldPreferences = userPreferencesService.getAllPreferences();
+
+        // Set current pdl consent value
+        newPreferences.updatePreference(Preference.PDL_CONSENT_GIVEN, oldPreferences.get(Preference.PDL_CONSENT_GIVEN));
+
         // Update preferences with new values
         userPreferencesService.updatePreferences(newPreferences);
         LOG.debug("Updating user pref with values {}", keyValueMap);
