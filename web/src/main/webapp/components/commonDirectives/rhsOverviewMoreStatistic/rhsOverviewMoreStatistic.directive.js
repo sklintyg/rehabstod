@@ -25,11 +25,13 @@ angular.module('rehabstodApp').directive('rhsOverviewMoreStatistic',
         restrict: 'E',
         scope: {},
         templateUrl: '/components/commonDirectives/rhsOverviewMoreStatistic/rhsOverviewMoreStatistic.directive.html',
-        controller: function($scope, UserProxy, UserModel, dynamicLinkService, $window) {
+        controller: function($scope, UserProxy, UserModel, dynamicLinkService, $window, APP_CONFIG) {
           var link = dynamicLinkService.getLink('statistiktjanstenTooltip');
 
           $scope.linkText = link.text;
           $scope.linkTooltip = link.tooltip;
+
+          var linkUrl = APP_CONFIG.statistikSsoUrl;
 
           $scope.openStatistik = function() {
             UserProxy.fetchAccessToken().then(function(token) {
@@ -44,7 +46,7 @@ angular.module('rehabstodApp').directive('rhsOverviewMoreStatistic',
           };
 
           function openLink() {
-            $window.open(link.url);
+            $window.open(linkUrl);
           }
 
           function formLogin(accessToken) {
@@ -52,7 +54,7 @@ angular.module('rehabstodApp').directive('rhsOverviewMoreStatistic',
             var form = document.createElement('form');
 
             form.method = 'post';
-            form.action = link.url;
+            form.action = linkUrl;
             form.target = '_blank';
 
             var nodeEnhet = document.createElement('input');

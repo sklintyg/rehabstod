@@ -38,6 +38,7 @@ public class ConfigController {
 
     private static final String WEBCERT_VIEW_INTYG_URL_TEMPLATE = "webcert.view.urltemplate";
     private static final String WEBCERT_VIEW_INTYG_URL_LOGOUT = "webcert.view.urllogout";
+    private static final String STATISTIK_SSO_URL = "statistik.sso.url";
     private static final String PROJECT_VERSION_PROPERTY = "project.version";
 
     @Autowired
@@ -63,6 +64,7 @@ public class ConfigController {
         configResponse.setDiagnosKapitelList(diagnosKapitelService.getDiagnosKapitelList());
         configResponse.setWebcertViewIntygTemplateUrl(env.getProperty(WEBCERT_VIEW_INTYG_URL_TEMPLATE));
         configResponse.setWebcertViewIntygLogoutUrl(env.getProperty(WEBCERT_VIEW_INTYG_URL_LOGOUT));
+        configResponse.setStatistikSsoUrl(env.getProperty(STATISTIK_SSO_URL));
         configResponse.setVersion(env.getProperty(PROJECT_VERSION_PROPERTY));
         configResponse.setBanners(iaBannerService.getCurrentBanners());
 

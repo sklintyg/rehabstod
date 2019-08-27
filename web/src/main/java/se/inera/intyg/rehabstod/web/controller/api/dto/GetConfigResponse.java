@@ -30,6 +30,7 @@ public class GetConfigResponse {
     private List<DiagnosKapitel> diagnosKapitelList;
     private String webcertViewIntygTemplateUrl;
     private String webcertViewIntygLogoutUrl;
+    private String statistikSsoUrl;
     private String version;
     private List<Banner> banners;
 
@@ -63,6 +64,14 @@ public class GetConfigResponse {
 
     public String getWebcertViewIntygLogoutUrl() {
         return webcertViewIntygLogoutUrl;
+    }
+
+    public String getStatistikSsoUrl() {
+        return statistikSsoUrl;
+    }
+
+    public void setStatistikSsoUrl(String statistikSsoUrl) {
+        this.statistikSsoUrl = statistikSsoUrl;
     }
 
     public List<Banner> getBanners() {
