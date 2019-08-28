@@ -17,6 +17,9 @@
     "webcertViewIntygLogoutUrl": {
       "type": "string"
     },
+    "statistikSsoUrl": {
+      "type": "string"
+    },
     "banners": {
       "type": "array",
       "minItems": 0,
@@ -62,7 +65,8 @@
     "diagnosKapitelList",
     "version",
     "webcertViewIntygTemplateUrl",
-    "webcertViewIntygLogoutUrl"
+    "webcertViewIntygLogoutUrl",
+    "statistikSsoUrl"
   ],
   "title": "GetConfigResponse transport model",
   "type": "object",
