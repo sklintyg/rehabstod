@@ -18,12 +18,62 @@
  */
 
 angular.module('rehabstodApp').directive('rhsOverviewMoreStatistic',
-    [function() {
+    function() {
       'use strict';
 
       return {
         restrict: 'E',
         scope: {},
-        templateUrl: '/components/commonDirectives/rhsOverviewMoreStatistic/rhsOverviewMoreStatistic.directive.html'
+        templateUrl: '/components/commonDirectives/rhsOverviewMoreStatistic/rhsOverviewMoreStatistic.directive.html',
+        controller: function($scope, UserProxy, UserModel, dynamicLinkService, $window, APP_CONFIG) {
+          var link = dynamicLinkService.getLink('statistiktjanstenTooltip');
+
+          $scope.linkText = link.text;
+          $scope.linkTooltip = link.tooltip;
+
+          var linkUrl = APP_CONFIG.statistikSsoUrl;
+
+          $scope.openStatistik = function() {
+            UserProxy.fetchAccessToken().then(function(token) {
+              if (token) {
+                formLogin(token);
+              } else {
+                openLink();
+              }
+            }, function() {
+              openLink();
+            });
+          };
+
+          function openLink() {
+            $window.open(linkUrl);
+          }
+
+          function formLogin(accessToken) {
+            var enhet = UserModel.get().valdVardenhet.id;
+            var form = document.createElement('form');
+
+            form.method = 'post';
+            form.action = linkUrl;
+            form.target = '_blank';
+
+            var nodeEnhet = document.createElement('input');
+            nodeEnhet.name = 'enhet';
+            nodeEnhet.value = enhet;
+            nodeEnhet.type = 'hidden';
+            form.appendChild(nodeEnhet);
+
+            var nodeAccessToken = document.createElement('input');
+            nodeAccessToken.name = 'access_token';
+            nodeAccessToken.value = accessToken;
+            nodeAccessToken.type = 'hidden';
+            form.appendChild(nodeAccessToken);
+
+            // To be sent, the form needs to be attached to the main document.
+            form.style.display = 'none';
+
+            $window.jQuery(form).appendTo('body').submit().remove();
+          }
+        }
       };
-    }]);
+    });

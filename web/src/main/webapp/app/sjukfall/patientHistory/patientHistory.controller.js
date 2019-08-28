@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp').controller('patientHistoryController',
     function($scope, $http, $uibModalInstance, $state, APP_CONFIG, patientHistoryProxy, SjukfallFilterViewState,
-        patientHistoryViewState, patient, UserModel, TableService) {
+        patientHistoryViewState, patient, UserModel, TableService, UserProxy) {
       'use strict';
 
       //Create initial default details tab (cannot be closed)
@@ -88,8 +88,8 @@ angular.module('rehabstodApp').controller('patientHistoryController',
       updatePatientSjukfall(patient);
 
       function fetchAccessToken() {
-        $http.get('/api/user/accesstoken').then(function(response) {
-          $scope.accessToken = response.data.accessToken;
+        UserProxy.fetchAccessToken().then(function(token) {
+          $scope.accessToken = token;
         }, function() {
           $scope.accessToken = '';
         });
