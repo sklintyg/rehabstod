@@ -21,7 +21,6 @@ package se.inera.intyg.rehabstod.service.export.pdf;
 import static com.itextpdf.io.font.PdfEncodings.IDENTITY_H;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.TABLE_TITLE_MINA_SJUKFALL;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.TABLE_TITLE_PA_ENHETEN;
-import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.TABLE_TITLE_PREFIX;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfUtil.aCell;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfUtil.millimetersToPoints;
 
@@ -156,10 +155,9 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         boolean srsFeatureActive) {
 
         Div root = new Div().setFillAvailableArea(true);
-        StringBuilder tableTitle = new StringBuilder(TABLE_TITLE_PREFIX);
-        tableTitle.append(user.getUrval() == Urval.ALL ? TABLE_TITLE_PA_ENHETEN : TABLE_TITLE_MINA_SJUKFALL);
+        String tableTitle = (user.getUrval() == Urval.ALL ? TABLE_TITLE_PA_ENHETEN : TABLE_TITLE_MINA_SJUKFALL);
 
-        root.add(new Paragraph(tableTitle.toString()).addStyle(style.getPageHeaderStyle()).setMarginTop(TABLE_MARGIN_TOP));
+        root.add(new Paragraph(tableTitle).addStyle(style.getPageHeaderStyle()).setMarginTop(TABLE_MARGIN_TOP));
 
         boolean displaySortorder = shouldShowSortering(printSjukfallRequest,
             ExportField.fromJson(user.getPreferences().get(Preference.SJUKFALL_TABLE_COLUMNS)));
