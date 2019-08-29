@@ -36,9 +36,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.core.env.Environment;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
+import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
@@ -79,6 +81,9 @@ public class UserControllerTest {
     @Mock
     TokenExchangeService tokenExchangeService;
 
+    @Mock
+    private Environment environment;
+
     @InjectMocks
     private UserController userController = new UserController();
 
@@ -93,6 +98,7 @@ public class UserControllerTest {
         when(rehabUserMock.getSjfPatientVardgivare()).thenReturn(new HashMap<>());
         when(rehabUserMock.getPreferences()).thenReturn(RehabstodUserPreferences.empty());
         when(userService.getUser()).thenReturn(rehabUserMock);
+        when(environment.getActiveProfiles()).thenReturn(new String[0]);
     }
 
     @Test
@@ -173,6 +179,29 @@ public class UserControllerTest {
         GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
         verify(tokenExchangeService, never())
             .refresh(any(RehabstodUserTokens.class));
+        assertNull(accessTokenResponse.getAccessToken());
+    }
+
+    @Test
+    public void testGetAccessTokenFakeUserResponse() {
+        when(rehabUserMock.getTokens()).thenReturn(null);
+
+        when(rehabUserMock.getAuthenticationMethod()).thenReturn(AuthenticationMethod.FAKE);
+
+        GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
+        verify(tokenExchangeService, never()).refresh(any(RehabstodUserTokens.class));
+        assertEquals("fakeToken-" + HSA_ID, accessTokenResponse.getAccessToken());
+    }
+
+    @Test
+    public void testGetAccessTokenFakeUserNotProdResponse() {
+        when(rehabUserMock.getTokens()).thenReturn(null);
+
+        when(rehabUserMock.getAuthenticationMethod()).thenReturn(AuthenticationMethod.FAKE);
+        when(environment.getActiveProfiles()).thenReturn(new String[] {"prod"});
+
+        GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
+        verify(tokenExchangeService, never()).refresh(any(RehabstodUserTokens.class));
         assertNull(accessTokenResponse.getAccessToken());
     }
 
