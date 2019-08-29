@@ -37,9 +37,8 @@ final class PdfConstants {
     static final String FORMAT_ANTAL_DAGAR = "%d dagar";
     static final String UNICODE_RIGHT_ARROW_SYMBOL = "\u2192";
 
-    static final String TABLE_TITLE_PREFIX = "Sjukfall";
-    static final String TABLE_TITLE_MINA_SJUKFALL = " - Pågående sjukfall där jag utfärdat det nuvarande intyget";
-    static final String TABLE_TITLE_PA_ENHETEN = " - Pågående sjukfall på enheten";
+    static final String TABLE_TITLE_MINA_SJUKFALL = "Mina pågående sjukfall på enheten";
+    static final String TABLE_TITLE_PA_ENHETEN = "Pågående sjukfall på enheten";
 
     private PdfConstants() {
     }
