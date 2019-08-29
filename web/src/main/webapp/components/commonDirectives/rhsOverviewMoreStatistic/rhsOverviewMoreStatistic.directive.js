@@ -46,7 +46,7 @@ angular.module('rehabstodApp').directive('rhsOverviewMoreStatistic',
           };
 
           function openLink() {
-            $window.open(linkUrl);
+            $window.open(link.url);
           }
 
           function formLogin(accessToken) {

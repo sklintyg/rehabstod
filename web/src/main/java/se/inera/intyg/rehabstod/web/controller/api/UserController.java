@@ -23,9 +23,11 @@ import static se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService.PDL_CONS
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
+import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
@@ -74,6 +77,9 @@ public class UserController {
     @Autowired
     private TokenExchangeService tokenExchangeService;
 
+    @Autowired
+    private Environment environment;
+
     @RequestMapping(value = "", method = RequestMethod.GET)
     public GetUserResponse getUser() {
         RehabstodUser user = getRehabstodUser();
@@ -98,6 +104,18 @@ public class UserController {
                 }
             }
         }
+
+        // Don't use when prod profile is active
+        String[] activeProfiles = environment.getActiveProfiles();
+        if (Stream.of(activeProfiles).noneMatch("prod"::equalsIgnoreCase)) {
+            if (tokens == null) {
+                if (AuthenticationMethod.FAKE.equals(user.getAuthenticationMethod())) {
+                    tokens = new RehabstodUserTokens();
+                    tokens.setAccessToken("fakeToken-" + user.getHsaId());
+                }
+            }
+        }
+
         return new GetAccessTokenResponse(tokens);
     }
 
