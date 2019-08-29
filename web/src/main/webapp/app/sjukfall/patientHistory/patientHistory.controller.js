@@ -53,7 +53,8 @@ angular.module('rehabstodApp').controller('patientHistoryController',
         };
 
         $scope.close = function() {
-            wcLogout();
+          // Removed due to late revert of new IdP functions
+          // wcLogout();
             $uibModalInstance.close();
         };
 

@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import java.util.List;
 import org.opensaml.saml2.core.Assertion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,6 @@ import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.infra.security.siths.BaseUserDetailsService;
@@ -37,9 +37,6 @@ import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.inera.intyg.rehabstod.service.user.TokenExchangeService;
-import se.inera.intyg.rehabstod.service.user.TokenServiceException;
-
-import java.util.List;
 
 /**
  * @author andreaskaltenbach
@@ -77,8 +74,12 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
             rehabstodUnitChangeService.changeValdVardenhet(rehabstodUser.getValdVardenhet().getId(), rehabstodUser);
         }
         RehabstodUserPreferences preferences = RehabstodUserPreferences
-                .fromBackend(anvandarPreferenceRepository.getAnvandarPreference(intygUser.getHsaId()));
+            .fromBackend(anvandarPreferenceRepository.getAnvandarPreference(intygUser.getHsaId()));
         rehabstodUser.setPreferences(preferences);
+
+
+        /*
+        The following code is removed due to late revert of new IdP funtions
 
         // Get AccessToken to use in Webcert iFrame, but only when SITHS authentication is performed.
         // This only works with Inera IdP, so needs to be modified if other IdP's should be used.
@@ -92,6 +93,7 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
                 LOG.error("Unable to get AccessToken for user {} with reason {}", rehabstodUser.getHsaId(), exception.getMessage());
             }
         }
+        */
 
         return rehabstodUser;
     }
@@ -151,7 +153,7 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         long unitsAfter = authorizedVardgivare.stream().mapToInt(vg -> vg.getVardenheter().size()).sum();
 
         LOG.debug("removeEnheterMissingRehabKoordinatorRole rehabauthorized units are: [" + String.join(",", rehabAuthorizedEnhetIds)
-                + "]. User units before filtering: " + unitsBefore + ", after: " + unitsAfter);
+            + "]. User units before filtering: " + unitsBefore + ", after: " + unitsAfter);
 
         if (unitsAfter < 1) {
             throw new MissingUnitWithRehabSystemRoleException(hsaId);

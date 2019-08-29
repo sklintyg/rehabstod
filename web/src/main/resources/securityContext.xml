@@ -262,7 +262,7 @@
           <property name="includeScoping" value="false"/>
           <property name="authnContexts">
                <set>
-                 <value>http://id.sambi.se/loa/loa3</value>
+                 <value>urn:oasis:names:tc:SAML:2.0:ac:classes:TLSClient</value>
                </set>
           </property>
         </bean>
@@ -408,9 +408,17 @@
     </bean>
 
     <!-- Provider of default SAML Context -->
-    <bean id="contextProvider" class="org.springframework.security.saml.context.SAMLContextProviderImpl">
-        <property name="keyManager" ref="keyManager" />
+    <bean id="contextProvider" class="org.springframework.security.saml.context.SAMLContextProviderLB">
+      <property name="keyManager" ref="keyManager" />
+      <property name="scheme" value="https"/>
+      <property name="serverName" value="verifiering.rehabstod.intygstjanster.se"/>
+      <property name="serverPort" value="443"/>
+      <property name="includeServerPortInRequestURL" value="false"/>
+      <property name="contextPath" value="/"/>
     </bean>
+<!--    <bean id="contextProvider" class="org.springframework.security.saml.context.SAMLContextProviderImpl">-->
+<!--        <property name="keyManager" ref="keyManager" />-->
+<!--    </bean>-->
 
     <!-- Logout handler terminating local session -->
     <bean id="logoutHandler" class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
