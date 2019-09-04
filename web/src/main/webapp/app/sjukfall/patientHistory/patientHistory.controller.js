@@ -53,7 +53,8 @@ angular.module('rehabstodApp').controller('patientHistoryController',
         };
 
         $scope.close = function() {
-            wcLogout();
+            // Removed due to late revert of new IdP functions
+            // wcLogout();
             $uibModalInstance.close();
         };
 
@@ -90,23 +91,23 @@ angular.module('rehabstodApp').controller('patientHistoryController',
 
         fetchAccessToken();
 
-        function wcLogout() {
-
-            var logoutUrl = APP_CONFIG.webcertViewIntygLogoutUrl;
-
-            var form = document.createElement('form');
-
-            form.method = 'post';
-            form.action = logoutUrl;
-            form.target = 'wc_logout';
-
-            // To be sent, the form needs to be attached to the main document.
-            form.style.display = 'none';
-            document.body.appendChild(form);
-
-            form.submit();
-
-            // Once the form is sent, remove it.
-            document.body.removeChild(form);
-        }
+        // function wcLogout() {
+        //
+        //     var logoutUrl = APP_CONFIG.webcertViewIntygLogoutUrl;
+        //
+        //     var form = document.createElement('form');
+        //
+        //     form.method = 'post';
+        //     form.action = logoutUrl;
+        //     form.target = 'wc_logout';
+        //
+        //     // To be sent, the form needs to be attached to the main document.
+        //     form.style.display = 'none';
+        //     document.body.appendChild(form);
+        //
+        //     form.submit();
+        //
+        //     // Once the form is sent, remove it.
+        //     document.body.removeChild(form);
+        // }
     });

@@ -65,7 +65,7 @@
   <saml:AuthnStatement AuthnInstant="2013-10-14T09:16:13.298Z" SessionIndex="7b778ae9-f0c6-4108-91ba-b21120425391"
                        SessionNotOnOrAfter="2013-10-14T10:16:13.294Z">
     <saml:AuthnContext>
-      <saml:AuthnContextClassRef>http://id.sambi.se/loa/loa3</saml:AuthnContextClassRef>
+      <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:TLSClient</saml:AuthnContextClassRef>
     </saml:AuthnContext>
   </saml:AuthnStatement>
   <saml:AttributeStatement>

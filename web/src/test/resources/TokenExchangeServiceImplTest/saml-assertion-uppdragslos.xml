@@ -110,7 +110,7 @@
     <saml2:AuthnStatement AuthnInstant="2019-05-13T07:39:13.735Z"
         SessionIndex="84c9f2c1-ca77-4729-8b1b-7716e53a4bd6">
       <saml2:AuthnContext>
-        <saml2:AuthnContextClassRef>http://id.sambi.se/loa/loa3</saml2:AuthnContextClassRef>
+        <saml2:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:TLSClient</saml2:AuthnContextClassRef>
       </saml2:AuthnContext>
     </saml2:AuthnStatement>
   </saml2:Assertion>
