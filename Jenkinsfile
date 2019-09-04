@@ -1,6 +1,6 @@
 #!groovy
 
-def buildVersion = "1.10.0.1.${BUILD_NUMBER}"
+def buildVersion = "1.10.0.${BUILD_NUMBER}"
 def infraVersion = "3.10.0.+"
 def refDataVersion = "1.0-SNAPSHOT"
 
