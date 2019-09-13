@@ -21,13 +21,16 @@ package se.inera.intyg.rehabstod.auth;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import com.google.common.collect.ImmutableMap;
 import java.security.Principal;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 
 /**
@@ -47,9 +50,11 @@ public class LoggingSessionRegistryImplTest {
 
     private Principal customPrincipal = (Principal) () -> "I'm not a real Principal";
 
+    private Map<String, Role> roles = ImmutableMap.of("LAKARE", new Role());
     @Before
     public void before() {
         user = new RehabstodUser("hsaId", "En Användare", false);
+        user.setRoles(roles);
         user.setAuthenticationScheme("my:auth");
     }
 
@@ -67,7 +72,7 @@ public class LoggingSessionRegistryImplTest {
     @Test
     public void testRegisterNewSession() throws Exception {
         testee.registerNewSession(SESSION_ID, user);
-        verify(monitoringService).logUserLogin(user.getHsaId(), user.getAuthenticationScheme(), user.getOrigin());
+        verify(monitoringService).logUserLogin(user.getHsaId(), user.getRoles().keySet().iterator().next(), null, user.getAuthenticationScheme(), user.getOrigin());
     }
 
     @Test
