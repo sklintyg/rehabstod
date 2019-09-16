@@ -336,11 +336,11 @@ var rhsMessages = {
     'faq.certificate.3.body': '<p>Ja, genom att klicka upp patientens sjukfallshistorik kan du välja att "Visa intyg". ' +
         'Det är möjligt att ha flera intyg öppna samtidigt för en patient. Men det går inte att ha intyg för olika patienter öppna samtidigt.</p>',
 
-    'faq.patient.1.title': 'Vad menas med sekretessmarkerad uppgift?',
-    'faq.patient.1.body': '<p>Med sekretessmarkerad uppgift menas att Skatteverket har bedömt att patientens personuppgifter är extra viktiga att skydda. ' +
-        'Det finns speciella riktlinjer om hur personuppgifter för invånare med sekretessmarkering ska hanteras. I Rehabstöd innebär det att:</p>' +
+    'faq.patient.1.title': 'Vad menas med skyddad personuppgift?',
+    'faq.patient.1.body': '<p>Med skyddad personuppgift menas att Skatteverket har bedömt att patientens personuppgifter är extra viktiga att skydda. ' +
+        'Det finns speciella riktlinjer om hur personuppgifter för invånare med skyddade personuppgifter ska hanteras. I Rehabstöd innebär det att:</p>' +
         '<ul>' +
-        '<li>Namnet på patienten har bytts ut till "Sekretessmarkerad uppgift".</li>' +
+        '<li>Namnet på patienten har bytts ut till "Skyddad personuppgift".</li>' +
         '<li>Endast läkare, inloggad på den vårdenhet där denne utfärdade intyget kan se sjukfallet.</li>' +
         '</ul>'
 

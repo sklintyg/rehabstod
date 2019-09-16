@@ -28,7 +28,7 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
  */
 public interface SjukfallPuService {
 
-    String SEKRETESS_SKYDDAD_NAME_PLACEHOLDER = "Sekretessmarkerad uppgift";
+    String SEKRETESS_SKYDDAD_NAME_PLACEHOLDER = "Skyddad personuppgift";
     String SEKRETESS_SKYDDAD_NAME_UNKNOWN = "Namn okänt";
 
     /**
