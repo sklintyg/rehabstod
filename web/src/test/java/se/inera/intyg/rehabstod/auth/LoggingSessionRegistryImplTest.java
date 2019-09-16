@@ -40,6 +40,7 @@ import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 public class LoggingSessionRegistryImplTest {
 
     private static final String SESSION_ID = "sessionId";
+    private static final String ROLE_TYPE_NAME = "Läkare - AT";
     @Mock
     private MonitoringLogService monitoringService;
 
@@ -55,6 +56,7 @@ public class LoggingSessionRegistryImplTest {
     public void before() {
         user = new RehabstodUser("hsaId", "En Användare", false);
         user.setRoles(roles);
+        user.setRoleTypeName(ROLE_TYPE_NAME);
         user.setAuthenticationScheme("my:auth");
     }
 
@@ -72,7 +74,8 @@ public class LoggingSessionRegistryImplTest {
     @Test
     public void testRegisterNewSession() throws Exception {
         testee.registerNewSession(SESSION_ID, user);
-        verify(monitoringService).logUserLogin(user.getHsaId(), user.getRoles().keySet().iterator().next(), null, user.getAuthenticationScheme(), user.getOrigin());
+        verify(monitoringService).logUserLogin(user.getHsaId(), user.getRoles().keySet().iterator().next(), user.getRoleTypeName(),
+            user.getAuthenticationScheme(), user.getOrigin());
     }
 
     @Test
