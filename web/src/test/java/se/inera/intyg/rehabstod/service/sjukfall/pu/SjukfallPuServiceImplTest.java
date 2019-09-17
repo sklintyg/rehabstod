@@ -356,7 +356,7 @@ public class SjukfallPuServiceImplTest {
         testee.enrichWithPatientNameAndFilterSekretess(patientSjukfallList);
         assertEquals(1, patientSjukfallList.size());
         assertEquals(1, patientSjukfallList.get(0).getIntyg().size());
-        assertEquals("Sekretessmarkerad uppgift", patientSjukfallList.get(0).getIntyg().get(0).getPatient().getNamn());
+        assertEquals("Skyddad personuppgift", patientSjukfallList.get(0).getIntyg().get(0).getPatient().getNamn());
     }
 
     @Test
@@ -424,7 +424,7 @@ public class SjukfallPuServiceImplTest {
         List<SjukfallPatient> patientSjukfallList = buildPatientSjukfallList(TOLVANSSON_PNR);
         testee.enrichWithPatientNameAndFilterSekretess(patientSjukfallList);
         assertEquals(1, patientSjukfallList.size());
-        assertEquals("Sekretessmarkerad uppgift", patientSjukfallList.get(0).getIntyg().get(0).getPatient().getNamn());
+        assertEquals("Skyddad personuppgift", patientSjukfallList.get(0).getIntyg().get(0).getPatient().getNamn());
     }
 
     @Test(expected = IllegalStateException.class)
