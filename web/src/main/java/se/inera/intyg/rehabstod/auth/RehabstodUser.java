@@ -112,6 +112,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
         this.pdlConsentGiven = pdlConsentGiven;
 
         this.isLakare = isLakare;
+        this.roleTypeName = intygUser.getRoleTypeName();
     }
 
     public Urval getUrval() {

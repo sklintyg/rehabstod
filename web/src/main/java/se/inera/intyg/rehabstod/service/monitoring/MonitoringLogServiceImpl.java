@@ -32,9 +32,9 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
 
     @Override
     @PrometheusTimeMethod
-    public void logUserLogin(String userHsaId, String authenticationScheme, String origin) {
+    public void logUserLogin(String userHsaId, String role, String roleTypeName, String authenticationScheme, String origin) {
         // Origin is not interesting for Rehabstod so we ignore it
-        logEvent(MonitoringEvent.USER_LOGIN, userHsaId, authenticationScheme);
+        logEvent(MonitoringEvent.USER_LOGIN, userHsaId, role, roleTypeName, authenticationScheme);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
     }
 
     private enum MonitoringEvent {
-        USER_LOGIN("Login user '{}' using scheme '{}'"),
+        USER_LOGIN("Login user '{}' as role '{}' roleTypeName '{}' using scheme '{}'"),
         USER_LOGOUT("Logout user '{}' using scheme '{}'"),
         USER_VIEWED_SJUKFALL("User '{}' viewed {} sjukfall on enhet '{}'"),
         USER_SESSION_EXPIRY("Session expired for user '{}' using scheme '{}'"),
