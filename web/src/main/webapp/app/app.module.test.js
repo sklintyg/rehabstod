@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Inera AB (http://www.inera.se)
+ * Copyright (C) 2017 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,19 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.config;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-
-/**
- * Created by eriklup.
- */
-@Configuration
-@ComponentScan({"se.inera.intyg.infra.dynamiclink", "se.inera.intyg.infra.monitoring.logging"})
-public class DynamicLinkConfig {
-
-    public DynamicLinkConfig() { //NOSONAR
-    }
-
-}
+angular.module('rehabstodApp', [
+  'ngAnimate',
+  'ngCookies',
+  'ngResource',
+  'ngSanitize',
+  'ngStorage',
+  'ngMessages',
+  'ui.router',
+  'ui.bootstrap',
+  'smart-table',
+  'infinite-scroll',
+  'taiPlaceholder',
+  'ngStorage',
+  'lodash',
+  'rehabstodcommon.dynamiclink',
+  'smoothScroll'
+]).run(
+    /** @ngInject */
+    function($httpBackend) {
+      'use strict';
+      $httpBackend.whenPOST(/^\/js-monitoring-api\/log/).respond(200);
+    });

@@ -32,4 +32,6 @@ public interface MonitoringLogService extends AuthenticationLogger {
     void logUserLogout(String id, String authenticationScheme);
 
     void logUserViewedSjukfall(String userId, int numberOfSjukfall, String vardEnhet);
+
+    void logBrowserInfo(String browserName, String browserVersion, String osFamily, String osVersion, String width, String height);
 }

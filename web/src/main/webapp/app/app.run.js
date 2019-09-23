@@ -20,7 +20,7 @@
 angular
 .module('rehabstodApp')
 .run(function($log, $rootScope, $state, $window, messageService, dynamicLinkService, UserProxy, UserModel, USER_DATA, LINKS,
-    $uibModalStack) {
+    $uibModalStack, monitoringLogService) {
   'use strict';
 
   // Always scroll to top
@@ -45,6 +45,9 @@ angular
   messageService.addLinks(LINKS);
 
   dynamicLinkService.addLinks(LINKS);
+
+  //Log startup screen resolution (server also uses userAgent header to detect and log other browser info)
+  monitoringLogService.screenResolution($window.innerWidth, $window.innerHeight);
 
   //Configure app wide routing rules
   $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState/*, fromParams*/) {
