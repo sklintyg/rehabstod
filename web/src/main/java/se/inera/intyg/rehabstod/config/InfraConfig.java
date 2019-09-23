@@ -26,9 +26,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan({"se.inera.intyg.infra.dynamiclink", "se.inera.intyg.infra.monitoring.logging"})
-public class DynamicLinkConfig {
+public class InfraConfig {
 
-    public DynamicLinkConfig() { //NOSONAR
+    public InfraConfig() { //NOSONAR
     }
 
 }
