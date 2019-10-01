@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.List;
-import se.inera.intyg.infra.integration.ia.model.Banner;
+import se.inera.intyg.infra.driftbannerdto.Banner;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
 /**
