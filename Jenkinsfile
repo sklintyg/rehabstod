@@ -1,6 +1,6 @@
 #!groovy
 
-def buildVersion = "1.11.0.${BUILD_NUMBER}"
+def buildVersion = "1.11.0.${BUILD_NUMBER}-nightly"
 def infraVersion = "3.11.0.+"
 
 stage('checkout') {
@@ -18,5 +18,11 @@ stage('owasp') {
             publishHTML allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'build/reports', \
                 reportFiles: 'dependency-check-report.html', reportName: 'OWASP dependency-check'
         }
+    }
+}
+
+stage('sonarqube') {
+    node {
+        shgradle "sonarqube -DbuildVersion=${buildVersion} -DinfraVersion=${infraVersion}"
     }
 }
