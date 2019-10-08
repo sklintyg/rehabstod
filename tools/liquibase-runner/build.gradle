@@ -23,6 +23,8 @@ startScripts {
     }
 }
 
+uploadArchives.enabled = true
+
 sonarqube {
     skipProject = true
 }
