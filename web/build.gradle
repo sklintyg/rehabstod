@@ -124,5 +124,6 @@ dependencies {
     testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "javax.jms:jms-api:${javaxJmsVersion}"
 
+    gretty "jstl:jstl:${jstlVersion}"
     gretty "se.inera.intyg.refdata:refdata:${refDataVersion}"
 }
