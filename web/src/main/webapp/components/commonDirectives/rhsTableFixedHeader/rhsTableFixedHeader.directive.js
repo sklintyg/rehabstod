@@ -24,36 +24,54 @@ angular.module('rehabstodApp').directive('rhsTableFixedHeader', function($window
   return {
     restrict: 'A',
     link: function(scope, element, attrs) {
+      var $rhsBody = $('.rhs-body');
       var topClass = attrs.rhsTableFixedHeader,
           fixedHeader = element.find('#' + attrs.fixedHeader),
           normalHeader = element.find('#' + attrs.normalHeader);
-
-      var paddingTop = 0;
-      if (attrs.paddingTop) {
-        paddingTop = parseInt(attrs.paddingTop, 10);
-      }
-
+      var tableBody = $('#rhs-table-body');
+      var tableScrollContainer = $('.floating-scroll-container');
       var isFixed = false;
+      var createdWrappingDiv = false;
+
+      var syncFixedHeaderHorizontalScroll = function() {
+        var baseOffset = tableScrollContainer.offset().left;
+        var currentOffset = tableBody.offset().left;
+        var currentWidth = normalHeader.width() - baseOffset + currentOffset;
+        $('.outer-div-fixed-header').width(currentWidth);
+      };
 
       var setColumnWidths = function() {
         fixedHeader.height(normalHeader.outerHeight());
+        var tableWidth = normalHeader.parent().outerWidth();
+        var tableScrollContainerWidth = tableScrollContainer.outerWidth();
+        fixedHeader.width(tableWidth < tableScrollContainerWidth ? tableWidth : tableScrollContainerWidth);
 
         var fixedColumns = fixedHeader.find('th');
         normalHeader.find('th').each(function(index, column) {
           $(fixedColumns[index]).width($(column).width());
         });
+
+        if (createdWrappingDiv) {
+          syncFixedHeaderHorizontalScroll();
+        }
+
       };
 
       var onScroll = function() {
         fixedHeader = element.find('#' + attrs.fixedHeader);
         normalHeader = element.find('#' + attrs.normalHeader);
-        var offsetTop = element.offset().top - paddingTop;
+        var offsetTop = normalHeader.offset().top; // - paddingTop;
 
-        if ($win.scrollTop() >= offsetTop) {
+        if (offsetTop < 0) {
           if (!isFixed) {
+            if (!createdWrappingDiv) {
+              fixedHeader.wrapInner('<div class="inner-div-fixed-header"></div>');
+              var outerDiv = fixedHeader.wrapInner('<div class="outer-div-fixed-header"></div>');
+              outerDiv.width(normalHeader.width());
+              createdWrappingDiv = true;
+            }
             fixedHeader.addClass(topClass);
             fixedHeader.removeClass('hidden');
-            fixedHeader.css('top', paddingTop);
             setColumnWidths();
             isFixed = true;
           }
@@ -66,11 +84,15 @@ angular.module('rehabstodApp').directive('rhsTableFixedHeader', function($window
         }
       };
 
-      $win.on('resize', setColumnWidths);
-      $win.on('scroll', onScroll);
+      $win.on('resize', setColumnWidths); //To catch horizontal scroll
+      $rhsBody.on('resize', setColumnWidths);
+      $rhsBody.on('scroll', onScroll);
+      tableScrollContainer.on('scroll', syncFixedHeaderHorizontalScroll);
 
       scope.$on('$destroy', function() {
-        $win.unbind('scroll', onScroll);
+        tableScrollContainer.unbind('scroll', syncFixedHeaderHorizontalScroll);
+        $rhsBody.unbind('scroll', onScroll);
+        $rhsBody.unbind('resize', setColumnWidths);
         $win.unbind('resize', setColumnWidths);
       });
     }
