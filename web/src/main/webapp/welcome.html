@@ -446,7 +446,7 @@
                       // Add properties to object
                       obj.index = ''+index++;
                       obj.hsaId = val.hsaId;
-
+                      obj.env = val.fakeProperties.env;
                     });
                   acc.push(val[outerProp][innerProp]);
                 }
@@ -489,6 +489,37 @@
           }
           return false;
       }
+
+      $scope.whichEnv = function(env) {
+        if ($scope.environment.name === 'all') { return true; }
+        if ($scope.environment.name === 'dev' && env === 'dev') { return true; }
+        if ($scope.environment.name === 'demo' && env === 'demo') { return true; }
+        if ($scope.environment.name === 'utbildning' && env === 'utbildning') { return true; }
+        return false;
+      };
+
+      $scope.environment = {
+        name: 'all'
+      };
+
+      $scope.environments = [
+        {
+          id: 'all',
+          name: 'Alla'
+        },
+        {
+          id: 'dev',
+          name: 'Dev'
+        },
+        {
+          id: 'demo',
+          name: 'Demo'
+        },
+        {
+          id: 'utbildning',
+          name: 'Utbildning'
+        }
+      ];
 
       $scope.loginModel = [];
       $scope.loginOptions = [];
@@ -552,11 +583,20 @@
 
           <div class="form-group col-xs-8">
 
-            <h4>Mallar</h4>
+            <h4>
+              Visa Mallar för:
+
+              <span class="envButtons" ng-repeat="env in environments">
+                <label for="{{env.id}}">
+                  <input id="{{env.id}}" name="{{env.id}}" type="radio" ng-model="environment.name" value="{{env.id}}" /> {{env.name}}
+                </label>
+              </span>
+            </h4>
 
             <select id="jsonSelect" name="jsonSelect" ng-model="selectedIndex" size="18" class="form-control" style="width: 100%;max-width:100%" autofocus>
               <option id="{{login.hsaId}}_{{login.forvaldEnhet}}"
                       ng-repeat="login in loginOptions"
+                      ng-if="whichEnv(login.env)"
                       value="{{login.index}}">{{login.beskrivning}}
               </option>
             </select>
