@@ -3,6 +3,8 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
+        "chrome-launcher": "^0.11.2",
+        "chrome-remote-interface": "^0.28.0",
         "rehabstod-testtools": "file:rehabstodTestTools",
         "sleep": "^5.2.4"
     },
@@ -20,6 +22,6 @@
         "webdriver-manager": "^12.1.7"
     },
     "scripts": {
-        "install": "node webdriver.js"
+        "install": "node scripts/webdriver.js"
     }
 }

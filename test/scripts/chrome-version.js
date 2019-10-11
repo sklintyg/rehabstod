@@ -16,23 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-const { exec } = require('child_process');
 
-let command = 'google-chrome --version';
+const ChromeLauncher = require("chrome-launcher")
+const CDP = require("chrome-remote-interface")
 
-if (process.platform === "win32") {
-  command = 'wmic datafile where name="C:\\\\Program Files (x86)\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe" get Version /value\n';
-} else if (process.platform === "darwin") {
-  command = '/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --version';
+const chromeFlags = [
+  "--no-sandbox",
+  "--headless",
+]
+
+const regExp = /HeadlessChrome\/(.*)/
+
+module.exports = async () => {
+  const chrome = await ChromeLauncher.launch({ chromeFlags })
+  const protocol = await CDP({ port: chrome.port })
+  const { product } = await protocol.Browser.getVersion()
+  protocol.close()
+  chrome.kill()
+  return regExp.exec(product)[1]
 }
-
-exec(command, (err, stdout, stderr) => {
-  var regex = /[^0-9.]/gi;
-
-  var version = stdout.replace(regex, '');
-  console.log(`installed chrome: ${version}`);
-
-  exec('node node_modules/webdriver-manager/bin/webdriver-manager update --versions.chrome  ' + version + ' --gecko false --standalone false', (err, stdout, stderr) => {
-    console.log(`${stdout}`);
-  })
-});
