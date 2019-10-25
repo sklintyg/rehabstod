@@ -14,7 +14,7 @@
         <fieldset class="form-group search-filter-diagnos" ng-disabled="filterInactive('dxs')">
           <label class="control-label"><span message key="label.filter.diagnos"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                               field-help-text="label.filter.diagnos.help"></span></label>
-          <rhs-multi-select items-model="filterViewState.get().diagnosKapitelModel"
+          <rhs-multi-select items-model="filterViewState.get().diagnosKapitelModel" disabled="filterInactive('dxs')"
                             none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="true"></rhs-multi-select>
         </fieldset>
       </div>
@@ -23,7 +23,7 @@
         <fieldset class="form-group" ng-disabled="filterInactive('doctor')">
           <label class="control-label"><span message key="label.filter.lakare"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                              field-help-text="label.filter.lakare.help"></span></label>
-          <rhs-multi-select id="rhs-filter-lakare" items-model="filterViewState.get().lakareModel"
+          <rhs-multi-select id="rhs-filter-lakare" items-model="filterViewState.get().lakareModel" disabled="filterInactive('doctor')"
                             none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="false"></rhs-multi-select>
         </fieldset>
       </div>
@@ -32,7 +32,7 @@
         <fieldset class="form-group" ng-disabled="filterInactive('kompletteringar')">
           <label class="control-label"><span message key="label.filter.komplettering-status"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                                            field-help-text="label.filter.komplettering-status.help"></span></label>
-          <rhs-multi-select id="rhs-filter-komplettering-status" items-model="filterViewState.get().kompletteringModel"
+          <rhs-multi-select id="rhs-filter-komplettering-status" items-model="filterViewState.get().kompletteringModel"  disabled="filterInactive('kompletteringar')"
                             none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="false" xor-mode="true"></rhs-multi-select>
         </fieldset>
       </div>
@@ -59,11 +59,13 @@
           <div class="form-inline">
             Från&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().sjukskrivningslangdModel[0]" min="1"
                                                      max="filterViewState.get().sjukskrivningslangdModel[1]" display-max-value-as="365+"
-                                               input-id="rhs-filter-langd-from"></rhs-numeric-range-input>
+                                               input-id="rhs-filter-langd-from"
+                                               control-disabled="filterInactive('days')"></rhs-numeric-range-input>
 
             till&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().sjukskrivningslangdModel[1]"
                                                      min="filterViewState.get().sjukskrivningslangdModel[0]" max="366"
-                                               display-max-value-as="365+" input-id="rhs-filter-langd-to"></rhs-numeric-range-input>&nbsp;dagar
+                                               display-max-value-as="365+" input-id="rhs-filter-langd-to"
+                                               control-disabled="filterInactive('days')"></rhs-numeric-range-input>&nbsp;dagar
           </div>
         </fieldset>
       </div>
@@ -85,11 +87,13 @@
           <div class="form-inline">
             Från&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().aldersModel[0]" min="0"
                                                      max="filterViewState.get().aldersModel[1]" display-max-value-as="100+"
-                                               input-id="rhs-filter-alder-from"></rhs-numeric-range-input>
+                                               input-id="rhs-filter-alder-from"
+                                               control-disabled="filterInactive('patientAge')"></rhs-numeric-range-input>
 
             till&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().aldersModel[1]"
                                                      min="filterViewState.get().aldersModel[0]" max="101" display-max-value-as="100+"
-                                               input-id="rhs-filter-alder-to"></rhs-numeric-range-input>&nbsp;år
+                                               input-id="rhs-filter-alder-to"
+                                               control-disabled="filterInactive('patientAge')"></rhs-numeric-range-input>&nbsp;år
           </div>
         </fieldset>
       </div>

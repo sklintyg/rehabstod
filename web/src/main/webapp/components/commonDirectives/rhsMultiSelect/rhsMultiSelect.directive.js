@@ -29,7 +29,8 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
           noneSelectedTitle: '@',
           highLightEnabled: '=',
           itemsModel: '=',
-          xorMode: '='
+          xorMode: '=',
+          disabled: '='
         },
 
         templateUrl: '/components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.html',
