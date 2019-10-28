@@ -30,7 +30,7 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
           highLightEnabled: '=',
           itemsModel: '=',
           xorMode: '=',
-          disabled: '='
+          controlDisabled: '='
         },
 
         templateUrl: '/components/commonDirectives/rhsMultiSelect/rhsMultiSelect.directive.html',
