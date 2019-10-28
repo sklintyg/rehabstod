@@ -14,7 +14,7 @@
         <fieldset class="form-group search-filter-diagnos" ng-disabled="filterInactive('dxs')">
           <label class="control-label"><span message key="label.filter.diagnos"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                               field-help-text="label.filter.diagnos.help"></span></label>
-          <rhs-multi-select items-model="filterViewState.get().diagnosKapitelModel" disabled="filterInactive('dxs')"
+          <rhs-multi-select items-model="filterViewState.get().diagnosKapitelModel" control-disabled="filterInactive('dxs')"
                             none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="true"></rhs-multi-select>
         </fieldset>
       </div>
@@ -23,7 +23,7 @@
         <fieldset class="form-group" ng-disabled="filterInactive('doctor')">
           <label class="control-label"><span message key="label.filter.lakare"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                              field-help-text="label.filter.lakare.help"></span></label>
-          <rhs-multi-select id="rhs-filter-lakare" items-model="filterViewState.get().lakareModel" disabled="filterInactive('doctor')"
+          <rhs-multi-select id="rhs-filter-lakare" items-model="filterViewState.get().lakareModel" control-disabled="filterInactive('doctor')"
                             none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="false"></rhs-multi-select>
         </fieldset>
       </div>
@@ -32,7 +32,7 @@
         <fieldset class="form-group" ng-disabled="filterInactive('kompletteringar')">
           <label class="control-label"><span message key="label.filter.komplettering-status"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                                            field-help-text="label.filter.komplettering-status.help"></span></label>
-          <rhs-multi-select id="rhs-filter-komplettering-status" items-model="filterViewState.get().kompletteringModel"  disabled="filterInactive('kompletteringar')"
+          <rhs-multi-select id="rhs-filter-komplettering-status" items-model="filterViewState.get().kompletteringModel"  control-disabled="filterInactive('kompletteringar')"
                             none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="false" xor-mode="true"></rhs-multi-select>
         </fieldset>
       </div>
@@ -75,7 +75,7 @@
         <fieldset class="form-group" ng-disabled="filterInactive('endDate')">
           <label class="control-label"><span message key="label.filter.slutdatum"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                                 field-help-text="label.filter.slutdatum.help"></span></label>
-          <rhs-date-range-picker id="slutdatum-range-picker" disabled="filterInactive('endDate')" model="filterViewState.get().slutdatumModel"></rhs-date-range-picker>
+          <rhs-date-range-picker id="slutdatum-range-picker" control-disabled="filterInactive('endDate')" model="filterViewState.get().slutdatumModel"></rhs-date-range-picker>
         </fieldset>
       </div>
 
