@@ -17,14 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 angular.module('rehabstodApp').directive('rhsUnblockedConsent',
-    function($rootScope, patientHistoryViewState, patientHistoryProxy) {
+    function($rootScope, patientHistoryViewState, patientHistoryProxy, $uibModal) {
       'use strict';
 
       return {
         restrict: 'E',
         scope: {
           patient: '=',
-          labelError: '@'
+          labelError: '@',
+          boxState: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedConsent/rhsUnblockedConsent.directive.html',
         link: function($scope) {
@@ -49,6 +50,28 @@ angular.module('rehabstodApp').directive('rhsUnblockedConsent',
                 }
               }
           );
+
+          $scope.openDialog = function(title, bodyText) {
+            $uibModal.open({
+              templateUrl: '/components/commonDirectives/rhsSjfModal/rhsSjf.modal.html',
+              controller: 'rhsSjfModalController',
+              size: 'md',
+              resolve: {
+                title: function() {
+                  return title;
+                },
+                bodyText: function() {
+                  return bodyText;
+                }
+              }
+            }).result.then(function() {
+            }, function() {
+            });
+          };
+
+          $scope.close = function() {
+            $scope.boxState.skipStart = false;
+          };
 
           $scope.next = function() {
             patientHistoryProxy.giveConsent({

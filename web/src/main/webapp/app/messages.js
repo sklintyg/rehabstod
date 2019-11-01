@@ -342,7 +342,17 @@ var rhsMessages = {
         '<ul>' +
         '<li>Namnet på patienten har bytts ut till "Skyddad personuppgift".</li>' +
         '<li>Endast läkare, inloggad på den vårdenhet där denne utfärdade intyget kan se sjukfallet.</li>' +
-        '</ul>'
+        '</ul>',
+
+    'label.consent.modal.title': 'Om samtycke',
+    'label.consent.modal.body': '<p>För att ta del av uppgifter via sammanhållen journalföring behöver du ha</p>\n' +
+                                '  <ul>\n' +
+                                '    <li><p>Dels en pågående vårdrelation med patienten</p></li>\n' +
+                                '    <li><p>Dels patientens samtycke</p></li>\n' +
+                                '  </ul>\n' +
+                                '  <p>Samtycket kan ha getts muntligen eller skriftligen.</p>',
+    'label.about.sjf.modal.title': 'Om sammanhållen journalföring',
+    'label.about.sjf.modal.body': '<p>Med sammanhållen journalföring avses möjligheten för en vårdgivare att läsa journaluppgifter från en annan vårdgivare direkt, på elektronisk väg.</p><p>Observera att åtkomst och läsning av uppgifter via sammanhållenjournalföring loggas.</p>'
 
   },
   'en': {

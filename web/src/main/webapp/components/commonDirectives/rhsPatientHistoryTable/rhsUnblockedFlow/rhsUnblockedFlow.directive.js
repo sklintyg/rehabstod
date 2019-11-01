@@ -24,7 +24,8 @@ angular.module('rehabstodApp').directive('rhsUnblockedFlow',
         restrict: 'E',
         scope: {
           patient: '=',
-          mustHaveConsent: '='
+          mustHaveConsent: '=',
+          boxState: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsUnblockedFlow/rhsUnblockedFlow.directive.html',
         link: function($scope) {
