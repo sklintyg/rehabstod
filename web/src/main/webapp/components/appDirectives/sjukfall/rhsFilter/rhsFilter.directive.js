@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp')
 .controller('RhsFilterCtrl',
-    function($scope, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel,
+    function($scope, $rootScope, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel,
         UserModel, StringHelper, TableService, _) {
       'use strict';
 
@@ -41,6 +41,11 @@ angular.module('rehabstodApp')
             $filter('rhsUnique')(value, 'diagnos.kapitel'));
 
       });
+
+      var unregisterFn = $rootScope.$on('SelectedUnitChanged', function(/*event, value*/) {
+        columns = TableService.getSelectedSjukfallColumns(true);
+      });
+      $scope.$on('$destroy', unregisterFn);
 
       $scope.onResetFilterClick = function() {
         $scope.filterViewState.reset();
