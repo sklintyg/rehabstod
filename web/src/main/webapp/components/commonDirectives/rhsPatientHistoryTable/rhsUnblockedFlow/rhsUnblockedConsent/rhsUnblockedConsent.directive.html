@@ -1,6 +1,7 @@
 <h5>Vårdgivare med information</h5>
 <div class="message-wrapper scrollable-list">{{vardgivareMedInfo}}</div>
 
+<h5>Samtycke sammanhållen journalföring</h5>
 <div class="flex-fill">
   <div class="rhs-info-box--section rhs-info-box--spacing">
     <div class="rhs-checkbox">
@@ -27,4 +28,17 @@
 <div class="message-wrapper" ng-if="consent.confirm && consent.error">
   <div class="alert alert-danger"><span message key="{{::labelError}}"></span></div>
 </div>
-<rhs-box-button rhs-click="next()" btn-disabled="!consent.confirm">Hämta information</rhs-box-button>
+
+<div class="flex-fill">
+  <a ng-click="openDialog('label.consent.modal.title', 'label.consent.modal.body')"><span message key="label.consent.modal.title"/></a>
+  <a ng-click="openDialog('label.about.sjf.modal.title', 'label.about.sjf.modal.body')"><span message key="label.about.sjf.modal.title"/></a>
+</div>
+
+<div class="row">
+  <div class="col-xs-6 no-padding">
+      <rhs-box-button class="buttonWithPadding" rhs-click="next()" btn-disabled="!consent.confirm">Patienten ger samtycke</rhs-box-button>
+  </div>
+  <div class="col-xs-6 no-padding">
+      <rhs-box-button rhs-click="close()">Avbryt</rhs-box-button>
+  </div>
+</div>

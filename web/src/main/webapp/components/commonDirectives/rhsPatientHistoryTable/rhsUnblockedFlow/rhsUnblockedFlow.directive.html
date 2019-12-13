@@ -1,4 +1,4 @@
 <div ng-switch="step" class="flex-fill">
-  <rhs-unblocked-consent ng-switch-when="consent" class="flex-fill" patient="patient" label-error="label.extradiagnoser.osparradandra.error"></rhs-unblocked-consent>
+  <rhs-unblocked-consent box-state="boxState" ng-switch-when="consent" class="flex-fill" patient="patient" label-error="label.extradiagnoser.osparradandra.error"></rhs-unblocked-consent>
   <rhs-unblocked-list ng-switch-when="list" class="flex-fill" patient="patient" must-have-consent="mustHaveConsent"></rhs-unblocked-list>
 </div>
