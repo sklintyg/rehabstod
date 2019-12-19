@@ -352,7 +352,7 @@ var rhsMessages = {
                                 '  </ul>\n' +
                                 '  <p>Samtycket kan ha getts muntligen eller skriftligen.</p>',
     'label.about.sjf.modal.title': 'Om sammanhållen journalföring',
-    'label.about.sjf.modal.body': '<p>Med sammanhållen journalföring avses möjligheten för en vårdgivare att läsa journaluppgifter från en annan vårdgivare direkt, på elektronisk väg.</p><p>Observera att åtkomst och läsning av uppgifter via sammanhållenjournalföring loggas.</p>'
+    'label.about.sjf.modal.body': '<p>Med sammanhållen journalföring avses möjligheten för en vårdgivare att läsa journaluppgifter från en annan vårdgivare direkt, på elektronisk väg.</p><p>Observera att åtkomst och läsning av uppgifter via sammanhållen journalföring loggas.</p>'
 
   },
   'en': {
