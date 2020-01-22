@@ -72,6 +72,11 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
         logEvent(MonitoringEvent.BROWSER_INFO, browserName, browserVersion, osFamily, osVersion, width, height);
     }
 
+    @Override
+    public void logSamlStatusForFailedLogin(String issuer, String samlStatus) {
+        logEvent(MonitoringEvent.SAML_STATUS_LOGIN_FAIL, issuer, samlStatus);
+    }
+
     private void logEvent(MonitoringEvent logEvent, Object... logMsgArgs) {
         LOG.info(LogMarkers.MONITORING, buildMessage(logEvent), logMsgArgs);
     }
@@ -89,7 +94,9 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
         USER_SESSION_EXPIRY("Session expired for user '{}' using scheme '{}'"),
         USER_MISSING_MIU("No valid MIU was found for user '{}'"),
         USER_MISSING_MIU_ON_ENHET("No valid MIU was found for user '{}' on unit '{}'"),
-        BROWSER_INFO("Name '{}' Version '{}' OSFamily '{}' OSVersion '{}' Width '{}' Height '{}'");
+        BROWSER_INFO("Name '{}' Version '{}' OSFamily '{}' OSVersion '{}' Width '{}' Height '{}'"),
+
+        SAML_STATUS_LOGIN_FAIL("Login failed at IDP '{}' with status message '{}'");
 
         private final String message;
 
