@@ -96,12 +96,12 @@ angular.module('rehabstodApp').controller('rhsSelectColumnsModalController',
         });
       }
 
-      function init() {
+      function init(isReset) {
         $scope.columns = _.cloneDeep(columns);
         var selectedColumns = UserModel.get().preferences[preferenceKey] || '';
         var selectAll = selectedColumns === '';
 
-        if (selectAll) {
+        if (selectAll || isReset) {
           _.each($scope.columns, function(column) {
             column.checked = true;
           });
@@ -140,9 +140,13 @@ angular.module('rehabstodApp').controller('rhsSelectColumnsModalController',
         }).length === 0;
       };
 
+      $scope.reset = function () {
+        init(true);
+      };
+
       $scope.translationBaseKey = modalTextTranslationKey;
       $scope.nonSelected = true;
 
-      init();
+      init(false);
     }
 );

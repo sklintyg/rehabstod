@@ -35,6 +35,7 @@ var rhsMessages = {
     'common.close': 'Stäng',
     'common.date': 'Datum',
     'common.approve': 'Godkänn',
+    'common.reset': 'Återställ',
 
     'common.label.loading': 'Laddar',
 
