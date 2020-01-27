@@ -124,7 +124,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         // Session Timeout filter
         FilterRegistration.Dynamic sessionTimeoutFilter = servletContext.addFilter("sessionTimeoutFilter", SessionTimeoutFilter.class);
         sessionTimeoutFilter.addMappingForUrlPatterns(null, false, "/*");
-        sessionTimeoutFilter.setInitParameter("getSessionStatusUri", SESSION_STATUS_CHECK_URI);
+        sessionTimeoutFilter.setInitParameter("skipRenewSessionUrls", SESSION_STATUS_CHECK_URI);
 
         // Spring security filter
         FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain",
