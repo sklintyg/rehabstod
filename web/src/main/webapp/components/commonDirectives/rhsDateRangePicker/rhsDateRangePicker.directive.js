@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').directive('rhsDateRangePicker',
-    function(moment, $timeout) {
+    function(moment, $timeout, UserModel) {
       'use strict';
 
       return {
@@ -26,6 +26,7 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
         scope: {
           model: '=',
           id: '@',
+          daysBack: '=',
           controlDisabled: '='
         },
         templateUrl: '/components/commonDirectives/rhsDateRangePicker/rhsDateRangePicker.directive.html',
@@ -69,11 +70,30 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
             'minute': 'minut'
           };
 
+          $scope.updateChosenValues = function () {
+            if ($scope.model.from < moment($scope.chosenStartDate, null).toDate() || $scope.model.to < moment(
+                $scope.chosenStartDate, null).toDate()) {
+              $scope.model.from = null;
+              $scope.model.to = null;
+            }
+          };
+
+          $scope.updateStartDate = function() {
+            if($scope.daysBack) {
+              $scope.chosenStartDate = moment().subtract(UserModel.get().preferences.maxAntalDagarSedanSjukfallAvslut, 'days').format('YYYY-MM-DD');
+            } else {
+              $scope.chosenStartDate = moment().format('YYYY-MM-DD');
+            }
+            $scope.updateChosenValues();
+          };
+
+          $scope.updateStartDate();
+
           var options = {
             autoClose: false,
             separator: ' to ',
             language: 'se',
-            startDate: moment().format('YYYY-MM-DD'),
+            startDate: $scope.chosenStartDate,
             startOfWeek: 'monday',
             singleMonth: false,
             showShortcuts: true,
@@ -113,14 +133,12 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
               /* This event will be triggered when second date is selected */
               $scope.model.from = obj.date1;
               $scope.model.to = obj.date2;
-
               setDisplayValue(true);
             })
             .on('datepicker-open', function() {
               $('#clearDatePicker').click(function() {
                 inputElement.data('dateRangePicker').clear();
                 inputElement.data('dateRangePicker').redraw();
-
                 $scope.model.from = null;
                 $scope.model.to = null;
 

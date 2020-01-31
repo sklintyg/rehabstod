@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
-    function($scope, $uibModalInstance, UserProxy, UserModel, SjukfallService, _) {
+    function($scope, $rootScope, $uibModalInstance, UserProxy, UserModel, SjukfallService, _) {
       'use strict';
 
       /**
@@ -70,6 +70,7 @@ angular.module('rehabstodApp').controller('RhsSettingsModalCtrl',
         UserProxy.saveSettings(settingsToSave).then(function(preferences) {
           $scope.saving = false;
           UserModel.get().preferences = preferences;
+          $rootScope.$broadcast('rhsFilter.toggleDatePicker');
           $uibModalInstance.close($scope.settingsModel);
           if (UserModel.isPdlConsentGiven()) {
             SjukfallService.loadSjukfall(true, true);
