@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp')
 .controller('RhsFilterCtrl',
-    function($scope, $rootScope, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel,
+    function($scope, $rootScope, $timeout, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel,
         UserModel, StringHelper, TableService, _) {
       'use strict';
 
@@ -28,6 +28,16 @@ angular.module('rehabstodApp')
       $scope.showSearchFilter = true;
       $scope.model = SjukfallModel;
       var columns;
+      $scope.showDatePicker = true;
+
+      $scope.toggleDatePicker = function () {
+        $scope.showDatePicker = false;
+        $timeout(function(){
+          $scope.showDatePicker = true;
+        });
+      };
+
+      $scope.$on('rhsFilter.toggleDatePicker', $scope.toggleDatePicker);
 
       $scope.$watchCollection('model.get()', function(value) {
         //Update contents on those models of filtercomponents that depends on the searchresults contents, i.e
