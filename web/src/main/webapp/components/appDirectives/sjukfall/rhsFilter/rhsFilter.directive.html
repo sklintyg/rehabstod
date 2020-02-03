@@ -75,7 +75,7 @@
         <fieldset class="form-group" ng-disabled="filterInactive('endDate')">
           <label class="control-label"><span message key="label.filter.slutdatum"></span> <span class="rhs-tooltip" rhs-tooltip
                                                                                                 field-help-text="label.filter.slutdatum.help"></span></label>
-          <rhs-date-range-picker id="slutdatum-range-picker" control-disabled="filterInactive('endDate')" model="filterViewState.get().slutdatumModel"></rhs-date-range-picker>
+          <rhs-date-range-picker ng-if="showDatePicker" id="slutdatum-range-picker" control-disabled="filterInactive('endDate')" model="filterViewState.get().slutdatumModel" days-back="true"></rhs-date-range-picker>
         </fieldset>
       </div>
 
