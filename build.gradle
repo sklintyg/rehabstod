@@ -13,7 +13,7 @@ ext {
     consentSchemaVersion = "2.0.1"
     rivtaItintegrationMonitoringSchemasVersion = "1.0.0.5"
     internalMonitoringSchemaVersion = "1.0.4"
-    intygClinicalprocessSchemasVersion = "1.0.22"
+    intygClinicalprocessSchemasVersion = "1.0.23"
     schemasContractVersion = "2.1.8"
     srsSchemasVersion = "0.0.13"
 
@@ -107,7 +107,7 @@ allprojects {
     }
 
     [install.repositories.mavenInstaller, uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
-        pom.dependencies.findAll {dep -> dep.groupId == 'se.inera.intyg.infra'}.each {
+        pom.dependencies.findAll { dep -> dep.groupId == 'se.inera.intyg.infra' }.each {
             it.version = se.inera.intyg.IntygPluginKt.findResolvedVersion(project, 'se.inera.intyg.infra')
         }
     }
