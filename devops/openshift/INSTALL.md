@@ -190,9 +190,6 @@ Open _&lt;env>/secret-vars.yaml_ and and assign correct values:
 	NTJP_WS_KEY_MANAGER_PASSWORD: "<password>"
 	NTJP_WS_TRUSTSTORE_PASSWORD: "<password>"
 	SAML_KEYSTORE_PASSWORD: "<password>"
-	SAKERHETSTJANST_WS_CERTIFICATE_PASSWORD: "<password>"
-	SAKERHETSTJANST_WS_KEY_MANAGER_PASSWORD: "<password>"
-	SAKERHETSTJANST_WS_TRUSTSTORE_PASSWORD: "<password>"
 	
 Open _&lt;env>/configmap-vars.yaml_ and replace example `<value>` with expected values. You may also update the names of keystore/truststore files as well as their type (JKS or PKCS12). Also see working example from [rehabstod-test-configmap-envvar](https://raw.githubusercontent.com/sklintyg/rehabstod/develop/devops/openshift/stage/configmap-vars.yaml). 
 
