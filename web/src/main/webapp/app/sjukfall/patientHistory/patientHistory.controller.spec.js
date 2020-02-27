@@ -96,7 +96,8 @@ describe('Controller: PatientHistoryController', function() {
           $state: $state,
           patientHistoryProxy: _patientHistoryProxy_,
           patientHistoryViewState: _patientHistoryViewState_,
-          patient: {}
+          patient: {},
+          nyligenAvslutat: false
         });
       }));
 
