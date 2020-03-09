@@ -113,7 +113,7 @@ angular.module('rehabstodApp').factory('TableService',
         return columns;
       }
 
-      function _getAllPatientTableColumns() {
+      function _getAllPatientTableColumns(nyligenAvslutat) {
         var columns = [
           {
             id: 'number',
@@ -150,22 +150,25 @@ angular.module('rehabstodApp').factory('TableService',
           {
             id: 'occupation',
             classes: 'column-occupation'
-          },
-          {
+          }
+        ];
+
+        if(!nyligenAvslutat) {
+          columns.push({
             id: 'vardenhet',
             classes: '',
             filter: function(isActive) {
               return isActive;
             }
-          },
-          {
+          });
+          columns.push({
             id: 'vardgivare',
             classes: '',
             filter: function(isActive) {
               return isActive;
             }
-          }
-        ];
+          });
+        }
 
         if (featureService.hasFeature('SRS')) {
           columns.push({

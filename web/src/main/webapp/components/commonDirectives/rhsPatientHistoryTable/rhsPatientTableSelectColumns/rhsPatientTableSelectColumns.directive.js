@@ -25,7 +25,8 @@ angular.module('rehabstodApp')
       return {
         restrict: 'E',
         scope: {
-          labelKey: '@'
+          labelKey: '@',
+          nyligenAvslutat: '='
         },
         controller: function($scope, $uibModal, UserModel, TableService) {
 
@@ -42,7 +43,7 @@ angular.module('rehabstodApp')
               size: 'md',
               resolve: {
                 columns: function() {
-                  return TableService.getAllPatientTableColumns();
+                  return TableService.getAllPatientTableColumns($scope.nyligenAvslutat);
                 },
                 preferenceKey: function() {
                   return preferenceKey;

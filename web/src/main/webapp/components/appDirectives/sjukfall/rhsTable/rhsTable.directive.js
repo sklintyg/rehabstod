@@ -43,7 +43,7 @@ angular.module('rehabstodApp')
         return '<b>' + diagnos.kod + '</b><br>' + desc;
       };
 
-      $scope.showPatientHistory = function(patientModel) {
+      $scope.showPatientHistory = function(patientModel, nyligenAvslutat) {
         $uibModal.open({
           windowClass: 'patient-history-dialog',
           templateUrl: '/app/sjukfall/patientHistory/patientHistory.dialog.html',
@@ -54,6 +54,9 @@ angular.module('rehabstodApp')
           resolve: {
             patient: function() {
               return patientModel;
+            },
+            nyligenAvslutat: function() {
+              return nyligenAvslutat;
             }
           }
         });
