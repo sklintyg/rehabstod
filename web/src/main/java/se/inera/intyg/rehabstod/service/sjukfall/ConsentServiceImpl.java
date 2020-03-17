@@ -24,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.integration.hsa.model.Mottagning;
+import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
 import se.inera.intyg.schemas.contract.Personnummer;
@@ -50,7 +52,7 @@ public class ConsentServiceImpl implements ConsentService {
 
         String userHsaId = onlyCurrentUser ? user.getHsaId() : null;
         String vgHsaId = user.getValdVardgivare().getId();
-        String veHsaId = user.getValdVardenhet().getId();
+        String veHsaId = getCareUnit(user);
 
         try {
             LOG.debug("Calling Samtyckestjänsten - registering consent.");
@@ -66,6 +68,13 @@ public class ConsentServiceImpl implements ConsentService {
         return registrationDate;
     }
 
+    private String getCareUnit(RehabstodUser user) {
+        final SelectableVardenhet unit = user.getValdVardenhet();
+        if (unit instanceof Mottagning) {
+            return ((Mottagning) unit).getParentHsaId();
+        }
+        return unit.getId();
+    }
 
     private ActionType createActionType(RehabstodUser user, LocalDateTime registrationDate) {
         ActionType registrationAction = new ActionType();
