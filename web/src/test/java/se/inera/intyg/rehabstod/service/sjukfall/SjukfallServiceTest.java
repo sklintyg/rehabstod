@@ -194,7 +194,7 @@ public class SjukfallServiceTest {
         when(integrationService.getIntygsDataForCareUnit(anyString(), anyInt())).thenReturn(new ArrayList<>());
         when(integrationService.getIntygsDataForCareUnitAndPatient(anyString(), anyString(), anyInt())).thenReturn(new ArrayList<>());
         when(integrationService.getAllIntygsDataForPatient(anyString())).thenReturn(createIntygsData());
-        when(sjukfallPuService.filterSekretessForPatientHistory(anyListOf(IntygData.class), anyString(), anyString()))
+        when(sjukfallPuService.filterSekretessForPatientHistory(anyListOf(IntygData.class)))
             .thenAnswer(returnsFirstArg());
 
         doReturn(createSjukfallEnhetList()).when(sjukfallEngine)

@@ -299,7 +299,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         // Remove intyg from other units for patients with sekretess
         LOG.debug("Calling PU - fetching information about patients 'sekretess' status.");
-        List<IntygData> filteredData = sjukfallPuService.filterSekretessForPatientHistory(data, vardgivareId, enhetsId);
+        List<IntygData> filteredData = sjukfallPuService.filterSekretessForPatientHistory(data);
 
         boolean haveSekretess = filteredData.size() != data.size();
         data = filteredData;

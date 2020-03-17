@@ -60,8 +60,11 @@ public class SjukfallPuServiceImplTest {
     private static final String TOLVANSSON_PNR_INVALID = "19121212-1211";
     private static final String VARDGIVARE_1 = "vg-1";
     private static final String VARDGIVARE_2 = "vg-2";
-    private static final String ENHET_1 = "enhet-1";
-    private static final String ENHET_2 = "enhet-2";
+    private static final String VARDENHET_1 = "vg-1-ve-1";
+    private static final String VARDENHET_2 = "vg-1-ve-2";
+    private static final String VARDENHET_3 = "vg-2-ve-2";
+    private static final String ENHET_1 = "vg-1-ve-1-e-1";
+    private static final String ENHET_2 = "vg-1-ve-1-e-2";
     private static final String LAKARE1_HSA_ID = "lakare-1";
     private static final String LAKARE2_HSA_ID = "lakare-2";
     private static final String LAKARE1_NAMN = "Läkare Läkarsson";
@@ -133,56 +136,75 @@ public class SjukfallPuServiceImplTest {
 
     @Test
     public void testFilterSekretessForPatientHistoryNoSekretess() {
-        RehabstodUser rehabstodUser = buildLakare(ENHET_1);
+        RehabstodUser rehabstodUser = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(rehabstodUser);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
             buildPersonSvar(TOLVANSSON_PNR, false, false));
 
         List<IntygData> intygData = buildIntygList(TOLVANSSON_PNR);
-        List<IntygData> returnedData = testee.filterSekretessForPatientHistory(intygData, VARDGIVARE_1, ENHET_1);
+        List<IntygData> returnedData = testee.filterSekretessForPatientHistory(intygData);
         assertEquals(3, returnedData.size());
     }
 
     @Test
-    public void testFilterSekretessForPatientHistorySekretess() {
-        RehabstodUser rehabstodUser = buildLakare(ENHET_1);
+    public void testFilterSekretessForPatientHistorySekretessOnCareUnit() {
+        RehabstodUser rehabstodUser = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(rehabstodUser);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
             buildPersonSvar(TOLVANSSON_PNR, true, false));
 
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(VARDENHET_1)).thenReturn(true);
+
         List<IntygData> intygData = buildIntygList(TOLVANSSON_PNR);
-        List<IntygData> returnedData = testee.filterSekretessForPatientHistory(intygData, VARDGIVARE_1, ENHET_1);
+        List<IntygData> returnedData = testee.filterSekretessForPatientHistory(intygData);
+        assertEquals(1, returnedData.size());
+    }
+
+    @Test
+    public void testFilterSekretessForPatientHistorySekretessOnSubUnit() {
+        RehabstodUser rehabstodUser = buildLakare(VARDENHET_1);
+        when(userService.getUser()).thenReturn(rehabstodUser);
+
+        when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
+            buildPersonSvar(TOLVANSSON_PNR, true, false));
+
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(VARDENHET_1)).thenReturn(true);
+
+        List<IntygData> intygData = buildIntygList(TOLVANSSON_PNR);
+        List<IntygData> returnedData = testee.filterSekretessForPatientHistory(intygData);
         assertEquals(1, returnedData.size());
     }
 
     @Test(expected = IllegalStateException.class)
     public void testFilterSekretessForPatientHistoryError() {
-        RehabstodUser rehabstodUser = buildLakare(ENHET_1);
+        RehabstodUser rehabstodUser = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(rehabstodUser);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(PersonSvar.error());
 
         List<IntygData> intygData = buildIntygList(TOLVANSSON_PNR);
-        testee.filterSekretessForPatientHistory(intygData, VARDGIVARE_1, ENHET_1);
+        testee.filterSekretessForPatientHistory(intygData);
     }
 
     @Test
     public void testFilterSekretessForPatientHistoryNotFound() {
-        RehabstodUser rehabstodUser = buildLakare(ENHET_1);
+        RehabstodUser rehabstodUser = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(rehabstodUser);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(PersonSvar.notFound());
 
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(VARDENHET_1)).thenReturn(true);
+
         List<IntygData> intygData = buildIntygList(TOLVANSSON_PNR);
-        List<IntygData> returnedData = testee.filterSekretessForPatientHistory(intygData, VARDGIVARE_1, ENHET_1);
+        List<IntygData> returnedData = testee.filterSekretessForPatientHistory(intygData);
         assertEquals(1, returnedData.size());
     }
 
     @Test
     public void testSekretessmarkeradIsFilteredWhenUserIsLakareOnOtherUnit() {
-        RehabstodUser rehabstodUser = buildLakare(ENHET_2);
+        RehabstodUser rehabstodUser = buildLakare(VARDENHET_2);
         when(userService.getUser()).thenReturn(rehabstodUser);
 
         mockPersonSvar(false, true);
@@ -194,7 +216,7 @@ public class SjukfallPuServiceImplTest {
 
     @Test(expected = IllegalStateException.class)
     public void testFilterSekretessForSummaryWhenPuServiceThrowsException() {
-        RehabstodUser rehabstodUser = buildLakare(ENHET_1);
+        RehabstodUser rehabstodUser = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(rehabstodUser);
         when(puService.getPersons(anyListOf(Personnummer.class))).thenReturn(new HashMap());
 
@@ -203,7 +225,7 @@ public class SjukfallPuServiceImplTest {
 
     @Test
     public void testSekretessmarkeradIsFilteredWhenUserIsLakareOnOtherUnitFilterOnly() {
-        RehabstodUser rehabstodUser = buildLakare(ENHET_2);
+        RehabstodUser rehabstodUser = buildLakare(VARDENHET_2);
         when(userService.getUser()).thenReturn(rehabstodUser);
 
         mockPersonSvar(false, true);
@@ -215,9 +237,9 @@ public class SjukfallPuServiceImplTest {
 
     @Test
     public void testSekretessmarkeradIsIncludedWhenUserIsLakareOnSameUnit() {
-        RehabstodUser rehabstodUser = buildLakare(ENHET_1);
+        RehabstodUser rehabstodUser = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(rehabstodUser);
-        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(VARDENHET_1)).thenReturn(true);
 
         mockPersonSvar(false, true);
 
@@ -228,9 +250,9 @@ public class SjukfallPuServiceImplTest {
 
     @Test
     public void testSekretessmarkeradIsIncludedWhenUserIsLakareAsRehabkoordinatorAndSignedTheIntyg() {
-        RehabstodUser rehabstodUser = buildLakareAsRehabkoordinator(ENHET_1);
+        RehabstodUser rehabstodUser = buildLakareAsRehabkoordinator(VARDENHET_1);
         when(userService.getUser()).thenReturn(rehabstodUser);
-        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(VARDENHET_1)).thenReturn(true);
         when(puService.getPersons(Arrays.asList(createPnr(TOLVANSSON_PNR)))).thenReturn(buildPersonMap());
         List<SjukfallEnhet> sjukfallList = buildSjukfallList(TOLVANSSON_PNR);
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
@@ -239,10 +261,10 @@ public class SjukfallPuServiceImplTest {
 
     @Test
     public void testSekretessmarkeradIsExcludedWhenUserIsLakareAsRehabkoordinatorOnSameUnitButIsNotSigning() {
-        RehabstodUser rehabstodUser = buildLakareAsRehabkoordinator(ENHET_1);
+        RehabstodUser rehabstodUser = buildLakareAsRehabkoordinator(VARDENHET_1);
         when(rehabstodUser.getHsaId()).thenReturn(LAKARE2_HSA_ID);
         when(userService.getUser()).thenReturn(rehabstodUser);
-        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(VARDENHET_1)).thenReturn(true);
 
         when(puService.getPersons(Arrays.asList(createPnr(TOLVANSSON_PNR)))).thenReturn(buildPersonMap());
 
@@ -279,9 +301,9 @@ public class SjukfallPuServiceImplTest {
 
     @Test
     public void testNameIsReplacedWhenLakareAccessesSekretessmarkerad() {
-        RehabstodUser user = buildLakare(ENHET_1);
+        RehabstodUser user = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(user);
-        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(VARDENHET_1)).thenReturn(true);
 
         mockPersonSvar(false, true);
 
@@ -333,9 +355,9 @@ public class SjukfallPuServiceImplTest {
 
     @Test(expected = IllegalStateException.class)
     public void testGetPatientSjukfallNotAllowedForLakareOtherUnitIfSekretessmarkering() {
-        RehabstodUser user = buildLakare(ENHET_2);
+        RehabstodUser user = buildLakare(VARDENHET_2);
         when(userService.getUser()).thenReturn(user);
-        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(false);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(VARDENHET_1)).thenReturn(false);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
             buildPersonSvar(TOLVANSSON_PNR, true, false));
@@ -345,9 +367,9 @@ public class SjukfallPuServiceImplTest {
 
     @Test
     public void testGetPatientSjukfallAllowedForLakareSameUnitIfSekretessmarkering() {
-        RehabstodUser user = buildLakare(ENHET_1);
+        RehabstodUser user = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(user);
-        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(VARDENHET_1)).thenReturn(true);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
             buildPersonSvar(TOLVANSSON_PNR, true, false));
@@ -361,9 +383,9 @@ public class SjukfallPuServiceImplTest {
 
     @Test
     public void testGetPatientSjukfallAllowedForLakareSameUnitIfNotSekretessmarkering() {
-        RehabstodUser user = buildLakare(ENHET_1);
+        RehabstodUser user = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(user);
-        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(VARDENHET_1)).thenReturn(true);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
             buildPersonSvar(TOLVANSSON_PNR, false, false));
@@ -377,7 +399,7 @@ public class SjukfallPuServiceImplTest {
 
     @Test(expected = IllegalStateException.class)
     public void testFilterSekretessForSummaryWhenPersonnummerHasInvalidDigit() {
-        RehabstodUser lakare = buildLakare(ENHET_1);
+        RehabstodUser lakare = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(lakare);
         when(puService.getPersons(Arrays.asList(createPnr(TOLVANSSON_PNR_INVALID)))).thenReturn(new HashMap<>());
 
@@ -386,7 +408,7 @@ public class SjukfallPuServiceImplTest {
 
     @Test
     public void testFilterSekretessForSummaryWhenPatientAvliden() {
-        RehabstodUser lakare = buildLakare(ENHET_1);
+        RehabstodUser lakare = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(lakare);
         mockPersonSvar(true, false);
 
@@ -397,7 +419,7 @@ public class SjukfallPuServiceImplTest {
 
     @Test(expected = IllegalStateException.class)
     public void testEnrichPatientsWhenPersonnummerHasInvalidDigit() {
-        RehabstodUser lakare = buildLakare(ENHET_1);
+        RehabstodUser lakare = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(lakare);
         when(puService.getPersons(Arrays.asList(createPnr(TOLVANSSON_PNR_INVALID)))).thenReturn(new HashMap<>());
 
@@ -406,7 +428,7 @@ public class SjukfallPuServiceImplTest {
 
     @Test(expected = RuntimeException.class)
     public void testEnrichPatientWhenPersonnummerHasInvalidDigit() {
-        RehabstodUser lakare = buildLakare(ENHET_1);
+        RehabstodUser lakare = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(lakare);
 
         List<SjukfallPatient> sjukfallPatientList = buildPatientSjukfallList(TOLVANSSON_PNR_INVALID);
@@ -415,9 +437,9 @@ public class SjukfallPuServiceImplTest {
 
     @Test
     public void testPatientNameSetToSekretessWhenApplicableOnPatientView() {
-        RehabstodUser lakare = buildLakare(ENHET_1);
+        RehabstodUser lakare = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(lakare);
-        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(VARDENHET_1)).thenReturn(true);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
             buildPersonSvar(TOLVANSSON_PNR, true, false));
@@ -429,9 +451,9 @@ public class SjukfallPuServiceImplTest {
 
     @Test(expected = IllegalStateException.class)
     public void testThrowsExceptionWhenAvliden() {
-        RehabstodUser lakare = buildLakare(ENHET_1);
+        RehabstodUser lakare = buildLakare(VARDENHET_1);
         when(userService.getUser()).thenReturn(lakare);
-        when(userService.isUserLoggedInOnEnhetOrUnderenhet(ENHET_1)).thenReturn(true);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(VARDENHET_1)).thenReturn(true);
 
         when(puService.getPerson(createPnr(TOLVANSSON_PNR))).thenReturn(
             buildPersonSvar(TOLVANSSON_PNR, false, true));
@@ -486,7 +508,7 @@ public class SjukfallPuServiceImplTest {
 
     private PatientData buildPatientData(String pnr, String namn) {
         PatientData patientData = new PatientData();
-        patientData.setVardenhetId(ENHET_1);
+        patientData.setVardenhetId(VARDENHET_1);
         patientData.setPatient(buildPatient(pnr, namn));
         patientData.setLakare(new Lakare(LAKARE1_HSA_ID, LAKARE1_NAMN));
         return patientData;
@@ -537,9 +559,9 @@ public class SjukfallPuServiceImplTest {
 
     private List<IntygData> buildIntygList(String pnr) {
         List<IntygData> intygData = new ArrayList<>();
-        intygData.add(buildIntyg(pnr, VARDGIVARE_1, ENHET_1));
-        intygData.add(buildIntyg(pnr, VARDGIVARE_1, ENHET_2));
-        intygData.add(buildIntyg(pnr, VARDGIVARE_2, ENHET_1));
+        intygData.add(buildIntyg(pnr, VARDGIVARE_1, VARDENHET_1));
+        intygData.add(buildIntyg(pnr, VARDGIVARE_1, VARDENHET_2));
+        intygData.add(buildIntyg(pnr, VARDGIVARE_2, VARDENHET_3));
         return intygData;
     }
 
@@ -553,7 +575,7 @@ public class SjukfallPuServiceImplTest {
     private SjukfallEnhet buildSjukfall(String pnr, String namn) {
         SjukfallEnhet sjukfall = new SjukfallEnhet();
         sjukfall.setPatient(buildPatient(pnr, namn));
-        sjukfall.setVardEnhetId(ENHET_1);
+        sjukfall.setVardEnhetId(VARDENHET_1);
         sjukfall.setLakare(new Lakare(LAKARE1_HSA_ID, LAKARE1_NAMN));
         return sjukfall;
     }
