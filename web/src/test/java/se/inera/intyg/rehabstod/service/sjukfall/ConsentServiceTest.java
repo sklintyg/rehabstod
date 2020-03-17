@@ -58,7 +58,7 @@ public class ConsentServiceTest {
 
 
     @Test
-    public void testGiveConsent() {
+    public void testGiveConsentLoggedInOnCareUnit() {
         LocalDateTime consentFrom = LocalDateTime.now();
         LocalDateTime consentTo = consentFrom.plusDays(10);
 
