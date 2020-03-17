@@ -110,7 +110,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
     }
 
     @Override
-    public List<IntygData> filterSekretessForPatientHistory(List<IntygData> intygsData, String vardgivareId, String enhetsId) {
+    public List<IntygData> filterSekretessForPatientHistory(List<IntygData> intygsData) {
         if (intygsData.isEmpty()) {
             return intygsData;
         }
@@ -123,12 +123,12 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
         PersonSvar personSvar = puService.getPerson(personnummer);
         if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
             if (personSvar.getPerson().isSekretessmarkering()) {
-                filteredIntyg = filterOnVardgivareAndEnhet(intygsData, vardgivareId, enhetsId);
+                filteredIntyg = filterOnCareUnit(intygsData);
             }
         } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
             throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
         } else {
-            filteredIntyg = filterOnVardgivareAndEnhet(intygsData, vardgivareId, enhetsId);
+            filteredIntyg = filterOnCareUnit(intygsData);
         }
 
         return filteredIntyg;
@@ -291,11 +291,9 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
         return personnummer;
     }
 
-    private List<IntygData> filterOnVardgivareAndEnhet(List<IntygData> intygsData, String vardgivareId, String enhetsId) {
+    private List<IntygData> filterOnCareUnit(List<IntygData> intygsData) {
         return intygsData.stream()
-            .filter(intygData ->
-                intygData.getVardgivareId().equals(vardgivareId)
-                    && intygData.getVardenhetId().equals(enhetsId))
+            .filter(intygData -> userService.isUserLoggedInOnEnhetOrUnderenhet(intygData.getVardenhetId()))
             .collect(Collectors.toList());
     }
 

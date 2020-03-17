@@ -41,7 +41,7 @@ public interface SjukfallPuService {
     /**
      * Removes intyg from other careUnits belonging to the patient with sekretessmarkering.
      */
-    List<IntygData> filterSekretessForPatientHistory(List<IntygData> intygsData, String vardgivareId, String enhetsId);
+    List<IntygData> filterSekretessForPatientHistory(List<IntygData> intygsData);
 
     /**
      * Filters out sjukfall if the patient has sekretessmarkering and the user doesn't have the requisite privilege.
