@@ -31,6 +31,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -42,7 +43,8 @@ public class ConsentServiceTest {
 
     private static final String PERSON_ID = "19121212-1212";
     private static final String VARDGIVARE_ID = "VG123";
-    private static final String VARDENHETS_ID = "VEA";
+    private static final String VARDENHETS_ID = "VG123-VEA";
+    private static final String MOTTAGNINGS_ID = "VG123-VEA-E1";
     private static final String USER_HSA_ID = "USERHSA";
 
     @Mock
@@ -54,13 +56,6 @@ public class ConsentServiceTest {
     @InjectMocks
     private ConsentServiceImpl testee = new ConsentServiceImpl();
 
-    @Before
-    public void setup() {
-        when(rehabstodUserMock.getValdVardgivare()).thenReturn(new Vardgivare(VARDGIVARE_ID, "vårdgivare"));
-        when(rehabstodUserMock.getValdVardenhet()).thenReturn(new Vardenhet(VARDENHETS_ID, "enhet"));
-        when(rehabstodUserMock.getHsaId()).thenReturn(USER_HSA_ID);
-
-    }
 
     @Test
     public void testGiveConsent() {
@@ -68,6 +63,30 @@ public class ConsentServiceTest {
         LocalDateTime consentTo = consentFrom.plusDays(10);
 
         Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
+
+        when(rehabstodUserMock.getValdVardgivare()).thenReturn(new Vardgivare(VARDGIVARE_ID, "vårdgivare"));
+        when(rehabstodUserMock.getValdVardenhet()).thenReturn(new Vardenhet(VARDENHETS_ID, "enhet"));
+        when(rehabstodUserMock.getHsaId()).thenReturn(USER_HSA_ID);
+
+        testee.giveConsent(personnummer.get(), true, null, consentFrom, consentTo, rehabstodUserMock);
+
+        verify(samtyckestjanstIntegrationService)
+            .registerConsent(eq(VARDGIVARE_ID), eq(VARDENHETS_ID), eq(personnummer.get()), eq(USER_HSA_ID), eq(null), eq(consentFrom),
+                eq(consentTo), any());
+    }
+
+    @Test
+    public void testGiveConsentLoggedInOnSubUnit() {
+        LocalDateTime consentFrom = LocalDateTime.now();
+        LocalDateTime consentTo = consentFrom.plusDays(10);
+
+        Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
+        Mottagning mottagning = new Mottagning(MOTTAGNINGS_ID, "enhet");
+        mottagning.setParentHsaId(VARDENHETS_ID);
+
+        when(rehabstodUserMock.getValdVardgivare()).thenReturn(new Vardgivare(VARDGIVARE_ID, "vårdgivare"));
+        when(rehabstodUserMock.getValdVardenhet()).thenReturn(mottagning);
+        when(rehabstodUserMock.getHsaId()).thenReturn(USER_HSA_ID);
 
         testee.giveConsent(personnummer.get(), true, null, consentFrom, consentTo, rehabstodUserMock);
 
