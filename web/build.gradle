@@ -92,94 +92,48 @@ dependencies {
     compile "se.inera.intyg.infra:security-siths:${intygInfraVersion}"
     compile "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
 
-
-
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
     compile ("com.googlecode.json-simple:json-simple:${jsonSimpleVersion}") {
         exclude group: "junit", module: "junit"
     }
     compile "com.itextpdf:itext7-core:${itext7Version}"
-    compile "org.apache.commons:commons-lang3"
-    compile "org.apache.cxf:cxf-rt-features-logging:${cxfVersion}"
-    compile "org.apache.poi:poi-ooxml:${poiVersion}"
-    compile "org.apache.poi:poi:${poiVersion}"
-    compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
-    compile "org.springframework.security:spring-security-config"
-    compile "org.springframework.security:spring-security-web"
-    compile "org.springframework.ws:spring-ws-core"
-    compile "org.springframework:spring-jms"
-    //compile "org.springframework.session:spring-session"
-    //compile "org.springframework.session:spring-session-core"
-    compile "org.springframework.session:spring-session-data-redis"
-    compile "wsdl4j:wsdl4j"
-    //compile "junit:junit:4.+" //For json-simple to use same junit as everywhere else
 
+    compile "mysql:mysql-connector-java"
     compile "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
     compile "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
 
     compile "org.apache.activemq:activemq-spring"
-    compile "mysql:mysql-connector-java"
+    compile "org.apache.commons:commons-lang3"
+    compile "org.apache.cxf:cxf-rt-features-logging:${cxfVersion}"
+    compile "org.apache.poi:poi-ooxml:${poiVersion}"
+    compile "org.apache.poi:poi:${poiVersion}"
 
-    //compileOnly "javax.jms:javax.jms-api"
+    compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
+    compile "org.springframework.security:spring-security-config"
+    compile "org.springframework.security:spring-security-web"
+    compile "org.springframework.session:spring-session-data-redis"
+    compile "org.springframework:spring-jms"
+    compile "org.springframework.ws:spring-ws-core"
+
+    compile "wsdl4j:wsdl4j"
+
     compileOnly "jakarta.jms:jakarta.jms-api"
     compileOnly "javax.servlet:javax.servlet-api"
-    //compileOnly "jstl:jstl:${jstlVersion}"
     compileOnly "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
 
-    //testCompile "com.jayway.restassured:rest-assured:${restAssuredVersion}"
-    //testCompile "com.jayway.restassured:json-schema-validator:${restAssuredVersion}"
     testCompile "io.rest-assured:rest-assured"
     testCompile "io.rest-assured:json-schema-validator"
     testCompile "com.sun.xml.bind:jaxb-osgi:2.3.2" // Can remove when rest-assured in BOM > version 4.0
+
+    testCompile "jakarta.jms:jakarta.jms-api"
     testCompile "org.hamcrest:hamcrest"
     testCompile "org.hamcrest:hamcrest-library"
-    //testCompile "org.powermock:powermock-mockito-release-full:${powermockFullVersion}"
-    testCompile "org.powermock:powermock-module-junit4:${powermockApiVersion}"
-    testCompile "org.powermock:powermock-api-mockito2:${powermockApiVersion}"
+    testCompile "org.powermock:powermock-module-junit4:${powermockVersion}"
+    testCompile "org.powermock:powermock-api-mockito2:${powermockVersion}"
     testCompile "org.springframework:spring-test"
     testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "org.testng:testng:${testngVersion}"
-    //testCompile "javax.jms:jms-api:${javaxJmsVersion}"
-    testCompile "jakarta.jms:jakarta.jms-api"
 
-    //gretty "jstl:jstl:${jstlVersion}"
     gretty "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
     gretty "se.inera.intyg.refdata:refdata:${refDataVersion}"
 }
-
-/*
-compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVersion}"
-    compile "com.googlecode.json-simple:json-simple:${jsonSimpleVersion}"
-    compile "com.itextpdf:itext7-core:${itextVersion}"
-    compile "org.apache.commons:commons-lang3:${commonsLang3Version}"
-    compile "org.apache.poi:poi-ooxml:${poiVersion}"
-    compile "org.apache.poi:poi:${poiVersion}"
-    compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
-    compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
-    compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
-    compile "org.springframework.ws:spring-ws-core:${springWsCoreVersion}"
-    compile "org.springframework:spring-jms:${springContextVersion}"
-    compile "org.springframework.session:spring-session:${springSessionVersion}"
-    compile "wsdl4j:wsdl4j:${wsdl4jVersion}"
-
-    compile "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
-    compile "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
-
-    compile "org.apache.activemq:activemq-spring:${activemqVersion}"
-    compile "mysql:mysql-connector-java:${mysqlVersion}"
-
-    compileOnly "javax.jms:jms-api:${javaxJmsVersion}"
-    compileOnly "javax.servlet:javax.servlet-api:${javaxServletVersion}"
-    compileOnly "jstl:jstl:${jstlVersion}"
-
-    testCompile "com.jayway.restassured:rest-assured:${restAssuredVersion}"
-    testCompile "com.jayway.restassured:json-schema-validator:${restAssuredVersion}"
-    testCompile "org.hamcrest:hamcrest-all:${hamcrestVersion}"
-    testCompile "org.powermock:powermock-mockito-release-full:${powermockFullVersion}"
-    testCompile "org.springframework:spring-test:${springContextVersion}"
-    testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
-    testCompile "javax.jms:jms-api:${javaxJmsVersion}"
-
-    gretty "jstl:jstl:${jstlVersion}"
-    gretty "se.inera.intyg.refdata:refdata:${refDataVersion}"
- */

@@ -10,18 +10,3 @@ dependencies {
     testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "org.springframework:spring-test"
 }
-
-/*
-dependencies {
-    compile project(":rehabstod-common")
-    compile project(":rehabstod-wc-integration")
-
-    compile "se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:${intygHealthcondRehabilitationSchemasVersion}"
-    compile "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${rivtaItintegrationMonitoringSchemasVersion}"
-    compile "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
-    compile "se.inera.intyg.infra:pu-integration:${intygInfraVersion}"
-
-    testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
-    testCompile "org.springframework:spring-test:${springContextVersion}"
-}
- */

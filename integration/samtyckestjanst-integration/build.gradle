@@ -10,5 +10,4 @@ dependencies {
 
     testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "org.springframework:spring-test"
-
 }

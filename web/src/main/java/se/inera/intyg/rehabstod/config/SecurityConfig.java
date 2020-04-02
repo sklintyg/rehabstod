@@ -42,6 +42,7 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.session.FlushMode;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.web.client.RestTemplate;
 
@@ -49,7 +50,6 @@ import org.springframework.web.client.RestTemplate;
  * Created by eriklupander on 2016-05-18.
  */
 @Configuration
-@EnableRedisHttpSession
 @ComponentScan("se.inera.intyg.infra.security.authorities")
 @ImportResource({"classpath:securityContext.xml"})
 public class SecurityConfig {
