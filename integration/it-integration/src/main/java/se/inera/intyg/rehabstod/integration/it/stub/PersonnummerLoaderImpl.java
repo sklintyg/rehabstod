@@ -54,10 +54,9 @@ public class PersonnummerLoaderImpl implements PersonnummerLoader {
     @Override
     public List<String> readTestPersonnummer() throws IOException {
         Resource resource = getResource(location);
-        LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "UTF-8");
 
         List<String> personnummerList = new ArrayList<>();
-        try {
+        try (LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "UTF-8")) {
             // Skip CSV column name
             if (it.hasNext()) {
                 it.nextLine();
@@ -67,8 +66,6 @@ public class PersonnummerLoaderImpl implements PersonnummerLoader {
                 String line = it.nextLine();
                 personnummerList.add(line);
             }
-        } finally {
-            LineIterator.closeQuietly(it);
         }
         return personnummerList;
     }

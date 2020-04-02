@@ -57,17 +57,13 @@ public class DiagnosGruppLoaderImpl implements DiagnosGruppLoader {
 
         Resource resource = resourceLoader.getResource(location);
 
-        LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "UTF-8");
-
         List<DiagnosGrupp> list = new ArrayList<>();
-        try {
+        try (LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "UTF-8")) {
 
             while (it.hasNext()) {
                 final String line = it.nextLine();
                 list.add(new DiagnosGrupp(line));
             }
-        } finally {
-            LineIterator.closeQuietly(it);
         }
         return list;
     }

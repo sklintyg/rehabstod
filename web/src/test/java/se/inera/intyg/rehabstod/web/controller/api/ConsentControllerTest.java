@@ -19,13 +19,15 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.google.common.base.Strings;
@@ -37,7 +39,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
@@ -86,7 +88,7 @@ public class ConsentControllerTest {
     public void testRegisterExtendedConsent() {
         LocalDateTime result = LocalDateTime.now();
 
-        when(consentServiceMock.giveConsent(any(), anyBoolean(), anyString(), any(), any(), any()))
+        when(consentServiceMock.giveConsent(any(), anyBoolean(), isNull(), any(), any(), any()))
             .thenReturn(result);
 
         RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest(PERSON_ID));
@@ -108,7 +110,7 @@ public class ConsentControllerTest {
     public void testRegisterExtendedConsentMaxDays() {
         LocalDateTime result = LocalDateTime.now();
 
-        when(consentServiceMock.giveConsent(any(), anyBoolean(), anyString(), any(), any(), any()))
+        when(consentServiceMock.giveConsent(any(), anyBoolean(), isNull(), any(), any(), any()))
             .thenReturn(result);
 
         RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest(PERSON_ID, ConsentController.MAX_DAYS_FOR_CONSENT));
@@ -132,9 +134,9 @@ public class ConsentControllerTest {
 
         assertEquals(LAKARE_ID, response.getRegisteredBy());
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
-        assertTrue(!Strings.isNullOrEmpty(response.getResponseMessage()));
+        assertFalse(Strings.isNullOrEmpty(response.getResponseMessage()));
 
-        verifyZeroInteractions(consentServiceMock);
+        verifyNoInteractions(consentServiceMock);
     }
 
     @Test
@@ -146,21 +148,21 @@ public class ConsentControllerTest {
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
         assertTrue(!Strings.isNullOrEmpty(response.getResponseMessage()));
 
-        verifyZeroInteractions(consentServiceMock);
+        verifyNoInteractions(consentServiceMock);
     }
 
     @Test
     public void testRegisterExtendedConsent_error() {
-        when(consentServiceMock.giveConsent(any(), anyBoolean(), anyString(), any(), any(), any()))
+        when(consentServiceMock.giveConsent(any(), anyBoolean(), isNull(), any(), any(), any()))
             .thenReturn(null);
 
         RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest(PERSON_ID));
 
         assertEquals(LAKARE_ID, response.getRegisteredBy());
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
-        assertTrue(!Strings.isNullOrEmpty(response.getResponseMessage()));
+        assertFalse(Strings.isNullOrEmpty(response.getResponseMessage()));
 
-        verify(consentServiceMock).giveConsent(any(), anyBoolean(), anyString(), any(), any(), any());
+        verify(consentServiceMock).giveConsent(any(), anyBoolean(), isNull(), any(), any(), any());
     }
 
     private RehabstodUser buildUser() {

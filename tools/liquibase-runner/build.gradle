@@ -40,6 +40,6 @@ configurations.runtime {
 dependencies {
     runtime project(":rehabstod-persistence")
 
-    runtime "org.liquibase:liquibase-core:${liquibaseVersion}"
-    runtime "mysql:mysql-connector-java:${mysqlVersion}"
+    runtime "org.liquibase:liquibase-core"
+    runtime "mysql:mysql-connector-java"
 }

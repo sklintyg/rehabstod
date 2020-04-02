@@ -20,8 +20,8 @@ package se.inera.intyg.rehabstod.web.controller.api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
@@ -90,12 +90,9 @@ public class UserControllerTest {
     @Before
     public void before() {
         when(commonAuthoritiesResolver.getFeatures(any())).thenReturn(Collections.emptyMap());
-        when(rehabstodUnitChangeService.changeValdVardenhet("123", rehabUserMock)).thenReturn(true);
         when(rehabUserMock.getValdVardenhet()).thenReturn(new Vardenhet("123", "enhet"));
         when(rehabUserMock.getValdVardgivare()).thenReturn(new Vardenhet("456", "vardgivare"));
         when(rehabUserMock.getHsaId()).thenReturn(HSA_ID);
-        when(rehabUserMock.getSjfPatientVardenhet()).thenReturn(new HashMap<>());
-        when(rehabUserMock.getSjfPatientVardgivare()).thenReturn(new HashMap<>());
         when(rehabUserMock.getPreferences()).thenReturn(RehabstodUserPreferences.empty());
         when(userService.getUser()).thenReturn(rehabUserMock);
         when(environment.getActiveProfiles()).thenReturn(new String[0]);
@@ -197,7 +194,6 @@ public class UserControllerTest {
     public void testGetAccessTokenFakeUserNotProdResponse() {
         when(rehabUserMock.getTokens()).thenReturn(null);
 
-        when(rehabUserMock.getAuthenticationMethod()).thenReturn(AuthenticationMethod.FAKE);
         when(environment.getActiveProfiles()).thenReturn(new String[] {"prod"});
 
         GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();

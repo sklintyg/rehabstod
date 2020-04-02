@@ -24,7 +24,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author Magnus Ekstrand on 2017-02-21.

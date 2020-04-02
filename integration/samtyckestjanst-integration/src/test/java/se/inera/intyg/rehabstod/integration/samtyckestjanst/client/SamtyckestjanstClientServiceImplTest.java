@@ -21,8 +21,11 @@ package se.inera.intyg.rehabstod.integration.samtyckestjanst.client;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 import com.google.common.base.Strings;
@@ -34,7 +37,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
@@ -108,10 +111,10 @@ public class SamtyckestjanstClientServiceImplTest {
         verify(registerExtendedConsentService).registerExtendedConsent(eq(LOGICAL_ADDRESS), requestCapture.capture());
 
         final RegisterExtendedConsentType args = requestCapture.getValue();
-        assertTrue(!Strings.isNullOrEmpty(args.getAssertionId()));
-        assertTrue(args.getEndDate() == null);
-        assertTrue(args.getRepresentedBy() == null);
-        assertTrue(args.getStartDate() != null);
+        assertFalse(Strings.isNullOrEmpty(args.getAssertionId()));
+        assertNull(args.getEndDate());
+        assertNull(args.getRepresentedBy());
+        assertNotNull(args.getStartDate());
 
         assertEquals(VG_HSA_ID, args.getCareProviderId());
         assertEquals(VE_HSA_ID, args.getCareUnitId());

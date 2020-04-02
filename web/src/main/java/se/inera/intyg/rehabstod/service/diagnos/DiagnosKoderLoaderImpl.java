@@ -70,10 +70,8 @@ public class DiagnosKoderLoaderImpl implements DiagnosKoderLoader {
         String location = ResourceUtils.isUrl(file) ? file : "file://" + file;
         Resource resource = resourceLoader.getResource(location);
 
-        LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "ISO-8859-1");
-
         Map<String, String> map = new HashMap<>();
-        try {
+        try (LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "ISO-8859-1")) {
             while (it.hasNext()) {
                 final String line = it.nextLine();
 
@@ -83,8 +81,6 @@ public class DiagnosKoderLoaderImpl implements DiagnosKoderLoader {
                     map.put(kod.getCleanedCode(), kod.getName());
                 }
             }
-        } finally {
-            LineIterator.closeQuietly(it);
         }
         return map;
     }

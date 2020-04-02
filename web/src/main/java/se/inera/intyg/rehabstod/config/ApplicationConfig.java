@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import javax.annotation.PostConstruct;
 import org.apache.cxf.Bus;
-import org.apache.cxf.feature.LoggingFeature;
+import org.apache.cxf.ext.logging.LoggingFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

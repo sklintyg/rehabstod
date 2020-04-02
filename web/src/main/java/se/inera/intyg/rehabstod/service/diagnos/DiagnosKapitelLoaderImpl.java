@@ -57,17 +57,15 @@ public class DiagnosKapitelLoaderImpl implements DiagnosKapitelLoader {
 
         Resource resource = resourceLoader.getResource(diagnosKapitelFile);
 
-        LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "UTF-8");
+
 
         List<DiagnosKapitel> list = new ArrayList<>();
-        try {
+        try (LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "UTF-8")) {
 
             while (it.hasNext()) {
                 final String line = it.nextLine();
                 list.add(new DiagnosKapitel(line));
             }
-        } finally {
-            LineIterator.closeQuietly(it);
         }
         return list;
     }

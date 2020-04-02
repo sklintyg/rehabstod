@@ -23,16 +23,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -48,7 +48,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
@@ -192,21 +192,16 @@ public class SjukfallServiceTest {
     @Before
     public void init() {
         when(integrationService.getIntygsDataForCareUnit(anyString(), anyInt())).thenReturn(new ArrayList<>());
-        when(integrationService.getIntygsDataForCareUnitAndPatient(anyString(), anyString(), anyInt())).thenReturn(new ArrayList<>());
         when(integrationService.getAllIntygsDataForPatient(anyString())).thenReturn(createIntygsData());
-        when(sjukfallPuService.filterSekretessForPatientHistory(anyListOf(IntygData.class)))
+        when(sjukfallPuService.filterSekretessForPatientHistory(anyList()))
             .thenAnswer(returnsFirstArg());
 
         doReturn(createSjukfallEnhetList()).when(sjukfallEngine)
-            .beraknaSjukfallForEnhet(anyListOf(se.inera.intyg.infra.sjukfall.dto.IntygData.class),
+            .beraknaSjukfallForEnhet(anyList(),
                 any(se.inera.intyg.infra.sjukfall.dto.IntygParametrar.class));
 
-        when(statisticsCalculator.getSjukfallSummary(anyListOf(SjukfallEnhet.class))).thenReturn(
+        when(statisticsCalculator.getSjukfallSummary(anyList())).thenReturn(
             new SjukfallSummary(0, Collections.emptyList(), new ArrayList<>(), new ArrayList<>()));
-
-        when(employeeNameService.getEmployeeHsaName(anyString())).thenReturn("Tolvan Tolvansson");
-
-        when(userPreferencesService.getPreferenceValue(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG)).thenReturn("5");
 
         when(hsaOrganizationsService.getVardgivareInfo(anyString()))
             .thenAnswer(i -> createVardgivare((String) i.getArguments()[0], i.getArguments()[0] + "-VGNAME"));
@@ -214,8 +209,8 @@ public class SjukfallServiceTest {
         when(hsaOrganizationsService.getVardenhet(anyString()))
             .thenAnswer(i -> createVardenhet((String) i.getArguments()[0], i.getArguments()[0] + "-VENAME"));
 
-        doNothing().when(sjukfallEmployeeNameResolver).enrichWithHsaEmployeeNames(anyListOf(SjukfallEnhet.class));
-        doNothing().when(sjukfallEmployeeNameResolver).updateDuplicateDoctorNamesWithHsaId(anyListOf(SjukfallEnhet.class));
+        doNothing().when(sjukfallEmployeeNameResolver).enrichWithHsaEmployeeNames(anyList());
+        doNothing().when(sjukfallEmployeeNameResolver).updateDuplicateDoctorNamesWithHsaId(anyList());
 
         when(userService.getUser()).thenReturn(buildUser());
     }
@@ -265,7 +260,7 @@ public class SjukfallServiceTest {
         testee.getSummary(enhetsId1_1, null, lakareId1, Urval.ALL, parameters);
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId1_1, MAX_DAGAR_SEDAN_AVSLUT);
-        verify(statisticsCalculator).getSjukfallSummary(anyListOf(SjukfallEnhet.class));
+        verify(statisticsCalculator).getSjukfallSummary(anyList());
     }
 
     @Test
@@ -273,7 +268,7 @@ public class SjukfallServiceTest {
         testee.getSummary(enhetsId1_1, mottagningsId, lakareId1, Urval.ALL, parameters);
 
         verify(integrationService).getIntygsDataForCareUnit(enhetsId1_1, MAX_DAGAR_SEDAN_AVSLUT);
-        verify(statisticsCalculator).getSjukfallSummary(anyListOf(SjukfallEnhet.class));
+        verify(statisticsCalculator).getSjukfallSummary(anyList());
     }
 
     /*
@@ -342,7 +337,7 @@ public class SjukfallServiceTest {
 
         testee.getByPatient(vgId1, enhetsId1_1, lakareId1, patientId1, Urval.ALL, parameters, new ArrayList<>(), new ArrayList<>());
 
-        verifyZeroInteractions(logService);
+        verifyNoInteractions(logService);
     }
 
     /*
@@ -413,7 +408,7 @@ public class SjukfallServiceTest {
      */
     @Test
     public void testGetByPatient_inomVardgivareOchInomEnhet() {
-        List<IntygsData> data = new ArrayList<IntygsData>() {{
+        List<IntygsData> data = new ArrayList<>() {{
             add(createIntygsData(vgId1, enhetsId1_1, lakareId1, patientId1, false,
                 activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
             add(createIntygsData(vgId1, enhetsId1_1, lakareId1, patientId1, false,
@@ -441,7 +436,7 @@ public class SjukfallServiceTest {
      */
     @Test
     public void testGetByPatient_whenInomVardgivareOchInomEnhet_andMottagning() {
-        List<IntygsData> data = new ArrayList<IntygsData>() {{
+        List<IntygsData> data = new ArrayList<>() {{
             add(createIntygsData(vgId1, enhetsId1_1, lakareId1, patientId1, false,
                 activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
             add(createIntygsData(vgId1, mottagningsId, lakareId1, patientId1, false,
@@ -471,7 +466,7 @@ public class SjukfallServiceTest {
      */
     @Test
     public void testGetByPatient_whenInomVardgivareOchInomMottagning_andParent() {
-        List<IntygsData> data = new ArrayList<IntygsData>() {{
+        List<IntygsData> data = new ArrayList<>() {{
             add(createIntygsData(vgId1, mottagningsId, lakareId1, patientId1, false,
                 activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
             add(createIntygsData(vgId1, enhetsId1_1, lakareId1, patientId1, false,
@@ -501,15 +496,12 @@ public class SjukfallServiceTest {
      */
     @Test(expected = SjukfallServiceException.class)
     public void testGetByPatient_whenNoIntygAtCurrentLoggedInUnitThrowsException() {
-        List<IntygsData> data = new ArrayList<IntygsData>() {{
+        List<IntygsData> data = new ArrayList<>() {{
             add(createIntygsData(vgId1, mottagningsId, lakareId1, patientId1, false,
                 activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
             add(createIntygsData(vgId1, enhetsId1_1, lakareId1, patientId1, false,
                 activeDate.minusDays(20), activeDate.minusDays(15), activeDate.minusDays(20).atStartOfDay()));
         }};
-        //Koppla mottagningen till enheten
-        when(hsaOrganizationsService.getVardenhet(eq(mottagningsId)))
-            .thenReturn(createVardenhet(enhetsId1_1, "parentunit", createMottagning(mottagningsId, "mottagning", enhetsId1_1)));
 
         when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
 
@@ -526,7 +518,7 @@ public class SjukfallServiceTest {
      */
     @Test
     public void testGetByPatient_inomVardgivareOchAnnanEnhetOchUtanforGlappet() {
-        List<IntygsData> data = new ArrayList<IntygsData>() {{
+        List<IntygsData> data = new ArrayList<>() {{
             add(createIntygsData(vgId1, enhetsId1_1, lakareId1, patientId1, false,
                 activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
             add(createIntygsData(vgId1, enhetsId1_2, lakareId1, patientId1, false,
@@ -561,7 +553,7 @@ public class SjukfallServiceTest {
      */
     @Test
     public void testGetByPatient_inomVardgivareOchUtanforEnhetMenInomGlappet() {
-        List<IntygsData> data = new ArrayList<IntygsData>() {{
+        List<IntygsData> data = new ArrayList<>() {{
             add(createIntygsData(vgId1, enhetsId1_1, lakareId1, patientId1, false,
                 activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
             add(createIntygsData(vgId1, enhetsId1_2, lakareId1, patientId1, false,
@@ -596,7 +588,7 @@ public class SjukfallServiceTest {
      */
     @Test
     public void testGetByPatient_allaVardgivareSkaFinnasMedISjfMetaData() {
-        List<IntygsData> data = new ArrayList<IntygsData>() {{
+        List<IntygsData> data = new ArrayList<>() {{
             add(createIntygsData(vgId1, enhetsId1_1, lakareId1, patientId1, false,
                 activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
             add(createIntygsData(vgId2, enhetsId2, lakareId1, patientId1, false,

@@ -58,7 +58,7 @@ public class AnvandarPreferenceRepositoryTest {
     public void testFindOne() {
         AnvandarPreference saved = buildAnvandarPreference(HSA_ID, KEY_1, VALUE_1);
         anvandarMetadataRepository.save(saved);
-        AnvandarPreference read = anvandarMetadataRepository.findOne(saved.getInternReferens());
+        AnvandarPreference read = anvandarMetadataRepository.findById(saved.getInternReferens()).orElse(null);
         assertEquals(saved, read);
     }
 

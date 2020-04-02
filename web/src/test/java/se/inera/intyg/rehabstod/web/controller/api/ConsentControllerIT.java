@@ -19,17 +19,18 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 
-import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static se.inera.intyg.rehabstod.web.controller.api.ConsentController.MAX_DAYS_FOR_CONSENT;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.response.Response;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import java.util.Map;
 import org.junit.After;
 import org.junit.Test;
@@ -77,7 +78,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
         RegisterExtendedConsentResponse result = response.body().as(RegisterExtendedConsentResponse.class);
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.OK, result.getResponseCode());
-        assertTrue(!Strings.isNullOrEmpty(result.getResponseMessage()));
+        assertFalse(Strings.isNullOrEmpty(result.getResponseMessage()));
         assertEquals(DEFAULT_LAKARE.getHsaId(), result.getRegisteredBy());
 
         // 2. Do check that consent is in the store
@@ -86,7 +87,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
             "vardenhetId", DEFAULT_VE_HSAID);
 
         response = sd.begin()
-            .queryParameters(parameters)
+            .queryParams(parameters)
             .body(request)
             .expect().statusCode(OK)
             .when().get(API_ENDPOINT_STUB + "/" + PNR_TOLVAN_TOLVANSSON)
@@ -117,7 +118,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
         RegisterExtendedConsentResponse result = response.body().as(RegisterExtendedConsentResponse.class);
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.OK, result.getResponseCode());
-        assertTrue(!Strings.isNullOrEmpty(result.getResponseMessage()));
+        assertFalse(Strings.isNullOrEmpty(result.getResponseMessage()));
         assertEquals(DEFAULT_LAKARE.getHsaId(), result.getRegisteredBy());
 
         // 2. Do check that consent is in the store
@@ -149,7 +150,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
         RegisterExtendedConsentResponse result = response.body().as(RegisterExtendedConsentResponse.class);
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, result.getResponseCode());
-        assertTrue(!Strings.isNullOrEmpty(result.getResponseMessage()));
+        assertFalse(Strings.isNullOrEmpty(result.getResponseMessage()));
     }
 
     @Test
@@ -175,7 +176,7 @@ public class ConsentControllerIT extends BaseRestIntegrationTest {
 
         RegisterExtendedConsentResponse result = response.body().as(RegisterExtendedConsentResponse.class);
         assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, result.getResponseCode());
-        assertTrue(!Strings.isNullOrEmpty(result.getResponseMessage()));
+        assertFalse(Strings.isNullOrEmpty(result.getResponseMessage()));
     }
 
     private static Personnummer createPnr(String personId) {

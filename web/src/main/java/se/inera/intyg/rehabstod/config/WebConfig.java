@@ -31,6 +31,7 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.servlet.view.InternalResourceView;
@@ -44,7 +45,7 @@ import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
     "se.inera.intyg.rehabstod.integration.wc.stub.api",
     "se.inera.intyg.rehabstod.integration.srs.stub.api"})
 @ImportResource({"classpath:META-INF/cxf/cxf.xml"})
-public class WebConfig extends WebMvcConfigurerAdapter {
+public class WebConfig implements WebMvcConfigurer {
 
     private static final int SECONDS_IN_HOUR = 3600;
     private static final int HOURS_IN_DAY = 24;
