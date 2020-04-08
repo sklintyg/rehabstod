@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall.pu;
 
 import java.util.List;
+import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
@@ -56,4 +57,6 @@ public interface SjukfallPuService {
      * If the PU-service cannot be reached, an Exception must be thrown.
      */
     void enrichWithPatientNameAndFilterSekretess(List<SjukfallPatient> patientSjukfall);
+
+    PersonSvar getPersonSvar(String pnr);
 }
