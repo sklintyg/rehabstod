@@ -13,8 +13,8 @@
         "SELENIUM_ADDRESS": ""
     },
     "test-pipeline": {
-        "REHABSTOD_URL": "http://rehabstod-2020-2:8080/",
-        "INTYGTJANST_URL": "http://intygstjanst-rehabstod-2020-2:8080/inera-certificate",
+        "REHABSTOD_URL": "http://rehabstod-2020-2-spring5:8080/",
+        "INTYGTJANST_URL": "http://intygstjanst-rehabstod-2020-2-spring5:8080/inera-certificate",
         "SELENIUM_ADDRESS": ""
     }
 }
