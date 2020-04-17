@@ -165,13 +165,13 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         Table tableAbove = new Table(displaySortorder ? 2 : 1);
         tableAbove.setWidth(UnitValue.createPercentValue(100f));
 
-        Cell showingCell = aCell().
-            add(new Paragraph(String.format(TEMPLATESTRING_TABLE_METADATA, total, sjukfallList.size()))
+        Cell showingCell = aCell()
+            .add(new Paragraph(String.format(TEMPLATESTRING_TABLE_METADATA, total, sjukfallList.size()))
                 .addStyle(style.getPageHeaderStyle()));
         tableAbove.addCell(showingCell);
         if (displaySortorder) {
-            Cell sortedByCell = aCell().
-                add(new Paragraph(getSorteringDesc(printSjukfallRequest.getSortering()))
+            Cell sortedByCell = aCell()
+                .add(new Paragraph(getSorteringDesc(printSjukfallRequest.getSortering()))
                     .addStyle(style.getPageHeaderStyle())).setTextAlignment(TextAlignment.RIGHT);
             tableAbove.addCell(sortedByCell);
         }

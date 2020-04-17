@@ -4,7 +4,6 @@ dependencies {
     compile("se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}")
     compile "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${rivtaItintegrationMonitoringSchemasVersion}"
 
-    compile "com.sun.xml.ws:jaxws-rt:${jaxwsRtVersion}"
     compile "jakarta.xml.ws:jakarta.xml.ws-api"
 
     testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
