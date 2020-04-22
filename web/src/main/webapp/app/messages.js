@@ -241,6 +241,7 @@ var rhsMessages = {
     'label.extradiagnoser.none': 'Det finns för tillfället ingen ytterligare information att inhämta från andra vårdenheter eller andra vårdgivare.',
     'label.extradiagnoser.empty': 'Det finns för tillfället ingen information i denna kategori att inhämta.',
     'label.extradiagnoser.error': 'Tyvärr kan information från andra vårdgivare inte inhämtas på grund av ett tekniskt fel. Försök igen om en stund.',
+    'label.extradiagnoser.notfound-pu': 'För patient där ofullständiga uppgifter hämtats från folkbokföringsregistret kan ingen ytterligare information hämtas från andra vårdenheter eller andra vårdgivare.',
 
     'label.extradiagnoser.osparradinom.title': 'Ospärrad information inom vårdgivare',
     'label.extradiagnoser.osparradinom': '<p>Det finns ospärrad information hos en annan vårdenhet inom din vårdgivare.</p>Du kan klicka nedan för att visa vilka vårdenheter som har denna information och få möjlighet att inhämta den.',

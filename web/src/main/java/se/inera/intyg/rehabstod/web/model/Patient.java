@@ -51,6 +51,7 @@ public class Patient {
 
     private int alder;
 
+    private String responseFromPu;
 
     public Patient() {
         // When we try to deserialize a JSON String to Patient an Exception
@@ -114,6 +115,14 @@ public class Patient {
 
     public void setAlder(int alder) {
         this.alder = alder;
+    }
+
+    public void setResponseFromPu(String response) {
+        responseFromPu = response;
+    }
+
+    public String getResponseFromPu() {
+        return responseFromPu;
     }
 
     // api

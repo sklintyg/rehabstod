@@ -32,6 +32,8 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.integration.hsa.model.Mottagning;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
+import se.inera.intyg.infra.integration.pu.model.PersonSvar;
+import se.inera.intyg.infra.integration.pu.model.PersonSvar.Status;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
@@ -301,7 +303,8 @@ public class SjukfallServiceImpl implements SjukfallService {
         LOG.debug("Calling PU - fetching information about patients 'sekretess' status.");
         List<IntygData> filteredData = sjukfallPuService.filterSekretessForPatientHistory(data);
 
-        boolean haveSekretess = filteredData.size() != data.size();
+        PersonSvar personSvar = sjukfallPuService.getPersonSvar(patientId);
+        boolean haveSekretess = filteredData.size() != data.size() && personSvar.getStatus() != Status.NOT_FOUND;
         data = filteredData;
 
         //Decorate with VG names

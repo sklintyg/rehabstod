@@ -57,6 +57,9 @@
           "alder": {
             "type": "integer"
           },
+          "responseFromPu": {
+            "type": "string"
+          },
           "namn": {
             "type": "string"
           }

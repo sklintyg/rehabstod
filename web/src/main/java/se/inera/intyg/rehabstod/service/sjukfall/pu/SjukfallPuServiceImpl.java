@@ -100,7 +100,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                     }
                 } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
                     throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
-                } else {
+                } else if (personSvar.getStatus() != PersonSvar.Status.NOT_FOUND) {
                     LOG.info("Removing item from list of sjukfall. PU service returned an unexpected status response for person '{}'",
                         pnr.get().getPersonnummerHash());
                     i.remove();
@@ -135,6 +135,12 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
     }
 
     @Override
+    public PersonSvar getPersonSvar(String pnr) {
+        Personnummer personnummer = getPersonnummer(pnr);
+        return puService.getPerson(personnummer);
+    }
+
+    @Override
     public void enrichWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList) {
         RehabstodUser user = userService.getUser();
         Map<Personnummer, PersonSvar> personSvarMap = fetchPersons(sjukfallList);
@@ -155,7 +161,8 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
             // Parse response from PU service
             PersonSvar personSvar = personSvarMap.get(pnr.get());
-            if (personSvar != null && personSvar.getStatus() == PersonSvar.Status.FOUND) {
+            item.getPatient().setResponseFromPu(personSvar.getStatus().name());
+            if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
                 if (personSvar.getPerson().isSekretessmarkering()) {
 
                     // RS-US-GE-002: RS-15 => Om patienten är sekretessmarkerad, skall namnet bytas ut mot placeholder.
@@ -173,7 +180,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                 } else {
                     item.getPatient().setNamn(joinNames(personSvar));
                 }
-            } else if (personSvar != null && personSvar.getStatus() == PersonSvar.Status.ERROR) {
+            } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
                 throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
             } else {
                 item.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_UNKNOWN);
