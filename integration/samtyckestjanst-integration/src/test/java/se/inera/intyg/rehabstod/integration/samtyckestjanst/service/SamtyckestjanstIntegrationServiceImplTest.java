@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.integration.samtyckestjanst.service;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 
 import java.util.UUID;
@@ -31,7 +31,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.client.SamtyckestjanstClientService;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
@@ -62,8 +62,8 @@ public class SamtyckestjanstIntegrationServiceImplTest {
         doAnswer(new Answer<CheckConsentResponseType>() {
             @Override
             public CheckConsentResponseType answer(InvocationOnMock invocation) {
-                if (invocation.getArgumentAt(0, String.class).equals(VG_HSAID_2)
-                    && invocation.getArgumentAt(1, String.class).equals(VE_HSAID_2)) {
+                if (invocation.getArgument(0, String.class).equals(VG_HSAID_2)
+                    && invocation.getArgument(1, String.class).equals(VE_HSAID_2)) {
                     return createCheckConsentResponseType(true);
                 } else {
                     return createCheckConsentResponseType(false);

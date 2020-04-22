@@ -53,7 +53,7 @@
 
   <bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
     <property name="redisNamespace" value="${app.name}"/>
-    <property name="redisFlushMode" value="IMMEDIATE" />
+    <property name="flushMode" value="IMMEDIATE" />
   </bean>
 
   <!-- Logger for SAML messages and events -->

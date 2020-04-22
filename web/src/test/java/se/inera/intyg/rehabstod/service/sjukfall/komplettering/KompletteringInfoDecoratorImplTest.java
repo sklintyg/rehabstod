@@ -18,10 +18,11 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.komplettering;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +34,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.rehabstod.integration.wc.service.WcIntegrationService;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -122,10 +123,10 @@ public class KompletteringInfoDecoratorImplTest {
         assertEquals(1, sjukfall1.getIntyg().get(0).getObesvaradeKompl().intValue());
         assertEquals(2, sjukfall23.getIntyg().get(0).getObesvaradeKompl().intValue());
         assertEquals(3, sjukfall23.getIntyg().get(1).getObesvaradeKompl().intValue());
-        assertEquals(null, sjukfall4.getIntyg().get(0).getObesvaradeKompl());
-        assertEquals(null, sjukfall5.getIntyg().get(0).getObesvaradeKompl());
-        assertEquals(null, sjukfall6.getIntyg().get(0).getObesvaradeKompl());
-        assertEquals(null, sjukfallNotPresent.getIntyg().get(0).getObesvaradeKompl());
+        assertNull(sjukfall4.getIntyg().get(0).getObesvaradeKompl());
+        assertNull(sjukfall5.getIntyg().get(0).getObesvaradeKompl());
+        assertNull(sjukfall6.getIntyg().get(0).getObesvaradeKompl());
+        assertNull(sjukfallNotPresent.getIntyg().get(0).getObesvaradeKompl());
     }
 
     private PatientData createPatientData(String intygId, boolean otherVardgivare, boolean otherVardenhet) {

@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.auth.fake;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +52,7 @@ public class FakeAuthenticationFilter extends AbstractAuthenticationProcessingFi
         }
         String parameter = request.getParameter("userJsonDisplay");
         // we manually encode the json parameter
-        String json = URLDecoder.decode(parameter, "UTF-8");
+        String json = URLDecoder.decode(parameter, StandardCharsets.UTF_8);
 
         return performFakeElegAuthentication(json);
     }

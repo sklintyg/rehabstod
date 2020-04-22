@@ -68,10 +68,8 @@ public class DiagnosKoderFileTest {
     private List<String> loadDiagnosFile(String fileName) throws IOException {
         String filePath = getClass().getClassLoader().getResource(fileName).getFile();
 
-        LineIterator it = FileUtils.lineIterator(new File(filePath), "ISO-8859-1");
-
         List<String> koder = new ArrayList<>();
-        try {
+        try (LineIterator it = FileUtils.lineIterator(new File(filePath), "ISO-8859-1")) {
 
             while (it.hasNext()) {
                 String line = it.nextLine();
@@ -80,8 +78,6 @@ public class DiagnosKoderFileTest {
 
                 koder.add(kod);
             }
-        } finally {
-            LineIterator.closeQuietly(it);
         }
         return koder;
     }

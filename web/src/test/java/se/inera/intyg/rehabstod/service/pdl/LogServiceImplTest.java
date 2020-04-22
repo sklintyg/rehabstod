@@ -18,7 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.pdl;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -31,7 +31,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -80,7 +80,6 @@ public class LogServiceImplTest {
 
     @Test
     public void testNoLogMessageSentWhenSjukfallListIsEmpty() {
-        when(userService.getUser()).thenReturn(TestDataGen.buildRehabStodUser(true));
         testee.logSjukfallData(new ArrayList<>(),
             ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
         verify(template, times(0)).send(any());

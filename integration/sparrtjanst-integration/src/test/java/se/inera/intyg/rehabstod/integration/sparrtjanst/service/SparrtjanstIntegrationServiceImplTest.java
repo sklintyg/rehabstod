@@ -20,8 +20,8 @@ package se.inera.intyg.rehabstod.integration.sparrtjanst.service;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +34,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.client.SparrtjanstClientService;
@@ -110,7 +110,7 @@ public class SparrtjanstIntegrationServiceImplTest {
 
         CheckBlocksResponseType response = createResponse(ResultCodeType.OK, CheckStatusType.OK);
         when(sparrtjanstClientService.getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID),
-            anyListOf(IntygData.class))).thenReturn(response);
+            anyList())).thenReturn(response);
 
         testee.decorateWithBlockStatus(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygOnOtherUnitsList);
 
@@ -127,7 +127,7 @@ public class SparrtjanstIntegrationServiceImplTest {
 
         CheckBlocksResponseType response = createResponse(ResultCodeType.OK, CheckStatusType.BLOCKED);
         when(sparrtjanstClientService.getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID),
-            anyListOf(IntygData.class))).thenReturn(response);
+            anyList())).thenReturn(response);
 
         testee.decorateWithBlockStatus(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygOnOtherUnitsList);
 
@@ -144,7 +144,7 @@ public class SparrtjanstIntegrationServiceImplTest {
 
         CheckBlocksResponseType response = createResponse(ResultCodeType.ERROR, CheckStatusType.BLOCKED);
         when(sparrtjanstClientService.getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID),
-            anyListOf(IntygData.class))).thenReturn(response);
+            anyList())).thenReturn(response);
 
         testee.decorateWithBlockStatus(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygOnOtherUnitsList);
     }
@@ -155,7 +155,7 @@ public class SparrtjanstIntegrationServiceImplTest {
         CheckBlocksResponseType response = createResponse(ResultCodeType.OK, CheckStatusType.BLOCKED);
         response.getCheckBlocksResult().getCheckResults().remove(0);
         when(sparrtjanstClientService.getCheckBlocks(eq(VG_HSA_ID), eq(VE_HSA_ID), eq(USER_HSA_ID), eq(PATIENT_ID),
-            anyListOf(IntygData.class))).thenReturn(response);
+            anyList())).thenReturn(response);
 
         testee.decorateWithBlockStatus(VG_HSA_ID, VE_HSA_ID, USER_HSA_ID, PATIENT_ID, aclList, intygOnOtherUnitsList);
     }

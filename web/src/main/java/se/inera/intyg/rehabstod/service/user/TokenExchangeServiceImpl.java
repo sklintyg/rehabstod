@@ -20,7 +20,7 @@ package se.inera.intyg.rehabstod.service.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import org.opensaml.xml.util.XMLHelper;
@@ -70,7 +70,7 @@ public class TokenExchangeServiceImpl implements TokenExchangeService {
 
         try {
             String assertionString = XMLHelper.nodeToString(SAMLUtil.marshallMessage(samlCredential.getAuthenticationAssertion()));
-            String assertion = Base64.getEncoder().encodeToString(assertionString.getBytes(Charset.forName("UTF-8")));
+            String assertion = Base64.getEncoder().encodeToString(assertionString.getBytes(StandardCharsets.UTF_8));
             return sendTokenRequest(BEARER_VALUE, ASSERTION, assertion);
         } catch (Exception e) {
             // Also handles nullpointers

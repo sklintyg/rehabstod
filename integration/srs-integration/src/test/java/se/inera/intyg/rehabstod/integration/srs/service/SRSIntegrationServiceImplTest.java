@@ -19,8 +19,8 @@
 package se.inera.intyg.rehabstod.integration.srs.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.Risksignal;
 import se.inera.intyg.rehabstod.integration.srs.client.SRSClientService;
@@ -53,7 +53,7 @@ public class SRSIntegrationServiceImplTest {
     public void testHappyPath() {
         String intygsId = UUID.randomUUID().toString();
 
-        when(srsClientService.getRiskPrediktionForCertificate(anyListOf(String.class))).thenReturn(buildResult(intygsId));
+        when(srsClientService.getRiskPrediktionForCertificate(anyList())).thenReturn(buildResult(intygsId));
         List<RiskSignal> result = testee.getRiskPreditionerForIntygsId(Arrays.asList(intygsId));
         assertEquals(1, result.size());
         assertEquals(intygsId, result.get(0).getIntygsId());
@@ -65,7 +65,7 @@ public class SRSIntegrationServiceImplTest {
     public void testEmptyListReturnedWhenNullIdsSupplied() {
         List<RiskSignal> result = testee.getRiskPreditionerForIntygsId(null);
         assertEquals(0, result.size());
-        verifyZeroInteractions(srsClientService);
+        verifyNoInteractions(srsClientService);
     }
 
     private List<RiskPrediktion> buildResult(String intygsId) {

@@ -429,10 +429,9 @@ public class SjukfallServiceImpl implements SjukfallService {
     }
 
     private void declineAccessToSjfData(Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> intygOnOtherUnits) {
-        intygOnOtherUnits.
-            forEach(intygData -> {
-                intygAccessMetaData.get(intygData.getIntygId()).setSparr(true);
-            });
+        intygOnOtherUnits.forEach(intygData -> {
+            intygAccessMetaData.get(intygData.getIntygId()).setSparr(true);
+        });
     }
 
     private void decorateWithBlockStatus(String vardgivareId, String enhetsId, String lakareId, String patientId,

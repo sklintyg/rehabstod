@@ -24,10 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
@@ -457,13 +458,15 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
         boldStyle = wb.createCellStyle();
         boldStyle.setFont(boldFont11);
-        boldStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(40, 180, 196)));
-        boldStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        boldStyle.setFillForegroundColor(new XSSFColor(new byte[] {(byte) 40, (byte) 180, (byte) 196},
+            new DefaultIndexedColorMap()));
+        boldStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         stripedDarker = wb.createCellStyle();
         stripedDarker.setFont(defaultFont11);
-        stripedDarker.setFillForegroundColor(new XSSFColor(new java.awt.Color(230, 230, 230)));
-        stripedDarker.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        stripedDarker.setFillForegroundColor(new XSSFColor(new byte[] {(byte) 230, (byte) 230, (byte) 230},
+            new DefaultIndexedColorMap()));
+        stripedDarker.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         stripedDarkerItalic = wb.createCellStyle();
         stripedDarkerItalic.cloneStyleFrom(stripedDarker);
@@ -471,8 +474,9 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
         stripedLighter = wb.createCellStyle();
         stripedLighter.setFont(defaultFont11);
-        stripedLighter.setFillForegroundColor(new XSSFColor(new java.awt.Color(244, 244, 244)));
-        stripedLighter.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        stripedLighter.setFillForegroundColor(new XSSFColor(new byte[] {(byte) 244, (byte) 244, (byte) 244},
+            new DefaultIndexedColorMap()));
+        stripedLighter.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         stripedLighterItalic = wb.createCellStyle();
         stripedLighterItalic.cloneStyleFrom(stripedLighter);
@@ -480,20 +484,23 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
 
         filterTextStyle = wb.createCellStyle();
         filterTextStyle.setFont(defaultFont12);
-        filterTextStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(240, 240, 240)));
-        filterTextStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        filterTextStyle.setFillForegroundColor(new XSSFColor(new byte[] {(byte) 240, (byte) 240, (byte) 240},
+            new DefaultIndexedColorMap()));
+        filterTextStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         filterTextStyle.setWrapText(true);
 
         filterHeaderStyle = wb.createCellStyle();
         filterHeaderStyle.setFont(boldFont12);
-        filterHeaderStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(240, 240, 240)));
-        filterHeaderStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-        filterHeaderStyle.setVerticalAlignment(CellStyle.VERTICAL_TOP);
+        filterHeaderStyle.setFillForegroundColor(new XSSFColor(new byte[] {(byte) 240, (byte) 240, (byte) 240},
+            new DefaultIndexedColorMap()));
+        filterHeaderStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        filterHeaderStyle.setVerticalAlignment(VerticalAlignment.TOP);
 
         filterMainHeaderStyle = wb.createCellStyle();
         filterMainHeaderStyle.setFont(boldFont16);
-        filterMainHeaderStyle.setFillForegroundColor(new XSSFColor(new java.awt.Color(240, 240, 240)));
-        filterMainHeaderStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        filterMainHeaderStyle.setFillForegroundColor(new XSSFColor(new byte[] {(byte) 240, (byte) 240, (byte) 240},
+            new DefaultIndexedColorMap()));
+        filterMainHeaderStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
     }
 
@@ -503,7 +510,6 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         font.setFontName(fontName);
         font.setColor(IndexedColors.BLACK.getIndex());
         font.setBold(bold);
-        font.setBoldweight(bold ? Font.BOLDWEIGHT_BOLD : Font.BOLDWEIGHT_NORMAL);
         font.setUnderline(underline ? XSSFFont.U_SINGLE : XSSFFont.U_NONE);
         return font;
     }

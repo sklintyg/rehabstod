@@ -5,8 +5,9 @@ dependencies {
     compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
     compile "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${rivtaItintegrationMonitoringSchemasVersion}"
     compile "se.riv.informationsecurity.authorization.blocking:informationsecurity-authorization-blocking-schemas:${blockingSchemaVersion}"
-    compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jacksonVersion}"
+
+    compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
 
     testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
-    testCompile "org.springframework:spring-test:${springContextVersion}"
+    testCompile "org.springframework:spring-test"
 }

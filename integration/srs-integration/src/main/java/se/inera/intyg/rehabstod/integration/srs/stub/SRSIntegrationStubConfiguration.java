@@ -47,6 +47,13 @@ public class SRSIntegrationStubConfiguration {
         return new ObjectMapper();
     }
 
+  /*  @Bean
+    public EndpointImpl srsResponder() {
+        Object implementor = srsStub;
+        EndpointImpl endpoint = new EndpointImpl(bus, implementor);
+        endpoint.publish("/stubs/get-risk-prediction-for-certificate/v1.0");
+        return endpoint;
+    }*/
     @Bean
     public EndpointImpl srsResponder() {
         Object implementor = srsStub;

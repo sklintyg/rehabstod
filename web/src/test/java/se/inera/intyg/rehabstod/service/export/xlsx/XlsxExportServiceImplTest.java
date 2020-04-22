@@ -20,7 +20,7 @@ package se.inera.intyg.rehabstod.service.export.xlsx;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.security.common.model.Role;

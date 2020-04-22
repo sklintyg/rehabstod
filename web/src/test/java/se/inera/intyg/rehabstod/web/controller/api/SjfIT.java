@@ -18,11 +18,11 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
 
-import com.jayway.restassured.http.ContentType;
+import io.restassured.http.ContentType;
 import org.junit.After;
 import org.junit.Test;
 import se.inera.intyg.rehabstod.web.BaseRestIntegrationTest;
