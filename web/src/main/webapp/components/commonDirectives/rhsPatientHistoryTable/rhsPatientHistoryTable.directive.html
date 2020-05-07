@@ -90,7 +90,7 @@
 
       <div ng-switch-when="false" ng-switch="extraDiagnoser.sekretess" class="text-center">
         <span ng-switch-when="true" message key="label.extradiagnoser.sekretess"></span>
-        <div ng-switch-when="false" ng-switch="patient.responseFromPu === 'NOT_FOUND'">
+        <div ng-switch-when="false" ng-switch="patient.responseFromPu === 'NOT_FOUND' || patient.responseFromPu === 'FOUND_NO_NAME'">
           <span ng-switch-when="true" message key="label.extradiagnoser.notfound-pu"></span>
           <span ng-switch-when="false" message key="label.extradiagnoser.none"></span>
         </div>
