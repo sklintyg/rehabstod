@@ -54,7 +54,8 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable',
 
           $scope.extraDiagnoser = {
             patientSjfMetaData: patientSjfMetaData,
-            available: andraVeInomVgUtanSparr > 0 || andraVeInomVgMedSparr > 0 || andraVgMedSparr > 0 || andraVgUtanSparr > 0,
+            available: andraVeInomVgUtanSparr > 0 || andraVeInomVgMedSparr > 0 || andraVgMedSparr > 0 || andraVgUtanSparr > 0 &&
+                $scope.patient.responseFromPu !== 'FOUND_NO_NAME' && $scope.patient.responseFromPu !== 'NOT_FOUND',
             sekretess: patientSjfMetaData.haveSekretess,
             osparradInfoInomVardgivare: andraVeInomVgUtanSparr > 0,
             sparradInfoInomVardgivare: andraVeInomVgMedSparr > 0,

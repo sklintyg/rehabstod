@@ -86,21 +86,23 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                     pnr.get().getPersonnummerHash());
                 i.remove();
             } else {
-                if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
-                    if (personSvar.getPerson().isSekretessmarkering()) {
-                        // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE,
-                        // då får vi ej visa sjukfall för s-märkt patient.
-                        if (!hasLakareRoleAndIsLakare(user, item.getLakare().getHsaId())
-                            || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
+                if (personSvar.getStatus() == PersonSvar.Status.FOUND || personSvar.getStatus() == PersonSvar.Status.NOT_FOUND) {
+                    if (personSvar.getPerson() != null) {
+                        if (personSvar.getPerson().isSekretessmarkering()) {
+                            // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE,
+                            // då får vi ej visa sjukfall för s-märkt patient.
+                            if (!hasLakareRoleAndIsLakare(user, item.getLakare().getHsaId())
+                                || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
+                                i.remove();
+                            }
+                        } else if (personSvar.getPerson().isAvliden()) {
+                            // The patient is dead...remove...
                             i.remove();
                         }
-                    } else if (personSvar.getPerson().isAvliden()) {
-                        // The patient is dead...remove...
-                        i.remove();
                     }
                 } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
                     throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
-                } else if (personSvar.getStatus() != PersonSvar.Status.NOT_FOUND) {
+                } else {
                     LOG.info("Removing item from list of sjukfall. PU service returned an unexpected status response for person '{}'",
                         pnr.get().getPersonnummerHash());
                     i.remove();
@@ -161,7 +163,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
             // Parse response from PU service
             PersonSvar personSvar = personSvarMap.get(pnr.get());
-            item.getPatient().setResponseFromPu(personSvar.getStatus().name());
+
             if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
                 if (personSvar.getPerson().isSekretessmarkering()) {
 
@@ -177,6 +179,8 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
                 } else if (personSvar.getPerson().isAvliden()) {
                     i.remove();
+                } else if (joinNames(personSvar).equals("")) {
+                    item.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_UNKNOWN);
                 } else {
                     item.getPatient().setNamn(joinNames(personSvar));
                 }
@@ -185,7 +189,16 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
             } else {
                 item.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_UNKNOWN);
             }
+            setResponseFromPu(personSvar, item);
         }
+    }
+
+    private void setResponseFromPu(PersonSvar personSvar, SjukfallEnhet item) {
+        boolean isNameEmpty = item.getPatient() != null
+            && (item.getPatient().getNamn().equals(SEKRETESS_SKYDDAD_NAME_UNKNOWN) || item.getPatient().getNamn().equals(""))
+            && personSvar.getStatus() == PersonSvar.Status.FOUND;
+        String responseFromPU =  isNameEmpty ? personSvar.getStatus().name() + "_NO_NAME" : personSvar.getStatus().name();
+        item.getPatient().setResponseFromPu(responseFromPU);
     }
 
     private Map<Personnummer, PersonSvar> fetchPersons(List<SjukfallEnhet> sjukfallList) {
@@ -252,7 +265,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
         } else {
             patientSjukfall.stream()
                 .flatMap(ps -> ps.getIntyg().stream())
-                .forEach(i -> i.getPatient().setNamn("Namn okänt"));
+                .forEach(i -> i.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_UNKNOWN));
         }
     }
 
