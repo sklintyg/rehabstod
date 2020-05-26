@@ -31,6 +31,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
@@ -106,6 +107,16 @@ public class ApplicationConfig implements TransactionManagementConfigurer {
         LoggingFeature loggingFeature = new LoggingFeature();
         loggingFeature.setPrettyLogging(true);
         return loggingFeature;
+    }
+
+    @Bean
+    public CookieSerializer cookieSerializer() {
+        /*
+        This is needed to make IdP functionality work.
+        This will not satisfy all browsers, but it works for IE, Chrome and Edge.
+        Reference: https://auth0.com/blog/browser-behavior-changes-what-developers-need-to-know/
+         */
+        return new IneraCookieSerializer();
     }
 
     @Override
