@@ -310,7 +310,9 @@ public class SjukfallPuServiceImplTest {
 
     @Test
     public void testNameIsReplacedByPlaceholderIfFromPersonSvarWasNotFound() {
-        when(userService.getUser()).thenReturn(buildVardadmin());
+        RehabstodUser user = buildLakare(VARDENHET_1);
+        when(userService.getUser()).thenReturn(user);
+        when(userService.isUserLoggedInOnEnhetOrUnderenhet(VARDENHET_1)).thenReturn(true);
 
         mockPersonSvarNotFound();
 
@@ -318,6 +320,16 @@ public class SjukfallPuServiceImplTest {
         testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
         assertEquals(1, sjukfallList.size());
         assertEquals(SjukfallPuService.SEKRETESS_SKYDDAD_NAME_UNKNOWN, sjukfallList.get(0).getPatient().getNamn());
+    }
+
+    @Test
+    public void testSjukfallIsRemovedIfVardadminAndPersonSvarWasNotFound() {
+        when(userService.getUser()).thenReturn(buildVardadmin());
+        mockPersonSvarNotFound();
+
+        List<SjukfallEnhet> sjukfallList = buildSjukfallList(TOLVANSSON_PNR);
+        testee.enrichWithPatientNamesAndFilterSekretess(sjukfallList);
+        assertEquals(0, sjukfallList.size());
     }
 
     @Test(expected = IllegalStateException.class)

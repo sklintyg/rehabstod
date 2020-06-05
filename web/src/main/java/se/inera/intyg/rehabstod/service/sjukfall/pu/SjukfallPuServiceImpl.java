@@ -86,19 +86,18 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
                     pnr.get().getPersonnummerHash());
                 i.remove();
             } else {
-                if (personSvar.getStatus() == PersonSvar.Status.FOUND || personSvar.getStatus() == PersonSvar.Status.NOT_FOUND) {
-                    if (personSvar.getPerson() != null) {
-                        if (personSvar.getPerson().isSekretessmarkering()) {
-                            // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE,
-                            // då får vi ej visa sjukfall för s-märkt patient.
-                            if (!hasLakareRoleAndIsLakare(user, item.getLakare().getHsaId())
-                                || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
-                                i.remove();
-                            }
-                        } else if (personSvar.getPerson().isAvliden()) {
-                            // The patient is dead...remove...
+                boolean patientNotFound = personSvar.getStatus() == PersonSvar.Status.NOT_FOUND;
+                if (personSvar.getStatus() == PersonSvar.Status.FOUND || patientNotFound) {
+                    if (patientNotFound || personSvar.getPerson().isSekretessmarkering()) {
+                        // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE,
+                        // då får vi ej visa sjukfall för s-märkt patient.
+                        if (!hasLakareRoleAndIsLakare(user, item.getLakare().getHsaId())
+                            || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
                             i.remove();
                         }
+                    } else if (personSvar.getPerson().isAvliden()) {
+                        // The patient is dead...remove...
+                        i.remove();
                     }
                 } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
                     throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
@@ -163,12 +162,13 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
             // Parse response from PU service
             PersonSvar personSvar = personSvarMap.get(pnr.get());
-
-            if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
-                if (personSvar.getPerson().isSekretessmarkering()) {
+            boolean patientNotFound = personSvar.getStatus() == PersonSvar.Status.NOT_FOUND;
+            if (personSvar.getStatus() == PersonSvar.Status.FOUND || patientNotFound) {
+                if (patientNotFound || personSvar.getPerson().isSekretessmarkering()) {
 
                     // RS-US-GE-002: RS-15 => Om patienten är sekretessmarkerad, skall namnet bytas ut mot placeholder.
-                    item.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_PLACEHOLDER);
+                    String updatedName = patientNotFound ? SEKRETESS_SKYDDAD_NAME_UNKNOWN : SEKRETESS_SKYDDAD_NAME_PLACEHOLDER;
+                    item.getPatient().setNamn(updatedName);
 
                     // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE, då får vi ej visa
                     // sjukfall för s-märkt patient. Dessutom kan det vara en läkare med roll REHABKOORDINATOR.
