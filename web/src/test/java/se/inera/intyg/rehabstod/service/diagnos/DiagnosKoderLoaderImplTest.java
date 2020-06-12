@@ -38,21 +38,25 @@ import org.springframework.test.util.ReflectionTestUtils;
 public class DiagnosKoderLoaderImplTest {
 
     @Autowired
-    private DiagnosKoderLoaderImpl testee;
+    private DiagnosKoderLoaderImpl diagnosKoderLoader;
 
     @Test
     public void testLoadDiagnosKoder() throws IOException {
         specifyDiagnosKodFiler();
-        Map<String, String> diagnosKoder = testee.loadDiagnosKoder();
+        Map<String, String> diagnosKoder = diagnosKoderLoader.loadDiagnosKoder();
         assertNotNull(diagnosKoder);
-        assertEquals(36323, diagnosKoder.size());
+        assertEquals(36322, diagnosKoder.size());
     }
 
     private void specifyDiagnosKodFiler() {
-        ReflectionTestUtils.setField(testee, "diagnosKodKS97KatFile", loadDiagnosKodFile("KSH97_KAT.ANS"));
-        ReflectionTestUtils.setField(testee, "diagnosKodKS97KodFile", loadDiagnosKodFile("KSH97_KOD.ANS"));
-        ReflectionTestUtils.setField(testee, "diagnosKodKS97KxxFile", loadDiagnosKodFile("KSH97_KXX.ANS"));
-        ReflectionTestUtils.setField(testee, "diagnosKodKS97PKodFile", loadDiagnosKodFile("KSH97P_KOD.ANS"));
+        ReflectionTestUtils.setField(diagnosKoderLoader, "diagnoseCodeIcd10SeFile1",
+                loadDiagnosKodFile("icd10se/digit3.txt"));
+        ReflectionTestUtils.setField(diagnosKoderLoader, "diagnoseCodeIcd10SeFile2",
+                loadDiagnosKodFile("icd10se/digit4.txt"));
+        ReflectionTestUtils.setField(diagnosKoderLoader, "diagnoseCodeIcd10SeFile3",
+                loadDiagnosKodFile("icd10se/digit5.txt"));
+        ReflectionTestUtils.setField(diagnosKoderLoader, "diagnosKodKS97PKodFile",
+                loadDiagnosKodFile("KSH97P_KOD.ANS"));
     }
 
     private String loadDiagnosKodFile(String file) {

@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.service.diagnos.dto;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
@@ -30,26 +29,44 @@ public class DiagnosKodTest {
 
     @Test
     public void testCleanDignosKod() {
-        assertEquals("M80-", DiagnosKod.cleanKod("M80-   "));
-        assertEquals("M80-P", DiagnosKod.cleanKod("M80-P  "));
-        assertEquals("M80", DiagnosKod.cleanKod("M80.   "));
-        assertEquals("M801", DiagnosKod.cleanKod("M80.1   "));
-        assertEquals("M8001", DiagnosKod.cleanKod("M.80.01   "));
-        assertEquals("A", DiagnosKod.cleanKod("aÅÄÖ)(/"));
+        DiagnosKod diagnosKod = new DiagnosKod("M80-   Diagnos", false);
+        assertEquals("M80-", diagnosKod.getCode());
+        assertEquals("Diagnos", diagnosKod.getName());
+
+        diagnosKod = new DiagnosKod("M80-P  Diagnos", false);
+        assertEquals("M80-P", diagnosKod.getCode());
+        assertEquals("Diagnos", diagnosKod.getName());
+
+        diagnosKod = new DiagnosKod("M80*\t Diagnos", false);
+        assertEquals("M80", diagnosKod.getCode());
+        assertEquals("Diagnos", diagnosKod.getName());
+
+        diagnosKod = new DiagnosKod("M80†\t Diagnos", false);
+        assertEquals("M80", diagnosKod.getCode());
+        assertEquals("Diagnos", diagnosKod.getName());
+
+        diagnosKod = new DiagnosKod("\uFEFFM80*\tDiagnos", false);
+        assertEquals("\uFEFFM80", diagnosKod.getCode());
+        assertEquals("Diagnos", diagnosKod.getName());
+
+        diagnosKod = new DiagnosKod("\uFEFFM80*\t Diagnos", true);
+        assertEquals("M80", diagnosKod.getCode());
+        assertEquals("Diagnos", diagnosKod.getName());
+
+        diagnosKod = new DiagnosKod("\uFEFFM80\t†\t Diagnos", true);
+        assertEquals("M80", diagnosKod.getCode());
+        assertEquals("Diagnos", diagnosKod.getName());
+
+        diagnosKod = new DiagnosKod("M80-   Diagnos", true);
+        assertEquals("M80-", diagnosKod.getCode());
+        assertEquals("Diagnos", diagnosKod.getName());
     }
 
     @Test
     public void testSplitNormalDignosKod() {
-        DiagnosKod kod = new DiagnosKod("M123   Palindrom reumatism");
-        assertEquals("M123", kod.getCleanedCode());
+        DiagnosKod kod = new DiagnosKod("M123   Palindrom reumatism", false);
+        assertEquals("M123", kod.getCode());
         assertEquals("Palindrom reumatism", kod.getName());
-    }
-
-    @Test
-    public void testSplitToShortDiagnosKod() {
-        DiagnosKod kod = new DiagnosKod("M123");
-        assertEquals("M123", kod.getCleanedCode());
-        assertNull(kod.getName());
     }
 
     @Test(expected = IllegalArgumentException.class)
