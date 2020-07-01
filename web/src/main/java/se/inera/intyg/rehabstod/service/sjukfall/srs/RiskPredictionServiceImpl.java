@@ -168,7 +168,6 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
     }
 
     private boolean isSrsDiagnosis(Diagnos diagnosis, List<String> diagnosisList) {
-        LOG.debug("isSrsDiagnosis(diagnosis: {}, diagnosisList: {})", diagnosis, diagnosisList);
         if (diagnosis == null || StringUtils.isBlank(diagnosis.getKod()) || diagnosisList == null || diagnosisList.isEmpty()) {
             return false;
         }
