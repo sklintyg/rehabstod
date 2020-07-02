@@ -61,4 +61,12 @@ public class SRSIntegrationStubConfiguration {
         endpoint.publish("/stubs/get-risk-prediction-for-certificate/v1.0");
         return endpoint;
     }
+
+    @Bean
+    public EndpointImpl srsGetDiagnosisCodesResponder() {
+        Object implementor = srsStub;
+        EndpointImpl endpoint = new EndpointImpl(bus, implementor);
+        endpoint.publish("/stubs/diagnosiscodes/v1.0");
+        return endpoint;
+    }
 }

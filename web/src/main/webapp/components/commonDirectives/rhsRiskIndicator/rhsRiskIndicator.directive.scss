@@ -27,6 +27,16 @@ rhs-risk-indicator {
     margin-right: 0;
   }
 
+  .rhs-srs-risk-zero {
+    width: 17px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 1px;
+    margin-top: 10px;
+    margin-bottom: 9px;
+    background-color: $rs-color-26;
+  }
+
   .rhs-srs-risk-one > .rhs-srs-risk-indicator.filled {
     background-color: $srs-risk-indicator-moderate;
   }
