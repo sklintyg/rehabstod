@@ -1,0 +1,19 @@
+<label for="rhs-patient-ag-checkbox">
+  <input id="rhs-patient-ag-checkbox"
+         type="checkbox"
+         ng-model="toggleDisplayAgTable">
+  <span message
+        key="label.patienthistory.ag.checkbox">
+  </span>
+  <span class="rhs-tooltip"
+        rhs-tooltip
+        icon="fa-question-circle"
+        field-help-text="label.patienthistory.ag.checkbox.help"
+        tooltip-class="rhs-patient-ag-checkbox-tooltip"
+        alignment="auto top">
+  </span>
+</label>
+
+<span>{{toggleDisplayAgTable}}</span>
+
+
