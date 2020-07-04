@@ -1,0 +1,21 @@
+rhs-patient-ag-table {
+
+  display: block;
+
+  h3 {
+    @extend %rs-typo-03;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+
+  h4 {
+    @extend %rs-typo-04;
+    margin-left: 75px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+
+
+
+}

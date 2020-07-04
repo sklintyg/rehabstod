@@ -1,5 +1,30 @@
 rhs-patient-ag-table-checkbox {
   display: inline-block;
+
+  input[type=checkbox] {
+    background-color: $rs-color-01;
+    border: 1px solid $rs-color-07;
+    cursor: pointer;
+  }
+
+  input[type=checkbox] :checked {
+    background-color: $rs-color-31;
+    color: $rs-color-01;
+  }
+
+  input[type=checkbox] :disabled {
+    background-color: $rs-color-07;
+  }
+
+  .fa {
+    color: $rs-color-10
+  }
+
+  label {
+    @extend %rs-typo-05;
+    font-weight: normal;
+    cursor: pointer;
+  }
 }
 
 .rhs-patient-ag-checkbox-tooltip {

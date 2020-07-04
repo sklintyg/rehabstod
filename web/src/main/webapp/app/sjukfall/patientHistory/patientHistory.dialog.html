@@ -36,18 +36,15 @@
           <div class="row">
             <div class="col-xs-6">
               <rhs-patient-ag-table-checkbox></rhs-patient-ag-table-checkbox>
-              <!--<label for="rhs-patient-ag-checkbox">
-                <input id="rhs-patient-ag-checkbox" type="checkbox">
-                <span message key="label.patienthistory.ag.checkbox"></span>
-                <span class="rhs-tooltip" rhs-tooltip field-help-text="label.patienthistory.ag.checkbox.help" tooltip-class="rhs-patient-columns-tooltip" alignment="auto top"></span>
-              </label>-->
             </div>
             <div class="col-xs-6">
               <div class="select-columns-container">
                <rhs-patient-table-select-columns nyligen-avslutat="nyligenAvslutat"></rhs-patient-table-select-columns>
               </div>
             </div>
-          </div><br>
+          </div>
+
+          <rhs-patient-ag-table></rhs-patient-ag-table>
           <div ng-repeat="item in timeline">
 
             <!-- special case: gap between years that have sjukfall -->
