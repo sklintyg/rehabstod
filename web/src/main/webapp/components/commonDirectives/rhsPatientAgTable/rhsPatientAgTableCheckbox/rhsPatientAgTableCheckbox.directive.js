@@ -33,7 +33,7 @@ angular.module('rehabstodApp')/*
     }, true);
 
 }])*/
-  .directive('rhsPatientAgTableCheckbox',  function(patientAgViewState) {
+  .directive('rhsPatientAgTableCheckbox',  function(patientAgViewState/*, patientAgProxy*/) {
       'use strict';
 
       return {
@@ -43,6 +43,7 @@ angular.module('rehabstodApp')/*
         link: function($scope) {
           $scope.patientAgTableCheckbox = false;
           $scope.$watch('patientAgTableCheckbox', function(checked) {
+            //patientAgProxy.get();
             patientAgViewState.updateDisplayAgTable(checked);
           });
         }

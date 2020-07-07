@@ -120,6 +120,10 @@ angular.module('rehabstodApp').factory('TableService',
             classes: 'column-number'
           },
           {
+            id: 'intyg',
+            classes: 'column-intyg'
+          },
+          {
             id: 'diagnose',
             classes: 'column-diagnose'
           },

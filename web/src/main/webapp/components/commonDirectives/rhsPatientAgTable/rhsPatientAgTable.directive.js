@@ -18,15 +18,43 @@
  */
 angular.module('rehabstodApp')
   .directive('rhsPatientAgTable',
-    function() {
+    function(UserModel) {
       'use strict';
 
       return {
         restrict: 'E',
-        scope: {},
+        scope: {
+          historyItem: '=',
+          patient: '=',
+          index: '=',
+          onLoadIntyg: '&',
+          columns: '='
+        },
         templateUrl: '/components/commonDirectives/rhsPatientAgTable/rhsPatientAgTable.directive.html',
+
         controller: function($scope, patientAgViewState) {
           $scope.showAgTable = patientAgViewState;
+        },
+        link: function($scope) {
+
+          $scope.$watchCollection('columns', function() {
+            $scope.filteredColumns = $scope.columns.filter(function(column ) {
+              return column.id !== 'obesvaradekompl' && column.id !== 'risk';
+            });
+          });
+
+          $scope.getEffectiveVardenhetUnitName = function() {
+            var user = UserModel.get();
+            if (user.valdVardenhet) {
+              //Is valdvardenhet actually a mottagning?
+              if (user.valdVardenhet.parentHsaId) {
+                //return parent unit name, since data is always returned for unit level (even if mottagning is selected)
+                return UserModel.getUnitNameById(user.valdVardenhet.parentHsaId);
+              }
+              return user.valdVardenhet.namn;
+            }
+            return '';
+          };
         }
       };
     });

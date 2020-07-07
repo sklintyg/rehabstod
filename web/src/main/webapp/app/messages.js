@@ -193,6 +193,7 @@ var rhsMessages = {
 
     // Patient table
     'label.patient.table.column.number': '#',
+    'label.patient.table.column.intyg': 'Intyg',
     'label.patient.table.column.diagnose': 'Diagnos/diagnoser',
     'label.patient.table.column.startdate': 'Startdatum',
     'label.patient.table.column.enddate': 'Slutdatum',

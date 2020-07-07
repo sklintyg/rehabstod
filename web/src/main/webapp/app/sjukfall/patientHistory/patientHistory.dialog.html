@@ -44,7 +44,8 @@
             </div>
           </div>
 
-          <rhs-patient-ag-table></rhs-patient-ag-table>
+          <rhs-patient-ag-table columns="tableColumns" history-item="item" patient="patient"
+                                index="$index" on-load-intyg="loadIntyg(intyg)"></rhs-patient-ag-table>
           <div ng-repeat="item in timeline">
 
             <!-- special case: gap between years that have sjukfall -->
