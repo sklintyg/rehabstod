@@ -6,6 +6,7 @@ dependencies {
     compile "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${rivtaItintegrationMonitoringSchemasVersion}"
     compile "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
     compile "se.inera.intyg.infra:pu-integration:${intygInfraVersion}"
+    compile "se.inera.intyg.infra:certificate:${intygInfraVersion}"
 
     testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "org.springframework:spring-test"
