@@ -19,6 +19,8 @@
 package se.inera.intyg.rehabstod.service.sjukfall.komplettering;
 
 import java.util.List;
+import se.inera.intyg.rehabstod.web.model.AGCertificate;
+import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
@@ -27,4 +29,8 @@ public interface KompletteringInfoDecorator {
     void updateSjukfallEnhetKompletteringar(List<SjukfallEnhet> sjukfallList);
 
     void updateSjukfallPatientKompletteringar(List<SjukfallPatient> rehabstodSjukfall);
+
+    void updateLUCertificatesWithKompletteringar(List<LUCertificate> luCertificate);
+
+    void updateAGCertificatesWithKompletteringar(List<AGCertificate> agCertificate);
 }

@@ -117,6 +117,12 @@ dependencies {
 
     compile "wsdl4j:wsdl4j"
 
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
     compileOnly "jakarta.jms:jakarta.jms-api"
     compileOnly "javax.servlet:javax.servlet-api"
     compileOnly "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"

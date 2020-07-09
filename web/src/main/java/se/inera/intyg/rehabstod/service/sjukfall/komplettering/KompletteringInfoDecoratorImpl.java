@@ -25,6 +25,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.wc.service.WcIntegrationService;
+import se.inera.intyg.rehabstod.web.model.AGCertificate;
+import se.inera.intyg.rehabstod.web.model.LUCertificate;
+import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
@@ -43,7 +46,7 @@ public class KompletteringInfoDecoratorImpl implements KompletteringInfoDecorato
 
         final Map<String, Integer> perIntyg = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
 
-        sjukfallList.stream().forEach(
+        sjukfallList.forEach(
             sjukfallEnhet -> sjukfallEnhet.setObesvaradeKompl(
                 sjukfallEnhet.getIntygLista().stream()
                     .mapToInt(intygsId -> Optional.ofNullable(perIntyg.get(intygsId)).orElse(0))
@@ -57,15 +60,37 @@ public class KompletteringInfoDecoratorImpl implements KompletteringInfoDecorato
         final List<String> idList = patientSjukfallList.stream()
             .flatMap(sjukfallPatient -> sjukfallPatient.getIntyg().stream())
             .filter(patientData -> !patientData.isOtherVardgivare() && !patientData.isOtherVardenhet())
-            .map(patientData -> patientData.getIntygsId())
+            .map(PatientData::getIntygsId)
             .collect(Collectors.toList());
 
         final Map<String, Integer> perIntyg = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
 
-        patientSjukfallList.stream()
-            .forEach(sjukfallPatient -> sjukfallPatient.getIntyg()
-                .stream().forEach(
-                    patientData -> patientData.setObesvaradeKompl(perIntyg.get(patientData.getIntygsId()))));
+        patientSjukfallList
+            .forEach(sjukfallPatient -> sjukfallPatient.getIntyg().forEach(
+                patientData -> patientData.setObesvaradeKompl(perIntyg.get(patientData.getIntygsId()))));
+
+    }
+
+    @Override
+    public void updateLUCertificatesWithKompletteringar(List<LUCertificate> luCertificate) {
+
+        final var idList = luCertificate.stream().map(LUCertificate::getCertificateId).collect(Collectors.toList());
+
+        final var certificateAdditions = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
+
+        luCertificate
+            .forEach(cert -> cert.setNotifications(Optional.ofNullable(certificateAdditions.get(cert.getCertificateId())).orElse(0)));
+    }
+
+    @Override
+    public void updateAGCertificatesWithKompletteringar(List<AGCertificate> agCertificate) {
+
+        final var idList = agCertificate.stream().map(AGCertificate::getCertificateId).collect(Collectors.toList());
+
+        final var certificateAdditions = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
+
+        agCertificate
+            .forEach(cert -> cert.setNotifications(Optional.ofNullable(certificateAdditions.get(cert.getCertificateId())).orElse(0)));
 
     }
 
