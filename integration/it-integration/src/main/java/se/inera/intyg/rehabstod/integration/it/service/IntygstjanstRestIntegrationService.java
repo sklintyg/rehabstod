@@ -16,21 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.sjukfall.komplettering;
+package se.inera.intyg.rehabstod.integration.it.service;
 
+import java.time.LocalDate;
 import java.util.List;
-import se.inera.intyg.rehabstod.web.model.AGCertificate;
-import se.inera.intyg.rehabstod.web.model.LUCertificate;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
+import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 
-public interface KompletteringInfoDecorator {
 
-    void updateSjukfallEnhetKompletteringar(List<SjukfallEnhet> sjukfallList);
+public interface IntygstjanstRestIntegrationService {
 
-    void updateSjukfallPatientKompletteringar(List<SjukfallPatient> rehabstodSjukfall);
+    List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(List<String> units, List<String> certificateTypes, LocalDate fromDate,
+        LocalDate toDate);
 
-    void updateLUCertificatesWithKompletteringar(List<LUCertificate> luCertificate);
+    List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
+        LocalDate toDate, List<String> units);
 
-    void updateAGCertificatesWithKompletteringar(List<AGCertificate> agCertificate);
+    List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
+        LocalDate toDate, List<String> units);
+
 }

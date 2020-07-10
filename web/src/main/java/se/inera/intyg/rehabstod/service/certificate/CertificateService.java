@@ -16,21 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.sjukfall.komplettering;
+package se.inera.intyg.rehabstod.service.certificate;
 
+import java.time.LocalDate;
 import java.util.List;
 import se.inera.intyg.rehabstod.web.model.AGCertificate;
 import se.inera.intyg.rehabstod.web.model.LUCertificate;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-public interface KompletteringInfoDecorator {
+public interface CertificateService {
 
-    void updateSjukfallEnhetKompletteringar(List<SjukfallEnhet> sjukfallList);
+    List<LUCertificate> getLUCertificatesForCareUnit(String unit, LocalDate fromDate, LocalDate toDate);
 
-    void updateSjukfallPatientKompletteringar(List<SjukfallPatient> rehabstodSjukfall);
+    List<LUCertificate> getLUCertificatesForPerson(String personId, LocalDate fromDate, LocalDate toDate, String unit);
 
-    void updateLUCertificatesWithKompletteringar(List<LUCertificate> luCertificate);
-
-    void updateAGCertificatesWithKompletteringar(List<AGCertificate> agCertificate);
+    List<AGCertificate> getAGCertificatesForPerson(String personId, LocalDate fromDate, LocalDate toDate, String unit);
 }
