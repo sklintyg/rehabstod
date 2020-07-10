@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').factory('patientAgViewState', function(patientAgProxy) {
+angular.module('rehabstodApp').factory('patientAgViewState', function() {
   'use strict';
 
   var agTableVisible = false;
@@ -32,14 +32,16 @@ angular.module('rehabstodApp').factory('patientAgViewState', function(patientAgP
     return agTableVisible;
   }
 
-  function _getAgItems(patient, isChecked) {
-    patientAgProxy.getAgIntyg(patient).then(function(sjukfallResponse) {
-      var agItems = sjukfallResponse.sjukfallList;
-      _updateAgTableVisible(isChecked);
-      return agItems;
+  function _getAgItems(sjukfall) {
+    var extractedIntyg = [];
+    angular.forEach(sjukfall, function(sjukfall) {
+      angular.forEach(sjukfall.intyg, function(intyg) {
+        extractedIntyg.push(intyg);
+      });
     });
-    //return agItems;
+    return extractedIntyg;
   }
+
 
   return {
     updateAgTableVisible: _updateAgTableVisible,

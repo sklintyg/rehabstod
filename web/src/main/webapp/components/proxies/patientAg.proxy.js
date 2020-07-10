@@ -32,6 +32,7 @@ angular.module('rehabstodApp').factory('patientAgProxy',
           patientId: patient.id
         };
 
+        //var restPath = '/api/certificate/ag/person';
         var restPath = '/api/sjukfall/patient';
 
         var config = {

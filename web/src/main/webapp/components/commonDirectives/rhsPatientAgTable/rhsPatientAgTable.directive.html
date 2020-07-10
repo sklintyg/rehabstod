@@ -47,7 +47,7 @@
             <td data-ng-repeat="column in filteredColumns"
                 ng-attr-id="intyg-{{index}}-column-{{::column.id}}-{{::rowIndex}}">
               <div data-ng-if="column.id === 'number'">{{rowIndex + 1}}</div>
-              <div data-ng-if="column.id === 'intyg'">AG1602</div>
+              <div data-ng-if="column.id === 'intyg'">AG7777</div>
               <div data-ng-if="column.id === 'diagnose'" class="nowrap column-diagnos">
                 <div class="diagnos-container">
               <span uib-tooltip-html="getToolTip(intyg.diagnos)" tooltip-popup-delay="200"
@@ -56,7 +56,7 @@
                   <div class="diagnos hidden-xs hidden-sm">{{::intyg.diagnos.beskrivning}}</div>
                 </div>
                 <div class="diagnos-container" ng-repeat="d in intyg.bidiagnoser">
-                  <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" tooltip-placement="auto top-right" class="patient-history-dialog-tooltip">{{::d.intygsVarde}}</span>
+                  <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" tooltip-placement="auto top-right" class="patient-ag-dialog-tooltip">{{::d.intygsVarde}}</span>
                   <span class="diagnos hidden-xs hidden-sm">{{::d.beskrivning}}</span>
                 </div>
               </div>
@@ -73,19 +73,9 @@
               </div>
               <div data-ng-if="column.id === 'vardenhet'">{{::intyg.vardenhetNamn}}</div>
               <div data-ng-if="column.id === 'vardgivare'">{{::intyg.vardgivareNamn}}</div>
-              <!--<div data-ng-if="column.id === 'risk'" class="column-risk">-->
-              <!--  <rhs-risk-indicator category="intyg.riskSignal.riskKategori"
-                                    description="intyg.riskSignal.riskDescription"></rhs-risk-indicator>
-              </div>-->
             </td>
-            <!--<td ng-if="historyItem.isActive"><i ng-if="intyg.otherVardgivare || intyg.otherVardenhet"
-                                                class="fa fa-exclamation-triangle warning-triangle"
-                                                uib-tooltip-html="'Intyget kommer från en annan vårdenhet eller vårdgivare, det kommer inte att synas i Rehabstöd i övrigt.'"
-                                                tooltip-placement="auto top"
-                                                tooltip-popup-delay="300"></i>
-            </td>-->
+
             <td class="column-showintyg">
-              <!--ng-if="!intyg.otherVardgivare && !intyg.otherVardenhet"-->
               <button class="btn btn-default" ng-attr-id="sjukfall-{{index}}-show-intyg-{{intyg.id}}"
                       ng-click="onLoadIntyg({'intyg': intyg})"><b><i class="glyphicon glyphicon-eye-open"></i> Visa intyg</b>
               </button>

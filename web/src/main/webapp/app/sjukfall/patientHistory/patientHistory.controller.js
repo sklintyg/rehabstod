@@ -68,25 +68,37 @@ angular.module('rehabstodApp').controller('patientHistoryController',
         $uibModalInstance.close();
       };
 
+      $scope.getEffectiveVardenhetUnitName = function() {
+        var user = UserModel.get();
+        if (user.valdVardenhet) {
+          //Is valdvardenhet actually a mottagning?
+          if (user.valdVardenhet.parentHsaId) {
+            //return parent unit name, since data is always returned for unit level (even if mottagning is selected)
+            return UserModel.getUnitNameById(user.valdVardenhet.parentHsaId);
+          }
+          return user.valdVardenhet.namn;
+        }
+        return '';
+      };
+
+
       $scope.agItems = {};
-      $scope.isCheckedAgCheckbox = false;
+      //$scope.isCheckedAgCheckbox = false;
       $scope.updateAgTableVisible = function(isChecked) {
         if (isChecked) {
-          patientAgProxy.getAgIntyg(patient).then(function(sjukfallresponse) {
-            $scope.agItems.intyg = sjukfallresponse.sjukfallList;
+          //For testing purposes - working with sjukfall instead of agItems
+          patientAgProxy.getAgIntyg(patient).then(function(sjukfall) {
+            $scope.agItems.intyg = patientAgViewState.getAgItems(sjukfall.sjukfallList);
+            patientAgViewState.updateAgTableVisible(isChecked);
           }, function() {
-            $scope.showSpinner = false;
-            //$scope.errorMessageKey = 'server.error.loadpatienthistory.text';
             $scope.agItems.error = 'server.error.loadpatientag.text';
+            patientAgViewState.updateAgTableVisible(isChecked);
           });
-          patientAgViewState.updateAgTableVisible(isChecked);
         } else {
           patientAgViewState.updateAgTableVisible(isChecked);
           $scope.agItems = {};
         }
       };
-
-
 
       function updatePatientSjukfall(patient) {
         //Start by requesting data

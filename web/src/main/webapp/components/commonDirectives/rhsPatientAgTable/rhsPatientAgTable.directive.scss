@@ -41,6 +41,7 @@ rhs-patient-ag-table {
       margin-bottom: 10px;
       border: 2px solid $rs-color-03;
       padding: 15px;
+      margin-top: 5px;
       box-shadow: 1px 4px 13px 0 rgba(0, 0, 0, 0.11);
       width: 100%;
     }
@@ -67,9 +68,8 @@ rhs-patient-ag-table {
       .column-showintyg {
         position: absolute;
         width: 130px;
-        right: 0;
+        right: 15px;
         border-top: none !important;
-
         button {
           position: relative;
           top: 5px;

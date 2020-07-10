@@ -70,7 +70,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     @Override
     public List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate, List<String> units) {
-        final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/sickleave/unit";
+        final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/sickleave/person";
         TypedCertificateRequest requestObject = getTypedCertificateRequest(units, certificateTypes, fromDate, toDate, personId);
 
         var sickLeaveCertificates = restTemplate.postForObject(url, requestObject, SickLeaveCertificate[].class);
