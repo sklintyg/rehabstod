@@ -1,7 +1,8 @@
 <label for="rhs-patient-ag-checkbox">
   <input id="rhs-patient-ag-checkbox"
          type="checkbox"
-         ng-model="patientAgTableCheckbox">
+         ng-model="isCheckedAgCheckbox"
+         ng-change="onChangeAgCheckbox({'isChecked': isCheckedAgCheckbox})">
   <span message
         key="label.patienthistory.ag.checkbox">
   </span>

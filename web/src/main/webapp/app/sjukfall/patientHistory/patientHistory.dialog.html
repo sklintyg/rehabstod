@@ -35,7 +35,10 @@
           </div>
           <div class="row">
             <div class="col-xs-6">
-              <rhs-patient-ag-table-checkbox></rhs-patient-ag-table-checkbox>
+              <rhs-patient-ag-table-checkbox
+                  on-change-ag-checkbox="updateAgTableVisible(isChecked)"
+                  is-checked-ag-checkbox="isCheckedAgCheckbox">
+              </rhs-patient-ag-table-checkbox>
             </div>
             <div class="col-xs-6">
               <div class="select-columns-container">
@@ -44,7 +47,7 @@
             </div>
           </div>
 
-          <rhs-patient-ag-table columns="tableColumns" history-item="item" patient="patient"
+          <rhs-patient-ag-table columns="tableColumns" history-item="item" patient="patient" ag-items="agItems"
                                 index="$index" on-load-intyg="loadIntyg(intyg)"></rhs-patient-ag-table>
           <div ng-repeat="item in timeline">
 

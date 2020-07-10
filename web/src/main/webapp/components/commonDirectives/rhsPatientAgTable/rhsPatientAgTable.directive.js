@@ -18,13 +18,13 @@
  */
 angular.module('rehabstodApp')
   .directive('rhsPatientAgTable',
-    function(UserModel) {
+    function(UserModel, patientAgViewState, messageService) {
       'use strict';
 
       return {
         restrict: 'E',
         scope: {
-          historyItem: '=',
+          agItems: '=',
           patient: '=',
           index: '=',
           onLoadIntyg: '&',
@@ -32,10 +32,11 @@ angular.module('rehabstodApp')
         },
         templateUrl: '/components/commonDirectives/rhsPatientAgTable/rhsPatientAgTable.directive.html',
 
-        controller: function($scope, patientAgViewState) {
-          $scope.showAgTable = patientAgViewState;
-        },
+        //controller: function($scope, patientAgViewState) {
+        //  $scope.showAgTable = patientAgViewState;
+        //},
         link: function($scope) {
+          $scope.patientAgViewState = patientAgViewState;
 
           $scope.$watchCollection('columns', function() {
             $scope.filteredColumns = $scope.columns.filter(function(column ) {
@@ -54,6 +55,25 @@ angular.module('rehabstodApp')
               return user.valdVardenhet.namn;
             }
             return '';
+          };
+
+          $scope.getToolTip = function(diagnos) {
+            var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
+                messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
+            return '<b>' + diagnos.kod + '</b><br>' + desc;
+          };
+
+          $scope.formatGrader = function(gradArr) {
+
+            switch (gradArr.length) {
+            case 0:
+              return '';
+            case 1:
+              return gradArr[0] + '%';
+            default:
+              return gradArr[0] + '% &#10142; ' + gradArr[gradArr.length - 1] + '%';
+            }
+
           };
         }
       };

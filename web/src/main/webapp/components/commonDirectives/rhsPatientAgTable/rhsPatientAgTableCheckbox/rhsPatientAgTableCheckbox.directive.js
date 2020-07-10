@@ -16,36 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('rehabstodApp')/*
-.controller('rhsPatientAgTableCheckboxCtrl', ['$scope', function($scope) {
-  'use strict';
-    $scope.displayAgTable = '';
-    //$scope.remote = 'false';
-    //$scope.displayAgTable.test = '';
-    //patientAgViewState.updateDisplayAgTable(true);
-
-    //$scope.remote = '';
-
-    $scope.$watch('displayAgTable', function(a) {
-      alert('yes ' + a);
-      patientAgViewState.updateDisplayAgTable(a);
-      $scope.remote = patientAgViewState.getDisplayAgTable();
-    }, true);
-
-}])*/
-  .directive('rhsPatientAgTableCheckbox',  function(patientAgViewState/*, patientAgProxy*/) {
+angular.module('rehabstodApp')
+  .directive('rhsPatientAgTableCheckbox',  function(/*patientAgViewState*/) {
       'use strict';
 
       return {
         restrict: 'E',
-        scope: {},
-        templateUrl: '/components/commonDirectives/rhsPatientAgTable/rhsPatientAgTableCheckbox/rhsPatientAgTableCheckbox.directive.html',
-        link: function($scope) {
-          $scope.patientAgTableCheckbox = false;
-          $scope.$watch('patientAgTableCheckbox', function(checked) {
-            //patientAgProxy.get();
-            patientAgViewState.updateDisplayAgTable(checked);
-          });
-        }
+        scope: {
+          isCheckedAgCheckbox: '=',
+          onChangeAgCheckbox: '&'
+        },
+        templateUrl: '/components/commonDirectives/rhsPatientAgTable/rhsPatientAgTableCheckbox/rhsPatientAgTableCheckbox.directive.html'
       };
     });

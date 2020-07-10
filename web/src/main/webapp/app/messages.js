@@ -235,10 +235,12 @@ var rhsMessages = {
     'label.role.switch.loggedin': 'Du har olika behörigheter på olika enheter. Var uppmärksam om att din roll kan komma att skifta mellan Läkare och Rehabkoordinator beroende på vilken enhet du väljer att byta till.',
 
     // Patient History Dialog
-    'label.patienthistory.loading': 'Hämtar sjukfall för patient...',
-    'label.patienthistory.empty': 'Tyvärr finns det inga giltiga intyg att visa i det här sjukfallet för tillfället. Det beror på att intygen har makulerats.',
     'label.patienthistory.ag.checkbox' : 'Visa intyg till arbetsgivare',
     'label.patienthistory.ag.checkbox.help' : 'Visa eller dölj tabell med patientens intyg till arbetsgivare.',
+    'label.patienthistory.ag.table.empty' : 'Patienten har inga intyg till arbetsgivaren.',
+    'label.patienthistory.loading': 'Hämtar sjukfall för patient...',
+    'label.patienthistory.empty': 'Tyvärr finns det inga giltiga intyg att visa i det här sjukfallet för tillfället. Det beror på att intygen har makulerats.',
+
 
     'label.extradiagnoser.sekretess': 'För patient med skyddade personuppgifter kan ingen ytterligare information hämtas från andra vårdenheter eller andra vårdgivare.',
     'label.extradiagnoser.none': 'Det finns för tillfället ingen ytterligare information att inhämta från andra vårdenheter eller andra vårdgivare.',
@@ -277,6 +279,7 @@ var rhsMessages = {
     'server.error.changeurval.title': 'Kunde inte visa sjukfall',
     'server.error.getsummary.text': 'Statistik för enheten kan inte visas',
     'server.error.giveconsent.title': 'Kunde inte lämna medgivande om PDL-loggning',
+    'server.error.loadpatientag.text' : 'Historik för patientens AG-intyg kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
     'server.error.loadpatienthistory.text': 'Sjukfallshistorik kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
 
     // FAQ

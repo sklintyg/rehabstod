@@ -6,13 +6,13 @@ rhs-patient-ag-table {
   h3 {
     @extend %rs-typo-03;
     padding-left: 10px;
-    margin-top: 10px;
+    margin-top: 15px;
     margin-bottom: 5px;
   }
 
   h4 {
     @extend %rs-typo-04;
-    padding-left: 75px;
+    padding: 5px 0 5px 0;
   }
 
   .no-columns {
@@ -21,18 +21,28 @@ rhs-patient-ag-table {
 
 
   .rhs-ag-table-container {
-
-    background: #ffffff;
-    border: 2px solid $rs-color-03;
     margin-left: 75px;
-    padding: 15px;
     margin-bottom: 15px;
-    width: calc(100% - 75px);
-    box-shadow: 1px 4px 13px 0 rgba(0, 0, 0, 0.11);
+
+
+    .no-ag-items {
+      color: #333333;
+      border-top: 1px solid $inactive-element-color;
+      width:calc(100% - 145px);
+      background-color:#efefef;
+      padding: 10px;
+      white-space: nowrap;
+      overflow-x: auto;
+    }
 
     .patient-ag-table-container {
       display: flex;
       position: relative;
+      margin-bottom: 10px;
+      border: 2px solid $rs-color-03;
+      padding: 15px;
+      box-shadow: 1px 4px 13px 0 rgba(0, 0, 0, 0.11);
+      width: 100%;
     }
 
     .table-responsive {

@@ -19,10 +19,12 @@
 
 angular.module('rehabstodApp').controller('patientHistoryController',
     function($scope, $http, $uibModalInstance, $state, APP_CONFIG, patientHistoryProxy, SjukfallFilterViewState,
-        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy) {
+        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy,
+        patientAgViewState, patientAgProxy) {
       'use strict';
 
       //Create initial default details tab (cannot be closed)
+      patientAgViewState.updateAgTableVisible(false);
       patientHistoryViewState.reset();
       patientHistoryViewState.addTab('', 'Sjukfall', true, true);
       $scope.nyligenAvslutat = nyligenAvslutat;
@@ -65,6 +67,26 @@ angular.module('rehabstodApp').controller('patientHistoryController',
         wcLogout();
         $uibModalInstance.close();
       };
+
+      $scope.agItems = {};
+      $scope.isCheckedAgCheckbox = false;
+      $scope.updateAgTableVisible = function(isChecked) {
+        if (isChecked) {
+          patientAgProxy.getAgIntyg(patient).then(function(sjukfallresponse) {
+            $scope.agItems.intyg = sjukfallresponse.sjukfallList;
+          }, function() {
+            $scope.showSpinner = false;
+            //$scope.errorMessageKey = 'server.error.loadpatienthistory.text';
+            $scope.agItems.error = 'server.error.loadpatientag.text';
+          });
+          patientAgViewState.updateAgTableVisible(isChecked);
+        } else {
+          patientAgViewState.updateAgTableVisible(isChecked);
+          $scope.agItems = {};
+        }
+      };
+
+
 
       function updatePatientSjukfall(patient) {
         //Start by requesting data

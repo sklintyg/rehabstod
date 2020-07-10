@@ -24,7 +24,7 @@ angular.module('rehabstodApp').factory('patientAgProxy',
       /*
        * Get history for the specified patient
        */
-      function _get(patient) {
+      function _getAgIntyg(patient) {
 
         var promise = $q.defer();
 
@@ -38,7 +38,7 @@ angular.module('rehabstodApp').factory('patientAgProxy',
           timeout: networkConfig.defaultTimeout
         };
 
-        $log.debug('Requesting patient ag-intyg for patient');
+        $log.debug('Requesting arbetsgivarintyg for patient');
 
         $http.post(restPath, query, config).then(function(response) {
           if (!ObjectHelper.isDefined(response.data)) {
@@ -66,6 +66,6 @@ angular.module('rehabstodApp').factory('patientAgProxy',
       }
 
       return {
-        get: _get
+        getAgIntyg: _getAgIntyg
       };
     });
