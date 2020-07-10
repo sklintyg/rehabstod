@@ -54,7 +54,7 @@ public class CertificateController {
         LOG.info("Getting LU certificates for care unit");
 
         var certificateList = certificateService
-            .getLUCertificatesForCareUnit(request.getUnit(), request.getFromDate(), request.getToDate());
+            .getLUCertificatesForCareUnit(request.getFromDate(), request.getToDate());
 
         return new ResponseEntity<>(certificateList, HttpStatus.OK);
     }
@@ -64,7 +64,7 @@ public class CertificateController {
         LOG.info("Getting LU certificates for person");
 
         var certificateList = certificateService
-            .getLUCertificatesForPerson(request.getPersonId(), request.getFromDate(), request.getToDate(), request.getUnit());
+            .getLUCertificatesForPerson(request.getPersonId());
 
         return new ResponseEntity<>(certificateList, HttpStatus.OK);
     }
@@ -74,7 +74,7 @@ public class CertificateController {
         LOG.info("Getting AG certificates for person");
 
         var certificateList = certificateService
-            .getAGCertificatesForPerson(request.getPersonId(), request.getFromDate(), request.getToDate(), request.getUnit());
+            .getAGCertificatesForPerson(request.getPersonId());
 
         return new ResponseEntity<>(certificateList, HttpStatus.OK);
     }

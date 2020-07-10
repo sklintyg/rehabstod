@@ -42,4 +42,7 @@ public interface LogService {
         ActivityType activityType,
         ResourceType resourceType);
 
+    void logCertificate(Personnummer personId,
+        ActivityType activityType,
+        ResourceType resourceType);
 }

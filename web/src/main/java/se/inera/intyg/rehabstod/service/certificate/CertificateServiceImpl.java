@@ -32,87 +32,118 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate.WorkCapacity;
+import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.KompletteringInfoDecorator;
+import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.AGCertificate;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 @Service
 public class CertificateServiceImpl implements CertificateService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CertificateServiceImpl.class); //TODO
+    private static final Logger LOGGER = LoggerFactory.getLogger(CertificateServiceImpl.class);
 
     private final IntygstjanstRestIntegrationService restIntegrationService;
 
-    private static final String[] LU_TYPE_LIST = {"luse", "luae-na", "luae-fs"};
+    private static final String[] LU_TYPE_LIST = {"luse", "luae_na", "luae_fs"};
     private static final String[] AG_TYPE_LIST = {"ag114", "ag7804"};
 
     private final KompletteringInfoDecorator kompletteringInfoDecorator;
 
     private final LogService logService;
 
+    private final UserService userService;
+
     @Autowired
     public CertificateServiceImpl(
         IntygstjanstRestIntegrationService restIntegrationService, KompletteringInfoDecorator kompletteringInfoDecorator,
-        LogService logService) {
+        LogService logService, UserService userService) {
         this.restIntegrationService = restIntegrationService;
         this.kompletteringInfoDecorator = kompletteringInfoDecorator;
         this.logService = logService;
+        this.userService = userService;
     }
 
     @Override
-    public List<LUCertificate> getLUCertificatesForCareUnit(String unit, LocalDate fromDate, LocalDate toDate) {
+    public List<LUCertificate> getLUCertificatesForCareUnit(LocalDate fromDate, LocalDate toDate) {
+        var unitId = userService.getUser().getValdVardenhet().getId();
         var diagnosedCertificateList = restIntegrationService
-            .getDiagnosedCertificatesForCareUnit(Collections.singletonList(unit), Arrays.asList(LU_TYPE_LIST), fromDate, toDate);
+            .getDiagnosedCertificatesForCareUnit(Collections.singletonList(unitId), Arrays.asList(LU_TYPE_LIST), fromDate, toDate);
 
         var luCertificateList = transformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
 
-        pdlLogLUCertificatesForCareUnit(luCertificateList);
+        pdlLogLUCertificatesForCareUnit(luCertificateList, unitId);
 
+        LOGGER.debug("Returning LU Certificates for Care Unit");
         return luCertificateList;
     }
 
     @Override
-    public List<LUCertificate> getLUCertificatesForPerson(String personId, LocalDate fromDate, LocalDate toDate, String unit) {
+    public List<LUCertificate> getLUCertificatesForPerson(String personId) {
+        var unitId = userService.getUser().getValdVardenhet().getId();
         var diagnosedCertificateList = restIntegrationService
-            .getDiagnosedCertificatesForPerson(personId, Arrays.asList(LU_TYPE_LIST), fromDate, toDate, Collections.singletonList(unit));
+            .getDiagnosedCertificatesForPerson(personId, Arrays.asList(LU_TYPE_LIST), Collections.singletonList(unitId));
 
         var luCertificateList = transformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
 
-        pdlLogLUCertificatesForPerson(personId);
+        LOGGER.debug("Adding PDL log for certificate read");
+        pdlLogCertificatesForPerson(personId, unitId);
 
+        LOGGER.debug("Returning LU Certificates for Person");
         return luCertificateList;
     }
 
     @Override
-    public List<AGCertificate> getAGCertificatesForPerson(String personId, LocalDate fromDate, LocalDate toDate, String unit) {
+    public List<AGCertificate> getAGCertificatesForPerson(String personId) {
+        var unitId = userService.getUser().getValdVardenhet().getId();
         var sickLeaveCertificateList = restIntegrationService
-            .getSickLeaveCertificatesForPerson(personId, Arrays.asList(AG_TYPE_LIST), fromDate, toDate, Collections.singletonList(unit));
+            .getSickLeaveCertificatesForPerson(personId, Arrays.asList(AG_TYPE_LIST), Collections.singletonList(unitId));
 
-        var agCertificates = transformSickLeaveCertificatesToLUCertificates(sickLeaveCertificateList);
+        var agCertificates = transformSickLeaveCertificatesToAGCertificates(sickLeaveCertificateList);
 
-        pdlLogAGCertificatesForPerson(personId);
+        LOGGER.debug("Adding PDL log for certificate read");
+        pdlLogCertificatesForPerson(personId, unitId);
 
+        LOGGER.debug("Returning AG Certificates for Person");
         return agCertificates;
     }
 
-    private void pdlLogAGCertificatesForPerson(String personId) {
+    private void pdlLogCertificatesForPerson(String personId, String unitId) {
+        var patientId = Personnummer.createPersonnummer(personId)
+            .orElseThrow(() -> new IllegalArgumentException("Could not parse passed personId: " + personId));
+
+        var readActivityType = ActivityType.READ;
+        var resourceTypeCertificate = ResourceType.RESOURCE_TYPE_INTYG;
+        var rehabstodUser = userService.getUser();
+
+        var isInStore = PDLActivityStore
+            .isActivityInStore(unitId, personId, readActivityType, resourceTypeCertificate, rehabstodUser.getStoredActivities());
+
+        if (!isInStore) {
+            logService.logCertificate(patientId, readActivityType, resourceTypeCertificate);
+            PDLActivityStore
+                .addActivityToStore(unitId, personId, readActivityType, resourceTypeCertificate, rehabstodUser.getStoredActivities());
+        }
     }
 
-    private void pdlLogLUCertificatesForCareUnit(List<LUCertificate> luCertificateList) {
+    private void pdlLogLUCertificatesForCareUnit(List<LUCertificate> luCertificateList, String unitId) {
+        LOGGER.debug("Adding PDL logs for certificate read");
+        luCertificateList.stream().map(LUCertificate::getPatient).map(Patient::getId).distinct()
+            .forEach(id -> pdlLogCertificatesForPerson(id, unitId));
     }
 
-    private void pdlLogLUCertificatesForPerson(String personId) {
-    }
-
-    private List<AGCertificate> transformSickLeaveCertificatesToLUCertificates(List<SickLeaveCertificate> sickLeaveCertificateList) {
+    private List<AGCertificate> transformSickLeaveCertificatesToAGCertificates(List<SickLeaveCertificate> sickLeaveCertificateList) {
         List<AGCertificate> agCertificateList = sickLeaveCertificateList.stream().map(this::convertSickLeaveCertificateToLUCertificate)
-            .collect(Collectors.toList());
+            .sorted(Comparator.comparing(AGCertificate::getSigningTimeStamp).reversed()).collect(Collectors.toList());
         populateAGCertificatesWithNotificationData(agCertificateList);
 
         return agCertificateList;

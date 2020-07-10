@@ -25,9 +25,9 @@ import se.inera.intyg.rehabstod.web.model.LUCertificate;
 
 public interface CertificateService {
 
-    List<LUCertificate> getLUCertificatesForCareUnit(String unit, LocalDate fromDate, LocalDate toDate);
+    List<LUCertificate> getLUCertificatesForCareUnit(LocalDate fromDate, LocalDate toDate);
 
-    List<LUCertificate> getLUCertificatesForPerson(String personId, LocalDate fromDate, LocalDate toDate, String unit);
+    List<LUCertificate> getLUCertificatesForPerson(String personId);
 
-    List<AGCertificate> getAGCertificatesForPerson(String personId, LocalDate fromDate, LocalDate toDate, String unit);
+    List<AGCertificate> getAGCertificatesForPerson(String personId);
 }

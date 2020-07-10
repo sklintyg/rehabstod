@@ -87,7 +87,7 @@ public class CertificateServiceImplTest {
         when(intygstjanstRestIntegrationService.getDiagnosedCertificatesForCareUnit(any(List.class), any(List.class), any(), any()))
             .thenReturn(diagnosedCertificateList);
 
-        var luCertificates = service.getLUCertificatesForCareUnit(UNIT_1, null, null);
+        var luCertificates = service.getLUCertificatesForCareUnit(null, null);
 
         assertNotNull(luCertificates);
         assertEquals(2, luCertificates.size());
@@ -105,7 +105,7 @@ public class CertificateServiceImplTest {
             .getDiagnosedCertificatesForPerson(anyString(), any(List.class), any(), any(), any(List.class)))
             .thenReturn(diagnosedCertificateList);
 
-        var luCertificates = service.getLUCertificatesForPerson(PERSON_ID, null, null, UNIT_1);
+        var luCertificates = service.getLUCertificatesForPerson(PERSON_ID);
 
         assertNotNull(luCertificates);
         assertEquals(2, luCertificates.size());
@@ -123,7 +123,7 @@ public class CertificateServiceImplTest {
             .getSickLeaveCertificatesForPerson(anyString(), any(List.class), any(), any(), any(List.class)))
             .thenReturn(sickLeaveCertificateList);
 
-        var agCertificates = service.getAGCertificatesForPerson(PERSON_ID, null, null, UNIT_1);
+        var agCertificates = service.getAGCertificatesForPerson(PERSON_ID);
 
         assertNotNull(agCertificates);
         assertEquals(2, agCertificates.size());
