@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.certificate;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -39,8 +38,12 @@ import se.inera.intyg.infra.certificate.builder.SickLeaveCertificateBuilder;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate.WorkCapacity;
+import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
-import se.inera.intyg.rehabstod.service.sjukfall.komplettering.KompletteringInfoDecorator;
+import se.inera.intyg.rehabstod.service.pdl.LogService;
+import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
+import se.inera.intyg.rehabstod.service.user.UserService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CertificateServiceImplTest {
@@ -72,16 +75,27 @@ public class CertificateServiceImplTest {
     private static final int REDUCTION_3 = 50;
 
     @Mock
-    KompletteringInfoDecorator kompletteringInfoDecorator;
+    UnansweredQAsInfoDecorator unAnsweredQAsInfoDecorator;
 
     @Mock
     IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+
+    @Mock
+    UserService userService;
+
+    @Mock
+    RehabstodUser user;
+
+    @Mock
+    LogService logService;
 
     @InjectMocks
     CertificateServiceImpl service;
 
     @Test
     public void getLUCertificatesForCareUnit() {
+        when(userService.getUser()).thenReturn(user);
+        when(user.getValdVardenhet()).thenReturn(new Vardenhet("hsaid", "namn"));
 
         var diagnosedCertificateList = buildDiagnosedCertificateList();
         when(intygstjanstRestIntegrationService.getDiagnosedCertificatesForCareUnit(any(List.class), any(List.class), any(), any()))
@@ -99,10 +113,12 @@ public class CertificateServiceImplTest {
 
     @Test
     public void getLUCertificatesForPerson() {
+        when(userService.getUser()).thenReturn(user);
+        when(user.getValdVardenhet()).thenReturn(new Vardenhet("hsaid", "namn"));
 
         var diagnosedCertificateList = buildDiagnosedCertificateList();
         when(intygstjanstRestIntegrationService
-            .getDiagnosedCertificatesForPerson(anyString(), any(List.class), any(), any(), any(List.class)))
+            .getDiagnosedCertificatesForPerson(anyString(), any(List.class), any(List.class)))
             .thenReturn(diagnosedCertificateList);
 
         var luCertificates = service.getLUCertificatesForPerson(PERSON_ID);
@@ -117,10 +133,12 @@ public class CertificateServiceImplTest {
 
     @Test
     public void getAGCertificatesForPerson() {
+        when(userService.getUser()).thenReturn(user);
+        when(user.getValdVardenhet()).thenReturn(new Vardenhet("hsaid", "namn"));
 
         var sickLeaveCertificateList = buildSickLeaveCertificateList();
         when(intygstjanstRestIntegrationService
-            .getSickLeaveCertificatesForPerson(anyString(), any(List.class), any(), any(), any(List.class)))
+            .getSickLeaveCertificatesForPerson(anyString(), any(List.class), any(List.class)))
             .thenReturn(sickLeaveCertificateList);
 
         var agCertificates = service.getAGCertificatesForPerson(PERSON_ID);

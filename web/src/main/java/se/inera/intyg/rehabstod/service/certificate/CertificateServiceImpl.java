@@ -37,9 +37,13 @@ import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
-import se.inera.intyg.rehabstod.service.sjukfall.komplettering.KompletteringInfoDecorator;
+import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonResponse;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitResponse;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForPersonResponse;
 import se.inera.intyg.rehabstod.web.model.AGCertificate;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.LUCertificate;
@@ -57,7 +61,7 @@ public class CertificateServiceImpl implements CertificateService {
     private static final String[] LU_TYPE_LIST = {"luse", "luae_na", "luae_fs"};
     private static final String[] AG_TYPE_LIST = {"ag114", "ag7804"};
 
-    private final KompletteringInfoDecorator kompletteringInfoDecorator;
+    private final UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
 
     private final LogService logService;
 
@@ -65,56 +69,74 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Autowired
     public CertificateServiceImpl(
-        IntygstjanstRestIntegrationService restIntegrationService, KompletteringInfoDecorator kompletteringInfoDecorator,
+        IntygstjanstRestIntegrationService restIntegrationService, UnansweredQAsInfoDecorator unansweredQAsInfoDecorator,
         LogService logService, UserService userService) {
         this.restIntegrationService = restIntegrationService;
-        this.kompletteringInfoDecorator = kompletteringInfoDecorator;
+        this.unansweredQAsInfoDecorator = unansweredQAsInfoDecorator;
         this.logService = logService;
         this.userService = userService;
     }
 
     @Override
-    public List<LUCertificate> getLUCertificatesForCareUnit(LocalDate fromDate, LocalDate toDate) {
+    public GetLUCertificatesForCareUnitResponse getLUCertificatesForCareUnit(LocalDate fromDate, LocalDate toDate) {
         var unitId = userService.getUser().getValdVardenhet().getId();
         var diagnosedCertificateList = restIntegrationService
             .getDiagnosedCertificatesForCareUnit(Collections.singletonList(unitId), Arrays.asList(LU_TYPE_LIST), fromDate, toDate);
 
         var luCertificateList = transformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
+        boolean qaInfoError = false;
+        try {
+            populateLUCertificatesWithNotificationData(luCertificateList);
+        } catch (WcIntegrationException e) {
+            qaInfoError = true;
+        }
 
         pdlLogLUCertificatesForCareUnit(luCertificateList, unitId);
 
         LOGGER.debug("Returning LU Certificates for Care Unit");
-        return luCertificateList;
+        return new GetLUCertificatesForCareUnitResponse(luCertificateList, qaInfoError);
     }
 
     @Override
-    public List<LUCertificate> getLUCertificatesForPerson(String personId) {
+    public GetLUCertificatesForPersonResponse getLUCertificatesForPerson(String personId) {
         var unitId = userService.getUser().getValdVardenhet().getId();
         var diagnosedCertificateList = restIntegrationService
             .getDiagnosedCertificatesForPerson(personId, Arrays.asList(LU_TYPE_LIST), Collections.singletonList(unitId));
 
         var luCertificateList = transformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
+        boolean qaInfoError = false;
+        try {
+            populateLUCertificatesWithNotificationData(luCertificateList);
+        } catch (WcIntegrationException e) {
+            qaInfoError = true;
+        }
 
         LOGGER.debug("Adding PDL log for certificate read");
         pdlLogCertificatesForPerson(personId, unitId);
 
         LOGGER.debug("Returning LU Certificates for Person");
-        return luCertificateList;
+        return new GetLUCertificatesForPersonResponse(luCertificateList, qaInfoError);
     }
 
     @Override
-    public List<AGCertificate> getAGCertificatesForPerson(String personId) {
+    public GetAGCertificatesForPersonResponse getAGCertificatesForPerson(String personId) {
         var unitId = userService.getUser().getValdVardenhet().getId();
         var sickLeaveCertificateList = restIntegrationService
             .getSickLeaveCertificatesForPerson(personId, Arrays.asList(AG_TYPE_LIST), Collections.singletonList(unitId));
 
-        var agCertificates = transformSickLeaveCertificatesToAGCertificates(sickLeaveCertificateList);
+        var agCertificateList = transformSickLeaveCertificatesToAGCertificates(sickLeaveCertificateList);
+        boolean qaInfoError = false;
+        try {
+            populateAGCertificatesWithNotificationData(agCertificateList);
+        } catch (WcIntegrationException e) {
+            qaInfoError = true;
+        }
 
         LOGGER.debug("Adding PDL log for certificate read");
         pdlLogCertificatesForPerson(personId, unitId);
 
         LOGGER.debug("Returning AG Certificates for Person");
-        return agCertificates;
+        return new GetAGCertificatesForPersonResponse(agCertificateList, qaInfoError);
     }
 
     private void pdlLogCertificatesForPerson(String personId, String unitId) {
@@ -144,13 +166,12 @@ public class CertificateServiceImpl implements CertificateService {
     private List<AGCertificate> transformSickLeaveCertificatesToAGCertificates(List<SickLeaveCertificate> sickLeaveCertificateList) {
         List<AGCertificate> agCertificateList = sickLeaveCertificateList.stream().map(this::convertSickLeaveCertificateToLUCertificate)
             .sorted(Comparator.comparing(AGCertificate::getSigningTimeStamp).reversed()).collect(Collectors.toList());
-        populateAGCertificatesWithNotificationData(agCertificateList);
 
         return agCertificateList;
     }
 
     private void populateAGCertificatesWithNotificationData(List<AGCertificate> agCertificateList) {
-        kompletteringInfoDecorator.updateAGCertificatesWithKompletteringar(agCertificateList);
+        unansweredQAsInfoDecorator.updateAGCertificatesWithQAs(agCertificateList);
     }
 
     private AGCertificate convertSickLeaveCertificateToLUCertificate(SickLeaveCertificate sickLeaveCertificate) {
@@ -178,13 +199,12 @@ public class CertificateServiceImpl implements CertificateService {
 
         List<LUCertificate> luCertificateList = diagnosedCertificateList.stream().map(this::convertDiagnosedCertificateToLUCertificate)
             .collect(Collectors.toList());
-        populateLUCertificatesWithNotificationData(luCertificateList);
 
         return luCertificateList;
     }
 
     private void populateLUCertificatesWithNotificationData(List<LUCertificate> luCertificateList) {
-        kompletteringInfoDecorator.updateLUCertificatesWithKompletteringar(luCertificateList);
+        unansweredQAsInfoDecorator.updateLUCertificatesWithQAs(luCertificateList);
     }
 
     private LUCertificate convertDiagnosedCertificateToLUCertificate(DiagnosedCertificate diagnosedCertificate) {

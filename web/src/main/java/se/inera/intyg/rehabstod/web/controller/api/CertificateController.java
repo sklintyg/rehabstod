@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +30,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.service.certificate.CertificateService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonRequest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitRequest;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForPersonRequest;
-import se.inera.intyg.rehabstod.web.model.AGCertificate;
-import se.inera.intyg.rehabstod.web.model.LUCertificate;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForPersonResponse;
 
 @RestController
 @RequestMapping("/api/certificate")
@@ -50,32 +50,32 @@ public class CertificateController {
     }
 
     @RequestMapping(value = "/lu/unit", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<LUCertificate>> getLUForCareUnit(@RequestBody GetLUCertificatesForCareUnitRequest request) {
+    public ResponseEntity<GetLUCertificatesForCareUnitResponse> getLUForCareUnit(@RequestBody GetLUCertificatesForCareUnitRequest request) {
         LOG.info("Getting LU certificates for care unit");
 
-        var certificateList = certificateService
+        var response = certificateService
             .getLUCertificatesForCareUnit(request.getFromDate(), request.getToDate());
 
-        return new ResponseEntity<>(certificateList, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/lu/person", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<LUCertificate>> getLUForPerson(@RequestBody GetLUCertificatesForPersonRequest request) {
+    public ResponseEntity<GetLUCertificatesForPersonResponse> getLUForPerson(@RequestBody GetLUCertificatesForPersonRequest request) {
         LOG.info("Getting LU certificates for person");
 
-        var certificateList = certificateService
+        var response = certificateService
             .getLUCertificatesForPerson(request.getPersonId());
 
-        return new ResponseEntity<>(certificateList, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ag/person", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AGCertificate>> getAGForPerson(@RequestBody GetAGCertificatesForPersonRequest request) {
+    public ResponseEntity<GetAGCertificatesForPersonResponse> getAGForPerson(@RequestBody GetAGCertificatesForPersonRequest request) {
         LOG.info("Getting AG certificates for person");
 
-        var certificateList = certificateService
+        var response = certificateService
             .getAGCertificatesForPerson(request.getPersonId());
 
-        return new ResponseEntity<>(certificateList, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

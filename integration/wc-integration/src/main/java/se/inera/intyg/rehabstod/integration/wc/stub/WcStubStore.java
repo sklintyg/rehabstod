@@ -56,7 +56,7 @@ public class WcStubStore {
     @Resource(name = "rediscache")
     private ValueOperations<String, String> valueOps;
 
-    private CustomObjectMapper objectMapper = new CustomObjectMapper();
+    private final CustomObjectMapper objectMapper = new CustomObjectMapper();
 
     public void remove(String intygsId) {
         Set<String> keys = valueOps.getOperations().keys(assemblePattern("*" + intygsId));
@@ -94,7 +94,7 @@ public class WcStubStore {
             .collect(Collectors.joining(":"));
     }
 
-    public void addAddition(String intygsId, LocalDateTime skapad, int antalObesvaradeKompletteringar) {
+    public void addAddition(String intygsId, LocalDateTime skapad, int antalObesvaradeKompletteringar, int antalObesvaradeOthers) {
         IntygAdditionsType intygAdditionsType = new IntygAdditionsType();
         IntygId intygId = new IntygId();
         intygId.setExtension(intygsId);
@@ -105,8 +105,18 @@ public class WcStubStore {
             additionType.setSkapad(skapad);
             additionType.setId(intygsId + "-arendeid-" + i);
             additionType.setStatus(antalObesvaradeKompletteringar == 0 ? StatusType.BESVARAD : StatusType.OBESVARAD);
+            additionType.getAny().add("KOMPL");
             intygAdditionsType.getAddition().add(additionType);
         }
+        for (int i = 100; i < antalObesvaradeOthers + 100; i++) {
+            AdditionType additionType = new AdditionType();
+            additionType.setSkapad(skapad);
+            additionType.setId(intygsId + "-arendeid-" + i);
+            additionType.setStatus(antalObesvaradeOthers == 0 ? StatusType.BESVARAD : StatusType.OBESVARAD);
+            additionType.getAny().add("OTHER");
+            intygAdditionsType.getAddition().add(additionType);
+        }
+
         addAddition(intygAdditionsType);
     }
 

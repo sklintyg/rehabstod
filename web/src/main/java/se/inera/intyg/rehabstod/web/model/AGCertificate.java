@@ -39,7 +39,8 @@ public class AGCertificate {
 
     private LocalDateTime signingTimeStamp;
 
-    private int notifications;
+    private int unAnsweredComplement;
+    private int unAnsweredOther;
 
     private LocalDate start;
     private LocalDate end;

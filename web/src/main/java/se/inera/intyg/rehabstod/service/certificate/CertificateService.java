@@ -19,15 +19,15 @@
 package se.inera.intyg.rehabstod.service.certificate;
 
 import java.time.LocalDate;
-import java.util.List;
-import se.inera.intyg.rehabstod.web.model.AGCertificate;
-import se.inera.intyg.rehabstod.web.model.LUCertificate;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonResponse;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitResponse;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForPersonResponse;
 
 public interface CertificateService {
 
-    List<LUCertificate> getLUCertificatesForCareUnit(LocalDate fromDate, LocalDate toDate);
+    GetLUCertificatesForCareUnitResponse getLUCertificatesForCareUnit(LocalDate fromDate, LocalDate toDate);
 
-    List<LUCertificate> getLUCertificatesForPerson(String personId);
+    GetLUCertificatesForPersonResponse getLUCertificatesForPerson(String personId);
 
-    List<AGCertificate> getAGCertificatesForPerson(String personId);
+    GetAGCertificatesForPersonResponse getAGCertificatesForPerson(String personId);
 }
