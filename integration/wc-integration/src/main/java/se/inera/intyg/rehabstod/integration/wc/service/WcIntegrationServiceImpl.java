@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.clinicalprocess.healthcond.certificate.v3.ResultCodeType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AdditionType;
+import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AmneType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.IntygAdditionsType;
 import se.inera.intyg.rehabstod.integration.wc.client.WcClientService;
@@ -88,7 +89,7 @@ public class WcIntegrationServiceImpl implements WcIntegrationService {
             for (AdditionType item : intyg.getAddition()) {
                 // Implements RS-VR-051 and RS-VR-052
                 if (OBESVARAD.equals(item.getStatus()) && item.getSkapad().isAfter(earliestValidDate)) {
-                    if ("KOMPL".equals(item.getAny().get(0))) {
+                    if (AmneType.KOMPLT.equals(item.getAmne())) {
                         unansweredComplement++;
                     } else {
                         unansweredOther++;

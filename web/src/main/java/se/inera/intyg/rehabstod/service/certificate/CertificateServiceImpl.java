@@ -38,6 +38,7 @@ import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -67,14 +68,17 @@ public class CertificateServiceImpl implements CertificateService {
 
     private final UserService userService;
 
+    private final DiagnosFactory diagnosFactory;
+
     @Autowired
     public CertificateServiceImpl(
         IntygstjanstRestIntegrationService restIntegrationService, UnansweredQAsInfoDecorator unansweredQAsInfoDecorator,
-        LogService logService, UserService userService) {
+        LogService logService, UserService userService, DiagnosFactory diagnosFactory) {
         this.restIntegrationService = restIntegrationService;
         this.unansweredQAsInfoDecorator = unansweredQAsInfoDecorator;
         this.logService = logService;
         this.userService = userService;
+        this.diagnosFactory = diagnosFactory;
     }
 
     @Override
@@ -164,10 +168,9 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private List<AGCertificate> transformSickLeaveCertificatesToAGCertificates(List<SickLeaveCertificate> sickLeaveCertificateList) {
-        List<AGCertificate> agCertificateList = sickLeaveCertificateList.stream().map(this::convertSickLeaveCertificateToLUCertificate)
-            .sorted(Comparator.comparing(AGCertificate::getSigningTimeStamp).reversed()).collect(Collectors.toList());
 
-        return agCertificateList;
+        return sickLeaveCertificateList.stream().map(this::convertSickLeaveCertificateToLUCertificate)
+            .sorted(Comparator.comparing(AGCertificate::getSigningTimeStamp).reversed()).collect(Collectors.toList());
     }
 
     private void populateAGCertificatesWithNotificationData(List<AGCertificate> agCertificateList) {
@@ -181,6 +184,7 @@ public class CertificateServiceImpl implements CertificateService {
         var endDate = workCapacityList.stream().max(Comparator.comparing(WorkCapacity::getEndDate)).get().getEndDate();
 
         return AGCertificate.builder().certificateId(sickLeaveCertificate.getCertificateId())
+            .certificateType(translateCertificateTypeName(sickLeaveCertificate.getCertificateType()))
             .signingTimeStamp(sickLeaveCertificate.getSigningDateTime())
             .patient(new Patient(sickLeaveCertificate.getPersonId(), sickLeaveCertificate.getPatientFullName()))
             .doctor(new Lakare(sickLeaveCertificate.getPersonalHsaId(), sickLeaveCertificate.getPersonalFullName()))
@@ -197,10 +201,8 @@ public class CertificateServiceImpl implements CertificateService {
     private List<LUCertificate> transformDiagnosedCertificatesToLUCertificates(
         List<DiagnosedCertificate> diagnosedCertificateList) {
 
-        List<LUCertificate> luCertificateList = diagnosedCertificateList.stream().map(this::convertDiagnosedCertificateToLUCertificate)
+        return diagnosedCertificateList.stream().map(this::convertDiagnosedCertificateToLUCertificate)
             .collect(Collectors.toList());
-
-        return luCertificateList;
     }
 
     private void populateLUCertificatesWithNotificationData(List<LUCertificate> luCertificateList) {
@@ -209,6 +211,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     private LUCertificate convertDiagnosedCertificateToLUCertificate(DiagnosedCertificate diagnosedCertificate) {
         return LUCertificate.builder().certificateId(diagnosedCertificate.getCertificateId())
+            .certificateType(translateCertificateTypeName(diagnosedCertificate.getCertificateType()))
             .signingTimeStamp(diagnosedCertificate.getSigningDateTime())
             .patient(new Patient(diagnosedCertificate.getPersonId(), diagnosedCertificate.getPatientFullName()))
             .doctor(new Lakare(diagnosedCertificate.getPersonalHsaId(), diagnosedCertificate.getPersonalFullName()))
@@ -222,6 +225,30 @@ public class CertificateServiceImpl implements CertificateService {
 
     private Diagnos getDiagnose(String code) {
         var diagnoseCode = new DiagnosKod(code);
-        return new Diagnos(diagnoseCode.getOriginalCode(), diagnoseCode.getCleanedCode(), diagnoseCode.getName());
+        return diagnosFactory.getDiagnos(diagnoseCode.getOriginalCode(), diagnoseCode.getCleanedCode(), diagnoseCode.getName());
+    }
+
+    private String translateCertificateTypeName(String type) {
+        String name = type;
+
+        switch (type) {
+            case "luse":
+                name = "FK7800";
+                break;
+            case "luae-na":
+                name = "FK7801";
+                break;
+            case "luae-fs":
+                name = "FK7802";
+                break;
+            case "ag7804":
+                name = "AG7804";
+                break;
+            case "ag114":
+                name = "AG1-14";
+                break;
+        }
+
+        return name;
     }
 }

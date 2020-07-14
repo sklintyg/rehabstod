@@ -34,6 +34,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import se.inera.clinicalprocess.healthcond.certificate.types.v3.IntygId;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AdditionType;
+import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AmneType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.IntygAdditionsType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.StatusType;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
@@ -104,16 +105,16 @@ public class WcStubStore {
             AdditionType additionType = new AdditionType();
             additionType.setSkapad(skapad);
             additionType.setId(intygsId + "-arendeid-" + i);
-            additionType.setStatus(antalObesvaradeKompletteringar == 0 ? StatusType.BESVARAD : StatusType.OBESVARAD);
-            additionType.getAny().add("KOMPL");
+            additionType.setStatus(StatusType.OBESVARAD);
+            additionType.setAmne(AmneType.KOMPLT);
             intygAdditionsType.getAddition().add(additionType);
         }
         for (int i = 100; i < antalObesvaradeOthers + 100; i++) {
             AdditionType additionType = new AdditionType();
             additionType.setSkapad(skapad);
             additionType.setId(intygsId + "-arendeid-" + i);
-            additionType.setStatus(antalObesvaradeOthers == 0 ? StatusType.BESVARAD : StatusType.OBESVARAD);
-            additionType.getAny().add("OTHER");
+            additionType.setStatus(StatusType.OBESVARAD);
+            additionType.setAmne(AmneType.OVRIGT);
             intygAdditionsType.getAddition().add(additionType);
         }
 

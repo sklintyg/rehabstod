@@ -39,6 +39,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.clinicalprocess.healthcond.certificate.types.v3.IntygId;
 import se.inera.clinicalprocess.healthcond.certificate.v3.ResultCodeType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AdditionType;
+import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AmneType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.IntygAdditionsType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.StatusType;
@@ -129,7 +130,7 @@ public class WcIntegrationServiceImplTest {
         AdditionType addition = new AdditionType();
         addition.setStatus(statusType);
         addition.setSkapad(skapad);
-        addition.getAny().add("KOMPL");
+        addition.setAmne(AmneType.KOMPLT);
         return addition;
     }
 

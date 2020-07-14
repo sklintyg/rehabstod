@@ -14,7 +14,7 @@ ext {
     consentSchemaVersion = "2.0.1"
     rivtaItintegrationMonitoringSchemasVersion = "1.0.0.5"
     internalMonitoringSchemaVersion = "1.0.4"
-    intygClinicalprocessSchemasVersion = "1.0.23"
+    intygClinicalprocessSchemasVersion = "1.0.24"
     schemasContractVersion = "2.1.8"
     srsSchemasVersion = "0.0.13"
 

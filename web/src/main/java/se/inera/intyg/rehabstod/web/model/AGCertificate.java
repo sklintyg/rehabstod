@@ -29,6 +29,7 @@ import lombok.Data;
 public class AGCertificate {
 
     private String certificateId;
+    private String certificateType;
 
     private Lakare doctor;
 

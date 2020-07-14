@@ -28,6 +28,7 @@ import lombok.Data;
 public class LUCertificate {
 
     private String certificateId;
+    private String certificateType;
 
     private Lakare doctor;
 
