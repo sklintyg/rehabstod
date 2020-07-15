@@ -39,8 +39,14 @@ import se.inera.intyg.infra.certificate.builder.SickLeaveCertificateBuilder;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate.WorkCapacity;
+import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
-import se.inera.intyg.rehabstod.service.sjukfall.komplettering.KompletteringInfoDecorator;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
+import se.inera.intyg.rehabstod.service.pdl.LogService;
+import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
+import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.model.Diagnos;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CertificateServiceImplTest {
@@ -72,22 +78,41 @@ public class CertificateServiceImplTest {
     private static final int REDUCTION_3 = 50;
 
     @Mock
-    KompletteringInfoDecorator kompletteringInfoDecorator;
+    UnansweredQAsInfoDecorator unAnsweredQAsInfoDecorator;
 
     @Mock
     IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+
+    @Mock
+    UserService userService;
+
+    @Mock
+    RehabstodUser user;
+
+    @Mock
+    LogService logService;
+
+    @Mock
+    DiagnosFactory diagnosFactory;
 
     @InjectMocks
     CertificateServiceImpl service;
 
     @Test
     public void getLUCertificatesForCareUnit() {
+        when(userService.getUser()).thenReturn(user);
+        when(user.getValdVardenhet()).thenReturn(new Vardenhet("hsaid", "namn"));
 
         var diagnosedCertificateList = buildDiagnosedCertificateList();
         when(intygstjanstRestIntegrationService.getDiagnosedCertificatesForCareUnit(any(List.class), any(List.class), any(), any()))
             .thenReturn(diagnosedCertificateList);
 
-        var luCertificates = service.getLUCertificatesForCareUnit(UNIT_1, null, null);
+        when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
+            .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
+
+        var response = service.getLUCertificatesForCareUnit(null, null);
+        assertNotNull(response);
+        var luCertificates = response.getCertificates();
 
         assertNotNull(luCertificates);
         assertEquals(2, luCertificates.size());
@@ -99,13 +124,20 @@ public class CertificateServiceImplTest {
 
     @Test
     public void getLUCertificatesForPerson() {
+        when(userService.getUser()).thenReturn(user);
+        when(user.getValdVardenhet()).thenReturn(new Vardenhet("hsaid", "namn"));
 
         var diagnosedCertificateList = buildDiagnosedCertificateList();
         when(intygstjanstRestIntegrationService
-            .getDiagnosedCertificatesForPerson(anyString(), any(List.class), any(), any(), any(List.class)))
+            .getDiagnosedCertificatesForPerson(anyString(), any(List.class), any(List.class)))
             .thenReturn(diagnosedCertificateList);
 
-        var luCertificates = service.getLUCertificatesForPerson(PERSON_ID, null, null, UNIT_1);
+        when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
+            .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
+
+        var response = service.getLUCertificatesForPerson(PERSON_ID);
+        assertNotNull(response);
+        var luCertificates = response.getCertificates();
 
         assertNotNull(luCertificates);
         assertEquals(2, luCertificates.size());
@@ -117,13 +149,20 @@ public class CertificateServiceImplTest {
 
     @Test
     public void getAGCertificatesForPerson() {
+        when(userService.getUser()).thenReturn(user);
+        when(user.getValdVardenhet()).thenReturn(new Vardenhet("hsaid", "namn"));
 
         var sickLeaveCertificateList = buildSickLeaveCertificateList();
         when(intygstjanstRestIntegrationService
-            .getSickLeaveCertificatesForPerson(anyString(), any(List.class), any(), any(), any(List.class)))
+            .getSickLeaveCertificatesForPerson(anyString(), any(List.class), any(List.class)))
             .thenReturn(sickLeaveCertificateList);
 
-        var agCertificates = service.getAGCertificatesForPerson(PERSON_ID, null, null, UNIT_1);
+        when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
+            .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
+
+        var response = service.getAGCertificatesForPerson(PERSON_ID);
+        assertNotNull(response);
+        var agCertificates = response.getCertificates();
 
         assertNotNull(agCertificates);
         assertEquals(2, agCertificates.size());
@@ -166,8 +205,8 @@ public class CertificateServiceImplTest {
     private ArrayList<SickLeaveCertificate> buildSickLeaveCertificateList() {
         var certificates = new ArrayList<SickLeaveCertificate>();
 
-        certificates.add(buildSickLeaveCertificate("1"));
-        certificates.add(buildSickLeaveCertificate("2"));
+        certificates.add(buildSickLeaveCertificate(CERT_ID_1));
+        certificates.add(buildSickLeaveCertificate(CERT_ID_2));
 
         return certificates;
     }

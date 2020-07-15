@@ -29,6 +29,7 @@ import lombok.Data;
 public class AGCertificate {
 
     private String certificateId;
+    private String certificateType;
 
     private Lakare doctor;
 
@@ -39,7 +40,8 @@ public class AGCertificate {
 
     private LocalDateTime signingTimeStamp;
 
-    private int notifications;
+    private int unAnsweredComplement;
+    private int unAnsweredOther;
 
     private LocalDate start;
     private LocalDate end;

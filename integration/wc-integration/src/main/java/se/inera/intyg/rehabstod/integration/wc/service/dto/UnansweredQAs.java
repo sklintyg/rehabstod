@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.web.controller.api.dto;
+package se.inera.intyg.rehabstod.integration.wc.service.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class GetAGCertificatesForPersonRequest {
+@AllArgsConstructor
+public class UnansweredQAs {
 
-    String personId;
-
+    int complement;
+    int others;
 }

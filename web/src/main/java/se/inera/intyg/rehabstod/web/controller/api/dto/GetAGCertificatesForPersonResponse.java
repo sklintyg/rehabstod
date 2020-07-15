@@ -18,11 +18,16 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import se.inera.intyg.rehabstod.web.model.AGCertificate;
 
 @Data
-public class GetAGCertificatesForPersonRequest {
+@AllArgsConstructor
+public class GetAGCertificatesForPersonResponse {
 
-    String personId;
+    List<AGCertificate> certificates;
+    boolean qaError;
 
 }

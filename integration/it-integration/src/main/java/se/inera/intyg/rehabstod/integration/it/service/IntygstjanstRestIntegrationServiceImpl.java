@@ -20,7 +20,10 @@ package se.inera.intyg.rehabstod.integration.it.service;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +36,8 @@ import se.inera.intyg.infra.certificate.dto.TypedCertificateRequest;
 
 @Service
 public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestIntegrationService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(IntygstjanstRestIntegrationServiceImpl.class);
 
     @Bean("itRestTemplate")
     public RestTemplate restTemplate() {
@@ -53,8 +58,21 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/diagnosed/unit";
         TypedCertificateRequest requestObject = getTypedCertificateRequest(units, certificateTypes, fromDate, toDate, null);
 
+        LOGGER.debug("Getting diagnosed certificates for care unit from intygstjansten");
+
         var diagnosedCertificates = restTemplate.postForObject(url, requestObject, DiagnosedCertificate[].class);
-        return Arrays.asList(diagnosedCertificates); //TODO felhantering
+
+        if (diagnosedCertificates == null || diagnosedCertificates.length == 0) {
+            return Collections.emptyList();
+        } else {
+            return Arrays.asList(diagnosedCertificates);
+        }
+    }
+
+    @Override
+    public List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(String personId, List<String> certificateTypes,
+        List<String> units) {
+        return getDiagnosedCertificatesForPerson(personId, certificateTypes, null, null, units);
     }
 
     @Override
@@ -63,8 +81,21 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/diagnosed/person";
         TypedCertificateRequest requestObject = getTypedCertificateRequest(units, certificateTypes, fromDate, toDate, personId);
 
+        LOGGER.debug("Getting diagnosed certificates for person from intygstjansten");
+
         var diagnosedCertificates = restTemplate.postForObject(url, requestObject, DiagnosedCertificate[].class);
-        return Arrays.asList(diagnosedCertificates);
+
+        if (diagnosedCertificates == null || diagnosedCertificates.length == 0) {
+            return Collections.emptyList();
+        } else {
+            return Arrays.asList(diagnosedCertificates);
+        }
+    }
+
+    @Override
+    public List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes,
+        List<String> units) {
+        return getSickLeaveCertificatesForPerson(personId, certificateTypes, null, null, units);
     }
 
     @Override
@@ -73,8 +104,15 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/sickleave/unit";
         TypedCertificateRequest requestObject = getTypedCertificateRequest(units, certificateTypes, fromDate, toDate, personId);
 
+        LOGGER.debug("Getting sick leave certificates for person from intygstjansten");
+
         var sickLeaveCertificates = restTemplate.postForObject(url, requestObject, SickLeaveCertificate[].class);
-        return Arrays.asList(sickLeaveCertificates);
+
+        if (sickLeaveCertificates == null || sickLeaveCertificates.length == 0) {
+            return Collections.emptyList();
+        } else {
+            return Arrays.asList(sickLeaveCertificates);
+        }
     }
 
     private TypedCertificateRequest getTypedCertificateRequest(List<String> units, List<String> certificateTypes, LocalDate fromDate,

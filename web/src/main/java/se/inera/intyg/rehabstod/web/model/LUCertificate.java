@@ -28,6 +28,7 @@ import lombok.Data;
 public class LUCertificate {
 
     private String certificateId;
+    private String certificateType;
 
     private Lakare doctor;
 
@@ -38,6 +39,7 @@ public class LUCertificate {
 
     private LocalDateTime signingTimeStamp;
 
-    private int notifications;
+    private int unAnsweredComplement;
+    private int unAnsweredOther;
 
 }

@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.integration.wc.service;
 
 import java.util.List;
 import java.util.Map;
+import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
 
 /**
  * Created by marced on 2018-09-28.
@@ -27,6 +28,6 @@ import java.util.Map;
 public interface WcIntegrationService {
 
 
-    Map<String, Integer> getCertificateAdditionsForIntyg(List<String> intygId);
+    Map<String, UnansweredQAs> getCertificateAdditionsForIntyg(List<String> intygId);
 
 }

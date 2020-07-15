@@ -18,11 +18,15 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import se.inera.intyg.rehabstod.web.model.LUCertificate;
 
 @Data
-public class GetAGCertificatesForPersonRequest {
+@AllArgsConstructor
+public class GetLUCertificatesForPersonResponse {
 
-    String personId;
-
+    List<LUCertificate> certificates;
+    boolean qaError;
 }

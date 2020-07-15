@@ -34,6 +34,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import se.inera.clinicalprocess.healthcond.certificate.types.v3.IntygId;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AdditionType;
+import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AmneType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.IntygAdditionsType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.StatusType;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
@@ -56,7 +57,7 @@ public class WcStubStore {
     @Resource(name = "rediscache")
     private ValueOperations<String, String> valueOps;
 
-    private CustomObjectMapper objectMapper = new CustomObjectMapper();
+    private final CustomObjectMapper objectMapper = new CustomObjectMapper();
 
     public void remove(String intygsId) {
         Set<String> keys = valueOps.getOperations().keys(assemblePattern("*" + intygsId));
@@ -94,7 +95,7 @@ public class WcStubStore {
             .collect(Collectors.joining(":"));
     }
 
-    public void addAddition(String intygsId, LocalDateTime skapad, int antalObesvaradeKompletteringar) {
+    public void addAddition(String intygsId, LocalDateTime skapad, int antalObesvaradeKompletteringar, int antalObesvaradeOthers) {
         IntygAdditionsType intygAdditionsType = new IntygAdditionsType();
         IntygId intygId = new IntygId();
         intygId.setExtension(intygsId);
@@ -104,9 +105,19 @@ public class WcStubStore {
             AdditionType additionType = new AdditionType();
             additionType.setSkapad(skapad);
             additionType.setId(intygsId + "-arendeid-" + i);
-            additionType.setStatus(antalObesvaradeKompletteringar == 0 ? StatusType.BESVARAD : StatusType.OBESVARAD);
+            additionType.setStatus(StatusType.OBESVARAD);
+            additionType.setAmne(AmneType.KOMPLT);
             intygAdditionsType.getAddition().add(additionType);
         }
+        for (int i = 100; i < antalObesvaradeOthers + 100; i++) {
+            AdditionType additionType = new AdditionType();
+            additionType.setSkapad(skapad);
+            additionType.setId(intygsId + "-arendeid-" + i);
+            additionType.setStatus(StatusType.OBESVARAD);
+            additionType.setAmne(AmneType.OVRIGT);
+            intygAdditionsType.getAddition().add(additionType);
+        }
+
         addAddition(intygAdditionsType);
     }
 

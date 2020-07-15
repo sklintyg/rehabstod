@@ -77,7 +77,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
     private LocalDateTime timeSimulator = LocalDateTime.now();
 
-    private Queue<Patient> seededPatients = new ArrayDeque<>();
+    private final Queue<Patient> seededPatients = new ArrayDeque<>();
     private Enhet enhet;
     private Enhet enhet2;
     private Enhet enhet3;
@@ -94,33 +94,34 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     private Vardgivare vg4;
     private HosPersonal utanInloggning;
     private int currentDiagnosIndex = 0;
-    private List<String> diagnosList = new ArrayList<>();
+    private final List<String> diagnosList = new ArrayList<>();
     private int currentSysselSattningIndex = 0;
     // Merged list of codes from fk7263/lisjp schema cv types
-    private List<String> sysselSattningList = Arrays.asList("NUVARANDE_ARBETE", "ARBETSLOSHET", "FORALDRALEDIGHET",
+    private final List<String> sysselSattningList = Arrays.asList("NUVARANDE_ARBETE", "ARBETSLOSHET", "FORALDRALEDIGHET",
         "ARBETSSOKANDE", "FORALDRALEDIG", "STUDIER");
-    private List<Integer> sjukskrivningsgrader = Arrays.asList(100, 75, 50, 25);
+    private final List<Integer> sjukskrivningsgrader = Arrays.asList(100, 75, 50, 25);
     private int currentSjukskrivningsgraderIndex = 0;
     private int currentHosPersonIndex = 0;
-    private List<HosPersonal> hosPersonList = new ArrayList<>();
+    private final List<HosPersonal> hosPersonList = new ArrayList<>();
 
-    private List<String> femaleNames = Arrays.asList("Eva", "Britt-Marie", "Petra", "Maria", "Anna", "Margaret", "Elisabet", "Eva",
+    private final List<String> femaleNames = Arrays.asList("Eva", "Britt-Marie", "Petra", "Maria", "Anna", "Margaret", "Elisabet", "Eva",
         "Kristina", "Birgitta", "Karin", "Elisabet", "Marie", "Ingrid", "Christina", "Linnéa", "Sofia", "Kerstin", "Marianne", "Lena",
         "Helena", "Emma", "Johanna", "Linnea", "Inger", "Sara", "Cecilia", "Elin");
     private int currentFemaleIndex = 0;
 
-    private List<String> maleNames = Arrays.asList("Johan",
+    private final List<String> maleNames = Arrays.asList("Johan",
         "Lars", "Karl", "Anders", "Johan", "Per", "Nils", "Carl", "Nils", "Roger", "Hans-Åke", "Vidar", "Birk", "Thomas", "Mikael",
         "Jan", "Hans", "Sören", "Morgan", "Ahmad", "Herbert", "Lennart", "Olof", "Peter", "Gunnar", "Sven",
         "Fredrik", "Bengt", "Bo", "Daniel", "Gustav", "Åke", "Göran", "Alexander", "Magnus");
     private int currentMaleIndex = 0;
 
-    private List<String> lastNames = Arrays.asList("Andersson", "Ekman", "Melin", "Holmqvist", "Pålsson", "Marklund", "Krantz-HöllerBach",
-        "Åkerblom", "Chen", "Westling", "Mahmoud", "Dalman", "Stolt", "Rönnberg", "Svedin", "Gran", "Hosseini", "Nordstrand",
-        "Karlsson", "Weibull", "Nilsson", "Eriksson", "Larsson", "Söderlind", "Olsson", "Persson", "Pullman", "Svensson", "Sollervik",
-        "Gustafsson", "Pettersson", "Lindberg", "Jonsson", "Jansson", "Hansson", "Bengtsson", "Jönsson", "von Zinken", "Carlsson",
-        "Petersson", "Lindberg", "Öfverkvist", "Wahlström", "Magnusson", "Lindström", "Gustavsson", "Olofsson", "Möller", "Sjöström",
-        "Lindgren", "Zaid", "Zetterström", "Öberg");
+    private final List<String> lastNames = Arrays
+        .asList("Andersson", "Ekman", "Melin", "Holmqvist", "Pålsson", "Marklund", "Krantz-HöllerBach",
+            "Åkerblom", "Chen", "Westling", "Mahmoud", "Dalman", "Stolt", "Rönnberg", "Svedin", "Gran", "Hosseini", "Nordstrand",
+            "Karlsson", "Weibull", "Nilsson", "Eriksson", "Larsson", "Söderlind", "Olsson", "Persson", "Pullman", "Svensson", "Sollervik",
+            "Gustafsson", "Pettersson", "Lindberg", "Jonsson", "Jansson", "Hansson", "Bengtsson", "Jönsson", "von Zinken", "Carlsson",
+            "Petersson", "Lindberg", "Öfverkvist", "Wahlström", "Magnusson", "Lindström", "Gustavsson", "Olofsson", "Möller", "Sjöström",
+            "Lindgren", "Zaid", "Zetterström", "Öberg");
     private int currentLastNameIndex = 0;
 
     @Autowired
@@ -220,12 +221,16 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
             // Add random nr of days glapp between intyg
             timeSimulator = timeSimulator.plusDays(ThreadLocalRandom.current().nextInt(0, 10));
 
-            //For 25% of intyg, add at least 1 obesvarad komplettering
-            int randomNumberOfObesvaradeKompletteringar = 0;
+            //For 25% of certificates, add at least 1 unanswered complement and the same for others
+            int randomNumberOfUnansweredComplement = 0;
+            int randomNumberOfUnansweredOthers = 0;
             if (ThreadLocalRandom.current().nextInt(0, 100) < 25) {
-                randomNumberOfObesvaradeKompletteringar = ThreadLocalRandom.current().nextInt(1, 3);
+                randomNumberOfUnansweredComplement = ThreadLocalRandom.current().nextInt(1, 3);
             }
-            addToWcStubStore(intygData, randomNumberOfObesvaradeKompletteringar);
+            if (ThreadLocalRandom.current().nextInt(0, 100) < 25) {
+                randomNumberOfUnansweredOthers = ThreadLocalRandom.current().nextInt(1, 3);
+            }
+            addToWcStubStore(intygData, randomNumberOfUnansweredComplement, randomNumberOfUnansweredOthers);
         }
         // Once for each patient > 50 years old, add a 2 really old intyg to get som history
         if (getAge(patient) > 50) {
@@ -235,8 +240,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         }
     }
 
-    private void addToWcStubStore(IntygsData intygsData, int nrObesvaradeKompletteringar) {
-        wcStore.addAddition(intygsData.getIntygsId(), intygsData.getSigneringsTidpunkt(), nrObesvaradeKompletteringar);
+    private void addToWcStubStore(IntygsData intygsData, int nrUnansweredComplement, int nrUnansweredOthers) {
+        wcStore.addAddition(intygsData.getIntygsId(), intygsData.getSigneringsTidpunkt(), nrUnansweredComplement, nrUnansweredOthers);
     }
 
     private int getAge(Patient patient) {

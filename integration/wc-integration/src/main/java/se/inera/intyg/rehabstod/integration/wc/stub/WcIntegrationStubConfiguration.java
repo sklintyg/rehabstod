@@ -49,7 +49,7 @@ public class WcIntegrationStubConfiguration {
     public EndpointImpl getCertificateAdditionsResponder() {
         Object implementor = getCertificateAdditionsStub;
         EndpointImpl endpoint = new EndpointImpl(bus, implementor);
-        endpoint.publish("/get-additions/v1.0");
+        endpoint.publish("/get-additions/v1.1");
         return endpoint;
     }
 

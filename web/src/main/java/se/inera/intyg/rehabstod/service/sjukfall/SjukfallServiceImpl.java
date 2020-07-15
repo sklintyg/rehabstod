@@ -58,7 +58,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaDataItemType;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
-import se.inera.intyg.rehabstod.service.sjukfall.komplettering.KompletteringInfoDecorator;
+import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
@@ -96,7 +96,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
     @Autowired
-    private KompletteringInfoDecorator kompletteringInfoDecorator;
+    private UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
 
     @Autowired
     private SjukfallPuService sjukfallPuService;
@@ -144,11 +144,11 @@ public class SjukfallServiceImpl implements SjukfallService {
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(rehabstodSjukfall);
         sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(rehabstodSjukfall);
 
-        boolean kompletteringInfoError = false;
+        boolean qaInfoError = false;
         try {
-            kompletteringInfoDecorator.updateSjukfallEnhetKompletteringar(rehabstodSjukfall);
+            unansweredQAsInfoDecorator.updateSjukfallEnhetQAs(rehabstodSjukfall);
         } catch (WcIntegrationException e) {
-            kompletteringInfoError = true;
+            qaInfoError = true;
         }
 
         boolean srsError = false;
@@ -168,7 +168,7 @@ public class SjukfallServiceImpl implements SjukfallService {
             });
         }
 
-        return new SjukfallEnhetResponse(rehabstodSjukfall, srsError, kompletteringInfoError);
+        return new SjukfallEnhetResponse(rehabstodSjukfall, srsError, qaInfoError);
     }
 
     @Override
@@ -187,11 +187,11 @@ public class SjukfallServiceImpl implements SjukfallService {
         sjukfallPuService.enrichWithPatientNameAndFilterSekretess(rehabstodSjukfall);
         sjukfallEmployeeNameResolver.enrichSjukfallPaientWithHsaEmployeeNames(rehabstodSjukfall);
 
-        boolean kompletteringInfoError = false;
+        boolean qaInfoError = false;
         try {
-            kompletteringInfoDecorator.updateSjukfallPatientKompletteringar(rehabstodSjukfall);
+            unansweredQAsInfoDecorator.updateSjukfallPatientWithQAs(rehabstodSjukfall);
         } catch (WcIntegrationException e) {
-            kompletteringInfoError = true;
+            qaInfoError = true;
         }
 
         boolean srsError = false;
@@ -205,7 +205,7 @@ public class SjukfallServiceImpl implements SjukfallService {
             monitoringLogService.logUserViewedSjukfall(lakareId, rehabstodSjukfall.size(), enhetsId);
         }
 
-        return new SjukfallPatientResponse(rehabstodSjukfall, result.getSjfMetaData(), srsError, kompletteringInfoError);
+        return new SjukfallPatientResponse(rehabstodSjukfall, result.getSjfMetaData(), srsError, qaInfoError);
     }
     // CHECKSTYLE:ON ParameterNumber
 

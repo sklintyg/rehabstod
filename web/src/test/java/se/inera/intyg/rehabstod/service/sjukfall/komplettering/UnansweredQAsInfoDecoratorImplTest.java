@@ -36,6 +36,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.rehabstod.integration.wc.service.WcIntegrationService;
+import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
 import se.inera.intyg.rehabstod.web.model.AGCertificate;
 import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.PatientData;
@@ -43,22 +44,22 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 @RunWith(MockitoJUnitRunner.class)
-public class KompletteringInfoDecoratorImplTest {
+public class UnansweredQAsInfoDecoratorImplTest {
 
     @Mock
     private WcIntegrationService wcIntegrationService;
 
     @InjectMocks
-    private KompletteringInfoDecoratorImpl testee;
+    private UnansweredQAsInfoDecoratorImpl testee;
 
     @Test
     public void updateSjukfallEnhetKompletteringar() {
-        Map<String, Integer> kompl = new HashMap<>();
+        Map<String, UnansweredQAs> qas = new HashMap<>();
         for (int i = 0; i < 10; i++) {
-            kompl.put(Integer.toString(i), i);
+            qas.put(Integer.toString(i), new UnansweredQAs(i, i));
         }
 
-        when(wcIntegrationService.getCertificateAdditionsForIntyg(any(List.class))).thenReturn(kompl);
+        when(wcIntegrationService.getCertificateAdditionsForIntyg(any(List.class))).thenReturn(qas);
         List<SjukfallEnhet> sjukfall = new ArrayList<>();
 
         final SjukfallEnhet sjukfall0 = createSjukfall("0");
@@ -72,7 +73,7 @@ public class KompletteringInfoDecoratorImplTest {
         sjukfall.add(sjukfall456);
         sjukfall.add(sjukfallNotPresent);
 
-        testee.updateSjukfallEnhetKompletteringar(sjukfall);
+        testee.updateSjukfallEnhetQAs(sjukfall);
 
         assertEquals(0, sjukfall0.getObesvaradeKompl());
         assertEquals(1, sjukfall1.getObesvaradeKompl());
@@ -85,11 +86,11 @@ public class KompletteringInfoDecoratorImplTest {
     public void updateSjukfallPatientKompletteringar() {
 
         // Results returned from wc integration service..
-        Map<String, Integer> kompl = new HashMap<>();
-        kompl.put("0", 0);
-        kompl.put("1", 1);
-        kompl.put("2", 2);
-        kompl.put("3", 3);
+        Map<String, UnansweredQAs> kompl = new HashMap<>();
+        kompl.put("0", new UnansweredQAs(0, 0));
+        kompl.put("1", new UnansweredQAs(1, 1));
+        kompl.put("2", new UnansweredQAs(2, 2));
+        kompl.put("3", new UnansweredQAs(3, 3));
 
         ArgumentCaptor<List> integrationIdList = ArgumentCaptor.forClass(List.class);
 
@@ -116,7 +117,7 @@ public class KompletteringInfoDecoratorImplTest {
         sjukfall.add(sjukfall6);
         sjukfall.add(sjukfallNotPresent);
 
-        testee.updateSjukfallPatientKompletteringar(sjukfall);
+        testee.updateSjukfallPatientWithQAs(sjukfall);
 
         verify(wcIntegrationService).getCertificateAdditionsForIntyg(integrationIdList.capture());
         assertEquals(Arrays.asList("0", "1", "2", "3", "n/a"), integrationIdList.getValue());
@@ -153,12 +154,12 @@ public class KompletteringInfoDecoratorImplTest {
 
     @Test
     public void updateLUCertificatesWithKompletteringar() {
-        Map<String, Integer> kompl = new HashMap<>();
+        Map<String, UnansweredQAs> qas = new HashMap<>();
         for (int i = 0; i < 10; i++) {
-            kompl.put(Integer.toString(i), i);
+            qas.put(Integer.toString(i), new UnansweredQAs(i, i));
         }
 
-        when(wcIntegrationService.getCertificateAdditionsForIntyg(any(List.class))).thenReturn(kompl);
+        when(wcIntegrationService.getCertificateAdditionsForIntyg(any(List.class))).thenReturn(qas);
         List<LUCertificate> luCertificateList = new ArrayList<>();
 
         final LUCertificate certificate = createLUCertificate("0");
@@ -172,23 +173,23 @@ public class KompletteringInfoDecoratorImplTest {
         luCertificateList.add(certificate3);
         luCertificateList.add(certificateNotPresent);
 
-        testee.updateLUCertificatesWithKompletteringar(luCertificateList);
+        testee.updateLUCertificatesWithQAs(luCertificateList);
 
-        assertEquals(0, certificate.getNotifications());
-        assertEquals(1, certificate1.getNotifications());
-        assertEquals(2, certificate2.getNotifications());
-        assertEquals(3, certificate3.getNotifications());
-        assertEquals(0, certificateNotPresent.getNotifications());
+        assertEquals(0, certificate.getUnAnsweredComplement());
+        assertEquals(1, certificate1.getUnAnsweredComplement());
+        assertEquals(2, certificate2.getUnAnsweredComplement());
+        assertEquals(3, certificate3.getUnAnsweredComplement());
+        assertEquals(0, certificateNotPresent.getUnAnsweredComplement());
     }
 
     @Test
     public void updateAGCertificatesWithKompletteringar() {
-        Map<String, Integer> kompl = new HashMap<>();
+        Map<String, UnansweredQAs> qas = new HashMap<>();
         for (int i = 0; i < 10; i++) {
-            kompl.put(Integer.toString(i), i);
+            qas.put(Integer.toString(i), new UnansweredQAs(i, i));
         }
 
-        when(wcIntegrationService.getCertificateAdditionsForIntyg(any(List.class))).thenReturn(kompl);
+        when(wcIntegrationService.getCertificateAdditionsForIntyg(any(List.class))).thenReturn(qas);
         List<AGCertificate> agCertificateList = new ArrayList<>();
 
         final AGCertificate certificate = createAGCertificate("0");
@@ -202,13 +203,13 @@ public class KompletteringInfoDecoratorImplTest {
         agCertificateList.add(certificate3);
         agCertificateList.add(certificateNotPresent);
 
-        testee.updateAGCertificatesWithKompletteringar(agCertificateList);
+        testee.updateAGCertificatesWithQAs(agCertificateList);
 
-        assertEquals(0, certificate.getNotifications());
-        assertEquals(1, certificate1.getNotifications());
-        assertEquals(2, certificate2.getNotifications());
-        assertEquals(3, certificate3.getNotifications());
-        assertEquals(0, certificateNotPresent.getNotifications());
+        assertEquals(0, certificate.getUnAnsweredComplement());
+        assertEquals(1, certificate1.getUnAnsweredComplement());
+        assertEquals(2, certificate2.getUnAnsweredComplement());
+        assertEquals(3, certificate3.getUnAnsweredComplement());
+        assertEquals(0, certificateNotPresent.getUnAnsweredComplement());
     }
 
     private LUCertificate createLUCertificate(String id) {

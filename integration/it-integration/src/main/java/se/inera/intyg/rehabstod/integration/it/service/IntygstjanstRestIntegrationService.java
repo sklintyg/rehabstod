@@ -29,8 +29,12 @@ public interface IntygstjanstRestIntegrationService {
     List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(List<String> units, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate);
 
+    List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(String personId, List<String> certificateTypes, List<String> units);
+
     List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate, List<String> units);
+
+    List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, List<String> units);
 
     List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate, List<String> units);

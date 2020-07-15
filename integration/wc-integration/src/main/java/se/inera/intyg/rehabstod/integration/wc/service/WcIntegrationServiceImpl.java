@@ -31,10 +31,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.clinicalprocess.healthcond.certificate.v3.ResultCodeType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AdditionType;
+import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AmneType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.IntygAdditionsType;
 import se.inera.intyg.rehabstod.integration.wc.client.WcClientService;
 import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
+import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
 
 /**
  * Created by marced on 2019-05-16.
@@ -51,7 +53,7 @@ public class WcIntegrationServiceImpl implements WcIntegrationService {
     private WcClientService wcClientService;
 
     @Override
-    public Map<String, Integer> getCertificateAdditionsForIntyg(List<String> intygId) {
+    public Map<String, UnansweredQAs> getCertificateAdditionsForIntyg(List<String> intygId) {
         try {
             // Nothing to do?
             if (intygId == null || intygId.isEmpty()) {
@@ -66,7 +68,7 @@ public class WcIntegrationServiceImpl implements WcIntegrationService {
 
             }
 
-            final Map<String, Integer> result = convertResult(response.getAdditions(), LocalDateTime.now().minusDays(maxDaysOld));
+            final Map<String, UnansweredQAs> result = convertResult(response.getAdditions(), LocalDateTime.now().minusDays(maxDaysOld));
             LOG.debug(
                 "Queried getCertificateAdditionsForIntyg for {} intygids, got {} items back (after converting using no older "
                     + "than {} days, {} are left)",
@@ -79,17 +81,22 @@ public class WcIntegrationServiceImpl implements WcIntegrationService {
         }
     }
 
-    private Map<String, Integer> convertResult(List<IntygAdditionsType> additions, LocalDateTime earliestValidDate) {
-        Map<String, Integer> result = new HashMap<>();
+    private Map<String, UnansweredQAs> convertResult(List<IntygAdditionsType> additions, LocalDateTime earliestValidDate) {
+        Map<String, UnansweredQAs> result = new HashMap<>();
         for (IntygAdditionsType intyg : additions) {
-            int antalObesvarade = 0;
+            var unansweredComplement = 0;
+            var unansweredOther = 0;
             for (AdditionType item : intyg.getAddition()) {
                 // Implements RS-VR-051 and RS-VR-052
                 if (OBESVARAD.equals(item.getStatus()) && item.getSkapad().isAfter(earliestValidDate)) {
-                    antalObesvarade++;
+                    if (AmneType.KOMPLT.equals(item.getAmne())) {
+                        unansweredComplement++;
+                    } else {
+                        unansweredOther++;
+                    }
                 }
             }
-            result.put(intyg.getIntygsId().getExtension(), antalObesvarade);
+            result.put(intyg.getIntygsId().getExtension(), new UnansweredQAs(unansweredComplement, unansweredOther));
         }
 
         return result;
