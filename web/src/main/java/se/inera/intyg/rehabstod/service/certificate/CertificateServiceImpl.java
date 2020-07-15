@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate.WorkCapacity;
+import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
@@ -70,15 +71,18 @@ public class CertificateServiceImpl implements CertificateService {
 
     private final DiagnosFactory diagnosFactory;
 
+    private final HsaOrganizationsService hsaOrganizationsService;
+
     @Autowired
     public CertificateServiceImpl(
         IntygstjanstRestIntegrationService restIntegrationService, UnansweredQAsInfoDecorator unansweredQAsInfoDecorator,
-        LogService logService, UserService userService, DiagnosFactory diagnosFactory) {
+        LogService logService, UserService userService, DiagnosFactory diagnosFactory, HsaOrganizationsService hsaOrganizationsService) {
         this.restIntegrationService = restIntegrationService;
         this.unansweredQAsInfoDecorator = unansweredQAsInfoDecorator;
         this.logService = logService;
         this.userService = userService;
         this.diagnosFactory = diagnosFactory;
+        this.hsaOrganizationsService = hsaOrganizationsService;
     }
 
     @Override
@@ -179,12 +183,18 @@ public class CertificateServiceImpl implements CertificateService {
 
     private AGCertificate convertSickLeaveCertificateToLUCertificate(SickLeaveCertificate sickLeaveCertificate) {
 
+        var careUnit = hsaOrganizationsService.getVardenhet(sickLeaveCertificate.getCareUnitId());
+        var careProvider = hsaOrganizationsService.getVardgivareInfo(sickLeaveCertificate.getCareProviderId());
         var workCapacityList = sickLeaveCertificate.getWorkCapacityList();
         var startDate = workCapacityList.stream().min(Comparator.comparing(WorkCapacity::getStartDate)).get().getStartDate();
         var endDate = workCapacityList.stream().max(Comparator.comparing(WorkCapacity::getEndDate)).get().getEndDate();
 
         return AGCertificate.builder().certificateId(sickLeaveCertificate.getCertificateId())
             .certificateType(translateCertificateTypeName(sickLeaveCertificate.getCertificateType()))
+            .careProviderId(sickLeaveCertificate.getCareProviderId())
+            .careProviderName(careProvider.getNamn())
+            .careUnitId(sickLeaveCertificate.getCareUnitId())
+            .careUnitName(careUnit.getNamn())
             .signingTimeStamp(sickLeaveCertificate.getSigningDateTime())
             .patient(new Patient(sickLeaveCertificate.getPersonId(), sickLeaveCertificate.getPatientFullName()))
             .doctor(new Lakare(sickLeaveCertificate.getPersonalHsaId(), sickLeaveCertificate.getPersonalFullName()))
@@ -210,8 +220,15 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private LUCertificate convertDiagnosedCertificateToLUCertificate(DiagnosedCertificate diagnosedCertificate) {
+        var careUnit = hsaOrganizationsService.getVardenhet(diagnosedCertificate.getCareUnitId());
+        var careProvider = hsaOrganizationsService.getVardgivareInfo(diagnosedCertificate.getCareProviderId());
+
         return LUCertificate.builder().certificateId(diagnosedCertificate.getCertificateId())
             .certificateType(translateCertificateTypeName(diagnosedCertificate.getCertificateType()))
+            .careProviderId(diagnosedCertificate.getCareProviderId())
+            .careProviderName(careProvider.getNamn())
+            .careUnitId(diagnosedCertificate.getCareUnitId())
+            .careUnitName(careUnit.getNamn())
             .signingTimeStamp(diagnosedCertificate.getSigningDateTime())
             .patient(new Patient(diagnosedCertificate.getPersonId(), diagnosedCertificate.getPatientFullName()))
             .doctor(new Lakare(diagnosedCertificate.getPersonalHsaId(), diagnosedCertificate.getPersonalFullName()))
@@ -235,10 +252,10 @@ public class CertificateServiceImpl implements CertificateService {
             case "luse":
                 name = "FK7800";
                 break;
-            case "luae-na":
+            case "luae_na":
                 name = "FK7801";
                 break;
-            case "luae-fs":
+            case "luae_fs":
                 name = "FK7802";
                 break;
             case "ag7804":

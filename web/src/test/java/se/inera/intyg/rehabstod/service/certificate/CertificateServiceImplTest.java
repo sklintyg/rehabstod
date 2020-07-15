@@ -40,6 +40,8 @@ import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate.WorkCapacity;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
+import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
+import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
@@ -52,7 +54,6 @@ import se.inera.intyg.rehabstod.web.model.Diagnos;
 public class CertificateServiceImplTest {
 
     private static final String CERT_TYPE_LUSE = "LUSE";
-    private static final String UNIT_1 = "UNIT1";
     private static final String CERT_ID_1 = "1";
     private static final String CERT_ID_2 = "2";
     private static final String PERSON_ID = "191212121212";
@@ -60,7 +61,8 @@ public class CertificateServiceImplTest {
     private static final String DOCTOR_HSAID = "HSAID1";
     private static final LocalDateTime SIGN_TIME = LocalDateTime.now();
     private static final String DOCTOR_NAME = "Doctor1";
-    private static final String CARE_PROVIDER_ID = "Provider1";
+    private static final String CARE_PROVIDER_ID = "ProviderId1";
+    private static final String CARE_PROVIDER_NAME = "ProviderName1";
     private static final String CARE_UNIT_ID = "UnitId1";
     private static final String CARE_UNIT_NAME = "UnitName1";
     private static final String DIAGNOSE_CODE = "W58";
@@ -95,13 +97,18 @@ public class CertificateServiceImplTest {
     @Mock
     DiagnosFactory diagnosFactory;
 
+    @Mock
+    HsaOrganizationsService hsaOrganizationsService;
+
     @InjectMocks
     CertificateServiceImpl service;
 
     @Test
     public void getLUCertificatesForCareUnit() {
         when(userService.getUser()).thenReturn(user);
-        when(user.getValdVardenhet()).thenReturn(new Vardenhet("hsaid", "namn"));
+        when(user.getValdVardenhet()).thenReturn(getCareUnit());
+        when(hsaOrganizationsService.getVardenhet(anyString())).thenReturn(getCareUnit());
+        when(hsaOrganizationsService.getVardgivareInfo(anyString())).thenReturn(getCareProvider());
 
         var diagnosedCertificateList = buildDiagnosedCertificateList();
         when(intygstjanstRestIntegrationService.getDiagnosedCertificatesForCareUnit(any(List.class), any(List.class), any(), any()))
@@ -122,10 +129,20 @@ public class CertificateServiceImplTest {
         assertEquals(DIAGNOSE_CODE, luCertificates.get(1).getDiagnose().getKod());
     }
 
+    private Vardgivare getCareProvider() {
+        return new Vardgivare(CARE_PROVIDER_ID, CARE_PROVIDER_NAME);
+    }
+
+    private Vardenhet getCareUnit() {
+        return new Vardenhet(CARE_UNIT_ID, CARE_UNIT_NAME);
+    }
+
     @Test
     public void getLUCertificatesForPerson() {
         when(userService.getUser()).thenReturn(user);
-        when(user.getValdVardenhet()).thenReturn(new Vardenhet("hsaid", "namn"));
+        when(user.getValdVardenhet()).thenReturn(getCareUnit());
+        when(hsaOrganizationsService.getVardenhet(anyString())).thenReturn(getCareUnit());
+        when(hsaOrganizationsService.getVardgivareInfo(anyString())).thenReturn(getCareProvider());
 
         var diagnosedCertificateList = buildDiagnosedCertificateList();
         when(intygstjanstRestIntegrationService
@@ -150,7 +167,9 @@ public class CertificateServiceImplTest {
     @Test
     public void getAGCertificatesForPerson() {
         when(userService.getUser()).thenReturn(user);
-        when(user.getValdVardenhet()).thenReturn(new Vardenhet("hsaid", "namn"));
+        when(user.getValdVardenhet()).thenReturn(getCareUnit());
+        when(hsaOrganizationsService.getVardenhet(anyString())).thenReturn(getCareUnit());
+        when(hsaOrganizationsService.getVardgivareInfo(anyString())).thenReturn(getCareProvider());
 
         var sickLeaveCertificateList = buildSickLeaveCertificateList();
         when(intygstjanstRestIntegrationService

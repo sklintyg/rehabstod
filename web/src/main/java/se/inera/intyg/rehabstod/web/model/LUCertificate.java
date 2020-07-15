@@ -30,6 +30,11 @@ public class LUCertificate {
     private String certificateId;
     private String certificateType;
 
+    private String careProviderId;
+    private String careProviderName;
+    private String careUnitId;
+    private String careUnitName;
+
     private Lakare doctor;
 
     private Patient patient;
