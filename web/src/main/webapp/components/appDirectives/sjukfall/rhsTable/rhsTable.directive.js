@@ -29,6 +29,7 @@ angular.module('rehabstodApp')
       $scope.displayedCollection = [].concat($scope.model.get());
       $scope.columns = TableService.getAllSjukfallTableColumns();
       $scope.columnsForTable = [];
+      $scope.tableTextKey = 'label.table.column';
 
       $scope.$watch(function() {
         return SjukfallFilterViewState.get().showPatientId + UserModel.get().preferences[$scope.preferenceKey];

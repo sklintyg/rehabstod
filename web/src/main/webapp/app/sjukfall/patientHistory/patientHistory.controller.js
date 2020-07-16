@@ -25,10 +25,12 @@ angular.module('rehabstodApp').controller('patientHistoryController',
       //Create initial default details tab (cannot be closed)
       patientHistoryViewState.reset();
       patientHistoryViewState.addTab('', 'Sjukfall', true, true);
+      patientHistoryViewState.addTab('', 'Läkarutlåtanden', true, false);
       $scope.nyligenAvslutat = nyligenAvslutat;
 
       //expose tabs model to view
       $scope.tabs = patientHistoryViewState.getTabs();
+      patientHistoryViewState.selectTab($scope.tabs[0]);
 
       var allColumns = TableService.getAllPatientTableColumns(nyligenAvslutat);
 
@@ -64,6 +66,19 @@ angular.module('rehabstodApp').controller('patientHistoryController',
       $scope.close = function() {
         wcLogout();
         $uibModalInstance.close();
+      };
+
+      $scope.getEffectiveVardenhetUnitName = function() {
+        var user = UserModel.get();
+        if (user.valdVardenhet) {
+          //Is valdvardenhet actually a mottagning?
+          if (user.valdVardenhet.parentHsaId) {
+            //return parent unit name, since data is always returned for unit level (even if mottagning is selected)
+            return UserModel.getUnitNameById(user.valdVardenhet.parentHsaId);
+          }
+          return user.valdVardenhet.namn;
+        }
+        return '';
       };
 
       function updatePatientSjukfall(patient) {

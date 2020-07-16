@@ -23,6 +23,7 @@ angular.module('rehabstodApp').factory('TableService',
 
       var sjukfallTableKey = 'sjukfallTableColumns';
       var patientTableKey = 'patientTableColumns';
+      var lakarutlatandenTableKey = 'lakarutlatandenTableColumns';
 
       function _getAllSjukfallTableColumns() {
         var columns = [
@@ -180,6 +181,46 @@ angular.module('rehabstodApp').factory('TableService',
         return columns;
       }
 
+      function _getAllLakarutlatandenTableColumns() {
+        var columns = [
+          {
+            id: 'number',
+            classes: 'column-number',
+            hideHelp: true,
+            disableSort: true
+          },
+          {
+            id: 'type',
+            classes: 'column-type'
+          },
+          {
+            id: 'diagnos',
+            classes: 'column-diagnos'
+          },
+          {
+            id: 'signeringsdatum',
+            classes: 'column-signeringsdatum'
+          },
+          {
+            id: 'arenden',
+            classes: 'column-arenden'
+          },
+          {
+            id: 'doctor',
+            classes: 'column-doctor'
+          },
+          {
+            id: 'vardenhet',
+            classes: ''
+          },
+          {
+            id: 'vardgivare',
+            classes: ''
+          }
+          ];
+        return columns;
+        }
+
       function _getSelectedColumns(allColumns, preferenceKey, onlyPreferences) {
         var selectedColumns = UserModel.get().preferences[preferenceKey];
         var allSelected = !selectedColumns;
@@ -227,12 +268,19 @@ angular.module('rehabstodApp').factory('TableService',
         return _getSelectedColumns(_getAllSjukfallTableColumns(), sjukfallTableKey, onlyPreferences);
       }
 
+      function _getSelectedLakarutlatandenTableColumns(onlyPreferences) {
+        return _getSelectedColumns(_getAllLakarutlatandenTableColumns(), lakarutlatandenTableKey, onlyPreferences);
+      }
+
       return {
         getSelectedColumns: _getSelectedColumns,
         getSelectedSjukfallColumns: _getSelectedSjukfallColumns,
+        getSelectedLakarutlatandenTableColumns: _getSelectedLakarutlatandenTableColumns,
         getAllSjukfallTableColumns: _getAllSjukfallTableColumns,
         getAllPatientTableColumns: _getAllPatientTableColumns,
+        getAllLakarutlatandenTableColumns: _getAllLakarutlatandenTableColumns,
         sjukfallTableKey: sjukfallTableKey,
-        patientTableKey: patientTableKey
+        patientTableKey: patientTableKey,
+        lakarutlatandenTableKey: lakarutlatandenTableKey
       };
     });
