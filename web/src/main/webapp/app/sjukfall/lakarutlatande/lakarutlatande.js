@@ -18,25 +18,16 @@
  */
 
 angular.module('rehabstodApp')
-.controller('NavbarCtrl', function($scope) {
+.config(function($stateProvider) {
   'use strict';
-  $scope.menu = [
-    {
-      title: 'Översikt',
-      link: 'app.sjukfall.start',
-      id: 'navbar-link-start'
-    },
-    {
-      title: 'Pågående sjukfall',
-      link: 'app.sjukfall.result',
-      id: 'navbar-link-sjukfall'
-    },
-    {
-      title: 'Läkarutlåtanden',
-      link: 'app.sjukfall.lakarutlatande',
-      id: 'navbar-link-lu'
+  $stateProvider
+  .state('app.sjukfall.lakarutlatande', {
+    url: 'lakarutlatande',
+    views: {
+      'content@app': {
+        templateUrl: '/app/sjukfall/lakarutlatande/lakarutlatande.page.html',
+        controller: 'LakarutlatandeResultPageCtrl'
+      }
     }
-  ];
-
-  $scope.isCollapsed = true;
+  });
 });

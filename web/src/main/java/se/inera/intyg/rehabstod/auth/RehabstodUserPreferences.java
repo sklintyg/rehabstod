@@ -127,6 +127,7 @@ public final class RehabstodUserPreferences implements Serializable {
         MAX_ANTAL_DAGAR_MELLAN_INTYG("maxAntalDagarMellanIntyg", "maxAntalDagarMellanIntyg", "5"),
         MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT("maxAntalDagarSedanSjukfallAvslut", "maxAntalDagarSedanSjukfallAvslut", "0"),
         SJUKFALL_TABLE_COLUMNS("sjukfall_table_columns", "sjukfallTableColumns", ""),
+        LAKARUTLATANDE_UNIT_TABLE_COLUMNS("lakarutlatande_unit_table_columns", "lakarutlatandeUnitTableColumns", ""),
         PATIENT_TABLE_COLUMNS("patient_table_columns", "patientTableColumns", "");
 
         private final String backendKeyName;

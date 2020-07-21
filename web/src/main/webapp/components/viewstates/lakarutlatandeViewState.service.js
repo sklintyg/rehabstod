@@ -17,26 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp')
-.controller('NavbarCtrl', function($scope) {
-  'use strict';
-  $scope.menu = [
-    {
-      title: 'Översikt',
-      link: 'app.sjukfall.start',
-      id: 'navbar-link-start'
-    },
-    {
-      title: 'Pågående sjukfall',
-      link: 'app.sjukfall.result',
-      id: 'navbar-link-sjukfall'
-    },
-    {
-      title: 'Läkarutlåtanden',
-      link: 'app.sjukfall.lakarutlatande',
-      id: 'navbar-link-lu'
-    }
-  ];
+angular.module('rehabstodApp').factory('LakarutlatandeViewState', [
+  function() {
+    'use strict';
 
-  $scope.isCollapsed = true;
-});
+    var state = {
+      kompletteringInfoError: false
+    };
+
+    function _reset() {
+      state.kompletteringInfoError = false;
+    }
+
+    function _getState() {
+      return state;
+    }
+
+    function _setKompletteringInfoError(_kompletteringInfoError) {
+      state.kompletteringInfoError = _kompletteringInfoError;
+    }
+
+    _reset();
+
+    return {
+      reset: _reset,
+      get: _getState,
+      setKompletteringInfoError: _setKompletteringInfoError
+    };
+  }])
+;
