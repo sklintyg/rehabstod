@@ -196,6 +196,7 @@ var rhsMessages = {
     'label.table.no-result.rehab': 'Det finns inga pågående sjukfall på %0',
     'label.table.no-result.lakare': 'Du har inga pågående sjukfall på %0',
     'label.table.no-filter-result': 'Inga sjukfall matchade filtreringen.',
+    'label.lakarutlatanden.table.no-result': 'Det finns inga läkarutlåtanden för patienten på %0',
 
     'label.table.number.of.rows': 'Visar',
     'label.table.number.of.rows.of': 'av',
@@ -292,6 +293,7 @@ var rhsMessages = {
     'server.error.giveconsent.title': 'Kunde inte lämna medgivande om PDL-loggning',
     'server.error.loadpatienthistory.text': 'Sjukfallshistorik kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
     'server.error.loadlakarutlatanden.text': 'Historik för patientens läkarutlåtanden kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
+    'server.error.getarenden.text': 'Tyvärr kunde inte information om ärendekommunikation inhämtas på grund av ett tekniskt fel. Därför är den kolumnen tom. Om problemet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
 
     // FAQ
     'faq.sickness.1.title': 'Vad är ett sjukfall?',

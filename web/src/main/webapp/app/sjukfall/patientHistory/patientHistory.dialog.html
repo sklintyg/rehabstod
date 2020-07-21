@@ -21,7 +21,7 @@
   <div ng-repeat="tab in tabs">
     <!-- patient history timeline section -->
     <div ng-if="tab.fixed">
-      <rhs-lakarutlatanden patient="patient" index="$index" ng-if="tab.active && tab.title == 'Läkarutlåtanden'" on-load-intyg="loadIntyg(intyg)" active-unit="getEffectiveVardenhetUnitName()"></rhs-lakarutlatanden>
+      <rhs-lakarutlatanden patient="patient" index="$index" get-tool-tip="getToolTip(diagnos)" ng-if="tab.active && tab.title == 'Läkarutlåtanden'" on-load-intyg="loadIntyg(intyg)" active-unit="getEffectiveVardenhetUnitName()"></rhs-lakarutlatanden>
 
       <div ng-show="tab.active && tab.title == 'Sjukfall'" class="modal-body">
         <div rhs-spinner show-spinner="showSpinner" label="label.patienthistory.loading">
@@ -60,7 +60,7 @@
                                                   on-select="onSelectSjukfall(item)" class="pull-left history-timeline"></rhs-patient-history-time-line-item>
 
               <rhs-patient-history-table columns="tableColumns" history-item="item" patient="patient" index="$index" on-select="onSelectSjukfall(item)"
-                                         on-load-intyg="loadIntyg(intyg)" active-unit="getEffectiveVardenhetUnitName()"
+                                         on-load-intyg="loadIntyg(intyg)" get-tool-tip="getToolTip(diagnos)" active-unit="getEffectiveVardenhetUnitName()"
                                          class="pull-left history-table"></rhs-patient-history-table>
             </div>
           </div>

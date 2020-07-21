@@ -29,7 +29,8 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable',
           onSelect: '&',
           onLoadIntyg: '&',
           columns: '=',
-          activeUnit: '='
+          activeUnit: '=',
+          getToolTip: '&'
         },
         templateUrl: '/components/commonDirectives/rhsPatientHistoryTable/rhsPatientHistoryTable.directive.html',
         link: function($scope) {
@@ -63,12 +64,6 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable',
             osparradInfoAndraVardgivare: andraVgUtanSparr > 0,
             sparradInfoAndraVardgivare: andraVgMedSparr > 0,
             samtyckeFinns: patientHistoryViewState.hasSamtycke()
-          };
-
-          $scope.getToolTip = function(diagnos) {
-            var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
-                messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
-            return '<b>' + diagnos.kod + '</b><br>' + desc;
           };
 
           //Requirements state that only first/last of grader should be returned

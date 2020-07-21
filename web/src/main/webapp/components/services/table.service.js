@@ -191,31 +191,39 @@ angular.module('rehabstodApp').factory('TableService',
           },
           {
             id: 'type',
-            classes: 'column-type'
+            classes: 'column-type',
+            dataColumn: 'certificateType'
           },
           {
             id: 'diagnos',
-            classes: 'column-diagnos'
+            classes: 'column-diagnos',
+            dataColumn: 'diagnose.intygsVarde'
           },
           {
             id: 'signeringsdatum',
-            classes: 'column-signeringsdatum'
+            classes: 'column-signeringsdatum',
+            defaultSort: true,
+            dataColumn: 'signingTimeStamp'
           },
           {
             id: 'arenden',
-            classes: 'column-arenden'
+            classes: 'column-arenden',
+            dataColumn: 'highestNbrOfArenden'
           },
           {
             id: 'doctor',
-            classes: 'column-doctor'
+            classes: 'column-doctor',
+            dataColumn: 'doctor.namn'
           },
           {
             id: 'vardenhet',
-            classes: ''
+            classes: '',
+            dataColumn: 'careUnitName'
           },
           {
             id: 'vardgivare',
-            classes: ''
+            classes: '',
+            dataColumn: 'careProviderName'
           }
           ];
         return columns;
