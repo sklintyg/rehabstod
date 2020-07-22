@@ -1,5 +1,5 @@
 <h3>
-  <span ng-if="historyItem.isActive">Pågående sjukfall på {{getEffectiveVardenhetUnitName()}}</span>
+  <span ng-if="historyItem.isActive">Pågående sjukfall på {{activeUnit}}</span>
   <span ng-if="historyItem.isFirstHistorical">Tidigare sjukfall på {{getEffectiveVardenhetUnitName()}}</span> &nbsp;
 </h3>
 <div class="rhs-history-table-container arrow_box" ng-class="{'selected' : historyItem.selected}">
@@ -37,13 +37,13 @@
             <div data-ng-if="column.id === 'number'">{{rowIndex + 1}}</div>
             <div data-ng-if="column.id === 'diagnose'" class="nowrap column-diagnos">
               <div class="diagnos-container">
-              <span uib-tooltip-html="getToolTip(intyg.diagnos)" tooltip-popup-delay="200"
+              <span uib-tooltip-html="getToolTip({'diagnos': intyg.diagnos})" tooltip-popup-delay="200"
                     class="patient-history-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnos.intygsVarde}}
               </span><span ng-if="!intyg.diagnos.intygsVarde" class="hidden-value">Okänt</span>
                 <div class="diagnos hidden-xs hidden-sm">{{::intyg.diagnos.beskrivning}}</div>
               </div>
               <div class="diagnos-container" ng-repeat="d in intyg.bidiagnoser">
-                <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" tooltip-placement="auto top-right" class="patient-history-dialog-tooltip">{{::d.intygsVarde}}</span>
+                <span uib-tooltip-html="getToolTip({'diagnos': d})" tooltip-popup-delay="200" tooltip-placement="auto top-right" class="patient-history-dialog-tooltip">{{::d.intygsVarde}}</span>
                 <span class="diagnos hidden-xs hidden-sm">{{::d.beskrivning}}</span>
               </div>
             </div>

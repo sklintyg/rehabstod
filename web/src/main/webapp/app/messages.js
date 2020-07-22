@@ -177,9 +177,26 @@ var rhsMessages = {
     'label.table.column.sort.risksignal.riskkategori': 'srs',
     'label.table.column.srs.help': 'Risksignalen för att sjukfallet varar mer än 90 dagar beräknas med matematiska metoder tillämpade på en rad variabler som till exempel ålder, kön, bostadsort och tidigare vårdkontakter för att försöka detektera om den aktuella individens risk skiljer sig från andra patienter inom samma diagnosgrupp. Metoden ska ses som ett komplement inför den egna professionella bedömningen.',
 
+    'label.lakarutlatanden.table.column.number': '#',
+    'label.lakarutlatanden.table.column.type': 'Intyg',
+    'label.lakarutlatanden.table.column.type.help': 'Typ av läkarutlåtande: FK 7800 -Läkarutlåtande för sjukersättning, FK 7801 -Läkarutlåtande för aktivitetsersättning vid nedsatt arbetsförmåga, FK 7802 - Läkarutlåtande för aktivitetsersättning vid förlängd skolgång',
+    'label.lakarutlatanden.table.column.signeringsdatum': 'Signeringsdatum',
+    'label.lakarutlatanden.table.column.signeringsdatum.help': 'Datum då läkarutlåtandet signerades.',
+    'label.lakarutlatanden.table.column.diagnos': 'Diagnos/diagnoser',
+    'label.lakarutlatanden.table.column.diagnos.help': 'Diagnos/diagnoser i läkarutlåtandet. Om det finns flera diagnoser så är den som anges först den som påverkar arbetsförmågan mest. För muspekaren över koden för att se vilken diagnos den motsvarar.',
+    'label.lakarutlatanden.table.column.doctor': 'Läkare',
+    'label.lakarutlatanden.table.column.arenden': 'Ärenden',
+    'label.lakarutlatanden.table.column.arenden.help': 'Visar om det finns läkarutlåtanden som har obesvarade kompletteringsbegäran eller obesvarade administrativa frågor och svar och hur många det är.',
+    'label.lakarutlatanden.table.column.doctor.help': 'Läkaren som utfärdat läkarutlåtandet. Namnet hämtas från HSA-katalogen. Om det inte går att slå upp läkaren i HSA-katalogen visas bara HSA-id.',
+    'label.lakarutlatanden.table.column.vardenhet': 'Vårdenhet',
+    'label.lakarutlatanden.table.column.vardenhet.help': 'Namn på vårdenhet där läkarutlåtandet utfärdats.',
+    'label.lakarutlatanden.table.column.vardgivare': 'Vårdgivare',
+    'label.lakarutlatanden.table.column.vardgivare.help': 'Namn på vårdgivare som vårdenhet tillhör där läkarutlåtandet utfärdats.',
+
     'label.table.no-result.rehab': 'Det finns inga pågående sjukfall på %0',
     'label.table.no-result.lakare': 'Du har inga pågående sjukfall på %0',
     'label.table.no-filter-result': 'Inga sjukfall matchade filtreringen.',
+    'label.lakarutlatanden.table.no-result': 'Det finns inga läkarutlåtanden för patienten på %0',
 
     'label.table.number.of.rows': 'Visar',
     'label.table.number.of.rows.of': 'av',
@@ -275,6 +292,8 @@ var rhsMessages = {
     'server.error.getsummary.text': 'Statistik för enheten kan inte visas',
     'server.error.giveconsent.title': 'Kunde inte lämna medgivande om PDL-loggning',
     'server.error.loadpatienthistory.text': 'Sjukfallshistorik kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
+    'server.error.loadlakarutlatanden.text': 'Historik för patientens läkarutlåtanden kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
+    'server.error.getarenden.text': 'Tyvärr kunde inte information om ärendekommunikation inhämtas på grund av ett tekniskt fel. Därför är den kolumnen tom. Om problemet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
 
     // FAQ
     'faq.sickness.1.title': 'Vad är ett sjukfall?',

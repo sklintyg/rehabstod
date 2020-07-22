@@ -1,0 +1,130 @@
+/*!
+ * Copyright (C) 2020 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+rhs-lakarutlatanden {
+
+  .rhs-select-columns-container {
+    float: right;
+  }
+
+  .rhs-tooltip-icon {
+    margin-left: 5px;
+  }
+
+  .lakarutlatanden-table-container {
+    display: flex;
+    position: relative;
+  }
+
+  .table-responsive {
+    flex: 1 1 0;
+  }
+
+  .modal-body {
+    padding-left: $panel-body-padding;
+    padding-right: $panel-body-padding;
+    position: relative;
+  }
+
+  table {
+    margin: 15px 0 0 0;
+
+    td {
+      height: 55px;
+      padding-left: 5px !important;
+    }
+
+    .column-number {
+      width: 20px;
+    }
+
+    .column-diagnos {
+      max-width: 150px;
+    }
+
+    .column-showintyg {
+      position: absolute;
+      padding: 5px !important;
+      width: 130px;
+      right: 0;
+      border-top: none !important;
+      button {
+        position: relative;
+        top: 5px;
+      }
+    }
+
+    thead > tr > th {
+      color: $rs-color-03;
+      font-size: 14px;
+      padding-left: 5px !important;
+    }
+
+    tbody {
+      tr {
+        //first tr should have top border
+        &:first-child > td {
+          border-top: 1px solid $inactive-element-color;
+        }
+
+        td {
+          vertical-align: middle;
+          padding: 5px 15px 2px 5px;
+          line-height: 20px;
+          font-size: 12px;
+          .nowrap {
+            white-space: nowrap;
+          }
+
+          &.column-diagnos {
+            // Stop table-layout assigning extra width to this column
+            width: 1px;
+          }
+
+          .diagnos-container {
+            display: flex;
+            max-width: 350px;
+          }
+
+          .diagnos, .bidiagnos {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            vertical-align: middle;
+            display: inline-block;
+            padding-left: 5px;
+          }
+
+          .patient-history-dialog-tooltip {
+            border-bottom: 1px dotted;
+            cursor: help;
+          }
+
+        }
+      }
+
+    }
+
+  }
+
+  .space-column-showintyg {
+    width: 130px;
+    flex: 0 0 auto;
+  }
+}
