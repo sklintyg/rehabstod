@@ -27,7 +27,8 @@ angular.module('rehabstodApp')
         scope: {
           labelKey: '@',
           preferenceKey: '=',
-          columns: '='
+          columns: '=',
+          tableTextKey: '@'
         },
         controller: function($scope, $uibModal, UserModel) {
 
@@ -47,7 +48,7 @@ angular.module('rehabstodApp')
                   return $scope.preferenceKey;
                 },
                 columnTranslationKey: function() {
-                  return 'label.table.column.';
+                  return $scope.tableTextKey + '.';
                 },
                 modalTextTranslationKey: function() {
                   return 'label.table.custom.modal.sjukfall.';

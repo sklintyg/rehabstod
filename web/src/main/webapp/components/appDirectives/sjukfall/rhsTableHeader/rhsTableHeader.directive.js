@@ -25,7 +25,8 @@ angular.module('rehabstodApp').directive('rhsTableHeader',
         restrict: 'A',
         scope: {
           user: '=',
-          columns: '='
+          columns: '=',
+          tableTextKey: '@'
         },
         templateUrl: '/components/appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.directive.html'
       };

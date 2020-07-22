@@ -131,17 +131,17 @@ describe('Controller: PatientHistoryController', function() {
     $httpBackend.flush();
 
     expect(scope.timeline.length).toBe(3);
-    expect(scope.tabs.length).toBe(1);
+    expect(scope.tabs.length).toBe(2);
 
     scope.loadIntyg({intygsId: '333'});
     scope.$digest();
 
-    expect(scope.tabs.length).toBe(2);
+    expect(scope.tabs.length).toBe(3);
 
     scope.loadIntyg({intygsId: '333'});
     scope.$digest();
     //Should still be 2
-    expect(scope.tabs.length).toBe(2);
+    expect(scope.tabs.length).toBe(3);
 
   });
 

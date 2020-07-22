@@ -19,16 +19,18 @@
 
 angular.module('rehabstodApp').controller('patientHistoryController',
     function($scope, $http, $uibModalInstance, $state, APP_CONFIG, patientHistoryProxy, SjukfallFilterViewState,
-        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy) {
+        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy, messageService) {
       'use strict';
 
       //Create initial default details tab (cannot be closed)
       patientHistoryViewState.reset();
       patientHistoryViewState.addTab('', 'Sjukfall', true, true);
+      patientHistoryViewState.addTab('', 'Läkarutlåtanden', true, false);
       $scope.nyligenAvslutat = nyligenAvslutat;
 
       //expose tabs model to view
       $scope.tabs = patientHistoryViewState.getTabs();
+      patientHistoryViewState.selectTab($scope.tabs[0]);
 
       var allColumns = TableService.getAllPatientTableColumns(nyligenAvslutat);
 
@@ -48,11 +50,13 @@ angular.module('rehabstodApp').controller('patientHistoryController',
 
       $scope.loadIntyg = function(intyg) {
         //Either select or create new tab if not already opened..
-        var existingTab = patientHistoryViewState.getTabById(intyg.intygsId);
+        var intygsId = intyg.certificateId ? intyg.certificateId : intyg.intygsId;
+        var title = intyg.start ? intyg.start : intyg.signingTimeStamp;
+        var existingTab = patientHistoryViewState.getTabById(intygsId);
         if (existingTab) {
           patientHistoryViewState.selectTab(existingTab);
         } else {
-          patientHistoryViewState.addTab(intyg.intygsId, intyg.start, false, false, $scope.accessToken);
+          patientHistoryViewState.addTab(intygsId, title, false, false, $scope.accessToken);
         }
 
       };
@@ -64,6 +68,25 @@ angular.module('rehabstodApp').controller('patientHistoryController',
       $scope.close = function() {
         wcLogout();
         $uibModalInstance.close();
+      };
+
+      $scope.getEffectiveVardenhetUnitName = function() {
+        var user = UserModel.get();
+        if (user.valdVardenhet) {
+          //Is valdvardenhet actually a mottagning?
+          if (user.valdVardenhet.parentHsaId) {
+            //return parent unit name, since data is always returned for unit level (even if mottagning is selected)
+            return UserModel.getUnitNameById(user.valdVardenhet.parentHsaId);
+          }
+          return user.valdVardenhet.namn;
+        }
+        return '';
+      };
+
+      $scope.getToolTip = function(diagnos) {
+        var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
+            messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
+        return '<b>' + diagnos.kod + '</b><br>' + desc;
       };
 
       function updatePatientSjukfall(patient) {
