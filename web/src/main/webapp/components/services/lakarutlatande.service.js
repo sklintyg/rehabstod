@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').factory('LakarutlatandeService',
-    function($log, StringHelper, messageService, /*LakarutlatandeProxy,*/ LakarutlatandeModel, LakarutlatandeFilterViewState, LakarutlatandeViewState, _, UserModel) {
+    function($log, StringHelper, messageService, lakarutlatandenProxy, LakarutlatandeModel, LakarutlatandeFilterViewState, LakarutlatandeViewState, _) {
       'use strict';
 
       var loading = false;
@@ -38,47 +38,31 @@ angular.module('rehabstodApp').factory('LakarutlatandeService',
             LakarutlatandeModel.reset();
           }
 
+          var filterState = LakarutlatandeFilterViewState.getCurrentFilterState();
+
           var query = {
-            LakarutlatandeFilterViewState
-            // maxIntygsGlapp: UserModel.get().preferences.maxAntalDagarMellanIntyg
+            qas: filterState.komplettering,
+            certTypes: filterState.certType,
+            fromDate: filterState.signDate.from,
+            toDate: filterState.signDate.to,
+            diagnoses: filterState.diagnosKapitel,
+            doctors: filterState.lakare,
+            searchText: filterState.freeText,
+            fromAge: filterState.alder[0],
+            toAge: filterState.alder[1]
           };
 
-          var testJsonData = [{
-            'patient': {
-              'id': '19360721-7068',
-              'namn': 'Förnamn-3607 Efternamn-21-7068',
-              'kon': 'F',
-              'alder': 79
-            },
-            'diagnos': {
-              'intygsVarde': 'M16.0',
-              'kapitel': 'M00-M99',
-              'kod': 'M160',
-              'beskrivning': 'Primär koxartros, dubbelsidig'
-            },
-            'biDiagnoser': [{'intygsVarde': 'B1'}, {'intygsVarde': 'B2'}],
-            'signDate': '2016-02-01',
-            'qas': 1,
-            'lakare': {
-              namn: 'Jan Nilsson'
-            },
-            'certType': 'FK7800'
-          }];
-          LakarutlatandeModel.set(testJsonData);
-          loading = false;
+          return lakarutlatandenProxy.getLakarutlatandenForUnit(query).then(function(response) {
+            LakarutlatandeViewState.setKompletteringInfoError(response.qaError);
+            LakarutlatandeModel.set(response.certificates);
+            loading = false;
+          }, function(errorData) {
+            $log.debug('Failed to get lakarutlatanden.');
+            $log.debug(errorData);
 
-          return null;
-          // return LakarutlatandeProxy.get(query).then(function(response) {
-          //   LakarutlatandeViewState.setKompletteringInfoError(response.kompletteringInfoError);
-          //   LakarutlatandeModel.set(response.data);
-          //   loading = false;
-          // }, function(errorData) {
-          //   $log.debug('Failed to get sjukfall.');
-          //   $log.debug(errorData);
-          //
-          //   LakarutlatandeModel.setError();
-          //   loading = false;
-          // });
+            LakarutlatandeModel.setError();
+            loading = false;
+          });
         }
       }
 

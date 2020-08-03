@@ -2,11 +2,11 @@
   <div set-class-when-at-top="result-fixed-top" class="result-top" ng-switch="user.urval">
 
     <div ng-switch-when="ISSUED_BY_ME">
-      <h1 class="page-header"><span message key="label.lakarutlatande.result.lakare.header"></span>{{user.valdVardenhet.namn}}</h1>
+      <h1 class="page-header"><span message key="label.lakarutlatande.result.lakare.header"></span>{{user.valdVardenhet.namn}}<span message key="label.lakarutlatande.result.lakare.headerend"></span></h1>
     </div>
 
     <div ng-switch-default>
-      <h1 class="page-header"><span message key="label.lakarutlatande.result.rehab.header"></span>{{user.valdVardenhet.namn}}</h1>
+      <h1 class="page-header"><span message key="label.lakarutlatande.result.rehab.header"></span>{{user.valdVardenhet.namn}}<span message key="label.lakarutlatande.result.rehab.headerend"></span></h1>
     </div>
   </div>
 </div>

@@ -27,7 +27,8 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
           model: '=',
           id: '@',
           daysBack: '=',
-          controlDisabled: '='
+          controlDisabled: '=',
+          yearsBack: '='
         },
         templateUrl: '/components/commonDirectives/rhsDateRangePicker/rhsDateRangePicker.directive.html',
         link: function($scope, element) {
@@ -81,7 +82,9 @@ angular.module('rehabstodApp').directive('rhsDateRangePicker',
           $scope.updateStartDate = function() {
             if($scope.daysBack) {
               $scope.chosenStartDate = moment().subtract(UserModel.get().preferences.maxAntalDagarSedanSjukfallAvslut, 'days').format('YYYY-MM-DD');
-            } else {
+            } else if ($scope.yearsBack !== undefined && $scope.yearsBack > 0){
+              $scope.chosenStartDate = moment().subtract($scope.yearsBack, 'years').format('YYYY-MM-DD');}
+            else {
               $scope.chosenStartDate = moment().format('YYYY-MM-DD');
             }
             $scope.updateChosenValues();

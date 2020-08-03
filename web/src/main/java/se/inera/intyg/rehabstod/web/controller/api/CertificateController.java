@@ -54,7 +54,7 @@ public class CertificateController {
         LOG.info("Getting LU certificates for care unit");
 
         var response = certificateService
-            .getLUCertificatesForCareUnit(request.getFromDate(), request.getToDate());
+            .getLUCertificatesForCareUnit(request);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

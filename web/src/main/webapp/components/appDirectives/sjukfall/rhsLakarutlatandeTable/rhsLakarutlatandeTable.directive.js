@@ -29,6 +29,7 @@ angular.module('rehabstodApp')
       $scope.displayedCollection = [].concat($scope.model.get());
       $scope.columns = TableService.getSelectedLakarutlatandeUnitColumns();
       $scope.columnsForTable = [];
+      $scope.tableTextKey = 'label.table.column';
 
       $scope.$watch(function() {
         return LakarutlatandeFilterViewState.get().showPatientId + UserModel.get().preferences[$scope.preferenceKey];
@@ -44,7 +45,7 @@ angular.module('rehabstodApp')
         return '<b>' + diagnos.kod + '</b><br>' + desc;
       };
 
-      $scope.showPatientHistory = function(patientModel, nyligenAvslutat) {
+      $scope.showPatientHistory = function(patientModel, nyligenAvslutat) { //TODO
         $uibModal.open({
           windowClass: 'patient-history-dialog',
           templateUrl: '/app/sjukfall/patientHistory/patientHistory.dialog.html',

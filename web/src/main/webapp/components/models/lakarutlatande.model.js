@@ -23,10 +23,12 @@ angular.module('rehabstodApp').factory('LakarutlatandeModel',
 
       var data = [];
       var hasError = false;
+      var initialDataState = true;
 
       function _reset() {
         data = [];
         hasError = false;
+        initialDataState = true;
         return data;
       }
 
@@ -66,8 +68,11 @@ angular.module('rehabstodApp').factory('LakarutlatandeModel',
       function _updateQuickSearchContent() {
         angular.forEach(data, function(item) {
           item.patient.konShow = _getKon(item.patient.kon);
-          item.obesvaradeKomplShow = _getObesvaradeKomplShow(item.obesvaradeKompl);
+          // item.obesvaradeKomplShow = _getObesvaradeKomplShow(item.obesvaradeKompl); TODO
           item.quickSearchString = '';
+
+          item.highestNbrOfArenden = item.unAnsweredComplement ? item.unAnsweredComplement : item.unAnsweredOther;
+          item.signingTimeStamp = item.signingTimeStamp.split('T')[0];
 
           var columns = TableService.getSelectedLakarutlatandeUnitColumns();
 
@@ -107,6 +112,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeModel',
         },
 
         set: function(newData) {
+          initialDataState = false;
           hasError = false;
           data = newData;
           _updateQuickSearchContent();
@@ -117,9 +123,13 @@ angular.module('rehabstodApp').factory('LakarutlatandeModel',
         setError: function() {
           _reset();
           hasError = true;
+          initialDataState = true;
         },
         hasError: function() {
           return hasError;
+        },
+        isInitialState: function() {
+          return initialDataState;
         },
         updateQuickSearchContent: _updateQuickSearchContent
       };

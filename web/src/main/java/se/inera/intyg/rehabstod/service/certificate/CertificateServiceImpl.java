@@ -18,17 +18,18 @@
  */
 package se.inera.intyg.rehabstod.service.certificate;
 
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.certificate.dto.BaseCertificate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate.WorkCapacity;
@@ -44,6 +45,7 @@ import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonResponse;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForPersonResponse;
 import se.inera.intyg.rehabstod.web.model.AGCertificate;
@@ -86,10 +88,38 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    public GetLUCertificatesForCareUnitResponse getLUCertificatesForCareUnit(LocalDate fromDate, LocalDate toDate) {
+    public GetLUCertificatesForCareUnitResponse getLUCertificatesForCareUnit(GetLUCertificatesForCareUnitRequest request) {
         var unitId = userService.getUser().getValdVardenhet().getId();
+
         var diagnosedCertificateList = restIntegrationService
-            .getDiagnosedCertificatesForCareUnit(Collections.singletonList(unitId), Arrays.asList(LU_TYPE_LIST), fromDate, toDate);
+            .getDiagnosedCertificatesForCareUnit(Collections.singletonList(unitId), Arrays.asList(LU_TYPE_LIST), request.getFromDate(),
+                request.getToDate());
+
+        var certTypes = request.getCertTypes();
+        var diagnoses = request.getDiagnoses();
+        var fromAge = request.getFromAge();
+        var toAge = request.getToAge();
+        var doctors = request.getDoctors();
+
+        if (certTypes != null && !certTypes.isEmpty()) {
+            diagnosedCertificateList = diagnosedCertificateList.stream()
+                .filter(c -> certTypes.contains(translateCertificateTypeName(c.getCertificateType()))).collect(Collectors.toList());
+        }
+
+        if (diagnoses != null && !diagnoses.isEmpty()) {
+            diagnosedCertificateList = diagnosedCertificateList.stream()
+                .filter(c -> filterOnDiagnoses(c, diagnoses)).collect(Collectors.toList());
+        }
+
+        if (fromAge > 0 || (toAge > 0 && toAge <= 100)) {
+            diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> filterOnAge(c, fromAge, toAge))
+                .collect(Collectors.toList());
+        }
+
+        if (doctors != null && !doctors.isEmpty()) {
+            diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> doctors.contains(c.getPersonalFullName()))
+                .collect(Collectors.toList());
+        }
 
         var luCertificateList = transformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
         boolean qaInfoError = false;
@@ -99,10 +129,120 @@ public class CertificateServiceImpl implements CertificateService {
             qaInfoError = true;
         }
 
+        var qas = request.getQas(); //TODO
+
+        var searchText = request.getSearchText();
+        if (searchText != null && !searchText.isBlank() && !searchText.isEmpty()) {
+            luCertificateList = luCertificateList.stream().filter(c -> filterOnText(c, searchText)).collect(Collectors.toList());
+        }
         pdlLogLUCertificatesForCareUnit(luCertificateList, unitId);
 
         LOGGER.debug("Returning LU Certificates for Care Unit");
         return new GetLUCertificatesForCareUnitResponse(luCertificateList, qaInfoError);
+    }
+
+    private boolean filterOnText(LUCertificate c, String searchText) {
+
+        var patient = c.getPatient();
+        if (patient != null) {
+            if (patient.getId() != null && patient.getId().contains(searchText)) {
+                return true;
+            }
+            if (patient.getNamn() != null && patient.getNamn().contains(searchText)) {
+                return true;
+            }
+            if (patient.getKon() != null && patient.getKon().getDescription().contains(searchText)) {
+                return true;
+            }
+            if (patient.getAlder() > -1 && String.format("%d år", patient.getAlder()).contains(searchText)) {
+                return true;
+            }
+        }
+
+        if (c.getDiagnose() != null) {
+            if (c.getDiagnose().getIntygsVarde() != null && c.getDiagnose().getIntygsVarde().contains(searchText)) {
+                return true;
+            }
+            if (c.getDiagnose().getBeskrivning() != null && c.getDiagnose().getBeskrivning().contains(searchText)) {
+                return true;
+            }
+        }
+
+        var biDiagnoses = c.getBiDiagnosis();
+        if (biDiagnoses != null && !biDiagnoses.isEmpty()) {
+            for (var diagnosis : biDiagnoses) {
+                if (diagnosis.getIntygsVarde() != null && diagnosis.getIntygsVarde().contains(searchText)) {
+                    return true;
+                }
+                if (diagnosis.getBeskrivning() != null && diagnosis.getBeskrivning().contains(searchText)) {
+                    return true;
+                }
+            }
+        }
+
+        if (c.getCertificateType() != null && c.getCertificateType().contains(searchText)) {
+            return true;
+        }
+
+        if (c.getSigningTimeStamp() != null && c.getSigningTimeStamp().toLocalDate().toString().contains(searchText)) {
+            return true;
+        }
+
+        if (c.getDoctor() != null && c.getDoctor().getNamn() != null && c.getDoctor().getNamn().contains(searchText)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean filterOnAge(DiagnosedCertificate c, int fromAge, int toAge) {
+        var patient = new Patient(c.getPersonId(), c.getPatientFullName());
+
+        if (fromAge > 0 && patient.getAlder() < fromAge) {
+            return false;
+        }
+        if (toAge > 0 && toAge <= 100 && patient.getAlder() > toAge) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean filterOnDiagnoses(DiagnosedCertificate diagnosedCertificate, List<String> diagnoseGroupList) {
+        List<String> diagnoseList;
+
+        if (diagnosedCertificate.getSecondaryDiagnoseCodes() != null) {
+            diagnoseList = Stream
+                .concat(Stream.of(diagnosedCertificate.getDiagnoseCode()), diagnosedCertificate.getSecondaryDiagnoseCodes().stream())
+                .collect(Collectors.toList());
+        } else {
+            diagnoseList = Collections.singletonList(diagnosedCertificate.getDiagnoseCode());
+        }
+
+        for (String d : diagnoseList) {
+            for (String dg : diagnoseGroupList) {
+                if (belongsToDiagnoseGroup(d, dg)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean belongsToDiagnoseGroup(String diagnose, String diagnoseGroup) {
+        if (!diagnose.startsWith(diagnoseGroup.substring(0, 1))) {
+            return false;
+        }
+
+        var diagnoseNumber = Integer.parseInt(diagnose.substring(1, 3));
+        var splits = diagnoseGroup.split("-");
+        if (diagnoseNumber < Integer.parseInt(splits[0].substring(1, 3))
+            || diagnoseNumber > Integer.parseInt(splits[1].substring(1, 3))) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -173,7 +313,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     private List<AGCertificate> transformSickLeaveCertificatesToAGCertificates(List<SickLeaveCertificate> sickLeaveCertificateList) {
 
-        return sickLeaveCertificateList.stream().map(this::convertSickLeaveCertificateToLUCertificate)
+        return sickLeaveCertificateList.stream().filter(this::commonFilter).map(this::convertSickLeaveCertificateToLUCertificate)
             .sorted(Comparator.comparing(AGCertificate::getSigningTimeStamp).reversed()).collect(Collectors.toList());
     }
 
@@ -211,8 +351,12 @@ public class CertificateServiceImpl implements CertificateService {
     private List<LUCertificate> transformDiagnosedCertificatesToLUCertificates(
         List<DiagnosedCertificate> diagnosedCertificateList) {
 
-        return diagnosedCertificateList.stream().map(this::convertDiagnosedCertificateToLUCertificate)
+        return diagnosedCertificateList.stream().filter(this::commonFilter).map(this::convertDiagnosedCertificateToLUCertificate)
             .collect(Collectors.toList());
+    }
+
+    private boolean commonFilter(BaseCertificate certificate) {
+        return !certificate.isDeleted() && !certificate.isTestCertificate();
     }
 
     private void populateLUCertificatesWithNotificationData(List<LUCertificate> luCertificateList) {
@@ -237,6 +381,9 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private List<Diagnos> getDiagnoseList(List<String> secondaryDiagnoseCodes) {
+        if (secondaryDiagnoseCodes == null || secondaryDiagnoseCodes.isEmpty()) {
+            return null;
+        }
         return secondaryDiagnoseCodes.stream().map(this::getDiagnose).collect(Collectors.toList());
     }
 

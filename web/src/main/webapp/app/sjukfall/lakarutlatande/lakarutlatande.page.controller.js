@@ -55,6 +55,6 @@ angular.module('rehabstodApp')
 
       function loadLakarUtlatanden() {
         $scope.showSpinner = true;
-        LakarutlatandeService.loadLakarutlatande(true);
+        LakarutlatandeService.loadLakarutlatande(true, true);
       }
     });

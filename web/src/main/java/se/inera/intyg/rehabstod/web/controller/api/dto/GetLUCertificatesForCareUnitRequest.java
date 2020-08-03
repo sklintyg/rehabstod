@@ -19,12 +19,19 @@
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 import lombok.Data;
 
 @Data
 public class GetLUCertificatesForCareUnitRequest {
 
-    String unit;
     LocalDate fromDate;
     LocalDate toDate;
+    List<String> certTypes;
+    int fromAge;
+    int toAge;
+    List<String> diagnoses;
+    List<String> doctors;
+    String searchText;
+    int qas;
 }

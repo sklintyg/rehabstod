@@ -90,6 +90,12 @@ var rhsMessages = {
 
     'label.sjukfall.result.back': 'Tillbaka till översiktssidan',
 
+    // Läkarutlåtande
+    'label.lakarutlatande.result.lakare.header': 'Alla läkarutlåtanden på ',
+    'label.lakarutlatande.result.lakare.headerend': ' de senaste tre åren.',
+    'label.lakarutlatande.result.rehab.header': 'Mina läkarutlåtanden på ',
+    'label.lakarutlatande.result.rehab.headerend': ' de senaste tre åren.',
+
     // Filter
     'label.filter.show': 'Visa sökfilter',
     'label.filter.hide': 'Dölj sökfilter',
@@ -209,6 +215,10 @@ var rhsMessages = {
     'label.table.no-result.lakare': 'Du har inga pågående sjukfall på %0',
     'label.table.no-filter-result': 'Inga sjukfall matchade filtreringen.',
     'label.lakarutlatanden.table.no-result': 'Det finns inga läkarutlåtanden för patienten på %0',
+    'label.lakarutlatande.table.no-result.rehab': 'Det finns inga läkarutlåtanden på %0',
+    'label.lakarutlatande.table.no-result.lakare': 'Du har inga läkarutlåtanden på %0',
+    'label.lakarutlatande.table.initialstate.rehab':'Tryck på Sök för att visa alla läkarutlåtanden för enheten, eller ange filterval och tryck på Sök för att visa urval av läkarutlåtanden. <br\>Läkarutlåtanden som signerats de senaste tre åren på enheten visas.',
+    'label.lakarutlatande.table.initialstate.lakare':'Tryck på Sök för att visa alla dina läkarutlåtanden för enheten, eller ange filterval och tryck på Sök för att visa urval av dina läkarutlåtanden. <br\>Läkarutlåtanden som signerats de senaste tre åren på enheten visas.',
 
     'label.table.number.of.rows': 'Visar',
     'label.table.number.of.rows.of': 'av',
@@ -299,6 +309,7 @@ var rhsMessages = {
     'server.error.default.text': 'Tyvärr har ett tekniskt problem uppstått i tjänsten. Kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
 
     'server.error.getsjukfall.title': 'Sjukfall för enheten kunde inte hämtas',
+    'server.error.getlakarutlatande.title': 'Läkarutlåtanden för enheten kunde inte hämtas',
     'server.error.changeunit.title': 'Byte av enhet misslyckades',
     'server.error.changeurval.title': 'Kunde inte visa sjukfall',
     'server.error.getsummary.text': 'Statistik för enheten kan inte visas',
