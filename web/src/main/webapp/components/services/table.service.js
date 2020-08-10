@@ -23,6 +23,7 @@ angular.module('rehabstodApp').factory('TableService',
 
       var sjukfallTableKey = 'sjukfallTableColumns';
       var patientTableKey = 'patientTableColumns';
+      var lakarutlatandenTableKey = 'lakarutlatandenTableColumns';
 
       function _getAllSjukfallTableColumns() {
         var columns = [
@@ -184,6 +185,54 @@ angular.module('rehabstodApp').factory('TableService',
         return columns;
       }
 
+      function _getAllLakarutlatandenTableColumns() {
+        var columns = [
+          {
+            id: 'number',
+            classes: 'column-number',
+            hideHelp: true,
+            disableSort: true
+          },
+          {
+            id: 'type',
+            classes: 'column-type',
+            dataColumn: 'certificateType'
+          },
+          {
+            id: 'diagnos',
+            classes: 'column-diagnos',
+            dataColumn: 'diagnose.intygsVarde'
+          },
+          {
+            id: 'signeringsdatum',
+            classes: 'column-signeringsdatum',
+            defaultSort: true,
+            dataColumn: 'signingTimeStamp'
+          },
+          {
+            id: 'arenden',
+            classes: 'column-arenden',
+            dataColumn: 'highestNbrOfArenden'
+          },
+          {
+            id: 'doctor',
+            classes: 'column-doctor',
+            dataColumn: 'doctor.namn'
+          },
+          {
+            id: 'vardenhet',
+            classes: '',
+            dataColumn: 'careUnitName'
+          },
+          {
+            id: 'vardgivare',
+            classes: '',
+            dataColumn: 'careProviderName'
+          }
+          ];
+        return columns;
+        }
+
       function _getSelectedColumns(allColumns, preferenceKey, onlyPreferences) {
         var selectedColumns = UserModel.get().preferences[preferenceKey];
         var allSelected = !selectedColumns;
@@ -231,12 +280,19 @@ angular.module('rehabstodApp').factory('TableService',
         return _getSelectedColumns(_getAllSjukfallTableColumns(), sjukfallTableKey, onlyPreferences);
       }
 
+      function _getSelectedLakarutlatandenTableColumns(onlyPreferences) {
+        return _getSelectedColumns(_getAllLakarutlatandenTableColumns(), lakarutlatandenTableKey, onlyPreferences);
+      }
+
       return {
         getSelectedColumns: _getSelectedColumns,
         getSelectedSjukfallColumns: _getSelectedSjukfallColumns,
+        getSelectedLakarutlatandenTableColumns: _getSelectedLakarutlatandenTableColumns,
         getAllSjukfallTableColumns: _getAllSjukfallTableColumns,
         getAllPatientTableColumns: _getAllPatientTableColumns,
+        getAllLakarutlatandenTableColumns: _getAllLakarutlatandenTableColumns,
         sjukfallTableKey: sjukfallTableKey,
-        patientTableKey: patientTableKey
+        patientTableKey: patientTableKey,
+        lakarutlatandenTableKey: lakarutlatandenTableKey
       };
     });

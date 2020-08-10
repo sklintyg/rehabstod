@@ -116,6 +116,23 @@ public class LogServiceImpl implements LogService {
         send(pdlLogMessage);
     }
 
+    @Override
+    public void logCertificate(Personnummer personId, ActivityType activityType, ResourceType resourceType) {
+        if (personId == null) {
+            LOG.debug("No personId for PDL logging, not logging.");
+            return;
+        }
+
+        var rehabstodUser = userService.getUser();
+        var logPatient = new LogPatient.Builder(personId.getPersonnummer(), rehabstodUser.getValdVardenhet().getId(),
+            rehabstodUser.getValdVardgivare().getId())
+            .enhetsNamn(rehabstodUser.getValdVardenhet().getNamn())
+            .vardgivareNamn(rehabstodUser.getValdVardgivare().getNamn())
+            .build();
+
+        var pdlLogMessage = pdlLogMessageFactory.buildLogMessage(logPatient, LogUtil.getLogUser(rehabstodUser), activityType, resourceType);
+        send(pdlLogMessage);
+    }
 
     private void send(PdlLogMessage pdlLogMessage) {
 

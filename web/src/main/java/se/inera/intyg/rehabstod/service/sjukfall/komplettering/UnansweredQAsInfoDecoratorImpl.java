@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.wc.service.WcIntegrationService;
+import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
 import se.inera.intyg.rehabstod.web.model.AGCertificate;
 import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.PatientData;
@@ -32,29 +33,30 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 @Service
-public class KompletteringInfoDecoratorImpl implements KompletteringInfoDecorator {
+public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorator {
 
     @Autowired
     private WcIntegrationService wcIntegrationService;
 
     @Override
-    public void updateSjukfallEnhetKompletteringar(List<SjukfallEnhet> sjukfallList) {
+    public void updateSjukfallEnhetQAs(List<SjukfallEnhet> sjukfallList) {
 
         final List<String> idList = sjukfallList.stream()
             .flatMap(sfe -> sfe.getIntygLista().stream())
             .collect(Collectors.toList());
 
-        final Map<String, Integer> perIntyg = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
+        final Map<String, UnansweredQAs> perIntyg = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
 
+        var dummy = new UnansweredQAs(0, 0);
         sjukfallList.forEach(
             sjukfallEnhet -> sjukfallEnhet.setObesvaradeKompl(
                 sjukfallEnhet.getIntygLista().stream()
-                    .mapToInt(intygsId -> Optional.ofNullable(perIntyg.get(intygsId)).orElse(0))
+                    .mapToInt(intygsId -> Optional.ofNullable(perIntyg.get(intygsId)).orElse(dummy).getComplement())
                     .sum()));
     }
 
     @Override
-    public void updateSjukfallPatientKompletteringar(List<SjukfallPatient> patientSjukfallList) {
+    public void updateSjukfallPatientWithQAs(List<SjukfallPatient> patientSjukfallList) {
 
         // Get all intygsidn to query for kompletteringsinfo, excluding sjf intyg
         final List<String> idList = patientSjukfallList.stream()
@@ -63,35 +65,58 @@ public class KompletteringInfoDecoratorImpl implements KompletteringInfoDecorato
             .map(PatientData::getIntygsId)
             .collect(Collectors.toList());
 
-        final Map<String, Integer> perIntyg = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
+        final Map<String, UnansweredQAs> perIntyg = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
 
         patientSjukfallList
             .forEach(sjukfallPatient -> sjukfallPatient.getIntyg().forEach(
-                patientData -> patientData.setObesvaradeKompl(perIntyg.get(patientData.getIntygsId()))));
+                patientData -> {
+                    var unAnsweredQAs = Optional.ofNullable(perIntyg.get(patientData.getIntygsId())).orElse(null);
+
+                    patientData.setObesvaradeKompl(unAnsweredQAs == null ? null : unAnsweredQAs.getComplement());
+                }));
 
     }
 
     @Override
-    public void updateLUCertificatesWithKompletteringar(List<LUCertificate> luCertificate) {
+    public void updateLUCertificatesWithQAs(List<LUCertificate> luCertificate) {
 
         final var idList = luCertificate.stream().map(LUCertificate::getCertificateId).collect(Collectors.toList());
 
         final var certificateAdditions = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
 
         luCertificate
-            .forEach(cert -> cert.setNotifications(Optional.ofNullable(certificateAdditions.get(cert.getCertificateId())).orElse(0)));
+            .forEach(
+                cert -> {
+                    var unAnsweredQAs = Optional.ofNullable(certificateAdditions.get(cert.getCertificateId())).orElse(null);
+                    if (unAnsweredQAs != null) {
+                        cert.setUnAnsweredComplement(unAnsweredQAs.getComplement());
+                        cert.setUnAnsweredComplement(unAnsweredQAs.getOthers());
+                    } else {
+                        cert.setUnAnsweredComplement(0);
+                        cert.setUnAnsweredComplement(0);
+                    }
+                });
     }
 
     @Override
-    public void updateAGCertificatesWithKompletteringar(List<AGCertificate> agCertificate) {
+    public void updateAGCertificatesWithQAs(List<AGCertificate> agCertificate) {
 
         final var idList = agCertificate.stream().map(AGCertificate::getCertificateId).collect(Collectors.toList());
 
         final var certificateAdditions = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
 
         agCertificate
-            .forEach(cert -> cert.setNotifications(Optional.ofNullable(certificateAdditions.get(cert.getCertificateId())).orElse(0)));
-
+            .forEach(
+                cert -> {
+                    var unAnsweredQAs = Optional.ofNullable(certificateAdditions.get(cert.getCertificateId())).orElse(null);
+                    if (unAnsweredQAs != null) {
+                        cert.setUnAnsweredComplement(unAnsweredQAs.getComplement());
+                        cert.setUnAnsweredComplement(unAnsweredQAs.getOthers());
+                    } else {
+                        cert.setUnAnsweredComplement(0);
+                        cert.setUnAnsweredComplement(0);
+                    }
+                });
     }
 
 }

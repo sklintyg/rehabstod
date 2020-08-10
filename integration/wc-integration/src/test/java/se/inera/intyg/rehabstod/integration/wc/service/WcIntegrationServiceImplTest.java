@@ -39,11 +39,13 @@ import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.clinicalprocess.healthcond.certificate.types.v3.IntygId;
 import se.inera.clinicalprocess.healthcond.certificate.v3.ResultCodeType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AdditionType;
+import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.AmneType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.IntygAdditionsType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.StatusType;
 import se.inera.intyg.rehabstod.integration.wc.client.WcClientService;
 import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
+import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
 
 /**
  * Created by marced on 2019-05-17.
@@ -96,13 +98,14 @@ public class WcIntegrationServiceImplTest {
         when(wcClientService.getCertificateAdditions(anyList())).thenReturn(result);
 
         List<String> intygsIds = Arrays.asList(INTYGS_ID_1, INTYGS_ID_2, INTYGS_ID_3);
-        final Map<String, Integer> resultMap = testee.getCertificateAdditionsForIntyg(Arrays.asList(INTYGS_ID_1, INTYGS_ID_2, INTYGS_ID_3));
+        final Map<String, UnansweredQAs> resultMap = testee
+            .getCertificateAdditionsForIntyg(Arrays.asList(INTYGS_ID_1, INTYGS_ID_2, INTYGS_ID_3));
 
         verify(wcClientService).getCertificateAdditions(eq(intygsIds));
 
-        assertEquals(2, resultMap.get(INTYGS_ID_1).intValue());
-        assertEquals(0, resultMap.get(INTYGS_ID_2).intValue());
-        assertEquals(0, resultMap.get(INTYGS_ID_3).intValue());
+        assertEquals(2, resultMap.get(INTYGS_ID_1).getComplement());
+        assertEquals(0, resultMap.get(INTYGS_ID_2).getComplement());
+        assertEquals(0, resultMap.get(INTYGS_ID_3).getComplement());
 
     }
 
@@ -127,6 +130,7 @@ public class WcIntegrationServiceImplTest {
         AdditionType addition = new AdditionType();
         addition.setStatus(statusType);
         addition.setSkapad(skapad);
+        addition.setAmne(AmneType.KOMPLT);
         return addition;
     }
 

@@ -16,35 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.web.model;
+package se.inera.intyg.rehabstod.integration.wc.service.dto;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@Builder
-public class LUCertificate {
+@AllArgsConstructor
+public class UnansweredQAs {
 
-    private String certificateId;
-    private String certificateType;
-
-    private String careProviderId;
-    private String careProviderName;
-    private String careUnitId;
-    private String careUnitName;
-
-    private Lakare doctor;
-
-    private Patient patient;
-
-    private Diagnos diagnose;
-    private List<Diagnos> biDiagnosis;
-
-    private LocalDateTime signingTimeStamp;
-
-    private int unAnsweredComplement;
-    private int unAnsweredOther;
-
+    int complement;
+    int others;
 }

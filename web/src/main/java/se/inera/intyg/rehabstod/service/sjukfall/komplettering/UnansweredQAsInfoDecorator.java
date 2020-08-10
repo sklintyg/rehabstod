@@ -24,13 +24,13 @@ import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-public interface KompletteringInfoDecorator {
+public interface UnansweredQAsInfoDecorator {
 
-    void updateSjukfallEnhetKompletteringar(List<SjukfallEnhet> sjukfallList);
+    void updateSjukfallEnhetQAs(List<SjukfallEnhet> sjukfallList);
 
-    void updateSjukfallPatientKompletteringar(List<SjukfallPatient> rehabstodSjukfall);
+    void updateSjukfallPatientWithQAs(List<SjukfallPatient> rehabstodSjukfall);
 
-    void updateLUCertificatesWithKompletteringar(List<LUCertificate> luCertificate);
+    void updateLUCertificatesWithQAs(List<LUCertificate> luCertificate);
 
-    void updateAGCertificatesWithKompletteringar(List<AGCertificate> agCertificate);
+    void updateAGCertificatesWithQAs(List<AGCertificate> agCertificate);
 }

@@ -30,11 +30,12 @@ angular.module('rehabstodApp')
           msgParams: '=',
           column: '@',
           labelKey: '@',
-          defaultSort: '@'
+          defaultSort: '@',
+          tableTextKey: '@'
         },
         templateUrl: '/components/appDirectives/sjukfall/rhsTableHeaderColumn/rhsTableHeaderColumn.directive.html',
         link: function($scope, element) {
-          $scope.label = 'label.table.column.' + $scope.labelKey.toLowerCase();
+          $scope.label = $scope.tableTextKey + '.' + $scope.labelKey.toLowerCase();
 
           $timeout(function() {
             element.addClass('rhs-table-head');

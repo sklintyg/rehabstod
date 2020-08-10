@@ -61,7 +61,6 @@ import se.inera.intyg.infra.sjukfall.dto.Vardgivare;
 import se.inera.intyg.infra.sjukfall.services.SjukfallEngineServiceImpl;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
-import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstIntegrationServiceImpl;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.service.SamtyckestjanstIntegrationService;
@@ -74,7 +73,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaDataItemType;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
-import se.inera.intyg.rehabstod.service.sjukfall.komplettering.KompletteringInfoDecorator;
+import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
@@ -128,12 +127,12 @@ public class SjukfallServiceTest {
 
     private int intygsIdCounter = 1;
 
-    private Integer intygsGlapp = 5;
-    private LocalDate activeDate = LocalDate.parse("2016-02-16");
+    private final Integer intygsGlapp = 5;
+    private final LocalDate activeDate = LocalDate.parse("2016-02-16");
 
     private List<String> intygWithSparr = new ArrayList<>();
 
-    private IntygParametrar parameters = new IntygParametrar(intygsGlapp, MAX_DAGAR_SEDAN_AVSLUT, activeDate);
+    private final IntygParametrar parameters = new IntygParametrar(intygsGlapp, MAX_DAGAR_SEDAN_AVSLUT, activeDate);
 
     @Mock
     private IntygstjanstIntegrationServiceImpl integrationService;
@@ -178,7 +177,7 @@ public class SjukfallServiceTest {
     private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
     @Mock
-    private KompletteringInfoDecorator kompletteringInfoDecorator;
+    private UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
 
     @Mock
     private UserService userService;
@@ -187,7 +186,7 @@ public class SjukfallServiceTest {
     private LogService logService;
 
     @InjectMocks
-    private SjukfallServiceImpl testee = new SjukfallServiceImpl();
+    private final SjukfallServiceImpl testee = new SjukfallServiceImpl();
 
     @Before
     public void init() {
