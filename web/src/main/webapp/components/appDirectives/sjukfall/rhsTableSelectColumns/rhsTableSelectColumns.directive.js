@@ -28,12 +28,22 @@ angular.module('rehabstodApp')
           labelKey: '@',
           preferenceKey: '=',
           columns: '=',
-          tableTextKey: '@'
+          tableTextKey: '@',
+          noFilter: '=',
+          modalTextKey: '@'
         },
         controller: function($scope, $uibModal, UserModel) {
 
           $scope.label = $scope.labelKey ? $scope.labelKey : 'label.table.anpassa';
           showIcon();
+
+          if($scope.noFilter) {
+            $scope.tooltipLabel = 'label.table.anpassa.help.nofilter';
+          } else {
+            $scope.tooltipLabel = 'label.table.anpassa.help';
+          }
+
+          $scope.modalTextKey = $scope.modalTextKey ? $scope.modalTextKey : 'label.table.custom.modal.sjukfall.';
 
           $scope.openDialog = function() {
             $uibModal.open({
@@ -51,7 +61,7 @@ angular.module('rehabstodApp')
                   return $scope.tableTextKey + '.';
                 },
                 modalTextTranslationKey: function() {
-                  return 'label.table.custom.modal.sjukfall.';
+                  return $scope.modalTextKey;
                 }
               }
               // Removes angular error "Possibly unhandled rejection:
