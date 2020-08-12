@@ -1,9 +1,10 @@
 <span ng-if="showIcon"
       class="rhs-tooltip"
+      tooltip-class="rhs-table-select-columns-tooltip"
       id="rhs-table-select-columns-tooltip"
       rhs-tooltip
       icon="fa-exclamation-circle"
-      field-help-text="label.table.anpassa.help"
+      field-help-text={{tooltipLabel}}
       alignment="auto top"></span>
 
 <a href data-ng-click="openDialog()" id="rhs-table-select-columns-link">{{::label | message}}</a>

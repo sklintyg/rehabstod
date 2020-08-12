@@ -5,3 +5,7 @@ rhs-table-select-columns {
     @extend %rs-typo-06;
   }
 }
+
+.rhs-table-select-columns-tooltip {
+  z-index: 1500 !important;
+}

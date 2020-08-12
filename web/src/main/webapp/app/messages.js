@@ -205,6 +205,7 @@ var rhsMessages = {
     'label.table.diagnosbeskrivning.okand': 'Diagnoskod ${kod} är okänd och har ingen beskrivning',
     'label.table.anpassa': 'Anpassa tabellen',
     'label.table.anpassa.help': 'Du har anpassat innehållet i tabellen, vilket påverkar vilka filterval du kan göra.',
+    'label.table.anpassa.help.nofilter': 'Du har anpassat innehållet i tabellen.',
     'label.table.anpassa.patient': 'Anpassa tabellerna',
     'label.table.anpassa.patient.help': 'Observera att du har anpassat vilka kolumner som syns i tabellen.',
 
@@ -227,6 +228,11 @@ var rhsMessages = {
     'label.table.custom.modal.sjukfall.body': 'Välj vilka kolumner du vill se i sjukfallstabellen och i vilken ordning dessa ska ligga. Dina ändringar kommer att sparas tillsvidare. Du kan ändra dessa när du vill. Kolumner som du väljer att ta bort kan du inte filtrera på.',
     'label.table.custom.modal.sjukfall.selectone': 'Var god välj minst en kolumn för att kunna se sjukfallstabellen.',
     'label.table.custom.modal.sjukfall.error': '<p>Kunde inte spara dina ändringar på grund av ett tekniskt fel. Försök igen om en stund.</p><p>Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.</p>',
+
+    'label.table.custom.modal.lakarutlatanden.title': 'Anpassa tabellen',
+    'label.table.custom.modal.lakarutlatanden.body': 'Välj vilka kolumner du vill se i tabellen med läkarutlåtanden och i vilken ordning dessa ska ligga. Dina ändringar kommer att sparas tillsvidare. Du kan ändra dessa när du vill.',
+    'label.table.custom.modal.lakarutlatanden.selectone': 'Var god välj minst en kolumn för att kunna se sjukfallstabellen.',
+    'label.table.custom.modal.lakarutlatanden.error': '<p>Kunde inte spara dina ändringar på grund av ett tekniskt fel. Försök igen om en stund.</p><p>Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.</p>',
 
     'label.table.custom.modal.patient.title': 'Anpassa tabellerna',
     'label.table.custom.modal.patient.body': 'Välj vilka kolumner du vill se i sjukfallet och i vilken ordning dessa ska ligga. Dina ändringar kommer att sparas tillsvidare. Du kan ändra dessa när du vill.',
