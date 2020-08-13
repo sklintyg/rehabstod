@@ -18,11 +18,12 @@
  */
 
 angular.module('rehabstodApp')
-.controller('pdlConsentDialogCtrl', function($scope, $uibModalInstance, $state, UserProxy, UserModel, msgConfig) {
+.controller('pdlConsentDialogCtrl', function($scope, $uibModalInstance, $state, UserProxy, UserModel, msgConfig, toSite) {
   'use strict';
 
   $scope.msgConfig = msgConfig;
   $scope.user = UserModel;
+  $scope.toSite = toSite;
 
   $scope.approveChecked = false;
 
@@ -35,7 +36,12 @@ angular.module('rehabstodApp')
     UserProxy.givePdlConsent($scope.user.hsaId).then(function(updatedUserModel) {
       UserModel.set(updatedUserModel);
       $uibModalInstance.close(updatedUserModel);
-      $state.go('app.sjukfall.result');
+      if ($scope.toSite === undefined) {
+        $state.go('app.sjukfall.result');
+      }
+      else {
+        $state.go($scope.toSite);
+      }
     }, function() {
 
     });

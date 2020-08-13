@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').factory('TableService',
-    function(UserModel, SjukfallFilterViewState, featureService, _) {
+    function(UserModel, SjukfallFilterViewState, featureService, _, LakarutlatandeFilterViewState) {
       'use strict';
 
       var sjukfallTableKey = 'sjukfallTableColumns';
@@ -230,7 +230,7 @@ angular.module('rehabstodApp').factory('TableService',
         return columns;
       }
 
-      function _getSelectedColumns(allColumns, preferenceKey, onlyPreferences) {
+      function _getSelectedColumns(allColumns, preferenceKey, onlyPreferences, isLU) {
         var selectedColumns = UserModel.get().preferences[preferenceKey];
         var allSelected = !selectedColumns;
         var columns;
@@ -265,8 +265,13 @@ angular.module('rehabstodApp').factory('TableService',
 
         return columns
         .filter(function(column) {
-          if ((column.id === 'patientId' || column.id === 'patientName') && !SjukfallFilterViewState.get().showPatientId) {
-            return false;
+          if (column.id === 'patientId' || column.id === 'patientName'){
+            if (isLU && !LakarutlatandeFilterViewState.get().showPatientId){
+              return false;
+            }
+            else if (!SjukfallFilterViewState.get().showPatientId) {
+              return false;
+            }
           }
 
           return true;
@@ -282,7 +287,7 @@ angular.module('rehabstodApp').factory('TableService',
       }
 
       function _getSelectedLakarutlatandeUnitColumns(onlyPreferences) {
-        return _getSelectedColumns(_getAllLakarutlatandeUnitColumns(), lakarutlatandeUnitTableKey, onlyPreferences);
+        return _getSelectedColumns(_getAllLakarutlatandeUnitColumns(), lakarutlatandeUnitTableKey, onlyPreferences, true);
       }
 
       function _getAllLakarutlatandeUnitColumns() {

@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
-    function(DiagnosKapitelModel, LakareModel, KompletteringModel, CertTypeModel, APP_CONFIG) {
+    function(DiagnosKapitelModel, LakareModel, KompletteringModel, CertTypeModel, APP_CONFIG, lakarutlatandenProxy) {
       'use strict';
 
       var state = {
@@ -37,15 +37,26 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
 
       state.kompletteringModel.set([
         {id: null, displayValue: 'Visa alla', defaultSelected: true},
-        {id: 0, displayValue: 'Visa läkarutlåtanden utan obesvarade kompletteringar'},
-        {id: 1, displayValue: 'Visa läkarutlåtanden med obesvarade kompletteringar'},
-        {id: 2, displayValue: 'Visa enbart läkarutlåtanden utan obesvarade ärenden'},
-        {id: 3, displayValue: 'Visa enbart läkarutlåtanden med obesvarade ärenden'}]);
+        {id: 1, displayValue: 'Visa läkarutlåtanden utan obesvarade kompletteringar'},
+        {id: 2, displayValue: 'Visa läkarutlåtanden med obesvarade kompletteringar'},
+        {id: 3, displayValue: 'Visa enbart läkarutlåtanden utan obesvarade ärenden'},
+        {id: 4, displayValue: 'Visa enbart läkarutlåtanden med obesvarade ärenden'}]);
 
       state.certTypeModel.set([
         {id: 'FK7800', displayValue: 'Läkarutlåtande för sjukersättning, FK7800'},
         {id: 'FK7801', displayValue: 'Läkarutlåtande för aktivitetsersättning vid nedsatt arbetsförmåga, FK7801'},
         {id: 'FK7802', displayValue: 'Läkarutlåtande för aktivitetsersättning vid förlängd skolgång, FK7802'}]);
+
+
+      function loadDoctors() {
+        lakarutlatandenProxy.getDoctorsForUnit().then(function(response){
+          state.lakareModel.set(response);
+        }, function(errorData) {
+          $log.debug('Failed to get signing doctors.');
+          $log.debug(errorData);
+        });
+
+      }
 
       function _reset() {
         state.diagnosKapitelModel.reset();
@@ -57,6 +68,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
         state.showPatientId = true;
         state.freeTextModel = '';
         state.certTypeModel.reset();
+        loadDoctors();
       }
 
       function _resetIfColumnsHidden(columnsByKey) {

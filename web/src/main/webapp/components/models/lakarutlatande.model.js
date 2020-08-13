@@ -57,18 +57,9 @@ angular.module('rehabstodApp').factory('LakarutlatandeModel',
         return asText;
       }
 
-      function _getObesvaradeKomplShow(obesvaradeKompl) {
-        if (LakarutlatandeViewState.get().kompletteringInfoError) {
-          //indicate no value due to error
-          return '';
-        }
-        return (obesvaradeKompl > 0) ? 'Obesvarad (' + obesvaradeKompl + ')' : '-';
-      }
-
       function _updateQuickSearchContent() {
         angular.forEach(data, function(item) {
           item.patient.konShow = _getKon(item.patient.kon);
-          // item.obesvaradeKomplShow = _getObesvaradeKomplShow(item.obesvaradeKompl); TODO
           item.quickSearchString = '';
 
           item.highestNbrOfArenden = item.unAnsweredComplement ? item.unAnsweredComplement : item.unAnsweredOther;

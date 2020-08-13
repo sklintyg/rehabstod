@@ -39,4 +39,5 @@ public interface IntygstjanstRestIntegrationService {
     List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate, List<String> units);
 
+    List<String> getSigningDoctorsForUnit(List<String> units, List<String> certificateTypes);
 }

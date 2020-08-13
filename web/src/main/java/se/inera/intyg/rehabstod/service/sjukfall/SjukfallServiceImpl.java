@@ -318,12 +318,12 @@ public class SjukfallServiceImpl implements SjukfallService {
                 isIntygIssuedOnEnhetOrMottagning(currentVardenhet, intygData.getVardenhetId()),
                 shouldBeIncludedInCalculationOfSjukfall(vgHsaIds, veHsaIds, intygData))));
 
-        //Assert that at least one intyg for this patient is issued
-        //on the current unit (see INTYG-7686)
-        if (intygAccessMetaData.size() > 0
-            && intygAccessMetaData.entrySet().stream().noneMatch(intyg -> intyg.getValue().isInomVardenhet())) {
-            throw new SjukfallServiceException("At least one intyg must be issued on current unit!");
-        }
+//        //Assert that at least one intyg for this patient is issued
+//        //on the current unit (see INTYG-7686)
+//        if (intygAccessMetaData.size() > 0 //TODO
+//            && intygAccessMetaData.entrySet().stream().noneMatch(intyg -> intyg.getValue().isInomVardenhet())) {
+//            throw new SjukfallServiceException("At least one intyg must be issued on current unit!");
+//        }
 
         SjfMetaData sjfMetaData = new SjfMetaData();
         sjfMetaData.setHaveSekretess(haveSekretess);

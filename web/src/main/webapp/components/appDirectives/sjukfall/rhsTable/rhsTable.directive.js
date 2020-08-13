@@ -58,6 +58,9 @@ angular.module('rehabstodApp')
             },
             nyligenAvslutat: function() {
               return nyligenAvslutat;
+            },
+            openLU: function() {
+              return false;
             }
           }
         });

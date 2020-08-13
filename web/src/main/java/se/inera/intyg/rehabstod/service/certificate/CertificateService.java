@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.certificate;
 
+import java.util.List;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitResponse;
@@ -30,4 +31,6 @@ public interface CertificateService {
     GetLUCertificatesForPersonResponse getLUCertificatesForPerson(String personId);
 
     GetAGCertificatesForPersonResponse getAGCertificatesForPerson(String personId);
+
+    List<String> getDoctorsForUnit();
 }

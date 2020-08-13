@@ -97,21 +97,23 @@
 
     <div class="row">
       <div class="col-xs-12">
-        <!-- ÅTERSTÄLL FILTER -->
-        <div class="form-group">
-          <label class="control-label">&nbsp;</label>
-          <button id="rhs-filter-reset-btn" ng-click="onResetFilterClick()" class="btn btn-default pull-right"
-                  rhs-emulate-button-active-state>
-            <span style="position:relative" message key="label.filter.reset"></span>
-          </button>
-        </div>
-        <!-- SÖK -->
-        <div class="form-group">
-          <label class="control-label">&nbsp;</label>
-          <button id="rhs-filter-search-btn" ng-click="onSearchFilterClick()" class="btn btn-default pull-right"
-                  rhs-emulate-button-active-state>
-            <span style="position:relative" message key="label.filter.search"></span>
-          </button>
+        <div class="form-inline pull-right">
+          <!-- SÖK -->
+          <div class="form-group">
+            <label class="control-label">&nbsp;</label>
+            <button id="rhs-filter-search-btn" ng-click="onSearchFilterClick()" class="btn btn-default pull-right"
+                    rhs-emulate-button-active-state>
+              <span style="position:relative" message key="label.filter.search"></span>
+            </button>
+          </div>
+          <!-- ÅTERSTÄLL FILTER -->
+          <div class="form-group">
+            <label class="control-label">&nbsp;</label>
+            <button id="rhs-filter-reset-btn" ng-click="onResetFilterClick()" class="btn btn-default pull-right"
+                    rhs-emulate-button-active-state>
+              <span style="position:relative" message key="label.filter.reset"></span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

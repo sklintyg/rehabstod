@@ -22,7 +22,7 @@
         <thead class="hidden" rhs-table-header user="user" columns="columnsForTable" table-text-key="{{tableTextKey}}" id="rhs-table-fixed-header"></thead>
         <thead rhs-table-header  user="user" columns="columnsForTable" table-text-key="{{tableTextKey}}" id="rhs-table-normal-header"></thead>
         <tbody id="rhs-table-body">
-            <tr id="sjukfall-row-{{rowIndex}}" ng-repeat="(rowIndex, row) in displayedCollection | limitTo: limit track by row.patient.id"
+            <tr id="sjukfall-row-{{rowIndex}}" ng-repeat="(rowIndex, row) in displayedCollection | limitTo: limit track by row.certificateId"
                 class="rhs-table-row" ng-click="showPatientHistory(row.patient, row.nyligenAvslutat)"
                 ng-class="{'nyligen-avslutad-row' : row.nyligenAvslutat}">
 
@@ -44,7 +44,11 @@
                         </div>
                     </div>
                     <div data-ng-if="column.id === 'signDate'" class="column-sign sign-date">{{::row.signingTimeStamp}}</div>
-                    <div data-ng-if="column.id === 'kompletteringar'" class="column-obesvaradeKompl" ng-bind-html="::row.unAnsweredComplement"></div>
+                    <div data-ng-if="column.id === 'qas'">
+                        <div ng-if="row.unAnsweredComplement > 0">Komplettering ({{::row.unAnsweredComplement}})</div>
+                        <div ng-if="row.unAnsweredOther > 0">Administrativ fråga ({{::row.unAnsweredOther}})</div>
+                        <div ng-if="row.unAnsweredComplement === 0 && row.unAnsweredOther === 0">-</div>
+                    </div>
                     <div data-ng-if="column.id === 'doctor'">{{::row.doctor.namn}}</div>
                 </td>
             </tr>

@@ -115,14 +115,35 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         }
     }
 
+    @Override
+    public List<String> getSigningDoctorsForUnit(List<String> units, List<String> certificateTypes) {
+        final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/doctors";
+        TypedCertificateRequest requestObject = getTypedCertificateRequest(units, certificateTypes, null, null, null);
+
+        LOGGER.debug("Getting signing doctors for unit from intygstjansten");
+
+        var doctors = restTemplate.postForObject(url, requestObject, String[].class);
+
+        if (doctors == null || doctors.length == 0) {
+            return Collections.emptyList();
+        } else {
+            return Arrays.asList(doctors);
+        }
+    }
+
     private TypedCertificateRequest getTypedCertificateRequest(List<String> units, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate, String personId) {
         TypedCertificateRequest requestObject = new TypedCertificateRequest();
         requestObject.setUnitIds(units);
         requestObject.setCertificateTypes(certificateTypes);
         requestObject.setPersonId(personId);
-        requestObject.setFromDate(fromDate);
         requestObject.setToDate(toDate);
+
+        if (fromDate == null) {
+            requestObject.setFromDate(LocalDate.now().minusYears(3));
+        } else {
+            requestObject.setFromDate(fromDate);
+        }
         return requestObject;
     }
 }

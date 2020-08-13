@@ -26,11 +26,11 @@ angular.module('rehabstodApp')
       $scope.user = UserModel.get();
       $scope.kompletteringInfoError = false;
 
-      // loadLakarUtlatanden();
+      LakarutlatandeService.reset();
+
 
       var unregisterFn = $rootScope.$on('SelectedUnitChanged', function() {
-        // loadLakarUtlatanden();
-        // TODO clear data?
+        LakarutlatandeService.reset();
       });
       //rootscope on event listeners aren't unregistered automatically when 'this' directives
       //scope is destroyed, so let's take care of that.
@@ -44,9 +44,9 @@ angular.module('rehabstodApp')
         $scope.showSpinner = val;
       });
 
-      // $scope.$watch('SjukfallViewState.get().kompletteringInfoError', function(val) { //TODO
-      //   $scope.kompletteringInfoError = val;
-      // });
+      $scope.$watch('SjukfallViewState.get().kompletteringInfoError', function(val) {
+        $scope.kompletteringInfoError = val;
+      });
 
 
       $scope.searchFn = function() {

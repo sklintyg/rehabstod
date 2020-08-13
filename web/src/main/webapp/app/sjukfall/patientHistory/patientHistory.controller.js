@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp').controller('patientHistoryController',
     function($scope, $http, $uibModalInstance, $state, APP_CONFIG, patientHistoryProxy, SjukfallFilterViewState,
-        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy, messageService) {
+        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy, messageService, openLU) {
       'use strict';
 
       //Create initial default details tab (cannot be closed)
@@ -30,7 +30,14 @@ angular.module('rehabstodApp').controller('patientHistoryController',
 
       //expose tabs model to view
       $scope.tabs = patientHistoryViewState.getTabs();
-      patientHistoryViewState.selectTab($scope.tabs[0]);
+
+      $scope.openLU = openLU;
+      if ($scope.openLU) {
+        patientHistoryViewState.selectTab($scope.tabs[1]);
+      }
+      else {
+        patientHistoryViewState.selectTab($scope.tabs[0]);
+      }
 
       var allColumns = TableService.getAllPatientTableColumns(nyligenAvslutat);
 
@@ -39,7 +46,6 @@ angular.module('rehabstodApp').controller('patientHistoryController',
       }, function() {
         $scope.tableColumns = TableService.getSelectedColumns(allColumns, TableService.patientTableKey, true);
       }, true);
-
       $scope.errorMessageKey = '';
       $scope.patientHistoryViewState = patientHistoryViewState;
       $scope.patient = patient;

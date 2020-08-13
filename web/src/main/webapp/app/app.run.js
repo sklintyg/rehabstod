@@ -72,7 +72,7 @@ angular
       _redirect($state, toState.name, event, 'app.selectunit', {}, {
         location: false
       });
-    } else if ((toState.name === 'app.sjukfall.result') && !UserModel.isPdlConsentGiven()) {
+    } else if (((toState.name === 'app.sjukfall.result') || (toState.name === 'app.sjukfall.lakarutlatande')) && !UserModel.isPdlConsentGiven()) {
       // app.sjukfall.result can only be visited if pdlConsent has been given
       event.preventDefault();
 
@@ -84,7 +84,8 @@ angular
         $log.debug('PDL logging consent not given - redirecting to give consent page!');
 
         var msgConfig = {
-          bodyTextKey: 'modal.pdlconsent.' + (UserModel.isLakare() ? 'lakare' : 'rehabkoordinator') + '.body'
+          bodyTextKey: 'modal.pdlconsent.' + (UserModel.isLakare() ? 'lakare' : 'rehabkoordinator') + '.body',
+          toSite: toState.name
         };
         $rootScope.$emit('show.pdl.consent', msgConfig);
 

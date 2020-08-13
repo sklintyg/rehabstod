@@ -129,7 +129,29 @@ public class CertificateServiceImpl implements CertificateService {
             qaInfoError = true;
         }
 
-        var qas = request.getQas(); //TODO
+        var qas = request.getQas();
+        if (qas > 0) {
+            switch (qas) {
+                case 1:
+                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredComplement() == 0)
+                        .collect(Collectors.toList());
+                    break;
+                case 2:
+                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredComplement() > 0)
+                        .collect(Collectors.toList());
+                    break;
+                case 3:
+                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredOther() == 0)
+                        .collect(Collectors.toList());
+                    break;
+                case 4:
+                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredOther() > 0)
+                        .collect(Collectors.toList());
+                    break;
+                default:
+                    break;
+            }
+        }
 
         var searchText = request.getSearchText();
         if (searchText != null && !searchText.isBlank() && !searchText.isEmpty()) {
@@ -243,6 +265,12 @@ public class CertificateServiceImpl implements CertificateService {
         }
 
         return true;
+    }
+
+    @Override
+    public List<String> getDoctorsForUnit() {
+        var unitId = userService.getUser().getValdVardenhet().getId();
+        return restIntegrationService.getSigningDoctorsForUnit(Collections.singletonList(unitId), Arrays.asList(LU_TYPE_LIST));
     }
 
     @Override

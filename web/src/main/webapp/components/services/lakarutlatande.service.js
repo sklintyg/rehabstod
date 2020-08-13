@@ -70,8 +70,14 @@ angular.module('rehabstodApp').factory('LakarutlatandeService',
         return loading;
       }
 
+      function _reset() {
+        LakarutlatandeFilterViewState.reset();
+        LakarutlatandeModel.reset();
+      }
+
       return {
         loadLakarutlatande: _loadLakarutlatande,
-        isLoading: _isLoading
+        isLoading: _isLoading,
+        reset: _reset
       };
     });
