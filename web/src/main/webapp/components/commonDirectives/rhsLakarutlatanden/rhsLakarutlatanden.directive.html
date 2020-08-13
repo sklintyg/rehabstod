@@ -18,19 +18,19 @@
   -->
 
 <div class="modal-body">
-  <div rhs-spinner show-spinner="showSpinner" label="label.patienthistory.loading">
+  <div rhs-spinner show-spinner="showSpinner" label="common.label.loading">
     <h3>
       <span>Patientens läkarutlåtanden på {{activeUnit}}</span>
     </h3>
     <div class="rhs-select-columns-container">
-      <rhs-table-select-columns ng-if="lakarutlatanden.length > 0" preference-key="preferenceKey" columns="allColumns" table-text-key="{{tableTextKey}}"></rhs-table-select-columns>
+      <rhs-table-select-columns ng-if="lakarutlatanden.length > 0" no-filter="true" modal-text-key="label.table.custom.modal.lakarutlatanden." preference-key="preferenceKey" columns="allColumns" table-text-key="{{tableTextKey}}"></rhs-table-select-columns>
     </div>
     <div class="lakarutlatanden-table-container">
         <div ng-if="tableColumns.length === 0" class="alert alert-warning">
           När du tidigare anpassade tabellen valde du bort samtliga kolumner och kan därför inte se den nu. För att lägga till kolumner igen, klicka här för att <rhs-table-select-columns preference-key="preferenceKey" columns="allColumns" table-text-key="{{tableTextKey}}"></rhs-table-select-columns>.
         </div>
         <div class="table-responsive" ng-if="tableColumns.length > 0">
-          <div class="alert alert-danger" ng-if="patientHistoryViewState.getKompletteringInfoError() && arendenErrorMessageKey" ng-bind-html="arendenErrorMessageKey | message"></div>
+          <div class="alert alert-danger" ng-if="isQAError && arendenErrorMessageKey" ng-bind-html="arendenErrorMessageKey | message"></div>
           <table id="lakarutlatanden-table" class="table table-striped" class="rhs-table" st-set-sort="rhsSort" st-table="lakarutlatanden">
             <thead rhs-table-header user="user" columns="tableColumns" id="rhs-table-normal-header" table-text-key="{{tableTextKey}}"></thead>
             <tbody>
@@ -56,7 +56,8 @@
                   <div data-ng-if="column.id === 'arenden'">
                     <div ng-if="intyg.unAnsweredComplement > 0">Komplettering ({{::intyg.unAnsweredComplement}})</div>
                     <div ng-if="intyg.unAnsweredOther > 0">Administrativ fråga ({{::intyg.unAnsweredOther}})</div>
-                    <div ng-if="intyg.unAnsweredComplement === 0 && intyg.unAnsweredOther === 0">-</div>
+                    <div ng-if="intyg.unAnsweredComplement === 0 && intyg.unAnsweredOther === 0 && !isQAError">-</div>
+                    <div ng-if="isQAError && arendenErrorMessageKey"> </div>
                   </div>
                   <div data-ng-if="column.id === 'vardenhet'">{{::intyg.careUnitName}}</div>
                   <div data-ng-if="column.id === 'vardgivare'">{{::intyg.careProviderName}}</div>
@@ -74,8 +75,8 @@
         </div>
     </div>
     <div class="alert alert-danger" ng-if="errorMessageKey" ng-bind-html="errorMessageKey | message"></div>
-    <div class="rhs-table-no-result">
-      <span ng-if="lakarutlatanden.length == 0 && !errorMessageKey" message key="label.lakarutlatanden.table.no-result" param="activeUnit"></span>
+    <div ng-if="lakarutlatanden.length == 0 && !errorMessageKey" class="rhs-table-no-result">
+      <span message key="label.lakarutlatanden.table.no-result" param="activeUnit"></span>
     </div>
   </div>
 </div>
