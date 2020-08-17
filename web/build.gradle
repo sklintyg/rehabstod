@@ -61,8 +61,9 @@ gretty {
     enableNaming = true
 
     jvmArgs = [
-            '-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,caching-enabled,rhs-security-test,rhs-wc-stub,ia-stub',
-               '-Dconfig.folder=' + projectDir + '/../devops/dev',
+            //'-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,caching-enabled,rhs-security-test,rhs-wc-stub,ia-stub',
+            '-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-srs-stub,caching-enabled,rhs-security-test,ia-stub',
+                '-Dconfig.folder=' + projectDir + '/../devops/dev',
                '-Dconfig.file=' + projectDir + '/src/main/resources/dev.properties',
                '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
                '-Dresources.folder=classpath:',

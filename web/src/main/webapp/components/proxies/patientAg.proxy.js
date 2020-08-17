@@ -22,18 +22,19 @@ angular.module('rehabstodApp').factory('patientAgProxy',
       'use strict';
 
       /*
-       * Get history for the specified patient
+       * Get AG-intyg for the specified patient
        */
       function _getAgIntyg(patient) {
 
         var promise = $q.defer();
 
         var query = {
-          patientId: patient.id
+          //patientId: patient.id
+          personId: patient.id
         };
 
-        //var restPath = '/api/certificate/ag/person';
-        var restPath = '/api/sjukfall/patient';
+        var restPath = '/api/certificate/ag/person';
+        //var restPath = '/api/sjukfall/patient';
 
         var config = {
           timeout: networkConfig.defaultTimeout

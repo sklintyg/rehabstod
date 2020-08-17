@@ -18,25 +18,26 @@
  */
 angular.module('rehabstodApp')
   .directive('rhsPatientAgTable',
-    function(UserModel, patientAgViewState, messageService) {
+    function(UserModel, patientAgProxy) {
       'use strict';
 
       return {
         restrict: 'E',
         scope: {
-          agItems: '=',
           patient: '=',
           index: '=',
           onLoadIntyg: '&',
-          columns: '='
+          columns: '=',
+          activeUnit: '=',
+          getToolTip: '&',
+          formatGrader: '&',
+          showAgTable: '='
         },
         templateUrl: '/components/commonDirectives/rhsPatientAgTable/rhsPatientAgTable.directive.html',
 
-        //controller: function($scope, patientAgViewState) {
-        //  $scope.showAgTable = patientAgViewState;
-        //},
+
         link: function($scope) {
-          $scope.patientAgViewState = patientAgViewState;
+          $scope.agItems = {};
 
           $scope.$watchCollection('columns', function() {
             $scope.filteredColumns = $scope.columns.filter(function(column ) {
@@ -44,37 +45,28 @@ angular.module('rehabstodApp')
             });
           });
 
-          $scope.getEffectiveVardenhetUnitName = function() {
-            var user = UserModel.get();
-            if (user.valdVardenhet) {
-              //Is valdvardenhet actually a mottagning?
-              if (user.valdVardenhet.parentHsaId) {
-                //return parent unit name, since data is always returned for unit level (even if mottagning is selected)
-                return UserModel.getUnitNameById(user.valdVardenhet.parentHsaId);
-              }
-              return user.valdVardenhet.namn;
+          $scope.$watch('showAgTable', function() {
+            $scope.showSpinner = true;
+            if ($scope.showAgTable) {
+              patientAgProxy.getAgIntyg($scope.patient).then(function(response) {
+                if (!response.qaError) {
+                  $scope.agItems.intyg = response.certificates;
+                } else {
+                  //$scope.agItems.error = 'server.error.loadpatientag.text';
+                  $scope.errorMessageKey = 'server.error.loadpatientag.text';
+
+                }
+                $scope.showSpinner = false;
+              }, function() {
+                //$scope.agItems.error = 'server.error.loadpatientag.text';
+                $scope.errorMessageKey = 'server.error.loadpatientag.text';
+                $scope.showSpinner = false;
+              });
+            } else {
+              $scope.agItems = {};
+              $scope.showSpinner = false;
             }
-            return '';
-          };
-
-          $scope.getToolTip = function(diagnos) {
-            var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
-                messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
-            return '<b>' + diagnos.kod + '</b><br>' + desc;
-          };
-
-          $scope.formatGrader = function(gradArr) {
-
-            switch (gradArr.length) {
-            case 0:
-              return '';
-            case 1:
-              return gradArr[0] + '%';
-            default:
-              return gradArr[0] + '% &#10142; ' + gradArr[gradArr.length - 1] + '%';
-            }
-
-          };
+          });
         }
       };
     });

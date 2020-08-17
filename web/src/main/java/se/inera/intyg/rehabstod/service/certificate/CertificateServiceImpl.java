@@ -36,6 +36,7 @@ import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
+import se.inera.intyg.infra.sjukfall.util.SysselsattningMapper;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
@@ -205,7 +206,9 @@ public class CertificateServiceImpl implements CertificateService {
             .days((int) ChronoUnit.DAYS.between(startDate, endDate))
             .degree(workCapacityList.stream().sorted(Comparator.comparing(WorkCapacity::getStartDate)).map(WorkCapacity::getReduction)
                 .collect(Collectors.toList()))
-            .occupation(Arrays.asList(sickLeaveCertificate.getOccupation().split(","))).build();
+            .occupation(Arrays.stream(sickLeaveCertificate.getOccupation().split(","))
+                .map(SysselsattningMapper::mapSysselsattning).collect(Collectors.toList()))
+            .build();
     }
 
     private List<LUCertificate> transformDiagnosedCertificatesToLUCertificates(
@@ -237,7 +240,11 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private List<Diagnos> getDiagnoseList(List<String> secondaryDiagnoseCodes) {
-        return secondaryDiagnoseCodes.stream().map(this::getDiagnose).collect(Collectors.toList());
+        if (secondaryDiagnoseCodes != null) {
+            return secondaryDiagnoseCodes.stream().map(this::getDiagnose).collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     private Diagnos getDiagnose(String code) {

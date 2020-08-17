@@ -19,15 +19,15 @@
 
 angular.module('rehabstodApp').controller('patientHistoryController',
     function($scope, $http, $uibModalInstance, $state, APP_CONFIG, patientHistoryProxy, SjukfallFilterViewState,
-        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy, messageService, patientAgViewState, patientAgProxy) {
+        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy, messageService) {
       'use strict';
 
       //Create initial default details tab (cannot be closed)
-      patientAgViewState.updateAgTableVisible(false);
       patientHistoryViewState.reset();
       patientHistoryViewState.addTab('', 'Sjukfall', true, true);
       patientHistoryViewState.addTab('', 'Läkarutlåtanden', true, false);
       $scope.nyligenAvslutat = nyligenAvslutat;
+      $scope.showAgTable = false;
 
       //expose tabs model to view
       $scope.tabs = patientHistoryViewState.getTabs();
@@ -90,6 +90,31 @@ angular.module('rehabstodApp').controller('patientHistoryController',
         return '<b>' + diagnos.kod + '</b><br>' + desc;
       };
 
+      $scope.updateShowAgTable = function(isChecked) {
+        $scope.showAgTable = isChecked;
+      };
+/*
+      $scope.agItems = {};
+      //$scope.isCheckedAgCheckbox = false;
+      $scope.updateAgTableVisible = function(isChecked) {
+        if (isChecked) {
+          patientAgProxy.getAgIntyg(patient).then(function(response) {
+            if (!response.qaError) {
+              $scope.agItems.intyg = response.certificates;
+            } else {
+              $scope.agItems.error = 'server.error.loadpatientag.text';
+            }
+            patientAgViewState.updateAgTableVisible(isChecked);
+          }, function() {
+            $scope.agItems.error = 'server.error.loadpatientag.text';
+            patientAgViewState.updateAgTableVisible(isChecked);
+          });
+        } else {
+          patientAgViewState.updateAgTableVisible(isChecked);
+          $scope.agItems = {};
+        }
+      };
+*/
       function updatePatientSjukfall(patient) {
         //Start by requesting data
 
@@ -105,6 +130,19 @@ angular.module('rehabstodApp').controller('patientHistoryController',
           $scope.errorMessageKey = 'server.error.loadpatienthistory.text';
         });
       }
+
+      $scope.formatGrader = function(gradArr) {
+
+        switch (gradArr.length) {
+        case 0:
+          return '';
+        case 1:
+          return gradArr[0] + '%';
+        default:
+          return gradArr[0] + '% &#10142; ' + gradArr[gradArr.length - 1] + '%';
+        }
+
+      };
 
       $scope.$on('patientHistory.update', function() {
         updatePatientSjukfall(patient);

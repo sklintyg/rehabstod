@@ -38,7 +38,7 @@
           <div class="row">
             <div class="col-xs-6">
               <rhs-patient-ag-table-checkbox
-                  on-change-ag-checkbox="updateAgTableVisible(isChecked)"
+                  on-change-ag-checkbox="updateShowAgTable(isChecked)"
                   is-checked-ag-checkbox="isCheckedAgCheckbox">
               </rhs-patient-ag-table-checkbox>
             </div>
@@ -49,8 +49,9 @@
             </div>
           </div>
 
-          <rhs-patient-ag-table columns="tableColumns" history-item="item" patient="patient" ag-items="agItems"
-                                index="$index" on-load-intyg="loadIntyg(intyg)"></rhs-patient-ag-table>
+          <rhs-patient-ag-table columns="tableColumns" history-item="item" patient="patient" show-ag-table="showAgTable"
+                                index="$index" on-load-intyg="loadIntyg(intyg)" active-unit="getEffectiveVardenhetUnitName()"
+                                get-tool-tip="getToolTip(diagnos)" format-grader="formatGrader(gradArr)"></rhs-patient-ag-table>
           <div ng-repeat="item in timeline">
 
             <!-- special case: gap between years that have sjukfall -->

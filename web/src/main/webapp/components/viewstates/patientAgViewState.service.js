@@ -31,8 +31,8 @@ angular.module('rehabstodApp').factory('patientAgViewState', function() {
   function _getAgTableVisible() {
     return agTableVisible;
   }
-
-  function _getAgItems(sjukfall) {
+/*
+  function _getAgItems(certificates) {
     var extractedIntyg = [];
     angular.forEach(sjukfall, function(sjukfall) {
       angular.forEach(sjukfall.intyg, function(intyg) {
@@ -41,11 +41,11 @@ angular.module('rehabstodApp').factory('patientAgViewState', function() {
     });
     return extractedIntyg;
   }
-
+*/
 
   return {
     updateAgTableVisible: _updateAgTableVisible,
-    getAgTableVisible: _getAgTableVisible,
-    getAgItems: _getAgItems
+    getAgTableVisible: _getAgTableVisible
+    /*getAgItems: _getAgItems*/
   };
 });
