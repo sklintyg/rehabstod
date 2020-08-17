@@ -18,7 +18,7 @@
  */
 
 angular.module('rehabstodApp').directive('rhsLakarutlatanden',
-    function(TableService, UserModel, lakarutlatandenProxy, patientHistoryViewState) {
+    function(TableService, UserModel, lakarutlatandenProxy) {
       'use strict';
       return {
         restrict: 'E',
@@ -31,12 +31,12 @@ angular.module('rehabstodApp').directive('rhsLakarutlatanden',
         },
         templateUrl: '/components/commonDirectives/rhsLakarutlatanden/rhsLakarutlatanden.directive.html',
         link: function($scope) {
-          $scope.patientHistoryViewState = patientHistoryViewState;
           $scope.showSpinner = true;
           $scope.user = UserModel.get();
           $scope.preferenceKey = TableService.lakarutlatandenTableKey;
           $scope.tableTextKey = 'label.lakarutlatanden.table.column';
           $scope.arendenErrorMessageKey = 'server.error.getarenden.text';
+          $scope.isQAError = false;
 
           $scope.allColumns = TableService.getAllLakarutlatandenTableColumns();
           $scope.$watch(function() {
@@ -48,6 +48,7 @@ angular.module('rehabstodApp').directive('rhsLakarutlatanden',
           $scope.getLakarutlatanden = function() {
             lakarutlatandenProxy.get($scope.patient, UserModel.valdVardenhet).then(function(lakarutlatandenResponse) {
               $scope.showSpinner = false;
+              $scope.isQAError = lakarutlatandenResponse.qaError;
               $scope.lakarutlatanden = lakarutlatandenResponse.certificates;
               $scope.lakarutlatanden.forEach(function(intyg) {
                 intyg.highestNbrOfArenden = intyg.unAnsweredComplement ? intyg.unAnsweredComplement : intyg.unAnsweredOther;
