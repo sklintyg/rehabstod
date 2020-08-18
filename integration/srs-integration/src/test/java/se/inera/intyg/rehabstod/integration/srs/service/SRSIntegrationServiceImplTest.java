@@ -54,7 +54,7 @@ public class SRSIntegrationServiceImplTest {
         String intygsId = UUID.randomUUID().toString();
 
         when(srsClientService.getRiskPrediktionForCertificate(anyList())).thenReturn(buildResult(intygsId));
-        List<RiskSignal> result = testee.getRiskPreditionerForIntygsId(Arrays.asList(intygsId));
+        List<RiskSignal> result = testee.getRiskPrediktionerForIntygsId(Arrays.asList(intygsId));
         assertEquals(1, result.size());
         assertEquals(intygsId, result.get(0).getIntygsId());
         assertEquals(1, result.get(0).getRiskKategori());
@@ -63,7 +63,7 @@ public class SRSIntegrationServiceImplTest {
 
     @Test
     public void testEmptyListReturnedWhenNullIdsSupplied() {
-        List<RiskSignal> result = testee.getRiskPreditionerForIntygsId(null);
+        List<RiskSignal> result = testee.getRiskPrediktionerForIntygsId(null);
         assertEquals(0, result.size());
         verifyNoInteractions(srsClientService);
     }

@@ -34,6 +34,12 @@ public interface SRSIntegrationService {
      * @param intygsIdn 1..n intygIds to query SRS for risks.
      * @return 0..n RiskSignals.
      */
-    List<RiskSignal> getRiskPreditionerForIntygsId(List<String> intygsIdn);
+    List<RiskSignal> getRiskPrediktionerForIntygsId(List<String> intygsIdn);
+
+    /**
+     * Fetch the list of diagnosis codes that has SRS support
+     * @return a list of ICD-10 diagnosis codes
+     */
+    List<String> getDiagnosisList();
 
 }

@@ -67,7 +67,7 @@ angular.module('rehabstodApp').factory('SjukfallService',
 
         _.each(sjukfall, function(s) {
           if (s.riskSignal === null) {
-            s.riskSignal = {riskKategori: 0};
+            s.riskSignal = {riskKategori: -1};
           }
         });
       }
