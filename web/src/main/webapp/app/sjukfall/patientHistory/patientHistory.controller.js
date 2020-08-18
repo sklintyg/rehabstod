@@ -93,28 +93,7 @@ angular.module('rehabstodApp').controller('patientHistoryController',
       $scope.updateShowAgTable = function(isChecked) {
         $scope.showAgTable = isChecked;
       };
-/*
-      $scope.agItems = {};
-      //$scope.isCheckedAgCheckbox = false;
-      $scope.updateAgTableVisible = function(isChecked) {
-        if (isChecked) {
-          patientAgProxy.getAgIntyg(patient).then(function(response) {
-            if (!response.qaError) {
-              $scope.agItems.intyg = response.certificates;
-            } else {
-              $scope.agItems.error = 'server.error.loadpatientag.text';
-            }
-            patientAgViewState.updateAgTableVisible(isChecked);
-          }, function() {
-            $scope.agItems.error = 'server.error.loadpatientag.text';
-            patientAgViewState.updateAgTableVisible(isChecked);
-          });
-        } else {
-          patientAgViewState.updateAgTableVisible(isChecked);
-          $scope.agItems = {};
-        }
-      };
-*/
+
       function updatePatientSjukfall(patient) {
         //Start by requesting data
 

@@ -31,7 +31,7 @@ rhs-patient-ag-table {
 
   h4 {
     @extend %rs-typo-04;
-    padding: 5px 0 5px 0;
+    padding: 0;
   }
 
   .no-columns {
@@ -44,14 +44,14 @@ rhs-patient-ag-table {
     margin-bottom: 15px;
 
 
-    .no-ag-items {
+    .no-ag-certificates {
       color: #333333;
       border-top: 1px solid $inactive-element-color;
-      width:calc(100% - 145px);
+      /*width:calc(100% - 145px);*/
+      min-width: 730px;
       background-color:#efefef;
       padding: 10px;
       white-space: nowrap;
-      overflow-x: auto;
     }
 
     .patient-ag-table-container {

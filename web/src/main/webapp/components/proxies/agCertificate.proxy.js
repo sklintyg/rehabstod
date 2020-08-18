@@ -17,30 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').factory('patientAgProxy',
+angular.module('rehabstodApp').factory('agCertificateProxy',
     function($http, $log, $q, ObjectHelper, networkConfig) {
       'use strict';
 
       /*
-       * Get AG-intyg for the specified patient
+       * Get AG-certificates for the specified patient
        */
-      function _getAgIntyg(patient) {
+      function _getAgCertificates(patient) {
 
         var promise = $q.defer();
 
         var query = {
-          //patientId: patient.id
           personId: patient.id
         };
 
         var restPath = '/api/certificate/ag/person';
-        //var restPath = '/api/sjukfall/patient';
 
         var config = {
           timeout: networkConfig.defaultTimeout
         };
 
-        $log.debug('Requesting arbetsgivarintyg for patient');
+        $log.debug('Requesting AG-certificates for patient');
 
         $http.post(restPath, query, config).then(function(response) {
           if (!ObjectHelper.isDefined(response.data)) {
@@ -68,6 +66,6 @@ angular.module('rehabstodApp').factory('patientAgProxy',
       }
 
       return {
-        getAgIntyg: _getAgIntyg
+        getAgCertificates: _getAgCertificates
       };
     });

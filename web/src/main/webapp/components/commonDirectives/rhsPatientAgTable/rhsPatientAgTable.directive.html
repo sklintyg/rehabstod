@@ -17,106 +17,87 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!--<div ng-if="patientAgViewState.getAgTableVisible()">-->
-  <div ng-if="showAgTable">
-    <div rhs-spinner show-spinner="showSpinner" label="label.patienthistory.loading">
-      <h3>Intyg till arbetsgivaren</h3>
+<div ng-if="showAgTable">
+  <div rhs-spinner show-spinner="showSpinner" label="label.agcertificates.loading">
+    <h3>Intyg till arbetsgivaren</h3>
 
-      <div class="rhs-ag-table-container">
+    <div class="rhs-ag-table-container">
+      <h4>Intyg till arbetsgivaren för patienten på {{activeUnit}} - räknas inte in i patientens uppskattade position i rehabiliteringskedjan.</h4>
 
-        <h4>Intyg till arbetsgivaren för patienten på {{activeUnit}} - räknas inte in i patientens uppskattade position i rehabiliteringskedjan.</h4>
+      <div class="patient-ag-table-container">
 
-        <div ng-if="agItems.intyg.length === 0 && !agItems.error" class="no-ag-items">
-          <span>Patienten har inga intyg till arbetsgivaren på {{activeUnit}}.</span>
+        <div data-ng-if="filteredColumns.length === 0" class="alert alert-warning no-columns">
+          När du tidigare anpassade tabellen valde du bort samtliga kolumner och kan därför inte se den nu. För att lägga till kolumner igen,&nbsp;<rhs-patient-table-select-columns label-key="label.table.custom.modal.link"></rhs-patient-table-select-columns>.
         </div>
 
-        <div class="alert alert-danger" ng-if="errorMessageKey" ng-bind-html="errorMessageKey | message"></div>
+        <div class="table-responsive" data-ng-if="filteredColumns.length > 0">
+          <table id="patient-ag-table" class="table table-striped">
 
+            <thead>
+            <tr>
+              <th data-ng-repeat="column in filteredColumns" class="{{::column.classes}}">
+                {{::'label.patient.table.column.' + column.id | message}}
+              </th>
+              <th id="header-column-show-intyg" class="column-showintyg">&nbsp;</th>
+            </tr>
+            </thead>
 
-        <div ng-if="agItems.error" class="alert alert-danger">
-          <span message key="server.error.loadpatientag.text"></span>
+            <tbody>
+            <tr ng-if="agCertificates.length > 0" ng-repeat="(rowIndex, intyg) in agCertificates">
+              <td data-ng-repeat="column in filteredColumns" ng-attr-id="intyg-{{index}}-column-{{::column.id}}-{{::rowIndex}}">
+                <div data-ng-if="column.id === 'number'">{{rowIndex + 1}}</div>
+                <div data-ng-if="column.id === 'intyg'" class="nowrap">{{::intyg.certificateType}}</div>
+                <div data-ng-if="column.id === 'diagnose'" class="nowrap column-diagnos">
+                  <div class="diagnos-container">
+                    <span uib-tooltip-html="getToolTip({'diagnos': intyg.diagnose})" tooltip-popup-delay="200"
+                      class="patient-ag-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnose.intygsVarde}}
+                    </span>
+                    <span ng-if="!intyg.diagnose.intygsVarde" class="hidden-value">Okänt</span>
+                    <div class="diagnos hidden-xs hidden-sm">{{::intyg.diagnose.beskrivning}}</div>
+                  </div>
+                  <div class="diagnos-container" ng-repeat="d in intyg.biDiagnosis">
+                    <span uib-tooltip-html="getToolTip({'diagnos': d})" tooltip-popup-delay="200" tooltip-placement="auto top-right" class="patient-ag-dialog-tooltip">{{::d.intygsVarde}}</span>
+                    <span class="diagnos hidden-xs hidden-sm">{{::d.beskrivning}}</span>
+                  </div>
+                </div>
+                <div data-ng-if="column.id === 'startdate'" class="nowrap">{{::intyg.start}}</div>
+                <div data-ng-if="column.id === 'enddate'" class="nowrap">{{::intyg.end}}</div>
+                <div data-ng-if="column.id === 'length'">{{::intyg.days}} dagar</div>
+                <div data-ng-if="column.id === 'grade'" class="nowrap">
+                  <span ng-bind-html="::formatGrader({gradArr: intyg.degree})"></span>
+                  <span ng-if="!intyg.degree || intyg.degree.length <= 0" class="hidden-value">Okänt</span>
+                </div>
+                <div data-ng-if="column.id === 'doctor'">{{::intyg.doctor.namn}}
+                  <span ng-if="!intyg.doctor.namn" class="hidden-value">Okänt</span>
+                </div>
+                <div data-ng-if="column.id === 'occupation'">
+                  <div ng-repeat="s in intyg.occupation track by $index">{{::s}}</div>
+                  <span ng-if="!intyg.occupation || intyg.occupation.length <= 0" class="hidden-value">Okänt</span>
+                </div>
+                <div data-ng-if="column.id === 'vardenhet'">{{::intyg.careUnitName}}</div>
+                <div data-ng-if="column.id === 'vardgivare'">{{::intyg.careProviderName}}</div>
+              </td>
+              <td class="column-showintyg">
+                <button class="btn btn-default" ng-attr-id="sjukfall-{{index}}-show-intyg-{{intyg.id}}"
+                        ng-click="onLoadIntyg({'intyg': intyg})"><b><i class="glyphicon glyphicon-eye-open"></i> Visa intyg</b>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+          <div ng-if="agCertificates.length === 0 && !errorMessageKey" class="no-ag-certificates">
+            <span message key="label.agcertificate.table.empty" param="activeUnit"></span>
+          </div>
+          <div class="alert alert-danger" ng-if="errorMessageKey" ng-bind-html="errorMessageKey | message"></div>
         </div>
 
-
-      <div ng-if="agItems.intyg.length > 0 && !agItems.error" class="patient-ag-table-container">
-
-          <div data-ng-if="filteredColumns.length === 0" class="alert alert-warning no-columns">
-            När du tidigare anpassade tabellen valde du bort samtliga kolumner och kan därför inte se den nu. För att lägga till kolumner igen,&nbsp;<rhs-patient-table-select-columns label-key="label.table.custom.modal.link"></rhs-patient-table-select-columns>.
-          </div>
-
-          <div class="table-responsive" data-ng-if="filteredColumns.length > 0">
-            <table id="patient-ag-table" class="table table-striped">
-              <thead>
-              <tr>
-                <th data-ng-repeat="column in filteredColumns" class="{{::column.classes}}">
-                  {{::'label.patient.table.column.' + column.id | message}}
-                </th>
-                <th id="header-column-show-intyg" class="column-showintyg">&nbsp;</th>
-               </tr>
-              </thead>
-
-              <tbody>
-              <!--
-              <tr ng-if="agItems.intyg.length === 0 || agItems.error">
-                <td style="width:calc(100% - 130px);background-color:#efefef; overflow: auto;position:absolute ; top: auto">
-                  <span style="padding-top: 10px" ng-if="agItems.intyg.length === 0 && !agItems.error" message key="label.patienthistory.ag.table.empty"></span>
-                  <span class="alert" ng-if="agItems.error" message key="server.error.loadpatientag.text"></span>
-                </td>
-                <td></td>
-              </tr>
-              -->
-              <tr ng-if="agItems.intyg.length > 0 && !agItems.error" ng-repeat="(rowIndex, intyg) in agItems.intyg">
-
-                <td data-ng-repeat="column in filteredColumns" ng-attr-id="intyg-{{index}}-column-{{::column.id}}-{{::rowIndex}}">
-                  <div data-ng-if="column.id === 'number'">{{rowIndex + 1}}</div>
-                  <div data-ng-if="column.id === 'intyg'">{{::intyg.certificateType}}</div>
-                  <div data-ng-if="column.id === 'diagnose'" class="nowrap column-diagnos">
-                    <div class="diagnos-container">
-                  <span uib-tooltip-html="getToolTip({'diagnos': intyg.diagnose})" tooltip-popup-delay="200"
-                        class="patient-ag-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnose.intygsVarde}}
-                  </span><span ng-if="!intyg.diagnose.intygsVarde" class="hidden-value">Okänt</span>
-                      <div class="diagnos hidden-xs hidden-sm">{{::intyg.diagnose.beskrivning}}</div>
-                    </div>
-                    <div class="diagnos-container" ng-repeat="d in intyg.biDiagnosis">
-                      <span uib-tooltip-html="getToolTip({'diagnos': d})" tooltip-popup-delay="200" tooltip-placement="auto top-right" class="patient-ag-dialog-tooltip">{{::d.intygsVarde}}</span>
-                      <span class="diagnos hidden-xs hidden-sm">{{::d.beskrivning}}</span>
-                    </div>
-                  </div>
-                  <div data-ng-if="column.id === 'startdate'" class="nowrap">{{::intyg.start}}</div>
-                  <div data-ng-if="column.id === 'enddate'" class="nowrap">{{::intyg.end}}</div>
-                  <div data-ng-if="column.id === 'length'">{{::intyg.days}} dagar</div>
-                  <div data-ng-if="column.id === 'grade'" class="nowrap">
-                    <span ng-bind-html="::formatGrader({gradArr: intyg.degree})"></span><span ng-if="!intyg.degree || intyg.degree.length <= 0" class="hidden-value">Okänt</span>
-                  </div>
-                  <div data-ng-if="column.id === 'doctor'">{{::intyg.doctor.namn}}<span ng-if="!intyg.doctor.namn" class="hidden-value">Okänt</span></div>
-                  <div data-ng-if="column.id === 'occupation'">
-                    <div ng-repeat="s in intyg.occupation track by $index">{{::s}}</div>
-                    <span ng-if="!intyg.occupation || intyg.occupation.length <= 0" class="hidden-value">Okänt</span>
-                  </div>
-                  <div data-ng-if="column.id === 'vardenhet'">{{::intyg.careUnitName}}</div>
-                  <div data-ng-if="column.id === 'vardgivare'">{{::intyg.careProviderName}}</div>
-                </td>
-
-                <td class="column-showintyg">
-                  <button class="btn btn-default" ng-attr-id="sjukfall-{{index}}-show-intyg-{{intyg.id}}"
-                          ng-click="onLoadIntyg({'intyg': intyg})"><b><i class="glyphicon glyphicon-eye-open"></i> Visa intyg</b>
-                  </button>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="space-column-showintyg">
-          </div>
-
-        </div>
-
+        <div class="space-column-showintyg"></div>
       </div>
     </div>
-      <h3>Intyg till försäkringskassan</h3>
+  </div>
 
+  <h3>Intyg till försäkringskassan</h3>
 </div>
-<!--</div>-->
 
 <div ng-if="!showAgTable"><br></div>

@@ -18,7 +18,7 @@
  */
 angular.module('rehabstodApp')
   .directive('rhsPatientAgTable',
-    function(UserModel, patientAgProxy) {
+    function(agCertificateProxy) {
       'use strict';
 
       return {
@@ -35,9 +35,8 @@ angular.module('rehabstodApp')
         },
         templateUrl: '/components/commonDirectives/rhsPatientAgTable/rhsPatientAgTable.directive.html',
 
-
         link: function($scope) {
-          $scope.agItems = {};
+          $scope.agCertificates = {};
 
           $scope.$watchCollection('columns', function() {
             $scope.filteredColumns = $scope.columns.filter(function(column ) {
@@ -46,25 +45,21 @@ angular.module('rehabstodApp')
           });
 
           $scope.$watch('showAgTable', function() {
-            $scope.showSpinner = true;
             if ($scope.showAgTable) {
-              patientAgProxy.getAgIntyg($scope.patient).then(function(response) {
+              $scope.showSpinner = true;
+              $scope.errorMessageKey = null;
+              $scope.agCertificates = [];
+              agCertificateProxy.getAgCertificates($scope.patient).then(function(response) {
                 if (!response.qaError) {
-                  $scope.agItems.intyg = response.certificates;
+                  $scope.agCertificates = response.certificates;
                 } else {
-                  //$scope.agItems.error = 'server.error.loadpatientag.text';
-                  $scope.errorMessageKey = 'server.error.loadpatientag.text';
-
+                  $scope.errorMessageKey = 'server.error.loadagcertificates.text';
                 }
                 $scope.showSpinner = false;
               }, function() {
-                //$scope.agItems.error = 'server.error.loadpatientag.text';
-                $scope.errorMessageKey = 'server.error.loadpatientag.text';
+                $scope.errorMessageKey = 'server.error.loadagcertificates.text';
                 $scope.showSpinner = false;
               });
-            } else {
-              $scope.agItems = {};
-              $scope.showSpinner = false;
             }
           });
         }

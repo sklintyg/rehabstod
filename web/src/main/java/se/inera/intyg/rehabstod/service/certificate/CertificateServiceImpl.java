@@ -203,7 +203,7 @@ public class CertificateServiceImpl implements CertificateService {
             .biDiagnosis(getDiagnoseList(sickLeaveCertificate.getSecondaryDiagnoseCodes()))
             .start(startDate)
             .end(endDate)
-            .days((int) ChronoUnit.DAYS.between(startDate, endDate))
+            .days((int) ChronoUnit.DAYS.between(startDate, endDate) + 1)
             .degree(workCapacityList.stream().sorted(Comparator.comparing(WorkCapacity::getStartDate)).map(WorkCapacity::getReduction)
                 .collect(Collectors.toList()))
             .occupation(Arrays.stream(sickLeaveCertificate.getOccupation().split(","))
