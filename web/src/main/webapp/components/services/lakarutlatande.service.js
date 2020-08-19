@@ -18,7 +18,8 @@
  */
 
 angular.module('rehabstodApp').factory('LakarutlatandeService',
-    function($log, StringHelper, messageService, lakarutlatandenProxy, LakarutlatandeModel, LakarutlatandeFilterViewState, LakarutlatandeViewState, _) {
+    function($log, StringHelper, messageService, lakarutlatandenProxy, LakarutlatandeModel, LakarutlatandeFilterViewState,
+        LakarutlatandeViewState) {
       'use strict';
 
       var loading = false;

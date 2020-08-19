@@ -38,16 +38,13 @@ describe('Model: LakarutlatandeModel', function() {
       'beskrivning': 'Primär koxartros, dubbelsidig'
     },
     'biDiagnoser': [{'intygsVarde': 'B1'}, {'intygsVarde': 'B2'}],
-    'start': '2016-02-01',
-    'slut': '2016-03-01',
-    'dagar': 84,
-    'intyg': 4,
-    'obesvaradeKompl': 1,
-    'grader': [100, 50],
-    'aktivGrad': 100,
+    'signingTimeStamp': '2016-02-01T12:01:01.1111',
+    'unAnsweredComplement': 1,
+    'unAnsweredOther': 1,
     'lakare': {
       namn: 'Jan Nilsson'
-    }
+    },
+    'certtype': 'FK7800'
   }];
 
   // Initialize the controller and a mock scope
@@ -64,15 +61,12 @@ describe('Model: LakarutlatandeModel', function() {
       LakarutlatandeModel.set(testJsonData);
       expect(LakarutlatandeModel.get().length).toEqual(testJsonData.length);
       expect(LakarutlatandeModel.get()[0].quickSearchString).toEqual(
-          '19360721-7068:79:Förnamn-3607 Efternamn-21-7068:Kvinna:M16.0:Primär koxartros, dubbelsidig:B1B2:2016-02-01:2016-03-01:84 dagar' +
-          ':4:100%,50%:Obesvarad (1):Jan Nilsson:');
+          '19360721-7068:79:Förnamn-3607 Efternamn-21-7068:Kvinna:FK7800:M16.0:Primär koxartros, dubbelsidig:B1B2:2016-02-01:Jan Nilsson:');
     });
 
     it('should decorate show properties when set', inject(function(messageService) {
       LakarutlatandeModel.set(testJsonData);
       expect(LakarutlatandeModel.get().length).toEqual(testJsonData.length);
-      expect(LakarutlatandeModel.get()[0].dagarShow).toEqual('84 dagar');
-      expect(LakarutlatandeModel.get()[0].gradShow).toEqual('<span class="rhs-table-grad-active">100% </span> &#10142; 50% ');
       expect(LakarutlatandeModel.get()[0].patient.konShow).toEqual(messageService.getProperty('label.gender.female'));
       expect(LakarutlatandeModel.hasError()).toBeFalsy();
     }));

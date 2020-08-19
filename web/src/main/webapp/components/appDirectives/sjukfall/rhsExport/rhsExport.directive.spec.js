@@ -27,14 +27,16 @@ describe('Directive: rhsExport', function() {
   var $compile;
   var $scope;
   var SjukfallService;
+  var $httpBackend;
 
   // Store references to $rootScope and $compile
   // so they are available to all tests in this describe block
-  beforeEach(inject(function(_$compile_, $rootScope, _SjukfallService_) {
+  beforeEach(inject(function(_$compile_, $rootScope, _SjukfallService_, _$httpBackend_) {
     // The injector unwraps the underscores (_) from around the parameter names when matching
     $compile = _$compile_;
     $scope = $rootScope.$new();
     SjukfallService = _SjukfallService_;
+    $httpBackend = _$httpBackend_;
 
   }));
 
@@ -158,6 +160,8 @@ describe('Directive: rhsExport', function() {
 
     var element = angular.element('<rhs-export></rhs-export>');
     element.data('$stTableController', tableCtrl);
+
+    $httpBackend.expectGET('/api/certificate/lu/doctors').respond(['Doctor Doctorsson']);
 
     var rowElement = $compile(element)($scope);
 

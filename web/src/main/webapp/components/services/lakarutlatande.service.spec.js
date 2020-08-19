@@ -36,15 +36,17 @@ describe('Service: LakarutlatandeService', function() {
   var LakarutlatandeModel;
   var LakarutlatandeService;
   var LakarutlatandeProxy;
-  var lakarutlatandeData = [{patient: {namn: 'Hej', kon: null}}];
+  var lakarutlatandeData = [{patient: {namn: 'Hej', kon: null}, signingTimeStamp: '2020-01-01T01:01:01.000'}];
   var messageService;
+
 
   describe('Test Lakarutlatande', function() {
     // Initialize the controller and a mock scope
     beforeEach(inject(
-        function(_LakarutlatandeModel_, _messageService_, _LakarutlatandeService_, _LakarutlatandeProxy_, _LakarutlatandeFilterViewState_, featureService) {
+        function(_LakarutlatandeModel_, _messageService_, _LakarutlatandeService_, _lakarutlatandenProxy_,
+            _LakarutlatandeFilterViewState_, featureService) {
           LakarutlatandeService = _LakarutlatandeService_;
-          LakarutlatandeProxy = _LakarutlatandeProxy_;
+          LakarutlatandeProxy = _lakarutlatandenProxy_;
           LakarutlatandeModel = _LakarutlatandeModel_;
           LakarutlatandeFilterViewState = _LakarutlatandeFilterViewState_;
           messageService = _messageService_;
@@ -55,10 +57,10 @@ describe('Service: LakarutlatandeService', function() {
         }));
 
     it('Success', function() {
-      spyOn(LakarutlatandeProxy, 'get').and.callFake(function() {
+      spyOn(LakarutlatandeProxy, 'getLakarutlatandenForUnit').and.callFake(function() {
         return {
           then: function(success) {
-            success({data: lakarutlatandeData, srsError: false});
+            success({certificates: lakarutlatandeData, qaError:false});
           }
         };
       });
@@ -71,54 +73,8 @@ describe('Service: LakarutlatandeService', function() {
       expect(LakarutlatandeModel.get()).toEqual(lakarutlatandeData);
     });
 
-    it('should give correct export parameters', function() {
-
-      spyOn(LakarutlatandeProxy, 'exportResult');
-
-      LakarutlatandeFilterViewState.reset();
-      var cfs = LakarutlatandeFilterViewState.getCurrentFilterState();
-
-      var type = 'pdf';
-      var personnummer = ['1', '2'];
-      var sortState = {
-        kolumn: 'patient.namn',
-        order: 'desc'
-      };
-
-      var expectedQuery = {
-        sortering: {
-          kolumn: messageService.getProperty('label.table.column.sort.' + sortState.kolumn),
-          order: messageService.getProperty('label.table.column.sort.' + sortState.order)
-        },
-        maxIntygsGlapp: 5,
-        fritext: cfs.freeText,
-        showPatientId: cfs.showPatientId,
-        langdIntervall: {
-          min: '1',
-          max: '365+'
-        },
-        aldersIntervall: {
-          min: '0',
-          max: '100+'
-        },
-        slutdatum: {
-          min: '',
-          max: ''
-        },
-        lakare: cfs.lakare,
-        komplettering: null,
-        diagnosGrupper: cfs.diagnosKapitel,
-        personnummer: personnummer
-      };
-
-      LakarutlatandeService.exportResult(type, personnummer, sortState);
-
-      expect(LakarutlatandeProxy.exportResult.calls.count()).toEqual(1);
-      expect(LakarutlatandeProxy.exportResult).toHaveBeenCalledWith(type, expectedQuery);
-    });
-
     it('Failed', function() {
-      spyOn(LakarutlatandeProxy, 'get').and.callFake(function() {
+      spyOn(LakarutlatandeProxy, 'getLakarutlatandenForUnit').and.callFake(function() {
         return {
           then: function(success, error) {
             error({error: 401});
@@ -131,12 +87,12 @@ describe('Service: LakarutlatandeService', function() {
       expect(LakarutlatandeModel.get()).toEqual([]);
     });
 
-    describe('Test reload of sjukfall', function() {
+    describe('Test reload of Lakarutlatande', function() {
       beforeEach(inject(function() {
-        spyOn(LakarutlatandeProxy, 'get').and.callFake(function() {
+        spyOn(LakarutlatandeProxy, 'getLakarutlatandenForUnit').and.callFake(function() {
           return {
             then: function(success) {
-              success({data: lakarutlatandeData, srsError: false});
+              success({certificates: lakarutlatandeData, qaError:false});
             }
           };
         });
@@ -152,14 +108,14 @@ describe('Service: LakarutlatandeService', function() {
         LakarutlatandeService.loadLakarutlatande();
 
         expect(LakarutlatandeFilterViewState.reset.calls.count()).toEqual(1);
-        expect(LakarutlatandeProxy.get.calls.count()).toEqual(1);
+        expect(LakarutlatandeProxy.getLakarutlatandenForUnit.calls.count()).toEqual(1);
       });
 
       it('Load and reset if force', function() {
         LakarutlatandeService.loadLakarutlatande(true);
 
         expect(LakarutlatandeFilterViewState.reset.calls.count()).toEqual(2);
-        expect(LakarutlatandeProxy.get.calls.count()).toEqual(2);
+        expect(LakarutlatandeProxy.getLakarutlatandenForUnit.calls.count()).toEqual(2);
       });
     });
   });

@@ -48,6 +48,7 @@ import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -117,7 +118,7 @@ public class CertificateServiceImplTest {
         when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
             .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
 
-        var response = service.getLUCertificatesForCareUnit(null, null);
+        var response = service.getLUCertificatesForCareUnit(new GetLUCertificatesForCareUnitRequest());
         assertNotNull(response);
         var luCertificates = response.getCertificates();
 

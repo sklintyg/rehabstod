@@ -76,6 +76,6 @@ angular.module('rehabstodApp')
         restrict: 'E',
         scope: { searchFn: '&' },
         controller: 'RhsLakarutlatandeFilterCtrl',
-        templateUrl: '/components/appDirectives/sjukfall/rhsLakarutlatandeFilter/rhsLakarutlatandeFilter.directive.html',
+        templateUrl: '/components/appDirectives/sjukfall/rhsLakarutlatandeFilter/rhsLakarutlatandeFilter.directive.html'
       };
     });

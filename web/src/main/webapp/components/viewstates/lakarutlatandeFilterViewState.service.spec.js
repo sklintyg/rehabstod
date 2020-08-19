@@ -18,6 +18,7 @@
  */
 
 describe('Viewstate: LakarutlatandeFilterViewState', function() {
+
   'use strict';
   // Load the module and mock away everything that is not necessary.
   beforeEach(angular.mock.module('rehabstodApp', function($provide) {
@@ -35,13 +36,15 @@ describe('Viewstate: LakarutlatandeFilterViewState', function() {
   var DiagnosKapitelModel;
   var LakareModel;
   var KompletteringModel;
+  var CertTypeModel;
 
   // Inject dependencies and mocks
-  beforeEach(inject(function(_LakarutlatandeFilterViewState_, _DiagnosKapitelModel_, _LakareModel_, _KompletteringModel_) {
+  beforeEach(inject(function(_LakarutlatandeFilterViewState_, _DiagnosKapitelModel_, _LakareModel_, _KompletteringModel_, _CertTypeModel_) {
     LakarutlatandeFilterViewState = _LakarutlatandeFilterViewState_;
     DiagnosKapitelModel = _DiagnosKapitelModel_;
     LakareModel = _LakareModel_;
     KompletteringModel = _KompletteringModel_;
+    CertTypeModel = _CertTypeModel_;
 
   }));
 
@@ -49,12 +52,12 @@ describe('Viewstate: LakarutlatandeFilterViewState', function() {
     it('should return initial state initially', function() {
       expect(LakarutlatandeFilterViewState.get().diagnosKapitelModel.getSelected()).toEqual([]);
       expect(LakarutlatandeFilterViewState.get().lakareModel.getSelected()).toEqual([]);
-      expect(LakarutlatandeFilterViewState.get().sjukskrivningslangdModel).toEqual([1, 366]);
       expect(LakarutlatandeFilterViewState.get().aldersModel).toEqual([0, 101]);
-      expect(LakarutlatandeFilterViewState.get().slutdatumModel).toEqual({from: null, to: null});
+      expect(LakarutlatandeFilterViewState.get().signDateModel).toEqual({from: null, to: null});
       expect(LakarutlatandeFilterViewState.get().freeTextModel).toEqual('');
       expect(LakarutlatandeFilterViewState.get().kompletteringModel.getSelected().length).toEqual(1);
       expect(LakarutlatandeFilterViewState.get().showPatientId).toEqual(true);
+      expect(LakarutlatandeFilterViewState.get().certTypeModel.getSelected().length).toEqual(0);
     });
   });
 
@@ -65,20 +68,20 @@ describe('Viewstate: LakarutlatandeFilterViewState', function() {
       LakareModel.set(['Dr Jan Itor', 'Mr Nobody']);
       LakareModel.get()[0].selected = true;
       LakarutlatandeFilterViewState.get().freeTextModel = 'anything';
-      LakarutlatandeFilterViewState.get().sjukskrivningslangdModel = [22, 77];
       LakarutlatandeFilterViewState.get().aldersModel = [22, 77];
-      LakarutlatandeFilterViewState.get().slutdatumModel = {from: new Date(2017, 1, 9), to: new Date(2017, 1, 11)};
+      LakarutlatandeFilterViewState.get().signDateModel = {from: new Date(2017, 1, 9), to: new Date(2017, 1, 11)};
       LakarutlatandeFilterViewState.get().showPatientId = false;
+      CertTypeModel.get()[0].selected = true;
 
       var expectedFilter = {
         diagnosKapitel: [DiagnosKapitelModel.get()[0].id],
         lakare: [LakareModel.get()[0].id],
-        sjukskrivningslangd: LakarutlatandeFilterViewState.get().sjukskrivningslangdModel,
         alder: LakarutlatandeFilterViewState.get().aldersModel,
-        slutdatum: {from: new Date(2017, 1, 9), to: new Date(2017, 1, 11)},
+        signDate: {from: new Date(2017, 1, 9), to: new Date(2017, 1, 11)},
         freeText: LakarutlatandeFilterViewState.get().freeTextModel,
         komplettering: null,
-        showPatientId: false
+        showPatientId: false,
+        certType: ['FK7800']
       };
       //Verify
 
@@ -93,20 +96,20 @@ describe('Viewstate: LakarutlatandeFilterViewState', function() {
       LakareModel.set(['Dr Jan Itor', 'Mr Nobody']);
       LakareModel.get()[0].selected = true;
       LakarutlatandeFilterViewState.get().freeTextModel = 'anything';
-      LakarutlatandeFilterViewState.get().sjukskrivningslangdModel = [22, 77];
       LakarutlatandeFilterViewState.get().aldersModel = [22, 77];
-      LakarutlatandeFilterViewState.get().slutdatumModel = {from: new Date(2017, 1, 9), to: new Date(2017, 1, 11)};
+      LakarutlatandeFilterViewState.get().signDateModel = {from: new Date(2017, 1, 9), to: new Date(2017, 1, 11)};
       LakarutlatandeFilterViewState.get().showPatientId = false;
+      CertTypeModel.get()[0].selected = true;
 
       var expectedFilter = {
         diagnosKapitel: [],
         lakare: [],
-        sjukskrivningslangd: [1, null],
         alder: [0, null],
-        slutdatum: {from: null, to: null},
+        signDate: {from: null, to: null},
         freeText: '',
         komplettering: null,
-        showPatientId: true
+        showPatientId: true,
+        certType: []
       };
 
       //Act

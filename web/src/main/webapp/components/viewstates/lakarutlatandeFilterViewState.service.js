@@ -18,13 +18,13 @@
  */
 
 angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
-    function(DiagnosKapitelModel, LakareModel, KompletteringModel, CertTypeModel, APP_CONFIG, lakarutlatandenProxy) {
+    function(DiagnosKapitelModel, LakareModel, KompletteringModel, CertTypeModel, APP_CONFIG, lakarutlatandenProxy, $log) {
       'use strict';
 
       var state = {
         diagnosKapitelModel: DiagnosKapitelModel,
         lakareModel: LakareModel,
-        kompletteringModel: KompletteringModel, //null = show all, 0 = exactly 0 and 1 means all > 0
+        kompletteringModel: KompletteringModel, //null = show all
         showPatientId: true,
         signDateModel: {
           from: null, to: null

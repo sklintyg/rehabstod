@@ -73,7 +73,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeModel',
             case 'patientId':
             case 'patientName':
             case 'gender':
-            case 'signDate':
+            case 'signeringsdatum':
             case 'doctor':
             case 'certType':
               _addQuickSearchContentFromProperty(item, column.dataColumn);
@@ -85,9 +85,6 @@ angular.module('rehabstodApp').factory('LakarutlatandeModel',
               break;
             case 'patientAge':
               _addQuickSearchContent(item, item.patient.alder);
-              break;
-            case 'kompletteringar':
-              _addQuickSearchContent(item, item.obesvaradeKomplShow);
               break;
             }
           });

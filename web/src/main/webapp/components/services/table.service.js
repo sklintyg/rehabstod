@@ -333,14 +333,15 @@ angular.module('rehabstodApp').factory('TableService',
           classes: 'column-diagnos'
         },
         {
-          id: 'signDate',
-          dataColumn: 'slut',
-          classes: 'column-slut'
+          id: 'signeringsdatum',
+          classes: 'column-signeringsdatum',
+          defaultSort: true,
+          dataColumn: 'signingTimeStamp'
         },
         {
           id: 'qas',
-          dataColumn: 'obesvaradeArenden',
-          classes: 'column-obesvaradeArenden'
+          classes: 'column-arenden',
+          dataColumn: 'highestNbrOfArenden'
         }
       ];
 
