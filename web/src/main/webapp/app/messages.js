@@ -216,7 +216,7 @@ var rhsMessages = {
     'label.patient.table.column.enddate': 'Slutdatum',
     'label.patient.table.column.length': 'Längd',
     'label.patient.table.column.grade': 'Grad',
-    'label.patient.table.column.obesvaradekompl': 'Komplettering',
+    'label.patient.table.column.arenden': 'Ärenden',
     'label.patient.table.column.doctor': 'Läkare',
     'label.patient.table.column.occupation': 'Sysselsättning',
     'label.patient.table.column.vardenhet': 'Vårdenhet',

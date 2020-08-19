@@ -53,7 +53,7 @@
             <div data-ng-if="column.id === 'grade'" class="nowrap">
               <span ng-bind-html="::formatGrader(intyg.grader)"></span><span ng-if="!intyg.grader || intyg.grader.length <= 0" class="hidden-value">Okänt</span>
             </div>
-            <div data-ng-if="column.id === 'obesvaradekompl'" ng-bind-html="::formatKomplettering(intyg.obesvaradeKompl)"></div>
+            <div data-ng-if="column.id === 'arenden'" ng-bind-html="::formatArenden(intyg.obesvaradeKompl, intyg.unansweredOther)"></div>
             <div data-ng-if="column.id === 'doctor'">{{::intyg.lakare.namn}}<span ng-if="!intyg.lakare.namn" class="hidden-value">Okänt</span></div>
             <div data-ng-if="column.id === 'occupation'">
               <div ng-repeat="s in intyg.sysselsattning track by $index">{{::s}}</div>
