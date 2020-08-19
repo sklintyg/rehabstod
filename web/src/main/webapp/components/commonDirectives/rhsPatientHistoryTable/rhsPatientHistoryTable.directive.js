@@ -85,7 +85,7 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable',
               return '';
             } else if (!angular.isNumber(kompl) && !angular.isNumber(other)) {
               return '<span class="hidden-value">Okänt</span>';
-            } else if(kompl === 0 && qa === 0) {
+            } else if(kompl === 0 && other === 0) {
               return '-';
             } else {
                 var s = '';
