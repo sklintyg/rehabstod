@@ -36,7 +36,7 @@ public class SRSIntegrationServiceImpl implements SRSIntegrationService {
     private SRSClientService srsClientService;
 
     @Override
-    public List<RiskSignal> getRiskPreditionerForIntygsId(List<String> intygsIdn) {
+    public List<RiskSignal> getRiskPrediktionerForIntygsId(List<String> intygsIdn) {
         // Just return empty list if no intygsId's was supplied.
         if (intygsIdn == null || intygsIdn.size() == 0) {
             return new ArrayList<>();
@@ -47,5 +47,11 @@ public class SRSIntegrationServiceImpl implements SRSIntegrationService {
             .map(rp -> new RiskSignal(rp.getIntygsId(), rp.getRisksignal().getRiskkategori(),
                 rp.getRisksignal().getBeskrivning(), rp.getRisksignal().getBerakningstidpunkt()))
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getDiagnosisList() {
+        return srsClientService.getDiagnosisList().stream()
+            .map(d -> d.getCode()).collect(Collectors.toList());
     }
 }

@@ -23,6 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.Diagnos;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateResponseType;
@@ -39,6 +43,9 @@ public class SRSClientServiceImpl implements SRSClientService {
 
     @Autowired
     private GetRiskPredictionForCertificateResponderInterface service;
+
+    @Autowired
+    private GetDiagnosisCodesResponderInterface getDiagnosisCodesService;
 
     @Autowired
     @Qualifier("srsPingForConfigurationWebServiceClient")
@@ -61,5 +68,12 @@ public class SRSClientServiceImpl implements SRSClientService {
         reqType.getIntygsId().addAll(intygsId);
         GetRiskPredictionForCertificateResponseType responseType = service.getRiskPredictionForCertificate(reqType);
         return responseType.getRiskPrediktioner();
+    }
+
+    @Override
+    public List<Diagnos> getDiagnosisList() {
+        GetDiagnosisCodesRequestType reqType = new GetDiagnosisCodesRequestType();
+        GetDiagnosisCodesResponseType response = getDiagnosisCodesService.getDiagnosisCodes(reqType);
+        return response.getDiagnos();
     }
 }

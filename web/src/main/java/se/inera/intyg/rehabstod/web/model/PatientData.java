@@ -55,6 +55,7 @@ public class PatientData {
 
     private String intygsId;
     private Integer obesvaradeKompl;
+    private Integer unansweredOther;
 
     private RiskSignal riskSignal;
 
@@ -221,5 +222,13 @@ public class PatientData {
 
     public void setObesvaradeKompl(Integer obesvaradeKompl) {
         this.obesvaradeKompl = obesvaradeKompl;
+    }
+
+    public Integer getUnansweredOther() {
+        return unansweredOther;
+    }
+
+    public void setUnansweredOther(Integer unansweredOther) {
+        this.unansweredOther = unansweredOther;
     }
 }

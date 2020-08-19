@@ -16,7 +16,7 @@ ext {
     internalMonitoringSchemaVersion = "1.0.4"
     intygClinicalprocessSchemasVersion = "1.0.24"
     schemasContractVersion = "2.1.8"
-    srsSchemasVersion = "0.0.13"
+    srsSchemasVersion = "0.0.16"
 
     apacheJstlVersion = "9.4.28.v20200408"
     commonsIoVersion = "2.6"

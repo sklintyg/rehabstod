@@ -145,8 +145,8 @@ angular.module('rehabstodApp').factory('TableService',
             classes: 'column-grade'
           },
           {
-            id: 'obesvaradekompl',
-            classes: 'column-obesvaradeKompl'
+            id: 'arenden',
+            classes: 'column-arenden'
           },
           {
             id: 'doctor',

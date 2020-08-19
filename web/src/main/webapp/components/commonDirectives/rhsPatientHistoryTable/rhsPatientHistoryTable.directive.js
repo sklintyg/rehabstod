@@ -83,13 +83,18 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable',
 
           };
 
-          $scope.formatKomplettering = function(obesvaradeKompl) {
+          $scope.formatArenden = function(kompl, other) {
             if ($scope.patientHistoryViewState.getKompletteringInfoError()) {
               return '';
-            } else if (!angular.isNumber(obesvaradeKompl)) {
+            } else if (!angular.isNumber(kompl) && !angular.isNumber(other)) {
               return '<span class="hidden-value">Okänt</span>';
+            } else if(kompl === 0 && other === 0) {
+              return '-';
             } else {
-              return (obesvaradeKompl > 0) ? 'Obesvarad (' + obesvaradeKompl + ')' : '-';
+                var s = '';
+                s = kompl > 0 ? s + 'Komplettering (' + kompl + ') ' : s;
+                s = other > 0 ? s + 'Administrativ fråga (' + other + ') ' : s;
+                return s;
             }
           };
 

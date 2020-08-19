@@ -49,6 +49,7 @@ import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.integration.srs.service.SRSIntegrationService;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
@@ -118,7 +119,7 @@ public class RiskPredictionServiceImplTest {
     public void testInteractionWithSRSWhenFeatureActive() {
         String intygsId = UUID.randomUUID().toString();
 
-        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyList())).thenReturn(buildRiskSignalList(intygsId));
+        when(srsIntegrationService.getRiskPrediktionerForIntygsId(anyList())).thenReturn(buildRiskSignalList(intygsId));
         List<SjukfallEnhet> sjukfallEnhetList = buildSjukfallEnhetList(intygsId);
         testee.updateWithRiskPredictions(sjukfallEnhetList);
 
@@ -130,14 +131,14 @@ public class RiskPredictionServiceImplTest {
         assertEquals(2, sjukfallEnhet.getRiskSignal().getRiskKategori());
         assertEquals("beskrivning", sjukfallEnhet.getRiskSignal().getRiskDescription());
 
-        verify(srsIntegrationService, times(1)).getRiskPreditionerForIntygsId(anyList());
+        verify(srsIntegrationService, times(1)).getRiskPrediktionerForIntygsId(anyList());
     }
 
     @Test
     public void testPatientDataInteractionWithSRSWhenFeatureActive() {
         String intygsId = UUID.randomUUID().toString();
 
-        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyList())).thenReturn(buildRiskSignalList(intygsId));
+        when(srsIntegrationService.getRiskPrediktionerForIntygsId(anyList())).thenReturn(buildRiskSignalList(intygsId));
         List<SjukfallPatient> sjukfallPatientList = buildSjukfallPatientList(intygsId);
         testee.updateSjukfallPatientListWithRiskPredictions(sjukfallPatientList);
 
@@ -148,18 +149,18 @@ public class RiskPredictionServiceImplTest {
         assertEquals(2, patientData.getRiskSignal().getRiskKategori());
         assertEquals("beskrivning", patientData.getRiskSignal().getRiskDescription());
 
-        verify(srsIntegrationService, times(1)).getRiskPreditionerForIntygsId(anyList());
+        verify(srsIntegrationService, times(1)).getRiskPrediktionerForIntygsId(anyList());
     }
 
     @Test(expected = SRSServiceException.class)
     public void testExpectedExceptionIsThrownWhenCallToSRSFails() {
-        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyList())).thenThrow(new RuntimeException("FEL FEL FEL"));
+        when(srsIntegrationService.getRiskPrediktionerForIntygsId(anyList())).thenThrow(new RuntimeException("FEL FEL FEL"));
         testee.updateWithRiskPredictions(buildSjukfallEnhetList(UUID.randomUUID().toString()));
     }
 
     @Test(expected = SRSServiceException.class)
     public void testPatientListExpectedExceptionIsThrownWhenCallToSRSFails() {
-        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyList())).thenThrow(new RuntimeException("FEL FEL FEL"));
+        when(srsIntegrationService.getRiskPrediktionerForIntygsId(anyList())).thenThrow(new RuntimeException("FEL FEL FEL"));
         testee.updateSjukfallPatientListWithRiskPredictions(buildSjukfallPatientList(UUID.randomUUID().toString()));
     }
 
@@ -167,12 +168,13 @@ public class RiskPredictionServiceImplTest {
     public void testRiskLevelZeroIsFilteredOut() {
         String intygsId = UUID.randomUUID().toString();
         LocalDateTime now = LocalDateTime.now();
+        List<String> diagnosisList = Arrays.asList("F43", "M79", "S52");
         List<RiskSignal> riskSignals = Arrays.asList(
             new RiskSignal(intygsId, 1, "beskrivning1", now),
             new RiskSignal(intygsId, 0, "beskrivning0", now)
         );
-
-        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyList())).thenReturn(riskSignals);
+        when(srsIntegrationService.getDiagnosisList()).thenReturn(diagnosisList);
+        when(srsIntegrationService.getRiskPrediktionerForIntygsId(anyList())).thenReturn(riskSignals);
         List<SjukfallEnhet> sjukfallEnhetList = buildSjukfallEnhetList(intygsId);
         testee.updateWithRiskPredictions(sjukfallEnhetList);
 
@@ -193,7 +195,7 @@ public class RiskPredictionServiceImplTest {
             new RiskSignal(intygsId, 0, "beskrivning0", now)
         );
 
-        when(srsIntegrationService.getRiskPreditionerForIntygsId(anyList())).thenReturn(riskSignals);
+        when(srsIntegrationService.getRiskPrediktionerForIntygsId(anyList())).thenReturn(riskSignals);
         List<SjukfallEnhet> sjukfallEnhetList = buildSjukfallEnhetList(intygsId);
         testee.updateWithRiskPredictions(sjukfallEnhetList);
 
@@ -212,6 +214,7 @@ public class RiskPredictionServiceImplTest {
         List<SjukfallEnhet> list = new ArrayList<>();
         SjukfallEnhet se = new SjukfallEnhet();
         se.setIntygLista(Arrays.asList(intygsId));
+        se.setDiagnos(new Diagnos("F438A", "F438A", "namn"));
         se.setAktivIntygsId(intygsId);
         list.add(se);
         return list;
