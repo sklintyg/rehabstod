@@ -127,6 +127,7 @@ dependencies {
     compileOnly "jakarta.jms:jakarta.jms-api"
     compileOnly "javax.servlet:javax.servlet-api"
     compileOnly "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
+    compileOnly "org.eclipse.jetty:apache-jstl:${apacheJstlVersion}"
 
     testCompile "io.rest-assured:rest-assured"
     testCompile "io.rest-assured:json-schema-validator"
@@ -142,5 +143,6 @@ dependencies {
     testCompile "org.testng:testng:${testngVersion}"
 
     gretty "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
+    gretty "org.eclipse.jetty:apache-jstl:${apacheJstlVersion}"
     gretty "se.inera.intyg.refdata:refdata:${refDataVersion}"
 }

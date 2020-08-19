@@ -36,7 +36,7 @@ angular.module('rehabstodApp')
         templateUrl: '/components/commonDirectives/rhsPatientAgTable/rhsPatientAgTable.directive.html',
 
         link: function($scope) {
-          $scope.agCertificates = {};
+          $scope.agCertificates = [];
 
           $scope.$watchCollection('columns', function() {
             $scope.filteredColumns = $scope.columns.filter(function(column ) {
