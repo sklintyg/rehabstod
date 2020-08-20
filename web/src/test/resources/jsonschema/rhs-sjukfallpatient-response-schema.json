@@ -192,6 +192,9 @@
               "obesvaradeKompl": {
                 "type": "integer"
               },
+              "unansweredOther": {
+                "type": "integer"
+              },
               "additionalItems": false
             }
           }

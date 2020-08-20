@@ -138,6 +138,9 @@
       "obesvaradeKompl": {
         "type": "integer"
       },
+      "unansweredOther": {
+        "type": "integer"
+      },
       "aktivGrad": {
         "type": "integer"
       },
