@@ -333,7 +333,7 @@ angular.module('rehabstodApp').factory('TableService',
           classes: 'column-diagnos'
         },
         {
-          id: 'signeringsdatum',
+          id: 'signdate',
           classes: 'column-signeringsdatum',
           defaultSort: true,
           dataColumn: 'signingTimeStamp'

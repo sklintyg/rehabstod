@@ -73,7 +73,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeModel',
             case 'patientId':
             case 'patientName':
             case 'gender':
-            case 'signeringsdatum':
+            case 'signdate':
             case 'doctor':
             case 'certType':
               _addQuickSearchContentFromProperty(item, column.dataColumn);
