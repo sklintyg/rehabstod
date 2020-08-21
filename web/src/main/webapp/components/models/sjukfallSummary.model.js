@@ -54,7 +54,8 @@ angular.module('rehabstodApp').factory('SjukfallSummaryModel',
               {
                 id: group.grupp.id,
                 name: group.grupp.name,
-                y: group.count
+                y: group.count,
+                percentage: group.percentage
               });
         });
 
@@ -64,7 +65,8 @@ angular.module('rehabstodApp').factory('SjukfallSummaryModel',
               {
                 id: genderStat.gender,
                 name: genderStat.gender,
-                y: genderStat.count
+                y: genderStat.count,
+                percentage: genderStat.percentage
               });
         });
 
@@ -74,7 +76,8 @@ angular.module('rehabstodApp').factory('SjukfallSummaryModel',
               {
                 id: sickLeaveDegree.id,
                 name: sickLeaveDegree.name,
-                y: sickLeaveDegree.count
+                y: sickLeaveDegree.count,
+                percentage: sickLeaveDegree.percentage
               });
         });
       }

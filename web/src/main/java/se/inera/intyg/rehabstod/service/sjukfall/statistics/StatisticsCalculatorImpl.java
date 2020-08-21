@@ -84,7 +84,8 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
         Map<Integer, List<SjukfallEnhet>> byGrad = sjukfall.stream()
             .collect(Collectors.groupingBy(SjukfallEnhet::getAktivGrad));
         return byGrad.entrySet().stream()
-            .map(entry -> new SickLeaveDegreeStat(entry.getKey(), "" + entry.getKey() + " %", entry.getValue().size()))
+            .map(entry -> new SickLeaveDegreeStat(entry.getKey(), "" + entry.getKey() + " %",
+                    entry.getValue().size(), calculatePercentage(entry.getValue().size(), sjukfall.size())))
             .sorted(Comparator.comparingInt(SickLeaveDegreeStat::getId))
             .collect(Collectors.toList());
     }
@@ -95,7 +96,9 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
         int menTotal = byGender.getOrDefault(Gender.M, Collections.emptyList()).size();
         int womenTotal = byGender.getOrDefault(Gender.F, Collections.emptyList()).size();
 
-        return Arrays.asList(new GenderStat(Gender.F, womenTotal), new GenderStat(Gender.M, menTotal));
+        return Arrays.asList(
+                new GenderStat(Gender.F, womenTotal, calculatePercentage(womenTotal, (womenTotal + menTotal))),
+                new GenderStat(Gender.M, menTotal, calculatePercentage(menTotal, (womenTotal + menTotal))));
     }
 
     private List<DiagnosGruppStat> calculateGroupStatistics(List<SjukfallEnhet> sjukfall) {
@@ -106,14 +109,15 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
         for (DiagnosGrupp grupp : diagnosGrupper) {
             long count = getAntalSjukfallPerDiagnosGrupp(grupp, sjukfall);
             if (count > 0) {
-                stats.add(new DiagnosGruppStat(grupp, count));
+                stats.add(new DiagnosGruppStat(grupp, count, calculatePercentage(count, sjukfall.size())));
             }
             assignedToExistingGroupCount += count;
         }
 
         long sjukFallWithUnassignedCodeCount = sjukfall.size() - assignedToExistingGroupCount;
         if (sjukFallWithUnassignedCodeCount > 0) {
-            stats.add(new DiagnosGruppStat(NON_MATCHING_GROUP, sjukFallWithUnassignedCodeCount));
+            stats.add(new DiagnosGruppStat(NON_MATCHING_GROUP, sjukFallWithUnassignedCodeCount,
+                    calculatePercentage(sjukFallWithUnassignedCodeCount, sjukfall.size())));
         }
 
         // Finally sort the stats in falling order
@@ -124,4 +128,9 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
     private long getAntalSjukfallPerDiagnosGrupp(DiagnosGrupp grupp, List<SjukfallEnhet> sjukfall) {
         return sjukfall.stream().filter(s -> grupp.includes(s.getDiagnos().getKod())).count();
     }
+
+    private float calculatePercentage(long fraction, long total) {
+        return total == 0 ? 0.0f : ((float) fraction / total) * 100;
+    }
+
 }
