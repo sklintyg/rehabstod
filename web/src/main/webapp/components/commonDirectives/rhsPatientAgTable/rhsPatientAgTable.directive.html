@@ -52,7 +52,7 @@
                     <span uib-tooltip-html="getToolTip({'diagnos': intyg.diagnose})" tooltip-popup-delay="200"
                       class="patient-ag-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnose.intygsVarde}}
                     </span>
-                    <span ng-if="!intyg.diagnose.intygsVarde" class="hidden-value">Okänt</span>
+                    <span ng-if="!intyg.diagnose.intygsVarde" class="hidden-value">-</span>
                     <div class="diagnos hidden-xs hidden-sm">{{::intyg.diagnose.beskrivning}}</div>
                   </div>
                   <div class="diagnos-container" ng-repeat="d in intyg.biDiagnosis">

@@ -40,7 +40,7 @@ angular.module('rehabstodApp')
 
           $scope.$watchCollection('columns', function() {
             $scope.filteredColumns = $scope.columns.filter(function(column ) {
-              return column.id !== 'obesvaradekompl' && column.id !== 'risk';
+              return column.id !== 'arenden' && column.id !== 'risk';
             });
           });
 

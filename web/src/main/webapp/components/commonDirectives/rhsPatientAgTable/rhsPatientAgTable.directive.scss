@@ -47,11 +47,8 @@ rhs-patient-ag-table {
     .no-ag-certificates {
       color: #333333;
       border-top: 1px solid $inactive-element-color;
-      /*width:calc(100% - 145px);*/
-      min-width: 730px;
       background-color:#efefef;
       padding: 10px;
-      white-space: nowrap;
     }
 
     .patient-ag-table-container {
