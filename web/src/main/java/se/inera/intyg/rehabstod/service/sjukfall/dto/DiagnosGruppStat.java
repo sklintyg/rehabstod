@@ -28,10 +28,12 @@ public class DiagnosGruppStat {
 
     private DiagnosGrupp grupp;
     private Long count;
+    private float percentage;
 
-    public DiagnosGruppStat(DiagnosGrupp grupp, Long count) {
+    public DiagnosGruppStat(DiagnosGrupp grupp, Long count, float percentage) {
         this.grupp = grupp;
         this.count = count;
+        this.percentage = percentage;
     }
 
     public DiagnosGrupp getGrupp() {
@@ -50,6 +52,14 @@ public class DiagnosGruppStat {
         this.count = count;
     }
 
+    public float getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(float percentage) {
+        this.percentage = percentage;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -59,11 +69,13 @@ public class DiagnosGruppStat {
             return false;
         }
         DiagnosGruppStat that = (DiagnosGruppStat) o;
-        return Objects.equals(grupp, that.grupp) && Objects.equals(count, that.count);
+        return Objects.equals(grupp, that.grupp)
+                && Objects.equals(count, that.count)
+                && Float.compare(that.percentage, percentage) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(grupp, count);
+        return Objects.hash(grupp, count, percentage);
     }
 }
