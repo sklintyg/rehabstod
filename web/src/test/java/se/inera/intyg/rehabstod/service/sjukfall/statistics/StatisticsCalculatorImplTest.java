@@ -85,7 +85,9 @@ public class StatisticsCalculatorImplTest {
         final SjukfallSummary summary = testee.getSjukfallSummary(internalSjukfallList);
         assertEquals(0, summary.getTotal());
         assertEquals(0, getGenderItem(Gender.F, summary.getGenders()).getCount());
+        assertEquals(0.0f, getGenderItem(Gender.F, summary.getGenders()).getPercentage(), 0.001f);
         assertEquals(0, getGenderItem(Gender.M, summary.getGenders()).getCount());
+        assertEquals(0.0f, getGenderItem(Gender.M, summary.getGenders()).getPercentage(), 0.001f);
     }
 
     @Test
@@ -104,14 +106,16 @@ public class StatisticsCalculatorImplTest {
         final SjukfallSummary summary = testee.getSjukfallSummary(internalSjukfallList);
         assertEquals(6, summary.getTotal());
         assertEquals(3, getGenderItem(Gender.F, summary.getGenders()).getCount());
+        assertEquals(50.0f, getGenderItem(Gender.F, summary.getGenders()).getPercentage(), 0.001f);
         assertEquals(3, getGenderItem(Gender.M, summary.getGenders()).getCount());
+        assertEquals(50.0f, getGenderItem(Gender.M, summary.getGenders()).getPercentage(), 0.001f);
 
         final List<DiagnosGruppStat> returnedGroups = summary.getGroups();
 
         final List<DiagnosGruppStat> expectedGroups = new ArrayList<>();
-        expectedGroups.add(new DiagnosGruppStat(GRUPP1, 3L));
-        expectedGroups.add(new DiagnosGruppStat(DIAGNOS_GRUPP_UNKNOWN, 2L));
-        expectedGroups.add(new DiagnosGruppStat(GRUPP2, 1L));
+        expectedGroups.add(new DiagnosGruppStat(GRUPP1, 3L, (float) 3/6 * 100));
+        expectedGroups.add(new DiagnosGruppStat(DIAGNOS_GRUPP_UNKNOWN, 2L, (float) 2/6 * 100));
+        expectedGroups.add(new DiagnosGruppStat(GRUPP2, 1L, (float) 1/6 * 100));
         assertEquals(expectedGroups, returnedGroups);
     }
 
@@ -132,7 +136,9 @@ public class StatisticsCalculatorImplTest {
         final SjukfallSummary summary = testee.getSjukfallSummary(internalSjukfallList);
         assertEquals(4, summary.getTotal());
         assertEquals(4, getGenderItem(Gender.F, summary.getGenders()).getCount());
+        assertEquals(100.0f, getGenderItem(Gender.F, summary.getGenders()).getPercentage(), 0.001f);
         assertEquals(0, getGenderItem(Gender.M, summary.getGenders()).getCount());
+        assertEquals(0.0f, getGenderItem(Gender.M, summary.getGenders()).getPercentage(), 0.001f);
 
     }
 
@@ -151,9 +157,13 @@ public class StatisticsCalculatorImplTest {
 
         final SjukfallSummary summary = testee.getSjukfallSummary(internalSjukfallList);
         assertEquals(2, summary.getSickLeaveDegrees().get(0).getCount());
+        assertEquals((float) 2/7 * 100, summary.getSickLeaveDegrees().get(0).getPercentage(), 0.001f);
         assertEquals(1, summary.getSickLeaveDegrees().get(1).getCount());
+        assertEquals((float) 1/7 * 100, summary.getSickLeaveDegrees().get(1).getPercentage(), 0.001f);
         assertEquals(1, summary.getSickLeaveDegrees().get(2).getCount());
+        assertEquals((float) 1/7 * 100, summary.getSickLeaveDegrees().get(2).getPercentage(), 0.001f);
         assertEquals(3, summary.getSickLeaveDegrees().get(3).getCount());
+        assertEquals((float) 3/7 * 100, summary.getSickLeaveDegrees().get(3).getPercentage(), 0.001f);
 
     }
 
