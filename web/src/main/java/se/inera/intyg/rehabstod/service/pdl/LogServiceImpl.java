@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.service.pdl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -37,10 +38,12 @@ import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.PdlLogMessage;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogPatient;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUtil;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.schemas.contract.Personnummer;
@@ -131,6 +134,19 @@ public class LogServiceImpl implements LogService {
             .build();
 
         var pdlLogMessage = pdlLogMessageFactory.buildLogMessage(logPatient, LogUtil.getLogUser(rehabstodUser), activityType, resourceType);
+        send(pdlLogMessage);
+    }
+
+    @Override
+    public void logCertificate(List<LUCertificate> luCertificateList, ActivityType activityType, ResourceType resourceType,
+        Map<String, List<PDLActivityEntry>> storedActivities) {
+        if (luCertificateList == null || luCertificateList.isEmpty()) {
+            LOG.debug("No LU Certificates in resource list for PDL logging, not logging.");
+            return;
+        }
+        PdlLogMessage pdlLogMessage =
+            pdlLogMessageFactory.buildLogMessage(luCertificateList, LogUtil.getLogUser(userService.getUser()), activityType, resourceType,
+                storedActivities);
         send(pdlLogMessage);
     }
 

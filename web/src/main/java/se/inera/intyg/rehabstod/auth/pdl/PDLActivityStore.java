@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.schemas.contract.Personnummer;
 
@@ -74,7 +75,41 @@ public final class PDLActivityStore {
                     activityType,
                     resourceType)))
             .collect(Collectors.toList());
+    }
 
+    /**
+     * Should return list of LU Certificates (internally identified by patient) not already present in store
+     * for this vardenhet, activityType and resourceType.
+     *
+     * @return a list of SjukfallEnhet
+     */
+    public static List<LUCertificate> getActivitiesNotInStore(List<LUCertificate> certificates,
+        String enhetsId,
+        ActivityType activityType,
+        ResourceType resourceType,
+        Map<String, List<PDLActivityEntry>> storedActivities) {
+
+        if (certificates == null || certificates.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        if (storedActivities == null || storedActivities.isEmpty()) {
+            return certificates;
+        }
+
+        List<PDLActivityEntry> vardenhetEvents = storedActivities.get(enhetsId);
+
+        if (vardenhetEvents == null) {
+            return certificates;
+        }
+
+        return certificates.stream()
+            .filter(c -> vardenhetEvents.stream()
+                .noneMatch(storedEvent -> isStoredEvent(storedEvent,
+                    c.getPatient().getId(),
+                    activityType,
+                    resourceType)))
+            .collect(Collectors.toList());
     }
 
     /**
@@ -152,6 +187,37 @@ public final class PDLActivityStore {
         final List<PDLActivityEntry> newEntryList = sjukfallToAdd.stream()
             .map(sf -> new PDLActivityEntry(
                 createPersonnummer(sf.getPatient().getId()).getPersonnummer(),
+                activityType,
+                resourceType))
+            .collect(Collectors.toList());
+
+        List<PDLActivityEntry> vardenhetEvents = storedActivities.get(enhetsId);
+        if (vardenhetEvents == null) {
+            storedActivities.put(enhetsId, newEntryList);
+        } else {
+            ArrayList<PDLActivityEntry> list = new ArrayList<>();
+            list.addAll(vardenhetEvents);
+            list.addAll(newEntryList);
+            storedActivities.put(enhetsId, list);
+        }
+    }
+
+    /**
+     * Should store the specified certificate for the vardenhet and activityType.
+     */
+    public static void addActivitiesToStore(List<LUCertificate> luCertificatesToAdd,
+        String enhetsId,
+        ActivityType activityType,
+        ResourceType resourceType,
+        Map<String, List<PDLActivityEntry>> storedActivities) {
+
+        if (luCertificatesToAdd == null || luCertificatesToAdd.isEmpty()) {
+            return;
+        }
+
+        final List<PDLActivityEntry> newEntryList = luCertificatesToAdd.stream()
+            .map(c -> new PDLActivityEntry(
+                createPersonnummer(c.getPatient().getId()).getPersonnummer(),
                 activityType,
                 resourceType))
             .collect(Collectors.toList());

@@ -159,7 +159,8 @@ public class CertificateServiceImpl implements CertificateService {
         if (searchText != null && !searchText.isBlank() && !searchText.isEmpty()) {
             luCertificateList = luCertificateList.stream().filter(c -> filterOnText(c, searchText)).collect(Collectors.toList());
         }
-        pdlLogLUCertificatesForCareUnit(luCertificateList, unitId);
+
+        pdlLogLUCertificatesForCareUnit(luCertificateList);
 
         LOGGER.debug("Returning LU Certificates for Care Unit");
         return new GetLUCertificatesForCareUnitResponse(luCertificateList, qaInfoError);
@@ -339,12 +340,22 @@ public class CertificateServiceImpl implements CertificateService {
         }
     }
 
-    private void pdlLogLUCertificatesForCareUnit(List<LUCertificate> luCertificateList, String unitId) {
+    private void pdlLogLUCertificatesForCareUnit(List<LUCertificate> luCertificateList) {
         LOGGER.debug("Adding PDL logs for certificate read");
         var rehabstodUser = userService.getUser();
+        var enhetsId = rehabstodUser.getValdVardenhet().getId();
         var storedActivities = rehabstodUser.getStoredActivities();
-        luCertificateList.stream().map(LUCertificate::getPatient).map(Patient::getId).distinct()
-            .forEach(id -> pdlLogCertificatesForPerson(id, unitId, storedActivities));
+
+        var readActivityType = ActivityType.READ;
+        var resourceTypeCertificate = ResourceType.RESOURCE_TYPE_INTYG;
+
+        List<LUCertificate> luCertificateToLog = PDLActivityStore
+            .getActivitiesNotInStore(luCertificateList, enhetsId, readActivityType, resourceTypeCertificate,
+                rehabstodUser.getStoredActivities());
+        logService.logCertificate(luCertificateList, readActivityType, resourceTypeCertificate, storedActivities);
+        PDLActivityStore.addActivitiesToStore(luCertificateToLog, enhetsId, readActivityType, resourceTypeCertificate,
+            rehabstodUser.getStoredActivities());
+
     }
 
     private List<AGCertificate> transformSickLeaveCertificatesToAGCertificates(List<SickLeaveCertificate> sickLeaveCertificateList) {

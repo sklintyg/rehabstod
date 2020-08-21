@@ -19,6 +19,10 @@
 package se.inera.intyg.rehabstod.service.pdl;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,9 +32,11 @@ import se.inera.intyg.infra.logmessages.Patient;
 import se.inera.intyg.infra.logmessages.PdlLogMessage;
 import se.inera.intyg.infra.logmessages.PdlResource;
 import se.inera.intyg.infra.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.common.logging.pdl.SjukfallDataLogMessage;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogPatient;
 import se.inera.intyg.rehabstod.service.pdl.dto.LogUser;
+import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /**
@@ -85,6 +91,51 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         unsetValues(pdlLogMessage);
 
         return pdlLogMessage;
+    }
+
+    @Override
+    public PdlLogMessage buildLogMessage(List<LUCertificate> luCertificateList, LogUser logUser, ActivityType activityType,
+        ResourceType resourceType, Map<String, List<PDLActivityEntry>> storedActivities) {
+        PdlLogMessage pdlLogMessage = getLogMessage(activityType);
+        populateWithCurrentUserAndCareUnit(pdlLogMessage, logUser);
+
+        // Add resources
+        pdlLogMessage.getPdlResourceList().addAll(
+            luCertificateList.stream().filter(distinctByKey(c -> c.getPatient().getId()))
+                .map(c -> buildPdlLogResource(c, logUser, resourceType))
+                .collect(Collectors.toList()));
+
+        // Unset values due to regulations
+        unsetValues(pdlLogMessage);
+
+        return pdlLogMessage;
+    }
+
+    public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
+    private PdlResource buildPdlLogResource(LUCertificate certificate, LogUser user, ResourceType resourceType) {
+        PdlResource pdlResource = new PdlResource();
+        pdlResource.setPatient(getPatient(certificate));
+        pdlResource.setResourceOwner(getEnhet(certificate, user));
+        pdlResource.setResourceType(resourceType.getResourceTypeName());
+
+        return pdlResource;
+    }
+
+    private Patient getPatient(LUCertificate certificate) {
+        return createPatient(certificate.getPatient().getId(), certificate.getPatient().getNamn());
+    }
+
+    private Enhet getEnhet(LUCertificate certificate, LogUser user) {
+        String vardenhetId = getConditionalValue(certificate.getCareUnitId(), user.getEnhetsId());
+        String vardenhetNamn = getConditionalValue(certificate.getCareUnitName(), user.getEnhetsNamn());
+        String vardgivareId = getConditionalValue(certificate.getCareProviderId(), user.getVardgivareId());
+        String vardgivareNamn = getConditionalValue(certificate.getCareProviderName(), user.getVardgivareNamn());
+
+        return createEnhet(vardenhetId, vardenhetNamn, vardgivareId, vardgivareNamn);
     }
 
     private PdlResource buildPdlLogResource(SjukfallEnhet sfe, LogUser user, ResourceType resourceType) {
