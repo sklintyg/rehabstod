@@ -34,6 +34,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import se.inera.intyg.infra.certificate.dto.BaseCertificate;
+import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
+import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
+import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate.WorkCapacity;
 import se.inera.intyg.infra.integration.pu.stub.StubResidentStore;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.integration.wc.stub.WcStubStore;
@@ -62,7 +66,7 @@ import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
 // CHECKSTYLE:OFF MagicNumber
 @Component
 @Profile({"dev", "rhs-it-stub"})
-public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerator {
+public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
 
     public static final String VE_TSTNMT2321000156_105N = "TSTNMT2321000156-105N";
     public static final String VE_TSTNMT2321000156_105P = "TSTNMT2321000156-105P";
@@ -73,7 +77,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
     public static final String UE_AKUTEN = "akuten";
     public static final String UE_DIALYS = "dialys";
 
-    private static final Logger LOG = LoggerFactory.getLogger(SjukfallIntygDataGeneratorImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RSTestDataGeneratorImpl.class);
 
     private LocalDateTime timeSimulator = LocalDateTime.now();
 
@@ -146,7 +150,7 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
      */
     @Override
     @PrometheusTimeMethod
-    public List<IntygsData> generateIntygsData(Integer numberOfPatients, Integer intygPerPatient) {
+    public StubData generateIntygsData(Integer numberOfPatients, Integer intygPerPatient) {
 
         if (numberOfPatients > 13000) {
             throw new IllegalArgumentException("Cannot seed more than 13000 patients or we would have to recycle personnummer...");
@@ -156,6 +160,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         seedPatients(numberOfPatients);
 
         List<IntygsData> intygsDataList = new ArrayList<>();
+        List<DiagnosedCertificate> diagnosedCertificateList = new ArrayList<>();
+        List<SickLeaveCertificate> sickleaveCertificateList = new ArrayList<>();
 
         for (int a = 0; a < numberOfPatients; a++) {
             Patient patient = nextPatient();
@@ -163,6 +169,9 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
             addToIntygsData(intygPerPatient, patient, hosPerson, intygsDataList);
             addToIntygsData(intygPerPatient, patient, utanInloggning, intygsDataList);
             addToIntygsData(intygPerPatient, patient, nextHosPerson(), intygsDataList);
+
+            addToDiagnosedCertificates(patient, hosPerson, diagnosedCertificateList);
+            addToSickleaveCertificates(patient, hosPerson, sickleaveCertificateList);
 
         }
 
@@ -172,12 +181,134 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         addToIntygsData(intygPerPatient, tolvan, hosPersonList.get(0), intygsDataList);
         addToIntygsData(intygPerPatient, tolvan, utanInloggning, intygsDataList);
         addToIntygsData(intygPerPatient, tolvan, hosPersonList.get(1), intygsDataList);
+        addToDiagnosedCertificates(tolvan, hosPersonList.get(0), diagnosedCertificateList);
+        addToSickleaveCertificates(tolvan, hosPersonList.get(0), sickleaveCertificateList);
 
         // Lilltolvan
         createSjfPatientData(intygsDataList, intygPerPatient);
 
-        LOG.info("Generated {} intygsData items for stub", intygsDataList.size());
-        return intygsDataList;
+        LOG.info("Generated {} intygsData, {} diagnosed certs, {} sickleave certs items for stub", intygsDataList.size(),
+            diagnosedCertificateList.size(), sickleaveCertificateList.size());
+        return new StubData(intygsDataList, diagnosedCertificateList, sickleaveCertificateList);
+    }
+
+    private void addToSickleaveCertificates(Patient patient, HosPersonal hosPerson, List<SickLeaveCertificate> sickleaveCertificateList) {
+        // Start by resetting time to 60-120 days back in time..
+        timeSimulator = LocalDateTime.now().minusDays(ThreadLocalRandom.current().nextInt(60, 120));
+
+        var sickLeaveCertificate = new SickLeaveCertificate();
+        buildSickleaveCertificate(sickLeaveCertificate, patient, hosPerson);
+        sickleaveCertificateList.add(sickLeaveCertificate);
+
+        //For 25% of certificates, add at least 1 unanswered complement and the same for others
+        int randomNumberOfUnansweredComplement = getRandomNumber();
+        int randomNumberOfUnansweredOthers = getRandomNumber();
+        addToWcStubStore(sickLeaveCertificate, randomNumberOfUnansweredComplement, randomNumberOfUnansweredOthers);
+
+    }
+
+    private void addToDiagnosedCertificates(Patient patient, HosPersonal hosPerson, List<DiagnosedCertificate> diagnosedCertificateList) {
+        // Start by resetting time to 60-120 days back in time..
+        timeSimulator = LocalDateTime.now().minusDays(ThreadLocalRandom.current().nextInt(60, 120));
+
+        var diagnosedCertificate = new DiagnosedCertificate();
+        buildDiagnosedCertificate(diagnosedCertificate, patient, hosPerson);
+        diagnosedCertificateList.add(diagnosedCertificate);
+
+        //For 25% of certificates, add at least 1 unanswered complement and the same for others
+        int randomNumberOfUnansweredComplement = getRandomNumber();
+        int randomNumberOfUnansweredOthers = getRandomNumber();
+        addToWcStubStore(diagnosedCertificate, randomNumberOfUnansweredComplement, randomNumberOfUnansweredOthers);
+
+    }
+
+    private int getRandomNumber() {
+        if (ThreadLocalRandom.current().nextInt(0, 100) < 25) {
+            return ThreadLocalRandom.current().nextInt(1, 3);
+        }
+        return 0;
+    }
+
+    private void buildSickleaveCertificate(SickLeaveCertificate certificate, Patient patient, HosPersonal hosPerson) {
+
+        if (ThreadLocalRandom.current().nextInt(0, 2) == 0) {
+            buildDiagnosedCertificate(certificate, patient, hosPerson);
+        } else {
+            buildBaseCertificate(certificate, patient, hosPerson);
+        }
+
+        certificate.setOccupation(getNextSysselSattning());
+
+        var workCapacityList = buildWorkCapacity();
+        certificate.setWorkCapacityList(workCapacityList);
+
+        var i = ThreadLocalRandom.current().nextInt(2);
+
+        if (i == 1) {
+            certificate.setCertificateType("ag114");
+        } else {
+            certificate.setCertificateType("ag7804");
+        }
+
+    }
+
+    private List<WorkCapacity> buildWorkCapacity() {
+        var workCapacityList = new ArrayList<WorkCapacity>();
+
+        var randomSjukskrivningsPerioder = getRandomSjukskrivningsPerioder();
+
+        for (var sjp : randomSjukskrivningsPerioder) {
+            var workCapacity = new WorkCapacity();
+            workCapacity.setReduction(sjp.getNedsattning());
+            workCapacity.setStartDate(sjp.getStartdatum());
+            workCapacity.setEndDate(sjp.getSlutdatum());
+            workCapacityList.add(workCapacity);
+        }
+
+        return workCapacityList;
+    }
+
+    private void buildDiagnosedCertificate(DiagnosedCertificate certificate, Patient patient, HosPersonal hosPerson) {
+        buildBaseCertificate(certificate, patient, hosPerson);
+
+        certificate.setDiagnoseCode(nextDiagnosis());
+
+        if (ThreadLocalRandom.current().nextInt(2) == 0) {
+            List<String> diagnoses = new ArrayList<>();
+            diagnoses.add(nextDiagnosis());
+            if (ThreadLocalRandom.current().nextInt(2) == 0) {
+                diagnoses.add(nextDiagnosis());
+            }
+            certificate.setSecondaryDiagnoseCodes(diagnoses);
+        }
+
+        var i = ThreadLocalRandom.current().nextInt(3);
+        if (i == 0) {
+            certificate.setCertificateType("luse");
+        } else if (i == 1) {
+            certificate.setCertificateType("luae_na");
+        } else {
+            certificate.setCertificateType("luae_fs");
+        }
+
+    }
+
+    private void buildBaseCertificate(BaseCertificate certificate, Patient patient, HosPersonal hosPerson) {
+
+        certificate.setPatientFullName(patient.getFullstandigtNamn());
+        certificate.setPersonId(patient.getPersonId().getExtension());
+
+        certificate.setPersonalFullName(hosPerson.getFullstandigtNamn());
+        certificate.setPersonalHsaId(hosPerson.getPersonalId().getExtension());
+
+        var enhet = hosPerson.getEnhet();
+        certificate.setCareProviderId(enhet.getVardgivare().getVardgivarId().getExtension());
+        certificate.setCareUnitId(enhet.getEnhetsId().getExtension());
+        certificate.setCareUnitName(enhet.getEnhetsnamn());
+
+        certificate.setCertificateId(randomIntygId());
+        certificate.setSigningDateTime(timeSimulator);
+
     }
 
     private void createSjfPatientData(List<IntygsData> intygsDataList, Integer intygPerPatient) {
@@ -222,14 +353,8 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
             timeSimulator = timeSimulator.plusDays(ThreadLocalRandom.current().nextInt(0, 10));
 
             //For 25% of certificates, add at least 1 unanswered complement and the same for others
-            int randomNumberOfUnansweredComplement = 0;
-            int randomNumberOfUnansweredOthers = 0;
-            if (ThreadLocalRandom.current().nextInt(0, 100) < 25) {
-                randomNumberOfUnansweredComplement = ThreadLocalRandom.current().nextInt(1, 3);
-            }
-            if (ThreadLocalRandom.current().nextInt(0, 100) < 25) {
-                randomNumberOfUnansweredOthers = ThreadLocalRandom.current().nextInt(1, 3);
-            }
+            int randomNumberOfUnansweredComplement = getRandomNumber();
+            int randomNumberOfUnansweredOthers = getRandomNumber();
             addToWcStubStore(intygData, randomNumberOfUnansweredComplement, randomNumberOfUnansweredOthers);
         }
         // Once for each patient > 50 years old, add a 2 really old intyg to get som history
@@ -242,6 +367,16 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
 
     private void addToWcStubStore(IntygsData intygsData, int nrUnansweredComplement, int nrUnansweredOthers) {
         wcStore.addAddition(intygsData.getIntygsId(), intygsData.getSigneringsTidpunkt(), nrUnansweredComplement, nrUnansweredOthers);
+    }
+
+    private void addToWcStubStore(SickLeaveCertificate sickLeaveCertificate, int nrUnansweredComplement, int nrUnansweredOthers) {
+        wcStore.addAddition(sickLeaveCertificate.getCertificateId(), sickLeaveCertificate.getSigningDateTime(), nrUnansweredComplement,
+            nrUnansweredOthers);
+    }
+
+    private void addToWcStubStore(DiagnosedCertificate diagnosedCertificate, int nrUnansweredComplement, int nrUnansweredOthers) {
+        wcStore.addAddition(diagnosedCertificate.getCertificateId(), diagnosedCertificate.getSigningDateTime(), nrUnansweredComplement,
+            nrUnansweredOthers);
     }
 
     private int getAge(Patient patient) {
@@ -681,5 +816,31 @@ public class SjukfallIntygDataGeneratorImpl implements SjukfallIntygDataGenerato
         hsaId.setExtension("TSTNMT2321000156-1061");
         vg4.setVardgivarId(hsaId);
         vg4.setVardgivarnamn("VårdgivareCambio");
+    }
+
+    public static class StubData {
+
+        List<IntygsData> intygsDataList;
+        List<DiagnosedCertificate> diagnosedCertificateList;
+        List<SickLeaveCertificate> sickleaveCertificateList;
+
+        public StubData(List<IntygsData> intygsDataList, List<DiagnosedCertificate> diagnosedCertificateList,
+            List<SickLeaveCertificate> sickleaveCertificateList) {
+            this.intygsDataList = intygsDataList;
+            this.diagnosedCertificateList = diagnosedCertificateList;
+            this.sickleaveCertificateList = sickleaveCertificateList;
+        }
+
+        public List<IntygsData> getIntygsData() {
+            return intygsDataList;
+        }
+
+        public List<DiagnosedCertificate> getDiagnosedCertificates() {
+            return diagnosedCertificateList;
+        }
+
+        public List<SickLeaveCertificate> getSickLeaveCertificates() {
+            return sickleaveCertificateList;
+        }
     }
 }

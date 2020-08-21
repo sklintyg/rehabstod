@@ -18,14 +18,12 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import java.util.List;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+import se.inera.intyg.rehabstod.integration.it.stub.RSTestDataGeneratorImpl.StubData;
 
 /**
  * Created by eriklupander on 2016-02-01.
  */
-public interface SjukfallIntygDataGenerator {
+public interface RSTestDataGenerator {
 
-    List<IntygsData> generateIntygsData(Integer numberOfPatients, Integer intygPerPatient);
-
+    StubData generateIntygsData(Integer numberOfPatients, Integer intygPerPatient);
 }

@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
@@ -288,7 +290,9 @@ public class CertificateServiceImpl implements CertificateService {
         }
 
         LOGGER.debug("Adding PDL log for certificate read");
-        pdlLogCertificatesForPerson(personId, unitId);
+        var rehabstodUser = userService.getUser();
+        var storedActivities = rehabstodUser.getStoredActivities();
+        pdlLogCertificatesForPerson(personId, unitId, storedActivities);
 
         LOGGER.debug("Returning LU Certificates for Person");
         return new GetLUCertificatesForPersonResponse(luCertificateList, qaInfoError);
@@ -309,34 +313,38 @@ public class CertificateServiceImpl implements CertificateService {
         }
 
         LOGGER.debug("Adding PDL log for certificate read");
-        pdlLogCertificatesForPerson(personId, unitId);
+        var rehabstodUser = userService.getUser();
+        var storedActivities = rehabstodUser.getStoredActivities();
+        pdlLogCertificatesForPerson(personId, unitId, storedActivities);
 
         LOGGER.debug("Returning AG Certificates for Person");
         return new GetAGCertificatesForPersonResponse(agCertificateList, qaInfoError);
     }
 
-    private void pdlLogCertificatesForPerson(String personId, String unitId) {
+    private void pdlLogCertificatesForPerson(String personId, String unitId,
+        Map<String, List<PDLActivityEntry>> storedActivities) {
         var patientId = Personnummer.createPersonnummer(personId)
             .orElseThrow(() -> new IllegalArgumentException("Could not parse passed personId: " + personId));
 
         var readActivityType = ActivityType.READ;
         var resourceTypeCertificate = ResourceType.RESOURCE_TYPE_INTYG;
-        var rehabstodUser = userService.getUser();
 
         var isInStore = PDLActivityStore
-            .isActivityInStore(unitId, personId, readActivityType, resourceTypeCertificate, rehabstodUser.getStoredActivities());
+            .isActivityInStore(unitId, personId, readActivityType, resourceTypeCertificate, storedActivities);
 
         if (!isInStore) {
             logService.logCertificate(patientId, readActivityType, resourceTypeCertificate);
             PDLActivityStore
-                .addActivityToStore(unitId, personId, readActivityType, resourceTypeCertificate, rehabstodUser.getStoredActivities());
+                .addActivityToStore(unitId, personId, readActivityType, resourceTypeCertificate, storedActivities);
         }
     }
 
     private void pdlLogLUCertificatesForCareUnit(List<LUCertificate> luCertificateList, String unitId) {
         LOGGER.debug("Adding PDL logs for certificate read");
+        var rehabstodUser = userService.getUser();
+        var storedActivities = rehabstodUser.getStoredActivities();
         luCertificateList.stream().map(LUCertificate::getPatient).map(Patient::getId).distinct()
-            .forEach(id -> pdlLogCertificatesForPerson(id, unitId));
+            .forEach(id -> pdlLogCertificatesForPerson(id, unitId, storedActivities));
     }
 
     private List<AGCertificate> transformSickLeaveCertificatesToAGCertificates(List<SickLeaveCertificate> sickLeaveCertificateList) {

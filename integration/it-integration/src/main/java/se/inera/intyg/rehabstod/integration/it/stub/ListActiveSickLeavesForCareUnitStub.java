@@ -42,7 +42,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
 public class ListActiveSickLeavesForCareUnitStub implements ListActiveSickLeavesForCareUnitResponderInterface {
 
     @Autowired
-    private SjukfallIntygStub sjukfallIntygStub;
+    private RSTestIntygStub rsTestIntygStub;
 
     @Override
     public ListActiveSickLeavesForCareUnitResponseType listActiveSickLeavesForCareUnit(String logicalAddress,
@@ -50,7 +50,7 @@ public class ListActiveSickLeavesForCareUnitStub implements ListActiveSickLeaves
         ListActiveSickLeavesForCareUnitResponseType resp = new ListActiveSickLeavesForCareUnitResponseType();
         resp.setResultCode(ResultCodeEnum.OK);
 
-        List<String> enhetIds = SjukfallIntygDataGeneratorHelper.getUnderenheterHsaIds(parameters.getEnhetsId().getExtension());
+        List<String> enhetIds = RSTestDataGeneratorHelper.getUnderenheterHsaIds(parameters.getEnhetsId().getExtension());
         enhetIds.add(parameters.getEnhetsId().getExtension());
 
         IntygsLista intygsLista = new IntygsLista();
@@ -61,12 +61,12 @@ public class ListActiveSickLeavesForCareUnitStub implements ListActiveSickLeaves
             : null;
 
         if (!Strings.isNullOrEmpty(personnummer)) {
-            intygsLista.getIntygsData().addAll(sjukfallIntygStub.getIntygsData().stream()
+            intygsLista.getIntygsData().addAll(rsTestIntygStub.getIntygsData().stream()
                 .filter(id -> enhetIds.contains(id.getSkapadAv().getEnhet().getEnhetsId().getExtension())
                     && personnummer.equals(id.getPatient().getPersonId().getExtension()))
                 .collect(Collectors.toList()));
         } else {
-            intygsLista.getIntygsData().addAll(sjukfallIntygStub.getIntygsData().stream()
+            intygsLista.getIntygsData().addAll(rsTestIntygStub.getIntygsData().stream()
                 .filter(id -> enhetIds.contains(id.getSkapadAv().getEnhet().getEnhetsId().getExtension()))
                 .collect(Collectors.toList()));
         }

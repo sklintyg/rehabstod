@@ -42,7 +42,7 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsLista;
 public class ListSickLeavesForPersonStub implements ListSickLeavesForPersonResponderInterface {
 
     @Autowired
-    private SjukfallIntygStub sjukfallIntygStub;
+    private RSTestIntygStub rsTestIntygStub;
 
     @Override
     public ListSickLeavesForPersonResponseType listSickLeavesForPerson(String s, ListSickLeavesForPersonType parameters) {
@@ -55,7 +55,7 @@ public class ListSickLeavesForPersonStub implements ListSickLeavesForPersonRespo
         Preconditions.checkArgument(!Strings.isNullOrEmpty(personnummer));
 
         IntygsLista intygsLista = new IntygsLista();
-        intygsLista.getIntygsData().addAll(sjukfallIntygStub.getIntygsData().stream()
+        intygsLista.getIntygsData().addAll(rsTestIntygStub.getIntygsData().stream()
             .filter(item -> personnummer.equals(item.getPatient().getPersonId().getExtension()))
             .collect(Collectors.toList()));
 

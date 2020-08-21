@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import static se.inera.intyg.rehabstod.integration.it.stub.SjukfallIntygDataGeneratorImpl.UE_AKUTEN;
-import static se.inera.intyg.rehabstod.integration.it.stub.SjukfallIntygDataGeneratorImpl.UE_DIALYS;
-import static se.inera.intyg.rehabstod.integration.it.stub.SjukfallIntygDataGeneratorImpl.VE_CENTRUM_VAST;
+import static se.inera.intyg.rehabstod.integration.it.stub.RSTestDataGeneratorImpl.UE_AKUTEN;
+import static se.inera.intyg.rehabstod.integration.it.stub.RSTestDataGeneratorImpl.UE_DIALYS;
+import static se.inera.intyg.rehabstod.integration.it.stub.RSTestDataGeneratorImpl.VE_CENTRUM_VAST;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +28,9 @@ import java.util.List;
 /**
  * Created by eriklupander on 2016-02-01.
  */
-public final class SjukfallIntygDataGeneratorHelper {
+public final class RSTestDataGeneratorHelper {
 
-    private SjukfallIntygDataGeneratorHelper() {
+    private RSTestDataGeneratorHelper() {
     }
 
     public static List<String> getUnderenheterHsaIds(String enhetId) {
