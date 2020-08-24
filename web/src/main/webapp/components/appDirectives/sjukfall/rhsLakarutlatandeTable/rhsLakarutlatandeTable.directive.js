@@ -27,7 +27,7 @@ angular.module('rehabstodApp')
       $scope.model = LakarutlatandeModel;
       $scope.user = UserModel.get();
       $scope.displayedCollection = [].concat($scope.model.get());
-      $scope.columns = TableService.getSelectedLakarutlatandeUnitColumns();
+      $scope.columns = TableService.getAllLakarutlatandeUnitColumns();
       $scope.columnsForTable = [];
       $scope.tableTextKey = 'label.table.column';
 
