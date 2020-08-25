@@ -105,6 +105,10 @@ angular.module('rehabstodApp').controller('patientHistoryController',
           patientHistoryViewState.setKompletteringInfoError(sjukfallResponse.kompletteringInfoError);
 
           $scope.timeline = patientHistoryViewState.getTimelineItems();
+
+          if (sjukfallResponse.sjukfallList.length === 0) {
+            $scope.tabs.shift(); // Remove sjukfalltab
+          }
         }, function() {
           $scope.showSpinner = false;
           $scope.errorMessageKey = 'server.error.loadpatienthistory.text';

@@ -43,7 +43,7 @@
                             </span>
                         </div>
                     </div>
-                    <div data-ng-if="column.id === 'signDate'" class="column-sign sign-date">{{::row.signingTimeStamp}}</div>
+                    <div data-ng-if="column.id === 'signdate'" class="column-sign sign-date">{{::row.signingTimeStamp}}</div>
                     <div data-ng-if="column.id === 'qas'">
                         <div ng-if="row.unAnsweredComplement > 0">Komplettering ({{::row.unAnsweredComplement}})</div>
                         <div ng-if="row.unAnsweredOther > 0">Administrativ fråga ({{::row.unAnsweredOther}})</div>

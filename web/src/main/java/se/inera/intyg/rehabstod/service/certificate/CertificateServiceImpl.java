@@ -42,6 +42,7 @@ import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
@@ -91,7 +92,9 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public GetLUCertificatesForCareUnitResponse getLUCertificatesForCareUnit(GetLUCertificatesForCareUnitRequest request) {
-        var unitId = userService.getUser().getValdVardenhet().getId();
+        var user = userService.getUser();
+        var unitId = user.getValdVardenhet().getId();
+        var urval = user.getUrval();
 
         var diagnosedCertificateList = restIntegrationService
             .getDiagnosedCertificatesForCareUnit(Collections.singletonList(unitId), Arrays.asList(LU_TYPE_LIST), request.getFromDate(),
@@ -118,7 +121,10 @@ public class CertificateServiceImpl implements CertificateService {
                 .collect(Collectors.toList());
         }
 
-        if (doctors != null && !doctors.isEmpty()) {
+        if (urval == Urval.ISSUED_BY_ME) {
+            diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> user.getHsaId().equals(c.getPersonalHsaId()))
+                .collect(Collectors.toList());
+        } else if (doctors != null && !doctors.isEmpty()) {
             diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> doctors.contains(c.getPersonalFullName()))
                 .collect(Collectors.toList());
         }
@@ -184,16 +190,16 @@ public class CertificateServiceImpl implements CertificateService {
             }
         }
 
-        if (c.getDiagnose() != null) {
-            if (c.getDiagnose().getIntygsVarde() != null && c.getDiagnose().getIntygsVarde().contains(searchText)) {
+        if (c.getDiagnosis() != null) {
+            if (c.getDiagnosis().getIntygsVarde() != null && c.getDiagnosis().getIntygsVarde().contains(searchText)) {
                 return true;
             }
-            if (c.getDiagnose().getBeskrivning() != null && c.getDiagnose().getBeskrivning().contains(searchText)) {
+            if (c.getDiagnosis().getBeskrivning() != null && c.getDiagnosis().getBeskrivning().contains(searchText)) {
                 return true;
             }
         }
 
-        var biDiagnoses = c.getBiDiagnosis();
+        var biDiagnoses = c.getBiDiagnoses();
         if (biDiagnoses != null && !biDiagnoses.isEmpty()) {
             for (var diagnosis : biDiagnoses) {
                 if (diagnosis.getIntygsVarde() != null && diagnosis.getIntygsVarde().contains(searchText)) {
@@ -213,11 +219,7 @@ public class CertificateServiceImpl implements CertificateService {
             return true;
         }
 
-        if (c.getDoctor() != null && c.getDoctor().getNamn() != null && c.getDoctor().getNamn().contains(searchText)) {
-            return true;
-        }
-
-        return false;
+        return c.getDoctor() != null && c.getDoctor().getNamn() != null && c.getDoctor().getNamn().contains(searchText);
     }
 
     private boolean filterOnAge(DiagnosedCertificate c, int fromAge, int toAge) {
@@ -226,11 +228,7 @@ public class CertificateServiceImpl implements CertificateService {
         if (fromAge > 0 && patient.getAlder() < fromAge) {
             return false;
         }
-        if (toAge > 0 && toAge <= 100 && patient.getAlder() > toAge) {
-            return false;
-        }
-
-        return true;
+        return toAge <= 0 || toAge > 100 || patient.getAlder() <= toAge;
     }
 
     private boolean filterOnDiagnoses(DiagnosedCertificate diagnosedCertificate, List<String> diagnoseGroupList) {
@@ -262,12 +260,8 @@ public class CertificateServiceImpl implements CertificateService {
 
         var diagnoseNumber = Integer.parseInt(diagnose.substring(1, 3));
         var splits = diagnoseGroup.split("-");
-        if (diagnoseNumber < Integer.parseInt(splits[0].substring(1, 3))
-            || diagnoseNumber > Integer.parseInt(splits[1].substring(1, 3))) {
-            return false;
-        }
-
-        return true;
+        return diagnoseNumber >= Integer.parseInt(splits[0].substring(1, 3))
+            && diagnoseNumber <= Integer.parseInt(splits[1].substring(1, 3));
     }
 
     @Override
@@ -385,8 +379,8 @@ public class CertificateServiceImpl implements CertificateService {
             .signingTimeStamp(sickLeaveCertificate.getSigningDateTime())
             .patient(new Patient(sickLeaveCertificate.getPersonId(), sickLeaveCertificate.getPatientFullName()))
             .doctor(new Lakare(sickLeaveCertificate.getPersonalHsaId(), sickLeaveCertificate.getPersonalFullName()))
-            .diagnose(getDiagnose(sickLeaveCertificate.getDiagnoseCode()))
-            .biDiagnosis(getDiagnoseList(sickLeaveCertificate.getSecondaryDiagnoseCodes()))
+            .diagnosis(getDiagnosis(sickLeaveCertificate.getDiagnoseCode()))
+            .biDiagnoses(getDiagnosisList(sickLeaveCertificate.getSecondaryDiagnoseCodes()))
             .start(startDate)
             .end(endDate)
             .days((int) ChronoUnit.DAYS.between(startDate, endDate))
@@ -423,18 +417,18 @@ public class CertificateServiceImpl implements CertificateService {
             .signingTimeStamp(diagnosedCertificate.getSigningDateTime())
             .patient(new Patient(diagnosedCertificate.getPersonId(), diagnosedCertificate.getPatientFullName()))
             .doctor(new Lakare(diagnosedCertificate.getPersonalHsaId(), diagnosedCertificate.getPersonalFullName()))
-            .diagnose(getDiagnose(diagnosedCertificate.getDiagnoseCode()))
-            .biDiagnosis(getDiagnoseList(diagnosedCertificate.getSecondaryDiagnoseCodes())).build();
+            .diagnosis(getDiagnosis(diagnosedCertificate.getDiagnoseCode()))
+            .biDiagnoses(getDiagnosisList(diagnosedCertificate.getSecondaryDiagnoseCodes())).build();
     }
 
-    private List<Diagnos> getDiagnoseList(List<String> secondaryDiagnoseCodes) {
+    private List<Diagnos> getDiagnosisList(List<String> secondaryDiagnoseCodes) {
         if (secondaryDiagnoseCodes == null || secondaryDiagnoseCodes.isEmpty()) {
             return null;
         }
-        return secondaryDiagnoseCodes.stream().map(this::getDiagnose).collect(Collectors.toList());
+        return secondaryDiagnoseCodes.stream().map(this::getDiagnosis).collect(Collectors.toList());
     }
 
-    private Diagnos getDiagnose(String code) {
+    private Diagnos getDiagnosis(String code) {
         var diagnoseCode = new DiagnosKod(code);
         return diagnosFactory.getDiagnos(diagnoseCode.getOriginalCode(), diagnoseCode.getCleanedCode(), diagnoseCode.getName());
     }

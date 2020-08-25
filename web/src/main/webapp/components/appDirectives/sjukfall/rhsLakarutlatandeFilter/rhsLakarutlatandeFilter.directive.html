@@ -58,9 +58,9 @@
       </div>
       <!-- SIGNERINGSDATUM -->
       <div class="col-md-3 col-sm-6">
-        <fieldset class="form-group" ng-disabled="filterInactive('signDate')">
+        <fieldset class="form-group" ng-disabled="filterInactive('signdate')">
           <label class="control-label"><span message key="label.filter.signdatum"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.signdatum.help"></span></label>
-          <rhs-date-range-picker ng-if="showDatePicker" id="signdatum-range-picker" control-disabled="filterInactive('signDate')" model="filterViewState.get().signDateModel" years-back="3"></rhs-date-range-picker>
+          <rhs-date-range-picker ng-if="showDatePicker" id="signdatum-range-picker" control-disabled="filterInactive('signdate')" model="filterViewState.get().signDateModel" years-back="3"></rhs-date-range-picker>
         </fieldset>
       </div>
       <!-- ÅLDER -->
