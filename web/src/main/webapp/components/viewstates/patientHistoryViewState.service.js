@@ -235,7 +235,7 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', ['$filter', fu
     }
   }
 
-  function _closeTab(tab) {
+  function _closeTab() {
     _tabs.pop();
 
     //select the (unclosable) default fixed tab.
