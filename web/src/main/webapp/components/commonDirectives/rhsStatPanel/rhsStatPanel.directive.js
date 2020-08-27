@@ -120,8 +120,8 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                 var truncateAfter = 30;
                 var name = (this.name.length > truncateAfter) ?
                     this.name.substr(0, truncateAfter - 1) + '&hellip;' : this.name;
-                return this.id + (this.id === '' ? '' : ' ') + name + '&nbsp;<b>' + this.y + '&nbsp;st,&nbsp;' +
-                    this.percentage.toFixed(1) + '%</b>';
+                return this.id + (this.id === '' ? '' : ' ') + name + '&nbsp;<b>(' + this.y + '&nbsp;st,&nbsp;' +
+                    this.percentage.toFixed(1) + '%)</b>';
               },
               enabled: false
 
@@ -155,8 +155,8 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                 var truncateAfter = 30;
                 var name = (this.name.length > truncateAfter) ?
                     this.name.substr(0, truncateAfter - 1) + '&hellip;' : this.name;
-                return name + '&nbsp;<b>' + this.y + '&nbsp;st,&nbsp;' +
-                    this.percentage.toFixed(1) + '%</b>';
+                return name + '&nbsp;sjukskrivningsgrad&nbsp;<b>(' + this.y + '&nbsp;st,&nbsp;' +
+                    this.percentage.toFixed(1) + '%)</b>';
               },
               enabled: false
 
