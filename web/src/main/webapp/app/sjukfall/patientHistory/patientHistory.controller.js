@@ -33,12 +33,10 @@ angular.module('rehabstodApp').controller('patientHistoryController',
       $scope.tabs = patientHistoryViewState.getTabs();
       patientHistoryViewState.selectTab($scope.tabs[0]);
 
-      var allColumns = TableService.getAllPatientTableColumns(nyligenAvslutat);
-
       $scope.$watch(function() {
         return UserModel.get().preferences[TableService.patientTableKey];
       }, function() {
-        $scope.tableColumns = TableService.getSelectedColumns(allColumns, TableService.patientTableKey, true);
+        $scope.tableColumns = TableService.getSelectedPatientTableColumns(nyligenAvslutat);
       }, true);
 
       $scope.errorMessageKey = '';

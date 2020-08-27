@@ -45,15 +45,12 @@ angular.module('rehabstodApp').directive('rhsPatientHistoryTable',
           var andraVgMedSparr = patientSjfMetaData.andraVardgivareMedSparr.length;
 
           $scope.$watchCollection('columns', function() {
-            var tempColumns = $scope.columns.filter(function(column) {
-              return column.id !== 'intyg';
-            });
             if (!$scope.historyItem.isActive) {
-              $scope.filteredColumns = tempColumns.filter(function(column) {
+              $scope.filteredColumns = $scope.columns.filter(function(column) {
                 return !angular.isFunction(column.filter) || column.filter($scope.historyItem.isActive);
               });
             } else {
-              $scope.filteredColumns = tempColumns;
+              $scope.filteredColumns = $scope.columns;
             }
           });
 

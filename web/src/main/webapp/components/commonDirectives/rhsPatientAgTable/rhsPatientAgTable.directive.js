@@ -18,7 +18,7 @@
  */
 angular.module('rehabstodApp')
   .directive('rhsPatientAgTable',
-    function(agCertificateProxy) {
+    function(agCertificateProxy, TableService, UserModel) {
       'use strict';
 
       return {
@@ -27,7 +27,6 @@ angular.module('rehabstodApp')
           patient: '=',
           index: '=',
           onLoadIntyg: '&',
-          columns: '=',
           activeUnit: '=',
           getToolTip: '&',
           formatGrader: '&',
@@ -37,12 +36,13 @@ angular.module('rehabstodApp')
 
         link: function($scope) {
           $scope.agCertificates = [];
+          $scope.preferenceKey = TableService.patientTableKey;
 
-          $scope.$watchCollection('columns', function() {
-            $scope.filteredColumns = $scope.columns.filter(function(column ) {
-              return column.id !== 'arenden' && column.id !== 'risk';
-            });
-          });
+          $scope.$watch(function() {
+            return UserModel.get().preferences[$scope.preferenceKey];
+          }, function() {
+            $scope.tableColumns = TableService.getSelectedAgTableColumns(true);
+          }, true);
 
           $scope.$watch('showAgTable', function() {
             if ($scope.showAgTable) {
@@ -50,11 +50,7 @@ angular.module('rehabstodApp')
               $scope.errorMessageKey = null;
               $scope.agCertificates = [];
               agCertificateProxy.getAgCertificates($scope.patient).then(function(response) {
-                if (!response.qaError) {
-                  $scope.agCertificates = response.certificates;
-                } else {
-                  $scope.errorMessageKey = 'server.error.loadagcertificates.text';
-                }
+                $scope.agCertificates = response.certificates;
                 $scope.showSpinner = false;
               }, function() {
                 $scope.errorMessageKey = 'server.error.loadagcertificates.text';

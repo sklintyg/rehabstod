@@ -26,16 +26,16 @@
 
       <div class="patient-ag-table-container">
 
-        <div data-ng-if="filteredColumns.length === 0" class="alert alert-warning no-columns">
+        <div data-ng-if="tableColumns.length === 0" class="alert alert-warning no-columns">
           När du tidigare anpassade tabellen valde du bort samtliga kolumner och kan därför inte se den nu. För att lägga till kolumner igen,&nbsp;<rhs-patient-table-select-columns label-key="label.table.custom.modal.link"></rhs-patient-table-select-columns>.
         </div>
 
-        <div class="table-responsive" data-ng-if="filteredColumns.length > 0">
+        <div class="table-responsive" data-ng-if="tableColumns.length > 0">
           <table id="patient-ag-table" class="table table-striped">
 
             <thead>
             <tr>
-              <th data-ng-repeat="column in filteredColumns" class="{{::column.classes}}">
+              <th data-ng-repeat="column in tableColumns" class="{{::column.classes}}">
                 {{::'label.patient.table.column.' + column.id | message}}
               </th>
               <th id="header-column-show-intyg" class="column-showintyg">&nbsp;</th>
@@ -44,7 +44,7 @@
 
             <tbody>
             <tr ng-if="agCertificates.length > 0" ng-repeat="(rowIndex, intyg) in agCertificates">
-              <td data-ng-repeat="column in filteredColumns" ng-attr-id="intyg-{{index}}-column-{{::column.id}}-{{::rowIndex}}">
+              <td data-ng-repeat="column in tableColumns" ng-attr-id="agintyg-{{index}}-column-{{::column.id}}-{{::rowIndex}}">
                 <div data-ng-if="column.id === 'number'">{{rowIndex + 1}}</div>
                 <div data-ng-if="column.id === 'intyg'" class="nowrap">{{::intyg.certificateType}}</div>
                 <div data-ng-if="column.id === 'diagnose'" class="nowrap column-diagnos">

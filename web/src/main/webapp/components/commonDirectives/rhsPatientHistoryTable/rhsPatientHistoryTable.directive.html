@@ -1,6 +1,6 @@
 <h4>
   <span ng-if="historyItem.isActive">Pågående sjukfall på {{activeUnit}}</span>
-  <span ng-if="historyItem.isFirstHistorical">Tidigare sjukfall på {{getEffectiveVardenhetUnitName()}}</span> &nbsp;
+  <span ng-if="historyItem.isFirstHistorical">Tidigare sjukfall på {{activeUnit}}</span> &nbsp;
 </h4>
 <div class="rhs-history-table-container arrow_box" ng-class="{'selected' : historyItem.selected}">
   <div class="sjukfall-title-row" ng-click="onSelect(historyItem)" ng-class="{'selected' : historyItem.selected}">

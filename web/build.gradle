@@ -62,6 +62,7 @@ gretty {
 
     jvmArgs = [
             '-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,caching-enabled,rhs-security-test,rhs-wc-stub,ia-stub',
+            //'-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-srs-stub,caching-enabled,rhs-security-test,ia-stub',
                '-Dconfig.folder=' + projectDir + '/../devops/dev',
                '-Dconfig.file=' + projectDir + '/src/main/resources/dev.properties',
                '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
@@ -126,7 +127,6 @@ dependencies {
     compileOnly "jakarta.jms:jakarta.jms-api"
     compileOnly "javax.servlet:javax.servlet-api"
     compileOnly "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
-    compileOnly "org.eclipse.jetty:apache-jstl:${apacheJstlVersion}"
 
     testCompile "io.rest-assured:rest-assured"
     testCompile "io.rest-assured:json-schema-validator"
