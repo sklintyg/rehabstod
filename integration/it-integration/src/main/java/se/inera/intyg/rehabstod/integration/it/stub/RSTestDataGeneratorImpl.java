@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
+import static java.util.Map.entry;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,6 +27,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -237,7 +240,7 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
             buildBaseCertificate(certificate, patient, hosPerson);
         }
 
-        certificate.setOccupation(getNextSysselSattning());
+        certificate.setOccupation(mapOccupation(getNextSysselSattning()));
 
         var workCapacityList = buildWorkCapacity();
         certificate.setWorkCapacityList(workCapacityList);
@@ -250,6 +253,20 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
             certificate.setCertificateType("ag7804");
         }
 
+    }
+
+    private String mapOccupation(String occupation) {
+        return occupationMap().get(occupation);
+    }
+
+    private static Map<String, String> occupationMap() {
+        return Map.ofEntries(
+            entry("ARBETSLOSHET", "Arbetssökande"),
+            entry("ARBETSSOKANDE", "Arbetssökande"),
+            entry("FORALDRALEDIG", "Föräldraledighet för vård av barn"),
+            entry("FORALDRALEDIGHET", "Föräldraledighet för vård av barn"),
+            entry("NUVARANDE_ARBETE", "Nuvarande arbete"),
+            entry("STUDIER", "Studier"));
     }
 
     private List<WorkCapacity> buildWorkCapacity() {

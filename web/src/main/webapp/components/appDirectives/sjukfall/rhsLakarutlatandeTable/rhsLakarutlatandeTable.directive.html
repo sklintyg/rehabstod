@@ -35,10 +35,10 @@
                     <div data-ng-if="column.id === 'certType'" class="column-patient-vcert-type">{{::row.certificateType}}</div>
                     <div data-ng-if="column.id === 'dxs'" class="column-diagnos">
                         <div class="diagnos-container">
-                            <span uib-tooltip-html="getToolTip(row.diagnose)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnose.intygsVarde}}</span>&nbsp;
+                            <span uib-tooltip-html="getToolTip(row.diagnosis)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::row.diagnosis.intygsVarde}}</span>&nbsp;
                             <span class="column-diagnos-beskrivning hidden-sm"
-                                  ng-bind-html="row.diagnose.beskrivning"></span>
-                            <span ng-repeat="d in row.biDiagnosis track by $index">,
+                                  ng-bind-html="row.diagnosis.beskrivning"></span>
+                            <span ng-repeat="d in row.biDiagnoses track by $index">,
                               <span uib-tooltip-html="getToolTip(d)" tooltip-popup-delay="200" class="rhs-table-tooltip">{{::d.intygsVarde}}</span>
                             </span>
                         </div>

@@ -255,7 +255,7 @@ angular.module('rehabstodApp').factory('TableService',
           {
             id: 'diagnos',
             classes: 'column-diagnos',
-            dataColumn: 'diagnose.intygsVarde'
+            dataColumn: 'diagnosis.intygsVarde'
           },
           {
             id: 'signeringsdatum',
@@ -386,7 +386,7 @@ angular.module('rehabstodApp').factory('TableService',
         },
         {
           id: 'dxs',
-          dataColumn: 'diagnos.intygsVarde',
+          dataColumn: 'diagnosis.intygsVarde',
           classes: 'column-diagnos'
         },
         {

@@ -39,10 +39,10 @@ angular.module('rehabstodApp')
       });
 
 
-      $scope.getToolTip = function(diagnos) {
-        var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
-            messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
-        return '<b>' + diagnos.kod + '</b><br>' + desc;
+      $scope.getToolTip = function(diagnosis) {
+        var desc = angular.isString(diagnosis.beskrivning) ? diagnosis.beskrivning :
+            messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnosis.kod});
+        return '<b>' + diagnosis.kod + '</b><br>' + desc;
       };
 
       $scope.showPatientHistory = function(patientModel, nyligenAvslutat) {

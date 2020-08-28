@@ -49,13 +49,13 @@
                 <div data-ng-if="column.id === 'intyg'" class="nowrap">{{::intyg.certificateType}}</div>
                 <div data-ng-if="column.id === 'diagnose'" class="nowrap column-diagnos">
                   <div class="diagnos-container">
-                    <span uib-tooltip-html="getToolTip({'diagnos': intyg.diagnose})" tooltip-popup-delay="200"
-                      class="patient-ag-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnose.intygsVarde}}
+                    <span uib-tooltip-html="getToolTip({'diagnos': intyg.diagnosis})" tooltip-popup-delay="200"
+                      class="patient-ag-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnosis.intygsVarde}}
                     </span>
-                    <span ng-if="!intyg.diagnose.intygsVarde" class="hidden-value">-</span>
-                    <div class="diagnos hidden-xs hidden-sm">{{::intyg.diagnose.beskrivning}}</div>
+                    <span ng-if="!intyg.diagnosis.intygsVarde" class="hidden-value">-</span>
+                    <div class="diagnos hidden-xs hidden-sm">{{::intyg.diagnosis.beskrivning}}</div>
                   </div>
-                  <div class="diagnos-container" ng-repeat="d in intyg.biDiagnosis">
+                  <div class="diagnos-container" ng-repeat="d in intyg.biDiagnoses">
                     <span uib-tooltip-html="getToolTip({'diagnos': d})" tooltip-popup-delay="200" tooltip-placement="auto top-right" class="patient-ag-dialog-tooltip">{{::d.intygsVarde}}</span>
                     <span class="diagnos hidden-xs hidden-sm">{{::d.beskrivning}}</span>
                   </div>
