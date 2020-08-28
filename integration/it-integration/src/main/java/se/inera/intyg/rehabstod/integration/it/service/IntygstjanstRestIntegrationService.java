@@ -24,20 +24,81 @@ import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 
 
+/**
+ * Connects to Intygstjanstens REST-api to get specialized certificate data
+ */
 public interface IntygstjanstRestIntegrationService {
 
+    /**
+     * List certificates on unit(s) with diagnosis information
+     * If no from date is provided it is assumed to be 3 years back in time
+     *
+     * @param units List of units the certificates are bound to
+     * @param certificateTypes The specific type of certificates to get
+     * @param fromDate First signing date of selection
+     * @param toDate Last signing date of selection
+     * @return List of certificates with diagnosis information
+     */
     List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(List<String> units, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate);
 
+    /**
+     * List certificates for person with diagnosis information
+     * Date range is assumed to be 3 years back in time from today
+     *
+     * @param personId Id of the person to get certificates for
+     * @param certificateTypes The specific type of certificates to get
+     * @param units List of units the certificates are bound to
+     * @return List of certificates with diagnosis information
+     */
     List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(String personId, List<String> certificateTypes, List<String> units);
 
+    /**
+     * List certificates for person with diagnosis information
+     * If no from date is provided it is assumed to be 3 years back in time
+     *
+     * @param personId Id of the person to get certificates for
+     * @param certificateTypes The specific type of certificates to get
+     * @param fromDate First signing date of selection
+     * @param toDate Last signing date of selection
+     * @param units List of units the certificates are bound to
+     * @return List of certificates with diagnosis information
+     */
     List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate, List<String> units);
 
+    /**
+     * List certificates for person with sickleave information
+     * Date range is assumed to be 3 years back in time from today
+     *
+     * @param personId Id of the person to get certificates for
+     * @param certificateTypes The specific type of certificates to get
+     * @param units List of units the certificates are bound to
+     * @return List of certificates with sickleave information
+     */
     List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, List<String> units);
 
+    /**
+     * List certificates for person with sickleave information
+     * If no from date is provided it is assumed to be 3 years back in time
+     *
+     * @param personId Id of the person to get certificates for
+     * @param certificateTypes The specific type of certificates to get
+     * @param fromDate First signing date of selection
+     * @param toDate Last signing date of selection
+     * @param units List of units the certificates are bound to
+     * @return List of certificates with sickleave information
+     */
     List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate, List<String> units);
 
+    /**
+     * List doctors that have signed certificates on unit(s)
+     * Date range is assumed to be 3 years back in time from today
+     *
+     * @param units List of units the certificates are bound to
+     * @param certificateTypes The specific type of certificates to get
+     * @return List of certificates with diagnosis information
+     */
     List<String> getSigningDoctorsForUnit(List<String> units, List<String> certificateTypes);
 }

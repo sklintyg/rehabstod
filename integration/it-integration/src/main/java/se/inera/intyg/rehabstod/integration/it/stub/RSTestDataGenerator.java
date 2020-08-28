@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 import se.inera.intyg.rehabstod.integration.it.stub.RSTestDataGeneratorImpl.StubData;
 
 /**
- * Created by eriklupander on 2016-02-01.
+ * Generates test data for both sjukfall and typed certificates
  */
 public interface RSTestDataGenerator {
 
