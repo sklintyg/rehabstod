@@ -142,8 +142,8 @@ angular.module('rehabstodApp').factory('TableService',
             classes: 'column-grade'
           },
           {
-            id: 'obesvaradekompl',
-            classes: 'column-obesvaradeKompl'
+            id: 'arenden',
+            classes: 'column-arenden'
           },
           {
             id: 'doctor',
@@ -179,6 +179,63 @@ angular.module('rehabstodApp').factory('TableService',
           });
         }
 
+        return columns;
+      }
+
+      function _getAllPatientAndAgTableColumns(nyligenAvslutat) {
+        var patientTableColumns = _getAllPatientTableColumns(nyligenAvslutat);
+        var agTableColumns = _getAllAgTableColumns();
+        patientTableColumns.splice(1, 0, agTableColumns[1]);
+        return patientTableColumns;
+      }
+
+      function _getAllAgTableColumns() {
+        var columns = [
+          {
+            id: 'number',
+            classes: 'column-number'
+          },
+          {
+            id: 'intyg',
+            classes: 'column-intyg'
+          },
+          {
+            id: 'diagnose',
+            classes: 'column-diagnose'
+          },
+          {
+            id: 'startdate',
+            classes: 'column-startdate'
+          },
+          {
+            id: 'enddate',
+            classes: 'column-enddate'
+          },
+          {
+            id: 'length',
+            classes: 'column-length'
+          },
+          {
+            id: 'grade',
+            classes: 'column-grade'
+          },
+          {
+            id: 'doctor',
+            classes: 'column-doctor'
+          },
+          {
+            id: 'occupation',
+            classes: 'column-occupation'
+          },
+          {
+            id: 'vardenhet',
+            classes: ''
+          },
+          {
+            id: 'vardgivare',
+            classes: ''
+          }
+        ];
         return columns;
       }
 
@@ -356,13 +413,23 @@ angular.module('rehabstodApp').factory('TableService',
         return columns;
       }
 
+      function _getSelectedAgTableColumns(onlyPreferences) {
+        return _getSelectedColumns(_getAllAgTableColumns(), patientTableKey, onlyPreferences);
+      }
+
+      function _getSelectedPatientTableColumns(nyligenAvslutat){
+          return _getSelectedColumns(_getAllPatientTableColumns(nyligenAvslutat), patientTableKey, true);
+      }
+
       return {
         getSelectedColumns: _getSelectedColumns,
         getSelectedSjukfallColumns: _getSelectedSjukfallColumns,
         getSelectedLakarutlatandenTableColumns: _getSelectedLakarutlatandenTableColumns,
+        getSelectedAgTableColumns: _getSelectedAgTableColumns,
+        getSelectedPatientTableColumns: _getSelectedPatientTableColumns,
         getAllSjukfallTableColumns: _getAllSjukfallTableColumns,
-        getAllPatientTableColumns: _getAllPatientTableColumns,
         getAllLakarutlatandenTableColumns: _getAllLakarutlatandenTableColumns,
+        getAllPatientAndAgTableColumns: _getAllPatientAndAgTableColumns,
         sjukfallTableKey: sjukfallTableKey,
         patientTableKey: patientTableKey,
         lakarutlatandenTableKey: lakarutlatandenTableKey,

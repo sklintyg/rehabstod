@@ -27,10 +27,12 @@ public class GenderStat {
 
     private Gender gender;
     private int count;
+    private float percentage;
 
-    public GenderStat(Gender gender, int count) {
+    public GenderStat(Gender gender, int count, float percentage) {
         this.gender = gender;
         this.count = count;
+        this.percentage = percentage;
     }
 
     public Gender getGender() {
@@ -48,4 +50,13 @@ public class GenderStat {
     public void setCount(int count) {
         this.count = count;
     }
+
+    public float getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(float percentage) {
+        this.percentage = percentage;
+    }
+
 }

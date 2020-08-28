@@ -1,7 +1,7 @@
-<h3>
+<h4>
   <span ng-if="historyItem.isActive">Pågående sjukfall på {{activeUnit}}</span>
-  <span ng-if="historyItem.isFirstHistorical">Tidigare sjukfall på {{getEffectiveVardenhetUnitName()}}</span> &nbsp;
-</h3>
+  <span ng-if="historyItem.isFirstHistorical">Tidigare sjukfall på {{activeUnit}}</span> &nbsp;
+</h4>
 <div class="rhs-history-table-container arrow_box" ng-class="{'selected' : historyItem.selected}">
   <div class="sjukfall-title-row" ng-click="onSelect(historyItem)" ng-class="{'selected' : historyItem.selected}">
     <h4>{{historyItem.sjukfall.diagnos.kod}} {{historyItem.sjukfall.diagnos.beskrivning}}</h4>  <b>Sjukfallets längd
@@ -53,7 +53,7 @@
             <div data-ng-if="column.id === 'grade'" class="nowrap">
               <span ng-bind-html="::formatGrader(intyg.grader)"></span><span ng-if="!intyg.grader || intyg.grader.length <= 0" class="hidden-value">Okänt</span>
             </div>
-            <div data-ng-if="column.id === 'obesvaradekompl'" ng-bind-html="::formatKomplettering(intyg.obesvaradeKompl)"></div>
+            <div data-ng-if="column.id === 'arenden'" ng-bind-html="::formatArenden(intyg.obesvaradeKompl, intyg.unansweredOther)"></div>
             <div data-ng-if="column.id === 'doctor'">{{::intyg.lakare.namn}}<span ng-if="!intyg.lakare.namn" class="hidden-value">Okänt</span></div>
             <div data-ng-if="column.id === 'occupation'">
               <div ng-repeat="s in intyg.sysselsattning track by $index">{{::s}}</div>

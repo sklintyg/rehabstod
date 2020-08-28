@@ -46,6 +46,7 @@ public class SjukfallEnhet {
     private int dagar;
     private int intyg;
     private int obesvaradeKompl;
+    private int unansweredOther;
 
     @JsonIgnore
     private List<String> intygLista;
@@ -212,6 +213,14 @@ public class SjukfallEnhet {
 
     public void setObesvaradeKompl(int obesvaradeKompl) {
         this.obesvaradeKompl = obesvaradeKompl;
+    }
+
+    public int getUnansweredOther() {
+        return unansweredOther;
+    }
+
+    public void setUnansweredOther(int unansweredOther) {
+        this.unansweredOther = unansweredOther;
     }
 
     public List<String> getIntygLista() {

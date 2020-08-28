@@ -26,14 +26,16 @@ public class SickLeaveDegreeStat {
     private int id;
     private String name;
     private int count;
+    private float percentage;
 
     public SickLeaveDegreeStat() {
     }
 
-    public SickLeaveDegreeStat(int id, String name, int count) {
+    public SickLeaveDegreeStat(int id, String name, int count, float percentage) {
         this.id = id;
         this.name = name;
         this.count = count;
+        this.percentage = percentage;
     }
 
     public int getId() {
@@ -58,5 +60,13 @@ public class SickLeaveDegreeStat {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public float getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(float percentage) {
+        this.percentage = percentage;
     }
 }

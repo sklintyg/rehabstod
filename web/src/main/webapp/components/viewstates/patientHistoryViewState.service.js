@@ -30,7 +30,7 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', ['$filter', fu
    */
   var _timeline = [];
 
-  var _defaultTab = null;
+  var _activeTab = null;
 
   var _sjfMetaData = {};
 
@@ -204,6 +204,7 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', ['$filter', fu
     });
     //..and mark new one
     tab.active = true;
+    _activeTab = tab;
   }
 
   function _getTabById(id) {
@@ -226,21 +227,19 @@ angular.module('rehabstodApp').factory('patientHistoryViewState', ['$filter', fu
       active: isActive
     };
 
+    if(!newTab.fixed) {
+      newTab.openedFrom = _activeTab;
+    }
+
     _tabs.push(newTab);
 
     //Select new one by default
     _selectTab(newTab);
-    if (isFixed) {
-      _defaultTab = newTab;
-    }
   }
 
-  function _closeTab() {
-    _tabs.pop();
-
-    //select the (unclosable) default fixed tab.
-    _selectTab(_defaultTab);
-
+  function _closeTab(tab) {
+    _tabs.pop(tab);
+    _selectTab(tab.openedFrom);
   }
 
   // Return public API for the factory

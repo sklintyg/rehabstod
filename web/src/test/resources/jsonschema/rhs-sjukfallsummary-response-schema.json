@@ -17,6 +17,9 @@
           },
           "count": {
             "type": "integer"
+          },
+          "percentage": {
+            "type": "number"
           }
         },
         "additionalProperties": false
@@ -47,6 +50,9 @@
           },
           "count": {
             "type": "integer"
+          },
+          "percentage": {
+            "type": "number"
           }
         },
         "additionalProperties": false
@@ -66,6 +72,9 @@
           },
           "count": {
             "type": "integer"
+          },
+          "percentage": {
+            "type": "number"
           }
         },
         "additionalProperties": false

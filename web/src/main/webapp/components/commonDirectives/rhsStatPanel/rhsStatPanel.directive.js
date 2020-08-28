@@ -96,7 +96,8 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
             },
             legend: {
               labelFormatter: function() {
-                return _getGender(this.name, false) + ' <b>(' + this.y + ' st)</b>';
+                return _getGender(this.name, false) + ' <b>(' + this.y + ' st, ' +
+                    this.percentage.toFixed(1) + '%)</b>';
               },
               enabled: false
             }
@@ -119,8 +120,8 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                 var truncateAfter = 30;
                 var name = (this.name.length > truncateAfter) ?
                     this.name.substr(0, truncateAfter - 1) + '&hellip;' : this.name;
-                return this.id + (this.id === '' ? '' : ' ') + name + '&nbsp;<b>' + this.y +
-                    '</b>&nbsp;st';
+                return this.id + (this.id === '' ? '' : ' ') + name + '&nbsp;<b>(' + this.y + '&nbsp;st,&nbsp;' +
+                    this.percentage.toFixed(1) + '%)</b>';
               },
               enabled: false
 
@@ -154,8 +155,8 @@ angular.module('rehabstodApp').directive('rhsStatPanel',
                 var truncateAfter = 30;
                 var name = (this.name.length > truncateAfter) ?
                     this.name.substr(0, truncateAfter - 1) + '&hellip;' : this.name;
-                return name + '&nbsp;<b>' + this.y +
-                    '</b>&nbsp;st';
+                return name + '&nbsp;sjukskrivningsgrad&nbsp;<b>(' + this.y + '&nbsp;st,&nbsp;' +
+                    this.percentage.toFixed(1) + '%)</b>';
               },
               enabled: false
 

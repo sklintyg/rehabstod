@@ -383,7 +383,7 @@ public class CertificateServiceImpl implements CertificateService {
             .biDiagnoses(getDiagnosisList(sickLeaveCertificate.getSecondaryDiagnoseCodes()))
             .start(startDate)
             .end(endDate)
-            .days((int) ChronoUnit.DAYS.between(startDate, endDate))
+            .days((int) ChronoUnit.DAYS.between(startDate, endDate) + 1)
             .degree(workCapacityList.stream().sorted(Comparator.comparing(WorkCapacity::getStartDate)).map(WorkCapacity::getReduction)
                 .collect(Collectors.toList()))
             .occupation(Arrays.asList(sickLeaveCertificate.getOccupation().split(","))).build();
@@ -422,15 +422,20 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private List<Diagnos> getDiagnosisList(List<String> secondaryDiagnoseCodes) {
-        if (secondaryDiagnoseCodes == null || secondaryDiagnoseCodes.isEmpty()) {
-            return null;
+        if (secondaryDiagnoseCodes != null) {
+            return secondaryDiagnoseCodes.stream().map(this::getDiagnosis).collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
         }
-        return secondaryDiagnoseCodes.stream().map(this::getDiagnosis).collect(Collectors.toList());
     }
 
     private Diagnos getDiagnosis(String code) {
-        var diagnoseCode = new DiagnosKod(code);
-        return diagnosFactory.getDiagnos(diagnoseCode.getOriginalCode(), diagnoseCode.getCleanedCode(), diagnoseCode.getName());
+        if (code != null) {
+            var diagnoseCode = new DiagnosKod(code);
+            return diagnosFactory.getDiagnos(diagnoseCode.getOriginalCode(), diagnoseCode.getCleanedCode(), diagnoseCode.getName());
+        } else  {
+            return null;
+        }
     }
 
     private String translateCertificateTypeName(String type) {

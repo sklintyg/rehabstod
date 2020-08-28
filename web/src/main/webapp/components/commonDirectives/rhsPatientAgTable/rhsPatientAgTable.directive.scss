@@ -1,83 +1,65 @@
+/*!
+ * Copyright (C) 2020 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 $screen-xl-min: 1600px;
 
-rhs-patient-history-table {
-  margin: 12px 0 0 0;
+rhs-patient-ag-table {
   display: block;
 
-  h4 {
-    padding-bottom: 3px;
+  h3 {
+    @extend %rs-typo-03;
+    padding-left: 10px;
+    margin-top: 15px;
+    margin-bottom: 5px;
   }
 
-  //css triangle - adapted from www.cssarrowplease.com
-  .arrow_box {
-    position: relative;
-    background: #ffffff;
-    border: 1px solid $rs-color-07;
-    &.selected {
-      border: 2px solid $rs-color-03;
-    }
-
-    &:after, &:before {
-      right: 100%;
-      top: 22px;
-      border: solid transparent;
-      content: " ";
-      height: 0;
-      width: 0;
-      position: absolute;
-      pointer-events: none;
-    }
-
-    &:after {
-      border-color: rgba(255, 255, 255, 0);
-      border-right-color: #fff;
-      border-width: 10px;
-      margin-top: -10px;
-    }
-
-    &:before {
-      border-color: rgba(0, 131, 145, 0);
-      border-right-color: $rs-color-07;
-      border-width: 12px;
-      margin-top: -12px;
-    }
-    &.selected:before {
-      border-right-color: $rs-color-03;
-    }
-
+  h4 {
+    @extend %rs-typo-04;
+    padding: 0;
   }
 
   .no-columns {
     margin-top: 20px;
   }
 
-  .rhs-history-table-container {
 
-    &.selected {
-      box-shadow: 1px 4px 13px 0 rgba(0, 0, 0, 0.11);
-    }
-    padding: 15px;
+  .rhs-ag-table-container {
+    margin-left: 75px;
     margin-bottom: 15px;
 
-    .sjukfall-title-row {
-      display: inline-block;
-      cursor: pointer;
 
-      &.selected {
-        cursor: default;
-      }
-
-      //make room for absolutely positioned chevron-toggle-button to the right
-      padding-right: 16px;
-      h4 {
-        display: inline-block;
-        padding: 0 40px 0 0;
-      }
+    .no-ag-certificates {
+      color: #333333;
+      border-top: 1px solid $inactive-element-color;
+      background-color:#efefef;
+      padding: 10px;
     }
 
-    .patient-sjukfall-table-container {
+    .patient-ag-table-container {
       display: flex;
       position: relative;
+      margin-bottom: 10px;
+      border: 2px solid $rs-color-03;
+      padding: 15px;
+      margin-top: 5px;
+      box-shadow: 1px 4px 13px 0 rgba(0, 0, 0, 0.11);
+      width: 100%;
     }
 
     .table-responsive {
@@ -85,7 +67,7 @@ rhs-patient-history-table {
     }
 
     table {
-      margin: 15px 0 0 0;
+      margin: 0;
 
       td {
         height: 55px;
@@ -102,13 +84,14 @@ rhs-patient-history-table {
       .column-showintyg {
         position: absolute;
         width: 130px;
-        right: 0;
+        right: 15px;
         border-top: none !important;
         button {
           position: relative;
           top: 5px;
         }
       }
+
       .column-startdate,
       .column-enddate {
         width: 85px;
@@ -160,6 +143,7 @@ rhs-patient-history-table {
             padding: 5px 15px 2px 5px;
             line-height: 20px;
             font-size: 12px;
+
             .nowrap {
               white-space: nowrap;
             }
@@ -183,73 +167,18 @@ rhs-patient-history-table {
               padding-left: 5px;
             }
 
-            .patient-history-dialog-tooltip {
+            .patient-ag-dialog-tooltip {
               border-bottom: 1px dotted;
               cursor: help;
             }
-
           }
         }
-
       }
-
     }
 
     .space-column-showintyg {
       width: 130px;
       flex: 0 0 auto;
     }
-
-    .chevron-toggle-button {
-      font-size: 14px;
-      font-weight: normal;
-      border: none;
-      margin: 0;
-      padding: 0 5px;
-      background-color: transparent;
-      color: $rs-color-03;
-      outline: none;
-      top: 15px;
-      right: 10px;
-      position: absolute;
-    }
-
-  }
-
-  .extra-diagnoser {
-    padding: 20px 0 0;
-    display: flex;
-
-    .extra-diagnoser__wrapper {
-      width: 100%;
-    }
-  }
-
-  img.list-spinner {
-    width: 16px;
-  }
-
-  .warning-triangle {
-    color: $rs-color-32;
-    font-size: 16px;
-  }
-
-  .hidden-value {
-    font-style: italic;
-  }
-
-  .extra-intyginfo-heading {
-    padding: 15px 0px 10px 0px;
-    text-align: center;
-  }
-
-  .extra-intyginfo-padding-top {
-    padding-top: $grid-gutter-width;
-  }
-}
-
-@media (min-width: 992px) {
-  .extra-intyginfo {
-    display: flex;
   }
 }

@@ -43,7 +43,7 @@ angular.module('rehabstodApp')
               size: 'md',
               resolve: {
                 columns: function() {
-                  return TableService.getAllPatientTableColumns($scope.nyligenAvslutat);
+                  return TableService.getAllPatientAndAgTableColumns($scope.nyligenAvslutat);
                 },
                 preferenceKey: function() {
                   return preferenceKey;

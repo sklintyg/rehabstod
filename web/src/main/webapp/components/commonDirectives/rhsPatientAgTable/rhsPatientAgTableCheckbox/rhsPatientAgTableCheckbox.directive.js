@@ -16,21 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.integration.srs.client;
+angular.module('rehabstodApp')
+  .directive('rhsPatientAgTableCheckbox',  function(/*patientAgViewState*/) {
+      'use strict';
 
-import java.util.List;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.Diagnos;
-import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion;
-import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
-
-/**
- * Created by eriklupander on 2017-10-31.
- */
-public interface SRSClientService {
-
-    PingForConfigurationResponseType pingForConfiguration();
-
-    List<RiskPrediktion> getRiskPrediktionForCertificate(List<String> intygsId);
-
-    List<Diagnos> getDiagnosisList();
-}
+      return {
+        restrict: 'E',
+        scope: {
+          isCheckedAgCheckbox: '=',
+          onChangeAgCheckbox: '&'
+        },
+        templateUrl: '/components/commonDirectives/rhsPatientAgTable/rhsPatientAgTableCheckbox/rhsPatientAgTableCheckbox.directive.html'
+      };
+    });

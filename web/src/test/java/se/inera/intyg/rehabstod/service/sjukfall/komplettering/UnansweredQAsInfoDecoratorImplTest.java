@@ -126,10 +126,10 @@ public class UnansweredQAsInfoDecoratorImplTest {
         assertEquals(1, sjukfall1.getIntyg().get(0).getObesvaradeKompl().intValue());
         assertEquals(2, sjukfall23.getIntyg().get(0).getObesvaradeKompl().intValue());
         assertEquals(3, sjukfall23.getIntyg().get(1).getObesvaradeKompl().intValue());
-        assertNull(sjukfall4.getIntyg().get(0).getObesvaradeKompl());
-        assertNull(sjukfall5.getIntyg().get(0).getObesvaradeKompl());
-        assertNull(sjukfall6.getIntyg().get(0).getObesvaradeKompl());
-        assertNull(sjukfallNotPresent.getIntyg().get(0).getObesvaradeKompl());
+        assertEquals(0, sjukfall4.getIntyg().get(0).getObesvaradeKompl().intValue());
+        assertEquals(0, sjukfall5.getIntyg().get(0).getObesvaradeKompl().intValue());
+        assertEquals(0, sjukfall6.getIntyg().get(0).getObesvaradeKompl().intValue());
+        assertEquals(0, sjukfallNotPresent.getIntyg().get(0).getObesvaradeKompl().intValue());
     }
 
     private PatientData createPatientData(String intygId, boolean otherVardgivare, boolean otherVardenhet) {

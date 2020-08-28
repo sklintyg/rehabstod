@@ -22,9 +22,11 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.integration.srs.service.SRSIntegrationService;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
@@ -63,6 +66,18 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
         if (rehabstodSjukfall == null || rehabstodSjukfall.size() == 0) {
             return;
         }
+
+        // Set "Risk har ej beräknats" as a default value on all "sjukfall" that has an SRS diagnosis.
+        // This will be overridden below if a risk has been calculated.
+        List<String> diagnosisList = getDiagnosisList();
+        if (diagnosisList != null) {
+            for (SjukfallEnhet sjukfallEnhet : rehabstodSjukfall) {
+                if (isSrsDiagnosis(sjukfallEnhet.getDiagnos(), diagnosisList)) {
+                    sjukfallEnhet.setRiskSignal(new RiskSignal(sjukfallEnhet.getAktivIntygsId(), 0, "Risk har ej beräknats", null));
+                }
+            }
+        }
+
         List<String> intygIds = rehabstodSjukfall
             .stream()
             .flatMap((sfe) -> CollectionUtils.emptyIfNull(sfe.getIntygLista()).stream())
@@ -101,6 +116,19 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
             return;
         }
 
+        // Set "Risk har ej beräknats" as a default value on all certificates that has an SRS diagnosis.
+        // This will be overridden below if a risk has been calculated.
+        List<String> diagnosisList = getDiagnosisList();
+        if (diagnosisList != null) {
+            for (SjukfallPatient sjukfallPatient : rehabstodSjukfall) {
+                for (PatientData patientData : sjukfallPatient.getIntyg()) {
+                    if (isSrsDiagnosis(patientData.getDiagnos(), diagnosisList)) {
+                        patientData.setRiskSignal(new RiskSignal(patientData.getIntygsId(), 0, "Risk har ej beräknats", null));
+                    }
+                }
+            }
+        }
+
         List<String> intygIds = rehabstodSjukfall.stream()
             .flatMap(patientData -> patientData.getIntyg().stream())
             .map(intyg -> intyg.getIntygsId())
@@ -112,7 +140,8 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
         // Ugly iteration over result and patientdata to apply risk signals on original datastructure.
         for (RiskSignal riskSignal : prediktioner) {
 
-            // Do not add risk signals if response was 1, that means SRS had no prediction at all for the intygsId.
+            // 0 valued risk signals means it is an SRS diagnosis but no risk has been calculated
+            // Do not add risk signals if response was 0, that means SRS had no prediction at all for the intygsId.
             if (riskSignal.getRiskKategori() < 1
                 || riskSignal.getBerakningstidpunkt().isBefore(LocalDateTime.now().minus(MAX_AGE_DAYS, ChronoUnit.DAYS))) {
                 continue;
@@ -138,9 +167,29 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
             .orElse(false);
     }
 
+    private boolean isSrsDiagnosis(Diagnos diagnosis, List<String> diagnosisList) {
+        if (diagnosis == null || StringUtils.isBlank(diagnosis.getKod()) || diagnosisList == null || diagnosisList.isEmpty()) {
+            return false;
+        }
+        String diagnosisToFind = diagnosis.getKod().toUpperCase(Locale.ENGLISH)
+            .replace(".", "")
+            .replace("-", "")
+            .replace("_", "")
+            .substring(0,3);
+        return diagnosisList.contains(diagnosisToFind);
+    }
+
+    private List<String> getDiagnosisList() {
+        try {
+            return srsIntegrationService.getDiagnosisList();
+        } catch (Exception e) {
+            throw new SRSServiceException(e.getMessage());
+        }
+    }
+
     private List<RiskSignal> getRiskSignals(List<String> intygIds) {
         try {
-            return srsIntegrationService.getRiskPreditionerForIntygsId(intygIds);
+            return srsIntegrationService.getRiskPrediktionerForIntygsId(intygIds);
         } catch (Exception e) {
             throw new SRSServiceException(e.getMessage());
         }

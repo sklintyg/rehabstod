@@ -233,12 +233,13 @@ var rhsMessages = {
 
     // Patient table
     'label.patient.table.column.number': '#',
+    'label.patient.table.column.intyg': 'Intyg',
     'label.patient.table.column.diagnose': 'Diagnos/diagnoser',
     'label.patient.table.column.startdate': 'Startdatum',
     'label.patient.table.column.enddate': 'Slutdatum',
     'label.patient.table.column.length': 'Längd',
     'label.patient.table.column.grade': 'Grad',
-    'label.patient.table.column.obesvaradekompl': 'Komplettering',
+    'label.patient.table.column.arenden': 'Ärenden',
     'label.patient.table.column.doctor': 'Läkare',
     'label.patient.table.column.occupation': 'Sysselsättning',
     'label.patient.table.column.vardenhet': 'Vårdenhet',
@@ -279,6 +280,11 @@ var rhsMessages = {
     'label.role.switch.loggedin': 'Du har olika behörigheter på olika enheter. Var uppmärksam om att din roll kan komma att skifta mellan Läkare och Rehabkoordinator beroende på vilken enhet du väljer att byta till.',
 
     // Patient History Dialog
+    'label.patienthistory.ag.checkbox' : 'Visa intyg till arbetsgivare',
+    'label.patienthistory.ag.checkbox.help' : 'Visa eller dölj tabell med patientens intyg till arbetsgivare.',
+    'label.agcertificate.table.header': 'Intyg till arbetsgivaren för patienten på %0 - räknas inte in i patientens uppskattade position i rehabiliteringskedjan.',
+    'label.agcertificate.table.empty': 'Patienten har inga intyg till arbetsgivaren på %0',
+    'label.agcertificates.loading': 'Hämtar intyg till arbetsgivare...',
     'label.patienthistory.loading': 'Hämtar sjukfall för patient...',
     'label.patienthistory.empty': 'Tyvärr finns det inga giltiga intyg att visa i det här sjukfallet för tillfället. Det beror på att intygen har makulerats.',
 
@@ -320,6 +326,7 @@ var rhsMessages = {
     'server.error.changeurval.title': 'Kunde inte visa sjukfall',
     'server.error.getsummary.text': 'Statistik för enheten kan inte visas',
     'server.error.giveconsent.title': 'Kunde inte lämna medgivande om PDL-loggning',
+    'server.error.loadagcertificates.text' : 'Historik för patientens AG-intyg kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
     'server.error.loadpatienthistory.text': 'Sjukfallshistorik kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
     'server.error.loadlakarutlatanden.text': 'Historik för patientens läkarutlåtanden kan inte visas på grund av ett tekniskt fel. Försök igen om en liten stund. Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',
     'server.error.getarenden.text': 'Tyvärr kunde inte information om ärendekommunikation inhämtas på grund av ett tekniskt fel. Därför är den kolumnen tom. Om problemet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.',

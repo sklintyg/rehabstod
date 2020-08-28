@@ -1,8 +1,11 @@
 <div class="rhs-table-tooltip"
-      ng-if="category > 0"
+      ng-if="category >= 0"
       uib-tooltip-html="description"
       tooltip-popup-delay="200"
       tooltip-placement="top-right">
+  <div class="rhs-srs-risk-zero" ng-if="category == 0">
+    <div>-</div>
+  </div>
   <div class="rhs-srs-risk-one" ng-if="category == 1">
     <div class="rhs-srs-risk-indicator filled">&nbsp;</div>
     <div class="rhs-srs-risk-indicator"></div>

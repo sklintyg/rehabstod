@@ -35,10 +35,23 @@
               Därför är den kolumnen tom. Om problemet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <span dynamiclink key="ineraNationellKundservice"></span>.
             </div>
           </div>
-          <div class="select-columns-container">
-            <rhs-patient-table-select-columns nyligen-avslutat="nyligenAvslutat"></rhs-patient-table-select-columns>
+          <div class="row">
+            <div class="col-xs-6">
+              <rhs-patient-ag-table-checkbox
+                  on-change-ag-checkbox="updateShowAgTable(isChecked)"
+                  is-checked-ag-checkbox="isCheckedAgCheckbox">
+              </rhs-patient-ag-table-checkbox>
+            </div>
+            <div class="col-xs-6">
+              <div class="select-columns-container">
+               <rhs-patient-table-select-columns nyligen-avslutat="nyligenAvslutat"></rhs-patient-table-select-columns>
+              </div>
+            </div>
           </div>
 
+          <rhs-patient-ag-table columns="tableColumns" history-item="item" patient="patient" show-ag-table="showAgTable"
+                                index="$index" on-load-intyg="loadIntyg(intyg)" active-unit="getEffectiveVardenhetUnitName()"
+                                get-tool-tip="getToolTip(diagnos)" format-grader="formatGrader(gradArr)"></rhs-patient-ag-table>
           <div ng-repeat="item in timeline">
 
             <!-- special case: gap between years that have sjukfall -->

@@ -19,8 +19,15 @@
 package se.inera.intyg.rehabstod.integration.srs.stub;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.Diagnos;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesRequestType;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponderInterface;
+import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateRequestType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateResponseType;
@@ -34,7 +41,7 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertifi
  */
 @Service
 @Profile({"rhs-srs-stub"})
-public class SRSStub implements GetRiskPredictionForCertificateResponderInterface {
+public class SRSStub implements GetRiskPredictionForCertificateResponderInterface, GetDiagnosisCodesResponderInterface {
 
     private static final int ONE = 1;
     private static final int TWO = 2;
@@ -62,6 +69,23 @@ public class SRSStub implements GetRiskPredictionForCertificateResponderInterfac
             }
         }
         return resp;
+    }
+
+    @Override
+    public GetDiagnosisCodesResponseType getDiagnosisCodes(GetDiagnosisCodesRequestType getDiagnosisCodesRequestType) {
+        GetDiagnosisCodesResponseType response = new GetDiagnosisCodesResponseType();
+        response.setPrediktionsmodellversion("2.2");
+        List<Diagnos> dList = Arrays.asList("F43","M79","S52")
+            .stream()
+            .map(code -> {
+                Diagnos d = new Diagnos();
+                d.setCode(code);
+                d.setCodeSystem("1.2.752.116.1.1.1.1.3");
+                return d;
+            })
+            .collect(Collectors.toList());
+        response.getDiagnos().addAll(dList);
+        return response;
     }
 
     public boolean isActive() {

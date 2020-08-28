@@ -71,8 +71,13 @@ public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorato
             .forEach(sjukfallPatient -> sjukfallPatient.getIntyg().forEach(
                 patientData -> {
                     var unAnsweredQAs = Optional.ofNullable(perIntyg.get(patientData.getIntygsId())).orElse(null);
-
-                    patientData.setObesvaradeKompl(unAnsweredQAs == null ? null : unAnsweredQAs.getComplement());
+                    if (unAnsweredQAs != null) {
+                        patientData.setObesvaradeKompl(unAnsweredQAs.getComplement());
+                        patientData.setUnansweredOther(unAnsweredQAs.getOthers());
+                    } else {
+                        patientData.setObesvaradeKompl(0);
+                        patientData.setUnansweredOther(0);
+                    }
                 }));
 
     }
