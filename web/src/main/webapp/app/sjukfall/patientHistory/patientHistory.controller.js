@@ -27,17 +27,16 @@ angular.module('rehabstodApp').controller('patientHistoryController',
       patientHistoryViewState.addTab('', 'Sjukfall', true, true);
       patientHistoryViewState.addTab('', 'Läkarutlåtanden', true, false);
       $scope.nyligenAvslutat = nyligenAvslutat;
+      $scope.showAgTable = false;
 
       //expose tabs model to view
       $scope.tabs = patientHistoryViewState.getTabs();
       patientHistoryViewState.selectTab($scope.tabs[0]);
 
-      var allColumns = TableService.getAllPatientTableColumns(nyligenAvslutat);
-
       $scope.$watch(function() {
         return UserModel.get().preferences[TableService.patientTableKey];
       }, function() {
-        $scope.tableColumns = TableService.getSelectedColumns(allColumns, TableService.patientTableKey, true);
+        $scope.tableColumns = TableService.getSelectedPatientTableColumns(nyligenAvslutat);
       }, true);
 
       $scope.errorMessageKey = '';
@@ -89,6 +88,10 @@ angular.module('rehabstodApp').controller('patientHistoryController',
         return '<b>' + diagnos.kod + '</b><br>' + desc;
       };
 
+      $scope.updateShowAgTable = function(isChecked) {
+        $scope.showAgTable = isChecked;
+      };
+
       function updatePatientSjukfall(patient) {
         //Start by requesting data
 
@@ -104,6 +107,19 @@ angular.module('rehabstodApp').controller('patientHistoryController',
           $scope.errorMessageKey = 'server.error.loadpatienthistory.text';
         });
       }
+
+      $scope.formatGrader = function(gradArr) {
+
+        switch (gradArr.length) {
+        case 0:
+          return '';
+        case 1:
+          return gradArr[0] + '%';
+        default:
+          return gradArr[0] + '% &#10142; ' + gradArr[gradArr.length - 1] + '%';
+        }
+
+      };
 
       $scope.$on('patientHistory.update', function() {
         updatePatientSjukfall(patient);
