@@ -35,7 +35,7 @@ angular.module('rehabstodApp')
         });
       };
 
-      $scope.showPdlConsentDialog = function(msgConfig) {
+      $scope.showPdlConsentDialog = function(msgConfig, toSite) {
         $uibModal.open({
           windowClass: 'rhs-pdlconsent-modal',
           templateUrl: '/app/pdlconsent/pdlconsentdialog.html',
@@ -44,6 +44,9 @@ angular.module('rehabstodApp')
           resolve: {
             msgConfig: function() {
               return msgConfig;
+            },
+            toSite: function() {
+              return toSite;
             }
           }
         });
@@ -61,7 +64,7 @@ angular.module('rehabstodApp')
         var texts = {
           body: messageService.getProperty(msgConfig.bodyTextKey)
         };
-        $scope.showPdlConsentDialog(texts);
+        $scope.showPdlConsentDialog(texts, msgConfig.toSite);
       });
       //rootscope on event listeners aren't unregistered automatically when 'this' directives
       //scope is destroyed, so let's take care of that.

@@ -30,6 +30,11 @@ angular.module('rehabstodApp')
       title: 'Pågående sjukfall',
       link: 'app.sjukfall.result',
       id: 'navbar-link-sjukfall'
+    },
+    {
+      title: 'Läkarutlåtanden',
+      link: 'app.sjukfall.lakarutlatande',
+      id: 'navbar-link-lu'
     }
   ];
 

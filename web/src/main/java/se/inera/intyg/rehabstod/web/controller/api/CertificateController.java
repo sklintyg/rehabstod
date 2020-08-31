@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class CertificateController {
         LOG.info("Getting LU certificates for care unit");
 
         var response = certificateService
-            .getLUCertificatesForCareUnit(request.getFromDate(), request.getToDate());
+            .getLUCertificatesForCareUnit(request);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -65,6 +66,15 @@ public class CertificateController {
 
         var response = certificateService
             .getLUCertificatesForPerson(request.getPersonId());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/lu/doctors", method = RequestMethod.GET)
+    public ResponseEntity<List<String>> getDoctorsForUnit() {
+        LOG.info("Getting LU signing doctors for unit");
+
+        var response = certificateService.getDoctorsForUnit();
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

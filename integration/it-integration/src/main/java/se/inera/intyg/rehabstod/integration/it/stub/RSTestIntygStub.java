@@ -27,6 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
+import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 // CHECKSTYLE:ON LineLength
@@ -36,12 +38,16 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
  */
 @Service
 @Profile({"rhs-it-stub"})
-public class SjukfallIntygStub {
+public class RSTestIntygStub {
 
     private List<IntygsData> intygsData = new ArrayList<>();
 
+    private List<DiagnosedCertificate> luCertificateData = new ArrayList<>();
+
+    private List<SickLeaveCertificate> agCertificateData = new ArrayList<>();
+
     @Autowired
-    private SjukfallIntygDataGenerator sjukfallIntygDataGenerator;
+    private RSTestDataGenerator rsTestDataGenerator;
 
     @Value("${rhs.sjukfall.stub.numberOfPatients}")
     private Integer numberOfPatients;
@@ -51,10 +57,21 @@ public class SjukfallIntygStub {
 
     @PostConstruct
     public void init() {
-        intygsData = sjukfallIntygDataGenerator.generateIntygsData(numberOfPatients, intygPerPatient);
+        var stubData = rsTestDataGenerator.generateIntygsData(numberOfPatients, intygPerPatient);
+        intygsData = stubData.getIntygsData();
+        luCertificateData = stubData.getDiagnosedCertificates();
+        agCertificateData = stubData.getSickLeaveCertificates();
     }
 
     public List<IntygsData> getIntygsData() {
         return intygsData;
+    }
+
+    public List<DiagnosedCertificate> getLUCertificateData() {
+        return luCertificateData;
+    }
+
+    public List<SickLeaveCertificate> getAGCertificateData() {
+        return agCertificateData;
     }
 }

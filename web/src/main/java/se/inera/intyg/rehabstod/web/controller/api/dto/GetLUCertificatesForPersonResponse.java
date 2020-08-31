@@ -28,5 +28,5 @@ import se.inera.intyg.rehabstod.web.model.LUCertificate;
 public class GetLUCertificatesForPersonResponse {
 
     List<LUCertificate> certificates;
-    boolean qaError;
+    boolean questionAndAnswersError;
 }

@@ -36,12 +36,15 @@
 @import 'footer/footer.scss';
 @import 'index/index.page.scss';
 @import 'selectunit/selectunit.page.scss';
+@import 'sjukfall/lakarutlatande/lakarutlatande.page.scss';
 @import 'sjukfall/patientHistory/patientHistory.scss';
 @import 'sjukfall/result/result.page.scss';
 @import 'sjukfall/start/selection/selection.scss';
 @import 'vendor-override.scss';
 @import 'appDirectives/sjukfall/rhsExport/rhsExport.scss';
 @import 'appDirectives/sjukfall/rhsFilter/rhsFilter.scss';
+@import 'appDirectives/sjukfall/rhsLakarutlatandeFilter/rhsLakarutlatandeFilter.scss';
+@import 'appDirectives/sjukfall/rhsLakarutlatandeTable/rhsLakarutlatandeTable.scss';
 @import 'appDirectives/sjukfall/rhsTable/rhsTable.scss';
 @import 'appDirectives/sjukfall/rhsTableHeader/rhsTableHeader.scss';
 @import 'appDirectives/sjukfall/rhsTableSelectColumns/rhsTableSelectColumns.scss';

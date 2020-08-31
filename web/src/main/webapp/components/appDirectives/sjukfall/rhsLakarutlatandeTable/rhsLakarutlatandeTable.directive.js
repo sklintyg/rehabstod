@@ -18,30 +18,31 @@
  */
 
 angular.module('rehabstodApp')
-.controller('RhsTableCtrl',
-    function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService,
+.controller('RhsLakarutlatandeTableCtrl',
+    function($scope, $uibModal, LakarutlatandeFilterViewState, LakarutlatandeModel, UserModel, messageService,
         featureService, $document, TableService) {
       'use strict';
 
-      $scope.preferenceKey = TableService.sjukfallTableKey;
-      $scope.model = SjukfallModel;
+      $scope.preferenceKey = TableService.lakarutlatandeUnitTableKey;
+      $scope.model = LakarutlatandeModel;
       $scope.user = UserModel.get();
       $scope.displayedCollection = [].concat($scope.model.get());
-      $scope.columns = TableService.getAllSjukfallTableColumns();
+      $scope.columns = TableService.getAllLakarutlatandeUnitColumns();
       $scope.columnsForTable = [];
       $scope.tableTextKey = 'label.table.column';
 
       $scope.$watch(function() {
-        return SjukfallFilterViewState.get().showPatientId + UserModel.get().preferences[$scope.preferenceKey];
+        return LakarutlatandeFilterViewState.get().showPatientId + UserModel.get().preferences[$scope.preferenceKey];
       }, function() {
         $scope.columnsForTable = TableService.getSelectedColumns($scope.columns, $scope.preferenceKey);
-        SjukfallModel.updateQuickSearchContent();
+        LakarutlatandeModel.updateQuickSearchContent();
       });
 
-      $scope.getToolTip = function(diagnos) {
-        var desc = angular.isString(diagnos.beskrivning) ? diagnos.beskrivning :
-            messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnos.kod});
-        return '<b>' + diagnos.kod + '</b><br>' + desc;
+
+      $scope.getToolTip = function(diagnosis) {
+        var desc = angular.isString(diagnosis.beskrivning) ? diagnosis.beskrivning :
+            messageService.getProperty('label.table.diagnosbeskrivning.okand', {'kod': diagnosis.kod});
+        return '<b>' + diagnosis.kod + '</b><br>' + desc;
       };
 
       $scope.showPatientHistory = function(patientModel, nyligenAvslutat) {
@@ -60,7 +61,7 @@ angular.module('rehabstodApp')
               return nyligenAvslutat;
             },
             openLU: function() {
-              return false;
+              return true;
             }
           }
         });
@@ -95,14 +96,14 @@ angular.module('rehabstodApp')
       }
     }
 )
-.directive('rhsTable',
+.directive('rhsLakarutlatandeTable',
     function() {
       'use strict';
 
       return {
         restrict: 'E',
         scope: {},
-        controller: 'RhsTableCtrl',
-        templateUrl: '/components/appDirectives/sjukfall/rhsTable/rhsTable.directive.html'
+        controller: 'RhsLakarutlatandeTableCtrl',
+        templateUrl: '/components/appDirectives/sjukfall/rhsLakarutlatandeTable/rhsLakarutlatandeTable.directive.html'
       };
     });

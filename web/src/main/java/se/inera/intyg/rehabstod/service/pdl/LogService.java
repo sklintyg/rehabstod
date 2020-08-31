@@ -19,8 +19,11 @@
 package se.inera.intyg.rehabstod.service.pdl;
 
 import java.util.List;
+import java.util.Map;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
+import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.schemas.contract.Personnummer;
@@ -45,4 +48,7 @@ public interface LogService {
     void logCertificate(Personnummer personId,
         ActivityType activityType,
         ResourceType resourceType);
+
+    void logCertificate(List<LUCertificate> luCertificateList, ActivityType readActivityType, ResourceType resourceTypeCertificate,
+        Map<String, List<PDLActivityEntry>> storedActivities);
 }

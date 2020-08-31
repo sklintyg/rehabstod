@@ -18,16 +18,44 @@
  */
 package se.inera.intyg.rehabstod.service.certificate;
 
-import java.time.LocalDate;
+import java.util.List;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonResponse;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForPersonResponse;
 
+/**
+ * Provides front end with specialized certificate data.
+ * Data is collected from intygstjansten
+ */
 public interface CertificateService {
 
-    GetLUCertificatesForCareUnitResponse getLUCertificatesForCareUnit(LocalDate fromDate, LocalDate toDate);
+    /**
+     * Gets LU certificates for the active unit
+     *
+     * @param request GetLUCertificatesForCareUnitRequest with internal parameters
+     * @return GetLUCertificatesForCareUnitResponse with LU certificates for unit
+     */
+    GetLUCertificatesForCareUnitResponse getLUCertificatesForCareUnit(GetLUCertificatesForCareUnitRequest request);
 
+    /**
+     * Gets LU certificates for the selected person
+     *
+     * @param personId Id of the person the get certificates for
+     * @return GetLUCertificatesForCareUnitResponse with LU certificates for person
+     */
     GetLUCertificatesForPersonResponse getLUCertificatesForPerson(String personId);
 
+    /**
+     * Gets AG certificates for the selected person
+     *
+     * @param personId Id of the person the get certificates for
+     * @return GetAGCertificatesForCareUnitResponse with LU certificates for person
+     */
     GetAGCertificatesForPersonResponse getAGCertificatesForPerson(String personId);
+
+    /**
+     * Gets names of the doctors on active unit that has signed certificates
+     */
+    List<String> getDoctorsForUnit();
 }

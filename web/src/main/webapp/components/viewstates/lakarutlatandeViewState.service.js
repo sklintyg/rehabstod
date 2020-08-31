@@ -16,16 +16,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.integration.it.stub;
 
-import java.util.List;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
+angular.module('rehabstodApp').factory('LakarutlatandeViewState', [
+  function() {
+    'use strict';
 
-/**
- * Created by eriklupander on 2016-02-01.
- */
-public interface SjukfallIntygDataGenerator {
+    var state = {
+      kompletteringInfoError: false
+    };
 
-    List<IntygsData> generateIntygsData(Integer numberOfPatients, Integer intygPerPatient);
+    function _reset() {
+      state.kompletteringInfoError = false;
+    }
 
-}
+    function _getState() {
+      return state;
+    }
+
+    function _setKompletteringInfoError(_kompletteringInfoError) {
+      state.kompletteringInfoError = _kompletteringInfoError;
+    }
+
+    _reset();
+
+    return {
+      reset: _reset,
+      get: _getState,
+      setKompletteringInfoError: _setKompletteringInfoError
+    };
+  }])
+;

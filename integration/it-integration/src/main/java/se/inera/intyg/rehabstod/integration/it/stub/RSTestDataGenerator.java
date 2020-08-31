@@ -18,29 +18,12 @@
  */
 package se.inera.intyg.rehabstod.integration.it.stub;
 
-import static se.inera.intyg.rehabstod.integration.it.stub.SjukfallIntygDataGeneratorImpl.UE_AKUTEN;
-import static se.inera.intyg.rehabstod.integration.it.stub.SjukfallIntygDataGeneratorImpl.UE_DIALYS;
-import static se.inera.intyg.rehabstod.integration.it.stub.SjukfallIntygDataGeneratorImpl.VE_CENTRUM_VAST;
-
-import java.util.ArrayList;
-import java.util.List;
+import se.inera.intyg.rehabstod.integration.it.stub.RSTestDataGeneratorImpl.StubData;
 
 /**
- * Created by eriklupander on 2016-02-01.
+ * Generates test data for both sjukfall and typed certificates
  */
-public final class SjukfallIntygDataGeneratorHelper {
+public interface RSTestDataGenerator {
 
-    private SjukfallIntygDataGeneratorHelper() {
-    }
-
-    public static List<String> getUnderenheterHsaIds(String enhetId) {
-        List<String> ids = new ArrayList<>();
-        // This is incredibly stupid...
-        if (enhetId.equals(VE_CENTRUM_VAST)) {
-            ids.add(UE_AKUTEN);
-            ids.add(UE_DIALYS);
-        }
-        return ids;
-    }
-
+    StubData generateIntygsData(Integer numberOfPatients, Integer intygPerPatient);
 }

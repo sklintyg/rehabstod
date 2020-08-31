@@ -24,7 +24,7 @@ angular.module('rehabstodApp').factory('lakarutlatandenProxy',
       /*
        * Get history for the specified patient
        */
-      function _get(patient, vardenhet) {
+      function _getLakarutlatandenForPatient(patient, vardenhet) {
 
         var promise = $q.defer();
 
@@ -66,8 +66,91 @@ angular.module('rehabstodApp').factory('lakarutlatandenProxy',
         return promise.promise;
       }
 
+
+      /*
+       * Get lakarutlatanden for unit
+       */
+      function _getLakarutlatandenForUnit(query) {
+
+        var promise = $q.defer();
+
+        var restPath = '/api/certificate/lu/unit';
+
+        var config = {
+          timeout: networkConfig.defaultTimeout
+        };
+
+        $log.debug('Requesting lakarutlatanden for unit');
+
+        $http.post(restPath, query, config).then(function(response) {
+          if (!ObjectHelper.isDefined(response.data)) {
+            promise.reject({
+              errorCode: response.data,
+              message: 'invalid data'
+            });
+          } else {
+            promise.resolve(response.data);
+          }
+        }, function(response) {
+          $log.error('error ' + response.status);
+          // Let calling code handle the error of no data response
+          if (response === null) {
+            promise.reject({
+              errorCode: response,
+              message: 'no response'
+            });
+          } else {
+            promise.reject(response.data);
+          }
+        });
+
+        return promise.promise;
+      }
+
+      /*
+       * Get signing doctors for unit
+       */
+      function _getDoctorsForUnit() {
+
+        var promise = $q.defer();
+
+        var restPath = '/api/certificate/lu/doctors';
+
+        var config = {
+          timeout: networkConfig.defaultTimeout
+        };
+
+        $log.debug('Requesting signing doctors for unit');
+
+        $http.get(restPath, config).then(function(response) {
+          if (!ObjectHelper.isDefined(response.data)) {
+            promise.reject({
+              errorCode: response.data,
+              message: 'invalid data'
+            });
+          } else {
+            promise.resolve(response.data);
+          }
+        }, function(response) {
+          $log.error('error ' + response.status);
+          // Let calling code handle the error of no data response
+          if (response === null) {
+            promise.reject({
+              errorCode: response,
+              message: 'no response'
+            });
+          } else {
+            promise.reject(response.data);
+          }
+        });
+
+        return promise.promise;
+      }
+
       // Return public API for the service
       return {
-        get: _get
+        getLakarutlatandenForPatient: _getLakarutlatandenForPatient,
+        getLakarutlatandenForUnit: _getLakarutlatandenForUnit,
+        getDoctorsForUnit: _getDoctorsForUnit
       };
     });

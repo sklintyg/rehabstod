@@ -16,22 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-import java.time.LocalDate;
-import java.util.List;
-import lombok.Data;
-
-@Data
-public class GetLUCertificatesForCareUnitRequest {
-
-    LocalDate fromDate;
-    LocalDate toDate;
-    List<String> certTypes;
-    int fromAge;
-    int toAge;
-    List<String> diagnoses;
-    List<String> doctors;
-    String searchText;
-    int questionAndAnswers;
-}
+angular.module('rehabstodApp')
+.config(function($stateProvider) {
+  'use strict';
+  $stateProvider
+  .state('app.sjukfall.lakarutlatande', {
+    url: 'lakarutlatande',
+    views: {
+      'content@app': {
+        templateUrl: '/app/sjukfall/lakarutlatande/lakarutlatande.page.html',
+        controller: 'LakarutlatandeResultPageCtrl'
+      }
+    }
+  });
+});

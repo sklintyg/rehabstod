@@ -1,0 +1,24 @@
+<div id="rhs-lakarutlatande-page" class="container-fluid">
+  <div set-class-when-at-top="result-fixed-top" class="result-top" ng-switch="user.urval">
+
+    <div ng-switch-when="ISSUED_BY_ME">
+      <h1 class="page-header"><span message key="label.lakarutlatande.result.lakare.header"></span>{{user.valdVardenhet.namn}}<span message key="label.lakarutlatande.result.lakare.headerend"></span></h1>
+    </div>
+
+    <div ng-switch-default>
+      <h1 class="page-header"><span message key="label.lakarutlatande.result.rehab.header"></span>{{user.valdVardenhet.namn}}<span message key="label.lakarutlatande.result.rehab.headerend"></span></h1>
+    </div>
+  </div>
+</div>
+
+<rhs-lakarutlatande-filter class="container-fluid" search-fn="searchFn()"></rhs-lakarutlatande-filter>
+
+<div ng-if="kompletteringInfoError" class="container-fluid bottom-padding-medium">
+  <div class="alert alert-danger pull-right">Tyvärr kunde inte information om ärendekommunikation inhämtas på grund av ett tekniskt fel.
+    Därför är den kolumnen tom. Om problemet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <span dynamiclink key="ineraNationellKundservice"></span>.
+  </div>
+</div>
+
+<div rhs-spinner show-spinner="showSpinner" label="common.label.loading" class="container-fluid">
+  <rhs-lakarutlatande-table></rhs-lakarutlatande-table>
+</div>

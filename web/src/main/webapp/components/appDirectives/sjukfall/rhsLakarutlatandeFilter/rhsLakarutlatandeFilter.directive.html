@@ -1,0 +1,122 @@
+<button class="btn btn-link btn-link-minimal" id="rhs-filter-hide-btn" ng-click="showSearchFilter = !showSearchFilter"
+        ng-switch="showSearchFilter">
+
+  <span ng-switch-when="false"><span message key="label.filter.show"></span></span>
+  <span ng-switch-when="true"><span message key="label.filter.hide"></span></span>
+  <i class="glyphicon" data-ng-class="[{'glyphicon-chevron-down': !showSearchFilter}, {'glyphicon-chevron-up': showSearchFilter}]"></i>
+</button>
+
+<div class="rhs-lakarutlatande-filter" ng-if="showSearchFilter">
+  <div class="box rhs-box">
+    <div class="row">
+      <!-- DIAGNOS -->
+      <div class="col-md-3 col-xs-6">
+        <fieldset class="form-group search-filter-diagnos" ng-disabled="filterInactive('dxs')">
+          <label class="control-label"><span message key="label.filter.diagnos"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.diagnos.help"></span></label>
+          <rhs-multi-select items-model="filterViewState.get().diagnosKapitelModel" control-disabled="filterInactive('dxs')"
+                            none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="false"></rhs-multi-select>
+        </fieldset>
+      </div>
+      <!-- LÄKARE (optional) -->
+      <div ng-if="user.urval === 'ALL'" class="col-md-3 col-xs-6">
+        <fieldset class="form-group" ng-disabled="filterInactive('doctor')">
+          <label class="control-label"><span message key="label.filter.lakare"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.lakare.help"></span></label>
+          <rhs-multi-select id="rhs-filter-lakare" items-model="filterViewState.get().lakareModel" control-disabled="filterInactive('doctor')"
+                            none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="false"></rhs-multi-select>
+        </fieldset>
+      </div>
+      <!-- KOMPLETTERING -->
+      <div class="col-md-3 col-xs-6">
+        <fieldset class="form-group" ng-disabled="filterInactive('qas')">
+          <label class="control-label"><span message key="label.filter.komplettering-status"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.komplettering-status.help"></span></label>
+          <rhs-multi-select id="rhs-filter-komplettering-status" items-model="filterViewState.get().kompletteringModel"  control-disabled="filterInactive('qas')"
+                            none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="false" xor-mode="true"></rhs-multi-select>
+        </fieldset>
+      </div>
+      <!-- FRITEXT -->
+      <div ng-class="[{'col-md-3 col-xs-6': user.urval === 'ALL'}, {'col-md-6 col-xs-12' : user.urval !== 'ALL'}]">
+        <div class="form-group">
+          <label class="control-label" for="rhs-filter-free-text-input"><span message key="label.filter.filter"></span> <span
+              class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.filter.help"></span></label>
+          <input id="rhs-filter-free-text-input" ng-model="filterViewState.get().freeTextModel"
+                 placeholder="&#61442; {{::'label.filter.filter.placeholder' | message}}" class="form-control rhs-filter-filter-input"
+                 type="search" ng-trim="false" maxlength="100" />
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <!-- LU -->
+      <div class="col-md-3 col-xs-6">
+        <fieldset class="form-group" ng-disabled="filterInactive('certType')">
+          <label class="control-label"><span message key="label.filter.lakarutlatande"></span>
+            <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.lakarutlatande-status.help"></span></label>
+          <rhs-multi-select id="rhs-filter-lakarutlatande" items-model="filterViewState.get().certTypeModel"  control-disabled="filterInactive('certType')"
+                            none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="false"></rhs-multi-select>
+        </fieldset>
+      </div>
+      <!-- SIGNERINGSDATUM -->
+      <div class="col-md-3 col-sm-6">
+        <fieldset class="form-group" ng-disabled="filterInactive('signdate')">
+          <label class="control-label"><span message key="label.filter.signdatum"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.signdatum.help"></span></label>
+          <rhs-date-range-picker ng-if="showDatePicker" id="signdatum-range-picker" control-disabled="filterInactive('signdate')" model="filterViewState.get().signDateModel" years-back="3"></rhs-date-range-picker>
+        </fieldset>
+      </div>
+      <!-- ÅLDER -->
+      <div class="col-md-3 col-sm-6">
+        <fieldset class="form-group" ng-disabled="filterInactive('patientAge')">
+          <label class="control-label"><span message key="label.filter.alder"></span><span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.alder.help"></span></label>
+          <div class="form-inline">
+            Från&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().aldersModel[0]" min="0"
+                                                     max="filterViewState.get().aldersModel[1]" display-max-value-as="100+"
+                                               input-id="rhs-filter-alder-from"
+                                               control-disabled="filterInactive('patientAge')"></rhs-numeric-range-input>
+
+            till&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().aldersModel[1]"
+                                                     min="filterViewState.get().aldersModel[0]" max="101" display-max-value-as="100+"
+                                               input-id="rhs-filter-alder-to"
+                                               control-disabled="filterInactive('patientAge')"></rhs-numeric-range-input>&nbsp;år
+          </div>
+        </fieldset>
+      </div>
+      <!-- PERSONUPPGIFTER -->
+      <div class="col-md-3 col-sm-6">
+        <fieldset class="rhs-checkbox form-group" ng-disabled="filterInactive('patientId', 'patientName')">
+          <label class="control-label">&nbsp;</label><br>
+          <label for="rhs-filter-showPatientIdToggle">
+            <input ng-if="!filterInactive('patientId', 'patientName')" id="rhs-filter-showPatientIdToggle" type="checkbox"
+                                                             ng-model="filterViewState.get().showPatientId">
+            <input ng-if="filterInactive('patientId', 'patientName')" type="checkbox">
+            <span message key="label.filter.personuppgifter"></span>
+            <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.personuppgifter.help" alignment="auto top"></span>
+          </label>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="form-inline pull-right">
+          <!-- SÖK -->
+          <div class="form-group">
+            <label class="control-label">&nbsp;</label>
+            <button id="rhs-filter-search-btn" ng-click="onSearchFilterClick()" class="btn btn-default pull-right"
+                    rhs-emulate-button-active-state>
+              <span style="position:relative" message key="label.filter.search"></span>
+            </button>
+          </div>
+          <!-- ÅTERSTÄLL FILTER -->
+          <div class="form-group">
+            <label class="control-label">&nbsp;</label>
+            <button id="rhs-filter-reset-btn" ng-click="onResetFilterClick()" class="btn btn-default pull-right"
+                    rhs-emulate-button-active-state>
+              <span style="position:relative" message key="label.filter.reset"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

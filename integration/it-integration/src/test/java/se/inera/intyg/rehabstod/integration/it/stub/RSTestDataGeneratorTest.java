@@ -34,14 +34,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.pu.stub.StubResidentStore;
+import se.inera.intyg.rehabstod.integration.it.stub.RSTestDataGeneratorImpl.StubData;
 import se.inera.intyg.rehabstod.integration.wc.stub.WcStubStore;
-import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 /**
  * Created by eriklupander on 2016-01-31.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class SjukfallIntygDataGeneratorTest {
+public class RSTestDataGeneratorTest {
 
     @Mock
     private WcStubStore wcStubStore;
@@ -53,7 +53,7 @@ public class SjukfallIntygDataGeneratorTest {
     private PersonnummerLoader personnummerLoader;
 
     @InjectMocks
-    private SjukfallIntygDataGeneratorImpl testee;
+    private RSTestDataGeneratorImpl testee;
 
     @Before
     public void init() {
@@ -66,7 +66,10 @@ public class SjukfallIntygDataGeneratorTest {
 
         final int numberOfPatients = 10;
         final int intygPerPatient = 4;
-        List<IntygsData> intygsData = testee.generateIntygsData(numberOfPatients, intygPerPatient);
+        StubData stubData = testee.generateIntygsData(numberOfPatients, intygPerPatient);
+        var intygsData = stubData.getIntygsData();
+        var diagnosedCertificates = stubData.getDiagnosedCertificates();
+        var sickLeaveCertificates = stubData.getSickLeaveCertificates();
 
         final int intygPerPatientOtherCareUnit = intygPerPatient * 2; // Vi skapar upp intyg på andra vårdgivare för sjf
         final int intygTolvan = intygPerPatient + intygPerPatientOtherCareUnit + 6; // Tolvan är gammal och ges då fyra extra intyg
@@ -79,6 +82,11 @@ public class SjukfallIntygDataGeneratorTest {
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getStartdatum());
         assertNotNull(intygsData.get(0).getArbetsformaga().getFormaga().get(0).getSlutdatum());
         verify(residentStore, times(numberOfPatients + 2)).addResident(any());
+
+        assertNotNull(diagnosedCertificates.get(0).getPatientFullName());
+        assertNotNull(diagnosedCertificates.get(0).getDiagnoseCode());
+        assertNotNull(sickLeaveCertificates.get(0).getWorkCapacityList().get(0));
+        assertNotNull(sickLeaveCertificates.get(0).getOccupation());
     }
 
     private List<String> buildPersonnummerList() {

@@ -28,6 +28,6 @@ import se.inera.intyg.rehabstod.web.model.AGCertificate;
 public class GetAGCertificatesForPersonResponse {
 
     List<AGCertificate> certificates;
-    boolean qaError;
+    boolean questionAndAnswersError;
 
 }

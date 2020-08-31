@@ -490,28 +490,6 @@ public class SjukfallServiceTest {
     }
 
     /*
-     * Testet ska visa att om inget intyg är utfärdat på den enhet användaren är inloggad på,
-     * så skall fel kastas (see INTYG-7686)
-     */
-    @Test(expected = SjukfallServiceException.class)
-    public void testGetByPatient_whenNoIntygAtCurrentLoggedInUnitThrowsException() {
-        List<IntygsData> data = new ArrayList<>() {{
-            add(createIntygsData(vgId1, mottagningsId, lakareId1, patientId1, false,
-                activeDate.minusDays(1), activeDate.plusDays(9), activeDate.minusDays(1).atStartOfDay()));
-            add(createIntygsData(vgId1, enhetsId1_1, lakareId1, patientId1, false,
-                activeDate.minusDays(20), activeDate.minusDays(15), activeDate.minusDays(20).atStartOfDay()));
-        }};
-
-        when(integrationService.getAllIntygsDataForPatient(eq(patientId1))).thenReturn(data);
-
-        List<String> vgHsaId = new ArrayList<>();
-        List<String> veHsaId = new ArrayList<>();
-
-        SjukfallPatientResponse patientResponse = testee.getByPatient(vgId1, "enhetX", lakareId1, patientId1,
-            Urval.ALL, parameters, vgHsaId, veHsaId);
-    }
-
-    /*
      * Testet ska visa att intyg inom samma vårdgivare fast på olika enheter och utanför glappet,
      * ska resultera i ett sjukfall (det aktiva) med ett intyg i sig.
      */

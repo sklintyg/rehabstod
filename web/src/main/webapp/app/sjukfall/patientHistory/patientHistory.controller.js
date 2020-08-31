@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp').controller('patientHistoryController',
     function($scope, $http, $uibModalInstance, $state, APP_CONFIG, patientHistoryProxy, SjukfallFilterViewState,
-        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy, messageService) {
+        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy, messageService, openLU) {
       'use strict';
 
       //Create initial default details tab (cannot be closed)
@@ -31,14 +31,20 @@ angular.module('rehabstodApp').controller('patientHistoryController',
 
       //expose tabs model to view
       $scope.tabs = patientHistoryViewState.getTabs();
-      patientHistoryViewState.selectTab($scope.tabs[0]);
+
+      $scope.openLU = openLU;
+      if ($scope.openLU) {
+        patientHistoryViewState.selectTab($scope.tabs[1]);
+      }
+      else {
+        patientHistoryViewState.selectTab($scope.tabs[0]);
+      }
 
       $scope.$watch(function() {
         return UserModel.get().preferences[TableService.patientTableKey];
       }, function() {
         $scope.tableColumns = TableService.getSelectedPatientTableColumns(nyligenAvslutat);
       }, true);
-
       $scope.errorMessageKey = '';
       $scope.patientHistoryViewState = patientHistoryViewState;
       $scope.patient = patient;
@@ -102,6 +108,10 @@ angular.module('rehabstodApp').controller('patientHistoryController',
           patientHistoryViewState.setKompletteringInfoError(sjukfallResponse.kompletteringInfoError);
 
           $scope.timeline = patientHistoryViewState.getTimelineItems();
+
+          if (sjukfallResponse.sjukfallList.length === 0) {
+            $scope.tabs.shift(); // Remove sjukfalltab
+          }
         }, function() {
           $scope.showSpinner = false;
           $scope.errorMessageKey = 'server.error.loadpatienthistory.text';

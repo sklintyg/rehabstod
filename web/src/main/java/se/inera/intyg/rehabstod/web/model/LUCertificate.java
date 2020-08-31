@@ -39,8 +39,8 @@ public class LUCertificate {
 
     private Patient patient;
 
-    private Diagnos diagnose;
-    private List<Diagnos> biDiagnosis;
+    private Diagnos diagnosis;
+    private List<Diagnos> biDiagnoses;
 
     private LocalDateTime signingTimeStamp;
 

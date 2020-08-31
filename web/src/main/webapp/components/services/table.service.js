@@ -18,12 +18,13 @@
  */
 
 angular.module('rehabstodApp').factory('TableService',
-    function(UserModel, SjukfallFilterViewState, featureService, _) {
+    function(UserModel, SjukfallFilterViewState, featureService, _, LakarutlatandeFilterViewState) {
       'use strict';
 
       var sjukfallTableKey = 'sjukfallTableColumns';
       var patientTableKey = 'patientTableColumns';
       var lakarutlatandenTableKey = 'lakarutlatandenTableColumns';
+      var lakarutlatandeUnitTableKey = 'lakarutlatandeUnitTableColumns';
 
       function _getAllSjukfallTableColumns() {
         var columns = [
@@ -254,7 +255,7 @@ angular.module('rehabstodApp').factory('TableService',
           {
             id: 'diagnos',
             classes: 'column-diagnos',
-            dataColumn: 'diagnose.intygsVarde'
+            dataColumn: 'diagnosis.intygsVarde'
           },
           {
             id: 'signeringsdatum',
@@ -286,7 +287,7 @@ angular.module('rehabstodApp').factory('TableService',
         return columns;
       }
 
-      function _getSelectedColumns(allColumns, preferenceKey, onlyPreferences) {
+      function _getSelectedColumns(allColumns, preferenceKey, onlyPreferences, isLU) {
         var selectedColumns = UserModel.get().preferences[preferenceKey];
         var allSelected = !selectedColumns;
         var columns;
@@ -321,8 +322,13 @@ angular.module('rehabstodApp').factory('TableService',
 
         return columns
         .filter(function(column) {
-          if ((column.id === 'patientId' || column.id === 'patientName') && !SjukfallFilterViewState.get().showPatientId) {
-            return false;
+          if (column.id === 'patientId' || column.id === 'patientName'){
+            if (isLU && !LakarutlatandeFilterViewState.get().showPatientId){
+              return false;
+            }
+            else if (!SjukfallFilterViewState.get().showPatientId) {
+              return false;
+            }
           }
 
           return true;
@@ -335,6 +341,76 @@ angular.module('rehabstodApp').factory('TableService',
 
       function _getSelectedLakarutlatandenTableColumns(onlyPreferences) {
         return _getSelectedColumns(_getAllLakarutlatandenTableColumns(), lakarutlatandenTableKey, onlyPreferences);
+      }
+
+      function _getSelectedLakarutlatandeUnitColumns(onlyPreferences) {
+        return _getSelectedColumns(_getAllLakarutlatandeUnitColumns(), lakarutlatandeUnitTableKey, onlyPreferences, true);
+      }
+
+      function _getAllLakarutlatandeUnitColumns() {
+        var columns = [
+        {
+          id: 'number',
+          hideHelp: true,
+          disableSort: true,
+          classes: 'column-number'
+        },
+        {
+          id: 'patientId',
+          dataColumn: 'patient.id',
+          hideHelp: true,
+          classes: 'column-patient-id text-nowrap'
+        },
+        {
+          id: 'patientAge',
+          dataColumn: 'patient.alder',
+          hideHelp: true,
+          classes: 'column-patient-age text-nowrap'
+        },
+        {
+          id: 'patientName',
+          dataColumn: 'patient.namn',
+          hideHelp: true,
+          classes: 'column-patient-name text-nowrap'
+        },
+        {
+          id: 'gender',
+          dataColumn: 'patient.konShow',
+          hideHelp: true,
+          classes: 'column-patient-kon text-nowrap'
+        },
+        {
+          id: 'certType',
+          dataColumn: 'certtype',
+          classes: 'column-certtype'
+        },
+        {
+          id: 'dxs',
+          dataColumn: 'diagnosis.intygsVarde',
+          classes: 'column-diagnos'
+        },
+        {
+          id: 'signdate',
+          classes: 'column-signeringsdatum',
+          defaultSort: true,
+          dataColumn: 'signingTimeStamp'
+        },
+        {
+          id: 'qas',
+          classes: 'column-arenden',
+          dataColumn: 'highestNbrOfArenden'
+        }
+      ];
+
+        if (UserModel.get().urval !== 'ISSUED_BY_ME') {
+          columns.push({
+            id: 'doctor',
+            dataColumn: 'lakare.namn',
+            classes: ''
+          });
+        }
+
+        return columns;
       }
 
       function _getSelectedAgTableColumns(onlyPreferences) {
@@ -356,6 +432,9 @@ angular.module('rehabstodApp').factory('TableService',
         getAllPatientAndAgTableColumns: _getAllPatientAndAgTableColumns,
         sjukfallTableKey: sjukfallTableKey,
         patientTableKey: patientTableKey,
-        lakarutlatandenTableKey: lakarutlatandenTableKey
+        lakarutlatandenTableKey: lakarutlatandenTableKey,
+        lakarutlatandeUnitTableKey: lakarutlatandeUnitTableKey,
+        getSelectedLakarutlatandeUnitColumns: _getSelectedLakarutlatandeUnitColumns,
+        getAllLakarutlatandeUnitColumns: _getAllLakarutlatandeUnitColumns
       };
     });

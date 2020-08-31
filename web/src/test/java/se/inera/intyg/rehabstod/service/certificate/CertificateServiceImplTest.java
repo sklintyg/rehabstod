@@ -48,6 +48,7 @@ import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -117,7 +118,7 @@ public class CertificateServiceImplTest {
         when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
             .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
 
-        var response = service.getLUCertificatesForCareUnit(null, null);
+        var response = service.getLUCertificatesForCareUnit(new GetLUCertificatesForCareUnitRequest());
         assertNotNull(response);
         var luCertificates = response.getCertificates();
 
@@ -125,8 +126,8 @@ public class CertificateServiceImplTest {
         assertEquals(2, luCertificates.size());
         assertEquals(CERT_ID_1, luCertificates.get(0).getCertificateId());
         assertEquals(CERT_ID_2, luCertificates.get(1).getCertificateId());
-        assertEquals(DIAGNOSE_CODE, luCertificates.get(0).getDiagnose().getKod());
-        assertEquals(DIAGNOSE_CODE, luCertificates.get(1).getDiagnose().getKod());
+        assertEquals(DIAGNOSE_CODE, luCertificates.get(0).getDiagnosis().getKod());
+        assertEquals(DIAGNOSE_CODE, luCertificates.get(1).getDiagnosis().getKod());
     }
 
     private Vardgivare getCareProvider() {
@@ -160,8 +161,8 @@ public class CertificateServiceImplTest {
         assertEquals(2, luCertificates.size());
         assertEquals(CERT_ID_1, luCertificates.get(0).getCertificateId());
         assertEquals(CERT_ID_2, luCertificates.get(1).getCertificateId());
-        assertEquals(DIAGNOSE_CODE, luCertificates.get(0).getDiagnose().getKod());
-        assertEquals(DIAGNOSE_CODE, luCertificates.get(1).getDiagnose().getKod());
+        assertEquals(DIAGNOSE_CODE, luCertificates.get(0).getDiagnosis().getKod());
+        assertEquals(DIAGNOSE_CODE, luCertificates.get(1).getDiagnosis().getKod());
     }
 
     @Test
@@ -187,8 +188,8 @@ public class CertificateServiceImplTest {
         assertEquals(2, agCertificates.size());
         assertEquals(CERT_ID_1, agCertificates.get(0).getCertificateId());
         assertEquals(CERT_ID_2, agCertificates.get(1).getCertificateId());
-        assertEquals(DIAGNOSE_CODE, agCertificates.get(0).getDiagnose().getKod());
-        assertEquals(DIAGNOSE_CODE, agCertificates.get(1).getDiagnose().getKod());
+        assertEquals(DIAGNOSE_CODE, agCertificates.get(0).getDiagnosis().getKod());
+        assertEquals(DIAGNOSE_CODE, agCertificates.get(1).getDiagnosis().getKod());
         assertEquals(START_DATE_1, agCertificates.get(0).getStart());
         assertEquals(END_DATE_3, agCertificates.get(0).getEnd());
         assertEquals(REDUCTION_1, agCertificates.get(0).getDegree().get(0).intValue());

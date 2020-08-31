@@ -95,10 +95,10 @@ public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorato
                     var unAnsweredQAs = Optional.ofNullable(certificateAdditions.get(cert.getCertificateId())).orElse(null);
                     if (unAnsweredQAs != null) {
                         cert.setUnAnsweredComplement(unAnsweredQAs.getComplement());
-                        cert.setUnAnsweredComplement(unAnsweredQAs.getOthers());
+                        cert.setUnAnsweredOther(unAnsweredQAs.getOthers());
                     } else {
                         cert.setUnAnsweredComplement(0);
-                        cert.setUnAnsweredComplement(0);
+                        cert.setUnAnsweredOther(0);
                     }
                 });
     }
@@ -116,10 +116,10 @@ public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorato
                     var unAnsweredQAs = Optional.ofNullable(certificateAdditions.get(cert.getCertificateId())).orElse(null);
                     if (unAnsweredQAs != null) {
                         cert.setUnAnsweredComplement(unAnsweredQAs.getComplement());
-                        cert.setUnAnsweredComplement(unAnsweredQAs.getOthers());
+                        cert.setUnAnsweredOther(unAnsweredQAs.getOthers());
                     } else {
                         cert.setUnAnsweredComplement(0);
-                        cert.setUnAnsweredComplement(0);
+                        cert.setUnAnsweredOther(0);
                     }
                 });
     }

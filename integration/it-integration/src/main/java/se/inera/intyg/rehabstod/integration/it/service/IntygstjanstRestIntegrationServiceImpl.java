@@ -25,32 +25,29 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.TypedCertificateRequest;
 
+@Profile("!rhs-it-stub")
 @Service
 public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestIntegrationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IntygstjanstRestIntegrationServiceImpl.class);
 
-    @Bean("itRestTemplate")
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
-    @Autowired
-    @Qualifier("itRestTemplate")
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Value("${intygstjanst.host.url}")
     private String intygstjanstUrl;
 
+    @Autowired
+    public IntygstjanstRestIntegrationServiceImpl(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(List<String> units, List<String> certificateTypes,
@@ -115,14 +112,35 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         }
     }
 
+    @Override
+    public List<String> getSigningDoctorsForUnit(List<String> units, List<String> certificateTypes) {
+        final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/doctors";
+        TypedCertificateRequest requestObject = getTypedCertificateRequest(units, certificateTypes, null, null, null);
+
+        LOGGER.debug("Getting signing doctors for unit from intygstjansten");
+
+        var doctors = restTemplate.postForObject(url, requestObject, String[].class);
+
+        if (doctors == null || doctors.length == 0) {
+            return Collections.emptyList();
+        } else {
+            return Arrays.asList(doctors);
+        }
+    }
+
     private TypedCertificateRequest getTypedCertificateRequest(List<String> units, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate, String personId) {
         TypedCertificateRequest requestObject = new TypedCertificateRequest();
         requestObject.setUnitIds(units);
         requestObject.setCertificateTypes(certificateTypes);
         requestObject.setPersonId(personId);
-        requestObject.setFromDate(fromDate);
         requestObject.setToDate(toDate);
+
+        if (fromDate == null) {
+            requestObject.setFromDate(LocalDate.now().minusYears(3));
+        } else {
+            requestObject.setFromDate(fromDate);
+        }
         return requestObject;
     }
 }
