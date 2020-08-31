@@ -19,10 +19,11 @@
 
 angular.module('rehabstodApp')
 .controller('LakarutlatandeResultPageCtrl',
-    function($scope, $rootScope, $state, LakarutlatandeService, UserModel) {
+    function($scope, $rootScope, $state, LakarutlatandeService, UserModel, LakarutlatandeViewState) {
       'use strict';
 
       $scope.lakarutlatandeService = LakarutlatandeService;
+      $scope.LakarutlatandeViewState = LakarutlatandeViewState;
       $scope.user = UserModel.get();
       $scope.kompletteringInfoError = false;
 
@@ -44,7 +45,7 @@ angular.module('rehabstodApp')
         $scope.showSpinner = val;
       });
 
-      $scope.$watch('SjukfallViewState.get().kompletteringInfoError', function(val) {
+      $scope.$watch('LakarutlatandeViewState.get().kompletteringInfoError', function(val) {
         $scope.kompletteringInfoError = val;
       });
 

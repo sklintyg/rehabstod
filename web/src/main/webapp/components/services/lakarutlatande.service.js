@@ -54,7 +54,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeService',
           };
 
           return lakarutlatandenProxy.getLakarutlatandenForUnit(query).then(function(response) {
-            LakarutlatandeViewState.setKompletteringInfoError(response.qaError);
+            LakarutlatandeViewState.setKompletteringInfoError(response.questionAndAnswersError);
             LakarutlatandeModel.set(response.certificates);
             loading = false;
           }, function(errorData) {

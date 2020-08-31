@@ -33,5 +33,5 @@ public class GetLUCertificatesForCareUnitRequest {
     List<String> diagnoses;
     List<String> doctors;
     String searchText;
-    int qas;
+    int questionAndAnswers;
 }

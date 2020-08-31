@@ -137,29 +137,7 @@ public class CertificateServiceImpl implements CertificateService {
             qaInfoError = true;
         }
 
-        var qas = request.getQas();
-        if (qas > 0) {
-            switch (qas) {
-                case 1:
-                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredComplement() == 0)
-                        .collect(Collectors.toList());
-                    break;
-                case 2:
-                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredComplement() > 0)
-                        .collect(Collectors.toList());
-                    break;
-                case 3:
-                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredOther() == 0)
-                        .collect(Collectors.toList());
-                    break;
-                case 4:
-                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredOther() > 0)
-                        .collect(Collectors.toList());
-                    break;
-                default:
-                    break;
-            }
-        }
+        luCertificateList = filterOnQuestionAndAnswers(request, luCertificateList);
 
         var searchText = request.getSearchText();
         if (searchText != null && !searchText.isBlank() && !searchText.isEmpty()) {
@@ -170,6 +148,34 @@ public class CertificateServiceImpl implements CertificateService {
 
         LOGGER.debug("Returning LU Certificates for Care Unit");
         return new GetLUCertificatesForCareUnitResponse(luCertificateList, qaInfoError);
+    }
+
+    private List<LUCertificate> filterOnQuestionAndAnswers(GetLUCertificatesForCareUnitRequest request,
+        List<LUCertificate> luCertificateList) {
+        var qas = request.getQuestionAndAnswers();
+        if (qas > 0) {
+            switch (qas) {
+                case 1: // Only show certificates without unanswered complement requests
+                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredComplement() == 0)
+                        .collect(Collectors.toList());
+                    break;
+                case 2: // Only show certificates with unanswered complement requests
+                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredComplement() > 0)
+                        .collect(Collectors.toList());
+                    break;
+                case 3: // Only show certificates without unanswered question
+                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredOther() == 0)
+                        .collect(Collectors.toList());
+                    break;
+                case 4: // Only show certificates with unanswered question
+                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredOther() > 0)
+                        .collect(Collectors.toList());
+                    break;
+                default:
+                    break;
+            }
+        }
+        return luCertificateList;
     }
 
     private boolean filterOnText(LUCertificate c, String searchText) {

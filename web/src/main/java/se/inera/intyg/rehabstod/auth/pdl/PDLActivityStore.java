@@ -81,7 +81,7 @@ public final class PDLActivityStore {
      * Should return list of LU Certificates (internally identified by patient) not already present in store
      * for this vardenhet, activityType and resourceType.
      *
-     * @return a list of SjukfallEnhet
+     * @return a list of LUCertificate
      */
     public static List<LUCertificate> getActivitiesNotInStore(List<LUCertificate> certificates,
         String enhetsId,

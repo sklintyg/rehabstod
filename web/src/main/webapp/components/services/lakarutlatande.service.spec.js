@@ -60,7 +60,7 @@ describe('Service: LakarutlatandeService', function() {
       spyOn(LakarutlatandeProxy, 'getLakarutlatandenForUnit').and.callFake(function() {
         return {
           then: function(success) {
-            success({certificates: lakarutlatandeData, qaError:false});
+            success({certificates: lakarutlatandeData, questionAndAnswersError:false});
           }
         };
       });
@@ -92,7 +92,7 @@ describe('Service: LakarutlatandeService', function() {
         spyOn(LakarutlatandeProxy, 'getLakarutlatandenForUnit').and.callFake(function() {
           return {
             then: function(success) {
-              success({certificates: lakarutlatandeData, qaError:false});
+              success({certificates: lakarutlatandeData, questionAndAnswersError:false});
             }
           };
         });

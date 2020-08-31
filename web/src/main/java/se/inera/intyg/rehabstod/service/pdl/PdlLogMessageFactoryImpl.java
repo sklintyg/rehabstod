@@ -67,8 +67,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
                 .map(sfe -> buildPdlLogResource(sfe, logUser, resourceType))
                 .collect(Collectors.toList()));
 
-        // Unset values due to regulations
-        unsetValues(pdlLogMessage);
+        unsetValuesdueToRegulations(pdlLogMessage);
 
         return pdlLogMessage;
     }
@@ -87,8 +86,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
             buildPdlLogResource(logPatient.getPatientId(), logPatient.getPatientNamn(), logPatient.getEnhetsId(),
                 logPatient.getEnhetsNamn(), logPatient.getVardgivareId(), logPatient.getVardgivareNamn(), resourceType));
 
-        // Unset values due to regulations
-        unsetValues(pdlLogMessage);
+        unsetValuesdueToRegulations(pdlLogMessage);
 
         return pdlLogMessage;
     }
@@ -105,8 +103,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
                 .map(c -> buildPdlLogResource(c, logUser, resourceType))
                 .collect(Collectors.toList()));
 
-        // Unset values due to regulations
-        unsetValues(pdlLogMessage);
+        unsetValuesdueToRegulations(pdlLogMessage);
 
         return pdlLogMessage;
     }
@@ -221,7 +218,7 @@ public class PdlLogMessageFactoryImpl implements PdlLogMessageFactory {
         logMsg.setUserCareUnit(vardenhet);
     }
 
-    private void unsetValues(final PdlLogMessage logMessage) {
+    private void unsetValuesdueToRegulations(final PdlLogMessage logMessage) {
         // INTYG-8349: Inget användarnamn vid PDL-logging
         logMessage.setUserName("");
 

@@ -48,7 +48,7 @@ angular.module('rehabstodApp').directive('rhsLakarutlatanden',
           $scope.getLakarutlatanden = function() {
             lakarutlatandenProxy.getLakarutlatandenForPatient($scope.patient, UserModel.valdVardenhet).then(function(lakarutlatandenResponse) {
               $scope.showSpinner = false;
-              $scope.isQAError = lakarutlatandenResponse.qaError;
+              $scope.isQAError = lakarutlatandenResponse.questionAndAnswersError;
               $scope.lakarutlatanden = lakarutlatandenResponse.certificates;
               $scope.lakarutlatanden.forEach(function(intyg) {
                 intyg.highestNbrOfArenden = intyg.unAnsweredComplement ? intyg.unAnsweredComplement : intyg.unAnsweredOther;
