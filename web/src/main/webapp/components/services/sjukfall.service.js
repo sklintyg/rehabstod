@@ -97,7 +97,7 @@ angular.module('rehabstodApp').factory('SjukfallService',
             min: filterState.slutdatum.from === null ? '' : moment(filterState.slutdatum.from).format('YYYY-MM-DD'),
             max: filterState.slutdatum.to === null ? '' : moment(filterState.slutdatum.to).format('YYYY-MM-DD')
           },
-          komplettering: filterState.komplettering,
+          qa: filterState.qa,
           lakare: filterState.lakare,
           diagnosGrupper: filterState.diagnosKapitel,
           personnummer: personnummer

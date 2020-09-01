@@ -136,7 +136,7 @@ class SjukfallTableBuilder {
                     Arrays.asList(
                         ExportField.NR_OF_INTYG,
                         ExportField.GRADER,
-                        ExportField.KOMPLETTERINGAR),
+                        ExportField.ARENDEN),
                     Arrays.asList(
                         aParagraph(String.valueOf(sf.getIntyg())),
                         getGrader(sf),

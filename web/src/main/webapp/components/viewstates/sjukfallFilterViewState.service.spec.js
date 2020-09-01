@@ -34,14 +34,14 @@ describe('Viewstate: SjukfallFilterViewState', function() {
   var SjukfallFilterViewState;
   var DiagnosKapitelModel;
   var LakareModel;
-  var KompletteringModel;
+  var QAModel;
 
   // Inject dependencies and mocks
-  beforeEach(inject(function(_SjukfallFilterViewState_, _DiagnosKapitelModel_, _LakareModel_, _KompletteringModel_) {
+  beforeEach(inject(function(_SjukfallFilterViewState_, _DiagnosKapitelModel_, _LakareModel_, _QAModel_) {
     SjukfallFilterViewState = _SjukfallFilterViewState_;
     DiagnosKapitelModel = _DiagnosKapitelModel_;
     LakareModel = _LakareModel_;
-    KompletteringModel = _KompletteringModel_;
+    QAModel = _QAModel_;
 
   }));
 
@@ -53,7 +53,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
       expect(SjukfallFilterViewState.get().aldersModel).toEqual([0, 101]);
       expect(SjukfallFilterViewState.get().slutdatumModel).toEqual({from: null, to: null});
       expect(SjukfallFilterViewState.get().freeTextModel).toEqual('');
-      expect(SjukfallFilterViewState.get().kompletteringModel.getSelected().length).toEqual(1);
+      expect(SjukfallFilterViewState.get().qaModel.getSelected().length).toEqual(1);
       expect(SjukfallFilterViewState.get().showPatientId).toEqual(true);
     });
   });
@@ -77,7 +77,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
         alder: SjukfallFilterViewState.get().aldersModel,
         slutdatum: {from: new Date(2017, 1, 9), to: new Date(2017, 1, 11)},
         freeText: SjukfallFilterViewState.get().freeTextModel,
-        komplettering: null,
+        qa: null,
         showPatientId: false
       };
       //Verify
@@ -105,7 +105,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
         alder: [0, null],
         slutdatum: {from: null, to: null},
         freeText: '',
-        komplettering: null,
+        qa: null,
         showPatientId: true
       };
 

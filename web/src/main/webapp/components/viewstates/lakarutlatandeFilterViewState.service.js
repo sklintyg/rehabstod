@@ -18,13 +18,13 @@
  */
 
 angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
-    function(DiagnosKapitelModel, LakareModel, KompletteringModel, CertTypeModel, APP_CONFIG, lakarutlatandenProxy, $log) {
+    function(DiagnosKapitelModel, LakareModel, QAModel, CertTypeModel, APP_CONFIG, lakarutlatandenProxy, $log) {
       'use strict';
 
       var state = {
         diagnosKapitelModel: DiagnosKapitelModel,
         lakareModel: LakareModel,
-        kompletteringModel: KompletteringModel, //null = show all
+        qaModel: QAModel, //null = show all
         showPatientId: true,
         signDateModel: {
           from: null, to: null
@@ -35,7 +35,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
       //Kanske initiera diagnoskapitelmodellen samtidigt som UserModel i appmain eller något?
       state.diagnosKapitelModel.set(APP_CONFIG.diagnosKapitelList);
 
-      state.kompletteringModel.set([
+      state.qaModel.set([
         {id: null, displayValue: 'Visa alla', defaultSelected: true},
         {id: 1, displayValue: 'Visa läkarutlåtanden utan obesvarade kompletteringar'},
         {id: 2, displayValue: 'Visa läkarutlåtanden med obesvarade kompletteringar'},
@@ -64,7 +64,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
         state.signDateModel.from = null;
         state.signDateModel.to = null;
         state.lakareModel.reset();
-        state.kompletteringModel.reset();
+        state.qaModel.reset();
         state.showPatientId = true;
         state.freeTextModel = '';
         state.certTypeModel.reset();
@@ -85,7 +85,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
         }
 
         if (!columnsByKey.kompletteringar) {
-          state.kompletteringModel.reset();
+          state.qaModel.reset();
         }
 
         if (!columnsByKey.patientAge) {
@@ -110,7 +110,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
         }, selectedLakare);
 
         var selectedKompletteringOptions = [];
-        angular.forEach(state.kompletteringModel.getSelected(), function(value) {
+        angular.forEach(state.qaModel.getSelected(), function(value) {
           this.push(value.id);
         }, selectedKompletteringOptions);
 

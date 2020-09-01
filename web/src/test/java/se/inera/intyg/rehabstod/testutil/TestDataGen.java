@@ -70,7 +70,7 @@ public final class TestDataGen {
         req.setLangdIntervall(buildLangdIntervall());
         req.setAldersIntervall(buildAlderIntervall());
         req.setSlutdatumIntervall(buildDatumIntervall());
-        req.setKomplettering(1);
+        req.setArenden(1);
         req.setSortering(buildSortering());
         req.setShowPatientId(true);
         req.setFritext("En orelistiskt lång fritextsökning bara för att testa");

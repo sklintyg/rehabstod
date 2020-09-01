@@ -24,10 +24,12 @@ import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TI
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_AVSLUTADE_SJUKFALL;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_DIAGNOSER;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_FRITEXT;
-import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_KOMPLETTERINGSSTATUS;
-import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA;
-import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_KOMPLETTERINGSSTATUS_MED;
-import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN;
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_ARENDESTATUS;
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_ARENDESTATUS_ALLA;
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_ARENDESTATUS_MED;
+import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_ARENDESTATUS_UTAN;
+//import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_ARENDESTATUS_MED_KOMPLETTERING;
+//import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_ARENDESTATUS_MED_FRAGOR;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_LAKARE;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_PATIENTUPPGIFTER;
@@ -113,7 +115,7 @@ class FilterTableBuilder {
             table.addCell(getLakareFilterCell(printRequest, user));
         }
         table.addCell(getSjukskrivningFilterCell(printRequest));
-        table.addCell(getKompletteringFilterCell(printRequest));
+        table.addCell(getArendeFilterCell(printRequest));
 
         // Settings
         table.addCell(new Cell(1, nrFilterColumns)
@@ -134,9 +136,9 @@ class FilterTableBuilder {
 
     }
 
-    private Cell getKompletteringFilterCell(PrintSjukfallRequest printRequest) {
-        //komplettering
-        String komplettering = getKompletteringFilterDisplayValue(printRequest.getKomplettering());
+    private Cell getArendeFilterCell(PrintSjukfallRequest printRequest) {
+        //arende
+        String arende = getArendeFilterDisplayValue(printRequest.getArenden());
 
         //visa patientuppgifter
         String patientuppgifter = printRequest.isShowPatientId() ? PATIENTUPPGIFTER_VISAS : PATIENTUPPGIFTER_VISAS_EJ;
@@ -147,8 +149,8 @@ class FilterTableBuilder {
                 : ellipsize(printRequest.getFritext(), MAXLENGTH_FRITEXT);
 
         return buildFilterCellMulti(false, 1,
-            Arrays.asList(FILTER_TITLE_KOMPLETTERINGSSTATUS, FILTER_TITLE_PATIENTUPPGIFTER, FILTER_TITLE_FRITEXT),
-            Arrays.asList(komplettering, patientuppgifter, fritext));
+            Arrays.asList(FILTER_TITLE_ARENDESTATUS, FILTER_TITLE_PATIENTUPPGIFTER, FILTER_TITLE_FRITEXT),
+            Arrays.asList(arende, patientuppgifter, fritext));
     }
 
     private Cell getSjukskrivningFilterCell(PrintSjukfallRequest printRequest) {
@@ -209,11 +211,11 @@ class FilterTableBuilder {
         return buildFilterCell(true, FILTER_TITLE_DIAGNOSER, diagnoses);
     }
 
-    protected String getKompletteringFilterDisplayValue(Integer komplettering) {
+    protected String getArendeFilterDisplayValue(Integer komplettering) {
         if (komplettering == null) {
-            return FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA;
+            return FILTER_TITLE_ARENDESTATUS_ALLA;
         } else {
-            return komplettering == 0 ? FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN : FILTER_TITLE_KOMPLETTERINGSSTATUS_MED;
+            return komplettering == 0 ? FILTER_TITLE_ARENDESTATUS_UTAN : FILTER_TITLE_ARENDESTATUS_MED;
         }
     }
 

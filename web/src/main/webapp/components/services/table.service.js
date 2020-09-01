@@ -90,9 +90,9 @@ angular.module('rehabstodApp').factory('TableService',
             classes: 'column-grad'
           },
           {
-            id: 'kompletteringar',
-            dataColumn: 'obesvaradeKompl',
-            classes: 'column-obesvaradeKompl'
+            id: 'qa',
+            dataColumn: 'highestNbrOfQA',
+            classes: 'column-qa'
           }
         ];
 

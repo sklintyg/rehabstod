@@ -35,15 +35,15 @@ describe('Viewstate: LakarutlatandeFilterViewState', function() {
   var LakarutlatandeFilterViewState;
   var DiagnosKapitelModel;
   var LakareModel;
-  var KompletteringModel;
+  var QAModel;
   var CertTypeModel;
 
   // Inject dependencies and mocks
-  beforeEach(inject(function(_LakarutlatandeFilterViewState_, _DiagnosKapitelModel_, _LakareModel_, _KompletteringModel_, _CertTypeModel_) {
+  beforeEach(inject(function(_LakarutlatandeFilterViewState_, _DiagnosKapitelModel_, _LakareModel_, _QAModel_, _CertTypeModel_) {
     LakarutlatandeFilterViewState = _LakarutlatandeFilterViewState_;
     DiagnosKapitelModel = _DiagnosKapitelModel_;
     LakareModel = _LakareModel_;
-    KompletteringModel = _KompletteringModel_;
+    QAModel = _QAModel_;
     CertTypeModel = _CertTypeModel_;
 
   }));
@@ -55,7 +55,7 @@ describe('Viewstate: LakarutlatandeFilterViewState', function() {
       expect(LakarutlatandeFilterViewState.get().aldersModel).toEqual([0, 101]);
       expect(LakarutlatandeFilterViewState.get().signDateModel).toEqual({from: null, to: null});
       expect(LakarutlatandeFilterViewState.get().freeTextModel).toEqual('');
-      expect(LakarutlatandeFilterViewState.get().kompletteringModel.getSelected().length).toEqual(1);
+      expect(LakarutlatandeFilterViewState.get().qaModel.getSelected().length).toEqual(1);
       expect(LakarutlatandeFilterViewState.get().showPatientId).toEqual(true);
       expect(LakarutlatandeFilterViewState.get().certTypeModel.getSelected().length).toEqual(0);
     });
