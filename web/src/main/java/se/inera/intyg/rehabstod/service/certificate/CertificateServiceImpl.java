@@ -45,6 +45,7 @@ import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
+import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonResponse;
@@ -78,16 +79,20 @@ public class CertificateServiceImpl implements CertificateService {
 
     private final HsaOrganizationsService hsaOrganizationsService;
 
+    private PuService puService;
+
     @Autowired
     public CertificateServiceImpl(
         IntygstjanstRestIntegrationService restIntegrationService, UnansweredQAsInfoDecorator unansweredQAsInfoDecorator,
-        LogService logService, UserService userService, DiagnosFactory diagnosFactory, HsaOrganizationsService hsaOrganizationsService) {
+        LogService logService, UserService userService, DiagnosFactory diagnosFactory, HsaOrganizationsService hsaOrganizationsService,
+        PuService puService) {
         this.restIntegrationService = restIntegrationService;
         this.unansweredQAsInfoDecorator = unansweredQAsInfoDecorator;
         this.logService = logService;
         this.userService = userService;
         this.diagnosFactory = diagnosFactory;
         this.hsaOrganizationsService = hsaOrganizationsService;
+        this.puService = puService;
     }
 
     @Override
@@ -99,6 +104,8 @@ public class CertificateServiceImpl implements CertificateService {
         var diagnosedCertificateList = restIntegrationService
             .getDiagnosedCertificatesForCareUnit(Collections.singletonList(unitId), Arrays.asList(LU_TYPE_LIST), request.getFromDate(),
                 request.getToDate());
+
+        puService.enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(diagnosedCertificateList);
 
         var certTypes = request.getCertTypes();
         var diagnoses = request.getDiagnoses();

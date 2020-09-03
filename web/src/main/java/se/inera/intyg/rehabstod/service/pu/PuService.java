@@ -16,18 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.sjukfall.pu;
+package se.inera.intyg.rehabstod.service.pu;
 
 import java.util.List;
+import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-/**
- * Created by eriklupander on 2017-09-05.
- */
-public interface SjukfallPuService {
+public interface PuService {
 
     String SEKRETESS_SKYDDAD_NAME_PLACEHOLDER = "Skyddad personuppgift";
     String SEKRETESS_SKYDDAD_NAME_UNKNOWN = "Namn okänt";
@@ -49,14 +47,21 @@ public interface SjukfallPuService {
      *
      * If the PU-service cannot be reached, an Exception must be thrown.
      */
-    void enrichWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList);
+    void enrichSjukfallWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList);
+
+    /**
+     * Filters out certificates if the patient has sekretessmarkering and the user doesn't have the requisite privilege.
+     *
+     * If the PU-service cannot be reached, an Exception must be thrown.
+     */
+    void enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(List<DiagnosedCertificate> diagnosedCertificateList);
 
     /**
      * Filters out sjukfall if the patient has sekretessmarkering and the user doesn't have the requisite privilege.
      *
      * If the PU-service cannot be reached, an Exception must be thrown.
      */
-    void enrichWithPatientNameAndFilterSekretess(List<SjukfallPatient> patientSjukfall);
+    void enrichSjukfallWithPatientNameAndFilterSekretess(List<SjukfallPatient> patientSjukfall);
 
     PersonSvar getPersonSvar(String pnr);
 }
