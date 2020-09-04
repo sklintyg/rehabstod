@@ -99,7 +99,7 @@ angular.module('rehabstodApp').factory('SjukfallModel',
       }
 
       function _getHighestNbrOfQA(unansweredComplement, unansweredOther) {
-        return unansweredComplement > unansweredOther ? unansweredComplement : unansweredOther;
+        return unansweredComplement > 0 ? unansweredComplement : (unansweredOther > 0 ? unansweredOther : 0);
       }
 
       function _updateQuickSearchContent() {
