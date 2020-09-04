@@ -25,11 +25,6 @@ import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TI
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_DIAGNOSER;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_FRITEXT;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_ARENDESTATUS;
-import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_ARENDESTATUS_ALLA;
-import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_ARENDESTATUS_MED;
-import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_ARENDESTATUS_UTAN;
-//import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_ARENDESTATUS_MED_KOMPLETTERING;
-//import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_ARENDESTATUS_MED_FRAGOR;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_LAKARE;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfConstants.FILTER_TITLE_PATIENTUPPGIFTER;
@@ -56,6 +51,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
+import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 
@@ -138,7 +134,7 @@ class FilterTableBuilder {
 
     private Cell getArendeFilterCell(PrintSjukfallRequest printRequest) {
         //arende
-        String arende = getArendeFilterDisplayValue(printRequest.getArenden());
+        String arende = BaseExportService.getQAFilterDisplayValue(printRequest.getQa());
 
         //visa patientuppgifter
         String patientuppgifter = printRequest.isShowPatientId() ? PATIENTUPPGIFTER_VISAS : PATIENTUPPGIFTER_VISAS_EJ;
@@ -209,14 +205,6 @@ class FilterTableBuilder {
             : Arrays.asList(NO_FILTER_VALUES_SELECTED_PLACEHOLDER);
 
         return buildFilterCell(true, FILTER_TITLE_DIAGNOSER, diagnoses);
-    }
-
-    protected String getArendeFilterDisplayValue(Integer komplettering) {
-        if (komplettering == null) {
-            return FILTER_TITLE_ARENDESTATUS_ALLA;
-        } else {
-            return komplettering == 0 ? FILTER_TITLE_ARENDESTATUS_UTAN : FILTER_TITLE_ARENDESTATUS_MED;
-        }
     }
 
     private String getDiagnosKapitelDisplayValue(String diagnosKapitel) {

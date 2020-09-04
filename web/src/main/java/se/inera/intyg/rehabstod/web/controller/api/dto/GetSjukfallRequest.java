@@ -41,7 +41,7 @@ public class GetSjukfallRequest {
 
     private String patientId;
     private String fritext;
-    private Integer arende;
+    private Integer qa;
 
     /**
      * The sole constructor.
@@ -130,11 +130,11 @@ public class GetSjukfallRequest {
         this.showPatientId = showPatientId;
     }
 
-    public Integer getArenden() {
-        return arende;
+    public Integer getQa() {
+        return qa;
     }
 
-    public void setArenden(Integer arenden) {
-        this.arende = arenden;
+    public void setQa(Integer qa) {
+        this.qa = qa;
     }
 }

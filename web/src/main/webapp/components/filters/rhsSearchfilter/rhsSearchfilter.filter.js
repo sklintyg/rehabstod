@@ -46,7 +46,7 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', function(moment, _) {
         return false;
       }
 
-      if(checkArendenFilter(filterParams)) {
+      if(checkArendenFilter(filterParams, actual)) {
         return false;
       }
 

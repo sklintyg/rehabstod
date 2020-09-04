@@ -42,6 +42,7 @@ describe('Viewstate: SjukfallFilterViewState', function() {
     DiagnosKapitelModel = _DiagnosKapitelModel_;
     LakareModel = _LakareModel_;
     QAModel = _QAModel_;
+    SjukfallFilterViewState.initQAModel();
 
   }));
 

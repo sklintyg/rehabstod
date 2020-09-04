@@ -35,12 +35,14 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
       //Kanske initiera diagnoskapitelmodellen samtidigt som UserModel i appmain eller något?
       state.diagnosKapitelModel.set(APP_CONFIG.diagnosKapitelList);
 
-      state.qaModel.set([
-        {id: null, displayValue: 'Visa alla', defaultSelected: true},
-        {id: 1, displayValue: 'Visa läkarutlåtanden utan obesvarade kompletteringar'},
-        {id: 2, displayValue: 'Visa läkarutlåtanden med obesvarade kompletteringar'},
-        {id: 3, displayValue: 'Visa enbart läkarutlåtanden utan obesvarade ärenden'},
-        {id: 4, displayValue: 'Visa enbart läkarutlåtanden med obesvarade ärenden'}]);
+      function _initQAModel() {
+        state.qaModel.set([
+          {id: null, displayValue: 'Visa alla', defaultSelected: true},
+          {id: 0, displayValue: 'Visa enbart läkarutlåtanden utan obesvarade ärenden'},
+          {id: 1, displayValue: 'Visa enbart läkarutlåtanden med obesvarade ärenden'},
+          {id: 2, displayValue: 'Visa läkarutlåtanden med obesvarade kompletteringar'},
+          {id: 3, displayValue: 'Visa läkarutlåtanden med obesvarade administrativa frågor och svar'}]);
+      }
 
       state.certTypeModel.set([
         {id: 'FK7800', displayValue: 'Läkarutlåtande för sjukersättning, FK7800'},
@@ -143,7 +145,8 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
         reset: _reset,
         resetIfColumnsHidden: _resetIfColumnsHidden,
         getCurrentFilterState: _getCurrentFilterState,
-        get: _getState
+        get: _getState,
+        initQAModel: _initQAModel
       };
     })
 ;

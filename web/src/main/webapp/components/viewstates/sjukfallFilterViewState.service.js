@@ -24,7 +24,7 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState',
       var state = {
         diagnosKapitelModel: DiagnosKapitelModel,
         lakareModel: LakareModel,
-        qaModel: QAModel, //null = show all, 0 = exactly 0 and 1 means all > 0
+        qaModel: QAModel,
         showPatientId: true,
         slutdatumModel: {
           from: null,
@@ -35,12 +35,14 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState',
       //Kanske initiera diagnoskapitelmodellen samtidigt som UserModel i appmain eller något?
       state.diagnosKapitelModel.set(APP_CONFIG.diagnosKapitelList);
 
-      state.qaModel.set([
-        {id: null, displayValue: 'Visa alla', defaultSelected: true},
-        {id: 0, displayValue: 'Visa enbart sjukfall utan obesvarade ärenden'},
-        {id: 1, displayValue: 'Visa enbart sjukfall med obesvarade ärenden'},
-        {id: 2, displayValue: 'Visa sjukfall med obesvarade kompletteringar'},
-        {id: 3, displayValue: 'Visa sjukfall med obesvarade administrativa frågor och svar'}]);
+      function _initQAModel() {
+        state.qaModel.set([
+          {id: null, displayValue: 'Visa alla', defaultSelected: true},
+          {id: 0, displayValue: 'Visa enbart sjukfall utan obesvarade ärenden'},
+          {id: 1, displayValue: 'Visa enbart sjukfall med obesvarade ärenden'},
+          {id: 2, displayValue: 'Visa sjukfall med obesvarade kompletteringar'},
+          {id: 3, displayValue: 'Visa sjukfall med obesvarade administrativa frågor och svar'}]);
+      }
 
 
       function _reset() {
@@ -123,7 +125,8 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState',
         reset: _reset,
         resetIfColumnsHidden: _resetIfColumnsHidden,
         getCurrentFilterState: _getCurrentFilterState,
-        get: _getState
+        get: _getState,
+        initQAModel: _initQAModel
       };
     })
 ;

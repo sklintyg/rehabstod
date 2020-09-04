@@ -45,7 +45,7 @@ describe('Viewstate: LakarutlatandeFilterViewState', function() {
     LakareModel = _LakareModel_;
     QAModel = _QAModel_;
     CertTypeModel = _CertTypeModel_;
-
+    LakarutlatandeFilterViewState.initQAModel();
   }));
 
   describe('get', function() {

@@ -40,6 +40,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.export.BaseExportService;
 import se.inera.intyg.rehabstod.service.export.ExportField;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -140,7 +141,7 @@ class SjukfallTableBuilder {
                     Arrays.asList(
                         aParagraph(String.valueOf(sf.getIntyg())),
                         getGrader(sf),
-                        aParagraph(String.valueOf(sf.getObesvaradeKompl()))), avslutat));
+                        aParagraph(BaseExportService.getQAStatusFormat(sf.getObesvaradeKompl(), sf.getUnansweredOther()))), avslutat));
 
             // Column 5 - Lakare and SRS are not only controlled by user preference enabledFields toggling
             List<ExportField> c5Headers = new ArrayList<>();
