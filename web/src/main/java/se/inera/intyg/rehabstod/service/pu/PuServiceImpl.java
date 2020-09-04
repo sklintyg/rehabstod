@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.service.sjukfall.pu;
+package se.inera.intyg.rehabstod.service.pu;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.integration.pu.services.PUService;
 import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
@@ -46,7 +47,7 @@ import se.inera.intyg.schemas.contract.Personnummer;
  * Created by eriklupander on 2017-09-05.
  */
 @Service
-public class SjukfallPuServiceImpl implements SjukfallPuService {
+public class PuServiceImpl implements PuService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
@@ -142,7 +143,54 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
     }
 
     @Override
-    public void enrichWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList) {
+    public void enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(List<DiagnosedCertificate> diagnosedCertificateList) {
+        RehabstodUser user = userService.getUser();
+        Map<Personnummer, PersonSvar> personSvarMap = fetchPersonsForDiagnosedCertificates(diagnosedCertificateList);
+
+        var iterator = diagnosedCertificateList.iterator();
+        while (iterator.hasNext()) {
+            var certificate = iterator.next();
+
+            var optionalPersonnummer = getPersonnummerOfOptional(certificate.getPersonId());
+            if (optionalPersonnummer.isEmpty()) {
+                iterator.remove();
+                LOG.warn("Problem parsing personnummer returned by PU service. Removing from list of certificates.");
+                continue;
+            }
+            // Parse response from PU service
+            PersonSvar personSvar = personSvarMap.get(optionalPersonnummer.get());
+            boolean patientNotFound = personSvar.getStatus() == PersonSvar.Status.NOT_FOUND;
+            if (personSvar.getStatus() == PersonSvar.Status.FOUND || patientNotFound) {
+                if (patientNotFound || personSvar.getPerson().isSekretessmarkering()) {
+
+                    // RS-US-GE-002: RS-15 => Om patienten är sekretessmarkerad, skall namnet bytas ut mot placeholder.
+                    String updatedName = patientNotFound ? SEKRETESS_SKYDDAD_NAME_UNKNOWN : SEKRETESS_SKYDDAD_NAME_PLACEHOLDER;
+                    certificate.setPatientFullName(updatedName);
+
+                    // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE, då får vi ej visa
+                    // sjukfall för s-märkt patient. Dessutom kan det vara en läkare med roll REHABKOORDINATOR.
+                    if (!hasLakareRoleAndIsLakare(user, certificate.getPersonalHsaId())
+                        || !userService.isUserLoggedInOnEnhetOrUnderenhet(certificate.getCareUnitId())) {
+                        iterator.remove();
+                    }
+
+                } else if (personSvar.getPerson().isAvliden()) {
+                    iterator.remove();
+                } else if (joinNames(personSvar).equals("")) {
+                    certificate.setPatientFullName(SEKRETESS_SKYDDAD_NAME_UNKNOWN);
+                } else {
+                    certificate.setPatientFullName(joinNames(personSvar));
+                }
+            } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
+                throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
+            } else {
+                certificate.setPatientFullName(SEKRETESS_SKYDDAD_NAME_UNKNOWN);
+            }
+        }
+    }
+
+    @Override
+    public void enrichSjukfallWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList) {
         RehabstodUser user = userService.getUser();
         Map<Personnummer, PersonSvar> personSvarMap = fetchPersons(sjukfallList);
 
@@ -153,10 +201,9 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
             // If invalid personnummer, remove the last element returned by the iterator
             Optional<Personnummer> pnr = getPersonnummerOfOptional(item.getPatient().getId());
-            if (!pnr.isPresent()) {
+            if (pnr.isEmpty()) {
                 i.remove();
-                LOG.warn("Problem parsing personnummer '{}' returned by PU service. Removing from list of sjukfall.",
-                    item.getPatient().getId());
+                LOG.warn("Problem parsing personnummer returned by PU service. Removing from list of sjukfall.");
                 continue;
             }
 
@@ -208,7 +255,7 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
 
         // Call the PU service to get patient information.
         // If an error occur when calling the PU service an empty map will be returned.
-        Map<Personnummer, PersonSvar> personSvarMap = puService.getPersons(getPersonnummerList(sjukfallList));
+        Map<Personnummer, PersonSvar> personSvarMap = puService.getPersons(this.getPersonnummerListFromSjukfall(sjukfallList));
 
         // Empty map indicates an error when calling the PU service,
         // clear the list of sjukfall.
@@ -218,8 +265,26 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
         return personSvarMap;
     }
 
+    private Map<Personnummer, PersonSvar> fetchPersonsForDiagnosedCertificates(List<DiagnosedCertificate> diagnosedCertificateList) {
+        if (diagnosedCertificateList.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        // Call the PU service to get patient information.
+        // If an error occur when calling the PU service an empty map will be returned.
+        Map<Personnummer, PersonSvar> personSvarMap = puService.getPersons(getPersonnummerListFromCertificate(diagnosedCertificateList));
+
+        // Empty map indicates an error when calling the PU service,
+        // clear the list of sjukfall.
+        if (personSvarMap.isEmpty()) {
+            throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
+        }
+        return personSvarMap;
+    }
+
+
     @Override
-    public void enrichWithPatientNameAndFilterSekretess(List<SjukfallPatient> patientSjukfall) {
+    public void enrichSjukfallWithPatientNameAndFilterSekretess(List<SjukfallPatient> patientSjukfall) {
         if (patientSjukfall.size() == 0) {
             return;
         }
@@ -274,18 +339,34 @@ public class SjukfallPuServiceImpl implements SjukfallPuService {
      * Any invalid patient ID in sjukfallList will be filtered.
      */
     @VisibleForTesting
-    List<Personnummer> getPersonnummerList(List<SjukfallEnhet> sjukfallList) {
+    List<Personnummer> getPersonnummerListFromSjukfall(List<SjukfallEnhet> sjukfallList) {
         LOG.debug("Building a list of Personnummer by extracting patient IDs from a 'sjukfall' list.");
-        return getPersonnummerListOfOptionals(sjukfallList).stream()
+        return getPersonnummerListOfOptionalsFromSjukfall(sjukfallList).stream()
             .filter(Optional::isPresent)
             .map(Optional::get)
             .distinct()
             .collect(Collectors.toList());
     }
 
-    private List<Optional<Personnummer>> getPersonnummerListOfOptionals(List<SjukfallEnhet> sjukfallList) {
+    private List<Optional<Personnummer>> getPersonnummerListOfOptionalsFromSjukfall(List<SjukfallEnhet> sjukfallList) {
         return sjukfallList.stream()
             .map(se -> getPersonnummerOfOptional(se.getPatient().getId()))
+            .collect(Collectors.toList());
+    }
+
+    @VisibleForTesting
+    List<Personnummer> getPersonnummerListFromCertificate(List<DiagnosedCertificate> diagnosedCertificateList) {
+        return getPersonnummerListOfOptionalsFromCertificate(diagnosedCertificateList).stream()
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .distinct()
+            .collect(Collectors.toList());
+    }
+
+    private List<Optional<Personnummer>> getPersonnummerListOfOptionalsFromCertificate(
+        List<DiagnosedCertificate> diagnosedCertificateList) {
+        return diagnosedCertificateList.stream()
+            .map(c -> getPersonnummerOfOptional(c.getPersonId()))
             .collect(Collectors.toList());
     }
 

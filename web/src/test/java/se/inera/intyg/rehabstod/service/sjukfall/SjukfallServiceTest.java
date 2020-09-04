@@ -69,6 +69,7 @@ import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
+import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaDataItemType;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
@@ -77,7 +78,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfo
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
-import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
@@ -159,7 +159,7 @@ public class SjukfallServiceTest {
     private EmployeeNameService employeeNameService;
 
     @Mock
-    private SjukfallPuService sjukfallPuService;
+    private PuService puService;
 
     @Mock
     private RiskPredictionService riskPredictionService;
@@ -192,7 +192,7 @@ public class SjukfallServiceTest {
     public void init() {
         when(integrationService.getIntygsDataForCareUnit(anyString(), anyInt())).thenReturn(new ArrayList<>());
         when(integrationService.getAllIntygsDataForPatient(anyString())).thenReturn(createIntygsData());
-        when(sjukfallPuService.filterSekretessForPatientHistory(anyList()))
+        when(puService.filterSekretessForPatientHistory(anyList()))
             .thenAnswer(returnsFirstArg());
 
         doReturn(createSjukfallEnhetList()).when(sjukfallEngine)

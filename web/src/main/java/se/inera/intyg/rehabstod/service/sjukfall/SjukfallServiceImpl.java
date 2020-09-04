@@ -51,6 +51,7 @@ import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
+import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.FilteredSjukFallByPatientResult;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaDataItem;
@@ -62,7 +63,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfo
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
-import se.inera.intyg.rehabstod.service.sjukfall.pu.SjukfallPuService;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -99,7 +99,7 @@ public class SjukfallServiceImpl implements SjukfallService {
     private UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
 
     @Autowired
-    private SjukfallPuService sjukfallPuService;
+    private PuService puService;
 
     @Autowired
     private StatisticsCalculator statisticsCalculator;
@@ -134,7 +134,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         List<SjukfallEnhet> rehabstodSjukfall = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, parameters);
 
         // Utför sekretess-filtrering innan loggning, vi filtrerar ju ev. bort en del poster.
-        sjukfallPuService.enrichWithPatientNamesAndFilterSekretess(rehabstodSjukfall);
+        puService.enrichSjukfallWithPatientNamesAndFilterSekretess(rehabstodSjukfall);
 
         if (rehabstodSjukfall != null) {
             monitoringLogService.logUserViewedSjukfall(lakareId,
@@ -184,7 +184,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         final List<SjukfallPatient> rehabstodSjukfall = result.getRehabstodSjukfall();
 
-        sjukfallPuService.enrichWithPatientNameAndFilterSekretess(rehabstodSjukfall);
+        puService.enrichSjukfallWithPatientNameAndFilterSekretess(rehabstodSjukfall);
         sjukfallEmployeeNameResolver.enrichSjukfallPaientWithHsaEmployeeNames(rehabstodSjukfall);
 
         boolean qaInfoError = false;
@@ -215,7 +215,7 @@ public class SjukfallServiceImpl implements SjukfallService {
         String lakareId, Urval urval, IntygParametrar parameters) {
 
         List<SjukfallEnhet> sjukfallList = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, parameters);
-        sjukfallPuService.filterSekretessForSummary(sjukfallList);
+        puService.filterSekretessForSummary(sjukfallList);
         return statisticsCalculator.getSjukfallSummary(sjukfallList);
     }
 
@@ -301,9 +301,9 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         // Remove intyg from other units for patients with sekretess
         LOG.debug("Calling PU - fetching information about patients 'sekretess' status.");
-        List<IntygData> filteredData = sjukfallPuService.filterSekretessForPatientHistory(data);
+        List<IntygData> filteredData = puService.filterSekretessForPatientHistory(data);
 
-        PersonSvar personSvar = sjukfallPuService.getPersonSvar(patientId);
+        PersonSvar personSvar = puService.getPersonSvar(patientId);
         boolean haveSekretess = filteredData.size() != data.size() && personSvar.getStatus() != Status.NOT_FOUND;
         data = filteredData;
 
