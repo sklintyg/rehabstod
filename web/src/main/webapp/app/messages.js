@@ -123,6 +123,7 @@ var rhsMessages = {
     'label.filter.signdatum.help': 'Filtrerar på signeringsdatum. Det är möjligt att välja ett intervall genom att klicka på två olika datum, eller ett enskilt datum genom att klicka på samma datum två gånger.',
     'label.filter.lakarutlatande': 'Välj läkarutlåtande',
     'label.filter.lakarutlatande-status.help': 'Filtrerar på typ av läkarutlåtande.',
+    'label.filter.lakarutlatande.qa-status.help': 'Filtrerar på läkarutlåtanden med eller utan obesvarade kompletteringar eller administrativa frågor och svar.',
 
     // Settings
     'settings.modal.header': 'Inställningar',
