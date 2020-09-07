@@ -38,10 +38,10 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
       function _initQAModel() {
         state.qaModel.set([
           {id: null, displayValue: 'Visa alla', defaultSelected: true},
-          {id: 0, displayValue: 'Visa enbart läkarutlåtanden utan obesvarade ärenden'},
-          {id: 1, displayValue: 'Visa enbart läkarutlåtanden med obesvarade ärenden'},
-          {id: 2, displayValue: 'Visa läkarutlåtanden med obesvarade kompletteringar'},
-          {id: 3, displayValue: 'Visa läkarutlåtanden med obesvarade administrativa frågor och svar'}]);
+          {id: 1, displayValue: 'Visa enbart läkarutlåtanden utan obesvarade ärenden'},
+          {id: 2, displayValue: 'Visa enbart läkarutlåtanden med obesvarade ärenden'},
+          {id: 3, displayValue: 'Visa läkarutlåtanden med obesvarade kompletteringar'},
+          {id: 4, displayValue: 'Visa läkarutlåtanden med obesvarade administrativa frågor och svar'}]);
       }
 
       state.certTypeModel.set([
