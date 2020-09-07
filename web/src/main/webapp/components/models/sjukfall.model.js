@@ -80,12 +80,26 @@ angular.module('rehabstodApp').factory('SjukfallModel',
         return items.join(' &#10142; ');
       }
 
-      function _getObesvaradeKomplShow(obesvaradeKompl) {
+      function _getQAString(unansweredComplement, unansweredOther) {
         if (SjukfallViewState.get().kompletteringInfoError) {
           //indicate no value due to error
           return '';
+        } else if (unansweredComplement === 0 && unansweredOther === 0) {
+          return '-';
+        } else {
+          var s = '';
+          if(unansweredComplement !== 0) {
+            s = 'Komplettering (' + unansweredComplement + ')';
+          }
+          if(unansweredOther !== 0) {
+            s = s + '\nAdministrativ fråga (' + unansweredOther + ')';
+          }
+          return s;
         }
-        return (obesvaradeKompl > 0) ? 'Obesvarad (' + obesvaradeKompl + ')' : '-';
+      }
+
+      function _getHighestNbrOfQA(unansweredComplement, unansweredOther) {
+        return unansweredComplement > 0 ? unansweredComplement : (unansweredOther > 0 ? unansweredOther : 0);
       }
 
       function _updateQuickSearchContent() {
@@ -93,7 +107,8 @@ angular.module('rehabstodApp').factory('SjukfallModel',
           item.patient.konShow = _getKon(item.patient.kon);
           item.dagarShow = _getDagar(item.dagar);
           item.gradShow = _getGradShow(item.aktivGrad, item.grader);
-          item.obesvaradeKomplShow = _getObesvaradeKomplShow(item.obesvaradeKompl);
+          item.qaString = _getQAString(item.obesvaradeKompl, item.unansweredOther);
+          item.highestNbrOfQA = _getHighestNbrOfQA(item.obesvaradeKompl, item.unansweredOther);
           item.quickSearchString = '';
 
           var columns = TableService.getSelectedSjukfallColumns();
@@ -121,8 +136,8 @@ angular.module('rehabstodApp').factory('SjukfallModel',
             case 'days':
               _addQuickSearchContent(item, item.dagarShow);
               break;
-            case 'kompletteringar':
-              _addQuickSearchContent(item, item.obesvaradeKomplShow);
+            case 'qa':
+              _addQuickSearchContent(item, item.qaString);
               break;
             case 'degree':
               _addQuickSearchContent(item, angular.isArray(item.grader) ? item.grader.join('%,') + '%' : '');

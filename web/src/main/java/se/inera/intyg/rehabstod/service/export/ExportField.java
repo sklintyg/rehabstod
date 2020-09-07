@@ -39,7 +39,7 @@ public enum ExportField {
     DAYS("days", "Längd", "Längd"),
     NR_OF_INTYG("antal", "Antal intyg", "Antal"),
     GRADER("degree", "Grad", "Grad"),
-    KOMPLETTERINGAR("Kompletteringar", "Komplettering", "Kompletteringar"),
+    ARENDEN("qa", "Ärenden", "Ärenden"),
     SRS("srs", "Risk", "Risk"),
     LAKARE("doctor", "Läkare", "Läkare");
 

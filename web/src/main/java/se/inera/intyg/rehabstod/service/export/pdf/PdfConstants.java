@@ -22,10 +22,7 @@ final class PdfConstants {
 
     static final String FILTER_TITLE_MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG = "Max dagar mellan intyg";
     static final String FILTER_TITLE_AVSLUTADE_SJUKFALL = "Visa avslutade sjukfall";
-    static final String FILTER_TITLE_KOMPLETTERINGSSTATUS = "Kompletteringsstatus";
-    static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA = "Visa alla";
-    static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN = "Visa sjukfall utan obesvarade kompletteringar";
-    static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_MED = "Visa sjukfall med obesvarade kompletteringar";
+    protected static final String FILTER_TITLE_ARENDESTATUS = "Ärendestatus";
     static final String FILTER_TITLE_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
     static final String FILTER_TITLE_ALDERSPANN = "Åldersspann";
     static final String FILTER_TITLE_SLUTDATUM = "Slutdatum";
