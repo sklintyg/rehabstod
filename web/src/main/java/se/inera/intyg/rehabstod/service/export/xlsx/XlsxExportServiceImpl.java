@@ -114,7 +114,7 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         if (user.getUrval() != Urval.ISSUED_BY_ME) {
             rowNumber = addLakareList(sheet, rowNumber, FILTER_TITLE_VALDA_LAKARE, req.getLakare(), user); // NOSONAR
         }
-        rowNumber = addKompletteringsStatus(sheet, rowNumber, FILTER_TITLE_KOMPLETTERINGSSTATUS, req.getKomplettering()); // NOSONAR
+        rowNumber = addArendeStatus(sheet, rowNumber, FILTER_TITLE_ARENDESTATUS, req.getQa()); // NOSONAR
 
         // Inställningar
         String maxGlapp = user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG);
@@ -186,10 +186,10 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
         return String.format(TEMPLATESTRING_SJUKSKRIVNINGSLANGD, minDesc, maxDesc);
     }
 
-    private int addKompletteringsStatus(XSSFSheet sheet, int currentRowNumber, String filterTitleKompletteringsstatus,
-        Integer komplettering) {
+    private int addArendeStatus(XSSFSheet sheet, int currentRowNumber, String filterTitleArendestatus,
+        Integer qa) {
         int rowNumber = currentRowNumber;
-        addFilterHeader(sheet, rowNumber++, filterTitleKompletteringsstatus, getKompletteringFilterDisplayValue(komplettering));
+        addFilterHeader(sheet, rowNumber++, filterTitleArendestatus, getQAFilterDisplayValue(qa));
         return rowNumber;
     }
 
@@ -347,8 +347,8 @@ public class XlsxExportServiceImpl extends BaseExportService implements XlsxExpo
                     case GRADER:
                         createRichTextDataCell(row, colIndex++, buildGraderRichText(sf), avslutat);
                         break;
-                    case KOMPLETTERINGAR:
-                        createDataCell(row, colIndex++, getKompletteringStatusFormat(sf.getObesvaradeKompl()), avslutat);
+                    case ARENDEN:
+                        createDataCell(row, colIndex++, getQAStatusFormat(sf.getObesvaradeKompl(), sf.getUnansweredOther()), avslutat);
                         break;
                     case LAKARE:
                         createDataCell(row, colIndex++, sf.getLakare().getNamn(), avslutat);

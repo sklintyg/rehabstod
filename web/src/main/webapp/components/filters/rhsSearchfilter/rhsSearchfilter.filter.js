@@ -25,6 +25,14 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', function(moment, _) {
     return ('' + obj).toLowerCase().indexOf(text) > -1;
   };
 
+  function checkArendenFilter(filterParams, actual) {
+   return (angular.isNumber(filterParams.qa) &&
+        (((filterParams.qa === 0) && (actual.unansweredOther > 0 || actual.obesvaradeKompl > 0 )) ||
+            ((filterParams.qa === 1) && (actual.obesvaradeKompl === 0 && actual.unansweredOther === 0)) ||
+            ((filterParams.qa === 2) && actual.obesvaradeKompl === 0) ||
+            ((filterParams.qa === 3) && actual.unansweredOther === 0)));
+  }
+
   return function(array, expression) {
     function customComparator(actual, filterParams, slutDatum) {
 
@@ -38,10 +46,7 @@ angular.module('rehabstodApp').filter('rhsSearchfilter', function(moment, _) {
         return false;
       }
 
-      //Kompletteringsstatus (null = don't filter at all, 0 = must be exactly 0 to pass, otherwise must be > 0)
-      if (angular.isNumber(filterParams.komplettering) &&
-          (((filterParams.komplettering === 0) && actual.obesvaradeKompl > 0) ||
-              ((filterParams.komplettering > 0) && actual.obesvaradeKompl < 1))) {
+      if(checkArendenFilter(filterParams, actual)) {
         return false;
       }
 

@@ -30,6 +30,8 @@ angular.module('rehabstodApp')
       var columns;
       $scope.showDatePicker = true;
 
+      $scope.filterViewState.initQAModel();
+
       $scope.toggleDatePicker = function () {
         $scope.showDatePicker = false;
         $timeout(function(){

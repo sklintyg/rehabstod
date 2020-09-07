@@ -43,6 +43,7 @@ describe('Model: SjukfallModel', function() {
     'dagar': 84,
     'intyg': 4,
     'obesvaradeKompl': 1,
+    'unansweredOther': 0,
     'grader': [100, 50],
     'aktivGrad': 100,
     'lakare': {
@@ -65,7 +66,7 @@ describe('Model: SjukfallModel', function() {
       expect(SjukfallModel.get().length).toEqual(testJsonData.length);
       expect(SjukfallModel.get()[0].quickSearchString).toEqual(
           '19360721-7068:79:Förnamn-3607 Efternamn-21-7068:Kvinna:M16.0:Primär koxartros, dubbelsidig:B1B2:2016-02-01:2016-03-01:84 dagar' +
-          ':4:100%,50%:Obesvarad (1):Jan Nilsson:');
+          ':4:100%,50%:Komplettering (1):Jan Nilsson:');
     });
 
     it('should decorate show properties when set', inject(function(messageService) {

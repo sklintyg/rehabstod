@@ -49,10 +49,16 @@ public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorato
 
         var dummy = new UnansweredQAs(0, 0);
         sjukfallList.forEach(
-            sjukfallEnhet -> sjukfallEnhet.setObesvaradeKompl(
+            sjukfallEnhet -> {
+                sjukfallEnhet.setObesvaradeKompl(
                 sjukfallEnhet.getIntygLista().stream()
                     .mapToInt(intygsId -> Optional.ofNullable(perIntyg.get(intygsId)).orElse(dummy).getComplement())
-                    .sum()));
+                    .sum());
+                sjukfallEnhet.setUnansweredOther(
+                    sjukfallEnhet.getIntygLista().stream()
+                        .mapToInt(intygsId -> Optional.ofNullable(perIntyg.get(intygsId)).orElse(dummy).getOthers())
+                        .sum());
+            });
     }
 
     @Override

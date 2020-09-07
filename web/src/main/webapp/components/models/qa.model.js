@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').factory('KompletteringModel',
+angular.module('rehabstodApp').factory('QAModel',
     function() {
       'use strict';
 

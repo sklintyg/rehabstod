@@ -162,19 +162,21 @@ public class CertificateServiceImpl implements CertificateService {
         var qas = request.getQuestionAndAnswers();
         if (qas > 0) {
             switch (qas) {
-                case 1: // Only show certificates without unanswered complement requests
-                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredComplement() == 0)
+                case 1: // Only show certificates without unanswered complement requests and questions
+                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredComplement() == 0
+                        && c.getUnAnsweredOther() == 0)
                         .collect(Collectors.toList());
                     break;
-                case 2: // Only show certificates with unanswered complement requests
+                case 2: // Only show certificates with unanswered complement requests or questions
+                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredComplement() > 0
+                        || c.getUnAnsweredOther() > 0)
+                        .collect(Collectors.toList());
+                    break;
+                case 3: // Only show certificates with unanswered complement requests
                     luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredComplement() > 0)
                         .collect(Collectors.toList());
                     break;
-                case 3: // Only show certificates without unanswered question
-                    luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredOther() == 0)
-                        .collect(Collectors.toList());
-                    break;
-                case 4: // Only show certificates with unanswered question
+                case 4: // Only show certificates with unanswered questions
                     luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredOther() > 0)
                         .collect(Collectors.toList());
                     break;

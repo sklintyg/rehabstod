@@ -40,10 +40,12 @@ public abstract class BaseExportService {
     protected static final String FILTER_TITLE_VALDA_DIAGNOSER = "Valda diagnoser";
     protected static final String SELECTION_VALUE_ALLA = "Alla";
     protected static final String FILTER_TITLE_VALDA_LAKARE = "Valda läkare";
-    protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS = "Kompletteringsstatus";
-    protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA = "Visa alla";
-    protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN = "Visa sjukfall utan obesvarade kompletteringar";
-    protected static final String FILTER_TITLE_KOMPLETTERINGSSTATUS_MED = "Visa sjukfall med obesvarade kompletteringar";
+    protected static final String FILTER_TITLE_ARENDESTATUS = "Ärendestatus";
+    protected static final String FILTER_TITLE_ARENDESTATUS_ALLA = "Visa alla";
+    protected static final String FILTER_TITLE_ARENDESTATUS_UTAN = "Visa enbart sjukfall utan obesvarade ärenden";
+    protected static final String FILTER_TITLE_ARENDESTATUS_MED = "Visa enbart sjukfall med obesvarade ärenden";
+    protected static final String FILTER_TITLE_ARENDESTATUS_MED_KOMPLETTERING = "Visa sjukfall med obesvarade kompletteringar";
+    protected static final String FILTER_TITLE_ARENDESTATUS_MED_FRAGOR = "Visa sjukfall med obesvarade administrativa frågor och svar";
     protected static final String FILTER_TITLE_VALD_SJUKSKRIVNINGSLANGD = "Sjukskrivningslängd";
     protected static final String FILTER_TITLE_VALD_ALDER = "Åldersspann";
     protected static final String FILTER_TITLE_VALD_SLUTDATUM = "Slutdatum";
@@ -114,19 +116,32 @@ public abstract class BaseExportService {
 
     }
 
-    protected String getKompletteringFilterDisplayValue(Integer komplettering) {
-        if (komplettering == null) {
-            return FILTER_TITLE_KOMPLETTERINGSSTATUS_ALLA;
-        } else {
-            return komplettering == 0 ? FILTER_TITLE_KOMPLETTERINGSSTATUS_UTAN : FILTER_TITLE_KOMPLETTERINGSSTATUS_MED;
+    public static String getQAFilterDisplayValue(Integer qaID) {
+        String[] qaStatuses = { FILTER_TITLE_ARENDESTATUS_UTAN, FILTER_TITLE_ARENDESTATUS_MED,
+            FILTER_TITLE_ARENDESTATUS_MED_KOMPLETTERING, FILTER_TITLE_ARENDESTATUS_MED_FRAGOR};
+        if (qaID == null) {
+            return FILTER_TITLE_ARENDESTATUS_ALLA;
         }
+        for (int i = 0; i < qaStatuses.length; i++) {
+            if (qaID == i) {
+                return qaStatuses[i];
+            }
+        }
+        return FILTER_TITLE_ARENDESTATUS_ALLA;
     }
 
-    protected String getKompletteringStatusFormat(int obesvaradeKompl) {
-        if (obesvaradeKompl == 0) {
+    public static String getQAStatusFormat(int unansweredComplement, int unansweredOther) {
+        if (unansweredComplement == 0 && unansweredOther == 0) {
             return "-";
         } else {
-            return "Obesvarade(" + obesvaradeKompl + ")";
+            String s = "";
+            if (unansweredComplement != 0) {
+                s = "Komplettering (" + unansweredComplement + ")\n";
+            }
+            if (unansweredOther != 0) {
+                s = s + "Administrativ fråga (" + unansweredOther + ")";
+            }
+            return s;
         }
     }
 

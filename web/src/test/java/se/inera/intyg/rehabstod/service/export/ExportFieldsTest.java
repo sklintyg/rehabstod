@@ -36,9 +36,9 @@ public class ExportFieldsTest {
         assertEquals(ExportField.fromJson(ExportField.DAYS.getJsonId()), Arrays.asList(ExportField.DAYS));
 
         final List<ExportField> exportFields = ExportField.fromJson(
-            ExportField.KOMPLETTERINGAR.getJsonId() + ":1|" + ExportField.DAYS.getJsonId() + ":1|apa:1|" + ExportField.GRADER.getJsonId() + ":1");
+            ExportField.ARENDEN.getJsonId() + ":1|" + ExportField.DAYS.getJsonId() + ":1|apa:1|" + ExportField.GRADER.getJsonId() + ":1");
         assertEquals(3, exportFields.size());
-        assertEquals((ExportField.KOMPLETTERINGAR), exportFields.get(0));
+        assertEquals((ExportField.ARENDEN), exportFields.get(0));
         assertEquals((ExportField.DAYS), exportFields.get(1));
         assertEquals((ExportField.GRADER), exportFields.get(2));
 

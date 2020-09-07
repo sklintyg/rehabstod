@@ -42,7 +42,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeService',
           var filterState = LakarutlatandeFilterViewState.getCurrentFilterState();
 
           var query = {
-            qas: filterState.komplettering,
+            questionAndAnswers: filterState.komplettering,
             certTypes: filterState.certType,
             fromDate: filterState.signDate.from,
             toDate: filterState.signDate.to,

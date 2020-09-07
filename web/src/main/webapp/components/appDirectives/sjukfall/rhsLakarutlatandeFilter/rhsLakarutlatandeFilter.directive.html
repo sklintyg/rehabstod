@@ -28,8 +28,8 @@
       <!-- KOMPLETTERING -->
       <div class="col-md-3 col-xs-6">
         <fieldset class="form-group" ng-disabled="filterInactive('qas')">
-          <label class="control-label"><span message key="label.filter.komplettering-status"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.komplettering-status.help"></span></label>
-          <rhs-multi-select id="rhs-filter-komplettering-status" items-model="filterViewState.get().kompletteringModel"  control-disabled="filterInactive('qas')"
+          <label class="control-label"><span message key="label.filter.qa-status"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.lakarutlatande.qa-status.help"></span></label>
+          <rhs-multi-select id="rhs-filter-komplettering-status" items-model="filterViewState.get().qaModel"  control-disabled="filterInactive('qas')"
                             none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="false" xor-mode="true"></rhs-multi-select>
         </fieldset>
       </div>
