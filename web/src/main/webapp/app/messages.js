@@ -91,10 +91,10 @@ var rhsMessages = {
     'label.sjukfall.result.back': 'Tillbaka till översiktssidan',
 
     // Läkarutlåtande
-    'label.lakarutlatande.result.lakare.header': 'Alla läkarutlåtanden på ',
-    'label.lakarutlatande.result.lakare.headerend': ' de senaste tre åren.',
-    'label.lakarutlatande.result.rehab.header': 'Mina läkarutlåtanden på ',
+    'label.lakarutlatande.result.rehab.header': 'Alla läkarutlåtanden på ',
     'label.lakarutlatande.result.rehab.headerend': ' de senaste tre åren.',
+    'label.lakarutlatande.result.lakare.header': 'Mina läkarutlåtanden på ',
+    'label.lakarutlatande.result.lakare.headerend': ' de senaste tre åren.',
 
     // Filter
     'label.filter.show': 'Visa sökfilter',
@@ -124,6 +124,7 @@ var rhsMessages = {
     'label.filter.lakarutlatande': 'Välj läkarutlåtande',
     'label.filter.lakarutlatande-status.help': 'Filtrerar på typ av läkarutlåtande.',
     'label.filter.lakarutlatande.qa-status.help': 'Filtrerar på läkarutlåtanden med eller utan obesvarade kompletteringar eller administrativa frågor och svar.',
+    'label.filter.lakarutlatande-filter.placeholder': 'Hitta läkarutlåtanden som innehåller...',
 
     // Settings
     'settings.modal.header': 'Inställningar',
@@ -255,7 +256,7 @@ var rhsMessages = {
 
     'label.table.custom.modal.lakarutlatanden.title': 'Anpassa tabellen',
     'label.table.custom.modal.lakarutlatanden.body': 'Välj vilka kolumner du vill se i tabellen med läkarutlåtanden och i vilken ordning dessa ska ligga. Dina ändringar kommer att sparas tillsvidare. Du kan ändra dessa när du vill.',
-    'label.table.custom.modal.lakarutlatanden.selectone': 'Var god välj minst en kolumn för att kunna se sjukfallstabellen.',
+    'label.table.custom.modal.lakarutlatanden.selectone': 'Var god välj minst en kolumn för att kunna se läkarutlåtande.',
     'label.table.custom.modal.lakarutlatanden.error': '<p>Kunde inte spara dina ändringar på grund av ett tekniskt fel. Försök igen om en stund.</p><p>Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.</p>',
 
     'label.table.custom.modal.patient.title': 'Anpassa tabellerna',

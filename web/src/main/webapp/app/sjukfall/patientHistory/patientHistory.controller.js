@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp').controller('patientHistoryController',
     function($scope, $http, $uibModalInstance, $state, APP_CONFIG, patientHistoryProxy, SjukfallFilterViewState,
-        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy, messageService, openLU) {
+        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy, messageService, openLU, certificate) {
       'use strict';
 
       //Create initial default details tab (cannot be closed)
@@ -32,6 +32,7 @@ angular.module('rehabstodApp').controller('patientHistoryController',
       //expose tabs model to view
       $scope.tabs = patientHistoryViewState.getTabs();
 
+      $scope.certificate = certificate;
       $scope.openLU = openLU;
       if ($scope.openLU) {
         patientHistoryViewState.selectTab($scope.tabs[1]);
@@ -147,6 +148,10 @@ angular.module('rehabstodApp').controller('patientHistoryController',
       }
 
       fetchAccessToken();
+
+      if ($scope.certificate){
+        $scope.loadIntyg($scope.certificate);
+      }
 
       function wcLogout() {
 

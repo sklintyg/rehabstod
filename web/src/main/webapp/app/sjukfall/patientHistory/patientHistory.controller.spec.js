@@ -98,7 +98,8 @@ describe('Controller: PatientHistoryController', function() {
           patientHistoryViewState: _patientHistoryViewState_,
           patient: {},
           nyligenAvslutat: false,
-          openLU: false
+          openLU: false,
+          certificate: undefined
         });
       }));
 

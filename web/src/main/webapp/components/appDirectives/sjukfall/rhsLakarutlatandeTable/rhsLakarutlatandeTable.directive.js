@@ -34,7 +34,7 @@ angular.module('rehabstodApp')
       $scope.$watch(function() {
         return LakarutlatandeFilterViewState.get().showPatientId + UserModel.get().preferences[$scope.preferenceKey];
       }, function() {
-        $scope.columnsForTable = TableService.getSelectedColumns($scope.columns, $scope.preferenceKey);
+        $scope.columnsForTable = TableService.getSelectedColumns($scope.columns, $scope.preferenceKey, undefined, true);
         LakarutlatandeModel.updateQuickSearchContent();
       });
 
@@ -45,7 +45,7 @@ angular.module('rehabstodApp')
         return '<b>' + diagnosis.kod + '</b><br>' + desc;
       };
 
-      $scope.showPatientHistory = function(patientModel, nyligenAvslutat) {
+      $scope.showPatientHistory = function(patientModel, nyligenAvslutat, certificateId, signingTimeStamp) {
         $uibModal.open({
           windowClass: 'patient-history-dialog',
           templateUrl: '/app/sjukfall/patientHistory/patientHistory.dialog.html',
@@ -62,6 +62,9 @@ angular.module('rehabstodApp')
             },
             openLU: function() {
               return true;
+            },
+            certificate: function() {
+              return {certificateId:certificateId,signingTimeStamp:signingTimeStamp};
             }
           }
         });
