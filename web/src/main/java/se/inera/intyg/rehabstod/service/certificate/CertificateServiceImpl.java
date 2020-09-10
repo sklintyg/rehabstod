@@ -234,6 +234,14 @@ public class CertificateServiceImpl implements CertificateService {
             return true;
         }
 
+        if (c.getUnAnsweredComplement() > 0 && String.format("Komplettering (%d)", c.getUnAnsweredComplement()).contains(searchText)) {
+            return true;
+        }
+
+        if (c.getUnAnsweredOther() > 0 && String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()).contains(searchText)) {
+            return true;
+        }
+
         return c.getDoctor() != null && c.getDoctor().getNamn() != null && c.getDoctor().getNamn().contains(searchText);
     }
 
@@ -361,9 +369,14 @@ public class CertificateServiceImpl implements CertificateService {
         List<LUCertificate> luCertificateToLog = PDLActivityStore
             .getActivitiesNotInStore(luCertificateList, enhetsId, readActivityType, resourceTypeCertificate,
                 rehabstodUser.getStoredActivities());
-        logService.logCertificate(luCertificateList, readActivityType, resourceTypeCertificate, storedActivities);
-        PDLActivityStore.addActivitiesToStore(luCertificateToLog, enhetsId, readActivityType, resourceTypeCertificate,
-            rehabstodUser.getStoredActivities());
+        if (luCertificateToLog.isEmpty()) {
+            LOGGER.info("Everything in list already in PDL log");
+        } else {
+            LOGGER.info("Adding new entries to PDL log");
+            logService.logCertificate(luCertificateToLog, readActivityType, resourceTypeCertificate, storedActivities);
+            PDLActivityStore.addActivitiesToStore(luCertificateToLog, enhetsId, readActivityType, resourceTypeCertificate,
+                rehabstodUser.getStoredActivities());
+        }
 
     }
 

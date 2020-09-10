@@ -3,7 +3,7 @@
      infinite-scroll-distance="2">
 
     <div class="rhs-select-columns-container">
-        <rhs-table-select-columns preference-key="preferenceKey" columns="columns" table-text-key="{{tableTextKey}}"></rhs-table-select-columns>
+        <rhs-table-select-columns preference-key="preferenceKey" columns="columns" table-text-key="{{tableTextKey}}" modal-text-key="label.table.custom.modal.lakarutlatanden."></rhs-table-select-columns>
     </div>
 <!--    <rhs-table-search-connector columns="columnsForTable"></rhs-table-search-connector>-->
     <rhs-reset-limit on-change="resetLimit()" scroll-element=".rhs-lakarutlatande-table" padding-top="57"></rhs-reset-limit>
@@ -23,7 +23,7 @@
         <thead rhs-table-header  user="user" columns="columnsForTable" table-text-key="{{tableTextKey}}" id="rhs-table-normal-header"></thead>
         <tbody id="rhs-table-body">
             <tr id="sjukfall-row-{{rowIndex}}" ng-repeat="(rowIndex, row) in displayedCollection | limitTo: limit track by row.certificateId"
-                class="rhs-table-row" ng-click="showPatientHistory(row.patient, row.nyligenAvslutat)"
+                class="rhs-table-row" ng-click="showPatientHistory(row.patient, row.nyligenAvslutat, row.certificateId, row.signingTimeStamp)"
                 ng-class="{'nyligen-avslutad-row' : row.nyligenAvslutat}">
 
                 <td data-ng-repeat="column in columnsForTable" ng-attr-id="sjukfall-{{rowIndex}}-column-{{::column.id}}">
