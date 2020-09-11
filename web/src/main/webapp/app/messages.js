@@ -255,7 +255,7 @@ var rhsMessages = {
 
     'label.table.custom.modal.lakarutlatanden.title': 'Anpassa tabellen',
     'label.table.custom.modal.lakarutlatanden.body': 'Välj vilka kolumner du vill se i tabellen med läkarutlåtanden och i vilken ordning dessa ska ligga. Dina ändringar kommer att sparas tillsvidare. Du kan ändra dessa när du vill.',
-    'label.table.custom.modal.lakarutlatanden.selectone': 'Var god välj minst en kolumn för att kunna se sjukfallstabellen.',
+    'label.table.custom.modal.lakarutlatanden.selectone': 'Var god välj minst en kolumn för att kunna se läkarutlåtanden.',
     'label.table.custom.modal.lakarutlatanden.error': '<p>Kunde inte spara dina ändringar på grund av ett tekniskt fel. Försök igen om en stund.</p><p>Om felet kvarstår, kontakta i första hand din lokala IT-avdelning och i andra hand <LINK:ineraNationellKundservice>.</p>',
 
     'label.table.custom.modal.patient.title': 'Anpassa tabellerna',
