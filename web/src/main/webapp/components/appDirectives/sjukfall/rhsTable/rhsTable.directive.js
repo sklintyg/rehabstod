@@ -61,7 +61,10 @@ angular.module('rehabstodApp')
             },
             openLU: function() {
               return false;
-            }
+            },
+            certificate: function() {
+              return null;
+        }
           }
         });
       };

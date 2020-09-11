@@ -91,10 +91,10 @@ var rhsMessages = {
     'label.sjukfall.result.back': 'Tillbaka till översiktssidan',
 
     // Läkarutlåtande
-    'label.lakarutlatande.result.lakare.header': 'Alla läkarutlåtanden på ',
-    'label.lakarutlatande.result.lakare.headerend': ' de senaste tre åren.',
-    'label.lakarutlatande.result.rehab.header': 'Mina läkarutlåtanden på ',
+    'label.lakarutlatande.result.rehab.header': 'Alla läkarutlåtanden på ',
     'label.lakarutlatande.result.rehab.headerend': ' de senaste tre åren.',
+    'label.lakarutlatande.result.lakare.header': 'Mina läkarutlåtanden på ',
+    'label.lakarutlatande.result.lakare.headerend': ' de senaste tre åren.',
 
     // Filter
     'label.filter.show': 'Visa sökfilter',
@@ -124,6 +124,7 @@ var rhsMessages = {
     'label.filter.lakarutlatande': 'Välj läkarutlåtande',
     'label.filter.lakarutlatande-status.help': 'Filtrerar på typ av läkarutlåtande.',
     'label.filter.lakarutlatande.qa-status.help': 'Filtrerar på läkarutlåtanden med eller utan obesvarade kompletteringar eller administrativa frågor och svar.',
+    'label.filter.lakarutlatande-filter.placeholder': 'Hitta läkarutlåtanden som innehåller...',
 
     // Settings
     'settings.modal.header': 'Inställningar',
