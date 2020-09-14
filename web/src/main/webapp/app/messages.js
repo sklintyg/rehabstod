@@ -51,20 +51,25 @@ var rhsMessages = {
 
     'label.sjukfall.start.selectionpanel.header': 'Vad kan jag se i Rehabstöd?',
     'label.sjukfall.start.selectionpanel.urval.button': 'Visa pågående sjukfall',
+    'label.sjukfall.start.selectionpanel.urval.lu-button': 'Visa pågående läkarutlåtanden',
 
     // Sjukfall Start Läkare
     'label.sjukfall.start.lakare.header': 'Översikt över mina pågående sjukfall på ',
     'label.sjukfall.start.lakare.subheader': 'Mina pågående sjukfall på enheten',
-    'label.sjukfall.start.lakare.selectionpanel.body': 'Som läkare kan du ta del av de sjukfall där du själv utfärdat det nuvarande intyget.<br><br>' +
-        'När du klickar på "Visa pågående sjukfall" nedan kommer du att få se dina pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid och sjukskrivningsgrad. Om du har tillgång till flera enheter kan du se dina pågående sjukfall för en annan enhet genom att byta enhet i sidhuvudet.<br><br>' +
+    'label.sjukfall.start.lakare.selectionpanel.body': 'Som läkare kan du ta del av de sjukfall där du utfärdat det nu gällande intyget och även vissa läkarutlåtanden som du utfärdat.<br><br>' +
+        'När du klickar på fliken "Pågående sjukfall" ser du dina pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad m.m.<br><br>' +
+        'När du klickar på fliken “Läkarutlåtanden“ kan du se alla läkarutlåtanden (FK 7800, FK 7801 och FK 7802) som du har utfärdat på enheten de senaste tre åren.<br><br>' +
+        'Om du har tillgång till flera enheter kan du se dina pågående sjukfall och läkarutlåtanden för en annan enhet genom att byta enhet i sidhuvudet.<br><br>' +
         'Informationen som visas loggas enligt Patientdatalagen (PDL).',
 
     // Sjukfall Start Rehab
     'label.sjukfall.start.rehab.header': 'Översikt över alla pågående sjukfall på ',
     'label.sjukfall.start.rehab.subheader': 'Alla pågående sjukfall på enheten',
 
-    'label.sjukfall.start.rehab.selectionpanel.body': 'Som rehabkoordinator kan du ta del av alla pågående sjukfall på enheten.<br><br>' +
-        'När du klickar på "Visa pågående sjukfall" nedan kommer du att få se alla pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad och läkare. Om du har tillgång till flera enheter kan du se pågående sjukfall för en annan enhet genom att byta enhet i sidhuvudet.<br><br>' +
+    'label.sjukfall.start.rehab.selectionpanel.body': 'Som rehabkoordinator kan du ta del av enhetens alla pågående sjukfall samt vissa läkarutlåtanden.<br><br>' +
+        'När du klickar på fliken "Pågående sjukfall" ser du alla pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad, läkare m.m..<br><br>' +
+        'När du klickar på fliken “Läkarutlåtanden” kan du se alla läkarutlåtanden (FK 7800, FK 7801 och FK 7802) som utfärdats på enheten de senaste tre åren.<br><br>' +
+        'Om du har tillgång till flera enheter kan du se pågående sjukfall och läkarutlåtanden för en annan enhet genom att byta enhet i sidhuvudet.<br><br>' +
         'Informationen som visas loggas enligt Patientdatalagen (PDL).',
     'label.sjukfall.start.merstatistik.header': 'Var kan jag hitta mer statistik?',
     'label.sjukfall.start.merstatistik.body': 'Om du vill se mer statistik för din enhet eller på nationell nivå kan du använda Intygsstatistik.<br><br>När du klickar på länken nedan öppnas Intygsstatistik i en ny flik, och du blir automatiskt inloggad om du har giltig behörighet till Intygsstatistik.',

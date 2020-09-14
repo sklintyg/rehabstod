@@ -34,6 +34,10 @@ angular.module('rehabstodApp')
     $state.go('app.sjukfall.result');
   };
 
+  $scope.onSelectLU = function() {
+    $state.go('app.sjukfall.lakarutlatande');
+  };
+
   $scope.hasFeature = function(feature) {
     return featureService.hasFeature(feature);
   };
