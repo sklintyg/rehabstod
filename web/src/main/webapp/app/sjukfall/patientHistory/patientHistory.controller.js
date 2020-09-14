@@ -141,6 +141,11 @@ angular.module('rehabstodApp').controller('patientHistoryController',
       function fetchAccessToken() {
         UserProxy.fetchAccessToken().then(function(token) {
           $scope.accessToken = token;
+
+          if ($scope.certificate){
+            $scope.loadIntyg($scope.certificate);
+          }
+
         }, function() {
           $scope.accessToken = '';
         });
@@ -148,10 +153,6 @@ angular.module('rehabstodApp').controller('patientHistoryController',
       }
 
       fetchAccessToken();
-
-      if ($scope.certificate){
-        $scope.loadIntyg($scope.certificate);
-      }
 
       function wcLogout() {
 
