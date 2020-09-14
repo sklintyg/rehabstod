@@ -92,9 +92,9 @@ var rhsMessages = {
 
     // Läkarutlåtande
     'label.lakarutlatande.result.rehab.header': 'Alla läkarutlåtanden på ',
-    'label.lakarutlatande.result.rehab.headerend': ' de senaste tre åren.',
+    'label.lakarutlatande.result.rehab.headerend': ' de senaste tre åren',
     'label.lakarutlatande.result.lakare.header': 'Mina läkarutlåtanden på ',
-    'label.lakarutlatande.result.lakare.headerend': ' de senaste tre åren.',
+    'label.lakarutlatande.result.lakare.headerend': ' de senaste tre åren',
 
     // Filter
     'label.filter.show': 'Visa sökfilter',
