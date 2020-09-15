@@ -51,7 +51,7 @@ var rhsMessages = {
 
     'label.sjukfall.start.selectionpanel.header': 'Vad kan jag se i Rehabstöd?',
     'label.sjukfall.start.selectionpanel.urval.button': 'Visa pågående sjukfall',
-    'label.sjukfall.start.selectionpanel.urval.lu-button': 'Visa pågående läkarutlåtanden',
+    'label.sjukfall.start.selectionpanel.urval.lu-button': 'Visa läkarutlåtanden',
 
     // Sjukfall Start Läkare
     'label.sjukfall.start.lakare.header': 'Översikt över mina pågående sjukfall på ',
