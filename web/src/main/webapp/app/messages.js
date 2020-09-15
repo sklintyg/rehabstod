@@ -67,7 +67,7 @@ var rhsMessages = {
     'label.sjukfall.start.rehab.subheader': 'Alla pågående sjukfall på enheten',
 
     'label.sjukfall.start.rehab.selectionpanel.body': 'Som rehabkoordinator kan du ta del av enhetens alla pågående sjukfall samt vissa läkarutlåtanden.<br><br>' +
-        'När du klickar på fliken "Pågående sjukfall" ser du alla pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad, läkare m.m..<br><br>' +
+        'När du klickar på fliken "Pågående sjukfall" ser du alla pågående sjukfall för den enhet du har loggat in på. För varje sjukfall visas patientens personuppgifter, diagnos, sjukskrivningstid, sjukskrivningsgrad, läkare m.m.<br><br>' +
         'När du klickar på fliken “Läkarutlåtanden” kan du se alla läkarutlåtanden (FK 7800, FK 7801 och FK 7802) som utfärdats på enheten de senaste tre åren.<br><br>' +
         'Om du har tillgång till flera enheter kan du se pågående sjukfall och läkarutlåtanden för en annan enhet genom att byta enhet i sidhuvudet.<br><br>' +
         'Informationen som visas loggas enligt Patientdatalagen (PDL).',
