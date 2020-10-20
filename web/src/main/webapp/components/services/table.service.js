@@ -381,7 +381,7 @@ angular.module('rehabstodApp').factory('TableService',
         },
         {
           id: 'certType',
-          dataColumn: 'certtype',
+          dataColumn: 'certificateType',
           classes: 'column-certtype'
         },
         {
