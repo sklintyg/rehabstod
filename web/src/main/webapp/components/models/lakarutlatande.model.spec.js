@@ -41,10 +41,10 @@ describe('Model: LakarutlatandeModel', function() {
     'signingTimeStamp': '2016-02-01T12:01:01.1111',
     'unAnsweredComplement': 1,
     'unAnsweredOther': 1,
-    'lakare': {
+    'doctor': {
       namn: 'Jan Nilsson'
     },
-    'certtype': 'FK7800'
+    'certificateType': 'FK7800'
   }];
 
   // Initialize the controller and a mock scope
