@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.integration.it.service;
 
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.slf4j.Logger;
@@ -57,13 +57,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
         LOGGER.debug("Getting diagnosed certificates for care unit from intygstjansten");
 
-        var diagnosedCertificates = restTemplate.postForObject(url, requestObject, DiagnosedCertificate[].class);
-
-        if (diagnosedCertificates == null || diagnosedCertificates.length == 0) {
-            return Collections.emptyList();
-        } else {
-            return Arrays.asList(diagnosedCertificates);
-        }
+        return buildListResponseFromArray(restTemplate.postForObject(url, requestObject, DiagnosedCertificate[].class));
     }
 
     @Override
@@ -80,13 +74,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
         LOGGER.debug("Getting diagnosed certificates for person from intygstjansten");
 
-        var diagnosedCertificates = restTemplate.postForObject(url, requestObject, DiagnosedCertificate[].class);
-
-        if (diagnosedCertificates == null || diagnosedCertificates.length == 0) {
-            return Collections.emptyList();
-        } else {
-            return Arrays.asList(diagnosedCertificates);
-        }
+        return buildListResponseFromArray(restTemplate.postForObject(url, requestObject, DiagnosedCertificate[].class));
     }
 
     @Override
@@ -103,13 +91,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
         LOGGER.debug("Getting sick leave certificates for person from intygstjansten");
 
-        var sickLeaveCertificates = restTemplate.postForObject(url, requestObject, SickLeaveCertificate[].class);
-
-        if (sickLeaveCertificates == null || sickLeaveCertificates.length == 0) {
-            return Collections.emptyList();
-        } else {
-            return Arrays.asList(sickLeaveCertificates);
-        }
+        return buildListResponseFromArray(restTemplate.postForObject(url, requestObject, SickLeaveCertificate[].class));
     }
 
     @Override
@@ -119,13 +101,15 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
         LOGGER.debug("Getting signing doctors for unit from intygstjansten");
 
-        var doctors = restTemplate.postForObject(url, requestObject, String[].class);
+        return buildListResponseFromArray(restTemplate.postForObject(url, requestObject, String[].class));
+    }
 
-        if (doctors == null || doctors.length == 0) {
-            return Collections.emptyList();
-        } else {
-            return Arrays.asList(doctors);
+    private <E> List<E> buildListResponseFromArray(E[] array) {
+        List<E> response = new ArrayList<>();
+        if (array != null && array.length > 0) {
+            Collections.addAll(response, array);
         }
+        return response;
     }
 
     private TypedCertificateRequest getTypedCertificateRequest(List<String> units, List<String> certificateTypes, LocalDate fromDate,
