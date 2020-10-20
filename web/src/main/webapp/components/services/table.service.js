@@ -405,7 +405,7 @@ angular.module('rehabstodApp').factory('TableService',
         if (UserModel.get().urval !== 'ISSUED_BY_ME') {
           columns.push({
             id: 'doctor',
-            dataColumn: 'lakare.namn',
+            dataColumn: 'doctor.namn',
             classes: ''
           });
         }
