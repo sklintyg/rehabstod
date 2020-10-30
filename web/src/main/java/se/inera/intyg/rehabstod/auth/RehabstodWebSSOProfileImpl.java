@@ -19,6 +19,8 @@
 package se.inera.intyg.rehabstod.auth;
 
 import com.google.common.base.Strings;
+import java.util.Collections;
+import java.util.List;
 import org.opensaml.common.SAMLException;
 import org.opensaml.saml2.core.Audience;
 import org.opensaml.saml2.core.AudienceRestriction;
@@ -40,7 +42,9 @@ import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
  */
 public class RehabstodWebSSOProfileImpl extends org.springframework.security.saml.websso.WebSSOProfileImpl {
 
-    public static final String HTTP_ID_SAMBI_SE_LOA_LOA3 = "http://id.sambi.se/loa/loa3";
+    private static final List<String> SITHS_AUTHN_CLASSES = List.of(
+        "http://id.sambi.se/loa/loa2",
+        "http://id.sambi.se/loa/loa3");
 
     @Value("${oidc.op.identity}")
     private String opIdentity;
@@ -72,7 +76,7 @@ public class RehabstodWebSSOProfileImpl extends org.springframework.security.sam
         AuthnRequest authnRequest = super.getAuthnRequest(context, options, assertionConsumer, bindingService);
 
         // Only specify attributeConsumingServiceIndex for SITHS-based authentications.
-        if (options.getAuthnContexts().contains(HTTP_ID_SAMBI_SE_LOA_LOA3)) {
+        if (!Collections.disjoint(options.getAuthnContexts(), SITHS_AUTHN_CLASSES)) {
             authnRequest.setAttributeConsumingServiceIndex(1);
         }
         authnRequest.setConditions(buildConditions());
