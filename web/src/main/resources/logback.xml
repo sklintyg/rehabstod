@@ -2,7 +2,7 @@
 <configuration scan="true" scanPeriod="30 seconds">
   <!-- <jmxConfigurator /> -->
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <filter class="se.inera.intyg.rehabstod.common.monitoring.util.MarkerFilter">
+    <filter class="se.inera.intyg.infra.monitoring.logging.MarkerFilter">
       <markers>Monitoring</markers>
       <onMatch>DENY</onMatch>
       <onMismatch>ACCEPT</onMismatch>
@@ -17,7 +17,7 @@
   <!--Daily rolling file appender -->
   <appender name="FILE"
     class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <filter class="se.inera.intyg.rehabstod.common.monitoring.util.MarkerFilter">
+    <filter class="se.inera.intyg.infra.monitoring.logging.MarkerFilter">
       <markers>Monitoring</markers>
       <onMatch>DENY</onMatch>
       <onMismatch>ACCEPT</onMismatch>
@@ -36,7 +36,7 @@
 
   <!-- Daily rolling file appender for logging monitoring events -->
   <appender name="MONITORING" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <filter class="se.inera.intyg.rehabstod.common.monitoring.util.MarkerFilter">
+    <filter class="se.inera.intyg.infra.monitoring.logging.MarkerFilter">
       <marker>Monitoring</marker>
       <onMatch>ACCEPT</onMatch>
       <onMismatch>DENY</onMismatch>
