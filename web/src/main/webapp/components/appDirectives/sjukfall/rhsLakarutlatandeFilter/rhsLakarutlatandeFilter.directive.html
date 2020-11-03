@@ -12,7 +12,7 @@
       <!-- DIAGNOS -->
       <div class="col-md-3 col-xs-6">
         <fieldset class="form-group search-filter-diagnos" ng-disabled="filterInactive('dxs')">
-          <label class="control-label"><span message key="label.filter.diagnos"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.diagnos.help"></span></label>
+          <label class="control-label"><span message key="label.filter.diagnos"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.diagnos-lu.help"></span></label>
           <rhs-multi-select items-model="filterViewState.get().diagnosKapitelModel" control-disabled="filterInactive('dxs')"
                             none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="false"></rhs-multi-select>
         </fieldset>
@@ -20,7 +20,7 @@
       <!-- LÄKARE (optional) -->
       <div ng-if="user.urval === 'ALL'" class="col-md-3 col-xs-6">
         <fieldset class="form-group" ng-disabled="filterInactive('doctor')">
-          <label class="control-label"><span message key="label.filter.lakare"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.lakare.help"></span></label>
+          <label class="control-label"><span message key="label.filter.lakare"></span> <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.lakare-lu.help"></span></label>
           <rhs-multi-select id="rhs-filter-lakare" items-model="filterViewState.get().lakareModel" control-disabled="filterInactive('doctor')"
                             none-selected-title="{{::'label.filter.allselected' | message}}" high-light-enabled="false"></rhs-multi-select>
         </fieldset>
@@ -66,15 +66,16 @@
       <!-- ÅLDER -->
       <div class="col-md-3 col-sm-6">
         <fieldset class="form-group" ng-disabled="filterInactive('patientAge')">
-          <label class="control-label"><span message key="label.filter.alder"></span><span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.alder.help"></span></label>
+          <label class="control-label"><span message key="label.filter.alder"></span>
+            <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.alder.help"></span></label>
           <div class="form-inline">
             Från&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().aldersModel[0]" min="0"
-                                                     max="filterViewState.get().aldersModel[1]" display-max-value-as="100+"
+                                               max="filterViewState.get().aldersModel[1]" display-max-value-as="100+"
                                                input-id="rhs-filter-alder-from"
                                                control-disabled="filterInactive('patientAge')"></rhs-numeric-range-input>
 
             till&nbsp;<rhs-numeric-range-input external-model="filterViewState.get().aldersModel[1]"
-                                                     min="filterViewState.get().aldersModel[0]" max="101" display-max-value-as="100+"
+                                               min="filterViewState.get().aldersModel[0]" max="101" display-max-value-as="100+"
                                                input-id="rhs-filter-alder-to"
                                                control-disabled="filterInactive('patientAge')"></rhs-numeric-range-input>&nbsp;år
           </div>
@@ -86,7 +87,7 @@
           <label class="control-label">&nbsp;</label><br>
           <label for="rhs-filter-showPatientIdToggle">
             <input ng-if="!filterInactive('patientId', 'patientName')" id="rhs-filter-showPatientIdToggle" type="checkbox"
-                                                             ng-model="filterViewState.get().showPatientId">
+                   ng-model="filterViewState.get().showPatientId">
             <input ng-if="filterInactive('patientId', 'patientName')" type="checkbox">
             <span message key="label.filter.personuppgifter"></span>
             <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.personuppgifter.help" alignment="auto top"></span>
