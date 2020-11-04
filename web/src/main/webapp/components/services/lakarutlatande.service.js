@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp').factory('LakarutlatandeService',
     function($log, StringHelper, messageService, lakarutlatandenProxy, LakarutlatandeModel, LakarutlatandeFilterViewState,
-        LakarutlatandeViewState) {
+        LakarutlatandeViewState, $filter) {
       'use strict';
 
       var loading = false;
@@ -44,8 +44,8 @@ angular.module('rehabstodApp').factory('LakarutlatandeService',
           var query = {
             questionAndAnswers: filterState.komplettering,
             certTypes: filterState.certType,
-            fromDate: filterState.signDate.from,
-            toDate: filterState.signDate.to,
+            fromDate: $filter('date')(filterState.signDate.from,'yyyy-MM-dd'),
+            toDate: $filter('date')(filterState.signDate.to,'yyyy-MM-dd'),
             diagnoses: filterState.diagnosKapitel,
             doctors: filterState.lakare,
             searchText: filterState.freeText,
