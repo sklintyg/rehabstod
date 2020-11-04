@@ -18,17 +18,19 @@
  */
 
 angular.module('rehabstodApp').factory('LakarutlatandeModel',
-    function($parse, $filter, LakarutlatandeViewState, TableService, _) {
+    function($parse, $filter, LakarutlatandeViewState, LakarutlatandeFilterViewState, TableService, _) {
       'use strict';
 
       var data = [];
       var hasError = false;
       var initialDataState = true;
+      var isFiltered = false;
 
       function _reset() {
         data = [];
         hasError = false;
         initialDataState = true;
+        isFiltered = false;
         return data;
       }
 
@@ -103,6 +105,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeModel',
           initialDataState = false;
           hasError = false;
           data = newData;
+          isFiltered = LakarutlatandeFilterViewState.isAnyFilterSet();
           _updateQuickSearchContent();
         },
         get: function() {
@@ -118,6 +121,9 @@ angular.module('rehabstodApp').factory('LakarutlatandeModel',
         },
         isInitialState: function() {
           return initialDataState;
+        },
+        isFiltered: function() {
+          return isFiltered;
         },
         updateQuickSearchContent: _updateQuickSearchContent
       };

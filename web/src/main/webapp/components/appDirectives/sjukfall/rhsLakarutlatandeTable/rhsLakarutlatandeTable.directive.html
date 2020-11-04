@@ -58,8 +58,11 @@
 
     <div ng-if="!displayedCollection.length" class="rhs-table-no-result">
         <span ng-if="!model.get().length && !model.hasError() && !model.isInitialState()">
-            <span ng-if="user.isLakare" message key="label.lakarutlatande.table.no-result.lakare" param="user.valdVardenhet.namn"></span>
-            <span ng-if="!user.isLakare" message key="label.lakarutlatande.table.no-result.rehab" param="user.valdVardenhet.namn"></span>
+            <span ng-if="model.isFiltered()" message key="label.lakarutlatande.table.no-result.filter"></span>
+            <span ng-if="!model.isFiltered()">
+                <span ng-if="user.isLakare" message key="label.lakarutlatande.table.no-result.lakare" param="user.valdVardenhet.namn"></span>
+                <span ng-if="!user.isLakare" message key="label.lakarutlatande.table.no-result.rehab" param="user.valdVardenhet.namn"></span>
+            </span>
         </span>
         <span ng-if="model.get().length">
           {{::'label.table.no-filter-result' | message}}

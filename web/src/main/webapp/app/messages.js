@@ -228,7 +228,7 @@ var rhsMessages = {
     'label.lakarutlatande.table.no-result.lakare': 'Du har inga läkarutlåtanden på %0',
     'label.lakarutlatande.table.initialstate.rehab':'Tryck på Sök för att visa alla läkarutlåtanden för enheten, eller ange filterval och tryck på Sök för att visa urval av läkarutlåtanden. <br\>Läkarutlåtanden som signerats de senaste tre åren på enheten visas.',
     'label.lakarutlatande.table.initialstate.lakare':'Tryck på Sök för att visa alla dina läkarutlåtanden för enheten, eller ange filterval och tryck på Sök för att visa urval av dina läkarutlåtanden. <br\>Läkarutlåtanden som signerats de senaste tre åren på enheten visas.',
-
+    'label.lakarutlatande.table.no-result.filter': 'Inga läkarutlåtanden matchade filtreringen.',
     'label.table.number.of.rows': 'Visar',
     'label.table.number.of.rows.of': 'av',
     'label.table.column.sort.desc': 'Fallande',
