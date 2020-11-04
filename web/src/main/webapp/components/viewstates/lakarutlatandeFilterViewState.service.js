@@ -139,6 +139,16 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
         return state;
       }
 
+      function _isAnyFilterSet() {
+        var selectedFilter = _getCurrentFilterState();
+        var isSet = selectedFilter.signDate.from === null && selectedFilter.signDate.to === null &&
+            selectedFilter.alder[0] === 0 && selectedFilter.alder[1] === null &&
+            selectedFilter.freeText === '' && selectedFilter.certType.length === 0 &&
+            selectedFilter.diagnosKapitel.length === 0 && selectedFilter.komplettering === null &&
+            selectedFilter.lakare.length === 0;
+        return !isSet;
+      }
+
       _reset();
 
       return {
@@ -146,7 +156,8 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
         resetIfColumnsHidden: _resetIfColumnsHidden,
         getCurrentFilterState: _getCurrentFilterState,
         get: _getState,
-        initQAModel: _initQAModel
+        initQAModel: _initQAModel,
+        isAnyFilterSet: _isAnyFilterSet
       };
     })
 ;

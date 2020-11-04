@@ -31,6 +31,7 @@ angular.module('rehabstodApp').factory('DiagnosKapitelModel',
       function _reset() {
         angular.forEach(data, function(value) {
           value.selected = false;
+          value.disabled = false;
         });
         return data;
       }

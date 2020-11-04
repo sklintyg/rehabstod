@@ -106,8 +106,10 @@ var rhsMessages = {
     'label.filter.hide': 'Dölj sökfilter',
     'label.filter.diagnos': 'Välj diagnos',
     'label.filter.diagnos.help': 'Filtrerar på den diagnos som skrivs ut först för sjukfallet uppdelat på kapitel. Diagnoskapitel som saknar data är inte valbara.',
+    'label.filter.diagnos-lu.help': 'Filtrerar på den diagnos som skrivs ut först för läkarutlåtandet uppdelat på kapitel.',
     'label.filter.lakare': 'Välj läkare',
     'label.filter.lakare.help': 'Filtrerar på den läkare som har utfärdat det aktiva intyget. Endast läkare som utfärdat aktiva intyg visas i listan.',
+    'label.filter.lakare-lu.help': 'Filtrerar på den läkare som har utfärdat läkarutlåtandet.',
     'label.filter.langd': 'Välj sjukskrivningslängd',
     'label.filter.langd.help': 'Filtrerar på total längd för det sjukfall som det aktiva intyget ingår i.',
     'label.filter.alder': 'Välj åldersspann',
@@ -127,7 +129,7 @@ var rhsMessages = {
     'label.filter.signdatum': 'Välj signeringsdatum',
     'label.filter.signdatum.help': 'Filtrerar på signeringsdatum. Det är möjligt att välja ett intervall genom att klicka på två olika datum, eller ett enskilt datum genom att klicka på samma datum två gånger.',
     'label.filter.lakarutlatande': 'Välj läkarutlåtande',
-    'label.filter.lakarutlatande-status.help': 'Filtrerar på typ av läkarutlåtande.',
+    'label.filter.lakarutlatande-status.help': 'Filtrerar på typ av läkarutlåtande. Visas i kolumnen Intyg i tabellen.',
     'label.filter.lakarutlatande.qa-status.help': 'Filtrerar på läkarutlåtanden med eller utan obesvarade kompletteringar eller administrativa frågor och svar.',
     'label.filter.lakarutlatande-filter.placeholder': 'Hitta läkarutlåtanden som innehåller...',
 
@@ -226,7 +228,7 @@ var rhsMessages = {
     'label.lakarutlatande.table.no-result.lakare': 'Du har inga läkarutlåtanden på %0',
     'label.lakarutlatande.table.initialstate.rehab':'Tryck på Sök för att visa alla läkarutlåtanden för enheten, eller ange filterval och tryck på Sök för att visa urval av läkarutlåtanden. <br\>Läkarutlåtanden som signerats de senaste tre åren på enheten visas.',
     'label.lakarutlatande.table.initialstate.lakare':'Tryck på Sök för att visa alla dina läkarutlåtanden för enheten, eller ange filterval och tryck på Sök för att visa urval av dina läkarutlåtanden. <br\>Läkarutlåtanden som signerats de senaste tre åren på enheten visas.',
-
+    'label.lakarutlatande.table.no-result.filter': 'Inga läkarutlåtanden matchade filtreringen.',
     'label.table.number.of.rows': 'Visar',
     'label.table.number.of.rows.of': 'av',
     'label.table.column.sort.desc': 'Fallande',

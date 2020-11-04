@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -255,15 +254,7 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private boolean filterOnDiagnoses(DiagnosedCertificate diagnosedCertificate, List<String> diagnoseGroupList) {
-        List<String> diagnoseList;
-
-        if (diagnosedCertificate.getSecondaryDiagnoseCodes() != null) {
-            diagnoseList = Stream
-                .concat(Stream.of(diagnosedCertificate.getDiagnoseCode()), diagnosedCertificate.getSecondaryDiagnoseCodes().stream())
-                .collect(Collectors.toList());
-        } else {
-            diagnoseList = Collections.singletonList(diagnosedCertificate.getDiagnoseCode());
-        }
+        List<String> diagnoseList = Collections.singletonList(diagnosedCertificate.getDiagnoseCode());
 
         for (String d : diagnoseList) {
             for (String dg : diagnoseGroupList) {

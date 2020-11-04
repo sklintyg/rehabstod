@@ -264,6 +264,7 @@
           <property name="authnContexts">
                <set>
                  <value>http://id.sambi.se/loa/loa3</value>
+                 <value>http://id.sambi.se/loa/loa2</value>
                </set>
           </property>
         </bean>
