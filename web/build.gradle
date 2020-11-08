@@ -66,6 +66,7 @@ gretty {
                '-Dconfig.file=' + projectDir + '/src/main/resources/dev.properties',
                '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
                '-Dresources.folder=classpath:',
+               '-Dlogback.file=classpath:logback-dev.xml',
                '-Dcatalina.base=' + buildDir + '/catalina.base'
                ]
 
