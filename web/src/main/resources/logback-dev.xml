@@ -19,11 +19,13 @@
 
 <configuration>
 
+  <property name="APP_NAME" value="${APP_NAME:-rehabstod}"/>
+
   <include resource="logback-dev-base.xml"/>
 
   <logger name="se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService" level="info" />
 
-  <root level="warn">
+  <root level="info">
     <appender-ref ref="CONSOLE"/>
     <appender-ref ref="MONITORING"/>
     <appender-ref ref="VALIDATION"/>
