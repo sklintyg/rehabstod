@@ -187,7 +187,10 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private boolean containsIgnoreCase(String one, String other) {
-        return one.toLowerCase().contains(other.toLowerCase());
+        if (one == null) {
+            return other == null;
+        }
+        return other == null ? false : one.toLowerCase().contains(other.toLowerCase());
     }
 
     private boolean filterOnText(LUCertificate c, String searchText) {
