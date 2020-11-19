@@ -186,29 +186,33 @@ public class CertificateServiceImpl implements CertificateService {
         return luCertificateList;
     }
 
+    private boolean containsIgnoreCase(String one, String other) {
+        return one.toLowerCase().contains(other.toLowerCase());
+    }
+
     private boolean filterOnText(LUCertificate c, String searchText) {
 
         var patient = c.getPatient();
         if (patient != null) {
-            if (patient.getId() != null && patient.getId().contains(searchText)) {
+            if (patient.getId() != null && containsIgnoreCase(patient.getId(), searchText)) {
                 return true;
             }
-            if (patient.getNamn() != null && patient.getNamn().contains(searchText)) {
+            if (patient.getNamn() != null && containsIgnoreCase(patient.getNamn(), searchText)) {
                 return true;
             }
-            if (patient.getKon() != null && patient.getKon().getDescription().contains(searchText)) {
+            if (patient.getKon() != null && containsIgnoreCase(patient.getKon().getDescription(), searchText)) {
                 return true;
             }
-            if (patient.getAlder() > -1 && String.format("%d år", patient.getAlder()).contains(searchText)) {
+            if (patient.getAlder() > -1 && containsIgnoreCase(String.format("%d år", patient.getAlder()), searchText)) {
                 return true;
             }
         }
 
         if (c.getDiagnosis() != null) {
-            if (c.getDiagnosis().getIntygsVarde() != null && c.getDiagnosis().getIntygsVarde().contains(searchText)) {
+            if (c.getDiagnosis().getIntygsVarde() != null && containsIgnoreCase(c.getDiagnosis().getIntygsVarde(), searchText)) {
                 return true;
             }
-            if (c.getDiagnosis().getBeskrivning() != null && c.getDiagnosis().getBeskrivning().contains(searchText)) {
+            if (c.getDiagnosis().getBeskrivning() != null && containsIgnoreCase(c.getDiagnosis().getBeskrivning(), searchText)) {
                 return true;
             }
         }
@@ -216,32 +220,34 @@ public class CertificateServiceImpl implements CertificateService {
         var biDiagnoses = c.getBiDiagnoses();
         if (biDiagnoses != null && !biDiagnoses.isEmpty()) {
             for (var diagnosis : biDiagnoses) {
-                if (diagnosis.getIntygsVarde() != null && diagnosis.getIntygsVarde().contains(searchText)) {
+                if (diagnosis.getIntygsVarde() != null && containsIgnoreCase(diagnosis.getIntygsVarde(), searchText)) {
                     return true;
                 }
-                if (diagnosis.getBeskrivning() != null && diagnosis.getBeskrivning().contains(searchText)) {
+                if (diagnosis.getBeskrivning() != null && containsIgnoreCase(diagnosis.getBeskrivning(), searchText)) {
                     return true;
                 }
             }
         }
 
-        if (c.getCertificateType() != null && c.getCertificateType().contains(searchText)) {
+        if (c.getCertificateType() != null && containsIgnoreCase(c.getCertificateType(), searchText)) {
             return true;
         }
 
-        if (c.getSigningTimeStamp() != null && c.getSigningTimeStamp().toLocalDate().toString().contains(searchText)) {
+        if (c.getSigningTimeStamp() != null && containsIgnoreCase(c.getSigningTimeStamp().toLocalDate().toString(), searchText)) {
             return true;
         }
 
-        if (c.getUnAnsweredComplement() > 0 && String.format("Komplettering (%d)", c.getUnAnsweredComplement()).contains(searchText)) {
+        if (c.getUnAnsweredComplement() > 0 && containsIgnoreCase(String.format("Komplettering (%d)", c.getUnAnsweredComplement()),
+            searchText)) {
             return true;
         }
 
-        if (c.getUnAnsweredOther() > 0 && String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()).contains(searchText)) {
+        if (c.getUnAnsweredOther() > 0 && containsIgnoreCase(String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()),
+            searchText)) {
             return true;
         }
 
-        return c.getDoctor() != null && c.getDoctor().getNamn() != null && c.getDoctor().getNamn().contains(searchText);
+        return c.getDoctor() != null && c.getDoctor().getNamn() != null && containsIgnoreCase(c.getDoctor().getNamn(), searchText);
     }
 
     private boolean filterOnAge(DiagnosedCertificate c, int fromAge, int toAge) {
@@ -452,7 +458,7 @@ public class CertificateServiceImpl implements CertificateService {
         if (code != null) {
             var diagnoseCode = new DiagnosKod(code);
             return diagnosFactory.getDiagnos(diagnoseCode.getOriginalCode(), diagnoseCode.getCleanedCode(), diagnoseCode.getName());
-        } else  {
+        } else {
             return null;
         }
     }
