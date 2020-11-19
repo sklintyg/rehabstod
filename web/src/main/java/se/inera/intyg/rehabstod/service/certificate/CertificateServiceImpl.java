@@ -276,15 +276,42 @@ public class CertificateServiceImpl implements CertificateService {
         return false;
     }
 
+    /**
+     * Creates a numeric representation of diagnose and the selected diagnoseGroup and checks
+     * if the diagnose is within the range of the diagnoseGroup.
+     *
+     * The diagnoseGroup should be in the format of this example: "A00-B99".
+     *
+     * @return true if diagnose is within the range of diagnoseGroup
+     */
     private boolean belongsToDiagnoseGroup(String diagnose, String diagnoseGroup) {
-        if (!diagnose.startsWith(diagnoseGroup.substring(0, 1))) {
+        if (diagnose == null || diagnoseGroup == null) {
             return false;
         }
 
-        var diagnoseNumber = Integer.parseInt(diagnose.substring(1, 3));
+        diagnose = diagnose.toUpperCase();
+        diagnoseGroup = diagnoseGroup.toUpperCase();
+
         var splits = diagnoseGroup.split("-");
-        return diagnoseNumber >= Integer.parseInt(splits[0].substring(1, 3))
-            && diagnoseNumber <= Integer.parseInt(splits[1].substring(1, 3));
+        if (splits.length != 2 || splits[0].length() != 3 || splits[1].length() != 3) {
+            return false;
+        }
+
+        try {
+            // get int representation of diagnoseGroup
+            int startValue = (Character.getNumericValue(splits[0].toCharArray()[0]) * 100) + Integer.parseInt(splits[0].substring(1, 3));
+            int endValue = (Character.getNumericValue(splits[1].toCharArray()[0]) * 100) + Integer.parseInt(splits[1].substring(1, 3));
+
+            // get int representation of diagnose code (first 3 characters only)
+            int diagnoseValue =
+                (Character.getNumericValue(diagnose.toCharArray()[0]) * 100) + Integer.parseInt(diagnose.substring(1, 3));
+
+            return diagnoseValue >= startValue && diagnoseValue <= endValue;
+        } catch (NumberFormatException exception) {
+            // Likely due to an invalid diagnose code containing other values than a starting char followed by numbers. i.e. "B65" or "B651"
+            return false;
+        }
+
     }
 
     @Override
