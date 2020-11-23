@@ -41,7 +41,7 @@ import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = {PersistenceConfigTest.class, PersistenceConfigDev.class})
-@ActiveProfiles({"dev"})
+@ActiveProfiles({"h2"})
 @Transactional
 public class AnvandarPreferenceRepositoryTest {
 
