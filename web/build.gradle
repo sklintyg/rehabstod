@@ -11,7 +11,7 @@ test {
 
 task restAssuredTest(type: Test) {
     outputs.upToDateWhen { false }
-    systemProperty "integration.tests.baseUrl", System.properties['baseUrl'] ?: "http://localhost:8790/"
+    systemProperty "integration.tests.baseUrl", System.properties['baseUrl'] ?: "http://localhost:8030/"
     include '**/*IT*'
     environment "catalina.base",  "${buildDir}/catalina.base"
 }
@@ -48,17 +48,23 @@ grunt_build.dependsOn npmInstall
 grunt_build_no_minify.dependsOn npmInstall
 
 gretty {
+
+    def instance = System.properties['instance'] ?: '0'
+    def useHttpPort = 8030 + (instance as Integer)
+    def useInternalHttpPort = 8130 + (instance as Integer)
+
     servletContainer = 'tomcat9'
     contextPath = '/'
 
     integrationTestTask = null
     scanInterval = 0
-    httpPort = 8790
-    debugPort = 5008
+    debugPort = 8830 + (instance as Integer)
+    portPropertiesFileName = "gretty_ports_${instance}.properties"
     debugSuspend = false
     fastReload = true
     inplaceMode = 'hard'
     enableNaming = true
+    serverConfigFile = "tomcat-gretty-${instance}.xml"
 
     jvmArgs = [
             '-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,caching-enabled,rhs-security-test,rhs-wc-stub,ia-stub',
@@ -67,9 +73,10 @@ gretty {
                '-Dcredentials.file=' + projectDir + '/src/main/resources/dev-credentials.properties',
                '-Dresources.folder=classpath:',
                '-Dlogback.file=classpath:logback-dev.xml',
-               '-Dcatalina.base=' + buildDir + '/catalina.base'
+               '-Dcatalina.base=' + buildDir + '/catalina.base',
+               "-Ddev.http.port=${useHttpPort}",
+               "-Ddev.http.port.internal=${useInternalHttpPort}"
                ]
-
 }
 
 dependencies {
