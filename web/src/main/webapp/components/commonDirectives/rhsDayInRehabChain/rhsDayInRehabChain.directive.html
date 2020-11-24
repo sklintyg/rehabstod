@@ -1,4 +1,11 @@
 <div class="alert alert-info" ng-if="shouldDisplay()">
-  Patientens uppskattade position i rehabiliteringskedjan<br>
+    <span message key="label.patienthistory.page.header"></span>
+  <span class="rhs-tooltip"
+        rhs-tooltip
+        icon="fa-question-circle"
+        field-help-text="label.patienthistory.page.header.help"
+        tooltip-class="rhs-patient-page-header-tooltip"
+        alignment="auto top">
+  </span><br>
   <span class="period" id="day-in-rehab-chain-text">{{getDagRehabKedja(historyItem.sjukfall)}}</span>
 </div>
