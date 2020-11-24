@@ -289,9 +289,11 @@ var rhsMessages = {
     'label.role.switch.loggedin': 'Du har olika behörigheter på olika enheter. Var uppmärksam om att din roll kan komma att skifta mellan Läkare och Rehabkoordinator beroende på vilken enhet du väljer att byta till.',
 
     // Patient History Dialog
+    'label.patienthistory.page.header' : 'Patientens uppskattade dag i sjukfallet',
+    'label.patienthistory.page.header.help' : 'Visar antal dagar som patientens sjukfall har pågått så här långt, beräknat från första intygets ordinerade startdatum. Ett sjukfall omfattar en patients alla digitala sjukpenningintyg, utfärdade från samma enhet och där intervallet mellan intygen är högst 5 - 90 dagar (valfri inställning). Om intyg hämtas in från andra enheter och/eller vårdgivare, påverkar dessa beräkningen.',
     'label.patienthistory.ag.checkbox' : 'Visa intyg till arbetsgivare',
     'label.patienthistory.ag.checkbox.help' : 'Visa eller dölj tabell med patientens intyg till arbetsgivare.',
-    'label.agcertificate.table.header': 'Intyg till arbetsgivaren för patienten på %0 - räknas inte in i patientens uppskattade position i rehabiliteringskedjan.',
+    'label.agcertificate.table.header': 'Intyg till arbetsgivaren för patienten på %0 - räknas inte in i patientens uppskattade dag i sjukfallet.',
     'label.agcertificate.table.empty': 'Patienten har inga intyg till arbetsgivaren på %0',
     'label.agcertificates.loading': 'Hämtar intyg till arbetsgivare...',
     'label.patienthistory.loading': 'Hämtar sjukfall för patient...',
