@@ -73,21 +73,4 @@ module.exports = function(grunt) {
     }
     grunt.task.run(['env:' + environment, 'protractor_webdriver', 'protractor:dev']);
   });
-
-  grunt.registerTask('acc', function(environment, tags) {
-    if (!environment) {
-      var defaultEnv = 'build-server';
-      grunt.log.subhead('Ingen miljö vald, använder ' + defaultEnv + '-miljön..');
-      environment = defaultEnv;
-    }
-
-    if (tags) {
-      grunt.log.subhead('Kör tester taggade med: ' + tags);
-      grunt.config.set('protractor.acc.options.args.cucumberOpts.tags', tags);
-    } else {
-      grunt.config.set('protractor.acc.options.args.cucumberOpts.tags', ['~@notReady', '~@waitingForFix']);
-    }
-
-    grunt.task.run(['env:' + environment, 'protractor_webdriver', 'protractor:acc']);
-  });
 };
