@@ -24,11 +24,10 @@ The following configuration properties have been added:
 
 ### 1.4 Configuration of reference data
 
-The main update is activation of the new reference data concept (master data for shared configurations). Refdata is provided as a JAR file and configured with the `REFDATA_URL` and `RESOURCES_FOLDER` parameters. Normally the default value of `RESOURCES_FOLDER` should be set to  `classpath:`. Three configuration updates is required in order to activate the new refdata:
+The main update is activation of the new reference data concept (master data for shared configurations). Refdata is provided as a JAR file and configured with the `REFDATA_URL` parameter. Two configuration updates are required in order to activate the new refdata:
 
 1. Parameter `REFDATA_URL` shall be set to the actual location of the refdata JAR artefact.
-2. Parameter `RESOURCES_FOLDER` or `-Dresources.folder=...` in `secret-env.sh` shall be set to `classpath:`. Though, it's recommended to remove this parameter from `secret-env.sh`. 
-3. The old `resources.zip` must be removed in order to enable the `REFDATA_URL` setting. 
+2. The old `resources.zip` must be removed in order to enable the `REFDATA_URL` setting. 
 
 Latest builds of refdata can be downloaded from the Inera Nexus server. 
 
@@ -195,7 +194,6 @@ Open _&lt;env>/configmap-vars.yaml_ and replace example `<value>` with expected 
 
 
 	SPRING_PROFILES_ACTIVE: "prod,caching-enabled,redis-sentinel"
-	RESOURCES_FOLDER: "classpath:"
 	WEBCERT_VIEW_URLLOGOUT: "https://webcert.intygstjanster.se/logout"
 	WEBCERT_VIEW_URLTEMPLATE: "https://webcert.intygstjanster.se/oauth/token/read"
 	REDIS_HOST: "<hostname1[;hostname2;...]>"
@@ -205,18 +203,14 @@ Open _&lt;env>/configmap-vars.yaml_ and replace example `<value>` with expected 
 	PDL_LOGGING_QUEUE_NAME: "webcert.log.queue"
 	DB_SERVER: "<hostname>"
 	SAML_KEYSTORE_ALIAS: "<alias>"
-	SAML_KEYSTORE_FILE: "file://${certificate.folder}/<file>"
-	NTJP_WS_CERTIFICATE_FILE: "${certificate.folder}/<file>"
-	NTJP_WS_TRUSTSTORE_FILE: "${certificate.folder}/<file>"
+	SAML_KEYSTORE_FILE: "file://${application.dir}/certifikat/<file>"
+	NTJP_WS_CERTIFICATE_FILE: "${application.dir}/certifikat/<file>"
+	NTJP_WS_TRUSTSTORE_FILE: "${application.dir}/certifikat/<file>"
 	NTJP_WS_CERTIFICATE_TYPE: [ "JKS" | "PKCS12" ]
 	NTJP_WS_TRUSTSTORE_TYPE: [ "JKS" | "PKCS12" ]
-	IT_WS_CERTIFICATE_FILE: "${certificate.folder}/<file>"
+	IT_WS_CERTIFICATE_FILE: "${application.dir}/certifikat/<file>"
 	IT_WS_TRUSTSTORE_TYPE: [ "JKS" | "PKCS12" ]
    
-Note: Other properties might be used to define a `<value>`. As an example is the path to certificates indicated by the `certificate.folder` property and the truststore file might be defined like:
- 
-	NTJP_WS_TRUSTSTORE_FILE: "${certificate.folder}/truststore.jks"
-    
         
 The _&lt;env>/config/recipients.json_ file may need to be updated with any new intyg recipients.
     

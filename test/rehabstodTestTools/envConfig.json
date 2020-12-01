@@ -2,11 +2,6 @@
     "ip30": {
 
     },
-    "build-server": {
-        "REHABSTOD_URL": "https://rehabstod.inera.nordicmedtest.se/",
-        "INTYGTJANST_URL": "https://intygstjanst.inera.nordicmedtest.se/inera-certificate",
-        "SELENIUM_ADDRESS": "http://selenium1.nordicmedtest.se:4444/wd/hub"
-    },
     "dev": {
         "REHABSTOD_URL": "http://localhost:8030/",
         "INTYGTJANST_URL": "http://localhost:8080/inera-certificate",
