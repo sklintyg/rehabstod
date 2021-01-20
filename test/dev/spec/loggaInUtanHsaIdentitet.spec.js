@@ -35,9 +35,9 @@ describe('Logga in som Hans Hosplösa ', function() {
 
   it('Öppna och försök logga in som Hans Hosplösa', function() {
     var userJson = {
-      forNamn: 'Hans',
+      forNamn: 'Höns',
       efterNamn: 'Hosplösa',
-      hsaId: 'hans-hosplosa',
+      hsaId: 'höns-hosplosa',
       enhetId: 'TSTNMT2321000156-105F',
       forskrivarKod: '9300005'
     };
