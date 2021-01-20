@@ -25,16 +25,16 @@ import javax.xml.ws.WebServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.integration.hsa.services.HsaEmployeeService;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaEmployeeService;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 
 /**
  * Class that provides a cachable facade for calls to HSA getEmployeeIncludingProtectedPerson.
  *
  * The purpose is to allow calls to determine doctor current name in HSA to be cached without
- * introducing caching in the hsa-integration {@link se.inera.intyg.infra.integration.hsa.client.EmployeeService} itself.
+ * introducing caching in the hsatk-integration {@link se.inera.intyg.infra.integration.hsatk.services.legacy.HsaEmployeeService} itself.
  *
  * Created by eriklupander on 2017-02-23.
  */
@@ -49,7 +49,7 @@ public class EmployeeNameServiceImpl implements EmployeeNameService {
     @Cacheable(value = EMPLOYEE_NAME_CACHE_NAME, key = "#employeeHsaId", unless = "#result == null")
     public String getEmployeeHsaName(String employeeHsaId) {
         try {
-            List<PersonInformationType> employeeInfo = employeeService.getEmployee(employeeHsaId, null, null);
+            List<PersonInformation> employeeInfo = employeeService.getEmployee(employeeHsaId, null, null);
             if (employeeInfo.size() > 0) {
                 return employeeInfo.get(0).getGivenName() + " " + employeeInfo.get(0).getMiddleAndSurName();
             } else {

@@ -29,7 +29,7 @@ import org.springframework.context.annotation.ImportResource;
 @Configuration
 @ComponentScan({"se.inera.intyg.rehabstod.integration.hsa.services"})
 @Import(HsaStubConfiguration.class)
-@ImportResource("classpath:hsa-services-config.xml")
+@ImportResource("classpath:hsatk-services-config.xml")
 public class HsaConfiguration {
 
     public HsaConfiguration() { //NOSONAR
