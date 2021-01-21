@@ -149,8 +149,6 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
         return !isSet;
       }
 
-      _reset();
-
       return {
         reset: _reset,
         resetIfColumnsHidden: _resetIfColumnsHidden,
