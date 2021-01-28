@@ -186,29 +186,36 @@ public class CertificateServiceImpl implements CertificateService {
         return luCertificateList;
     }
 
+    private boolean containsIgnoreCase(String one, String other) {
+        if (one == null) {
+            return other == null;
+        }
+        return other == null ? false : one.toLowerCase().contains(other.toLowerCase());
+    }
+
     private boolean filterOnText(LUCertificate c, String searchText) {
 
         var patient = c.getPatient();
         if (patient != null) {
-            if (patient.getId() != null && patient.getId().contains(searchText)) {
+            if (patient.getId() != null && containsIgnoreCase(patient.getId(), searchText)) {
                 return true;
             }
-            if (patient.getNamn() != null && patient.getNamn().contains(searchText)) {
+            if (patient.getNamn() != null && containsIgnoreCase(patient.getNamn(), searchText)) {
                 return true;
             }
-            if (patient.getKon() != null && patient.getKon().getDescription().contains(searchText)) {
+            if (patient.getKon() != null && containsIgnoreCase(patient.getKon().getDescription(), searchText)) {
                 return true;
             }
-            if (patient.getAlder() > -1 && String.format("%d år", patient.getAlder()).contains(searchText)) {
+            if (patient.getAlder() > -1 && containsIgnoreCase(String.format("%d år", patient.getAlder()), searchText)) {
                 return true;
             }
         }
 
         if (c.getDiagnosis() != null) {
-            if (c.getDiagnosis().getIntygsVarde() != null && c.getDiagnosis().getIntygsVarde().contains(searchText)) {
+            if (c.getDiagnosis().getIntygsVarde() != null && containsIgnoreCase(c.getDiagnosis().getIntygsVarde(), searchText)) {
                 return true;
             }
-            if (c.getDiagnosis().getBeskrivning() != null && c.getDiagnosis().getBeskrivning().contains(searchText)) {
+            if (c.getDiagnosis().getBeskrivning() != null && containsIgnoreCase(c.getDiagnosis().getBeskrivning(), searchText)) {
                 return true;
             }
         }
@@ -216,32 +223,34 @@ public class CertificateServiceImpl implements CertificateService {
         var biDiagnoses = c.getBiDiagnoses();
         if (biDiagnoses != null && !biDiagnoses.isEmpty()) {
             for (var diagnosis : biDiagnoses) {
-                if (diagnosis.getIntygsVarde() != null && diagnosis.getIntygsVarde().contains(searchText)) {
+                if (diagnosis.getIntygsVarde() != null && containsIgnoreCase(diagnosis.getIntygsVarde(), searchText)) {
                     return true;
                 }
-                if (diagnosis.getBeskrivning() != null && diagnosis.getBeskrivning().contains(searchText)) {
+                if (diagnosis.getBeskrivning() != null && containsIgnoreCase(diagnosis.getBeskrivning(), searchText)) {
                     return true;
                 }
             }
         }
 
-        if (c.getCertificateType() != null && c.getCertificateType().contains(searchText)) {
+        if (c.getCertificateType() != null && containsIgnoreCase(c.getCertificateType(), searchText)) {
             return true;
         }
 
-        if (c.getSigningTimeStamp() != null && c.getSigningTimeStamp().toLocalDate().toString().contains(searchText)) {
+        if (c.getSigningTimeStamp() != null && containsIgnoreCase(c.getSigningTimeStamp().toLocalDate().toString(), searchText)) {
             return true;
         }
 
-        if (c.getUnAnsweredComplement() > 0 && String.format("Komplettering (%d)", c.getUnAnsweredComplement()).contains(searchText)) {
+        if (c.getUnAnsweredComplement() > 0 && containsIgnoreCase(String.format("Komplettering (%d)", c.getUnAnsweredComplement()),
+            searchText)) {
             return true;
         }
 
-        if (c.getUnAnsweredOther() > 0 && String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()).contains(searchText)) {
+        if (c.getUnAnsweredOther() > 0 && containsIgnoreCase(String.format("Administrativ fråga (%d)", c.getUnAnsweredOther()),
+            searchText)) {
             return true;
         }
 
-        return c.getDoctor() != null && c.getDoctor().getNamn() != null && c.getDoctor().getNamn().contains(searchText);
+        return c.getDoctor() != null && c.getDoctor().getNamn() != null && containsIgnoreCase(c.getDoctor().getNamn(), searchText);
     }
 
     private boolean filterOnAge(DiagnosedCertificate c, int fromAge, int toAge) {
@@ -267,15 +276,42 @@ public class CertificateServiceImpl implements CertificateService {
         return false;
     }
 
+    /**
+     * Creates a numeric representation of diagnose and the selected diagnoseGroup and checks
+     * if the diagnose is within the range of the diagnoseGroup.
+     *
+     * The diagnoseGroup should be in the format of this example: "A00-B99".
+     *
+     * @return true if diagnose is within the range of diagnoseGroup
+     */
     private boolean belongsToDiagnoseGroup(String diagnose, String diagnoseGroup) {
-        if (!diagnose.startsWith(diagnoseGroup.substring(0, 1))) {
+        if (diagnose == null || diagnoseGroup == null) {
             return false;
         }
 
-        var diagnoseNumber = Integer.parseInt(diagnose.substring(1, 3));
+        diagnose = diagnose.toUpperCase();
+        diagnoseGroup = diagnoseGroup.toUpperCase();
+
         var splits = diagnoseGroup.split("-");
-        return diagnoseNumber >= Integer.parseInt(splits[0].substring(1, 3))
-            && diagnoseNumber <= Integer.parseInt(splits[1].substring(1, 3));
+        if (splits.length != 2 || splits[0].length() != 3 || splits[1].length() != 3) {
+            return false;
+        }
+
+        try {
+            // get int representation of diagnoseGroup
+            int startValue = (Character.getNumericValue(splits[0].toCharArray()[0]) * 100) + Integer.parseInt(splits[0].substring(1, 3));
+            int endValue = (Character.getNumericValue(splits[1].toCharArray()[0]) * 100) + Integer.parseInt(splits[1].substring(1, 3));
+
+            // get int representation of diagnose code (first 3 characters only)
+            int diagnoseValue =
+                (Character.getNumericValue(diagnose.toCharArray()[0]) * 100) + Integer.parseInt(diagnose.substring(1, 3));
+
+            return diagnoseValue >= startValue && diagnoseValue <= endValue;
+        } catch (NumberFormatException exception) {
+            // Likely due to an invalid diagnose code containing other values than a starting char followed by numbers. i.e. "B65" or "B651"
+            return false;
+        }
+
     }
 
     @Override
@@ -452,7 +488,7 @@ public class CertificateServiceImpl implements CertificateService {
         if (code != null) {
             var diagnoseCode = new DiagnosKod(code);
             return diagnosFactory.getDiagnos(diagnoseCode.getOriginalCode(), diagnoseCode.getCleanedCode(), diagnoseCode.getName());
-        } else  {
+        } else {
             return null;
         }
     }
