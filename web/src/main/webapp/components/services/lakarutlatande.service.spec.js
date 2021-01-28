@@ -51,6 +51,8 @@ describe('Service: LakarutlatandeService', function() {
           LakarutlatandeFilterViewState = _LakarutlatandeFilterViewState_;
           messageService = _messageService_;
 
+          LakarutlatandeFilterViewState.reset();
+
           featureService.hasFeature = function() {
             return false;
           };
