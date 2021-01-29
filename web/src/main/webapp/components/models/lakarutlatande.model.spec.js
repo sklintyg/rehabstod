@@ -24,6 +24,7 @@ describe('Model: LakarutlatandeModel', function() {
   beforeEach(module('rehabstodApp'));
 
   var LakarutlatandeModel;
+  var LakarutlatandeFilterViewState;
   var testJsonData = [{
     'patient': {
       'id': '19360721-7068',
@@ -48,8 +49,9 @@ describe('Model: LakarutlatandeModel', function() {
   }];
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function(_LakarutlatandeModel_, featureService) {
+  beforeEach(inject(function(_LakarutlatandeModel_, _LakarutlatandeFilterViewState_, featureService) {
     LakarutlatandeModel = _LakarutlatandeModel_;
+    LakarutlatandeFilterViewState = _LakarutlatandeFilterViewState_;
 
     featureService.hasFeature = function() {
       return false;
@@ -58,6 +60,7 @@ describe('Model: LakarutlatandeModel', function() {
 
   describe('set', function() {
     it('should decorate quickSearch property when set', function() {
+      LakarutlatandeFilterViewState.reset();
       LakarutlatandeModel.set(testJsonData);
       expect(LakarutlatandeModel.get().length).toEqual(testJsonData.length);
       expect(LakarutlatandeModel.get()[0].quickSearchString).toEqual(
@@ -65,6 +68,7 @@ describe('Model: LakarutlatandeModel', function() {
     });
 
     it('should decorate show properties when set', inject(function(messageService) {
+      LakarutlatandeFilterViewState.reset();
       LakarutlatandeModel.set(testJsonData);
       expect(LakarutlatandeModel.get().length).toEqual(testJsonData.length);
       expect(LakarutlatandeModel.get()[0].patient.konShow).toEqual(messageService.getProperty('label.gender.female'));
@@ -74,6 +78,7 @@ describe('Model: LakarutlatandeModel', function() {
 
   describe('reset', function() {
     it('should reset correctly', function() {
+      LakarutlatandeFilterViewState.reset();
       LakarutlatandeModel.set(testJsonData);
 
       expect(LakarutlatandeModel.get().length).toEqual(testJsonData.length);
