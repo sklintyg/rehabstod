@@ -45,6 +45,11 @@ angular.module('rehabstodApp').directive('rhsMultiSelect',
               var height = $window.innerHeight - offsetTop - 20;
 
               dropdown.css('max-height', Math.max(height, 100));
+
+              if ($scope.items.length === 0 || !$scope.items) {
+                dropdown.css('min-height', 35);
+                dropdown.css('max-width', 100);
+              }
             }
           };
 
