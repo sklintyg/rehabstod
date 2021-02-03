@@ -155,14 +155,6 @@ public class CertificateServiceImplTest {
         }
     }
 
-    private Vardgivare getCareProvider() {
-        return new Vardgivare(CARE_PROVIDER_ID, CARE_PROVIDER_NAME);
-    }
-
-    private Vardenhet getCareUnit() {
-        return new Vardenhet(CARE_UNIT_ID, CARE_UNIT_NAME);
-    }
-
     @Test
     public void getLUCertificatesForPerson() {
         final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
@@ -279,6 +271,14 @@ public class CertificateServiceImplTest {
         for (var actualUnitId : actualUnitIds) {
             assertTrue("Doesn't expect unitId: " + actualUnitId, expectedUnitIds.contains(actualUnitId));
         }
+    }
+    
+    private Vardgivare getCareProvider() {
+        return new Vardgivare(CARE_PROVIDER_ID, CARE_PROVIDER_NAME);
+    }
+
+    private Vardenhet getCareUnit() {
+        return new Vardenhet(CARE_UNIT_ID, CARE_UNIT_NAME);
     }
 
     private ArrayList<DiagnosedCertificate> buildDiagnosedCertificateList() {
