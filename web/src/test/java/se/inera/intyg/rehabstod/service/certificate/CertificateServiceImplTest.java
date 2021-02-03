@@ -116,13 +116,21 @@ public class CertificateServiceImplTest {
 
     @Test
     public void getLUCertificatesForCareUnit() {
-        when(userService.getUser()).thenReturn(user);
-        when(user.getValdVardenhet()).thenReturn(getCareUnit());
+        final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
+
+        final var argumentCapture = ArgumentCaptor.forClass(List.class);
+        final var selectableVardenhet = mock(SelectableVardenhet.class);
+
+        doReturn(user).when(userService).getUser();
+        doReturn(selectableVardenhet).when(user).getValdVardenhet();
+        doReturn(expectedUnitIds).when(selectableVardenhet).getHsaIds();
+
         when(hsaOrganizationsService.getVardenhet(anyString())).thenReturn(getCareUnit());
         when(hsaOrganizationsService.getVardgivareInfo(anyString())).thenReturn(getCareProvider());
 
         var diagnosedCertificateList = buildDiagnosedCertificateList();
-        when(intygstjanstRestIntegrationService.getDiagnosedCertificatesForCareUnit(any(List.class), any(List.class), any(), any()))
+        when(intygstjanstRestIntegrationService
+            .getDiagnosedCertificatesForCareUnit(argumentCapture.capture(), any(List.class), any(), any()))
             .thenReturn(diagnosedCertificateList);
 
         when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
@@ -138,26 +146,33 @@ public class CertificateServiceImplTest {
         assertEquals(CERT_ID_2, luCertificates.get(1).getCertificateId());
         assertEquals(DIAGNOSE_CODE, luCertificates.get(0).getDiagnosis().getKod());
         assertEquals(DIAGNOSE_CODE, luCertificates.get(1).getDiagnosis().getKod());
-    }
 
-    private Vardgivare getCareProvider() {
-        return new Vardgivare(CARE_PROVIDER_ID, CARE_PROVIDER_NAME);
-    }
-
-    private Vardenhet getCareUnit() {
-        return new Vardenhet(CARE_UNIT_ID, CARE_UNIT_NAME);
+        final var actualUnitIds = argumentCapture.getValue();
+        assertNotNull("Doesn't expect actual unitIds to be null", actualUnitIds);
+        assertEquals(expectedUnitIds.size(), actualUnitIds.size());
+        for (var actualUnitId : actualUnitIds) {
+            assertTrue("Doesn't expect unitId: " + actualUnitId, expectedUnitIds.contains(actualUnitId));
+        }
     }
 
     @Test
     public void getLUCertificatesForPerson() {
-        when(userService.getUser()).thenReturn(user);
-        when(user.getValdVardenhet()).thenReturn(getCareUnit());
+        final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
+
+        final var argumentCapture = ArgumentCaptor.forClass(List.class);
+        final var selectableVardenhet = mock(SelectableVardenhet.class);
+
+        doReturn(user).when(userService).getUser();
+        doReturn(selectableVardenhet).when(user).getValdVardenhet();
+        doReturn(expectedUnitIds).when(selectableVardenhet).getHsaIds();
+        doReturn(getCareUnit().getId()).when(selectableVardenhet).getId();
+
         when(hsaOrganizationsService.getVardenhet(anyString())).thenReturn(getCareUnit());
         when(hsaOrganizationsService.getVardgivareInfo(anyString())).thenReturn(getCareProvider());
 
         var diagnosedCertificateList = buildDiagnosedCertificateList();
         when(intygstjanstRestIntegrationService
-            .getDiagnosedCertificatesForPerson(anyString(), any(List.class), any(List.class)))
+            .getDiagnosedCertificatesForPerson(anyString(), any(List.class), argumentCapture.capture()))
             .thenReturn(diagnosedCertificateList);
 
         when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
@@ -173,18 +188,33 @@ public class CertificateServiceImplTest {
         assertEquals(CERT_ID_2, luCertificates.get(1).getCertificateId());
         assertEquals(DIAGNOSE_CODE, luCertificates.get(0).getDiagnosis().getKod());
         assertEquals(DIAGNOSE_CODE, luCertificates.get(1).getDiagnosis().getKod());
+
+        final var actualUnitIds = argumentCapture.getValue();
+        assertNotNull("Doesn't expect actual unitIds to be null", actualUnitIds);
+        assertEquals(expectedUnitIds.size(), actualUnitIds.size());
+        for (var actualUnitId : actualUnitIds) {
+            assertTrue("Doesn't expect unitId: " + actualUnitId, expectedUnitIds.contains(actualUnitId));
+        }
     }
 
     @Test
     public void getAGCertificatesForPerson() {
-        when(userService.getUser()).thenReturn(user);
-        when(user.getValdVardenhet()).thenReturn(getCareUnit());
+        final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
+
+        final var argumentCapture = ArgumentCaptor.forClass(List.class);
+        final var selectableVardenhet = mock(SelectableVardenhet.class);
+
+        doReturn(user).when(userService).getUser();
+        doReturn(selectableVardenhet).when(user).getValdVardenhet();
+        doReturn(expectedUnitIds).when(selectableVardenhet).getHsaIds();
+        doReturn(getCareUnit().getId()).when(selectableVardenhet).getId();
+
         when(hsaOrganizationsService.getVardenhet(anyString())).thenReturn(getCareUnit());
         when(hsaOrganizationsService.getVardgivareInfo(anyString())).thenReturn(getCareProvider());
 
         var sickLeaveCertificateList = buildSickLeaveCertificateList();
         when(intygstjanstRestIntegrationService
-            .getSickLeaveCertificatesForPerson(anyString(), any(List.class), any(List.class)))
+            .getSickLeaveCertificatesForPerson(anyString(), any(List.class), argumentCapture.capture()))
             .thenReturn(sickLeaveCertificateList);
 
         when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
@@ -205,6 +235,13 @@ public class CertificateServiceImplTest {
         assertEquals(REDUCTION_1, agCertificates.get(0).getDegree().get(0).intValue());
         assertEquals(REDUCTION_2, agCertificates.get(0).getDegree().get(1).intValue());
         assertEquals(REDUCTION_3, agCertificates.get(0).getDegree().get(2).intValue());
+
+        final var actualUnitIds = argumentCapture.getValue();
+        assertNotNull("Doesn't expect actual unitIds to be null", actualUnitIds);
+        assertEquals(expectedUnitIds.size(), actualUnitIds.size());
+        for (var actualUnitId : actualUnitIds) {
+            assertTrue("Doesn't expect unitId: " + actualUnitId, expectedUnitIds.contains(actualUnitId));
+        }
     }
 
     @Test
@@ -234,6 +271,14 @@ public class CertificateServiceImplTest {
         for (var actualUnitId : actualUnitIds) {
             assertTrue("Doesn't expect unitId: " + actualUnitId, expectedUnitIds.contains(actualUnitId));
         }
+    }
+    
+    private Vardgivare getCareProvider() {
+        return new Vardgivare(CARE_PROVIDER_ID, CARE_PROVIDER_NAME);
+    }
+
+    private Vardenhet getCareUnit() {
+        return new Vardenhet(CARE_UNIT_ID, CARE_UNIT_NAME);
     }
 
     private ArrayList<DiagnosedCertificate> buildDiagnosedCertificateList() {
