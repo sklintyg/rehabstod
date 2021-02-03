@@ -316,8 +316,8 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public List<String> getDoctorsForUnit() {
-        var unitId = userService.getUser().getValdVardenhet().getId();
-        return restIntegrationService.getSigningDoctorsForUnit(Collections.singletonList(unitId), Arrays.asList(LU_TYPE_LIST));
+        final var unitIds = userService.getUser().getValdVardenhet().getHsaIds();
+        return restIntegrationService.getSigningDoctorsForUnit(unitIds, Arrays.asList(LU_TYPE_LIST));
     }
 
     @Override

@@ -20,8 +20,12 @@ package se.inera.intyg.rehabstod.service.certificate;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -31,6 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -39,6 +44,7 @@ import se.inera.intyg.infra.certificate.builder.SickLeaveCertificateBuilder;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate.WorkCapacity;
+import se.inera.intyg.infra.integration.hsa.model.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
 import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
 import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
@@ -199,6 +205,35 @@ public class CertificateServiceImplTest {
         assertEquals(REDUCTION_1, agCertificates.get(0).getDegree().get(0).intValue());
         assertEquals(REDUCTION_2, agCertificates.get(0).getDegree().get(1).intValue());
         assertEquals(REDUCTION_3, agCertificates.get(0).getDegree().get(2).intValue());
+    }
+
+    @Test
+    public void ifUserLoggedInOnCareUnitSearchDoctorsIncludingSubUnits() {
+        final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
+        final var expectedDoctors = Arrays.asList("DOCTOR-1", "DOCTOR-2", "DOCTOR-3");
+
+        final var argumentCapture = ArgumentCaptor.forClass(List.class);
+        final var selectableVardenhet = mock(SelectableVardenhet.class);
+
+        doReturn(user).when(userService).getUser();
+        doReturn(selectableVardenhet).when(user).getValdVardenhet();
+        doReturn(expectedUnitIds).when(selectableVardenhet).getHsaIds();
+        doReturn(expectedDoctors).when(intygstjanstRestIntegrationService).getSigningDoctorsForUnit(argumentCapture.capture(), anyList());
+
+        final var actualDoctors = service.getDoctorsForUnit();
+
+        assertNotNull("Doesn't expect actual doctors to be null", actualDoctors);
+        assertEquals(actualDoctors.size(), actualDoctors.size());
+        for (var actualDoctor : actualDoctors) {
+            assertTrue("Doesn't expect doctor with id: " + actualDoctor, expectedDoctors.contains(actualDoctor));
+        }
+
+        final var actualUnitIds = argumentCapture.getValue();
+        assertNotNull("Doesn't expect actual unitIds to be null", actualUnitIds);
+        assertEquals(expectedUnitIds.size(), actualUnitIds.size());
+        for (var actualUnitId : actualUnitIds) {
+            assertTrue("Doesn't expect unitId: " + actualUnitId, expectedUnitIds.contains(actualUnitId));
+        }
     }
 
     private ArrayList<DiagnosedCertificate> buildDiagnosedCertificateList() {
