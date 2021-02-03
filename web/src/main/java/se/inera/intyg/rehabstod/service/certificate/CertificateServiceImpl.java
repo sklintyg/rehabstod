@@ -97,11 +97,11 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     public GetLUCertificatesForCareUnitResponse getLUCertificatesForCareUnit(GetLUCertificatesForCareUnitRequest request) {
         var user = userService.getUser();
-        var unitId = user.getValdVardenhet().getId();
+        var unitIds = user.getValdVardenhet().getHsaIds();
         var urval = user.getUrval();
 
         var diagnosedCertificateList = restIntegrationService
-            .getDiagnosedCertificatesForCareUnit(Collections.singletonList(unitId), Arrays.asList(LU_TYPE_LIST), request.getFromDate(),
+            .getDiagnosedCertificatesForCareUnit(unitIds, Arrays.asList(LU_TYPE_LIST), request.getFromDate(),
                 request.getToDate());
 
         puService.enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(diagnosedCertificateList);
@@ -322,9 +322,11 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public GetLUCertificatesForPersonResponse getLUCertificatesForPerson(String personId) {
-        var unitId = userService.getUser().getValdVardenhet().getId();
+        final var unitIds = userService.getUser().getValdVardenhet().getHsaIds();
+        final var loggedInUnitId = userService.getUser().getValdVardenhet().getId();
+
         var diagnosedCertificateList = restIntegrationService
-            .getDiagnosedCertificatesForPerson(personId, Arrays.asList(LU_TYPE_LIST), Collections.singletonList(unitId));
+            .getDiagnosedCertificatesForPerson(personId, Arrays.asList(LU_TYPE_LIST), unitIds);
 
         var luCertificateList = transformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
         boolean qaInfoError = false;
@@ -337,7 +339,7 @@ public class CertificateServiceImpl implements CertificateService {
         LOGGER.debug("Adding PDL log for certificate read");
         var rehabstodUser = userService.getUser();
         var storedActivities = rehabstodUser.getStoredActivities();
-        pdlLogCertificatesForPerson(personId, unitId, storedActivities);
+        pdlLogCertificatesForPerson(personId, loggedInUnitId, storedActivities);
 
         LOGGER.debug("Returning LU Certificates for Person");
         return new GetLUCertificatesForPersonResponse(luCertificateList, qaInfoError);
@@ -345,9 +347,10 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public GetAGCertificatesForPersonResponse getAGCertificatesForPerson(String personId) {
-        var unitId = userService.getUser().getValdVardenhet().getId();
+        final var unitIds = userService.getUser().getValdVardenhet().getHsaIds();
+        final var loggedInUnitId = userService.getUser().getValdVardenhet().getId();
         var sickLeaveCertificateList = restIntegrationService
-            .getSickLeaveCertificatesForPerson(personId, Arrays.asList(AG_TYPE_LIST), Collections.singletonList(unitId));
+            .getSickLeaveCertificatesForPerson(personId, Arrays.asList(AG_TYPE_LIST), unitIds);
 
         var agCertificateList = transformSickLeaveCertificatesToAGCertificates(sickLeaveCertificateList);
         boolean qaInfoError = false;
@@ -360,7 +363,7 @@ public class CertificateServiceImpl implements CertificateService {
         LOGGER.debug("Adding PDL log for certificate read");
         var rehabstodUser = userService.getUser();
         var storedActivities = rehabstodUser.getStoredActivities();
-        pdlLogCertificatesForPerson(personId, unitId, storedActivities);
+        pdlLogCertificatesForPerson(personId, loggedInUnitId, storedActivities);
 
         LOGGER.debug("Returning AG Certificates for Person");
         return new GetAGCertificatesForPersonResponse(agCertificateList, qaInfoError);
