@@ -104,7 +104,6 @@ describe('Controller: PatientHistoryController', function() {
       }));
 
   it('should build correct timeline for scenario 1', function() {
-    $httpBackend.expectGET('/api/certificate/lu/doctors').respond(['Doctor Doctorsson']);
     $httpBackend.expectPOST('/api/sjukfall/patient').respond(scenario1);
     $httpBackend.expectGET('/api/user/accesstoken').respond(accessToken);
 
@@ -116,7 +115,6 @@ describe('Controller: PatientHistoryController', function() {
   });
 
   it('should build correct timeline for scenario 2', function() {
-    $httpBackend.expectGET('/api/certificate/lu/doctors').respond(['Doctor Doctorsson']);
     $httpBackend.expectPOST('/api/sjukfall/patient').respond(scenario2);
     $httpBackend.expectGET('/api/user/accesstoken').respond(accessToken);
 
@@ -128,7 +126,6 @@ describe('Controller: PatientHistoryController', function() {
   });
 
   it('should handle load intyg correctly', function() {
-    $httpBackend.expectGET('/api/certificate/lu/doctors').respond(['Doctor Doctorsson']);
     $httpBackend.expectPOST('/api/sjukfall/patient').respond(scenario2);
     $httpBackend.expectGET('/api/user/accesstoken').respond(accessToken);
 
