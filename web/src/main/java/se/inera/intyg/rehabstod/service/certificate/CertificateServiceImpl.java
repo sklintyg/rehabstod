@@ -410,7 +410,7 @@ public class CertificateServiceImpl implements CertificateService {
     private List<AGCertificate> transformSickLeaveCertificatesToAGCertificates(List<SickLeaveCertificate> sickLeaveCertificateList) {
 
         return sickLeaveCertificateList.stream().filter(this::commonFilter).map(this::convertSickLeaveCertificateToLUCertificate)
-            .sorted(Comparator.comparing(AGCertificate::getSigningTimeStamp).reversed()).collect(Collectors.toList());
+            .sorted(Comparator.comparing(AGCertificate::getStart).reversed()).collect(Collectors.toList());
     }
 
     private void populateAGCertificatesWithNotificationData(List<AGCertificate> agCertificateList) {

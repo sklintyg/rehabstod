@@ -16,7 +16,6 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
 <div ng-if="showAgTable">
   <div rhs-spinner show-spinner="showSpinner" label="label.agcertificates.loading">
     <h3>Intyg till arbetsgivaren</h3>
@@ -41,41 +40,42 @@
               <th id="header-column-show-intyg" class="column-showintyg">&nbsp;</th>
             </tr>
             </thead>
-
             <tbody>
             <tr ng-if="agCertificates.length > 0" ng-repeat="(rowIndex, intyg) in agCertificates">
-              <td data-ng-repeat="column in tableColumns" ng-attr-id="agintyg-{{index}}-column-{{::column.id}}-{{::rowIndex}}">
-                <div data-ng-if="column.id === 'number'">{{rowIndex + 1}}</div>
-                <div data-ng-if="column.id === 'intyg'" class="nowrap">{{::intyg.certificateType}}</div>
-                <div data-ng-if="column.id === 'diagnose'" class="nowrap column-diagnos">
-                  <div class="diagnos-container">
-                    <span uib-tooltip-html="getToolTip({'diagnos': intyg.diagnosis})" tooltip-popup-delay="200"
-                      class="patient-ag-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnosis.intygsVarde}}
-                    </span>
-                    <span ng-if="!intyg.diagnosis.intygsVarde" class="hidden-value">-</span>
-                    <div class="diagnos hidden-xs hidden-sm">{{::intyg.diagnosis.beskrivning}}</div>
+              <td data-ng-repeat="column in tableColumns" ng-attr-id="agintyg-{{index}}-column-{{::column.id}}-{{::rowIndex}}"
+                  ng-class="{'expired-certificate': isExpiredCertificate(intyg.end)}">
+
+                  <div data-ng-if="column.id === 'number'">{{rowIndex + 1}}</div>
+                  <div data-ng-if="column.id === 'intyg'" class="nowrap">{{::intyg.certificateType}}</div>
+                  <div data-ng-if="column.id === 'diagnose'" class="nowrap column-diagnos">
+                    <div class="diagnos-container">
+                      <span uib-tooltip-html="getToolTip({'diagnos': intyg.diagnosis})" tooltip-popup-delay="200"
+                        class="patient-ag-dialog-tooltip" tooltip-placement="top-left">{{::intyg.diagnosis.intygsVarde}}
+                      </span>
+                      <span ng-if="!intyg.diagnosis.intygsVarde" class="hidden-value">-</span>
+                      <div class="diagnos hidden-xs hidden-sm">{{::intyg.diagnosis.beskrivning}}</div>
+                    </div>
+                    <div class="diagnos-container" ng-repeat="d in intyg.biDiagnoses">
+                      <span uib-tooltip-html="getToolTip({'diagnos': d})" tooltip-popup-delay="200" tooltip-placement="auto top-right" class="patient-ag-dialog-tooltip">{{::d.intygsVarde}}</span>
+                      <span class="diagnos hidden-xs hidden-sm">{{::d.beskrivning}}</span>
+                    </div>
                   </div>
-                  <div class="diagnos-container" ng-repeat="d in intyg.biDiagnoses">
-                    <span uib-tooltip-html="getToolTip({'diagnos': d})" tooltip-popup-delay="200" tooltip-placement="auto top-right" class="patient-ag-dialog-tooltip">{{::d.intygsVarde}}</span>
-                    <span class="diagnos hidden-xs hidden-sm">{{::d.beskrivning}}</span>
+                  <div data-ng-if="column.id === 'startdate'" class="nowrap">{{::intyg.start}}</div>
+                  <div data-ng-if="column.id === 'enddate'" class="nowrap">{{::intyg.end}}</div>
+                  <div data-ng-if="column.id === 'length'">{{::intyg.days}} dagar</div>
+                  <div data-ng-if="column.id === 'grade'" class="nowrap">
+                    <span ng-bind-html="::formatGrader({gradArr: intyg.degree})"></span>
+                    <span ng-if="!intyg.degree || intyg.degree.length <= 0" class="hidden-value">Okänt</span>
                   </div>
-                </div>
-                <div data-ng-if="column.id === 'startdate'" class="nowrap">{{::intyg.start}}</div>
-                <div data-ng-if="column.id === 'enddate'" class="nowrap">{{::intyg.end}}</div>
-                <div data-ng-if="column.id === 'length'">{{::intyg.days}} dagar</div>
-                <div data-ng-if="column.id === 'grade'" class="nowrap">
-                  <span ng-bind-html="::formatGrader({gradArr: intyg.degree})"></span>
-                  <span ng-if="!intyg.degree || intyg.degree.length <= 0" class="hidden-value">Okänt</span>
-                </div>
-                <div data-ng-if="column.id === 'doctor'">{{::intyg.doctor.namn}}
-                  <span ng-if="!intyg.doctor.namn" class="hidden-value">Okänt</span>
-                </div>
-                <div data-ng-if="column.id === 'occupation'">
-                  <div ng-repeat="s in intyg.occupation track by $index">{{::s}}</div>
-                  <span ng-if="!intyg.occupation || intyg.occupation.length <= 0" class="hidden-value">Okänt</span>
-                </div>
-                <div data-ng-if="column.id === 'vardenhet'">{{::intyg.careUnitName}}</div>
-                <div data-ng-if="column.id === 'vardgivare'">{{::intyg.careProviderName}}</div>
+                  <div data-ng-if="column.id === 'doctor'">{{::intyg.doctor.namn}}
+                    <span ng-if="!intyg.doctor.namn" class="hidden-value">Okänt</span>
+                  </div>
+                  <div data-ng-if="column.id === 'occupation'">
+                    <div ng-repeat="s in intyg.occupation track by $index">{{::s}}</div>
+                    <span ng-if="!intyg.occupation || intyg.occupation.length <= 0" class="hidden-value">Okänt</span>
+                  </div>
+                  <div data-ng-if="column.id === 'vardenhet'">{{::intyg.careUnitName}}</div>
+                  <div data-ng-if="column.id === 'vardgivare'">{{::intyg.careProviderName}}</div>
               </td>
               <td class="column-showintyg">
                 <button class="btn btn-default" ng-attr-id="sjukfall-{{index}}-show-intyg-{{intyg.id}}"
