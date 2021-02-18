@@ -49,9 +49,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-import se.inera.intyg.infra.integration.hsa.model.Mottagning;
-import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
@@ -637,7 +637,7 @@ public class SjukfallServiceTest {
 
         RehabstodUser user = new RehabstodUser(LAKARE_ID, LAKARE_NAMN, true);
         user.setPreferences(preferences);
-        user.setValdVardgivare(new se.inera.intyg.infra.integration.hsa.model.Vardgivare(VARDGIVARE_ID, "vårdgivare"));
+        user.setValdVardgivare(new se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare(VARDGIVARE_ID, "vårdgivare"));
         user.setValdVardenhet(new Vardenhet(VARDENHETS_ID, "enhet"));
 
         return user;
@@ -779,15 +779,15 @@ public class SjukfallServiceTest {
         return intygsData;
     }
 
-    private se.inera.intyg.infra.integration.hsa.model.Vardgivare createVardgivare(String id, String namn) {
-        return new se.inera.intyg.infra.integration.hsa.model.Vardgivare(id, namn);
+    private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare createVardgivare(String id, String namn) {
+        return new se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare(id, namn);
     }
 
-    private se.inera.intyg.infra.integration.hsa.model.Vardenhet createVardenhet(String id, String namn) {
+    private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet createVardenhet(String id, String namn) {
         return createVardenhet(id, namn, new ArrayList<>());
     }
 
-    private se.inera.intyg.infra.integration.hsa.model.Vardenhet createVardenhet(String id, String namn, Mottagning mottagning) {
+    private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet createVardenhet(String id, String namn, Mottagning mottagning) {
         if (mottagning == null) {
             return createVardenhet(id, namn, new ArrayList<>());
         }
@@ -796,9 +796,10 @@ public class SjukfallServiceTest {
         return createVardenhet(id, namn, mottagningar);
     }
 
-    private se.inera.intyg.infra.integration.hsa.model.Vardenhet createVardenhet(String id, String namn, List<Mottagning> mottagningar) {
-        se.inera.intyg.infra.integration.hsa.model.Vardenhet vardenhet =
-            new se.inera.intyg.infra.integration.hsa.model.Vardenhet(id, namn);
+    private se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet createVardenhet(String id, String namn,
+        List<Mottagning> mottagningar) {
+        se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet vardenhet =
+            new se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet(id, namn);
 
         if (mottagningar == null) {
             mottagningar = new ArrayList<>();
@@ -808,7 +809,7 @@ public class SjukfallServiceTest {
         return vardenhet;
     }
 
-    private se.inera.intyg.infra.integration.hsa.model.Mottagning createMottagning(String id, String namn, String parentId) {
+    private se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning createMottagning(String id, String namn, String parentId) {
         Mottagning mottagning = new Mottagning();
         mottagning.setId(id);
         mottagning.setNamn(namn);

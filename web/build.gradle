@@ -93,7 +93,7 @@ dependencies {
     compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
 
     compile "se.inera.intyg.infra:dynamiclink:${intygInfraVersion}"
-    compile "se.inera.intyg.infra:hsa-integration:${intygInfraVersion}"
+    compile "se.inera.intyg.infra:hsatk-integration:${intygInfraVersion}"
     compile "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
     compile "se.inera.intyg.infra:pu-integration:${intygInfraVersion}"
     compile "se.inera.intyg.infra:ia-integration:${intygInfraVersion}"

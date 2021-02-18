@@ -56,13 +56,16 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
-import se.inera.intyg.infra.integration.hsa.model.Mottagning;
-import se.inera.intyg.infra.integration.hsa.model.UserAuthorizationInfo;
-import se.inera.intyg.infra.integration.hsa.model.UserCredentials;
-import se.inera.intyg.infra.integration.hsa.model.Vardenhet;
-import se.inera.intyg.infra.integration.hsa.model.Vardgivare;
-import se.inera.intyg.infra.integration.hsa.services.HsaOrganizationsService;
-import se.inera.intyg.infra.integration.hsa.services.HsaPersonService;
+import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
+import se.inera.intyg.infra.integration.hsatk.model.PersonInformation.PaTitle;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.UserAuthorizationInfo;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
+import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
 import se.inera.intyg.infra.security.common.exception.GenericAuthenticationException;
@@ -79,9 +82,6 @@ import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.inera.intyg.rehabstod.service.user.TokenExchangeService;
-import se.riv.infrastructure.directory.v1.HsaSystemRoleType;
-import se.riv.infrastructure.directory.v1.PaTitleType;
-import se.riv.infrastructure.directory.v1.PersonInformationType;
 
 /**
  * Created by marced on 29/01/16.
@@ -367,7 +367,7 @@ public class RehabstodUserDetailsServiceTest {
         Vardenhet enhet23 = new Vardenhet(ENHET_HSAID_23, "Vårdenhet 23");
         vardgivare2.getVardenheter().addAll(Arrays.asList(enhet21, enhet22, enhet23));
 
-        List<HsaSystemRoleType> systemRoles = buildSystemRoles();
+        List<HsaSystemRole> systemRoles = buildSystemRoles();
 
         List<Vardgivare> original = Arrays.asList(vardgivare1, vardgivare2);
 
@@ -388,13 +388,13 @@ public class RehabstodUserDetailsServiceTest {
 
     }
 
-    private List<HsaSystemRoleType> buildSystemRoles() {
+    private List<HsaSystemRole> buildSystemRoles() {
         return Arrays.asList(SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2,
             SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
             SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23)
             .stream()
             .map(s -> {
-                HsaSystemRoleType hsaSystemRole = new HsaSystemRoleType();
+                HsaSystemRole hsaSystemRole = new HsaSystemRole();
                 hsaSystemRole.setRole(s);
                 return hsaSystemRole;
             }).collect(Collectors.toList());
@@ -494,7 +494,7 @@ public class RehabstodUserDetailsServiceTest {
         List<String> legitimeradeYrkesgrupper = Arrays.asList("Läkare", "Psykoterapeut");
         List<String> befattningar = Collections.emptyList();
 
-        List<PersonInformationType> userTypes = Collections
+        List<PersonInformation> userTypes = Collections
             .singletonList(buildPersonInformationType(PERSONAL_HSAID, title, specs, legitimeradeYrkesgrupper, befattningar));
 
         when(hsaPersonService.getHsaPersonInfo(PERSONAL_HSAID)).thenReturn(userTypes);
@@ -509,17 +509,17 @@ public class RehabstodUserDetailsServiceTest {
         List<String> legitimeradeYrkesgrupper = Arrays.asList("Vårdadministratör");
         List<String> befattningar = Collections.emptyList();
 
-        List<PersonInformationType> userTypes = Collections
+        List<PersonInformation> userTypes = Collections
             .singletonList(buildPersonInformationType(PERSONAL_HSAID, title, specs, legitimeradeYrkesgrupper, befattningar));
 
         when(hsaPersonService.getHsaPersonInfo(PERSONAL_HSAID)).thenReturn(userTypes);
     }
 
-    private PersonInformationType buildPersonInformationType(String hsaId, String title, List<String> specialities,
+    private PersonInformation buildPersonInformationType(String hsaId, String title, List<String> specialities,
         List<String> legitimeradeYrkesgrupper,
         List<String> befattningar) {
 
-        PersonInformationType type = new PersonInformationType();
+        PersonInformation type = new PersonInformation();
         type.setPersonHsaId(hsaId);
         type.setGivenName("Danne");
         type.setMiddleAndSurName("Doktorsson");
@@ -536,7 +536,7 @@ public class RehabstodUserDetailsServiceTest {
 
         if (befattningar != null) {
             for (String befattningsKod : befattningar) {
-                PaTitleType paTitleType = new PaTitleType();
+                PaTitle paTitleType = new PaTitle();
                 paTitleType.setPaTitleCode(befattningsKod);
                 type.getPaTitle().add(paTitleType);
             }
