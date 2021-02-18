@@ -37,7 +37,10 @@ angular.module('rehabstodApp')
         link: function($scope) {
           $scope.agCertificates = [];
           $scope.preferenceKey = TableService.patientTableKey;
-          $scope.todaysDate = new Date();
+
+          var date = new Date();
+          $scope.todaysDate = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' +
+              String(date.getDate()).padStart(2, '0');
 
           $scope.$watch(function() {
             return UserModel.get().preferences[$scope.preferenceKey];
@@ -61,13 +64,7 @@ angular.module('rehabstodApp')
           });
 
           $scope.isExpiredCertificate = function(enddate){
-
-            var date =
-                $scope.todaysDate.getFullYear() + '-' +
-                String($scope.todaysDate.getMonth() + 1).padStart(2, '0').padStart(2, '0') + '-' +
-                String($scope.todaysDate.getDate());
-
-            return Date.parse(enddate) < Date.parse(date);
+            return Date.parse(enddate) < Date.parse($scope.todaysDate);
           };
         }
       };
