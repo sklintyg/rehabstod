@@ -44,7 +44,6 @@
             <tr ng-if="agCertificates.length > 0" ng-repeat="(rowIndex, intyg) in agCertificates">
               <td data-ng-repeat="column in tableColumns" ng-attr-id="agintyg-{{index}}-column-{{::column.id}}-{{::rowIndex}}"
                   ng-class="{'expired-certificate': isExpiredCertificate(intyg.end)}">
-
                   <div data-ng-if="column.id === 'number'">{{rowIndex + 1}}</div>
                   <div data-ng-if="column.id === 'intyg'" class="nowrap">{{::intyg.certificateType}}</div>
                   <div data-ng-if="column.id === 'diagnose'" class="nowrap column-diagnos">
