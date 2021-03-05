@@ -60,7 +60,8 @@
                     </div>
                   </div>
                   <div data-ng-if="column.id === 'startdate'" class="nowrap">{{::intyg.start}}</div>
-                  <div data-ng-if="column.id === 'enddate'" class="nowrap">{{::intyg.end}}</div>
+                  <div data-ng-class="{'expired-certificate-end-date': isExpiredCertificate(intyg.end)}"
+                       data-ng-if="column.id === 'enddate'" class="nowrap">{{::intyg.end}}</div>
                   <div data-ng-if="column.id === 'length'">{{::intyg.days}} dagar</div>
                   <div data-ng-if="column.id === 'grade'" class="nowrap">
                     <span ng-bind-html="::formatGrader({gradArr: intyg.degree})"></span>

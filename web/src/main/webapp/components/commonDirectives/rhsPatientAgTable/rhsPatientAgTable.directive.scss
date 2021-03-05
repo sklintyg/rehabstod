@@ -74,7 +74,11 @@ rhs-patient-ag-table {
       }
 
       .expired-certificate {
-        font-style: italic;
+        @extend %rs-typo-13;
+      }
+
+      .expired-certificate-end-date {
+        @extend %rs-typo-14;
       }
 
       .column-number {
