@@ -35,15 +35,11 @@ angular.module('rehabstodApp').directive('rhsDayInRehabChain', ['moment', functi
           var started = moment($scope.items[0].sjukfall.start);
           var duration = moment.duration(moment().diff(started));
           var years = duration.years();
-          var durationMinusWholeYears = duration.subtract(years, 'y');
-          var days = Math.floor(durationMinusWholeYears.asDays());
+          var days = Math.floor(moment.duration(moment().diff(started.add(years,'y'))).asDays());
 
           return ((years > 0) ? years + ' år ' : '') + days + ' dagar';
-
         }
-
       };
-
     }
   };
 }]);
