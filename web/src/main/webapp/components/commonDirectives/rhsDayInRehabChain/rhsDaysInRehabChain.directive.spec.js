@@ -49,16 +49,38 @@ describe('Directive: rhsDaysInRehabChain', function() {
     expect($(element).find('#day-in-rehab-chain-text').text()).toEqual(expected);
   }
 
-  function compensateForleapYear() {
-    var year = moment().format('YYYY');
-    var month = moment().format('M');
-    if(month < 3){
-      year -= 1;
+  function compensateForleapYear(startDate) {
+    var today = moment();
+
+    var yearToCheck = moment(startDate);
+    var considerMonth = true;
+
+    while (today.year('YYYY') > yearToCheck.year('YYYY')) {
+      if (isLeapYear(yearToCheck, considerMonth)) {
+        return startDate.add(1, 'days');
+      }
+      considerMonth = false;
+      yearToCheck.add(1, 'y');
     }
-    if(((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)){
-      return moment().add(1, 'days');
+
+    if (isLeapYear(today, false) && today.format('M') > 2 && startDate.format('M') < 3) {
+      return startDate.add(1, 'days');
+    }
+
+    return startDate;
+  }
+
+  function isLeapYear(date, considerMonth) {
+    var year = date.format('YYYY');
+    var month = date.format('M');
+    if (considerMonth && month > 2) {
+      return false;
+    }
+
+    if (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)) {
+      return true;
     } else {
-      return moment();
+      return false;
     }
   }
 
@@ -77,10 +99,25 @@ describe('Directive: rhsDaysInRehabChain', function() {
 
   });
 
+  it('Should handle duration 20 days correctly', function() {
+    var items = [{
+      'sjukfall': {
+        'start': compensateForleapYear(moment().subtract(20, 'days')).format('YYYY-MM-DD')
+      },
+      'isActive': true
+    }];
+
+    compileDirective(items);
+
+    //Assert
+    assertText('20 dagar');
+
+  });
+
   it('Should handle duration under 1 year correctly', function() {
     var items = [{
       'sjukfall': {
-        'start': moment().subtract(364, 'days').format('YYYY-MM-DD')
+        'start': compensateForleapYear(moment().subtract(364, 'days')).format('YYYY-MM-DD')
       },
       'isActive': true
     }];
@@ -95,7 +132,7 @@ describe('Directive: rhsDaysInRehabChain', function() {
   it('Should handle duration of exactly 1 year correctly', function() {
     var items = [{
       'sjukfall': {
-        'start': compensateForleapYear().subtract(1, 'years').format('YYYY-MM-DD')
+        'start': compensateForleapYear(moment().subtract(1, 'years')).format('YYYY-MM-DD')
       },
       'isActive': true
     }];
@@ -110,7 +147,7 @@ describe('Directive: rhsDaysInRehabChain', function() {
   it('Should handle duration of one year + one day correctly', function() {
     var items = [{
       'sjukfall': {
-        'start': compensateForleapYear().subtract(1, 'years').subtract(1, 'days').format('YYYY-MM-DD')
+        'start': compensateForleapYear(moment().subtract(1, 'years').subtract(1, 'days')).format('YYYY-MM-DD')
       },
       'isActive': true
     }];
@@ -125,7 +162,7 @@ describe('Directive: rhsDaysInRehabChain', function() {
   it('Should handle duration over 1 year correctly', function() {
     var items = [{
       'sjukfall': {
-        'start': compensateForleapYear().subtract(2, 'years').subtract(19, 'days').format('YYYY-MM-DD')
+        'start': compensateForleapYear(moment().subtract(2, 'years').subtract(2, 'days')).format('YYYY-MM-DD')
       },
       'isActive': true
     }];
@@ -133,7 +170,7 @@ describe('Directive: rhsDaysInRehabChain', function() {
     compileDirective(items);
 
     //Assert
-    assertText('2 år 19 dagar');
+    assertText('2 år 2 dagar');
 
   });
 
