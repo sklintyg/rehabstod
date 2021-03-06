@@ -100,11 +100,18 @@ public class CertificateServiceImpl implements CertificateService {
         var unitIds = user.getValdVardenhet().getHsaIds();
         var urval = user.getUrval();
 
+        final var startMilliseconds = System.currentTimeMillis();
+
         var diagnosedCertificateList = restIntegrationService
             .getDiagnosedCertificatesForCareUnit(unitIds, Arrays.asList(LU_TYPE_LIST), request.getFromDate(),
                 request.getToDate());
 
+        logDurationForTaskInMilliseconds("After fetch from Intygstjänst", startMilliseconds);
+
+        // TODO: Lets get pU information after we have filtered the list.
         puService.enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(diagnosedCertificateList);
+
+        logDurationForTaskInMilliseconds("After PU-service call", startMilliseconds);
 
         var certTypes = request.getCertTypes();
         var diagnoses = request.getDiagnoses();
@@ -112,30 +119,38 @@ public class CertificateServiceImpl implements CertificateService {
         var toAge = request.getToAge();
         var doctors = request.getDoctors();
 
+        // TODO: Send only the types we want to see instead of filter it after...
         if (certTypes != null && !certTypes.isEmpty()) {
             diagnosedCertificateList = diagnosedCertificateList.stream()
                 .filter(c -> certTypes.contains(translateCertificateTypeName(c.getCertificateType()))).collect(Collectors.toList());
+            logDurationForTaskInMilliseconds("After Cert filtering", startMilliseconds);
         }
 
         if (diagnoses != null && !diagnoses.isEmpty()) {
             diagnosedCertificateList = diagnosedCertificateList.stream()
                 .filter(c -> filterOnDiagnoses(c, diagnoses)).collect(Collectors.toList());
+            logDurationForTaskInMilliseconds("After diagnose filtering", startMilliseconds);
         }
 
         if (fromAge > 0 || (toAge > 0 && toAge <= 100)) {
             diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> filterOnAge(c, fromAge, toAge))
                 .collect(Collectors.toList());
+            logDurationForTaskInMilliseconds("After age filtering", startMilliseconds);
         }
 
+        // TODO: Send the doctor hsa id we want to see instead of filter it after...
         if (urval == Urval.ISSUED_BY_ME) {
             diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> user.getHsaId().equals(c.getPersonalHsaId()))
                 .collect(Collectors.toList());
+            logDurationForTaskInMilliseconds("After filtering logged in doctor", startMilliseconds);
         } else if (doctors != null && !doctors.isEmpty()) {
             diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> doctors.contains(c.getPersonalFullName()))
                 .collect(Collectors.toList());
+            logDurationForTaskInMilliseconds("After filtering doctors", startMilliseconds);
         }
 
         var luCertificateList = transformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
+        logDurationForTaskInMilliseconds("After creating lu certificate list", startMilliseconds);
         boolean qaInfoError = false;
         try {
             populateLUCertificatesWithNotificationData(luCertificateList);
@@ -143,17 +158,32 @@ public class CertificateServiceImpl implements CertificateService {
             qaInfoError = true;
         }
 
+        logDurationForTaskInMilliseconds("After populating messages from webcert", startMilliseconds);
+
         luCertificateList = filterOnQuestionAndAnswers(request, luCertificateList);
+
+        logDurationForTaskInMilliseconds("After filtering on messages", startMilliseconds);
 
         var searchText = request.getSearchText();
         if (searchText != null && !searchText.isBlank() && !searchText.isEmpty()) {
             luCertificateList = luCertificateList.stream().filter(c -> filterOnText(c, searchText)).collect(Collectors.toList());
+            logDurationForTaskInMilliseconds("After filtering on freetext", startMilliseconds);
         }
 
         pdlLogLUCertificatesForCareUnit(luCertificateList);
 
+        logDurationForTaskInMilliseconds("After PDL logging", startMilliseconds);
+
         LOGGER.debug("Returning LU Certificates for Care Unit");
         return new GetLUCertificatesForCareUnitResponse(luCertificateList, qaInfoError);
+    }
+
+    private void logDurationForTaskInMilliseconds(String task, long startTimeInMilliseconds) {
+        LOGGER.info("################### " + task + " - " + durationInMilliSecondsFromStart(startTimeInMilliseconds));
+    }
+
+    private long durationInMilliSecondsFromStart(long startTimeInMilliseconds) {
+        return System.currentTimeMillis() - startTimeInMilliseconds;
     }
 
     private List<LUCertificate> filterOnQuestionAndAnswers(GetLUCertificatesForCareUnitRequest request,
