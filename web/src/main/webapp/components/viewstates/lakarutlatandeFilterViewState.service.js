@@ -52,7 +52,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
 
       function loadDoctors() {
         lakarutlatandenProxy.getDoctorsForUnit().then(function(response){
-          state.lakareModel.set(response);
+          state.lakareModel.setDoctors(response.doctors);
         }, function(errorData) {
           $log.debug('Failed to get signing doctors.');
           $log.debug(errorData);

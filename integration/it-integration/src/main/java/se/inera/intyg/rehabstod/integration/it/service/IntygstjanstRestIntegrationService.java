@@ -40,7 +40,7 @@ public interface IntygstjanstRestIntegrationService {
      * @return List of certificates with diagnosis information
      */
     List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(List<String> units, List<String> certificateTypes, LocalDate fromDate,
-        LocalDate toDate);
+        LocalDate toDate, List<String> doctorIds);
 
     /**
      * List certificates for person with diagnosis information

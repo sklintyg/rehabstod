@@ -18,10 +18,14 @@
  */
 package se.inera.intyg.rehabstod.service.certificate;
 
+import static se.inera.intyg.rehabstod.web.controller.api.CertificateController.NEW_LU_QUERY;
+
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,6 +37,8 @@ import se.inera.intyg.infra.certificate.dto.BaseCertificate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate.WorkCapacity;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
@@ -43,11 +49,13 @@ import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrati
 import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
+import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonResponse;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetDoctorsForUnitResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForPersonResponse;
@@ -80,11 +88,13 @@ public class CertificateServiceImpl implements CertificateService {
 
     private PuService puService;
 
+    private EmployeeNameService employeeNameService;
+
     @Autowired
     public CertificateServiceImpl(
         IntygstjanstRestIntegrationService restIntegrationService, UnansweredQAsInfoDecorator unansweredQAsInfoDecorator,
         LogService logService, UserService userService, DiagnosFactory diagnosFactory, HsaOrganizationsService hsaOrganizationsService,
-        PuService puService) {
+        PuService puService, EmployeeNameService employeeNameService) {
         this.restIntegrationService = restIntegrationService;
         this.unansweredQAsInfoDecorator = unansweredQAsInfoDecorator;
         this.logService = logService;
@@ -92,6 +102,7 @@ public class CertificateServiceImpl implements CertificateService {
         this.diagnosFactory = diagnosFactory;
         this.hsaOrganizationsService = hsaOrganizationsService;
         this.puService = puService;
+        this.employeeNameService = employeeNameService;
     }
 
     @Override
@@ -104,7 +115,7 @@ public class CertificateServiceImpl implements CertificateService {
 
         var diagnosedCertificateList = restIntegrationService
             .getDiagnosedCertificatesForCareUnit(unitIds, Arrays.asList(LU_TYPE_LIST), request.getFromDate(),
-                request.getToDate());
+                request.getToDate(), Collections.emptyList());
 
         logDurationForTaskInMilliseconds("After fetch from Intygstjänst", startMilliseconds);
 
@@ -150,6 +161,95 @@ public class CertificateServiceImpl implements CertificateService {
         }
 
         var luCertificateList = transformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
+        logDurationForTaskInMilliseconds("After creating lu certificate list", startMilliseconds);
+        boolean qaInfoError = false;
+        try {
+            populateLUCertificatesWithNotificationData(luCertificateList);
+        } catch (WcIntegrationException e) {
+            qaInfoError = true;
+        }
+
+        logDurationForTaskInMilliseconds("After populating messages from webcert", startMilliseconds);
+
+        luCertificateList = filterOnQuestionAndAnswers(request, luCertificateList);
+
+        logDurationForTaskInMilliseconds("After filtering on messages", startMilliseconds);
+
+        var searchText = request.getSearchText();
+        if (searchText != null && !searchText.isBlank() && !searchText.isEmpty()) {
+            luCertificateList = luCertificateList.stream().filter(c -> filterOnText(c, searchText)).collect(Collectors.toList());
+            logDurationForTaskInMilliseconds("After filtering on freetext", startMilliseconds);
+        }
+
+        pdlLogLUCertificatesForCareUnit(luCertificateList);
+
+        logDurationForTaskInMilliseconds("After PDL logging", startMilliseconds);
+
+        LOGGER.debug("Returning LU Certificates for Care Unit");
+        return new GetLUCertificatesForCareUnitResponse(luCertificateList, qaInfoError);
+    }
+
+    @Override
+    public GetLUCertificatesForCareUnitResponse getNewLUCertificatesForCareUnit(GetLUCertificatesForCareUnitRequest request) {
+        var user = userService.getUser();
+        var unitIds = user.getValdVardenhet().getHsaIds();
+        var urval = user.getUrval();
+
+        final var startMilliseconds = System.currentTimeMillis();
+
+        final var certTypesToQuery = new ArrayList<String>(3);
+        if (request.getCertTypes() != null && request.getCertTypes().size() > 0) {
+            for (String certType : request.getCertTypes()) {
+                if (certType.equalsIgnoreCase("fk7800")) {
+                    certTypesToQuery.add("luse");
+                } else if (certType.equalsIgnoreCase("fk7801")) {
+                    certTypesToQuery.add("luae_na");
+                } else if (certType.equalsIgnoreCase("fk7802")) {
+                    certTypesToQuery.add("luae_fs");
+                }
+            }
+        } else {
+            certTypesToQuery.addAll(Arrays.asList(LU_TYPE_LIST));
+        }
+
+        final var doctorIds = new ArrayList<String>();
+        if (urval == Urval.ISSUED_BY_ME) {
+            doctorIds.add(user.getHsaId());
+        } else if (request.getDoctors() != null && !request.getDoctors().isEmpty()) {
+            doctorIds.addAll(request.getDoctors());
+        }
+
+        // Only query the cert types asked for.
+        var diagnosedCertificateList = restIntegrationService
+            .getDiagnosedCertificatesForCareUnit(unitIds, certTypesToQuery, request.getFromDate(), request.getToDate(), doctorIds);
+
+        logDurationForTaskInMilliseconds("After fetch from Intygstjänst", startMilliseconds);
+
+        var certTypes = request.getCertTypes();
+        var diagnoses = request.getDiagnoses();
+        var fromAge = request.getFromAge();
+        var toAge = request.getToAge();
+        var doctors = request.getDoctors();
+
+        if (diagnoses != null && !diagnoses.isEmpty()) {
+            diagnosedCertificateList = diagnosedCertificateList.stream()
+                .filter(c -> filterOnDiagnoses(c, diagnoses)).collect(Collectors.toList());
+            logDurationForTaskInMilliseconds("After diagnose filtering", startMilliseconds);
+        }
+
+        if (fromAge > 0 || (toAge > 0 && toAge <= 100)) {
+            diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> filterOnAge(c, fromAge, toAge))
+                .collect(Collectors.toList());
+            logDurationForTaskInMilliseconds("After age filtering", startMilliseconds);
+        }
+
+        // Enrich with patients as late as possible, because it costs to load a lot of patients...
+        // TODO: Rewrite so it can be done "last".
+        puService.enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(diagnosedCertificateList);
+
+        logDurationForTaskInMilliseconds("After PU-service call", startMilliseconds);
+
+        var luCertificateList = newTransformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
         logDurationForTaskInMilliseconds("After creating lu certificate list", startMilliseconds);
         boolean qaInfoError = false;
         try {
@@ -345,9 +445,22 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    public List<String> getDoctorsForUnit() {
+    public GetDoctorsForUnitResponse getDoctorsForUnit() {
         final var unitIds = userService.getUser().getValdVardenhet().getHsaIds();
-        return restIntegrationService.getSigningDoctorsForUnit(unitIds, Arrays.asList(LU_TYPE_LIST));
+
+        final var doctorIds = restIntegrationService.getSigningDoctorsForUnit(unitIds, Arrays.asList(LU_TYPE_LIST));
+
+        final var doctors = new ArrayList<Lakare>(doctorIds.size());
+        for (String doctorId : doctorIds) {
+            if (NEW_LU_QUERY) {
+                final var doctorName = employeeNameService.getEmployeeHsaName(doctorId);
+                doctors.add(new Lakare(doctorId, doctorName));
+            } else {
+                doctors.add(new Lakare(doctorId, doctorId));
+            }
+        }
+
+        return new GetDoctorsForUnitResponse(doctors);
     }
 
     @Override
@@ -475,6 +588,49 @@ public class CertificateServiceImpl implements CertificateService {
             .degree(workCapacityList.stream().sorted(Comparator.comparing(WorkCapacity::getStartDate)).map(WorkCapacity::getReduction)
                 .collect(Collectors.toList()))
             .occupation(Arrays.asList(sickLeaveCertificate.getOccupation().split(","))).build();
+    }
+
+    private List<LUCertificate> newTransformDiagnosedCertificatesToLUCertificates(
+        List<DiagnosedCertificate> diagnosedCertificateList) {
+
+        final var unitIds = new ArrayList<String>();
+        final var careProviderIds = new ArrayList<String>();
+
+        diagnosedCertificateList.stream().forEach(diagnosedCertificate -> {
+            if (!unitIds.contains(diagnosedCertificate.getCareUnitId())) {
+                unitIds.add(diagnosedCertificate.getCareUnitId());
+            }
+            if (!careProviderIds.contains(diagnosedCertificate.getCareProviderId())) {
+                careProviderIds.add(diagnosedCertificate.getCareProviderId());
+            }
+        });
+
+        final var unitMap = new HashMap<String, Vardenhet>(unitIds.size());
+        final var careproviderMap = new HashMap<String, Vardgivare>(careProviderIds.size());
+
+        for (String unitId : unitIds) {
+            final var careUnit = hsaOrganizationsService.getVardenhet(unitId);
+            unitMap.put(unitId, careUnit);
+        }
+
+        for (String careProviderId : careProviderIds) {
+            final var careProvider = hsaOrganizationsService.getVardgivareInfo(careProviderId);
+            careproviderMap.put(careProviderId, careProvider);
+        }
+
+        return diagnosedCertificateList.stream().filter(this::commonFilter).map(diagnosedCertificate -> {
+            return LUCertificate.builder().certificateId(diagnosedCertificate.getCertificateId())
+                .certificateType(translateCertificateTypeName(diagnosedCertificate.getCertificateType()))
+                .careProviderId(diagnosedCertificate.getCareProviderId())
+                .careProviderName(careproviderMap.get(diagnosedCertificate.getCareProviderId()).getNamn())
+                .careUnitId(diagnosedCertificate.getCareUnitId())
+                .careUnitName(unitMap.get(diagnosedCertificate.getCareUnitId()).getNamn())
+                .signingTimeStamp(diagnosedCertificate.getSigningDateTime())
+                .patient(new Patient(diagnosedCertificate.getPersonId(), diagnosedCertificate.getPatientFullName()))
+                .doctor(new Lakare(diagnosedCertificate.getPersonalHsaId(), diagnosedCertificate.getPersonalFullName()))
+                .diagnosis(getDiagnosis(diagnosedCertificate.getDiagnoseCode()))
+                .biDiagnoses(getDiagnosisList(diagnosedCertificate.getSecondaryDiagnoseCodes())).build();
+        }).collect(Collectors.toList());
     }
 
     private List<LUCertificate> transformDiagnosedCertificatesToLUCertificates(

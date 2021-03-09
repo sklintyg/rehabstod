@@ -52,6 +52,17 @@ angular.module('rehabstodApp').factory('LakareModel',
             });
           });
         },
+        setDoctors: function(lakareArray) {
+          _init();
+          angular.forEach(lakareArray, function(value) {
+            data.push({
+              id: value.hsaId,
+              displayValue: value.namn,
+              selected: false,
+              disabled: false
+            });
+          });
+        },
         get: function() {
           return data;
         },

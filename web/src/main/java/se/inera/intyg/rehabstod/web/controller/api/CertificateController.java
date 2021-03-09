@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.service.certificate.CertificateService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonResponse;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetDoctorsForUnitResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForPersonRequest;
@@ -45,6 +45,9 @@ public class CertificateController {
 
     private final CertificateService certificateService;
 
+    // TODO: This need to be toggle through a configuration.
+    public final static boolean NEW_LU_QUERY = true;
+
     @Autowired
     public CertificateController(CertificateService certificateService) {
         this.certificateService = certificateService;
@@ -54,8 +57,12 @@ public class CertificateController {
     public ResponseEntity<GetLUCertificatesForCareUnitResponse> getLUForCareUnit(@RequestBody GetLUCertificatesForCareUnitRequest request) {
         LOG.info("Getting LU certificates for care unit");
 
-        var response = certificateService
-            .getLUCertificatesForCareUnit(request);
+        GetLUCertificatesForCareUnitResponse response;
+        if (NEW_LU_QUERY) {
+            response = certificateService.getNewLUCertificatesForCareUnit(request);
+        } else {
+            response = certificateService.getLUCertificatesForCareUnit(request);
+        }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -71,7 +78,7 @@ public class CertificateController {
     }
 
     @RequestMapping(value = "/lu/doctors", method = RequestMethod.GET)
-    public ResponseEntity<List<String>> getDoctorsForUnit() {
+    public ResponseEntity<GetDoctorsForUnitResponse> getDoctorsForUnit() {
         LOG.info("Getting LU signing doctors for unit");
 
         var response = certificateService.getDoctorsForUnit();
