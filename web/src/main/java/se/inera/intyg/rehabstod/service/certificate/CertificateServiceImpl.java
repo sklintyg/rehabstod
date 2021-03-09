@@ -220,13 +220,13 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private List<DiagnosedCertificate> filterOnAge(List<DiagnosedCertificate> diagnosedCertificates, int fromAge, int toAge) {
-        if (fromAge < 0 || (toAge < 0 && toAge > 100)) {
-            return diagnosedCertificates;
+        if (fromAge > 0 || (toAge > 0 && toAge <= 100)) {
+            return diagnosedCertificates.stream()
+                .filter(c -> filterOnAge(c, fromAge, toAge))
+                .collect(Collectors.toList());
         }
 
-        return diagnosedCertificates.stream()
-            .filter(c -> filterOnAge(c, fromAge, toAge))
-            .collect(Collectors.toList());
+        return diagnosedCertificates;
     }
 
     private List<LUCertificate> filterOnText(List<LUCertificate> luCertificates, String searchText) {
