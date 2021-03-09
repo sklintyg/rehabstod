@@ -220,7 +220,7 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private List<DiagnosedCertificate> filterOnAge(List<DiagnosedCertificate> diagnosedCertificates, int fromAge, int toAge) {
-        if (fromAge < 1 || (toAge < 0 && toAge > 100)) {
+        if (fromAge < 0 || (toAge < 0 && toAge > 100)) {
             return diagnosedCertificates;
         }
 
