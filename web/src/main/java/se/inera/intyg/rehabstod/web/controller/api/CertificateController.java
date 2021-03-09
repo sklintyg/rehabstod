@@ -45,9 +45,6 @@ public class CertificateController {
 
     private final CertificateService certificateService;
 
-    // TODO: This need to be toggle through a configuration.
-    public final static boolean NEW_LU_QUERY = true;
-
     @Autowired
     public CertificateController(CertificateService certificateService) {
         this.certificateService = certificateService;
@@ -57,12 +54,7 @@ public class CertificateController {
     public ResponseEntity<GetLUCertificatesForCareUnitResponse> getLUForCareUnit(@RequestBody GetLUCertificatesForCareUnitRequest request) {
         LOG.info("Getting LU certificates for care unit");
 
-        GetLUCertificatesForCareUnitResponse response;
-        if (NEW_LU_QUERY) {
-            response = certificateService.getNewLUCertificatesForCareUnit(request);
-        } else {
-            response = certificateService.getLUCertificatesForCareUnit(request);
-        }
+        final var response = certificateService.getLUCertificatesForCareUnit(request);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -71,8 +63,7 @@ public class CertificateController {
     public ResponseEntity<GetLUCertificatesForPersonResponse> getLUForPerson(@RequestBody GetLUCertificatesForPersonRequest request) {
         LOG.info("Getting LU certificates for person");
 
-        var response = certificateService
-            .getLUCertificatesForPerson(request.getPersonId());
+        var response = certificateService.getLUCertificatesForPerson(request.getPersonId());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -90,8 +81,7 @@ public class CertificateController {
     public ResponseEntity<GetAGCertificatesForPersonResponse> getAGForPerson(@RequestBody GetAGCertificatesForPersonRequest request) {
         LOG.info("Getting AG certificates for person");
 
-        var response = certificateService
-            .getAGCertificatesForPerson(request.getPersonId());
+        var response = certificateService.getAGCertificatesForPerson(request.getPersonId());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

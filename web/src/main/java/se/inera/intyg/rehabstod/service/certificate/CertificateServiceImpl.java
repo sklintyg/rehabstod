@@ -18,8 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.certificate;
 
-import static se.inera.intyg.rehabstod.web.controller.api.CertificateController.NEW_LU_QUERY;
-
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +30,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.certificate.dto.BaseCertificate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
@@ -91,11 +90,14 @@ public class CertificateServiceImpl implements CertificateService {
 
     private EmployeeNameService employeeNameService;
 
+    private boolean useNewQuery;
+
     @Autowired
     public CertificateServiceImpl(
         IntygstjanstRestIntegrationService restIntegrationService, UnansweredQAsInfoDecorator unansweredQAsInfoDecorator,
         LogService logService, UserService userService, DiagnosFactory diagnosFactory, HsaOrganizationsService hsaOrganizationsService,
-        PuService puService, EmployeeNameService employeeNameService) {
+        PuService puService, EmployeeNameService employeeNameService,
+        @Value("#{new Boolean('${use.certificate.metadata.query:false}')}") boolean useNewQuery) {
         this.restIntegrationService = restIntegrationService;
         this.unansweredQAsInfoDecorator = unansweredQAsInfoDecorator;
         this.logService = logService;
@@ -104,15 +106,18 @@ public class CertificateServiceImpl implements CertificateService {
         this.hsaOrganizationsService = hsaOrganizationsService;
         this.puService = puService;
         this.employeeNameService = employeeNameService;
+        this.useNewQuery = useNewQuery;
     }
 
     @Override
     public GetLUCertificatesForCareUnitResponse getLUCertificatesForCareUnit(GetLUCertificatesForCareUnitRequest request) {
+        if (useNewQuery) {
+            return getNewLUCertificatesForCareUnit(request);
+        }
+
         var user = userService.getUser();
         var unitIds = user.getValdVardenhet().getHsaIds();
         var urval = user.getUrval();
-
-        final var startMilliseconds = System.currentTimeMillis();
 
         var diagnosedCertificateList = restIntegrationService
             .getDiagnosedCertificatesForCareUnit(unitIds, Arrays.asList(LU_TYPE_LIST), request.getFromDate(),
@@ -175,8 +180,7 @@ public class CertificateServiceImpl implements CertificateService {
      * coexist until the new MetaData table in Intygstjansten is in full use. This method can be renamed and the old method
      * removed from 2021-2 and after.
      */
-    @Override
-    public GetLUCertificatesForCareUnitResponse getNewLUCertificatesForCareUnit(GetLUCertificatesForCareUnitRequest request) {
+    private GetLUCertificatesForCareUnitResponse getNewLUCertificatesForCareUnit(GetLUCertificatesForCareUnitRequest request) {
         final var user = userService.getUser();
         final var unitIds = user.getValdVardenhet().getHsaIds();
 
@@ -251,14 +255,6 @@ public class CertificateServiceImpl implements CertificateService {
         }
 
         return Arrays.asList(LU_TYPE_LIST);
-    }
-
-    private void logDurationForTaskInMilliseconds(String task, long startTimeInMilliseconds) {
-        LOGGER.info("################### " + task + " - " + durationInMilliSecondsFromStart(startTimeInMilliseconds));
-    }
-
-    private long durationInMilliSecondsFromStart(long startTimeInMilliseconds) {
-        return System.currentTimeMillis() - startTimeInMilliseconds;
     }
 
     private List<LUCertificate> filterOnQuestionAndAnswers(GetLUCertificatesForCareUnitRequest request,
@@ -425,17 +421,20 @@ public class CertificateServiceImpl implements CertificateService {
 
         final var doctorIds = restIntegrationService.getSigningDoctorsForUnit(unitIds, Arrays.asList(LU_TYPE_LIST));
 
-        final var doctors = new ArrayList<Lakare>(doctorIds.size());
-        for (String doctorId : doctorIds) {
-            if (NEW_LU_QUERY) {
-                final var doctorName = employeeNameService.getEmployeeHsaName(doctorId);
-                doctors.add(new Lakare(doctorId, doctorName));
-            } else {
-                doctors.add(new Lakare(doctorId, doctorId));
-            }
-        }
+        final var doctors = doctorIds.stream()
+            .map(this::getDoctor)
+            .sorted(Comparator.comparing(Lakare::getNamn))
+            .collect(Collectors.toList());
 
         return new GetDoctorsForUnitResponse(doctors);
+    }
+
+    private Lakare getDoctor(String doctorId) {
+        if (useNewQuery) {
+            return new Lakare(doctorId, employeeNameService.getEmployeeHsaName(doctorId));
+        }
+
+        return new Lakare(doctorId, doctorId);
     }
 
     @Override

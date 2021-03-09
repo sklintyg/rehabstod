@@ -54,8 +54,6 @@ public interface CertificateService {
      */
     GetAGCertificatesForPersonResponse getAGCertificatesForPerson(String personId);
 
-    GetLUCertificatesForCareUnitResponse getNewLUCertificatesForCareUnit(GetLUCertificatesForCareUnitRequest request);
-
     /**
      * Gets names of the doctors on active unit that has signed certificates
      */
