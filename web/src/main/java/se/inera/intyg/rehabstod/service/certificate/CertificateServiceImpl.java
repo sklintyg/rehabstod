@@ -567,30 +567,8 @@ public class CertificateServiceImpl implements CertificateService {
     private List<LUCertificate> newTransformDiagnosedCertificatesToLUCertificates(
         List<DiagnosedCertificate> diagnosedCertificateList) {
 
-        final var unitIds = new ArrayList<String>();
-        final var careProviderIds = new ArrayList<String>();
-
-        diagnosedCertificateList.stream().forEach(diagnosedCertificate -> {
-            if (!unitIds.contains(diagnosedCertificate.getCareUnitId())) {
-                unitIds.add(diagnosedCertificate.getCareUnitId());
-            }
-            if (!careProviderIds.contains(diagnosedCertificate.getCareProviderId())) {
-                careProviderIds.add(diagnosedCertificate.getCareProviderId());
-            }
-        });
-
-        final var unitMap = new HashMap<String, Vardenhet>(unitIds.size());
-        final var careproviderMap = new HashMap<String, Vardgivare>(careProviderIds.size());
-
-        for (String unitId : unitIds) {
-            final var careUnit = hsaOrganizationsService.getVardenhet(unitId);
-            unitMap.put(unitId, careUnit);
-        }
-
-        for (String careProviderId : careProviderIds) {
-            final var careProvider = hsaOrganizationsService.getVardgivareInfo(careProviderId);
-            careproviderMap.put(careProviderId, careProvider);
-        }
+        final var unitMap = getUnitMap(diagnosedCertificateList);
+        final var careproviderMap = getCareProviderMap(diagnosedCertificateList);
 
         return diagnosedCertificateList.stream().filter(this::commonFilter).map(diagnosedCertificate -> {
             return LUCertificate.builder().certificateId(diagnosedCertificate.getCertificateId())
@@ -605,6 +583,44 @@ public class CertificateServiceImpl implements CertificateService {
                 .diagnosis(getDiagnosis(diagnosedCertificate.getDiagnoseCode()))
                 .biDiagnoses(getDiagnosisList(diagnosedCertificate.getSecondaryDiagnoseCodes())).build();
         }).collect(Collectors.toList());
+    }
+
+    private Map<String, Vardenhet> getUnitMap(List<DiagnosedCertificate> diagnosedCertificateList) {
+        final var unitIds = new ArrayList<String>();
+
+        diagnosedCertificateList.stream().forEach(diagnosedCertificate -> {
+            if (!unitIds.contains(diagnosedCertificate.getCareUnitId())) {
+                unitIds.add(diagnosedCertificate.getCareUnitId());
+            }
+        });
+
+        final var unitMap = new HashMap<String, Vardenhet>(unitIds.size());
+
+        for (String unitId : unitIds) {
+            final var careUnit = hsaOrganizationsService.getVardenhet(unitId);
+            unitMap.put(unitId, careUnit);
+        }
+
+        return unitMap;
+    }
+
+    private Map<String, Vardgivare> getCareProviderMap(List<DiagnosedCertificate> diagnosedCertificateList) {
+        final var careProviderIds = new ArrayList<String>();
+
+        diagnosedCertificateList.stream().forEach(diagnosedCertificate -> {
+            if (!careProviderIds.contains(diagnosedCertificate.getCareProviderId())) {
+                careProviderIds.add(diagnosedCertificate.getCareProviderId());
+            }
+        });
+
+        final var careproviderMap = new HashMap<String, Vardgivare>(careProviderIds.size());
+
+        for (String careProviderId : careProviderIds) {
+            final var careProvider = hsaOrganizationsService.getVardgivareInfo(careProviderId);
+            careproviderMap.put(careProviderId, careProvider);
+        }
+
+        return careproviderMap;
     }
 
     private List<LUCertificate> transformDiagnosedCertificatesToLUCertificates(
