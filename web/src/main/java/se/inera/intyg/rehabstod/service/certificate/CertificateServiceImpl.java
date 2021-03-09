@@ -43,6 +43,7 @@ import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsSe
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
@@ -117,12 +118,7 @@ public class CertificateServiceImpl implements CertificateService {
             .getDiagnosedCertificatesForCareUnit(unitIds, Arrays.asList(LU_TYPE_LIST), request.getFromDate(),
                 request.getToDate(), Collections.emptyList());
 
-        logDurationForTaskInMilliseconds("After fetch from Intygstjänst", startMilliseconds);
-
-        // TODO: Lets get pU information after we have filtered the list.
         puService.enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(diagnosedCertificateList);
-
-        logDurationForTaskInMilliseconds("After PU-service call", startMilliseconds);
 
         var certTypes = request.getCertTypes();
         var diagnoses = request.getDiagnoses();
@@ -130,38 +126,30 @@ public class CertificateServiceImpl implements CertificateService {
         var toAge = request.getToAge();
         var doctors = request.getDoctors();
 
-        // TODO: Send only the types we want to see instead of filter it after...
         if (certTypes != null && !certTypes.isEmpty()) {
             diagnosedCertificateList = diagnosedCertificateList.stream()
                 .filter(c -> certTypes.contains(translateCertificateTypeName(c.getCertificateType()))).collect(Collectors.toList());
-            logDurationForTaskInMilliseconds("After Cert filtering", startMilliseconds);
         }
 
         if (diagnoses != null && !diagnoses.isEmpty()) {
             diagnosedCertificateList = diagnosedCertificateList.stream()
                 .filter(c -> filterOnDiagnoses(c, diagnoses)).collect(Collectors.toList());
-            logDurationForTaskInMilliseconds("After diagnose filtering", startMilliseconds);
         }
 
         if (fromAge > 0 || (toAge > 0 && toAge <= 100)) {
             diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> filterOnAge(c, fromAge, toAge))
                 .collect(Collectors.toList());
-            logDurationForTaskInMilliseconds("After age filtering", startMilliseconds);
         }
 
-        // TODO: Send the doctor hsa id we want to see instead of filter it after...
         if (urval == Urval.ISSUED_BY_ME) {
             diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> user.getHsaId().equals(c.getPersonalHsaId()))
                 .collect(Collectors.toList());
-            logDurationForTaskInMilliseconds("After filtering logged in doctor", startMilliseconds);
         } else if (doctors != null && !doctors.isEmpty()) {
             diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> doctors.contains(c.getPersonalFullName()))
                 .collect(Collectors.toList());
-            logDurationForTaskInMilliseconds("After filtering doctors", startMilliseconds);
         }
 
         var luCertificateList = transformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
-        logDurationForTaskInMilliseconds("After creating lu certificate list", startMilliseconds);
         boolean qaInfoError = false;
         try {
             populateLUCertificatesWithNotificationData(luCertificateList);
@@ -169,113 +157,100 @@ public class CertificateServiceImpl implements CertificateService {
             qaInfoError = true;
         }
 
-        logDurationForTaskInMilliseconds("After populating messages from webcert", startMilliseconds);
-
         luCertificateList = filterOnQuestionAndAnswers(request, luCertificateList);
-
-        logDurationForTaskInMilliseconds("After filtering on messages", startMilliseconds);
 
         var searchText = request.getSearchText();
         if (searchText != null && !searchText.isBlank() && !searchText.isEmpty()) {
             luCertificateList = luCertificateList.stream().filter(c -> filterOnText(c, searchText)).collect(Collectors.toList());
-            logDurationForTaskInMilliseconds("After filtering on freetext", startMilliseconds);
         }
 
         pdlLogLUCertificatesForCareUnit(luCertificateList);
-
-        logDurationForTaskInMilliseconds("After PDL logging", startMilliseconds);
 
         LOGGER.debug("Returning LU Certificates for Care Unit");
         return new GetLUCertificatesForCareUnitResponse(luCertificateList, qaInfoError);
     }
 
+    /**
+     * This method will replace getLUCertificatesForCareUnit(request). For backward compatibility both methods will
+     * coexist until the new MetaData table in Intygstjansten is in full use. This method can be renamed and the old method
+     * removed from 2021-2 and after.
+     */
     @Override
     public GetLUCertificatesForCareUnitResponse getNewLUCertificatesForCareUnit(GetLUCertificatesForCareUnitRequest request) {
-        var user = userService.getUser();
-        var unitIds = user.getValdVardenhet().getHsaIds();
-        var urval = user.getUrval();
+        final var user = userService.getUser();
+        final var unitIds = user.getValdVardenhet().getHsaIds();
 
-        final var startMilliseconds = System.currentTimeMillis();
+        final var certTypesToQuery = getCertificateTypesToQuery(request.getCertTypes());
+        final var doctorIds = getDoctorIds(user, request.getDoctors());
 
-        final var certTypesToQuery = new ArrayList<String>(3);
-        if (request.getCertTypes() != null && request.getCertTypes().size() > 0) {
-            for (String certType : request.getCertTypes()) {
-                if (certType.equalsIgnoreCase("fk7800")) {
-                    certTypesToQuery.add("luse");
-                } else if (certType.equalsIgnoreCase("fk7801")) {
-                    certTypesToQuery.add("luae_na");
-                } else if (certType.equalsIgnoreCase("fk7802")) {
-                    certTypesToQuery.add("luae_fs");
-                }
-            }
-        } else {
-            certTypesToQuery.addAll(Arrays.asList(LU_TYPE_LIST));
-        }
-
-        final var doctorIds = new ArrayList<String>();
-        if (urval == Urval.ISSUED_BY_ME) {
-            doctorIds.add(user.getHsaId());
-        } else if (request.getDoctors() != null && !request.getDoctors().isEmpty()) {
-            doctorIds.addAll(request.getDoctors());
-        }
-
-        // Only query the cert types asked for.
         var diagnosedCertificateList = restIntegrationService
             .getDiagnosedCertificatesForCareUnit(unitIds, certTypesToQuery, request.getFromDate(), request.getToDate(), doctorIds);
 
-        logDurationForTaskInMilliseconds("After fetch from Intygstjänst", startMilliseconds);
+        diagnosedCertificateList = filterOnDiagnoses(diagnosedCertificateList, request.getDiagnoses());
+        diagnosedCertificateList = filterOnAge(diagnosedCertificateList, request.getFromAge(), request.getToAge());
 
-        var certTypes = request.getCertTypes();
-        var diagnoses = request.getDiagnoses();
-        var fromAge = request.getFromAge();
-        var toAge = request.getToAge();
-        var doctors = request.getDoctors();
-
-        if (diagnoses != null && !diagnoses.isEmpty()) {
-            diagnosedCertificateList = diagnosedCertificateList.stream()
-                .filter(c -> filterOnDiagnoses(c, diagnoses)).collect(Collectors.toList());
-            logDurationForTaskInMilliseconds("After diagnose filtering", startMilliseconds);
-        }
-
-        if (fromAge > 0 || (toAge > 0 && toAge <= 100)) {
-            diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> filterOnAge(c, fromAge, toAge))
-                .collect(Collectors.toList());
-            logDurationForTaskInMilliseconds("After age filtering", startMilliseconds);
-        }
-
-        // Enrich with patients as late as possible, because it costs to load a lot of patients...
-        // TODO: Rewrite so it can be done "last".
         puService.enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(diagnosedCertificateList);
 
-        logDurationForTaskInMilliseconds("After PU-service call", startMilliseconds);
-
         var luCertificateList = newTransformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
-        logDurationForTaskInMilliseconds("After creating lu certificate list", startMilliseconds);
-        boolean qaInfoError = false;
-        try {
-            populateLUCertificatesWithNotificationData(luCertificateList);
-        } catch (WcIntegrationException e) {
-            qaInfoError = true;
-        }
 
-        logDurationForTaskInMilliseconds("After populating messages from webcert", startMilliseconds);
+        final var qaInfoError = populateLUCertificatesWithNotificationData(luCertificateList);
 
         luCertificateList = filterOnQuestionAndAnswers(request, luCertificateList);
 
-        logDurationForTaskInMilliseconds("After filtering on messages", startMilliseconds);
-
-        var searchText = request.getSearchText();
-        if (searchText != null && !searchText.isBlank() && !searchText.isEmpty()) {
-            luCertificateList = luCertificateList.stream().filter(c -> filterOnText(c, searchText)).collect(Collectors.toList());
-            logDurationForTaskInMilliseconds("After filtering on freetext", startMilliseconds);
-        }
+        luCertificateList = filterOnText(luCertificateList, request.getSearchText());
 
         pdlLogLUCertificatesForCareUnit(luCertificateList);
 
-        logDurationForTaskInMilliseconds("After PDL logging", startMilliseconds);
-
         LOGGER.debug("Returning LU Certificates for Care Unit");
         return new GetLUCertificatesForCareUnitResponse(luCertificateList, qaInfoError);
+    }
+
+    private List<DiagnosedCertificate> filterOnDiagnoses(List<DiagnosedCertificate> diagnosedCertificates, List<String> diagnoses) {
+        if (diagnoses == null || diagnoses.isEmpty()) {
+            return diagnosedCertificates;
+        }
+
+        return diagnosedCertificates.stream()
+            .filter(c -> filterOnDiagnoses(c, diagnoses))
+            .collect(Collectors.toList());
+    }
+
+    private List<DiagnosedCertificate> filterOnAge(List<DiagnosedCertificate> diagnosedCertificates, int fromAge, int toAge) {
+        if (fromAge < 1 || (toAge < 0 && toAge > 100)) {
+            return diagnosedCertificates;
+        }
+
+        return diagnosedCertificates.stream()
+            .filter(c -> filterOnAge(c, fromAge, toAge))
+            .collect(Collectors.toList());
+    }
+
+    private List<LUCertificate> filterOnText(List<LUCertificate> luCertificates, String searchText) {
+        if (searchText == null || searchText.isBlank() || searchText.isEmpty()) {
+            return luCertificates;
+        }
+
+        return luCertificates.stream()
+            .filter(c -> filterOnText(c, searchText))
+            .collect(Collectors.toList());
+    }
+
+    private List<String> getDoctorIds(RehabstodUser user, List<String> doctorIds) {
+        if (user.getUrval() == Urval.ISSUED_BY_ME) {
+            return Collections.singletonList(user.getHsaId());
+        }
+
+        return doctorIds;
+    }
+
+    private List<String> getCertificateTypesToQuery(List<String> certificateTypeNames) {
+        if (certificateTypeNames != null && certificateTypeNames.size() > 0) {
+            return certificateTypeNames.stream()
+                .map(this::translateCertificateType)
+                .collect(Collectors.toList());
+        }
+
+        return Arrays.asList(LU_TYPE_LIST);
     }
 
     private void logDurationForTaskInMilliseconds(String task, long startTimeInMilliseconds) {
@@ -644,8 +619,13 @@ public class CertificateServiceImpl implements CertificateService {
         return !certificate.isDeleted() && !certificate.isTestCertificate();
     }
 
-    private void populateLUCertificatesWithNotificationData(List<LUCertificate> luCertificateList) {
-        unansweredQAsInfoDecorator.updateLUCertificatesWithQAs(luCertificateList);
+    private boolean populateLUCertificatesWithNotificationData(List<LUCertificate> luCertificateList) {
+        try {
+            unansweredQAsInfoDecorator.updateLUCertificatesWithQAs(luCertificateList);
+            return false;
+        } catch (WcIntegrationException e) {
+            return true;
+        }
     }
 
     private LUCertificate convertDiagnosedCertificateToLUCertificate(DiagnosedCertificate diagnosedCertificate) {
@@ -705,4 +685,30 @@ public class CertificateServiceImpl implements CertificateService {
 
         return name;
     }
+
+    private String translateCertificateType(String name) {
+        var type = name;
+
+        switch (name) {
+            case "FK7800":
+                type = "luse";
+                break;
+            case "FK7801":
+                type = "luae_na";
+                break;
+            case "FK7802":
+                type = "luae_fs";
+                break;
+            case "AG7804":
+                type = "ag7804";
+                break;
+            case "AG1-14":
+                type = "ag114";
+                break;
+        }
+
+        return type;
+    }
+
+
 }
