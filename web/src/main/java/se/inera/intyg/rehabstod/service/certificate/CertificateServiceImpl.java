@@ -93,14 +93,14 @@ public class CertificateServiceImpl implements CertificateService {
 
     private EmployeeNameService employeeNameService;
 
-    private boolean useNewQuery;
+    private boolean useCertificateMetaDataQuery;
 
     @Autowired
     public CertificateServiceImpl(
         IntygstjanstRestIntegrationService restIntegrationService, UnansweredQAsInfoDecorator unansweredQAsInfoDecorator,
         LogService logService, UserService userService, DiagnosFactory diagnosFactory, HsaOrganizationsService hsaOrganizationsService,
         PuService puService, EmployeeNameService employeeNameService,
-        @Value("#{new Boolean('${use.certificate.metadata.query:false}')}") boolean useNewQuery) {
+        @Value("#{new Boolean('${use.certificate.metadata.query:false}')}") boolean useCertificateMetaDataQuery) {
         this.restIntegrationService = restIntegrationService;
         this.unansweredQAsInfoDecorator = unansweredQAsInfoDecorator;
         this.logService = logService;
@@ -109,13 +109,13 @@ public class CertificateServiceImpl implements CertificateService {
         this.hsaOrganizationsService = hsaOrganizationsService;
         this.puService = puService;
         this.employeeNameService = employeeNameService;
-        this.useNewQuery = useNewQuery;
+        this.useCertificateMetaDataQuery = useCertificateMetaDataQuery;
     }
 
     @Override
     public GetLUCertificatesForCareUnitResponse getLUCertificatesForCareUnit(GetLUCertificatesForCareUnitRequest request) {
-        if (useNewQuery) {
-            return getNewLUCertificatesForCareUnit(request);
+        if (useCertificateMetaDataQuery) {
+            return getCertificatesWithMetaDataQuery(request);
         }
 
         var user = userService.getUser();
@@ -183,7 +183,7 @@ public class CertificateServiceImpl implements CertificateService {
      * coexist until the new MetaData table in Intygstjansten is in full use. This method can be renamed and the old method
      * removed from 2021-2 and after.
      */
-    private GetLUCertificatesForCareUnitResponse getNewLUCertificatesForCareUnit(GetLUCertificatesForCareUnitRequest request) {
+    private GetLUCertificatesForCareUnitResponse getCertificatesWithMetaDataQuery(GetLUCertificatesForCareUnitRequest request) {
         final var user = userService.getUser();
         final var unitIds = user.getValdVardenhet().getHsaIds();
 
@@ -198,7 +198,7 @@ public class CertificateServiceImpl implements CertificateService {
 
         puService.enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(diagnosedCertificateList);
 
-        var luCertificateList = newTransformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
+        var luCertificateList = transformCertificatesBasedOnMetaDataQuery(diagnosedCertificateList);
 
         final var qaInfoError = populateLUCertificatesWithNotificationData(luCertificateList);
 
@@ -433,7 +433,7 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private Lakare getDoctor(String doctorId) {
-        if (useNewQuery) {
+        if (useCertificateMetaDataQuery) {
             return new Lakare(doctorId, employeeNameService.getEmployeeHsaName(doctorId));
         }
 
@@ -567,17 +567,17 @@ public class CertificateServiceImpl implements CertificateService {
             .occupation(Arrays.asList(sickLeaveCertificate.getOccupation().split(","))).build();
     }
 
-    private List<LUCertificate> newTransformDiagnosedCertificatesToLUCertificates(
+    private List<LUCertificate> transformCertificatesBasedOnMetaDataQuery(
         List<DiagnosedCertificate> diagnosedCertificateList) {
 
         final var unitMap = getUnitMap(diagnosedCertificateList);
-        final var careproviderMap = getCareProviderMap(diagnosedCertificateList);
+        final var careProviderMap = getCareProviderMap(diagnosedCertificateList);
 
         return diagnosedCertificateList.stream().filter(this::commonFilter).map(diagnosedCertificate -> {
             return LUCertificate.builder().certificateId(diagnosedCertificate.getCertificateId())
                 .certificateType(translateCertificateTypeName(diagnosedCertificate.getCertificateType()))
                 .careProviderId(diagnosedCertificate.getCareProviderId())
-                .careProviderName(careproviderMap.get(diagnosedCertificate.getCareProviderId()).getNamn())
+                .careProviderName(careProviderMap.get(diagnosedCertificate.getCareProviderId()).getNamn())
                 .careUnitId(diagnosedCertificate.getCareUnitId())
                 .careUnitName(unitMap.get(diagnosedCertificate.getCareUnitId()).getNamn())
                 .signingTimeStamp(diagnosedCertificate.getSigningDateTime())
@@ -616,14 +616,14 @@ public class CertificateServiceImpl implements CertificateService {
             }
         });
 
-        final var careproviderMap = new HashMap<String, Vardgivare>(careProviderIds.size());
+        final var careProviderMap = new HashMap<String, Vardgivare>(careProviderIds.size());
 
         for (String careProviderId : careProviderIds) {
             final var careProvider = hsaOrganizationsService.getVardgivareInfo(careProviderId);
-            careproviderMap.put(careProviderId, careProvider);
+            careProviderMap.put(careProviderId, careProvider);
         }
 
-        return careproviderMap;
+        return careProviderMap;
     }
 
     private List<LUCertificate> transformDiagnosedCertificatesToLUCertificates(
