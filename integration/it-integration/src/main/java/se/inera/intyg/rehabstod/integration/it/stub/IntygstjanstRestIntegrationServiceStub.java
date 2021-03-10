@@ -38,7 +38,7 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
 
     @Override
     public List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(List<String> units, List<String> certificateTypes,
-        LocalDate fromDate, LocalDate toDate) {
+        LocalDate fromDate, LocalDate toDate, List<String> doctorIds) {
         return rsTestIntygStub.getLUCertificateData();
     }
 

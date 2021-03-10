@@ -51,9 +51,10 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
     @Override
     public List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(List<String> units, List<String> certificateTypes,
-        LocalDate fromDate, LocalDate toDate) {
+        LocalDate fromDate, LocalDate toDate, List<String> doctorIds) {
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/diagnosed/unit";
         TypedCertificateRequest requestObject = getTypedCertificateRequest(units, certificateTypes, fromDate, toDate, null);
+        requestObject.setDoctorIds(doctorIds);
 
         LOGGER.debug("Getting diagnosed certificates for care unit from intygstjansten");
 

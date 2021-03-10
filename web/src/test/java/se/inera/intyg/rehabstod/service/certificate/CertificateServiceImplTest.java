@@ -33,10 +33,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.certificate.builder.DiagnosedCertificateBuilder;
@@ -51,12 +51,14 @@ import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsSe
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
+import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class CertificateServiceImplTest {
@@ -111,8 +113,16 @@ public class CertificateServiceImplTest {
     @Mock
     PuService puService;
 
-    @InjectMocks
+    @Mock
+    EmployeeNameService employeeNameService;
+
     CertificateServiceImpl service;
+
+    @Before
+    public void setup() {
+        service = new CertificateServiceImpl(intygstjanstRestIntegrationService, unAnsweredQAsInfoDecorator, logService, userService,
+            diagnosFactory, hsaOrganizationsService, puService, employeeNameService, false);
+    }
 
     @Test
     public void getLUCertificatesForCareUnit() {
@@ -130,7 +140,7 @@ public class CertificateServiceImplTest {
 
         var diagnosedCertificateList = buildDiagnosedCertificateList();
         when(intygstjanstRestIntegrationService
-            .getDiagnosedCertificatesForCareUnit(argumentCapture.capture(), any(List.class), any(), any()))
+            .getDiagnosedCertificatesForCareUnit(argumentCapture.capture(), any(List.class), any(), any(), any()))
             .thenReturn(diagnosedCertificateList);
 
         when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
@@ -257,12 +267,12 @@ public class CertificateServiceImplTest {
         doReturn(expectedUnitIds).when(selectableVardenhet).getHsaIds();
         doReturn(expectedDoctors).when(intygstjanstRestIntegrationService).getSigningDoctorsForUnit(argumentCapture.capture(), anyList());
 
-        final var actualDoctors = service.getDoctorsForUnit();
+        final var actualDoctors = service.getDoctorsForUnit().getDoctors();
 
         assertNotNull("Doesn't expect actual doctors to be null", actualDoctors);
         assertEquals(actualDoctors.size(), actualDoctors.size());
         for (var actualDoctor : actualDoctors) {
-            assertTrue("Doesn't expect doctor with id: " + actualDoctor, expectedDoctors.contains(actualDoctor));
+            assertTrue("Doesn't expect doctor with id: " + actualDoctor.getHsaId(), expectedDoctors.contains(actualDoctor.getHsaId()));
         }
 
         final var actualUnitIds = argumentCapture.getValue();
