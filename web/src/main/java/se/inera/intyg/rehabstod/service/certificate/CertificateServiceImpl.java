@@ -76,6 +76,9 @@ public class CertificateServiceImpl implements CertificateService {
     private static final String[] LU_TYPE_LIST = {"luse", "luae_na", "luae_fs"};
     private static final String[] AG_TYPE_LIST = {"ag114", "ag7804"};
 
+    private static final int AGE_LOWER_LIMIT = 0;
+    private static final int AGE_UPPER_LIMIT = 100;
+
     private final UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
 
     private final LogService logService;
@@ -141,7 +144,7 @@ public class CertificateServiceImpl implements CertificateService {
                 .filter(c -> filterOnDiagnoses(c, diagnoses)).collect(Collectors.toList());
         }
 
-        if (fromAge > 0 || (toAge > 0 && toAge <= 100)) {
+        if (fromAge > AGE_LOWER_LIMIT || (toAge > AGE_LOWER_LIMIT && toAge <= AGE_UPPER_LIMIT)) {
             diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> filterOnAge(c, fromAge, toAge))
                 .collect(Collectors.toList());
         }
@@ -220,7 +223,7 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private List<DiagnosedCertificate> filterOnAge(List<DiagnosedCertificate> diagnosedCertificates, int fromAge, int toAge) {
-        if (fromAge > 0 || (toAge > 0 && toAge <= 100)) {
+        if (fromAge > AGE_LOWER_LIMIT || (toAge > AGE_LOWER_LIMIT && toAge <= AGE_UPPER_LIMIT)) {
             return diagnosedCertificates.stream()
                 .filter(c -> filterOnAge(c, fromAge, toAge))
                 .collect(Collectors.toList());
@@ -357,10 +360,10 @@ public class CertificateServiceImpl implements CertificateService {
     private boolean filterOnAge(DiagnosedCertificate c, int fromAge, int toAge) {
         var patient = new Patient(c.getPersonId(), c.getPatientFullName());
 
-        if (fromAge > 0 && patient.getAlder() < fromAge) {
+        if (fromAge > AGE_LOWER_LIMIT && patient.getAlder() < fromAge) {
             return false;
         }
-        return toAge <= 0 || toAge > 100 || patient.getAlder() <= toAge;
+        return toAge <= AGE_LOWER_LIMIT || toAge > AGE_UPPER_LIMIT || patient.getAlder() <= toAge;
     }
 
     private boolean filterOnDiagnoses(DiagnosedCertificate diagnosedCertificate, List<String> diagnoseGroupList) {
