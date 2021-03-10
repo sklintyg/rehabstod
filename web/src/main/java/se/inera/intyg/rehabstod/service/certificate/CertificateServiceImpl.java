@@ -572,6 +572,7 @@ public class CertificateServiceImpl implements CertificateService {
 
         final var unitMap = getUnitMap(diagnosedCertificateList);
         final var careProviderMap = getCareProviderMap(diagnosedCertificateList);
+        final var doctorMap = getDoctorMap(diagnosedCertificateList);
 
         return diagnosedCertificateList.stream().filter(this::commonFilter).map(diagnosedCertificate -> {
             return LUCertificate.builder().certificateId(diagnosedCertificate.getCertificateId())
@@ -582,10 +583,29 @@ public class CertificateServiceImpl implements CertificateService {
                 .careUnitName(unitMap.get(diagnosedCertificate.getCareUnitId()).getNamn())
                 .signingTimeStamp(diagnosedCertificate.getSigningDateTime())
                 .patient(new Patient(diagnosedCertificate.getPersonId(), diagnosedCertificate.getPatientFullName()))
-                .doctor(new Lakare(diagnosedCertificate.getPersonalHsaId(), diagnosedCertificate.getPersonalFullName()))
+                .doctor(doctorMap.get(diagnosedCertificate.getPersonalHsaId()))
                 .diagnosis(getDiagnosis(diagnosedCertificate.getDiagnoseCode()))
                 .biDiagnoses(getDiagnosisList(diagnosedCertificate.getSecondaryDiagnoseCodes())).build();
         }).collect(Collectors.toList());
+    }
+
+    private Map<String, Lakare> getDoctorMap(List<DiagnosedCertificate> diagnosedCertificateList) {
+        final var doctorIds = new ArrayList<String>();
+
+        diagnosedCertificateList.stream().forEach(diagnosedCertificate -> {
+            if (!doctorIds.contains(diagnosedCertificate.getPersonalHsaId())) {
+                doctorIds.add(diagnosedCertificate.getPersonalHsaId());
+            }
+        });
+
+        final var doctorMap = new HashMap<String, Lakare>(doctorIds.size());
+
+        for (String doctorId : doctorIds) {
+            final var doctor = getDoctor(doctorId);
+            doctorMap.put(doctorId, doctor);
+        }
+
+        return doctorMap;
     }
 
     private Map<String, Vardenhet> getUnitMap(List<DiagnosedCertificate> diagnosedCertificateList) {
