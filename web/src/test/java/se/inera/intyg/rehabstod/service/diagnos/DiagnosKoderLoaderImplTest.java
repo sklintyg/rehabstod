@@ -45,7 +45,7 @@ public class DiagnosKoderLoaderImplTest {
         specifyDiagnosKodFiler();
         Map<String, String> diagnosKoder = diagnosKoderLoader.loadDiagnosKoder();
         assertNotNull(diagnosKoder);
-        assertEquals(36322, diagnosKoder.size());
+        assertEquals(36387, diagnosKoder.size());
     }
 
     private void specifyDiagnosKodFiler() {
