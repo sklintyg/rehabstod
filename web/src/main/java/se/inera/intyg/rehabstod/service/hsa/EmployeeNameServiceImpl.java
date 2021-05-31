@@ -29,15 +29,6 @@ import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaEmployeeService;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 
-
-/**
- * Class that provides a cachable facade for calls to HSA getEmployeeIncludingProtectedPerson.
- *
- * The purpose is to allow calls to determine doctor current name in HSA to be cached without
- * introducing caching in the hsatk-integration {@link se.inera.intyg.infra.integration.hsatk.services.legacy.HsaEmployeeService} itself.
- *
- * Created by eriklupander on 2017-02-23.
- */
 @Service
 public class EmployeeNameServiceImpl implements EmployeeNameService {
 
@@ -46,19 +37,28 @@ public class EmployeeNameServiceImpl implements EmployeeNameService {
 
     @Override
     @PrometheusTimeMethod
-    @Cacheable(value = EMPLOYEE_NAME_CACHE_NAME, key = "#employeeHsaId", unless = "#result == null")
+    @Cacheable(value = EMPLOYEE_NAME_CACHE_NAME, key = "#employeeHsaId")
     public String getEmployeeHsaName(String employeeHsaId) {
+        final var employeeInfo = getEmployee(employeeHsaId);
+        if (isEmpty(employeeInfo)) {
+            return employeeHsaId;
+        }
+        return getName(employeeInfo);
+    }
+
+    private List<PersonInformation> getEmployee(String employeeHsaId) {
         try {
-            List<PersonInformation> employeeInfo = employeeService.getEmployee(employeeHsaId, null, null);
-            if (employeeInfo.size() > 0) {
-                return employeeInfo.get(0).getGivenName() + " " + employeeInfo.get(0).getMiddleAndSurName();
-            } else {
-                return null;
-            }
+            return employeeService.getEmployee(employeeHsaId, null, null);
         } catch (WebServiceException e) {
-            // If there are problems calling HSA, we'll return null which indicates that the name couldn't be fetched.
-            // Nulls shouldn't be cached, e.g. forces new retry.
             return null;
         }
+    }
+
+    private boolean isEmpty(List<PersonInformation> employeeInfo) {
+        return employeeInfo == null || employeeInfo.isEmpty();
+    }
+
+    private String getName(List<PersonInformation> employeeInfo) {
+        return employeeInfo.get(0).getGivenName() + " " + employeeInfo.get(0).getMiddleAndSurName();
     }
 }
