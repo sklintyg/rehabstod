@@ -121,7 +121,7 @@ public class CertificateServiceImplTest {
     @Before
     public void setup() {
         service = new CertificateServiceImpl(intygstjanstRestIntegrationService, unAnsweredQAsInfoDecorator, logService, userService,
-            diagnosFactory, hsaOrganizationsService, puService, employeeNameService, false);
+            diagnosFactory, hsaOrganizationsService, puService, employeeNameService, true);
     }
 
     @Test
@@ -266,6 +266,7 @@ public class CertificateServiceImplTest {
         doReturn(selectableVardenhet).when(user).getValdVardenhet();
         doReturn(expectedUnitIds).when(selectableVardenhet).getHsaIds();
         doReturn(expectedDoctors).when(intygstjanstRestIntegrationService).getSigningDoctorsForUnit(argumentCapture.capture(), anyList());
+        doReturn("Doctors name").when(employeeNameService).getEmployeeHsaName(anyString());
 
         final var actualDoctors = service.getDoctorsForUnit().getDoctors();
 
@@ -280,6 +281,28 @@ public class CertificateServiceImplTest {
         assertEquals(expectedUnitIds.size(), actualUnitIds.size());
         for (var actualUnitId : actualUnitIds) {
             assertTrue("Doesn't expect unitId: " + actualUnitId, expectedUnitIds.contains(actualUnitId));
+        }
+    }
+
+    @Test
+    public void shallUseHSAIdWhenDoctorIsMissingInHSA() {
+        final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
+        final var expectedDoctors = Arrays.asList("DOCTOR-1", "DOCTOR-2", "DOCTOR-3");
+
+        final var selectableVardenhet = mock(SelectableVardenhet.class);
+
+        doReturn(user).when(userService).getUser();
+        doReturn(selectableVardenhet).when(user).getValdVardenhet();
+        doReturn(expectedUnitIds).when(selectableVardenhet).getHsaIds();
+        doReturn(expectedDoctors).when(intygstjanstRestIntegrationService).getSigningDoctorsForUnit(anyList(), anyList());
+        doReturn(null).when(employeeNameService).getEmployeeHsaName(anyString());
+
+        final var actualDoctors = service.getDoctorsForUnit().getDoctors();
+
+        assertNotNull("Doesn't expect actual doctors to be null", actualDoctors);
+        assertEquals(actualDoctors.size(), actualDoctors.size());
+        for (var actualDoctor : actualDoctors) {
+            assertTrue("Doesn't expect doctor with name: " + actualDoctor.getNamn(), expectedDoctors.contains(actualDoctor.getNamn()));
         }
     }
 
