@@ -89,11 +89,11 @@ public class CertificateServiceImpl implements CertificateService {
 
     private final HsaOrganizationsService hsaOrganizationsService;
 
-    private PuService puService;
+    private final PuService puService;
 
-    private EmployeeNameService employeeNameService;
+    private final EmployeeNameService employeeNameService;
 
-    private boolean useCertificateMetaDataQuery;
+    private final boolean useCertificateMetaDataQuery;
 
     @Autowired
     public CertificateServiceImpl(
@@ -294,7 +294,7 @@ public class CertificateServiceImpl implements CertificateService {
         if (one == null) {
             return other == null;
         }
-        return other == null ? false : one.toLowerCase().contains(other.toLowerCase());
+        return other != null && one.toLowerCase().contains(other.toLowerCase());
     }
 
     private boolean filterOnText(LUCertificate c, String searchText) {
@@ -434,10 +434,19 @@ public class CertificateServiceImpl implements CertificateService {
 
     private Lakare getDoctor(String doctorId) {
         if (useCertificateMetaDataQuery) {
-            return new Lakare(doctorId, employeeNameService.getEmployeeHsaName(doctorId));
+            final var employeeHsaName = getEmployeeHsaName(doctorId);
+            return new Lakare(doctorId, employeeHsaName);
         }
 
         return new Lakare(doctorId, doctorId);
+    }
+
+    private String getEmployeeHsaName(String doctorId) {
+        final var employeeHsaName = employeeNameService.getEmployeeHsaName(doctorId);
+        if (employeeHsaName == null) {
+            return doctorId;
+        }
+        return employeeHsaName;
     }
 
     @Override
@@ -574,25 +583,27 @@ public class CertificateServiceImpl implements CertificateService {
         final var careProviderMap = getCareProviderMap(diagnosedCertificateList);
         final var doctorMap = getDoctorMap(diagnosedCertificateList);
 
-        return diagnosedCertificateList.stream().filter(this::commonFilter).map(diagnosedCertificate -> {
-            return LUCertificate.builder().certificateId(diagnosedCertificate.getCertificateId())
-                .certificateType(translateCertificateTypeName(diagnosedCertificate.getCertificateType()))
-                .careProviderId(diagnosedCertificate.getCareProviderId())
-                .careProviderName(careProviderMap.get(diagnosedCertificate.getCareProviderId()).getNamn())
-                .careUnitId(diagnosedCertificate.getCareUnitId())
-                .careUnitName(unitMap.get(diagnosedCertificate.getCareUnitId()).getNamn())
-                .signingTimeStamp(diagnosedCertificate.getSigningDateTime())
-                .patient(new Patient(diagnosedCertificate.getPersonId(), diagnosedCertificate.getPatientFullName()))
-                .doctor(doctorMap.get(diagnosedCertificate.getPersonalHsaId()))
-                .diagnosis(getDiagnosis(diagnosedCertificate.getDiagnoseCode()))
-                .biDiagnoses(getDiagnosisList(diagnosedCertificate.getSecondaryDiagnoseCodes())).build();
-        }).collect(Collectors.toList());
+        return diagnosedCertificateList.stream()
+            .filter(this::commonFilter).map(diagnosedCertificate ->
+                LUCertificate.builder().certificateId(diagnosedCertificate.getCertificateId())
+                    .certificateType(translateCertificateTypeName(diagnosedCertificate.getCertificateType()))
+                    .careProviderId(diagnosedCertificate.getCareProviderId())
+                    .careProviderName(careProviderMap.get(diagnosedCertificate.getCareProviderId()).getNamn())
+                    .careUnitId(diagnosedCertificate.getCareUnitId())
+                    .careUnitName(unitMap.get(diagnosedCertificate.getCareUnitId()).getNamn())
+                    .signingTimeStamp(diagnosedCertificate.getSigningDateTime())
+                    .patient(new Patient(diagnosedCertificate.getPersonId(), diagnosedCertificate.getPatientFullName()))
+                    .doctor(doctorMap.get(diagnosedCertificate.getPersonalHsaId()))
+                    .diagnosis(getDiagnosis(diagnosedCertificate.getDiagnoseCode()))
+                    .biDiagnoses(getDiagnosisList(diagnosedCertificate.getSecondaryDiagnoseCodes()))
+                    .build()
+            ).collect(Collectors.toList());
     }
 
     private Map<String, Lakare> getDoctorMap(List<DiagnosedCertificate> diagnosedCertificateList) {
         final var doctorIds = new ArrayList<String>();
 
-        diagnosedCertificateList.stream().forEach(diagnosedCertificate -> {
+        diagnosedCertificateList.forEach(diagnosedCertificate -> {
             if (!doctorIds.contains(diagnosedCertificate.getPersonalHsaId())) {
                 doctorIds.add(diagnosedCertificate.getPersonalHsaId());
             }
@@ -611,7 +622,7 @@ public class CertificateServiceImpl implements CertificateService {
     private Map<String, Vardenhet> getUnitMap(List<DiagnosedCertificate> diagnosedCertificateList) {
         final var unitIds = new ArrayList<String>();
 
-        diagnosedCertificateList.stream().forEach(diagnosedCertificate -> {
+        diagnosedCertificateList.forEach(diagnosedCertificate -> {
             if (!unitIds.contains(diagnosedCertificate.getCareUnitId())) {
                 unitIds.add(diagnosedCertificate.getCareUnitId());
             }
@@ -630,7 +641,7 @@ public class CertificateServiceImpl implements CertificateService {
     private Map<String, Vardgivare> getCareProviderMap(List<DiagnosedCertificate> diagnosedCertificateList) {
         final var careProviderIds = new ArrayList<String>();
 
-        diagnosedCertificateList.stream().forEach(diagnosedCertificate -> {
+        diagnosedCertificateList.forEach(diagnosedCertificate -> {
             if (!careProviderIds.contains(diagnosedCertificate.getCareProviderId())) {
                 careProviderIds.add(diagnosedCertificate.getCareProviderId());
             }
