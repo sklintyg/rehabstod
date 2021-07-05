@@ -84,7 +84,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
     public RehabstodUser(IntygUser intygUser, boolean pdlConsentGiven, boolean isLakare) {
         super(intygUser.getHsaId());
 
-        this.privatLakareAvtalGodkand = intygUser.isPrivatLakareAvtalGodkand();
+        this.userTermsApprovedOrSubscriptionInUse = intygUser.isUserTermsApprovedOrSubscriptionInUse();
         this.personId = intygUser.getPersonId();
 
         this.namn = intygUser.getNamn();
