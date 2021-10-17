@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.certificate.dto.BaseCertificate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
@@ -93,14 +92,11 @@ public class CertificateServiceImpl implements CertificateService {
 
     private final EmployeeNameService employeeNameService;
 
-    private final boolean useCertificateMetaDataQuery;
-
     @Autowired
     public CertificateServiceImpl(
         IntygstjanstRestIntegrationService restIntegrationService, UnansweredQAsInfoDecorator unansweredQAsInfoDecorator,
         LogService logService, UserService userService, DiagnosFactory diagnosFactory, HsaOrganizationsService hsaOrganizationsService,
-        PuService puService, EmployeeNameService employeeNameService,
-        @Value("#{new Boolean('${use.certificate.metadata.query:false}')}") boolean useCertificateMetaDataQuery) {
+        PuService puService, EmployeeNameService employeeNameService) {
         this.restIntegrationService = restIntegrationService;
         this.unansweredQAsInfoDecorator = unansweredQAsInfoDecorator;
         this.logService = logService;
@@ -109,81 +105,10 @@ public class CertificateServiceImpl implements CertificateService {
         this.hsaOrganizationsService = hsaOrganizationsService;
         this.puService = puService;
         this.employeeNameService = employeeNameService;
-        this.useCertificateMetaDataQuery = useCertificateMetaDataQuery;
     }
 
     @Override
     public GetLUCertificatesForCareUnitResponse getLUCertificatesForCareUnit(GetLUCertificatesForCareUnitRequest request) {
-        if (useCertificateMetaDataQuery) {
-            return getCertificatesWithMetaDataQuery(request);
-        }
-
-        var user = userService.getUser();
-        var unitIds = user.getValdVardenhet().getHsaIds();
-        var urval = user.getUrval();
-
-        var diagnosedCertificateList = restIntegrationService
-            .getDiagnosedCertificatesForCareUnit(unitIds, Arrays.asList(LU_TYPE_LIST), request.getFromDate(),
-                request.getToDate(), Collections.emptyList());
-
-        puService.enrichDiagnosedCertificateWithPatientNamesAndFilterSekretess(diagnosedCertificateList);
-
-        var certTypes = request.getCertTypes();
-        var diagnoses = request.getDiagnoses();
-        var fromAge = request.getFromAge();
-        var toAge = request.getToAge();
-        var doctors = request.getDoctors();
-
-        if (certTypes != null && !certTypes.isEmpty()) {
-            diagnosedCertificateList = diagnosedCertificateList.stream()
-                .filter(c -> certTypes.contains(translateCertificateTypeName(c.getCertificateType()))).collect(Collectors.toList());
-        }
-
-        if (diagnoses != null && !diagnoses.isEmpty()) {
-            diagnosedCertificateList = diagnosedCertificateList.stream()
-                .filter(c -> filterOnDiagnoses(c, diagnoses)).collect(Collectors.toList());
-        }
-
-        if (fromAge > AGE_LOWER_LIMIT || (toAge > AGE_LOWER_LIMIT && toAge <= AGE_UPPER_LIMIT)) {
-            diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> filterOnAge(c, fromAge, toAge))
-                .collect(Collectors.toList());
-        }
-
-        if (urval == Urval.ISSUED_BY_ME) {
-            diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> user.getHsaId().equals(c.getPersonalHsaId()))
-                .collect(Collectors.toList());
-        } else if (doctors != null && !doctors.isEmpty()) {
-            diagnosedCertificateList = diagnosedCertificateList.stream().filter(c -> doctors.contains(c.getPersonalFullName()))
-                .collect(Collectors.toList());
-        }
-
-        var luCertificateList = transformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
-        boolean qaInfoError = false;
-        try {
-            populateLUCertificatesWithNotificationData(luCertificateList);
-        } catch (WcIntegrationException e) {
-            qaInfoError = true;
-        }
-
-        luCertificateList = filterOnQuestionAndAnswers(request, luCertificateList);
-
-        var searchText = request.getSearchText();
-        if (searchText != null && !searchText.isBlank() && !searchText.isEmpty()) {
-            luCertificateList = luCertificateList.stream().filter(c -> filterOnText(c, searchText)).collect(Collectors.toList());
-        }
-
-        pdlLogLUCertificatesForCareUnit(luCertificateList);
-
-        LOGGER.debug("Returning LU Certificates for Care Unit");
-        return new GetLUCertificatesForCareUnitResponse(luCertificateList, qaInfoError);
-    }
-
-    /**
-     * This method will replace getLUCertificatesForCareUnit(request). For backward compatibility both methods will
-     * coexist until the new MetaData table in Intygstjansten is in full use. This method can be renamed and the old method
-     * removed from 2021-2 and after.
-     */
-    private GetLUCertificatesForCareUnitResponse getCertificatesWithMetaDataQuery(GetLUCertificatesForCareUnitRequest request) {
         final var user = userService.getUser();
         final var unitIds = user.getValdVardenhet().getHsaIds();
 
@@ -433,12 +358,8 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     private Lakare getDoctor(String doctorId) {
-        if (useCertificateMetaDataQuery) {
-            final var employeeHsaName = getEmployeeHsaName(doctorId);
-            return new Lakare(doctorId, employeeHsaName);
-        }
-
-        return new Lakare(doctorId, doctorId);
+        final var employeeHsaName = getEmployeeHsaName(doctorId);
+        return new Lakare(doctorId, employeeHsaName);
     }
 
     private String getEmployeeHsaName(String doctorId) {
