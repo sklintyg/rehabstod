@@ -121,7 +121,7 @@ public class CertificateServiceImplTest {
     @Before
     public void setup() {
         service = new CertificateServiceImpl(intygstjanstRestIntegrationService, unAnsweredQAsInfoDecorator, logService, userService,
-            diagnosFactory, hsaOrganizationsService, puService, employeeNameService, true);
+            diagnosFactory, hsaOrganizationsService, puService, employeeNameService);
     }
 
     @Test
