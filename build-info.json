@@ -1,6 +1,6 @@
 {
-  "appVersion": "1.16.0",
-  "infraVersion": "3.16.0.+",
+  "appVersion": "1.16.1",
+  "infraVersion": "3.16.1.+",
   "buildArgs": "--refresh-dependencies clean build testReport -PcodeQuality -PuseMinifiedJavaScript",
   "tests": [ "restAssuredTest", "protractorTest" ]
 }
