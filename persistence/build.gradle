@@ -1,6 +1,5 @@
 dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind"
-    compile "com.h2database:h2"
 
     compile "org.springframework.data:spring-data-jpa"
     compile "org.jadira.usertype:usertype.core:${jadiraUserTypeVersion}"
