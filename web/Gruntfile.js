@@ -498,6 +498,17 @@ module.exports = function(grunt) {
     'karma'
   ]);
 
+  grunt.registerTask('build_no_minify_no_karma', [
+    'clean:dist',
+    'jshint',
+    'injector:sass',
+    'sass',
+    'postcss',
+    'injector:scripts',
+    'injector:css',
+    'wiredep'
+  ]);
+
   grunt.registerTask('build', [
     'clean:dist',
     'jshint',
