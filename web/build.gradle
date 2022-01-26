@@ -38,6 +38,8 @@ if (project.hasProperty('useMinifiedJavaScript')) {
         webAppDirName = 'build/webapp'
     }
     war.dependsOn grunt_build
+} else if (project.hasProperty('useNoMinifiedJavaScriptNoKarma')) {
+    war.dependsOn grunt_build_no_minify_no_karma
 } else {
     war.dependsOn grunt_build_no_minify
 }
@@ -46,6 +48,7 @@ war.dependsOn createVersionPropertyFile
 
 grunt_build.dependsOn npmInstall
 grunt_build_no_minify.dependsOn npmInstall
+grunt_build_no_minify_no_karma.dependsOn npmInstall
 
 gretty {
     def minified = System.properties['useMinifiedJavaScript'] ?: false
