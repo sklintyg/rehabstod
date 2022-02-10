@@ -22,6 +22,7 @@ ext {
     commonsIoVersion = "2.6"
     cxfVersion = "3.2.4"
     googleGuavaVersion = "28.2-jre"
+    h2Version = "2.1.210"
     hibernateVersion = "5.3.15.Final"
     itext7Version = "7.1.10"
     jadiraUserTypeVersion = "6.0.1.GA"
