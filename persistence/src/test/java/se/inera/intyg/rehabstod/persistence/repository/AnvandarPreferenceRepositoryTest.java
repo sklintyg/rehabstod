@@ -42,9 +42,8 @@ import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = {PersistenceConfigTest.class, PersistenceConfigDev.class})
-//@ActiveProfiles({"h2"})
+@ActiveProfiles({"h2"})
 @Transactional
-@Ignore
 public class AnvandarPreferenceRepositoryTest {
 
     private static final String HSA_ID = "hsaId1";
