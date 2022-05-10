@@ -6,7 +6,7 @@ plugins {
 }
 
 ext {
-    intygInfraVersion = System.properties['infraVersion'] ?: '3.17.0-SNAPSHOT'
+    intygInfraVersion = System.properties['infraVersion'] ?: '3.17.1-SNAPSHOT'
     refDataVersion = System.properties['refDataVersion'] ?: '1.0-SNAPSHOT'
 
     intygHealthcondRehabilitationSchemasVersion = "1.1.3"
