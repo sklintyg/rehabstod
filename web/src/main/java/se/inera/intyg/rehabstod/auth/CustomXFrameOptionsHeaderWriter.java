@@ -18,27 +18,31 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
-import static org.springframework.security.web.server.header.StrictTransportSecurityServerHttpHeadersWriter.STRICT_TRANSPORT_SECURITY;
 import static org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter.X_FRAME_OPTIONS;
-import static org.springframework.security.web.server.header.XXssProtectionServerHttpHeadersWriter.X_XSS_PROTECTION;
 
-import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import se.inera.intyg.infra.security.filter.SecurityHeadersFilter;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.web.header.HeaderWriter;
 
-public class RSSecurityHeadersFilter extends SecurityHeadersFilter {
+public class CustomXFrameOptionsHeaderWriter implements HeaderWriter {
+
+    private static final String PDF_API_IDENTIFIER = "/pdf";
+    private static final String IE_USER_AGENT_REGEX = ".*Trident/\\d+.*|.*MSIE \\d+.*";
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
+    public void writeHeaders(HttpServletRequest request, HttpServletResponse response) {
+        if (isPdfRequestFromNonIEBrowser(request)) {
+            response.setHeader(X_FRAME_OPTIONS, "SAMEORIGIN");
 
-        response.setHeader(STRICT_TRANSPORT_SECURITY, "max-age=31536000 ; includeSubDomains");
-        response.setHeader(X_XSS_PROTECTION, "1; mode=block");
-        response.setHeader(X_FRAME_OPTIONS, "DENY");
+        } else {
+            response.setHeader(X_FRAME_OPTIONS, "DENY");
+        }
+    }
 
-        super.doFilterInternal(request, response, filterChain);
+    private boolean isPdfRequestFromNonIEBrowser(HttpServletRequest request) {
+        final var isPdfRequest = request.getRequestURI().contains(PDF_API_IDENTIFIER);
+        final var isNonIEBrowser = !request.getHeader(HttpHeaders.USER_AGENT).matches(IE_USER_AGENT_REGEX);
+        return isPdfRequest && isNonIEBrowser;
     }
 }

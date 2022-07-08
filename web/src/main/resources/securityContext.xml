@@ -107,6 +107,15 @@
     <constructor-arg ref="loggingSessionRegistry" />
   </bean>
 
+  <bean id="xFrameOptionsHeaderWriter" class="org.springframework.security.web.header.writers.DelegatingRequestMatcherHeaderWriter">
+    <constructor-arg>
+      <bean class="org.springframework.security.web.util.matcher.AnyRequestMatcher"/>
+    </constructor-arg>
+    <constructor-arg>
+      <bean class="se.inera.intyg.rehabstod.auth.CustomXFrameOptionsHeaderWriter"/>
+    </constructor-arg>
+  </bean>
+
 
   <!-- =============================================================== -->
   <!-- These URLs are unsecured in all profiles except rhs-security-prod -->
@@ -131,6 +140,10 @@
         <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
         <security:custom-filter position="PRE_AUTH_FILTER" ref="fakeAuthFilter"/>
         <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
+        <security:headers>
+          <security:frame-options disabled="true"/>
+          <security:header ref="xFrameOptionsHeaderWriter"/>
+        </security:headers>
       </security:http>
       <security:authentication-manager alias="authenticationManager">
         <security:authentication-provider ref="rehabstodAuthenticationProvider"/>
@@ -170,6 +183,10 @@
       <security:custom-filter position="PRE_AUTH_FILTER" ref="fakeAuthFilter"/>
       <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
       <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
+      <security:headers>
+        <security:frame-options disabled="true"/>
+        <security:header ref="xFrameOptionsHeaderWriter"/>
+      </security:headers>
     </security:http>
     <!-- Other unauthenticated requests will be returned as http status 403. -->
     <!-- This will allow frontend to act correctly on ajax requests          -->
@@ -179,6 +196,10 @@
       <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
       <security:custom-filter position="PRE_AUTH_FILTER" ref="fakeAuthFilter"/>
       <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
+      <security:headers>
+        <security:frame-options disabled="true"/>
+        <security:header ref="xFrameOptionsHeaderWriter"/>
+      </security:headers>
     </security:http>
 
     <security:authentication-manager alias="authenticationManager">
@@ -198,10 +219,18 @@
       <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
       <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
       <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
+      <security:headers>
+        <security:frame-options disabled="true"/>
+        <security:header ref="xFrameOptionsHeaderWriter"/>
+      </security:headers>
     </security:http>
     <security:http  use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
       <security:csrf request-matcher-ref="csrfRequestMatcher" token-repository-ref="csrfTokenRepository"/>
       <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
+      <security:headers>
+        <security:frame-options disabled="true"/>
+        <security:header ref="xFrameOptionsHeaderWriter"/>
+      </security:headers>
     </security:http>
     <security:authentication-manager alias="authenticationManager">
       <security:authentication-provider ref="samlAuthenticationProvider"/>

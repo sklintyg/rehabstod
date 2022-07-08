@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,8 +50,9 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
@@ -170,16 +173,20 @@ public class SjukfallControllerTest {
 
     @Test
     public void testGetSjukfallByUnitAsPDF() {
-        SjukfallEnhet a = createSjukFallEnhet("19121212-1212");
-        SjukfallEnhet b = createSjukFallEnhet("20121212-1212");
-        SjukfallEnhet c = createSjukFallEnhet("19840921-9287");
+        final var a = createSjukFallEnhet("19121212-1212");
+        final var b = createSjukFallEnhet("20121212-1212");
+        final var c = createSjukFallEnhet("19840921-9287");
 
-        List<SjukfallEnhet> allSjukFall = Arrays.asList(a, b, c);
-        List<SjukfallEnhet> finalList = Arrays.asList(a, b);
-        List<SjukfallEnhet> toLog = Arrays.asList(c);
+        final var allSjukFall = Arrays.asList(a, b, c);
+        final var finalList = Arrays.asList(a, b);
+        final var toLog = List.of(c);
 
         // Given
-        PrintSjukfallRequest request = new PrintSjukfallRequest();
+        final var servletRequest = new MockHttpServletRequest();
+        servletRequest.addHeader(HttpHeaders.USER_AGENT,
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36");
+
+        final var request = new PrintSjukfallRequest();
         request.setPersonnummer(Arrays.asList("19121212-1212", "20121212-1212"));
 
         // When
@@ -196,7 +203,7 @@ public class SjukfallControllerTest {
             .thenReturn(new byte[0]);
 
         // Then
-        ResponseEntity response = testee.getSjukfallForCareUnitAsPdf(request);
+        final var response = testee.getSjukfallForCareUnitAsPdf(request, servletRequest);
 
         // Verify
         verifyStatic(PDLActivityStore.class);
@@ -210,6 +217,57 @@ public class SjukfallControllerTest {
         verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.PRINT), eq(ResourceType.RESOURCE_TYPE_SJUKFALL));
 
         assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertTrue(Objects.requireNonNull(response.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION)).get(0)
+            .startsWith("inline; filename=\"sjukfall-" + DEFAULT_VARDENHET.getNamn() + "-"));
+    }
+
+    @Test
+    public void testGetSjukfallByUnitAsPDFFromInternetExplorer() {
+        final var a = createSjukFallEnhet("19121212-1212");
+        final var b = createSjukFallEnhet("20121212-1212");
+        final var c = createSjukFallEnhet("19840921-9287");
+
+        final var allSjukFall = Arrays.asList(a, b, c);
+        final var finalList = Arrays.asList(a, b);
+        final var toLog = Arrays.asList(c);
+
+        // Given
+        final var servletRequest = new MockHttpServletRequest();
+        servletRequest.addHeader(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko");
+
+        final var request = new PrintSjukfallRequest();
+        request.setPersonnummer(Arrays.asList("19121212-1212", "20121212-1212"));
+
+        // When
+        mockStatic(PDLActivityStore.class);
+        doNothing().when(PDLActivityStore.class); //This is the preferred way to mock static void methods
+        PDLActivityStore.addActivitiesToStore(anyString(), eq(toLog), eq(ActivityType.PRINT),
+            eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class));
+        when(PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
+            eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class))).thenReturn(toLog);
+
+        when(sjukfallServiceMock.getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class)))
+            .thenReturn(new SjukfallEnhetResponse(allSjukFall, false, false));
+        when(pdfExportServiceMock.export(eq(finalList), eq(request), eq(rehabstodUserMock), eq(allSjukFall.size())))
+            .thenReturn(new byte[0]);
+
+        // Then
+        final var response = testee.getSjukfallForCareUnitAsPdf(request, servletRequest);
+
+        // Verify
+        verifyStatic(PDLActivityStore.class);
+        PDLActivityStore.addActivitiesToStore(anyString(), eq(toLog), eq(ActivityType.PRINT),
+            eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class));
+        verifyStatic(PDLActivityStore.class);
+        PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
+            eq(ResourceType.RESOURCE_TYPE_SJUKFALL), any(Map.class));
+
+        verify(sjukfallServiceMock).getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class));
+        verify(logServiceMock).logSjukfallData(eq(toLog), eq(ActivityType.PRINT), eq(ResourceType.RESOURCE_TYPE_SJUKFALL));
+
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertTrue(Objects.requireNonNull(response.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION)).get(0)
+            .startsWith("attachment; filename=\"sjukfall-" + DEFAULT_VARDENHET.getNamn() + "-"));
     }
 
     @Test

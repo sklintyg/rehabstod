@@ -32,10 +32,12 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -84,6 +86,10 @@ public class SjukfallController {
 
     private static final String SRS_UNAVAILABLE_HEADER = "SRS_UNAVAILABLE";
     private static final String KOMPLETTERING_INFO_UNAVAILABLE_HEADER = "KOMPLETTERING_INFO_UNAVAILABLE";
+    private static final String FILE_EXTENSION_PDF = ".pdf";
+    private static final String IE_USER_AGENT_REGEX = ".*Trident/\\d+.*|.*MSIE \\d+.*";
+    private static final String CONTENT_DISPOSITION_INLINE = "inline";
+    private static final String CONTENT_DISPOSITION_ATTACHMENT = "attachment";
 
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm");
 
@@ -170,26 +176,21 @@ public class SjukfallController {
     }
 
     @RequestMapping(value = "/pdf", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<ByteArrayResource> getSjukfallForCareUnitAsPdf(@ModelAttribute PrintSjukfallRequest request) {
+    public ResponseEntity<byte[]> getSjukfallForCareUnitAsPdf(@ModelAttribute PrintSjukfallRequest request,
+        @Context HttpServletRequest servletRequest) {
         try {
-            // Get user from session
-            RehabstodUser user = userService.getUser();
-
-            // Fetch sjukfall
-            List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request).getSjukfallList();
-            List<SjukfallEnhet> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
-
-            byte[] pdfData = pdfExportService.export(finalList, request, user, sjukfall.size());
+            final var user = userService.getUser();
+            final var sjukfall = getSjukfallForCareUnit(user, request).getSjukfallList();
+            final var finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
+            final var pdfData = pdfExportService.export(finalList, request, user, sjukfall.size());
+            final var headers = getHttpHeaders(servletRequest, user, pdfData.length);
 
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if PDF export was OK.
             LOG.debug("PDL logging - log which 'sjukfall' that are about to be exported in PDF format.");
             logSjukfallData(user, finalList, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
             logSjukfallData(user, filterHavingRiskSignal(finalList), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
 
-            HttpHeaders respHeaders = getHttpHeaders("application/pdf",
-                pdfData.length, ".pdf", user);
-
-            return new ResponseEntity<>(new ByteArrayResource(pdfData), respHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(pdfData, headers, HttpStatus.OK);
 
         } catch (PdfExportServiceException e) {
             throw new RehabExportException("Failed to create PDF export", e);
@@ -315,6 +316,19 @@ public class SjukfallController {
         respHeaders.setContentDispositionFormData("attachment", getAttachmentFilename(user, filenameExtension));
         return respHeaders;
     }
+
+    private HttpHeaders getHttpHeaders(HttpServletRequest servletRequest, RehabstodUser user, int contentLength) {
+        final var userAgent = servletRequest.getHeader(HttpHeaders.USER_AGENT);
+        final var type = userAgent.matches(IE_USER_AGENT_REGEX) ? CONTENT_DISPOSITION_ATTACHMENT : CONTENT_DISPOSITION_INLINE;
+        final var filename = getAttachmentFilename(user, FILE_EXTENSION_PDF);
+
+        final var headers = new HttpHeaders();
+        headers.setContentLength(contentLength);
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.builder(type).filename(filename).build());
+        return headers;
+    }
+
 
     private SjukfallEnhetResponse getSjukfallForCareUnit(RehabstodUser user, GetSjukfallRequest request) {
         String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
