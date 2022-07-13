@@ -34,7 +34,6 @@ public class CustomXFrameOptionsHeaderWriter implements HeaderWriter {
     public void writeHeaders(HttpServletRequest request, HttpServletResponse response) {
         if (isPdfRequestFromNonIEBrowser(request)) {
             response.setHeader(X_FRAME_OPTIONS, "SAMEORIGIN");
-
         } else {
             response.setHeader(X_FRAME_OPTIONS, "DENY");
         }
@@ -42,7 +41,14 @@ public class CustomXFrameOptionsHeaderWriter implements HeaderWriter {
 
     private boolean isPdfRequestFromNonIEBrowser(HttpServletRequest request) {
         final var isPdfRequest = request.getRequestURI().contains(PDF_API_IDENTIFIER);
-        final var isNonIEBrowser = !request.getHeader(HttpHeaders.USER_AGENT).matches(IE_USER_AGENT_REGEX);
-        return isPdfRequest && isNonIEBrowser;
+        if (isPdfRequest) {
+            return isNonIEBrowser(request);
+        }
+        return false;
+    }
+
+    private boolean isNonIEBrowser(HttpServletRequest request) {
+        final var userAgent = request.getHeader(HttpHeaders.USER_AGENT);
+        return !userAgent.matches(IE_USER_AGENT_REGEX);
     }
 }
