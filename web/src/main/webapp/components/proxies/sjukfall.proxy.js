@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp').factory('SjukfallProxy',
     function($http, $log, $q,
-        ObjectHelper, networkConfig, $window, $cookies) {
+        ObjectHelper, networkConfig, $window, $cookies, $timeout) {
       'use strict';
 
       /*
@@ -61,8 +61,34 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
       }
 
       function _exportResult(type, query) {
-
         var restPath = '/api/sjukfall/' + type;
+        var exportData = _getExportData(query);
+        var isIEBrowser = /Trident\/\d+|MSIE \d+/.test($window.navigator.userAgent);
+        var target = '_blank';
+
+        if (!isIEBrowser && type === 'pdf') {
+          target = 'printTargetIFrame';
+          var iframe = document.getElementById(target);
+          iframe.onload = function() {
+            $timeout(function() {
+              iframe.focus();
+              iframe.contentWindow.print();
+            }, 1);
+          };
+        }
+
+        //send request
+        $window.jQuery(
+            '<form action="' + restPath + '" ' +
+            'target="' + target + '" ' +
+            'method="post" ' +
+            'accept-charset="utf-8" ' +
+            'enctype="application/x-www-form-urlencoded">' +
+            exportData + '</form>'
+        ).appendTo('body').submit().remove();
+      }
+
+      function _getExportData(query) {
         var inputs = '';
 
         inputs += _addInput('langdIntervall.max', query.langdIntervall.max);
@@ -90,10 +116,7 @@ angular.module('rehabstodApp').factory('SjukfallProxy',
           inputs += _addInput('personnummer', item);
         });
 
-        //send request
-        $window.jQuery('<form action="' + restPath + '" target="_blank" accept-charset="utf-8" ' +
-            'enctype="application/x-www-form-urlencoded" method="post">' + inputs + '</form>')
-        .appendTo('body').submit().remove();
+        return inputs;
       }
 
       function _addInput(name, item) {
