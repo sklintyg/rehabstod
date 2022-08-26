@@ -35,7 +35,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeService',
         if (force || empty) {
           loading = true;
           if (!skipReset) {
-            LakarutlatandeFilterViewState.reset();
+            LakarutlatandeFilterViewState.partialReset();
             LakarutlatandeModel.reset();
           }
 
@@ -72,7 +72,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeService',
       }
 
       function _reset() {
-        LakarutlatandeFilterViewState.reset();
+        LakarutlatandeFilterViewState.partialReset();
         LakarutlatandeModel.reset();
       }
 

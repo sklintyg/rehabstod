@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp')
 .controller('RhsLakarutlatandeFilterCtrl',
-    function($scope, $rootScope, $timeout, $filter, $log, LakarutlatandeService, LakarutlatandeFilterViewState, LakarutlatandeModel,
+    function($window, $scope, $rootScope, $timeout, $filter, $log, LakarutlatandeService, LakarutlatandeFilterViewState, LakarutlatandeModel,
         DiagnosKapitelModel, LakareModel, UserModel, StringHelper, TableService, _) {
       'use strict';
 
@@ -61,12 +61,27 @@ angular.module('rehabstodApp')
         columns = TableService.getSelectedLakarutlatandeUnitColumns();
       }, true);
 
+      //Store showPatientId in window session so we keep the value when switching page.
+      $scope.$watch(function() {
+        return LakarutlatandeFilterViewState.get().showPatientId;
+      }, function(value) {
+        $window.sessionStorage.setItem('lakarutlatandeShowPatientId', value);
+      }, true);
+
       $scope.filterInactive = function(field, field2) {
         var column = _.find(columns, function(column) {
           return column.id === field || (field2 && column.id === field2);
         });
 
         return !column;
+      };
+
+      $scope.filterInactivePersonalData = function() {
+        var excludePatientName = 'patientName:0';
+        var excludePatientId = 'patientId:0';
+        var currentFilter = UserModel.get().preferences[TableService.lakarutlatandeUnitTableKey];
+
+        return currentFilter.includes(excludePatientName) && currentFilter.includes(excludePatientId);
       };
     }
 )

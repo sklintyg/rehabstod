@@ -51,7 +51,7 @@ describe('Service: LakarutlatandeService', function() {
           LakarutlatandeFilterViewState = _LakarutlatandeFilterViewState_;
           messageService = _messageService_;
 
-          LakarutlatandeFilterViewState.reset();
+          LakarutlatandeFilterViewState.partialReset();
 
           featureService.hasFeature = function() {
             return false;
@@ -67,11 +67,11 @@ describe('Service: LakarutlatandeService', function() {
         };
       });
 
-      spyOn(LakarutlatandeFilterViewState, 'reset');
+      spyOn(LakarutlatandeFilterViewState, 'partialReset');
 
       LakarutlatandeService.loadLakarutlatande();
 
-      expect(LakarutlatandeFilterViewState.reset).toHaveBeenCalled();
+      expect(LakarutlatandeFilterViewState.partialReset).toHaveBeenCalled();
       expect(LakarutlatandeModel.get()).toEqual(lakarutlatandeData);
     });
 
@@ -99,7 +99,7 @@ describe('Service: LakarutlatandeService', function() {
           };
         });
 
-        spyOn(LakarutlatandeFilterViewState, 'reset');
+        spyOn(LakarutlatandeFilterViewState, 'partialReset');
 
         LakarutlatandeService.loadLakarutlatande();
 
@@ -109,14 +109,14 @@ describe('Service: LakarutlatandeService', function() {
       it('Not reload if loaded', function() {
         LakarutlatandeService.loadLakarutlatande();
 
-        expect(LakarutlatandeFilterViewState.reset.calls.count()).toEqual(1);
+        expect(LakarutlatandeFilterViewState.partialReset.calls.count()).toEqual(1);
         expect(LakarutlatandeProxy.getLakarutlatandenForUnit.calls.count()).toEqual(1);
       });
 
       it('Load and reset if force', function() {
         LakarutlatandeService.loadLakarutlatande(true);
 
-        expect(LakarutlatandeFilterViewState.reset.calls.count()).toEqual(2);
+        expect(LakarutlatandeFilterViewState.partialReset.calls.count()).toEqual(2);
         expect(LakarutlatandeProxy.getLakarutlatandenForUnit.calls.count()).toEqual(2);
       });
     });

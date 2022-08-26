@@ -18,14 +18,22 @@
  */
 
 angular.module('rehabstodApp').factory('SjukfallFilterViewState',
-    function(DiagnosKapitelModel, LakareModel, QAModel, APP_CONFIG) {
+    function($window, DiagnosKapitelModel, LakareModel, QAModel, APP_CONFIG) {
       'use strict';
+
+      var showPatientId;
+      if($window.sessionStorage.getItem('sjukfallShowPatientId')) {
+        showPatientId = $window.sessionStorage.getItem('sjukfallShowPatientId') === 'true';
+      } else {
+        showPatientId = true;
+      }
+
 
       var state = {
         diagnosKapitelModel: DiagnosKapitelModel,
         lakareModel: LakareModel,
         qaModel: QAModel,
-        showPatientId: true,
+        showPatientId: showPatientId,
         slutdatumModel: {
           from: null,
           to: null
@@ -44,6 +52,17 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState',
           {id: 3, displayValue: 'Visa sjukfall med obesvarade administrativa frågor och svar'}]);
       }
 
+
+      function _partialReset() {
+        state.diagnosKapitelModel.reset();
+        state.sjukskrivningslangdModel = [1, 366];
+        state.aldersModel = [0, 101];
+        state.slutdatumModel.from = null;
+        state.slutdatumModel.to = null;
+        state.lakareModel.reset();
+        state.qaModel.reset();
+        state.freeTextModel = '';
+      }
 
       function _reset() {
         state.diagnosKapitelModel.reset();
@@ -119,9 +138,10 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState',
         return state;
       }
 
-      _reset();
+      _partialReset();
 
       return {
+        partialReset: _partialReset,
         reset: _reset,
         resetIfColumnsHidden: _resetIfColumnsHidden,
         getCurrentFilterState: _getCurrentFilterState,

@@ -99,12 +99,12 @@
       </div>
       <!-- PERSONUPPGIFTER -->
       <div class="col-md-3 col-sm-6">
-        <fieldset class="rhs-checkbox form-group" ng-disabled="filterInactive('patientId', 'patientName')">
+        <fieldset class="rhs-checkbox form-group" ng-disabled="filterInactivePersonalData()">
           <label class="control-label">&nbsp;</label><br>
           <label for="rhs-filter-showPatientIdToggle">
-            <input ng-if="!filterInactive('patientId', 'patientName')" id="rhs-filter-showPatientIdToggle" type="checkbox"
+            <input ng-if="!filterInactivePersonalData()" id="rhs-filter-showPatientIdToggle" type="checkbox"
                                                              ng-model="filterViewState.get().showPatientId">
-            <input ng-if="filterInactive('patientId', 'patientName')" type="checkbox">
+            <input ng-if="filterInactivePersonalData()" type="checkbox">
             <span message key="label.filter.personuppgifter"></span>
             <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.personuppgifter.help" alignment="auto top"></span>
           </label>
