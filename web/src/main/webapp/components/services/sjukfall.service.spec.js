@@ -63,11 +63,11 @@ describe('Service: SjukfallService', function() {
         };
       });
 
-      spyOn(SjukfallFilterViewState, 'reset');
+      spyOn(SjukfallFilterViewState, 'partialReset');
 
       SjukfallService.loadSjukfall();
 
-      expect(SjukfallFilterViewState.reset).toHaveBeenCalled();
+      expect(SjukfallFilterViewState.partialReset).toHaveBeenCalled();
       expect(SjukfallModel.get()).toEqual(sjukFallData);
     });
 
@@ -75,7 +75,7 @@ describe('Service: SjukfallService', function() {
 
       spyOn(SjukfallProxy, 'exportResult');
 
-      SjukfallFilterViewState.reset();
+      SjukfallFilterViewState.partialReset();
       var cfs = SjukfallFilterViewState.getCurrentFilterState();
 
       var type = 'pdf';
@@ -141,7 +141,7 @@ describe('Service: SjukfallService', function() {
           };
         });
 
-        spyOn(SjukfallFilterViewState, 'reset');
+        spyOn(SjukfallFilterViewState, 'partialReset');
 
         SjukfallService.loadSjukfall();
 
@@ -151,14 +151,14 @@ describe('Service: SjukfallService', function() {
       it('Not reload if loaded', function() {
         SjukfallService.loadSjukfall();
 
-        expect(SjukfallFilterViewState.reset.calls.count()).toEqual(1);
+        expect(SjukfallFilterViewState.partialReset.calls.count()).toEqual(1);
         expect(SjukfallProxy.get.calls.count()).toEqual(1);
       });
 
       it('Load and reset if force', function() {
         SjukfallService.loadSjukfall(true);
 
-        expect(SjukfallFilterViewState.reset.calls.count()).toEqual(2);
+        expect(SjukfallFilterViewState.partialReset.calls.count()).toEqual(2);
         expect(SjukfallProxy.get.calls.count()).toEqual(2);
       });
     });

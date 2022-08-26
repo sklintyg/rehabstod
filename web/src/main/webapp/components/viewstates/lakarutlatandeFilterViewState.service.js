@@ -18,14 +18,21 @@
  */
 
 angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
-    function(DiagnosKapitelModel, LakareModel, QAModel, CertTypeModel, APP_CONFIG, lakarutlatandenProxy, $log) {
+    function($window, DiagnosKapitelModel, LakareModel, QAModel, CertTypeModel, APP_CONFIG, lakarutlatandenProxy, $log) {
       'use strict';
+
+      var showPatientId;
+      if($window.sessionStorage.getItem('lakarutlatandeShowPatientId')) {
+        showPatientId = $window.sessionStorage.getItem('lakarutlatandeShowPatientId') === 'true';
+      } else {
+        showPatientId = true;
+      }
 
       var state = {
         diagnosKapitelModel: DiagnosKapitelModel,
         lakareModel: LakareModel,
         qaModel: QAModel, //null = show all
-        showPatientId: true,
+        showPatientId: showPatientId,
         signDateModel: {
           from: null, to: null
         },
@@ -58,6 +65,18 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
           $log.debug(errorData);
         });
 
+      }
+
+      function _partialReset() {
+        state.diagnosKapitelModel.reset();
+        state.aldersModel = [0, 101];
+        state.signDateModel.from = null;
+        state.signDateModel.to = null;
+        state.lakareModel.reset();
+        state.qaModel.reset();
+        state.freeTextModel = '';
+        state.certTypeModel.reset();
+        loadDoctors();
       }
 
       function _reset() {
@@ -150,6 +169,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
       }
 
       return {
+        partialReset: _partialReset,
         reset: _reset,
         resetIfColumnsHidden: _resetIfColumnsHidden,
         getCurrentFilterState: _getCurrentFilterState,

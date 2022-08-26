@@ -34,7 +34,7 @@ angular.module('rehabstodApp').factory('SjukfallService',
         if (force || empty) {
           loading = true;
           if (!skipReset) {
-            SjukfallFilterViewState.reset();
+            SjukfallFilterViewState.partialReset();
             SjukfallModel.reset();
           }
 

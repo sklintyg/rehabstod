@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp')
 .controller('RhsFilterCtrl',
-    function($scope, $rootScope, $timeout, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel,
+    function($window, $scope, $rootScope, $timeout, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel,
         UserModel, StringHelper, TableService, _) {
       'use strict';
 
@@ -69,12 +69,27 @@ angular.module('rehabstodApp')
         columns = TableService.getSelectedSjukfallColumns(true);
       }, true);
 
+      //Store showPatientId in window session so we keep the value when switching page.
+      $scope.$watch(function() {
+        return SjukfallFilterViewState.get().showPatientId;
+      }, function(value) {
+        $window.sessionStorage.setItem('sjukfallShowPatientId', value);
+      }, true);
+
       $scope.filterInactive = function(field, field2) {
         var column = _.find(columns, function(column) {
           return column.id === field || (field2 && column.id === field2);
         });
 
         return !column;
+      };
+      $scope.filterInactivePersonalData = function() {
+
+        var excludePatientName = 'patientName:0';
+        var excludePatientId = 'patientId:0';
+        var currentFilter = UserModel.get().preferences[TableService.sjukfallTableKey];
+
+        return currentFilter.includes(excludePatientName) && currentFilter.includes(excludePatientId);
       };
     }
 )
