@@ -19,8 +19,9 @@
 
 angular.module('rehabstodApp')
 .controller('RhsFilterCtrl',
-    function($window, $scope, $rootScope, $timeout, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel,
-        UserModel, StringHelper, TableService, _) {
+    function($window, $scope, $rootScope, $timeout, $filter, $log, SjukfallFilterViewState,
+        SjukfallModel, DiagnosKapitelModel, LakareModel,
+        UserModel, StringHelper, TableService, LakarutlatandeFilterViewState, _) {
       'use strict';
 
       $scope.filterViewState = SjukfallFilterViewState;
@@ -70,11 +71,20 @@ angular.module('rehabstodApp')
       }, true);
 
       //Store showPatientId in window session so we keep the value when switching page.
-      $scope.$watch(function() {
-        return SjukfallFilterViewState.get().showPatientId;
-      }, function(value) {
-        $window.sessionStorage.setItem('sjukfallShowPatientId', value);
+      //$scope.$watch(function() {
+      //  return SjukfallFilterViewState.get().showPatientId;
+      //}, function(value) {
+      //  $window.sessionStorage.setItem('showPatientId', value);
+      //  LakarutlatandeFilterViewState.setShowPatientId(value);
+      //}, true);
+      $scope.$watch('filterViewState.get().showPatientId', function(newValue, oldValue) {
+        $window.sessionStorage.setItem('showPatientId', newValue);
+        LakarutlatandeFilterViewState.setShowPatientId(newValue);
+        $log.info('RhsLakarutlatandeFilterCtrl old value: ' + oldValue);
+        $log.info('RhsLakarutlatandeFilterCtrl new value: ' + newValue);
       }, true);
+
+
 
       $scope.filterInactive = function(field, field2) {
         var column = _.find(columns, function(column) {

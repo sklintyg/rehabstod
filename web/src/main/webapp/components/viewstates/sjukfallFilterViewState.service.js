@@ -22,8 +22,8 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState',
       'use strict';
 
       var showPatientId;
-      if($window.sessionStorage.getItem('sjukfallShowPatientId')) {
-        showPatientId = $window.sessionStorage.getItem('sjukfallShowPatientId') === 'true';
+      if($window.sessionStorage.getItem('showPatientId')) {
+        showPatientId = $window.sessionStorage.getItem('showPatientId') === 'true';
       } else {
         showPatientId = true;
       }
@@ -134,6 +134,10 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState',
 
       }
 
+      function _setShowPatientId(value) {
+        state.ShowPatientId = value;
+      }
+
       function _getState() {
         return state;
       }
@@ -141,6 +145,7 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState',
       _partialReset();
 
       return {
+        setShowPatientId: _setShowPatientId,
         partialReset: _partialReset,
         reset: _reset,
         resetIfColumnsHidden: _resetIfColumnsHidden,
