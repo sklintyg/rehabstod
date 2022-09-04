@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Inera AB (http://www.inera.se)
+ * Copyright (C) 2022 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').factory('TableService',
-    function(UserModel, SjukfallFilterViewState, featureService, _, LakarutlatandeFilterViewState) {
+angular.module('rehabstodApp').factory('TableService', function($window, UserModel, SjukfallFilterViewState, featureService, _,
+    ShowPatientIdViewState) {
       'use strict';
 
       var sjukfallTableKey = 'sjukfallTableColumns';
@@ -323,10 +323,10 @@ angular.module('rehabstodApp').factory('TableService',
         return columns
         .filter(function(column) {
           if (column.id === 'patientId' || column.id === 'patientName'){
-            if (isLU && !LakarutlatandeFilterViewState.get().showPatientId){
+            if (isLU && !ShowPatientIdViewState.showPatientId()){
               return false;
             }
-            else if (!SjukfallFilterViewState.get().showPatientId) {
+            else if (!ShowPatientIdViewState.showPatientId()) {
               return false;
             }
           }

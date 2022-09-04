@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Inera AB (http://www.inera.se)
+ * Copyright (C) 2022 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,8 +19,9 @@
 
 angular.module('rehabstodApp')
 .controller('RhsLakarutlatandeFilterCtrl',
-    function($window, $scope, $rootScope, $timeout, $filter, $log, LakarutlatandeService, LakarutlatandeFilterViewState, LakarutlatandeModel,
-        DiagnosKapitelModel, LakareModel, UserModel, StringHelper, TableService, SjukfallFilterViewState, _) {
+    function($scope, $rootScope, $timeout, $filter, $log, LakarutlatandeService, LakarutlatandeFilterViewState,
+        LakarutlatandeModel, DiagnosKapitelModel, LakareModel, UserModel, StringHelper, TableService, SjukfallFilterViewState, _,
+        ShowPatientIdViewState) {
       'use strict';
 
       $scope.filterViewState = LakarutlatandeFilterViewState;
@@ -39,6 +40,29 @@ angular.module('rehabstodApp')
         });
       };
 
+      $scope.showPatientId = ShowPatientIdViewState.showPatientId();
+
+      $scope.toggleShowPatientId = function() {
+        ShowPatientIdViewState.toggleShowPatientId();
+      };
+
+      $scope.onResetFilterClick = function() {
+        var showPatientIdCheckBox = document.getElementById('rhs-lu-filter-showPatientIdToggle');
+        if (showPatientIdCheckBox !== null && ShowPatientIdViewState.showPatientId() === false && (!$scope.filterInactivePersonalData() ||
+            $scope.showSearchFilter)) {
+          showPatientIdCheckBox.click();
+        }
+        $scope.filterViewState.reset();
+      };
+
+      $scope.$watch(function() {
+        return ShowPatientIdViewState.showPatientId();
+        }, function(newValue) {
+        SjukfallFilterViewState.setShowPatientIdFilterState(newValue);
+        LakarutlatandeFilterViewState.setShowPatientIdFilterState(newValue);
+      }, true);
+
+
       $scope.$on('rhsLakarutlatandeFilter.toggleDatePicker', $scope.toggleDatePicker);
 
 
@@ -46,10 +70,6 @@ angular.module('rehabstodApp')
         columns = TableService.getSelectedLakarutlatandeUnitColumns();
       });
       $scope.$on('$destroy', unregisterFn);
-
-      $scope.onResetFilterClick = function() {
-        $scope.filterViewState.reset();
-      };
 
       $scope.onSearchFilterClick = function() {
         $scope.searchFn();
@@ -59,20 +79,6 @@ angular.module('rehabstodApp')
         return UserModel.get().preferences[TableService.lakarutlatandeUnitTableKey];
       }, function() {
         columns = TableService.getSelectedLakarutlatandeUnitColumns();
-      }, true);
-
-      //Store showPatientId in window session so we keep the value when switching page.
-      //$scope.$watch(function() {
-      //  return LakarutlatandeFilterViewState.get().showPatientId;
-      //}, function(value) {
-      //  $window.sessionStorage.setItem('showPatientId', value);
-      //  SjukfallFilterViewState.setShowPatientId(value);
-      //}, true);
-      $scope.$watch('filterViewState.get().showPatientId', function(newValue, oldValue) {
-        $window.sessionStorage.setItem('showPatientId', newValue);
-        SjukfallFilterViewState.setShowPatientId(newValue);
-        $log.info('RhsLakarutlatandeFilterCtrl old value: ' + oldValue);
-        $log.info('RhsLakarutlatandeFilterCtrl new value: ' + newValue);
       }, true);
 
       $scope.filterInactive = function(field, field2) {

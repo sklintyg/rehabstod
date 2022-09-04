@@ -6,7 +6,7 @@
   <i class="glyphicon" data-ng-class="[{'glyphicon-chevron-down': !showSearchFilter}, {'glyphicon-chevron-up': showSearchFilter}]"></i>
 </button>
 
-<div class="rhs-filter" ng-if="showSearchFilter">
+<div class="rhs-filter" ng-show="showSearchFilter">
   <div class="box rhs-box">
     <div class="row">
       <!-- DIAGNOS -->
@@ -101,10 +101,10 @@
       <div class="col-md-3 col-sm-6">
         <fieldset class="rhs-checkbox form-group" ng-disabled="filterInactivePersonalData()">
           <label class="control-label">&nbsp;</label><br>
-          <label for="rhs-filter-showPatientIdToggle">
-            <input ng-if="!filterInactivePersonalData()" id="rhs-filter-showPatientIdToggle" type="checkbox"
-                                                             ng-model="filterViewState.get().showPatientId">
-            <input ng-if="filterInactivePersonalData()" type="checkbox">
+          <label for="rhs-sjukfall-filter-showPatientIdToggle">
+            <input ng-show="!filterInactivePersonalData()" id="rhs-sjukfall-filter-showPatientIdToggle" type="checkbox"
+                   ng-model="showPatientId" ng-change="toggleShowPatientId()">
+            <input ng-show="filterInactivePersonalData()" type="checkbox">
             <span message key="label.filter.personuppgifter"></span>
             <span class="rhs-tooltip" rhs-tooltip field-help-text="label.filter.personuppgifter.help" alignment="auto top"></span>
           </label>

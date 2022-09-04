@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Inera AB (http://www.inera.se)
+ * Copyright (C) 2022 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -17,17 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
-    function($window, DiagnosKapitelModel, LakareModel, QAModel, CertTypeModel, APP_CONFIG,
-        lakarutlatandenProxy, $log) {
+angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState', function($window, DiagnosKapitelModel, LakareModel, QAModel,
+    CertTypeModel, APP_CONFIG, lakarutlatandenProxy, $log, ShowPatientIdViewState) {
       'use strict';
 
-      var showPatientId;
-      if($window.sessionStorage.getItem('showPatientId')) {
-        showPatientId = $window.sessionStorage.getItem('showPatientId') === 'true';
-      } else {
-        showPatientId = true;
-      }
+      var showPatientId = ShowPatientIdViewState.showPatientId();
 
       var state = {
         diagnosKapitelModel: DiagnosKapitelModel,
@@ -87,7 +81,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
         state.signDateModel.to = null;
         state.lakareModel.reset();
         state.qaModel.reset();
-        state.showPatientId = true;
+        state.showPatientId = ShowPatientIdViewState.showPatientId();
         state.freeTextModel = '';
         state.certTypeModel.reset();
         loadDoctors();
@@ -155,8 +149,8 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
 
       }
 
-      function _setShowPatientId(value) {
-        state.ShowPatientId = value;
+      function _setShowPatientIdFilterState(value) {
+        state.showPatientId = value;
       }
 
       function _getState() {
@@ -174,7 +168,7 @@ angular.module('rehabstodApp').factory('LakarutlatandeFilterViewState',
       }
 
       return {
-        setShowPatientId: _setShowPatientId,
+        setShowPatientIdFilterState: _setShowPatientIdFilterState,
         partialReset: _partialReset,
         reset: _reset,
         resetIfColumnsHidden: _resetIfColumnsHidden,

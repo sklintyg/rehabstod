@@ -61,6 +61,7 @@ angular.module('rehabstodApp').directive('rhsHeader',
             if ($event) {
               $event.preventDefault();
             }
+            $window.sessionStorage.removeItem('showPatientId');
             $window.jQuery('<form action="' + UserModel.getLogoutLocation() + '" method="post" />')
             .appendTo('body').submit().remove();
           };

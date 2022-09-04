@@ -128,13 +128,14 @@ describe('Service: TableService', function() {
         id: 'ny'
       }, {
         id: 'column2'
-      }];
+      }, {
+        id: 'patientId'}];
 
       SjukfallFilterViewState.get().showPatientId = false;
 
       var valda = TableService.getSelectedColumns(columns, preferenceNyckel);
 
-      expect(valda.length).toBe(2);
+      expect(valda.length).toBe(3);
       expect(valda).toEqual(expected);
     });
 
