@@ -48,8 +48,7 @@ angular.module('rehabstodApp')
 
       $scope.onResetFilterClick = function() {
         var showPatientIdCheckBox = document.getElementById('rhs-lu-filter-showPatientIdToggle');
-        if (showPatientIdCheckBox !== null && ShowPatientIdViewState.showPatientId() === false && (!$scope.filterInactivePersonalData() ||
-            $scope.showSearchFilter)) {
+        if (showPatientIdCheckBox !== null && ShowPatientIdViewState.showPatientId() === false && !$scope.filterInactivePersonalData()) {
           showPatientIdCheckBox.click();
         }
         $scope.filterViewState.reset();

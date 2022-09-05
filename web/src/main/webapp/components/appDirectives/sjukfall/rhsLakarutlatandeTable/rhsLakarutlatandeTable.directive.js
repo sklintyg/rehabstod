@@ -19,7 +19,7 @@
 
 angular.module('rehabstodApp')
 .controller('RhsLakarutlatandeTableCtrl',
-    function($window, $scope, $uibModal, LakarutlatandeFilterViewState, LakarutlatandeModel, UserModel, messageService,
+    function($scope, $uibModal, LakarutlatandeFilterViewState, LakarutlatandeModel, UserModel, messageService,
         featureService, $document, TableService, ShowPatientIdViewState) {
       'use strict';
 
