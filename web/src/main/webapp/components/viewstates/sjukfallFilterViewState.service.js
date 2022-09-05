@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Inera AB (http://www.inera.se)
+ * Copyright (C) 2022 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,16 +18,10 @@
  */
 
 angular.module('rehabstodApp').factory('SjukfallFilterViewState',
-    function($window, DiagnosKapitelModel, LakareModel, QAModel, APP_CONFIG) {
+    function($window, DiagnosKapitelModel, LakareModel, QAModel, APP_CONFIG, ShowPatientIdViewState) {
       'use strict';
 
-      var showPatientId;
-      if($window.sessionStorage.getItem('sjukfallShowPatientId')) {
-        showPatientId = $window.sessionStorage.getItem('sjukfallShowPatientId') === 'true';
-      } else {
-        showPatientId = true;
-      }
-
+      var showPatientId = ShowPatientIdViewState.showPatientId();
 
       var state = {
         diagnosKapitelModel: DiagnosKapitelModel,
@@ -52,7 +46,6 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState',
           {id: 3, displayValue: 'Visa sjukfall med obesvarade administrativa frågor och svar'}]);
       }
 
-
       function _partialReset() {
         state.diagnosKapitelModel.reset();
         state.sjukskrivningslangdModel = [1, 366];
@@ -72,7 +65,7 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState',
         state.slutdatumModel.to = null;
         state.lakareModel.reset();
         state.qaModel.reset();
-        state.showPatientId = true;
+        state.showPatientId = ShowPatientIdViewState.showPatientId();
         state.freeTextModel = '';
       }
 
@@ -134,6 +127,10 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState',
 
       }
 
+      function _setShowPatientIdFilterState(value) {
+        state.showPatientId = value;
+      }
+
       function _getState() {
         return state;
       }
@@ -141,6 +138,7 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState',
       _partialReset();
 
       return {
+        setShowPatientIdFilterState: _setShowPatientIdFilterState,
         partialReset: _partialReset,
         reset: _reset,
         resetIfColumnsHidden: _resetIfColumnsHidden,
@@ -148,5 +146,4 @@ angular.module('rehabstodApp').factory('SjukfallFilterViewState',
         get: _getState,
         initQAModel: _initQAModel
       };
-    })
-;
+    });

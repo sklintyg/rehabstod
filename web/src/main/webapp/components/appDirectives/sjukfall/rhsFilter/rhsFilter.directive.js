@@ -19,8 +19,9 @@
 
 angular.module('rehabstodApp')
 .controller('RhsFilterCtrl',
-    function($window, $scope, $rootScope, $timeout, $filter, $log, SjukfallFilterViewState, SjukfallModel, DiagnosKapitelModel, LakareModel,
-        UserModel, StringHelper, TableService, _) {
+    function($scope, $rootScope, $timeout, $filter, $log, SjukfallFilterViewState,
+        SjukfallModel, DiagnosKapitelModel, LakareModel,
+        UserModel, StringHelper, TableService, LakarutlatandeFilterViewState, _, ShowPatientIdViewState) {
       'use strict';
 
       $scope.filterViewState = SjukfallFilterViewState;
@@ -38,6 +39,30 @@ angular.module('rehabstodApp')
           $scope.showDatePicker = true;
         });
       };
+
+
+
+      $scope.showPatientId = ShowPatientIdViewState.showPatientId();
+
+      $scope.toggleShowPatientId = function() {
+        ShowPatientIdViewState.toggleShowPatientId();
+      };
+
+      $scope.onResetFilterClick = function() {
+        var showPatientIdCheckBox = document.getElementById('rhs-sjukfall-filter-showPatientIdToggle');
+        if (showPatientIdCheckBox!== null && ShowPatientIdViewState.showPatientId() === false && !$scope.filterInactivePersonalData()) {
+          showPatientIdCheckBox.click();
+        }
+        $scope.filterViewState.reset();
+      };
+
+      $scope.$watch(function() {
+        return ShowPatientIdViewState.showPatientId();
+      }, function(newValue) {
+        SjukfallFilterViewState.setShowPatientIdFilterState(newValue);
+        LakarutlatandeFilterViewState.setShowPatientIdFilterState(newValue);
+      }, true);
+
 
       $scope.$on('rhsFilter.toggleDatePicker', $scope.toggleDatePicker);
 
@@ -59,21 +84,11 @@ angular.module('rehabstodApp')
       });
       $scope.$on('$destroy', unregisterFn);
 
-      $scope.onResetFilterClick = function() {
-        $scope.filterViewState.reset();
-      };
 
       $scope.$watch(function() {
         return UserModel.get().preferences[TableService.sjukfallTableKey];
       }, function() {
         columns = TableService.getSelectedSjukfallColumns(true);
-      }, true);
-
-      //Store showPatientId in window session so we keep the value when switching page.
-      $scope.$watch(function() {
-        return SjukfallFilterViewState.get().showPatientId;
-      }, function(value) {
-        $window.sessionStorage.setItem('sjukfallShowPatientId', value);
       }, true);
 
       $scope.filterInactive = function(field, field2) {

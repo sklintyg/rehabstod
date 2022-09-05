@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Inera AB (http://www.inera.se)
+ * Copyright (C) 2022 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,7 +19,8 @@
 
 angular.module('rehabstodApp').controller('patientHistoryController',
     function($scope, $http, $uibModalInstance, $state, APP_CONFIG, patientHistoryProxy, SjukfallFilterViewState,
-        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy, messageService, openLU, certificate) {
+        patientHistoryViewState, patient, nyligenAvslutat, UserModel, TableService, UserProxy, messageService, openLU, certificate,
+        ShowPatientIdViewState) {
       'use strict';
 
       //Create initial default details tab (cannot be closed)
@@ -49,7 +50,7 @@ angular.module('rehabstodApp').controller('patientHistoryController',
       $scope.errorMessageKey = '';
       $scope.patientHistoryViewState = patientHistoryViewState;
       $scope.patient = patient;
-      $scope.showPatientId = SjukfallFilterViewState.get().showPatientId;
+      $scope.showPatientId = ShowPatientIdViewState.showPatientId();
       $scope.showSpinner = true;
       //Constant needed in template
       $scope.radius = 30;
@@ -169,7 +170,6 @@ angular.module('rehabstodApp').controller('patientHistoryController',
         document.body.appendChild(form);
 
         form.submit();
-
         // Once the form is sent, remove it.
         document.body.removeChild(form);
       }

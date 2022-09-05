@@ -20,7 +20,7 @@
 angular.module('rehabstodApp')
 .controller('RhsTableCtrl',
     function($scope, $uibModal, SjukfallFilterViewState, SjukfallModel, UserModel, messageService,
-        featureService, $document, TableService) {
+        featureService, $document, TableService, ShowPatientIdViewState) {
       'use strict';
 
       $scope.preferenceKey = TableService.sjukfallTableKey;
@@ -32,7 +32,7 @@ angular.module('rehabstodApp')
       $scope.tableTextKey = 'label.table.column';
 
       $scope.$watch(function() {
-        return SjukfallFilterViewState.get().showPatientId + UserModel.get().preferences[$scope.preferenceKey];
+        return ShowPatientIdViewState.showPatientId() + UserModel.get().preferences[$scope.preferenceKey];
       }, function() {
         $scope.columnsForTable = TableService.getSelectedColumns($scope.columns, $scope.preferenceKey);
         SjukfallModel.updateQuickSearchContent();

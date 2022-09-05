@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Inera AB (http://www.inera.se)
+ * Copyright (C) 2022 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,7 +20,7 @@
 angular.module('rehabstodApp')
 .controller('RhsLakarutlatandeTableCtrl',
     function($scope, $uibModal, LakarutlatandeFilterViewState, LakarutlatandeModel, UserModel, messageService,
-        featureService, $document, TableService) {
+        featureService, $document, TableService, ShowPatientIdViewState) {
       'use strict';
 
       $scope.preferenceKey = TableService.lakarutlatandeUnitTableKey;
@@ -32,12 +32,11 @@ angular.module('rehabstodApp')
       $scope.tableTextKey = 'label.table.column';
 
       $scope.$watch(function() {
-        return LakarutlatandeFilterViewState.get().showPatientId + UserModel.get().preferences[$scope.preferenceKey];
+        return ShowPatientIdViewState.showPatientId() + UserModel.get().preferences[$scope.preferenceKey];
       }, function() {
         $scope.columnsForTable = TableService.getSelectedColumns($scope.columns, $scope.preferenceKey, undefined, true);
         LakarutlatandeModel.updateQuickSearchContent();
       });
-
 
       $scope.getToolTip = function(diagnosis) {
         var desc = angular.isString(diagnosis.beskrivning) ? diagnosis.beskrivning :

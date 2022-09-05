@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Inera AB (http://www.inera.se)
+ * Copyright (C) 2022 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,7 +18,8 @@
  */
 
 angular.module('rehabstodApp').factory('SjukfallService',
-    function($log, StringHelper, messageService, SjukfallProxy, SjukfallModel, SjukfallFilterViewState, SjukfallViewState, _, UserModel) {
+    function($log, StringHelper, messageService, SjukfallProxy, SjukfallModel, SjukfallFilterViewState, SjukfallViewState, _,
+        UserModel, ShowPatientIdViewState) {
       'use strict';
 
       var loading = false;
@@ -84,7 +85,7 @@ angular.module('rehabstodApp').factory('SjukfallService',
           sortering: sort,
           maxIntygsGlapp: UserModel.get().preferences.maxAntalDagarMellanIntyg,
           fritext: filterState.freeText,
-          showPatientId: filterState.showPatientId,
+          showPatientId: ShowPatientIdViewState.showPatientId(),
           aldersIntervall: {
             min: '' + filterState.alder[0],
             max: '' + (filterState.alder[1] === null ? '100+' : filterState.alder[1])
