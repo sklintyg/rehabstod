@@ -74,8 +74,8 @@ public class IntygstjanstIntegrationClientConfiguration {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(itWsUrl);
         proxyFactoryBean.setServiceClass(ListActiveSickLeavesForCareUnitResponderInterface.class);
-        ListActiveSickLeavesForCareUnitResponderInterface listActiveSickLeavesForCareUnitResponderInterface = (ListActiveSickLeavesForCareUnitResponderInterface) proxyFactoryBean
-            .create();
+        ListActiveSickLeavesForCareUnitResponderInterface listActiveSickLeavesForCareUnitResponderInterface =
+            (ListActiveSickLeavesForCareUnitResponderInterface) proxyFactoryBean.create();
         Client client = ClientProxy.getClient(listActiveSickLeavesForCareUnitResponderInterface);
         applyTimeouts(client);
         return listActiveSickLeavesForCareUnitResponderInterface;
@@ -88,8 +88,8 @@ public class IntygstjanstIntegrationClientConfiguration {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(listSickleavesForPersonUrl);
         proxyFactoryBean.setServiceClass(ListSickLeavesForPersonResponderInterface.class);
-        ListSickLeavesForPersonResponderInterface listSickLeavesForPersonResponderInterface = (ListSickLeavesForPersonResponderInterface) proxyFactoryBean
-            .create();
+        ListSickLeavesForPersonResponderInterface listSickLeavesForPersonResponderInterface =
+            (ListSickLeavesForPersonResponderInterface) proxyFactoryBean.create();
         Client client = ClientProxy.getClient(listSickLeavesForPersonResponderInterface);
         applyTimeouts(client);
         return listSickLeavesForPersonResponderInterface;
@@ -103,8 +103,8 @@ public class IntygstjanstIntegrationClientConfiguration {
         proxyFactoryBean.setAddress(itWsPingUrl);
         proxyFactoryBean.setServiceClass(PingForConfigurationResponderInterface.class);
 
-        PingForConfigurationResponderInterface pingForConfigurationResponderInterface = (PingForConfigurationResponderInterface) proxyFactoryBean
-            .create();
+        PingForConfigurationResponderInterface pingForConfigurationResponderInterface =
+            (PingForConfigurationResponderInterface) proxyFactoryBean.create();
         Client client = ClientProxy.getClient(pingForConfigurationResponderInterface);
         applyTimeouts(client);
         return pingForConfigurationResponderInterface;

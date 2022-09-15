@@ -45,7 +45,7 @@ describe('Hantera filtret', function() {
 
     sjukfallPage.clickHideFilter();
 
-    expect(sjukfallPage.resetButton().isPresent()).toBeFalsy();
+    expect(sjukfallPage.resetButton().isDisplayed()).toBeFalsy();
 
     sjukfallPage.clickHideFilter();
   });

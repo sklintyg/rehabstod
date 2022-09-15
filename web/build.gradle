@@ -1,6 +1,6 @@
 apply plugin: 'war'
 apply plugin: 'org.gretty'
-apply plugin: 'com.moowork.grunt'
+apply plugin: 'nebula.grunt'
 
 war.rootSpec.exclude "logback.xml"
 
@@ -117,6 +117,7 @@ dependencies {
     compile "org.apache.activemq:activemq-spring"
     compile "org.apache.commons:commons-lang3"
     compile "org.apache.cxf:cxf-rt-features-logging:${cxfVersion}"
+    compile "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
     compile "org.apache.poi:poi-ooxml:${poiVersion}"
     compile "org.apache.poi:poi:${poiVersion}"
 
@@ -146,8 +147,6 @@ dependencies {
     testCompile "jakarta.jms:jakarta.jms-api"
     testCompile "org.hamcrest:hamcrest"
     testCompile "org.hamcrest:hamcrest-library"
-    testCompile "org.powermock:powermock-module-junit4:${powermockVersion}"
-    testCompile "org.powermock:powermock-api-mockito2:${powermockVersion}"
     testCompile "org.springframework:spring-test"
     testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "org.testng:testng:${testngVersion}"

@@ -7,6 +7,10 @@ dependencies {
     compile "org.liquibase:liquibase-core"
     compile "org.springframework:spring-orm"
 
+    compile "org.hibernate:hibernate-core"
+    compile "org.hibernate:hibernate-hikaricp"
+    compile "org.hibernate:hibernate-entitymanager"
+
     compile "javax.annotation:javax.annotation-api"
 
     testCompile "org.springframework:spring-test"
