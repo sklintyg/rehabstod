@@ -152,6 +152,6 @@ dependencies {
     testCompile "org.testng:testng:${testngVersion}"
 
     gretty "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
-    gretty "org.eclipse.jetty:apache-jstl:${apacheJstlVersion}"
+    gretty "org.eclipse.jetty:apache-jstl"
     gretty "se.inera.intyg.refdata:refdata:${refDataVersion}"
 }
