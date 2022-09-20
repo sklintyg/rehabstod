@@ -21,7 +21,7 @@ ext {
     commonsIoVersion = "2.11.0"
     cxfVersion = "3.5.3"
     googleGuavaVersion = "31.1-jre"
-    itext7Version = "7.1.10"
+    itext7Version = "7.2.3"
     jadiraUserTypeVersion = "6.0.1.GA"
     jsonSimpleVersion = "1.1.1"
     picocliVersion = "4.6.3"

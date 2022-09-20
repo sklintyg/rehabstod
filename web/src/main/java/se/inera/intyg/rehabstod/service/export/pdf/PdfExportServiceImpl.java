@@ -30,6 +30,7 @@ import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.font.PdfFontFactory.EmbeddingStrategy;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -42,9 +43,9 @@ import com.itextpdf.layout.element.Div;
 import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.TextAlignment;
-import com.itextpdf.layout.property.UnitValue;
-import com.itextpdf.layout.property.VerticalAlignment;
+import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.UnitValue;
+import com.itextpdf.layout.properties.VerticalAlignment;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -92,10 +93,7 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
     private static final float PAGE_HEADER_FONTSIZE = 7.5f;
     private static final float TABLE_MARGIN_TOP = millimetersToPoints(6.5f);
 
-    private PdfImageXObject logoImage;
-
     private PdfStyle style;
-
 
     @Override
     @PrometheusTimeMethod
@@ -107,8 +105,8 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
             initFontStyles();
 
             // Load icons for observandum
-            this.logoImage = new PdfImageXObject(
-                ImageDataFactory.create(IOUtils.toByteArray(new ClassPathResource(LOGO_PATH).getInputStream())));
+            final var logoImage = new PdfImageXObject(ImageDataFactory.create(new ClassPathResource(LOGO_PATH)
+                .getInputStream().readAllBytes()));
 
             // Initialize PDF writer
             PdfWriter writer = new PdfWriter(bos);
@@ -209,10 +207,10 @@ public class PdfExportServiceImpl extends BaseExportService implements PdfExport
         try {
             PdfFont regularFont = PdfFontFactory
                 .createFont(IOUtils.toByteArray(new ClassPathResource(REGULAR_UNICODE_CAPABLE_FONT_PATH).getInputStream()), IDENTITY_H,
-                    true);
+                    EmbeddingStrategy.PREFER_EMBEDDED, true);
             PdfFont boldFont = PdfFontFactory
                 .createFont(IOUtils.toByteArray(new ClassPathResource(BOLD_UNICODE_CAPABLE_FONT_PATH).getInputStream()), IDENTITY_H,
-                    true);
+                    EmbeddingStrategy.PREFER_EMBEDDED, true);
 
             Style defaultParagraphStyle = new Style()
                 .setFont(regularFont)
