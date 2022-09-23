@@ -142,13 +142,11 @@ dependencies {
 
     testCompile "io.rest-assured:rest-assured"
     testCompile "io.rest-assured:json-schema-validator"
-    testCompile "com.sun.xml.bind:jaxb-osgi:2.3.2" // Can remove when rest-assured in BOM > version 4.0
 
     testCompile "jakarta.jms:jakarta.jms-api"
     testCompile "org.hamcrest:hamcrest"
     testCompile "org.hamcrest:hamcrest-library"
     testCompile "org.springframework:spring-test"
-    testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "org.testng:testng:${testngVersion}"
 
     gretty "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"

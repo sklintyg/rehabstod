@@ -29,7 +29,6 @@ ext {
     springSecurityExtensionsVersion = "1.0.3.RELEASE"
     shedlockSpringVersion = "4.42.0"
     testngVersion = "7.6.1"
-    unitilsCoreVersion = "3.4.6"
 
     nodeJsVersion = "12.22.12"
     npmVersion = "6.14.16"

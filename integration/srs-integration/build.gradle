@@ -6,6 +6,5 @@ dependencies {
 
     compile "jakarta.xml.ws:jakarta.xml.ws-api"
 
-    testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "org.springframework:spring-test"
 }

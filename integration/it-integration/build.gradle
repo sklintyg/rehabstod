@@ -8,6 +8,5 @@ dependencies {
     compile "se.inera.intyg.infra:pu-integration:${intygInfraVersion}"
     compile "se.inera.intyg.infra:certificate:${intygInfraVersion}"
 
-    testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "org.springframework:spring-test"
 }
