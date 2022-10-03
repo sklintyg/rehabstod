@@ -14,6 +14,7 @@ task restAssuredTest(type: Test) {
     systemProperty "integration.tests.baseUrl", System.properties['baseUrl'] ?: "http://localhost:8030/"
     include '**/*IT*'
     environment "catalina.base",  "${buildDir}/catalina.base"
+    useJUnitPlatform()
 }
 
 idea {
