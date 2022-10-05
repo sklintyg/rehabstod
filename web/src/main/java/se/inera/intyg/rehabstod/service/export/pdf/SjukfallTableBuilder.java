@@ -32,7 +32,7 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Text;
-import com.itextpdf.layout.property.UnitValue;
+import com.itextpdf.layout.properties.UnitValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,7 +61,7 @@ class SjukfallTableBuilder {
     private static final int MAXLENGTH_LAKARE_NAMN = 30;
     private static final int MAXLENGTH_DIAGNOS = 40;
     private static final int TOTAL_NUM_COLUMNS = 5;
-    private PdfStyle style;
+    private final PdfStyle style;
 
     SjukfallTableBuilder(PdfStyle style) {
         this.style = style;
@@ -79,7 +79,7 @@ class SjukfallTableBuilder {
             .setWidth(UnitValue.createPercentValue(widthPercentage));
     }
 
-    BlockElement buildsjukfallTable(List<SjukfallEnhet> sjukfallList, RehabstodUser user,
+    BlockElement<Table> buildsjukfallTable(List<SjukfallEnhet> sjukfallList, RehabstodUser user,
         PrintSjukfallRequest printSjukfallRequest, boolean srsFeatureActive) {
 
         final List<ExportField> enabledFields = ExportField.fromJson(user.getPreferences().get(Preference.SJUKFALL_TABLE_COLUMNS));

@@ -73,8 +73,8 @@ public class SRSIntegrationClientConfiguration {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(srsWsUrl);
         proxyFactoryBean.setServiceClass(GetRiskPredictionForCertificateResponderInterface.class);
-        GetRiskPredictionForCertificateResponderInterface getRiskPredictionForCertificateResponderInterface = (GetRiskPredictionForCertificateResponderInterface) proxyFactoryBean
-            .create();
+        GetRiskPredictionForCertificateResponderInterface getRiskPredictionForCertificateResponderInterface =
+            (GetRiskPredictionForCertificateResponderInterface) proxyFactoryBean.create();
         Client client = ClientProxy.getClient(getRiskPredictionForCertificateResponderInterface);
         applyTimeouts(client);
         return getRiskPredictionForCertificateResponderInterface;
@@ -100,8 +100,8 @@ public class SRSIntegrationClientConfiguration {
         proxyFactoryBean.setAddress(srsWsPingUrl);
         proxyFactoryBean.setServiceClass(PingForConfigurationResponderInterface.class);
 
-        PingForConfigurationResponderInterface pingForConfigurationResponderInterface = (PingForConfigurationResponderInterface) proxyFactoryBean
-            .create();
+        PingForConfigurationResponderInterface pingForConfigurationResponderInterface =
+            (PingForConfigurationResponderInterface) proxyFactoryBean.create();
         Client client = ClientProxy.getClient(pingForConfigurationResponderInterface);
         applyTimeouts(client);
         return pingForConfigurationResponderInterface;

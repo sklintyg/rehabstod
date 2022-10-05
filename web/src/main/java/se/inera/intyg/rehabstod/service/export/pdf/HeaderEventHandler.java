@@ -18,10 +18,6 @@
  */
 package se.inera.intyg.rehabstod.service.export.pdf;
 
-/**
- * Created by marced on 25/02/16.
- */
-
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfExportServiceImpl.PAGE_MARGIN_LEFT;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfExportServiceImpl.PAGE_MARGIN_RIGHT;
 import static se.inera.intyg.rehabstod.service.export.pdf.PdfExportServiceImpl.PAGE_MARGIN_TOP;
@@ -31,26 +27,23 @@ import com.itextpdf.kernel.events.Event;
 import com.itextpdf.kernel.events.IEventHandler;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
 import com.itextpdf.kernel.geom.Rectangle;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.kernel.pdf.xobject.PdfImageXObject;
+import com.itextpdf.kernel.pdf.xobject.PdfXObject;
 import com.itextpdf.layout.Canvas;
-import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.properties.TextAlignment;
 import java.time.LocalDateTime;
 import se.inera.intyg.rehabstod.common.util.HourMinuteFormatter;
 import se.inera.intyg.rehabstod.common.util.YearMonthDateFormatter;
 
 public class HeaderEventHandler implements IEventHandler {
 
-
     protected static final float LOGO_WIDTH = 25f;
     protected static final float LOGO_ESTIMATED_HEIGHT = 15f;
 
-    private PdfImageXObject logo;
-    private float footerFontSize;
-    private String printedByText;
-
+    private final PdfImageXObject logo;
+    private final float footerFontSize;
+    private final String printedByText;
 
     public HeaderEventHandler(PdfImageXObject logo, String userName, String enhetsNamn, float footerFontSize) {
         this.logo = logo;
@@ -60,27 +53,27 @@ public class HeaderEventHandler implements IEventHandler {
             YearMonthDateFormatter.print(now), HourMinuteFormatter.print(now), enhetsNamn, userName);
     }
 
-
     @Override
     public void handleEvent(Event event) {
         if (!(event instanceof PdfDocumentEvent)) {
             return;
         }
 
-        PdfDocumentEvent docEvent = (PdfDocumentEvent) event;
-        PdfDocument pdf = docEvent.getDocument();
-        PdfPage page = docEvent.getPage();
+        final var  docEvent = (PdfDocumentEvent) event;
+        final var  pdf = docEvent.getDocument();
+        final var  page = docEvent.getPage();
 
-        Rectangle pageSize = page.getPageSize();
-        PdfCanvas pdfCanvas = new PdfCanvas(page.newContentStreamBefore(), page.getResources(), pdf);
-        Canvas canvas = new Canvas(pdfCanvas, pdf, pageSize);
+        final var  pageSize = page.getPageSize();
+        final var  pdfCanvas = new PdfCanvas(page.newContentStreamBefore(), page.getResources(), pdf);
+        final var  canvas = new Canvas(pdfCanvas, pageSize);
 
-        // Logotyp
-        pdfCanvas.addXObject(logo, millimetersToPoints(PAGE_MARGIN_LEFT), pageSize.getTop() - PAGE_MARGIN_TOP - LOGO_ESTIMATED_HEIGHT,
-            millimetersToPoints(LOGO_WIDTH));
+        final var logoX = millimetersToPoints(PAGE_MARGIN_LEFT);
+        final var logoY = pageSize.getTop() - PAGE_MARGIN_TOP - LOGO_ESTIMATED_HEIGHT;
+        final var logoWidth = millimetersToPoints(LOGO_WIDTH);
+        final var rectangle = PdfXObject.calculateProportionallyFitRectangleWithWidth(logo, logoX, logoY, logoWidth);
 
+        pdfCanvas.addXObjectFittedIntoRectangle(logo, rectangle);
         renderPrintedBy(pageSize, canvas);
-
         pdfCanvas.release();
     }
 

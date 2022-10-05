@@ -1,11 +1,15 @@
 dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind"
-    compile "com.h2database:h2:${h2Version}"
+    compile "com.h2database:h2"
 
     compile "org.springframework.data:spring-data-jpa"
     compile "org.jadira.usertype:usertype.core:${jadiraUserTypeVersion}"
     compile "org.liquibase:liquibase-core"
     compile "org.springframework:spring-orm"
+
+    compile "org.hibernate:hibernate-core"
+    compile "org.hibernate:hibernate-hikaricp"
+    compile "org.hibernate:hibernate-entitymanager"
 
     compile "javax.annotation:javax.annotation-api"
 

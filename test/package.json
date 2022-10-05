@@ -5,8 +5,7 @@
     "dependencies": {
         "chrome-launcher": "^0.11.2",
         "chrome-remote-interface": "^0.28.0",
-        "rehabstod-testtools": "file:rehabstodTestTools",
-        "sleep": "^5.2.4"
+        "rehabstod-testtools": "file:rehabstodTestTools"
     },
     "devDependencies": {
         "grunt": "^0.4.5",

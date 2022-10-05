@@ -1,6 +1,6 @@
 apply plugin: 'war'
 apply plugin: 'org.gretty'
-apply plugin: 'com.moowork.grunt'
+apply plugin: 'nebula.grunt'
 
 war.rootSpec.exclude "logback.xml"
 
@@ -14,6 +14,7 @@ task restAssuredTest(type: Test) {
     systemProperty "integration.tests.baseUrl", System.properties['baseUrl'] ?: "http://localhost:8030/"
     include '**/*IT*'
     environment "catalina.base",  "${buildDir}/catalina.base"
+    useJUnitPlatform()
 }
 
 idea {
@@ -117,6 +118,7 @@ dependencies {
     compile "org.apache.activemq:activemq-spring"
     compile "org.apache.commons:commons-lang3"
     compile "org.apache.cxf:cxf-rt-features-logging:${cxfVersion}"
+    compile "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
     compile "org.apache.poi:poi-ooxml:${poiVersion}"
     compile "org.apache.poi:poi:${poiVersion}"
 
@@ -141,18 +143,14 @@ dependencies {
 
     testCompile "io.rest-assured:rest-assured"
     testCompile "io.rest-assured:json-schema-validator"
-    testCompile "com.sun.xml.bind:jaxb-osgi:2.3.2" // Can remove when rest-assured in BOM > version 4.0
 
     testCompile "jakarta.jms:jakarta.jms-api"
     testCompile "org.hamcrest:hamcrest"
     testCompile "org.hamcrest:hamcrest-library"
-    testCompile "org.powermock:powermock-module-junit4:${powermockVersion}"
-    testCompile "org.powermock:powermock-api-mockito2:${powermockVersion}"
     testCompile "org.springframework:spring-test"
-    testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "org.testng:testng:${testngVersion}"
 
     gretty "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
-    gretty "org.eclipse.jetty:apache-jstl:${apacheJstlVersion}"
+    gretty "org.eclipse.jetty:apache-jstl"
     gretty "se.inera.intyg.refdata:refdata:${refDataVersion}"
 }

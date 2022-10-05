@@ -8,6 +8,5 @@ dependencies {
 
     compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
 
-    testCompile "org.unitils:unitils-core:${unitilsCoreVersion}"
     testCompile "org.springframework:spring-test"
 }

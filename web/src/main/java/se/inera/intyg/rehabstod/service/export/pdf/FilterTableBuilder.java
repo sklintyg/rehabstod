@@ -42,7 +42,7 @@ import com.itextpdf.layout.element.BlockElement;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.UnitValue;
+import com.itextpdf.layout.properties.UnitValue;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -79,8 +79,8 @@ class FilterTableBuilder {
     private static final String NO_FILTER_VALUES_SELECTED_PLACEHOLDER = "-";
     private static final Color FILTER_TABLE_BACKGROUND_COLOR = new DeviceRgb(0xEF, 0xEF, 0xEF);
     private static final float FILTER_TABLE_MIN_HEIGHT = 25f;
-    private DiagnosKapitelService diagnosKapitelService;
-    private PdfStyle style;
+    private final DiagnosKapitelService diagnosKapitelService;
+    private final PdfStyle style;
 
     // CHECKSTYLE:OFF MagicNumber
 
@@ -89,7 +89,7 @@ class FilterTableBuilder {
         this.style = style;
     }
 
-    BlockElement buildFilterSettings(PrintSjukfallRequest printRequest, RehabstodUser user) {
+    BlockElement<Table> buildFilterSettings(PrintSjukfallRequest printRequest, RehabstodUser user) {
 
         int nrFilterColumns = user.getUrval() == Urval.ALL ? 4 : 3;
 
@@ -120,11 +120,11 @@ class FilterTableBuilder {
             .add(new Paragraph(FILTER_TITLE_SETTINGSSECTION).addStyle(style.getPageHeaderStyle())));
 
         table.addCell(buildFilterCellMulti(true, 1,
-            Arrays.asList(FILTER_TITLE_MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG),
-            Arrays.asList(String.format(TEMPLATESTRING_GLAPPDAGAR, user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG)))));
+            List.of(FILTER_TITLE_MAXANTAL_DAGAR_UPPEHALL_MELLAN_INTYG),
+            List.of(String.format(TEMPLATESTRING_GLAPPDAGAR, user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG)))));
         table.addCell(buildFilterCellMulti(false, nrFilterColumns - 1,
-            Arrays.asList(FILTER_TITLE_AVSLUTADE_SJUKFALL),
-            Arrays.asList(
+            List.of(FILTER_TITLE_AVSLUTADE_SJUKFALL),
+            List.of(
                 String
                     .format(TEMPLATESTRING_DAGAR_AVSLUTADE, user.getPreferences().get(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT)))));
 
@@ -178,7 +178,7 @@ class FilterTableBuilder {
     private Cell getLakareFilterCell(PrintSjukfallRequest printRequest, RehabstodUser user) {
 
         final List<String> lakare = printRequest.getLakare() != null ? printRequest.getLakare()
-            : Arrays.asList(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : FILTER_SELECTION_VALUE_ALLA);
+            : List.of(user.getUrval() == Urval.ISSUED_BY_ME ? user.getNamn() : FILTER_SELECTION_VALUE_ALLA);
 
         List<String> truncated = lakare.stream().map(name -> ellipsize(name, MAXLENGTH_LAKARNAMN)).collect(Collectors.toList());
         return buildFilterCell(false, FILTER_TITLE_LAKARE, truncated);
@@ -201,8 +201,8 @@ class FilterTableBuilder {
 
     private Cell getDiagnosFilterCell(PrintSjukfallRequest printRequest) {
         final List<String> diagnoses = printRequest.getDiagnosGrupper() != null ? printRequest.getDiagnosGrupper().stream()
-            .map(dg -> getDiagnosKapitelDisplayValue(dg)).collect(Collectors.toList())
-            : Arrays.asList(NO_FILTER_VALUES_SELECTED_PLACEHOLDER);
+            .map(this::getDiagnosKapitelDisplayValue).collect(Collectors.toList())
+            : List.of(NO_FILTER_VALUES_SELECTED_PLACEHOLDER);
 
         return buildFilterCell(true, FILTER_TITLE_DIAGNOSER, diagnoses);
     }
