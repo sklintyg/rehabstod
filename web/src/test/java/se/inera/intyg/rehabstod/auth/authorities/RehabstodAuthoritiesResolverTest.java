@@ -43,15 +43,16 @@ import se.inera.intyg.infra.security.common.model.Title;
 @RunWith(MockitoJUnitRunner.class)
 public class RehabstodAuthoritiesResolverTest {
 
-    private String authoritiesConfigurationFile = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
-    private String featuresConfigurationsFile = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    private final String authoritiesConfigurationFile = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
+    private final String featuresConfigurationsFile = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    private final Integer defaultMaxAliasesForCollections = 300;
 
     @Mock
     private HsaPersonService hsaPersonService;
 
     @Spy
     private SecurityConfigurationLoader configurationLoader = new SecurityConfigurationLoader(authoritiesConfigurationFile,
-        featuresConfigurationsFile);
+        featuresConfigurationsFile, defaultMaxAliasesForCollections);
 
     @InjectMocks
     private CommonAuthoritiesResolver authoritiesResolver = new CommonAuthoritiesResolver();
@@ -62,7 +63,7 @@ public class RehabstodAuthoritiesResolverTest {
     }
 
     @Test
-    public void testGetIntygsTyper() throws Exception {
+    public void testGetIntygsTyper() {
         // Arrange
 
         // Act
@@ -74,7 +75,7 @@ public class RehabstodAuthoritiesResolverTest {
     }
 
     @Test
-    public void testGetPrivileges() throws Exception {
+    public void testGetPrivileges() {
         // Arrange
 
         // Act
@@ -86,7 +87,7 @@ public class RehabstodAuthoritiesResolverTest {
     }
 
     @Test
-    public void testGetRequestOrigins() throws Exception {
+    public void testGetRequestOrigins() {
         // Arrange
 
         // Act
@@ -98,7 +99,7 @@ public class RehabstodAuthoritiesResolverTest {
     }
 
     @Test
-    public void testGetTitles() throws Exception {
+    public void testGetTitles() {
         // Arrange
 
         // Act

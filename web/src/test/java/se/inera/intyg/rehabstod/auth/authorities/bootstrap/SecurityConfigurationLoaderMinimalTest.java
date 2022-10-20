@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.auth.authorities.bootstrap;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -49,10 +48,11 @@ public class SecurityConfigurationLoaderMinimalTest {
     private static final String AUTHORITIES_CONFIGURATION_TEST_FILE = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test-minimal.yaml";
     private static final String FEATURES_CONFIGURATION_TEST_FILE = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
     private static final String AUTHORITIES_CONFIGURATION_OUTPUT_FILE = "classpath:AuthoritiesConfigurationLoaderTest/authorities-output-minimal.txt";
+    private static final Integer DEFAULT_MAX_ALIASES_FOR_COLLECTIONS = 300;
 
     @InjectMocks
     SecurityConfigurationLoader loader = new SecurityConfigurationLoader(AUTHORITIES_CONFIGURATION_TEST_FILE,
-        FEATURES_CONFIGURATION_TEST_FILE);
+        FEATURES_CONFIGURATION_TEST_FILE, DEFAULT_MAX_ALIASES_FOR_COLLECTIONS);
 
     @Before
     public void setupAuthoritiesConfiguration() {
@@ -68,11 +68,11 @@ public class SecurityConfigurationLoaderMinimalTest {
     public void loadConfigurationAndAssertTypeOfObjects() {
         AuthoritiesConfiguration configuration = loader.getAuthoritiesConfiguration();
 
-        assertTrue(configuration.getRequestOrigins().size() == 0);
-        assertTrue(configuration.getPrivileges().size() == 0);
-        assertTrue(configuration.getRoles().size() == 2);
-        assertTrue(configuration.getTitles().size() == 2);
-        assertTrue(configuration.getTitleCodes().size() == 4);
+        assertEquals(0, configuration.getRequestOrigins().size());
+        assertEquals(0, configuration.getPrivileges().size());
+        assertEquals(2, configuration.getRoles().size());
+        assertEquals(2, configuration.getTitles().size());
+        assertEquals(4, configuration.getTitleCodes().size());
 
         // Assert that lists are of specific types
         try {
@@ -106,7 +106,7 @@ public class SecurityConfigurationLoaderMinimalTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void loadConfigurationWithBadLocation() {
-        SecurityConfigurationLoader loader = new SecurityConfigurationLoader(null, null);
+        SecurityConfigurationLoader loader = new SecurityConfigurationLoader(null, null, null);
     }
 
     // ~ Private scope

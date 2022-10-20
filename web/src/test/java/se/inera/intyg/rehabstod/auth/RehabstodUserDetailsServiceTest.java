@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.cxf.staxutils.StaxUtils;
 import org.junit.Before;
@@ -91,9 +92,10 @@ public class RehabstodUserDetailsServiceTest {
 
     protected static final String AUTHORITIES_CONFIGURATION_FILE = "classpath:AuthoritiesConfigurationLoaderTest/authorities-test.yaml";
     protected static final String FEATURES_CONFIGURATION_FILE = "classpath:AuthoritiesConfigurationLoaderTest/features-test.yaml";
+    protected static final Integer DEFAULT_MAX_ALIASES_FOR_COLLECTIONS = 300;
 
     protected static final SecurityConfigurationLoader CONFIGURATION_LOADER = new SecurityConfigurationLoader(
-        AUTHORITIES_CONFIGURATION_FILE, FEATURES_CONFIGURATION_FILE);
+        AUTHORITIES_CONFIGURATION_FILE, FEATURES_CONFIGURATION_FILE, DEFAULT_MAX_ALIASES_FOR_COLLECTIONS);
     protected static final CommonAuthoritiesResolver AUTHORITIES_RESOLVER = new CommonAuthoritiesResolver();
     protected static final AuthoritiesValidator AUTHORITIES_VALIDATOR = new AuthoritiesValidator();
     private static final String PERSONAL_HSAID = "TST5565594230-106J";
@@ -265,12 +267,12 @@ public class RehabstodUserDetailsServiceTest {
     }
 
     @Test(expected = GenericAuthenticationException.class)
-    public void testGenericAuthenticationExceptionIsThrownWhenNoSamlCredentialsGiven() throws Exception {
+    public void testGenericAuthenticationExceptionIsThrownWhenNoSamlCredentialsGiven() {
         userDetailsService.loadUserBySAML(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testGetAssertionWithNullThrowsIllegalArgumentException() throws Exception {
+    public void testGetAssertionWithNullThrowsIllegalArgumentException() {
         userDetailsService.getAssertion(null);
     }
 
@@ -373,7 +375,7 @@ public class RehabstodUserDetailsServiceTest {
 
         // Test
         userDetailsService.removeEnheterMissingRehabKoordinatorRole(original,
-            systemRoles.stream().map(rt -> rt.getRole()).collect(Collectors.toList()),
+            systemRoles.stream().map(HsaSystemRole::getRole).collect(Collectors.toList()),
             "userHsaId");
 
         // Verify
@@ -389,10 +391,9 @@ public class RehabstodUserDetailsServiceTest {
     }
 
     private List<HsaSystemRole> buildSystemRoles() {
-        return Arrays.asList(SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2,
+        return Stream.of(SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2,
             SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
             SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23)
-            .stream()
             .map(s -> {
                 HsaSystemRole hsaSystemRole = new HsaSystemRole();
                 hsaSystemRole.setRole(s);
@@ -439,9 +440,9 @@ public class RehabstodUserDetailsServiceTest {
         Vardenhet enhet1 = new Vardenhet(ENHET_HSAID_1, "Skall bort");
         vardgivare1.getVardenheter().add(enhet1);
 
-        List<String> systemRoles = Arrays.asList(SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2);
+        List<String> systemRoles = List.of(SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2);
 
-        List<Vardgivare> original = new ArrayList<>(Arrays.asList(vardgivare1));
+        List<Vardgivare> original = new ArrayList<>(List.of(vardgivare1));
 
         // Act
         userDetailsService.removeEnheterMissingRehabKoordinatorRole(original, systemRoles, "userHsaId");
@@ -475,7 +476,7 @@ public class RehabstodUserDetailsServiceTest {
 
         vardgivare.getVardenheter().add(enhet2);
 
-        return new ArrayList<>(Arrays.asList(vardgivare));
+        return new ArrayList<>(List.of(vardgivare));
     }
 
     private Map<String, String> buildMiuPerCareUnitMap() {
@@ -506,7 +507,7 @@ public class RehabstodUserDetailsServiceTest {
 
     private void setupCallToGetHsaPersonInfoNonDoctor(String title) {
         List<String> specs = new ArrayList<>();
-        List<String> legitimeradeYrkesgrupper = Arrays.asList("Vårdadministratör");
+        List<String> legitimeradeYrkesgrupper = List.of("Vårdadministratör");
         List<String> befattningar = Collections.emptyList();
 
         List<PersonInformation> userTypes = Collections
