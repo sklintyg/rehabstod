@@ -107,6 +107,22 @@ allprojects {
     }
 }
 
+gradle.taskGraph.whenReady {
+    def runningRestAssuredTest = false
+    project('rehabstod-web') { runningRestAssuredTest = gradle.taskGraph.getAllTasks().contains(restAssuredTest) }
+
+    if (runningRestAssuredTest) {
+        project('rehabstod-web') { test.enabled(false) }
+        project('rehabstod-common') { test.enabled(false) }
+        project('rehabstod-persistence') { test.enabled(false) }
+        project('rehabstod-it-integration') { test.enabled(false) }
+        project('rehabstod-samtyckestjanst-integration') { test.enabled(false) }
+        project('rehabstod-sparrtjanst-integration') { test.enabled(false) }
+        project('rehabstod-srs-integration') { test.enabled(false) }
+        project('rehabstod-wc-integration') { test.enabled(false) }
+    }
+}
+
 task tagRelease(type: TagReleaseTask)
 
 def environment = project.findProperty('env') ?: "local"
