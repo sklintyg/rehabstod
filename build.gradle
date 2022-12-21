@@ -6,7 +6,7 @@ plugins {
 }
 
 ext {
-    intygInfraVersion = System.properties['infraVersion'] ?: '3.18.0-SNAPSHOT'
+    intygInfraVersion = System.properties['infraVersion'] ?: '3.19.0-SNAPSHOT'
     refDataVersion = System.properties['refDataVersion'] ?: '1.0-SNAPSHOT'
 
     intygHealthcondRehabilitationSchemasVersion = "1.1.3"
@@ -19,7 +19,7 @@ ext {
     srsSchemasVersion = "0.0.16"
 
     commonsIoVersion = "2.11.0"
-    cxfVersion = "3.5.3"
+    cxfVersion = "3.5.5"
     googleGuavaVersion = "31.1-jre"
     itext7Version = "7.2.3"
     jadiraUserTypeVersion = "6.0.1.GA"
@@ -33,7 +33,7 @@ ext {
     nodeJsVersion = "12.22.12"
     npmVersion = "6.14.16"
 
-    springbootMavenBomVersion = "2.7.3"
+    springbootMavenBomVersion = "2.7.6"
 }
 
 allprojects {
