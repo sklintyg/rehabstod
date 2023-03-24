@@ -38,6 +38,7 @@ public class SickLeaveController {
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SjukfallEnhet>> getSickLeavesForUnit() {
+        //SickLeavesResponseDTO - content (List<SE>)
         return new ResponseEntity<>(getActiveSickLeavesService.get(), HttpStatus.OK);
     }
 

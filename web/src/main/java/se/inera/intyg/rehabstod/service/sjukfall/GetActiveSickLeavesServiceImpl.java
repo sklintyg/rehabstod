@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
@@ -59,24 +60,33 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     @Override
     public List<SjukfallEnhet> get() {
         final var user = userService.getUser();
-        final var unitId = user.isValdVardenhetMottagning()
-            ? user.getValdVardenhet().getId() : ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
+        final var unitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
+        final var careUnitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
         final var certificateParameters = getCertificateParameters(user);
+        final var request = getRequest(user, unitId, careUnitId);
 
         LOG.debug("Getting sick leaves for unit {}", unitId);
-        final var sickLeavesFromIT = intygstjanstRestIntegrationService.getSickLeaveCertificatesForUnit(
-            ControllerUtil.getMaxGlapp(user),
-            ControllerUtil.getMaxDagarSedanSjukfallAvslut(user)
-        );
-        final var convertedSickLeaves = convertSickLeaves(sickLeavesFromIT, certificateParameters);
+        final var response = intygstjanstRestIntegrationService.getActiveSickLeaves(request);
+        final var convertedSickLeaves = convertSickLeaves(response.getContent(), certificateParameters);
 
         LOG.debug("Add patient names and filter on protected person for sick leaves");
         puService.enrichSjukfallWithPatientNamesAndFilterSekretess(convertedSickLeaves);
 
         LOG.debug("Logging that sick leaves have been fetched");
-        performPDLLogging(convertedSickLeaves, user.getHsaId(), unitId);
+        performMonitorLogging(convertedSickLeaves, user.getHsaId(), careUnitId != null ? careUnitId : unitId);
 
         return convertedSickLeaves;
+    }
+
+    private SickLeavesRequestDTO getRequest(RehabstodUser user, String unitId, String careUnitId) {
+        final var request = new SickLeavesRequestDTO();
+        request.setMaxCertificateGap(ControllerUtil.getMaxGlapp(user));
+        request.setMaxDaysSinceSickLeaveCompleted(ControllerUtil.getMaxDagarSedanSjukfallAvslut(user));
+        request.setUnitId(unitId);
+        request.setCareUnitId(careUnitId);
+        request.setDoctorId(user.getHsaId());
+        return request;
+
     }
 
     private List<SjukfallEnhet> convertSickLeaves(
@@ -100,7 +110,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         );
     }
 
-    private void performPDLLogging(List<SjukfallEnhet> sickLeaves, String hsaId, String unitId) {
+    private void performMonitorLogging(List<SjukfallEnhet> sickLeaves, String hsaId, String unitId) {
         if (sickLeaves == null) {
             return;
         }
