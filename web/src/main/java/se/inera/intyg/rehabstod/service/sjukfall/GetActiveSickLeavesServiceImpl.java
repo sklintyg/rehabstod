@@ -25,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
@@ -43,17 +45,20 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     private final PuService puService;
     private final MonitoringLogService monitoringLogService;
     private final SjukfallEngineMapper sjukfallEngineMapper;
+    private final PdlLogSickLeavesService pdlLogSickLeavesService;
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
 
     private static final Logger LOG = LoggerFactory.getLogger(GetActiveSickLeavesServiceImpl.class);
 
     @Autowired
     public GetActiveSickLeavesServiceImpl(UserService userService, PuService puService, MonitoringLogService monitoringLogService,
-        SjukfallEngineMapper sjukfallEngineMapper, IntygstjanstRestIntegrationService intygstjanstRestIntegrationService) {
+        SjukfallEngineMapper sjukfallEngineMapper, PdlLogSickLeavesService pdlLogSickLeavesService,
+        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService) {
         this.userService = userService;
         this.puService = puService;
         this.monitoringLogService = monitoringLogService;
         this.sjukfallEngineMapper = sjukfallEngineMapper;
+        this.pdlLogSickLeavesService = pdlLogSickLeavesService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
     }
 
@@ -74,6 +79,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
 
         LOG.debug("Logging that sick leaves have been fetched");
         performMonitorLogging(convertedSickLeaves, user.getHsaId(), careUnitId != null ? careUnitId : unitId);
+        pdlLogSickLeavesService.log(convertedSickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
         return convertedSickLeaves;
     }
