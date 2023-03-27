@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.integration.it.dto;
+package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.List;
-import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 public class SickLeavesResponseDTO {
     private List<SjukfallEnhet> content;
