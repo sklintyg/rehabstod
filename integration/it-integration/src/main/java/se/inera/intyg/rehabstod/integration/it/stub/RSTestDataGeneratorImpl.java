@@ -204,7 +204,6 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
     }
 
     private void addToActiveSickleavesList(Patient patient, HosPersonal hosPerson, List<SjukfallEnhet> list) {
-        // Start by resetting time to 60-120 days back in time..
         timeSimulator = LocalDateTime.now().minusDays(ThreadLocalRandom.current().nextInt(60, 120));
 
         final var sickLeave = new SjukfallEnhet();
@@ -273,11 +272,12 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
     }
 
     private void buildActiveSickleave(SjukfallEnhet sickleave, Patient patient, HosPersonal hosPerson) {
-        sickleave.setLakare(new Lakare(hosPerson.getPersonalId().toString(), hosPerson.getFullstandigtNamn()));
+        sickleave.setLakare(new Lakare(hosPerson.getPersonalId().getExtension(), hosPerson.getFullstandigtNamn()));
         sickleave.setPatient(new se.inera.intyg.infra.sjukfall.dto.Patient(
-            patient.getPersonId().toString(), patient.getFullstandigtNamn()
+            patient.getPersonId().getExtension(), patient.getFullstandigtNamn()
         ));
-        sickleave.setVardenhet(new Vardenhet(hosPerson.getEnhet().getEnhetsId().toString(), hosPerson.getEnhet().getEnhetsnamn()));
+        sickleave.setVardenhet(new Vardenhet(hosPerson.getEnhet().getEnhetsId().getExtension(), hosPerson.getEnhet().getEnhetsnamn()));
+        sickleave.setVardgivare(new se.inera.intyg.infra.sjukfall.dto.Vardgivare("id", "namn"));
 
         sickleave.setDiagnosKod(new DiagnosKod(nextDiagnosis()));
         final var subDiagnosisCodes = new ArrayList<DiagnosKod>();

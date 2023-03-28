@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +32,7 @@ public class SickLeaveController {
     @Autowired
     private GetActiveSickLeavesService getActiveSickLeavesService;
 
-    @RequestMapping(value = "/active", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/active", method = RequestMethod.POST)
     public SickLeavesResponseDTO getSickLeavesForUnit() {
         return new SickLeavesResponseDTO(getActiveSickLeavesService.get());
     }
