@@ -42,6 +42,8 @@ import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
+import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
@@ -87,7 +89,8 @@ public class GetActiveSickLeavesServiceTest {
         when(user.getVardgivare()).thenReturn(Collections.singletonList(careGiver));
 
         final var preferences = new HashMap<String, String>();
-        preferences.put(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG.getBackendKeyName(), "5");
+        preferences.put(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG.getBackendKeyName(), gap);
+        preferences.put(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT.getBackendKeyName(), days);
         final var userPreferences = RehabstodUserPreferences.fromBackend(preferences);
         when(user.getPreferences()).thenReturn(userPreferences);
 
@@ -99,6 +102,8 @@ public class GetActiveSickLeavesServiceTest {
     final String HSA_ID = "HSA_ID";
     final String SUB_UNIT_ID = "SUB_UNIT_ID";
     final String UNIT_ID = "UNIT_ID";
+    final String gap = "5";
+    final String days = "10";
 
     @Nested
     class TestMonitorLogging {
@@ -144,6 +149,63 @@ public class GetActiveSickLeavesServiceTest {
 
             verify(pdlLogSickLeavesService)
                 .log(Collections.singletonList(sickLeave), ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
+        }
+    }
+
+    @Nested
+    class TestPU {
+        se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave = new se.inera.intyg.rehabstod.web.model.SjukfallEnhet();
+        @BeforeEach
+        void setup() {
+            when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
+                any(SjukfallEnhet.class), anyInt(), any(LocalDate.class)
+            )).thenReturn(sickLeave);
+
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+        }
+
+        @Test
+        void shouldMakeCallToPUForConvertedSickLeaves() {
+            getActiveSickLeavesService.get();
+
+            verify(puService).enrichSjukfallWithPatientNamesAndFilterSekretess(Collections.singletonList(sickLeave));
+        }
+    }
+
+    @Nested
+    class TestITRequest {
+        @Test
+        void shouldCreateRequestIncludingUnitId() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+
+            final var expectedRequest = new SickLeavesRequestDTO();
+            expectedRequest.setDoctorId(HSA_ID);
+            expectedRequest.setUnitId(UNIT_ID);
+            expectedRequest.setMaxCertificateGap(Integer.parseInt(gap));
+            expectedRequest.setMaxDaysSinceSickLeaveCompleted(Integer.parseInt(days));
+
+            getActiveSickLeavesService.get();
+
+            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(expectedRequest);
+        }
+
+        @Test
+        void shouldCreateRequestIncludingSubUnitId() {
+            final var subUnit = mock(SelectableVardenhet.class);
+            when(subUnit.getId()).thenReturn(SUB_UNIT_ID);
+            when(user.getValdVardenhet()).thenReturn(subUnit);
+
+            final var expectedRequest = new SickLeavesRequestDTO();
+            expectedRequest.setDoctorId(HSA_ID);
+            expectedRequest.setUnitId(UNIT_ID);
+            expectedRequest.setMaxCertificateGap(Integer.parseInt(gap));
+            expectedRequest.setMaxDaysSinceSickLeaveCompleted(Integer.parseInt(days));
+
+            getActiveSickLeavesService.get();
+
+            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(expectedRequest);
         }
     }
 }
