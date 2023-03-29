@@ -27,13 +27,16 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
@@ -76,11 +79,13 @@ public class GetActiveSickLeavesServiceTest {
     GetActiveSickLeavesServiceImpl getActiveSickLeavesService;
 
     Vardenhet unit;
+    SelectableVardenhet careGiverUnit;
+    Vardgivare careGiver;
 
     @BeforeEach
     void setup() {
-        final var careGiverUnit = mock(SelectableVardenhet.class);
-        final var careGiver = mock(Vardgivare.class);
+        careGiverUnit = mock(SelectableVardenhet.class);
+        careGiver = mock(Vardgivare.class);
         unit = mock(Vardenhet.class);
 
         when(userService.getUser()).thenReturn(user);
@@ -110,9 +115,7 @@ public class GetActiveSickLeavesServiceTest {
 
         @Test
         void shouldLogUsingSubUnitIdIfChosen() {
-            final var subUnit = mock(SelectableVardenhet.class);
-            when(subUnit.getId()).thenReturn(SUB_UNIT_ID);
-            when(user.getValdVardenhet()).thenReturn(subUnit);
+            setupSubUnit();
 
             getActiveSickLeavesService.get();
 
@@ -176,36 +179,49 @@ public class GetActiveSickLeavesServiceTest {
     @Nested
     class TestITRequest {
         @Test
-        void shouldCreateRequestIncludingUnitId() {
+        void shouldCreateRequestWithCorrectValuesWhenChosenUnit() {
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
 
-            final var expectedRequest = new SickLeavesRequestDTO();
-            expectedRequest.setDoctorId(HSA_ID);
-            expectedRequest.setUnitId(UNIT_ID);
-            expectedRequest.setMaxCertificateGap(Integer.parseInt(gap));
-            expectedRequest.setMaxDaysSinceSickLeaveCompleted(Integer.parseInt(days));
-
+            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
             getActiveSickLeavesService.get();
 
-            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(expectedRequest);
+            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+            Assertions.assertNull(captor.getValue().getCareUnitId());
+            Assertions.assertEquals(UNIT_ID, captor.getValue().getUnitId());
+            Assertions.assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
+            Assertions.assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+            Assertions.assertEquals(HSA_ID, captor.getValue().getDoctorId());
         }
 
         @Test
-        void shouldCreateRequestIncludingSubUnitId() {
-            final var subUnit = mock(SelectableVardenhet.class);
-            when(subUnit.getId()).thenReturn(SUB_UNIT_ID);
-            when(user.getValdVardenhet()).thenReturn(subUnit);
+        void shouldCreateRequestWithCorrectValuesWhenChosenSubUnit() {
+            setupSubUnit();
 
-            final var expectedRequest = new SickLeavesRequestDTO();
-            expectedRequest.setDoctorId(HSA_ID);
-            expectedRequest.setUnitId(UNIT_ID);
-            expectedRequest.setMaxCertificateGap(Integer.parseInt(gap));
-            expectedRequest.setMaxDaysSinceSickLeaveCompleted(Integer.parseInt(days));
-
+            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
             getActiveSickLeavesService.get();
 
-            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(expectedRequest);
+            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+            Assertions.assertEquals(SUB_UNIT_ID, captor.getValue().getCareUnitId());
+            Assertions.assertEquals(UNIT_ID, captor.getValue().getUnitId());
+            Assertions.assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
+            Assertions.assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+            Assertions.assertEquals(HSA_ID, captor.getValue().getDoctorId());
+
         }
+    }
+
+    private void setupSubUnit() {
+        when(user.isValdVardenhetMottagning()).thenReturn(true);
+
+        final var subUnit = mock(SelectableVardenhet.class);
+        final var mottagning = mock(Mottagning.class);
+        when(mottagning.getId()).thenReturn(SUB_UNIT_ID);
+        when(subUnit.getId()).thenReturn(SUB_UNIT_ID);
+        when(user.getValdVardenhet()).thenReturn(subUnit);
+
+        when(careGiver.getVardenheter()).thenReturn(Collections.singletonList(unit));
+        when(unit.getMottagningar()).thenReturn(Collections.singletonList(mottagning));
+        when(unit.getId()).thenReturn(UNIT_ID);
     }
 }
