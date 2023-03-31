@@ -61,8 +61,8 @@ public class PdlLogSickLeavesServiceTest {
     SjukfallEnhet notLoggedSickLeave = new SjukfallEnhet();
     List<SjukfallEnhet> list = Arrays.asList(loggedSickLeave, notLoggedSickLeave);
 
-    final String LOGGED_PATIENT_ID = "191212121212";
-    final String NOT_LOGGED_PATIENT_ID = "201212121212";
+    final static String LOGGED_PATIENT_ID = "191212121212";
+    final static String NOT_LOGGED_PATIENT_ID = "201212121212";
 
     @BeforeEach
     void setup() {
@@ -92,6 +92,8 @@ public class PdlLogSickLeavesServiceTest {
 
         pdlLogSickLeavesService.log(list, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
-        verify(logService).logSjukfallData(Collections.singletonList(notLoggedSickLeave), ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
+        verify(logService).logSjukfallData(
+            Collections.singletonList(notLoggedSickLeave), ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL
+        );
     }
 }
