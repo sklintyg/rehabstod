@@ -286,10 +286,11 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         }
         sickleave.setBiDiagnoser(subDiagnosisCodes);
 
-        sickleave.setAktivGrad(getNextSjukskrivningsgrad());
+        sickleave.setGrader(getSjukskrivningsGrader());
+        sickleave.setAktivGrad(sickleave.getGrader().get(0));
 
         sickleave.setStart(LocalDate.from(timeSimulator));
-        sickleave.setSlut(LocalDate.from(timeSimulator.minusDays(60)));
+        sickleave.setSlut(LocalDate.from(timeSimulator.plusDays(60)));
         sickleave.setDagar(60);
         sickleave.setIntyg(1);
     }
@@ -476,6 +477,17 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         intygsData.setArbetsformaga(arbetsformaga);
 
         return intygsData;
+    }
+
+    private List<Integer> getSjukskrivningsGrader() {
+        List<Integer> sjukskrivningsgradList = new ArrayList<>();
+
+        int antalPerioder = 2;
+
+        for (int i = 0; i < antalPerioder; i++) {
+            sjukskrivningsgradList.add(getNextSjukskrivningsgrad());
+        }
+        return sjukskrivningsgradList;
     }
 
     private List<Formaga> getSjukskrivningsPerioder() {
