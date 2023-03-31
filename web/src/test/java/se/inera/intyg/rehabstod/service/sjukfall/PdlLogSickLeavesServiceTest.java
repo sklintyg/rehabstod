@@ -61,8 +61,8 @@ public class PdlLogSickLeavesServiceTest {
     SjukfallEnhet notLoggedSickLeave = new SjukfallEnhet();
     List<SjukfallEnhet> list = Arrays.asList(loggedSickLeave, notLoggedSickLeave);
 
-    final static String LOGGED_PATIENT_ID = "191212121212";
-    final static String NOT_LOGGED_PATIENT_ID = "201212121212";
+    static final String LOGGED_PATIENT_ID = "191212121212";
+    static final String NOT_LOGGED_PATIENT_ID = "201212121212";
 
     @BeforeEach
     void setup() {
