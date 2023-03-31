@@ -104,11 +104,11 @@ public class GetActiveSickLeavesServiceTest {
     }
 
     final RehabstodUser user = mock(RehabstodUser.class);
-    final String HSA_ID = "HSA_ID";
-    final String SUB_UNIT_ID = "SUB_UNIT_ID";
-    final String UNIT_ID = "UNIT_ID";
-    final String gap = "5";
-    final String days = "10";
+    final static String HSA_ID = "HSA_ID";
+    final static String SUB_UNIT_ID = "SUB_UNIT_ID";
+    final static String UNIT_ID = "UNIT_ID";
+    final static String gap = "5";
+    final static String days = "10";
 
     @Nested
     class TestMonitorLogging {
