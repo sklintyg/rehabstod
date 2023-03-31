@@ -32,7 +32,6 @@ import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.TypedCertificateRequest;
-import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
 
