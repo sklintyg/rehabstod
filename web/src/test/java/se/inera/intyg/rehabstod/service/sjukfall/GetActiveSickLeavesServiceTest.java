@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -87,11 +88,10 @@ public class GetActiveSickLeavesServiceTest {
         careGiverUnit = mock(SelectableVardenhet.class);
         careGiver = mock(Vardgivare.class);
         unit = mock(Vardenhet.class);
+        user = mock(RehabstodUser.class);
 
         when(userService.getUser()).thenReturn(user);
         when(user.getHsaId()).thenReturn(HSA_ID);
-        when(user.getValdVardgivare()).thenReturn(careGiverUnit);
-        when(user.getVardgivare()).thenReturn(Collections.singletonList(careGiver));
 
         final var preferences = new HashMap<String, String>();
         preferences.put(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG.getBackendKeyName(), gap);
@@ -103,7 +103,7 @@ public class GetActiveSickLeavesServiceTest {
         when(intygstjanstRestIntegrationService.getActiveSickLeaves(any())).thenReturn(response);
     }
 
-    static final RehabstodUser user = mock(RehabstodUser.class);
+    static RehabstodUser user;
     static final String HSA_ID = "HSA_ID";
     static final String SUB_UNIT_ID = "SUB_UNIT_ID";
     static final String UNIT_ID = "UNIT_ID";
@@ -187,11 +187,11 @@ public class GetActiveSickLeavesServiceTest {
             getActiveSickLeavesService.get();
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            Assertions.assertNull(captor.getValue().getCareUnitId());
-            Assertions.assertEquals(UNIT_ID, captor.getValue().getUnitId());
-            Assertions.assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
-            Assertions.assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
-            Assertions.assertEquals(HSA_ID, captor.getValue().getDoctorId());
+            Assertions.assertNull(captor.getValue().getUnitId());
+            assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
+            assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
+            assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+            assertEquals(HSA_ID, captor.getValue().getDoctorId());
         }
 
         @Test
@@ -202,12 +202,11 @@ public class GetActiveSickLeavesServiceTest {
             getActiveSickLeavesService.get();
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            Assertions.assertEquals(SUB_UNIT_ID, captor.getValue().getCareUnitId());
-            Assertions.assertEquals(UNIT_ID, captor.getValue().getUnitId());
-            Assertions.assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
-            Assertions.assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
-            Assertions.assertEquals(HSA_ID, captor.getValue().getDoctorId());
-
+            assertEquals(SUB_UNIT_ID, captor.getValue().getUnitId());
+            assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
+            assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
+            assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+            assertEquals(HSA_ID, captor.getValue().getDoctorId());
         }
     }
 
@@ -223,5 +222,6 @@ public class GetActiveSickLeavesServiceTest {
         when(careGiver.getVardenheter()).thenReturn(Collections.singletonList(unit));
         when(unit.getMottagningar()).thenReturn(Collections.singletonList(mottagning));
         when(unit.getId()).thenReturn(UNIT_ID);
+        when(user.getVardgivare()).thenReturn(Collections.singletonList(careGiver));
     }
 }
