@@ -65,12 +65,12 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     @Override
     public List<SjukfallEnhet> get() {
         final var user = userService.getUser();
-        final var unitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-        final var careUnitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
+        final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
+        final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
         final var certificateParameters = getCertificateParameters(user);
         final var request = getRequest(user, unitId, careUnitId);
 
-        LOG.debug("Getting sick leaves for unit {}", unitId);
+        LOG.debug("Getting sick leaves for unit {}", careUnitId);
         final var response = intygstjanstRestIntegrationService.getActiveSickLeaves(request);
         final var convertedSickLeaves = convertSickLeaves(response.getContent(), certificateParameters);
 
@@ -78,7 +78,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         puService.enrichSjukfallWithPatientNamesAndFilterSekretess(convertedSickLeaves);
 
         LOG.debug("Logging that sick leaves have been fetched");
-        performMonitorLogging(convertedSickLeaves, user.getHsaId(), careUnitId != null ? careUnitId : unitId);
+        performMonitorLogging(convertedSickLeaves, user.getHsaId(), unitId != null ? unitId : careUnitId);
         pdlLogSickLeavesService.log(convertedSickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
         return convertedSickLeaves;
