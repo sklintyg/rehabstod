@@ -336,15 +336,15 @@ public class SjukfallEngineMapperTest {
     }
 
     private se.inera.intyg.infra.sjukfall.dto.Lakare createLakare() {
-        return new se.inera.intyg.infra.sjukfall.dto.Lakare(LAKAREID, LAKARENAMN);
+        return se.inera.intyg.infra.sjukfall.dto.Lakare.create(LAKAREID, LAKARENAMN);
     }
 
     private se.inera.intyg.infra.sjukfall.dto.Patient createPatient() {
-        return new se.inera.intyg.infra.sjukfall.dto.Patient(PERSONNUMMER, PERSONNAMN);
+        return se.inera.intyg.infra.sjukfall.dto.Patient.create(PERSONNUMMER, PERSONNAMN);
     }
 
     private se.inera.intyg.infra.sjukfall.dto.DiagnosKod createDiagnosKod(String diagnos) {
-        return new se.inera.intyg.infra.sjukfall.dto.DiagnosKod(diagnos);
+        return se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create(diagnos);
     }
 
     private List<se.inera.intyg.infra.sjukfall.dto.DiagnosKod> createBiDiagnoser(String diagnos) {
@@ -369,11 +369,11 @@ public class SjukfallEngineMapperTest {
     }
 
     private se.inera.intyg.infra.sjukfall.dto.Vardgivare createVardivare() {
-        return new se.inera.intyg.infra.sjukfall.dto.Vardgivare(VARDGIVAREID, VARDGIVARENAMN);
+        return se.inera.intyg.infra.sjukfall.dto.Vardgivare.create(VARDGIVAREID, VARDGIVARENAMN);
     }
 
     private se.inera.intyg.infra.sjukfall.dto.Vardenhet createVardenhet() {
-        return new se.inera.intyg.infra.sjukfall.dto.Vardenhet(VARDENHETID, VARDENHETNAMN);
+        return se.inera.intyg.infra.sjukfall.dto.Vardenhet.create(VARDENHETID, VARDENHETNAMN);
     }
 
 }

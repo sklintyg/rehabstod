@@ -272,17 +272,17 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
     }
 
     private void buildActiveSickleave(SjukfallEnhet sickleave, Patient patient, HosPersonal hosPerson) {
-        sickleave.setLakare(new Lakare(hosPerson.getPersonalId().getExtension(), hosPerson.getFullstandigtNamn()));
-        sickleave.setPatient(new se.inera.intyg.infra.sjukfall.dto.Patient(
+        sickleave.setLakare(Lakare.create(hosPerson.getPersonalId().getExtension(), hosPerson.getFullstandigtNamn()));
+        sickleave.setPatient(se.inera.intyg.infra.sjukfall.dto.Patient.create(
             patient.getPersonId().getExtension(), patient.getFullstandigtNamn()
         ));
-        sickleave.setVardenhet(new Vardenhet(hosPerson.getEnhet().getEnhetsId().getExtension(), hosPerson.getEnhet().getEnhetsnamn()));
-        sickleave.setVardgivare(new se.inera.intyg.infra.sjukfall.dto.Vardgivare("id", "namn"));
+        sickleave.setVardenhet(Vardenhet.create(hosPerson.getEnhet().getEnhetsId().getExtension(), hosPerson.getEnhet().getEnhetsnamn()));
+        sickleave.setVardgivare(se.inera.intyg.infra.sjukfall.dto.Vardgivare.create("id", "namn"));
 
-        sickleave.setDiagnosKod(new DiagnosKod(nextDiagnosis()));
+        sickleave.setDiagnosKod(DiagnosKod.create(nextDiagnosis()));
         final var subDiagnosisCodes = new ArrayList<DiagnosKod>();
         for (int i = ThreadLocalRandom.current().nextInt(3); i > 0; i--) {
-            subDiagnosisCodes.add(new DiagnosKod(nextDiagnosis()));
+            subDiagnosisCodes.add(DiagnosKod.create(nextDiagnosis()));
         }
         sickleave.setBiDiagnoser(subDiagnosisCodes);
 
