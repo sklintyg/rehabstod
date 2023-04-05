@@ -120,7 +120,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
     @Override
     public PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request) {
-        final String url = intygstjanstUrl + "/inera-certificate/internalapi/sickleave/populate/filters";
+        final String url = intygstjanstUrl + "/inera-certificate/internalapi/sickleave/filters";
 
         LOGGER.debug("Getting doctors with active sick leaves from Intygstjansten");
 
