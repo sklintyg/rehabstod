@@ -115,16 +115,8 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/sickleave/active";
 
         LOGGER.debug("Getting active sick leaves from Intygstjansten");
-        final var response = restTemplate.postForObject(url, request, SickLeavesResponseDTO.class);
 
-        return new SickLeavesResponseDTO(
-            response.getContent()
-                .stream()
-                .filter((sickLeave) -> request.getDoctorIds().size() == 0 || request.getDoctorId())
-                .filter((sickLeave) -> sickLeave.getStart().isAfter(LocalDate.now().plusDays(request.getFromSickLeaveLength())))
-                .filter((sickLeave) -> sickLeave.getSlut().isBefore((LocalDate.now().plusDays(request.getToSickLeaveLength()))))
-                .collect(Collectors.toList())
-        );
+        return restTemplate.postForObject(url, request, SickLeavesResponseDTO.class);
     }
 
     @Override

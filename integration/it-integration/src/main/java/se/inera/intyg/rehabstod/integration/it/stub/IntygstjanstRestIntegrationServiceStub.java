@@ -88,7 +88,16 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     @Override
     public SickLeavesResponseDTO getActiveSickLeaves(SickLeavesRequestDTO request) {
         return new SickLeavesResponseDTO(
-            rsTestIntygStub.getActiveSickLeaveData());
+            rsTestIntygStub.getActiveSickLeaveData()
+            .stream()
+            .filter(
+                (sickLeave) -> (request.getDoctorIds().size() == 0
+                    || request.getDoctorIds().contains(sickLeave.getLakare().getId()))
+                    && sickLeave.getDagar() >= request.getFromSickLeaveLength()
+                    && sickLeave.getDagar() <= request.getToSickLeaveLength()
+            )
+            .collect(Collectors.toList())
+        );
     }
 
     @Override
