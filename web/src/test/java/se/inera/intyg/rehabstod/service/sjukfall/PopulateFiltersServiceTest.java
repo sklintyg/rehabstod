@@ -59,7 +59,7 @@ public class PopulateFiltersServiceTest {
     IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
 
     @InjectMocks
-    PopulateFiltersImpl populateActiveFilters;
+    PopulateFiltersServiceImpl populateActiveFilters;
 
     static final RehabstodUser user = mock(RehabstodUser.class);
     static final String HSA_ID = "HSA_ID";

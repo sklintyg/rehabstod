@@ -31,12 +31,12 @@ import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 
 @Service
-public class PopulateFiltersImpl implements PopulateFiltersService {
+public class PopulateFiltersServiceImpl implements PopulateFiltersService {
 
     private final UserService userService;
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
 
-    public PopulateFiltersImpl(UserService userService,
+    public PopulateFiltersServiceImpl(UserService userService,
         IntygstjanstRestIntegrationService intygstjanstRestIntegrationService) {
         this.userService = userService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
