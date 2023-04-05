@@ -45,8 +45,8 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
     @Override
     public PopulateFiltersResponseDTO get() {
         final var user = userService.getUser();
-        final var unitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-        final var careUnitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
+        final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
+        final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
         final var request = getRequest(user, unitId, careUnitId);
         final var responseFromIT = intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(request);
         return new PopulateFiltersResponseDTO(convertDoctors(responseFromIT.getActiveDoctors()));

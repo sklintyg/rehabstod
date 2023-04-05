@@ -20,6 +20,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -110,8 +111,8 @@ public class PopulateFiltersServiceTest {
             populateActiveFilters.get();
 
             verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
-            Assertions.assertNull(captor.getValue().getCareUnitId());
-            assertEquals(UNIT_ID, captor.getValue().getUnitId());
+            assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
+            assertNull(captor.getValue().getUnitId());
             assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
             assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
         }
@@ -124,8 +125,8 @@ public class PopulateFiltersServiceTest {
             populateActiveFilters.get();
 
             verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
-            assertEquals(UNIT_ID, captor.getValue().getUnitId());
-            assertEquals(SUB_UNIT_ID, captor.getValue().getCareUnitId());
+            assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
+            assertEquals(SUB_UNIT_ID, captor.getValue().getUnitId());
             assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
             assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
         }
