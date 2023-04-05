@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,8 +115,16 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/sickleave/active";
 
         LOGGER.debug("Getting active sick leaves from Intygstjansten");
+        final var response = restTemplate.postForObject(url, request, SickLeavesResponseDTO.class);
 
-        return restTemplate.postForObject(url, request, SickLeavesResponseDTO.class);
+        return new SickLeavesResponseDTO(
+            response.getContent()
+                .stream()
+                .filter((sickLeave) -> request.getDoctorIds().size() == 0 || request.getDoctorId())
+                .filter((sickLeave) -> sickLeave.getStart().isAfter(LocalDate.now().plusDays(request.getFromSickLeaveLength())))
+                .filter((sickLeave) -> sickLeave.getSlut().isBefore((LocalDate.now().plusDays(request.getToSickLeaveLength()))))
+                .collect(Collectors.toList())
+        );
     }
 
     @Override
