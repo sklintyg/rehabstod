@@ -17,12 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall;
+package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.List;
-import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.web.model.Lakare;
 
-public interface GetActiveSickLeavesService {
-    List<SjukfallEnhet> get(SickLeavesFilterRequestDTO request);
+public class PopulateFiltersResponseDTO {
+    private List<Lakare> activeDoctors;
+
+    public PopulateFiltersResponseDTO(List<Lakare> activeDoctors) {
+        this.activeDoctors = activeDoctors;
+    }
+
+    public List<Lakare> getActiveDoctors() {
+        return activeDoctors;
+    }
+
+    public void setActiveDoctors(List<Lakare> activeDoctors) {
+        this.activeDoctors = activeDoctors;
+    }
 }

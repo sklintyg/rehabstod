@@ -19,16 +19,11 @@
 
 package se.inera.intyg.rehabstod.integration.it.dto;
 
-import java.util.List;
-
-public class SickLeavesRequestDTO {
+public class PopulateFiltersRequestDTO {
     private String unitId;
     private String careUnitId;
-    private List<String> doctorIds;
     private int maxCertificateGap;
     private int maxDaysSinceSickLeaveCompleted;
-    private int toSickLeaveLength;
-    private int fromSickLeaveLength;
 
     public String getUnitId() {
         return unitId;
@@ -46,13 +41,6 @@ public class SickLeavesRequestDTO {
         this.careUnitId = careUnitId;
     }
 
-    public List<String> getDoctorIds() {
-        return doctorIds;
-    }
-
-    public void setDoctorIds(List<String> doctorIds) {
-        this.doctorIds = doctorIds;
-    }
 
     public int getMaxCertificateGap() {
         return maxCertificateGap;
@@ -68,21 +56,5 @@ public class SickLeavesRequestDTO {
 
     public void setMaxDaysSinceSickLeaveCompleted(int maxDaysSinceSickLeaveCompleted) {
         this.maxDaysSinceSickLeaveCompleted = maxDaysSinceSickLeaveCompleted;
-    }
-
-    public int getToSickLeaveLength() {
-        return toSickLeaveLength;
-    }
-
-    public void setToSickLeaveLength(int toSickLeaveLength) {
-        this.toSickLeaveLength = toSickLeaveLength;
-    }
-
-    public int getFromSickLeaveLength() {
-        return fromSickLeaveLength;
-    }
-
-    public void setFromSickLeaveLength(int fromSickLeaveLength) {
-        this.fromSickLeaveLength = fromSickLeaveLength;
     }
 }

@@ -19,10 +19,15 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesService;
+import se.inera.intyg.rehabstod.service.sjukfall.PopulateFiltersService;
+import se.inera.intyg.rehabstod.web.controller.api.dto.PopulateFiltersResponseDTO;
+import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesResponseDTO;
 
 @RestController
@@ -32,10 +37,17 @@ public class SickLeaveController {
     @Autowired
     private GetActiveSickLeavesService getActiveSickLeavesService;
 
-    @RequestMapping(value = "/active", method = RequestMethod.POST)
-    public SickLeavesResponseDTO getSickLeavesForUnit() {
-        return new SickLeavesResponseDTO(getActiveSickLeavesService.get());
+    @Autowired
+    private PopulateFiltersService populateFiltersService;
+
+    @RequestMapping(value = "/active", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public SickLeavesResponseDTO getSickLeavesForUnit(@RequestBody SickLeavesFilterRequestDTO request) {
+        return new SickLeavesResponseDTO(getActiveSickLeavesService.get(request));
     }
 
+    @RequestMapping(value = "/filters", method = RequestMethod.GET)
+    public PopulateFiltersResponseDTO populateFilters() {
+        return populateFiltersService.get();
+    }
 
 }

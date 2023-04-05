@@ -26,6 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import org.junit.jupiter.api.Assertions;
@@ -54,6 +55,7 @@ import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
 public class GetActiveSickLeavesServiceTest {
@@ -109,6 +111,12 @@ public class GetActiveSickLeavesServiceTest {
     static final String UNIT_ID = "UNIT_ID";
     static final String gap = "5";
     static final String days = "10";
+    final static String DOCTOR_FILTER = "DOCTOR_ID";
+    static final int FROM_FILTER = 1;
+    static final int TO_FILTER = 365;
+    static final SickLeavesFilterRequestDTO expectedRequest = new SickLeavesFilterRequestDTO(Collections.singletonList(DOCTOR_FILTER), TO_FILTER, FROM_FILTER);
+    static final SickLeavesFilterRequestDTO expectedRequestDoctor = new SickLeavesFilterRequestDTO(new ArrayList<>(), TO_FILTER, FROM_FILTER);
+
 
     @Nested
     class TestMonitorLogging {
@@ -117,7 +125,7 @@ public class GetActiveSickLeavesServiceTest {
         void shouldLogUsingSubUnitIdIfChosen() {
             setupSubUnit();
 
-            getActiveSickLeavesService.get();
+            getActiveSickLeavesService.get(expectedRequest);
 
             verify(monitoringLogService).logUserViewedSjukfall(HSA_ID, 1, SUB_UNIT_ID);
         }
@@ -127,7 +135,7 @@ public class GetActiveSickLeavesServiceTest {
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
 
-            getActiveSickLeavesService.get();
+            getActiveSickLeavesService.get(expectedRequest);
 
             verify(monitoringLogService).logUserViewedSjukfall(HSA_ID, 1, UNIT_ID);
         }
@@ -148,7 +156,7 @@ public class GetActiveSickLeavesServiceTest {
 
         @Test
         void shouldPerformPdlLog() {
-            getActiveSickLeavesService.get();
+            getActiveSickLeavesService.get(expectedRequest);
 
             verify(pdlLogSickLeavesService)
                 .log(Collections.singletonList(sickLeave), ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
@@ -170,7 +178,7 @@ public class GetActiveSickLeavesServiceTest {
 
         @Test
         void shouldMakeCallToPUForConvertedSickLeaves() {
-            getActiveSickLeavesService.get();
+            getActiveSickLeavesService.get(expectedRequest);
 
             verify(puService).enrichSjukfallWithPatientNamesAndFilterSekretess(Collections.singletonList(sickLeave));
         }
@@ -184,14 +192,16 @@ public class GetActiveSickLeavesServiceTest {
             when(unit.getId()).thenReturn(UNIT_ID);
 
             final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get();
+            getActiveSickLeavesService.get(expectedRequest);
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
             Assertions.assertNull(captor.getValue().getUnitId());
             assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
             assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
             assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
-            assertEquals(HSA_ID, captor.getValue().getDoctorId());
+            assertEquals(DOCTOR_FILTER, captor.getValue().getDoctorIds().get(0));
+            assertEquals(TO_FILTER, captor.getValue().getToSickLeaveLength());
+            assertEquals(FROM_FILTER, captor.getValue().getFromSickLeaveLength());
         }
 
         @Test
@@ -199,14 +209,29 @@ public class GetActiveSickLeavesServiceTest {
             setupSubUnit();
 
             final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get();
+            getActiveSickLeavesService.get(expectedRequest);
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
             assertEquals(SUB_UNIT_ID, captor.getValue().getUnitId());
             assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
             assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
             assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
-            assertEquals(HSA_ID, captor.getValue().getDoctorId());
+            assertEquals(DOCTOR_FILTER, captor.getValue().getDoctorIds().get(0));
+            assertEquals(TO_FILTER, captor.getValue().getToSickLeaveLength());
+            assertEquals(FROM_FILTER, captor.getValue().getFromSickLeaveLength());
+        }
+
+        @Test
+        void shouldCreateRequestWithHsaIdOfDoctorIfUserIsDoctor() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.isLakare()).thenReturn(true);
+
+            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+            getActiveSickLeavesService.get(expectedRequestDoctor);
+
+            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+            assertEquals(HSA_ID, captor.getValue().getDoctorIds().get(0));
         }
     }
 

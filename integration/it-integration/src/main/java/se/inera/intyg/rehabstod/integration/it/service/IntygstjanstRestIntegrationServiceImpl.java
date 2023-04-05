@@ -32,6 +32,8 @@ import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.TypedCertificateRequest;
+import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
 
@@ -114,6 +116,15 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         LOGGER.debug("Getting active sick leaves from Intygstjansten");
 
         return restTemplate.postForObject(url, request, SickLeavesResponseDTO.class);
+    }
+
+    @Override
+    public PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request) {
+        final String url = intygstjanstUrl + "/inera-certificate/internalapi/sickleave/populate/filters";
+
+        LOGGER.debug("Getting doctors with active sick leaves from Intygstjansten");
+
+        return restTemplate.postForObject(url, request, PopulateFiltersResponseDTO.class);
     }
 
     private <E> List<E> buildListResponseFromArray(E[] array) {

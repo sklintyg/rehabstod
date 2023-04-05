@@ -35,6 +35,7 @@ import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
@@ -63,12 +64,12 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     }
 
     @Override
-    public List<SjukfallEnhet> get() {
+    public List<SjukfallEnhet> get(SickLeavesFilterRequestDTO filterRequest) {
         final var user = userService.getUser();
         final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
         final var certificateParameters = getCertificateParameters(user);
-        final var request = getRequest(user, unitId, careUnitId);
+        final var request = getRequest(user, unitId, careUnitId, filterRequest);
 
         LOG.debug("Getting sick leaves for unit {}", careUnitId);
         final var response = intygstjanstRestIntegrationService.getActiveSickLeaves(request);
@@ -84,13 +85,22 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         return convertedSickLeaves;
     }
 
-    private SickLeavesRequestDTO getRequest(RehabstodUser user, String unitId, String careUnitId) {
+    private SickLeavesRequestDTO getRequest(
+        RehabstodUser user, String unitId, String careUnitId, SickLeavesFilterRequestDTO filterRequest
+    ) {
         final var request = new SickLeavesRequestDTO();
+
+        if (user.isLakare()) {
+            filterRequest.addDoctorId(user.getHsaId());
+        }
+
         request.setMaxCertificateGap(ControllerUtil.getMaxGlapp(user));
         request.setMaxDaysSinceSickLeaveCompleted(ControllerUtil.getMaxDagarSedanSjukfallAvslut(user));
         request.setUnitId(unitId);
         request.setCareUnitId(careUnitId);
-        request.setDoctorId(user.getHsaId());
+        request.setDoctorIds(filterRequest.getDoctorIds());
+        request.setToSickLeaveLength(filterRequest.getToSickLeaveLength());
+        request.setFromSickLeaveLength(filterRequest.getFromSickLeaveLength());
         return request;
 
     }
