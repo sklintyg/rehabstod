@@ -111,11 +111,13 @@ public class GetActiveSickLeavesServiceTest {
     static final String UNIT_ID = "UNIT_ID";
     static final String gap = "5";
     static final String days = "10";
-    final static String DOCTOR_FILTER = "DOCTOR_ID";
+    static final String DOCTOR_FILTER = "DOCTOR_ID";
     static final int FROM_FILTER = 1;
     static final int TO_FILTER = 365;
-    static final SickLeavesFilterRequestDTO expectedRequest = new SickLeavesFilterRequestDTO(Collections.singletonList(DOCTOR_FILTER), TO_FILTER, FROM_FILTER);
-    static final SickLeavesFilterRequestDTO expectedRequestDoctor = new SickLeavesFilterRequestDTO(new ArrayList<>(), TO_FILTER, FROM_FILTER);
+    static final SickLeavesFilterRequestDTO expectedRequest =
+        new SickLeavesFilterRequestDTO(Collections.singletonList(DOCTOR_FILTER), TO_FILTER, FROM_FILTER);
+    static final SickLeavesFilterRequestDTO expectedRequestDoctor =
+        new SickLeavesFilterRequestDTO(new ArrayList<>(), TO_FILTER, FROM_FILTER);
 
 
     @Nested
