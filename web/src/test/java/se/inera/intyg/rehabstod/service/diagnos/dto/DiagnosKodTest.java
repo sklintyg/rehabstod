@@ -71,12 +71,12 @@ public class DiagnosKodTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testEmptyDiagnosKod() {
-        se.inera.intyg.infra.sjukfall.dto.DiagnosKod kod = new se.inera.intyg.infra.sjukfall.dto.DiagnosKod("");
+        se.inera.intyg.infra.sjukfall.dto.DiagnosKod kod = se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create("");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNullDiagnosKod() {
-        se.inera.intyg.infra.sjukfall.dto.DiagnosKod kod = new se.inera.intyg.infra.sjukfall.dto.DiagnosKod(null);
+        se.inera.intyg.infra.sjukfall.dto.DiagnosKod kod = se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create(null);
     }
 
 }

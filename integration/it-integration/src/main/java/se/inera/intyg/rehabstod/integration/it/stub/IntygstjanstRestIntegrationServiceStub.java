@@ -27,6 +27,8 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.certificate.dto.BaseCertificate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 
 @Profile("rhs-it-stub")
@@ -73,5 +75,10 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     public List<String> getSigningDoctorsForUnit(List<String> units, List<String> certificateTypes) {
         return rsTestIntygStub.getLUCertificateData().stream().map(BaseCertificate::getPersonalFullName).distinct()
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public SickLeavesResponseDTO getActiveSickLeaves(SickLeavesRequestDTO request) {
+        return new SickLeavesResponseDTO(rsTestIntygStub.getActiveSickLeaveData());
     }
 }

@@ -688,18 +688,18 @@ public class SjukfallServiceTest {
     private se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet createSjukfallEnhet(String lakareId, String lakareNamn,
         String enhetsId, String patiendId) {
 
-        Vardgivare vardgivare = new Vardgivare(vgId1, "vg");
+        Vardgivare vardgivare = Vardgivare.create(vgId1, "vg");
 
         se.inera.intyg.infra.sjukfall.dto.Vardenhet vardenhet =
-            new se.inera.intyg.infra.sjukfall.dto.Vardenhet(enhetsId, "ve-" + enhetsId);
+            se.inera.intyg.infra.sjukfall.dto.Vardenhet.create(enhetsId, "ve-" + enhetsId);
 
         se.inera.intyg.infra.sjukfall.dto.Lakare lakare =
-            new se.inera.intyg.infra.sjukfall.dto.Lakare(lakareId, lakareNamn);
+            se.inera.intyg.infra.sjukfall.dto.Lakare.create(lakareId, lakareNamn);
 
         se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet sjukfall
             = new se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet();
 
-        Patient patient = new Patient(patiendId, "name");
+        Patient patient = Patient.create(patiendId, "name");
 
         sjukfall.setVardgivare(vardgivare);
         sjukfall.setVardenhet(vardenhet);
@@ -828,13 +828,13 @@ public class SjukfallServiceTest {
         public SjukfallEnhet mapToSjukfallEnhetDto(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, int maxDagarSedanAvslut,
             LocalDate today) {
             se.inera.intyg.infra.sjukfall.dto.Vardgivare vardgivare =
-                new se.inera.intyg.infra.sjukfall.dto.Vardgivare(vardgivareId, vardgivareNamn);
+                se.inera.intyg.infra.sjukfall.dto.Vardgivare.create(vardgivareId, vardgivareNamn);
 
             se.inera.intyg.infra.sjukfall.dto.Patient patient =
-                new se.inera.intyg.infra.sjukfall.dto.Patient(patientId, patinetNamn);
+                se.inera.intyg.infra.sjukfall.dto.Patient.create(patientId, patinetNamn);
 
             se.inera.intyg.infra.sjukfall.dto.DiagnosKod diagnosKod =
-                new se.inera.intyg.infra.sjukfall.dto.DiagnosKod("J22");
+                se.inera.intyg.infra.sjukfall.dto.DiagnosKod.create("J22");
 
             // Update Sjukfall with these objects to avoid failing test
             from.setVardgivare(vardgivare);

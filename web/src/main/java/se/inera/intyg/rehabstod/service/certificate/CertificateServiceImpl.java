@@ -625,7 +625,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     private Diagnos getDiagnosis(String code) {
         if (code != null) {
-            var diagnoseCode = new DiagnosKod(code);
+            var diagnoseCode = DiagnosKod.create(code);
             return diagnosFactory.getDiagnos(diagnoseCode.getOriginalCode(), diagnoseCode.getCleanedCode(), diagnoseCode.getName());
         } else {
             return null;

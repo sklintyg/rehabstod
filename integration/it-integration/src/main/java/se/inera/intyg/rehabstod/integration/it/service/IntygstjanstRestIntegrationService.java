@@ -22,6 +22,8 @@ import java.time.LocalDate;
 import java.util.List;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
 
 
 /**
@@ -101,4 +103,12 @@ public interface IntygstjanstRestIntegrationService {
      * @return List of certificates with diagnosis information
      */
     List<String> getSigningDoctorsForUnit(List<String> units, List<String> certificateTypes);
+
+    /**
+     * List active sick leaves for unit.
+     * Date range is assumed to be 3 years back in time from today
+     *
+     * @param request Request including parameters to perform search
+     */
+    SickLeavesResponseDTO getActiveSickLeaves(SickLeavesRequestDTO request);
 }

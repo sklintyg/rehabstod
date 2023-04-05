@@ -43,6 +43,10 @@ import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate.WorkCapacity;
 import se.inera.intyg.infra.integration.pu.stub.StubResidentStore;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
+import se.inera.intyg.infra.sjukfall.dto.Lakare;
+import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
+import se.inera.intyg.infra.sjukfall.dto.Vardenhet;
 import se.inera.intyg.rehabstod.integration.wc.stub.WcStubStore;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
@@ -165,6 +169,7 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         List<IntygsData> intygsDataList = new ArrayList<>();
         List<DiagnosedCertificate> diagnosedCertificateList = new ArrayList<>();
         List<SickLeaveCertificate> sickleaveCertificateList = new ArrayList<>();
+        List<SjukfallEnhet> activeSickLeavesList = new ArrayList<>();
 
         for (int a = 0; a < numberOfPatients; a++) {
             Patient patient = nextPatient();
@@ -175,6 +180,7 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
 
             addToDiagnosedCertificates(patient, hosPerson, diagnosedCertificateList);
             addToSickleaveCertificates(patient, hosPerson, sickleaveCertificateList);
+            addToActiveSickleavesList(patient, hosPerson, activeSickLeavesList);
 
         }
 
@@ -186,13 +192,23 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         addToIntygsData(intygPerPatient, tolvan, hosPersonList.get(1), intygsDataList);
         addToDiagnosedCertificates(tolvan, hosPersonList.get(0), diagnosedCertificateList);
         addToSickleaveCertificates(tolvan, hosPersonList.get(0), sickleaveCertificateList);
+        addToActiveSickleavesList(tolvan, hosPersonList.get(0), activeSickLeavesList);
+
 
         // Lilltolvan
         createSjfPatientData(intygsDataList, intygPerPatient);
 
-        LOG.info("Generated {} intygsData, {} diagnosed certs, {} sickleave certs items for stub", intygsDataList.size(),
-            diagnosedCertificateList.size(), sickleaveCertificateList.size());
-        return new StubData(intygsDataList, diagnosedCertificateList, sickleaveCertificateList);
+        LOG.info("Generated {} intygsData, {} diagnosed certs, {} sickleave, {} active sickleaves certs items for stub",
+            intygsDataList.size(), diagnosedCertificateList.size(), sickleaveCertificateList.size(), activeSickLeavesList.size());
+        return new StubData(intygsDataList, diagnosedCertificateList, sickleaveCertificateList, activeSickLeavesList);
+    }
+
+    private void addToActiveSickleavesList(Patient patient, HosPersonal hosPerson, List<SjukfallEnhet> list) {
+        timeSimulator = LocalDateTime.now().minusDays(ThreadLocalRandom.current().nextInt(60, 120));
+
+        final var sickLeave = new SjukfallEnhet();
+        buildActiveSickleave(sickLeave, patient, hosPerson);
+        list.add(sickLeave);
     }
 
     private void addToSickleaveCertificates(Patient patient, HosPersonal hosPerson, List<SickLeaveCertificate> sickleaveCertificateList) {
@@ -253,6 +269,30 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
             certificate.setCertificateType("ag7804");
         }
 
+    }
+
+    private void buildActiveSickleave(SjukfallEnhet sickleave, Patient patient, HosPersonal hosPerson) {
+        sickleave.setLakare(Lakare.create(hosPerson.getPersonalId().getExtension(), hosPerson.getFullstandigtNamn()));
+        sickleave.setPatient(se.inera.intyg.infra.sjukfall.dto.Patient.create(
+            patient.getPersonId().getExtension(), patient.getFullstandigtNamn()
+        ));
+        sickleave.setVardenhet(Vardenhet.create(hosPerson.getEnhet().getEnhetsId().getExtension(), hosPerson.getEnhet().getEnhetsnamn()));
+        sickleave.setVardgivare(se.inera.intyg.infra.sjukfall.dto.Vardgivare.create("id", "namn"));
+
+        sickleave.setDiagnosKod(DiagnosKod.create(nextDiagnosis()));
+        final var subDiagnosisCodes = new ArrayList<DiagnosKod>();
+        for (int i = ThreadLocalRandom.current().nextInt(3); i > 0; i--) {
+            subDiagnosisCodes.add(DiagnosKod.create(nextDiagnosis()));
+        }
+        sickleave.setBiDiagnoser(subDiagnosisCodes);
+
+        sickleave.setGrader(getSjukskrivningsGrader());
+        sickleave.setAktivGrad(sickleave.getGrader().get(0));
+
+        sickleave.setStart(LocalDate.from(timeSimulator));
+        sickleave.setSlut(LocalDate.from(timeSimulator.plusDays(60)));
+        sickleave.setDagar(60);
+        sickleave.setIntyg(1);
     }
 
     private String mapOccupation(String occupation) {
@@ -437,6 +477,17 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         intygsData.setArbetsformaga(arbetsformaga);
 
         return intygsData;
+    }
+
+    private List<Integer> getSjukskrivningsGrader() {
+        List<Integer> sjukskrivningsgradList = new ArrayList<>();
+
+        int antalPerioder = 2;
+
+        for (int i = 0; i < antalPerioder; i++) {
+            sjukskrivningsgradList.add(getNextSjukskrivningsgrad());
+        }
+        return sjukskrivningsgradList;
     }
 
     private List<Formaga> getSjukskrivningsPerioder() {
@@ -840,12 +891,14 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         List<IntygsData> intygsDataList;
         List<DiagnosedCertificate> diagnosedCertificateList;
         List<SickLeaveCertificate> sickleaveCertificateList;
+        List<SjukfallEnhet> activeSickleaveList;
 
         public StubData(List<IntygsData> intygsDataList, List<DiagnosedCertificate> diagnosedCertificateList,
-            List<SickLeaveCertificate> sickleaveCertificateList) {
+            List<SickLeaveCertificate> sickleaveCertificateList, List<SjukfallEnhet> activeSickleaveList) {
             this.intygsDataList = intygsDataList;
             this.diagnosedCertificateList = diagnosedCertificateList;
             this.sickleaveCertificateList = sickleaveCertificateList;
+            this.activeSickleaveList = activeSickleaveList;
         }
 
         public List<IntygsData> getIntygsData() {
@@ -859,5 +912,10 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         public List<SickLeaveCertificate> getSickLeaveCertificates() {
             return sickleaveCertificateList;
         }
+
+        public List<SjukfallEnhet> getActiveSickleaveList() {
+            return activeSickleaveList;
+        }
+
     }
 }
