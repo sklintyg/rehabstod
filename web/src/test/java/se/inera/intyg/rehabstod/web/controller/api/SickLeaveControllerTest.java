@@ -20,25 +20,37 @@ package se.inera.intyg.rehabstod.web.controller.api;
 
 import static org.mockito.Mockito.verify;
 
+import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesService;
+import se.inera.intyg.rehabstod.service.sjukfall.PopulateFiltersService;
+import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
 public class SickLeaveControllerTest {
 
     @Mock
     private GetActiveSickLeavesService getActiveSickLeavesService;
+    @Mock
+    private PopulateFiltersService populateFiltersService;
 
     @InjectMocks
     private SickLeaveController sickLeaveController = new SickLeaveController();
 
     @Test
     void shouldCallGetActiveSickLeavesService() {
-        sickLeaveController.getSickLeavesForUnit();
-        verify(getActiveSickLeavesService).get();
+        final var expectedRequest = new SickLeavesFilterRequestDTO(Collections.singletonList("doctorId"), 1, 365);
+        sickLeaveController.getSickLeavesForUnit(expectedRequest);
+        verify(getActiveSickLeavesService).get(expectedRequest);
+    }
+
+    @Test
+    void shouldCallPopulateFiltersService() {
+        sickLeaveController.populateFilters();
+        verify(populateFiltersService).get();
     }
 }

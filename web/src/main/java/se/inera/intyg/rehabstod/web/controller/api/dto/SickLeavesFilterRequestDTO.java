@@ -17,57 +17,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.integration.it.dto;
+package se.inera.intyg.rehabstod.web.controller.api.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SickLeavesRequestDTO {
-    private String unitId;
-    private String careUnitId;
+public class SickLeavesFilterRequestDTO {
     private List<String> doctorIds;
-    private int maxCertificateGap;
-    private int maxDaysSinceSickLeaveCompleted;
     private int toSickLeaveLength;
     private int fromSickLeaveLength;
 
-    public String getUnitId() {
-        return unitId;
-    }
+    public SickLeavesFilterRequestDTO() { }
 
-    public void setUnitId(String unitId) {
-        this.unitId = unitId;
-    }
-
-    public String getCareUnitId() {
-        return careUnitId;
-    }
-
-    public void setCareUnitId(String careUnitId) {
-        this.careUnitId = careUnitId;
+    public SickLeavesFilterRequestDTO(List<String> doctorIds, int toSickLeaveLength, int fromSickLeaveLength) {
+        this.doctorIds = doctorIds;
+        this.toSickLeaveLength = toSickLeaveLength;
+        this.fromSickLeaveLength = fromSickLeaveLength;
     }
 
     public List<String> getDoctorIds() {
         return doctorIds;
     }
 
+    public void addDoctorId(String id) {
+        if (doctorIds == null) {
+            doctorIds = new ArrayList<>();
+        }
+        doctorIds.add(id);
+    }
+
     public void setDoctorIds(List<String> doctorIds) {
         this.doctorIds = doctorIds;
-    }
-
-    public int getMaxCertificateGap() {
-        return maxCertificateGap;
-    }
-
-    public void setMaxCertificateGap(int maxCertificateGap) {
-        this.maxCertificateGap = maxCertificateGap;
-    }
-
-    public int getMaxDaysSinceSickLeaveCompleted() {
-        return maxDaysSinceSickLeaveCompleted;
-    }
-
-    public void setMaxDaysSinceSickLeaveCompleted(int maxDaysSinceSickLeaveCompleted) {
-        this.maxDaysSinceSickLeaveCompleted = maxDaysSinceSickLeaveCompleted;
     }
 
     public int getToSickLeaveLength() {
