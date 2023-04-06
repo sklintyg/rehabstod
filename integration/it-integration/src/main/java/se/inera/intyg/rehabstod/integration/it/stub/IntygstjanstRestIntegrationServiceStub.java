@@ -118,19 +118,9 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     }
 
     private static List<DiagnosKod> getDiagnosesFromSickLeaves(List<SjukfallEnhet> sickLeaves) {
-        final List<DiagnosKod> mainDiagnoses = sickLeaves
+        return sickLeaves
             .stream()
             .map(SjukfallEnhet::getDiagnosKod)
-            .collect(Collectors.toList());
-
-        final List<DiagnosKod> subDiagnoses = sickLeaves
-            .stream()
-            .map(SjukfallEnhet::getBiDiagnoser)
-            .flatMap(List::stream)
-            .collect(Collectors.toList());
-
-        return Stream
-            .concat(mainDiagnoses.stream(), subDiagnoses.stream())
             .filter(distinctByKey(DiagnosKod::getCleanedCode))
             .collect(Collectors.toList());
     }
