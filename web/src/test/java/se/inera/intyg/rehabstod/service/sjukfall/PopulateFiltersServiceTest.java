@@ -91,7 +91,7 @@ public class PopulateFiltersServiceTest {
         final var userPreferences = RehabstodUserPreferences.fromBackend(preferences);
         when(user.getPreferences()).thenReturn(userPreferences);
 
-        final var response = new PopulateFiltersResponseDTO(Collections.singletonList(Lakare.create(HSA_ID, DOCTOR_NAME)));
+        final var response = new PopulateFiltersResponseDTO(Collections.singletonList(Lakare.create(HSA_ID, DOCTOR_NAME)), Collections.emptyList());
         when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(response);
 
         expectedRequest.setMaxCertificateGap(Integer.parseInt(days));

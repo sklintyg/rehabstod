@@ -21,18 +21,23 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
 public class SickLeavesFilterRequestDTO {
     private List<String> doctorIds;
-    private int toSickLeaveLength;
-    private int fromSickLeaveLength;
+    private Integer toSickLeaveLength;
+    private Integer fromSickLeaveLength;
+    private List<DiagnosKapitel> diagnosisChapters;
 
     public SickLeavesFilterRequestDTO() { }
 
-    public SickLeavesFilterRequestDTO(List<String> doctorIds, int toSickLeaveLength, int fromSickLeaveLength) {
+    public SickLeavesFilterRequestDTO(
+        List<String> doctorIds, int toSickLeaveLength, int fromSickLeaveLength, List<DiagnosKapitel> diagnosisChapters
+    ) {
         this.doctorIds = doctorIds;
         this.toSickLeaveLength = toSickLeaveLength;
         this.fromSickLeaveLength = fromSickLeaveLength;
+        this.diagnosisChapters = diagnosisChapters;
     }
 
     public List<String> getDoctorIds() {
@@ -46,23 +51,38 @@ public class SickLeavesFilterRequestDTO {
         doctorIds.add(id);
     }
 
+    public void addDiagnosisChapter(DiagnosKapitel chapter) {
+        if (diagnosisChapters == null) {
+            diagnosisChapters = new ArrayList<>();
+        }
+        diagnosisChapters.add(chapter);
+    }
+
     public void setDoctorIds(List<String> doctorIds) {
         this.doctorIds = doctorIds;
     }
 
-    public int getToSickLeaveLength() {
+    public Integer getToSickLeaveLength() {
         return toSickLeaveLength;
     }
 
-    public void setToSickLeaveLength(int toSickLeaveLength) {
+    public void setToSickLeaveLength(Integer toSickLeaveLength) {
         this.toSickLeaveLength = toSickLeaveLength;
     }
 
-    public int getFromSickLeaveLength() {
+    public Integer getFromSickLeaveLength() {
         return fromSickLeaveLength;
     }
 
-    public void setFromSickLeaveLength(int fromSickLeaveLength) {
+    public void setFromSickLeaveLength(Integer fromSickLeaveLength) {
         this.fromSickLeaveLength = fromSickLeaveLength;
+    }
+
+    public List<DiagnosKapitel> getDiagnosisChapters() {
+        return diagnosisChapters;
+    }
+
+    public void setDiagnoses(List<DiagnosKapitel> diagnosisChapters) {
+        this.diagnosisChapters = diagnosisChapters;
     }
 }

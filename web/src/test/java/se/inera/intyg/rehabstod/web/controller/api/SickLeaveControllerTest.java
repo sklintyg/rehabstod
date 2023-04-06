@@ -43,7 +43,8 @@ public class SickLeaveControllerTest {
 
     @Test
     void shouldCallGetActiveSickLeavesService() {
-        final var expectedRequest = new SickLeavesFilterRequestDTO(Collections.singletonList("doctorId"), 1, 365);
+        final var expectedRequest =
+            new SickLeavesFilterRequestDTO(Collections.singletonList("doctorId"), 1, 365, Collections.emptyList());
         sickLeaveController.getSickLeavesForUnit(expectedRequest);
         verify(getActiveSickLeavesService).get(expectedRequest);
     }

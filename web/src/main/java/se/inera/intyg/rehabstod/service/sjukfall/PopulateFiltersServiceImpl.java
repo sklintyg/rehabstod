@@ -22,9 +22,12 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
@@ -35,11 +38,13 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
 
     private final UserService userService;
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+    private final DiagnosKapitelService diagnosKapitelService;
 
     public PopulateFiltersServiceImpl(UserService userService,
-        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService) {
+        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService, DiagnosKapitelService diagnosKapitelService) {
         this.userService = userService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
+        this.diagnosKapitelService = diagnosKapitelService;
     }
 
     @Override
@@ -49,12 +54,23 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
         final var request = getRequest(user, unitId, careUnitId);
         final var responseFromIT = intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(request);
-        return new PopulateFiltersResponseDTO(convertDoctors(responseFromIT.getActiveDoctors()));
+        return new PopulateFiltersResponseDTO(
+            convertDoctors(responseFromIT.getActiveDoctors()),
+            diagnosKapitelService.getDiagnosKapitelList(),
+            convertDiagnosisChapters(responseFromIT.getDiagnoses())
+        );
     }
 
     List<Lakare> convertDoctors(List<se.inera.intyg.infra.sjukfall.dto.Lakare> listToConvert) {
         return listToConvert.stream()
             .map((lakare) -> new Lakare(lakare.getId(), lakare.getNamn()))
+            .collect(Collectors.toList());
+    }
+
+    List<DiagnosKapitel> convertDiagnosisChapters(List<DiagnosKod> diagnoses) {
+        return diagnoses
+            .stream()
+            .map((diagnosis) -> diagnosKapitelService.getDiagnosKapitel(diagnosis.getOriginalCode()))
             .collect(Collectors.toList());
     }
 

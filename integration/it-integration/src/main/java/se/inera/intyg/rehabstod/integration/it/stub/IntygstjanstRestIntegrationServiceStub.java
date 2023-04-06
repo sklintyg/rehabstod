@@ -25,12 +25,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.certificate.dto.BaseCertificate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
@@ -102,13 +104,35 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
 
     @Override
     public PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request) {
+        final var sickLeaves = rsTestIntygStub.getActiveSickLeaveData();
         return new PopulateFiltersResponseDTO(
-            rsTestIntygStub.getActiveSickLeaveData()
-                .stream()
-                .map(SjukfallEnhet::getLakare)
-                .filter(distinctByKey(Lakare::getId))
-                .collect(Collectors.toList())
-        );
+            getDoctorsFromSickLeaves(sickLeaves), getDiagnosesFromSickLeaves(sickLeaves));
+    }
+
+    private static List<Lakare> getDoctorsFromSickLeaves(List<SjukfallEnhet> sickLeaves) {
+        return sickLeaves
+            .stream()
+            .map(SjukfallEnhet::getLakare)
+            .filter(distinctByKey(Lakare::getId))
+            .collect(Collectors.toList());
+    }
+
+    private static List<DiagnosKod> getDiagnosesFromSickLeaves(List<SjukfallEnhet> sickLeaves) {
+        final List<DiagnosKod> mainDiagnoses = sickLeaves
+            .stream()
+            .map(SjukfallEnhet::getDiagnosKod)
+            .collect(Collectors.toList());
+
+        final List<DiagnosKod> subDiagnoses = sickLeaves
+            .stream()
+            .map(SjukfallEnhet::getBiDiagnoser)
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
+
+        return Stream
+            .concat(mainDiagnoses.stream(), subDiagnoses.stream())
+            .filter(distinctByKey(DiagnosKod::getCleanedCode))
+            .collect(Collectors.toList());
     }
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {

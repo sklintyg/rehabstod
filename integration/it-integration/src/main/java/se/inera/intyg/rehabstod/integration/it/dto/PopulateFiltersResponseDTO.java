@@ -20,13 +20,16 @@
 package se.inera.intyg.rehabstod.integration.it.dto;
 
 import java.util.List;
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 
 public class PopulateFiltersResponseDTO {
     private List<Lakare> activeDoctors;
+    private List<DiagnosKod> diagnoses;
 
-    public PopulateFiltersResponseDTO(List<Lakare> activeDoctors) {
+    public PopulateFiltersResponseDTO(List<Lakare> activeDoctors, List<DiagnosKod> diagnoses) {
         this.activeDoctors = activeDoctors;
+        this.diagnoses = diagnoses;
     }
 
     public List<Lakare> getActiveDoctors() {
@@ -35,5 +38,13 @@ public class PopulateFiltersResponseDTO {
 
     public void setActiveDoctors(List<Lakare> activeDoctors) {
         this.activeDoctors = activeDoctors;
+    }
+
+    public List<DiagnosKod> getDiagnoses() {
+        return diagnoses;
+    }
+
+    public void setDiagnoses(List<DiagnosKod> diagnoses) {
+        this.diagnoses = diagnoses;
     }
 }

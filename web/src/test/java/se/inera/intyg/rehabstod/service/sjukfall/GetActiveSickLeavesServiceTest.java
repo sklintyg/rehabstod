@@ -115,9 +115,9 @@ public class GetActiveSickLeavesServiceTest {
     static final int FROM_FILTER = 1;
     static final int TO_FILTER = 365;
     static final SickLeavesFilterRequestDTO expectedRequest =
-        new SickLeavesFilterRequestDTO(Collections.singletonList(DOCTOR_FILTER), TO_FILTER, FROM_FILTER);
+        new SickLeavesFilterRequestDTO(Collections.singletonList(DOCTOR_FILTER), TO_FILTER, FROM_FILTER, Collections.emptyList());
     static final SickLeavesFilterRequestDTO expectedRequestDoctor =
-        new SickLeavesFilterRequestDTO(new ArrayList<>(), TO_FILTER, FROM_FILTER);
+        new SickLeavesFilterRequestDTO(new ArrayList<>(), TO_FILTER, FROM_FILTER, Collections.emptyList());
 
 
     @Nested
