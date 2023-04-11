@@ -393,6 +393,7 @@
         </list>
       </constructor-arg>
       <property name="refreshCheckInterval" value="86400000"/>
+      <property name="hostedSPName" value="https://${rehabstod.domain.name}"/>
     </bean>
 
     <!-- SAML Authentication Provider responsible for validating of received SAML messages over SITHS or e-leg -->
