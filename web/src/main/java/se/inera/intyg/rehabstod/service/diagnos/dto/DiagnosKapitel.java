@@ -68,6 +68,10 @@ public class DiagnosKapitel {
         }
     }
 
+    public DiagnosKapitel() {
+
+    }
+
     public DiagnosKapitel(DiagnosKategori from, DiagnosKategori to, String name) {
         this.from = from;
         this.to = to;

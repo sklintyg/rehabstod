@@ -22,8 +22,12 @@ package se.inera.intyg.rehabstod.integration.it.dto;
 public class PopulateFiltersRequestDTO {
     private String unitId;
     private String careUnitId;
+    private String doctorId;
     private int maxCertificateGap;
     private int maxDaysSinceSickLeaveCompleted;
+
+    public PopulateFiltersRequestDTO() {
+    }
 
     public String getUnitId() {
         return unitId;
@@ -56,5 +60,13 @@ public class PopulateFiltersRequestDTO {
 
     public void setMaxDaysSinceSickLeaveCompleted(int maxDaysSinceSickLeaveCompleted) {
         this.maxDaysSinceSickLeaveCompleted = maxDaysSinceSickLeaveCompleted;
+    }
+
+    public String getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(String doctorId) {
+        this.doctorId = doctorId;
     }
 }

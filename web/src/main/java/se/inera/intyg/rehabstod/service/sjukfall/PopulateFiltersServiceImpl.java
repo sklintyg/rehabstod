@@ -40,8 +40,10 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
     private final DiagnosKapitelService diagnosKapitelService;
 
-    public PopulateFiltersServiceImpl(UserService userService,
-        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService, DiagnosKapitelService diagnosKapitelService) {
+    public PopulateFiltersServiceImpl(
+        UserService userService,
+        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+        DiagnosKapitelService diagnosKapitelService) {
         this.userService = userService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
         this.diagnosKapitelService = diagnosKapitelService;
@@ -61,13 +63,13 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         );
     }
 
-    List<Lakare> convertDoctors(List<se.inera.intyg.infra.sjukfall.dto.Lakare> listToConvert) {
+    private List<Lakare> convertDoctors(List<se.inera.intyg.infra.sjukfall.dto.Lakare> listToConvert) {
         return listToConvert.stream()
             .map((lakare) -> new Lakare(lakare.getId(), lakare.getNamn()))
             .collect(Collectors.toList());
     }
 
-    List<DiagnosKapitel> convertDiagnosisChapters(List<DiagnosKod> diagnoses) {
+    private List<DiagnosKapitel> convertDiagnosisChapters(List<DiagnosKod> diagnoses) {
         return diagnoses
             .stream()
             .map((diagnosis) -> diagnosKapitelService.getDiagnosKapitel(diagnosis.getOriginalCode()))
@@ -81,6 +83,9 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         request.setMaxDaysSinceSickLeaveCompleted(ControllerUtil.getMaxDagarSedanSjukfallAvslut(user));
         request.setUnitId(unitId);
         request.setCareUnitId(careUnitId);
+        if (user.isLakare()) {
+            request.setDoctorId(user.getHsaId());
+        }
         return request;
 
     }
