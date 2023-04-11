@@ -69,7 +69,6 @@ public class PopulateFiltersServiceTest {
     @InjectMocks
     PopulateFiltersServiceImpl populateActiveFilters;
 
-    static final RehabstodUser user = mock(RehabstodUser.class);
     static final String HSA_ID = "HSA_ID";
     static final String SUB_UNIT_ID = "SUB_UNIT_ID";
     static final String UNIT_ID = "UNIT_ID";
@@ -78,6 +77,7 @@ public class PopulateFiltersServiceTest {
     static final String days = "10";
     static final PopulateFiltersRequestDTO expectedRequest = new PopulateFiltersRequestDTO();
 
+    RehabstodUser user;
     Vardenhet unit;
     SelectableVardenhet careGiverUnit;
     Vardgivare careGiver;
@@ -86,14 +86,12 @@ public class PopulateFiltersServiceTest {
 
     @BeforeEach
     void setup() {
+        user = mock(RehabstodUser.class);
         careGiverUnit = mock(SelectableVardenhet.class);
         careGiver = mock(Vardgivare.class);
         unit = mock(Vardenhet.class);
 
         when(userService.getUser()).thenReturn(user);
-        when(user.getHsaId()).thenReturn(HSA_ID);
-        when(user.getValdVardgivare()).thenReturn(careGiverUnit);
-        when(user.getVardgivare()).thenReturn(Collections.singletonList(careGiver));
 
         final var preferences = new HashMap<String, String>();
         preferences.put(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG.getBackendKeyName(), gap);
@@ -116,33 +114,68 @@ public class PopulateFiltersServiceTest {
 
     @Nested
     class TestITRequest {
-        @Test
-        void shouldCreateRequestWithCorrectValuesWhenChosenUnit() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
 
-            final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
-            populateActiveFilters.get();
+        @Nested
+        class CareUnit {
 
-            verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
-            assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
-            assertNull(captor.getValue().getUnitId());
-            assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
-            assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+            @BeforeEach
+            void setup() {
+                when(user.getValdVardenhet()).thenReturn(unit);
+                when(unit.getId()).thenReturn(UNIT_ID);
+            }
+
+            @Test
+            void shouldCreateRequestWithCorrectValuesWhenChosenUnit() {
+                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                populateActiveFilters.get();
+
+                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
+                assertNull(captor.getValue().getUnitId());
+                assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
+                assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+            }
+
+            @Test
+            void shouldSetDoctorIdIfUserIsDoctor() {
+                when(user.getHsaId()).thenReturn(HSA_ID);
+                when(user.isLakare()).thenReturn(true);
+
+                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                populateActiveFilters.get();
+
+                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                assertEquals(HSA_ID, captor.getValue().getDoctorId());
+            }
+
+            @Test
+            void shouldNotSetDoctorIdIfUserIsNotDoctor() {
+                when(user.isLakare()).thenReturn(false);
+
+                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                populateActiveFilters.get();
+
+                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                assertNull(captor.getValue().getDoctorId());
+            }
         }
 
-        @Test
-        void shouldCreateRequestWithCorrectValuesWhenChosenSubUnit() {
-            setupSubUnit();
+        @Nested
+        class SubUnit {
 
-            final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
-            populateActiveFilters.get();
+            @Test
+            void shouldCreateRequestWithCorrectValuesWhenChosenSubUnit() {
+                setupSubUnit();
 
-            verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
-            assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
-            assertEquals(SUB_UNIT_ID, captor.getValue().getUnitId());
-            assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
-            assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                populateActiveFilters.get();
+
+                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
+                assertEquals(SUB_UNIT_ID, captor.getValue().getUnitId());
+                assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
+                assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+            }
         }
     }
 
@@ -207,5 +240,7 @@ public class PopulateFiltersServiceTest {
         when(careGiver.getVardenheter()).thenReturn(Collections.singletonList(unit));
         when(unit.getMottagningar()).thenReturn(Collections.singletonList(mottagning));
         when(unit.getId()).thenReturn(UNIT_ID);
+
+        when(user.getVardgivare()).thenReturn(Collections.singletonList(careGiver));
     }
 }
