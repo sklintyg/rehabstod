@@ -19,20 +19,20 @@
 package se.inera.intyg.rehabstod.integration.it.stub;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.certificate.dto.BaseCertificate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
-import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
@@ -97,6 +97,7 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
                     || request.getDoctorIds().contains(sickLeave.getLakare().getId()))
                     && sickLeave.getDagar() >= request.getFromSickLeaveLength()
                     && sickLeave.getDagar() <= request.getToSickLeaveLength()
+                    && isDiagnosisCodeIncluded(request.getDiagnosisChapters(), sickLeave.getDiagnosKod().getCleanedCode())
             )
             .collect(Collectors.toList())
         );
@@ -106,7 +107,18 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     public PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request) {
         final var sickLeaves = rsTestIntygStub.getActiveSickLeaveData();
         return new PopulateFiltersResponseDTO(
-            getDoctorsFromSickLeaves(sickLeaves), getDiagnosesFromSickLeaves(sickLeaves));
+            getDoctorsFromSickLeaves(sickLeaves), Collections.emptyList());
+    }
+
+    private boolean isDiagnosisCodeIncluded(List<DiagnosKapitel> diagnosisChapters, String diagnosisCode) {
+        return diagnosisChapters.size() == 0
+            || diagnosisChapters
+            .stream().anyMatch(
+                (diagnosisChapter) ->
+                    diagnosisChapter.getFrom().getLetter() == diagnosisCode.charAt(0)
+                    && diagnosisChapter.getFrom().getNumber() <= Integer.parseInt(diagnosisCode.substring(1))
+                    && diagnosisChapter.getTo().getNumber() >= Integer.parseInt(diagnosisCode.substring(1))
+            );
     }
 
     private static List<Lakare> getDoctorsFromSickLeaves(List<SjukfallEnhet> sickLeaves) {
@@ -117,13 +129,13 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
             .collect(Collectors.toList());
     }
 
-    private static List<DiagnosKod> getDiagnosesFromSickLeaves(List<SjukfallEnhet> sickLeaves) {
+    /*private static List<DiagnosKapitel> getDiagnosesFromSickLeaves(List<SjukfallEnhet> sickLeaves) {
         return sickLeaves
             .stream()
             .map(SjukfallEnhet::getDiagnosKod)
             .filter(distinctByKey(DiagnosKod::getCleanedCode))
             .collect(Collectors.toList());
-    }
+    }*/
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
