@@ -78,13 +78,13 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         LOG.debug("Getting sick leaves for unit {}", careUnitId);
         final var logFactory = new SickLeaveLogMessageFactory(System.currentTimeMillis());
         final var response = intygstjanstRestIntegrationService.getActiveSickLeaves(request);
-        LOG.debug(logFactory.message(SickLeaveLogMessageFactory.GET_ACTIVE_SICK_LEAVES, response.getContent().size()));
+        LOG.info(logFactory.message(SickLeaveLogMessageFactory.GET_ACTIVE_SICK_LEAVES, response.getContent().size()));
         final var convertedSickLeaves = convertSickLeaves(response.getContent(), certificateParameters);
 
         LOG.debug("Add patient names and filter on protected person for sick leaves");
        logFactory.setStartTimer(System.currentTimeMillis());
         puService.enrichSjukfallWithPatientNamesAndFilterSekretess(convertedSickLeaves);
-        LOG.debug(logFactory.message(SickLeaveLogMessageFactory.ADD_PATIENT_INFORMATION, response.getContent().size()));
+        LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_PATIENT_INFORMATION, response.getContent().size()));
 
         LOG.debug("Logging that sick leaves have been fetched");
         performMonitorLogging(convertedSickLeaves, user.getHsaId(), unitId != null ? unitId : careUnitId);
