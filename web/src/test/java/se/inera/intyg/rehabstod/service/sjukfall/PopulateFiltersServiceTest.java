@@ -79,17 +79,14 @@ public class PopulateFiltersServiceTest {
     static final int NUMBER_TO = 1;
     static final int NUMBER_FROM = 2;
     static final String DIAGNOSIS_CHAPTER_NAME = "Name";
-    static final String DIAGNOSIS_CHAPTER_ID = "Id";
     static final PopulateFiltersRequestDTO expectedRequest = new PopulateFiltersRequestDTO();
 
     RehabstodUser user;
     Vardenhet unit;
     SelectableVardenhet careGiverUnit;
     Vardgivare careGiver;
-    se.inera.intyg.infra.sjukfall.dto.DiagnosKategori diagnosisChapterTo =
-        new se.inera.intyg.infra.sjukfall.dto.DiagnosKategori(LETTER_TO, NUMBER_TO);
-    se.inera.intyg.infra.sjukfall.dto.DiagnosKategori diagnosisChapterFrom =
-        new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
+    DiagnosKategori diagnosisChapterTo = new DiagnosKategori(LETTER_TO, NUMBER_TO);
+    DiagnosKategori diagnosisChapterFrom = new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
     se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel enabledDiagnosisChapter =
         new se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel(diagnosisChapterTo, diagnosisChapterFrom, DIAGNOSIS_CHAPTER_NAME);
     List<DiagnosKapitel> allDiagnosisChapters = Collections.singletonList(new DiagnosKapitel());
