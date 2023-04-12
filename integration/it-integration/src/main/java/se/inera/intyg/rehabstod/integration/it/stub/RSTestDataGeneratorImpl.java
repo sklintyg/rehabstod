@@ -174,7 +174,6 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         List<SjukfallEnhet> activeSickLeavesList = new ArrayList<>();
         List<DiagnosKapitel> diagnosisChapterList = new ArrayList<>();
 
-
         for (int a = 0; a < numberOfPatients; a++) {
             Patient patient = nextPatient();
             HosPersonal hosPerson = nextHosPerson();
