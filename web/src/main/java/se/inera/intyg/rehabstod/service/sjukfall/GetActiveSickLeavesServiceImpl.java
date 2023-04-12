@@ -32,6 +32,8 @@ import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
@@ -102,8 +104,27 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         request.setDoctorIds(filterRequest.getDoctorIds());
         request.setToSickLeaveLength(filterRequest.getToSickLeaveLength());
         request.setFromSickLeaveLength(filterRequest.getFromSickLeaveLength());
+        request.setDiagnosisChapters(convertDiagnosisChapters(filterRequest.getDiagnosisChapters()));
         return request;
 
+    }
+
+    private List<se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel> convertDiagnosisChapters(List<DiagnosKapitel> diagnosisChapters) {
+        return diagnosisChapters
+            .stream()
+            .map(
+                (diagnosisChapter) ->
+                    new se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel(
+                        convertDiagnosisCategory(diagnosisChapter.getFrom()),
+                        convertDiagnosisCategory(diagnosisChapter.getTo()),
+                        diagnosisChapter.getName()
+                    )
+            )
+            .collect(Collectors.toList());
+    }
+
+    private se.inera.intyg.infra.sjukfall.dto.DiagnosKategori convertDiagnosisCategory(DiagnosKategori diagnosisCategory) {
+        return new se.inera.intyg.infra.sjukfall.dto.DiagnosKategori(diagnosisCategory.getLetter(), diagnosisCategory.getNumber());
     }
 
     private List<SjukfallEnhet> convertSickLeaves(

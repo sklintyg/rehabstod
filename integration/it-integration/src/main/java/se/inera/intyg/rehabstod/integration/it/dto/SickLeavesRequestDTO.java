@@ -32,6 +32,9 @@ public class SickLeavesRequestDTO {
     private int toSickLeaveLength;
     private int fromSickLeaveLength;
 
+    public SickLeavesRequestDTO() {
+    }
+
     public String getUnitId() {
         return unitId;
     }
@@ -86,5 +89,13 @@ public class SickLeavesRequestDTO {
 
     public void setFromSickLeaveLength(int fromSickLeaveLength) {
         this.fromSickLeaveLength = fromSickLeaveLength;
+    }
+
+    public List<DiagnosKapitel> getDiagnosisChapters() {
+        return diagnosisChapters;
+    }
+
+    public void setDiagnosisChapters(List<DiagnosKapitel> diagnosisChapters) {
+        this.diagnosisChapters = diagnosisChapters;
     }
 }
