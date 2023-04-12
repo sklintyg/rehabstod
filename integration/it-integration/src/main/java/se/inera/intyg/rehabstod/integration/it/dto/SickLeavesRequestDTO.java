@@ -20,11 +20,13 @@
 package se.inera.intyg.rehabstod.integration.it.dto;
 
 import java.util.List;
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 
 public class SickLeavesRequestDTO {
     private String unitId;
     private String careUnitId;
     private List<String> doctorIds;
+    private List<DiagnosKapitel> diagnosisChapters;
     private int maxCertificateGap;
     private int maxDaysSinceSickLeaveCompleted;
     private int toSickLeaveLength;

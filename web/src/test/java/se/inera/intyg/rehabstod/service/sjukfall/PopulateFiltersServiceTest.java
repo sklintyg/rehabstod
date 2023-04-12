@@ -22,7 +22,6 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,7 +41,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
-import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKategori;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
@@ -75,13 +74,24 @@ public class PopulateFiltersServiceTest {
     static final String DOCTOR_NAME = "DOCTOR_NAME";
     static final String gap = "5";
     static final String days = "10";
+    static final char LETTER_TO = 'A';
+    static final char LETTER_FROM = 'B';
+    static final int NUMBER_TO = 1;
+    static final int NUMBER_FROM = 2;
+    static final String DIAGNOSIS_CHAPTER_NAME = "Name";
+    static final String DIAGNOSIS_CHAPTER_ID = "Id";
     static final PopulateFiltersRequestDTO expectedRequest = new PopulateFiltersRequestDTO();
 
     RehabstodUser user;
     Vardenhet unit;
     SelectableVardenhet careGiverUnit;
     Vardgivare careGiver;
-    DiagnosKapitel enabledDiagnosisChapter = new DiagnosKapitel();
+    se.inera.intyg.infra.sjukfall.dto.DiagnosKategori diagnosisChapterTo =
+        new se.inera.intyg.infra.sjukfall.dto.DiagnosKategori(LETTER_TO, NUMBER_TO);
+    se.inera.intyg.infra.sjukfall.dto.DiagnosKategori diagnosisChapterFrom =
+        new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
+    se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel enabledDiagnosisChapter =
+        new se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel(diagnosisChapterTo, diagnosisChapterFrom, DIAGNOSIS_CHAPTER_NAME);
     List<DiagnosKapitel> allDiagnosisChapters = Collections.singletonList(new DiagnosKapitel());
 
     @BeforeEach
@@ -100,7 +110,7 @@ public class PopulateFiltersServiceTest {
         when(user.getPreferences()).thenReturn(userPreferences);
 
         final var response = new PopulateFiltersResponseDTO(
-            Collections.singletonList(Lakare.create(HSA_ID, DOCTOR_NAME)), Collections.singletonList(DiagnosKod.create("A20"))
+            Collections.singletonList(Lakare.create(HSA_ID, DOCTOR_NAME)), Collections.singletonList(enabledDiagnosisChapter)
         );
         when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(response);
 
@@ -109,7 +119,6 @@ public class PopulateFiltersServiceTest {
         expectedRequest.setUnitId(UNIT_ID);
 
         when(diagnosKapitelService.getDiagnosKapitelList()).thenReturn(allDiagnosisChapters);
-        when(diagnosKapitelService.getDiagnosKapitel(anyString())).thenReturn(enabledDiagnosisChapter);
     }
 
     @Nested
@@ -218,13 +227,59 @@ public class PopulateFiltersServiceTest {
             assertEquals(allDiagnosisChapters, response.getAllDiagnosisChapters());
         }
 
-        @Test
-        void shouldConvertEnabledDiagnosisChapters() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
+        @Nested
+        class DiagnosisChapters {
 
-            final var response = populateActiveFilters.get();
-            assertEquals(enabledDiagnosisChapter, response.getEnabledDiagnosisChapters().get(0));
+            @Test
+            void shouldConvertEnabledDiagnosisChapters() {
+                when(user.getValdVardenhet()).thenReturn(unit);
+                when(unit.getId()).thenReturn(UNIT_ID);
+
+                final var response = populateActiveFilters.get();
+                assertEquals(1, response.getEnabledDiagnosisChapters().size());
+            }
+
+            @Test
+            void shouldConvertEnabledDiagnosisChapterTo() {
+                when(user.getValdVardenhet()).thenReturn(unit);
+                when(unit.getId()).thenReturn(UNIT_ID);
+
+                final var response = populateActiveFilters.get();
+                final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
+                assertEquals(enabledDiagnosisChapter.getTo().getLetter(), diagnosisChapter.getTo().getLetter());
+                assertEquals(enabledDiagnosisChapter.getTo().getNumber(), diagnosisChapter.getTo().getNumber());
+            }
+
+            @Test
+            void shouldConvertEnabledDiagnosisChapterFrom() {
+                when(user.getValdVardenhet()).thenReturn(unit);
+                when(unit.getId()).thenReturn(UNIT_ID);
+
+                final var response = populateActiveFilters.get();
+                final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
+                assertEquals(enabledDiagnosisChapter.getFrom().getLetter(), diagnosisChapter.getFrom().getLetter());
+                assertEquals(enabledDiagnosisChapter.getFrom().getNumber(), diagnosisChapter.getFrom().getNumber());
+            }
+
+            @Test
+            void shouldConvertEnabledDiagnosisChapterId() {
+                when(user.getValdVardenhet()).thenReturn(unit);
+                when(unit.getId()).thenReturn(UNIT_ID);
+
+                final var response = populateActiveFilters.get();
+                final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
+                assertEquals(enabledDiagnosisChapter.getId(), diagnosisChapter.getId());
+            }
+
+            @Test
+            void shouldConvertEnabledDiagnosisChapterName() {
+                when(user.getValdVardenhet()).thenReturn(unit);
+                when(unit.getId()).thenReturn(UNIT_ID);
+
+                final var response = populateActiveFilters.get();
+                final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
+                assertEquals(enabledDiagnosisChapter.getName(), diagnosisChapter.getName());
+            }
         }
     }
 

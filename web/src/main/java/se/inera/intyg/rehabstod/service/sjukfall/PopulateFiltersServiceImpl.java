@@ -22,12 +22,12 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
@@ -59,7 +59,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         return new PopulateFiltersResponseDTO(
             convertDoctors(responseFromIT.getActiveDoctors()),
             diagnosKapitelService.getDiagnosKapitelList(),
-            convertDiagnosisChapters(responseFromIT.getDiagnoses())
+            convertDiagnosisChapters(responseFromIT.getDiagnosisChapters())
         );
     }
 
@@ -69,11 +69,22 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
             .collect(Collectors.toList());
     }
 
-    private List<DiagnosKapitel> convertDiagnosisChapters(List<DiagnosKod> diagnoses) {
-        return diagnoses
+    private List<DiagnosKapitel> convertDiagnosisChapters(List<se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel> diagnosisChapters) {
+        return diagnosisChapters
             .stream()
-            .map((diagnosis) -> diagnosKapitelService.getDiagnosKapitel(diagnosis.getOriginalCode()))
+            .map(
+                (diagnosisChapter) ->
+                    new DiagnosKapitel(
+                        convertDiagnosisCategory(diagnosisChapter.getFrom()),
+                        convertDiagnosisCategory(diagnosisChapter.getTo()),
+                        diagnosisChapter.getName()
+                    )
+            )
             .collect(Collectors.toList());
+    }
+
+    private DiagnosKategori convertDiagnosisCategory(se.inera.intyg.infra.sjukfall.dto.DiagnosKategori diagnosisCategory) {
+        return new DiagnosKategori(diagnosisCategory.getLetter(), diagnosisCategory.getNumber());
     }
 
 
