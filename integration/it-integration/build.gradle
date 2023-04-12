@@ -1,4 +1,7 @@
 dependencies {
+    implementation 'org.projectlombok:lombok:1.18.22'
+    implementation 'org.projectlombok:lombok:1.18.22'
+    implementation 'org.projectlombok:lombok:1.18.22'
     compile project(":rehabstod-common")
     compile project(":rehabstod-wc-integration")
 
@@ -9,4 +12,10 @@ dependencies {
     compile "se.inera.intyg.infra:certificate:${intygInfraVersion}"
 
     testCompile "org.springframework:spring-test"
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }

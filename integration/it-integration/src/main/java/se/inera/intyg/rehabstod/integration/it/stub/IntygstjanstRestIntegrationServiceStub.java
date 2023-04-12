@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.integration.it.stub;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -106,8 +105,9 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     @Override
     public PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request) {
         final var sickLeaves = rsTestIntygStub.getActiveSickLeaveData();
+        final var diagnosisChapters = rsTestIntygStub.getDiagnosisChapterList();
         return new PopulateFiltersResponseDTO(
-            getDoctorsFromSickLeaves(sickLeaves), Collections.emptyList());
+            getDoctorsFromSickLeaves(sickLeaves), diagnosisChapters);
     }
 
     private boolean isDiagnosisCodeIncluded(List<DiagnosKapitel> diagnosisChapters, String diagnosisCode) {
@@ -115,9 +115,10 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
             || diagnosisChapters
             .stream().anyMatch(
                 (diagnosisChapter) ->
-                    diagnosisChapter.getFrom().getLetter() == diagnosisCode.charAt(0)
-                    && diagnosisChapter.getFrom().getNumber() <= Integer.parseInt(diagnosisCode.substring(1))
-                    && diagnosisChapter.getTo().getNumber() >= Integer.parseInt(diagnosisCode.substring(1))
+                    diagnosisChapter.getFrom().getLetter() <= diagnosisCode.charAt(0)
+                    && diagnosisChapter.getTo().getLetter() >= diagnosisCode.charAt(0)
+                    && diagnosisChapter.getFrom().getNumber() <= Integer.parseInt(diagnosisCode.substring(1, 2))
+                    && diagnosisChapter.getTo().getNumber() >= Integer.parseInt(diagnosisCode.substring(1, 2))
             );
     }
 
