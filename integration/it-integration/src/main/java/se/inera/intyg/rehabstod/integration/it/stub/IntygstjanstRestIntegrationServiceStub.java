@@ -130,14 +130,6 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
             .collect(Collectors.toList());
     }
 
-    /*private static List<DiagnosKapitel> getDiagnosesFromSickLeaves(List<SjukfallEnhet> sickLeaves) {
-        return sickLeaves
-            .stream()
-            .map(SjukfallEnhet::getDiagnosKod)
-            .filter(distinctByKey(DiagnosKod::getCleanedCode))
-            .collect(Collectors.toList());
-    }*/
-
     private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
         return t -> seen.add(keyExtractor.apply(t));
