@@ -51,6 +51,8 @@ import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
@@ -114,10 +116,25 @@ public class GetActiveSickLeavesServiceTest {
     static final String DOCTOR_FILTER = "DOCTOR_ID";
     static final int FROM_FILTER = 1;
     static final int TO_FILTER = 365;
+    static final char LETTER_TO = 'A';
+    static final char LETTER_FROM = 'B';
+    static final int NUMBER_TO = 1;
+    static final int NUMBER_FROM = 2;
+    static final String DIAGNOSIS_CHAPTER_NAME = "Name";
+
+    static final DiagnosKategori diagnosisChapterTo = new DiagnosKategori(LETTER_TO, NUMBER_TO);
+    static final DiagnosKategori diagnosisChapterFrom = new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
+    static final DiagnosKapitel chosenDiagnosisChapter =
+        new DiagnosKapitel(diagnosisChapterTo, diagnosisChapterFrom, DIAGNOSIS_CHAPTER_NAME);
     static final SickLeavesFilterRequestDTO expectedRequest =
-        new SickLeavesFilterRequestDTO(Collections.singletonList(DOCTOR_FILTER), TO_FILTER, FROM_FILTER);
+        new SickLeavesFilterRequestDTO(
+            Collections.singletonList(DOCTOR_FILTER),
+            TO_FILTER,
+            FROM_FILTER,
+            Collections.singletonList(chosenDiagnosisChapter)
+        );
     static final SickLeavesFilterRequestDTO expectedRequestDoctor =
-        new SickLeavesFilterRequestDTO(new ArrayList<>(), TO_FILTER, FROM_FILTER);
+        new SickLeavesFilterRequestDTO(new ArrayList<>(), TO_FILTER, FROM_FILTER, Collections.emptyList());
 
 
     @Nested
@@ -234,6 +251,78 @@ public class GetActiveSickLeavesServiceTest {
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
             assertEquals(HSA_ID, captor.getValue().getDoctorIds().get(0));
+        }
+
+        @Nested
+        class DiagnosisChapters {
+
+            @BeforeEach
+            void setup() {
+                when(user.getValdVardenhet()).thenReturn(unit);
+                when(unit.getId()).thenReturn(UNIT_ID);
+            }
+
+            @Test
+            void shouldConvertEnabledDiagnosisChapters() {
+                final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+                getActiveSickLeavesService.get(expectedRequest);
+
+                verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+
+                assertEquals(1, captor.getValue().getDiagnosisChapters().size());
+            }
+
+            @Test
+            void shouldConvertEnabledDiagnosisChapterTo() {
+                final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+                getActiveSickLeavesService.get(expectedRequest);
+
+                verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+
+                assertEquals(
+                    chosenDiagnosisChapter.getTo().getLetter(), captor.getValue().getDiagnosisChapters().get(0).getTo().getLetter()
+                );
+                assertEquals(
+                    chosenDiagnosisChapter.getTo().getNumber(), captor.getValue().getDiagnosisChapters().get(0).getTo().getNumber()
+                );
+            }
+
+            @Test
+            void shouldConvertEnabledDiagnosisChapterFrom() {
+                final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+                getActiveSickLeavesService.get(expectedRequest);
+
+                verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+
+                assertEquals(
+                    chosenDiagnosisChapter.getFrom().getLetter(), captor.getValue().getDiagnosisChapters().get(0).getFrom().getLetter()
+                );
+                assertEquals(
+                    chosenDiagnosisChapter.getFrom().getNumber(), captor.getValue().getDiagnosisChapters().get(0).getFrom().getNumber()
+                );
+            }
+
+            @Test
+            void shouldConvertEnabledDiagnosisChapterId() {
+                final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+                getActiveSickLeavesService.get(expectedRequest);
+
+                verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+
+                assertEquals(chosenDiagnosisChapter.getId(), captor.getValue().getDiagnosisChapters().get(0).getId());
+                assertEquals(chosenDiagnosisChapter.getId(), captor.getValue().getDiagnosisChapters().get(0).getId());
+            }
+
+            @Test
+            void shouldConvertEnabledDiagnosisChapterName() {
+                final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+                getActiveSickLeavesService.get(expectedRequest);
+
+                verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+
+                assertEquals(chosenDiagnosisChapter.getName(), captor.getValue().getDiagnosisChapters().get(0).getName());
+                assertEquals(chosenDiagnosisChapter.getName(), captor.getValue().getDiagnosisChapters().get(0).getName());
+            }
         }
     }
 

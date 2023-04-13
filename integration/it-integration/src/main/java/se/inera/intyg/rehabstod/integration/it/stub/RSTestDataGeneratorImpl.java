@@ -43,6 +43,8 @@ import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate.WorkCapacity;
 import se.inera.intyg.infra.integration.pu.stub.StubResidentStore;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKategori;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKod;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
@@ -170,6 +172,7 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         List<DiagnosedCertificate> diagnosedCertificateList = new ArrayList<>();
         List<SickLeaveCertificate> sickleaveCertificateList = new ArrayList<>();
         List<SjukfallEnhet> activeSickLeavesList = new ArrayList<>();
+        List<DiagnosKapitel> diagnosisChapterList = new ArrayList<>();
 
         for (int a = 0; a < numberOfPatients; a++) {
             Patient patient = nextPatient();
@@ -193,6 +196,7 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         addToDiagnosedCertificates(tolvan, hosPersonList.get(0), diagnosedCertificateList);
         addToSickleaveCertificates(tolvan, hosPersonList.get(0), sickleaveCertificateList);
         addToActiveSickleavesList(tolvan, hosPersonList.get(0), activeSickLeavesList);
+        fillDiagnosKapitel(diagnosisChapterList);
 
 
         // Lilltolvan
@@ -200,7 +204,7 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
 
         LOG.info("Generated {} intygsData, {} diagnosed certs, {} sickleave, {} active sickleaves certs items for stub",
             intygsDataList.size(), diagnosedCertificateList.size(), sickleaveCertificateList.size(), activeSickLeavesList.size());
-        return new StubData(intygsDataList, diagnosedCertificateList, sickleaveCertificateList, activeSickLeavesList);
+        return new StubData(intygsDataList, diagnosedCertificateList, sickleaveCertificateList, activeSickLeavesList, diagnosisChapterList);
     }
 
     private void addToActiveSickleavesList(Patient patient, HosPersonal hosPerson, List<SjukfallEnhet> list) {
@@ -699,6 +703,31 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         diagnosList.add("Z870");
     }
 
+    private DiagnosKapitel getDiagnosKapitel(char fromLetter, char toLetter, int fromNumber, int toNumber, String name) {
+        final var from = new DiagnosKategori(fromLetter, fromNumber);
+        final var to = new DiagnosKategori(toLetter, toNumber);
+        return new DiagnosKapitel(from, to, name);
+    }
+
+    private void fillDiagnosKapitel(List<DiagnosKapitel> diagnosisChapterList) {
+        diagnosisChapterList.add(getDiagnosKapitel('A', 'B', 0, 99, "Vissa infektionssjukdomar och parasitsjukdomar"));
+        diagnosisChapterList.add(getDiagnosKapitel('C', 'D', 0, 48, "Tumörer"));
+        diagnosisChapterList.add(getDiagnosKapitel('F', 'F', 0, 99, "Psykiska sjukdomar och syndrom samt beteendestörningar"));
+        diagnosisChapterList.add(getDiagnosKapitel('H', 'H', 0, 59, "Sjukdomar i ögat och närliggande organ"));
+        diagnosisChapterList.add(getDiagnosKapitel('J', 'J', 0, 99, "Andningsorganens sjukdomar"));
+        diagnosisChapterList.add(getDiagnosKapitel('M', 'M', 0, 99, "Sjukdomar i muskuloskeletala systemet och bindväven"));
+        diagnosisChapterList.add(getDiagnosKapitel('N', 'N', 0, 99, "Sjukdomar i urin- och könsorganen"));
+        diagnosisChapterList.add(getDiagnosKapitel('S', 'T', 0, 98, "Skador, förgiftningar och vissa andra följder av yttre orsaker"));
+        diagnosisChapterList.add(getDiagnosKapitel('V', 'V', 1, 98, "Yttre orsaker till sjukdom och död"));
+        diagnosisChapterList.add(
+            getDiagnosKapitel('Z', 'Z', 0, 99, "Faktorer av betydelse för hälsotillståndet och för kontakter med hälso- och sjukvården")
+        );
+        diagnosisChapterList.add(
+            getDiagnosKapitel('R', 'R', 0, 99,
+                "Symtom, sjukdomstecken och onormala kliniska fynd och laboratoriefynd som ej klassificeras på annan plats")
+        );
+    }
+
     private void initEnhet() {
         initFakedVardgivare1();
         initFakedVardgivare2();
@@ -892,13 +921,16 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         List<DiagnosedCertificate> diagnosedCertificateList;
         List<SickLeaveCertificate> sickleaveCertificateList;
         List<SjukfallEnhet> activeSickleaveList;
+        List<DiagnosKapitel> diagnosisChapterList;
 
         public StubData(List<IntygsData> intygsDataList, List<DiagnosedCertificate> diagnosedCertificateList,
-            List<SickLeaveCertificate> sickleaveCertificateList, List<SjukfallEnhet> activeSickleaveList) {
+            List<SickLeaveCertificate> sickleaveCertificateList, List<SjukfallEnhet> activeSickleaveList,
+            List<DiagnosKapitel> diagnosisChapterList) {
             this.intygsDataList = intygsDataList;
             this.diagnosedCertificateList = diagnosedCertificateList;
             this.sickleaveCertificateList = sickleaveCertificateList;
             this.activeSickleaveList = activeSickleaveList;
+            this.diagnosisChapterList = diagnosisChapterList;
         }
 
         public List<IntygsData> getIntygsData() {
@@ -917,5 +949,8 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
             return activeSickleaveList;
         }
 
+        public List<DiagnosKapitel> getDiagnosisChapterList() {
+            return diagnosisChapterList;
+        }
     }
 }

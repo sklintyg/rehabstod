@@ -36,6 +36,10 @@ public class DiagnosKategori {
     private char letter;
     private int number;
 
+    public DiagnosKategori() {
+
+    }
+
     public DiagnosKategori(char letter, int number) {
         this.letter = letter;
         this.number = number;

@@ -20,20 +20,16 @@
 package se.inera.intyg.rehabstod.integration.it.dto;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PopulateFiltersResponseDTO {
     private List<Lakare> activeDoctors;
-
-    public PopulateFiltersResponseDTO(List<Lakare> activeDoctors) {
-        this.activeDoctors = activeDoctors;
-    }
-
-    public List<Lakare> getActiveDoctors() {
-        return activeDoctors;
-    }
-
-    public void setActiveDoctors(List<Lakare> activeDoctors) {
-        this.activeDoctors = activeDoctors;
-    }
+    private List<DiagnosKapitel> diagnosisChapters;
 }

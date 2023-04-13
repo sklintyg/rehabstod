@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
@@ -49,6 +50,8 @@ public class RSTestIntygStub {
 
     private List<SjukfallEnhet> activeSickLeaveData = new ArrayList<>();
 
+    private List<DiagnosKapitel> diagnosisChapterList = new ArrayList<>();
+
     @Autowired
     private RSTestDataGenerator rsTestDataGenerator;
 
@@ -65,6 +68,7 @@ public class RSTestIntygStub {
         luCertificateData = stubData.getDiagnosedCertificates();
         agCertificateData = stubData.getSickLeaveCertificates();
         activeSickLeaveData = stubData.getActiveSickleaveList();
+        diagnosisChapterList = stubData.getDiagnosisChapterList();
     }
 
     public List<IntygsData> getIntygsData() {
@@ -81,6 +85,10 @@ public class RSTestIntygStub {
 
     public List<SjukfallEnhet> getActiveSickLeaveData() {
         return activeSickLeaveData;
+    }
+
+    public List<DiagnosKapitel> getDiagnosisChapterList() {
+        return diagnosisChapterList;
     }
 
 }

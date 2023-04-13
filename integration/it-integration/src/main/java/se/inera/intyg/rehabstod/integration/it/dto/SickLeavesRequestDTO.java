@@ -20,69 +20,19 @@
 package se.inera.intyg.rehabstod.integration.it.dto;
 
 import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 
+@Data
+@NoArgsConstructor
 public class SickLeavesRequestDTO {
     private String unitId;
     private String careUnitId;
     private List<String> doctorIds;
+    private List<DiagnosKapitel> diagnosisChapters;
     private int maxCertificateGap;
     private int maxDaysSinceSickLeaveCompleted;
     private int toSickLeaveLength;
     private int fromSickLeaveLength;
-
-    public String getUnitId() {
-        return unitId;
-    }
-
-    public void setUnitId(String unitId) {
-        this.unitId = unitId;
-    }
-
-    public String getCareUnitId() {
-        return careUnitId;
-    }
-
-    public void setCareUnitId(String careUnitId) {
-        this.careUnitId = careUnitId;
-    }
-
-    public List<String> getDoctorIds() {
-        return doctorIds;
-    }
-
-    public void setDoctorIds(List<String> doctorIds) {
-        this.doctorIds = doctorIds;
-    }
-
-    public int getMaxCertificateGap() {
-        return maxCertificateGap;
-    }
-
-    public void setMaxCertificateGap(int maxCertificateGap) {
-        this.maxCertificateGap = maxCertificateGap;
-    }
-
-    public int getMaxDaysSinceSickLeaveCompleted() {
-        return maxDaysSinceSickLeaveCompleted;
-    }
-
-    public void setMaxDaysSinceSickLeaveCompleted(int maxDaysSinceSickLeaveCompleted) {
-        this.maxDaysSinceSickLeaveCompleted = maxDaysSinceSickLeaveCompleted;
-    }
-
-    public int getToSickLeaveLength() {
-        return toSickLeaveLength;
-    }
-
-    public void setToSickLeaveLength(int toSickLeaveLength) {
-        this.toSickLeaveLength = toSickLeaveLength;
-    }
-
-    public int getFromSickLeaveLength() {
-        return fromSickLeaveLength;
-    }
-
-    public void setFromSickLeaveLength(int fromSickLeaveLength) {
-        this.fromSickLeaveLength = fromSickLeaveLength;
-    }
 }

@@ -19,42 +19,14 @@
 
 package se.inera.intyg.rehabstod.integration.it.dto;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 public class PopulateFiltersRequestDTO {
     private String unitId;
     private String careUnitId;
-    private int maxCertificateGap;
+    private String doctorId;
     private int maxDaysSinceSickLeaveCompleted;
-
-    public String getUnitId() {
-        return unitId;
-    }
-
-    public void setUnitId(String unitId) {
-        this.unitId = unitId;
-    }
-
-    public String getCareUnitId() {
-        return careUnitId;
-    }
-
-    public void setCareUnitId(String careUnitId) {
-        this.careUnitId = careUnitId;
-    }
-
-
-    public int getMaxCertificateGap() {
-        return maxCertificateGap;
-    }
-
-    public void setMaxCertificateGap(int maxCertificateGap) {
-        this.maxCertificateGap = maxCertificateGap;
-    }
-
-    public int getMaxDaysSinceSickLeaveCompleted() {
-        return maxDaysSinceSickLeaveCompleted;
-    }
-
-    public void setMaxDaysSinceSickLeaveCompleted(int maxDaysSinceSickLeaveCompleted) {
-        this.maxDaysSinceSickLeaveCompleted = maxDaysSinceSickLeaveCompleted;
-    }
 }

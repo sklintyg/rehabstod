@@ -25,6 +25,9 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
@@ -35,11 +38,15 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
 
     private final UserService userService;
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+    private final DiagnosKapitelService diagnosKapitelService;
 
-    public PopulateFiltersServiceImpl(UserService userService,
-        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService) {
+    public PopulateFiltersServiceImpl(
+        UserService userService,
+        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+        DiagnosKapitelService diagnosKapitelService) {
         this.userService = userService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
+        this.diagnosKapitelService = diagnosKapitelService;
     }
 
     @Override
@@ -49,22 +56,46 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
         final var request = getRequest(user, unitId, careUnitId);
         final var responseFromIT = intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(request);
-        return new PopulateFiltersResponseDTO(convertDoctors(responseFromIT.getActiveDoctors()));
+        return new PopulateFiltersResponseDTO(
+            convertDoctors(responseFromIT.getActiveDoctors()),
+            diagnosKapitelService.getDiagnosKapitelList(),
+            convertDiagnosisChapters(responseFromIT.getDiagnosisChapters())
+        );
     }
 
-    List<Lakare> convertDoctors(List<se.inera.intyg.infra.sjukfall.dto.Lakare> listToConvert) {
+    private List<Lakare> convertDoctors(List<se.inera.intyg.infra.sjukfall.dto.Lakare> listToConvert) {
         return listToConvert.stream()
             .map((lakare) -> new Lakare(lakare.getId(), lakare.getNamn()))
             .collect(Collectors.toList());
     }
 
+    private List<DiagnosKapitel> convertDiagnosisChapters(List<se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel> diagnosisChapters) {
+        return diagnosisChapters
+            .stream()
+            .map(
+                (diagnosisChapter) ->
+                    new DiagnosKapitel(
+                        convertDiagnosisCategory(diagnosisChapter.getFrom()),
+                        convertDiagnosisCategory(diagnosisChapter.getTo()),
+                        diagnosisChapter.getName()
+                    )
+            )
+            .collect(Collectors.toList());
+    }
+
+    private DiagnosKategori convertDiagnosisCategory(se.inera.intyg.infra.sjukfall.dto.DiagnosKategori diagnosisCategory) {
+        return new DiagnosKategori(diagnosisCategory.getLetter(), diagnosisCategory.getNumber());
+    }
+
 
     private PopulateFiltersRequestDTO getRequest(RehabstodUser user, String unitId, String careUnitId) {
         final var request = new PopulateFiltersRequestDTO();
-        request.setMaxCertificateGap(ControllerUtil.getMaxGlapp(user));
         request.setMaxDaysSinceSickLeaveCompleted(ControllerUtil.getMaxDagarSedanSjukfallAvslut(user));
         request.setUnitId(unitId);
         request.setCareUnitId(careUnitId);
+        if (user.isLakare()) {
+            request.setDoctorId(user.getHsaId());
+        }
         return request;
 
     }
