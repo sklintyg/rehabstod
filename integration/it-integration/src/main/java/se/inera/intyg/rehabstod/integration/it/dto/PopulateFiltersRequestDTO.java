@@ -20,8 +20,10 @@
 package se.inera.intyg.rehabstod.integration.it.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class PopulateFiltersRequestDTO {
     private String unitId;
     private String careUnitId;

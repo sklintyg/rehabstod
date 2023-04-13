@@ -22,9 +22,11 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
 @Data
+@NoArgsConstructor
 public class SickLeavesFilterRequestDTO {
     private List<String> doctorIds;
     private Integer toSickLeaveLength;

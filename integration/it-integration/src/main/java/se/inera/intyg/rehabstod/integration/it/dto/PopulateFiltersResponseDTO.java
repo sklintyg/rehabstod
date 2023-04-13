@@ -21,10 +21,12 @@ package se.inera.intyg.rehabstod.integration.it.dto;
 
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 
 @Data
+@NoArgsConstructor
 public class PopulateFiltersResponseDTO {
     private List<Lakare> activeDoctors;
     private List<DiagnosKapitel> diagnosisChapters;

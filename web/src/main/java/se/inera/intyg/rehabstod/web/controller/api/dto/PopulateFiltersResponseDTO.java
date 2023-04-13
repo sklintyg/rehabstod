@@ -21,10 +21,12 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 
 @Data
+@NoArgsConstructor
 public class PopulateFiltersResponseDTO {
     private List<Lakare> activeDoctors;
     private List<DiagnosKapitel> allDiagnosisChapters;

@@ -21,9 +21,11 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.List;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 @Data
+@NoArgsConstructor
 public class SickLeavesResponseDTO {
     private List<SjukfallEnhet> content;
 
