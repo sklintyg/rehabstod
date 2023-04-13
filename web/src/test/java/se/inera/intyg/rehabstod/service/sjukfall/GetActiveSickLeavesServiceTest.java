@@ -124,7 +124,8 @@ public class GetActiveSickLeavesServiceTest {
 
     static final DiagnosKategori diagnosisChapterTo = new DiagnosKategori(LETTER_TO, NUMBER_TO);
     static final DiagnosKategori diagnosisChapterFrom = new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
-    static final DiagnosKapitel chosenDiagnosisChapter = new DiagnosKapitel(diagnosisChapterTo, diagnosisChapterFrom, DIAGNOSIS_CHAPTER_NAME);
+    static final DiagnosKapitel chosenDiagnosisChapter =
+        new DiagnosKapitel(diagnosisChapterTo, diagnosisChapterFrom, DIAGNOSIS_CHAPTER_NAME);
     static final SickLeavesFilterRequestDTO expectedRequest =
         new SickLeavesFilterRequestDTO(
             Collections.singletonList(DOCTOR_FILTER),
@@ -278,8 +279,12 @@ public class GetActiveSickLeavesServiceTest {
 
                 verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
 
-                assertEquals(chosenDiagnosisChapter.getTo().getLetter(), captor.getValue().getDiagnosisChapters().get(0).getTo().getLetter());
-                assertEquals(chosenDiagnosisChapter.getTo().getNumber(), captor.getValue().getDiagnosisChapters().get(0).getTo().getNumber());
+                assertEquals(
+                    chosenDiagnosisChapter.getTo().getLetter(), captor.getValue().getDiagnosisChapters().get(0).getTo().getLetter()
+                );
+                assertEquals(
+                    chosenDiagnosisChapter.getTo().getNumber(), captor.getValue().getDiagnosisChapters().get(0).getTo().getNumber()
+                );
             }
 
             @Test
@@ -289,8 +294,13 @@ public class GetActiveSickLeavesServiceTest {
 
                 verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
 
-                assertEquals(chosenDiagnosisChapter.getFrom().getLetter(), captor.getValue().getDiagnosisChapters().get(0).getFrom().getLetter());
-                assertEquals(chosenDiagnosisChapter.getFrom().getNumber(), captor.getValue().getDiagnosisChapters().get(0).getFrom().getNumber());            }
+                assertEquals(
+                    chosenDiagnosisChapter.getFrom().getLetter(), captor.getValue().getDiagnosisChapters().get(0).getFrom().getLetter()
+                );
+                assertEquals(
+                    chosenDiagnosisChapter.getFrom().getNumber(), captor.getValue().getDiagnosisChapters().get(0).getFrom().getNumber()
+                );
+            }
 
             @Test
             void shouldConvertEnabledDiagnosisChapterId() {
