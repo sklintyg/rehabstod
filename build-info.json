@@ -1,6 +1,6 @@
 {
-  "appVersion": "1.19.0",
-  "infraVersion": "3.19.0.+",
+  "appVersion": "1.19.1",
+  "infraVersion": "3.19.1.+",
   "buildArgs": "--refresh-dependencies clean build testReport -PcodeQuality -PuseMinifiedJavaScript",
   "tests": [ "restAssuredTest" ]
 }
