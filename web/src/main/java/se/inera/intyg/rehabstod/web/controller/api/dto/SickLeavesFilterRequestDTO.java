@@ -21,26 +21,19 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class SickLeavesFilterRequestDTO {
     private List<String> doctorIds;
     private Integer toSickLeaveLength;
     private Integer fromSickLeaveLength;
     private List<DiagnosKapitel> diagnosisChapters;
-
-    public SickLeavesFilterRequestDTO(
-        List<String> doctorIds, int toSickLeaveLength, int fromSickLeaveLength, List<DiagnosKapitel> diagnosisChapters
-    ) {
-        this.doctorIds = doctorIds;
-        this.toSickLeaveLength = toSickLeaveLength;
-        this.fromSickLeaveLength = fromSickLeaveLength;
-        this.diagnosisChapters = diagnosisChapters;
-    }
 
     public void addDoctorId(String id) {
         if (doctorIds == null) {

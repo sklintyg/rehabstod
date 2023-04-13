@@ -20,6 +20,7 @@
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
@@ -27,15 +28,9 @@ import se.inera.intyg.rehabstod.web.model.Lakare;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class PopulateFiltersResponseDTO {
     private List<Lakare> activeDoctors;
     private List<DiagnosKapitel> allDiagnosisChapters;
     private List<DiagnosKapitel> enabledDiagnosisChapters;
-
-    public PopulateFiltersResponseDTO(List<Lakare> activeDoctors, List<DiagnosKapitel> allDiagnosisChapters,
-        List<DiagnosKapitel> enabledDiagnosisChapters) {
-        this.activeDoctors = activeDoctors;
-        this.allDiagnosisChapters = allDiagnosisChapters;
-        this.enabledDiagnosisChapters = enabledDiagnosisChapters;
-    }
 }
