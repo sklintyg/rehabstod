@@ -21,15 +21,15 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Data;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
+@Data
 public class SickLeavesFilterRequestDTO {
     private List<String> doctorIds;
     private Integer toSickLeaveLength;
     private Integer fromSickLeaveLength;
     private List<DiagnosKapitel> diagnosisChapters;
-
-    public SickLeavesFilterRequestDTO() { }
 
     public SickLeavesFilterRequestDTO(
         List<String> doctorIds, int toSickLeaveLength, int fromSickLeaveLength, List<DiagnosKapitel> diagnosisChapters
@@ -40,49 +40,10 @@ public class SickLeavesFilterRequestDTO {
         this.diagnosisChapters = diagnosisChapters;
     }
 
-    public List<String> getDoctorIds() {
-        return doctorIds;
-    }
-
     public void addDoctorId(String id) {
         if (doctorIds == null) {
             doctorIds = new ArrayList<>();
         }
         doctorIds.add(id);
-    }
-
-    public void addDiagnosisChapter(DiagnosKapitel chapter) {
-        if (diagnosisChapters == null) {
-            diagnosisChapters = new ArrayList<>();
-        }
-        diagnosisChapters.add(chapter);
-    }
-
-    public void setDoctorIds(List<String> doctorIds) {
-        this.doctorIds = doctorIds;
-    }
-
-    public Integer getToSickLeaveLength() {
-        return toSickLeaveLength;
-    }
-
-    public void setToSickLeaveLength(Integer toSickLeaveLength) {
-        this.toSickLeaveLength = toSickLeaveLength;
-    }
-
-    public Integer getFromSickLeaveLength() {
-        return fromSickLeaveLength;
-    }
-
-    public void setFromSickLeaveLength(Integer fromSickLeaveLength) {
-        this.fromSickLeaveLength = fromSickLeaveLength;
-    }
-
-    public List<DiagnosKapitel> getDiagnosisChapters() {
-        return diagnosisChapters;
-    }
-
-    public void setDiagnoses(List<DiagnosKapitel> diagnosisChapters) {
-        this.diagnosisChapters = diagnosisChapters;
     }
 }

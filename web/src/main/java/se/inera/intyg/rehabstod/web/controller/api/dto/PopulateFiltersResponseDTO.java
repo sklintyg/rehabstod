@@ -20,9 +20,11 @@
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.List;
+import lombok.Data;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 
+@Data
 public class PopulateFiltersResponseDTO {
     private List<Lakare> activeDoctors;
     private List<DiagnosKapitel> allDiagnosisChapters;
@@ -32,30 +34,6 @@ public class PopulateFiltersResponseDTO {
         List<DiagnosKapitel> enabledDiagnosisChapters) {
         this.activeDoctors = activeDoctors;
         this.allDiagnosisChapters = allDiagnosisChapters;
-        this.enabledDiagnosisChapters = enabledDiagnosisChapters;
-    }
-
-    public List<Lakare> getActiveDoctors() {
-        return activeDoctors;
-    }
-
-    public void setActiveDoctors(List<Lakare> activeDoctors) {
-        this.activeDoctors = activeDoctors;
-    }
-
-    public List<DiagnosKapitel> getAllDiagnosisChapters() {
-        return allDiagnosisChapters;
-    }
-
-    public void setAllDiagnosisChapters(List<DiagnosKapitel> allDiagnosisChapters) {
-        this.allDiagnosisChapters = allDiagnosisChapters;
-    }
-
-    public List<DiagnosKapitel> getEnabledDiagnosisChapters() {
-        return enabledDiagnosisChapters;
-    }
-
-    public void setEnabledDiagnosisChapters(List<DiagnosKapitel> enabledDiagnosisChapters) {
         this.enabledDiagnosisChapters = enabledDiagnosisChapters;
     }
 }
