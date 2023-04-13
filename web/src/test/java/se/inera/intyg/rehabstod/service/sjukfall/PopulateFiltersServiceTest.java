@@ -111,7 +111,6 @@ public class PopulateFiltersServiceTest {
         );
         when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(response);
 
-        expectedRequest.setMaxCertificateGap(Integer.parseInt(days));
         expectedRequest.setMaxDaysSinceSickLeaveCompleted(Integer.parseInt(days));
         expectedRequest.setUnitId(UNIT_ID);
 
@@ -138,7 +137,6 @@ public class PopulateFiltersServiceTest {
                 verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
                 assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
                 assertNull(captor.getValue().getUnitId());
-                assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
                 assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
             }
 
@@ -179,7 +177,6 @@ public class PopulateFiltersServiceTest {
                 verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
                 assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
                 assertEquals(SUB_UNIT_ID, captor.getValue().getUnitId());
-                assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
                 assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
             }
         }

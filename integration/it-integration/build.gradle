@@ -1,5 +1,4 @@
 dependencies {
-    implementation 'org.projectlombok:lombok:1.18.22'
     compile project(":rehabstod-common")
     compile project(":rehabstod-wc-integration")
 

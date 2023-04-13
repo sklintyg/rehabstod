@@ -90,7 +90,6 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
 
     private PopulateFiltersRequestDTO getRequest(RehabstodUser user, String unitId, String careUnitId) {
         final var request = new PopulateFiltersRequestDTO();
-        request.setMaxCertificateGap(ControllerUtil.getMaxGlapp(user));
         request.setMaxDaysSinceSickLeaveCompleted(ControllerUtil.getMaxDagarSedanSjukfallAvslut(user));
         request.setUnitId(unitId);
         request.setCareUnitId(careUnitId);
