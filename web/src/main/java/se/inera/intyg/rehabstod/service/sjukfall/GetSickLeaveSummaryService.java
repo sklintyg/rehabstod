@@ -20,7 +20,6 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
-import se.inera.intyg.rehabstod.service.user.UserService;
 
 public interface GetSickLeaveSummaryService {
 

@@ -34,7 +34,6 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
     private final StatisticsCalculator statisticsCalculator;
     private final GetActiveSickLeavesService getActiveSickLeavesService;
 
-    @Autowired
     public GetSickLeaveSummaryServiceImpl(PuService puService, StatisticsCalculator statisticsCalculator,
         GetActiveSickLeavesService getActiveSickLeavesService) {
         this.puService = puService;
