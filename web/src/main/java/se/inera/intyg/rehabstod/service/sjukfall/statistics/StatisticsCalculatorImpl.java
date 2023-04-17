@@ -34,10 +34,7 @@ import org.springframework.stereotype.Component;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosGruppLoader;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.DiagnosGruppStat;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.GenderStat;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveDegreeStat;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.*;
 import se.inera.intyg.rehabstod.web.model.Gender;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
@@ -80,14 +77,29 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
 
     }
 
+    @Override
+    public SickLeaveSummary getSickLeaveSummary(List<SjukfallEnhet> sickLeave) {
+
+        int total = sickLeave.size();
+
+        final var genderStat = calculateGenderStat(sickLeave);
+        final var diagnosisGroups = calculateGroupStatistics(sickLeave);
+        final var sickLeaveDegrees = calculateSickLeaveDegrees(sickLeave);
+        final var maleSickLeaveDegrees = calculateSickLeaveDegreeByGender(sickLeave, Gender.M);
+        final var femaleSickLeaveDegrees = calculateSickLeaveDegreeByGender(sickLeave, Gender.F);
+
+        return new SickLeaveSummary(total, genderStat, diagnosisGroups, sickLeaveDegrees, maleSickLeaveDegrees, femaleSickLeaveDegrees);
+
+    }
+
     private List<SickLeaveDegreeStat> calculateSickLeaveDegrees(List<SjukfallEnhet> sjukfall) {
         Map<Integer, List<SjukfallEnhet>> byGrad = sjukfall.stream()
-            .collect(Collectors.groupingBy(SjukfallEnhet::getAktivGrad));
+                .collect(Collectors.groupingBy(SjukfallEnhet::getAktivGrad));
         return byGrad.entrySet().stream()
-            .map(entry -> new SickLeaveDegreeStat(entry.getKey(), "" + entry.getKey() + " %",
-                    entry.getValue().size(), calculatePercentage(entry.getValue().size(), sjukfall.size())))
-            .sorted(Comparator.comparingInt(SickLeaveDegreeStat::getId))
-            .collect(Collectors.toList());
+                .map(entry -> new SickLeaveDegreeStat(entry.getKey(), "" + entry.getKey() + " %",
+                        entry.getValue().size(), calculatePercentage(entry.getValue().size(), sjukfall.size())))
+                .sorted(Comparator.comparingInt(SickLeaveDegreeStat::getId))
+                .collect(Collectors.toList());
     }
 
     private List<GenderStat> calculateGenderStat(List<SjukfallEnhet> sjukfall) {
@@ -99,6 +111,15 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
         return Arrays.asList(
                 new GenderStat(Gender.F, womenTotal, calculatePercentage(womenTotal, (womenTotal + menTotal))),
                 new GenderStat(Gender.M, menTotal, calculatePercentage(menTotal, (womenTotal + menTotal))));
+    }
+
+    private List<SickLeaveDegreeStat> calculateSickLeaveDegreeByGender(List<SjukfallEnhet> sickLeaves, Gender gender) {
+        final var sickLeavesByGender = sickLeaves
+                .stream()
+                .filter((sickLeave) -> sickLeave.getPatient().getKon() == gender)
+                .collect(Collectors.toList());
+
+        return calculateSickLeaveDegrees(sickLeavesByGender);
     }
 
     private List<DiagnosGruppStat> calculateGroupStatistics(List<SjukfallEnhet> sjukfall) {

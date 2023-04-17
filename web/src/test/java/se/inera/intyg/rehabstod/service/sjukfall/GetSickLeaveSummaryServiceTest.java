@@ -25,7 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.pu.PuService;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -51,12 +51,20 @@ public class GetSickLeaveSummaryServiceTest {
     GetSickLeaveSummaryServiceImpl getSickLeaveSummaryService;
 
     List<SjukfallEnhet> sickLeaves = new ArrayList<>();
-    SjukfallSummary summary = new SjukfallSummary(5, Collections.emptyList(), Collections.emptyList(), Collections.emptyList());
+    SickLeaveSummary summary =
+            new SickLeaveSummary(
+                    5,
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    Collections.emptyList()
+            );
 
     @BeforeEach
     void setup() {
         doReturn(sickLeaves).when(getActiveSickLeavesService).get(any(SickLeavesFilterRequestDTO.class));
-        doReturn(summary).when(statisticsCalculator).getSjukfallSummary(sickLeaves);
+        doReturn(summary).when(statisticsCalculator).getSickLeaveSummary(sickLeaves);
     }
 
     @Test
@@ -72,9 +80,9 @@ public class GetSickLeaveSummaryServiceTest {
     }
 
     @Test
-    void shouldCalculateSjukfallSummary() {
+    void shouldCalculateSickLeaveSummary() {
         getSickLeaveSummaryService.get();
-        verify(statisticsCalculator).getSjukfallSummary(sickLeaves);
+        verify(statisticsCalculator).getSickLeaveSummary(sickLeaves);
     }
 
     @Test
