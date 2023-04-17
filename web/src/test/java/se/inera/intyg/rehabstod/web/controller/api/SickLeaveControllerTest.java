@@ -27,6 +27,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesService;
+import se.inera.intyg.rehabstod.service.sjukfall.GetSickLeaveSummaryService;
 import se.inera.intyg.rehabstod.service.sjukfall.PopulateFiltersService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
@@ -37,6 +38,8 @@ public class SickLeaveControllerTest {
     private GetActiveSickLeavesService getActiveSickLeavesService;
     @Mock
     private PopulateFiltersService populateFiltersService;
+    @Mock
+    private GetSickLeaveSummaryService getSickLeaveSummaryService;
 
     @InjectMocks
     private SickLeaveController sickLeaveController = new SickLeaveController();
@@ -53,5 +56,11 @@ public class SickLeaveControllerTest {
     void shouldCallPopulateFiltersService() {
         sickLeaveController.populateFilters();
         verify(populateFiltersService).get();
+    }
+
+    @Test
+    void shouldCallGetSickLeaveSummaryService() {
+        sickLeaveController.getSummary();
+        verify(getSickLeaveSummaryService).get();
     }
 }

@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesService;
+import se.inera.intyg.rehabstod.service.sjukfall.GetSickLeaveSummaryService;
 import se.inera.intyg.rehabstod.service.sjukfall.PopulateFiltersService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesResponseDTO;
@@ -36,6 +38,8 @@ public class SickLeaveController {
 
     @Autowired
     private GetActiveSickLeavesService getActiveSickLeavesService;
+    @Autowired
+    private GetSickLeaveSummaryService getSickLeaveSummaryService;
 
     @Autowired
     private PopulateFiltersService populateFiltersService;
@@ -48,6 +52,11 @@ public class SickLeaveController {
     @RequestMapping(value = "/filters", method = RequestMethod.GET)
     public PopulateFiltersResponseDTO populateFilters() {
         return populateFiltersService.get();
+    }
+
+    @RequestMapping(value = "/summary", method = RequestMethod.GET)
+    public SjukfallSummary getSummary() {
+        return getSickLeaveSummaryService.get();
     }
 
 }
