@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Nested;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -159,13 +157,13 @@ public class StatisticsCalculatorImplTest {
 
         final SjukfallSummary summary = testee.getSjukfallSummary(internalSjukfallList);
         assertEquals(2, summary.getSickLeaveDegrees().get(0).getCount());
-        assertEquals((float) 2/7 * 100, summary.getSickLeaveDegrees().get(0).getPercentage(), 0.001f);
+        assertEquals((float) 2 / 7 * 100, summary.getSickLeaveDegrees().get(0).getPercentage(), 0.001f);
         assertEquals(1, summary.getSickLeaveDegrees().get(1).getCount());
-        assertEquals((float) 1/7 * 100, summary.getSickLeaveDegrees().get(1).getPercentage(), 0.001f);
+        assertEquals((float) 1 / 7 * 100, summary.getSickLeaveDegrees().get(1).getPercentage(), 0.001f);
         assertEquals(1, summary.getSickLeaveDegrees().get(2).getCount());
-        assertEquals((float) 1/7 * 100, summary.getSickLeaveDegrees().get(2).getPercentage(), 0.001f);
+        assertEquals((float) 1 / 7 * 100, summary.getSickLeaveDegrees().get(2).getPercentage(), 0.001f);
         assertEquals(3, summary.getSickLeaveDegrees().get(3).getCount());
-        assertEquals((float) 3/7 * 100, summary.getSickLeaveDegrees().get(3).getPercentage(), 0.001f);
+        assertEquals((float) 3 / 7 * 100, summary.getSickLeaveDegrees().get(3).getPercentage(), 0.001f);
 
     }
 
@@ -254,13 +252,13 @@ public class StatisticsCalculatorImplTest {
 
         final var summary = testee.getSickLeaveSummary(internalSjukfallList);
         assertEquals(2, summary.getSickLeaveDegrees().get(0).getCount());
-        assertEquals((float) 2/7 * 100, summary.getSickLeaveDegrees().get(0).getPercentage(), 0.001f);
+        assertEquals((float) 2 / 7 * 100, summary.getSickLeaveDegrees().get(0).getPercentage(), 0.001f);
         assertEquals(1, summary.getSickLeaveDegrees().get(1).getCount());
-        assertEquals((float) 1/7 * 100, summary.getSickLeaveDegrees().get(1).getPercentage(), 0.001f);
+        assertEquals((float) 1 / 7 * 100, summary.getSickLeaveDegrees().get(1).getPercentage(), 0.001f);
         assertEquals(1, summary.getSickLeaveDegrees().get(2).getCount());
-        assertEquals((float) 1/7 * 100, summary.getSickLeaveDegrees().get(2).getPercentage(), 0.001f);
+        assertEquals((float) 1 / 7 * 100, summary.getSickLeaveDegrees().get(2).getPercentage(), 0.001f);
         assertEquals(3, summary.getSickLeaveDegrees().get(3).getCount());
-        assertEquals((float) 3/7 * 100, summary.getSickLeaveDegrees().get(3).getPercentage(), 0.001f);
+        assertEquals((float) 3 / 7 * 100, summary.getSickLeaveDegrees().get(3).getPercentage(), 0.001f);
 
     }
 
