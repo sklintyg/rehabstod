@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -262,9 +263,85 @@ public class StatisticsCalculatorImplTest {
 
     }
 
+    @Test
+    public void testSickLeaveSummaryWhenSickLeaveHasSeveralSickLeaveDegrees() throws Exception {
+        List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16", 25, Arrays.asList(25, 50, 75, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16", 25, Arrays.asList(25, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "M16", 50, Arrays.asList(25, 50, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, "M16", 75, Arrays.asList(25, 50, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, "M16", 100, Arrays.asList(25, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "M16", 100, List.of(100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "M16", 100, List.of(100)));
+
+        final var summary = testee.getSickLeaveSummary(internalSjukfallList);
+        assertEquals(2, summary.getCountSickLeaveDegrees().get(0).getCount());
+        assertEquals((float) 2 / 7 * 100, summary.getCountSickLeaveDegrees().get(0).getPercentage(), 0.001f);
+        assertEquals(2, summary.getCountSickLeaveDegrees().get(1).getCount());
+        assertEquals((float) 2 / 7 * 100, summary.getCountSickLeaveDegrees().get(1).getPercentage(), 0.001f);
+        assertEquals(2, summary.getCountSickLeaveDegrees().get(2).getCount());
+        assertEquals((float) 2 / 7 * 100, summary.getCountSickLeaveDegrees().get(2).getPercentage(), 0.001f);
+        assertEquals(1, summary.getCountSickLeaveDegrees().get(3).getCount());
+        assertEquals((float) 1 / 7 * 100, summary.getCountSickLeaveDegrees().get(3).getPercentage(), 0.001f);
+    }
+
+    @Test
+    public void testSickLeaveSummaryWhenSickLeaveHasSeveralSickLeaveDegreesForMales() throws Exception {
+        List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.M, "M16", 25, Arrays.asList(25, 50, 75, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16", 25, Arrays.asList(25, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, "M16", 50, Arrays.asList(25, 50, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, "M16", 75, Arrays.asList(25, 50, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, "M16", 100, Arrays.asList(25, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, "M16", 100, List.of(100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "M16", 100, List.of(100)));
+
+        final var summary = testee.getSickLeaveSummary(internalSjukfallList);
+        assertEquals(1, summary.getCountMaleSickLeaveDegrees().get(0).getCount());
+        assertEquals((float) 1 / 5 * 100, summary.getCountMaleSickLeaveDegrees().get(0).getPercentage(), 0.001f);
+        assertEquals(1, summary.getCountMaleSickLeaveDegrees().get(1).getCount());
+        assertEquals((float) 1 / 5 * 100, summary.getCountMaleSickLeaveDegrees().get(1).getPercentage(), 0.001f);
+        assertEquals(2, summary.getCountMaleSickLeaveDegrees().get(2).getCount());
+        assertEquals((float) 2 / 5 * 100, summary.getCountMaleSickLeaveDegrees().get(2).getPercentage(), 0.001f);
+        assertEquals(1, summary.getCountMaleSickLeaveDegrees().get(3).getCount());
+        assertEquals((float) 1 / 5 * 100, summary.getCountMaleSickLeaveDegrees().get(3).getPercentage(), 0.001f);
+    }
+
+    @Test
+    public void testSickLeaveSummaryWhenSickLeaveHasSeveralSickLeaveDegreesForFemales() throws Exception {
+        List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16", 25, Arrays.asList(25, 50, 75, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.M, "M16", 25, Arrays.asList(25, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "M16", 50, Arrays.asList(25, 50, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "M16", 75, Arrays.asList(25, 50, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "M16", 100, Arrays.asList(25, 100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "M16", 100, List.of(100)));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, "M16", 100, List.of(100)));
+
+        final var summary = testee.getSickLeaveSummary(internalSjukfallList);
+        assertEquals(1, summary.getCountFemaleSickLeaveDegrees().get(0).getCount());
+        assertEquals((float) 1 / 5 * 100, summary.getCountFemaleSickLeaveDegrees().get(0).getPercentage(), 0.001f);
+        assertEquals(1, summary.getCountFemaleSickLeaveDegrees().get(1).getCount());
+        assertEquals((float) 1 / 5 * 100, summary.getCountFemaleSickLeaveDegrees().get(1).getPercentage(), 0.001f);
+        assertEquals(2, summary.getCountFemaleSickLeaveDegrees().get(2).getCount());
+        assertEquals((float) 2 / 5 * 100, summary.getCountFemaleSickLeaveDegrees().get(2).getPercentage(), 0.001f);
+        assertEquals(1, summary.getCountFemaleSickLeaveDegrees().get(3).getCount());
+        assertEquals((float) 1 / 5 * 100, summary.getCountFemaleSickLeaveDegrees().get(3).getPercentage(), 0.001f);
+    }
+
     private SjukfallEnhet createInternalSjukfall(String lakareId, String lakareNamn, Gender patientKon, String diagnosKod, int aktivGrad) {
         SjukfallEnhet isf = createInternalSjukfall(lakareId, lakareNamn, patientKon, diagnosKod);
         isf.setAktivGrad(aktivGrad);
+        return isf;
+    }
+
+    private SjukfallEnhet createInternalSjukfall(String lakareId, String lakareNamn, Gender patientKon, String diagnosKod, int aktivGrad, List<Integer> grader) {
+        SjukfallEnhet isf = createInternalSjukfall(lakareId, lakareNamn, patientKon, diagnosKod);
+        isf.setAktivGrad(aktivGrad);
+        isf.setGrader(grader);
         return isf;
     }
 

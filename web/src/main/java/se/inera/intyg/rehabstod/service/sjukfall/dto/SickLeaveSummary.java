@@ -35,4 +35,10 @@ public class SickLeaveSummary {
     private List<SickLeaveDegreeStat> sickLeaveDegrees;
     private List<SickLeaveDegreeStat> maleSickLeaveDegrees;
     private List<SickLeaveDegreeStat> femaleSickLeaveDegrees;
+    private List<SickLeaveDegreeStat> countSickLeaveDegrees;
+    private List<SickLeaveDegreeStat> countMaleSickLeaveDegrees;
+    private List<SickLeaveDegreeStat> countFemaleSickLeaveDegrees;
+
+
+
 }

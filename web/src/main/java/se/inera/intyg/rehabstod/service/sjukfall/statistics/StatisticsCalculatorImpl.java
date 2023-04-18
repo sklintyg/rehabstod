@@ -85,11 +85,57 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
         final var genderStat = calculateGenderStat(sickLeave);
         final var diagnosisGroups = calculateGroupStatistics(sickLeave);
         final var sickLeaveDegrees = calculateSickLeaveDegrees(sickLeave);
-        final var maleSickLeaveDegrees = calculateSickLeaveDegreeByGender(sickLeave, Gender.M);
-        final var femaleSickLeaveDegrees = calculateSickLeaveDegreeByGender(sickLeave, Gender.F);
+        final var maleSickLeaveDegrees = calculateSickLeaveDegrees(filterSickLeavesByGender(sickLeave, Gender.M));
+        final var femaleSickLeaveDegrees = calculateSickLeaveDegrees(filterSickLeavesByGender(sickLeave, Gender.F));
+        final var countSickLeaveDegrees = countSickLeaveDegrees(sickLeave);
+        final var countMaleSickLeaveDegrees = countSickLeaveDegrees(filterSickLeavesByGender(sickLeave, Gender.M));
+        final var countFemaleSickLeaveDegrees = countSickLeaveDegrees(filterSickLeavesByGender(sickLeave, Gender.F));
 
-        return new SickLeaveSummary(total, genderStat, diagnosisGroups, sickLeaveDegrees, maleSickLeaveDegrees, femaleSickLeaveDegrees);
+        return new SickLeaveSummary(
+                total,
+                genderStat,
+                diagnosisGroups,
+                sickLeaveDegrees,
+                maleSickLeaveDegrees,
+                femaleSickLeaveDegrees,
+                countSickLeaveDegrees,
+                countMaleSickLeaveDegrees,
+                countFemaleSickLeaveDegrees
+        );
 
+    }
+
+    private List<SickLeaveDegreeStat> countSickLeaveDegrees(List<SjukfallEnhet> sickLeaves) {
+        final var bySickLeaveDegreeCount = sickLeaves
+                .stream()
+                .filter((sickLeave) -> sickLeave.getGrader() != null)
+                .collect(Collectors.groupingBy((sickLeave) -> sickLeave.getGrader().size()));
+
+        return bySickLeaveDegreeCount
+                .entrySet()
+                .stream()
+                .map((entry) -> new SickLeaveDegreeStat(
+                        entry.getKey(),
+                        getCountSickLeaveDegreesName(entry.getKey()),
+                        entry.getValue().size(),
+                        calculatePercentage(entry.getValue().size(), sickLeaves.size())))
+                .collect(Collectors.toList());
+
+    }
+
+    private String getCountSickLeaveDegreesName(Integer count) {
+        switch(count) {
+            case 1:
+                return "Ett";
+            case 2:
+                return "Två";
+            case 3:
+                return "Tre";
+            case 4:
+                return "Fyra";
+            default:
+                return "";
+        }
     }
 
     private List<SickLeaveDegreeStat> calculateSickLeaveDegrees(List<SjukfallEnhet> sjukfall) {
@@ -113,13 +159,11 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
                 new GenderStat(Gender.M, menTotal, calculatePercentage(menTotal, (womenTotal + menTotal))));
     }
 
-    private List<SickLeaveDegreeStat> calculateSickLeaveDegreeByGender(List<SjukfallEnhet> sickLeaves, Gender gender) {
-        final var sickLeavesByGender = sickLeaves
+    private List<SjukfallEnhet> filterSickLeavesByGender(List<SjukfallEnhet> sickLeaves, Gender gender) {
+        return sickLeaves
                 .stream()
                 .filter((sickLeave) -> sickLeave.getPatient().getKon() == gender)
                 .collect(Collectors.toList());
-
-        return calculateSickLeaveDegrees(sickLeavesByGender);
     }
 
     private List<DiagnosGruppStat> calculateGroupStatistics(List<SjukfallEnhet> sjukfall) {

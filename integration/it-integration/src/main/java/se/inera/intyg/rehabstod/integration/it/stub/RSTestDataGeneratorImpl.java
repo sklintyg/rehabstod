@@ -486,7 +486,7 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
     private List<Integer> getSjukskrivningsGrader() {
         List<Integer> sjukskrivningsgradList = new ArrayList<>();
 
-        int antalPerioder = 2;
+        int antalPerioder = ThreadLocalRandom.current().nextInt(1, 4);
 
         for (int i = 0; i < antalPerioder; i++) {
             sjukskrivningsgradList.add(getNextSjukskrivningsgrad());
