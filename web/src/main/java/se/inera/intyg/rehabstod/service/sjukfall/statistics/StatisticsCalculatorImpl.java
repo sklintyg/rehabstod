@@ -161,7 +161,6 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
                 getSickLeaveLengthName(id),
                 sickLeaves.size(),
                 calculatePercentage(sickLeaves.size(), totalCount)
-
         );
     }
 
