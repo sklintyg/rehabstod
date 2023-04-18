@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -129,26 +130,22 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
 
     }
 
+    private List<SjukfallEnhet> filterOnSickLeaveLength(List<SjukfallEnhet> sickLeaves, Predicate<SjukfallEnhet> filter) {
+        return sickLeaves
+                .stream()
+                .filter(filter)
+                .collect(Collectors.toList());
+    }
+
     private List<SickLeaveLengthStat> calculateSickLeaveLength(List<SjukfallEnhet> sickLeaves) {
-        final var firstLimit = sickLeaves
-                .stream()
-                .filter((sickLeave) -> sickLeave.getDagar() < 90)
-                .collect(Collectors.toList());
-
-        final var secondLimit = sickLeaves
-                .stream()
-                .filter((sickLeave) -> sickLeave.getDagar() >= 90 && sickLeave.getDagar() <= 180)
-                .collect(Collectors.toList());
-
-        final var thirdLimit = sickLeaves
-                .stream()
-                .filter((sickLeave) -> sickLeave.getDagar() <= 365 && sickLeave.getDagar() > 180)
-                .collect(Collectors.toList());
-
-        final var fourthLimit = sickLeaves
-                .stream()
-                .filter((sickLeave) -> sickLeave.getDagar() > 365)
-                .collect(Collectors.toList());
+        final var firstLimit =
+                filterOnSickLeaveLength(sickLeaves, (sickLeave) -> sickLeave.getDagar() < 90);
+        final var secondLimit =
+                filterOnSickLeaveLength(sickLeaves,(sickLeave) -> sickLeave.getDagar() >= 90 && sickLeave.getDagar() <= 180);
+        final var thirdLimit =
+                filterOnSickLeaveLength(sickLeaves, (sickLeave) -> sickLeave.getDagar() <= 365 && sickLeave.getDagar() > 180);
+        final var fourthLimit =
+                filterOnSickLeaveLength(sickLeaves, (sickLeave) -> sickLeave.getDagar() > 365);
 
         return Arrays.asList(
                 getStatForSickLeaveLength(firstLimit, 1, sickLeaves.size()),
