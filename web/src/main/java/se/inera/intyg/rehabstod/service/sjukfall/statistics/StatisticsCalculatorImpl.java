@@ -126,7 +126,7 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
     private String getCountSickLeaveDegreesName(Integer count) {
         switch (count) {
             case 1:
-                return "Ett";
+                return "En";
             case 2:
                 return "Två";
             case 3:
