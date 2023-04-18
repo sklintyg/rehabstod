@@ -28,6 +28,7 @@ import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrati
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
+import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
@@ -40,13 +41,17 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
     private final DiagnosKapitelService diagnosKapitelService;
 
+    private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+
     public PopulateFiltersServiceImpl(
         UserService userService,
         IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
-        DiagnosKapitelService diagnosKapitelService) {
+        DiagnosKapitelService diagnosKapitelService,
+        SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver) {
         this.userService = userService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
         this.diagnosKapitelService = diagnosKapitelService;
+        this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
     }
 
     @Override
@@ -64,9 +69,13 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
     }
 
     private List<Lakare> convertDoctors(List<se.inera.intyg.infra.sjukfall.dto.Lakare> listToConvert) {
-        return listToConvert.stream()
-            .map((lakare) -> new Lakare(lakare.getId(), lakare.getNamn()))
+        final var lakareList = listToConvert.stream()
+            .map((lakare) -> new Lakare(lakare.getId(), sjukfallEmployeeNameResolver.getEmployeeName(lakare.getId())))
             .collect(Collectors.toList());
+
+        sjukfallEmployeeNameResolver.decorateAnyDuplicateNamesWithHsaId(lakareList);
+
+        return lakareList;
     }
 
     private List<DiagnosKapitel> convertDiagnosisChapters(List<se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel> diagnosisChapters) {

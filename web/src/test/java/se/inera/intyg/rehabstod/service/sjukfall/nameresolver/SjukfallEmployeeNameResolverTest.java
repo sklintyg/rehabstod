@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall.nameresolver;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -115,6 +116,57 @@ public class SjukfallEmployeeNameResolverTest {
         when(employeeNameService.getEmployeeHsaName(lakareId1)).thenReturn(null);
         testee.enrichSjukfallPaientWithHsaEmployeeNames(sjukfallList);
         assertEquals(lakareId1, sjukfallList.get(0).getIntyg().get(0).getLakare().getNamn());
+    }
+
+    @Test
+    public void shallReturnEmployeeNameWhenExists() {
+        final var employeeId = "employeeId";
+        final var expectedName = "Name Found";
+        doReturn(expectedName).when(employeeNameService).getEmployeeHsaName(employeeId);
+        final var actualName = testee.getEmployeeName(employeeId);
+        assertEquals(expectedName, actualName);
+    }
+
+    @Test
+    public void shallReturnHsaIdAsEmployeeNameWhenNotExists() {
+        final var employeeId = "employeeId";
+        doReturn(null).when(employeeNameService).getEmployeeHsaName(employeeId);
+        final var actualName = testee.getEmployeeName(employeeId);
+        assertEquals(employeeId, actualName);
+    }
+
+    @Test
+    public void shallAddHsaIdForDuplicateNames() {
+        final var lakareList = List.of(
+            new Lakare("HSA-ID1", "Duplicate Name"),
+            new Lakare("HSA-ID2", "Duplicate Name")
+        );
+
+        final var expectedLakareList = List.of(
+            new Lakare("HSA-ID1", "Duplicate Name (HSA-ID1)"),
+            new Lakare("HSA-ID2", "Duplicate Name (HSA-ID1)")
+        );
+
+        testee.decorateAnyDuplicateNamesWithHsaId(lakareList);
+
+        assertEquals(expectedLakareList, lakareList);
+    }
+
+    @Test
+    public void shallNotAddHsaIdForUniqueNames() {
+        final var lakareList = List.of(
+            new Lakare("HSA-ID1", "Unique Name 1"),
+            new Lakare("HSA-ID2", "Unique Name 2")
+        );
+
+        final var expectedLakareList = List.of(
+            new Lakare("HSA-ID1", "Unique Name 1"),
+            new Lakare("HSA-ID2", "Unique Name 2")
+        );
+
+        testee.decorateAnyDuplicateNamesWithHsaId(lakareList);
+
+        assertEquals(expectedLakareList, lakareList);
     }
 
     private List<SjukfallPatient> createSjukfallPatientList() {
