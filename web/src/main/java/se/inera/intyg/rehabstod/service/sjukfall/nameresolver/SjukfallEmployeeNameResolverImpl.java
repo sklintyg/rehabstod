@@ -55,36 +55,51 @@ public class SjukfallEmployeeNameResolverImpl implements SjukfallEmployeeNameRes
         if (lakare == null) {
             return;
         }
-        String employeeHsaName = employeeNameService.getEmployeeHsaName(lakare.getHsaId());
-        if (employeeHsaName != null) {
-            lakare.setNamn(employeeHsaName);
-        } else {
-            lakare.setNamn(lakare.getHsaId());
-        }
+        lakare.setNamn(
+            getEmployeeName(lakare.getHsaId())
+        );
     }
 
     @Override
     public void updateDuplicateDoctorNamesWithHsaId(List<SjukfallEnhet> sjukfallList) {
-        // Get number of unique lakare hsaIds
-        long numberOfHsaIds = sjukfallList.stream().map(sf -> sf.getLakare().getHsaId()).distinct().count();
-        long numberOfLakareNames = sjukfallList.stream().map(sf -> sf.getLakare().getNamn()).distinct().count();
+        final var lakareList = sjukfallList.stream().map(SjukfallEnhet::getLakare).collect(Collectors.toList());
+        if (noDuplicateNames(lakareList)) {
+            return;
+        }
+        decorateDuplicateNamesWithHsaId(lakareList);
+    }
 
-        // If these counts don't add up we need to post-process the names.
-        if (numberOfHsaIds != numberOfLakareNames) {
+    @Override
+    public void decorateAnyDuplicateNamesWithHsaId(List<Lakare> lakareList) {
+        if (noDuplicateNames(lakareList)) {
+            return;
+        }
+        decorateDuplicateNamesWithHsaId(lakareList);
+    }
 
-            // Make sure there are no two doctors in the list with the same name, but different hsaId's
-            Map<String, List<Lakare>> collect = sjukfallList.stream()
-                .map(SjukfallEnhet::getLakare)
-                .collect(Collectors.groupingBy(Lakare::getNamn));
+    @Override
+    public String getEmployeeName(String employeeHsaId) {
+        final var employeeHsaName = employeeNameService.getEmployeeHsaName(employeeHsaId);
+        if (employeeHsaName == null) {
+            return employeeHsaId;
+        }
+        return employeeHsaName;
+    }
 
-            for (Map.Entry<String, List<Lakare>> entry : collect.entrySet()) {
+    private boolean noDuplicateNames(List<Lakare> lakareList) {
+        return lakareList.stream().map(Lakare::getHsaId).distinct().count() == lakareList.stream().map(Lakare::getNamn).distinct().count();
+    }
 
-                double numberOfUnique = entry.getValue().stream().map(Lakare::getHsaId).distinct().count();
-                if (numberOfUnique > 1) {
-                    entry.getValue().forEach(lakare -> {
-                        lakare.setNamn(lakare.getNamn() + " (" + lakare.getHsaId() + ")");
-                    });
-                }
+    private void decorateDuplicateNamesWithHsaId(List<Lakare> lakareList) {
+        final var collect = lakareList.stream()
+            .collect(Collectors.groupingBy(Lakare::getNamn));
+
+        for (Map.Entry<String, List<Lakare>> entry : collect.entrySet()) {
+            final var numberOfUnique = entry.getValue().stream().map(Lakare::getHsaId).distinct().count();
+            if (numberOfUnique > 1) {
+                entry.getValue().forEach(lakare -> {
+                    lakare.setNamn(lakare.getNamn() + " (" + lakare.getHsaId() + ")");
+                });
             }
         }
     }

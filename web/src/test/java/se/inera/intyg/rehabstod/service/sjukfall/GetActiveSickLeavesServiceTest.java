@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -56,6 +57,7 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
+import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
@@ -79,6 +81,9 @@ public class GetActiveSickLeavesServiceTest {
 
     @Mock
     PdlLogSickLeavesService pdlLogSickLeavesService;
+
+    @Mock
+    SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
     @InjectMocks
     GetActiveSickLeavesServiceImpl getActiveSickLeavesService;
@@ -162,6 +167,7 @@ public class GetActiveSickLeavesServiceTest {
 
     @Nested
     class TestPdlLogging {
+
         se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave = new se.inera.intyg.rehabstod.web.model.SjukfallEnhet();
 
         @BeforeEach
@@ -184,7 +190,9 @@ public class GetActiveSickLeavesServiceTest {
 
     @Nested
     class TestPU {
+
         se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave = new se.inera.intyg.rehabstod.web.model.SjukfallEnhet();
+
         @BeforeEach
         void setup() {
             when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
@@ -204,7 +212,40 @@ public class GetActiveSickLeavesServiceTest {
     }
 
     @Nested
+    class TestUpdateHsaNames {
+
+        se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave = new se.inera.intyg.rehabstod.web.model.SjukfallEnhet();
+
+        @BeforeEach
+        void setup() {
+            when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
+                any(SjukfallEnhet.class), anyInt(), any(LocalDate.class)
+            )).thenReturn(sickLeave);
+
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+        }
+
+        @Test
+        void shouldEnrichWithHsaEmployeeNames() {
+            getActiveSickLeavesService.get(expectedRequest);
+
+            verify(sjukfallEmployeeNameResolver, times(1))
+                .enrichWithHsaEmployeeNames(Collections.singletonList(sickLeave));
+        }
+
+        @Test
+        void shouldUpdateDuplicateDoctorNamesWithHsaId() {
+            getActiveSickLeavesService.get(expectedRequest);
+
+            verify(sjukfallEmployeeNameResolver, times(1))
+                .updateDuplicateDoctorNamesWithHsaId(Collections.singletonList(sickLeave));
+        }
+    }
+
+    @Nested
     class TestITRequest {
+
         @Test
         void shouldCreateRequestWithCorrectValuesWhenChosenUnit() {
             when(user.getValdVardenhet()).thenReturn(unit);

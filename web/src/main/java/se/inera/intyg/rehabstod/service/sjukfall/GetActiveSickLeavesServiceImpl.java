@@ -38,6 +38,7 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
+import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
@@ -52,19 +53,21 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     private final SjukfallEngineMapper sjukfallEngineMapper;
     private final PdlLogSickLeavesService pdlLogSickLeavesService;
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+    private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
     private static final Logger LOG = LoggerFactory.getLogger(GetActiveSickLeavesServiceImpl.class);
 
     @Autowired
     public GetActiveSickLeavesServiceImpl(UserService userService, PuService puService, MonitoringLogService monitoringLogService,
         SjukfallEngineMapper sjukfallEngineMapper, PdlLogSickLeavesService pdlLogSickLeavesService,
-        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService) {
+        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService, SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver) {
         this.userService = userService;
         this.puService = puService;
         this.monitoringLogService = monitoringLogService;
         this.sjukfallEngineMapper = sjukfallEngineMapper;
         this.pdlLogSickLeavesService = pdlLogSickLeavesService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
+        this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
     }
 
     @Override
@@ -82,8 +85,13 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         final var convertedSickLeaves = convertSickLeaves(response.getContent(), certificateParameters);
 
         LOG.debug("Add patient names and filter on protected person for sick leaves");
-       logFactory.setStartTimer(System.currentTimeMillis());
+        logFactory.setStartTimer(System.currentTimeMillis());
         puService.enrichSjukfallWithPatientNamesAndFilterSekretess(convertedSickLeaves);
+        LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_PATIENT_INFORMATION, response.getContent().size()));
+
+        logFactory.setStartTimer(System.currentTimeMillis());
+        sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(convertedSickLeaves);
+        sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(convertedSickLeaves);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_PATIENT_INFORMATION, response.getContent().size()));
 
         LOG.debug("Logging that sick leaves have been fetched");

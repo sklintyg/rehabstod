@@ -22,7 +22,9 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,6 +53,7 @@ import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.UserService;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,6 +67,9 @@ public class PopulateFiltersServiceTest {
 
     @Mock
     DiagnosKapitelService diagnosKapitelService;
+
+    @Mock
+    SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
     @InjectMocks
     PopulateFiltersServiceImpl populateActiveFilters;
@@ -107,9 +113,11 @@ public class PopulateFiltersServiceTest {
         when(user.getPreferences()).thenReturn(userPreferences);
 
         final var response = new PopulateFiltersResponseDTO(
-            Collections.singletonList(Lakare.create(HSA_ID, DOCTOR_NAME)), Collections.singletonList(enabledDiagnosisChapter)
+            Collections.singletonList(Lakare.create(HSA_ID, HSA_ID)), Collections.singletonList(enabledDiagnosisChapter)
         );
         when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(response);
+
+        when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
 
         expectedRequest.setMaxDaysSinceSickLeaveCompleted(Integer.parseInt(days));
         expectedRequest.setUnitId(UNIT_ID);
@@ -185,38 +193,39 @@ public class PopulateFiltersServiceTest {
     @Nested
     class TestITResponse {
 
-        @Test
-        void shouldConvertActiveDoctors() {
+        @BeforeEach
+        void setUp() {
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
+        }
 
+        @Test
+        void shouldConvertActiveDoctors() {
             final var response = populateActiveFilters.get();
             assertEquals(1, response.getActiveDoctors().size());
         }
 
         @Test
         void shouldConvertHsaIdForDoctor() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-
             final var response = populateActiveFilters.get();
             assertEquals(HSA_ID, response.getActiveDoctors().get(0).getHsaId());
         }
 
         @Test
         void shouldConvertDoctorName() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-
             final var response = populateActiveFilters.get();
             assertEquals(DOCTOR_NAME, response.getActiveDoctors().get(0).getNamn());
         }
 
         @Test
-        void shouldConvertAllDiagnosisChapters() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
+        void shouldDecorateDuplicateDoctorNamesWithHsaId() {
+            populateActiveFilters.get();
+            verify(sjukfallEmployeeNameResolver, times(1))
+                .decorateAnyDuplicateNamesWithHsaId(anyList());
+        }
 
+        @Test
+        void shouldConvertAllDiagnosisChapters() {
             final var response = populateActiveFilters.get();
             assertEquals(allDiagnosisChapters, response.getAllDiagnosisChapters());
         }
