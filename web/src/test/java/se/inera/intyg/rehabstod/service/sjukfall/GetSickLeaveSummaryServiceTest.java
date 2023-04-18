@@ -61,6 +61,9 @@ public class GetSickLeaveSummaryServiceTest {
                     Collections.emptyList(),
                     Collections.emptyList(),
                     Collections.emptyList(),
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    Collections.emptyList(),
                     Collections.emptyList()
             );
 

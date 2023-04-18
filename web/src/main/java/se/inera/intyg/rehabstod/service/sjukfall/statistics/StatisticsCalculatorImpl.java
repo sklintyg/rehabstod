@@ -90,6 +90,9 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
         final var countSickLeaveDegrees = countSickLeaveDegrees(sickLeave);
         final var countMaleSickLeaveDegrees = countSickLeaveDegrees(filterSickLeavesByGender(sickLeave, Gender.M));
         final var countFemaleSickLeaveDegrees = countSickLeaveDegrees(filterSickLeavesByGender(sickLeave, Gender.F));
+        final var sickLeaveLength = calculateSickLeaveLength(sickLeave);
+        final var maleSickLeaveLength = calculateSickLeaveLength(filterSickLeavesByGender(sickLeave, Gender.M));
+        final var femaleSickLeaveLength = calculateSickLeaveLength(filterSickLeavesByGender(sickLeave, Gender.F));
 
         return new SickLeaveSummary(
                 total,
@@ -100,7 +103,10 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
                 femaleSickLeaveDegrees,
                 countSickLeaveDegrees,
                 countMaleSickLeaveDegrees,
-                countFemaleSickLeaveDegrees
+                countFemaleSickLeaveDegrees,
+                sickLeaveLength,
+                maleSickLeaveLength,
+                femaleSickLeaveLength
         );
 
     }
@@ -123,6 +129,45 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
 
     }
 
+    private List<SickLeaveLengthStat> calculateSickLeaveLength(List<SjukfallEnhet> sickLeaves) {
+        final var firstLimit = sickLeaves
+                .stream()
+                .filter((sickLeave) -> sickLeave.getDagar() < 90)
+                .collect(Collectors.toList());
+
+        final var secondLimit = sickLeaves
+                .stream()
+                .filter((sickLeave) -> sickLeave.getDagar() >= 90 && sickLeave.getDagar() <= 180)
+                .collect(Collectors.toList());
+
+        final var thirdLimit = sickLeaves
+                .stream()
+                .filter((sickLeave) -> sickLeave.getDagar() <= 365 && sickLeave.getDagar() > 180)
+                .collect(Collectors.toList());
+
+        final var fourthLimit = sickLeaves
+                .stream()
+                .filter((sickLeave) -> sickLeave.getDagar() > 365)
+                .collect(Collectors.toList());
+
+        return Arrays.asList(
+                getStatForSickLeaveLength(firstLimit, 1, sickLeaves.size()),
+                getStatForSickLeaveLength(secondLimit, 2, sickLeaves.size()),
+                getStatForSickLeaveLength(thirdLimit, 3, sickLeaves.size()),
+                getStatForSickLeaveLength(fourthLimit, 4, sickLeaves.size())
+            );
+    }
+
+    private SickLeaveLengthStat getStatForSickLeaveLength(List<SjukfallEnhet> sickLeaves, int id, int totalCount) {
+        return new SickLeaveLengthStat(
+                id,
+                getSickLeaveLengthName(id),
+                sickLeaves.size(),
+                calculatePercentage(sickLeaves.size(), totalCount)
+
+        );
+    }
+
     private String getCountSickLeaveDegreesName(Integer count) {
         switch (count) {
             case 1:
@@ -136,6 +181,22 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
             default:
                 return "";
         }
+    }
+
+    private String getSickLeaveLengthName(int id) {
+        if (id == 1) {
+            return "< 90";
+        }
+
+        if (id == 2) {
+            return "Dag 90-180";
+        }
+
+        if (id == 3) {
+            return "Dag 181-365";
+        }
+
+        return "> 365";
     }
 
     private List<SickLeaveDegreeStat> calculateSickLeaveDegrees(List<SjukfallEnhet> sjukfall) {
