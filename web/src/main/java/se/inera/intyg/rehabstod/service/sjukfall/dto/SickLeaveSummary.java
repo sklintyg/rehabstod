@@ -16,12 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
-package se.inera.intyg.rehabstod.service.sjukfall;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveSummary;
+import java.util.List;
 
-public interface GetSickLeaveSummaryService {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class SickLeaveSummary {
 
-    SickLeaveSummary get();
+    private int total;
+    private List<GenderStat> genders;
+    private List<DiagnosGruppStat> groups;
+    private List<SickLeaveDegreeStat> sickLeaveDegrees;
+    private List<SickLeaveDegreeStat> maleSickLeaveDegrees;
+    private List<SickLeaveDegreeStat> femaleSickLeaveDegrees;
+    private List<SickLeaveDegreeStat> countSickLeaveDegrees;
+    private List<SickLeaveDegreeStat> countMaleSickLeaveDegrees;
+    private List<SickLeaveDegreeStat> countFemaleSickLeaveDegrees;
+
+
+
 }

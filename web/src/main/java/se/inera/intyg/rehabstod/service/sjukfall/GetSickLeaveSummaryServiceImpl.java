@@ -22,7 +22,7 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 import java.util.ArrayList;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.service.pu.PuService;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
@@ -41,11 +41,11 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
     }
 
     @Override
-    public SjukfallSummary get() {
+    public SickLeaveSummary get() {
         final var sickLeaves = getActiveSickLeavesService.get(
             new SickLeavesFilterRequestDTO(new ArrayList<>(), 365, 1, new ArrayList<>())
         );
         puService.filterSekretessForSummary(sickLeaves);
-        return statisticsCalculator.getSjukfallSummary(sickLeaves);
+        return statisticsCalculator.getSickLeaveSummary(sickLeaves);
     }
 }
