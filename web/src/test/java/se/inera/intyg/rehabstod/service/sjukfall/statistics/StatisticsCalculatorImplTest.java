@@ -338,7 +338,9 @@ public class StatisticsCalculatorImplTest {
         return isf;
     }
 
-    private SjukfallEnhet createInternalSjukfall(String lakareId, String lakareNamn, Gender patientKon, String diagnosKod, int aktivGrad, List<Integer> grader) {
+    private SjukfallEnhet createInternalSjukfall(
+            String lakareId, String lakareNamn, Gender patientKon, String diagnosKod, int aktivGrad, List<Integer> grader
+    ) {
         SjukfallEnhet isf = createInternalSjukfall(lakareId, lakareNamn, patientKon, diagnosKod);
         isf.setAktivGrad(aktivGrad);
         isf.setGrader(grader);
