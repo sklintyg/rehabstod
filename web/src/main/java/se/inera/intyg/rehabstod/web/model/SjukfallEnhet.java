@@ -58,6 +58,8 @@ public class SjukfallEnhet {
     @JsonIgnore
     private String aktivIntygsId;
 
+    private List<String> sysselsattning;
+
     private RiskSignal riskSignal;
     private boolean nyligenAvslutat;
 
@@ -189,6 +191,14 @@ public class SjukfallEnhet {
 
     public void setAktivIntygsId(String aktivIntygsId) {
         this.aktivIntygsId = aktivIntygsId;
+    }
+
+    public List<String> getSysselsattning() {
+        return sysselsattning;
+    }
+
+    public void setSysselsattning(List<String> sysselsattning) {
+        this.sysselsattning = sysselsattning;
     }
 
     public RiskSignal getRiskSignal() {

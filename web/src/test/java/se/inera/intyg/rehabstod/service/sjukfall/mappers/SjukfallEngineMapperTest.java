@@ -27,16 +27,15 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.inera.clinicalprocess.healthcond.certificate.v1.Sysselsattning;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
@@ -71,7 +70,6 @@ public class SjukfallEngineMapperTest {
     private static final String SYSSELSATTNING = "NUVARANDE_ARBETE";
     private static final Integer ANTALINTYG = 1;
     private static final String DIAGNOS_KOD = "M123";
-
     private static final LocalDate AKTIVTDATUM = LocalDate.now();
 
     @Mock
@@ -120,6 +118,8 @@ public class SjukfallEngineMapperTest {
         assertEquals(getSjukskrivningsDagar(), to.getDagar());
         assertEquals(1, to.getGrader().size());
         assertEquals(NEDSATTNING, to.getGrader().get(0));
+        assertEquals(1, to.getSysselsattning().size());
+        assertEquals(SYSSELSATTNING, to.getSysselsattning().get(0));
     }
 
     @Test
@@ -282,6 +282,7 @@ public class SjukfallEngineMapperTest {
         enhet.setGrader(Arrays.asList(NEDSATTNING));
         enhet.setDagar(getSjukskrivningsDagar());
         enhet.setIntyg(ANTALINTYG);
+        enhet.setSysselsattning(createSysselsattningar());
 
         return enhet;
     }

@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 import static java.util.Map.entry;
 
 import java.io.IOException;
+import java.sql.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;
@@ -299,6 +300,19 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         sickleave.setSlut(LocalDate.from(timeSimulator.plusDays(days)));
         sickleave.setDagar(days);
         sickleave.setIntyg(1);
+        sickleave.setSysselsattning(getOccupationList());
+    }
+
+    private List<String> getOccupationList() {
+        final var map = occupationMap();
+        final var array = map.values().toArray();
+        final var list = new ArrayList<String>();
+
+        for (int i = ThreadLocalRandom.current().nextInt(4); i > 0; i--) {
+            list.add((String)array[i]);
+        }
+
+        return list;
     }
 
     private String mapOccupation(String occupation) {
