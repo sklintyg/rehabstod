@@ -85,6 +85,8 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
 
         final var genderStat = calculateGenderStat(sickLeave);
         final var diagnosisGroups = calculateGroupStatistics(sickLeave);
+        final var maleDiagnosisGroups = calculateGroupStatistics(filterSickLeavesByGender(sickLeave, Gender.M));
+        final var femaleDiagnosisGroups = calculateGroupStatistics(filterSickLeavesByGender(sickLeave, Gender.F));
         final var sickLeaveDegrees = calculateSickLeaveDegrees(sickLeave);
         final var maleSickLeaveDegrees = calculateSickLeaveDegrees(filterSickLeavesByGender(sickLeave, Gender.M));
         final var femaleSickLeaveDegrees = calculateSickLeaveDegrees(filterSickLeavesByGender(sickLeave, Gender.F));
@@ -99,6 +101,8 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
                 total,
                 genderStat,
                 diagnosisGroups,
+                maleDiagnosisGroups,
+                femaleDiagnosisGroups,
                 sickLeaveDegrees,
                 maleSickLeaveDegrees,
                 femaleSickLeaveDegrees,
@@ -180,19 +184,17 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
     }
 
     private String getSickLeaveLengthName(int id) {
-        if (id == 1) {
-            return "< 90";
+        switch (id) {
+            case 1:
+                return "< 90";
+            case 2:
+                return "Dag 90-180";
+            case 3:
+                return "Dag 181-365";
+            case 4:
+            default:
+                return "> 365";
         }
-
-        if (id == 2) {
-            return "Dag 90-180";
-        }
-
-        if (id == 3) {
-            return "Dag 181-365";
-        }
-
-        return "> 365";
     }
 
     private List<SickLeaveDegreeStat> calculateSickLeaveDegrees(List<SjukfallEnhet> sjukfall) {

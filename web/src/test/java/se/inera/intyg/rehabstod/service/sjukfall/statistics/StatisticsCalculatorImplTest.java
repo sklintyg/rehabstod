@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -428,6 +430,117 @@ public class StatisticsCalculatorImplTest {
         assertEquals((float) 2 / 7 * 100, summary.getFemaleSickLeaveLengths().get(2).getPercentage(), 0.001f);
         assertEquals(1, summary.getFemaleSickLeaveLengths().get(3).getCount());
         assertEquals((float) 1 / 7 * 100, summary.getFemaleSickLeaveLengths().get(3).getPercentage(), 0.001f);
+    }
+
+    @Test
+    public void testGenderStatForSickLeaveSummary() throws Exception {
+        List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "P16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "V16"));
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, "Z16"));
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.M, "A16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, null));
+
+        final var summary = testee.getSickLeaveSummary(internalSjukfallList);
+        assertEquals(6, summary.getTotal());
+        assertEquals(3, getGenderItem(Gender.F, summary.getGenders()).getCount());
+        assertEquals(50.0f, getGenderItem(Gender.F, summary.getGenders()).getPercentage(), 0.001f);
+        assertEquals(3, getGenderItem(Gender.M, summary.getGenders()).getCount());
+        assertEquals(50.0f, getGenderItem(Gender.M, summary.getGenders()).getPercentage(), 0.001f);
+    }
+
+    @Test
+    public void testGetSickLeaveSummaryDiagnosisGroups() throws Exception {
+        List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "P16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "V16"));
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, "Z16"));
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.M, "A16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, null));
+
+        final var summary = testee.getSickLeaveSummary(internalSjukfallList);
+
+        assertEquals(GRUPP1, summary.getGroups().get(0).getGrupp());
+        assertEquals(DIAGNOS_GRUPP_UNKNOWN, summary.getGroups().get(1).getGrupp());
+        assertEquals(GRUPP2, summary.getGroups().get(2).getGrupp());
+
+        assertEquals(Optional.of(3L).get(), summary.getGroups().get(0).getCount());
+        assertEquals(Optional.of(2L).get(), summary.getGroups().get(1).getCount());
+        assertEquals(Optional.of(1L).get(), summary.getGroups().get(2).getCount());
+
+        assertEquals((float) 3/6 * 100, summary.getGroups().get(0).getPercentage(), 0.001f);
+        assertEquals((float) 2/6 * 100, summary.getGroups().get(1).getPercentage(), 0.001f);
+        assertEquals((float) 1/6 * 100, summary.getGroups().get(2).getPercentage(), 0.001f);
+    }
+
+    @Test
+    public void testGetSickLeaveSummaryDiagnosisGroupsForMale() throws Exception {
+        List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.M, "M16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.M, "P16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.M, "V16"));
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, "Z16"));
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.M, "A16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, null));
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "A16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, null));
+
+        final var summary = testee.getSickLeaveSummary(internalSjukfallList);
+
+        assertEquals(GRUPP1, summary.getMaleDiagnosisGroups().get(0).getGrupp());
+        assertEquals(DIAGNOS_GRUPP_UNKNOWN, summary.getMaleDiagnosisGroups().get(1).getGrupp());
+        assertEquals(GRUPP2, summary.getMaleDiagnosisGroups().get(2).getGrupp());
+
+        assertEquals(Optional.of(3L).get(), summary.getMaleDiagnosisGroups().get(0).getCount());
+        assertEquals(Optional.of(2L).get(), summary.getMaleDiagnosisGroups().get(1).getCount());
+        assertEquals(Optional.of(1L).get(), summary.getMaleDiagnosisGroups().get(2).getCount());
+
+        assertEquals((float) 3/6 * 100, summary.getMaleDiagnosisGroups().get(0).getPercentage(), 0.001f);
+        assertEquals((float) 2/6 * 100, summary.getMaleDiagnosisGroups().get(1).getPercentage(), 0.001f);
+        assertEquals((float) 1/6 * 100, summary.getMaleDiagnosisGroups().get(2).getPercentage(), 0.001f);
+    }
+
+    @Test
+    public void testGetSickLeaveSummaryDiagnosisGroupsForFemale() throws Exception {
+        List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "M16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "P16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "V16"));
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, "Z16"));
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.F, "A16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.F, null));
+
+        internalSjukfallList.add(createInternalSjukfall(lakareId1, lakareNamn1, Gender.M, "A16"));
+        internalSjukfallList.add(createInternalSjukfall(lakareId2, lakareNamn2, Gender.M, null));
+
+        final var summary = testee.getSickLeaveSummary(internalSjukfallList);
+
+        assertEquals(GRUPP1, summary.getFemaleDiagnosisGroups().get(0).getGrupp());
+        assertEquals(DIAGNOS_GRUPP_UNKNOWN, summary.getFemaleDiagnosisGroups().get(1).getGrupp());
+        assertEquals(GRUPP2, summary.getFemaleDiagnosisGroups().get(2).getGrupp());
+
+        assertEquals(Optional.of(3L).get(), summary.getFemaleDiagnosisGroups().get(0).getCount());
+        assertEquals(Optional.of(2L).get(), summary.getFemaleDiagnosisGroups().get(1).getCount());
+        assertEquals(Optional.of(1L).get(), summary.getFemaleDiagnosisGroups().get(2).getCount());
+
+        assertEquals((float) 3/6 * 100, summary.getFemaleDiagnosisGroups().get(0).getPercentage(), 0.001f);
+        assertEquals((float) 2/6 * 100, summary.getFemaleDiagnosisGroups().get(1).getPercentage(), 0.001f);
+        assertEquals((float) 1/6 * 100, summary.getFemaleDiagnosisGroups().get(2).getPercentage(), 0.001f);
     }
 
     private SjukfallEnhet createInternalSjukfall(String lakareId, String lakareNamn, Gender patientKon, String diagnosKod, int aktivGrad) {
