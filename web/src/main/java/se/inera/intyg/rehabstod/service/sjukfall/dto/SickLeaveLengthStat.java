@@ -22,23 +22,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SickLeaveSummary {
-
-    private int total;
-    private List<GenderStat> genders;
-    private List<DiagnosGruppStat> groups;
-    private List<SickLeaveDegreeStat> sickLeaveDegrees;
-    private List<SickLeaveDegreeStat> maleSickLeaveDegrees;
-    private List<SickLeaveDegreeStat> femaleSickLeaveDegrees;
-    private List<SickLeaveDegreeStat> countSickLeaveDegrees;
-    private List<SickLeaveDegreeStat> countMaleSickLeaveDegrees;
-    private List<SickLeaveDegreeStat> countFemaleSickLeaveDegrees;
-    private List<SickLeaveLengthStat> sickLeaveLengths;
-    private List<SickLeaveLengthStat> maleSickLeaveLengths;
-    private List<SickLeaveLengthStat> femaleSickLeaveLengths;
+public class SickLeaveLengthStat {
+    private int id;
+    private String name;
+    private int count;
+    private float percentage;
 }

@@ -276,6 +276,8 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
     }
 
     private void buildActiveSickleave(SjukfallEnhet sickleave, Patient patient, HosPersonal hosPerson) {
+        final var days = ThreadLocalRandom.current().nextInt(400);
+
         sickleave.setLakare(Lakare.create(hosPerson.getPersonalId().getExtension(), hosPerson.getFullstandigtNamn()));
         sickleave.setPatient(se.inera.intyg.infra.sjukfall.dto.Patient.create(
             patient.getPersonId().getExtension(), patient.getFullstandigtNamn()
@@ -294,8 +296,8 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         sickleave.setAktivGrad(sickleave.getGrader().get(0));
 
         sickleave.setStart(LocalDate.from(timeSimulator));
-        sickleave.setSlut(LocalDate.from(timeSimulator.plusDays(60)));
-        sickleave.setDagar(60);
+        sickleave.setSlut(LocalDate.from(timeSimulator.plusDays(days)));
+        sickleave.setDagar(days);
         sickleave.setIntyg(1);
     }
 
