@@ -18,55 +18,16 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
-/**
- * Created by marced on 15/03/16.
- */
-public class SickLeaveLengthStat {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class SickLeaveLengthStat {
     private int id;
     private String name;
     private int count;
     private float percentage;
-
-    public SickLeaveLengthStat() {
-    }
-
-    public SickLeaveLengthStat(int id, String name, int count, float percentage) {
-        this.id = id;
-        this.name = name;
-        this.count = count;
-        this.percentage = percentage;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public float getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(float percentage) {
-        this.percentage = percentage;
-    }
 }
