@@ -119,4 +119,6 @@ public interface IntygstjanstRestIntegrationService {
      * @param request Request including parameters to perform search
      */
     PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request);
+
+    String getDefaultTestData();
 }
