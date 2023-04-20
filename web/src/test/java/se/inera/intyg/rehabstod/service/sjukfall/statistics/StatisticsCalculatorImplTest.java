@@ -476,9 +476,9 @@ public class StatisticsCalculatorImplTest {
         assertEquals(Optional.of(2L).get(), summary.getGroups().get(1).getCount());
         assertEquals(Optional.of(1L).get(), summary.getGroups().get(2).getCount());
 
-        assertEquals((float) 3/6 * 100, summary.getGroups().get(0).getPercentage(), 0.001f);
-        assertEquals((float) 2/6 * 100, summary.getGroups().get(1).getPercentage(), 0.001f);
-        assertEquals((float) 1/6 * 100, summary.getGroups().get(2).getPercentage(), 0.001f);
+        assertEquals((float) 3 / 6 * 100, summary.getGroups().get(0).getPercentage(), 0.001f);
+        assertEquals((float) 2 / 6 * 100, summary.getGroups().get(1).getPercentage(), 0.001f);
+        assertEquals((float) 1 / 6 * 100, summary.getGroups().get(2).getPercentage(), 0.001f);
     }
 
     @Test
@@ -507,9 +507,9 @@ public class StatisticsCalculatorImplTest {
         assertEquals(Optional.of(2L).get(), summary.getMaleDiagnosisGroups().get(1).getCount());
         assertEquals(Optional.of(1L).get(), summary.getMaleDiagnosisGroups().get(2).getCount());
 
-        assertEquals((float) 3/6 * 100, summary.getMaleDiagnosisGroups().get(0).getPercentage(), 0.001f);
-        assertEquals((float) 2/6 * 100, summary.getMaleDiagnosisGroups().get(1).getPercentage(), 0.001f);
-        assertEquals((float) 1/6 * 100, summary.getMaleDiagnosisGroups().get(2).getPercentage(), 0.001f);
+        assertEquals((float) 3 / 6 * 100, summary.getMaleDiagnosisGroups().get(0).getPercentage(), 0.001f);
+        assertEquals((float) 2 / 6 * 100, summary.getMaleDiagnosisGroups().get(1).getPercentage(), 0.001f);
+        assertEquals((float) 1 / 6 * 100, summary.getMaleDiagnosisGroups().get(2).getPercentage(), 0.001f);
     }
 
     @Test
@@ -538,9 +538,9 @@ public class StatisticsCalculatorImplTest {
         assertEquals(Optional.of(2L).get(), summary.getFemaleDiagnosisGroups().get(1).getCount());
         assertEquals(Optional.of(1L).get(), summary.getFemaleDiagnosisGroups().get(2).getCount());
 
-        assertEquals((float) 3/6 * 100, summary.getFemaleDiagnosisGroups().get(0).getPercentage(), 0.001f);
-        assertEquals((float) 2/6 * 100, summary.getFemaleDiagnosisGroups().get(1).getPercentage(), 0.001f);
-        assertEquals((float) 1/6 * 100, summary.getFemaleDiagnosisGroups().get(2).getPercentage(), 0.001f);
+        assertEquals((float) 3 / 6 * 100, summary.getFemaleDiagnosisGroups().get(0).getPercentage(), 0.001f);
+        assertEquals((float) 2 / 6 * 100, summary.getFemaleDiagnosisGroups().get(1).getPercentage(), 0.001f);
+        assertEquals((float) 1 / 6 * 100, summary.getFemaleDiagnosisGroups().get(2).getPercentage(), 0.001f);
     }
 
     private SjukfallEnhet createInternalSjukfall(String lakareId, String lakareNamn, Gender patientKon, String diagnosKod, int aktivGrad) {
