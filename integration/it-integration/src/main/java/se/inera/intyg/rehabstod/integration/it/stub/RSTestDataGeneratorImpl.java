@@ -299,6 +299,19 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         sickleave.setSlut(LocalDate.from(timeSimulator.plusDays(days)));
         sickleave.setDagar(days);
         sickleave.setIntyg(1);
+        sickleave.setSysselsattning(getOccupationList());
+    }
+
+    private List<String> getOccupationList() {
+        final var map = occupationMap();
+        final var array = map.values().toArray();
+        final var list = new ArrayList<String>();
+
+        for (int i = ThreadLocalRandom.current().nextInt(4); i > 0; i--) {
+            list.add((String)array[i]);
+        }
+
+        return list;
     }
 
     private String mapOccupation(String occupation) {
