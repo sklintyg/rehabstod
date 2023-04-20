@@ -21,7 +21,6 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 import static java.util.Map.entry;
 
 import java.io.IOException;
-import java.sql.Array;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;
