@@ -32,6 +32,8 @@ public class SickLeaveSummary {
     private int total;
     private List<GenderStat> genders;
     private List<DiagnosGruppStat> groups;
+    private List<DiagnosGruppStat> maleDiagnosisGroups;
+    private List<DiagnosGruppStat> femaleDiagnosisGroups;
     private List<SickLeaveDegreeStat> sickLeaveDegrees;
     private List<SickLeaveDegreeStat> maleSickLeaveDegrees;
     private List<SickLeaveDegreeStat> femaleSickLeaveDegrees;
