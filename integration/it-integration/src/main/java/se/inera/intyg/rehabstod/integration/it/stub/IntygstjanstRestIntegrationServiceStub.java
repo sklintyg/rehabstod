@@ -46,6 +46,7 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
 
     @Autowired
     private RSTestIntygStub rsTestIntygStub;
+    private static final String DEFAULT_TEST_DATA_MESSAGE = "Test data not generated, deactivate stub";
 
     @Override
     public List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(List<String> units, List<String> certificateTypes,
@@ -90,15 +91,15 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     public SickLeavesResponseDTO getActiveSickLeaves(SickLeavesRequestDTO request) {
         return new SickLeavesResponseDTO(
             rsTestIntygStub.getActiveSickLeaveData()
-            .stream()
-            .filter(
-                (sickLeave) -> (request.getDoctorIds().size() == 0
-                    || request.getDoctorIds().contains(sickLeave.getLakare().getId()))
-                    && sickLeave.getDagar() >= request.getFromSickLeaveLength()
-                    && sickLeave.getDagar() <= request.getToSickLeaveLength()
-                    && isDiagnosisCodeIncluded(request.getDiagnosisChapters(), sickLeave.getDiagnosKod().getCleanedCode())
-            )
-            .collect(Collectors.toList())
+                .stream()
+                .filter(
+                    (sickLeave) -> (request.getDoctorIds().size() == 0
+                        || request.getDoctorIds().contains(sickLeave.getLakare().getId()))
+                        && sickLeave.getDagar() >= request.getFromSickLeaveLength()
+                        && sickLeave.getDagar() <= request.getToSickLeaveLength()
+                        && isDiagnosisCodeIncluded(request.getDiagnosisChapters(), sickLeave.getDiagnosKod().getCleanedCode())
+                )
+                .collect(Collectors.toList())
         );
     }
 
@@ -110,15 +111,20 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
             getDoctorsFromSickLeaves(sickLeaves), diagnosisChapters);
     }
 
+    @Override
+    public String getDefaultTestData() {
+        return DEFAULT_TEST_DATA_MESSAGE;
+    }
+
     private boolean isDiagnosisCodeIncluded(List<DiagnosKapitel> diagnosisChapters, String diagnosisCode) {
         return diagnosisChapters.size() == 0
             || diagnosisChapters
             .stream().anyMatch(
                 (diagnosisChapter) ->
                     diagnosisChapter.getFrom().getLetter() <= diagnosisCode.charAt(0)
-                    && diagnosisChapter.getTo().getLetter() >= diagnosisCode.charAt(0)
-                    && diagnosisChapter.getFrom().getNumber() <= Integer.parseInt(diagnosisCode.substring(1, 2))
-                    && diagnosisChapter.getTo().getNumber() >= Integer.parseInt(diagnosisCode.substring(1, 2))
+                        && diagnosisChapter.getTo().getLetter() >= diagnosisCode.charAt(0)
+                        && diagnosisChapter.getFrom().getNumber() <= Integer.parseInt(diagnosisCode.substring(1, 2))
+                        && diagnosisChapter.getTo().getNumber() >= Integer.parseInt(diagnosisCode.substring(1, 2))
             );
     }
 

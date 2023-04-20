@@ -126,6 +126,7 @@
   <beans profile="dev,testability-api">
     <security:http security="none" pattern="/api/test/**"/>
     <security:http security="none" pattern="/api/stub/**"/>
+    <security:http security="none" pattern="/api/testability/**"/>
   </beans>
 
   <!-- =============================================================== -->
