@@ -280,12 +280,8 @@ public class StatisticsCalculatorImplTest {
         final var summary = testee.getSickLeaveSummary(internalSjukfallList);
         assertEquals(2, summary.getCountSickLeaveDegrees().get(0).getCount());
         assertEquals((float) 2 / 7 * 100, summary.getCountSickLeaveDegrees().get(0).getPercentage(), 0.001f);
-        assertEquals(2, summary.getCountSickLeaveDegrees().get(1).getCount());
-        assertEquals((float) 2 / 7 * 100, summary.getCountSickLeaveDegrees().get(1).getPercentage(), 0.001f);
-        assertEquals(2, summary.getCountSickLeaveDegrees().get(2).getCount());
-        assertEquals((float) 2 / 7 * 100, summary.getCountSickLeaveDegrees().get(2).getPercentage(), 0.001f);
-        assertEquals(1, summary.getCountSickLeaveDegrees().get(3).getCount());
-        assertEquals((float) 1 / 7 * 100, summary.getCountSickLeaveDegrees().get(3).getPercentage(), 0.001f);
+        assertEquals(5, summary.getCountSickLeaveDegrees().get(1).getCount());
+        assertEquals((float) 5 / 7 * 100, summary.getCountSickLeaveDegrees().get(1).getPercentage(), 0.001f);
     }
 
     @Test
@@ -303,12 +299,9 @@ public class StatisticsCalculatorImplTest {
         final var summary = testee.getSickLeaveSummary(internalSjukfallList);
         assertEquals(1, summary.getCountMaleSickLeaveDegrees().get(0).getCount());
         assertEquals((float) 1 / 5 * 100, summary.getCountMaleSickLeaveDegrees().get(0).getPercentage(), 0.001f);
-        assertEquals(1, summary.getCountMaleSickLeaveDegrees().get(1).getCount());
-        assertEquals((float) 1 / 5 * 100, summary.getCountMaleSickLeaveDegrees().get(1).getPercentage(), 0.001f);
-        assertEquals(2, summary.getCountMaleSickLeaveDegrees().get(2).getCount());
-        assertEquals((float) 2 / 5 * 100, summary.getCountMaleSickLeaveDegrees().get(2).getPercentage(), 0.001f);
-        assertEquals(1, summary.getCountMaleSickLeaveDegrees().get(3).getCount());
-        assertEquals((float) 1 / 5 * 100, summary.getCountMaleSickLeaveDegrees().get(3).getPercentage(), 0.001f);
+        assertEquals(4, summary.getCountMaleSickLeaveDegrees().get(1).getCount());
+        assertEquals((float) 4 / 5 * 100, summary.getCountMaleSickLeaveDegrees().get(1).getPercentage(), 0.001f);
+
     }
 
     @Test
@@ -326,12 +319,8 @@ public class StatisticsCalculatorImplTest {
         final var summary = testee.getSickLeaveSummary(internalSjukfallList);
         assertEquals(1, summary.getCountFemaleSickLeaveDegrees().get(0).getCount());
         assertEquals((float) 1 / 5 * 100, summary.getCountFemaleSickLeaveDegrees().get(0).getPercentage(), 0.001f);
-        assertEquals(1, summary.getCountFemaleSickLeaveDegrees().get(1).getCount());
-        assertEquals((float) 1 / 5 * 100, summary.getCountFemaleSickLeaveDegrees().get(1).getPercentage(), 0.001f);
-        assertEquals(2, summary.getCountFemaleSickLeaveDegrees().get(2).getCount());
-        assertEquals((float) 2 / 5 * 100, summary.getCountFemaleSickLeaveDegrees().get(2).getPercentage(), 0.001f);
-        assertEquals(1, summary.getCountFemaleSickLeaveDegrees().get(3).getCount());
-        assertEquals((float) 1 / 5 * 100, summary.getCountFemaleSickLeaveDegrees().get(3).getPercentage(), 0.001f);
+        assertEquals(4, summary.getCountFemaleSickLeaveDegrees().get(1).getCount());
+        assertEquals((float) 4 / 5 * 100, summary.getCountFemaleSickLeaveDegrees().get(1).getPercentage(), 0.001f);
     }
 
     @Test
@@ -541,6 +530,29 @@ public class StatisticsCalculatorImplTest {
         assertEquals((float) 3 / 6 * 100, summary.getFemaleDiagnosisGroups().get(0).getPercentage(), 0.001f);
         assertEquals((float) 2 / 6 * 100, summary.getFemaleDiagnosisGroups().get(1).getPercentage(), 0.001f);
         assertEquals((float) 1 / 6 * 100, summary.getFemaleDiagnosisGroups().get(2).getPercentage(), 0.001f);
+    }
+
+    @Test
+    public void testShouldReturnEmptyListIfValuesAreZeroForSickLeaveSummary() throws Exception {
+        List<SjukfallEnhet> internalSjukfallList = new ArrayList<>();
+        final var summary = testee.getSickLeaveSummary(internalSjukfallList);
+        assertEquals(0, summary.getTotal());
+
+        assertEquals(0, summary.getSickLeaveDegrees().size());
+        assertEquals(0, summary.getMaleSickLeaveDegrees().size());
+        assertEquals(0, summary.getFemaleSickLeaveDegrees().size());
+
+        assertEquals(0, summary.getCountSickLeaveDegrees().size());
+        assertEquals(0, summary.getCountMaleSickLeaveDegrees().size());
+        assertEquals(0, summary.getCountFemaleSickLeaveDegrees().size());
+
+        assertEquals(0, summary.getGroups().size());
+        assertEquals(0, summary.getMaleDiagnosisGroups().size());
+        assertEquals(0, summary.getFemaleDiagnosisGroups().size());
+
+        assertEquals(0, summary.getSickLeaveLengths().size());
+        assertEquals(0, summary.getMaleSickLeaveLengths().size());
+        assertEquals(0, summary.getFemaleSickLeaveLengths().size());
     }
 
     private SjukfallEnhet createInternalSjukfall(String lakareId, String lakareNamn, Gender patientKon, String diagnosKod, int aktivGrad) {
