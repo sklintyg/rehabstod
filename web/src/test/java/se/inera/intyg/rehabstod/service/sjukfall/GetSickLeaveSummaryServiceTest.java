@@ -18,9 +18,19 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,14 +39,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class GetSickLeaveSummaryServiceTest {
@@ -52,22 +54,23 @@ public class GetSickLeaveSummaryServiceTest {
 
     List<SjukfallEnhet> sickLeaves = new ArrayList<>();
     SickLeaveSummary summary =
-            new SickLeaveSummary(
-                    5,
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    Collections.emptyList()
-            );
+        new SickLeaveSummary(
+            5,
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList()
+        );
+
 
     @BeforeEach
     void setup() {
@@ -97,5 +100,14 @@ public class GetSickLeaveSummaryServiceTest {
     void shouldReturnResultFromStatisticsCalculator() {
         final var response = getSickLeaveSummaryService.get();
         assertEquals(response, summary);
+    }
+
+    @Test
+    void shouldNotIncludeSickLeaveLengthWhenFetchingSickLeaves() {
+        final var sickLeavesFilterRequestDTOArgumentCaptor = ArgumentCaptor.forClass(SickLeavesFilterRequestDTO.class);
+        getSickLeaveSummaryService.get();
+        verify(getActiveSickLeavesService).get(sickLeavesFilterRequestDTOArgumentCaptor.capture());
+        assertNull(sickLeavesFilterRequestDTOArgumentCaptor.getValue().getFromSickLeaveLength());
+        assertNull(sickLeavesFilterRequestDTOArgumentCaptor.getValue().getToSickLeaveLength());
     }
 }
