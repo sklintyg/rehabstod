@@ -53,6 +53,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
@@ -149,6 +150,7 @@ public class GetActiveSickLeavesServiceTest {
         @Test
         void shouldLogUsingSubUnitIdIfChosen() {
             setupSubUnit();
+            when(user.getUrval()).thenReturn(Urval.ALL);
 
             getActiveSickLeavesService.get(expectedRequest);
 
@@ -159,6 +161,7 @@ public class GetActiveSickLeavesServiceTest {
         void shouldLogUsingUnitIdIfNotSubUnitIsChosen() {
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ALL);
 
             getActiveSickLeavesService.get(expectedRequest);
 
@@ -178,6 +181,7 @@ public class GetActiveSickLeavesServiceTest {
             when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
                 any(SjukfallEnhet.class), anyInt(), any(LocalDate.class)
             )).thenReturn(sickLeave);
+            when(user.getUrval()).thenReturn(Urval.ALL);
         }
 
         @Test
@@ -202,6 +206,7 @@ public class GetActiveSickLeavesServiceTest {
 
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ALL);
         }
 
         @Test
@@ -225,6 +230,7 @@ public class GetActiveSickLeavesServiceTest {
 
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ALL);
         }
 
         @Test
@@ -251,6 +257,7 @@ public class GetActiveSickLeavesServiceTest {
         void shouldCreateRequestWithCorrectValuesWhenChosenUnit() {
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ALL);
 
             final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
             getActiveSickLeavesService.get(expectedRequest);
@@ -268,6 +275,7 @@ public class GetActiveSickLeavesServiceTest {
         @Test
         void shouldCreateRequestWithCorrectValuesWhenChosenSubUnit() {
             setupSubUnit();
+            when(user.getUrval()).thenReturn(Urval.ALL);
 
             final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
             getActiveSickLeavesService.get(expectedRequest);
@@ -286,6 +294,7 @@ public class GetActiveSickLeavesServiceTest {
         void shouldCreateRequestWithNullSickLeaveLengthFilter() {
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ALL);
 
             final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
             getActiveSickLeavesService.get(
@@ -306,7 +315,7 @@ public class GetActiveSickLeavesServiceTest {
         void shouldCreateRequestWithHsaIdOfDoctorIfUserIsDoctor() {
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.isLakare()).thenReturn(true);
+            when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
 
             final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
             getActiveSickLeavesService.get(expectedRequestDoctor);
@@ -322,6 +331,7 @@ public class GetActiveSickLeavesServiceTest {
             void setup() {
                 when(user.getValdVardenhet()).thenReturn(unit);
                 when(unit.getId()).thenReturn(UNIT_ID);
+                when(user.getUrval()).thenReturn(Urval.ALL);
             }
 
             @Test
