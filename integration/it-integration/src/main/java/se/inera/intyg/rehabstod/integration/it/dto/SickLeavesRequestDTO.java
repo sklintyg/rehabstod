@@ -27,12 +27,13 @@ import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 @Data
 @NoArgsConstructor
 public class SickLeavesRequestDTO {
+
     private String unitId;
     private String careUnitId;
     private List<String> doctorIds;
     private List<DiagnosKapitel> diagnosisChapters;
-    private int maxCertificateGap;
-    private int maxDaysSinceSickLeaveCompleted;
-    private int toSickLeaveLength;
-    private int fromSickLeaveLength;
+    private Integer maxCertificateGap;
+    private Integer maxDaysSinceSickLeaveCompleted;
+    private Integer toSickLeaveLength;
+    private Integer fromSickLeaveLength;
 }

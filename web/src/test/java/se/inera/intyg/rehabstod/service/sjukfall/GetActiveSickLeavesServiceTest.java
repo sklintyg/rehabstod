@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -279,6 +280,26 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(DOCTOR_FILTER, captor.getValue().getDoctorIds().get(0));
             assertEquals(TO_FILTER, captor.getValue().getToSickLeaveLength());
             assertEquals(FROM_FILTER, captor.getValue().getFromSickLeaveLength());
+        }
+
+        @Test
+        void shouldCreateRequestWithNullSickLeaveLengthFilter() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+
+            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+            getActiveSickLeavesService.get(
+                new SickLeavesFilterRequestDTO(
+                    Collections.singletonList(DOCTOR_FILTER),
+                    null,
+                    null,
+                    Collections.singletonList(chosenDiagnosisChapter)
+                )
+            );
+
+            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+            assertNull(captor.getValue().getToSickLeaveLength());
+            assertNull(captor.getValue().getFromSickLeaveLength());
         }
 
         @Test
