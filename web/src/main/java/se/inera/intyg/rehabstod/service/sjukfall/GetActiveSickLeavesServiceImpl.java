@@ -33,6 +33,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.logging.SickLeaveLogMessageFactory;
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
@@ -106,7 +107,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     ) {
         final var request = new SickLeavesRequestDTO();
 
-        if (user.isLakare()) {
+        if (user.getUrval().equals(Urval.ISSUED_BY_ME)) {
             filterRequest.addDoctorId(user.getHsaId());
         }
 
