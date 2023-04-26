@@ -51,6 +51,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
@@ -151,7 +152,7 @@ public class PopulateFiltersServiceTest {
             @Test
             void shouldSetDoctorIdIfUserIsDoctor() {
                 when(user.getHsaId()).thenReturn(HSA_ID);
-                when(user.isLakare()).thenReturn(true);
+                when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
 
                 final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
                 populateActiveFilters.get();
@@ -162,7 +163,7 @@ public class PopulateFiltersServiceTest {
 
             @Test
             void shouldNotSetDoctorIdIfUserIsNotDoctor() {
-                when(user.isLakare()).thenReturn(false);
+                when(user.getUrval()).thenReturn(Urval.ALL);
 
                 final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
                 populateActiveFilters.get();
@@ -197,6 +198,7 @@ public class PopulateFiltersServiceTest {
         void setUp() {
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ALL);
         }
 
         @Test
