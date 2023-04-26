@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
@@ -102,7 +103,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         request.setMaxDaysSinceSickLeaveCompleted(ControllerUtil.getMaxDagarSedanSjukfallAvslut(user));
         request.setUnitId(unitId);
         request.setCareUnitId(careUnitId);
-        if (user.isLakare()) {
+        if (user.getUrval() == Urval.ISSUED_BY_ME) {
             request.setDoctorId(user.getHsaId());
         }
         return request;
