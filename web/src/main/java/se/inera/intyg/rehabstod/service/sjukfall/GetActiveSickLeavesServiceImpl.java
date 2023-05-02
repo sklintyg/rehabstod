@@ -119,6 +119,8 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         request.setToSickLeaveLength(filterRequest.getToSickLeaveLength());
         request.setFromSickLeaveLength(filterRequest.getFromSickLeaveLength());
         request.setDiagnosisChapters(convertDiagnosisChapters(filterRequest.getDiagnosisChapters()));
+        request.setFromPatientAge(filterRequest.getFromPatientAge());
+        request.setToPatientAge(filterRequest.getToPatientAge());
         return request;
 
     }

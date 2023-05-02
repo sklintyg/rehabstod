@@ -30,10 +30,13 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SickLeavesFilterRequestDTO {
+
     private List<String> doctorIds;
     private Integer toSickLeaveLength;
     private Integer fromSickLeaveLength;
     private List<DiagnosKapitel> diagnosisChapters;
+    private Integer fromPatientAge;
+    private Integer toPatientAge;
 
     public void addDoctorId(String id) {
         if (doctorIds == null) {

@@ -36,4 +36,6 @@ public class SickLeavesRequestDTO {
     private Integer maxDaysSinceSickLeaveCompleted;
     private Integer toSickLeaveLength;
     private Integer fromSickLeaveLength;
+    private Integer fromPatientAge;
+    private Integer toPatientAge;
 }
