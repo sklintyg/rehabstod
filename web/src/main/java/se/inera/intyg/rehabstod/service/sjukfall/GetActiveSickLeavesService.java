@@ -24,5 +24,6 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDT
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 public interface GetActiveSickLeavesService {
-    List<SjukfallEnhet> get(SickLeavesFilterRequestDTO request);
+
+    List<SjukfallEnhet> get(SickLeavesFilterRequestDTO request, boolean includeParameters);
 }

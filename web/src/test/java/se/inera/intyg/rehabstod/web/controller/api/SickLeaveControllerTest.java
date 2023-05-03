@@ -49,7 +49,7 @@ public class SickLeaveControllerTest {
         final var expectedRequest =
             new SickLeavesFilterRequestDTO(Collections.singletonList("doctorId"), 1, 365, Collections.emptyList(), 1, 150);
         sickLeaveController.getSickLeavesForUnit(expectedRequest);
-        verify(getActiveSickLeavesService).get(expectedRequest);
+        verify(getActiveSickLeavesService).get(expectedRequest, true);
     }
 
     @Test
