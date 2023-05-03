@@ -82,6 +82,7 @@ public class GetSickLeaveSummaryServiceTest {
     void shouldGetActiveSickLeaves() {
         getSickLeaveSummaryService.get();
         verify(getActiveSickLeavesService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class));
+
     }
 
     @Test
