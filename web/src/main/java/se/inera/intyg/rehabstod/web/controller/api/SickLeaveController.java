@@ -44,9 +44,11 @@ public class SickLeaveController {
     @Autowired
     private PopulateFiltersService populateFiltersService;
 
+    private static final boolean INCLUDE_PARAMETERS = true;
+
     @RequestMapping(value = "/active", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public SickLeavesResponseDTO getSickLeavesForUnit(@RequestBody SickLeavesFilterRequestDTO request) {
-        return new SickLeavesResponseDTO(getActiveSickLeavesService.get(request));
+        return new SickLeavesResponseDTO(getActiveSickLeavesService.get(request, INCLUDE_PARAMETERS));
     }
 
     @RequestMapping(value = "/filters", method = RequestMethod.GET)

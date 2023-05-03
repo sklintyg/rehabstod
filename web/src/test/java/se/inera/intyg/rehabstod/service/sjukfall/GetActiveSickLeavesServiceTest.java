@@ -156,7 +156,7 @@ public class GetActiveSickLeavesServiceTest {
             setupSubUnit();
             when(user.getUrval()).thenReturn(Urval.ALL);
 
-            getActiveSickLeavesService.get(EXPECTED_REQUEST);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
             verify(monitoringLogService).logUserViewedSjukfall(HSA_ID, 1, SUB_UNIT_ID);
         }
@@ -167,7 +167,7 @@ public class GetActiveSickLeavesServiceTest {
             when(unit.getId()).thenReturn(UNIT_ID);
             when(user.getUrval()).thenReturn(Urval.ALL);
 
-            getActiveSickLeavesService.get(EXPECTED_REQUEST);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
             verify(monitoringLogService).logUserViewedSjukfall(HSA_ID, 1, UNIT_ID);
         }
@@ -190,7 +190,7 @@ public class GetActiveSickLeavesServiceTest {
 
         @Test
         void shouldPerformPdlLog() {
-            getActiveSickLeavesService.get(EXPECTED_REQUEST);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
             verify(pdlLogSickLeavesService)
                 .log(Collections.singletonList(sickLeave), ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
@@ -215,7 +215,7 @@ public class GetActiveSickLeavesServiceTest {
 
         @Test
         void shouldMakeCallToPUForConvertedSickLeaves() {
-            getActiveSickLeavesService.get(EXPECTED_REQUEST);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
             verify(puService).enrichSjukfallWithPatientNamesAndFilterSekretess(Collections.singletonList(sickLeave));
         }
@@ -239,7 +239,7 @@ public class GetActiveSickLeavesServiceTest {
 
         @Test
         void shouldEnrichWithHsaEmployeeNames() {
-            getActiveSickLeavesService.get(EXPECTED_REQUEST);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
             verify(sjukfallEmployeeNameResolver, times(1))
                 .enrichWithHsaEmployeeNames(Collections.singletonList(sickLeave));
@@ -247,7 +247,7 @@ public class GetActiveSickLeavesServiceTest {
 
         @Test
         void shouldUpdateDuplicateDoctorNamesWithHsaId() {
-            getActiveSickLeavesService.get(EXPECTED_REQUEST);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
             verify(sjukfallEmployeeNameResolver, times(1))
                 .updateDuplicateDoctorNamesWithHsaId(Collections.singletonList(sickLeave));
@@ -264,7 +264,7 @@ public class GetActiveSickLeavesServiceTest {
             when(user.getUrval()).thenReturn(Urval.ALL);
 
             final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
             Assertions.assertNull(captor.getValue().getUnitId());
@@ -284,7 +284,7 @@ public class GetActiveSickLeavesServiceTest {
             when(user.getUrval()).thenReturn(Urval.ALL);
 
             final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
             assertEquals(SUB_UNIT_ID, captor.getValue().getUnitId());
@@ -313,12 +313,33 @@ public class GetActiveSickLeavesServiceTest {
                     Collections.singletonList(CHOSEN_DIAGNOSIS_CHAPTER),
                     null,
                     null
-                )
-            );
+                ),
+                true);
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
             assertNull(captor.getValue().getToSickLeaveLength());
             assertNull(captor.getValue().getFromSickLeaveLength());
+        }
+
+        @Test
+        void shouldCreateRequestWithCorrectValuesWhenNotIncludingParameters() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ALL);
+
+            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, false);
+
+            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+            Assertions.assertNull(captor.getValue().getUnitId());
+            assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
+            assertEquals(0, captor.getValue().getMaxCertificateGap());
+            assertEquals(0, captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+            assertEquals(DOCTOR_FILTER, captor.getValue().getDoctorIds().get(0));
+            assertEquals(TO_FILTER, captor.getValue().getToSickLeaveLength());
+            assertEquals(FROM_FILTER, captor.getValue().getFromSickLeaveLength());
+            assertEquals(FROM_PATIENT_AGE, captor.getValue().getFromPatientAge());
+            assertEquals(TO_PATIENT_AGE, captor.getValue().getToPatientAge());
         }
 
         @Test
@@ -328,7 +349,7 @@ public class GetActiveSickLeavesServiceTest {
             when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
 
             final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST_DOCTOR);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST_DOCTOR, true);
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
             assertEquals(HSA_ID, captor.getValue().getDoctorIds().get(0));
@@ -347,7 +368,7 @@ public class GetActiveSickLeavesServiceTest {
             @Test
             void shouldConvertEnabledDiagnosisChapters() {
                 final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-                getActiveSickLeavesService.get(EXPECTED_REQUEST);
+                getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
                 verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
 
@@ -357,7 +378,7 @@ public class GetActiveSickLeavesServiceTest {
             @Test
             void shouldConvertEnabledDiagnosisChapterTo() {
                 final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-                getActiveSickLeavesService.get(EXPECTED_REQUEST);
+                getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
                 verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
 
@@ -372,7 +393,7 @@ public class GetActiveSickLeavesServiceTest {
             @Test
             void shouldConvertEnabledDiagnosisChapterFrom() {
                 final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-                getActiveSickLeavesService.get(EXPECTED_REQUEST);
+                getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
                 verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
 
@@ -387,7 +408,7 @@ public class GetActiveSickLeavesServiceTest {
             @Test
             void shouldConvertEnabledDiagnosisChapterId() {
                 final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-                getActiveSickLeavesService.get(EXPECTED_REQUEST);
+                getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
                 verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
 
@@ -398,7 +419,7 @@ public class GetActiveSickLeavesServiceTest {
             @Test
             void shouldConvertEnabledDiagnosisChapterName() {
                 final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-                getActiveSickLeavesService.get(EXPECTED_REQUEST);
+                getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
                 verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
 
