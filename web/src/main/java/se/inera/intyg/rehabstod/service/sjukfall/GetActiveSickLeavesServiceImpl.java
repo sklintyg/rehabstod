@@ -124,8 +124,8 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         return request;
     }
 
-    private List<SickLeaveLengthInterval> convertSickLeaveLengthIntervals
-            (List<se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval> intervals) {
+    private List<SickLeaveLengthInterval> convertSickLeaveLengthIntervals(
+            List<se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval> intervals) {
         return intervals.stream()
                 .map((interval) -> new SickLeaveLengthInterval(interval.getFrom(), interval.getTo()))
                 .collect(Collectors.toList());

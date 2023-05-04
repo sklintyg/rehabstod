@@ -96,7 +96,8 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
                     (sickLeave) -> (request.getDoctorIds().size() == 0
                         || request.getDoctorIds().contains(sickLeave.getLakare().getId()))
                         && isDiagnosisCodeIncluded(request.getDiagnosisChapters(), sickLeave.getDiagnosKod().getCleanedCode())
-                        && (request.getSickLeaveLengthIntervals().size() == 0 || isSickLeaveLengthIncluded(request.getSickLeaveLengthIntervals(), sickLeave.getDagar()))
+                        && (request.getSickLeaveLengthIntervals().size() == 0
+                            || isSickLeaveLengthIncluded(request.getSickLeaveLengthIntervals(), sickLeave.getDagar()))
                         && filterOnPatientAge(request, sickLeave.getPatient().getId())
                 )
                 .collect(Collectors.toList())
