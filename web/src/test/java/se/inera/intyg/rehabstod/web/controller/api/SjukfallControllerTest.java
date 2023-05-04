@@ -68,6 +68,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
+import se.inera.intyg.rehabstod.service.sjukfall.util.AESEncrypter;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallForPatientRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
@@ -283,6 +284,10 @@ public class SjukfallControllerTest {
 
                 verify(logService).logSjukfallData(any(PatientData.class), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
             }
+            try (MockedStatic<AESEncrypter> aesEncrypterMockedStatic = mockStatic(AESEncrypter.class)) {
+                sjukfallController.getSjukfallForPatient(request);
+                aesEncrypterMockedStatic.verify(() -> AESEncrypter.decryptPatientId(patientId), times(0));
+            }
         }
 
         @Test
@@ -312,6 +317,10 @@ public class SjukfallControllerTest {
 
                 verify(logService, times(4)).logSjukfallData(any(PatientData.class), eq(ActivityType.READ),
                     eq(ResourceType.RESOURCE_TYPE_INTYG));
+            }
+            try (MockedStatic<AESEncrypter> aesEncrypterMockedStatic = mockStatic(AESEncrypter.class)) {
+                sjukfallController.getSjukfallForPatient(request);
+                aesEncrypterMockedStatic.verify(() -> AESEncrypter.decryptPatientId(patientId), times(0));
             }
         }
     }

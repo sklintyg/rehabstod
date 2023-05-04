@@ -19,36 +19,34 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall.util;
 
+import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 
 public class AESEncrypter {
 
     private static final String KEY = "0123456789abcdef";
     private static final String INIT_VECTOR = "fedcba9876543210";
-    private static final String HEX_PATTERN = "^[0-9A-Fa-f]+$";
 
-    public static String encrypt(String value) {
+    public static String encryptPatientId(String value) {
         try {
             IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes("UTF-8"));
             SecretKeySpec keySpec = new SecretKeySpec(KEY.getBytes("UTF-8"), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, iv);
-
-            byte[] encrypted = cipher.doFinal(value.getBytes());
-            return bytesToHex(encrypted);
+            final var encryptedValue = cipher.doFinal(value.getBytes());
+            return Base64.getEncoder().encodeToString(encryptedValue).replace("/", "-");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
     }
 
-    public static String decrypt(String encrypted) {
+    public static String decryptPatientId(String encrypted) {
         try {
-            byte[] decryptedCiphertext = DatatypeConverter.parseHexBinary(encrypted);
+            final var decryptedCiphertext = Base64.getDecoder().decode(encrypted.replace("-", "/"));
             IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes("UTF-8"));
             SecretKeySpec keySpec = new SecretKeySpec(KEY.getBytes("UTF-8"), "AES");
 
@@ -62,17 +60,5 @@ public class AESEncrypter {
         }
 
         return null;
-    }
-
-    private static String bytesToHex(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        for (byte b : bytes) {
-            sb.append(String.format("%02X", b));
-        }
-        return sb.toString();
-    }
-
-    public static boolean isHex(String str) {
-        return str.matches(HEX_PATTERN);
     }
 }

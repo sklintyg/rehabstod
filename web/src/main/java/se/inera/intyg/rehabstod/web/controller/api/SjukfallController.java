@@ -132,7 +132,8 @@ public class SjukfallController {
         // Get user from session
         RehabstodUser user = userService.getUser();
         Personnummer personnummer = Personnummer.createPersonnummer(
-                AESEncrypter.isHex(request.getPatientId()) ? AESEncrypter.decrypt(request.getPatientId()) : request.getPatientId())
+                request.getPatientId().matches(".*[a-zA-Z].*") ? AESEncrypter.decryptPatientId(request.getPatientId())
+                    : request.getPatientId())
             .orElseThrow(() -> new IllegalArgumentException("Could not parse personnummer: " + request.getPatientId()));
 
         Collection<String> vardgivareIds = user.getSjfPatientVardgivare(personnummer.getPersonnummer());
