@@ -63,6 +63,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
+import se.inera.intyg.rehabstod.service.sjukfall.util.AESEncrypter;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.AddVeToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
@@ -130,8 +131,8 @@ public class SjukfallController {
 
         // Get user from session
         RehabstodUser user = userService.getUser();
-
-        Personnummer personnummer = Personnummer.createPersonnummer(request.getPatientId())
+        Personnummer personnummer = Personnummer.createPersonnummer(
+                AESEncrypter.isHex(request.getPatientId()) ? AESEncrypter.decrypt(request.getPatientId()) : request.getPatientId())
             .orElseThrow(() -> new IllegalArgumentException("Could not parse personnummer: " + request.getPatientId()));
 
         Collection<String> vardgivareIds = user.getSjfPatientVardgivare(personnummer.getPersonnummer());
@@ -139,7 +140,7 @@ public class SjukfallController {
 
         // Fetch sjukfall
         SjukfallPatientResponse response =
-            getSjukfallForPatient(user, request.getPatientId(), request.getAktivtDatum(), vardgivareIds, vardenhetIds);
+            getSjukfallForPatient(user, personnummer.getPersonnummer(), request.getAktivtDatum(), vardgivareIds, vardenhetIds);
         List<SjukfallPatient> sjukfall = response.getSjukfallList();
 
         // All filtrering av samtycke och spärrar har redan gjorts! De sjukfall vi har tillgång till

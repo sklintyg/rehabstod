@@ -62,8 +62,17 @@ public class SjukfallEnhet {
 
     private RiskSignal riskSignal;
     private boolean nyligenAvslutat;
+    private String uid;
 
     // - - - getters and setters
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
 
     public String getVardGivareId() {
         return vardGivareId;
