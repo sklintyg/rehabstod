@@ -127,7 +127,7 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     private boolean isSickLeaveLengthIncluded(List<SickLeaveLengthInterval> intervals, int days) {
         return intervals
                 .stream()
-                .anyMatch((interval) -> interval.getFrom() >= days && interval.getTo() <= days);
+                .anyMatch((interval) -> interval.getFrom() <= days && interval.getTo() >= days);
     }
 
     private static List<Lakare> getDoctorsFromSickLeaves(List<SjukfallEnhet> sickLeaves) {
