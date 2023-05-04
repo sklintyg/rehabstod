@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -58,6 +59,7 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -121,8 +123,7 @@ public class GetActiveSickLeavesServiceTest {
     static final String gap = "5";
     static final String days = "10";
     static final String DOCTOR_FILTER = "DOCTOR_ID";
-    static final int FROM_FILTER = 1;
-    static final int TO_FILTER = 365;
+    static final SickLeaveLengthInterval INTERVALS_FILTER = new SickLeaveLengthInterval(1, 365);
     static final char LETTER_TO = 'A';
     static final char LETTER_FROM = 'B';
     static final int NUMBER_TO = 1;
@@ -136,12 +137,11 @@ public class GetActiveSickLeavesServiceTest {
     static final SickLeavesFilterRequestDTO expectedRequest =
         new SickLeavesFilterRequestDTO(
             Collections.singletonList(DOCTOR_FILTER),
-            TO_FILTER,
-            FROM_FILTER,
+            Collections.singletonList(INTERVALS_FILTER),
             Collections.singletonList(chosenDiagnosisChapter)
         );
     static final SickLeavesFilterRequestDTO expectedRequestDoctor =
-        new SickLeavesFilterRequestDTO(new ArrayList<>(), TO_FILTER, FROM_FILTER, Collections.emptyList());
+        new SickLeavesFilterRequestDTO(new ArrayList<>(), Collections.singletonList(INTERVALS_FILTER), Collections.emptyList());
 
 
     @Nested
@@ -268,8 +268,8 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
             assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
             assertEquals(DOCTOR_FILTER, captor.getValue().getDoctorIds().get(0));
-            assertEquals(TO_FILTER, captor.getValue().getToSickLeaveLength());
-            assertEquals(FROM_FILTER, captor.getValue().getFromSickLeaveLength());
+            assertEquals(INTERVALS_FILTER.getTo(), captor.getValue().getSickLeaveLengthIntervals().get(0).getTo());
+            assertEquals(INTERVALS_FILTER.getFrom(), captor.getValue().getSickLeaveLengthIntervals().get(0).getFrom());
         }
 
         @Test
@@ -286,8 +286,8 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(Integer.parseInt(gap), captor.getValue().getMaxCertificateGap());
             assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
             assertEquals(DOCTOR_FILTER, captor.getValue().getDoctorIds().get(0));
-            assertEquals(TO_FILTER, captor.getValue().getToSickLeaveLength());
-            assertEquals(FROM_FILTER, captor.getValue().getFromSickLeaveLength());
+            assertEquals(INTERVALS_FILTER.getTo(), captor.getValue().getSickLeaveLengthIntervals().get(0).getTo());
+            assertEquals(INTERVALS_FILTER.getFrom(), captor.getValue().getSickLeaveLengthIntervals().get(0).getFrom());
         }
 
         @Test
@@ -300,15 +300,14 @@ public class GetActiveSickLeavesServiceTest {
             getActiveSickLeavesService.get(
                 new SickLeavesFilterRequestDTO(
                     Collections.singletonList(DOCTOR_FILTER),
-                    null,
-                    null,
+                    Collections.singletonList(new SickLeaveLengthInterval(null, null)),
                     Collections.singletonList(chosenDiagnosisChapter)
                 )
             );
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            assertNull(captor.getValue().getToSickLeaveLength());
-            assertNull(captor.getValue().getFromSickLeaveLength());
+            assertNull(captor.getValue().getSickLeaveLengthIntervals().get(0).getTo());
+            assertNull(captor.getValue().getSickLeaveLengthIntervals().get(0).getFrom());
         }
 
         @Test

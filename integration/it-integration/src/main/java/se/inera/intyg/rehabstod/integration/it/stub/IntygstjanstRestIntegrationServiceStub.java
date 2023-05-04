@@ -34,10 +34,7 @@ import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
-import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.*;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 
 @Profile("rhs-it-stub")
@@ -95,9 +92,8 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
                 .filter(
                     (sickLeave) -> (request.getDoctorIds().size() == 0
                         || request.getDoctorIds().contains(sickLeave.getLakare().getId()))
-                        && sickLeave.getDagar() >= request.getFromSickLeaveLength()
-                        && sickLeave.getDagar() <= request.getToSickLeaveLength()
                         && isDiagnosisCodeIncluded(request.getDiagnosisChapters(), sickLeave.getDiagnosKod().getCleanedCode())
+                        && (request.getSickLeaveLengthIntervals().size() == 0 || isSickLeaveLengthIncluded(request.getSickLeaveLengthIntervals(), sickLeave.getDagar()))
                 )
                 .collect(Collectors.toList())
         );
@@ -126,6 +122,12 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
                         && diagnosisChapter.getFrom().getNumber() <= Integer.parseInt(diagnosisCode.substring(1, 2))
                         && diagnosisChapter.getTo().getNumber() >= Integer.parseInt(diagnosisCode.substring(1, 2))
             );
+    }
+
+    private boolean isSickLeaveLengthIncluded(List<SickLeaveLengthInterval> intervals, int days) {
+        return intervals
+                .stream()
+                .anyMatch((interval) -> interval.getFrom() >= days && interval.getTo() <= days);
     }
 
     private static List<Lakare> getDoctorsFromSickLeaves(List<SjukfallEnhet> sickLeaves) {
