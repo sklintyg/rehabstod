@@ -32,6 +32,7 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
     private final PuService puService;
     private final StatisticsCalculator statisticsCalculator;
     private final GetActiveSickLeavesService getActiveSickLeavesService;
+    private static final boolean INCLUDE_PARAMETERS = false;
 
     public GetSickLeaveSummaryServiceImpl(PuService puService, StatisticsCalculator statisticsCalculator,
         GetActiveSickLeavesService getActiveSickLeavesService) {
@@ -43,8 +44,8 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
     @Override
     public SickLeaveSummary get() {
         final var sickLeaves = getActiveSickLeavesService.get(
-            new SickLeavesFilterRequestDTO(new ArrayList<>(), new ArrayList<>(), new ArrayList<>())
-        );
+            new SickLeavesFilterRequestDTO(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null),
+                INCLUDE_PARAMETERS);
         puService.filterSekretessForSummary(sickLeaves);
         return statisticsCalculator.getSickLeaveSummary(sickLeaves);
     }

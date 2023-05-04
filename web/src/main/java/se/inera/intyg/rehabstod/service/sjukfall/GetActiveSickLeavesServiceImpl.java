@@ -73,12 +73,12 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     }
 
     @Override
-    public List<SjukfallEnhet> get(SickLeavesFilterRequestDTO filterRequest) {
+    public List<SjukfallEnhet> get(SickLeavesFilterRequestDTO filterRequest, boolean includeParameters) {
         final var user = userService.getUser();
         final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
         final var certificateParameters = getCertificateParameters(user);
-        final var request = getRequest(user, unitId, careUnitId, filterRequest);
+        final var request = getRequest(user, unitId, careUnitId, filterRequest, includeParameters);
 
         LOG.debug("Getting sick leaves for unit {}", careUnitId);
         final var logFactory = new SickLeaveLogMessageFactory(System.currentTimeMillis());
@@ -104,7 +104,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     }
 
     private SickLeavesRequestDTO getRequest(
-        RehabstodUser user, String unitId, String careUnitId, SickLeavesFilterRequestDTO filterRequest
+        RehabstodUser user, String unitId, String careUnitId, SickLeavesFilterRequestDTO filterRequest, boolean includeParameters
     ) {
         final var request = new SickLeavesRequestDTO();
 
@@ -112,13 +112,15 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
             filterRequest.addDoctorId(user.getHsaId());
         }
 
-        request.setMaxCertificateGap(ControllerUtil.getMaxGlapp(user));
-        request.setMaxDaysSinceSickLeaveCompleted(ControllerUtil.getMaxDagarSedanSjukfallAvslut(user));
+        request.setMaxCertificateGap(includeParameters ? ControllerUtil.getMaxGlapp(user) : 0);
+        request.setMaxDaysSinceSickLeaveCompleted(includeParameters ? ControllerUtil.getMaxDagarSedanSjukfallAvslut(user) : 0);
         request.setUnitId(unitId);
         request.setCareUnitId(careUnitId);
         request.setDoctorIds(filterRequest.getDoctorIds());
         request.setSickLeaveLengthIntervals(convertSickLeaveLengthIntervals(filterRequest.getSickLeaveLengthIntervals()));
         request.setDiagnosisChapters(convertDiagnosisChapters(filterRequest.getDiagnosisChapters()));
+        request.setFromPatientAge(filterRequest.getFromPatientAge());
+        request.setToPatientAge(filterRequest.getToPatientAge());
         return request;
     }
 

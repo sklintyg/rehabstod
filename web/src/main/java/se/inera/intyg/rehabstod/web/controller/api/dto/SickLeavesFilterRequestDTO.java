@@ -31,9 +31,12 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SickLeavesFilterRequestDTO {
+
     private List<String> doctorIds;
     private List<SickLeaveLengthInterval> sickLeaveLengthIntervals;
     private List<DiagnosKapitel> diagnosisChapters;
+    private Integer fromPatientAge;
+    private Integer toPatientAge;
 
     public void addDoctorId(String id) {
         if (doctorIds == null) {

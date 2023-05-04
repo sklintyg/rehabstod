@@ -44,6 +44,9 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     @Autowired
     private RSTestIntygStub rsTestIntygStub;
     private static final String DEFAULT_TEST_DATA_MESSAGE = "Test data not generated, deactivate stub";
+    private static final int[] YEAR_SEPARATOR = {0, 4};
+    private static final int[] MONTH_SEPARATOR = {4, 6};
+    private static final int[] DAY_SEPARATOR = {6, 8};
 
     @Override
     public List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(List<String> units, List<String> certificateTypes,
@@ -94,9 +97,22 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
                         || request.getDoctorIds().contains(sickLeave.getLakare().getId()))
                         && isDiagnosisCodeIncluded(request.getDiagnosisChapters(), sickLeave.getDiagnosKod().getCleanedCode())
                         && (request.getSickLeaveLengthIntervals().size() == 0 || isSickLeaveLengthIncluded(request.getSickLeaveLengthIntervals(), sickLeave.getDagar()))
+                        && filterOnPatientAge(request, sickLeave.getPatient().getId())
                 )
                 .collect(Collectors.toList())
         );
+    }
+
+    private boolean filterOnPatientAge(SickLeavesRequestDTO request, String patientId) {
+        if (request.getFromPatientAge() == null || request.getToPatientAge() == null) {
+            return true;
+        }
+        final var patientAge = LocalDate.of(
+                Integer.parseInt(patientId.substring(YEAR_SEPARATOR[0], YEAR_SEPARATOR[1])),
+                Integer.parseInt(patientId.substring(MONTH_SEPARATOR[0], MONTH_SEPARATOR[1])),
+                Integer.parseInt(patientId.substring(DAY_SEPARATOR[0], DAY_SEPARATOR[1])))
+            .getYear();
+        return request.getFromPatientAge() <= patientAge && request.getToPatientAge() >= patientAge;
     }
 
     @Override

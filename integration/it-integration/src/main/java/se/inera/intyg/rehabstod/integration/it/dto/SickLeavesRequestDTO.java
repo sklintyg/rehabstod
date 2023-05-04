@@ -35,4 +35,6 @@ public class SickLeavesRequestDTO {
     private Integer maxCertificateGap;
     private Integer maxDaysSinceSickLeaveCompleted;
     private List<SickLeaveLengthInterval> sickLeaveLengthIntervals;
+    private Integer fromPatientAge;
+    private Integer toPatientAge;
 }

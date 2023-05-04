@@ -73,14 +73,15 @@ public class GetSickLeaveSummaryServiceTest {
 
     @BeforeEach
     void setup() {
-        doReturn(sickLeaves).when(getActiveSickLeavesService).get(any(SickLeavesFilterRequestDTO.class));
+        doReturn(sickLeaves).when(getActiveSickLeavesService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class));
         doReturn(summary).when(statisticsCalculator).getSickLeaveSummary(sickLeaves);
     }
 
     @Test
     void shouldGetActiveSickLeaves() {
         getSickLeaveSummaryService.get();
-        verify(getActiveSickLeavesService).get(any(SickLeavesFilterRequestDTO.class));
+        verify(getActiveSickLeavesService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class));
+
     }
 
     @Test
@@ -105,7 +106,7 @@ public class GetSickLeaveSummaryServiceTest {
     void shouldNotIncludeSickLeaveLengthWhenFetchingSickLeaves() {
         final var sickLeavesFilterRequestDTOArgumentCaptor = ArgumentCaptor.forClass(SickLeavesFilterRequestDTO.class);
         getSickLeaveSummaryService.get();
-        verify(getActiveSickLeavesService).get(sickLeavesFilterRequestDTOArgumentCaptor.capture());
+        verify(getActiveSickLeavesService).get(sickLeavesFilterRequestDTOArgumentCaptor.capture(), any(boolean.class));
         assertEquals(0, sickLeavesFilterRequestDTOArgumentCaptor.getValue().getSickLeaveLengthIntervals().size());
     }
 }
