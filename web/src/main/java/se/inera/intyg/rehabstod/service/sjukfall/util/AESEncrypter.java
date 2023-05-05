@@ -32,12 +32,14 @@ public class AESEncrypter {
 
     public static String encryptPatientId(String value) {
         try {
+
             IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes(StandardCharsets.UTF_8));
             SecretKeySpec keySpec = new SecretKeySpec(KEY.getBytes(StandardCharsets.UTF_8), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, iv);
             final var encryptedValue = cipher.doFinal(value.getBytes(StandardCharsets.UTF_8));
+
             return Base64.getEncoder().encodeToString(encryptedValue).replace("/", "-");
         } catch (Exception ex) {
             ex.printStackTrace();
