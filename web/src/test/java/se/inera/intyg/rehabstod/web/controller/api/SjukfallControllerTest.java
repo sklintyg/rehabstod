@@ -68,6 +68,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
+import se.inera.intyg.rehabstod.service.sjukfall.util.AESEncrypter;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallForPatientRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
@@ -78,6 +79,7 @@ import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
+import se.inera.intyg.schemas.contract.Personnummer;
 
 /**
  * Created by Magnus Ekstrand on 03/02/16.
@@ -165,7 +167,7 @@ public class SjukfallControllerTest {
             final var b = createSjukFallEnhet(PATIENT_ID_2);
             final var c = createSjukFallEnhet(PATIENT_ID_3);
             final var allSjukFall = List.of(a, b, c);
-            final var finalList =  List.of(a, b);
+            final var finalList = List.of(a, b);
             final var toLog = List.of(c);
 
             final var servletRequest = new MockHttpServletRequest();
@@ -205,8 +207,8 @@ public class SjukfallControllerTest {
             final var b = createSjukFallEnhet(PATIENT_ID_2);
             final var c = createSjukFallEnhet(PATIENT_ID_3);
 
-            final var allSjukFall =  List.of(a, b, c);
-            final var finalList =  List.of(a, b);
+            final var allSjukFall = List.of(a, b, c);
+            final var finalList = List.of(a, b);
             final var toLog = List.of(c);
 
             final var servletRequest = new MockHttpServletRequest();
@@ -265,6 +267,7 @@ public class SjukfallControllerTest {
             final var result = List.of(a);
             final var request = new GetSjukfallForPatientRequest();
             request.setPatientId(patientId);
+            final var personnummer = Personnummer.createPersonnummer(PATIENT_ID_1).get();
 
             try (MockedStatic<PDLActivityStore> pdlActivityStore = mockStatic(PDLActivityStore.class)) {
                 when(sjukfallService.getByPatient(anyString(), anyString(), isNull(), anyString(),
@@ -274,12 +277,16 @@ public class SjukfallControllerTest {
                 sjukfallController.getSjukfallForPatient(request);
 
                 verify(sjukfallService).getByPatient(eq(DEFAULT_VARDGIVARE.getId()), eq(DEFAULT_VARDENHET.getId()), isNull(),
-                    eq(patientId), any(Urval.class), any(IntygParametrar.class), anyCollection(), anyCollection());
+                    eq(personnummer.getPersonnummer()), any(Urval.class), any(IntygParametrar.class), anyCollection(), anyCollection());
 
                 pdlActivityStore.verify(() -> PDLActivityStore.isActivityInStore(anyString(), eq(patientId), eq(ActivityType.READ),
                     eq(ResourceType.RESOURCE_TYPE_INTYG), anyMap()));
 
                 verify(logService).logSjukfallData(any(PatientData.class), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
+            }
+            try (MockedStatic<AESEncrypter> aesEncrypterMockedStatic = mockStatic(AESEncrypter.class)) {
+                sjukfallController.getSjukfallForPatient(request);
+                aesEncrypterMockedStatic.verify(() -> AESEncrypter.decryptPatientId(patientId), times(0));
             }
         }
 
@@ -293,6 +300,7 @@ public class SjukfallControllerTest {
             final var result = List.of(a, b, c, d);
             final var request = new GetSjukfallForPatientRequest();
             request.setPatientId(patientId);
+            final var personnummer = Personnummer.createPersonnummer(PATIENT_ID_1).get();
 
             try (MockedStatic<PDLActivityStore> pdlActivityStore = mockStatic(PDLActivityStore.class)) {
                 when(sjukfallService.getByPatient(anyString(), anyString(), isNull(), anyString(),
@@ -302,13 +310,17 @@ public class SjukfallControllerTest {
                 sjukfallController.getSjukfallForPatient(request);
 
                 verify(sjukfallService).getByPatient(eq(DEFAULT_VARDGIVARE.getId()), eq(DEFAULT_VARDENHET.getId()), isNull(),
-                    eq(patientId), any(Urval.class), any(IntygParametrar.class), anyCollection(), anyCollection());
+                    eq(personnummer.getPersonnummer()), any(Urval.class), any(IntygParametrar.class), anyCollection(), anyCollection());
 
                 pdlActivityStore.verify(() -> PDLActivityStore.isActivityInStore(anyString(), eq(patientId), eq(ActivityType.READ),
                     eq(ResourceType.RESOURCE_TYPE_INTYG), anyMap()), times(4));
 
                 verify(logService, times(4)).logSjukfallData(any(PatientData.class), eq(ActivityType.READ),
                     eq(ResourceType.RESOURCE_TYPE_INTYG));
+            }
+            try (MockedStatic<AESEncrypter> aesEncrypterMockedStatic = mockStatic(AESEncrypter.class)) {
+                sjukfallController.getSjukfallForPatient(request);
+                aesEncrypterMockedStatic.verify(() -> AESEncrypter.decryptPatientId(patientId), times(0));
             }
         }
     }
@@ -359,7 +371,7 @@ public class SjukfallControllerTest {
             when(userService.getUser()).thenReturn(user);
 
             when(sjukfallService.getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class),
-                    any(IntygParametrar.class), anyCollection(), anyCollection()))
+                any(IntygParametrar.class), anyCollection(), anyCollection()))
                 .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false, false));
 
             sjukfallController.getSjukfallForPatient(request);
@@ -379,20 +391,20 @@ public class SjukfallControllerTest {
         @Test
         public void pdlLogSjukfallPatientShouldTriggerSRSLogEntry() {
             final var patientId = PATIENT_ID_1;
-            final var  user = buildConcreteUser();
+            final var user = buildConcreteUser();
 
             // Should trigger one history PDL item.
-            final var  a = createSjukFallPatient(patientId, 1, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
+            final var a = createSjukFallPatient(patientId, 1, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
             // Should trigger one risk PDL item.
-            final var  b = createSjukFallPatient(patientId, 3, 2, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
+            final var b = createSjukFallPatient(patientId, 3, 2, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
 
-            final var  finalList = List.of(a, b);
-            final var  request = new GetSjukfallForPatientRequest();
+            final var finalList = List.of(a, b);
+            final var request = new GetSjukfallForPatientRequest();
             request.setPatientId(patientId);
 
             when(userService.getUser()).thenReturn(user);
             when(sjukfallService.getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class),
-                    any(IntygParametrar.class), anyCollection(), anyCollection()))
+                any(IntygParametrar.class), anyCollection(), anyCollection()))
                 .thenReturn(new SjukfallPatientResponse(finalList, new SjfMetaData(), false, false));
 
             sjukfallController.getSjukfallForPatient(request);
@@ -400,7 +412,7 @@ public class SjukfallControllerTest {
             // Expect entries for ONE enhet
             assertEquals(1, user.getStoredActivities().size());
 
-            final var  pdlActivityEntries = user.getStoredActivities().get(DEFAULT_VARDENHET.getId());
+            final var pdlActivityEntries = user.getStoredActivities().get(DEFAULT_VARDENHET.getId());
             assertEquals(2, pdlActivityEntries.size());
 
             // Assert entries - expect one INTYG and one SRS log entry.
@@ -415,11 +427,11 @@ public class SjukfallControllerTest {
 
         @Test
         public void testPDLLogSRSForSjukfallEnhet() {
-            final var  user = buildConcreteUser();
-            final var  a = createSjukFallEnhet(PATIENT_ID_1, true);
-            final var  b = createSjukFallEnhet(PATIENT_ID_2, false);
-            final var  finalList = List.of(a, b);
-            final var  request = new GetSjukfallRequest();
+            final var user = buildConcreteUser();
+            final var a = createSjukFallEnhet(PATIENT_ID_1, true);
+            final var b = createSjukFallEnhet(PATIENT_ID_2, false);
+            final var finalList = List.of(a, b);
+            final var request = new GetSjukfallRequest();
 
             when(userService.getUser()).thenReturn(user);
             when(sjukfallService.getByUnit(anyString(), isNull(), anyString(), any(Urval.class), any(IntygParametrar.class)))
@@ -430,7 +442,7 @@ public class SjukfallControllerTest {
             // Expect entries for ONE enhet
             assertEquals(1, user.getStoredActivities().size());
 
-            final var  pdlActivityEntries = user.getStoredActivities().get(DEFAULT_VARDENHET.getId());
+            final var pdlActivityEntries = user.getStoredActivities().get(DEFAULT_VARDENHET.getId());
             assertEquals(3, pdlActivityEntries.size());
             assertEquals(1L, pdlActivityEntries.stream()
                 .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_PREDIKTION_SRS)
@@ -447,7 +459,7 @@ public class SjukfallControllerTest {
     }
 
     private void assertPdlActivityEntries(RehabstodUser user, Vardenhet vardenhet, ResourceType resourceType) {
-        final var  pdlActivityEntries = user.getStoredActivities().get(vardenhet.getId());
+        final var pdlActivityEntries = user.getStoredActivities().get(vardenhet.getId());
 
         // Expect one INTYG with a certain ResourceType
         assertEquals(1L, pdlActivityEntries.stream()
@@ -456,9 +468,9 @@ public class SjukfallControllerTest {
     }
 
     private RehabstodUser buildConcreteUser() {
-        final var  user = new RehabstodUser("user-1", "Hej Hejssansson", true);
-        final var  vg = DEFAULT_VARDGIVARE;
-        final var  ve = DEFAULT_VARDENHET;
+        final var user = new RehabstodUser("user-1", "Hej Hejssansson", true);
+        final var vg = DEFAULT_VARDGIVARE;
+        final var ve = DEFAULT_VARDENHET;
         vg.getVardenheter().add(ve);
         user.setVardgivare(List.of(vg));
         user.setValdVardgivare(vg);
@@ -471,16 +483,16 @@ public class SjukfallControllerTest {
 
     private static SjukfallEnhet createSjukFallEnhet(String personNummer) {
         // CHECKSTYLE:OFF MagicNumber
-        final var  isf = new SjukfallEnhet();
+        final var isf = new SjukfallEnhet();
 
-        final var  lakare = new Lakare("123456-0987", "Hr Doktor");
+        final var lakare = new Lakare("123456-0987", "Hr Doktor");
         isf.setLakare(lakare);
 
-        final var  patient = new Patient(personNummer, "patient " + personNummer);
+        final var patient = new Patient(personNummer, "patient " + personNummer);
         isf.setPatient(patient);
 
         // Not really interested in these properties, but the sjukfall equals /hashcode will fail without them
-        final var  diagnos = new Diagnos("M16", "M16", "diagnosnamn");
+        final var diagnos = new Diagnos("M16", "M16", "diagnosnamn");
         diagnos.setKapitel("M00-M99");
         isf.setDiagnos(diagnos);
 
@@ -497,7 +509,7 @@ public class SjukfallControllerTest {
     }
 
     private static SjukfallEnhet createSjukFallEnhet(String personNummer, boolean includeRisk) {
-        final var  isf = createSjukFallEnhet(personNummer);
+        final var isf = createSjukFallEnhet(personNummer);
         if (includeRisk) {
             isf.setRiskSignal(new RiskSignal("intyg-1", 3, "Descr.", isf.getStart().atTime(12, 0)));
         }
@@ -507,7 +519,7 @@ public class SjukfallControllerTest {
     private SjukfallPatient createSjukFallPatient(String personNummer, int numberOfIntyg, int numberOfIntygHavingRisk,
         Vardenhet vardenhet, Vardgivare vardgivare) {
 
-        final var  sp = new SjukfallPatient();
+        final var sp = new SjukfallPatient();
         sp.setIntyg(new ArrayList<>());
         for (int a = 0; a < numberOfIntyg; a++) {
             PatientData pd = new PatientData();

@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
+import se.inera.intyg.rehabstod.service.sjukfall.util.AESEncrypter;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -77,6 +78,7 @@ public class SjukfallEngineMapper {
             to.setAktivIntygsId(from.getAktivIntygsId());
             to.setSysselsattning(from.getSysselsattning());
             to.setNyligenAvslutat(to.getSlutOmDagar() < 0 && to.getSlutOmDagar() + maxDagarSedanAvslut >= 0);
+            to.setUid(AESEncrypter.encryptPatientId(from.getPatient().getId()));
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
         }
