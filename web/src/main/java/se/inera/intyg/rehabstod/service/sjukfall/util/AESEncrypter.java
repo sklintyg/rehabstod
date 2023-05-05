@@ -19,6 +19,7 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall.util;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -31,12 +32,12 @@ public class AESEncrypter {
 
     public static String encryptPatientId(String value) {
         try {
-            IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes("UTF-8"));
-            SecretKeySpec keySpec = new SecretKeySpec(KEY.getBytes("UTF-8"), "AES");
+            IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes(StandardCharsets.UTF_8));
+            SecretKeySpec keySpec = new SecretKeySpec(KEY.getBytes(StandardCharsets.UTF_8), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, iv);
-            final var encryptedValue = cipher.doFinal(value.getBytes());
+            final var encryptedValue = cipher.doFinal(value.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(encryptedValue).replace("/", "-");
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -47,14 +48,14 @@ public class AESEncrypter {
     public static String decryptPatientId(String encrypted) {
         try {
             final var decryptedCiphertext = Base64.getDecoder().decode(encrypted.replace("-", "/"));
-            IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes("UTF-8"));
-            SecretKeySpec keySpec = new SecretKeySpec(KEY.getBytes("UTF-8"), "AES");
+            IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes(StandardCharsets.UTF_8));
+            SecretKeySpec keySpec = new SecretKeySpec(KEY.getBytes(StandardCharsets.UTF_8), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, keySpec, iv);
 
             byte[] original = cipher.doFinal(decryptedCiphertext);
-            return new String(original).replace("-", "");
+            return new String(original, StandardCharsets.UTF_8).replace("-", "");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
