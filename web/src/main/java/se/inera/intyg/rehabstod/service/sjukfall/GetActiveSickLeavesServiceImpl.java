@@ -43,6 +43,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
+import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
@@ -73,7 +74,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     }
 
     @Override
-    public List<SjukfallEnhet> get(SickLeavesFilterRequestDTO filterRequest, boolean includeParameters) {
+    public SickLeavesResponseDTO get(SickLeavesFilterRequestDTO filterRequest, boolean includeParameters) {
         final var user = userService.getUser();
         final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
@@ -100,7 +101,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         performMonitorLogging(convertedSickLeaves, user.getHsaId(), unitId != null ? unitId : careUnitId);
         pdlLogSickLeavesService.log(convertedSickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
-        return convertedSickLeaves;
+        return new SickLeavesResponseDTO(convertedSickLeaves, response.getTotal());
     }
 
     private SickLeavesRequestDTO getRequest(

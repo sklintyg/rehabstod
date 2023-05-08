@@ -112,7 +112,7 @@ public class GetActiveSickLeavesServiceTest {
         final var userPreferences = RehabstodUserPreferences.fromBackend(preferences);
         when(user.getPreferences()).thenReturn(userPreferences);
 
-        final var response = new SickLeavesResponseDTO(Collections.singletonList(new SjukfallEnhet()));
+        final var response = new SickLeavesResponseDTO(Collections.singletonList(new SjukfallEnhet()), 1);
         when(intygstjanstRestIntegrationService.getActiveSickLeaves(any())).thenReturn(response);
     }
 
@@ -422,6 +422,29 @@ public class GetActiveSickLeavesServiceTest {
 
                 assertEquals(CHOSEN_DIAGNOSIS_CHAPTER.getName(), captor.getValue().getDiagnosisChapters().get(0).getName());
                 assertEquals(CHOSEN_DIAGNOSIS_CHAPTER.getName(), captor.getValue().getDiagnosisChapters().get(0).getName());
+            }
+        }
+
+        @Nested
+        class TestResponse {
+
+            @BeforeEach
+            void setup() {
+                when(user.getValdVardenhet()).thenReturn(unit);
+                when(unit.getId()).thenReturn(UNIT_ID);
+                when(user.getUrval()).thenReturn(Urval.ALL);
+            }
+
+            @Test
+            void shouldIncludeContent() {
+                final var response = getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+                assertEquals(1, response.getContent().size());
+            }
+
+            @Test
+            void shouldIncludeTotal() {
+                final var response = getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+                assertEquals(1, response.getTotal());
             }
         }
     }

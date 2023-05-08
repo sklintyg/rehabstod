@@ -89,8 +89,9 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
 
     @Override
     public SickLeavesResponseDTO getActiveSickLeaves(SickLeavesRequestDTO request) {
+        final var sickLeaves = rsTestIntygStub.getActiveSickLeaveData();
         return new SickLeavesResponseDTO(
-            rsTestIntygStub.getActiveSickLeaveData()
+            sickLeaves
                 .stream()
                 .filter(
                     (sickLeave) -> (request.getDoctorIds().size() == 0
@@ -100,7 +101,8 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
                             || isSickLeaveLengthIncluded(request.getSickLeaveLengthIntervals(), sickLeave.getDagar()))
                         && filterOnPatientAge(request, sickLeave.getPatient().getId())
                 )
-                .collect(Collectors.toList())
+                .collect(Collectors.toList()),
+                sickLeaves.size()
         );
     }
 

@@ -30,4 +30,5 @@ import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
 @AllArgsConstructor
 public class SickLeavesResponseDTO {
     private List<SjukfallEnhet> content;
+    private int total;
 }
