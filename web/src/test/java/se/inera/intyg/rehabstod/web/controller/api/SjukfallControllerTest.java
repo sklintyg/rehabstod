@@ -30,6 +30,7 @@ import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
@@ -120,6 +121,9 @@ public class SjukfallControllerTest {
 
     @InjectMocks
     private SjukfallController sjukfallController = new SjukfallController();
+
+    @Mock
+    private AESEncrypter aesEncrypter;
 
     @Nested
     class GetSjukfallByUnitTests {
@@ -283,10 +287,7 @@ public class SjukfallControllerTest {
                     eq(ResourceType.RESOURCE_TYPE_INTYG), anyMap()));
 
                 verify(logService).logSjukfallData(any(PatientData.class), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
-            }
-            try (MockedStatic<AESEncrypter> aesEncrypterMockedStatic = mockStatic(AESEncrypter.class)) {
-                sjukfallController.getSjukfallForPatient(request);
-                aesEncrypterMockedStatic.verify(() -> AESEncrypter.decryptPatientId(patientId), times(0));
+                verifyNoInteractions(aesEncrypter);
             }
         }
 
@@ -317,10 +318,7 @@ public class SjukfallControllerTest {
 
                 verify(logService, times(4)).logSjukfallData(any(PatientData.class), eq(ActivityType.READ),
                     eq(ResourceType.RESOURCE_TYPE_INTYG));
-            }
-            try (MockedStatic<AESEncrypter> aesEncrypterMockedStatic = mockStatic(AESEncrypter.class)) {
-                sjukfallController.getSjukfallForPatient(request);
-                aesEncrypterMockedStatic.verify(() -> AESEncrypter.decryptPatientId(patientId), times(0));
+                verifyNoInteractions(aesEncrypter);
             }
         }
     }

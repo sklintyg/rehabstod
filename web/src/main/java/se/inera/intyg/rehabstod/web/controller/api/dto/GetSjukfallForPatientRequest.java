@@ -27,6 +27,7 @@ public class GetSjukfallForPatientRequest {
 
     private LocalDate aktivtDatum;
     private String patientId;
+    private String encryptedPatientId;
 
     /**
      * The sole constructor.
@@ -50,5 +51,13 @@ public class GetSjukfallForPatientRequest {
 
     public void setPatientId(String patientId) {
         this.patientId = patientId;
+    }
+
+    public String getEncryptedPatientId() {
+        return encryptedPatientId;
+    }
+
+    public void setEncryptedPatientId(String encryptedPatientId) {
+        this.encryptedPatientId = encryptedPatientId;
     }
 }

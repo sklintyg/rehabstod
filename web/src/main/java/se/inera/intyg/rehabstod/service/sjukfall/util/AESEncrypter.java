@@ -24,44 +24,49 @@ import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AESEncrypter {
 
-    private static final String KEY = "0123456789abcdef";
+    private static final Logger LOG = LoggerFactory.getLogger(AESEncrypter.class);
     private static final String INIT_VECTOR = "fedcba9876543210";
+    @Value("${aes.encryption.key}")
+    private String key;
 
-    public static String encryptPatientId(String value) {
+    public String encryptPatientId(String value) {
         try {
+            final var iv = new IvParameterSpec(INIT_VECTOR.getBytes(StandardCharsets.UTF_8));
+            final var keySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
 
-            IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes(StandardCharsets.UTF_8));
-            SecretKeySpec keySpec = new SecretKeySpec(KEY.getBytes(StandardCharsets.UTF_8), "AES");
-
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            final var cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, iv);
-            final var encryptedValue = cipher.doFinal(value.getBytes(StandardCharsets.UTF_8));
 
+            final var encryptedValue = cipher.doFinal(value.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(encryptedValue).replace("/", "-");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOG.error("AESEncryption error - Could not encrypt value: {}", value);
+            throw new RuntimeException(ex);
         }
-        return null;
     }
 
-    public static String decryptPatientId(String encrypted) {
+    public String decryptPatientId(String encrypted) {
         try {
             final var decryptedCiphertext = Base64.getDecoder().decode(encrypted.replace("-", "/"));
-            IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes(StandardCharsets.UTF_8));
-            SecretKeySpec keySpec = new SecretKeySpec(KEY.getBytes(StandardCharsets.UTF_8), "AES");
+            final var iv = new IvParameterSpec(INIT_VECTOR.getBytes(StandardCharsets.UTF_8));
+            final var keySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
 
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            final var cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, keySpec, iv);
 
-            byte[] original = cipher.doFinal(decryptedCiphertext);
-            return new String(original, StandardCharsets.UTF_8).replace("-", "");
+            final var originalValue = cipher.doFinal(decryptedCiphertext);
+            return new String(originalValue, StandardCharsets.UTF_8).replace("-", "");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOG.error("AESEncryption error - Could not decrypt value: {}", encrypted);
+            throw new RuntimeException(ex);
         }
-
-        return null;
     }
 }

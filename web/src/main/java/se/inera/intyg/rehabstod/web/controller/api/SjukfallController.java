@@ -108,6 +108,8 @@ public class SjukfallController {
 
     @Autowired
     private PdfExportService pdfExportService;
+    @Autowired
+    private AESEncrypter aesEncrypter;
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SjukfallEnhet>> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
@@ -132,7 +134,7 @@ public class SjukfallController {
         // Get user from session
         RehabstodUser user = userService.getUser();
         Personnummer personnummer = Personnummer.createPersonnummer(
-                request.getPatientId().matches(".*[a-zA-Z].*") ? AESEncrypter.decryptPatientId(request.getPatientId())
+                request.getEncryptedPatientId() != null ? aesEncrypter.decryptPatientId(request.getEncryptedPatientId())
                     : request.getPatientId())
             .orElseThrow(() -> new IllegalArgumentException("Could not parse personnummer: " + request.getPatientId()));
 

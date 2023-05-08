@@ -38,7 +38,6 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -186,7 +185,7 @@ public class SjukfallServiceTest {
     private LogService logService;
 
     @InjectMocks
-    private final SjukfallServiceImpl testee = new SjukfallServiceImpl();
+    private SjukfallServiceImpl testee;
 
     @Before
     public void init() {
