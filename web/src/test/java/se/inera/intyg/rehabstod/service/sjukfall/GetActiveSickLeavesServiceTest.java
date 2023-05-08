@@ -61,7 +61,7 @@ import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
-import se.inera.intyg.rehabstod.service.sjukfall.util.AESEncrypter;
+import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
@@ -89,7 +89,7 @@ public class GetActiveSickLeavesServiceTest {
     @Mock
     SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
     @Mock
-    AESEncrypter aesEncrypter;
+    PatientIdEncryption patientIdEncryption;
 
     @InjectMocks
     GetActiveSickLeavesServiceImpl getActiveSickLeavesService;

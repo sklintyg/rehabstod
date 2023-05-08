@@ -27,10 +27,10 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
@@ -43,6 +43,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -69,7 +70,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
-import se.inera.intyg.rehabstod.service.sjukfall.util.AESEncrypter;
+import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallForPatientRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
@@ -123,7 +124,7 @@ public class SjukfallControllerTest {
     private SjukfallController sjukfallController = new SjukfallController();
 
     @Mock
-    private AESEncrypter aesEncrypter;
+    private PatientIdEncryption patientIdEncryption;
 
     @Nested
     class GetSjukfallByUnitTests {
@@ -287,7 +288,6 @@ public class SjukfallControllerTest {
                     eq(ResourceType.RESOURCE_TYPE_INTYG), anyMap()));
 
                 verify(logService).logSjukfallData(any(PatientData.class), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
-                verifyNoInteractions(aesEncrypter);
             }
         }
 
@@ -318,8 +318,40 @@ public class SjukfallControllerTest {
 
                 verify(logService, times(4)).logSjukfallData(any(PatientData.class), eq(ActivityType.READ),
                     eq(ResourceType.RESOURCE_TYPE_INTYG));
-                verifyNoInteractions(aesEncrypter);
             }
+        }
+
+        @Test
+        void shallNotDecryptAnNonEncryptedPatientId() {
+            final var expectedPatientId = "191212121212";
+            final var patientIdCaptor = ArgumentCaptor.forClass(String.class);
+            final var request = new GetSjukfallForPatientRequest();
+            request.setPatientId(expectedPatientId);
+
+            when(sjukfallService.getByPatient(any(), any(), any(), patientIdCaptor.capture(), any(), any(), any(),
+                any())).thenReturn(mock(SjukfallPatientResponse.class));
+
+            sjukfallController.getSjukfallForPatient(request);
+
+            assertEquals(expectedPatientId, patientIdCaptor.getValue());
+        }
+
+        @Test
+        void shallDecryptAnEncryptedPatientId() {
+            final var expectedPatientId = "191212121212";
+            final var encryptedPatientId = "HjdOIDIjREBrfko";
+            final var patientIdCaptor = ArgumentCaptor.forClass(String.class);
+            final var request = new GetSjukfallForPatientRequest();
+            request.setEncryptedPatientId(encryptedPatientId);
+
+            when(patientIdEncryption.decrypt(encryptedPatientId)).thenReturn(expectedPatientId);
+
+            when(sjukfallService.getByPatient(any(), any(), any(), patientIdCaptor.capture(), any(), any(), any(),
+                any())).thenReturn(mock(SjukfallPatientResponse.class));
+
+            sjukfallController.getSjukfallForPatient(request);
+
+            assertEquals(expectedPatientId, patientIdCaptor.getValue());
         }
     }
 

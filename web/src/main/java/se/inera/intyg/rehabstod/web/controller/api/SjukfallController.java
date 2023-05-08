@@ -63,7 +63,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
-import se.inera.intyg.rehabstod.service.sjukfall.util.AESEncrypter;
+import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.AddVeToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
@@ -109,7 +109,7 @@ public class SjukfallController {
     @Autowired
     private PdfExportService pdfExportService;
     @Autowired
-    private AESEncrypter aesEncrypter;
+    private PatientIdEncryption patientIdEncryption;
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SjukfallEnhet>> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
@@ -134,7 +134,7 @@ public class SjukfallController {
         // Get user from session
         RehabstodUser user = userService.getUser();
         Personnummer personnummer = Personnummer.createPersonnummer(
-                request.getEncryptedPatientId() != null ? aesEncrypter.decryptPatientId(request.getEncryptedPatientId())
+                request.getEncryptedPatientId() != null ? patientIdEncryption.decrypt(request.getEncryptedPatientId())
                     : request.getPatientId())
             .orElseThrow(() -> new IllegalArgumentException("Could not parse personnummer: " + request.getPatientId()));
 

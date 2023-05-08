@@ -41,7 +41,7 @@ import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
-import se.inera.intyg.rehabstod.service.sjukfall.util.AESEncrypter;
+import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
@@ -57,7 +57,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     private final PdlLogSickLeavesService pdlLogSickLeavesService;
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
     private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
-    private final AESEncrypter aesEncrypter;
+    private final PatientIdEncryption patientIdEncryption;
 
     private static final Logger LOG = LoggerFactory.getLogger(GetActiveSickLeavesServiceImpl.class);
 
@@ -65,7 +65,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     public GetActiveSickLeavesServiceImpl(UserService userService, PuService puService, MonitoringLogService monitoringLogService,
         SjukfallEngineMapper sjukfallEngineMapper, PdlLogSickLeavesService pdlLogSickLeavesService,
         IntygstjanstRestIntegrationService intygstjanstRestIntegrationService, SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
-        AESEncrypter aesEncrypter) {
+        PatientIdEncryption patientIdEncryption) {
         this.userService = userService;
         this.puService = puService;
         this.monitoringLogService = monitoringLogService;
@@ -73,7 +73,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         this.pdlLogSickLeavesService = pdlLogSickLeavesService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
         this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
-        this.aesEncrypter = aesEncrypter;
+        this.patientIdEncryption = patientIdEncryption;
     }
 
     @Override
@@ -104,7 +104,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         performMonitorLogging(convertedSickLeaves, user.getHsaId(), unitId != null ? unitId : careUnitId);
         pdlLogSickLeavesService.log(convertedSickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
         convertedSickLeaves.forEach(
-            sickLeave -> sickLeave.setEncryptedPatientId(aesEncrypter.encryptPatientId(sickLeave.getPatient().getId())));
+            sickLeave -> sickLeave.setEncryptedPatientId(patientIdEncryption.encrypt(sickLeave.getPatient().getId())));
 
         return convertedSickLeaves;
     }
