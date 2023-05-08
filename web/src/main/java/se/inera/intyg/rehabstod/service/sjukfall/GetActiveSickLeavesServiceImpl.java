@@ -103,7 +103,8 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         LOG.debug("Logging that sick leaves have been fetched");
         performMonitorLogging(convertedSickLeaves, user.getHsaId(), unitId != null ? unitId : careUnitId);
         pdlLogSickLeavesService.log(convertedSickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
-        convertedSickLeaves.forEach(sickLeave -> sickLeave.setUid(aesEncrypter.encryptPatientId(sickLeave.getPatient().getId())));
+        convertedSickLeaves.forEach(
+            sickLeave -> sickLeave.setEncryptedPatientId(aesEncrypter.encryptPatientId(sickLeave.getPatient().getId())));
 
         return convertedSickLeaves;
     }

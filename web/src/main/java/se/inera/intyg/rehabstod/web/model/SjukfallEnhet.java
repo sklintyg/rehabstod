@@ -62,16 +62,16 @@ public class SjukfallEnhet {
 
     private RiskSignal riskSignal;
     private boolean nyligenAvslutat;
-    private String uid;
+    private String encryptedPatientId;
 
     // - - - getters and setters
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setEncryptedPatientId(String encryptedPatientId) {
+        this.encryptedPatientId = encryptedPatientId;
     }
 
-    public String getUid() {
-        return uid;
+    public String getEncryptedPatientId() {
+        return encryptedPatientId;
     }
 
     public String getVardGivareId() {
