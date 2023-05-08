@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval;
 
 @Data
 @NoArgsConstructor
@@ -32,8 +33,7 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 public class SickLeavesFilterRequestDTO {
 
     private List<String> doctorIds;
-    private Integer toSickLeaveLength;
-    private Integer fromSickLeaveLength;
+    private List<SickLeaveLengthInterval> sickLeaveLengthIntervals;
     private List<DiagnosKapitel> diagnosisChapters;
     private Integer fromPatientAge;
     private Integer toPatientAge;

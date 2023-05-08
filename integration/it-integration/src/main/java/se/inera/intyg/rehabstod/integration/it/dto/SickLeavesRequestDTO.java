@@ -34,8 +34,7 @@ public class SickLeavesRequestDTO {
     private List<DiagnosKapitel> diagnosisChapters;
     private Integer maxCertificateGap;
     private Integer maxDaysSinceSickLeaveCompleted;
-    private Integer toSickLeaveLength;
-    private Integer fromSickLeaveLength;
+    private List<SickLeaveLengthInterval> sickLeaveLengthIntervals;
     private Integer fromPatientAge;
     private Integer toPatientAge;
 }

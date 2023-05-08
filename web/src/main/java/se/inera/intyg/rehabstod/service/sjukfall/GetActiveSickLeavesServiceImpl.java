@@ -30,6 +30,7 @@ import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeaveLengthInterval;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.logging.SickLeaveLogMessageFactory;
@@ -116,13 +117,18 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         request.setUnitId(unitId);
         request.setCareUnitId(careUnitId);
         request.setDoctorIds(filterRequest.getDoctorIds());
-        request.setToSickLeaveLength(filterRequest.getToSickLeaveLength());
-        request.setFromSickLeaveLength(filterRequest.getFromSickLeaveLength());
+        request.setSickLeaveLengthIntervals(convertSickLeaveLengthIntervals(filterRequest.getSickLeaveLengthIntervals()));
         request.setDiagnosisChapters(convertDiagnosisChapters(filterRequest.getDiagnosisChapters()));
         request.setFromPatientAge(filterRequest.getFromPatientAge());
         request.setToPatientAge(filterRequest.getToPatientAge());
         return request;
+    }
 
+    private List<SickLeaveLengthInterval> convertSickLeaveLengthIntervals(
+            List<se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval> intervals) {
+        return intervals.stream()
+                .map((interval) -> new SickLeaveLengthInterval(interval.getFrom(), interval.getTo()))
+                .collect(Collectors.toList());
     }
 
     private List<se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel> convertDiagnosisChapters(List<DiagnosKapitel> diagnosisChapters) {

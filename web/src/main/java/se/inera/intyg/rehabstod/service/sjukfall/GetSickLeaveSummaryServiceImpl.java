@@ -44,8 +44,8 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
     @Override
     public SickLeaveSummary get() {
         final var sickLeaves = getActiveSickLeavesService.get(
-            new SickLeavesFilterRequestDTO(new ArrayList<>(), null, null, new ArrayList<>(), null, null),
-            INCLUDE_PARAMETERS);
+            new SickLeavesFilterRequestDTO(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null),
+                INCLUDE_PARAMETERS);
         puService.filterSekretessForSummary(sickLeaves);
         return statisticsCalculator.getSickLeaveSummary(sickLeaves);
     }

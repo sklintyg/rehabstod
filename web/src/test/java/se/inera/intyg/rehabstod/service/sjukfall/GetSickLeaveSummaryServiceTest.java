@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -108,7 +107,6 @@ public class GetSickLeaveSummaryServiceTest {
         final var sickLeavesFilterRequestDTOArgumentCaptor = ArgumentCaptor.forClass(SickLeavesFilterRequestDTO.class);
         getSickLeaveSummaryService.get();
         verify(getActiveSickLeavesService).get(sickLeavesFilterRequestDTOArgumentCaptor.capture(), any(boolean.class));
-        assertNull(sickLeavesFilterRequestDTOArgumentCaptor.getValue().getFromSickLeaveLength());
-        assertNull(sickLeavesFilterRequestDTOArgumentCaptor.getValue().getToSickLeaveLength());
+        assertEquals(0, sickLeavesFilterRequestDTOArgumentCaptor.getValue().getSickLeaveLengthIntervals().size());
     }
 }
