@@ -57,14 +57,16 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
     private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
     private final PatientIdEncryption patientIdEncryption;
+    private final PuService puService;
 
     private static final Logger LOG = LoggerFactory.getLogger(GetActiveSickLeavesServiceImpl.class);
 
     @Autowired
     public GetActiveSickLeavesServiceImpl(UserService userService, MonitoringLogService monitoringLogService,
-        SjukfallEngineMapper sjukfallEngineMapper, PdlLogSickLeavesService pdlLogSickLeavesService,
-        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService, SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
-        PatientIdEncryption patientIdEncryption) {
+                                          SjukfallEngineMapper sjukfallEngineMapper, PdlLogSickLeavesService pdlLogSickLeavesService,
+                                          IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+                                          SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
+                                          PatientIdEncryption patientIdEncryption, PuService puService) {
         this.userService = userService;
         this.monitoringLogService = monitoringLogService;
         this.sjukfallEngineMapper = sjukfallEngineMapper;
@@ -72,6 +74,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
         this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
         this.patientIdEncryption = patientIdEncryption;
+        this.puService = puService;
     }
 
     @Override
@@ -120,6 +123,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         request.setDiagnosisChapters(convertDiagnosisChapters(filterRequest.getDiagnosisChapters()));
         request.setFromPatientAge(filterRequest.getFromPatientAge());
         request.setToPatientAge(filterRequest.getToPatientAge());
+        request.setFilterOnProtectedPerson(puService.shouldFilterSickLeavesOnProtectedPerson(user));
         return request;
     }
 

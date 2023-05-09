@@ -29,6 +29,7 @@ import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
+import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -41,17 +42,19 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
     private final UserService userService;
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
     private final DiagnosKapitelService diagnosKapitelService;
+    private final PuService puService;
 
     private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
     public PopulateFiltersServiceImpl(
-        UserService userService,
-        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
-        DiagnosKapitelService diagnosKapitelService,
-        SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver) {
+            UserService userService,
+            IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+            DiagnosKapitelService diagnosKapitelService,
+            PuService puService, SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver) {
         this.userService = userService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
         this.diagnosKapitelService = diagnosKapitelService;
+        this.puService = puService;
         this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
     }
 
@@ -104,6 +107,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         request.setMaxDaysSinceSickLeaveCompleted(ControllerUtil.getMaxDagarSedanSjukfallAvslut(user));
         request.setUnitId(unitId);
         request.setCareUnitId(careUnitId);
+        request.setFilterProtectedPerson(puService.shouldFilterSickLeavesOnProtectedPerson(user));
         if (user.getUrval() == Urval.ISSUED_BY_ME) {
             request.setDoctorId(user.getHsaId());
         }

@@ -87,6 +87,7 @@ public class PopulateFiltersServiceTest {
     static final int NUMBER_FROM = 2;
     static final String DIAGNOSIS_CHAPTER_NAME = "Name";
     static final PopulateFiltersRequestDTO expectedRequest = new PopulateFiltersRequestDTO();
+    static final int TOTAL_NUMBER_OF_SICK_LEAVES = 10;
 
     RehabstodUser user;
     Vardenhet unit;
@@ -114,7 +115,9 @@ public class PopulateFiltersServiceTest {
         when(user.getPreferences()).thenReturn(userPreferences);
 
         final var response = new PopulateFiltersResponseDTO(
-            Collections.singletonList(Lakare.create(HSA_ID, HSA_ID)), Collections.singletonList(enabledDiagnosisChapter)
+            Collections.singletonList(Lakare.create(HSA_ID, HSA_ID)),
+            Collections.singletonList(enabledDiagnosisChapter),
+            TOTAL_NUMBER_OF_SICK_LEAVES
         );
         when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(response);
 
@@ -230,6 +233,12 @@ public class PopulateFiltersServiceTest {
         void shouldConvertAllDiagnosisChapters() {
             final var response = populateActiveFilters.get();
             assertEquals(allDiagnosisChapters, response.getAllDiagnosisChapters());
+        }
+
+        @Test
+        void shouldConvertNbrOfSickLeaves() {
+            final var response = populateActiveFilters.get();
+            assertEquals(TOTAL_NUMBER_OF_SICK_LEAVES, response.getNbrOfSickLeaves());
         }
 
         @Nested

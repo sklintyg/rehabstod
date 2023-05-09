@@ -18,8 +18,7 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -212,10 +211,10 @@ public class GetActiveSickLeavesServiceTest {
         }
 
         @Test
-        void shouldMakeCallToPUForConvertedSickLeaves() {
+        void shouldMakeCallToPUToGetFilterOnProtectedPerson() {
             getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
-            verify(puService).enrichSjukfallWithPatientNamesAndFilterSekretess(Collections.singletonList(sickLeave));
+            verify(puService).shouldFilterSickLeavesOnProtectedPerson(user);
         }
     }
 
@@ -342,6 +341,34 @@ public class GetActiveSickLeavesServiceTest {
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
             assertEquals(HSA_ID, captor.getValue().getDoctorIds().get(0));
+        }
+
+        @Test
+        void shouldCreateRequestWithFilterOnProtectedPersonTrue() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
+            when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(true);
+
+            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST_DOCTOR, true);
+
+            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+            assertTrue(captor.getValue().isFilterOnProtectedPerson());
+        }
+
+        @Test
+        void shouldCreateRequestWithFilterOnProtectedPersonFalse() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
+            when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(false);
+
+            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST_DOCTOR, true);
+
+            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+            assertFalse(captor.getValue().isFilterOnProtectedPerson());
         }
 
         @Nested

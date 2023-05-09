@@ -37,4 +37,5 @@ public class SickLeavesRequestDTO {
     private List<SickLeaveLengthInterval> sickLeaveLengthIntervals;
     private Integer fromPatientAge;
     private Integer toPatientAge;
+    private boolean filterOnProtectedPerson;
 }
