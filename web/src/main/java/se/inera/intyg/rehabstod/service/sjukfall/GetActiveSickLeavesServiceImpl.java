@@ -51,7 +51,6 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesService {
 
     private final UserService userService;
-    private final PuService puService;
     private final MonitoringLogService monitoringLogService;
     private final SjukfallEngineMapper sjukfallEngineMapper;
     private final PdlLogSickLeavesService pdlLogSickLeavesService;
@@ -62,12 +61,11 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     private static final Logger LOG = LoggerFactory.getLogger(GetActiveSickLeavesServiceImpl.class);
 
     @Autowired
-    public GetActiveSickLeavesServiceImpl(UserService userService, PuService puService, MonitoringLogService monitoringLogService,
+    public GetActiveSickLeavesServiceImpl(UserService userService, MonitoringLogService monitoringLogService,
         SjukfallEngineMapper sjukfallEngineMapper, PdlLogSickLeavesService pdlLogSickLeavesService,
         IntygstjanstRestIntegrationService intygstjanstRestIntegrationService, SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
         PatientIdEncryption patientIdEncryption) {
         this.userService = userService;
-        this.puService = puService;
         this.monitoringLogService = monitoringLogService;
         this.sjukfallEngineMapper = sjukfallEngineMapper;
         this.pdlLogSickLeavesService = pdlLogSickLeavesService;
@@ -89,11 +87,6 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         final var response = intygstjanstRestIntegrationService.getActiveSickLeaves(request);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.GET_ACTIVE_SICK_LEAVES, response.getContent().size()));
         final var convertedSickLeaves = convertSickLeaves(response.getContent(), certificateParameters);
-
-        LOG.debug("Add patient names and filter on protected person for sick leaves");
-        logFactory.setStartTimer(System.currentTimeMillis());
-        puService.enrichSjukfallWithPatientNamesAndFilterSekretess(convertedSickLeaves);
-        LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_PATIENT_INFORMATION, response.getContent().size()));
 
         logFactory.setStartTimer(System.currentTimeMillis());
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(convertedSickLeaves);

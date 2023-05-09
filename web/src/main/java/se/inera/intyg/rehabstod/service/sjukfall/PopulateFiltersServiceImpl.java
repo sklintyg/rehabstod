@@ -29,9 +29,9 @@ import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.UserService;
-import se.inera.intyg.rehabstod.web.controller.api.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 
@@ -65,7 +65,8 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         return new PopulateFiltersResponseDTO(
             convertDoctors(responseFromIT.getActiveDoctors()),
             diagnosKapitelService.getDiagnosKapitelList(),
-            convertDiagnosisChapters(responseFromIT.getDiagnosisChapters())
+            convertDiagnosisChapters(responseFromIT.getDiagnosisChapters()),
+            responseFromIT.getNbrOfSickLeaves()
         );
     }
 
