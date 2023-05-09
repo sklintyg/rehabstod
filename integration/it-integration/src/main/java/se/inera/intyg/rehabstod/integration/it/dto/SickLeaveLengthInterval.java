@@ -27,6 +27,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SickLeaveLengthInterval {
+
     Integer from;
     Integer to;
 }

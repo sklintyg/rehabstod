@@ -31,7 +31,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -62,6 +61,7 @@ import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
+import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
@@ -88,6 +88,8 @@ public class GetActiveSickLeavesServiceTest {
 
     @Mock
     SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+    @Mock
+    PatientIdEncryption patientIdEncryption;
 
     @InjectMocks
     GetActiveSickLeavesServiceImpl getActiveSickLeavesService;
@@ -95,6 +97,7 @@ public class GetActiveSickLeavesServiceTest {
     Vardenhet unit;
     SelectableVardenhet careGiverUnit;
     Vardgivare careGiver;
+    se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave;
 
     @BeforeEach
     void setup() {
@@ -111,9 +114,15 @@ public class GetActiveSickLeavesServiceTest {
         preferences.put(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT.getBackendKeyName(), DAYS);
         final var userPreferences = RehabstodUserPreferences.fromBackend(preferences);
         when(user.getPreferences()).thenReturn(userPreferences);
-
+        sickLeave = new se.inera.intyg.rehabstod.web.model.SjukfallEnhet();
+        final se.inera.intyg.rehabstod.web.model.Patient patient = new se.inera.intyg.rehabstod.web.model.Patient("19121212-1212",
+            "Arnold");
+        sickLeave.setPatient(patient);
         final var response = new SickLeavesResponseDTO(Collections.singletonList(new SjukfallEnhet()));
         when(intygstjanstRestIntegrationService.getActiveSickLeaves(any())).thenReturn(response);
+        when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
+            any(SjukfallEnhet.class), anyInt(), any(LocalDate.class)
+        )).thenReturn(sickLeave);
     }
 
     static RehabstodUser user;
@@ -176,15 +185,10 @@ public class GetActiveSickLeavesServiceTest {
     @Nested
     class TestPdlLogging {
 
-        se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave = new se.inera.intyg.rehabstod.web.model.SjukfallEnhet();
-
         @BeforeEach
         void setupPdl() {
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
-            when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
-                any(SjukfallEnhet.class), anyInt(), any(LocalDate.class)
-            )).thenReturn(sickLeave);
             when(user.getUrval()).thenReturn(Urval.ALL);
         }
 
@@ -200,14 +204,8 @@ public class GetActiveSickLeavesServiceTest {
     @Nested
     class TestPU {
 
-        se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave = new se.inera.intyg.rehabstod.web.model.SjukfallEnhet();
-
         @BeforeEach
         void setup() {
-            when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
-                any(SjukfallEnhet.class), anyInt(), any(LocalDate.class)
-            )).thenReturn(sickLeave);
-
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
             when(user.getUrval()).thenReturn(Urval.ALL);
@@ -224,14 +222,8 @@ public class GetActiveSickLeavesServiceTest {
     @Nested
     class TestUpdateHsaNames {
 
-        se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave = new se.inera.intyg.rehabstod.web.model.SjukfallEnhet();
-
         @BeforeEach
         void setup() {
-            when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
-                any(SjukfallEnhet.class), anyInt(), any(LocalDate.class)
-            )).thenReturn(sickLeave);
-
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
             when(user.getUrval()).thenReturn(Urval.ALL);
