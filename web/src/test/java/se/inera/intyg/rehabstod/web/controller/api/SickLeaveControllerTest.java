@@ -23,6 +23,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -55,10 +58,46 @@ public class SickLeaveControllerTest {
         verify(getActiveSickLeavesService).get(expectedRequest, true);
     }
 
-    @Test
-    void shouldCallPopulateFiltersService() {
-        sickLeaveController.populateFilters();
-        verify(populateFiltersService).get();
+    @Nested
+    class GetPopulatedFiltersService {
+
+        PopulateFiltersResponseDTO expectedResponse;
+
+        @BeforeEach
+        void setup() {
+            expectedResponse = new PopulateFiltersResponseDTO(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), 10);
+            when(populateFiltersService.get()).thenReturn(expectedResponse);
+        }
+
+        @Test
+        void shouldCallPopulateFiltersService() {
+            sickLeaveController.populateFilters();
+            verify(populateFiltersService).get();
+        }
+
+        @Test
+        void shouldTransformResponseDoctors() {
+            final var response = sickLeaveController.populateFilters();
+            assertEquals(expectedResponse.getActiveDoctors(), response.getActiveDoctors());
+        }
+
+        @Test
+        void shouldTransformResponseAllDiagnoses() {
+            final var response = sickLeaveController.populateFilters();
+            assertEquals(expectedResponse.getAllDiagnosisChapters(), response.getAllDiagnosisChapters());
+        }
+
+        @Test
+        void shouldTransformResponseEnabledDiagnoses() {
+            final var response = sickLeaveController.populateFilters();
+            assertEquals(expectedResponse.getEnabledDiagnosisChapters(), response.getEnabledDiagnosisChapters());
+        }
+
+        @Test
+        void shouldTransformResponseTotalNbrOfSickLeaves() {
+            final var response = sickLeaveController.populateFilters();
+            assertEquals(expectedResponse.getNbrOfSickLeaves(), response.getNbrOfSickLeaves());
+        }
     }
 
     @Test
