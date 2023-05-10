@@ -54,6 +54,7 @@ import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrati
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.UserService;
 
@@ -71,6 +72,9 @@ public class PopulateFiltersServiceTest {
 
     @Mock
     SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+
+    @Mock
+    PuService puService;
 
     @InjectMocks
     PopulateFiltersServiceImpl populateActiveFilters;
