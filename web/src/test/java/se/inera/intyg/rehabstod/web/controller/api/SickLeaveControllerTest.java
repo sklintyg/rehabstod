@@ -18,7 +18,9 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetSickLeaveSummaryService;
 import se.inera.intyg.rehabstod.service.sjukfall.PopulateFiltersService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
@@ -56,6 +59,24 @@ public class SickLeaveControllerTest {
     void shouldCallPopulateFiltersService() {
         sickLeaveController.populateFilters();
         verify(populateFiltersService).get();
+    }
+
+    @Test
+    void shouldTransformPopulateFiltersResponse() {
+        final var expectedResponse = new PopulateFiltersResponseDTO(
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                10
+        );
+        when(populateFiltersService.get()).thenReturn(expectedResponse);
+
+        final var actualResponse = sickLeaveController.populateFilters();
+
+        assertEquals(expectedResponse.getActiveDoctors(), actualResponse.getActiveDoctors());
+        assertEquals(expectedResponse.getAllDiagnosisChapters(), actualResponse.getAllDiagnosisChapters());
+        assertEquals(expectedResponse.getEnabledDiagnosisChapters(), actualResponse.getEnabledDiagnosisChapters());
+        assertEquals(expectedResponse.getNbrOfSickLeaves(), actualResponse.getNbrOfSickLeaves());
     }
 
     @Test
