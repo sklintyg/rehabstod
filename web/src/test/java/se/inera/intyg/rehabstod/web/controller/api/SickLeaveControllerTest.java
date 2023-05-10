@@ -65,7 +65,13 @@ public class SickLeaveControllerTest {
 
         @BeforeEach
         void setup() {
-            expectedResponse = new PopulateFiltersResponseDTO(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), 10);
+            expectedResponse = new PopulateFiltersResponseDTO(
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    10
+            );
+
             when(populateFiltersService.get()).thenReturn(expectedResponse);
         }
 
