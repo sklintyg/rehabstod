@@ -29,5 +29,5 @@ public class PopulateFiltersRequestDTO {
     private String careUnitId;
     private String doctorId;
     private int maxDaysSinceSickLeaveCompleted;
-    private boolean filterProtectedPerson;
+    private String protectedPersonFilterId;
 }

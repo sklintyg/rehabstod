@@ -123,7 +123,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         request.setDiagnosisChapters(convertDiagnosisChapters(filterRequest.getDiagnosisChapters()));
         request.setFromPatientAge(filterRequest.getFromPatientAge());
         request.setToPatientAge(filterRequest.getToPatientAge());
-        request.setFilterOnProtectedPerson(puService.shouldFilterSickLeavesOnProtectedPerson(user));
+        request.setProtectedPersonFilterId(puService.shouldFilterSickLeavesOnProtectedPerson(user) ? null : user.getHsaId());
         return request;
     }
 

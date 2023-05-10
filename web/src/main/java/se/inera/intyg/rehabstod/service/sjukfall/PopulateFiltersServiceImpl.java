@@ -107,7 +107,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         request.setMaxDaysSinceSickLeaveCompleted(ControllerUtil.getMaxDagarSedanSjukfallAvslut(user));
         request.setUnitId(unitId);
         request.setCareUnitId(careUnitId);
-        request.setFilterProtectedPerson(puService.shouldFilterSickLeavesOnProtectedPerson(user));
+        request.setProtectedPersonFilterId(puService.shouldFilterSickLeavesOnProtectedPerson(user) ? null : user.getHsaId());
         if (user.getUrval() == Urval.ISSUED_BY_ME) {
             request.setDoctorId(user.getHsaId());
         }

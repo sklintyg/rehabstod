@@ -135,7 +135,6 @@ public class PopulateFiltersServiceTest {
 
     @Nested
     class TestITRequest {
-
         @Nested
         class CareUnit {
 
@@ -177,6 +176,29 @@ public class PopulateFiltersServiceTest {
 
                 verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
                 assertNull(captor.getValue().getDoctorId());
+            }
+
+            @Test
+            void shouldCreateRequestWithProtectedPersonFilterIdNull() {
+                when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(true);
+
+                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                populateActiveFilters.get();
+
+                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                assertNull(captor.getValue().getProtectedPersonFilterId());
+            }
+
+            @Test
+            void shouldCreateRequestWithProtectedPersonFilterIdAsHsaId() {
+                when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(false);
+                when(user.getHsaId()).thenReturn(HSA_ID);
+
+                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                populateActiveFilters.get();
+
+                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                assertEquals(HSA_ID, captor.getValue().getProtectedPersonFilterId());
             }
         }
 

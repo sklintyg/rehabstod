@@ -344,7 +344,7 @@ public class GetActiveSickLeavesServiceTest {
         }
 
         @Test
-        void shouldCreateRequestWithFilterOnProtectedPersonTrue() {
+        void shouldCreateRequestWithProtectedPersonFilterIdNull() {
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
             when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
@@ -354,11 +354,11 @@ public class GetActiveSickLeavesServiceTest {
             getActiveSickLeavesService.get(EXPECTED_REQUEST_DOCTOR, true);
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            assertTrue(captor.getValue().isFilterOnProtectedPerson());
+            assertNull(captor.getValue().getProtectedPersonFilterId());
         }
 
         @Test
-        void shouldCreateRequestWithFilterOnProtectedPersonFalse() {
+        void shouldCreateRequestWithProtectedPersonFilterIdAsHsaId() {
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
             when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
@@ -368,7 +368,7 @@ public class GetActiveSickLeavesServiceTest {
             getActiveSickLeavesService.get(EXPECTED_REQUEST_DOCTOR, true);
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            assertFalse(captor.getValue().isFilterOnProtectedPerson());
+            assertEquals(HSA_ID, captor.getValue().getProtectedPersonFilterId());
         }
 
         @Nested
