@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
+import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
@@ -121,4 +122,6 @@ public interface IntygstjanstRestIntegrationService {
     PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request);
 
     String getDefaultTestData();
+
+    String createSickleave(CreateSickLeaveRequestDTO createSickLeaveRequestDTO);
 }

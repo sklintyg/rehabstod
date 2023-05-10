@@ -19,9 +19,12 @@
 
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.testability.TestabilityService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.TestabilityResponseDTO;
 
@@ -38,5 +41,10 @@ public class TestabilityController {
     @RequestMapping(value = "/createDefault", method = RequestMethod.POST)
     public TestabilityResponseDTO createDefaultTestData() {
         return new TestabilityResponseDTO(testabilityService.getDefaultTestData());
+    }
+
+    @RequestMapping(value = "/createSickLeave", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public TestabilityResponseDTO createSickLeave(@RequestBody CreateSickLeaveRequestDTO request) {
+        return new TestabilityResponseDTO(testabilityService.createSickleave(request));
     }
 }

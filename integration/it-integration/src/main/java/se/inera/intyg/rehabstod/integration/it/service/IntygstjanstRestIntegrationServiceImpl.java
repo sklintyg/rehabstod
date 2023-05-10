@@ -32,6 +32,7 @@ import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.TypedCertificateRequest;
+import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
@@ -125,6 +126,13 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         LOGGER.debug("Getting default test data from Intygstjansten");
 
         return restTemplate.postForObject(url, null, String.class);
+    }
+
+    @Override
+    public String createSickleave(CreateSickLeaveRequestDTO request) {
+        final String url = intygstjanstUrl + "/inera-certificate/resources/testability/createDefault";
+        LOGGER.debug("Creating sick leave test data");
+        return restTemplate.postForObject(url, request, String.class);
     }
 
     @Override
