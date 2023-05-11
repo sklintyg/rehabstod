@@ -100,9 +100,15 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
                         && (request.getSickLeaveLengthIntervals().size() == 0
                             || isSickLeaveLengthIncluded(request.getSickLeaveLengthIntervals(), sickLeave.getDagar()))
                         && filterOnPatientAge(request, sickLeave.getPatient().getId())
+                        && filterOnSickLeaveEndDate(request, sickLeave.getSlut())
                 )
                 .collect(Collectors.toList())
         );
+    }
+
+    private boolean filterOnSickLeaveEndDate(SickLeavesRequestDTO request, LocalDate endDate) {
+        return (request.getFromSickLeaveEndDate() == null || request.getFromSickLeaveEndDate().isBefore(endDate))
+                && (request.getToSickLeaveEndDate() == null || request.getToSickLeaveEndDate().isAfter(endDate));
     }
 
     private boolean filterOnPatientAge(SickLeavesRequestDTO request, String patientId) {

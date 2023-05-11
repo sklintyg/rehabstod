@@ -139,6 +139,8 @@ public class GetActiveSickLeavesServiceTest {
     static final int NUMBER_TO = 1;
     static final int NUMBER_FROM = 2;
     static final String DIAGNOSIS_CHAPTER_NAME = "Name";
+    static final LocalDate FROM_END_DATE = LocalDate.now();
+    static final LocalDate TO_END_DATE = FROM_END_DATE.plusDays(10);
 
     static final DiagnosKategori DIAGNOSIS_CHAPTER_TO = new DiagnosKategori(LETTER_TO, NUMBER_TO);
     static final DiagnosKategori DIAGNOSIS_CHAPTER_FROM = new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
@@ -150,10 +152,20 @@ public class GetActiveSickLeavesServiceTest {
             Collections.singletonList(INTERVALS_FILTER),
             Collections.singletonList(CHOSEN_DIAGNOSIS_CHAPTER),
             FROM_PATIENT_AGE,
-            TO_PATIENT_AGE
+            TO_PATIENT_AGE,
+            FROM_END_DATE,
+            TO_END_DATE
         );
     static final SickLeavesFilterRequestDTO EXPECTED_REQUEST_DOCTOR =
-        new SickLeavesFilterRequestDTO(new ArrayList<>(), Collections.singletonList(INTERVALS_FILTER), Collections.emptyList(), null, null);
+        new SickLeavesFilterRequestDTO(
+                new ArrayList<>(),
+                Collections.singletonList(INTERVALS_FILTER),
+                Collections.emptyList(),
+                null,
+                null,
+                FROM_END_DATE,
+                TO_END_DATE
+        );
 
 
     @Nested
@@ -267,6 +279,8 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(INTERVALS_FILTER.getFrom(), captor.getValue().getSickLeaveLengthIntervals().get(0).getFrom());
             assertEquals(FROM_PATIENT_AGE, captor.getValue().getFromPatientAge());
             assertEquals(TO_PATIENT_AGE, captor.getValue().getToPatientAge());
+            assertEquals(FROM_END_DATE, captor.getValue().getFromSickLeaveEndDate());
+            assertEquals(TO_END_DATE, captor.getValue().getToSickLeaveEndDate());
         }
 
         @Test
@@ -287,6 +301,8 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(INTERVALS_FILTER.getFrom(), captor.getValue().getSickLeaveLengthIntervals().get(0).getFrom());
             assertEquals(FROM_PATIENT_AGE, captor.getValue().getFromPatientAge());
             assertEquals(TO_PATIENT_AGE, captor.getValue().getToPatientAge());
+            assertEquals(FROM_END_DATE, captor.getValue().getFromSickLeaveEndDate());
+            assertEquals(TO_END_DATE, captor.getValue().getToSickLeaveEndDate());
         }
 
         @Test
@@ -302,13 +318,39 @@ public class GetActiveSickLeavesServiceTest {
                     Collections.singletonList(new SickLeaveLengthInterval(null, null)),
                     Collections.singletonList(CHOSEN_DIAGNOSIS_CHAPTER),
                     null,
-                    null
+                    null,
+                    FROM_END_DATE,
+                    TO_END_DATE
                 ), true
             );
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
             assertNull(captor.getValue().getSickLeaveLengthIntervals().get(0).getTo());
             assertNull(captor.getValue().getSickLeaveLengthIntervals().get(0).getFrom());
+        }
+
+        @Test
+        void shouldCreateRequestWithNullSickLeaveEndDateFilter() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ALL);
+
+            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+            getActiveSickLeavesService.get(
+                    new SickLeavesFilterRequestDTO(
+                            Collections.singletonList(DOCTOR_FILTER),
+                            Collections.singletonList(new SickLeaveLengthInterval(null, null)),
+                            Collections.singletonList(CHOSEN_DIAGNOSIS_CHAPTER),
+                            null,
+                            null,
+                            null,
+                            null
+                    ), true
+            );
+
+            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+            assertNull(captor.getValue().getFromSickLeaveEndDate());
+            assertNull(captor.getValue().getToSickLeaveEndDate());
         }
 
         @Test
