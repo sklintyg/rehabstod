@@ -22,6 +22,7 @@ import java.util.List;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.integration.pu.model.PersonSvar;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
@@ -41,6 +42,8 @@ public interface PuService {
      * Removes intyg from other careUnits belonging to the patient with sekretessmarkering.
      */
     List<IntygData> filterSekretessForPatientHistory(List<IntygData> intygsData);
+
+    boolean shouldFilterSickLeavesOnProtectedPerson(RehabstodUser user);
 
     /**
      * Filters out sjukfall if the patient has sekretessmarkering and the user doesn't have the requisite privilege.

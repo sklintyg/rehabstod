@@ -190,6 +190,12 @@ public class PuServiceImpl implements PuService {
     }
 
     @Override
+    public boolean shouldFilterSickLeavesOnProtectedPerson(RehabstodUser user) {
+        return !(user.isLakare() && user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE))
+                || (user.isLakare() && !user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
+    }
+
+    @Override
     public void enrichSjukfallWithPatientNamesAndFilterSekretess(List<SjukfallEnhet> sjukfallList) {
         RehabstodUser user = userService.getUser();
         Map<Personnummer, PersonSvar> personSvarMap = fetchPersons(sjukfallList);

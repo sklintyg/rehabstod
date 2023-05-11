@@ -51,29 +51,30 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesService {
 
     private final UserService userService;
-    private final PuService puService;
     private final MonitoringLogService monitoringLogService;
     private final SjukfallEngineMapper sjukfallEngineMapper;
     private final PdlLogSickLeavesService pdlLogSickLeavesService;
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
     private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
     private final PatientIdEncryption patientIdEncryption;
+    private final PuService puService;
 
     private static final Logger LOG = LoggerFactory.getLogger(GetActiveSickLeavesServiceImpl.class);
 
     @Autowired
-    public GetActiveSickLeavesServiceImpl(UserService userService, PuService puService, MonitoringLogService monitoringLogService,
-        SjukfallEngineMapper sjukfallEngineMapper, PdlLogSickLeavesService pdlLogSickLeavesService,
-        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService, SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
-        PatientIdEncryption patientIdEncryption) {
+    public GetActiveSickLeavesServiceImpl(UserService userService, MonitoringLogService monitoringLogService,
+                                          SjukfallEngineMapper sjukfallEngineMapper, PdlLogSickLeavesService pdlLogSickLeavesService,
+                                          IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+                                          SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
+                                          PatientIdEncryption patientIdEncryption, PuService puService) {
         this.userService = userService;
-        this.puService = puService;
         this.monitoringLogService = monitoringLogService;
         this.sjukfallEngineMapper = sjukfallEngineMapper;
         this.pdlLogSickLeavesService = pdlLogSickLeavesService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
         this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
         this.patientIdEncryption = patientIdEncryption;
+        this.puService = puService;
     }
 
     @Override
@@ -89,11 +90,6 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         final var response = intygstjanstRestIntegrationService.getActiveSickLeaves(request);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.GET_ACTIVE_SICK_LEAVES, response.getContent().size()));
         final var convertedSickLeaves = convertSickLeaves(response.getContent(), certificateParameters);
-
-        LOG.debug("Add patient names and filter on protected person for sick leaves");
-        logFactory.setStartTimer(System.currentTimeMillis());
-        puService.enrichSjukfallWithPatientNamesAndFilterSekretess(convertedSickLeaves);
-        LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_PATIENT_INFORMATION, response.getContent().size()));
 
         logFactory.setStartTimer(System.currentTimeMillis());
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(convertedSickLeaves);
@@ -127,6 +123,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         request.setDiagnosisChapters(convertDiagnosisChapters(filterRequest.getDiagnosisChapters()));
         request.setFromPatientAge(filterRequest.getFromPatientAge());
         request.setToPatientAge(filterRequest.getToPatientAge());
+        request.setProtectedPersonFilterId(puService.shouldFilterSickLeavesOnProtectedPerson(user) ? null : user.getHsaId());
         return request;
     }
 

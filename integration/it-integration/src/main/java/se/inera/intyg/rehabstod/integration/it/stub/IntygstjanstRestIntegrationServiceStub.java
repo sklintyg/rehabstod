@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.integration.it.stub;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -108,11 +109,12 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
         if (request.getFromPatientAge() == null || request.getToPatientAge() == null) {
             return true;
         }
-        final var patientAge = LocalDate.of(
+        final var patientBirthDay = LocalDate.of(
                 Integer.parseInt(patientId.substring(YEAR_SEPARATOR[0], YEAR_SEPARATOR[1])),
                 Integer.parseInt(patientId.substring(MONTH_SEPARATOR[0], MONTH_SEPARATOR[1])),
-                Integer.parseInt(patientId.substring(DAY_SEPARATOR[0], DAY_SEPARATOR[1])))
-            .getYear();
+                Integer.parseInt(patientId.substring(DAY_SEPARATOR[0], DAY_SEPARATOR[1])));
+
+        final var patientAge = Period.between(patientBirthDay, LocalDate.now()).getYears();
         return request.getFromPatientAge() <= patientAge && request.getToPatientAge() >= patientAge;
     }
 
@@ -120,8 +122,7 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     public PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request) {
         final var sickLeaves = rsTestIntygStub.getActiveSickLeaveData();
         final var diagnosisChapters = rsTestIntygStub.getDiagnosisChapterList();
-        return new PopulateFiltersResponseDTO(
-            getDoctorsFromSickLeaves(sickLeaves), diagnosisChapters);
+        return new PopulateFiltersResponseDTO(getDoctorsFromSickLeaves(sickLeaves), diagnosisChapters, sickLeaves.size());
     }
 
     @Override

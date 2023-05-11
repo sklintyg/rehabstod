@@ -53,7 +53,13 @@ public class SickLeaveController {
 
     @RequestMapping(value = "/filters", method = RequestMethod.GET)
     public PopulateFiltersResponseDTO populateFilters() {
-        return populateFiltersService.get();
+        final var response = populateFiltersService.get();
+        return new PopulateFiltersResponseDTO(
+                response.getActiveDoctors(),
+                response.getAllDiagnosisChapters(),
+                response.getEnabledDiagnosisChapters(),
+                response.getNbrOfSickLeaves()
+        );
     }
 
     @RequestMapping(value = "/summary", method = RequestMethod.GET)

@@ -19,7 +19,7 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import se.inera.intyg.rehabstod.web.controller.api.dto.PopulateFiltersResponseDTO;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateFiltersResponseDTO;
 
 public interface PopulateFiltersService {
     PopulateFiltersResponseDTO get();

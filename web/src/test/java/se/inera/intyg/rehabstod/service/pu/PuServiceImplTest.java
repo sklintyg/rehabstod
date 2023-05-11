@@ -18,9 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.pu;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -63,8 +62,6 @@ public class PuServiceImplTest {
     private static final String VARDENHET_1 = "vg-1-ve-1";
     private static final String VARDENHET_2 = "vg-1-ve-2";
     private static final String VARDENHET_3 = "vg-2-ve-2";
-    private static final String ENHET_1 = "vg-1-ve-1-e-1";
-    private static final String ENHET_2 = "vg-1-ve-1-e-2";
     private static final String LAKARE1_HSA_ID = "lakare-1";
     private static final String LAKARE2_HSA_ID = "lakare-2";
     private static final String LAKARE1_NAMN = "Läkare Läkarsson";
@@ -86,6 +83,26 @@ public class PuServiceImplTest {
         when(puService.getPersons(Arrays.asList(createPnr(TOLVANSSON_PNR)))).thenReturn(
             buildPersonMap(buildPersonSvar(TOLVANSSON_PNR, false, false)));
 
+    }
+
+    @Test
+    public void testShouldFilterOnProtectedPersonIfVardadmin() {
+        when(userService.getUser()).thenReturn(buildVardadmin());
+        assertTrue(testee.shouldFilterSickLeavesOnProtectedPerson(userService.getUser()));
+    }
+
+    @Test
+    public void testShouldNotFilterOnProtectedPersonIfLakare() {
+        final var user = buildLakare(VARDENHET_1);
+        when(userService.getUser()).thenReturn(user);
+        assertFalse(testee.shouldFilterSickLeavesOnProtectedPerson(userService.getUser()));
+    }
+
+    @Test
+    public void testShouldFilterOnProtectedPersonIfLakareAsRehabkoordinator() {
+        final var user = buildLakareAsRehabkoordinator(VARDENHET_1);
+        when(userService.getUser()).thenReturn(user);
+        assertTrue(testee.shouldFilterSickLeavesOnProtectedPerson(userService.getUser()));
     }
 
     @Test
@@ -518,8 +535,8 @@ public class PuServiceImplTest {
         Vardenhet valdVardenhet = new Vardenhet(enhetHsaId, "namnet");
 
         RehabstodUser user = mock(RehabstodUser.class);
-        Map<String, Role> roleMap = mock(Map.class);
-        when(roleMap.containsKey(eq("LAKARE"))).thenReturn(true);
+        Map<String, Role> roleMap = new HashMap<>();
+        roleMap.put("LAKARE", new Role());
 
         when(user.isLakare()).thenReturn(true);
         when(user.getRoles()).thenReturn(roleMap);
@@ -530,8 +547,7 @@ public class PuServiceImplTest {
         Vardenhet valdVardenhet = new Vardenhet(enhetHsaId, "namnet");
 
         RehabstodUser user = mock(RehabstodUser.class);
-        Map<String, Role> roleMap = mock(Map.class);
-        when(roleMap.containsKey(eq("LAKARE"))).thenReturn(false);
+        Map<String, Role> roleMap = new HashMap<>();
 
         when(user.isLakare()).thenReturn(true);
         when(user.getRoles()).thenReturn(roleMap);

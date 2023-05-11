@@ -54,6 +54,7 @@ import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrati
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.UserService;
 
@@ -72,6 +73,9 @@ public class PopulateFiltersServiceTest {
     @Mock
     SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
+    @Mock
+    PuService puService;
+
     @InjectMocks
     PopulateFiltersServiceImpl populateActiveFilters;
 
@@ -87,6 +91,7 @@ public class PopulateFiltersServiceTest {
     static final int NUMBER_FROM = 2;
     static final String DIAGNOSIS_CHAPTER_NAME = "Name";
     static final PopulateFiltersRequestDTO expectedRequest = new PopulateFiltersRequestDTO();
+    static final int TOTAL_NUMBER_OF_SICK_LEAVES = 10;
 
     RehabstodUser user;
     Vardenhet unit;
@@ -114,7 +119,9 @@ public class PopulateFiltersServiceTest {
         when(user.getPreferences()).thenReturn(userPreferences);
 
         final var response = new PopulateFiltersResponseDTO(
-            Collections.singletonList(Lakare.create(HSA_ID, HSA_ID)), Collections.singletonList(enabledDiagnosisChapter)
+            Collections.singletonList(Lakare.create(HSA_ID, HSA_ID)),
+            Collections.singletonList(enabledDiagnosisChapter),
+            TOTAL_NUMBER_OF_SICK_LEAVES
         );
         when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(response);
 
@@ -128,7 +135,6 @@ public class PopulateFiltersServiceTest {
 
     @Nested
     class TestITRequest {
-
         @Nested
         class CareUnit {
 
@@ -170,6 +176,29 @@ public class PopulateFiltersServiceTest {
 
                 verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
                 assertNull(captor.getValue().getDoctorId());
+            }
+
+            @Test
+            void shouldCreateRequestWithProtectedPersonFilterIdNull() {
+                when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(true);
+
+                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                populateActiveFilters.get();
+
+                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                assertNull(captor.getValue().getProtectedPersonFilterId());
+            }
+
+            @Test
+            void shouldCreateRequestWithProtectedPersonFilterIdAsHsaId() {
+                when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(false);
+                when(user.getHsaId()).thenReturn(HSA_ID);
+
+                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                populateActiveFilters.get();
+
+                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                assertEquals(HSA_ID, captor.getValue().getProtectedPersonFilterId());
             }
         }
 
@@ -230,6 +259,12 @@ public class PopulateFiltersServiceTest {
         void shouldConvertAllDiagnosisChapters() {
             final var response = populateActiveFilters.get();
             assertEquals(allDiagnosisChapters, response.getAllDiagnosisChapters());
+        }
+
+        @Test
+        void shouldConvertNbrOfSickLeaves() {
+            final var response = populateActiveFilters.get();
+            assertEquals(TOTAL_NUMBER_OF_SICK_LEAVES, response.getNbrOfSickLeaves());
         }
 
         @Nested

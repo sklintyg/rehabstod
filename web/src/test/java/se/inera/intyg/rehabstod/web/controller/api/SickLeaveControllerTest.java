@@ -18,9 +18,14 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Collections;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,6 +34,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetSickLeaveSummaryService;
 import se.inera.intyg.rehabstod.service.sjukfall.PopulateFiltersService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,10 +58,70 @@ public class SickLeaveControllerTest {
         verify(getActiveSickLeavesService).get(expectedRequest, true);
     }
 
+    @Nested
+    class GetPopulatedFiltersService {
+
+        PopulateFiltersResponseDTO expectedResponse;
+
+        @BeforeEach
+        void setup() {
+            expectedResponse = new PopulateFiltersResponseDTO(
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    10
+            );
+
+            when(populateFiltersService.get()).thenReturn(expectedResponse);
+        }
+
+        @Test
+        void shouldCallPopulateFiltersService() {
+            sickLeaveController.populateFilters();
+            verify(populateFiltersService).get();
+        }
+
+        @Test
+        void shouldTransformResponseDoctors() {
+            final var response = sickLeaveController.populateFilters();
+            assertEquals(expectedResponse.getActiveDoctors(), response.getActiveDoctors());
+        }
+
+        @Test
+        void shouldTransformResponseAllDiagnoses() {
+            final var response = sickLeaveController.populateFilters();
+            assertEquals(expectedResponse.getAllDiagnosisChapters(), response.getAllDiagnosisChapters());
+        }
+
+        @Test
+        void shouldTransformResponseEnabledDiagnoses() {
+            final var response = sickLeaveController.populateFilters();
+            assertEquals(expectedResponse.getEnabledDiagnosisChapters(), response.getEnabledDiagnosisChapters());
+        }
+
+        @Test
+        void shouldTransformResponseTotalNbrOfSickLeaves() {
+            final var response = sickLeaveController.populateFilters();
+            assertEquals(expectedResponse.getNbrOfSickLeaves(), response.getNbrOfSickLeaves());
+        }
+    }
+
     @Test
-    void shouldCallPopulateFiltersService() {
-        sickLeaveController.populateFilters();
-        verify(populateFiltersService).get();
+    void shouldTransformPopulateFiltersResponse() {
+        final var expectedResponse = new PopulateFiltersResponseDTO(
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                10
+        );
+        when(populateFiltersService.get()).thenReturn(expectedResponse);
+
+        final var actualResponse = sickLeaveController.populateFilters();
+
+        assertEquals(expectedResponse.getActiveDoctors(), actualResponse.getActiveDoctors());
+        assertEquals(expectedResponse.getAllDiagnosisChapters(), actualResponse.getAllDiagnosisChapters());
+        assertEquals(expectedResponse.getEnabledDiagnosisChapters(), actualResponse.getEnabledDiagnosisChapters());
+        assertEquals(expectedResponse.getNbrOfSickLeaves(), actualResponse.getNbrOfSickLeaves());
     }
 
     @Test
