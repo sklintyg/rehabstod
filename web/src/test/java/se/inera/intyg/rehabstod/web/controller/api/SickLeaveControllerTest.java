@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +54,7 @@ public class SickLeaveControllerTest {
     @Test
     void shouldCallGetActiveSickLeavesService() {
         final var expectedRequest =
-            new SickLeavesFilterRequestDTO(Collections.singletonList("doctorId"), Collections.emptyList(), Collections.emptyList(), 1, 150);
+            new SickLeavesFilterRequestDTO(Collections.singletonList("doctorId"), Collections.emptyList(), Collections.emptyList(), 1, 150, LocalDate.now(), LocalDate.now());
         sickLeaveController.getSickLeavesForUnit(expectedRequest);
         verify(getActiveSickLeavesService).get(expectedRequest, true);
     }

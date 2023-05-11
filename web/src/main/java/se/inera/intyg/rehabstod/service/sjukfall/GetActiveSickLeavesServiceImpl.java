@@ -124,6 +124,8 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         request.setFromPatientAge(filterRequest.getFromPatientAge());
         request.setToPatientAge(filterRequest.getToPatientAge());
         request.setProtectedPersonFilterId(puService.shouldFilterSickLeavesOnProtectedPerson(user) ? null : user.getHsaId());
+        request.setFromSickLeaveEndDate(filterRequest.getFromSickLeaveEndDate());
+        request.setToSickLeaveEndDate(filterRequest.getToSickLeaveEndDate());
         return request;
     }
 
