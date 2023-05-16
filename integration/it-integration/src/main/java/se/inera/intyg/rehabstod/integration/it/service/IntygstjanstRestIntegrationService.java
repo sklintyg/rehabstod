@@ -23,10 +23,12 @@ import java.util.List;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
 
 
 /**
@@ -123,5 +125,7 @@ public interface IntygstjanstRestIntegrationService {
 
     String getDefaultTestData();
 
-    String createSickleave(CreateSickLeaveRequestDTO createSickLeaveRequestDTO);
+    CreateSickLeaveResponseDTO createSickleave(CreateSickLeaveRequestDTO createSickLeaveRequestDTO);
+
+    TestDataOptionsDTO getTestDataOptions();
 }

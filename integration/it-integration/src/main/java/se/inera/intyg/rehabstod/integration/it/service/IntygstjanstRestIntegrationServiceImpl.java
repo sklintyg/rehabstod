@@ -33,10 +33,12 @@ import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.TypedCertificateRequest;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
 
 @Profile("!rhs-it-stub")
 @Service
@@ -129,10 +131,17 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     }
 
     @Override
-    public String createSickleave(CreateSickLeaveRequestDTO request) {
-        final String url = intygstjanstUrl + "/inera-certificate/resources/testability/createDefault";
+    public CreateSickLeaveResponseDTO createSickleave(CreateSickLeaveRequestDTO request) {
+        final String url = intygstjanstUrl + "/inera-certificate/resources/testability/createSickLeave";
         LOGGER.debug("Creating sick leave test data");
-        return restTemplate.postForObject(url, request, String.class);
+        return restTemplate.postForObject(url, request, CreateSickLeaveResponseDTO.class);
+    }
+
+    @Override
+    public TestDataOptionsDTO getTestDataOptions() {
+        final String url = intygstjanstUrl + "/inera-certificate/resources/testability/testDataOptions";
+        LOGGER.debug("Getting sick leave test data");
+        return restTemplate.getForObject(url, TestDataOptionsDTO.class);
     }
 
     @Override

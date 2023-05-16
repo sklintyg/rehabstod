@@ -17,16 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall.testability;
+package se.inera.intyg.rehabstod.integration.it.testability.model;
 
-import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public interface TestabilityService {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class WorkCapacity {
 
-    String getDefaultTestData();
-
-    String createSickleave(CreateSickLeaveRequestDTO request);
-
-    TestDataOptionsDTO getTestDataOptions();
+    private String code;
+    private String description;
 }

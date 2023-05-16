@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.service.sjukfall.testability;
 
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 
 @Service
@@ -39,6 +40,11 @@ public class TestabilityServiceImpl implements TestabilityService {
 
     @Override
     public String createSickleave(CreateSickLeaveRequestDTO request) {
-        return intygstjanstRestIntegrationService.createSickleave(request);
+        return intygstjanstRestIntegrationService.createSickleave(request).getCertificateId();
+    }
+
+    @Override
+    public TestDataOptionsDTO getTestDataOptions() {
+        return intygstjanstRestIntegrationService.getTestDataOptions();
     }
 }

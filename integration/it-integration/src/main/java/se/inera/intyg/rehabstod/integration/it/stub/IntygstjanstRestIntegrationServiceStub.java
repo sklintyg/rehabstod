@@ -34,7 +34,14 @@ import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
-import se.inera.intyg.rehabstod.integration.it.dto.*;
+import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveResponseDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeaveLengthInterval;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 
 @Profile("rhs-it-stub")
@@ -97,7 +104,7 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
                         || request.getDoctorIds().contains(sickLeave.getLakare().getId()))
                         && isDiagnosisCodeIncluded(request.getDiagnosisChapters(), sickLeave.getDiagnosKod().getCleanedCode())
                         && (request.getSickLeaveLengthIntervals().size() == 0
-                            || isSickLeaveLengthIncluded(request.getSickLeaveLengthIntervals(), sickLeave.getDagar()))
+                        || isSickLeaveLengthIncluded(request.getSickLeaveLengthIntervals(), sickLeave.getDagar()))
                         && filterOnPatientAge(request, sickLeave.getPatient().getId())
                 )
                 .collect(Collectors.toList())
@@ -129,6 +136,16 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
         return DEFAULT_TEST_DATA_MESSAGE;
     }
 
+    @Override
+    public CreateSickLeaveResponseDTO createSickleave(CreateSickLeaveRequestDTO createSickLeaveRequestDTO) {
+        return null;
+    }
+
+    @Override
+    public TestDataOptionsDTO getTestDataOptions() {
+        return null;
+    }
+
     private boolean isDiagnosisCodeIncluded(List<DiagnosKapitel> diagnosisChapters, String diagnosisCode) {
         return diagnosisChapters.size() == 0
             || diagnosisChapters
@@ -143,8 +160,8 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
 
     private boolean isSickLeaveLengthIncluded(List<SickLeaveLengthInterval> intervals, int days) {
         return intervals
-                .stream()
-                .anyMatch((interval) -> interval.getFrom() <= days && interval.getTo() >= days);
+            .stream()
+            .anyMatch((interval) -> interval.getFrom() <= days && interval.getTo() >= days);
     }
 
     private static List<Lakare> getDoctorsFromSickLeaves(List<SjukfallEnhet> sickLeaves) {
