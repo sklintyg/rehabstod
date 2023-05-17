@@ -43,9 +43,7 @@ public class TestabilityServiceImpl implements TestabilityService {
     @Override
     public String getDefaultTestData() {
         final String url = intygstjanstUrl + "/inera-certificate/resources/testability/createDefault";
-
         LOGGER.debug("Getting default test data from Intygstjansten");
-
         return restTemplate.postForObject(url, null, String.class);
     }
 
