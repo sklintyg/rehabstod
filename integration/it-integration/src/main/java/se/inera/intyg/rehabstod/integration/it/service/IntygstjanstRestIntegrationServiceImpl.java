@@ -119,15 +119,6 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     }
 
     @Override
-    public String getDefaultTestData() {
-        final String url = intygstjanstUrl + "/inera-certificate/resources/testability/createDefault";
-
-        LOGGER.debug("Getting default test data from Intygstjansten");
-
-        return restTemplate.postForObject(url, null, String.class);
-    }
-
-    @Override
     public PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request) {
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/sickleave/filters";
 
