@@ -22,7 +22,6 @@ package se.inera.intyg.rehabstod.service.sjukfall.testability;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
@@ -30,7 +29,6 @@ import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
 
 @Service
-@Profile("dev,testability-api")
 public class TestabilityServiceImpl implements TestabilityService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestabilityServiceImpl.class);
