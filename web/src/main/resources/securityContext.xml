@@ -127,6 +127,10 @@
     <security:http security="none" pattern="/api/test/**"/>
     <security:http security="none" pattern="/api/stub/**"/>
     <security:http security="none" pattern="/api/testability/**"/>
+    <bean id="testabilityService" class="se.inera.intyg.rehabstod.service.sjukfall.testability.TestabilityServiceImpl">
+      <constructor-arg index="0" ref="restTemplate"/>
+    </bean>
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate"/>
   </beans>
 
   <!-- =============================================================== -->
