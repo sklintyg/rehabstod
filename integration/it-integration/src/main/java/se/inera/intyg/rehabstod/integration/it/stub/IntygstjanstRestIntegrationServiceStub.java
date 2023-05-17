@@ -34,14 +34,11 @@ import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
-import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeaveLengthInterval;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 
 @Profile("rhs-it-stub")
@@ -129,21 +126,6 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
         final var diagnosisChapters = rsTestIntygStub.getDiagnosisChapterList();
         return new PopulateFiltersResponseDTO(
             getDoctorsFromSickLeaves(sickLeaves), diagnosisChapters);
-    }
-
-    @Override
-    public String getDefaultTestData() {
-        return DEFAULT_TEST_DATA_MESSAGE;
-    }
-
-    @Override
-    public CreateSickLeaveResponseDTO createSickleave(CreateSickLeaveRequestDTO createSickLeaveRequestDTO) {
-        return null;
-    }
-
-    @Override
-    public TestDataOptionsDTO getTestDataOptions() {
-        return null;
     }
 
     private boolean isDiagnosisCodeIncluded(List<DiagnosKapitel> diagnosisChapters, String diagnosisCode) {

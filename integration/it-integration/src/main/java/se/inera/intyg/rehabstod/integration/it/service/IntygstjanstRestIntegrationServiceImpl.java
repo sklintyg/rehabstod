@@ -32,13 +32,10 @@ import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.TypedCertificateRequest;
-import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
 
 @Profile("!rhs-it-stub")
 @Service
@@ -119,29 +116,6 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
         LOGGER.debug("Getting active sick leaves from Intygstjansten");
 
         return restTemplate.postForObject(url, request, SickLeavesResponseDTO.class);
-    }
-
-    @Override
-    public String getDefaultTestData() {
-        final String url = intygstjanstUrl + "/inera-certificate/resources/testability/createDefault";
-
-        LOGGER.debug("Getting default test data from Intygstjansten");
-
-        return restTemplate.postForObject(url, null, String.class);
-    }
-
-    @Override
-    public CreateSickLeaveResponseDTO createSickleave(CreateSickLeaveRequestDTO request) {
-        final String url = intygstjanstUrl + "/inera-certificate/resources/testability/createSickLeave";
-        LOGGER.debug("Creating sick leave test data");
-        return restTemplate.postForObject(url, request, CreateSickLeaveResponseDTO.class);
-    }
-
-    @Override
-    public TestDataOptionsDTO getTestDataOptions() {
-        final String url = intygstjanstUrl + "/inera-certificate/resources/testability/testDataOptions";
-        LOGGER.debug("Getting sick leave test data");
-        return restTemplate.getForObject(url, TestDataOptionsDTO.class);
     }
 
     @Override
