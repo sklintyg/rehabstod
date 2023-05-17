@@ -27,6 +27,7 @@ import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
 
+import javax.xml.ws.Response;
 
 /**
  * Connects to Intygstjanstens REST-api to get specialized certificate data
@@ -119,4 +120,8 @@ public interface IntygstjanstRestIntegrationService {
      * @param request Request including parameters to perform search
      */
     PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request);
+
+    String getDefaultTestData();
+
+    Response setRekoStatusForSickLeave(SetRekoStatusToSickLeaveRequestDTO request);
 }
