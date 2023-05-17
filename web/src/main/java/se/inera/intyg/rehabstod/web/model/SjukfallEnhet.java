@@ -63,8 +63,17 @@ public class SjukfallEnhet {
     private RiskSignal riskSignal;
     private boolean nyligenAvslutat;
     private String encryptedPatientId;
+    private String rekoStatus;
 
     // - - - getters and setters
+
+    public String getRekoStatus() {
+        return rekoStatus;
+    }
+
+    public void setRekoStatus(String rekoStatus) {
+        this.rekoStatus = rekoStatus;
+    }
 
     public void setEncryptedPatientId(String encryptedPatientId) {
         this.encryptedPatientId = encryptedPatientId;
