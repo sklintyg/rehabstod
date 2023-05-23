@@ -75,26 +75,7 @@
         init-method="initialize"/>
   <bean id="parserPoolHolder" class="org.springframework.security.saml.parser.ParserPoolHolder" scope="singleton"/>
 
-  <bean id="failureHandler"
-        class="org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler">
-    <property name="exceptionMappings">
-      <props>
-        <prop key="org.springframework.security.authentication.BadCredentialsException">
-          /error.jsp?reason=login.failed
-        </prop>
-        <prop key="se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException">
-          /error.jsp?reason=login.medarbetaruppdrag
-        </prop>
-        <prop key="se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException">
-          /error.jsp?reason=login.saknar-hsa-rehabroll
-        </prop>
-        <prop key="se.inera.intyg.infra.security.exception.HsaServiceException">
-          /error.jsp?reason=login.hsaerror
-        </prop>
-      </props>
-    </property>
-    <property name="defaultFailureUrl" value="/error.jsp?reason=login.failed"/>
-  </bean>
+  <bean id="failureHandler" class="se.inera.intyg.rehabstod.auth.RehabstodAuthenticationFailureHandler"/>
 
   <bean id="http403ForbiddenEntryPoint"
         class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
