@@ -33,12 +33,12 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.ErrorLogRequestDTO;
 
 @RestController
 @RequestMapping("/api/log")
-public class LogController {
+public class LogErrorController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LogController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LogErrorController.class);
     private final ErrorLogService errorLogService;
 
-    public LogController(ErrorLogService errorLogService) {
+    public LogErrorController(ErrorLogService errorLogService) {
         this.errorLogService = errorLogService;
     }
 

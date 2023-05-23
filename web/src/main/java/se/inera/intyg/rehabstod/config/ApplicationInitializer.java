@@ -151,7 +151,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         pdlConsentGivenAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
         pdlConsentGivenAssuranceFilter.setInitParameter("ignoredUrls",
             SESSION_STATUS_CHECK_URI + "," + SESSION_STATUS_REQUEST_MAPPING + SESSION_STATUS_EXTEND
-                + ",/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary,/api/stub,/api/sickleaves,/api/testability");
+                + ",/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary,/api/stub,/api/sickleaves,/api/testability,"
+                + "/api/log/error");
 
         FilterRegistration.Dynamic hiddenHttpMethodFilter = servletContext.addFilter("hiddenHttpMethodFilter",
             HiddenHttpMethodFilter.class);

@@ -38,5 +38,5 @@ public interface MonitoringLogService extends AuthenticationLogger {
     // Saml
     void logSamlStatusForFailedLogin(String issuer, String samlStatus);
 
-    void logClientError(String errorId, String userId, String errorCode, String message, String stackTrace);
+    void logClientError(String errorId, String errorCode, String message, String stackTrace);
 }

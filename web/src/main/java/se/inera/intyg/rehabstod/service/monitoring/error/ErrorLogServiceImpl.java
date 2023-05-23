@@ -36,7 +36,6 @@ public class ErrorLogServiceImpl implements ErrorLogService {
     public void logError(ErrorLogRequestDTO errorLogRequestDTO) {
         monitoringLogService.logClientError(
             errorLogRequestDTO.getErrorId(),
-            errorLogRequestDTO.getUserId(),
             errorLogRequestDTO.getErrorCode(),
             errorLogRequestDTO.getMessage(),
             getStackTrace(errorLogRequestDTO.getStackTrace())

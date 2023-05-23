@@ -49,6 +49,7 @@
   <security:http security="none" pattern="/favicon.ico"/>
   <security:http security="none" pattern="/error.jsp"/>
   <security:http security="none" pattern="/api/config/**" />
+  <security:http security="none" pattern="/api/log/**" />
   <security:http security="none" create-session="never" pattern="/api/session-auth-check/**"/>
 
   <bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">

@@ -26,7 +26,6 @@ public class ErrorLogRequestDTO {
 
     private String errorId;
     private String errorCode;
-    private String userId;
     private String message;
     private String stackTrace;
 }

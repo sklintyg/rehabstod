@@ -78,8 +78,8 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
     }
 
     @Override
-    public void logClientError(String errorId, String userId, String errorCode, String message, String stackTrace) {
-        logEvent(MonitoringEvent.CLIENT_ERROR, errorId, userId, errorCode, message, stackTrace);
+    public void logClientError(String errorId, String errorCode, String message, String stackTrace) {
+        logEvent(MonitoringEvent.CLIENT_ERROR, errorId, errorCode, message, stackTrace);
     }
 
     private void logEvent(MonitoringEvent logEvent, Object... logMsgArgs) {
@@ -103,7 +103,7 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
 
         SAML_STATUS_LOGIN_FAIL("Login failed at IDP '{}' with status message '{}'"),
         CLIENT_ERROR(
-            "Received error from client with errorId '{}' for user '{}' with error code '{}', message '{}' and stacktrace '{}'");
+            "Received error from client with errorId '{}' with error code '{}', message '{}' and stacktrace '{}'");
 
         private final String message;
 

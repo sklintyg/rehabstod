@@ -30,18 +30,18 @@ import se.inera.intyg.rehabstod.service.monitoring.error.ErrorLogService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ErrorLogRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
-public class LogControllerTest {
+public class LogErrorControllerTest {
 
     @Mock
     private ErrorLogService errorLogService;
 
     @InjectMocks
-    private LogController logController;
+    private LogErrorController logErrorController;
 
     @Test
     void shallCallErrorLogService() {
         final var request = new ErrorLogRequestDTO();
-        logController.logError(request);
+        logErrorController.logError(request);
         verify(errorLogService).logError(request);
     }
 }

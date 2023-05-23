@@ -41,9 +41,8 @@ class ErrorLogServiceImplTest {
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String ERROR_ID = "errorId";
     private static final String ERROR_CODE = "errorCode";
-    private static final String USER_ID = "userId";
     private static final String STACK_TRACE = "stackTrace";
-    private final static String NO_STACK_TRACE = "NO_STACK_TRACE";
+    private static final String NO_STACK_TRACE = "NO_STACK_TRACE";
 
 
     @Test
@@ -52,11 +51,10 @@ class ErrorLogServiceImplTest {
         request.setMessage(ERROR_MESSAGE);
         request.setErrorId(ERROR_ID);
         request.setErrorCode(ERROR_CODE);
-        request.setUserId(USER_ID);
         request.setStackTrace(STACK_TRACE);
 
         errorLogService.logError(request);
-        verify(monitoringLogService).logClientError(ERROR_ID, USER_ID, ERROR_CODE, ERROR_MESSAGE, STACK_TRACE);
+        verify(monitoringLogService).logClientError(ERROR_ID, ERROR_CODE, ERROR_MESSAGE, STACK_TRACE);
     }
 
     @Test
@@ -65,9 +63,8 @@ class ErrorLogServiceImplTest {
         request.setMessage(ERROR_MESSAGE);
         request.setErrorId(ERROR_ID);
         request.setErrorCode(ERROR_CODE);
-        request.setUserId(USER_ID);
 
         errorLogService.logError(request);
-        verify(monitoringLogService).logClientError(ERROR_ID, USER_ID, ERROR_CODE, ERROR_MESSAGE, NO_STACK_TRACE);
+        verify(monitoringLogService).logClientError(ERROR_ID, ERROR_CODE, ERROR_MESSAGE, NO_STACK_TRACE);
     }
 }
