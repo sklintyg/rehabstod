@@ -125,8 +125,6 @@ public class PopulateFiltersServiceTest {
         );
         when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(response);
 
-        when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-
         expectedRequest.setMaxDaysSinceSickLeaveCompleted(Integer.parseInt(days));
         expectedRequest.setUnitId(UNIT_ID);
 
@@ -135,6 +133,7 @@ public class PopulateFiltersServiceTest {
 
     @Nested
     class TestITRequest {
+
         @Nested
         class CareUnit {
 
@@ -231,25 +230,41 @@ public class PopulateFiltersServiceTest {
         }
 
         @Test
+        void shouldHandleNullValuesFromResponse() {
+            final var responeDTO = new PopulateFiltersResponseDTO(
+                null,
+                null,
+                0
+            );
+            when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(responeDTO);
+            final var response = populateActiveFilters.get();
+            assertEquals(0, response.getActiveDoctors().size());
+        }
+
+        @Test
         void shouldConvertActiveDoctors() {
+            when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
             final var response = populateActiveFilters.get();
             assertEquals(1, response.getActiveDoctors().size());
         }
 
         @Test
         void shouldConvertHsaIdForDoctor() {
+            when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
             final var response = populateActiveFilters.get();
             assertEquals(HSA_ID, response.getActiveDoctors().get(0).getHsaId());
         }
 
         @Test
         void shouldConvertDoctorName() {
+            when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
             final var response = populateActiveFilters.get();
             assertEquals(DOCTOR_NAME, response.getActiveDoctors().get(0).getNamn());
         }
 
         @Test
         void shouldDecorateDuplicateDoctorNamesWithHsaId() {
+            when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
             populateActiveFilters.get();
             verify(sjukfallEmployeeNameResolver, times(1))
                 .decorateAnyDuplicateNamesWithHsaId(anyList());
@@ -257,12 +272,14 @@ public class PopulateFiltersServiceTest {
 
         @Test
         void shouldConvertAllDiagnosisChapters() {
+            when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
             final var response = populateActiveFilters.get();
             assertEquals(allDiagnosisChapters, response.getAllDiagnosisChapters());
         }
 
         @Test
         void shouldConvertNbrOfSickLeaves() {
+            when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
             final var response = populateActiveFilters.get();
             assertEquals(TOTAL_NUMBER_OF_SICK_LEAVES, response.getNbrOfSickLeaves());
         }

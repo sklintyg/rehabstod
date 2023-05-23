@@ -19,6 +19,7 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -47,10 +48,10 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
     private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
     public PopulateFiltersServiceImpl(
-            UserService userService,
-            IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
-            DiagnosKapitelService diagnosKapitelService,
-            PuService puService, SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver) {
+        UserService userService,
+        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+        DiagnosKapitelService diagnosKapitelService,
+        PuService puService, SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver) {
         this.userService = userService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
         this.diagnosKapitelService = diagnosKapitelService;
@@ -74,6 +75,9 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
     }
 
     private List<Lakare> convertDoctors(List<se.inera.intyg.infra.sjukfall.dto.Lakare> listToConvert) {
+        if (listToConvert == null) {
+            return Collections.emptyList();
+        }
         final var lakareList = listToConvert.stream()
             .map((lakare) -> new Lakare(lakare.getId(), sjukfallEmployeeNameResolver.getEmployeeName(lakare.getId())))
             .collect(Collectors.toList());
@@ -84,6 +88,9 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
     }
 
     private List<DiagnosKapitel> convertDiagnosisChapters(List<se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel> diagnosisChapters) {
+        if (diagnosisChapters == null) {
+            return Collections.emptyList();
+        }
         return diagnosisChapters
             .stream()
             .map(
