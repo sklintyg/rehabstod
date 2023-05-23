@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class SetRekoStatusToSickLeaveRequestDTO {
     private String patientId;
     private String status;
+    private String sickLeaveTimestamp;
 }

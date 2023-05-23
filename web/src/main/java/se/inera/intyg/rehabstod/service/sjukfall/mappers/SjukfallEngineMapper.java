@@ -77,6 +77,7 @@ public class SjukfallEngineMapper {
             to.setAktivIntygsId(from.getAktivIntygsId());
             to.setSysselsattning(from.getSysselsattning());
             to.setNyligenAvslutat(to.getSlutOmDagar() < 0 && to.getSlutOmDagar() + maxDagarSedanAvslut >= 0);
+            to.setRekoStatus(from.getRekoStatus());
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
         }

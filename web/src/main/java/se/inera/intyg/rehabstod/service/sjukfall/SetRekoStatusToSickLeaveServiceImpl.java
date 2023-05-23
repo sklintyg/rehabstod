@@ -6,6 +6,8 @@ import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrati
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 
+import java.time.LocalDateTime;
+
 @Service
 public class SetRekoStatusToSickLeaveServiceImpl implements SetRekoStatusToSickLeaveService {
 
@@ -17,7 +19,7 @@ public class SetRekoStatusToSickLeaveServiceImpl implements SetRekoStatusToSickL
         this.userService = userService;
     }
 
-    public void set(String patientId, String status) {
+    public void set(String patientId, String status, LocalDateTime sickLeaveTimestamp) {
         final var user = userService.getUser();
         final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
@@ -30,8 +32,7 @@ public class SetRekoStatusToSickLeaveServiceImpl implements SetRekoStatusToSickL
                 unitId,
                 user.getHsaId(),
                 user.getNamn(),
-                ControllerUtil.getMaxGlapp(user),
-                ControllerUtil.getMaxDagarSedanSjukfallAvslut(user)
+                sickLeaveTimestamp
         );
 
         intygstjanstRestIntegrationService.setRekoStatusForSickLeave(request);
