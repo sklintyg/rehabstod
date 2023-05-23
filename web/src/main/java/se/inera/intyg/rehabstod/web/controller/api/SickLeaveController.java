@@ -58,7 +58,8 @@ public class SickLeaveController {
                 response.getActiveDoctors(),
                 response.getAllDiagnosisChapters(),
                 response.getEnabledDiagnosisChapters(),
-                response.getNbrOfSickLeaves()
+                response.getNbrOfSickLeaves(),
+                response.getRekoStatusTypes()
         );
     }
 

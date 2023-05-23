@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
@@ -69,8 +70,16 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
             convertDoctors(responseFromIT.getActiveDoctors()),
             diagnosKapitelService.getDiagnosKapitelList(),
             convertDiagnosisChapters(responseFromIT.getDiagnosisChapters()),
-            responseFromIT.getNbrOfSickLeaves()
+            responseFromIT.getNbrOfSickLeaves(),
+            convertRekoStatuses(responseFromIT.getRekoStatuses())
         );
+    }
+
+    private List<se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusDTO> convertRekoStatuses(List<RekoStatusDTO> list) {
+        return list
+                .stream()
+                .map((status) -> new se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusDTO(status.getId(), status.getName()))
+                .collect(Collectors.toList());
     }
 
     private List<Lakare> convertDoctors(List<se.inera.intyg.infra.sjukfall.dto.Lakare> listToConvert) {

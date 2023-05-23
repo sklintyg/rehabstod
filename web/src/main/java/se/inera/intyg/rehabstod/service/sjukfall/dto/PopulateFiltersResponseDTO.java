@@ -35,4 +35,5 @@ public class PopulateFiltersResponseDTO {
     private List<DiagnosKapitel> allDiagnosisChapters;
     private List<DiagnosKapitel> enabledDiagnosisChapters;
     private int nbrOfSickLeaves;
+    private List<RekoStatusDTO> rekoStatusTypes;
 }
