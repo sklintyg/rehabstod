@@ -71,7 +71,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
             diagnosKapitelService.getDiagnosKapitelList(),
             convertDiagnosisChapters(responseFromIT.getDiagnosisChapters()),
             responseFromIT.getNbrOfSickLeaves(),
-            convertRekoStatuses(responseFromIT.getRekoStatuses())
+            convertRekoStatuses(responseFromIT.getRekoStatusTypes())
         );
     }
 

@@ -20,12 +20,14 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -37,8 +39,6 @@ import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
 import se.inera.intyg.rehabstod.integration.it.dto.*;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
-
-import javax.xml.ws.Response;
 
 @Profile("rhs-it-stub")
 @Service
@@ -130,12 +130,17 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     public PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request) {
         final var sickLeaves = rsTestIntygStub.getActiveSickLeaveData();
         final var diagnosisChapters = rsTestIntygStub.getDiagnosisChapterList();
-        return new PopulateFiltersResponseDTO(getDoctorsFromSickLeaves(sickLeaves), diagnosisChapters, sickLeaves.size());
+        return new PopulateFiltersResponseDTO(
+                getDoctorsFromSickLeaves(sickLeaves),
+                diagnosisChapters,
+                sickLeaves.size(),
+                Collections.emptyList()
+        );
     }
 
     @Override
     public Response setRekoStatusForSickLeave(SetRekoStatusToSickLeaveRequestDTO request) {
-        return null;
+        return Response.ok().build();
     }
 
     private boolean isDiagnosisCodeIncluded(List<DiagnosKapitel> diagnosisChapters, String diagnosisCode) {
