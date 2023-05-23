@@ -77,6 +77,11 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
         logEvent(MonitoringEvent.SAML_STATUS_LOGIN_FAIL, issuer, samlStatus);
     }
 
+    @Override
+    public void logClientError(String errorId, String errorCode, String message, String stackTrace) {
+        logEvent(MonitoringEvent.CLIENT_ERROR, errorId, errorCode, message, stackTrace);
+    }
+
     private void logEvent(MonitoringEvent logEvent, Object... logMsgArgs) {
         LOG.info(LogMarkers.MONITORING, buildMessage(logEvent), logMsgArgs);
     }
@@ -96,7 +101,9 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
         USER_MISSING_MIU_ON_ENHET("No valid MIU was found for user '{}' on unit '{}'"),
         BROWSER_INFO("Name '{}' Version '{}' OSFamily '{}' OSVersion '{}' Width '{}' Height '{}'"),
 
-        SAML_STATUS_LOGIN_FAIL("Login failed at IDP '{}' with status message '{}'");
+        SAML_STATUS_LOGIN_FAIL("Login failed at IDP '{}' with status message '{}'"),
+        CLIENT_ERROR(
+            "Received error from client with errorId '{}' with error code '{}', message '{}' and stacktrace '{}'");
 
         private final String message;
 
