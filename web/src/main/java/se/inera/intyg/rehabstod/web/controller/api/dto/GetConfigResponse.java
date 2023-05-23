@@ -19,66 +19,22 @@
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.List;
+import lombok.Data;
 import se.inera.intyg.infra.driftbannerdto.Banner;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
 /**
  * Created by marced on 2016-01-18.
  */
+@Data
 public class GetConfigResponse {
 
     private List<DiagnosKapitel> diagnosKapitelList;
     private String webcertViewIntygTemplateUrl;
     private String webcertViewIntygLogoutUrl;
+    private String webcertLaunchUrlTemplate;
     private String statistikSsoUrl;
     private String version;
     private List<Banner> banners;
 
-    public List<DiagnosKapitel> getDiagnosKapitelList() {
-        return diagnosKapitelList;
-    }
-
-    public void setDiagnosKapitelList(List<DiagnosKapitel> diagnosKapitelList) {
-        this.diagnosKapitelList = diagnosKapitelList;
-    }
-
-    public String getWebcertViewIntygTemplateUrl() {
-        return webcertViewIntygTemplateUrl;
-    }
-
-    public void setWebcertViewIntygTemplateUrl(String webcertViewIntygTemplateUrl) {
-        this.webcertViewIntygTemplateUrl = webcertViewIntygTemplateUrl;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public void setWebcertViewIntygLogoutUrl(String webcertViewIntygLogoutUrl) {
-        this.webcertViewIntygLogoutUrl = webcertViewIntygLogoutUrl;
-    }
-
-    public String getWebcertViewIntygLogoutUrl() {
-        return webcertViewIntygLogoutUrl;
-    }
-
-    public String getStatistikSsoUrl() {
-        return statistikSsoUrl;
-    }
-
-    public void setStatistikSsoUrl(String statistikSsoUrl) {
-        this.statistikSsoUrl = statistikSsoUrl;
-    }
-
-    public List<Banner> getBanners() {
-        return banners;
-    }
-
-    public void setBanners(List<Banner> banners) {
-        this.banners = banners;
-    }
 }
