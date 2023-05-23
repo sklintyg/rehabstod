@@ -13,6 +13,8 @@ public class SetRekoStatusToSickLeaveRequestDTO {
     String careProviderId;
     String careUnitId;
     String unitId;
+    String staffId;
+    String staffName;
     int maxCertificateGap;
     int maxDaysSinceSickLeaveCompleted;
 }

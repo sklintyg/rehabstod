@@ -28,6 +28,8 @@ public class SetRekoStatusToSickLeaveServiceImpl implements SetRekoStatusToSickL
                 user.getValdVardgivare().getId(),
                 careUnitId,
                 unitId,
+                user.getHsaId(),
+                user.getNamn(),
                 ControllerUtil.getMaxGlapp(user),
                 ControllerUtil.getMaxDagarSedanSjukfallAvslut(user)
         );
