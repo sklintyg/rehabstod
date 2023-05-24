@@ -78,7 +78,8 @@ public class SickLeaveControllerTest {
                     Collections.emptyList(),
                     Collections.emptyList(),
                     Collections.emptyList(),
-                    10
+                    10,
+                    Collections.emptyList()
             );
 
             when(populateFiltersService.get()).thenReturn(expectedResponse);
@@ -113,6 +114,12 @@ public class SickLeaveControllerTest {
             final var response = sickLeaveController.populateFilters();
             assertEquals(expectedResponse.getNbrOfSickLeaves(), response.getNbrOfSickLeaves());
         }
+
+        @Test
+        void shouldTransformResponseRekoStatusTypes() {
+            final var response = sickLeaveController.populateFilters();
+            assertEquals(expectedResponse.getRekoStatusTypes(), response.getRekoStatusTypes());
+        }
     }
 
     @Test
@@ -121,7 +128,8 @@ public class SickLeaveControllerTest {
                 Collections.emptyList(),
                 Collections.emptyList(),
                 Collections.emptyList(),
-                10
+                10,
+                Collections.emptyList()
         );
         when(populateFiltersService.get()).thenReturn(expectedResponse);
 
@@ -131,6 +139,7 @@ public class SickLeaveControllerTest {
         assertEquals(expectedResponse.getAllDiagnosisChapters(), actualResponse.getAllDiagnosisChapters());
         assertEquals(expectedResponse.getEnabledDiagnosisChapters(), actualResponse.getEnabledDiagnosisChapters());
         assertEquals(expectedResponse.getNbrOfSickLeaves(), actualResponse.getNbrOfSickLeaves());
+        assertEquals(expectedResponse.getRekoStatusTypes(), actualResponse.getRekoStatusTypes());
     }
 
     @Test

@@ -69,6 +69,7 @@ public class SjukfallEngineMapperTest {
     private static final String SYSSELSATTNING = "NUVARANDE_ARBETE";
     private static final Integer ANTALINTYG = 1;
     private static final String DIAGNOS_KOD = "M123";
+    private static final String REKO_STATUS = "REKO_1";
     private static final LocalDate AKTIVTDATUM = LocalDate.now();
 
     @Mock
@@ -119,6 +120,7 @@ public class SjukfallEngineMapperTest {
         assertEquals(NEDSATTNING, to.getGrader().get(0));
         assertEquals(1, to.getSysselsattning().size());
         assertEquals(SYSSELSATTNING, to.getSysselsattning().get(0));
+        assertEquals(REKO_STATUS, to.getRekoStatus());
     }
 
     @Test
@@ -282,6 +284,7 @@ public class SjukfallEngineMapperTest {
         enhet.setDagar(getSjukskrivningsDagar());
         enhet.setIntyg(ANTALINTYG);
         enhet.setSysselsattning(createSysselsattningar());
+        enhet.setRekoStatus(REKO_STATUS);
 
         return enhet;
     }
