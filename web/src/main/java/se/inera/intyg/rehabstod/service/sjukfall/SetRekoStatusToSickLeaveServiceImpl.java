@@ -14,7 +14,8 @@ public class SetRekoStatusToSickLeaveServiceImpl implements SetRekoStatusToSickL
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
     private final UserService userService;
 
-    public SetRekoStatusToSickLeaveServiceImpl(IntygstjanstRestIntegrationService intygstjanstRestIntegrationService, UserService userService) {
+    public SetRekoStatusToSickLeaveServiceImpl(IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+                                               UserService userService) {
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
         this.userService = userService;
     }
