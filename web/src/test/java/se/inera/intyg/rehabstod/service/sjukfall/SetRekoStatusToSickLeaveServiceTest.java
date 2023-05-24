@@ -34,12 +34,9 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.SetRekoStatusToSickLeaveRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.user.UserService;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
