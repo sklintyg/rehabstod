@@ -55,8 +55,6 @@ public class SetRekoStatusToSickLeaveServiceTest {
     @InjectMocks
     SetRekoStatusToSickLeaveServiceImpl setRekoStatusToSickLeaveService;
 
-    List<SjukfallEnhet> sickLeaves = new ArrayList<>();
-
     private static final String PATIENT_ID = "191212121212";
     private static final String STATUS = "REKO_1";
     private static final String CARE_PROVIDER_ID = "CareProviderId";
