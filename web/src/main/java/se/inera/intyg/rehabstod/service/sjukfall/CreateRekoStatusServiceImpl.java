@@ -20,7 +20,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import org.springframework.stereotype.Service;
-import se.inera.intyg.rehabstod.integration.it.dto.SetRekoStatusToSickLeaveRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
@@ -28,13 +28,13 @@ import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import java.time.LocalDateTime;
 
 @Service
-public class SetRekoStatusToSickLeaveServiceImpl implements SetRekoStatusToSickLeaveService {
+public class CreateRekoStatusServiceImpl implements CreateRekoStatusService {
 
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
     private final UserService userService;
 
-    public SetRekoStatusToSickLeaveServiceImpl(IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
-                                               UserService userService) {
+    public CreateRekoStatusServiceImpl(IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+                                       UserService userService) {
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
         this.userService = userService;
     }
@@ -44,7 +44,7 @@ public class SetRekoStatusToSickLeaveServiceImpl implements SetRekoStatusToSickL
         final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
 
-        final var request = new SetRekoStatusToSickLeaveRequestDTO(
+        final var request = new CreateRekoStatusRequestDTO(
                 patientId,
                 status,
                 user.getValdVardgivare().getId(),
@@ -55,6 +55,6 @@ public class SetRekoStatusToSickLeaveServiceImpl implements SetRekoStatusToSickL
                 sickLeaveTimestamp
         );
 
-        intygstjanstRestIntegrationService.setRekoStatusForSickLeave(request);
+        intygstjanstRestIntegrationService.createRekoStatus(request);
     }
 }

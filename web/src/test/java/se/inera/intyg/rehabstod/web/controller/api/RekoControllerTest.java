@@ -24,8 +24,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.service.sjukfall.SetRekoStatusToSickLeaveService;
-import se.inera.intyg.rehabstod.web.controller.api.dto.SetRekoStatusToSickLeaveRequestDTO;
+import se.inera.intyg.rehabstod.service.sjukfall.CreateRekoStatusService;
+import se.inera.intyg.rehabstod.web.controller.api.dto.CreateRekoStatusRequestDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.verify;
 public class RekoControllerTest {
 
     @Mock
-    private SetRekoStatusToSickLeaveService setRekoStatusToSickLeaveService;
+    private CreateRekoStatusService createRekoStatusService;
 
     @InjectMocks
     private RekoController rekoController;
@@ -51,11 +51,11 @@ public class RekoControllerTest {
 
     @Test
     void shouldCallSetRekoStatusServiceWithCorrectPatientId() {
-        final var expectedRequest = new SetRekoStatusToSickLeaveRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
+        final var expectedRequest = new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
         final var captor = ArgumentCaptor.forClass(String.class);
 
         rekoController.getSickLeavesForUnit(expectedRequest);
-        verify(setRekoStatusToSickLeaveService).set(captor.capture(), anyString(), any(LocalDateTime.class));
+        verify(createRekoStatusService).set(captor.capture(), anyString(), any(LocalDateTime.class));
 
         assertEquals(PATIENT_ID, captor.getValue());
     }
@@ -63,11 +63,11 @@ public class RekoControllerTest {
     @Test
     void shouldCallSetRekoStatusServiceWithCorrectStatus() {
         final var expectedRequest =
-                new SetRekoStatusToSickLeaveRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
+                new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
         final var captor = ArgumentCaptor.forClass(String.class);
 
         rekoController.getSickLeavesForUnit(expectedRequest);
-        verify(setRekoStatusToSickLeaveService).set(anyString(), captor.capture(), any(LocalDateTime.class));
+        verify(createRekoStatusService).set(anyString(), captor.capture(), any(LocalDateTime.class));
 
         assertEquals(STATUS, captor.getValue());
     }
@@ -75,11 +75,11 @@ public class RekoControllerTest {
     @Test
     void shouldCallSetRekoStatusServiceWithCorrectTimestamp() {
         final var expectedRequest =
-                new SetRekoStatusToSickLeaveRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
+                new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
         final var captor = ArgumentCaptor.forClass(LocalDateTime.class);
 
         rekoController.getSickLeavesForUnit(expectedRequest);
-        verify(setRekoStatusToSickLeaveService).set(anyString(), anyString(), captor.capture());
+        verify(createRekoStatusService).set(anyString(), anyString(), captor.capture());
 
         assertEquals(TIMESTAMP.atStartOfDay(), captor.getValue());
     }

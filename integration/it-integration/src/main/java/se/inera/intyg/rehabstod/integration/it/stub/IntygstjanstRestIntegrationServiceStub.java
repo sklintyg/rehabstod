@@ -139,7 +139,7 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     }
 
     @Override
-    public Response setRekoStatusForSickLeave(SetRekoStatusToSickLeaveRequestDTO request) {
+    public Response createRekoStatus(CreateRekoStatusRequestDTO request) {
         return Response.ok().build();
     }
 

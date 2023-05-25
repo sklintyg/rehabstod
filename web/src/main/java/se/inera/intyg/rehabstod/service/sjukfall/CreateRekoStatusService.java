@@ -21,6 +21,6 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.time.LocalDateTime;
 
-public interface SetRekoStatusToSickLeaveService {
+public interface CreateRekoStatusService {
     void set(String patientId, String status, LocalDateTime sickLeaveTimestamp);
 }

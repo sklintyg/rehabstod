@@ -118,5 +118,5 @@ public interface IntygstjanstRestIntegrationService {
      */
     PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request);
 
-    Response setRekoStatusForSickLeave(SetRekoStatusToSickLeaveRequestDTO request);
+    Response createRekoStatus(CreateRekoStatusRequestDTO request);
 }

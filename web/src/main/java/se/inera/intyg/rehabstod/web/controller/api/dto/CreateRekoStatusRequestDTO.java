@@ -17,24 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.integration.it.dto;
+package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SetRekoStatusToSickLeaveRequestDTO {
-    String patientId;
-    String status;
-    String careProviderId;
-    String careUnitId;
-    String unitId;
-    String staffId;
-    String staffName;
-    LocalDateTime sickLeaveTimestamp;
+public class CreateRekoStatusRequestDTO {
+    private String patientId;
+    private String status;
+    private String sickLeaveTimestamp;
 }
