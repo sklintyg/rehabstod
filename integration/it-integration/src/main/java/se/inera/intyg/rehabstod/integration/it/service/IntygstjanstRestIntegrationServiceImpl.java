@@ -22,7 +22,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,12 +116,12 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     }
 
     @Override
-    public Response createRekoStatus(CreateRekoStatusRequestDTO request) {
+    public RekoStatusDTO createRekoStatus(CreateRekoStatusRequestDTO request) {
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/reko/set";
 
         LOGGER.debug("Setting reko status to sick leave");
 
-        return restTemplate.postForObject(url, request, Response.class);
+        return restTemplate.postForObject(url, request, RekoStatusDTO.class);
     }
 
     @Override

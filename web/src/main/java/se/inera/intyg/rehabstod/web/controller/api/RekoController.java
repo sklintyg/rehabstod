@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.service.sjukfall.CreateRekoStatusService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.CreateRekoStatusRequestDTO;
 
-import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 
 @RestController
@@ -39,14 +39,12 @@ public class RekoController {
         this.createRekoStatusService = createRekoStatusService;
     }
 
-    @RequestMapping(value = "/set", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Response getSickLeavesForUnit(@RequestBody CreateRekoStatusRequestDTO request) {
-        createRekoStatusService.set(
+    @RequestMapping(value = "/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public RekoStatusDTO createRekoStatus(@RequestBody CreateRekoStatusRequestDTO request) {
+        return createRekoStatusService.create(
                 request.getPatientId(),
                 request.getStatus(),
                 LocalDate.parse(request.getSickLeaveTimestamp()).atStartOfDay()
         );
-
-        return Response.ok().build();
     }
 }

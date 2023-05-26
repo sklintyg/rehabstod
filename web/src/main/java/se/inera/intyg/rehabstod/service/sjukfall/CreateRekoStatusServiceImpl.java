@@ -22,6 +22,7 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 
@@ -39,7 +40,7 @@ public class CreateRekoStatusServiceImpl implements CreateRekoStatusService {
         this.userService = userService;
     }
 
-    public void set(String patientId, String status, LocalDateTime sickLeaveTimestamp) {
+    public RekoStatusDTO create(String patientId, String status, LocalDateTime sickLeaveTimestamp) {
         final var user = userService.getUser();
         final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
@@ -55,6 +56,13 @@ public class CreateRekoStatusServiceImpl implements CreateRekoStatusService {
                 sickLeaveTimestamp
         );
 
-        intygstjanstRestIntegrationService.createRekoStatus(request);
+        return convertResponse(intygstjanstRestIntegrationService.createRekoStatus(request));
+    }
+
+    private RekoStatusDTO convertResponse(se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO response) {
+        return new RekoStatusDTO(
+                response.getId(),
+                response.getStatus()
+        );
     }
 }

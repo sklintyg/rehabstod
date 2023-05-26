@@ -54,8 +54,8 @@ public class RekoControllerTest {
         final var expectedRequest = new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
         final var captor = ArgumentCaptor.forClass(String.class);
 
-        rekoController.getSickLeavesForUnit(expectedRequest);
-        verify(createRekoStatusService).set(captor.capture(), anyString(), any(LocalDateTime.class));
+        rekoController.createRekoStatus(expectedRequest);
+        verify(createRekoStatusService).create(captor.capture(), anyString(), any(LocalDateTime.class));
 
         assertEquals(PATIENT_ID, captor.getValue());
     }
@@ -66,8 +66,8 @@ public class RekoControllerTest {
                 new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
         final var captor = ArgumentCaptor.forClass(String.class);
 
-        rekoController.getSickLeavesForUnit(expectedRequest);
-        verify(createRekoStatusService).set(anyString(), captor.capture(), any(LocalDateTime.class));
+        rekoController.createRekoStatus(expectedRequest);
+        verify(createRekoStatusService).create(anyString(), captor.capture(), any(LocalDateTime.class));
 
         assertEquals(STATUS, captor.getValue());
     }
@@ -78,8 +78,8 @@ public class RekoControllerTest {
                 new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
         final var captor = ArgumentCaptor.forClass(LocalDateTime.class);
 
-        rekoController.getSickLeavesForUnit(expectedRequest);
-        verify(createRekoStatusService).set(anyString(), anyString(), captor.capture());
+        rekoController.createRekoStatus(expectedRequest);
+        verify(createRekoStatusService).create(anyString(), anyString(), captor.capture());
 
         assertEquals(TIMESTAMP.atStartOfDay(), captor.getValue());
     }

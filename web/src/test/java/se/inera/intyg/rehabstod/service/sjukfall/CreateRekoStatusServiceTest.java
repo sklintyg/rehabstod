@@ -93,7 +93,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetStaffId() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertEquals(STAFF_ID, captor.getValue().getStaffId());
             }
@@ -101,7 +101,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetStaffName() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertEquals(STAFF_NAME, captor.getValue().getStaffName());
             }
@@ -109,7 +109,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetPatientId() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertEquals(PATIENT_ID, captor.getValue().getPatientId());
             }
@@ -117,7 +117,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetSickLeaveTimestamp() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertEquals(SICK_LEAVE_TIMESTAMP, captor.getValue().getSickLeaveTimestamp());
             }
@@ -125,7 +125,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetCareProviderId() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertEquals(CARE_PROVIDER_ID, captor.getValue().getCareProviderId());
             }
@@ -133,7 +133,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetCareUnitId() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertEquals(CARE_UNIT_ID, captor.getValue().getCareUnitId());
             }
@@ -141,7 +141,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetUnitIdToNullIfNotSubUnit() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertNull(captor.getValue().getUnitId());
             }
@@ -171,7 +171,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetStaffId() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertEquals(STAFF_ID, captor.getValue().getStaffId());
             }
@@ -179,7 +179,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetStaffName() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertEquals(STAFF_NAME, captor.getValue().getStaffName());
             }
@@ -187,7 +187,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetPatientId() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertEquals(PATIENT_ID, captor.getValue().getPatientId());
             }
@@ -195,7 +195,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetSickLeaveTimestamp() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertEquals(SICK_LEAVE_TIMESTAMP, captor.getValue().getSickLeaveTimestamp());
             }
@@ -203,7 +203,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetCareProviderId() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertEquals(CARE_PROVIDER_ID, captor.getValue().getCareProviderId());
             }
@@ -211,7 +211,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetCareUnitId() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertEquals(CARE_UNIT_ID, captor.getValue().getCareUnitId());
             }
@@ -219,7 +219,7 @@ public class CreateRekoStatusServiceTest {
             @Test
             void shouldSetUnitIdToNullIfNotSubUnit() {
                 final var captor = ArgumentCaptor.forClass(CreateRekoStatusRequestDTO.class);
-                createRekoStatusService.set(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
+                createRekoStatusService.create(PATIENT_ID, STATUS, SICK_LEAVE_TIMESTAMP);
                 verify(intygstjanstRestIntegrationService).createRekoStatus(captor.capture());
                 assertEquals(UNIT_ID, captor.getValue().getUnitId());
             }

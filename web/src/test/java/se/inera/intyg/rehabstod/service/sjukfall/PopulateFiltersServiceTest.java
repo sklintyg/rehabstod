@@ -50,7 +50,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
@@ -100,7 +100,7 @@ public class PopulateFiltersServiceTest {
     Vardgivare careGiver;
     DiagnosKategori diagnosisChapterTo = new DiagnosKategori(LETTER_TO, NUMBER_TO);
     DiagnosKategori diagnosisChapterFrom = new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
-    RekoStatusDTO rekoStatus = new RekoStatusDTO("REKO_1", "Ingen");
+    RekoStatusTypeDTO rekoStatus = new RekoStatusTypeDTO("REKO_1", "Ingen");
     se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel enabledDiagnosisChapter =
         new se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel(diagnosisChapterTo, diagnosisChapterFrom, DIAGNOSIS_CHAPTER_NAME);
     List<DiagnosKapitel> allDiagnosisChapters = Collections.singletonList(new DiagnosKapitel());

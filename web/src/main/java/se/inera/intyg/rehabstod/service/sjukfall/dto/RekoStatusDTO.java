@@ -28,5 +28,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RekoStatusDTO {
     private String id;
-    private String name;
+    private String status;
 }

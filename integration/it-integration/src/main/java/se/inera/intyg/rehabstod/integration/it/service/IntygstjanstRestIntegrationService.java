@@ -20,7 +20,6 @@ package se.inera.intyg.rehabstod.integration.it.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import javax.ws.rs.core.Response;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.rehabstod.integration.it.dto.*;
@@ -118,5 +117,5 @@ public interface IntygstjanstRestIntegrationService {
      */
     PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request);
 
-    Response createRekoStatus(CreateRekoStatusRequestDTO request);
+    RekoStatusDTO createRekoStatus(CreateRekoStatusRequestDTO request);
 }

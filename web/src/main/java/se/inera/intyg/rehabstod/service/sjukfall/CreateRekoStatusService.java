@@ -19,8 +19,10 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusDTO;
+
 import java.time.LocalDateTime;
 
 public interface CreateRekoStatusService {
-    void set(String patientId, String status, LocalDateTime sickLeaveTimestamp);
+    RekoStatusDTO create(String patientId, String status, LocalDateTime sickLeaveTimestamp);
 }
