@@ -30,6 +30,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
@@ -78,7 +79,11 @@ public class CreateRekoStatusServiceTest {
         when(user.getHsaId()).thenReturn(STAFF_ID);
         when(user.getNamn()).thenReturn(STAFF_NAME);
         when(userService.getUser()).thenReturn(user);
-        when(intygstjanstRestIntegrationService.createRekoStatus(any())).thenReturn(new RekoStatusDTO(REKO_ID, REKO_NAME));
+        when(intygstjanstRestIntegrationService.createRekoStatus(any())).thenReturn(
+                new RekoStatusDTO(
+                        new RekoStatusTypeDTO(REKO_ID, REKO_NAME)
+                )
+        );
     }
 
     @Nested
@@ -94,13 +99,13 @@ public class CreateRekoStatusServiceTest {
         @Test
         void shouldReturnRekoStatusId() {
             final var response = createRekoStatusService.create(PATIENT_ID, REKO_ID, SICK_LEAVE_TIMESTAMP);
-            assertEquals(REKO_ID, response.getId());
+            assertEquals(REKO_ID, response.getStatus().getId());
         }
 
         @Test
         void shouldReturnRekoStatusName() {
             final var response = createRekoStatusService.create(PATIENT_ID, REKO_ID, SICK_LEAVE_TIMESTAMP);
-            assertEquals(REKO_NAME, response.getStatus());
+            assertEquals(REKO_NAME, response.getStatus().getName());
         }
     }
 

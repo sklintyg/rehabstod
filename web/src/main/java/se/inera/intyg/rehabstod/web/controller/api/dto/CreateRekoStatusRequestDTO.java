@@ -28,6 +28,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateRekoStatusRequestDTO {
     private String patientId;
-    private String status;
+    private String statusId;
     private String sickLeaveTimestamp;
 }

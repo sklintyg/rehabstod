@@ -43,7 +43,7 @@ public class RekoController {
     public RekoStatusDTO createRekoStatus(@RequestBody CreateRekoStatusRequestDTO request) {
         return createRekoStatusService.create(
                 request.getPatientId(),
-                request.getStatus(),
+                request.getStatusId(),
                 LocalDate.parse(request.getSickLeaveTimestamp()).atStartOfDay()
         );
     }

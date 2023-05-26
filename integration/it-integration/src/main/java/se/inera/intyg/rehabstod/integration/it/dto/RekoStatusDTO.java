@@ -22,11 +22,11 @@ package se.inera.intyg.rehabstod.integration.it.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RekoStatusDTO {
-    private String id;
-    private String status;
+    private RekoStatusTypeDTO status;
 }

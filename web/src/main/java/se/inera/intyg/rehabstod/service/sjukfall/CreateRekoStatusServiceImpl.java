@@ -20,6 +20,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusDTO;
@@ -61,8 +62,10 @@ public class CreateRekoStatusServiceImpl implements CreateRekoStatusService {
 
     private RekoStatusDTO convertResponse(se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO response) {
         return new RekoStatusDTO(
-                response.getId(),
-                response.getStatus()
+                new RekoStatusTypeDTO(
+                    response.getStatus().getId(),
+                    response.getStatus().getName()
+                )
         );
     }
 }

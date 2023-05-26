@@ -35,6 +35,7 @@ import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
+import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
 import se.inera.intyg.rehabstod.integration.it.dto.*;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
@@ -139,7 +140,9 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
 
     @Override
     public RekoStatusDTO createRekoStatus(CreateRekoStatusRequestDTO request) {
-        return new RekoStatusDTO("REKO_1", request.getStatus());
+        return new RekoStatusDTO(
+                new RekoStatusTypeDTO("REKO_1", request.getStatusId())
+        );
     }
 
     private boolean isDiagnosisCodeIncluded(List<DiagnosKapitel> diagnosisChapters, String diagnosisCode) {
