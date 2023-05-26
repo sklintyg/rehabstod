@@ -77,6 +77,9 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
     }
 
     private List<se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusTypeDTO> convertRekoStatuses(List<RekoStatusTypeDTO> list) {
+        if (list == null) {
+            return Collections.emptyList();
+        }
         return list
                 .stream()
                 .map((status) -> new se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusTypeDTO(status.getId(), status.getName()))
