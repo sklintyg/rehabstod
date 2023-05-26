@@ -25,6 +25,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
+import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 
 @Data
 @NoArgsConstructor
@@ -33,4 +34,5 @@ public class PopulateFiltersResponseDTO {
     private List<Lakare> activeDoctors;
     private List<DiagnosKapitel> diagnosisChapters;
     private int nbrOfSickLeaves;
+    private List<RekoStatusTypeDTO> rekoStatusTypes;
 }

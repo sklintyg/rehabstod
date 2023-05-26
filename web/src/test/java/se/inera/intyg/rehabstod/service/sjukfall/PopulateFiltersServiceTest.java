@@ -50,6 +50,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
+import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
@@ -99,6 +100,7 @@ public class PopulateFiltersServiceTest {
     Vardgivare careGiver;
     DiagnosKategori diagnosisChapterTo = new DiagnosKategori(LETTER_TO, NUMBER_TO);
     DiagnosKategori diagnosisChapterFrom = new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
+    RekoStatusTypeDTO rekoStatus = new RekoStatusTypeDTO("REKO_1", "Ingen");
     se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel enabledDiagnosisChapter =
         new se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel(diagnosisChapterTo, diagnosisChapterFrom, DIAGNOSIS_CHAPTER_NAME);
     List<DiagnosKapitel> allDiagnosisChapters = Collections.singletonList(new DiagnosKapitel());
@@ -121,7 +123,8 @@ public class PopulateFiltersServiceTest {
         final var response = new PopulateFiltersResponseDTO(
             Collections.singletonList(Lakare.create(HSA_ID, HSA_ID)),
             Collections.singletonList(enabledDiagnosisChapter),
-            TOTAL_NUMBER_OF_SICK_LEAVES
+            TOTAL_NUMBER_OF_SICK_LEAVES,
+            Collections.singletonList(rekoStatus)
         );
         when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(response);
 
@@ -282,6 +285,18 @@ public class PopulateFiltersServiceTest {
             when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
             final var response = populateActiveFilters.get();
             assertEquals(TOTAL_NUMBER_OF_SICK_LEAVES, response.getNbrOfSickLeaves());
+        }
+
+        @Test
+        void shouldConvertRekoStatusId() {
+            final var response = populateActiveFilters.get();
+            assertEquals(rekoStatus.getId(), response.getRekoStatusTypes().get(0).getId());
+        }
+
+        @Test
+        void shouldConvertRekoStatusName() {
+            final var response = populateActiveFilters.get();
+            assertEquals(rekoStatus.getName(), response.getRekoStatusTypes().get(0).getName());
         }
 
         @Nested

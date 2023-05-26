@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.integration.it.stub;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,12 +35,9 @@ import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
+import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
-import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeaveLengthInterval;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.*;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 
 @Profile("rhs-it-stub")
@@ -132,7 +130,19 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     public PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request) {
         final var sickLeaves = rsTestIntygStub.getActiveSickLeaveData();
         final var diagnosisChapters = rsTestIntygStub.getDiagnosisChapterList();
-        return new PopulateFiltersResponseDTO(getDoctorsFromSickLeaves(sickLeaves), diagnosisChapters, sickLeaves.size());
+        return new PopulateFiltersResponseDTO(
+                getDoctorsFromSickLeaves(sickLeaves),
+                diagnosisChapters,
+                sickLeaves.size(),
+                Collections.emptyList()
+        );
+    }
+
+    @Override
+    public RekoStatusDTO createRekoStatus(CreateRekoStatusRequestDTO request) {
+        return new RekoStatusDTO(
+                new RekoStatusTypeDTO("REKO_1", request.getStatusId())
+        );
     }
 
     private boolean isDiagnosisCodeIncluded(List<DiagnosKapitel> diagnosisChapters, String diagnosisCode) {

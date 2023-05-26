@@ -29,9 +29,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
+import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
+
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -77,11 +80,22 @@ public class SjukfallEngineMapper {
             to.setAktivIntygsId(from.getAktivIntygsId());
             to.setSysselsattning(from.getSysselsattning());
             to.setNyligenAvslutat(to.getSlutOmDagar() < 0 && to.getSlutOmDagar() + maxDagarSedanAvslut >= 0);
+            if (from.getRekoStatus() != null) {
+                to.setRekoStatus(getRekoStatus(from));
+            }
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
         }
 
         return to;
+    }
+
+    private static RekoStatusDTO getRekoStatus(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from) {
+        return new RekoStatusDTO(
+                new RekoStatusTypeDTO(
+                        from.getRekoStatus().getStatus().getId(),
+                        from.getRekoStatus().getStatus().getName())
+        );
     }
 
     /**

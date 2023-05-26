@@ -22,18 +22,11 @@ package se.inera.intyg.rehabstod.service.sjukfall.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.web.model.Lakare;
-
-import java.util.List;
+import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PopulateFiltersResponseDTO {
-    private List<Lakare> activeDoctors;
-    private List<DiagnosKapitel> allDiagnosisChapters;
-    private List<DiagnosKapitel> enabledDiagnosisChapters;
-    private int nbrOfSickLeaves;
-    private List<RekoStatusTypeDTO> rekoStatusTypes;
+public class RekoStatusDTO {
+    private RekoStatusTypeDTO status;
 }

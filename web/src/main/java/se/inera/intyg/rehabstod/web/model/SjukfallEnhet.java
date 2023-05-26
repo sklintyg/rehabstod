@@ -21,6 +21,8 @@ package se.inera.intyg.rehabstod.web.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.List;
+
+import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 
 /**
@@ -63,8 +65,17 @@ public class SjukfallEnhet {
     private RiskSignal riskSignal;
     private boolean nyligenAvslutat;
     private String encryptedPatientId;
+    private RekoStatusDTO rekoStatus;
 
     // - - - getters and setters
+
+    public RekoStatusDTO getRekoStatus() {
+        return rekoStatus;
+    }
+
+    public void setRekoStatus(RekoStatusDTO rekoStatus) {
+        this.rekoStatus = rekoStatus;
+    }
 
     public void setEncryptedPatientId(String encryptedPatientId) {
         this.encryptedPatientId = encryptedPatientId;

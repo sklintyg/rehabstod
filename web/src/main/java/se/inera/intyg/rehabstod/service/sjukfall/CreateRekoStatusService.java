@@ -17,23 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall.dto;
+package se.inera.intyg.rehabstod.service.sjukfall;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.web.model.Lakare;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusDTO;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class PopulateFiltersResponseDTO {
-    private List<Lakare> activeDoctors;
-    private List<DiagnosKapitel> allDiagnosisChapters;
-    private List<DiagnosKapitel> enabledDiagnosisChapters;
-    private int nbrOfSickLeaves;
-    private List<RekoStatusTypeDTO> rekoStatusTypes;
+public interface CreateRekoStatusService {
+    RekoStatusDTO create(String patientId, String status, LocalDateTime sickLeaveTimestamp);
 }
