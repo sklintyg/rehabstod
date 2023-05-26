@@ -79,7 +79,9 @@ public class SjukfallEngineMapper {
             to.setAktivIntygsId(from.getAktivIntygsId());
             to.setSysselsattning(from.getSysselsattning());
             to.setNyligenAvslutat(to.getSlutOmDagar() < 0 && to.getSlutOmDagar() + maxDagarSedanAvslut >= 0);
-            to.setRekoStatus(new RekoStatusDTO(from.getRekoStatus().getId(), from.getRekoStatus().getStatus()));
+            if (from.getRekoStatus() != null) {
+                to.setRekoStatus(new RekoStatusDTO(from.getRekoStatus().getId(), from.getRekoStatus().getStatus()));
+            }
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
         }
