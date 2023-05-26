@@ -61,7 +61,8 @@ public class SickLeaveControllerTest {
                     1,
                     150,
                     LocalDate.now(),
-                    LocalDate.now()
+                    LocalDate.now(),
+                    Collections.emptyList()
             );
         sickLeaveController.getSickLeavesForUnit(expectedRequest);
         verify(getActiveSickLeavesService).get(expectedRequest, true);
