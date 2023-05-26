@@ -35,6 +35,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.inera.intyg.infra.sjukfall.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
@@ -70,6 +71,7 @@ public class SjukfallEngineMapperTest {
     private static final Integer ANTALINTYG = 1;
     private static final String DIAGNOS_KOD = "M123";
     private static final String REKO_STATUS = "REKO_1";
+    private static final String REKO_STATUS_NAME = "REKO_1 Name";
     private static final LocalDate AKTIVTDATUM = LocalDate.now();
 
     @Mock
@@ -120,7 +122,7 @@ public class SjukfallEngineMapperTest {
         assertEquals(NEDSATTNING, to.getGrader().get(0));
         assertEquals(1, to.getSysselsattning().size());
         assertEquals(SYSSELSATTNING, to.getSysselsattning().get(0));
-        assertEquals(REKO_STATUS, to.getRekoStatus());
+        assertEquals(new se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO(REKO_STATUS, REKO_STATUS_NAME), to.getRekoStatus());
     }
 
     @Test
@@ -284,7 +286,18 @@ public class SjukfallEngineMapperTest {
         enhet.setDagar(getSjukskrivningsDagar());
         enhet.setIntyg(ANTALINTYG);
         enhet.setSysselsattning(createSysselsattningar());
-        enhet.setRekoStatus(REKO_STATUS);
+        enhet.setRekoStatus(new RekoStatusDTO(
+            REKO_STATUS,
+            REKO_STATUS_NAME,
+            PERSONNUMMER,
+            VARDGIVAREID,
+            VARDENHETID,
+            VARDENHETID,
+            LAKAREID,
+            LAKARENAMN,
+            NEDSATTNINGSTARTDATUM.atStartOfDay(),
+            LocalDateTime.now()
+        ));
 
         return enhet;
     }
