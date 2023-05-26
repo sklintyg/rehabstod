@@ -117,7 +117,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
     @Override
     public RekoStatusDTO createRekoStatus(CreateRekoStatusRequestDTO request) {
-        final String url = intygstjanstUrl + "/inera-certificate/internalapi/reko/set";
+        final String url = intygstjanstUrl + "/inera-certificate/internalapi/reko";
 
         LOGGER.debug("Setting reko status to sick leave");
 

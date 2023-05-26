@@ -41,6 +41,7 @@ public class CreateRekoStatusServiceImpl implements CreateRekoStatusService {
         this.userService = userService;
     }
 
+    @Override
     public RekoStatusDTO create(String patientId, String status, LocalDateTime sickLeaveTimestamp) {
         final var user = userService.getUser();
         final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
