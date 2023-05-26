@@ -237,7 +237,8 @@ public class PopulateFiltersServiceTest {
             final var responeDTO = new PopulateFiltersResponseDTO(
                 null,
                 null,
-                0
+                0,
+                null
             );
             when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(responeDTO);
             final var response = populateActiveFilters.get();
