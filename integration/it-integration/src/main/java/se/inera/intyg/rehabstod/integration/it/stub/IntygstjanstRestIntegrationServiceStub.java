@@ -139,8 +139,8 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     }
 
     @Override
-    public Response createRekoStatus(CreateRekoStatusRequestDTO request) {
-        return Response.ok().build();
+    public RekoStatusDTO createRekoStatus(CreateRekoStatusRequestDTO request) {
+        return new RekoStatusDTO("REKO_1", request.getStatus());
     }
 
     private boolean isDiagnosisCodeIncluded(List<DiagnosKapitel> diagnosisChapters, String diagnosisCode) {
