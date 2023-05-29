@@ -172,8 +172,6 @@ public class GetActiveSickLeavesServiceTest {
             TO_END_DATE,
             Collections.emptyList(),
             Collections.emptyList()
-            Collections.singletonList(REKO_FILTER),
-            OCCUPATION_FILTER
         );
 
 
