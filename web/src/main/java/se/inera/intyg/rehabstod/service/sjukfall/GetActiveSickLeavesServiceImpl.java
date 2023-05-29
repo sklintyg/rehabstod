@@ -111,7 +111,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         final var request = new SickLeavesRequestDTO();
 
         if (user.getUrval().equals(Urval.ISSUED_BY_ME)) {
-            filterRequest.addDoctorId(user.getHsaId());
+            filterRequest.getDoctorIds().add(user.getHsaId());
         }
 
         request.setMaxCertificateGap(includeParameters ? ControllerUtil.getMaxGlapp(user) : 0);
