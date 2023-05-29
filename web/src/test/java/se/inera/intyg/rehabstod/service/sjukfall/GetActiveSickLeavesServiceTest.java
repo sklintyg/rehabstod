@@ -284,7 +284,7 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(TO_PATIENT_AGE, captor.getValue().getToPatientAge());
             assertEquals(FROM_END_DATE, captor.getValue().getFromSickLeaveEndDate());
             assertEquals(TO_END_DATE, captor.getValue().getToSickLeaveEndDate());
-            assertEquals(REKO_FILTER, captor.getValue().getRekoStatuses().get(0));
+            assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
         }
 
         @Test
@@ -307,7 +307,7 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(TO_PATIENT_AGE, captor.getValue().getToPatientAge());
             assertEquals(FROM_END_DATE, captor.getValue().getFromSickLeaveEndDate());
             assertEquals(TO_END_DATE, captor.getValue().getToSickLeaveEndDate());
-            assertEquals(REKO_FILTER, captor.getValue().getRekoStatuses().get(0));
+            assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
         }
 
         @Test
@@ -377,7 +377,7 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(DOCTOR_FILTER, captor.getValue().getDoctorIds().get(0));
             assertEquals(FROM_PATIENT_AGE, captor.getValue().getFromPatientAge());
             assertEquals(TO_PATIENT_AGE, captor.getValue().getToPatientAge());
-            assertEquals(REKO_FILTER, captor.getValue().getRekoStatuses().get(0));
+            assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
         }
 
         @Test

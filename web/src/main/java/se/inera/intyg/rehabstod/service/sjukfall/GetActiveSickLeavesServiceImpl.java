@@ -126,7 +126,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         request.setProtectedPersonFilterId(puService.shouldFilterSickLeavesOnProtectedPerson(user) ? null : user.getHsaId());
         request.setFromSickLeaveEndDate(filterRequest.getFromSickLeaveEndDate());
         request.setToSickLeaveEndDate(filterRequest.getToSickLeaveEndDate());
-        request.setRekoStatuses(filterRequest.getRekoStatuses());
+        request.setRekoStatusTypeIds(filterRequest.getRekoStatusTypeIds());
         return request;
     }
 

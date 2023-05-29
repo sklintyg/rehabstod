@@ -40,7 +40,7 @@ public class SickLeavesFilterRequestDTO {
     private Integer toPatientAge;
     private LocalDate fromSickLeaveEndDate;
     private LocalDate toSickLeaveEndDate;
-    private List<String> rekoStatuses;
+    private List<String> rekoStatusTypeIds;
 
     public void addDoctorId(String id) {
         if (doctorIds == null) {
