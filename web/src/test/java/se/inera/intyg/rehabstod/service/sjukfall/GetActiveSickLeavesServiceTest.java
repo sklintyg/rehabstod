@@ -172,6 +172,8 @@ public class GetActiveSickLeavesServiceTest {
             TO_END_DATE,
             Collections.emptyList(),
             Collections.emptyList()
+            Collections.singletonList(REKO_FILTER),
+            OCCUPATION_FILTER
         );
 
 
@@ -314,7 +316,6 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(TO_END_DATE, captor.getValue().getToSickLeaveEndDate());
             assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
             assertEquals(OCCUPATION_FILTER, captor.getValue().getOccupationTypeIds());
-
         }
 
         @Test
@@ -388,7 +389,6 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(TO_PATIENT_AGE, captor.getValue().getToPatientAge());
             assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
             assertEquals(OCCUPATION_FILTER, captor.getValue().getOccupationTypeIds());
-            
         }
 
         @Test
