@@ -99,10 +99,10 @@ public class PuServiceImplTest {
     }
 
     @Test
-    public void testShouldFilterOnProtectedPersonIfLakareAsRehabkoordinator() {
+    public void testShouldNotFilterOnProtectedPersonIfLakareAsRehabkoordinator() {
         final var user = buildLakareAsRehabkoordinator(VARDENHET_1);
         when(userService.getUser()).thenReturn(user);
-        assertTrue(testee.shouldFilterSickLeavesOnProtectedPerson(userService.getUser()));
+        assertFalse(testee.shouldFilterSickLeavesOnProtectedPerson(userService.getUser()));
     }
 
     @Test
