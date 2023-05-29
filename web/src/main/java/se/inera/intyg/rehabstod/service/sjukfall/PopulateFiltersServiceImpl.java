@@ -23,15 +23,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
-import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.service.pu.PuService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.OccupationTypeDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -72,8 +73,19 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
             diagnosKapitelService.getDiagnosKapitelList(),
             convertDiagnosisChapters(responseFromIT.getDiagnosisChapters()),
             responseFromIT.getNbrOfSickLeaves(),
-            convertRekoStatuses(responseFromIT.getRekoStatusTypes())
+            convertRekoStatuses(responseFromIT.getRekoStatusTypes()),
+            convertOccupationTypes(responseFromIT.getOccupationTypes())
         );
+    }
+
+    private List<OccupationTypeDTO> convertOccupationTypes(
+        List<se.inera.intyg.infra.sjukfall.dto.OccupationTypeDTO> occupationTypeDTOList) {
+        if (occupationTypeDTOList == null) {
+            return Collections.emptyList();
+        }
+        return occupationTypeDTOList.stream()
+            .map(occupationTypeDTO -> new OccupationTypeDTO(occupationTypeDTO.getId(), occupationTypeDTO.getName()))
+            .collect(Collectors.toList());
     }
 
     private List<se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusTypeDTO> convertRekoStatuses(List<RekoStatusTypeDTO> list) {
@@ -81,9 +93,9 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
             return Collections.emptyList();
         }
         return list
-                .stream()
-                .map((status) -> new se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusTypeDTO(status.getId(), status.getName()))
-                .collect(Collectors.toList());
+            .stream()
+            .map((status) -> new se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusTypeDTO(status.getId(), status.getName()))
+            .collect(Collectors.toList());
     }
 
     private List<Lakare> convertDoctors(List<se.inera.intyg.infra.sjukfall.dto.Lakare> listToConvert) {
