@@ -19,6 +19,7 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
     public SickLeaveSummary get() {
         final var sickLeaves = getActiveSickLeavesService.get(
             new SickLeavesFilterRequestDTO(
-                    Collections.emptyList(),
+                    new ArrayList<>(),
                     Collections.emptyList(),
                     Collections.emptyList(),
                     null,
