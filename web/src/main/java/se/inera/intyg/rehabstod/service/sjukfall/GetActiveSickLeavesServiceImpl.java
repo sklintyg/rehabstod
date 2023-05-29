@@ -20,6 +20,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -110,15 +111,11 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     ) {
         final var request = new SickLeavesRequestDTO();
 
-        if (user.getUrval().equals(Urval.ISSUED_BY_ME)) {
-            filterRequest.addDoctorId(user.getHsaId());
-        }
-
         request.setMaxCertificateGap(includeParameters ? ControllerUtil.getMaxGlapp(user) : 0);
         request.setMaxDaysSinceSickLeaveCompleted(includeParameters ? ControllerUtil.getMaxDagarSedanSjukfallAvslut(user) : 0);
         request.setUnitId(unitId);
         request.setCareUnitId(careUnitId);
-        request.setDoctorIds(filterRequest.getDoctorIds());
+        request.setDoctorIds(getFilteringDoctorIds(user, filterRequest.getDoctorIds()));
         request.setSickLeaveLengthIntervals(convertSickLeaveLengthIntervals(filterRequest.getSickLeaveLengthIntervals()));
         request.setDiagnosisChapters(convertDiagnosisChapters(filterRequest.getDiagnosisChapters()));
         request.setFromPatientAge(filterRequest.getFromPatientAge());
@@ -126,7 +123,16 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         request.setProtectedPersonFilterId(puService.shouldFilterSickLeavesOnProtectedPerson(user) ? null : user.getHsaId());
         request.setFromSickLeaveEndDate(filterRequest.getFromSickLeaveEndDate());
         request.setToSickLeaveEndDate(filterRequest.getToSickLeaveEndDate());
+        request.setRekoStatusTypeIds(filterRequest.getRekoStatusTypeIds());
         return request;
+    }
+
+    private List<String> getFilteringDoctorIds(RehabstodUser user, List<String> filterDoctorIds) {
+        final var list = new ArrayList<>(filterDoctorIds);
+        if (user.getUrval().equals(Urval.ISSUED_BY_ME)) {
+            list.add(user.getHsaId());
+        }
+        return list;
     }
 
     private List<SickLeaveLengthInterval> convertSickLeaveLengthIntervals(

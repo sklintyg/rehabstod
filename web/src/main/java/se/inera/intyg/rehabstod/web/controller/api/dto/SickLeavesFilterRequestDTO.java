@@ -20,7 +20,6 @@
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -40,11 +39,5 @@ public class SickLeavesFilterRequestDTO {
     private Integer toPatientAge;
     private LocalDate fromSickLeaveEndDate;
     private LocalDate toSickLeaveEndDate;
-
-    public void addDoctorId(String id) {
-        if (doctorIds == null) {
-            doctorIds = new ArrayList<>();
-        }
-        doctorIds.add(id);
-    }
+    private List<String> rekoStatusTypeIds;
 }

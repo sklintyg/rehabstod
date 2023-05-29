@@ -19,7 +19,8 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.util.ArrayList;
+import java.util.Collections;
+
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveSummary;
@@ -44,8 +45,18 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
     @Override
     public SickLeaveSummary get() {
         final var sickLeaves = getActiveSickLeavesService.get(
-            new SickLeavesFilterRequestDTO(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, null, null),
-                INCLUDE_PARAMETERS);
+            new SickLeavesFilterRequestDTO(
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    Collections.emptyList()
+            ),
+            INCLUDE_PARAMETERS
+        );
         puService.filterSekretessForSummary(sickLeaves);
         return statisticsCalculator.getSickLeaveSummary(sickLeaves);
     }
