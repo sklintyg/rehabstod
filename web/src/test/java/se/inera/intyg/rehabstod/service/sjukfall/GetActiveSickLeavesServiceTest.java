@@ -27,7 +27,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import org.junit.jupiter.api.Assertions;
@@ -160,7 +159,7 @@ public class GetActiveSickLeavesServiceTest {
         );
     static final SickLeavesFilterRequestDTO EXPECTED_REQUEST_DOCTOR =
         new SickLeavesFilterRequestDTO(
-                new ArrayList<>(),
+                Collections.emptyList(),
                 Collections.singletonList(INTERVALS_FILTER),
                 Collections.emptyList(),
                 null,
@@ -391,6 +390,19 @@ public class GetActiveSickLeavesServiceTest {
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
             assertEquals(HSA_ID, captor.getValue().getDoctorIds().get(0));
+        }
+
+        @Test
+        void shouldCreateRequestWithHsaIdIfDoctorAndMergedWithFilteringDoctorIds() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
+
+            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+
+            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+            assertEquals(EXPECTED_REQUEST.getDoctorIds().size() + 1, captor.getValue().getDoctorIds().size());
         }
 
         @Test
