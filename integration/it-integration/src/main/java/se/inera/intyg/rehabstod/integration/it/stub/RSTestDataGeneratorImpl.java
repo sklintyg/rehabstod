@@ -898,7 +898,6 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         arnoldId.setExtension("TSTNMT2321000156-107");
         arnold.setPersonalId(arnoldId);
 
-
         hosPersonList.add(hosPerson1);
         hosPersonList.add(hosPerson2);
         hosPersonList.add(hosPerson3);
