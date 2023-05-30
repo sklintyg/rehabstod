@@ -34,6 +34,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.pu.PuService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.GetActiveSickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
@@ -73,7 +74,8 @@ public class GetSickLeaveSummaryServiceTest {
 
     @BeforeEach
     void setup() {
-        doReturn(sickLeaves).when(getActiveSickLeavesService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class));
+        doReturn(new GetActiveSickLeavesResponseDTO(sickLeaves, false))
+                .when(getActiveSickLeavesService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class));
         doReturn(summary).when(statisticsCalculator).getSickLeaveSummary(sickLeaves);
     }
 
