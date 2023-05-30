@@ -191,8 +191,8 @@ public class PuServiceImpl implements PuService {
 
     @Override
     public boolean shouldFilterSickLeavesOnProtectedPerson(RehabstodUser user) {
-        return !(user.isLakare() && user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE))
-                || (user.isLakare() && !user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE));
+        return !((user.isLakare() && user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE))
+                || (user.isLakare() && !user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE)));
     }
 
     @Override
