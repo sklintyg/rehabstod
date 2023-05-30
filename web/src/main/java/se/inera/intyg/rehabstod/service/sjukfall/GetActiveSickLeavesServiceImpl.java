@@ -38,8 +38,10 @@ import se.inera.intyg.rehabstod.logging.SickLeaveLogMessageFactory;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
+import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.GetActiveSickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
@@ -83,7 +85,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     }
 
     @Override
-    public List<SjukfallEnhet> get(SickLeavesFilterRequestDTO filterRequest, boolean includeParameters) {
+    public GetActiveSickLeavesResponseDTO get(SickLeavesFilterRequestDTO filterRequest, boolean includeParameters) {
         final var user = userService.getUser();
         final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
@@ -102,7 +104,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_DOCTOR_NAMES, convertedSickLeaves.size()));
 
         logFactory.setStartTimer(System.currentTimeMillis());
-        riskPredictionService.updateWithRiskPredictions(convertedSickLeaves);
+        final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(convertedSickLeaves);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_SRS_RISK, convertedSickLeaves.size()));
 
         LOG.debug("Logging that sick leaves have been fetched");
@@ -111,7 +113,16 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         convertedSickLeaves.forEach(
             sickLeave -> sickLeave.setEncryptedPatientId(patientIdEncryption.encrypt(sickLeave.getPatient().getId())));
 
-        return convertedSickLeaves;
+        return new GetActiveSickLeavesResponseDTO(convertedSickLeaves, !hasDecoratedWithSRSInfo);
+    }
+
+    private boolean decorateWithSRSInfo(List<SjukfallEnhet> sickLeaves) {
+        try {
+            riskPredictionService.updateWithRiskPredictions(sickLeaves);
+        } catch (SRSServiceException e) {
+            return false;
+        }
+        return true;
     }
 
     private SickLeavesRequestDTO getRequest(
