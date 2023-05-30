@@ -29,6 +29,9 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -59,6 +62,7 @@ import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
+import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
@@ -88,6 +92,9 @@ public class GetActiveSickLeavesServiceTest {
     SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
     @Mock
     PatientIdEncryption patientIdEncryption;
+
+    @Mock
+    RiskPredictionService riskPredictionService;
 
     @InjectMocks
     GetActiveSickLeavesServiceImpl getActiveSickLeavesService;
@@ -168,6 +175,25 @@ public class GetActiveSickLeavesServiceTest {
                 TO_END_DATE,
                 Collections.emptyList()
         );
+
+    @Nested
+    class TestSrs {
+        @BeforeEach
+        void setup() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ALL);
+        }
+
+        @Test
+        void shouldCallRiskPredictionService() {
+            final var captor = ArgumentCaptor.forClass(List.class);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+            verify(riskPredictionService).updateWithRiskPredictions(captor.capture());
+            assertEquals(1, captor.getValue().size());
+            assertEquals(sickLeave, captor.getValue().get(0));
+        }
+    }
 
 
     @Nested

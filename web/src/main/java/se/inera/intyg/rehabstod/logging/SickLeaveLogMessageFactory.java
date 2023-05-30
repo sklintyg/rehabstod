@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit;
 public class SickLeaveLogMessageFactory {
 
     public static final String GET_ACTIVE_SICK_LEAVES = "GET_ACTIVE_SICK_LEAVES";
-    public static final String ADD_PATIENT_INFORMATION = "ADD_PATIENT_INFORMATION";
     public static final String ADD_DOCTOR_NAMES = "ADD_DOCTOR_NAMES";
+    public static final String ADD_SRS_RISK = "ADD_SRS_RISK";
 
     private long startTimer;
 

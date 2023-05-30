@@ -38,11 +38,13 @@ import se.inera.intyg.rehabstod.logging.SickLeaveLogMessageFactory;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
+import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
+import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
@@ -59,6 +61,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
     private final PatientIdEncryption patientIdEncryption;
     private final PuService puService;
+    private final RiskPredictionService riskPredictionService;
 
     private static final Logger LOG = LoggerFactory.getLogger(GetActiveSickLeavesServiceImpl.class);
 
@@ -67,13 +70,15 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
                                           SjukfallEngineMapper sjukfallEngineMapper, PdlLogSickLeavesService pdlLogSickLeavesService,
                                           IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
                                           SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
-                                          PatientIdEncryption patientIdEncryption, PuService puService) {
+                                          PatientIdEncryption patientIdEncryption, PuService puService,
+                                          RiskPredictionService riskPredictionService) {
         this.userService = userService;
         this.monitoringLogService = monitoringLogService;
         this.sjukfallEngineMapper = sjukfallEngineMapper;
         this.pdlLogSickLeavesService = pdlLogSickLeavesService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
         this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
+        this.riskPredictionService = riskPredictionService;
         this.patientIdEncryption = patientIdEncryption;
         this.puService = puService;
     }
@@ -95,7 +100,11 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         logFactory.setStartTimer(System.currentTimeMillis());
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(convertedSickLeaves);
         sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(convertedSickLeaves);
-        LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_PATIENT_INFORMATION, response.getContent().size()));
+        LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_DOCTOR_NAMES, convertedSickLeaves.size()));
+
+        logFactory.setStartTimer(System.currentTimeMillis());
+        final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(convertedSickLeaves);
+        LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_SRS_RISK, convertedSickLeaves.size()));
 
         LOG.debug("Logging that sick leaves have been fetched");
         performMonitorLogging(convertedSickLeaves, user.getHsaId(), unitId != null ? unitId : careUnitId);
@@ -104,6 +113,15 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
             sickLeave -> sickLeave.setEncryptedPatientId(patientIdEncryption.encrypt(sickLeave.getPatient().getId())));
 
         return convertedSickLeaves;
+    }
+
+    private boolean decorateWithSRSInfo(List<SjukfallEnhet> sickLeaves) {
+        try {
+            riskPredictionService.updateWithRiskPredictions(sickLeaves);
+        } catch (SRSServiceException e) {
+            return false;
+        }
+        return true;
     }
 
     private SickLeavesRequestDTO getRequest(
