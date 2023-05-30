@@ -99,12 +99,14 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
     private Enhet underenhet2;
     private Enhet kerstinEnhet1;
     private Enhet kerstinEnhet2;
+    private Enhet alfaEnheten;
     private HosPersonal kerstin1HosPersonal;
     private HosPersonal kerstin2HosPersonal;
     private Vardgivare vg;
     private Vardgivare vg2;
     private Vardgivare vg3;
     private Vardgivare vg4;
+    private Vardgivare vg5;
     private HosPersonal utanInloggning;
     private int currentDiagnosIndex = 0;
     private final List<String> diagnosList = new ArrayList<>();
@@ -716,6 +718,7 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         diagnosList.add("Z610");
         diagnosList.add("Z723");
         diagnosList.add("Z870");
+        diagnosList.add("M79");
     }
 
     private DiagnosKapitel getDiagnosKapitel(char fromLetter, char toLetter, int fromNumber, int toNumber, String name) {
@@ -748,6 +751,7 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         initFakedVardgivare2();
         initFakedVardgivare3();
         initFakedVardgivare4();
+        initFakedVardgivare5();
 
         enhet = new Enhet();
         HsaId hsaId = new HsaId();
@@ -804,6 +808,14 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         kerstinEnhet2.setEnhetsId(kerstinEnhetsId2);
         kerstinEnhet2.setEnhetsnamn("Rehabstöd Enhet 3");
         kerstinEnhet2.setVardgivare(vg);
+
+        alfaEnheten = new Enhet();
+        final var alfaHsaId = new HsaId();
+        alfaHsaId.setExtension("TSTNMT2321000156-1077");
+        alfaEnheten.setEnhetsId(alfaHsaId);
+        alfaEnheten.setEnhetsnamn("Alfa-enheten");
+        alfaEnheten.setVardgivare(vg5);
+
     }
 
     private void initHoSPerson() {
@@ -879,6 +891,13 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         tothGergoId.setExtension("toth-gergo-1");
         tothGergo.setPersonalId(tothGergoId);
 
+        final var arnold = new HosPersonal();
+        final var arnoldId = new HsaId();
+        arnold.setEnhet(alfaEnheten);
+        arnold.setFullstandigtNamn("Arnold Johansson");
+        arnoldId.setExtension("TSTNMT2321000156-107");
+        arnold.setPersonalId(arnoldId);
+
         hosPersonList.add(hosPerson1);
         hosPersonList.add(hosPerson2);
         hosPersonList.add(hosPerson3);
@@ -889,6 +908,7 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         hosPersonList.add(kerstin2HosPersonal);
         hosPersonList.add(peterEnkel);
         hosPersonList.add(tothGergo);
+        hosPersonList.add(arnold);
 
         utanInloggning = new HosPersonal();
         utanInloggning.setEnhet(enhet4);
@@ -928,6 +948,14 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         hsaId.setExtension("TSTNMT2321000156-1061");
         vg4.setVardgivarId(hsaId);
         vg4.setVardgivarnamn("VårdgivareCambio");
+    }
+
+    private void initFakedVardgivare5() {
+        vg5 = new Vardgivare();
+        HsaId hsaId = new HsaId();
+        hsaId.setExtension("TSTNMT2321000156-102Q");
+        vg5.setVardgivarId(hsaId);
+        vg5.setVardgivarnamn("nmt_vg3");
     }
 
     public static class StubData {

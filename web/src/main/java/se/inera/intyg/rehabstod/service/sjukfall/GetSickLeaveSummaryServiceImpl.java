@@ -56,7 +56,7 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
                 Collections.emptyList()
             ),
             INCLUDE_PARAMETERS
-        );
+        ).getContent();
         puService.filterSekretessForSummary(sickLeaves);
         return statisticsCalculator.getSickLeaveSummary(sickLeaves);
     }

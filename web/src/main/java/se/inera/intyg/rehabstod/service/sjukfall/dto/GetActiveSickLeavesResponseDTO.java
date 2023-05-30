@@ -17,13 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall;
+package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
-import se.inera.intyg.rehabstod.service.sjukfall.dto.GetActiveSickLeavesResponseDTO;
-import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
+import java.util.List;
 
-public interface GetActiveSickLeavesService {
-
-    GetActiveSickLeavesResponseDTO get(SickLeavesFilterRequestDTO request, boolean includeParameters);
+@Data
+@AllArgsConstructor
+public class GetActiveSickLeavesResponseDTO {
+    List<SjukfallEnhet> content;
+    boolean srsError;
 }

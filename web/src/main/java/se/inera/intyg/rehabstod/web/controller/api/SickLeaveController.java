@@ -48,7 +48,8 @@ public class SickLeaveController {
 
     @RequestMapping(value = "/active", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public SickLeavesResponseDTO getSickLeavesForUnit(@RequestBody SickLeavesFilterRequestDTO request) {
-        return new SickLeavesResponseDTO(getActiveSickLeavesService.get(request, INCLUDE_PARAMETERS));
+        final var response = getActiveSickLeavesService.get(request, INCLUDE_PARAMETERS);
+        return new SickLeavesResponseDTO(response.getContent(), response.isSrsError());
     }
 
     @RequestMapping(value = "/filters", method = RequestMethod.GET)

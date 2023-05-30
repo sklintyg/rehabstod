@@ -30,4 +30,5 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 @AllArgsConstructor
 public class SickLeavesResponseDTO {
     private List<SjukfallEnhet> content;
+    private boolean srsError;
 }
