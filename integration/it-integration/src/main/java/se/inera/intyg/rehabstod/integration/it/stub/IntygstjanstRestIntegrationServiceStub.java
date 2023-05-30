@@ -37,7 +37,13 @@ import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
-import se.inera.intyg.rehabstod.integration.it.dto.*;
+import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeaveLengthInterval;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 
 @Profile("rhs-it-stub")
@@ -110,7 +116,7 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
 
     private boolean filterOnSickLeaveEndDate(SickLeavesRequestDTO request, LocalDate endDate) {
         return (request.getFromSickLeaveEndDate() == null || request.getFromSickLeaveEndDate().isBefore(endDate))
-                && (request.getToSickLeaveEndDate() == null || request.getToSickLeaveEndDate().isAfter(endDate));
+            && (request.getToSickLeaveEndDate() == null || request.getToSickLeaveEndDate().isAfter(endDate));
     }
 
     private boolean filterOnPatientAge(SickLeavesRequestDTO request, String patientId) {
@@ -118,9 +124,9 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
             return true;
         }
         final var patientBirthDay = LocalDate.of(
-                Integer.parseInt(patientId.substring(YEAR_SEPARATOR[0], YEAR_SEPARATOR[1])),
-                Integer.parseInt(patientId.substring(MONTH_SEPARATOR[0], MONTH_SEPARATOR[1])),
-                Integer.parseInt(patientId.substring(DAY_SEPARATOR[0], DAY_SEPARATOR[1])));
+            Integer.parseInt(patientId.substring(YEAR_SEPARATOR[0], YEAR_SEPARATOR[1])),
+            Integer.parseInt(patientId.substring(MONTH_SEPARATOR[0], MONTH_SEPARATOR[1])),
+            Integer.parseInt(patientId.substring(DAY_SEPARATOR[0], DAY_SEPARATOR[1])));
 
         final var patientAge = Period.between(patientBirthDay, LocalDate.now()).getYears();
         return request.getFromPatientAge() <= patientAge && request.getToPatientAge() >= patientAge;
@@ -131,17 +137,18 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
         final var sickLeaves = rsTestIntygStub.getActiveSickLeaveData();
         final var diagnosisChapters = rsTestIntygStub.getDiagnosisChapterList();
         return new PopulateFiltersResponseDTO(
-                getDoctorsFromSickLeaves(sickLeaves),
-                diagnosisChapters,
-                sickLeaves.size(),
-                Collections.emptyList()
+            getDoctorsFromSickLeaves(sickLeaves),
+            diagnosisChapters,
+            sickLeaves.size(),
+            Collections.emptyList(),
+            Collections.emptyList()
         );
     }
 
     @Override
     public RekoStatusDTO createRekoStatus(CreateRekoStatusRequestDTO request) {
         return new RekoStatusDTO(
-                new RekoStatusTypeDTO("REKO_1", request.getStatusId())
+            new RekoStatusTypeDTO("REKO_1", request.getStatusId())
         );
     }
 

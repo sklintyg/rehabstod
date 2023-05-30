@@ -24,7 +24,6 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.Collections;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -55,14 +54,15 @@ public class SickLeaveControllerTest {
     void shouldCallGetActiveSickLeavesService() {
         final var expectedRequest =
             new SickLeavesFilterRequestDTO(
-                    Collections.singletonList("doctorId"),
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    1,
-                    150,
-                    LocalDate.now(),
-                    LocalDate.now(),
-                    Collections.emptyList()
+                Collections.singletonList("doctorId"),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                1,
+                150,
+                LocalDate.now(),
+                LocalDate.now(),
+                Collections.emptyList(),
+                Collections.emptyList()
             );
         sickLeaveController.getSickLeavesForUnit(expectedRequest);
         verify(getActiveSickLeavesService).get(expectedRequest, true);
@@ -76,11 +76,12 @@ public class SickLeaveControllerTest {
         @BeforeEach
         void setup() {
             expectedResponse = new PopulateFiltersResponseDTO(
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    Collections.emptyList(),
-                    10,
-                    Collections.emptyList()
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                10,
+                Collections.emptyList(),
+                Collections.emptyList()
             );
 
             when(populateFiltersService.get()).thenReturn(expectedResponse);
@@ -121,16 +122,23 @@ public class SickLeaveControllerTest {
             final var response = sickLeaveController.populateFilters();
             assertEquals(expectedResponse.getRekoStatusTypes(), response.getRekoStatusTypes());
         }
+
+        @Test
+        void shouldTransformResponseOccupationsStatusTypes() {
+            final var response = sickLeaveController.populateFilters();
+            assertEquals(expectedResponse.getOccupationTypes(), response.getOccupationTypes());
+        }
     }
 
     @Test
     void shouldTransformPopulateFiltersResponse() {
         final var expectedResponse = new PopulateFiltersResponseDTO(
-                Collections.emptyList(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                10,
-                Collections.emptyList()
+            Collections.emptyList(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            10,
+            Collections.emptyList(),
+            Collections.emptyList()
         );
         when(populateFiltersService.get()).thenReturn(expectedResponse);
 
@@ -141,6 +149,7 @@ public class SickLeaveControllerTest {
         assertEquals(expectedResponse.getEnabledDiagnosisChapters(), actualResponse.getEnabledDiagnosisChapters());
         assertEquals(expectedResponse.getNbrOfSickLeaves(), actualResponse.getNbrOfSickLeaves());
         assertEquals(expectedResponse.getRekoStatusTypes(), actualResponse.getRekoStatusTypes());
+        assertEquals(expectedResponse.getOccupationTypes(), actualResponse.getOccupationTypes());
     }
 
     @Test
