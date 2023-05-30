@@ -67,6 +67,9 @@ public class SickLeaveControllerTest {
                 Collections.emptyList(),
                 Collections.emptyList()
             );
+        when(getActiveSickLeavesService.get(any(), anyBoolean())).thenReturn(
+                new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true)
+        );
         sickLeaveController.getSickLeavesForUnit(expectedRequest);
         verify(getActiveSickLeavesService).get(expectedRequest, true);
     }
@@ -82,6 +85,7 @@ public class SickLeaveControllerTest {
                         150,
                         LocalDate.now(),
                         LocalDate.now(),
+                        Collections.emptyList(),
                         Collections.emptyList()
                 );
 
@@ -104,6 +108,7 @@ public class SickLeaveControllerTest {
                         150,
                         LocalDate.now(),
                         LocalDate.now(),
+                        Collections.emptyList(),
                         Collections.emptyList()
                 );
 
