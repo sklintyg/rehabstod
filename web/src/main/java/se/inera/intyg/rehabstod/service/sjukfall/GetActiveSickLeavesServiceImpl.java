@@ -38,7 +38,6 @@ import se.inera.intyg.rehabstod.logging.SickLeaveLogMessageFactory;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
-import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
@@ -103,7 +102,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_DOCTOR_NAMES, convertedSickLeaves.size()));
 
         logFactory.setStartTimer(System.currentTimeMillis());
-        final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(convertedSickLeaves);
+        riskPredictionService.updateWithRiskPredictions(convertedSickLeaves);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_SRS_RISK, convertedSickLeaves.size()));
 
         LOG.debug("Logging that sick leaves have been fetched");
@@ -113,15 +112,6 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
             sickLeave -> sickLeave.setEncryptedPatientId(patientIdEncryption.encrypt(sickLeave.getPatient().getId())));
 
         return convertedSickLeaves;
-    }
-
-    private boolean decorateWithSRSInfo(List<SjukfallEnhet> sickLeaves) {
-        try {
-            riskPredictionService.updateWithRiskPredictions(sickLeaves);
-        } catch (SRSServiceException e) {
-            return false;
-        }
-        return true;
     }
 
     private SickLeavesRequestDTO getRequest(
