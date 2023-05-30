@@ -18,7 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -137,6 +138,7 @@ public class GetActiveSickLeavesServiceTest {
     static final String DAYS = "10";
     static final String DOCTOR_FILTER = "DOCTOR_ID";
     static final String REKO_FILTER = "REKO_STATUS";
+    static final List<String> OCCUPATION_FILTER = List.of("STUDIER");
     static final SickLeaveLengthInterval INTERVALS_FILTER = new SickLeaveLengthInterval(1, 365);
     static final int FROM_PATIENT_AGE = 1;
     static final int TO_PATIENT_AGE = 150;
@@ -161,18 +163,20 @@ public class GetActiveSickLeavesServiceTest {
             TO_PATIENT_AGE,
             FROM_END_DATE,
             TO_END_DATE,
-            Collections.singletonList(REKO_FILTER)
+            Collections.singletonList(REKO_FILTER),
+            OCCUPATION_FILTER
         );
     static final SickLeavesFilterRequestDTO EXPECTED_REQUEST_DOCTOR =
         new SickLeavesFilterRequestDTO(
-                Collections.emptyList(),
-                Collections.singletonList(INTERVALS_FILTER),
-                Collections.emptyList(),
-                null,
-                null,
-                FROM_END_DATE,
-                TO_END_DATE,
-                Collections.emptyList()
+            Collections.emptyList(),
+            Collections.singletonList(INTERVALS_FILTER),
+            Collections.emptyList(),
+            null,
+            null,
+            FROM_END_DATE,
+            TO_END_DATE,
+            Collections.emptyList(),
+            Collections.emptyList()
         );
 
     @Nested
@@ -309,6 +313,7 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(FROM_END_DATE, captor.getValue().getFromSickLeaveEndDate());
             assertEquals(TO_END_DATE, captor.getValue().getToSickLeaveEndDate());
             assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
+            assertEquals(OCCUPATION_FILTER, captor.getValue().getOccupationTypeIds());
         }
 
         @Test
@@ -332,6 +337,7 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(FROM_END_DATE, captor.getValue().getFromSickLeaveEndDate());
             assertEquals(TO_END_DATE, captor.getValue().getToSickLeaveEndDate());
             assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
+            assertEquals(OCCUPATION_FILTER, captor.getValue().getOccupationTypeIds());
         }
 
         @Test
@@ -350,7 +356,8 @@ public class GetActiveSickLeavesServiceTest {
                     null,
                     FROM_END_DATE,
                     TO_END_DATE,
-                    Collections.singletonList(REKO_FILTER)
+                    Collections.singletonList(REKO_FILTER),
+                    OCCUPATION_FILTER
                 ), true
             );
 
@@ -367,16 +374,17 @@ public class GetActiveSickLeavesServiceTest {
 
             final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
             getActiveSickLeavesService.get(
-                    new SickLeavesFilterRequestDTO(
-                            Collections.singletonList(DOCTOR_FILTER),
-                            Collections.singletonList(new SickLeaveLengthInterval(null, null)),
-                            Collections.singletonList(CHOSEN_DIAGNOSIS_CHAPTER),
-                            null,
-                            null,
-                            null,
-                            null,
-                            Collections.singletonList(REKO_FILTER)
-                    ), true
+                new SickLeavesFilterRequestDTO(
+                    Collections.singletonList(DOCTOR_FILTER),
+                    Collections.singletonList(new SickLeaveLengthInterval(null, null)),
+                    Collections.singletonList(CHOSEN_DIAGNOSIS_CHAPTER),
+                    null,
+                    null,
+                    null,
+                    null,
+                    Collections.singletonList(REKO_FILTER),
+                    OCCUPATION_FILTER
+                ), true
             );
 
             verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
@@ -402,6 +410,7 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(FROM_PATIENT_AGE, captor.getValue().getFromPatientAge());
             assertEquals(TO_PATIENT_AGE, captor.getValue().getToPatientAge());
             assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
+            assertEquals(OCCUPATION_FILTER, captor.getValue().getOccupationTypeIds());
         }
 
         @Test

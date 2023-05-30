@@ -132,6 +132,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         request.setFromSickLeaveEndDate(filterRequest.getFromSickLeaveEndDate());
         request.setToSickLeaveEndDate(filterRequest.getToSickLeaveEndDate());
         request.setRekoStatusTypeIds(filterRequest.getRekoStatusTypeIds());
+        request.setOccupationTypeIds(filterRequest.getOccupationTypeIds());
         return request;
     }
 

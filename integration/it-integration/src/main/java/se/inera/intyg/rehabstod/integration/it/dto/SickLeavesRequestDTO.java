@@ -42,4 +42,5 @@ public class SickLeavesRequestDTO {
     private LocalDate fromSickLeaveEndDate;
     private LocalDate toSickLeaveEndDate;
     private List<String> rekoStatusTypeIds;
+    private List<String> occupationTypeIds;
 }

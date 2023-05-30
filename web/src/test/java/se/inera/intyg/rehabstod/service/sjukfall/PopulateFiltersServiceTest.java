@@ -45,12 +45,13 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKategori;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
+import se.inera.intyg.infra.sjukfall.dto.OccupationTypeDTO;
+import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
-import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
@@ -84,14 +85,14 @@ public class PopulateFiltersServiceTest {
     static final String SUB_UNIT_ID = "SUB_UNIT_ID";
     static final String UNIT_ID = "UNIT_ID";
     static final String DOCTOR_NAME = "DOCTOR_NAME";
-    static final String gap = "5";
-    static final String days = "10";
+    static final String GAP = "5";
+    static final String DAYS = "10";
     static final char LETTER_TO = 'A';
     static final char LETTER_FROM = 'B';
     static final int NUMBER_TO = 1;
     static final int NUMBER_FROM = 2;
     static final String DIAGNOSIS_CHAPTER_NAME = "Name";
-    static final PopulateFiltersRequestDTO expectedRequest = new PopulateFiltersRequestDTO();
+    static final PopulateFiltersRequestDTO EXPECTED_REQUEST = new PopulateFiltersRequestDTO();
     static final int TOTAL_NUMBER_OF_SICK_LEAVES = 10;
 
     RehabstodUser user;
@@ -101,6 +102,7 @@ public class PopulateFiltersServiceTest {
     DiagnosKategori diagnosisChapterTo = new DiagnosKategori(LETTER_TO, NUMBER_TO);
     DiagnosKategori diagnosisChapterFrom = new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
     RekoStatusTypeDTO rekoStatus = new RekoStatusTypeDTO("REKO_1", "Ingen");
+    OccupationTypeDTO occupationTypeDTO = new OccupationTypeDTO("OCCUPATION_STUDIER", "Studier");
     se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel enabledDiagnosisChapter =
         new se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel(diagnosisChapterTo, diagnosisChapterFrom, DIAGNOSIS_CHAPTER_NAME);
     List<DiagnosKapitel> allDiagnosisChapters = Collections.singletonList(new DiagnosKapitel());
@@ -115,8 +117,8 @@ public class PopulateFiltersServiceTest {
         when(userService.getUser()).thenReturn(user);
 
         final var preferences = new HashMap<String, String>();
-        preferences.put(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG.getBackendKeyName(), gap);
-        preferences.put(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT.getBackendKeyName(), days);
+        preferences.put(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG.getBackendKeyName(), GAP);
+        preferences.put(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT.getBackendKeyName(), DAYS);
         final var userPreferences = RehabstodUserPreferences.fromBackend(preferences);
         when(user.getPreferences()).thenReturn(userPreferences);
 
@@ -124,12 +126,13 @@ public class PopulateFiltersServiceTest {
             Collections.singletonList(Lakare.create(HSA_ID, HSA_ID)),
             Collections.singletonList(enabledDiagnosisChapter),
             TOTAL_NUMBER_OF_SICK_LEAVES,
-            Collections.singletonList(rekoStatus)
+            Collections.singletonList(rekoStatus),
+            Collections.singletonList(occupationTypeDTO)
         );
         when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(response);
 
-        expectedRequest.setMaxDaysSinceSickLeaveCompleted(Integer.parseInt(days));
-        expectedRequest.setUnitId(UNIT_ID);
+        EXPECTED_REQUEST.setMaxDaysSinceSickLeaveCompleted(Integer.parseInt(DAYS));
+        EXPECTED_REQUEST.setUnitId(UNIT_ID);
 
         when(diagnosKapitelService.getDiagnosKapitelList()).thenReturn(allDiagnosisChapters);
     }
@@ -154,7 +157,7 @@ public class PopulateFiltersServiceTest {
                 verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
                 assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
                 assertNull(captor.getValue().getUnitId());
-                assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+                assertEquals(Integer.parseInt(DAYS), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
             }
 
             @Test
@@ -217,7 +220,7 @@ public class PopulateFiltersServiceTest {
                 verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
                 assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
                 assertEquals(SUB_UNIT_ID, captor.getValue().getUnitId());
-                assertEquals(Integer.parseInt(days), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+                assertEquals(Integer.parseInt(DAYS), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
             }
         }
     }
@@ -238,6 +241,7 @@ public class PopulateFiltersServiceTest {
                 null,
                 null,
                 0,
+                null,
                 null
             );
             when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(responeDTO);
@@ -298,6 +302,18 @@ public class PopulateFiltersServiceTest {
         void shouldConvertRekoStatusName() {
             final var response = populateActiveFilters.get();
             assertEquals(rekoStatus.getName(), response.getRekoStatusTypes().get(0).getName());
+        }
+
+        @Test
+        void shouldConvertOccupationTypeId() {
+            final var response = populateActiveFilters.get();
+            assertEquals(occupationTypeDTO.getId(), response.getOccupationTypes().get(0).getId());
+        }
+
+        @Test
+        void shouldConvertOccupationTypeName() {
+            final var response = populateActiveFilters.get();
+            assertEquals(occupationTypeDTO.getName(), response.getOccupationTypes().get(0).getName());
         }
 
         @Nested

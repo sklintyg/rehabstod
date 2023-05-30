@@ -55,11 +55,12 @@ public class SickLeaveController {
     public PopulateFiltersResponseDTO populateFilters() {
         final var response = populateFiltersService.get();
         return new PopulateFiltersResponseDTO(
-                response.getActiveDoctors(),
-                response.getAllDiagnosisChapters(),
-                response.getEnabledDiagnosisChapters(),
-                response.getNbrOfSickLeaves(),
-                response.getRekoStatusTypes()
+            response.getActiveDoctors(),
+            response.getAllDiagnosisChapters(),
+            response.getEnabledDiagnosisChapters(),
+            response.getNbrOfSickLeaves(),
+            response.getRekoStatusTypes(),
+            response.getOccupationTypes()
         );
     }
 
