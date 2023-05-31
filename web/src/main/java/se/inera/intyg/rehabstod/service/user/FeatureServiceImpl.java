@@ -19,10 +19,12 @@
 
 package se.inera.intyg.rehabstod.service.user;
 
+import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.security.common.model.Feature;
 
 import java.util.Optional;
 
+@Service
 public class FeatureServiceImpl implements FeatureService {
     private final UserService userService;
 
