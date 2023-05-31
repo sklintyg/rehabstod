@@ -41,7 +41,6 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
-import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKategori;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.OccupationTypeDTO;
@@ -166,6 +165,15 @@ public class PopulateFiltersServiceTest {
             final var response = populateActiveFilters.get();
 
             assertFalse(response.isSrsActivated());
+        }
+
+        @Test
+        void shouldCallFeatureServiceWithSrsFeatureString() {
+            final var captor = ArgumentCaptor.forClass(String.class);
+            populateActiveFilters.get();
+            verify(featureService).isFeatureActive(captor.capture());
+
+            assertEquals(AuthoritiesConstants.FEATURE_SRS, captor.getValue());
         }
     }
 
