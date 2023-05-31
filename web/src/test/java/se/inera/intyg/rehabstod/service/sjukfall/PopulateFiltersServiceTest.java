@@ -19,8 +19,7 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
@@ -43,6 +42,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
+import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKategori;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.OccupationTypeDTO;
@@ -50,6 +50,7 @@ import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
@@ -147,6 +148,43 @@ public class PopulateFiltersServiceTest {
             void setup() {
                 when(user.getValdVardenhet()).thenReturn(unit);
                 when(unit.getId()).thenReturn(UNIT_ID);
+            }
+
+            @Nested
+            class SRS {
+
+                @Test
+                void shouldSetSrsActivatedIfFeatureIsAvailable() {
+                    final var features = new HashMap<String, Feature>();
+                    final var feature = new Feature();
+                    feature.setGlobal(true);
+                    features.put(AuthoritiesConstants.FEATURE_SRS, feature);
+                    when(user.getFeatures()).thenReturn(features);
+
+                    final var response = populateActiveFilters.get();
+
+                    assertTrue(response.isSrsActivated());
+                }
+
+                @Test
+                void shouldSetSrsNotActivatedIfFeatureIsNotGlobal() {
+                    final var features = new HashMap<String, Feature>();
+                    final var feature = new Feature();
+                    feature.setGlobal(false);
+                    features.put(AuthoritiesConstants.FEATURE_SRS, feature);
+                    when(user.getFeatures()).thenReturn(features);
+
+                    final var response = populateActiveFilters.get();
+
+                    assertFalse(response.isSrsActivated());
+                }
+
+                @Test
+                void shouldSetSrsNotActivatedIfFeatureIsNotAvailable() {
+                    final var response = populateActiveFilters.get();
+
+                    assertFalse(response.isSrsActivated());
+                }
             }
 
             @Test

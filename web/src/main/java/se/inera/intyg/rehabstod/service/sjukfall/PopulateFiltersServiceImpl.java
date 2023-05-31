@@ -21,10 +21,13 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
@@ -74,8 +77,16 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
             convertDiagnosisChapters(responseFromIT.getDiagnosisChapters()),
             responseFromIT.getNbrOfSickLeaves(),
             convertRekoStatuses(responseFromIT.getRekoStatusTypes()),
-            convertOccupationTypes(responseFromIT.getOccupationTypes())
+            convertOccupationTypes(responseFromIT.getOccupationTypes()),
+            isSrsFeatureActive()
         );
+    }
+
+    private boolean isSrsFeatureActive() {
+        return Optional.ofNullable(userService.getUser().getFeatures())
+                .map(features -> features.get(AuthoritiesConstants.FEATURE_SRS))
+                .map(Feature::getGlobal)
+                .orElse(false);
     }
 
     private List<OccupationTypeDTO> convertOccupationTypes(

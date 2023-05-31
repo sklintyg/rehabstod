@@ -39,4 +39,5 @@ public class PopulateFiltersResponseDTO {
     private int nbrOfSickLeaves;
     private List<RekoStatusTypeDTO> rekoStatusTypes;
     private List<OccupationTypeDTO> occupationTypes;
+    private boolean srsActivated;
 }
