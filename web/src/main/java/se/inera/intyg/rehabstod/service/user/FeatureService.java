@@ -17,25 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall.dto;
+package se.inera.intyg.rehabstod.service.user;
 
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.web.model.Lakare;
+public interface FeatureService {
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class PopulateFiltersResponseDTO {
-
-    private List<Lakare> activeDoctors;
-    private List<DiagnosKapitel> allDiagnosisChapters;
-    private List<DiagnosKapitel> enabledDiagnosisChapters;
-    private int nbrOfSickLeaves;
-    private List<RekoStatusTypeDTO> rekoStatusTypes;
-    private List<OccupationTypeDTO> occupationTypes;
-    private boolean srsActivated;
+    boolean isFeatureActive(String authoritiesConstants);
 }

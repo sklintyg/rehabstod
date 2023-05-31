@@ -19,10 +19,8 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -50,6 +48,7 @@ import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
@@ -58,6 +57,7 @@ import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
+import se.inera.intyg.rehabstod.service.user.FeatureService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,6 +77,9 @@ public class PopulateFiltersServiceTest {
 
     @Mock
     PuService puService;
+
+    @Mock
+    FeatureService featureService;
 
     @InjectMocks
     PopulateFiltersServiceImpl populateActiveFilters;
@@ -135,6 +138,43 @@ public class PopulateFiltersServiceTest {
         EXPECTED_REQUEST.setUnitId(UNIT_ID);
 
         when(diagnosKapitelService.getDiagnosKapitelList()).thenReturn(allDiagnosisChapters);
+    }
+
+    @Nested
+    class SRS {
+
+        @BeforeEach
+        void setup() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+        }
+
+        @Test
+        void shouldSetSrsActivatedIfFeatureIsAvailable() {
+            when(featureService.isFeatureActive(anyString())).thenReturn(true);
+
+            final var response = populateActiveFilters.get();
+
+            assertTrue(response.isSrsActivated());
+        }
+
+        @Test
+        void shouldSetSrsNotActivatedIfFeatureIsNotAvailable() {
+            when(featureService.isFeatureActive(anyString())).thenReturn(false);
+
+            final var response = populateActiveFilters.get();
+
+            assertFalse(response.isSrsActivated());
+        }
+
+        @Test
+        void shouldCallFeatureServiceWithSrsFeatureString() {
+            final var captor = ArgumentCaptor.forClass(String.class);
+            populateActiveFilters.get();
+            verify(featureService).isFeatureActive(captor.capture());
+
+            assertEquals(AuthoritiesConstants.FEATURE_SRS, captor.getValue());
+        }
     }
 
     @Nested

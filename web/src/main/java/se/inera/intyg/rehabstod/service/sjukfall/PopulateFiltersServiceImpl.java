@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
@@ -35,6 +36,7 @@ import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.OccupationTypeDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
+import se.inera.intyg.rehabstod.service.user.FeatureService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.rehabstod.web.model.Lakare;
@@ -46,18 +48,20 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
     private final DiagnosKapitelService diagnosKapitelService;
     private final PuService puService;
+    private final FeatureService featureService;
 
     private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
     public PopulateFiltersServiceImpl(
-        UserService userService,
-        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
-        DiagnosKapitelService diagnosKapitelService,
-        PuService puService, SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver) {
+            UserService userService,
+            IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+            DiagnosKapitelService diagnosKapitelService,
+            PuService puService, FeatureService featureService, SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver) {
         this.userService = userService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
         this.diagnosKapitelService = diagnosKapitelService;
         this.puService = puService;
+        this.featureService = featureService;
         this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
     }
 
@@ -74,7 +78,8 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
             convertDiagnosisChapters(responseFromIT.getDiagnosisChapters()),
             responseFromIT.getNbrOfSickLeaves(),
             convertRekoStatuses(responseFromIT.getRekoStatusTypes()),
-            convertOccupationTypes(responseFromIT.getOccupationTypes())
+            convertOccupationTypes(responseFromIT.getOccupationTypes()),
+            featureService.isFeatureActive(AuthoritiesConstants.FEATURE_SRS)
         );
     }
 

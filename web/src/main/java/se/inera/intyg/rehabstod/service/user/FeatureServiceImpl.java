@@ -17,25 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall.dto;
+package se.inera.intyg.rehabstod.service.user;
 
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.web.model.Lakare;
+import se.inera.intyg.infra.security.common.model.Feature;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class PopulateFiltersResponseDTO {
+import java.util.Optional;
 
-    private List<Lakare> activeDoctors;
-    private List<DiagnosKapitel> allDiagnosisChapters;
-    private List<DiagnosKapitel> enabledDiagnosisChapters;
-    private int nbrOfSickLeaves;
-    private List<RekoStatusTypeDTO> rekoStatusTypes;
-    private List<OccupationTypeDTO> occupationTypes;
-    private boolean srsActivated;
+public class FeatureServiceImpl implements FeatureService {
+    private final UserService userService;
+
+    public FeatureServiceImpl(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Override
+    public boolean isFeatureActive(String authoritiesConstants) {
+        return Optional.ofNullable(userService.getUser().getFeatures())
+                .map(features -> features.get(authoritiesConstants))
+                .map(Feature::getGlobal)
+                .orElse(false);
+    }
 }

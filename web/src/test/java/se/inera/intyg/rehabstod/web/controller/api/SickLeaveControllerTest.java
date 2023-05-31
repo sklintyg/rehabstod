@@ -133,7 +133,8 @@ public class SickLeaveControllerTest {
                 Collections.emptyList(),
                 10,
                 Collections.emptyList(),
-                Collections.emptyList()
+                Collections.emptyList(),
+                true
             );
 
             when(populateFiltersService.get()).thenReturn(expectedResponse);
@@ -190,7 +191,8 @@ public class SickLeaveControllerTest {
             Collections.emptyList(),
             10,
             Collections.emptyList(),
-            Collections.emptyList()
+            Collections.emptyList(),
+            true
         );
         when(populateFiltersService.get()).thenReturn(expectedResponse);
 
@@ -202,6 +204,7 @@ public class SickLeaveControllerTest {
         assertEquals(expectedResponse.getNbrOfSickLeaves(), actualResponse.getNbrOfSickLeaves());
         assertEquals(expectedResponse.getRekoStatusTypes(), actualResponse.getRekoStatusTypes());
         assertEquals(expectedResponse.getOccupationTypes(), actualResponse.getOccupationTypes());
+        assertEquals(expectedResponse.isSrsActivated(), actualResponse.isSrsActivated());
     }
 
     @Test
