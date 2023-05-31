@@ -20,8 +20,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -59,6 +58,7 @@ import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
+import se.inera.intyg.rehabstod.service.user.FeatureService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 
 @ExtendWith(MockitoExtension.class)
@@ -78,6 +78,9 @@ public class PopulateFiltersServiceTest {
 
     @Mock
     PuService puService;
+
+    @Mock
+    FeatureService featureService;
 
     @InjectMocks
     PopulateFiltersServiceImpl populateActiveFilters;
@@ -139,6 +142,34 @@ public class PopulateFiltersServiceTest {
     }
 
     @Nested
+    class SRS {
+
+        @BeforeEach
+        void setup() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+        }
+
+        @Test
+        void shouldSetSrsActivatedIfFeatureIsAvailable() {
+            when(featureService.isFeatureActive(anyString())).thenReturn(true);
+
+            final var response = populateActiveFilters.get();
+
+            assertTrue(response.isSrsActivated());
+        }
+
+        @Test
+        void shouldSetSrsNotActivatedIfFeatureIsNotAvailable() {
+            when(featureService.isFeatureActive(anyString())).thenReturn(false);
+
+            final var response = populateActiveFilters.get();
+
+            assertFalse(response.isSrsActivated());
+        }
+    }
+
+    @Nested
     class TestITRequest {
 
         @Nested
@@ -148,43 +179,6 @@ public class PopulateFiltersServiceTest {
             void setup() {
                 when(user.getValdVardenhet()).thenReturn(unit);
                 when(unit.getId()).thenReturn(UNIT_ID);
-            }
-
-            @Nested
-            class SRS {
-
-                @Test
-                void shouldSetSrsActivatedIfFeatureIsAvailable() {
-                    final var features = new HashMap<String, Feature>();
-                    final var feature = new Feature();
-                    feature.setGlobal(true);
-                    features.put(AuthoritiesConstants.FEATURE_SRS, feature);
-                    when(user.getFeatures()).thenReturn(features);
-
-                    final var response = populateActiveFilters.get();
-
-                    assertTrue(response.isSrsActivated());
-                }
-
-                @Test
-                void shouldSetSrsNotActivatedIfFeatureIsNotGlobal() {
-                    final var features = new HashMap<String, Feature>();
-                    final var feature = new Feature();
-                    feature.setGlobal(false);
-                    features.put(AuthoritiesConstants.FEATURE_SRS, feature);
-                    when(user.getFeatures()).thenReturn(features);
-
-                    final var response = populateActiveFilters.get();
-
-                    assertFalse(response.isSrsActivated());
-                }
-
-                @Test
-                void shouldSetSrsNotActivatedIfFeatureIsNotAvailable() {
-                    final var response = populateActiveFilters.get();
-
-                    assertFalse(response.isSrsActivated());
-                }
             }
 
             @Test
