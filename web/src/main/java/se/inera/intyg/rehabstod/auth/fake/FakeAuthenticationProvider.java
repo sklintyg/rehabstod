@@ -38,6 +38,7 @@ import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.rehabstod.auth.BaseFakeAuthenticationProvider;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.common.util.StringUtil;
 
 /**
  * @author andreaskaltenbach
@@ -61,6 +62,11 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
 
         // Hack in the forNamn and efterNamn if not present.
         addAbsentAttributesFromFakeCredentials(token, details);
+
+        final var fakeCredentials = (FakeCredentials) token.getCredentials();
+        if (!StringUtil.isNullOrEmpty(fakeCredentials.getEnhetId())) {
+            ((RehabstodUser) details).changeValdVardenhet(fakeCredentials.getEnhetId());
+        }
         updateFeatures(details);
 
         ExpiringUsernameAuthenticationToken result = new ExpiringUsernameAuthenticationToken(null, details, credential,
