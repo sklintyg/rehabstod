@@ -44,8 +44,8 @@ import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.GetActiveSickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
-import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
+import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
@@ -68,11 +68,11 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
 
     @Autowired
     public GetActiveSickLeavesServiceImpl(UserService userService, MonitoringLogService monitoringLogService,
-                                          SjukfallEngineMapper sjukfallEngineMapper, PdlLogSickLeavesService pdlLogSickLeavesService,
-                                          IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
-                                          SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
-                                          PatientIdEncryption patientIdEncryption, PuService puService,
-                                          RiskPredictionService riskPredictionService) {
+        SjukfallEngineMapper sjukfallEngineMapper, PdlLogSickLeavesService pdlLogSickLeavesService,
+        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+        SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
+        PatientIdEncryption patientIdEncryption, PuService puService,
+        RiskPredictionService riskPredictionService) {
         this.userService = userService;
         this.monitoringLogService = monitoringLogService;
         this.sjukfallEngineMapper = sjukfallEngineMapper;
@@ -144,6 +144,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         request.setToSickLeaveEndDate(filterRequest.getToSickLeaveEndDate());
         request.setRekoStatusTypeIds(filterRequest.getRekoStatusTypeIds());
         request.setOccupationTypeIds(filterRequest.getOccupationTypeIds());
+        request.setTextSearch(filterRequest.getTextSearch());
         return request;
     }
 
