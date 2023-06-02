@@ -73,7 +73,8 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
                                           IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
                                           SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
                                           PatientIdEncryption patientIdEncryption, PuService puService,
-                                          RiskPredictionService riskPredictionService, UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService) {
+                                          RiskPredictionService riskPredictionService,
+                                          UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService) {
         this.userService = userService;
         this.monitoringLogService = monitoringLogService;
         this.sjukfallEngineMapper = sjukfallEngineMapper;

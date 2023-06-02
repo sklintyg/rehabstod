@@ -42,7 +42,7 @@ public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
 
     @Override
     public UnansweredCommunicationResponse getUnansweredCommunicationForPatients(List<String> patientIds) {
-        final var url = wcUrl + "/inera-certificate/internalapi/unanswered-communications";
+        final var url = wcUrl + "/internalapi/unanswered-communications";
 
         final var request = new UnansweredCommunicationRequest();
         request.setPatientIds(patientIds);
