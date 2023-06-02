@@ -109,7 +109,6 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         final var hasDecoratedWithUnansweredCommunications = unansweredCommunicationDecoratorService.decorate(convertedSickLeaves);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_UNANSWERED_COMMUNICATION, convertedSickLeaves.size()));
 
-
         logFactory.setStartTimer(System.currentTimeMillis());
         final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(convertedSickLeaves);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_SRS_RISK, convertedSickLeaves.size()));
