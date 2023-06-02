@@ -17,18 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall.dto;
+package se.inera.intyg.rehabstod.integration.wc.service.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
-import java.util.List;
+import java.util.Map;
 
 @Data
-@AllArgsConstructor
-public class GetActiveSickLeavesResponseDTO {
-    List<SjukfallEnhet> content;
-    boolean srsError;
-    boolean unansweredCommunicationError;
+public class UnansweredCommunicationResponse {
+
+    private Map<String, UnansweredQAs> unansweredQAsMap;
+    private boolean unansweredCommunicationError;
+
 }

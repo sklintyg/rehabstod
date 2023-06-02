@@ -19,16 +19,10 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
-import java.util.List;
 
 @Data
-@AllArgsConstructor
-public class GetActiveSickLeavesResponseDTO {
-    List<SjukfallEnhet> content;
-    boolean srsError;
-    boolean unansweredCommunicationError;
+public class UnansweredCommunicationDTO {
+    Integer unansweredComplements;
+    Integer answeredOthers;
 }

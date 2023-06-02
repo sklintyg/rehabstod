@@ -17,18 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall.dto;
+package se.inera.intyg.rehabstod.integration.wc.service;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
 
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-public class GetActiveSickLeavesResponseDTO {
-    List<SjukfallEnhet> content;
-    boolean srsError;
-    boolean unansweredCommunicationError;
+public interface WcRestIntegrationService {
+    UnansweredCommunicationResponse getUnansweredCommunicationForPatients(List<String> patientIds);
 }
