@@ -28,11 +28,11 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class DecorateUnansweredCommunicationServiceImpl implements DecorateUnansweredCommunicationService {
+public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCommunicationDecoratorService {
 
     private final WcRestIntegrationService wcRestIntegrationService;
 
-    public DecorateUnansweredCommunicationServiceImpl(WcRestIntegrationService wcRestIntegrationService) {
+    public UnansweredCommunicationDecoratorServiceImpl(WcRestIntegrationService wcRestIntegrationService) {
         this.wcRestIntegrationService = wcRestIntegrationService;
     }
 

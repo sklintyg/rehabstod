@@ -96,6 +96,9 @@ public class GetActiveSickLeavesServiceTest {
     @Mock
     RiskPredictionService riskPredictionService;
 
+    @Mock
+    UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
+
     @InjectMocks
     GetActiveSickLeavesServiceImpl getActiveSickLeavesService;
 
@@ -180,7 +183,7 @@ public class GetActiveSickLeavesServiceTest {
         );
 
     @Nested
-    class TestSrs {
+    class TestDecoratingServiced {
         @BeforeEach
         void setup() {
             when(user.getValdVardenhet()).thenReturn(unit);
@@ -193,6 +196,15 @@ public class GetActiveSickLeavesServiceTest {
             final var captor = ArgumentCaptor.forClass(List.class);
             getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
             verify(riskPredictionService).updateWithRiskPredictions(captor.capture());
+            assertEquals(1, captor.getValue().size());
+            assertEquals(sickLeave, captor.getValue().get(0));
+        }
+
+        @Test
+        void shouldCallUnansweredCommunicationDecorator() {
+            final var captor = ArgumentCaptor.forClass(List.class);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+            verify(unansweredCommunicationDecoratorService).decorate(captor.capture());
             assertEquals(1, captor.getValue().size());
             assertEquals(sickLeave, captor.getValue().get(0));
         }

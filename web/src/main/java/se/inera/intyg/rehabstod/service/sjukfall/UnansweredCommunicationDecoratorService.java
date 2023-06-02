@@ -23,6 +23,6 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.List;
 
-public interface DecorateUnansweredCommunicationService {
+public interface UnansweredCommunicationDecoratorService {
     boolean decorate(List<SjukfallEnhet> sickLeaves);
 }
