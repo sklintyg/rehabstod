@@ -28,6 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
+import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -36,7 +37,7 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -87,7 +88,7 @@ public class UnansweredCommunicationDecoratorServiceTest {
         unansweredQAsMap.put(CERTIFICATE_ID_3, QA_3);
         response.setUnansweredQAsMap(unansweredQAsMap);
 
-        when(wcRestIntegrationService.getUnansweredCommunicationForPatients(anyList())).thenReturn(response);
+        when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
     }
 
     @Nested
@@ -95,15 +96,25 @@ public class UnansweredCommunicationDecoratorServiceTest {
 
         @Test
         void shouldCallRestServiceWithPatientIds() {
-            final var captor = ArgumentCaptor.forClass(List.class);
+            final var captor = ArgumentCaptor.forClass(UnansweredCommunicationRequest.class);
 
             unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
 
             verify(wcRestIntegrationService).getUnansweredCommunicationForPatients(captor.capture());
-            assertEquals(SICK_LEAVES.size(), captor.getValue().size());
-            assertTrue(captor.getValue().contains(PATIENT_ID_0));
-            assertTrue(captor.getValue().contains(PATIENT_ID_1));
-            assertTrue(captor.getValue().contains(PATIENT_ID_2));
+            assertEquals(SICK_LEAVES.size(), captor.getValue().getPatientIds().size());
+            assertTrue(captor.getValue().getPatientIds().contains(PATIENT_ID_0));
+            assertTrue(captor.getValue().getPatientIds().contains(PATIENT_ID_1));
+            assertTrue(captor.getValue().getPatientIds().contains(PATIENT_ID_2));
+        }
+
+        @Test
+        void shouldCallRestServiceWithMaxDaysOfCommunication() {
+            final var captor = ArgumentCaptor.forClass(UnansweredCommunicationRequest.class);
+
+            unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
+
+            verify(wcRestIntegrationService).getUnansweredCommunicationForPatients(captor.capture());
+            assertNotNull(captor.getValue().getMaxDaysOfUnansweredCommunication());
         }
     }
 
@@ -130,28 +141,53 @@ public class UnansweredCommunicationDecoratorServiceTest {
 
     @Nested
     class TestDecoration {
-        @Test
-        void shouldNotDecorateCertificateWithNoCommunication() {
-            unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
 
-            assertEquals(0, SICK_LEAVE_NO_CERTIFICATE_WITH_COMMUNICATION.getUnansweredOther());
-            assertEquals(0, SICK_LEAVE_NO_CERTIFICATE_WITH_COMMUNICATION.getObesvaradeKompl());
+        @Nested
+        class TestComplements {
+            @Test
+            void shouldNotDecorateCertificateWithNoCommunication() {
+                unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
+
+                assertEquals(0, SICK_LEAVE_NO_CERTIFICATE_WITH_COMMUNICATION.getObesvaradeKompl());
+            }
+
+            @Test
+            void shouldSetValueOfSickLeaveWithOneCertificateWithCommunication() {
+                unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
+
+                assertEquals(10, SICK_LEAVE_ONE_CERTIFICATE.getObesvaradeKompl());
+            }
+
+            @Test
+            void shouldAddValuesOfSickLeaveWithSeveralCertificatesWithCommunication() {
+                unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
+
+                assertEquals(7, SICK_LEAVE_SEVERAL_CERTIFICATES.getObesvaradeKompl());
+            }
         }
 
-        @Test
-        void shouldSetValueOfSickLeaveWithOneCertificateWithCommunication() {
-            unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
+        @Nested
+        class TestOthers {
+            @Test
+            void shouldNotDecorateCertificateWithNoCommunication() {
+                unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
 
-            assertEquals(20, SICK_LEAVE_ONE_CERTIFICATE.getUnansweredOther());
-            assertEquals(10, SICK_LEAVE_ONE_CERTIFICATE.getObesvaradeKompl());
-        }
+                assertEquals(0, SICK_LEAVE_NO_CERTIFICATE_WITH_COMMUNICATION.getUnansweredOther());
+            }
 
-        @Test
-        void shouldAddValuesOfSickLeaveWithSeveralCertificatesWithCommunication() {
-            unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
+            @Test
+            void shouldSetValueOfSickLeaveWithOneCertificateWithCommunication() {
+                unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
 
-            assertEquals(6, SICK_LEAVE_SEVERAL_CERTIFICATES.getUnansweredOther());
-            assertEquals(7, SICK_LEAVE_SEVERAL_CERTIFICATES.getObesvaradeKompl());
+                assertEquals(20, SICK_LEAVE_ONE_CERTIFICATE.getUnansweredOther());
+            }
+
+            @Test
+            void shouldAddValuesOfSickLeaveWithSeveralCertificatesWithCommunication() {
+                unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
+
+                assertEquals(6, SICK_LEAVE_SEVERAL_CERTIFICATES.getUnansweredOther());
+            }
         }
     }
 }

@@ -20,19 +20,16 @@
 package se.inera.intyg.rehabstod.integration.wc.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
 
-import java.util.List;
-
+@Service
 public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
 
     @Value("${wc.service.logicalAddress}")
     private String wcUrl;
-
-    @Value("${wc.getadditions.max.age.days:90}")
-    private int maxDaysOfUnansweredCommunication;
 
     private final RestTemplate restTemplate;
 
@@ -41,13 +38,13 @@ public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
     }
 
     @Override
-    public UnansweredCommunicationResponse getUnansweredCommunicationForPatients(List<String> patientIds) {
+    public UnansweredCommunicationResponse getUnansweredCommunicationForPatients(UnansweredCommunicationRequest request) {
         final var url = wcUrl + "/internalapi/unanswered-communications";
 
-        final var request = new UnansweredCommunicationRequest();
-        request.setPatientIds(patientIds);
-        request.setMaxDaysOfUnansweredCommunication(maxDaysOfUnansweredCommunication);
-
-        return restTemplate.postForObject(url, request, UnansweredCommunicationResponse.class);
-    }
+        try {
+            return restTemplate.postForObject(url, request, UnansweredCommunicationResponse.class);
+        } catch (Exception e) {
+            return new UnansweredCommunicationResponse(null, true);
+        }
+     }
 }

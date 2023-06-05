@@ -19,10 +19,9 @@
 
 package se.inera.intyg.rehabstod.integration.wc.service;
 
+import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
 
-import java.util.List;
-
 public interface WcRestIntegrationService {
-    UnansweredCommunicationResponse getUnansweredCommunicationForPatients(List<String> patientIds);
+    UnansweredCommunicationResponse getUnansweredCommunicationForPatients(UnansweredCommunicationRequest request);
 }

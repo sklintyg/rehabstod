@@ -19,18 +19,24 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
+import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Service
 public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCommunicationDecoratorService {
 
     private final WcRestIntegrationService wcRestIntegrationService;
+
+    @Value("${wc.getadditions.max.age.days:90}")
+    private int maxDaysOfUnansweredCommunication;
 
     public UnansweredCommunicationDecoratorServiceImpl(WcRestIntegrationService wcRestIntegrationService) {
         this.wcRestIntegrationService = wcRestIntegrationService;
@@ -43,41 +49,36 @@ public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCo
                 .map((sickLeave) -> sickLeave.getPatient().getId())
                 .collect(Collectors.toList());
 
-        final var response = wcRestIntegrationService.getUnansweredCommunicationForPatients(patientIds);
+        final var response = wcRestIntegrationService.getUnansweredCommunicationForPatients(
+                new UnansweredCommunicationRequest(maxDaysOfUnansweredCommunication, patientIds)
+        );
+
+        if (response.isUnansweredCommunicationError()) {
+            return false;
+        }
 
         sickLeaves.forEach((sickLeave) -> decorateSickLeave(sickLeave, response.getUnansweredQAsMap()));
 
-        return !response.isUnansweredCommunicationError();
+        return true;
     }
 
     private void decorateSickLeave(SjukfallEnhet sickLeave, Map<String, UnansweredQAs> unansweredQAsMap) {
-        final var certificatesWithQAs = sickLeave.getIntygLista()
+        final var totalUnansweredQAs = sickLeave.getIntygLista()
                 .stream()
                 .filter(unansweredQAsMap::containsKey)
-                .collect(Collectors.toList());
+                .map(unansweredQAsMap::get)
+                .reduce(
+                        (a,b) -> new UnansweredQAs(
+                                a.getComplement() + b.getComplement(),
+                                a.getOthers() + b.getOthers()
+                        )
+                );
 
-        if (certificatesWithQAs.size() == 0) {
+        if (totalUnansweredQAs.isEmpty()) {
             return;
         }
 
-        final var unansweredOther = sumQA(
-                certificatesWithQAs, (certificateId) -> unansweredQAsMap.get(certificateId).getOthers()
-        );
-        final var unansweredComplement = sumQA(
-                certificatesWithQAs, (certificateId) -> unansweredQAsMap.get(certificateId).getComplement()
-        );
-
-        sickLeave.setUnansweredOther(unansweredOther);
-        sickLeave.setObesvaradeKompl(unansweredComplement);
+        sickLeave.setUnansweredOther(totalUnansweredQAs.get().getOthers());
+        sickLeave.setObesvaradeKompl(totalUnansweredQAs.get().getComplement());
     }
-
-    private int sumQA(List<String> certificateIds, Function<String, Integer> function) {
-        return certificateIds
-                .stream()
-                .map(function)
-                .mapToInt(Integer::intValue)
-                .sum();
-
-    }
-
 }
