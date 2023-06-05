@@ -43,7 +43,7 @@ public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
 
     @Override
     public UnansweredCommunicationResponse getUnansweredCommunicationForPatients(UnansweredCommunicationRequest request) {
-        final var url = wcUrl + "/internalapi/unanswered-communications";
+        final var url = wcUrl + "/internalapi/unanswered-communication";
 
         try {
             return restTemplate.postForObject(url, request, UnansweredCommunicationResponse.class);
