@@ -19,6 +19,8 @@
 
 package se.inera.intyg.rehabstod.integration.wc.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -28,8 +30,11 @@ import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicati
 @Service
 public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
 
+
     @Value("${webcert.internal.host.url}")
     private String wcUrl;
+
+    private static final Logger LOG = LoggerFactory.getLogger(WcRestIntegrationServiceImpl.class);
 
     private final RestTemplate restTemplate;
 
@@ -39,12 +44,13 @@ public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
 
     @Override
     public UnansweredCommunicationResponse getUnansweredCommunicationForPatients(UnansweredCommunicationRequest request) {
-        final var url = wcUrl + "/internalapi/unanswered-communications";
+        final var url = wcUrl + "/internalapi/unanswered-communication";
 
         try {
             return restTemplate.postForObject(url, request, UnansweredCommunicationResponse.class);
         } catch (Exception e) {
+            LOG.error("Error getting unanswered communication from Webcert", e);
             return new UnansweredCommunicationResponse(null, true);
         }
-    }
+     }
 }
