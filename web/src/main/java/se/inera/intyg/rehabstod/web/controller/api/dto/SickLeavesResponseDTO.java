@@ -31,4 +31,5 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 public class SickLeavesResponseDTO {
     private List<SjukfallEnhet> content;
     private boolean srsError;
+    private boolean unansweredCommunicationError;
 }

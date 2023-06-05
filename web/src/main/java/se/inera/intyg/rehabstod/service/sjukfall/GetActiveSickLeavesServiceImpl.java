@@ -63,6 +63,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     private final PatientIdEncryption patientIdEncryption;
     private final PuService puService;
     private final RiskPredictionService riskPredictionService;
+    private final UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
 
     private static final Logger LOG = LoggerFactory.getLogger(GetActiveSickLeavesServiceImpl.class);
 
@@ -72,7 +73,8 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
                                           IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
                                           SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
                                           PatientIdEncryption patientIdEncryption, PuService puService,
-                                          RiskPredictionService riskPredictionService) {
+                                          RiskPredictionService riskPredictionService,
+                                          UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService) {
         this.userService = userService;
         this.monitoringLogService = monitoringLogService;
         this.sjukfallEngineMapper = sjukfallEngineMapper;
@@ -82,6 +84,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         this.riskPredictionService = riskPredictionService;
         this.patientIdEncryption = patientIdEncryption;
         this.puService = puService;
+        this.unansweredCommunicationDecoratorService = unansweredCommunicationDecoratorService;
     }
 
     @Override
@@ -104,6 +107,10 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_DOCTOR_NAMES, convertedSickLeaves.size()));
 
         logFactory.setStartTimer(System.currentTimeMillis());
+        final var hasDecoratedWithUnansweredCommunications = unansweredCommunicationDecoratorService.decorate(convertedSickLeaves);
+        LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_UNANSWERED_COMMUNICATION, convertedSickLeaves.size()));
+
+        logFactory.setStartTimer(System.currentTimeMillis());
         final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(convertedSickLeaves);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_SRS_RISK, convertedSickLeaves.size()));
 
@@ -113,7 +120,11 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         convertedSickLeaves.forEach(
             sickLeave -> sickLeave.setEncryptedPatientId(patientIdEncryption.encrypt(sickLeave.getPatient().getId())));
 
-        return new GetActiveSickLeavesResponseDTO(convertedSickLeaves, !hasDecoratedWithSRSInfo);
+        return new GetActiveSickLeavesResponseDTO(
+                convertedSickLeaves,
+                !hasDecoratedWithSRSInfo,
+                !hasDecoratedWithUnansweredCommunications
+        );
     }
 
     private boolean decorateWithSRSInfo(List<SjukfallEnhet> sickLeaves) {
