@@ -28,7 +28,7 @@ import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicati
 @Service
 public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
 
-    @Value("${wc.service.logicalAddress}")
+    @Value("${webcert.internal.host.url}")
     private String wcUrl;
 
     private final RestTemplate restTemplate;
@@ -46,5 +46,5 @@ public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
         } catch (Exception e) {
             return new UnansweredCommunicationResponse(null, true);
         }
-     }
+    }
 }
