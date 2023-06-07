@@ -66,6 +66,7 @@ public class SickLeaveController {
             response.getNbrOfSickLeaves(),
             response.getRekoStatusTypes(),
             response.getOccupationTypes(),
+            response.getUnansweredCommunicationFilterTypes(),
             response.isSrsActivated()
         );
     }

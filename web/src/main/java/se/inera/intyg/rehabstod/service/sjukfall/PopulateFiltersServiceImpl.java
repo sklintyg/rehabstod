@@ -19,6 +19,7 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +36,8 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.OccupationTypeDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateFiltersResponseDTO;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterType;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterTypeDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.FeatureService;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -79,8 +82,16 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
             responseFromIT.getNbrOfSickLeaves(),
             convertRekoStatuses(responseFromIT.getRekoStatusTypes()),
             convertOccupationTypes(responseFromIT.getOccupationTypes()),
+            getUnansweredCommunicationTypes(),
             featureService.isFeatureActive(AuthoritiesConstants.FEATURE_SRS)
         );
+    }
+
+    private List<UnansweredCommunicationFilterTypeDTO> getUnansweredCommunicationTypes() {
+        return Arrays
+                .stream(UnansweredCommunicationFilterType.values())
+                .map((type) -> new UnansweredCommunicationFilterTypeDTO(type.toString(), type.getName()))
+                .collect(Collectors.toList());
     }
 
     private List<OccupationTypeDTO> convertOccupationTypes(

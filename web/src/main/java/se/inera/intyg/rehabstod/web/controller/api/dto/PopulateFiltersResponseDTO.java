@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.OccupationTypeDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterTypeDTO;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 
 @Data
@@ -39,5 +40,6 @@ public class PopulateFiltersResponseDTO {
     private int nbrOfSickLeaves;
     private List<RekoStatusTypeDTO> rekoStatusTypes;
     private List<OccupationTypeDTO> occupationTypes;
+    private List<UnansweredCommunicationFilterTypeDTO> unansweredCommunicationFilterTypes;
     private boolean srsActivated;
 }

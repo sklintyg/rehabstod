@@ -42,6 +42,7 @@ import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.GetActiveSickLeavesResponseDTO;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterType;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
@@ -106,18 +107,20 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(convertedSickLeaves);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_DOCTOR_NAMES, convertedSickLeaves.size()));
 
+        final var filteredSickLeaves = filterSickLeaves(convertedSickLeaves, filterRequest.getUnansweredCommunicationFilterTypeId());
+
         logFactory.setStartTimer(System.currentTimeMillis());
         final var hasDecoratedWithUnansweredCommunications = unansweredCommunicationDecoratorService.decorate(convertedSickLeaves);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_UNANSWERED_COMMUNICATION, convertedSickLeaves.size()));
 
         logFactory.setStartTimer(System.currentTimeMillis());
-        final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(convertedSickLeaves);
-        LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_SRS_RISK, convertedSickLeaves.size()));
+        final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(filteredSickLeaves);
+        LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_SRS_RISK, filteredSickLeaves.size()));
 
         LOG.debug("Logging that sick leaves have been fetched");
-        performMonitorLogging(convertedSickLeaves, user.getHsaId(), unitId != null ? unitId : careUnitId);
-        pdlLogSickLeavesService.log(convertedSickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
-        convertedSickLeaves.forEach(
+        performMonitorLogging(filteredSickLeaves, user.getHsaId(), unitId != null ? unitId : careUnitId);
+        pdlLogSickLeavesService.log(filteredSickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
+        filteredSickLeaves.forEach(
             sickLeave -> sickLeave.setEncryptedPatientId(patientIdEncryption.encrypt(sickLeave.getPatient().getId())));
 
         return new GetActiveSickLeavesResponseDTO(
@@ -125,6 +128,33 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
                 !hasDecoratedWithSRSInfo,
                 !hasDecoratedWithUnansweredCommunications
         );
+    }
+
+    private List<SjukfallEnhet> filterSickLeaves(List<SjukfallEnhet> sickLeaves, String unansweredCommunicationFilterTypeId) {
+        return sickLeaves
+                .stream()
+                .filter((sickLeave) -> filterOnUnansweredCommunication(sickLeave, unansweredCommunicationFilterTypeId))
+                .collect(Collectors.toList());
+    }
+
+    private boolean filterOnUnansweredCommunication(SjukfallEnhet sickLeave, String filterTypeId) {
+        if (filterTypeId == null) {
+            return false;
+        }
+
+        switch (UnansweredCommunicationFilterType.fromId(filterTypeId)) {
+            case UNANSWERED_COMMUNICATION_FILTER_TYPE_1:
+                return sickLeave.getUnansweredOther() + sickLeave.getObesvaradeKompl() == 0;
+            case UNANSWERED_COMMUNICATION_FILTER_TYPE_2:
+                return sickLeave.getUnansweredOther() + sickLeave.getObesvaradeKompl() > 0;
+            case UNANSWERED_COMMUNICATION_FILTER_TYPE_3:
+                return sickLeave.getObesvaradeKompl() > 0;
+            case UNANSWERED_COMMUNICATION_FILTER_TYPE_4:
+                return sickLeave.getUnansweredOther() > 0;
+            default:
+                return false;
+        }
+
     }
 
     private boolean decorateWithSRSInfo(List<SjukfallEnhet> sickLeaves) {

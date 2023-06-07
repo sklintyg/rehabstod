@@ -19,24 +19,29 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.web.model.Lakare;
+public enum UnansweredCommunicationFilterType {
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class PopulateFiltersResponseDTO {
+    UNANSWERED_COMMUNICATION_FILTER_TYPE_1("Enbart sjukfall utan obesvarade ärenden"),
+    UNANSWERED_COMMUNICATION_FILTER_TYPE_2("Enbart sjukfall med obesvarade ärenden"),
+    UNANSWERED_COMMUNICATION_FILTER_TYPE_3("Sjukfall med obesvarade kompletteringar"),
+    UNANSWERED_COMMUNICATION_FILTER_TYPE_4("Sjukfall med obesvarade frågor och svar");
 
-    private List<Lakare> activeDoctors;
-    private List<DiagnosKapitel> allDiagnosisChapters;
-    private List<DiagnosKapitel> enabledDiagnosisChapters;
-    private int nbrOfSickLeaves;
-    private List<RekoStatusTypeDTO> rekoStatusTypes;
-    private List<OccupationTypeDTO> occupationTypes;
-    private List<UnansweredCommunicationFilterTypeDTO> unansweredCommunicationFilterTypes;
-    private boolean srsActivated;
+    private final String name;
+    UnansweredCommunicationFilterType(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public static UnansweredCommunicationFilterType fromId(String id) {
+        for (final var type : values()) {
+            if (type.toString().equals(id)) {
+                return type;
+            }
+        }
+
+        return null;
+    }
 }
