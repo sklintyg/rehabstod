@@ -70,7 +70,7 @@ public class SickLeaveControllerTest {
                 TEXT_SEARCH
             );
         when(getActiveSickLeavesService.get(any(), anyBoolean())).thenReturn(
-                new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true)
+            new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true)
         );
         sickLeaveController.getSickLeavesForUnit(expectedRequest);
         verify(getActiveSickLeavesService).get(expectedRequest, true);
@@ -127,17 +127,18 @@ public class SickLeaveControllerTest {
     @Test
     void shouldConvertUnansweredCommunicationErrorInResponse() {
         final var expectedRequest =
-                new SickLeavesFilterRequestDTO(
-                        Collections.singletonList("doctorId"),
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        1,
-                        150,
-                        LocalDate.now(),
-                        LocalDate.now(),
-                        Collections.emptyList(),
-                        Collections.emptyList()
-                );
+            new SickLeavesFilterRequestDTO(
+                Collections.singletonList("doctorId"),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                1,
+                150,
+                LocalDate.now(),
+                LocalDate.now(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                TEXT_SEARCH
+            );
 
         final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), false, true);
         when(getActiveSickLeavesService.get(any(), anyBoolean())).thenReturn(expectedResponse);
