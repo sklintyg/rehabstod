@@ -33,6 +33,7 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
     private final StatisticsCalculator statisticsCalculator;
     private final GetActiveSickLeavesService getActiveSickLeavesService;
     private static final boolean INCLUDE_PARAMETERS = false;
+    private static final String TEXT_SEARCH = "textSearch";
 
     public GetSickLeaveSummaryServiceImpl(PuService puService, StatisticsCalculator statisticsCalculator,
         GetActiveSickLeavesService getActiveSickLeavesService) {
@@ -53,7 +54,8 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
                 null,
                 null,
                 Collections.emptyList(),
-                Collections.emptyList()
+                Collections.emptyList(),
+                null
             ),
             INCLUDE_PARAMETERS
         ).getContent();

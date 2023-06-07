@@ -31,7 +31,6 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -157,6 +156,7 @@ public class GetActiveSickLeavesServiceTest {
     static final DiagnosKategori DIAGNOSIS_CHAPTER_FROM = new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
     static final DiagnosKapitel CHOSEN_DIAGNOSIS_CHAPTER =
         new DiagnosKapitel(DIAGNOSIS_CHAPTER_TO, DIAGNOSIS_CHAPTER_FROM, DIAGNOSIS_CHAPTER_NAME);
+    static final String TEXT_SEARCH = "textSearch";
     static final SickLeavesFilterRequestDTO EXPECTED_REQUEST =
         new SickLeavesFilterRequestDTO(
             Collections.singletonList(DOCTOR_FILTER),
@@ -167,7 +167,8 @@ public class GetActiveSickLeavesServiceTest {
             FROM_END_DATE,
             TO_END_DATE,
             Collections.singletonList(REKO_FILTER),
-            OCCUPATION_FILTER
+            OCCUPATION_FILTER,
+            TEXT_SEARCH
         );
     static final SickLeavesFilterRequestDTO EXPECTED_REQUEST_DOCTOR =
         new SickLeavesFilterRequestDTO(
@@ -179,11 +180,13 @@ public class GetActiveSickLeavesServiceTest {
             FROM_END_DATE,
             TO_END_DATE,
             Collections.emptyList(),
-            Collections.emptyList()
+            Collections.emptyList(),
+            TEXT_SEARCH
         );
 
     @Nested
     class TestDecoratingServiced {
+      
         @BeforeEach
         void setup() {
             when(user.getValdVardenhet()).thenReturn(unit);
@@ -326,6 +329,7 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(TO_END_DATE, captor.getValue().getToSickLeaveEndDate());
             assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
             assertEquals(OCCUPATION_FILTER, captor.getValue().getOccupationTypeIds());
+            assertEquals(TEXT_SEARCH, captor.getValue().getTextSearch());
         }
 
         @Test
@@ -350,6 +354,7 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(TO_END_DATE, captor.getValue().getToSickLeaveEndDate());
             assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
             assertEquals(OCCUPATION_FILTER, captor.getValue().getOccupationTypeIds());
+            assertEquals(TEXT_SEARCH, captor.getValue().getTextSearch());
         }
 
         @Test
@@ -369,7 +374,8 @@ public class GetActiveSickLeavesServiceTest {
                     FROM_END_DATE,
                     TO_END_DATE,
                     Collections.singletonList(REKO_FILTER),
-                    OCCUPATION_FILTER
+                    OCCUPATION_FILTER,
+                    TEXT_SEARCH
                 ), true
             );
 
@@ -395,7 +401,8 @@ public class GetActiveSickLeavesServiceTest {
                     null,
                     null,
                     Collections.singletonList(REKO_FILTER),
-                    OCCUPATION_FILTER
+                    OCCUPATION_FILTER,
+                    TEXT_SEARCH
                 ), true
             );
 
@@ -423,6 +430,7 @@ public class GetActiveSickLeavesServiceTest {
             assertEquals(TO_PATIENT_AGE, captor.getValue().getToPatientAge());
             assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
             assertEquals(OCCUPATION_FILTER, captor.getValue().getOccupationTypeIds());
+            assertEquals(TEXT_SEARCH, captor.getValue().getTextSearch());
         }
 
         @Test

@@ -52,6 +52,7 @@ public class SickLeaveControllerTest {
 
     @InjectMocks
     private SickLeaveController sickLeaveController = new SickLeaveController();
+    private static final String TEXT_SEARCH = "textSearch";
 
     @Test
     void shouldCallGetActiveSickLeavesService() {
@@ -65,7 +66,8 @@ public class SickLeaveControllerTest {
                 LocalDate.now(),
                 LocalDate.now(),
                 Collections.emptyList(),
-                Collections.emptyList()
+                Collections.emptyList(),
+                TEXT_SEARCH
             );
         when(getActiveSickLeavesService.get(any(), anyBoolean())).thenReturn(
                 new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true)
@@ -77,17 +79,18 @@ public class SickLeaveControllerTest {
     @Test
     void shouldConvertContentInResponse() {
         final var expectedRequest =
-                new SickLeavesFilterRequestDTO(
-                        Collections.singletonList("doctorId"),
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        1,
-                        150,
-                        LocalDate.now(),
-                        LocalDate.now(),
-                        Collections.emptyList(),
-                        Collections.emptyList()
-                );
+            new SickLeavesFilterRequestDTO(
+                Collections.singletonList("doctorId"),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                1,
+                150,
+                LocalDate.now(),
+                LocalDate.now(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                TEXT_SEARCH
+            );
 
         final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true);
         when(getActiveSickLeavesService.get(any(), anyBoolean())).thenReturn(expectedResponse);
@@ -100,17 +103,18 @@ public class SickLeaveControllerTest {
     @Test
     void shouldConvertSRSErrorInResponse() {
         final var expectedRequest =
-                new SickLeavesFilterRequestDTO(
-                        Collections.singletonList("doctorId"),
-                        Collections.emptyList(),
-                        Collections.emptyList(),
-                        1,
-                        150,
-                        LocalDate.now(),
-                        LocalDate.now(),
-                        Collections.emptyList(),
-                        Collections.emptyList()
-                );
+            new SickLeavesFilterRequestDTO(
+                Collections.singletonList("doctorId"),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                1,
+                150,
+                LocalDate.now(),
+                LocalDate.now(),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                TEXT_SEARCH
+            );
 
         final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, false);
         when(getActiveSickLeavesService.get(any(), anyBoolean())).thenReturn(expectedResponse);
