@@ -49,7 +49,11 @@ public class SickLeaveController {
     @RequestMapping(value = "/active", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public SickLeavesResponseDTO getSickLeavesForUnit(@RequestBody SickLeavesFilterRequestDTO request) {
         final var response = getActiveSickLeavesService.get(request, INCLUDE_PARAMETERS);
-        return new SickLeavesResponseDTO(response.getContent(), response.isSrsError());
+        return new SickLeavesResponseDTO(
+                response.getContent(),
+                response.isSrsError(),
+                response.isUnansweredCommunicationError()
+        );
     }
 
     @RequestMapping(value = "/filters", method = RequestMethod.GET)

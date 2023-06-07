@@ -74,7 +74,7 @@ public class GetSickLeaveSummaryServiceTest {
 
     @BeforeEach
     void setup() {
-        doReturn(new GetActiveSickLeavesResponseDTO(sickLeaves, false))
+        doReturn(new GetActiveSickLeavesResponseDTO(sickLeaves, false, false))
                 .when(getActiveSickLeavesService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class));
         doReturn(summary).when(statisticsCalculator).getSickLeaveSummary(sickLeaves);
     }
