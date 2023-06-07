@@ -30,10 +30,11 @@ import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicati
 @Service
 public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WcRestIntegrationServiceImpl.class);
 
-    @Value("${wc.service.logicalAddress}")
+    @Value("${webcert.internal.host.url}")
     private String wcUrl;
+
+    private static final Logger LOG = LoggerFactory.getLogger(WcRestIntegrationServiceImpl.class);
 
     private final RestTemplate restTemplate;
 
