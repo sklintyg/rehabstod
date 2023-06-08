@@ -42,6 +42,6 @@ public enum UnansweredCommunicationFilterType {
             }
         }
 
-        return null;
+        throw new IllegalArgumentException("Not allowed UnansweredCommunicationFilterType id");
     }
 }

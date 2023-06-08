@@ -21,6 +21,8 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
+import java.util.List;
+
 public interface UnansweredCommunicationFilterService {
-    boolean filter(SjukfallEnhet sickLeave, String filterTypeId);
+    List<SjukfallEnhet> filter(List<SjukfallEnhet> sickLeave, String filterTypeId);
 }

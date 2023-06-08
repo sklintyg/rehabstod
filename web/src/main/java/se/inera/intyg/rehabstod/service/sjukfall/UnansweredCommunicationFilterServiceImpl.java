@@ -23,19 +23,25 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterType;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UnansweredCommunicationFilterServiceImpl implements UnansweredCommunicationFilterService {
     @Override
-    public boolean filter(SjukfallEnhet sickLeave, String filterTypeId) {
+    public List<SjukfallEnhet> filter(List<SjukfallEnhet> sickLeaves, String filterTypeId) {
+        return sickLeaves
+                .stream()
+                .filter((sickLeave) -> filterSickLeave(sickLeave, filterTypeId))
+                .collect(Collectors.toList());
+    }
+
+    public boolean filterSickLeave(SjukfallEnhet sickLeave, String filterTypeId) {
         if (filterTypeId == null || filterTypeId.isBlank()) {
             return true;
         }
 
         final var convertedFilterTypeId = UnansweredCommunicationFilterType.fromId(filterTypeId);
-
-        if (convertedFilterTypeId == null) {
-            return true;
-        }
 
         switch (convertedFilterTypeId) {
             case UNANSWERED_COMMUNICATION_FILTER_TYPE_1:

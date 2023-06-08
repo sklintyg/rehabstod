@@ -113,7 +113,9 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         final var hasDecoratedWithUnansweredCommunications = unansweredCommunicationDecoratorService.decorate(convertedSickLeaves);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_UNANSWERED_COMMUNICATION, convertedSickLeaves.size()));
 
-        final var filteredSickLeaves = filterSickLeaves(convertedSickLeaves, filterRequest.getUnansweredCommunicationFilterTypeId());
+        final var filteredSickLeaves = unansweredCommunicationFilterService.filter(
+                convertedSickLeaves, filterRequest.getUnansweredCommunicationFilterTypeId()
+        );
 
         logFactory.setStartTimer(System.currentTimeMillis());
         final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(filteredSickLeaves);
@@ -130,13 +132,6 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
                 !hasDecoratedWithSRSInfo,
                 !hasDecoratedWithUnansweredCommunications
         );
-    }
-
-    private List<SjukfallEnhet> filterSickLeaves(List<SjukfallEnhet> sickLeaves, String unansweredCommunicationFilterTypeId) {
-        return sickLeaves
-                .stream()
-                .filter((sickLeave) -> unansweredCommunicationFilterService.filter(sickLeave, unansweredCommunicationFilterTypeId))
-                .collect(Collectors.toList());
     }
 
     private boolean decorateWithSRSInfo(List<SjukfallEnhet> sickLeaves) {

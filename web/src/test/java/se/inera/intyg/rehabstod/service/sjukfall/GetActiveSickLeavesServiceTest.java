@@ -133,6 +133,8 @@ public class GetActiveSickLeavesServiceTest {
         when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
             any(SjukfallEnhet.class), anyInt(), any(LocalDate.class)
         )).thenReturn(sickLeave);
+        when(unansweredCommunicationFilterService.filter(any(), anyString()))
+                .thenReturn(Collections.singletonList(sickLeave));
     }
 
     static RehabstodUser user;
@@ -203,7 +205,6 @@ public class GetActiveSickLeavesServiceTest {
 
         @Test
         void shouldCallRiskPredictionService() {
-            when(unansweredCommunicationFilterService.filter(any(), anyString())).thenReturn(true);
             final var captor = ArgumentCaptor.forClass(List.class);
             getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
             verify(riskPredictionService).updateWithRiskPredictions(captor.capture());
@@ -232,11 +233,11 @@ public class GetActiveSickLeavesServiceTest {
 
         @Test
         void shouldCallUnansweredCommunicationFilteringServiceWithSickLeave() {
-            final var captor = ArgumentCaptor.forClass(se.inera.intyg.rehabstod.web.model.SjukfallEnhet.class);
+            final var captor = ArgumentCaptor.forClass(List.class);
             getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
 
             verify(unansweredCommunicationFilterService).filter(captor.capture(), anyString());
-            assertEquals(sickLeave, captor.getValue());
+            assertEquals(1, captor.getValue().size());
         }
 
         @Test
@@ -247,34 +248,10 @@ public class GetActiveSickLeavesServiceTest {
             verify(unansweredCommunicationFilterService).filter(any(), captor.capture());
             assertEquals(EXPECTED_REQUEST.getUnansweredCommunicationFilterTypeId(), captor.getValue());
         }
-
-        @Test
-        void shouldFilterSickLeavesWhichGetFalseAsResponseFromFilteringService() {
-            when(unansweredCommunicationFilterService.filter(any(), anyString())).thenReturn(false);
-
-            final var response = getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
-
-            assertEquals(0, response.getContent().size());
-        }
-
-        @Test
-        void shouldNotFilterSickLeavesWhichGetTrueAsResponseFromFilteringService() {
-            when(unansweredCommunicationFilterService.filter(any(), anyString())).thenReturn(true);
-
-            final var response = getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
-
-            assertEquals(1, response.getContent().size());
-        }
     }
 
     @Nested
     class TestMonitorLogging {
-
-        @BeforeEach
-        void setup() {
-            when(unansweredCommunicationFilterService.filter(any(), anyString())).thenReturn(true);
-        }
-
         @Test
         void shouldLogUsingSubUnitIdIfChosen() {
             setupSubUnit();
@@ -305,7 +282,6 @@ public class GetActiveSickLeavesServiceTest {
             when(user.getValdVardenhet()).thenReturn(unit);
             when(unit.getId()).thenReturn(UNIT_ID);
             when(user.getUrval()).thenReturn(Urval.ALL);
-            when(unansweredCommunicationFilterService.filter(any(), anyString())).thenReturn(true);
         }
 
         @Test

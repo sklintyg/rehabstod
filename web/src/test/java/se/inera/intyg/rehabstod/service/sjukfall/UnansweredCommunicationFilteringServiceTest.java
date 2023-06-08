@@ -29,10 +29,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterType;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
+import java.util.Collections;
+import java.util.List;
+
+import static org.testng.Assert.assertThrows;
+
 @ExtendWith(MockitoExtension.class)
 public class UnansweredCommunicationFilteringServiceTest {
 
     SjukfallEnhet sickLeave;
+    List<SjukfallEnhet> sickLeaves;
 
     @InjectMocks
     UnansweredCommunicationFilterServiceImpl unansweredCommunicationFilterService;
@@ -42,6 +48,7 @@ public class UnansweredCommunicationFilteringServiceTest {
         @BeforeEach
         void setup() {
             sickLeave = new SjukfallEnhet();
+            sickLeaves = Collections.singletonList(sickLeave);
         }
 
         @Nested
@@ -52,9 +59,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(10);
                 sickLeave.setObesvaradeKompl(0);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, "");
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, "");
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
 
             @Test
@@ -62,9 +69,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(0);
                 sickLeave.setObesvaradeKompl(10);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, "");
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, "");
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
 
             @Test
@@ -72,9 +79,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(10);
                 sickLeave.setObesvaradeKompl(10);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, "");
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, "");
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
         }
 
@@ -86,9 +93,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(10);
                 sickLeave.setObesvaradeKompl(0);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, null);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, null);
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
 
             @Test
@@ -96,9 +103,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(0);
                 sickLeave.setObesvaradeKompl(10);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, null);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, null);
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
 
             @Test
@@ -106,9 +113,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(10);
                 sickLeave.setObesvaradeKompl(10);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, null);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, null);
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
         }
 
@@ -116,33 +123,11 @@ public class UnansweredCommunicationFilteringServiceTest {
         class TestNonMatchingFilterTypeId {
 
             @Test
-            void shouldNotFilterSickLeaveWithQuestion() {
-                sickLeave.setUnansweredOther(10);
-                sickLeave.setObesvaradeKompl(0);
-
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, "random");
-
-                Assertions.assertTrue(response);
-            }
-
-            @Test
-            void shouldNotFilterSickLeaveWithComplement() {
-                sickLeave.setUnansweredOther(0);
-                sickLeave.setObesvaradeKompl(10);
-
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, "random");
-
-                Assertions.assertTrue(response);
-            }
-
-            @Test
-            void shouldNotFilterSickLeaveWithBothCommunicationTypes() {
+            void shouldThrowIllegalArgumentException() {
                 sickLeave.setUnansweredOther(10);
                 sickLeave.setObesvaradeKompl(10);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, "random");
-
-                Assertions.assertTrue(response);
+                assertThrows(IllegalArgumentException.class, () -> unansweredCommunicationFilterService.filter(sickLeaves, "random"));
             }
         }
 
@@ -157,9 +142,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(10);
                 sickLeave.setObesvaradeKompl(0);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertFalse(response);
+                Assertions.assertEquals(0, response.size());
             }
 
             @Test
@@ -167,9 +152,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(0);
                 sickLeave.setObesvaradeKompl(10);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertFalse(response);
+                Assertions.assertEquals(0, response.size());
             }
 
             @Test
@@ -177,9 +162,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(10);
                 sickLeave.setObesvaradeKompl(10);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertFalse(response);
+                Assertions.assertEquals(0, response.size());
             }
 
             @Test
@@ -187,9 +172,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(0);
                 sickLeave.setObesvaradeKompl(0);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
         }
 
@@ -202,9 +187,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(10);
                 sickLeave.setObesvaradeKompl(0);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
 
             @Test
@@ -212,9 +197,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(0);
                 sickLeave.setObesvaradeKompl(10);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
 
             @Test
@@ -222,9 +207,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(10);
                 sickLeave.setObesvaradeKompl(10);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
 
             @Test
@@ -232,9 +217,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(0);
                 sickLeave.setObesvaradeKompl(0);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertFalse(response);
+                Assertions.assertEquals(0, response.size());
             }
         }
 
@@ -247,9 +232,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(10);
                 sickLeave.setObesvaradeKompl(0);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertFalse(response);
+                Assertions.assertEquals(0, response.size());
             }
 
             @Test
@@ -257,9 +242,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(0);
                 sickLeave.setObesvaradeKompl(10);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
 
             @Test
@@ -267,9 +252,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(10);
                 sickLeave.setObesvaradeKompl(10);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
 
             @Test
@@ -277,9 +262,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(0);
                 sickLeave.setObesvaradeKompl(0);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertFalse(response);
+                Assertions.assertEquals(0, response.size());
             }
         }
 
@@ -292,9 +277,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(10);
                 sickLeave.setObesvaradeKompl(0);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
 
             @Test
@@ -302,9 +287,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(0);
                 sickLeave.setObesvaradeKompl(10);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertFalse(response);
+                Assertions.assertEquals(0, response.size());
             }
 
             @Test
@@ -312,9 +297,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(10);
                 sickLeave.setObesvaradeKompl(10);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertTrue(response);
+                Assertions.assertEquals(1, response.size());
             }
 
             @Test
@@ -322,9 +307,9 @@ public class UnansweredCommunicationFilteringServiceTest {
                 sickLeave.setUnansweredOther(0);
                 sickLeave.setObesvaradeKompl(0);
 
-                final var response = unansweredCommunicationFilterService.filter(sickLeave, request);
+                final var response = unansweredCommunicationFilterService.filter(sickLeaves, request);
 
-                Assertions.assertFalse(response);
+                Assertions.assertEquals(0, response.size());
             }
         }
     }
