@@ -56,6 +56,7 @@ import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.pu.PuService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterType;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.FeatureService;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -138,6 +139,82 @@ public class PopulateFiltersServiceTest {
         EXPECTED_REQUEST.setUnitId(UNIT_ID);
 
         when(diagnosKapitelService.getDiagnosKapitelList()).thenReturn(allDiagnosisChapters);
+    }
+
+    @Nested
+    class UnansweredCommunication {
+        @BeforeEach
+        void setup() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+        }
+
+        @Test
+        void shouldSetUnansweredCommunicationFilterTypeIds() {
+            final var response = populateActiveFilters.get();
+
+            assertEquals(4, response.getUnansweredCommunicationFilterTypes().size());
+        }
+
+        @Test
+        void shouldSetUnansweredCommunicationFilterTypeId1() {
+            final var response = populateActiveFilters.get();
+
+            assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_1.toString(),
+                    response.getUnansweredCommunicationFilterTypes().get(0).getId()
+            );
+
+            assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_1.getName(),
+                    response.getUnansweredCommunicationFilterTypes().get(0).getName()
+            );
+        }
+
+        @Test
+        void shouldSetUnansweredCommunicationFilterTypeId2() {
+            final var response = populateActiveFilters.get();
+
+            assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_2.toString(),
+                    response.getUnansweredCommunicationFilterTypes().get(1).getId()
+            );
+
+            assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_2.getName(),
+                    response.getUnansweredCommunicationFilterTypes().get(1).getName()
+            );
+        }
+
+        @Test
+        void shouldSetUnansweredCommunicationFilterTypeId3() {
+            final var response = populateActiveFilters.get();
+
+            assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_3.toString(),
+                    response.getUnansweredCommunicationFilterTypes().get(2).getId()
+            );
+
+            assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_3.getName(),
+                    response.getUnansweredCommunicationFilterTypes().get(2).getName()
+            );
+        }
+
+        @Test
+        void shouldSetUnansweredCommunicationFilterTypeId4() {
+            final var response = populateActiveFilters.get();
+
+            assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_4.toString(),
+                    response.getUnansweredCommunicationFilterTypes().get(3).getId()
+            );
+
+            assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_4.getName(),
+                    response.getUnansweredCommunicationFilterTypes().get(3).getName()
+            );
+        }
     }
 
     @Nested

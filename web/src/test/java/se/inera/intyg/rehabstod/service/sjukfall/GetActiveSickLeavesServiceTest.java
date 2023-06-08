@@ -20,8 +20,7 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -31,6 +30,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -98,6 +98,9 @@ public class GetActiveSickLeavesServiceTest {
     @Mock
     UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
 
+    @Mock
+    UnansweredCommunicationFilterService unansweredCommunicationFilterService;
+
     @InjectMocks
     GetActiveSickLeavesServiceImpl getActiveSickLeavesService;
 
@@ -130,6 +133,8 @@ public class GetActiveSickLeavesServiceTest {
         when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
             any(SjukfallEnhet.class), anyInt(), any(LocalDate.class)
         )).thenReturn(sickLeave);
+        when(unansweredCommunicationFilterService.filter(any(), anyString()))
+                .thenReturn(Collections.singletonList(sickLeave));
     }
 
     static RehabstodUser user;
@@ -157,6 +162,8 @@ public class GetActiveSickLeavesServiceTest {
     static final DiagnosKapitel CHOSEN_DIAGNOSIS_CHAPTER =
         new DiagnosKapitel(DIAGNOSIS_CHAPTER_TO, DIAGNOSIS_CHAPTER_FROM, DIAGNOSIS_CHAPTER_NAME);
     static final String TEXT_SEARCH = "textSearch";
+    private static final String UNANSWERED_COMMUNICATION = "uac";
+
     static final SickLeavesFilterRequestDTO EXPECTED_REQUEST =
         new SickLeavesFilterRequestDTO(
             Collections.singletonList(DOCTOR_FILTER),
@@ -168,7 +175,8 @@ public class GetActiveSickLeavesServiceTest {
             TO_END_DATE,
             Collections.singletonList(REKO_FILTER),
             OCCUPATION_FILTER,
-            TEXT_SEARCH
+            TEXT_SEARCH,
+            UNANSWERED_COMMUNICATION
         );
     static final SickLeavesFilterRequestDTO EXPECTED_REQUEST_DOCTOR =
         new SickLeavesFilterRequestDTO(
@@ -181,11 +189,12 @@ public class GetActiveSickLeavesServiceTest {
             TO_END_DATE,
             Collections.emptyList(),
             Collections.emptyList(),
-            TEXT_SEARCH
+            TEXT_SEARCH,
+            UNANSWERED_COMMUNICATION
         );
 
     @Nested
-    class TestDecoratingServiced {
+    class TestDecoratingServices {
       
         @BeforeEach
         void setup() {
@@ -213,10 +222,36 @@ public class GetActiveSickLeavesServiceTest {
         }
     }
 
+    @Nested
+    class TestUnansweredCommunicationFilteringService {
+        @BeforeEach
+        void setup() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ALL);
+        }
+
+        @Test
+        void shouldCallUnansweredCommunicationFilteringServiceWithSickLeave() {
+            final var captor = ArgumentCaptor.forClass(List.class);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+
+            verify(unansweredCommunicationFilterService).filter(captor.capture(), anyString());
+            assertEquals(1, captor.getValue().size());
+        }
+
+        @Test
+        void shouldCallUnansweredCommunicationFilteringServiceWithFilterId() {
+            final var captor = ArgumentCaptor.forClass(String.class);
+            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+
+            verify(unansweredCommunicationFilterService).filter(any(), captor.capture());
+            assertEquals(EXPECTED_REQUEST.getUnansweredCommunicationFilterTypeId(), captor.getValue());
+        }
+    }
 
     @Nested
     class TestMonitorLogging {
-
         @Test
         void shouldLogUsingSubUnitIdIfChosen() {
             setupSubUnit();
@@ -375,7 +410,8 @@ public class GetActiveSickLeavesServiceTest {
                     TO_END_DATE,
                     Collections.singletonList(REKO_FILTER),
                     OCCUPATION_FILTER,
-                    TEXT_SEARCH
+                    TEXT_SEARCH,
+                    UNANSWERED_COMMUNICATION
                 ), true
             );
 
@@ -402,7 +438,8 @@ public class GetActiveSickLeavesServiceTest {
                     null,
                     Collections.singletonList(REKO_FILTER),
                     OCCUPATION_FILTER,
-                    TEXT_SEARCH
+                    TEXT_SEARCH,
+                    UNANSWERED_COMMUNICATION
                 ), true
             );
 

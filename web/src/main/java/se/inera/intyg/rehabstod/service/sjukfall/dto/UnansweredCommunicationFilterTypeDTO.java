@@ -17,30 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.web.controller.api.dto;
+package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
-import java.time.LocalDate;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SickLeavesFilterRequestDTO {
+public class UnansweredCommunicationFilterTypeDTO {
 
-    private List<String> doctorIds;
-    private List<SickLeaveLengthInterval> sickLeaveLengthIntervals;
-    private List<DiagnosKapitel> diagnosisChapters;
-    private Integer fromPatientAge;
-    private Integer toPatientAge;
-    private LocalDate fromSickLeaveEndDate;
-    private LocalDate toSickLeaveEndDate;
-    private List<String> rekoStatusTypeIds;
-    private List<String> occupationTypeIds;
-    private String textSearch;
-    private String unansweredCommunicationFilterTypeId;
+    private String id;
+    private String name;
 }
