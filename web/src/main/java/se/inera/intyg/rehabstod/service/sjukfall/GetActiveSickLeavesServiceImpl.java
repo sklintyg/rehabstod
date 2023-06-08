@@ -109,11 +109,11 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(convertedSickLeaves);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_DOCTOR_NAMES, convertedSickLeaves.size()));
 
-        final var filteredSickLeaves = filterSickLeaves(convertedSickLeaves, filterRequest.getUnansweredCommunicationFilterTypeId());
-
         logFactory.setStartTimer(System.currentTimeMillis());
         final var hasDecoratedWithUnansweredCommunications = unansweredCommunicationDecoratorService.decorate(convertedSickLeaves);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_UNANSWERED_COMMUNICATION, convertedSickLeaves.size()));
+
+        final var filteredSickLeaves = filterSickLeaves(convertedSickLeaves, filterRequest.getUnansweredCommunicationFilterTypeId());
 
         logFactory.setStartTimer(System.currentTimeMillis());
         final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(filteredSickLeaves);
