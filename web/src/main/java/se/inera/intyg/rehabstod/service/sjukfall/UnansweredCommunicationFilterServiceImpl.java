@@ -33,7 +33,7 @@ public class UnansweredCommunicationFilterServiceImpl implements UnansweredCommu
 
         final var convertedFilterTypeId = UnansweredCommunicationFilterType.fromId(filterTypeId);
 
-        if(convertedFilterTypeId == null) {
+        if (convertedFilterTypeId == null) {
             return true;
         }
 
