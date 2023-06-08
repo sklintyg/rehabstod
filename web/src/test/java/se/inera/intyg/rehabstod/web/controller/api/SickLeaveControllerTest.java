@@ -53,6 +53,7 @@ public class SickLeaveControllerTest {
     @InjectMocks
     private SickLeaveController sickLeaveController = new SickLeaveController();
     private static final String TEXT_SEARCH = "textSearch";
+    private static final String UNANSWERED_COMMUNICATION = "uac";
 
     @Test
     void shouldCallGetActiveSickLeavesService() {
@@ -67,7 +68,8 @@ public class SickLeaveControllerTest {
                 LocalDate.now(),
                 Collections.emptyList(),
                 Collections.emptyList(),
-                TEXT_SEARCH
+                TEXT_SEARCH,
+                UNANSWERED_COMMUNICATION
             );
         when(getActiveSickLeavesService.get(any(), anyBoolean())).thenReturn(
             new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true)
@@ -89,7 +91,8 @@ public class SickLeaveControllerTest {
                 LocalDate.now(),
                 Collections.emptyList(),
                 Collections.emptyList(),
-                TEXT_SEARCH
+                TEXT_SEARCH,
+                UNANSWERED_COMMUNICATION
             );
 
         final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true);
@@ -113,7 +116,8 @@ public class SickLeaveControllerTest {
                 LocalDate.now(),
                 Collections.emptyList(),
                 Collections.emptyList(),
-                TEXT_SEARCH
+                TEXT_SEARCH,
+                UNANSWERED_COMMUNICATION
             );
 
         final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, false);
@@ -137,7 +141,8 @@ public class SickLeaveControllerTest {
                 LocalDate.now(),
                 Collections.emptyList(),
                 Collections.emptyList(),
-                TEXT_SEARCH
+                TEXT_SEARCH,
+                UNANSWERED_COMMUNICATION
             );
 
         final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), false, true);
@@ -160,6 +165,7 @@ public class SickLeaveControllerTest {
                 Collections.emptyList(),
                 Collections.emptyList(),
                 10,
+                Collections.emptyList(),
                 Collections.emptyList(),
                 Collections.emptyList(),
                 true
@@ -209,6 +215,13 @@ public class SickLeaveControllerTest {
             final var response = sickLeaveController.populateFilters();
             assertEquals(expectedResponse.getOccupationTypes(), response.getOccupationTypes());
         }
+
+        @Test
+        void shouldTransformResponseUnansweredCommunicationFilterTypes() {
+            final var response = sickLeaveController.populateFilters();
+            assertEquals(expectedResponse.getUnansweredCommunicationFilterTypes(),
+                    response.getUnansweredCommunicationFilterTypes());
+        }
     }
 
     @Test
@@ -218,6 +231,7 @@ public class SickLeaveControllerTest {
             Collections.emptyList(),
             Collections.emptyList(),
             10,
+            Collections.emptyList(),
             Collections.emptyList(),
             Collections.emptyList(),
             true
@@ -232,6 +246,8 @@ public class SickLeaveControllerTest {
         assertEquals(expectedResponse.getNbrOfSickLeaves(), actualResponse.getNbrOfSickLeaves());
         assertEquals(expectedResponse.getRekoStatusTypes(), actualResponse.getRekoStatusTypes());
         assertEquals(expectedResponse.getOccupationTypes(), actualResponse.getOccupationTypes());
+        assertEquals(expectedResponse.getUnansweredCommunicationFilterTypes(),
+                actualResponse.getUnansweredCommunicationFilterTypes());
         assertEquals(expectedResponse.isSrsActivated(), actualResponse.isSrsActivated());
     }
 

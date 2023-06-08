@@ -55,6 +55,7 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
                 null,
                 Collections.emptyList(),
                 Collections.emptyList(),
+                null,
                 null
             ),
             INCLUDE_PARAMETERS

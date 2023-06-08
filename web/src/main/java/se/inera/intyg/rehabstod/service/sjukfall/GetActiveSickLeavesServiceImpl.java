@@ -42,7 +42,6 @@ import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.GetActiveSickLeavesResponseDTO;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterType;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
@@ -65,6 +64,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     private final PuService puService;
     private final RiskPredictionService riskPredictionService;
     private final UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
+    private final UnansweredCommunicationFilterService unansweredCommunicationFilterService;
 
     private static final Logger LOG = LoggerFactory.getLogger(GetActiveSickLeavesServiceImpl.class);
 
@@ -75,7 +75,8 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
                                           SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
                                           PatientIdEncryption patientIdEncryption, PuService puService,
                                           RiskPredictionService riskPredictionService,
-                                          UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService) {
+                                          UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService,
+                                          UnansweredCommunicationFilterService unansweredCommunicationFilterService) {
         this.userService = userService;
         this.monitoringLogService = monitoringLogService;
         this.sjukfallEngineMapper = sjukfallEngineMapper;
@@ -86,6 +87,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         this.patientIdEncryption = patientIdEncryption;
         this.puService = puService;
         this.unansweredCommunicationDecoratorService = unansweredCommunicationDecoratorService;
+        this.unansweredCommunicationFilterService = unansweredCommunicationFilterService;
     }
 
     @Override
@@ -124,7 +126,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
             sickLeave -> sickLeave.setEncryptedPatientId(patientIdEncryption.encrypt(sickLeave.getPatient().getId())));
 
         return new GetActiveSickLeavesResponseDTO(
-                convertedSickLeaves,
+                filteredSickLeaves,
                 !hasDecoratedWithSRSInfo,
                 !hasDecoratedWithUnansweredCommunications
         );
@@ -133,28 +135,8 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     private List<SjukfallEnhet> filterSickLeaves(List<SjukfallEnhet> sickLeaves, String unansweredCommunicationFilterTypeId) {
         return sickLeaves
                 .stream()
-                .filter((sickLeave) -> filterOnUnansweredCommunication(sickLeave, unansweredCommunicationFilterTypeId))
+                .filter((sickLeave) -> unansweredCommunicationFilterService.filter(sickLeave, unansweredCommunicationFilterTypeId))
                 .collect(Collectors.toList());
-    }
-
-    private boolean filterOnUnansweredCommunication(SjukfallEnhet sickLeave, String filterTypeId) {
-        if (filterTypeId == null) {
-            return false;
-        }
-
-        switch (UnansweredCommunicationFilterType.fromId(filterTypeId)) {
-            case UNANSWERED_COMMUNICATION_FILTER_TYPE_1:
-                return sickLeave.getUnansweredOther() + sickLeave.getObesvaradeKompl() == 0;
-            case UNANSWERED_COMMUNICATION_FILTER_TYPE_2:
-                return sickLeave.getUnansweredOther() + sickLeave.getObesvaradeKompl() > 0;
-            case UNANSWERED_COMMUNICATION_FILTER_TYPE_3:
-                return sickLeave.getObesvaradeKompl() > 0;
-            case UNANSWERED_COMMUNICATION_FILTER_TYPE_4:
-                return sickLeave.getUnansweredOther() > 0;
-            default:
-                return false;
-        }
-
     }
 
     private boolean decorateWithSRSInfo(List<SjukfallEnhet> sickLeaves) {
