@@ -36,7 +36,7 @@ public class UnansweredCommunicationFilterServiceImpl implements UnansweredCommu
                 .collect(Collectors.toList());
     }
 
-    public boolean filterSickLeave(SjukfallEnhet sickLeave, String filterTypeId) {
+    private boolean filterSickLeave(SjukfallEnhet sickLeave, String filterTypeId) {
         if (filterTypeId == null || filterTypeId.isBlank()) {
             return true;
         }

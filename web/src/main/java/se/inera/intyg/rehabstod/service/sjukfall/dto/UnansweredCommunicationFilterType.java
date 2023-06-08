@@ -42,6 +42,6 @@ public enum UnansweredCommunicationFilterType {
             }
         }
 
-        throw new IllegalArgumentException("Not allowed UnansweredCommunicationFilterType id");
+        throw new IllegalArgumentException(String.format("Not allowed UnansweredCommunicationFilterType id: '%s'", id));
     }
 }
