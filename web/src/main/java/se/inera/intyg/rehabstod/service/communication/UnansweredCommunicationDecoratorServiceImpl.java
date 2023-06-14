@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.unansweredCommunication;
+package se.inera.intyg.rehabstod.service.communication;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

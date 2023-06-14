@@ -31,7 +31,7 @@ import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
-import se.inera.intyg.rehabstod.service.unansweredCommunication.UnansweredCommunicationDecoratorServiceImpl;
+import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorServiceImpl;
 import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;

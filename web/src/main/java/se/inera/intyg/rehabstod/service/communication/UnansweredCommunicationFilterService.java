@@ -17,15 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.unansweredCommunication;
+package se.inera.intyg.rehabstod.service.communication;
 
-import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.List;
 
-public interface UnansweredCommunicationDecoratorService {
-    boolean decorateSickLeaves(List<SjukfallEnhet> sickLeaves);
-
-    boolean decorateLuCertificates(List<LUCertificate> certificates);
+public interface UnansweredCommunicationFilterService {
+    List<SjukfallEnhet> filter(List<SjukfallEnhet> sickLeave, String filterTypeId);
 }

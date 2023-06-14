@@ -63,8 +63,8 @@ import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
-import se.inera.intyg.rehabstod.service.unansweredCommunication.UnansweredCommunicationDecoratorService;
-import se.inera.intyg.rehabstod.service.unansweredCommunication.UnansweredCommunicationFilterService;
+import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
+import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationFilterService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 

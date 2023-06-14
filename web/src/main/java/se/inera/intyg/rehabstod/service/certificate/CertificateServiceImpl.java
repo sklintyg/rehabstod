@@ -51,7 +51,7 @@ import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
-import se.inera.intyg.rehabstod.service.unansweredCommunication.UnansweredCommunicationDecoratorService;
+import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonResponse;
