@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall;
+package se.inera.intyg.rehabstod.service.unansweredCommunication;
 
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.List;
 
-public interface UnansweredCommunicationDecoratorService {
-    boolean decorate(List<SjukfallEnhet> sickLeaves);
+public interface UnansweredCommunicationFilterService {
+    List<SjukfallEnhet> filter(List<SjukfallEnhet> sickLeave, String filterTypeId);
 }

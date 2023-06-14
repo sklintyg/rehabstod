@@ -17,13 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall;
+package se.inera.intyg.rehabstod.service.unansweredCommunication;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
+import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCo
     }
 
     @Override
-    public boolean decorate(List<SjukfallEnhet> sickLeaves) {
+    public boolean decorateSickLeaves(List<SjukfallEnhet> sickLeaves) {
         final var patientIds = sickLeaves
                 .stream()
                 .map((sickLeave) -> sickLeave.getPatient().getId())
@@ -60,6 +61,36 @@ public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCo
         sickLeaves.forEach((sickLeave) -> decorateSickLeave(sickLeave, response.getUnansweredQAsMap()));
 
         return true;
+    }
+
+    @Override
+    public boolean decorateLuCertificates(List<LUCertificate> certificates) {
+        final var patientIds = certificates
+                .stream()
+                .map((luCertificate) -> luCertificate.getPatient().getId())
+                .collect(Collectors.toList());
+
+        final var response = wcRestIntegrationService.getUnansweredCommunicationForPatients(
+                new UnansweredCommunicationRequest(maxDaysOfUnansweredCommunication, patientIds)
+        );
+
+        if (response.isUnansweredCommunicationError()) {
+            return false;
+        }
+
+        certificates.forEach(
+                (luCertificate) -> decorateLuCertificate(
+                        luCertificate,
+                        response.getUnansweredQAsMap().get(luCertificate.getCertificateId())
+                )
+        );
+
+        return true;
+    }
+
+    private void decorateLuCertificate(LUCertificate luCertificate, UnansweredQAs unansweredQAs) {
+        luCertificate.setUnAnsweredComplement(unansweredQAs.getComplement());
+        luCertificate.setUnAnsweredOther(unansweredQAs.getOthers());
     }
 
     private void decorateSickLeave(SjukfallEnhet sickLeave, Map<String, UnansweredQAs> unansweredQAsMap) {

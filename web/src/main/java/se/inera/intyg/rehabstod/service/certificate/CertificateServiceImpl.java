@@ -51,6 +51,7 @@ import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
+import se.inera.intyg.rehabstod.service.unansweredCommunication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonResponse;
@@ -92,11 +93,14 @@ public class CertificateServiceImpl implements CertificateService {
 
     private final EmployeeNameService employeeNameService;
 
+    private final UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
+
     @Autowired
     public CertificateServiceImpl(
-        IntygstjanstRestIntegrationService restIntegrationService, UnansweredQAsInfoDecorator unansweredQAsInfoDecorator,
-        LogService logService, UserService userService, DiagnosFactory diagnosFactory, HsaOrganizationsService hsaOrganizationsService,
-        PuService puService, EmployeeNameService employeeNameService) {
+            IntygstjanstRestIntegrationService restIntegrationService, UnansweredQAsInfoDecorator unansweredQAsInfoDecorator,
+            LogService logService, UserService userService, DiagnosFactory diagnosFactory, HsaOrganizationsService hsaOrganizationsService,
+            PuService puService, EmployeeNameService employeeNameService,
+            UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService) {
         this.restIntegrationService = restIntegrationService;
         this.unansweredQAsInfoDecorator = unansweredQAsInfoDecorator;
         this.logService = logService;
@@ -105,6 +109,7 @@ public class CertificateServiceImpl implements CertificateService {
         this.hsaOrganizationsService = hsaOrganizationsService;
         this.puService = puService;
         this.employeeNameService = employeeNameService;
+        this.unansweredCommunicationDecoratorService = unansweredCommunicationDecoratorService;
     }
 
     @Override
@@ -125,7 +130,7 @@ public class CertificateServiceImpl implements CertificateService {
 
         var luCertificateList = transformCertificatesBasedOnMetaDataQuery(diagnosedCertificateList);
 
-        final var qaInfoError = populateLUCertificatesWithNotificationData(luCertificateList);
+        final var qaInfoError = unansweredCommunicationDecoratorService.decorateLuCertificates(luCertificateList);
 
         luCertificateList = filterOnQuestionAndAnswers(request, luCertificateList);
 

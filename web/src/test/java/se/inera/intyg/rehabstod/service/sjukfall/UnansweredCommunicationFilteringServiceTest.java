@@ -27,6 +27,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterType;
+import se.inera.intyg.rehabstod.service.unansweredCommunication.UnansweredCommunicationFilterServiceImpl;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 import java.util.Collections;

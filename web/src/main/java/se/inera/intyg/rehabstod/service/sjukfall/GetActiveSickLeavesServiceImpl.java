@@ -46,6 +46,8 @@ import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
+import se.inera.intyg.rehabstod.service.unansweredCommunication.UnansweredCommunicationDecoratorService;
+import se.inera.intyg.rehabstod.service.unansweredCommunication.UnansweredCommunicationFilterService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
@@ -110,7 +112,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_DOCTOR_NAMES, convertedSickLeaves.size()));
 
         logFactory.setStartTimer(System.currentTimeMillis());
-        final var hasDecoratedWithUnansweredCommunications = unansweredCommunicationDecoratorService.decorate(convertedSickLeaves);
+        final var hasDecoratedWithUnansweredCommunications = unansweredCommunicationDecoratorService.decorateSickLeaves(convertedSickLeaves);
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_UNANSWERED_COMMUNICATION, convertedSickLeaves.size()));
 
         final var filteredSickLeaves = unansweredCommunicationFilterService.filter(
