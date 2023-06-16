@@ -48,7 +48,7 @@ public class RehabstodAuthenticationFailureHandler extends ExceptionMappingAuthe
     private static final String RS_IDENTIFIER = "rs";
     private static final String RS2_IDENTIFIER = "rs2";
     private static final String RS_DEFAULT_FAILURE_URL = "/error.jsp?reason=login.failed";
-    private static final String RS2_DEFAULT_FAILURE_URL = "/error?reason=login.failed";
+    private static final String RS2_DEFAULT_FAILURE_URL = "/error/login-failed";
 
     private final Map<String, String> rsFailureUrls;
     private final Map<String, String> rs2FailureUrls;
@@ -119,9 +119,9 @@ public class RehabstodAuthenticationFailureHandler extends ExceptionMappingAuthe
     private Map<String, String> getRs2FailureUrls() {
         return Map.of(
             BAD_CREDENTIALS, RS2_DEFAULT_FAILURE_URL,
-            MISSING_ASSIGNMENT, "/error?reason=login.medarbetaruppdrag",
-            MISSING_UNIT_WITH_REHAB_SYSTEM_ROLE, "/error?reason=login.saknar-hsa-rehabroll",
-            HSA_SERVICE, "/error?reason=login.hsaerror"
+            MISSING_ASSIGNMENT, "/error/login-medarbetaruppdrag",
+            MISSING_UNIT_WITH_REHAB_SYSTEM_ROLE, "/error/login-saknar-hsa-rehabroll",
+            HSA_SERVICE, "/error/login-hsaerror"
         );
     }
 }
