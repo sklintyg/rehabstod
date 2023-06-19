@@ -20,7 +20,9 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -30,7 +32,6 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -133,8 +134,8 @@ public class GetActiveSickLeavesServiceTest {
         when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
             any(SjukfallEnhet.class), anyInt(), any(LocalDate.class)
         )).thenReturn(sickLeave);
-        when(unansweredCommunicationFilterService.filter(any(), anyString()))
-                .thenReturn(Collections.singletonList(sickLeave));
+        when(unansweredCommunicationFilterService.filter(any(), any()))
+            .thenReturn(Collections.singletonList(sickLeave));
     }
 
     static RehabstodUser user;
@@ -195,7 +196,7 @@ public class GetActiveSickLeavesServiceTest {
 
     @Nested
     class TestDecoratingServices {
-      
+
         @BeforeEach
         void setup() {
             when(user.getValdVardenhet()).thenReturn(unit);
@@ -224,6 +225,7 @@ public class GetActiveSickLeavesServiceTest {
 
     @Nested
     class TestUnansweredCommunicationFilteringService {
+
         @BeforeEach
         void setup() {
             when(user.getValdVardenhet()).thenReturn(unit);
@@ -252,6 +254,7 @@ public class GetActiveSickLeavesServiceTest {
 
     @Nested
     class TestMonitorLogging {
+
         @Test
         void shouldLogUsingSubUnitIdIfChosen() {
             setupSubUnit();
@@ -340,6 +343,32 @@ public class GetActiveSickLeavesServiceTest {
 
     @Nested
     class TestITRequest {
+
+        @Test
+        void shallHandleEmptyRequest() {
+            when(user.getValdVardenhet()).thenReturn(unit);
+            when(unit.getId()).thenReturn(UNIT_ID);
+            when(user.getUrval()).thenReturn(Urval.ALL);
+
+            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+            final var emptySickLeavesFilterRequestDTO = new SickLeavesFilterRequestDTO();
+            getActiveSickLeavesService.get(emptySickLeavesFilterRequestDTO, true);
+
+            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
+            Assertions.assertNull(captor.getValue().getUnitId());
+            assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
+            assertEquals(Integer.parseInt(GAP), captor.getValue().getMaxCertificateGap());
+            assertEquals(Integer.parseInt(DAYS), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+            assertEquals(0, captor.getValue().getDoctorIds().size());
+            assertEquals(0, captor.getValue().getSickLeaveLengthIntervals().size());
+            assertNull(captor.getValue().getFromPatientAge());
+            assertNull(captor.getValue().getToPatientAge());
+            assertNull(captor.getValue().getFromSickLeaveEndDate());
+            assertNull(captor.getValue().getToSickLeaveEndDate());
+            assertNull(captor.getValue().getRekoStatusTypeIds());
+            assertNull(captor.getValue().getOccupationTypeIds());
+            assertNull(captor.getValue().getTextSearch());
+        }
 
         @Test
         void shouldCreateRequestWithCorrectValuesWhenChosenUnit() {
