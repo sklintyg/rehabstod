@@ -22,12 +22,14 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class SickLeavesFilterRequestDTO {

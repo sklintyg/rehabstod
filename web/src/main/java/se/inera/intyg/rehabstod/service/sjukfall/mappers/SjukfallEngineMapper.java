@@ -34,7 +34,7 @@ import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
-
+import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -50,13 +50,16 @@ public class SjukfallEngineMapper {
 
     @Autowired
     private DiagnosFactory diagnosFactory;
+    @Autowired
+    private PatientIdEncryption patientIdEncryption;
 
     // api
 
     /**
      * Mapping from SjukfallEngine's format to Rehabstod internal format.
      */
-    public SjukfallEnhet mapToSjukfallEnhetDto(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from,
+    public SjukfallEnhet
+    mapToSjukfallEnhetDto(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from,
         int maxDagarSedanAvslut, LocalDate today) {
         SjukfallEnhet to = new SjukfallEnhet();
 
@@ -83,6 +86,7 @@ public class SjukfallEngineMapper {
             if (from.getRekoStatus() != null) {
                 to.setRekoStatus(getRekoStatus(from));
             }
+            to.setEncryptedPatientId(patientIdEncryption.encrypt(from.getPatient().getId()));
         } catch (Exception e) {
             throw new SjukfallServiceException("Error mapping SjukfallEngine format to internal format", e);
         }
@@ -92,9 +96,9 @@ public class SjukfallEngineMapper {
 
     private static RekoStatusDTO getRekoStatus(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from) {
         return new RekoStatusDTO(
-                new RekoStatusTypeDTO(
-                        from.getRekoStatus().getStatus().getId(),
-                        from.getRekoStatus().getStatus().getName())
+            new RekoStatusTypeDTO(
+                from.getRekoStatus().getStatus().getId(),
+                from.getRekoStatus().getStatus().getName())
         );
     }
 

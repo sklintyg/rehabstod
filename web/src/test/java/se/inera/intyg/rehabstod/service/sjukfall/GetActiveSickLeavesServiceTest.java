@@ -19,20 +19,16 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -41,29 +37,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
-import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
-import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
-import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
-import se.inera.intyg.rehabstod.service.Urval;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
-import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
-import se.inera.intyg.rehabstod.service.pu.PuService;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval;
-import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
-import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
@@ -72,26 +52,13 @@ public class GetActiveSickLeavesServiceTest {
 
     @Mock
     UserService userService;
-
-    @Mock
-    PuService puService;
-
     @Mock
     MonitoringLogService monitoringLogService;
-
-    @Mock
-    SjukfallEngineMapper sjukfallEngineMapper;
-
-    @Mock
-    IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
-
     @Mock
     PdlLogSickLeavesService pdlLogSickLeavesService;
 
     @Mock
     SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
-    @Mock
-    PatientIdEncryption patientIdEncryption;
 
     @Mock
     RiskPredictionService riskPredictionService;
@@ -101,113 +68,90 @@ public class GetActiveSickLeavesServiceTest {
 
     @Mock
     UnansweredCommunicationFilterService unansweredCommunicationFilterService;
+    @Mock
+    CreateSickLeaveRequestService createSickLeaveRequestService;
+    @Mock
+    GetSickLeavesService getSickLeavesService;
+
 
     @InjectMocks
     GetActiveSickLeavesServiceImpl getActiveSickLeavesService;
-
-    Vardenhet unit;
-    SelectableVardenhet careGiverUnit;
-    Vardgivare careGiver;
     se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave;
+    static RehabstodUser user;
+    static final String HSA_ID = "HSA_ID";
+    static final String UNIT_ID = "UNIT_ID";
+
+    static final SickLeavesFilterRequestDTO SICK_LEAVES_FILTER_REQUEST = new SickLeavesFilterRequestDTO();
+    static final SickLeavesRequestDTO SICK_LEAVES_REQUEST = SickLeavesRequestDTO.builder()
+        .unitId(UNIT_ID)
+        .build();
 
     @BeforeEach
     void setup() {
-        careGiverUnit = mock(SelectableVardenhet.class);
-        careGiver = mock(Vardgivare.class);
-        unit = mock(Vardenhet.class);
         user = mock(RehabstodUser.class);
-
         when(userService.getUser()).thenReturn(user);
         when(user.getHsaId()).thenReturn(HSA_ID);
-
-        final var preferences = new HashMap<String, String>();
-        preferences.put(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG.getBackendKeyName(), GAP);
-        preferences.put(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT.getBackendKeyName(), DAYS);
-        final var userPreferences = RehabstodUserPreferences.fromBackend(preferences);
-        when(user.getPreferences()).thenReturn(userPreferences);
         sickLeave = new se.inera.intyg.rehabstod.web.model.SjukfallEnhet();
-        final se.inera.intyg.rehabstod.web.model.Patient patient = new se.inera.intyg.rehabstod.web.model.Patient("19121212-1212",
-            "Arnold");
-        sickLeave.setPatient(patient);
-        final var response = new SickLeavesResponseDTO(Collections.singletonList(new SjukfallEnhet()));
-        when(intygstjanstRestIntegrationService.getActiveSickLeaves(any())).thenReturn(response);
-        when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
-            any(SjukfallEnhet.class), anyInt(), any(LocalDate.class)
-        )).thenReturn(sickLeave);
+        when(createSickLeaveRequestService.create(eq(SICK_LEAVES_FILTER_REQUEST), anyBoolean())).thenReturn(SICK_LEAVES_REQUEST);
+        when(getSickLeavesService.get(SICK_LEAVES_REQUEST)).thenReturn(List.of(sickLeave));
         when(unansweredCommunicationFilterService.filter(any(), any()))
             .thenReturn(Collections.singletonList(sickLeave));
     }
 
-    static RehabstodUser user;
-    static final String HSA_ID = "HSA_ID";
-    static final String SUB_UNIT_ID = "SUB_UNIT_ID";
-    static final String UNIT_ID = "UNIT_ID";
-    static final String GAP = "5";
-    static final String DAYS = "10";
-    static final String DOCTOR_FILTER = "DOCTOR_ID";
-    static final String REKO_FILTER = "REKO_STATUS";
-    static final List<String> OCCUPATION_FILTER = List.of("STUDIER");
-    static final SickLeaveLengthInterval INTERVALS_FILTER = new SickLeaveLengthInterval(1, 365);
-    static final int FROM_PATIENT_AGE = 1;
-    static final int TO_PATIENT_AGE = 150;
-    static final char LETTER_TO = 'A';
-    static final char LETTER_FROM = 'B';
-    static final int NUMBER_TO = 1;
-    static final int NUMBER_FROM = 2;
-    static final String DIAGNOSIS_CHAPTER_NAME = "Name";
-    static final LocalDate FROM_END_DATE = LocalDate.now();
-    static final LocalDate TO_END_DATE = FROM_END_DATE.plusDays(10);
+    @Test
+    void shallReturnContent() {
+        final var result = getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
+        assertEquals(List.of(sickLeave), result.getContent());
+    }
 
-    static final DiagnosKategori DIAGNOSIS_CHAPTER_TO = new DiagnosKategori(LETTER_TO, NUMBER_TO);
-    static final DiagnosKategori DIAGNOSIS_CHAPTER_FROM = new DiagnosKategori(LETTER_FROM, NUMBER_FROM);
-    static final DiagnosKapitel CHOSEN_DIAGNOSIS_CHAPTER =
-        new DiagnosKapitel(DIAGNOSIS_CHAPTER_TO, DIAGNOSIS_CHAPTER_FROM, DIAGNOSIS_CHAPTER_NAME);
-    static final String TEXT_SEARCH = "textSearch";
-    private static final String UNANSWERED_COMMUNICATION = "uac";
+    @Test
+    void shallReturnHasDecoratedWithUnansweredCommunications() {
+        final var expectedResult = true;
+        when(unansweredCommunicationDecoratorService.decorate(List.of(sickLeave))).thenReturn(false);
+        final var result = getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
+        assertEquals(expectedResult, result.isUnansweredCommunicationError());
+    }
 
-    static final SickLeavesFilterRequestDTO EXPECTED_REQUEST =
-        new SickLeavesFilterRequestDTO(
-            Collections.singletonList(DOCTOR_FILTER),
-            Collections.singletonList(INTERVALS_FILTER),
-            Collections.singletonList(CHOSEN_DIAGNOSIS_CHAPTER),
-            FROM_PATIENT_AGE,
-            TO_PATIENT_AGE,
-            FROM_END_DATE,
-            TO_END_DATE,
-            Collections.singletonList(REKO_FILTER),
-            OCCUPATION_FILTER,
-            TEXT_SEARCH,
-            UNANSWERED_COMMUNICATION
-        );
-    static final SickLeavesFilterRequestDTO EXPECTED_REQUEST_DOCTOR =
-        new SickLeavesFilterRequestDTO(
-            Collections.emptyList(),
-            Collections.singletonList(INTERVALS_FILTER),
-            Collections.emptyList(),
-            null,
-            null,
-            FROM_END_DATE,
-            TO_END_DATE,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            TEXT_SEARCH,
-            UNANSWERED_COMMUNICATION
-        );
+    @Nested
+    class CreateSickLeaveRequest {
+
+        @Test
+        void shouldUseFilterRequest() {
+            final var captor = ArgumentCaptor.forClass(SickLeavesFilterRequestDTO.class);
+            getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
+            verify(createSickLeaveRequestService).create(captor.capture(), anyBoolean());
+            assertEquals(SICK_LEAVES_FILTER_REQUEST, captor.getValue());
+        }
+
+        @Test
+        void shouldUseIncludeParameters() {
+            final var captor = ArgumentCaptor.forClass(Boolean.class);
+            getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
+            verify(createSickLeaveRequestService).create(eq(SICK_LEAVES_FILTER_REQUEST), captor.capture());
+            assertEquals(true, captor.getValue());
+        }
+    }
+
+    @Nested
+    class GetSickLeaveService {
+
+        @Test
+        void shouldUseRequestFromCreateRequest() {
+            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+            getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
+            verify(getSickLeavesService).get(captor.capture());
+            assertEquals(SICK_LEAVES_REQUEST, captor.getValue());
+        }
+    }
+
 
     @Nested
     class TestDecoratingServices {
 
-        @BeforeEach
-        void setup() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ALL);
-        }
-
         @Test
         void shouldCallRiskPredictionService() {
             final var captor = ArgumentCaptor.forClass(List.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+            getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
             verify(riskPredictionService).updateWithRiskPredictions(captor.capture());
             assertEquals(1, captor.getValue().size());
             assertEquals(sickLeave, captor.getValue().get(0));
@@ -216,7 +160,7 @@ public class GetActiveSickLeavesServiceTest {
         @Test
         void shouldCallUnansweredCommunicationDecorator() {
             final var captor = ArgumentCaptor.forClass(List.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+            getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
             verify(unansweredCommunicationDecoratorService).decorate(captor.capture());
             assertEquals(1, captor.getValue().size());
             assertEquals(sickLeave, captor.getValue().get(0));
@@ -226,29 +170,22 @@ public class GetActiveSickLeavesServiceTest {
     @Nested
     class TestUnansweredCommunicationFilteringService {
 
-        @BeforeEach
-        void setup() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ALL);
-        }
-
         @Test
         void shouldCallUnansweredCommunicationFilteringServiceWithSickLeave() {
             final var captor = ArgumentCaptor.forClass(List.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+            getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
 
-            verify(unansweredCommunicationFilterService).filter(captor.capture(), anyString());
+            verify(unansweredCommunicationFilterService).filter(captor.capture(), any());
             assertEquals(1, captor.getValue().size());
         }
 
         @Test
         void shouldCallUnansweredCommunicationFilteringServiceWithFilterId() {
             final var captor = ArgumentCaptor.forClass(String.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+            getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
 
             verify(unansweredCommunicationFilterService).filter(any(), captor.capture());
-            assertEquals(EXPECTED_REQUEST.getUnansweredCommunicationFilterTypeId(), captor.getValue());
+            assertEquals(SICK_LEAVES_FILTER_REQUEST.getUnansweredCommunicationFilterTypeId(), captor.getValue());
         }
     }
 
@@ -256,22 +193,8 @@ public class GetActiveSickLeavesServiceTest {
     class TestMonitorLogging {
 
         @Test
-        void shouldLogUsingSubUnitIdIfChosen() {
-            setupSubUnit();
-            when(user.getUrval()).thenReturn(Urval.ALL);
-
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
-
-            verify(monitoringLogService).logUserViewedSjukfall(HSA_ID, 1, SUB_UNIT_ID);
-        }
-
-        @Test
-        void shouldLogUsingUnitIdIfNotSubUnitIsChosen() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ALL);
-
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+        void shouldLogUsingUnitIdFromRequest() {
+            getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
 
             verify(monitoringLogService).logUserViewedSjukfall(HSA_ID, 1, UNIT_ID);
         }
@@ -280,16 +203,9 @@ public class GetActiveSickLeavesServiceTest {
     @Nested
     class TestPdlLogging {
 
-        @BeforeEach
-        void setupPdl() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ALL);
-        }
-
         @Test
         void shouldPerformPdlLog() {
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+            getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
 
             verify(pdlLogSickLeavesService)
                 .log(Collections.singletonList(sickLeave), ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
@@ -297,36 +213,11 @@ public class GetActiveSickLeavesServiceTest {
     }
 
     @Nested
-    class TestPU {
-
-        @BeforeEach
-        void setup() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ALL);
-        }
-
-        @Test
-        void shouldMakeCallToPUToGetFilterOnProtectedPerson() {
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
-
-            verify(puService).shouldFilterSickLeavesOnProtectedPerson(user);
-        }
-    }
-
-    @Nested
     class TestUpdateHsaNames {
-
-        @BeforeEach
-        void setup() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ALL);
-        }
 
         @Test
         void shouldEnrichWithHsaEmployeeNames() {
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+            getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
 
             verify(sjukfallEmployeeNameResolver, times(1))
                 .enrichWithHsaEmployeeNames(Collections.singletonList(sickLeave));
@@ -334,311 +225,10 @@ public class GetActiveSickLeavesServiceTest {
 
         @Test
         void shouldUpdateDuplicateDoctorNamesWithHsaId() {
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
+            getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
 
             verify(sjukfallEmployeeNameResolver, times(1))
                 .updateDuplicateDoctorNamesWithHsaId(Collections.singletonList(sickLeave));
         }
-    }
-
-    @Nested
-    class TestITRequest {
-
-        @Test
-        void shallHandleEmptyRequest() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ALL);
-
-            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            final var emptySickLeavesFilterRequestDTO = new SickLeavesFilterRequestDTO();
-            getActiveSickLeavesService.get(emptySickLeavesFilterRequestDTO, true);
-
-            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            Assertions.assertNull(captor.getValue().getUnitId());
-            assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
-            assertEquals(Integer.parseInt(GAP), captor.getValue().getMaxCertificateGap());
-            assertEquals(Integer.parseInt(DAYS), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
-            assertEquals(0, captor.getValue().getDoctorIds().size());
-            assertEquals(0, captor.getValue().getSickLeaveLengthIntervals().size());
-            assertNull(captor.getValue().getFromPatientAge());
-            assertNull(captor.getValue().getToPatientAge());
-            assertNull(captor.getValue().getFromSickLeaveEndDate());
-            assertNull(captor.getValue().getToSickLeaveEndDate());
-            assertNull(captor.getValue().getRekoStatusTypeIds());
-            assertNull(captor.getValue().getOccupationTypeIds());
-            assertNull(captor.getValue().getTextSearch());
-        }
-
-        @Test
-        void shouldCreateRequestWithCorrectValuesWhenChosenUnit() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ALL);
-
-            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
-
-            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            Assertions.assertNull(captor.getValue().getUnitId());
-            assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
-            assertEquals(Integer.parseInt(GAP), captor.getValue().getMaxCertificateGap());
-            assertEquals(Integer.parseInt(DAYS), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
-            assertEquals(DOCTOR_FILTER, captor.getValue().getDoctorIds().get(0));
-            assertEquals(INTERVALS_FILTER.getTo(), captor.getValue().getSickLeaveLengthIntervals().get(0).getTo());
-            assertEquals(INTERVALS_FILTER.getFrom(), captor.getValue().getSickLeaveLengthIntervals().get(0).getFrom());
-            assertEquals(FROM_PATIENT_AGE, captor.getValue().getFromPatientAge());
-            assertEquals(TO_PATIENT_AGE, captor.getValue().getToPatientAge());
-            assertEquals(FROM_END_DATE, captor.getValue().getFromSickLeaveEndDate());
-            assertEquals(TO_END_DATE, captor.getValue().getToSickLeaveEndDate());
-            assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
-            assertEquals(OCCUPATION_FILTER, captor.getValue().getOccupationTypeIds());
-            assertEquals(TEXT_SEARCH, captor.getValue().getTextSearch());
-        }
-
-        @Test
-        void shouldCreateRequestWithCorrectValuesWhenChosenSubUnit() {
-            setupSubUnit();
-            when(user.getUrval()).thenReturn(Urval.ALL);
-
-            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
-
-            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            assertEquals(SUB_UNIT_ID, captor.getValue().getUnitId());
-            assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
-            assertEquals(Integer.parseInt(GAP), captor.getValue().getMaxCertificateGap());
-            assertEquals(Integer.parseInt(DAYS), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
-            assertEquals(DOCTOR_FILTER, captor.getValue().getDoctorIds().get(0));
-            assertEquals(INTERVALS_FILTER.getTo(), captor.getValue().getSickLeaveLengthIntervals().get(0).getTo());
-            assertEquals(INTERVALS_FILTER.getFrom(), captor.getValue().getSickLeaveLengthIntervals().get(0).getFrom());
-            assertEquals(FROM_PATIENT_AGE, captor.getValue().getFromPatientAge());
-            assertEquals(TO_PATIENT_AGE, captor.getValue().getToPatientAge());
-            assertEquals(FROM_END_DATE, captor.getValue().getFromSickLeaveEndDate());
-            assertEquals(TO_END_DATE, captor.getValue().getToSickLeaveEndDate());
-            assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
-            assertEquals(OCCUPATION_FILTER, captor.getValue().getOccupationTypeIds());
-            assertEquals(TEXT_SEARCH, captor.getValue().getTextSearch());
-        }
-
-        @Test
-        void shouldCreateRequestWithNullSickLeaveLengthFilter() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ALL);
-
-            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get(
-                new SickLeavesFilterRequestDTO(
-                    Collections.singletonList(DOCTOR_FILTER),
-                    Collections.singletonList(new SickLeaveLengthInterval(null, null)),
-                    Collections.singletonList(CHOSEN_DIAGNOSIS_CHAPTER),
-                    null,
-                    null,
-                    FROM_END_DATE,
-                    TO_END_DATE,
-                    Collections.singletonList(REKO_FILTER),
-                    OCCUPATION_FILTER,
-                    TEXT_SEARCH,
-                    UNANSWERED_COMMUNICATION
-                ), true
-            );
-
-            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            assertNull(captor.getValue().getSickLeaveLengthIntervals().get(0).getTo());
-            assertNull(captor.getValue().getSickLeaveLengthIntervals().get(0).getFrom());
-        }
-
-        @Test
-        void shouldCreateRequestWithNullSickLeaveEndDateFilter() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ALL);
-
-            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get(
-                new SickLeavesFilterRequestDTO(
-                    Collections.singletonList(DOCTOR_FILTER),
-                    Collections.singletonList(new SickLeaveLengthInterval(null, null)),
-                    Collections.singletonList(CHOSEN_DIAGNOSIS_CHAPTER),
-                    null,
-                    null,
-                    null,
-                    null,
-                    Collections.singletonList(REKO_FILTER),
-                    OCCUPATION_FILTER,
-                    TEXT_SEARCH,
-                    UNANSWERED_COMMUNICATION
-                ), true
-            );
-
-            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            assertNull(captor.getValue().getFromSickLeaveEndDate());
-            assertNull(captor.getValue().getToSickLeaveEndDate());
-        }
-
-        @Test
-        void shouldCreateRequestWithCorrectValuesWhenNotIncludingParameters() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ALL);
-
-            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, false);
-
-            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            Assertions.assertNull(captor.getValue().getUnitId());
-            assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
-            assertEquals(0, captor.getValue().getMaxCertificateGap());
-            assertEquals(0, captor.getValue().getMaxDaysSinceSickLeaveCompleted());
-            assertEquals(DOCTOR_FILTER, captor.getValue().getDoctorIds().get(0));
-            assertEquals(FROM_PATIENT_AGE, captor.getValue().getFromPatientAge());
-            assertEquals(TO_PATIENT_AGE, captor.getValue().getToPatientAge());
-            assertEquals(REKO_FILTER, captor.getValue().getRekoStatusTypeIds().get(0));
-            assertEquals(OCCUPATION_FILTER, captor.getValue().getOccupationTypeIds());
-            assertEquals(TEXT_SEARCH, captor.getValue().getTextSearch());
-        }
-
-        @Test
-        void shouldCreateRequestWithHsaIdOfDoctorIfUserIsDoctor() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
-
-            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST_DOCTOR, true);
-
-            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            assertEquals(HSA_ID, captor.getValue().getDoctorIds().get(0));
-        }
-
-        @Test
-        void shouldCreateRequestWithHsaIdIfDoctorAndMergedWithFilteringDoctorIds() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
-
-            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
-
-            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            assertEquals(EXPECTED_REQUEST.getDoctorIds().size() + 1, captor.getValue().getDoctorIds().size());
-        }
-
-        @Test
-        void shouldCreateRequestWithProtectedPersonFilterIdNull() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
-            when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(true);
-
-            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST_DOCTOR, true);
-
-            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            assertNull(captor.getValue().getProtectedPersonFilterId());
-        }
-
-        @Test
-        void shouldCreateRequestWithProtectedPersonFilterIdAsHsaId() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
-            when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(false);
-
-            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesService.get(EXPECTED_REQUEST_DOCTOR, true);
-
-            verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-            assertEquals(HSA_ID, captor.getValue().getProtectedPersonFilterId());
-        }
-
-        @Nested
-        class DiagnosisChapters {
-
-            @BeforeEach
-            void setup() {
-                when(user.getValdVardenhet()).thenReturn(unit);
-                when(unit.getId()).thenReturn(UNIT_ID);
-                when(user.getUrval()).thenReturn(Urval.ALL);
-            }
-
-            @Test
-            void shouldConvertEnabledDiagnosisChapters() {
-                final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-                getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
-
-                verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-
-                assertEquals(1, captor.getValue().getDiagnosisChapters().size());
-            }
-
-            @Test
-            void shouldConvertEnabledDiagnosisChapterTo() {
-                final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-                getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
-
-                verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-
-                assertEquals(
-                    CHOSEN_DIAGNOSIS_CHAPTER.getTo().getLetter(), captor.getValue().getDiagnosisChapters().get(0).getTo().getLetter()
-                );
-                assertEquals(
-                    CHOSEN_DIAGNOSIS_CHAPTER.getTo().getNumber(), captor.getValue().getDiagnosisChapters().get(0).getTo().getNumber()
-                );
-            }
-
-            @Test
-            void shouldConvertEnabledDiagnosisChapterFrom() {
-                final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-                getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
-
-                verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-
-                assertEquals(
-                    CHOSEN_DIAGNOSIS_CHAPTER.getFrom().getLetter(), captor.getValue().getDiagnosisChapters().get(0).getFrom().getLetter()
-                );
-                assertEquals(
-                    CHOSEN_DIAGNOSIS_CHAPTER.getFrom().getNumber(), captor.getValue().getDiagnosisChapters().get(0).getFrom().getNumber()
-                );
-            }
-
-            @Test
-            void shouldConvertEnabledDiagnosisChapterId() {
-                final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-                getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
-
-                verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-
-                assertEquals(CHOSEN_DIAGNOSIS_CHAPTER.getId(), captor.getValue().getDiagnosisChapters().get(0).getId());
-                assertEquals(CHOSEN_DIAGNOSIS_CHAPTER.getId(), captor.getValue().getDiagnosisChapters().get(0).getId());
-            }
-
-            @Test
-            void shouldConvertEnabledDiagnosisChapterName() {
-                final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-                getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
-
-                verify(intygstjanstRestIntegrationService).getActiveSickLeaves(captor.capture());
-
-                assertEquals(CHOSEN_DIAGNOSIS_CHAPTER.getName(), captor.getValue().getDiagnosisChapters().get(0).getName());
-                assertEquals(CHOSEN_DIAGNOSIS_CHAPTER.getName(), captor.getValue().getDiagnosisChapters().get(0).getName());
-            }
-        }
-    }
-
-    private void setupSubUnit() {
-        when(user.isValdVardenhetMottagning()).thenReturn(true);
-
-        final var subUnit = mock(SelectableVardenhet.class);
-        final var mottagning = mock(Mottagning.class);
-        when(mottagning.getId()).thenReturn(SUB_UNIT_ID);
-        when(subUnit.getId()).thenReturn(SUB_UNIT_ID);
-        when(user.getValdVardenhet()).thenReturn(subUnit);
-
-        when(careGiver.getVardenheter()).thenReturn(Collections.singletonList(unit));
-        when(unit.getMottagningar()).thenReturn(Collections.singletonList(mottagning));
-        when(unit.getId()).thenReturn(UNIT_ID);
-        when(user.getVardgivare()).thenReturn(Collections.singletonList(careGiver));
     }
 }

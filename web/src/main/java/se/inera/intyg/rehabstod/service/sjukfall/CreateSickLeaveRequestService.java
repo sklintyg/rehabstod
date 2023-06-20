@@ -17,20 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.integration.it.dto;
+package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class SickLeavesResponseDTO {
+public interface CreateSickLeaveRequestService {
 
-    private List<SjukfallEnhet> content;
+    SickLeavesRequestDTO create(SickLeavesFilterRequestDTO filterRequest, boolean includeParameters);
 }
