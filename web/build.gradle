@@ -5,16 +5,7 @@ apply plugin: 'nebula.grunt'
 war.rootSpec.exclude "logback.xml"
 
 test {
-    exclude '**/*IT*'
     environment "catalina.base",  "${buildDir}/catalina.base"
-}
-
-task restAssuredTest(type: Test) {
-    outputs.upToDateWhen { false }
-    systemProperty "integration.tests.baseUrl", System.properties['baseUrl'] ?: "http://localhost:8030/"
-    include '**/*IT*'
-    environment "catalina.base",  "${buildDir}/catalina.base"
-    useJUnitPlatform()
 }
 
 idea {
@@ -72,7 +63,7 @@ gretty {
     serverConfigFile = "tomcat-gretty.xml"
 
     jvmArgs = ["-Dcatalina.base=${buildDir}/catalina.base",
-               "-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-it-stub,rhs-srs-stub,caching-enabled,rhs-security-test,rhs-wc-stub,ia-stub",
+               "-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-srs-stub,caching-enabled,rhs-security-test,ia-stub",
                "-Dlogback.file=${applicationDir}/config/logback-dev.xml",
                "-Djava.awt.headless=true",
                "-Dfile.encoding=UTF-8",
@@ -140,9 +131,6 @@ dependencies {
     compileOnly "jakarta.jms:jakarta.jms-api"
     compileOnly "javax.servlet:javax.servlet-api"
     compileOnly "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
-
-    testCompile "io.rest-assured:rest-assured"
-    testCompile "io.rest-assured:json-schema-validator"
 
     testCompile "jakarta.jms:jakarta.jms-api"
     testCompile "org.hamcrest:hamcrest"
