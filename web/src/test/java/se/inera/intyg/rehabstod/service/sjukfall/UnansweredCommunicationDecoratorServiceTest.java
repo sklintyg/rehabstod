@@ -19,6 +19,19 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,13 +46,6 @@ import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicati
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
 import se.inera.intyg.rehabstod.web.model.Patient;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UnansweredCommunicationDecoratorServiceTest {
@@ -63,10 +69,11 @@ public class UnansweredCommunicationDecoratorServiceTest {
     private static final SjukfallEnhet SICK_LEAVE_ONE_CERTIFICATE = new SjukfallEnhet();
     private static final SjukfallEnhet SICK_LEAVE_NO_CERTIFICATE_WITH_COMMUNICATION = new SjukfallEnhet();
     private static final List<SjukfallEnhet> SICK_LEAVES = List.of(
-            SICK_LEAVE_ONE_CERTIFICATE,
-            SICK_LEAVE_NO_CERTIFICATE_WITH_COMMUNICATION,
-            SICK_LEAVE_SEVERAL_CERTIFICATES
+        SICK_LEAVE_ONE_CERTIFICATE,
+        SICK_LEAVE_NO_CERTIFICATE_WITH_COMMUNICATION,
+        SICK_LEAVE_SEVERAL_CERTIFICATES
     );
+    private static final List<SjukfallEnhet> EMPTY_SICK_LEAVES = Collections.emptyList();
     private static final UnansweredQAs QA_0 = new UnansweredQAs(0, 0);
     private static final UnansweredQAs QA_1 = new UnansweredQAs(5, 3);
     private static final UnansweredQAs QA_2 = new UnansweredQAs(2, 3);
@@ -87,8 +94,6 @@ public class UnansweredCommunicationDecoratorServiceTest {
         unansweredQAsMap.put(CERTIFICATE_ID_2, QA_2);
         unansweredQAsMap.put(CERTIFICATE_ID_3, QA_3);
         response.setUnansweredQAsMap(unansweredQAsMap);
-
-        when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
     }
 
     @Nested
@@ -97,7 +102,7 @@ public class UnansweredCommunicationDecoratorServiceTest {
         @Test
         void shouldCallRestServiceWithPatientIds() {
             final var captor = ArgumentCaptor.forClass(UnansweredCommunicationRequest.class);
-
+            when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
             unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
 
             verify(wcRestIntegrationService).getUnansweredCommunicationForPatients(captor.capture());
@@ -108,9 +113,21 @@ public class UnansweredCommunicationDecoratorServiceTest {
         }
 
         @Test
+        void shouldNotCallRestServiceIfPatientIdsIsEmpty() {
+            unansweredCommunicationDecoratorService.decorate(EMPTY_SICK_LEAVES);
+            verifyNoInteractions(wcRestIntegrationService);
+        }
+
+        @Test
+        void shouldReturnTrueIfPatientIdsIsEmpty() {
+            final var result = unansweredCommunicationDecoratorService.decorate(EMPTY_SICK_LEAVES);
+            assertTrue(result);
+        }
+
+        @Test
         void shouldCallRestServiceWithMaxDaysOfCommunication() {
             final var captor = ArgumentCaptor.forClass(UnansweredCommunicationRequest.class);
-
+            when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
             unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
 
             verify(wcRestIntegrationService).getUnansweredCommunicationForPatients(captor.capture());
@@ -120,6 +137,12 @@ public class UnansweredCommunicationDecoratorServiceTest {
 
     @Nested
     class TestResponse {
+
+        @BeforeEach
+        void setUp() {
+            when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
+        }
+
         @Test
         void shouldSetErrorAsTrueIfResponseIsSuccess() {
             response.setUnansweredCommunicationError(true);
@@ -142,8 +165,14 @@ public class UnansweredCommunicationDecoratorServiceTest {
     @Nested
     class TestDecoration {
 
+        @BeforeEach
+        void setUp() {
+            when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
+        }
+
         @Nested
         class TestComplements {
+
             @Test
             void shouldNotDecorateCertificateWithNoCommunication() {
                 unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
@@ -168,6 +197,12 @@ public class UnansweredCommunicationDecoratorServiceTest {
 
         @Nested
         class TestOthers {
+
+            @BeforeEach
+            void setUp() {
+                when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
+            }
+
             @Test
             void shouldNotDecorateCertificateWithNoCommunication() {
                 unansweredCommunicationDecoratorService.decorate(SICK_LEAVES);
