@@ -19,16 +19,15 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCommunicationDecoratorService {
@@ -45,12 +44,15 @@ public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCo
     @Override
     public boolean decorate(List<SjukfallEnhet> sickLeaves) {
         final var patientIds = sickLeaves
-                .stream()
-                .map((sickLeave) -> sickLeave.getPatient().getId())
-                .collect(Collectors.toList());
+            .stream()
+            .map((sickLeave) -> sickLeave.getPatient().getId())
+            .collect(Collectors.toList());
 
+        if (patientIds.isEmpty()) {
+            return true;
+        }
         final var response = wcRestIntegrationService.getUnansweredCommunicationForPatients(
-                new UnansweredCommunicationRequest(maxDaysOfUnansweredCommunication, patientIds)
+            new UnansweredCommunicationRequest(maxDaysOfUnansweredCommunication, patientIds)
         );
 
         if (response.isUnansweredCommunicationError()) {
@@ -64,15 +66,15 @@ public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCo
 
     private void decorateSickLeave(SjukfallEnhet sickLeave, Map<String, UnansweredQAs> unansweredQAsMap) {
         final var totalUnansweredQAs = sickLeave.getIntygLista()
-                .stream()
-                .filter(unansweredQAsMap::containsKey)
-                .map(unansweredQAsMap::get)
-                .reduce(
-                        (a,b) -> new UnansweredQAs(
-                                a.getComplement() + b.getComplement(),
-                                a.getOthers() + b.getOthers()
-                        )
-                );
+            .stream()
+            .filter(unansweredQAsMap::containsKey)
+            .map(unansweredQAsMap::get)
+            .reduce(
+                (a, b) -> new UnansweredQAs(
+                    a.getComplement() + b.getComplement(),
+                    a.getOthers() + b.getOthers()
+                )
+            );
 
         if (totalUnansweredQAs.isEmpty()) {
             return;
