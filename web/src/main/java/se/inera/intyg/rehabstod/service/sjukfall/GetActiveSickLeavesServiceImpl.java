@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -72,13 +73,13 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
 
     @Autowired
     public GetActiveSickLeavesServiceImpl(UserService userService, MonitoringLogService monitoringLogService,
-                                          SjukfallEngineMapper sjukfallEngineMapper, PdlLogSickLeavesService pdlLogSickLeavesService,
-                                          IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
-                                          SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
-                                          PatientIdEncryption patientIdEncryption, PuService puService,
-                                          RiskPredictionService riskPredictionService,
-                                          UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService,
-                                          UnansweredCommunicationFilterService unansweredCommunicationFilterService) {
+        SjukfallEngineMapper sjukfallEngineMapper, PdlLogSickLeavesService pdlLogSickLeavesService,
+        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+        SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
+        PatientIdEncryption patientIdEncryption, PuService puService,
+        RiskPredictionService riskPredictionService,
+        UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService,
+        UnansweredCommunicationFilterService unansweredCommunicationFilterService) {
         this.userService = userService;
         this.monitoringLogService = monitoringLogService;
         this.sjukfallEngineMapper = sjukfallEngineMapper;
@@ -117,7 +118,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_UNANSWERED_COMMUNICATION, convertedSickLeaves.size()));
 
         final var filteredSickLeaves = unansweredCommunicationFilterService.filter(
-                convertedSickLeaves, filterRequest.getUnansweredCommunicationFilterTypeId()
+            convertedSickLeaves, filterRequest.getUnansweredCommunicationFilterTypeId()
         );
 
         logFactory.setStartTimer(System.currentTimeMillis());
@@ -131,9 +132,9 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
             sickLeave -> sickLeave.setEncryptedPatientId(patientIdEncryption.encrypt(sickLeave.getPatient().getId())));
 
         return new GetActiveSickLeavesResponseDTO(
-                filteredSickLeaves,
-                !hasDecoratedWithSRSInfo,
-                !hasDecoratedWithUnansweredCommunications
+            filteredSickLeaves,
+            !hasDecoratedWithSRSInfo,
+            !hasDecoratedWithUnansweredCommunications
         );
     }
 
@@ -170,7 +171,11 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
     }
 
     private List<String> getFilteringDoctorIds(RehabstodUser user, List<String> filterDoctorIds) {
-        final var list = new ArrayList<>(filterDoctorIds);
+        final List<String> list = new ArrayList<>();
+        if (filterDoctorIds != null) {
+            list.addAll(filterDoctorIds);
+        }
+
         if (user.getUrval().equals(Urval.ISSUED_BY_ME)) {
             list.add(user.getHsaId());
         }
@@ -179,16 +184,22 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
 
     private List<SickLeaveLengthInterval> convertSickLeaveLengthIntervals(
         List<se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthInterval> intervals) {
+        if (intervals == null) {
+            return Collections.emptyList();
+        }
         return intervals.stream()
-            .map((interval) -> new SickLeaveLengthInterval(interval.getFrom(), interval.getTo()))
+            .map(interval -> new SickLeaveLengthInterval(interval.getFrom(), interval.getTo()))
             .collect(Collectors.toList());
     }
 
     private List<se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel> convertDiagnosisChapters(List<DiagnosKapitel> diagnosisChapters) {
+        if (diagnosisChapters == null) {
+            return Collections.emptyList();
+        }
         return diagnosisChapters
             .stream()
             .map(
-                (diagnosisChapter) ->
+                diagnosisChapter ->
                     new se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel(
                         convertDiagnosisCategory(diagnosisChapter.getFrom()),
                         convertDiagnosisCategory(diagnosisChapter.getTo()),
