@@ -130,7 +130,7 @@ public class CertificateServiceImpl implements CertificateService {
 
         var luCertificateList = transformCertificatesBasedOnMetaDataQuery(diagnosedCertificateList);
 
-        final var qaInfoError = unansweredCommunicationDecoratorService.decorateLuCertificates(luCertificateList);
+        final var hasDecoratedWithUnansweredCommunication = unansweredCommunicationDecoratorService.decorateLuCertificates(luCertificateList);
 
         luCertificateList = filterOnQuestionAndAnswers(request, luCertificateList);
 
@@ -139,7 +139,7 @@ public class CertificateServiceImpl implements CertificateService {
         pdlLogLUCertificatesForCareUnit(luCertificateList);
 
         LOGGER.debug("Returning LU Certificates for Care Unit");
-        return new GetLUCertificatesForCareUnitResponse(luCertificateList, qaInfoError);
+        return new GetLUCertificatesForCareUnitResponse(luCertificateList, !hasDecoratedWithUnansweredCommunication);
     }
 
     private List<DiagnosedCertificate> filterOnDiagnoses(List<DiagnosedCertificate> diagnosedCertificates, List<String> diagnoses) {
