@@ -70,6 +70,7 @@ public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCo
         final var patientIds = certificates
                 .stream()
                 .map((luCertificate) -> luCertificate.getPatient().getId())
+                .distinct()
                 .collect(Collectors.toList());
 
         final var response = wcRestIntegrationService.getUnansweredCommunicationForPatients(
@@ -91,8 +92,10 @@ public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCo
     }
 
     private void decorateLuCertificate(LUCertificate luCertificate, UnansweredQAs unansweredQAs) {
-        luCertificate.setUnAnsweredComplement(unansweredQAs.getComplement());
-        luCertificate.setUnAnsweredOther(unansweredQAs.getOthers());
+        if (unansweredQAs != null) {
+            luCertificate.setUnAnsweredComplement(unansweredQAs.getComplement());
+            luCertificate.setUnAnsweredOther(unansweredQAs.getOthers());
+        }
     }
 
     private void decorateSickLeave(SjukfallEnhet sickLeave, Map<String, UnansweredQAs> unansweredQAsMap) {

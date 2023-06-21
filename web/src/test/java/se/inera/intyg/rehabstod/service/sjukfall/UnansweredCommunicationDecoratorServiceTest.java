@@ -19,10 +19,7 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -231,6 +228,37 @@ public class UnansweredCommunicationDecoratorServiceTest {
                     assertEquals(6, SICK_LEAVE_SEVERAL_CERTIFICATES.getUnansweredOther());
                 }
             }
+        }
+    }
+
+    @Nested
+    class TestLuWithEmptyResponse {
+
+        final List<LUCertificate> certificates = Arrays.asList(
+                LUCertificate
+                        .builder()
+                        .certificateId(CERTIFICATE_ID_0)
+                        .patient(new Patient(PATIENT_ID_0, "Name"))
+                        .build(),
+                LUCertificate
+                        .builder()
+                        .certificateId(CERTIFICATE_ID_1)
+                        .patient(new Patient(PATIENT_ID_1, "Name"))
+                        .build()
+        );
+
+        @BeforeEach
+        void setup() {
+
+            final var unansweredQAsMap = new HashMap<String, UnansweredQAs>();
+            response.setUnansweredQAsMap(unansweredQAsMap);
+
+            when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
+        }
+
+        @Test
+        void shouldNotThrowErrorIfResponseIsEmpty() {
+            assertDoesNotThrow(() -> unansweredCommunicationDecoratorService.decorateLuCertificates(certificates));
         }
     }
 
