@@ -64,6 +64,8 @@ import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
+import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
+import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationFilterService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
@@ -217,7 +219,7 @@ public class GetActiveSickLeavesServiceTest {
         void shouldCallUnansweredCommunicationDecorator() {
             final var captor = ArgumentCaptor.forClass(List.class);
             getActiveSickLeavesService.get(EXPECTED_REQUEST, true);
-            verify(unansweredCommunicationDecoratorService).decorate(captor.capture());
+            verify(unansweredCommunicationDecoratorService).decorateSickLeaves(captor.capture());
             assertEquals(1, captor.getValue().size());
             assertEquals(sickLeave, captor.getValue().get(0));
         }
