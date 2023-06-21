@@ -130,7 +130,8 @@ public class CertificateServiceImpl implements CertificateService {
 
         var luCertificateList = transformCertificatesBasedOnMetaDataQuery(diagnosedCertificateList);
 
-        final var hasDecoratedWithUnansweredCommunication = unansweredCommunicationDecoratorService.decorateLuCertificates(luCertificateList);
+        final var hasDecoratedWithUnansweredCommunication =
+                unansweredCommunicationDecoratorService.decorateLuCertificates(luCertificateList);
 
         luCertificateList = filterOnQuestionAndAnswers(request, luCertificateList);
 
