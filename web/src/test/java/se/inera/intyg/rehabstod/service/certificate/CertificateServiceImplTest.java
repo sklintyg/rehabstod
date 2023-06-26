@@ -273,6 +273,36 @@ public class CertificateServiceImplTest {
     }
 
     @Test
+    public void shouldCallUnansweredCommunicationServiceWhenGettingLuCertificatesForPerson() {
+        final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
+
+        final var selectableVardenhet = mock(SelectableVardenhet.class);
+
+        doReturn(user).when(userService).getUser();
+        doReturn(selectableVardenhet).when(user).getValdVardenhet();
+        doReturn(expectedUnitIds).when(selectableVardenhet).getHsaIds();
+        doReturn(getCareUnit().getId()).when(selectableVardenhet).getId();
+
+        when(hsaOrganizationsService.getVardenhet(anyString())).thenReturn(getCareUnit());
+        when(hsaOrganizationsService.getVardgivareInfo(anyString())).thenReturn(getCareProvider());
+
+        var diagnosedCertificateList = buildDiagnosedCertificateList();
+        when(intygstjanstRestIntegrationService
+                .getDiagnosedCertificatesForPerson(anyString(), any(List.class), any()))
+                .thenReturn(diagnosedCertificateList);
+
+        when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
+                .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
+
+        final var captor = ArgumentCaptor.forClass(List.class);
+
+        final var response = service.getLUCertificatesForPerson(PERSON_ID);
+
+        verify(unansweredCommunicationDecoratorService).decorateLuCertificates(captor.capture());
+        assertEquals(response.getCertificates(), captor.getValue());
+    }
+
+    @Test
     public void shouldSetEncryptedPatientIdForLUCertificateForPerson() {
         final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
 

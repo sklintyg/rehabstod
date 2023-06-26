@@ -394,12 +394,8 @@ public class CertificateServiceImpl implements CertificateService {
             .getDiagnosedCertificatesForPerson(personId, Arrays.asList(LU_TYPE_LIST), unitIds);
 
         var luCertificateList = transformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
-        boolean qaInfoError = false;
-        try {
-            populateLUCertificatesWithNotificationData(luCertificateList);
-        } catch (WcIntegrationException e) {
-            qaInfoError = true;
-        }
+        final var hasDecoratedWithUnansweredCommunication =
+                unansweredCommunicationDecoratorService.decorateLuCertificates(luCertificateList);
 
         LOGGER.debug("Adding PDL log for certificate read");
         var rehabstodUser = userService.getUser();
@@ -411,7 +407,7 @@ public class CertificateServiceImpl implements CertificateService {
         );
 
         LOGGER.debug("Returning LU Certificates for Person");
-        return new GetLUCertificatesForPersonResponse(luCertificateList, qaInfoError);
+        return new GetLUCertificatesForPersonResponse(luCertificateList, !hasDecoratedWithUnansweredCommunication);
     }
 
     @Override
