@@ -38,6 +38,7 @@ public class LUCertificate {
     private Lakare doctor;
 
     private Patient patient;
+    private String encryptedPatientId;
 
     private Diagnos diagnosis;
     private List<Diagnos> biDiagnoses;

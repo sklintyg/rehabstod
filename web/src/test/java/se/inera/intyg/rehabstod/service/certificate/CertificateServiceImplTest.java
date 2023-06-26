@@ -54,6 +54,7 @@ import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
+import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForCareUnitRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
@@ -62,6 +63,7 @@ import se.inera.intyg.rehabstod.web.model.Diagnos;
 @RunWith(MockitoJUnitRunner.class)
 public class CertificateServiceImplTest {
 
+    private static final String ENCRYPTED_PATIENT_ID = "patient_id";
     private static final String CERT_TYPE_LUSE = "LUSE";
     private static final String CERT_ID_1 = "1";
     private static final String CERT_ID_2 = "2";
@@ -118,12 +120,15 @@ public class CertificateServiceImplTest {
     @Mock
     UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
 
+    @Mock
+    PatientIdEncryption patientIdEncryption;
+
     CertificateServiceImpl service;
 
     @Before
     public void setup() {
         service = new CertificateServiceImpl(intygstjanstRestIntegrationService, unAnsweredQAsInfoDecorator, logService, userService,
-            diagnosFactory, hsaOrganizationsService, puService, employeeNameService, unansweredCommunicationDecoratorService);
+            diagnosFactory, hsaOrganizationsService, puService, employeeNameService, unansweredCommunicationDecoratorService, patientIdEncryption);
     }
 
     @Test
@@ -198,6 +203,33 @@ public class CertificateServiceImplTest {
     }
 
     @Test
+    public void shouldSetEncryptedPatientIdForLUForUnit() {
+        final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
+        final var selectableVardenhet = mock(SelectableVardenhet.class);
+
+        doReturn(user).when(userService).getUser();
+        doReturn(selectableVardenhet).when(user).getValdVardenhet();
+        doReturn(expectedUnitIds).when(selectableVardenhet).getHsaIds();
+
+        when(hsaOrganizationsService.getVardenhet(anyString())).thenReturn(getCareUnit());
+        when(hsaOrganizationsService.getVardgivareInfo(anyString())).thenReturn(getCareProvider());
+
+        var diagnosedCertificateList = buildDiagnosedCertificateList();
+        when(intygstjanstRestIntegrationService
+                .getDiagnosedCertificatesForCareUnit(any(), any(List.class), any(), any(), any()))
+                .thenReturn(diagnosedCertificateList);
+
+        when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
+                .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
+
+        when(patientIdEncryption.encrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);
+
+        final var response = service.getLUCertificatesForCareUnit(new GetLUCertificatesForCareUnitRequest());
+
+        assertEquals(ENCRYPTED_PATIENT_ID, response.getCertificates().get(0).getEncryptedPatientId());
+    }
+
+    @Test
     public void getLUCertificatesForPerson() {
         final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
 
@@ -237,6 +269,37 @@ public class CertificateServiceImplTest {
         for (var actualUnitId : actualUnitIds) {
             assertTrue("Doesn't expect unitId: " + actualUnitId, expectedUnitIds.contains(actualUnitId));
         }
+    }
+
+    @Test
+    public void shouldSetEncryptedPatientIdForLUCertificateForPerson() {
+        final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
+
+        final var selectableVardenhet = mock(SelectableVardenhet.class);
+
+        doReturn(user).when(userService).getUser();
+        doReturn(selectableVardenhet).when(user).getValdVardenhet();
+        doReturn(expectedUnitIds).when(selectableVardenhet).getHsaIds();
+        doReturn(getCareUnit().getId()).when(selectableVardenhet).getId();
+
+        when(hsaOrganizationsService.getVardenhet(anyString())).thenReturn(getCareUnit());
+        when(hsaOrganizationsService.getVardgivareInfo(anyString())).thenReturn(getCareProvider());
+
+        var diagnosedCertificateList = buildDiagnosedCertificateList();
+        when(intygstjanstRestIntegrationService
+                .getDiagnosedCertificatesForPerson(anyString(), any(List.class), any()))
+                .thenReturn(diagnosedCertificateList);
+
+        when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
+                .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
+
+        when(patientIdEncryption.encrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);
+
+        var response = service.getLUCertificatesForPerson(PERSON_ID);
+        assertNotNull(response);
+        var luCertificates = response.getCertificates();
+
+        assertEquals(ENCRYPTED_PATIENT_ID, luCertificates.get(0).getEncryptedPatientId());
     }
 
     @Test

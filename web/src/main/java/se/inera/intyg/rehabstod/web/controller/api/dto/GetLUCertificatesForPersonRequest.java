@@ -24,4 +24,5 @@ import lombok.Data;
 public class GetLUCertificatesForPersonRequest {
 
     String personId;
+    String encryptedPatientId;
 }
