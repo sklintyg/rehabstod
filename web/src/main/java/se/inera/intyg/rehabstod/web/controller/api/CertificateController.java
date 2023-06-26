@@ -68,8 +68,8 @@ public class CertificateController {
         LOG.info("Getting LU certificates for person");
 
         var response = certificateService.getLUCertificatesForPerson(
-                request.getEncryptedPatientId() != null ?
-                        patientIdEncryption.decrypt(request.getEncryptedPatientId()) : request.getPersonId()
+                request.getEncryptedPatientId() != null
+                        ? patientIdEncryption.decrypt(request.getEncryptedPatientId()) : request.getPersonId()
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
