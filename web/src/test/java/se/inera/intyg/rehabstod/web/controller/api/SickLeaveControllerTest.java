@@ -37,7 +37,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetSickLeaveSummaryService;
 import se.inera.intyg.rehabstod.service.sjukfall.PopulateFiltersService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.GetActiveSickLeavesResponseDTO;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateFiltersResponseDTO;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateSickLeaveFilterResponseDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
@@ -156,11 +156,11 @@ public class SickLeaveControllerTest {
     @Nested
     class GetPopulatedFiltersService {
 
-        PopulateFiltersResponseDTO expectedResponse;
+        PopulateSickLeaveFilterResponseDTO expectedResponse;
 
         @BeforeEach
         void setup() {
-            expectedResponse = new PopulateFiltersResponseDTO(
+            expectedResponse = new PopulateSickLeaveFilterResponseDTO(
                 Collections.emptyList(),
                 Collections.emptyList(),
                 Collections.emptyList(),
@@ -171,13 +171,13 @@ public class SickLeaveControllerTest {
                 true
             );
 
-            when(populateFiltersService.get()).thenReturn(expectedResponse);
+            when(populateFiltersService.populateSickLeaveFilters()).thenReturn(expectedResponse);
         }
 
         @Test
         void shouldCallPopulateFiltersService() {
             sickLeaveController.populateFilters();
-            verify(populateFiltersService).get();
+            verify(populateFiltersService).populateSickLeaveFilters();
         }
 
         @Test
@@ -220,13 +220,13 @@ public class SickLeaveControllerTest {
         void shouldTransformResponseUnansweredCommunicationFilterTypes() {
             final var response = sickLeaveController.populateFilters();
             assertEquals(expectedResponse.getUnansweredCommunicationFilterTypes(),
-                    response.getUnansweredCommunicationFilterTypes());
+                response.getUnansweredCommunicationFilterTypes());
         }
     }
 
     @Test
     void shouldTransformPopulateFiltersResponse() {
-        final var expectedResponse = new PopulateFiltersResponseDTO(
+        final var expectedResponse = new PopulateSickLeaveFilterResponseDTO(
             Collections.emptyList(),
             Collections.emptyList(),
             Collections.emptyList(),
@@ -236,7 +236,7 @@ public class SickLeaveControllerTest {
             Collections.emptyList(),
             true
         );
-        when(populateFiltersService.get()).thenReturn(expectedResponse);
+        when(populateFiltersService.populateSickLeaveFilters()).thenReturn(expectedResponse);
 
         final var actualResponse = sickLeaveController.populateFilters();
 
@@ -247,7 +247,7 @@ public class SickLeaveControllerTest {
         assertEquals(expectedResponse.getRekoStatusTypes(), actualResponse.getRekoStatusTypes());
         assertEquals(expectedResponse.getOccupationTypes(), actualResponse.getOccupationTypes());
         assertEquals(expectedResponse.getUnansweredCommunicationFilterTypes(),
-                actualResponse.getUnansweredCommunicationFilterTypes());
+            actualResponse.getUnansweredCommunicationFilterTypes());
         assertEquals(expectedResponse.isSrsActivated(), actualResponse.isSrsActivated());
     }
 

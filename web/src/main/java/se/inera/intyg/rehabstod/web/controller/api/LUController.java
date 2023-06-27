@@ -17,14 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall;
+package se.inera.intyg.rehabstod.web.controller.api;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.rehabstod.service.sjukfall.PopulateFiltersService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateLUFilterResponseDTO;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateSickLeaveFilterResponseDTO;
 
-public interface PopulateFiltersService {
+@RestController
+@RequestMapping("/api/lu")
+public class LUController {
 
-    PopulateSickLeaveFilterResponseDTO populateSickLeaveFilters();
+    private final PopulateFiltersService populateFiltersService;
 
-    PopulateLUFilterResponseDTO populateLUFilters();
+    public LUController(PopulateFiltersService populateFiltersService) {
+        this.populateFiltersService = populateFiltersService;
+    }
+
+    @RequestMapping(value = "/filters", method = RequestMethod.GET)
+    public PopulateLUFilterResponseDTO populateFilters() {
+        return populateFiltersService.populateLUFilters();
+    }
 }

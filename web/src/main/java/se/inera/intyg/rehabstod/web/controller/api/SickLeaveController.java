@@ -50,15 +50,15 @@ public class SickLeaveController {
     public SickLeavesResponseDTO getSickLeavesForUnit(@RequestBody SickLeavesFilterRequestDTO request) {
         final var response = getActiveSickLeavesService.get(request, INCLUDE_PARAMETERS);
         return new SickLeavesResponseDTO(
-                response.getContent(),
-                response.isSrsError(),
-                response.isUnansweredCommunicationError()
+            response.getContent(),
+            response.isSrsError(),
+            response.isUnansweredCommunicationError()
         );
     }
 
     @RequestMapping(value = "/filters", method = RequestMethod.GET)
     public PopulateFiltersResponseDTO populateFilters() {
-        final var response = populateFiltersService.get();
+        final var response = populateFiltersService.populateSickLeaveFilters();
         return new PopulateFiltersResponseDTO(
             response.getActiveDoctors(),
             response.getAllDiagnosisChapters(),

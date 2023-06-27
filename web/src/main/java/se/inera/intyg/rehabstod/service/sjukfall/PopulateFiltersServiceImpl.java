@@ -30,12 +30,14 @@ import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.certificate.CertificateService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.OccupationTypeDTO;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateFiltersResponseDTO;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateLUFilterResponseDTO;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateSickLeaveFilterResponseDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterType;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterTypeDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
@@ -52,30 +54,33 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
     private final DiagnosKapitelService diagnosKapitelService;
     private final PuService puService;
     private final FeatureService featureService;
+    private final CertificateService certificateService;
 
     private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
     public PopulateFiltersServiceImpl(
-            UserService userService,
-            IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
-            DiagnosKapitelService diagnosKapitelService,
-            PuService puService, FeatureService featureService, SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver) {
+        UserService userService,
+        IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+        DiagnosKapitelService diagnosKapitelService,
+        PuService puService, FeatureService featureService, CertificateService certificateService,
+        SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver) {
         this.userService = userService;
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
         this.diagnosKapitelService = diagnosKapitelService;
         this.puService = puService;
         this.featureService = featureService;
+        this.certificateService = certificateService;
         this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
     }
 
     @Override
-    public PopulateFiltersResponseDTO get() {
+    public PopulateSickLeaveFilterResponseDTO populateSickLeaveFilters() {
         final var user = userService.getUser();
         final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
         final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
         final var request = getRequest(user, unitId, careUnitId);
         final var responseFromIT = intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(request);
-        return new PopulateFiltersResponseDTO(
+        return new PopulateSickLeaveFilterResponseDTO(
             convertDoctors(responseFromIT.getActiveDoctors()),
             diagnosKapitelService.getDiagnosKapitelList(),
             convertDiagnosisChapters(responseFromIT.getDiagnosisChapters()),
@@ -87,11 +92,19 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         );
     }
 
+    @Override
+    public PopulateLUFilterResponseDTO populateLUFilters() {
+        return PopulateLUFilterResponseDTO.builder()
+            .allDiagnosisChapters(diagnosKapitelService.getDiagnosKapitelList())
+            .doctors(certificateService.getDoctorsForUnit().getDoctors())
+            .build();
+    }
+
     private List<UnansweredCommunicationFilterTypeDTO> getUnansweredCommunicationTypes() {
         return Arrays
-                .stream(UnansweredCommunicationFilterType.values())
-                .map((type) -> new UnansweredCommunicationFilterTypeDTO(type.toString(), type.getName()))
-                .collect(Collectors.toList());
+            .stream(UnansweredCommunicationFilterType.values())
+            .map((type) -> new UnansweredCommunicationFilterTypeDTO(type.toString(), type.getName()))
+            .collect(Collectors.toList());
     }
 
     private List<OccupationTypeDTO> convertOccupationTypes(
