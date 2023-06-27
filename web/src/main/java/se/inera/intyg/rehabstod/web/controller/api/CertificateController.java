@@ -44,13 +44,13 @@ public class CertificateController {
 
     private static final Logger LOG = LoggerFactory.getLogger(CertificateController.class);
 
-    @Autowired
-    private PatientIdEncryption patientIdEncryption;
+    private final PatientIdEncryption patientIdEncryption;
 
     private final CertificateService certificateService;
 
     @Autowired
-    public CertificateController(CertificateService certificateService) {
+    public CertificateController(PatientIdEncryption patientIdEncryption, CertificateService certificateService) {
+        this.patientIdEncryption = patientIdEncryption;
         this.certificateService = certificateService;
     }
 
