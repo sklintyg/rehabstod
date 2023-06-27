@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.service.certificate.CertificateService;
+import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetDoctorsForUnitResponse;
@@ -42,6 +43,9 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForPerso
 public class CertificateController {
 
     private static final Logger LOG = LoggerFactory.getLogger(CertificateController.class);
+
+    @Autowired
+    private PatientIdEncryption patientIdEncryption;
 
     private final CertificateService certificateService;
 
@@ -63,7 +67,10 @@ public class CertificateController {
     public ResponseEntity<GetLUCertificatesForPersonResponse> getLUForPerson(@RequestBody GetLUCertificatesForPersonRequest request) {
         LOG.info("Getting LU certificates for person");
 
-        var response = certificateService.getLUCertificatesForPerson(request.getPersonId());
+        var response = certificateService.getLUCertificatesForPerson(
+                request.getEncryptedPatientId() != null
+                        ? patientIdEncryption.decrypt(request.getEncryptedPatientId()) : request.getPersonId()
+        );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -53,6 +53,7 @@ import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
+import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetDoctorsForUnitResponse;
@@ -95,12 +96,15 @@ public class CertificateServiceImpl implements CertificateService {
 
     private final UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
 
+    private final PatientIdEncryption patientIdEncryption;
+
     @Autowired
     public CertificateServiceImpl(
             IntygstjanstRestIntegrationService restIntegrationService, UnansweredQAsInfoDecorator unansweredQAsInfoDecorator,
             LogService logService, UserService userService, DiagnosFactory diagnosFactory, HsaOrganizationsService hsaOrganizationsService,
             PuService puService, EmployeeNameService employeeNameService,
-            UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService) {
+            UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService,
+            PatientIdEncryption patientIdEncryption) {
         this.restIntegrationService = restIntegrationService;
         this.unansweredQAsInfoDecorator = unansweredQAsInfoDecorator;
         this.logService = logService;
@@ -110,6 +114,7 @@ public class CertificateServiceImpl implements CertificateService {
         this.puService = puService;
         this.employeeNameService = employeeNameService;
         this.unansweredCommunicationDecoratorService = unansweredCommunicationDecoratorService;
+        this.patientIdEncryption = patientIdEncryption;
     }
 
     @Override
@@ -138,6 +143,10 @@ public class CertificateServiceImpl implements CertificateService {
         luCertificateList = filterOnText(luCertificateList, request.getSearchText());
 
         pdlLogLUCertificatesForCareUnit(luCertificateList);
+
+        luCertificateList.forEach(
+                lu -> lu.setEncryptedPatientId(patientIdEncryption.encrypt(lu.getPatient().getId()))
+        );
 
         LOGGER.debug("Returning LU Certificates for Care Unit");
         return new GetLUCertificatesForCareUnitResponse(luCertificateList, !hasDecoratedWithUnansweredCommunication);
@@ -385,20 +394,20 @@ public class CertificateServiceImpl implements CertificateService {
             .getDiagnosedCertificatesForPerson(personId, Arrays.asList(LU_TYPE_LIST), unitIds);
 
         var luCertificateList = transformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
-        boolean qaInfoError = false;
-        try {
-            populateLUCertificatesWithNotificationData(luCertificateList);
-        } catch (WcIntegrationException e) {
-            qaInfoError = true;
-        }
+        final var hasDecoratedWithUnansweredCommunication =
+                unansweredCommunicationDecoratorService.decorateLuCertificates(luCertificateList);
 
         LOGGER.debug("Adding PDL log for certificate read");
         var rehabstodUser = userService.getUser();
         var storedActivities = rehabstodUser.getStoredActivities();
         pdlLogCertificatesForPerson(personId, loggedInUnitId, storedActivities);
 
+        luCertificateList.forEach(
+                lu -> lu.setEncryptedPatientId(patientIdEncryption.encrypt(lu.getPatient().getId()))
+        );
+
         LOGGER.debug("Returning LU Certificates for Person");
-        return new GetLUCertificatesForPersonResponse(luCertificateList, qaInfoError);
+        return new GetLUCertificatesForPersonResponse(luCertificateList, !hasDecoratedWithUnansweredCommunication);
     }
 
     @Override
