@@ -24,5 +24,6 @@ import lombok.Data;
 public class GetAGCertificatesForPersonRequest {
 
     String personId;
+    String encryptedPatientId;
 
 }

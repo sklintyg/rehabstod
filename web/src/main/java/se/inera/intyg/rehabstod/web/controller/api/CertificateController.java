@@ -88,7 +88,9 @@ public class CertificateController {
     public ResponseEntity<GetAGCertificatesForPersonResponse> getAGForPerson(@RequestBody GetAGCertificatesForPersonRequest request) {
         LOG.info("Getting AG certificates for person");
 
-        var response = certificateService.getAGCertificatesForPerson(request.getPersonId());
+        var response = certificateService.getAGCertificatesForPerson(request.getEncryptedPatientId() != null
+                ? patientIdEncryption.decrypt(request.getEncryptedPatientId()) : request.getPersonId()
+        );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
