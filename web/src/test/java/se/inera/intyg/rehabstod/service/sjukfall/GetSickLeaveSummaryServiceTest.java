@@ -48,7 +48,7 @@ public class GetSickLeaveSummaryServiceTest {
     @Mock
     StatisticsCalculator statisticsCalculator;
     @Mock
-    GetActiveSickLeavesService getActiveSickLeavesService;
+    GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
     @InjectMocks
     GetSickLeaveSummaryServiceImpl getSickLeaveSummaryService;
 
@@ -75,14 +75,14 @@ public class GetSickLeaveSummaryServiceTest {
     @BeforeEach
     void setup() {
         doReturn(new GetActiveSickLeavesResponseDTO(sickLeaves, false, false))
-                .when(getActiveSickLeavesService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class));
+            .when(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class));
         doReturn(summary).when(statisticsCalculator).getSickLeaveSummary(sickLeaves);
     }
 
     @Test
     void shouldGetActiveSickLeaves() {
         getSickLeaveSummaryService.get();
-        verify(getActiveSickLeavesService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class));
+        verify(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class));
 
     }
 
@@ -108,7 +108,7 @@ public class GetSickLeaveSummaryServiceTest {
     void shouldNotIncludeSickLeaveLengthWhenFetchingSickLeaves() {
         final var sickLeavesFilterRequestDTOArgumentCaptor = ArgumentCaptor.forClass(SickLeavesFilterRequestDTO.class);
         getSickLeaveSummaryService.get();
-        verify(getActiveSickLeavesService).get(sickLeavesFilterRequestDTOArgumentCaptor.capture(), any(boolean.class));
+        verify(getActiveSickLeavesResponseService).get(sickLeavesFilterRequestDTOArgumentCaptor.capture(), any(boolean.class));
         assertEquals(0, sickLeavesFilterRequestDTOArgumentCaptor.getValue().getSickLeaveLengthIntervals().size());
     }
 }

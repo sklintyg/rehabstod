@@ -31,20 +31,20 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
 
     private final PuService puService;
     private final StatisticsCalculator statisticsCalculator;
-    private final GetActiveSickLeavesService getActiveSickLeavesService;
+    private final GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
     private static final boolean INCLUDE_PARAMETERS = false;
     private static final String TEXT_SEARCH = "textSearch";
 
     public GetSickLeaveSummaryServiceImpl(PuService puService, StatisticsCalculator statisticsCalculator,
-        GetActiveSickLeavesService getActiveSickLeavesService) {
+        GetActiveSickLeavesResponseService getActiveSickLeavesResponseService) {
         this.puService = puService;
         this.statisticsCalculator = statisticsCalculator;
-        this.getActiveSickLeavesService = getActiveSickLeavesService;
+        this.getActiveSickLeavesResponseService = getActiveSickLeavesResponseService;
     }
 
     @Override
     public SickLeaveSummary get() {
-        final var sickLeaves = getActiveSickLeavesService.get(
+        final var sickLeaves = getActiveSickLeavesResponseService.get(
             new SickLeavesFilterRequestDTO(
                 Collections.emptyList(),
                 Collections.emptyList(),

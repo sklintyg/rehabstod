@@ -19,110 +19,45 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.logmessages.ActivityType;
-import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.logging.SickLeaveLogMessageFactory;
-import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
-import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationFilterService;
-import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
-import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.GetActiveSickLeavesResponseDTO;
-import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
-import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
-import se.inera.intyg.rehabstod.service.user.UserService;
-import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
+import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 @Service
 public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesService {
 
-    private final PdlLogSickLeavesService pdlLogSickLeavesService;
-    private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
-    private final RiskPredictionService riskPredictionService;
-    private final UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
-    private final UnansweredCommunicationFilterService unansweredCommunicationFilterService;
-    private final CreateSickLeaveRequestService createSickLeaveRequestService;
-    private final MonitoringLogService monitoringLogService;
-
-    private final GetSickLeavesService getSickLeavesService;
-    private final UserService userService;
-
     private static final Logger LOG = LoggerFactory.getLogger(GetActiveSickLeavesServiceImpl.class);
+    private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+    private final SjukfallEngineMapper sjukfallEngineMapper;
 
-    @Autowired
-    public GetActiveSickLeavesServiceImpl(
-        PdlLogSickLeavesService pdlLogSickLeavesService,
-        SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
-        RiskPredictionService riskPredictionService,
-        UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService,
-        UnansweredCommunicationFilterService unansweredCommunicationFilterService,
-        CreateSickLeaveRequestService createSickLeaveRequestService, MonitoringLogService monitoringLogService,
-        GetSickLeavesService getSickLeavesService, UserService userService) {
-        this.pdlLogSickLeavesService = pdlLogSickLeavesService;
-        this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
-        this.riskPredictionService = riskPredictionService;
-        this.unansweredCommunicationDecoratorService = unansweredCommunicationDecoratorService;
-        this.unansweredCommunicationFilterService = unansweredCommunicationFilterService;
-        this.createSickLeaveRequestService = createSickLeaveRequestService;
-        this.monitoringLogService = monitoringLogService;
-        this.getSickLeavesService = getSickLeavesService;
-        this.userService = userService;
+
+    public GetActiveSickLeavesServiceImpl(IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+        SjukfallEngineMapper sjukfallEngineMapper) {
+        this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
+        this.sjukfallEngineMapper = sjukfallEngineMapper;
     }
 
     @Override
-    public GetActiveSickLeavesResponseDTO get(SickLeavesFilterRequestDTO filterRequest, boolean includeParameters) {
-        final var request = createSickLeaveRequestService.create(filterRequest, includeParameters);
-        final var sickLeaves = getSickLeavesService.get(request);
-        sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(sickLeaves);
-        sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(sickLeaves);
-
-        final var hasDecoratedWithUnansweredCommunications = unansweredCommunicationDecoratorService.decorateSickLeaves(sickLeaves);
-        final var filteredSickLeaves = unansweredCommunicationFilterService.filter(
-            sickLeaves,
-            filterRequest.getUnansweredCommunicationFilterTypeId()
-        );
-        final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(filteredSickLeaves);
-        pdlLogSickLeavesService.log(filteredSickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
-        performMonitorLogging(sickLeaves, getUnitForLogging(request));
-        return new GetActiveSickLeavesResponseDTO(
-            filteredSickLeaves,
-            !hasDecoratedWithSRSInfo,
-            !hasDecoratedWithUnansweredCommunications
-        );
-    }
-
-    private static String getUnitForLogging(SickLeavesRequestDTO request) {
-        return request.getUnitId() != null ? request.getUnitId() : request.getCareUnitId();
-    }
-
-    private void performMonitorLogging(List<SjukfallEnhet> sickLeaves, String unitId) {
-        if (sickLeaves == null || sickLeaves.isEmpty()) {
-            return;
-        }
-        final var user = userService.getUser();
-        monitoringLogService.logUserViewedSjukfall(
-            user.getHsaId(),
-            sickLeaves.size(),
-            unitId
-        );
-    }
-
-    private boolean decorateWithSRSInfo(List<SjukfallEnhet> sickLeaves) {
+    public List<SjukfallEnhet> get(SickLeavesRequestDTO request) {
         final var logFactory = new SickLeaveLogMessageFactory(System.currentTimeMillis());
-        logFactory.setStartTimer(System.currentTimeMillis());
-        try {
-            riskPredictionService.updateWithRiskPredictions(sickLeaves);
-        } catch (SRSServiceException e) {
-            LOG.info("Unable to update sick leaves with risk prediction cause of SRSServiceException: {}", e.getMessage());
-            return false;
-        }
-        LOG.info(logFactory.message(SickLeaveLogMessageFactory.ADD_SRS_RISK, sickLeaves.size()));
-        return true;
+        final var response = intygstjanstRestIntegrationService.getActiveSickLeaves(request);
+        final var sickLeaves = response.getContent().stream()
+            .map(sickLeave -> sjukfallEngineMapper.mapToSjukfallEnhetDto(
+                    sickLeave,
+                    request.getMaxDaysSinceSickLeaveCompleted(),
+                    LocalDate.now()
+                )
+            )
+            .collect(Collectors.toList());
+        LOG.info(logFactory.message(SickLeaveLogMessageFactory.GET_ACTIVE_SICK_LEAVES, response.getContent().size()));
+        return sickLeaves;
     }
 }

@@ -42,14 +42,14 @@ import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrati
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 
 @ExtendWith(MockitoExtension.class)
-class GetSickLeavesServiceImplTest {
+class GetActiveSickLeavesServiceImplTest {
 
     @Mock
     private IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
     @Mock
     private SjukfallEngineMapper sjukfallEngineMapper;
     @InjectMocks
-    private GetSickLeavesServiceImpl getSickLeavesService;
+    private GetActiveSickLeavesServiceImpl getSickLeavesService;
 
     private SickLeavesRequestDTO request;
     private SickLeavesResponseDTO response;

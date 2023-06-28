@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.service.filter.PopulateFiltersService;
-import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesService;
+import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesResponseService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetSickLeaveSummaryService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveSummary;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PopulateFiltersResponseDTO;
@@ -37,7 +37,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesResponseDTO;
 public class SickLeaveController {
 
     @Autowired
-    private GetActiveSickLeavesService getActiveSickLeavesService;
+    private GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
     @Autowired
     private GetSickLeaveSummaryService getSickLeaveSummaryService;
 
@@ -48,7 +48,7 @@ public class SickLeaveController {
 
     @RequestMapping(value = "/active", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public SickLeavesResponseDTO getSickLeavesForUnit(@RequestBody SickLeavesFilterRequestDTO request) {
-        final var response = getActiveSickLeavesService.get(request, INCLUDE_PARAMETERS);
+        final var response = getActiveSickLeavesResponseService.get(request, INCLUDE_PARAMETERS);
         return new SickLeavesResponseDTO(
             response.getContent(),
             response.isSrsError(),

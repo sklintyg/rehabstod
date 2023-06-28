@@ -19,11 +19,11 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import java.util.List;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
-public interface GetSickLeavesService {
+import se.inera.intyg.rehabstod.service.sjukfall.dto.GetActiveSickLeavesResponseDTO;
+import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 
-    List<SjukfallEnhet> get(SickLeavesRequestDTO request);
+public interface GetActiveSickLeavesResponseService {
+
+    GetActiveSickLeavesResponseDTO get(SickLeavesFilterRequestDTO request, boolean includeParameters);
 }
