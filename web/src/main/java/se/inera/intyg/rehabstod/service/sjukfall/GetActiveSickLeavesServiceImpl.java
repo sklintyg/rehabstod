@@ -28,6 +28,8 @@ import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.logging.SickLeaveLogMessageFactory;
+import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
+import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationFilterService;
 import se.inera.intyg.rehabstod.service.exceptions.SRSServiceException;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.GetActiveSickLeavesResponseDTO;
@@ -80,7 +82,7 @@ public class GetActiveSickLeavesServiceImpl implements GetActiveSickLeavesServic
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(sickLeaves);
         sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(sickLeaves);
 
-        final var hasDecoratedWithUnansweredCommunications = unansweredCommunicationDecoratorService.decorate(sickLeaves);
+        final var hasDecoratedWithUnansweredCommunications = unansweredCommunicationDecoratorService.decorateSickLeaves(sickLeaves);
         final var filteredSickLeaves = unansweredCommunicationFilterService.filter(
             sickLeaves,
             filterRequest.getUnansweredCommunicationFilterTypeId()

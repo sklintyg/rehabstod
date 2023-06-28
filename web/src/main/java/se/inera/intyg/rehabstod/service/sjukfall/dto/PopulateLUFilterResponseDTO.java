@@ -17,12 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall;
-
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.web.model.Lakare;
 
-public interface UnansweredCommunicationDecoratorService {
-    boolean decorate(List<SjukfallEnhet> sickLeaves);
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class PopulateLUFilterResponseDTO {
+
+    private List<Lakare> doctors;
+    private List<DiagnosKapitel> allDiagnosisChapters;
 }

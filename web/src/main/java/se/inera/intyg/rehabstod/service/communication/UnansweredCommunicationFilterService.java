@@ -16,36 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.inera.intyg.rehabstod.web.model;
 
-import java.time.LocalDateTime;
+package se.inera.intyg.rehabstod.service.communication;
+
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
+
 import java.util.List;
-import lombok.Builder;
-import lombok.Data;
 
-@Data
-@Builder
-public class LUCertificate {
-
-    private String certificateId;
-    private String certificateType;
-
-    private String careProviderId;
-    private String careProviderName;
-    private String careUnitId;
-    private String careUnitName;
-
-    private Lakare doctor;
-
-    private Patient patient;
-    private String encryptedPatientId;
-
-    private Diagnos diagnosis;
-    private List<Diagnos> biDiagnoses;
-
-    private LocalDateTime signingTimeStamp;
-
-    private int unAnsweredComplement;
-    private int unAnsweredOther;
-
+public interface UnansweredCommunicationFilterService {
+    List<SjukfallEnhet> filter(List<SjukfallEnhet> sickLeave, String filterTypeId);
 }
