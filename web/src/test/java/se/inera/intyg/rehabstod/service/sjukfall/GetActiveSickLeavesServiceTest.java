@@ -41,6 +41,8 @@ import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
+import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationFilterService;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
@@ -107,7 +109,7 @@ public class GetActiveSickLeavesServiceTest {
     @Test
     void shallReturnHasDecoratedWithUnansweredCommunications() {
         final var expectedResult = true;
-        when(unansweredCommunicationDecoratorService.decorate(List.of(sickLeave))).thenReturn(false);
+        when(unansweredCommunicationDecoratorService.decorateSickLeaves(List.of(sickLeave))).thenReturn(false);
         final var result = getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
         assertEquals(expectedResult, result.isUnansweredCommunicationError());
     }
@@ -161,7 +163,7 @@ public class GetActiveSickLeavesServiceTest {
         void shouldCallUnansweredCommunicationDecorator() {
             final var captor = ArgumentCaptor.forClass(List.class);
             getActiveSickLeavesService.get(SICK_LEAVES_FILTER_REQUEST, true);
-            verify(unansweredCommunicationDecoratorService).decorate(captor.capture());
+            verify(unansweredCommunicationDecoratorService).decorateSickLeaves(captor.capture());
             assertEquals(1, captor.getValue().size());
             assertEquals(sickLeave, captor.getValue().get(0));
         }
