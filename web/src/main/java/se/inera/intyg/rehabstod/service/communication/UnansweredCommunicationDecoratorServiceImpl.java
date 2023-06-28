@@ -68,13 +68,17 @@ public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCo
     @Override
     public boolean decorateLuCertificates(List<LUCertificate> certificates) {
         final var patientIds = certificates
-                .stream()
-                .map((luCertificate) -> luCertificate.getPatient().getId())
-                .distinct()
-                .collect(Collectors.toList());
+            .stream()
+            .map((luCertificate) -> luCertificate.getPatient().getId())
+            .distinct()
+            .collect(Collectors.toList());
 
+        if (patientIds.isEmpty()) {
+            return true;
+        }
+        
         final var response = wcRestIntegrationService.getUnansweredCommunicationForPatients(
-                new UnansweredCommunicationRequest(maxDaysOfUnansweredCommunication, patientIds)
+            new UnansweredCommunicationRequest(maxDaysOfUnansweredCommunication, patientIds)
         );
 
         if (response.isUnansweredCommunicationError()) {
@@ -82,10 +86,10 @@ public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCo
         }
 
         certificates.forEach(
-                (luCertificate) -> decorateLuCertificate(
-                        luCertificate,
-                        response.getUnansweredQAsMap().get(luCertificate.getCertificateId())
-                )
+            (luCertificate) -> decorateLuCertificate(
+                luCertificate,
+                response.getUnansweredQAsMap().get(luCertificate.getCertificateId())
+            )
         );
 
         return true;

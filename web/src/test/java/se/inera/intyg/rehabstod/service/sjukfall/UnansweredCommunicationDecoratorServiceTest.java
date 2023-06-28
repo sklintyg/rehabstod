@@ -19,7 +19,11 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -74,6 +78,7 @@ public class UnansweredCommunicationDecoratorServiceTest {
         SICK_LEAVE_SEVERAL_CERTIFICATES
     );
     private static final List<SjukfallEnhet> EMPTY_SICK_LEAVES = Collections.emptyList();
+    private static final List<LUCertificate> EMPTY_LU = Collections.emptyList();
     private static final UnansweredQAs QA_0 = new UnansweredQAs(0, 0);
     private static final UnansweredQAs QA_1 = new UnansweredQAs(5, 3);
     private static final UnansweredQAs QA_2 = new UnansweredQAs(2, 3);
@@ -235,16 +240,16 @@ public class UnansweredCommunicationDecoratorServiceTest {
     class TestLuWithEmptyResponse {
 
         final List<LUCertificate> certificates = Arrays.asList(
-                LUCertificate
-                        .builder()
-                        .certificateId(CERTIFICATE_ID_0)
-                        .patient(new Patient(PATIENT_ID_0, "Name"))
-                        .build(),
-                LUCertificate
-                        .builder()
-                        .certificateId(CERTIFICATE_ID_1)
-                        .patient(new Patient(PATIENT_ID_1, "Name"))
-                        .build()
+            LUCertificate
+                .builder()
+                .certificateId(CERTIFICATE_ID_0)
+                .patient(new Patient(PATIENT_ID_0, "Name"))
+                .build(),
+            LUCertificate
+                .builder()
+                .certificateId(CERTIFICATE_ID_1)
+                .patient(new Patient(PATIENT_ID_1, "Name"))
+                .build()
         );
 
         @BeforeEach
@@ -266,16 +271,16 @@ public class UnansweredCommunicationDecoratorServiceTest {
     class TestLuCertificate {
 
         final List<LUCertificate> certificates = Arrays.asList(
-                LUCertificate
-                        .builder()
-                        .certificateId(CERTIFICATE_ID_0)
-                        .patient(new Patient(PATIENT_ID_0, "Name"))
-                        .build(),
-                LUCertificate
-                        .builder()
-                        .certificateId(CERTIFICATE_ID_1)
-                        .patient(new Patient(PATIENT_ID_1, "Name"))
-                        .build()
+            LUCertificate
+                .builder()
+                .certificateId(CERTIFICATE_ID_0)
+                .patient(new Patient(PATIENT_ID_0, "Name"))
+                .build(),
+            LUCertificate
+                .builder()
+                .certificateId(CERTIFICATE_ID_1)
+                .patient(new Patient(PATIENT_ID_1, "Name"))
+                .build()
         );
 
         @BeforeEach
@@ -285,8 +290,6 @@ public class UnansweredCommunicationDecoratorServiceTest {
             unansweredQAsMap.put(CERTIFICATE_ID_0, QA_0);
             unansweredQAsMap.put(CERTIFICATE_ID_1, QA_1);
             response.setUnansweredQAsMap(unansweredQAsMap);
-
-            when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
         }
 
         @Nested
@@ -294,6 +297,8 @@ public class UnansweredCommunicationDecoratorServiceTest {
 
             @Test
             void shouldCallRestServiceWithPatientIds() {
+                when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
+
                 final var captor = ArgumentCaptor.forClass(UnansweredCommunicationRequest.class);
 
                 unansweredCommunicationDecoratorService.decorateLuCertificates(certificates);
@@ -306,6 +311,8 @@ public class UnansweredCommunicationDecoratorServiceTest {
 
             @Test
             void shouldCallRestServiceWithMaxDaysOfCommunication() {
+                when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
+
                 final var captor = ArgumentCaptor.forClass(UnansweredCommunicationRequest.class);
 
                 unansweredCommunicationDecoratorService.decorateLuCertificates(certificates);
@@ -313,10 +320,22 @@ public class UnansweredCommunicationDecoratorServiceTest {
                 verify(wcRestIntegrationService).getUnansweredCommunicationForPatients(captor.capture());
                 assertNotNull(captor.getValue().getMaxDaysOfUnansweredCommunication());
             }
+
+            @Test
+            void shouldReturnTrueIfPatientIdsIsEmpty() {
+                final var result = unansweredCommunicationDecoratorService.decorateLuCertificates(EMPTY_LU);
+                assertTrue(result);
+            }
         }
 
         @Nested
         class TestResponse {
+
+            @BeforeEach
+            void setUp() {
+                when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
+            }
+
             @Test
             void shouldSetErrorAsTrueIfResponseIsSuccess() {
                 response.setUnansweredCommunicationError(true);
@@ -339,8 +358,14 @@ public class UnansweredCommunicationDecoratorServiceTest {
         @Nested
         class TestDecoration {
 
+            @BeforeEach
+            void setUp() {
+                when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
+            }
+
             @Nested
             class TestComplements {
+
                 @Test
                 void shouldNotDecorateCertificateWithNoCommunication() {
                     unansweredCommunicationDecoratorService.decorateLuCertificates(certificates);
@@ -358,6 +383,12 @@ public class UnansweredCommunicationDecoratorServiceTest {
 
             @Nested
             class TestOthers {
+
+                @BeforeEach
+                void setUp() {
+                    when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any())).thenReturn(response);
+                }
+
                 @Test
                 void shouldNotDecorateCertificateWithNoCommunication() {
                     unansweredCommunicationDecoratorService.decorateLuCertificates(certificates);
