@@ -19,8 +19,13 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -53,13 +58,17 @@ import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.certificate.CertificateService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
+import se.inera.intyg.rehabstod.service.filter.PopulateFiltersServiceImpl;
 import se.inera.intyg.rehabstod.service.pu.PuService;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateLUFilterResponseDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterType;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.user.FeatureService;
 import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetDoctorsForUnitResponse;
 
 @ExtendWith(MockitoExtension.class)
 public class PopulateFiltersServiceTest {
@@ -81,6 +90,8 @@ public class PopulateFiltersServiceTest {
 
     @Mock
     FeatureService featureService;
+    @Mock
+    CertificateService certificateService;
 
     @InjectMocks
     PopulateFiltersServiceImpl populateActiveFilters;
@@ -111,154 +122,41 @@ public class PopulateFiltersServiceTest {
         new se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel(diagnosisChapterTo, diagnosisChapterFrom, DIAGNOSIS_CHAPTER_NAME);
     List<DiagnosKapitel> allDiagnosisChapters = Collections.singletonList(new DiagnosKapitel());
 
-    @BeforeEach
-    void setup() {
-        user = mock(RehabstodUser.class);
-        careGiverUnit = mock(SelectableVardenhet.class);
-        careGiver = mock(Vardgivare.class);
-        unit = mock(Vardenhet.class);
-
-        when(userService.getUser()).thenReturn(user);
-
-        final var preferences = new HashMap<String, String>();
-        preferences.put(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG.getBackendKeyName(), GAP);
-        preferences.put(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT.getBackendKeyName(), DAYS);
-        final var userPreferences = RehabstodUserPreferences.fromBackend(preferences);
-        when(user.getPreferences()).thenReturn(userPreferences);
-
-        final var response = new PopulateFiltersResponseDTO(
-            Collections.singletonList(Lakare.create(HSA_ID, HSA_ID)),
-            Collections.singletonList(enabledDiagnosisChapter),
-            TOTAL_NUMBER_OF_SICK_LEAVES,
-            Collections.singletonList(rekoStatus),
-            Collections.singletonList(occupationTypeDTO)
-        );
-        when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(response);
-
-        EXPECTED_REQUEST.setMaxDaysSinceSickLeaveCompleted(Integer.parseInt(DAYS));
-        EXPECTED_REQUEST.setUnitId(UNIT_ID);
-
-        when(diagnosKapitelService.getDiagnosKapitelList()).thenReturn(allDiagnosisChapters);
-    }
-
     @Nested
-    class UnansweredCommunication {
-        @BeforeEach
-        void setup() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-        }
-
-        @Test
-        void shouldSetUnansweredCommunicationFilterTypeIds() {
-            final var response = populateActiveFilters.get();
-
-            assertEquals(4, response.getUnansweredCommunicationFilterTypes().size());
-        }
-
-        @Test
-        void shouldSetUnansweredCommunicationFilterTypeId1() {
-            final var response = populateActiveFilters.get();
-
-            assertEquals(
-                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_1.toString(),
-                    response.getUnansweredCommunicationFilterTypes().get(0).getId()
-            );
-
-            assertEquals(
-                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_1.getName(),
-                    response.getUnansweredCommunicationFilterTypes().get(0).getName()
-            );
-        }
-
-        @Test
-        void shouldSetUnansweredCommunicationFilterTypeId2() {
-            final var response = populateActiveFilters.get();
-
-            assertEquals(
-                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_2.toString(),
-                    response.getUnansweredCommunicationFilterTypes().get(1).getId()
-            );
-
-            assertEquals(
-                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_2.getName(),
-                    response.getUnansweredCommunicationFilterTypes().get(1).getName()
-            );
-        }
-
-        @Test
-        void shouldSetUnansweredCommunicationFilterTypeId3() {
-            final var response = populateActiveFilters.get();
-
-            assertEquals(
-                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_3.toString(),
-                    response.getUnansweredCommunicationFilterTypes().get(2).getId()
-            );
-
-            assertEquals(
-                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_3.getName(),
-                    response.getUnansweredCommunicationFilterTypes().get(2).getName()
-            );
-        }
-
-        @Test
-        void shouldSetUnansweredCommunicationFilterTypeId4() {
-            final var response = populateActiveFilters.get();
-
-            assertEquals(
-                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_4.toString(),
-                    response.getUnansweredCommunicationFilterTypes().get(3).getId()
-            );
-
-            assertEquals(
-                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_4.getName(),
-                    response.getUnansweredCommunicationFilterTypes().get(3).getName()
-            );
-        }
-    }
-
-    @Nested
-    class SRS {
+    class PopulateSickLeaveFilter {
 
         @BeforeEach
         void setup() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
+            user = mock(RehabstodUser.class);
+            careGiverUnit = mock(SelectableVardenhet.class);
+            careGiver = mock(Vardgivare.class);
+            unit = mock(Vardenhet.class);
+
+            when(userService.getUser()).thenReturn(user);
+
+            final var preferences = new HashMap<String, String>();
+            preferences.put(Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG.getBackendKeyName(), GAP);
+            preferences.put(Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT.getBackendKeyName(), DAYS);
+            final var userPreferences = RehabstodUserPreferences.fromBackend(preferences);
+            when(user.getPreferences()).thenReturn(userPreferences);
+
+            final var response = new PopulateFiltersResponseDTO(
+                Collections.singletonList(Lakare.create(HSA_ID, HSA_ID)),
+                Collections.singletonList(enabledDiagnosisChapter),
+                TOTAL_NUMBER_OF_SICK_LEAVES,
+                Collections.singletonList(rekoStatus),
+                Collections.singletonList(occupationTypeDTO)
+            );
+            when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(response);
+
+            EXPECTED_REQUEST.setMaxDaysSinceSickLeaveCompleted(Integer.parseInt(DAYS));
+            EXPECTED_REQUEST.setUnitId(UNIT_ID);
+
+            when(diagnosKapitelService.getDiagnosKapitelList()).thenReturn(allDiagnosisChapters);
         }
-
-        @Test
-        void shouldSetSrsActivatedIfFeatureIsAvailable() {
-            when(featureService.isFeatureActive(anyString())).thenReturn(true);
-
-            final var response = populateActiveFilters.get();
-
-            assertTrue(response.isSrsActivated());
-        }
-
-        @Test
-        void shouldSetSrsNotActivatedIfFeatureIsNotAvailable() {
-            when(featureService.isFeatureActive(anyString())).thenReturn(false);
-
-            final var response = populateActiveFilters.get();
-
-            assertFalse(response.isSrsActivated());
-        }
-
-        @Test
-        void shouldCallFeatureServiceWithSrsFeatureString() {
-            final var captor = ArgumentCaptor.forClass(String.class);
-            populateActiveFilters.get();
-            verify(featureService).isFeatureActive(captor.capture());
-
-            assertEquals(AuthoritiesConstants.FEATURE_SRS, captor.getValue());
-        }
-    }
-
-    @Nested
-    class TestITRequest {
 
         @Nested
-        class CareUnit {
+        class UnansweredCommunication {
 
             @BeforeEach
             void setup() {
@@ -267,241 +165,400 @@ public class PopulateFiltersServiceTest {
             }
 
             @Test
-            void shouldCreateRequestWithCorrectValuesWhenChosenUnit() {
-                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
-                populateActiveFilters.get();
+            void shouldSetUnansweredCommunicationFilterTypeIds() {
+                final var response = populateActiveFilters.populateSickLeaveFilters();
 
-                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
-                assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
-                assertNull(captor.getValue().getUnitId());
-                assertEquals(Integer.parseInt(DAYS), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+                assertEquals(4, response.getUnansweredCommunicationFilterTypes().size());
             }
 
             @Test
-            void shouldSetDoctorIdIfUserIsDoctor() {
-                when(user.getHsaId()).thenReturn(HSA_ID);
-                when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
+            void shouldSetUnansweredCommunicationFilterTypeId1() {
+                final var response = populateActiveFilters.populateSickLeaveFilters();
 
-                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
-                populateActiveFilters.get();
+                assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_1.toString(),
+                    response.getUnansweredCommunicationFilterTypes().get(0).getId()
+                );
 
-                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
-                assertEquals(HSA_ID, captor.getValue().getDoctorId());
+                assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_1.getName(),
+                    response.getUnansweredCommunicationFilterTypes().get(0).getName()
+                );
             }
 
             @Test
-            void shouldNotSetDoctorIdIfUserIsNotDoctor() {
-                when(user.getUrval()).thenReturn(Urval.ALL);
+            void shouldSetUnansweredCommunicationFilterTypeId2() {
+                final var response = populateActiveFilters.populateSickLeaveFilters();
 
-                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
-                populateActiveFilters.get();
+                assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_2.toString(),
+                    response.getUnansweredCommunicationFilterTypes().get(1).getId()
+                );
 
-                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
-                assertNull(captor.getValue().getDoctorId());
+                assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_2.getName(),
+                    response.getUnansweredCommunicationFilterTypes().get(1).getName()
+                );
             }
 
             @Test
-            void shouldCreateRequestWithProtectedPersonFilterIdNull() {
-                when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(true);
+            void shouldSetUnansweredCommunicationFilterTypeId3() {
+                final var response = populateActiveFilters.populateSickLeaveFilters();
 
-                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
-                populateActiveFilters.get();
+                assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_3.toString(),
+                    response.getUnansweredCommunicationFilterTypes().get(2).getId()
+                );
 
-                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
-                assertNull(captor.getValue().getProtectedPersonFilterId());
+                assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_3.getName(),
+                    response.getUnansweredCommunicationFilterTypes().get(2).getName()
+                );
             }
 
             @Test
-            void shouldCreateRequestWithProtectedPersonFilterIdAsHsaId() {
-                when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(false);
-                when(user.getHsaId()).thenReturn(HSA_ID);
+            void shouldSetUnansweredCommunicationFilterTypeId4() {
+                final var response = populateActiveFilters.populateSickLeaveFilters();
 
-                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
-                populateActiveFilters.get();
+                assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_4.toString(),
+                    response.getUnansweredCommunicationFilterTypes().get(3).getId()
+                );
 
-                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
-                assertEquals(HSA_ID, captor.getValue().getProtectedPersonFilterId());
+                assertEquals(
+                    UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_4.getName(),
+                    response.getUnansweredCommunicationFilterTypes().get(3).getName()
+                );
             }
         }
 
         @Nested
-        class SubUnit {
+        class SRS {
+
+            @BeforeEach
+            void setup() {
+                when(user.getValdVardenhet()).thenReturn(unit);
+                when(unit.getId()).thenReturn(UNIT_ID);
+            }
 
             @Test
-            void shouldCreateRequestWithCorrectValuesWhenChosenSubUnit() {
-                setupSubUnit();
+            void shouldSetSrsActivatedIfFeatureIsAvailable() {
+                when(featureService.isFeatureActive(anyString())).thenReturn(true);
 
-                final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
-                populateActiveFilters.get();
+                final var response = populateActiveFilters.populateSickLeaveFilters();
 
-                verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
-                assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
-                assertEquals(SUB_UNIT_ID, captor.getValue().getUnitId());
-                assertEquals(Integer.parseInt(DAYS), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+                assertTrue(response.isSrsActivated());
             }
+
+            @Test
+            void shouldSetSrsNotActivatedIfFeatureIsNotAvailable() {
+                when(featureService.isFeatureActive(anyString())).thenReturn(false);
+
+                final var response = populateActiveFilters.populateSickLeaveFilters();
+
+                assertFalse(response.isSrsActivated());
+            }
+
+            @Test
+            void shouldCallFeatureServiceWithSrsFeatureString() {
+                final var captor = ArgumentCaptor.forClass(String.class);
+                populateActiveFilters.populateSickLeaveFilters();
+                verify(featureService).isFeatureActive(captor.capture());
+
+                assertEquals(AuthoritiesConstants.FEATURE_SRS, captor.getValue());
+            }
+        }
+
+        @Nested
+        class TestITRequest {
+
+            @Nested
+            class CareUnit {
+
+                @BeforeEach
+                void setup() {
+                    when(user.getValdVardenhet()).thenReturn(unit);
+                    when(unit.getId()).thenReturn(UNIT_ID);
+                }
+
+                @Test
+                void shouldCreateRequestWithCorrectValuesWhenChosenUnit() {
+                    final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                    populateActiveFilters.populateSickLeaveFilters();
+
+                    verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                    assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
+                    assertNull(captor.getValue().getUnitId());
+                    assertEquals(Integer.parseInt(DAYS), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+                }
+
+                @Test
+                void shouldSetDoctorIdIfUserIsDoctor() {
+                    when(user.getHsaId()).thenReturn(HSA_ID);
+                    when(user.getUrval()).thenReturn(Urval.ISSUED_BY_ME);
+
+                    final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                    populateActiveFilters.populateSickLeaveFilters();
+
+                    verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                    assertEquals(HSA_ID, captor.getValue().getDoctorId());
+                }
+
+                @Test
+                void shouldNotSetDoctorIdIfUserIsNotDoctor() {
+                    when(user.getUrval()).thenReturn(Urval.ALL);
+
+                    final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                    populateActiveFilters.populateSickLeaveFilters();
+
+                    verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                    assertNull(captor.getValue().getDoctorId());
+                }
+
+                @Test
+                void shouldCreateRequestWithProtectedPersonFilterIdNull() {
+                    when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(true);
+
+                    final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                    populateActiveFilters.populateSickLeaveFilters();
+
+                    verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                    assertNull(captor.getValue().getProtectedPersonFilterId());
+                }
+
+                @Test
+                void shouldCreateRequestWithProtectedPersonFilterIdAsHsaId() {
+                    when(puService.shouldFilterSickLeavesOnProtectedPerson(any())).thenReturn(false);
+                    when(user.getHsaId()).thenReturn(HSA_ID);
+
+                    final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                    populateActiveFilters.populateSickLeaveFilters();
+
+                    verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                    assertEquals(HSA_ID, captor.getValue().getProtectedPersonFilterId());
+                }
+            }
+
+            @Nested
+            class SubUnit {
+
+                @Test
+                void shouldCreateRequestWithCorrectValuesWhenChosenSubUnit() {
+                    setupSubUnit();
+
+                    final var captor = ArgumentCaptor.forClass(PopulateFiltersRequestDTO.class);
+                    populateActiveFilters.populateSickLeaveFilters();
+
+                    verify(intygstjanstRestIntegrationService).getPopulatedFiltersForActiveSickLeaves(captor.capture());
+                    assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
+                    assertEquals(SUB_UNIT_ID, captor.getValue().getUnitId());
+                    assertEquals(Integer.parseInt(DAYS), captor.getValue().getMaxDaysSinceSickLeaveCompleted());
+                }
+            }
+        }
+
+        @Nested
+        class TestITResponse {
+
+            @BeforeEach
+            void setUp() {
+                when(user.getValdVardenhet()).thenReturn(unit);
+                when(unit.getId()).thenReturn(UNIT_ID);
+                when(user.getUrval()).thenReturn(Urval.ALL);
+            }
+
+            @Test
+            void shouldHandleNullValuesFromResponse() {
+                final var responeDTO = new PopulateFiltersResponseDTO(
+                    null,
+                    null,
+                    0,
+                    null,
+                    null
+                );
+                when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(responeDTO);
+                final var response = populateActiveFilters.populateSickLeaveFilters();
+                assertEquals(0, response.getActiveDoctors().size());
+            }
+
+            @Test
+            void shouldConvertActiveDoctors() {
+                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
+                final var response = populateActiveFilters.populateSickLeaveFilters();
+                assertEquals(1, response.getActiveDoctors().size());
+            }
+
+            @Test
+            void shouldConvertHsaIdForDoctor() {
+                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
+                final var response = populateActiveFilters.populateSickLeaveFilters();
+                assertEquals(HSA_ID, response.getActiveDoctors().get(0).getHsaId());
+            }
+
+            @Test
+            void shouldConvertDoctorName() {
+                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
+                final var response = populateActiveFilters.populateSickLeaveFilters();
+                assertEquals(DOCTOR_NAME, response.getActiveDoctors().get(0).getNamn());
+            }
+
+            @Test
+            void shouldDecorateDuplicateDoctorNamesWithHsaId() {
+                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
+                populateActiveFilters.populateSickLeaveFilters();
+                verify(sjukfallEmployeeNameResolver, times(1))
+                    .decorateAnyDuplicateNamesWithHsaId(anyList());
+            }
+
+            @Test
+            void shouldConvertAllDiagnosisChapters() {
+                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
+                final var response = populateActiveFilters.populateSickLeaveFilters();
+                assertEquals(allDiagnosisChapters, response.getAllDiagnosisChapters());
+            }
+
+            @Test
+            void shouldConvertNbrOfSickLeaves() {
+                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
+                final var response = populateActiveFilters.populateSickLeaveFilters();
+                assertEquals(TOTAL_NUMBER_OF_SICK_LEAVES, response.getNbrOfSickLeaves());
+            }
+
+            @Test
+            void shouldConvertRekoStatusId() {
+                final var response = populateActiveFilters.populateSickLeaveFilters();
+                assertEquals(rekoStatus.getId(), response.getRekoStatusTypes().get(0).getId());
+            }
+
+            @Test
+            void shouldConvertRekoStatusName() {
+                final var response = populateActiveFilters.populateSickLeaveFilters();
+                assertEquals(rekoStatus.getName(), response.getRekoStatusTypes().get(0).getName());
+            }
+
+            @Test
+            void shouldConvertOccupationTypeId() {
+                final var response = populateActiveFilters.populateSickLeaveFilters();
+                assertEquals(occupationTypeDTO.getId(), response.getOccupationTypes().get(0).getId());
+            }
+
+            @Test
+            void shouldConvertOccupationTypeName() {
+                final var response = populateActiveFilters.populateSickLeaveFilters();
+                assertEquals(occupationTypeDTO.getName(), response.getOccupationTypes().get(0).getName());
+            }
+
+            @Nested
+            class DiagnosisChapters {
+
+                @Test
+                void shouldConvertEnabledDiagnosisChapters() {
+                    when(user.getValdVardenhet()).thenReturn(unit);
+                    when(unit.getId()).thenReturn(UNIT_ID);
+
+                    final var response = populateActiveFilters.populateSickLeaveFilters();
+                    assertEquals(1, response.getEnabledDiagnosisChapters().size());
+                }
+
+                @Test
+                void shouldConvertEnabledDiagnosisChapterTo() {
+                    when(user.getValdVardenhet()).thenReturn(unit);
+                    when(unit.getId()).thenReturn(UNIT_ID);
+
+                    final var response = populateActiveFilters.populateSickLeaveFilters();
+                    final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
+                    assertEquals(enabledDiagnosisChapter.getTo().getLetter(), diagnosisChapter.getTo().getLetter());
+                    assertEquals(enabledDiagnosisChapter.getTo().getNumber(), diagnosisChapter.getTo().getNumber());
+                }
+
+                @Test
+                void shouldConvertEnabledDiagnosisChapterFrom() {
+                    when(user.getValdVardenhet()).thenReturn(unit);
+                    when(unit.getId()).thenReturn(UNIT_ID);
+
+                    final var response = populateActiveFilters.populateSickLeaveFilters();
+                    final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
+                    assertEquals(enabledDiagnosisChapter.getFrom().getLetter(), diagnosisChapter.getFrom().getLetter());
+                    assertEquals(enabledDiagnosisChapter.getFrom().getNumber(), diagnosisChapter.getFrom().getNumber());
+                }
+
+                @Test
+                void shouldConvertEnabledDiagnosisChapterId() {
+                    when(user.getValdVardenhet()).thenReturn(unit);
+                    when(unit.getId()).thenReturn(UNIT_ID);
+
+                    final var response = populateActiveFilters.populateSickLeaveFilters();
+                    final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
+                    assertEquals(enabledDiagnosisChapter.getId(), diagnosisChapter.getId());
+                }
+
+                @Test
+                void shouldConvertEnabledDiagnosisChapterName() {
+                    when(user.getValdVardenhet()).thenReturn(unit);
+                    when(unit.getId()).thenReturn(UNIT_ID);
+
+                    final var response = populateActiveFilters.populateSickLeaveFilters();
+                    final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
+                    assertEquals(enabledDiagnosisChapter.getName(), diagnosisChapter.getName());
+                }
+            }
+        }
+
+        private void setupSubUnit() {
+            when(user.isValdVardenhetMottagning()).thenReturn(true);
+
+            final var subUnit = mock(SelectableVardenhet.class);
+            final var mottagning = mock(Mottagning.class);
+            when(mottagning.getId()).thenReturn(SUB_UNIT_ID);
+            when(subUnit.getId()).thenReturn(SUB_UNIT_ID);
+            when(user.getValdVardenhet()).thenReturn(subUnit);
+
+            when(careGiver.getVardenheter()).thenReturn(Collections.singletonList(unit));
+            when(unit.getMottagningar()).thenReturn(Collections.singletonList(mottagning));
+            when(unit.getId()).thenReturn(UNIT_ID);
+
+            when(user.getVardgivare()).thenReturn(Collections.singletonList(careGiver));
         }
     }
 
     @Nested
-    class TestITResponse {
+    class PopulateLUFilter {
 
-        @BeforeEach
-        void setUp() {
-            when(user.getValdVardenhet()).thenReturn(unit);
-            when(unit.getId()).thenReturn(UNIT_ID);
-            when(user.getUrval()).thenReturn(Urval.ALL);
+        @Test
+        void shouldReturnEmptyResponse() {
+            when(diagnosKapitelService.getDiagnosKapitelList()).thenReturn(Collections.emptyList());
+            when(certificateService.getDoctorsForUnit()).thenReturn(new GetDoctorsForUnitResponse(Collections.emptyList()));
+            final var expectedResponse = PopulateLUFilterResponseDTO.builder()
+                .doctors(Collections.emptyList())
+                .allDiagnosisChapters(Collections.emptyList())
+                .build();
+            final var response = populateActiveFilters.populateLUFilters();
+            assertEquals(expectedResponse, response);
         }
 
         @Test
-        void shouldHandleNullValuesFromResponse() {
-            final var responeDTO = new PopulateFiltersResponseDTO(
-                null,
-                null,
-                0,
-                null,
-                null
-            );
-            when(intygstjanstRestIntegrationService.getPopulatedFiltersForActiveSickLeaves(any())).thenReturn(responeDTO);
-            final var response = populateActiveFilters.get();
-            assertEquals(0, response.getActiveDoctors().size());
+        void shouldReturnAllDiagnosisChapters() {
+            when(diagnosKapitelService.getDiagnosKapitelList()).thenReturn(allDiagnosisChapters);
+            when(certificateService.getDoctorsForUnit()).thenReturn(new GetDoctorsForUnitResponse(Collections.emptyList()));
+            final var expectedResponse = PopulateLUFilterResponseDTO.builder()
+                .doctors(Collections.emptyList())
+                .allDiagnosisChapters(allDiagnosisChapters)
+                .build();
+            final var response = populateActiveFilters.populateLUFilters();
+            assertEquals(expectedResponse, response);
         }
 
         @Test
-        void shouldConvertActiveDoctors() {
-            when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-            final var response = populateActiveFilters.get();
-            assertEquals(1, response.getActiveDoctors().size());
+        void shouldReturnAllDoctorsForUnit() {
+            when(diagnosKapitelService.getDiagnosKapitelList()).thenReturn(Collections.emptyList());
+            final var doctor = new se.inera.intyg.rehabstod.web.model.Lakare();
+            when(certificateService.getDoctorsForUnit()).thenReturn(new GetDoctorsForUnitResponse(List.of(doctor)));
+            final var expectedResponse = PopulateLUFilterResponseDTO.builder()
+                .doctors(List.of(doctor))
+                .allDiagnosisChapters(Collections.emptyList())
+                .build();
+            final var response = populateActiveFilters.populateLUFilters();
+            assertEquals(expectedResponse, response);
         }
-
-        @Test
-        void shouldConvertHsaIdForDoctor() {
-            when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-            final var response = populateActiveFilters.get();
-            assertEquals(HSA_ID, response.getActiveDoctors().get(0).getHsaId());
-        }
-
-        @Test
-        void shouldConvertDoctorName() {
-            when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-            final var response = populateActiveFilters.get();
-            assertEquals(DOCTOR_NAME, response.getActiveDoctors().get(0).getNamn());
-        }
-
-        @Test
-        void shouldDecorateDuplicateDoctorNamesWithHsaId() {
-            when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-            populateActiveFilters.get();
-            verify(sjukfallEmployeeNameResolver, times(1))
-                .decorateAnyDuplicateNamesWithHsaId(anyList());
-        }
-
-        @Test
-        void shouldConvertAllDiagnosisChapters() {
-            when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-            final var response = populateActiveFilters.get();
-            assertEquals(allDiagnosisChapters, response.getAllDiagnosisChapters());
-        }
-
-        @Test
-        void shouldConvertNbrOfSickLeaves() {
-            when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-            final var response = populateActiveFilters.get();
-            assertEquals(TOTAL_NUMBER_OF_SICK_LEAVES, response.getNbrOfSickLeaves());
-        }
-
-        @Test
-        void shouldConvertRekoStatusId() {
-            final var response = populateActiveFilters.get();
-            assertEquals(rekoStatus.getId(), response.getRekoStatusTypes().get(0).getId());
-        }
-
-        @Test
-        void shouldConvertRekoStatusName() {
-            final var response = populateActiveFilters.get();
-            assertEquals(rekoStatus.getName(), response.getRekoStatusTypes().get(0).getName());
-        }
-
-        @Test
-        void shouldConvertOccupationTypeId() {
-            final var response = populateActiveFilters.get();
-            assertEquals(occupationTypeDTO.getId(), response.getOccupationTypes().get(0).getId());
-        }
-
-        @Test
-        void shouldConvertOccupationTypeName() {
-            final var response = populateActiveFilters.get();
-            assertEquals(occupationTypeDTO.getName(), response.getOccupationTypes().get(0).getName());
-        }
-
-        @Nested
-        class DiagnosisChapters {
-
-            @Test
-            void shouldConvertEnabledDiagnosisChapters() {
-                when(user.getValdVardenhet()).thenReturn(unit);
-                when(unit.getId()).thenReturn(UNIT_ID);
-
-                final var response = populateActiveFilters.get();
-                assertEquals(1, response.getEnabledDiagnosisChapters().size());
-            }
-
-            @Test
-            void shouldConvertEnabledDiagnosisChapterTo() {
-                when(user.getValdVardenhet()).thenReturn(unit);
-                when(unit.getId()).thenReturn(UNIT_ID);
-
-                final var response = populateActiveFilters.get();
-                final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
-                assertEquals(enabledDiagnosisChapter.getTo().getLetter(), diagnosisChapter.getTo().getLetter());
-                assertEquals(enabledDiagnosisChapter.getTo().getNumber(), diagnosisChapter.getTo().getNumber());
-            }
-
-            @Test
-            void shouldConvertEnabledDiagnosisChapterFrom() {
-                when(user.getValdVardenhet()).thenReturn(unit);
-                when(unit.getId()).thenReturn(UNIT_ID);
-
-                final var response = populateActiveFilters.get();
-                final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
-                assertEquals(enabledDiagnosisChapter.getFrom().getLetter(), diagnosisChapter.getFrom().getLetter());
-                assertEquals(enabledDiagnosisChapter.getFrom().getNumber(), diagnosisChapter.getFrom().getNumber());
-            }
-
-            @Test
-            void shouldConvertEnabledDiagnosisChapterId() {
-                when(user.getValdVardenhet()).thenReturn(unit);
-                when(unit.getId()).thenReturn(UNIT_ID);
-
-                final var response = populateActiveFilters.get();
-                final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
-                assertEquals(enabledDiagnosisChapter.getId(), diagnosisChapter.getId());
-            }
-
-            @Test
-            void shouldConvertEnabledDiagnosisChapterName() {
-                when(user.getValdVardenhet()).thenReturn(unit);
-                when(unit.getId()).thenReturn(UNIT_ID);
-
-                final var response = populateActiveFilters.get();
-                final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
-                assertEquals(enabledDiagnosisChapter.getName(), diagnosisChapter.getName());
-            }
-        }
-    }
-
-    private void setupSubUnit() {
-        when(user.isValdVardenhetMottagning()).thenReturn(true);
-
-        final var subUnit = mock(SelectableVardenhet.class);
-        final var mottagning = mock(Mottagning.class);
-        when(mottagning.getId()).thenReturn(SUB_UNIT_ID);
-        when(subUnit.getId()).thenReturn(SUB_UNIT_ID);
-        when(user.getValdVardenhet()).thenReturn(subUnit);
-
-        when(careGiver.getVardenheter()).thenReturn(Collections.singletonList(unit));
-        when(unit.getMottagningar()).thenReturn(Collections.singletonList(mottagning));
-        when(unit.getId()).thenReturn(UNIT_ID);
-
-        when(user.getVardgivare()).thenReturn(Collections.singletonList(careGiver));
     }
 }

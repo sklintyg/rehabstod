@@ -17,10 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall;
+package se.inera.intyg.rehabstod.service.filter;
 
-import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateFiltersResponseDTO;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateLUFilterResponseDTO;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateSickLeaveFilterResponseDTO;
 
 public interface PopulateFiltersService {
-    PopulateFiltersResponseDTO get();
+
+    PopulateSickLeaveFilterResponseDTO populateSickLeaveFilters();
+
+    PopulateLUFilterResponseDTO populateLUFilters();
 }

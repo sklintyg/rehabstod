@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.rehabstod.service.filter.PopulateFiltersService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetSickLeaveSummaryService;
-import se.inera.intyg.rehabstod.service.sjukfall.PopulateFiltersService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveSummary;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
@@ -50,15 +50,15 @@ public class SickLeaveController {
     public SickLeavesResponseDTO getSickLeavesForUnit(@RequestBody SickLeavesFilterRequestDTO request) {
         final var response = getActiveSickLeavesService.get(request, INCLUDE_PARAMETERS);
         return new SickLeavesResponseDTO(
-                response.getContent(),
-                response.isSrsError(),
-                response.isUnansweredCommunicationError()
+            response.getContent(),
+            response.isSrsError(),
+            response.isUnansweredCommunicationError()
         );
     }
 
     @RequestMapping(value = "/filters", method = RequestMethod.GET)
     public PopulateFiltersResponseDTO populateFilters() {
-        final var response = populateFiltersService.get();
+        final var response = populateFiltersService.populateSickLeaveFilters();
         return new PopulateFiltersResponseDTO(
             response.getActiveDoctors(),
             response.getAllDiagnosisChapters(),
