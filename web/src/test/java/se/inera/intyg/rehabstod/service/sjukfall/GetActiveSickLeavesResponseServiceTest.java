@@ -135,7 +135,7 @@ public class GetActiveSickLeavesResponseServiceTest {
     }
 
     @Nested
-    class GetSickLeaveService {
+    class GetActiveSickLeaveService {
 
         @Test
         void shouldUseRequestFromCreateRequest() {
