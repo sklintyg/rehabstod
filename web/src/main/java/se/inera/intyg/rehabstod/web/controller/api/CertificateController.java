@@ -44,13 +44,13 @@ public class CertificateController {
 
     private static final Logger LOG = LoggerFactory.getLogger(CertificateController.class);
 
-    @Autowired
-    private PatientIdEncryption patientIdEncryption;
+    private final PatientIdEncryption patientIdEncryption;
 
     private final CertificateService certificateService;
 
     @Autowired
-    public CertificateController(CertificateService certificateService) {
+    public CertificateController(PatientIdEncryption patientIdEncryption, CertificateService certificateService) {
+        this.patientIdEncryption = patientIdEncryption;
         this.certificateService = certificateService;
     }
 
@@ -88,7 +88,9 @@ public class CertificateController {
     public ResponseEntity<GetAGCertificatesForPersonResponse> getAGForPerson(@RequestBody GetAGCertificatesForPersonRequest request) {
         LOG.info("Getting AG certificates for person");
 
-        var response = certificateService.getAGCertificatesForPerson(request.getPersonId());
+        var response = certificateService.getAGCertificatesForPerson(request.getEncryptedPatientId() != null
+                ? patientIdEncryption.decrypt(request.getEncryptedPatientId()) : request.getPersonId()
+        );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
