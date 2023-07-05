@@ -27,7 +27,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.monitoring.error.ErrorLogService;
-import se.inera.intyg.rehabstod.web.controller.api.dto.ErrorLogRequestDTO;
+import se.inera.intyg.rehabstod.web.controller.api.dto.ErrorDataDTO;
 
 @ExtendWith(MockitoExtension.class)
 public class LogErrorControllerTest {
@@ -40,8 +40,8 @@ public class LogErrorControllerTest {
 
     @Test
     void shallCallErrorLogService() {
-        final var request = new ErrorLogRequestDTO();
+        final var request = new ErrorDataDTO();
         logErrorController.logError(request);
-        verify(errorLogService).logError(request);
+        verify(errorLogService).logError(request.getErrorData());
     }
 }

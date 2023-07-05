@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.service.monitoring.error.ErrorLogService;
-import se.inera.intyg.rehabstod.web.controller.api.dto.ErrorLogRequestDTO;
+import se.inera.intyg.rehabstod.web.controller.api.dto.ErrorDataDTO;
 
 @RestController
 @RequestMapping("/api/log")
@@ -43,11 +43,11 @@ public class LogErrorController {
     }
 
     @RequestMapping(value = "/error", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Response logError(@RequestBody @NotNull ErrorLogRequestDTO errorLogRequestDTO) {
+    public Response logError(@RequestBody @NotNull ErrorDataDTO errorDataDTO) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Logging error with id: '{}'", errorLogRequestDTO.getErrorId());
+            LOG.debug("Logging error with id: '{}'", errorDataDTO.getErrorData().getErrorId());
         }
-        errorLogService.logError(errorLogRequestDTO);
+        errorLogService.logError(errorDataDTO.getErrorData());
         return Response.ok().build();
     }
 }
