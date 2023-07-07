@@ -64,6 +64,7 @@ public class SickLeaveController {
             response.getAllDiagnosisChapters(),
             response.getEnabledDiagnosisChapters(),
             response.getNbrOfSickLeaves(),
+            response.isHasOngoingSickLeaves(),
             response.getRekoStatusTypes(),
             response.getOccupationTypes(),
             response.getUnansweredCommunicationFilterTypes(),
