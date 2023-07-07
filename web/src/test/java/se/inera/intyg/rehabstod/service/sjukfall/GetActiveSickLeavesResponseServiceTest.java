@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.eq;
@@ -53,32 +54,32 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDT
 public class GetActiveSickLeavesResponseServiceTest {
 
     @Mock
-    UserService userService;
+    private UserService userService;
     @Mock
-    MonitoringLogService monitoringLogService;
+    private MonitoringLogService monitoringLogService;
     @Mock
-    PdlLogSickLeavesService pdlLogSickLeavesService;
+    private PdlLogSickLeavesService pdlLogSickLeavesService;
 
     @Mock
-    SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+    private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
     @Mock
-    RiskPredictionService riskPredictionService;
+    private RiskPredictionService riskPredictionService;
 
     @Mock
-    UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
+    private UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
 
     @Mock
-    UnansweredCommunicationFilterService unansweredCommunicationFilterService;
+    private UnansweredCommunicationFilterService unansweredCommunicationFilterService;
     @Mock
-    CreateSickLeaveRequestService createSickLeaveRequestService;
+    private CreateSickLeaveRequestService createSickLeaveRequestService;
     @Mock
-    GetActiveSickLeavesService getActiveSickLeavesService;
+    private GetActiveSickLeavesService getActiveSickLeavesService;
 
 
     @InjectMocks
-    GetActiveSickLeavesResponseServiceImpl getActiveSickLeavesResponseService;
-    se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave;
+    private GetActiveSickLeavesResponseServiceImpl getActiveSickLeavesResponseService;
+    private se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave;
     static RehabstodUser user;
     static final String HSA_ID = "HSA_ID";
     static final String UNIT_ID = "UNIT_ID";
@@ -100,22 +101,32 @@ public class GetActiveSickLeavesResponseServiceTest {
             .thenReturn(Collections.singletonList(sickLeave));
     }
 
-    @Test
-    void shallReturnContent() {
-        final var result = getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true);
-        assertEquals(List.of(sickLeave), result.getContent());
-    }
+    @Nested
+    class GetActiveSickLeavesResponse {
 
-    @Test
-    void shallReturnHasDecoratedWithUnansweredCommunications() {
-        final var expectedResult = true;
-        when(unansweredCommunicationDecoratorService.decorateSickLeaves(List.of(sickLeave))).thenReturn(false);
-        final var result = getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true);
-        assertEquals(expectedResult, result.isUnansweredCommunicationError());
+        @Test
+        void shallReturnContent() {
+            final var result = getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true);
+            assertEquals(List.of(sickLeave), result.getContent());
+        }
+
+        @Test
+        void shallReturnHasDecoratedWithSrsInfo() {
+            final var result = getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true);
+            assertFalse(result.isSrsError());
+        }
+
+        @Test
+        void shallReturnHasDecoratedWithUnansweredCommunications() {
+            final var expectedResult = true;
+            when(unansweredCommunicationDecoratorService.decorateSickLeaves(List.of(sickLeave))).thenReturn(false);
+            final var result = getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true);
+            assertEquals(expectedResult, result.isUnansweredCommunicationError());
+        }
     }
 
     @Nested
-    class CreateSickLeaveRequest {
+    class CreateSickLeaveRequestServiceTest {
 
         @Test
         void shouldUseFilterRequest() {
@@ -135,7 +146,7 @@ public class GetActiveSickLeavesResponseServiceTest {
     }
 
     @Nested
-    class GetActiveSickLeaveService {
+    class GetActiveSickLeaveServiceTest {
 
         @Test
         void shouldUseRequestFromCreateRequest() {
