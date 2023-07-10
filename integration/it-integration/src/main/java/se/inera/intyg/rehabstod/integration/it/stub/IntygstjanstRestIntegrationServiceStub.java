@@ -140,7 +140,7 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
             getDoctorsFromSickLeaves(sickLeaves),
             diagnosisChapters,
             sickLeaves.size(),
-            sickLeaves.isEmpty(),
+            !sickLeaves.isEmpty(),
             Collections.emptyList(),
             Collections.emptyList()
         );
