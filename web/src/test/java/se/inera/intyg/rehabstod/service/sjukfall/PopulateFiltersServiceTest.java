@@ -109,6 +109,7 @@ public class PopulateFiltersServiceTest {
     static final String DIAGNOSIS_CHAPTER_NAME = "Name";
     static final PopulateFiltersRequestDTO EXPECTED_REQUEST = new PopulateFiltersRequestDTO();
     static final int TOTAL_NUMBER_OF_SICK_LEAVES = 10;
+    static final boolean HAS_ONGOING_SICK_LEAVES = true;
 
     RehabstodUser user;
     Vardenhet unit;
@@ -144,6 +145,7 @@ public class PopulateFiltersServiceTest {
                 Collections.singletonList(Lakare.create(HSA_ID, HSA_ID)),
                 Collections.singletonList(enabledDiagnosisChapter),
                 TOTAL_NUMBER_OF_SICK_LEAVES,
+                HAS_ONGOING_SICK_LEAVES,
                 Collections.singletonList(rekoStatus),
                 Collections.singletonList(occupationTypeDTO)
             );
@@ -373,6 +375,7 @@ public class PopulateFiltersServiceTest {
                     null,
                     null,
                     0,
+                    false,
                     null,
                     null
                 );
@@ -422,6 +425,13 @@ public class PopulateFiltersServiceTest {
                 when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
                 final var response = populateActiveFilters.populateSickLeaveFilters();
                 assertEquals(TOTAL_NUMBER_OF_SICK_LEAVES, response.getNbrOfSickLeaves());
+            }
+
+            @Test
+            void shouldConvertHasOngoingSickLeaves() {
+                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
+                final var response = populateActiveFilters.populateSickLeaveFilters();
+                assertEquals(HAS_ONGOING_SICK_LEAVES, response.isHasOngoingSickLeaves());
             }
 
             @Test

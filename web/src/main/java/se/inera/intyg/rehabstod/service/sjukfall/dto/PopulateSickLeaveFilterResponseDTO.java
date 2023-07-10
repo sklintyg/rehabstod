@@ -35,6 +35,7 @@ public class PopulateSickLeaveFilterResponseDTO {
     private List<DiagnosKapitel> allDiagnosisChapters;
     private List<DiagnosKapitel> enabledDiagnosisChapters;
     private int nbrOfSickLeaves;
+    private boolean hasOngoingSickLeaves;
     private List<RekoStatusTypeDTO> rekoStatusTypes;
     private List<OccupationTypeDTO> occupationTypes;
     private List<UnansweredCommunicationFilterTypeDTO> unansweredCommunicationFilterTypes;

@@ -165,6 +165,7 @@ public class SickLeaveControllerTest {
                 Collections.emptyList(),
                 Collections.emptyList(),
                 10,
+                true,
                 Collections.emptyList(),
                 Collections.emptyList(),
                 Collections.emptyList(),
@@ -205,6 +206,12 @@ public class SickLeaveControllerTest {
         }
 
         @Test
+        void shouldTransformResponseHasOngoingSickLeaves() {
+            final var response = sickLeaveController.populateFilters();
+            assertEquals(expectedResponse.isHasOngoingSickLeaves(), response.isHasOngoingSickLeaves());
+        }
+
+        @Test
         void shouldTransformResponseRekoStatusTypes() {
             final var response = sickLeaveController.populateFilters();
             assertEquals(expectedResponse.getRekoStatusTypes(), response.getRekoStatusTypes());
@@ -231,6 +238,7 @@ public class SickLeaveControllerTest {
             Collections.emptyList(),
             Collections.emptyList(),
             10,
+            true,
             Collections.emptyList(),
             Collections.emptyList(),
             Collections.emptyList(),
@@ -249,6 +257,7 @@ public class SickLeaveControllerTest {
         assertEquals(expectedResponse.getUnansweredCommunicationFilterTypes(),
             actualResponse.getUnansweredCommunicationFilterTypes());
         assertEquals(expectedResponse.isSrsActivated(), actualResponse.isSrsActivated());
+        assertEquals(expectedResponse.isHasOngoingSickLeaves(), actualResponse.isHasOngoingSickLeaves());
     }
 
     @Test
