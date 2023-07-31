@@ -43,6 +43,7 @@ import se.inera.intyg.infra.security.filter.SessionTimeoutFilter;
 import se.inera.intyg.rehabstod.auth.RSSecurityHeadersFilter;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
+import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstRestIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.config.SamtyckestjanstClientConfiguration;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.config.SamtyckestjanstConfiguration;
@@ -73,6 +74,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
             PuConfiguration.class, ServiceConfig.class,
             IaConfiguration.class, JobConfig.class,
             IntygstjanstIntegrationConfiguration.class,
+            IntygstjanstRestIntegrationConfiguration.class,
             IntygstjanstIntegrationClientConfiguration.class,
             IntygstjanstIntegrationStubConfiguration.class,
             WcClientConfiguration.class,

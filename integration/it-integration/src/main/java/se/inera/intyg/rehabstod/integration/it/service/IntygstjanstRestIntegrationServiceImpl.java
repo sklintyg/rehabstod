@@ -32,7 +32,12 @@ import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.TypedCertificateRequest;
-import se.inera.intyg.rehabstod.integration.it.dto.*;
+import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
 
 @Profile("!rhs-it-stub")
 @Service
@@ -40,14 +45,14 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IntygstjanstRestIntegrationServiceImpl.class);
 
-    private final RestTemplate restTemplate;
+    private final RestTemplate itRestTemplate;
 
     @Value("${intygstjanst.host.url}")
     private String intygstjanstUrl;
 
     @Autowired
-    public IntygstjanstRestIntegrationServiceImpl(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public IntygstjanstRestIntegrationServiceImpl(RestTemplate itRestTemplate) {
+        this.itRestTemplate = itRestTemplate;
     }
 
     @Override
@@ -59,7 +64,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
         LOGGER.debug("Getting diagnosed certificates for care unit from intygstjansten");
 
-        return buildListResponseFromArray(restTemplate.postForObject(url, requestObject, DiagnosedCertificate[].class));
+        return buildListResponseFromArray(itRestTemplate.postForObject(url, requestObject, DiagnosedCertificate[].class));
     }
 
     @Override
@@ -76,7 +81,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
         LOGGER.debug("Getting diagnosed certificates for person from intygstjansten");
 
-        return buildListResponseFromArray(restTemplate.postForObject(url, requestObject, DiagnosedCertificate[].class));
+        return buildListResponseFromArray(itRestTemplate.postForObject(url, requestObject, DiagnosedCertificate[].class));
     }
 
     @Override
@@ -93,7 +98,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
         LOGGER.debug("Getting sick leave certificates for person from intygstjansten");
 
-        return buildListResponseFromArray(restTemplate.postForObject(url, requestObject, SickLeaveCertificate[].class));
+        return buildListResponseFromArray(itRestTemplate.postForObject(url, requestObject, SickLeaveCertificate[].class));
     }
 
     @Override
@@ -103,7 +108,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
         LOGGER.debug("Getting signing doctors for unit from intygstjansten");
 
-        return buildListResponseFromArray(restTemplate.postForObject(url, requestObject, String[].class));
+        return buildListResponseFromArray(itRestTemplate.postForObject(url, requestObject, String[].class));
     }
 
     @Override
@@ -112,7 +117,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
         LOGGER.debug("Getting active sick leaves from Intygstjansten");
 
-        return restTemplate.postForObject(url, request, SickLeavesResponseDTO.class);
+        return itRestTemplate.postForObject(url, request, SickLeavesResponseDTO.class);
     }
 
     @Override
@@ -121,7 +126,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
         LOGGER.debug("Setting reko status to sick leave");
 
-        return restTemplate.postForObject(url, request, RekoStatusDTO.class);
+        return itRestTemplate.postForObject(url, request, RekoStatusDTO.class);
     }
 
     @Override
@@ -130,7 +135,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
 
         LOGGER.debug("Getting doctors with active sick leaves from Intygstjansten");
 
-        return restTemplate.postForObject(url, request, PopulateFiltersResponseDTO.class);
+        return itRestTemplate.postForObject(url, request, PopulateFiltersResponseDTO.class);
     }
 
     private <E> List<E> buildListResponseFromArray(E[] array) {
