@@ -40,6 +40,7 @@ angular.module('rehabstodApp').factory('UserModel',
         data.pdlConsentGiven = false;
         data.roleSwitchPossible = false;
         data.preferences = {maxAntalDagarMellanIntyg: 5};
+        data.launchFromOrigin = null;
         return data;
       }
 
@@ -90,6 +91,7 @@ angular.module('rehabstodApp').factory('UserModel',
           data.roleSwitchPossible = user.roleSwitchPossible;
           data.features = user.features;
           data.preferences = user.preferences;
+          data.launchFromOrigin = user.launchFromOrigin;
         },
         get: function() {
           return data;
