@@ -48,6 +48,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
@@ -79,6 +80,7 @@ import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
 import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
+import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
@@ -183,6 +185,9 @@ public class SjukfallServiceTest {
 
     @Mock
     private LogService logService;
+
+    @Mock
+    private PatientIdEncryption patientIdEncryption;
 
     @InjectMocks
     private SjukfallServiceImpl testee;
@@ -822,6 +827,10 @@ public class SjukfallServiceTest {
         private final String vardgivareNamn = "Vårdgivare-1";
         private final String patientId = "19121212-1212";
         private final String patinetNamn = "Tolvan Tolvansson";
+
+        public SjukfallEngineMapperTest() {
+            ReflectionTestUtils.setField(this, "patientIdEncryption", new PatientIdEncryption("McQfTjWmZq4t7w!z%C*F-JaNdRgUkXp2"));
+        }
 
         @Override
         public SjukfallEnhet mapToSjukfallEnhetDto(se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet from, int maxDagarSedanAvslut,
