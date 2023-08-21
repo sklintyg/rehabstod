@@ -20,6 +20,8 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
@@ -36,6 +38,8 @@ public class PdlLogSickLeavesServiceImpl implements PdlLogSickLeavesService {
 
     private final LogService logService;
 
+    private static final Logger LOG = LoggerFactory.getLogger(PdlLogSickLeavesServiceImpl.class);
+
     public PdlLogSickLeavesServiceImpl(UserService userService, LogService logService) {
         this.userService = userService;
         this.logService = logService;
@@ -46,7 +50,6 @@ public class PdlLogSickLeavesServiceImpl implements PdlLogSickLeavesService {
     public void log(List<SjukfallEnhet> sickLeaves, ActivityType activityType, ResourceType resourceType) {
         final var user = userService.getUser();
         final var unitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-
         if (unitId == null) {
             throw new IllegalArgumentException("Cannot create PDL log statements, unitId was null");
         }
@@ -54,7 +57,7 @@ public class PdlLogSickLeavesServiceImpl implements PdlLogSickLeavesService {
         final var sickLeavesToLog = PDLActivityStore.getActivitiesNotInStore(
             unitId, sickLeaves, activityType, resourceType, user.getStoredActivities()
         );
-
+        LOG.debug("Logging that sick leaves have been fetched");
         logService.logSjukfallData(sickLeavesToLog, activityType, resourceType);
         PDLActivityStore.addActivitiesToStore(unitId, sickLeavesToLog, activityType, resourceType, user.getStoredActivities());
     }

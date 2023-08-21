@@ -21,12 +21,16 @@ package se.inera.intyg.rehabstod.integration.it.dto;
 
 import java.time.LocalDate;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class SickLeavesRequestDTO {
 
     private String unitId;

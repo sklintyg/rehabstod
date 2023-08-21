@@ -34,7 +34,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.filter.PopulateFiltersService;
-import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesService;
+import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesResponseService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetSickLeaveSummaryService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.GetActiveSickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateSickLeaveFilterResponseDTO;
@@ -44,7 +44,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDT
 public class SickLeaveControllerTest {
 
     @Mock
-    private GetActiveSickLeavesService getActiveSickLeavesService;
+    private GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
     @Mock
     private PopulateFiltersService populateFiltersService;
     @Mock
@@ -71,11 +71,11 @@ public class SickLeaveControllerTest {
                 TEXT_SEARCH,
                 UNANSWERED_COMMUNICATION
             );
-        when(getActiveSickLeavesService.get(any(), anyBoolean())).thenReturn(
+        when(getActiveSickLeavesResponseService.get(any(), anyBoolean())).thenReturn(
             new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true)
         );
         sickLeaveController.getSickLeavesForUnit(expectedRequest);
-        verify(getActiveSickLeavesService).get(expectedRequest, true);
+        verify(getActiveSickLeavesResponseService).get(expectedRequest, true);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class SickLeaveControllerTest {
             );
 
         final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true);
-        when(getActiveSickLeavesService.get(any(), anyBoolean())).thenReturn(expectedResponse);
+        when(getActiveSickLeavesResponseService.get(any(), anyBoolean())).thenReturn(expectedResponse);
 
         final var response = sickLeaveController.getSickLeavesForUnit(expectedRequest);
 
@@ -121,7 +121,7 @@ public class SickLeaveControllerTest {
             );
 
         final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, false);
-        when(getActiveSickLeavesService.get(any(), anyBoolean())).thenReturn(expectedResponse);
+        when(getActiveSickLeavesResponseService.get(any(), anyBoolean())).thenReturn(expectedResponse);
 
         final var response = sickLeaveController.getSickLeavesForUnit(expectedRequest);
 
@@ -146,7 +146,7 @@ public class SickLeaveControllerTest {
             );
 
         final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), false, true);
-        when(getActiveSickLeavesService.get(any(), anyBoolean())).thenReturn(expectedResponse);
+        when(getActiveSickLeavesResponseService.get(any(), anyBoolean())).thenReturn(expectedResponse);
 
         final var response = sickLeaveController.getSickLeavesForUnit(expectedRequest);
 
