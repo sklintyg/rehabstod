@@ -128,7 +128,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     public RekoStatusDTO getRekoStatus(GetRekoStatusRequestDTO request) {
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/reko/patient";
 
-        LOGGER.debug("Setting reko status to sick leave");
+        LOGGER.debug("Getting reko status for patient");
 
         return itRestTemplate.postForObject(url, request, RekoStatusDTO.class);
     }
