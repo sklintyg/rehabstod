@@ -32,12 +32,7 @@ import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.TypedCertificateRequest;
-import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.*;
 
 @Profile("!rhs-it-stub")
 @Service
@@ -123,6 +118,15 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     @Override
     public RekoStatusDTO createRekoStatus(CreateRekoStatusRequestDTO request) {
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/reko";
+
+        LOGGER.debug("Setting reko status to sick leave");
+
+        return itRestTemplate.postForObject(url, request, RekoStatusDTO.class);
+    }
+
+    @Override
+    public RekoStatusDTO getRekoStatus(GetRekoStatusRequestDTO request) {
+        final String url = intygstjanstUrl + "/inera-certificate/internalapi/reko/patient";
 
         LOGGER.debug("Setting reko status to sick leave");
 

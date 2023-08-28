@@ -37,13 +37,7 @@ import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
-import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeaveLengthInterval;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
-import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.*;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 
 @Profile("rhs-it-stub")
@@ -150,6 +144,13 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     public RekoStatusDTO createRekoStatus(CreateRekoStatusRequestDTO request) {
         return new RekoStatusDTO(
             new RekoStatusTypeDTO("REKO_1", request.getStatusId())
+        );
+    }
+
+    @Override
+    public RekoStatusDTO getRekoStatus(GetRekoStatusRequestDTO request) {
+        return new RekoStatusDTO(
+                new RekoStatusTypeDTO("REKO_1", "REKO_1")
         );
     }
 
