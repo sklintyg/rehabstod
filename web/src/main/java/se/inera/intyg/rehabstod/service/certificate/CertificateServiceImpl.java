@@ -78,7 +78,7 @@ public class CertificateServiceImpl implements CertificateService {
     private static final String[] AG_TYPE_LIST = {"ag114", "ag7804"};
 
     private static final int AGE_LOWER_LIMIT = 0;
-    private static final int AGE_UPPER_LIMIT = 100;
+    private static final int AGE_UPPER_LIMIT = 150;
 
     private final UnansweredQAsInfoDecorator unansweredQAsInfoDecorator;
 
