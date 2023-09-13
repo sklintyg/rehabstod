@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -75,14 +76,14 @@ public class GetSickLeaveSummaryServiceTest {
     @BeforeEach
     void setup() {
         doReturn(new GetActiveSickLeavesResponseDTO(sickLeaves, false, false))
-            .when(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class), false);
+            .when(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class), any(boolean.class));
         doReturn(summary).when(statisticsCalculator).getSickLeaveSummary(sickLeaves);
     }
 
     @Test
     void shouldGetActiveSickLeaves() {
         getSickLeaveSummaryService.get();
-        verify(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class), false);
+        verify(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class), any(boolean.class));
 
     }
 
@@ -108,7 +109,26 @@ public class GetSickLeaveSummaryServiceTest {
     void shouldNotIncludeSickLeaveLengthWhenFetchingSickLeaves() {
         final var sickLeavesFilterRequestDTOArgumentCaptor = ArgumentCaptor.forClass(SickLeavesFilterRequestDTO.class);
         getSickLeaveSummaryService.get();
-        verify(getActiveSickLeavesResponseService).get(sickLeavesFilterRequestDTOArgumentCaptor.capture(), any(boolean.class), false);
+        verify(getActiveSickLeavesResponseService).get(sickLeavesFilterRequestDTOArgumentCaptor.capture(), any(boolean.class),
+            any(boolean.class));
         assertEquals(0, sickLeavesFilterRequestDTOArgumentCaptor.getValue().getSickLeaveLengthIntervals().size());
+    }
+
+    @Test
+    void shouldSetIncludeParametersToFalse() {
+        final var includeParametersCaptur = ArgumentCaptor.forClass(boolean.class);
+        getSickLeaveSummaryService.get();
+        verify(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), includeParametersCaptur.capture(),
+            any(boolean.class));
+        assertFalse(includeParametersCaptur.getValue());
+    }
+
+    @Test
+    void shouldSetShouldPdlLogToFalse() {
+        final var pdlLogArgumentCaptor = ArgumentCaptor.forClass(boolean.class);
+        getSickLeaveSummaryService.get();
+        verify(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class),
+            pdlLogArgumentCaptor.capture());
+        assertFalse(pdlLogArgumentCaptor.getValue());
     }
 }

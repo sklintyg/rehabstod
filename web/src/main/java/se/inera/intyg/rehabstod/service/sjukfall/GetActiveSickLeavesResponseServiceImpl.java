@@ -87,20 +87,15 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
             filterRequest.getUnansweredCommunicationFilterTypeId()
         );
         final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(filteredSickLeaves);
-        performPdlLogging(filteredSickLeaves, shouldPdlLog);
         performMonitorLogging(filteredSickLeaves, getUnitForLogging(request));
+        if (shouldPdlLog) {
+            pdlLogSickLeavesService.log(filteredSickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
+        }
         return new GetActiveSickLeavesResponseDTO(
             filteredSickLeaves,
             !hasDecoratedWithSRSInfo,
             !hasDecoratedWithUnansweredCommunications
         );
-    }
-
-    private void performPdlLogging(List<SjukfallEnhet> filteredSickLeaves, boolean shouldPdlLog) {
-        if (!shouldPdlLog) {
-            return;
-        }
-        pdlLogSickLeavesService.log(filteredSickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
     }
 
     private static String getUnitForLogging(SickLeavesRequestDTO request) {
