@@ -33,12 +33,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.service.filter.PopulateFiltersService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesResponseService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetSickLeaveSummaryService;
+import se.inera.intyg.rehabstod.service.sjukfall.PdlLogSickLeavesService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.GetActiveSickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateSickLeaveFilterResponseDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 @ExtendWith(MockitoExtension.class)
 public class SickLeaveControllerTest {
@@ -49,6 +53,8 @@ public class SickLeaveControllerTest {
     private PopulateFiltersService populateFiltersService;
     @Mock
     private GetSickLeaveSummaryService getSickLeaveSummaryService;
+    @Mock
+    private PdlLogSickLeavesService pdlLogSickLeavesService;
 
     @InjectMocks
     private SickLeaveController sickLeaveController = new SickLeaveController();
@@ -151,6 +157,35 @@ public class SickLeaveControllerTest {
         final var response = sickLeaveController.getSickLeavesForUnit(expectedRequest);
 
         assertEquals(expectedResponse.isUnansweredCommunicationError(), response.isUnansweredCommunicationError());
+    }
+
+    @Nested
+    class TestPdlLogging {
+
+        @Test
+        void shouldPerformPdlLog() {
+            final var expectedRequest =
+                new SickLeavesFilterRequestDTO(
+                    Collections.singletonList("doctorId"),
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    1,
+                    150,
+                    LocalDate.now(),
+                    LocalDate.now(),
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    TEXT_SEARCH,
+                    UNANSWERED_COMMUNICATION
+                );
+            final var sickLeaves = Collections.singletonList(new SjukfallEnhet());
+            final var getActiveSickLeavesResponse = new GetActiveSickLeavesResponseDTO(sickLeaves, true, false);
+            when(getActiveSickLeavesResponseService.get(any(), anyBoolean())).thenReturn(getActiveSickLeavesResponse);
+            sickLeaveController.getSickLeavesForUnit(expectedRequest);
+
+            verify(pdlLogSickLeavesService)
+                .log(sickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
+        }
     }
 
     @Nested

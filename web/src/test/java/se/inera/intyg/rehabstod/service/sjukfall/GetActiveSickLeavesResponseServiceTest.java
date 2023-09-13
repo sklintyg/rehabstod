@@ -38,8 +38,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.infra.logmessages.ActivityType;
-import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
@@ -210,18 +208,6 @@ public class GetActiveSickLeavesResponseServiceTest {
             getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true);
 
             verify(monitoringLogService).logUserViewedSjukfall(HSA_ID, 1, UNIT_ID);
-        }
-    }
-
-    @Nested
-    class TestPdlLogging {
-
-        @Test
-        void shouldPerformPdlLog() {
-            getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true);
-
-            verify(pdlLogSickLeavesService)
-                .log(Collections.singletonList(sickLeave), ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
         }
     }
 
