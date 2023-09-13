@@ -24,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.logmessages.ActivityType;
+import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.logging.SickLeaveLogMessageFactory;
 import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
@@ -49,6 +51,7 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
 
     private final GetActiveSickLeavesService getActiveSickLeavesService;
     private final UserService userService;
+    private final PdlLogSickLeavesService pdlLogSickLeavesService;
 
     private static final Logger LOG = LoggerFactory.getLogger(GetActiveSickLeavesResponseServiceImpl.class);
 
@@ -59,7 +62,7 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
         UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService,
         UnansweredCommunicationFilterService unansweredCommunicationFilterService,
         CreateSickLeaveRequestService createSickLeaveRequestService, MonitoringLogService monitoringLogService,
-        GetActiveSickLeavesService getActiveSickLeavesService, UserService userService) {
+        GetActiveSickLeavesService getActiveSickLeavesService, UserService userService, PdlLogSickLeavesService pdlLogSickLeavesService) {
         this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
         this.riskPredictionService = riskPredictionService;
         this.unansweredCommunicationDecoratorService = unansweredCommunicationDecoratorService;
@@ -68,10 +71,11 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
         this.monitoringLogService = monitoringLogService;
         this.getActiveSickLeavesService = getActiveSickLeavesService;
         this.userService = userService;
+        this.pdlLogSickLeavesService = pdlLogSickLeavesService;
     }
 
     @Override
-    public GetActiveSickLeavesResponseDTO get(SickLeavesFilterRequestDTO filterRequest, boolean includeParameters) {
+    public GetActiveSickLeavesResponseDTO get(SickLeavesFilterRequestDTO filterRequest, boolean includeParameters, boolean shouldPdlLog) {
         final var request = createSickLeaveRequestService.create(filterRequest, includeParameters);
         final var sickLeaves = getActiveSickLeavesService.get(request);
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(sickLeaves);
@@ -83,12 +87,20 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
             filterRequest.getUnansweredCommunicationFilterTypeId()
         );
         final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(filteredSickLeaves);
+        performPdlLogging(filteredSickLeaves, shouldPdlLog);
         performMonitorLogging(sickLeaves, getUnitForLogging(request));
         return new GetActiveSickLeavesResponseDTO(
             filteredSickLeaves,
             !hasDecoratedWithSRSInfo,
             !hasDecoratedWithUnansweredCommunications
         );
+    }
+
+    private void performPdlLogging(List<SjukfallEnhet> filteredSickLeaves, boolean shouldPdlLog) {
+        if (!shouldPdlLog) {
+            return;
+        }
+        pdlLogSickLeavesService.log(filteredSickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
     }
 
     private static String getUnitForLogging(SickLeavesRequestDTO request) {

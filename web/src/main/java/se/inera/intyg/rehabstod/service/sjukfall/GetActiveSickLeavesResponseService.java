@@ -25,5 +25,5 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDT
 
 public interface GetActiveSickLeavesResponseService {
 
-    GetActiveSickLeavesResponseDTO get(SickLeavesFilterRequestDTO request, boolean includeParameters);
+    GetActiveSickLeavesResponseDTO get(SickLeavesFilterRequestDTO request, boolean includeParameters, boolean shouldPdlLog);
 }

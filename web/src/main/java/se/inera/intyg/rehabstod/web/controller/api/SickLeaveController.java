@@ -24,12 +24,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import se.inera.intyg.infra.logmessages.ActivityType;
-import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.service.filter.PopulateFiltersService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesResponseService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetSickLeaveSummaryService;
-import se.inera.intyg.rehabstod.service.sjukfall.PdlLogSickLeavesService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveSummary;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
@@ -45,15 +42,13 @@ public class SickLeaveController {
     private GetSickLeaveSummaryService getSickLeaveSummaryService;
     @Autowired
     private PopulateFiltersService populateFiltersService;
-    @Autowired
-    private PdlLogSickLeavesService pdlLogSickLeavesService;
 
     private static final boolean INCLUDE_PARAMETERS = true;
+    private static final boolean SHOULD_PDL_LOG = true;
 
     @RequestMapping(value = "/active", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public SickLeavesResponseDTO getSickLeavesForUnit(@RequestBody SickLeavesFilterRequestDTO request) {
-        final var response = getActiveSickLeavesResponseService.get(request, INCLUDE_PARAMETERS);
-        pdlLogSickLeavesService.log(response.getContent(), ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
+        final var response = getActiveSickLeavesResponseService.get(request, INCLUDE_PARAMETERS, SHOULD_PDL_LOG);
         return new SickLeavesResponseDTO(
             response.getContent(),
             response.isSrsError(),
