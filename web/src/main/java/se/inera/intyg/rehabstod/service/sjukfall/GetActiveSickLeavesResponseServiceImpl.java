@@ -88,7 +88,7 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
         );
         final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(filteredSickLeaves);
         performPdlLogging(filteredSickLeaves, shouldPdlLog);
-        performMonitorLogging(sickLeaves, getUnitForLogging(request));
+        performMonitorLogging(filteredSickLeaves, getUnitForLogging(request));
         return new GetActiveSickLeavesResponseDTO(
             filteredSickLeaves,
             !hasDecoratedWithSRSInfo,
@@ -107,14 +107,14 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
         return request.getUnitId() != null ? request.getUnitId() : request.getCareUnitId();
     }
 
-    private void performMonitorLogging(List<SjukfallEnhet> sickLeaves, String unitId) {
-        if (sickLeaves == null || sickLeaves.isEmpty()) {
+    private void performMonitorLogging(List<SjukfallEnhet> filteredSickLeaves, String unitId) {
+        if (filteredSickLeaves == null || filteredSickLeaves.isEmpty()) {
             return;
         }
         final var user = userService.getUser();
         monitoringLogService.logUserViewedSjukfall(
             user.getHsaId(),
-            sickLeaves.size(),
+            filteredSickLeaves.size(),
             unitId
         );
     }
