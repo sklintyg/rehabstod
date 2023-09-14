@@ -42,7 +42,6 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 @Service
 public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeavesResponseService {
 
-    private final PdlLogSickLeavesService pdlLogSickLeavesService;
     private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
     private final RiskPredictionService riskPredictionService;
     private final UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
@@ -52,19 +51,18 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
 
     private final GetActiveSickLeavesService getActiveSickLeavesService;
     private final UserService userService;
+    private final PdlLogSickLeavesService pdlLogSickLeavesService;
 
     private static final Logger LOG = LoggerFactory.getLogger(GetActiveSickLeavesResponseServiceImpl.class);
 
     @Autowired
     public GetActiveSickLeavesResponseServiceImpl(
-        PdlLogSickLeavesService pdlLogSickLeavesService,
         SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver,
         RiskPredictionService riskPredictionService,
         UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService,
         UnansweredCommunicationFilterService unansweredCommunicationFilterService,
         CreateSickLeaveRequestService createSickLeaveRequestService, MonitoringLogService monitoringLogService,
-        GetActiveSickLeavesService getActiveSickLeavesService, UserService userService) {
-        this.pdlLogSickLeavesService = pdlLogSickLeavesService;
+        GetActiveSickLeavesService getActiveSickLeavesService, UserService userService, PdlLogSickLeavesService pdlLogSickLeavesService) {
         this.sjukfallEmployeeNameResolver = sjukfallEmployeeNameResolver;
         this.riskPredictionService = riskPredictionService;
         this.unansweredCommunicationDecoratorService = unansweredCommunicationDecoratorService;
@@ -73,10 +71,11 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
         this.monitoringLogService = monitoringLogService;
         this.getActiveSickLeavesService = getActiveSickLeavesService;
         this.userService = userService;
+        this.pdlLogSickLeavesService = pdlLogSickLeavesService;
     }
 
     @Override
-    public GetActiveSickLeavesResponseDTO get(SickLeavesFilterRequestDTO filterRequest, boolean includeParameters) {
+    public GetActiveSickLeavesResponseDTO get(SickLeavesFilterRequestDTO filterRequest, boolean includeParameters, boolean shouldPdlLog) {
         final var request = createSickLeaveRequestService.create(filterRequest, includeParameters);
         final var sickLeaves = getActiveSickLeavesService.get(request);
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(sickLeaves);
@@ -88,8 +87,10 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
             filterRequest.getUnansweredCommunicationFilterTypeId()
         );
         final var hasDecoratedWithSRSInfo = decorateWithSRSInfo(filteredSickLeaves);
-        pdlLogSickLeavesService.log(filteredSickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
-        performMonitorLogging(sickLeaves, getUnitForLogging(request));
+        performMonitorLogging(filteredSickLeaves, getUnitForLogging(request));
+        if (shouldPdlLog) {
+            pdlLogSickLeavesService.log(filteredSickLeaves, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
+        }
         return new GetActiveSickLeavesResponseDTO(
             filteredSickLeaves,
             !hasDecoratedWithSRSInfo,
@@ -101,14 +102,14 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
         return request.getUnitId() != null ? request.getUnitId() : request.getCareUnitId();
     }
 
-    private void performMonitorLogging(List<SjukfallEnhet> sickLeaves, String unitId) {
-        if (sickLeaves == null || sickLeaves.isEmpty()) {
+    private void performMonitorLogging(List<SjukfallEnhet> filteredSickLeaves, String unitId) {
+        if (filteredSickLeaves == null || filteredSickLeaves.isEmpty()) {
             return;
         }
         final var user = userService.getUser();
         monitoringLogService.logUserViewedSjukfall(
             user.getHsaId(),
-            sickLeaves.size(),
+            filteredSickLeaves.size(),
             unitId
         );
     }

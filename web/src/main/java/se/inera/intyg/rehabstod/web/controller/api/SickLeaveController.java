@@ -40,15 +40,15 @@ public class SickLeaveController {
     private GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
     @Autowired
     private GetSickLeaveSummaryService getSickLeaveSummaryService;
-
     @Autowired
     private PopulateFiltersService populateFiltersService;
 
     private static final boolean INCLUDE_PARAMETERS = true;
+    private static final boolean SHOULD_PDL_LOG = true;
 
     @RequestMapping(value = "/active", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public SickLeavesResponseDTO getSickLeavesForUnit(@RequestBody SickLeavesFilterRequestDTO request) {
-        final var response = getActiveSickLeavesResponseService.get(request, INCLUDE_PARAMETERS);
+        final var response = getActiveSickLeavesResponseService.get(request, INCLUDE_PARAMETERS, SHOULD_PDL_LOG);
         return new SickLeavesResponseDTO(
             response.getContent(),
             response.isSrsError(),

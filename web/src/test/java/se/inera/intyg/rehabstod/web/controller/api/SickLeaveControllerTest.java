@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.verify;
@@ -30,6 +31,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -58,45 +60,20 @@ public class SickLeaveControllerTest {
     @Test
     void shouldCallGetActiveSickLeavesService() {
         final var expectedRequest =
-            new SickLeavesFilterRequestDTO(
-                Collections.singletonList("doctorId"),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                1,
-                150,
-                LocalDate.now(),
-                LocalDate.now(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                TEXT_SEARCH,
-                UNANSWERED_COMMUNICATION
-            );
-        when(getActiveSickLeavesResponseService.get(any(), anyBoolean())).thenReturn(
+            getExpectedRequest();
+        when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean())).thenReturn(
             new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true)
         );
         sickLeaveController.getSickLeavesForUnit(expectedRequest);
-        verify(getActiveSickLeavesResponseService).get(expectedRequest, true);
+        verify(getActiveSickLeavesResponseService).get(expectedRequest, true, true);
     }
 
     @Test
     void shouldConvertContentInResponse() {
-        final var expectedRequest =
-            new SickLeavesFilterRequestDTO(
-                Collections.singletonList("doctorId"),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                1,
-                150,
-                LocalDate.now(),
-                LocalDate.now(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                TEXT_SEARCH,
-                UNANSWERED_COMMUNICATION
-            );
+        final var expectedRequest = getExpectedRequest();
 
         final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, true);
-        when(getActiveSickLeavesResponseService.get(any(), anyBoolean())).thenReturn(expectedResponse);
+        when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean())).thenReturn(expectedResponse);
 
         final var response = sickLeaveController.getSickLeavesForUnit(expectedRequest);
 
@@ -105,23 +82,10 @@ public class SickLeaveControllerTest {
 
     @Test
     void shouldConvertSRSErrorInResponse() {
-        final var expectedRequest =
-            new SickLeavesFilterRequestDTO(
-                Collections.singletonList("doctorId"),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                1,
-                150,
-                LocalDate.now(),
-                LocalDate.now(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                TEXT_SEARCH,
-                UNANSWERED_COMMUNICATION
-            );
+        final var expectedRequest = getExpectedRequest();
 
         final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, false);
-        when(getActiveSickLeavesResponseService.get(any(), anyBoolean())).thenReturn(expectedResponse);
+        when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean())).thenReturn(expectedResponse);
 
         final var response = sickLeaveController.getSickLeavesForUnit(expectedRequest);
 
@@ -129,28 +93,52 @@ public class SickLeaveControllerTest {
     }
 
     @Test
-    void shouldConvertUnansweredCommunicationErrorInResponse() {
-        final var expectedRequest =
-            new SickLeavesFilterRequestDTO(
-                Collections.singletonList("doctorId"),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                1,
-                150,
-                LocalDate.now(),
-                LocalDate.now(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                TEXT_SEARCH,
-                UNANSWERED_COMMUNICATION
-            );
+    void shouldSetIncludeParametersToFalse() {
+        final var includeParametersCaptur = ArgumentCaptor.forClass(boolean.class);
+        final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, false);
+        when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean())).thenReturn(expectedResponse);
+        sickLeaveController.getSickLeavesForUnit(getExpectedRequest());
+        verify(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), includeParametersCaptur.capture(),
+            any(boolean.class));
+        assertTrue(includeParametersCaptur.getValue());
+    }
 
+    @Test
+    void shouldSetShouldPdlLogToFalse() {
+        final var pdlLogArgumentCaptor = ArgumentCaptor.forClass(boolean.class);
+        final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), true, false);
+        when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean())).thenReturn(expectedResponse);
+        sickLeaveController.getSickLeavesForUnit(getExpectedRequest());
+        verify(getActiveSickLeavesResponseService).get(any(SickLeavesFilterRequestDTO.class), any(boolean.class),
+            pdlLogArgumentCaptor.capture());
+        assertTrue(pdlLogArgumentCaptor.getValue());
+    }
+
+    @Test
+    void shouldConvertUnansweredCommunicationErrorInResponse() {
+        final var expectedRequest = getExpectedRequest();
         final var expectedResponse = new GetActiveSickLeavesResponseDTO(Collections.emptyList(), false, true);
-        when(getActiveSickLeavesResponseService.get(any(), anyBoolean())).thenReturn(expectedResponse);
+        when(getActiveSickLeavesResponseService.get(any(), anyBoolean(), anyBoolean())).thenReturn(expectedResponse);
 
         final var response = sickLeaveController.getSickLeavesForUnit(expectedRequest);
 
         assertEquals(expectedResponse.isUnansweredCommunicationError(), response.isUnansweredCommunicationError());
+    }
+
+    private static SickLeavesFilterRequestDTO getExpectedRequest() {
+        return new SickLeavesFilterRequestDTO(
+            Collections.singletonList("doctorId"),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            1,
+            150,
+            LocalDate.now(),
+            LocalDate.now(),
+            Collections.emptyList(),
+            Collections.emptyList(),
+            TEXT_SEARCH,
+            UNANSWERED_COMMUNICATION
+        );
     }
 
     @Nested

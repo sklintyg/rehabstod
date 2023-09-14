@@ -32,7 +32,8 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
     private final PuService puService;
     private final StatisticsCalculator statisticsCalculator;
     private final GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
-    private static final boolean INCLUDE_PARAMETERS = false;
+    private static final boolean EXCLUDE_PARAMETERS = false;
+    private static final boolean SHOULD_NOT_PDL_LOG = false;
     private static final String TEXT_SEARCH = "textSearch";
 
     public GetSickLeaveSummaryServiceImpl(PuService puService, StatisticsCalculator statisticsCalculator,
@@ -58,7 +59,8 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
                 null,
                 null
             ),
-            INCLUDE_PARAMETERS
+            EXCLUDE_PARAMETERS,
+            SHOULD_NOT_PDL_LOG
         ).getContent();
         puService.filterSekretessForSummary(sickLeaves);
         return statisticsCalculator.getSickLeaveSummary(sickLeaves);
