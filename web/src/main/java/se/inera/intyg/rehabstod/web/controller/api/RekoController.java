@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.service.sjukfall.CreateRekoStatusService;
+import se.inera.intyg.rehabstod.service.sjukfall.GetRekoStatusService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.CreateRekoStatusRequestDTO;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetRekoStatusRequestDTO;
 
 import java.time.LocalDate;
 
@@ -34,9 +36,11 @@ import java.time.LocalDate;
 public class RekoController {
 
     private final CreateRekoStatusService createRekoStatusService;
+    private final GetRekoStatusService getRekoStatusService;
 
-    public RekoController(CreateRekoStatusService createRekoStatusService) {
+    public RekoController(CreateRekoStatusService createRekoStatusService, GetRekoStatusService getRekoStatusService) {
         this.createRekoStatusService = createRekoStatusService;
+        this.getRekoStatusService = getRekoStatusService;
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -45,6 +49,15 @@ public class RekoController {
                 request.getPatientId(),
                 request.getStatusId(),
                 LocalDate.parse(request.getSickLeaveTimestamp()).atStartOfDay()
+        );
+    }
+
+    @RequestMapping(value = "/patient", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public RekoStatusDTO getRekoStatus(@RequestBody GetRekoStatusRequestDTO request) {
+        return getRekoStatusService.get(
+                request.getPatientId(),
+                request.getEndDate(),
+                request.getStartDate()
         );
     }
 }

@@ -25,7 +25,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.sjukfall.CreateRekoStatusService;
+import se.inera.intyg.rehabstod.service.sjukfall.GetRekoStatusService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.CreateRekoStatusRequestDTO;
+import se.inera.intyg.rehabstod.web.controller.api.dto.GetRekoStatusRequestDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -40,6 +42,9 @@ public class RekoControllerTest {
 
     @Mock
     private CreateRekoStatusService createRekoStatusService;
+
+    @Mock
+    private GetRekoStatusService getRekoStatusService;
 
     @InjectMocks
     private RekoController rekoController;
@@ -84,4 +89,36 @@ public class RekoControllerTest {
         assertEquals(TIMESTAMP.atStartOfDay(), captor.getValue());
     }
 
+    @Test
+    void shouldCallGetRekoStatusServiceWithCorrectPatientId() {
+        final var expectedRequest = new GetRekoStatusRequestDTO(PATIENT_ID, TIMESTAMP, TIMESTAMP.minusDays(2));
+        final var captor = ArgumentCaptor.forClass(String.class);
+
+        rekoController.getRekoStatus(expectedRequest);
+        verify(getRekoStatusService).get(captor.capture(), any(LocalDate.class), any(LocalDate.class));
+
+        assertEquals(PATIENT_ID, captor.getValue());
+    }
+
+    @Test
+    void shouldCallGetRekoStatusServiceWithCorrectEndDate() {
+        final var expectedRequest = new GetRekoStatusRequestDTO(PATIENT_ID, TIMESTAMP, TIMESTAMP.minusDays(2));
+        final var captor = ArgumentCaptor.forClass(LocalDate.class);
+
+        rekoController.getRekoStatus(expectedRequest);
+        verify(getRekoStatusService).get(anyString(), captor.capture(), any(LocalDate.class));
+
+        assertEquals(TIMESTAMP, captor.getValue());
+    }
+
+    @Test
+    void shouldCallGetRekoStatusServiceWithCorrectStartDate() {
+        final var expectedRequest = new GetRekoStatusRequestDTO(PATIENT_ID, TIMESTAMP, TIMESTAMP.minusDays(2));
+        final var captor = ArgumentCaptor.forClass(LocalDate.class);
+
+        rekoController.getRekoStatus(expectedRequest);
+        verify(getRekoStatusService).get(anyString(), any(LocalDate.class), captor.capture());
+
+        assertEquals(TIMESTAMP.minusDays(2), captor.getValue());
+    }
 }
