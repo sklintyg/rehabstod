@@ -33,8 +33,8 @@ public class GetConfigResponse {
     private String webcertViewIntygTemplateUrl;
     private String webcertViewIntygLogoutUrl;
     private String webcertLaunchUrlTemplate;
+    private String sithsIdpUrl;
     private String statistikSsoUrl;
     private String version;
     private List<Banner> banners;
-
 }
