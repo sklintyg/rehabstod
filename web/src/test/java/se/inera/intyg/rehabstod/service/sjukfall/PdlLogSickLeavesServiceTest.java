@@ -132,5 +132,15 @@ public class PdlLogSickLeavesServiceTest {
             verify(logService).logSjukfallData(Collections.singletonList(sickLeave), ActivityType.PRINT,
                 ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
         }
+
+        @Test
+        void shouldHandleNullValues() {
+            when(unit.getId()).thenReturn("UNIT_ID");
+            pdlLogSickLeavesService.logPrint(null);
+            verify(logService).logSjukfallData(Collections.emptyList(), ActivityType.PRINT,
+                ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+            verify(logService).logSjukfallData(Collections.emptyList(), ActivityType.PRINT,
+                ResourceType.RESOURCE_TYPE_SJUKFALL);
+        }
     }
 }

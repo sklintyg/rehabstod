@@ -70,6 +70,9 @@ public class PdlLogSickLeavesServiceImpl implements PdlLogSickLeavesService {
     }
 
     private List<SjukfallEnhet> filterHavingRiskSignal(List<SjukfallEnhet> finalList) {
+        if (finalList == null) {
+            return null;
+        }
         return finalList.stream()
             .filter(hasRiskSignal())
             .collect(Collectors.toList());
