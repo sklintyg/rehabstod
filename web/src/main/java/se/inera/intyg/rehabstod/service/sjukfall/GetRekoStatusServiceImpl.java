@@ -45,6 +45,10 @@ public class GetRekoStatusServiceImpl implements GetRekoStatusService {
     }
 
     private RekoStatusDTO convertResponse(se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO response) {
+        if (response == null) {
+            return new RekoStatusDTO();
+        }
+
         return new RekoStatusDTO(
                 new RekoStatusTypeDTO(
                     response.getStatus().getId(),
