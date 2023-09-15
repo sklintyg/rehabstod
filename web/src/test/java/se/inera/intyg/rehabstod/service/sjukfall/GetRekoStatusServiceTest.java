@@ -35,6 +35,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -111,8 +112,15 @@ public class GetRekoStatusServiceTest {
      @Nested
     class HasNoRekoStatus {
          @Test
-         void shouldNotThrowErrorIfRekoStatusIsNull() {
+         void shouldNotThrowError() {
             assertDoesNotThrow(() -> getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE));
+         }
+
+         @Test
+         void shouldReturnEmptyRekoStatus() {
+             final var response = getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
+
+             assertNull(response.getStatus());
          }
      }
 }
