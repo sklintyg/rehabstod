@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.web.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,8 +28,10 @@ import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.service.filter.PopulateFiltersService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesResponseService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetSickLeaveSummaryService;
+import se.inera.intyg.rehabstod.service.sjukfall.PdlLogSickLeavesService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveSummary;
 import se.inera.intyg.rehabstod.web.controller.api.dto.PopulateFiltersResponseDTO;
+import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavePrintRequestDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesResponseDTO;
 
@@ -42,6 +45,8 @@ public class SickLeaveController {
     private GetSickLeaveSummaryService getSickLeaveSummaryService;
     @Autowired
     private PopulateFiltersService populateFiltersService;
+    @Autowired
+    private PdlLogSickLeavesService pdlLogSickLeavesService;
 
     private static final boolean INCLUDE_PARAMETERS = true;
     private static final boolean SHOULD_PDL_LOG = true;
@@ -77,4 +82,8 @@ public class SickLeaveController {
         return getSickLeaveSummaryService.get();
     }
 
+    @PostMapping(value = "/print", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void print(@RequestBody SickLeavePrintRequestDTO sickLeavesPrintRequest) {
+        pdlLogSickLeavesService.logPrint(sickLeavesPrintRequest.getSickLeaves());
+    }
 }

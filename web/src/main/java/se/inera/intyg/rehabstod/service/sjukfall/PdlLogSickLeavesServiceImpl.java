@@ -20,6 +20,8 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -57,8 +59,23 @@ public class PdlLogSickLeavesServiceImpl implements PdlLogSickLeavesService {
         final var sickLeavesToLog = PDLActivityStore.getActivitiesNotInStore(
             unitId, sickLeaves, activityType, resourceType, user.getStoredActivities()
         );
-        LOG.debug("Logging that sick leaves have been fetched");
         logService.logSjukfallData(sickLeavesToLog, activityType, resourceType);
         PDLActivityStore.addActivitiesToStore(unitId, sickLeavesToLog, activityType, resourceType, user.getStoredActivities());
+    }
+
+    @Override
+    public void logPrint(List<SjukfallEnhet> sickLeaves) {
+        log(sickLeaves, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
+        log(filterHavingRiskSignal(sickLeaves), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+    }
+
+    private List<SjukfallEnhet> filterHavingRiskSignal(List<SjukfallEnhet> finalList) {
+        return finalList.stream()
+            .filter(hasRiskSignal())
+            .collect(Collectors.toList());
+    }
+
+    private Predicate<SjukfallEnhet> hasRiskSignal() {
+        return se -> se.getRiskSignal() != null && se.getRiskSignal().getRiskKategori() >= 1;
     }
 }
