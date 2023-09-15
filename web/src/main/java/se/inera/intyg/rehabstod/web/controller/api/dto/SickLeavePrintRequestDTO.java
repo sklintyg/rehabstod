@@ -17,16 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package se.inera.intyg.rehabstod.service.sjukfall;
+package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.List;
-import se.inera.intyg.infra.logmessages.ActivityType;
-import se.inera.intyg.infra.logmessages.ResourceType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
-public interface PdlLogSickLeavesService {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class SickLeavePrintRequestDTO {
 
-    void log(List<SjukfallEnhet> sickLeaves, ActivityType activityType, ResourceType resourceType);
+    private List<SjukfallEnhet> sickLeaves;
 
-    void logPrint(List<SjukfallEnhet> sickLeaves);
 }

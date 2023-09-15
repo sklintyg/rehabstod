@@ -27,6 +27,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,9 +39,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.inera.intyg.rehabstod.service.filter.PopulateFiltersService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesResponseService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetSickLeaveSummaryService;
+import se.inera.intyg.rehabstod.service.sjukfall.PdlLogSickLeavesService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.GetActiveSickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateSickLeaveFilterResponseDTO;
+import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavePrintRequestDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDTO;
+import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 @ExtendWith(MockitoExtension.class)
 public class SickLeaveControllerTest {
@@ -51,6 +55,8 @@ public class SickLeaveControllerTest {
     private PopulateFiltersService populateFiltersService;
     @Mock
     private GetSickLeaveSummaryService getSickLeaveSummaryService;
+    @Mock
+    private PdlLogSickLeavesService pdlLogSickLeavesService;
 
     @InjectMocks
     private SickLeaveController sickLeaveController = new SickLeaveController();
@@ -216,6 +222,19 @@ public class SickLeaveControllerTest {
             final var response = sickLeaveController.populateFilters();
             assertEquals(expectedResponse.getUnansweredCommunicationFilterTypes(),
                 response.getUnansweredCommunicationFilterTypes());
+        }
+    }
+
+    @Nested
+    class Print {
+
+        @Test
+        void shouldLogPrintWithSickLeavesFromRequest() {
+            final var request = SickLeavePrintRequestDTO.builder()
+                .sickLeaves(List.of(new SjukfallEnhet()))
+                .build();
+            sickLeaveController.print(request);
+            verify(pdlLogSickLeavesService).logPrint(request.getSickLeaves());
         }
     }
 
