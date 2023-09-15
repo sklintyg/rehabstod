@@ -62,6 +62,7 @@ public class PdlLogSickLeavesServiceImpl implements PdlLogSickLeavesService {
         PDLActivityStore.addActivitiesToStore(unitId, sickLeavesToLog, activityType, resourceType, user.getStoredActivities());
     }
 
+
     @Override
     public void logPrint(List<SjukfallEnhet> sickLeaves) {
         log(sickLeaves, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
