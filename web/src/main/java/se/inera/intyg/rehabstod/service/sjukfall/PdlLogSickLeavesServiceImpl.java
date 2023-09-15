@@ -47,7 +47,6 @@ public class PdlLogSickLeavesServiceImpl implements PdlLogSickLeavesService {
         this.logService = logService;
     }
 
-
     @Override
     public void log(List<SjukfallEnhet> sickLeaves, ActivityType activityType, ResourceType resourceType) {
         final var user = userService.getUser();
