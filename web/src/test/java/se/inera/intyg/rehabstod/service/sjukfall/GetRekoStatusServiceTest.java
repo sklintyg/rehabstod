@@ -26,12 +26,15 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.GetRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 
 import java.time.LocalDate;
+import se.inera.intyg.rehabstod.service.user.UserService;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,14 +46,27 @@ public class GetRekoStatusServiceTest {
 
     @Mock
     IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+    @Mock
+    UserService userService;
     @InjectMocks
     GetRekoStatusServiceImpl getRekoStatusService;
 
     private static final String PATIENT_ID = "191212121212";
     private static final String REKO_ID = "REKO_1";
     private static final String REKO_NAME = "Reko name";
+    private static final String UNIT_ID = "Unit id";
     private static final LocalDate END_DATE = LocalDate.now();
     private static final LocalDate START_DATE = LocalDate.now();
+
+    @BeforeEach
+    void setup() {
+        final var unit = mock(SelectableVardenhet.class);
+        final var user = mock(RehabstodUser.class);
+
+        when(unit.getId()).thenReturn(UNIT_ID);
+        when(userService.getUser()).thenReturn(user);
+        when(user.getValdVardenhet()).thenReturn(unit);
+    }
 
      @Nested
      class HasRekoStatus {
@@ -105,6 +121,14 @@ public class GetRekoStatusServiceTest {
                  getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
                  verify(intygstjanstRestIntegrationService).getRekoStatus(captor.capture());
                  assertEquals(START_DATE, captor.getValue().getEndDate());
+             }
+
+             @Test
+             void shouldSetCareUnitId() {
+                 final var captor = ArgumentCaptor.forClass(GetRekoStatusRequestDTO.class);
+                 getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
+                 verify(intygstjanstRestIntegrationService).getRekoStatus(captor.capture());
+                 assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
              }
          }
      }
