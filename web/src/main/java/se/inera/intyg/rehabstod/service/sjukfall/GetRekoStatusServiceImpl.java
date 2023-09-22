@@ -26,20 +26,26 @@ import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrati
 import se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusDTO;
 
 import java.time.LocalDate;
+import se.inera.intyg.rehabstod.service.user.UserService;
+import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 
 @Service
 public class GetRekoStatusServiceImpl implements GetRekoStatusService {
 
     private final IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+    private final UserService userService;
 
-    public GetRekoStatusServiceImpl(IntygstjanstRestIntegrationService intygstjanstRestIntegrationService) {
+    public GetRekoStatusServiceImpl(IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
+        UserService userService) {
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
+        this.userService = userService;
     }
 
     @Override
     public RekoStatusDTO get(String patientId, LocalDate endDate, LocalDate startDate) {
-
-        final var request = new GetRekoStatusRequestDTO(patientId, endDate, startDate);
+        final var user = userService.getUser();
+        final var careUnitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
+        final var request = new GetRekoStatusRequestDTO(patientId, endDate, startDate, careUnitId);
 
         return convertResponse(intygstjanstRestIntegrationService.getRekoStatus(request));
     }

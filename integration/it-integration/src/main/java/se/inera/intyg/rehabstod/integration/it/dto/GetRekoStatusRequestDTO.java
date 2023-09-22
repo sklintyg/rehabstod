@@ -29,7 +29,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetRekoStatusRequestDTO {
-    String patientId;
-    LocalDate endDate;
-    LocalDate startDate;
+    private String patientId;
+    private LocalDate endDate;
+    private LocalDate startDate;
+    private String careUnitId;
 }
