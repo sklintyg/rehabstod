@@ -38,6 +38,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -55,6 +56,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
+import se.inera.intyg.infra.security.common.model.Feature;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -419,9 +421,13 @@ public class SjukfallControllerTest {
         }
 
         @Test
-        public void pdlLogSjukfallPatientShouldTriggerSRSLogEntry() {
+        public void pdlLogSjukfallPatientShouldTriggerSRSLogEntryIfFeatureIsActive() {
             final var patientId = PATIENT_ID_1;
             final var user = buildConcreteUser();
+
+            final var feature = new Feature();
+            feature.setGlobal(true);
+            user.setFeatures(Map.of(AuthoritiesConstants.FEATURE_SRS, feature));
 
             // Should trigger one history PDL item.
             final var a = createSjukFallPatient(patientId, 1, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
@@ -456,8 +462,49 @@ public class SjukfallControllerTest {
         }
 
         @Test
-        public void testPDLLogSRSForSjukfallEnhet() {
+        public void pdlLogSjukfallPatientShouldNotTriggerSRSLogEntryIfFeatureISInactive() {
+            final var patientId = PATIENT_ID_1;
             final var user = buildConcreteUser();
+
+            final var feature = new Feature();
+            feature.setGlobal(true);
+            user.setFeatures(Map.of(AuthoritiesConstants.ROLE_LAKARE, feature));
+
+            final var sjukfallPatient1 = createSjukFallPatient(patientId, 1, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
+            final var sjukfallPatient2 = createSjukFallPatient(patientId, 3, 2, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
+
+            final var listOfSjukfallPatient = List.of(sjukfallPatient1, sjukfallPatient2);
+            final var request = new GetSjukfallForPatientRequest();
+            request.setPatientId(patientId);
+
+            when(userService.getUser()).thenReturn(user);
+            when(sjukfallService.getByPatient(anyString(), anyString(), anyString(), anyString(), any(Urval.class),
+                any(IntygParametrar.class), anyCollection(), anyCollection()))
+                .thenReturn(new SjukfallPatientResponse(listOfSjukfallPatient, new SjfMetaData(), false, false));
+
+            sjukfallController.getSjukfallForPatient(request);
+
+            assertEquals(1, user.getStoredActivities().size());
+
+            final var pdlActivityEntries = user.getStoredActivities().get(DEFAULT_VARDENHET.getId());
+            assertEquals(1, pdlActivityEntries.size());
+
+            assertPdlActivityEntries(user, DEFAULT_VARDENHET, ResourceType.RESOURCE_TYPE_INTYG);
+
+            verify(logService, times(1)).logSjukfallData(any(PatientData.class),
+                eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_INTYG));
+            verify(logService, times(0)).logSjukfallData(any(PatientData.class),
+                eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_PREDIKTION_SRS));
+        }
+
+        @Test
+        public void testPDLLogSRSForSjukfallEnhetIfFeatureIsActive() {
+            final var user = buildConcreteUser();
+
+            final var feature = new Feature();
+            feature.setGlobal(true);
+            user.setFeatures(Map.of(AuthoritiesConstants.FEATURE_SRS, feature));
+
             final var a = createSjukFallEnhet(PATIENT_ID_1, true);
             final var b = createSjukFallEnhet(PATIENT_ID_2, false);
             final var finalList = List.of(a, b);
@@ -469,7 +516,6 @@ public class SjukfallControllerTest {
 
             sjukfallController.getSjukfallForCareUnit(request);
 
-            // Expect entries for ONE enhet
             assertEquals(1, user.getStoredActivities().size());
 
             final var pdlActivityEntries = user.getStoredActivities().get(DEFAULT_VARDENHET.getId());
@@ -486,6 +532,44 @@ public class SjukfallControllerTest {
             verify(logService, times(1)).logSjukfallData(anyList(),
                 eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_PREDIKTION_SRS));
         }
+    }
+
+    @Test
+    public void pdlLogSjukfallEnhetShouldNotTriggerSRSLogEntryIfFeatureISInactive() {
+        final var user = buildConcreteUser();
+
+        final var feature = new Feature();
+        feature.setGlobal(true);
+        user.setFeatures(Map.of(AuthoritiesConstants.ROLE_LAKARE, feature));
+
+        final var sjukfallEnhet1 = createSjukFallEnhet(PATIENT_ID_1, true);
+        final var sjukfallEnhet2 = createSjukFallEnhet(PATIENT_ID_2, false);
+        final var listOfSjukfallEnhet = List.of(sjukfallEnhet1, sjukfallEnhet2);
+        final var request = new GetSjukfallRequest();
+
+        when(userService.getUser()).thenReturn(user);
+        when(sjukfallService.getByUnit(anyString(), isNull(), anyString(), any(Urval.class), any(IntygParametrar.class)))
+            .thenReturn(new SjukfallEnhetResponse(listOfSjukfallEnhet, false, false));
+
+        sjukfallController.getSjukfallForCareUnit(request);
+
+        assertEquals(1, user.getStoredActivities().size());
+
+        final var pdlActivityEntries = user.getStoredActivities().get(DEFAULT_VARDENHET.getId());
+        assertEquals(2, pdlActivityEntries.size());
+
+        assertEquals(0, pdlActivityEntries.stream()
+            .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_PREDIKTION_SRS)
+            .count());
+
+        assertEquals(2L, pdlActivityEntries.stream()
+            .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_SJUKFALL)
+            .count());
+
+        verify(logService, times(1)).logSjukfallData(anyList(), eq(ActivityType.READ),
+            eq(ResourceType.RESOURCE_TYPE_SJUKFALL));
+        verify(logService, times(0)).logSjukfallData(anyList(),
+            eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_PREDIKTION_SRS));
     }
 
     private void assertPdlActivityEntries(RehabstodUser user, Vardenhet vardenhet, ResourceType resourceType) {

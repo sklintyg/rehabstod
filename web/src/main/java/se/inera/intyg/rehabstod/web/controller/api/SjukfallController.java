@@ -52,6 +52,7 @@ import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
@@ -124,7 +125,10 @@ public class SjukfallController {
         // PDL-logging based on which sjukfall that are about to be displayed to user.
         LOG.debug("PDL logging - log which 'sjukfall' that will be displayed to the user.");
         logSjukfallData(user, sjukfall, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
-        logSjukfallData(user, filterHavingRiskSignal(sjukfall), ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+
+        if (isActivatedForSRS(user)) {
+            logSjukfallData(user, filterHavingRiskSignal(sjukfall), ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+        }
         return buildSjukfallEnhetResponse(response.isSrsError(), response.isKompletteringInfoError(), sjukfall);
     }
 
@@ -159,7 +163,7 @@ public class SjukfallController {
             .forEach(logPatientData);
 
         // If at least one intyg for the patient has an SRS prediction, log this.
-        if (sjukfall.stream().flatMap(sf -> sf.getIntyg().stream()).anyMatch(anyIntygHasRiskSignal())) {
+        if (sjukfall.stream().flatMap(sf -> sf.getIntyg().stream()).anyMatch(anyIntygHasRiskSignal()) && isActivatedForSRS(user)) {
             logSjukfallData(user, sjukfall.get(0).getIntyg().get(0), ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
         }
 
@@ -192,7 +196,9 @@ public class SjukfallController {
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if PDF export was OK.
             LOG.debug("PDL logging - log which 'sjukfall' that are about to be exported in PDF format.");
             logSjukfallData(user, finalList, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
-            logSjukfallData(user, filterHavingRiskSignal(finalList), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+            if (isActivatedForSRS(user)) {
+                logSjukfallData(user, filterHavingRiskSignal(finalList), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+            }
 
             return new ResponseEntity<>(pdfData, headers, HttpStatus.OK);
 
@@ -215,8 +221,9 @@ public class SjukfallController {
             // PDL-logging based on which sjukfall that are about to be exported. Only perform if XLSX export was OK.
             LOG.debug("PDL logging - log which 'sjukfall' that are about to be exported in XLSX format.");
             logSjukfallData(user, finalList, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
-            logSjukfallData(user, filterHavingRiskSignal(finalList), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
-
+            if (isActivatedForSRS(user)) {
+                logSjukfallData(user, filterHavingRiskSignal(finalList), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+            }
             HttpHeaders respHeaders = getHttpHeaders("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 data.length, ".xlsx", user);
 
@@ -439,5 +446,9 @@ public class SjukfallController {
             headers.put(KOMPLETTERING_INFO_UNAVAILABLE_HEADER, Collections.singletonList("true"));
         }
         return headers;
+    }
+
+    private boolean isActivatedForSRS(RehabstodUser user) {
+        return user.isFeatureActive(AuthoritiesConstants.FEATURE_SRS);
     }
 }
