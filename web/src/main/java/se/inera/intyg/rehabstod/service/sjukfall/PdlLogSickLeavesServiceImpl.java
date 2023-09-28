@@ -22,11 +22,11 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -39,8 +39,6 @@ public class PdlLogSickLeavesServiceImpl implements PdlLogSickLeavesService {
     private final UserService userService;
 
     private final LogService logService;
-
-    private static final Logger LOG = LoggerFactory.getLogger(PdlLogSickLeavesServiceImpl.class);
 
     public PdlLogSickLeavesServiceImpl(UserService userService, LogService logService) {
         this.userService = userService;
@@ -62,11 +60,14 @@ public class PdlLogSickLeavesServiceImpl implements PdlLogSickLeavesService {
         PDLActivityStore.addActivitiesToStore(unitId, sickLeavesToLog, activityType, resourceType, user.getStoredActivities());
     }
 
-
     @Override
     public void logPrint(List<SjukfallEnhet> sickLeaves) {
+        final var user = userService.getUser();
         log(sickLeaves, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
-        log(filterHavingRiskSignal(sickLeaves), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+
+        if (isActivatedForSRS(user)) {
+            log(filterHavingRiskSignal(sickLeaves), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+        }
     }
 
     private List<SjukfallEnhet> filterHavingRiskSignal(List<SjukfallEnhet> finalList) {
@@ -80,5 +81,9 @@ public class PdlLogSickLeavesServiceImpl implements PdlLogSickLeavesService {
 
     private Predicate<SjukfallEnhet> hasRiskSignal() {
         return se -> se.getRiskSignal() != null && se.getRiskSignal().getRiskKategori() >= 1;
+    }
+
+    private boolean isActivatedForSRS(RehabstodUser user) {
+        return user.isFeatureActive(AuthoritiesConstants.FEATURE_SRS);
     }
 }

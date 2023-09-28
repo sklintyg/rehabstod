@@ -39,6 +39,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.SelectableVardenhet;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
@@ -73,7 +74,6 @@ public class PdlLogSickLeavesServiceTest {
         unit = mock(SelectableVardenhet.class);
         when(userService.getUser()).thenReturn(user);
         when(user.getValdVardenhet()).thenReturn(unit);
-
         loggedSickLeave.setPatient(new Patient(LOGGED_PATIENT_ID, "name"));
         notLoggedSickLeave.setPatient(new Patient(NOT_LOGGED_PATIENT_ID, "name"));
     }
@@ -122,7 +122,8 @@ public class PdlLogSickLeavesServiceTest {
         }
 
         @Test
-        void shouldLogActivityPrintAndResourceTypeSRS() {
+        void shouldLogActivityPrintAndResourceTypeSRSIfFeatureActive() {
+            when(user.isFeatureActive(AuthoritiesConstants.FEATURE_SRS)).thenReturn(true);
             when(unit.getId()).thenReturn("UNIT_ID");
             final var sickLeave = new SjukfallEnhet();
             sickLeave.setRiskSignal(new RiskSignal("ID", 1, "description", LocalDateTime.now()));
@@ -134,11 +135,22 @@ public class PdlLogSickLeavesServiceTest {
         }
 
         @Test
+        void shouldOnlyLogActivityPrintAndResourceTypeSjukfallIfSRSFeatureInactive() {
+            when(user.isFeatureActive(AuthoritiesConstants.FEATURE_SRS)).thenReturn(false);
+            when(unit.getId()).thenReturn("UNIT_ID");
+            final var sickLeave = new SjukfallEnhet();
+            sickLeave.setRiskSignal(new RiskSignal("ID", 1, "description", LocalDateTime.now()));
+            sickLeave.setPatient(new Patient(LOGGED_PATIENT_ID, "name"));
+            final var sickLeaveWithRisk = List.of(sickLeave);
+            pdlLogSickLeavesService.logPrint(sickLeaveWithRisk);
+            verify(logService).logSjukfallData(Collections.singletonList(sickLeave), ActivityType.PRINT,
+                ResourceType.RESOURCE_TYPE_SJUKFALL);
+        }
+
+        @Test
         void shouldHandleNullValues() {
             when(unit.getId()).thenReturn("UNIT_ID");
             pdlLogSickLeavesService.logPrint(null);
-            verify(logService).logSjukfallData(Collections.emptyList(), ActivityType.PRINT,
-                ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
             verify(logService).logSjukfallData(Collections.emptyList(), ActivityType.PRINT,
                 ResourceType.RESOURCE_TYPE_SJUKFALL);
         }
