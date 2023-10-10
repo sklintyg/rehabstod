@@ -24,6 +24,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
@@ -32,6 +33,52 @@ import se.inera.intyg.infra.security.exception.MissingMedarbetaruppdragException
 import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleException;
 
 public class RehabstodAuthenticationFailureHandler extends ExceptionMappingAuthenticationFailureHandler {
+
+    // NOTES FOR CLEANUP - Keep the DEFAULT_FAILURE_URL, the map "failureUrls" and method "onAuthenticationFailureForReactOnly"
+    // Rename method "onAuthenticationFailureForReactOnly" to "onAuthenticationFailure" and add an @Override annotation.
+    // ------------------------------------------------------------------------------------------------------------------------
+    private static final String DEFAULT_FAILURE_URL = "/error/login-failed";
+
+    private final Map<String, String> failureUrls = Map.of(
+        BadCredentialsException.class.getName(), DEFAULT_FAILURE_URL,
+        MissingMedarbetaruppdragException.class.getName(), "/error/login-medarbetaruppdrag",
+        MissingUnitWithRehabSystemRoleException.class.getName(), "/error/login-saknar-hsa-rehabroll",
+        HsaServiceException.class.getName(), "/error/login-hsaerror"
+    );
+
+    private void onAuthenticationFailureForReactOnly(HttpServletRequest request, HttpServletResponse response,
+        AuthenticationException exception)
+        throws IOException {
+        final var exceptionName = exception.getClass().getName();
+
+        String url;
+        if (failureUrls.containsKey(exceptionName)) {
+            url = failureUrls.get(exceptionName);
+        } else {
+            saveException(request, exception);
+            url = DEFAULT_FAILURE_URL;
+        }
+
+        getRedirectStrategy().sendRedirect(request, response, url);
+    }
+
+
+
+    // NOTES FOR CLEANUP - REMOVE ALL CODE BELOW THIS COMMENT, REMOVE IMPORTS UNUSED AFTER REMOVAL
+    //--------------------------------------------------------------------------------------------
+    @Value("${siths.idp.url}")
+    private String sithsIdpUrl;
+
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+        throws IOException {
+
+        if (sithsIdpUrl != null && sithsIdpUrl.contains("rs2")) {
+            onAuthenticationFailureForReactAndAngular(request, response, exception);
+        } else {
+            onAuthenticationFailureForReactOnly(request, response, exception);
+        }
+    }
 
     private static final String BAD_CREDENTIALS = "badCredentials";
     private static final String MISSING_ASSIGNMENT = "missingAssignment";
@@ -64,8 +111,8 @@ public class RehabstodAuthenticationFailureHandler extends ExceptionMappingAuthe
         mapExceptions();
     }
 
-    @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+    private void onAuthenticationFailureForReactAndAngular(HttpServletRequest request, HttpServletResponse response,
+        AuthenticationException exception)
         throws IOException {
         final var failureUrlIdentifier = getFailureUrlIdentifier(request);
         final var exceptionName = exception.getClass().getName();
@@ -86,10 +133,10 @@ public class RehabstodAuthenticationFailureHandler extends ExceptionMappingAuthe
         for (Map.Entry<String, String> entry : authExceptions.entrySet()) {
             final var rsFailureUrl = rsFailureUrls.get(entry.getKey());
             final var rs2FailureUrl = rs2FailureUrls.get(entry.getKey());
-            final var failureUrls = Map.of(
+            final var failUrls = Map.of(
                 RS_IDENTIFIER, rsFailureUrl != null ? rsFailureUrl : RS_DEFAULT_FAILURE_URL,
                 RS2_IDENTIFIER, rs2FailureUrl != null ? rs2FailureUrl : RS2_DEFAULT_FAILURE_URL);
-            this.failureUrlMap.put(entry.getValue(), failureUrls);
+            this.failureUrlMap.put(entry.getValue(), failUrls);
         }
     }
 
