@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -43,10 +42,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
@@ -93,26 +93,25 @@ public class SjukfallController {
     private static final String CONTENT_DISPOSITION_INLINE = "inline";
     private static final String CONTENT_DISPOSITION_ATTACHMENT = "attachment";
 
-    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm");
+    private final SjukfallService sjukfallService;
+    private final UserService userService;
+    private final LogService logService;
+    private final XlsxExportService xlsxExportService;
+    private final PdfExportService pdfExportService;
+    private final PatientIdEncryption patientIdEncryption;
 
-    @Autowired
-    private SjukfallService sjukfallService;
+    public SjukfallController(SjukfallService sjukfallService, UserService userService, LogService logService,
+        XlsxExportService xlsxExportService, PdfExportService pdfExportService, PatientIdEncryption patientIdEncryption) {
+        this.sjukfallService = sjukfallService;
+        this.userService = userService;
+        this.logService = logService;
+        this.xlsxExportService = xlsxExportService;
+        this.pdfExportService = pdfExportService;
+        this.patientIdEncryption = patientIdEncryption;
+    }
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private LogService logService;
-
-    @Autowired
-    private XlsxExportService xlsxExportService;
-
-    @Autowired
-    private PdfExportService pdfExportService;
-    @Autowired
-    private PatientIdEncryption patientIdEncryption;
-
-    @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SjukfallEnhet>> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
 
         // Get user from session
@@ -132,7 +131,7 @@ public class SjukfallController {
         return buildSjukfallEnhetResponse(response.isSrsError(), response.isKompletteringInfoError(), sjukfall);
     }
 
-    @RequestMapping(value = "/patient", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/patient", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SjukfallPatientResponse> getSjukfallForPatient(@RequestBody GetSjukfallForPatientRequest request) {
 
         // Get user from session
@@ -183,7 +182,7 @@ public class SjukfallController {
         response.sendRedirect(request.getContextPath() + "/error.jsp?reason=exporterror");
     }
 
-    @RequestMapping(value = "/pdf", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "/pdf", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<byte[]> getSjukfallForCareUnitAsPdf(@ModelAttribute PrintSjukfallRequest request,
         @Context HttpServletRequest servletRequest) {
         try {
@@ -207,7 +206,7 @@ public class SjukfallController {
         }
     }
 
-    @RequestMapping(value = "/xlsx", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "/xlsx", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<ByteArrayResource> getSjukfallForCareUnitAsXLSX(@ModelAttribute PrintSjukfallRequest request) {
         try {
             // Get user from session
@@ -234,7 +233,7 @@ public class SjukfallController {
         }
     }
 
-    @RequestMapping(value = "/summary", method = RequestMethod.GET)
+    @GetMapping(value = "/summary")
     public SjukfallSummary getUnitCertificateSummary() {
         // Get user from session
         RehabstodUser user = userService.getUser();
@@ -251,8 +250,7 @@ public class SjukfallController {
     /**
      * Register a 'vardgivare' to be included in the calculation of the patient sjukfall view.
      */
-    @RequestMapping(value = "/patient/addVardgivare", method = RequestMethod.POST,
-        consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(value = "/patient/addVardgivare", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<String>> addVgToPatientView(@RequestBody AddVgToPatientViewRequest request) {
         // Get logged in user
@@ -260,7 +258,7 @@ public class SjukfallController {
 
         try {
             Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
-            if (!personnummer.isPresent()) {
+            if (personnummer.isEmpty()) {
                 throw new RuntimeException("error parsing personnummer");
             }
 
@@ -276,8 +274,7 @@ public class SjukfallController {
     /**
      * Register a 'vardenhet' to be included in the calculation of the patient sjukfall view.
      */
-    @RequestMapping(value = "/patient/addVardenhet", method = RequestMethod.POST,
-        consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(value = "/patient/addVardenhet", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<String>> addVeToPatientView(@RequestBody AddVeToPatientViewRequest request) {
         // Get logged in user
@@ -285,7 +282,7 @@ public class SjukfallController {
 
         try {
             Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
-            if (!personnummer.isPresent()) {
+            if (personnummer.isEmpty()) {
                 throw new RuntimeException("error parsing personnummer");
             }
 
@@ -324,7 +321,7 @@ public class SjukfallController {
         HttpHeaders respHeaders = new HttpHeaders();
         respHeaders.set(HttpHeaders.CONTENT_TYPE, contentType);
         respHeaders.setContentLength(contentLength);
-        respHeaders.setContentDispositionFormData("attachment", getAttachmentFilename(user, filenameExtension));
+        respHeaders.setContentDispositionFormData(CONTENT_DISPOSITION_ATTACHMENT, getAttachmentFilename(user, filenameExtension));
         return respHeaders;
     }
 
@@ -383,8 +380,7 @@ public class SjukfallController {
         PDLActivityStore.addActivitiesToStore(enhetsId, sjukfallToLog, activityType, resourceType, user.getStoredActivities());
     }
 
-    private void logSjukfallData(RehabstodUser user, PatientData patientData,
-        ActivityType activityType, ResourceType resourceType) {
+    private void logSjukfallData(RehabstodUser user, PatientData patientData, ActivityType activityType, ResourceType resourceType) {
 
         if (patientData == null) {
             throw new IllegalArgumentException("Cannot create PDL log statements, sjukfallPatient was null");

@@ -1,6 +1,8 @@
 dependencies {
     compile project(":rehabstod-common")
 
+    implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
+
     compile("se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}")
     compile "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${rivtaItintegrationMonitoringSchemasVersion}"
 
