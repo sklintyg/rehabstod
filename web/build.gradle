@@ -84,8 +84,9 @@ dependencies {
     compile project(":rehabstod-persistence")
 
     compile "se.riv.clinicalprocess.healthcond.monitoring:clinicalprocess-healthcond-monitoring-schemas:${internalMonitoringSchemaVersion}"
-
     compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
+
+    implementation "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"
 
     compile "se.inera.intyg.infra:dynamiclink:${intygInfraVersion}"
     compile "se.inera.intyg.infra:hsatk-integration:${intygInfraVersion}"

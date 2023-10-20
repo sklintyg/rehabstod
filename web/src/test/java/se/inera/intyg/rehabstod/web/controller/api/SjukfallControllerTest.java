@@ -94,8 +94,8 @@ public class SjukfallControllerTest {
     public static final String PATIENT_ID_1 = "19121212-1212";
     public static final String PATIENT_ID_2 = "20121212-1212";
     public static final String PATIENT_ID_3 = "19840921-9287";
-    private final Vardenhet DEFAULT_VARDENHET = new Vardenhet("ve123", "Vardenhet_123");
-    private final Vardgivare DEFAULT_VARDGIVARE = new Vardgivare("vg987", "Vardgivare_987");
+    private static final Vardenhet DEFAULT_VARDENHET = new Vardenhet("ve123", "Vardenhet_123");
+    private static final Vardgivare DEFAULT_VARDGIVARE = new Vardgivare("vg987", "Vardgivare_987");
 
     private final List<Vardenhet> vardenheter = new ArrayList<>() {{
         add(DEFAULT_VARDENHET);
@@ -123,7 +123,7 @@ public class SjukfallControllerTest {
     private SjukfallService sjukfallService;
 
     @InjectMocks
-    private SjukfallController sjukfallController = new SjukfallController();
+    private SjukfallController sjukfallController;
 
     @Mock
     private PatientIdEncryption patientIdEncryption;
@@ -144,7 +144,7 @@ public class SjukfallControllerTest {
         }
 
         @Test
-        public void testGetSjukfallByUnit() {
+        void testGetSjukfallByUnit() {
             final var a = createSjukFallEnhet(PATIENT_ID_1);
             final var b = createSjukFallEnhet(PATIENT_ID_2);
             final var c = createSjukFallEnhet(PATIENT_ID_3);
@@ -164,12 +164,12 @@ public class SjukfallControllerTest {
                     eq(ResourceType.RESOURCE_TYPE_SJUKFALL), anyMap()));
 
                 verify(sjukfallService).getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class));
-                verify(logService).logSjukfallData(eq(toLog), eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_SJUKFALL));
+                verify(logService).logSjukfallData(toLog, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
             }
         }
 
         @Test
-        public void testGetSjukfallByUnitAsPDF() {
+        void testGetSjukfallByUnitAsPDF() {
             final var a = createSjukFallEnhet(PATIENT_ID_1);
             final var b = createSjukFallEnhet(PATIENT_ID_2);
             final var c = createSjukFallEnhet(PATIENT_ID_3);
@@ -189,7 +189,7 @@ public class SjukfallControllerTest {
                     eq(ResourceType.RESOURCE_TYPE_SJUKFALL), anyMap())).thenReturn(toLog);
                 when(sjukfallService.getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class)))
                     .thenReturn(new SjukfallEnhetResponse(allSjukFall, false, false));
-                when(pdfExportService.export(eq(finalList), eq(request), eq(rehabstodUser), eq(allSjukFall.size())))
+                when(pdfExportService.export(finalList, request, rehabstodUser, allSjukFall.size()))
                     .thenReturn(new byte[0]);
 
                 final var response = sjukfallController.getSjukfallForCareUnitAsPdf(request, servletRequest);
@@ -201,15 +201,15 @@ public class SjukfallControllerTest {
                     eq(ResourceType.RESOURCE_TYPE_SJUKFALL), anyMap()));
 
                 verify(sjukfallService).getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class));
-                verify(logService).logSjukfallData(eq(toLog), eq(ActivityType.PRINT), eq(ResourceType.RESOURCE_TYPE_SJUKFALL));
-                assertEquals(response.getStatusCode(), HttpStatus.OK);
+                verify(logService).logSjukfallData(toLog, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
                 assertTrue(Objects.requireNonNull(response.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION)).get(0)
                     .startsWith("inline; filename=\"sjukfall-" + DEFAULT_VARDENHET.getNamn() + "-"));
             }
         }
 
         @Test
-        public void testGetSjukfallByUnitAsPDFFromInternetExplorer() {
+        void testGetSjukfallByUnitAsPDFFromInternetExplorer() {
             final var a = createSjukFallEnhet(PATIENT_ID_1);
             final var b = createSjukFallEnhet(PATIENT_ID_2);
             final var c = createSjukFallEnhet(PATIENT_ID_3);
@@ -231,7 +231,7 @@ public class SjukfallControllerTest {
 
                 when(sjukfallService.getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class)))
                     .thenReturn(new SjukfallEnhetResponse(allSjukFall, false, false));
-                when(pdfExportService.export(eq(finalList), eq(request), eq(rehabstodUser), eq(allSjukFall.size())))
+                when(pdfExportService.export(finalList, request, rehabstodUser, allSjukFall.size()))
                     .thenReturn(new byte[0]);
 
                 final var response = sjukfallController.getSjukfallForCareUnitAsPdf(request, servletRequest);
@@ -242,9 +242,9 @@ public class SjukfallControllerTest {
                     eq(ResourceType.RESOURCE_TYPE_SJUKFALL), anyMap()));
 
                 verify(sjukfallService).getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class));
-                verify(logService).logSjukfallData(eq(toLog), eq(ActivityType.PRINT), eq(ResourceType.RESOURCE_TYPE_SJUKFALL));
+                verify(logService).logSjukfallData(toLog, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
-                assertEquals(response.getStatusCode(), HttpStatus.OK);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
                 assertTrue(Objects.requireNonNull(response.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION)).get(0)
                     .startsWith("attachment; filename=\"sjukfall-" + DEFAULT_VARDENHET.getNamn() + "-"));
             }
@@ -268,13 +268,13 @@ public class SjukfallControllerTest {
         }
 
         @Test
-        public void getSjukfallByPatientWhenIntygFromSingleUnit() {
+        void getSjukfallByPatientWhenIntygFromSingleUnit() {
             final var patientId = PATIENT_ID_1;
             final var a = createSjukFallPatient(patientId, 1, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
             final var result = List.of(a);
             final var request = new GetSjukfallForPatientRequest();
             request.setPatientId(patientId);
-            final var personnummer = Personnummer.createPersonnummer(PATIENT_ID_1).get();
+            final var personnummer = Personnummer.createPersonnummer(PATIENT_ID_1).orElseThrow();
 
             try (MockedStatic<PDLActivityStore> pdlActivityStore = mockStatic(PDLActivityStore.class)) {
                 when(sjukfallService.getByPatient(anyString(), anyString(), isNull(), anyString(),
@@ -294,7 +294,7 @@ public class SjukfallControllerTest {
         }
 
         @Test
-        public void getSjukfallByPatientWhenIntygFromMultipleUnits() {
+        void getSjukfallByPatientWhenIntygFromMultipleUnits() {
             final var patientId = PATIENT_ID_1;
             final var a = createSjukFallPatient(patientId, 1, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
             final var b = createSjukFallPatient(patientId, 1, 0, vardenheter.get(1), DEFAULT_VARDGIVARE);
@@ -303,7 +303,7 @@ public class SjukfallControllerTest {
             final var result = List.of(a, b, c, d);
             final var request = new GetSjukfallForPatientRequest();
             request.setPatientId(patientId);
-            final var personnummer = Personnummer.createPersonnummer(PATIENT_ID_1).get();
+            final var personnummer = Personnummer.createPersonnummer(PATIENT_ID_1).orElseThrow();
 
             try (MockedStatic<PDLActivityStore> pdlActivityStore = mockStatic(PDLActivityStore.class)) {
                 when(sjukfallService.getByPatient(anyString(), anyString(), isNull(), anyString(),
@@ -366,7 +366,7 @@ public class SjukfallControllerTest {
         }
 
         @Test
-        public void pdlLogSjukfallPatientWhenIntygFromSingleUnit() {
+        void pdlLogSjukfallPatientWhenIntygFromSingleUnit() {
             final var patientId = PATIENT_ID_1;
             final var user = buildConcreteUser();
             final var a = createSjukFallPatient(patientId, 1, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
@@ -388,7 +388,7 @@ public class SjukfallControllerTest {
         }
 
         @Test
-        public void pdlLogSjukfallPatientWhenIntygFromMultipleUnits() {
+        void pdlLogSjukfallPatientWhenIntygFromMultipleUnits() {
             final var patientId = PATIENT_ID_1;
             final var user = buildConcreteUser();
             final var a = createSjukFallPatient(patientId, 3, 0, DEFAULT_VARDENHET, DEFAULT_VARDGIVARE);
@@ -421,7 +421,7 @@ public class SjukfallControllerTest {
         }
 
         @Test
-        public void pdlLogSjukfallPatientShouldTriggerSRSLogEntryIfFeatureIsActive() {
+        void pdlLogSjukfallPatientShouldTriggerSRSLogEntryIfFeatureIsActive() {
             final var patientId = PATIENT_ID_1;
             final var user = buildConcreteUser();
 
@@ -462,7 +462,7 @@ public class SjukfallControllerTest {
         }
 
         @Test
-        public void pdlLogSjukfallPatientShouldNotTriggerSRSLogEntryIfFeatureISInactive() {
+        void pdlLogSjukfallPatientShouldNotTriggerSRSLogEntryIfFeatureISInactive() {
             final var patientId = PATIENT_ID_1;
             final var user = buildConcreteUser();
 
@@ -498,7 +498,7 @@ public class SjukfallControllerTest {
         }
 
         @Test
-        public void testPDLLogSRSForSjukfallEnhetIfFeatureIsActive() {
+        void testPDLLogSRSForSjukfallEnhetIfFeatureIsActive() {
             final var user = buildConcreteUser();
 
             final var feature = new Feature();
@@ -535,7 +535,7 @@ public class SjukfallControllerTest {
     }
 
     @Test
-    public void pdlLogSjukfallEnhetShouldNotTriggerSRSLogEntryIfFeatureISInactive() {
+    void pdlLogSjukfallEnhetShouldNotTriggerSRSLogEntryIfFeatureISInactive() {
         final var user = buildConcreteUser();
 
         final var feature = new Feature();
@@ -651,5 +651,4 @@ public class SjukfallControllerTest {
 
         return sp;
     }
-
 }

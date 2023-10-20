@@ -1,6 +1,9 @@
 dependencies {
     compile project(":rehabstod-common")
 
+    implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
+    implementation "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"
+
     compile "se.inera.intyg.infra:common-redis-cache-core:${intygInfraVersion}"
     compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
     compile "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${rivtaItintegrationMonitoringSchemasVersion}"

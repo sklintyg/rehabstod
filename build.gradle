@@ -6,23 +6,25 @@ plugins {
 }
 
 ext {
-    intygInfraVersion = System.properties['infraVersion'] ?: '3.19.1-SNAPSHOT'
+    intygInfraVersion = System.properties['infraVersion'] ?: '3.20.0-SNAPSHOT'
     refDataVersion = System.properties['refDataVersion'] ?: '1.0-SNAPSHOT'
 
-    intygHealthcondRehabilitationSchemasVersion = "1.1.3"
-    blockingSchemaVersion = "4.0.1"
-    consentSchemaVersion = "2.0.1"
-    rivtaItintegrationMonitoringSchemasVersion = "1.0.0.5"
-    internalMonitoringSchemaVersion = "1.0.4"
-    intygClinicalprocessSchemasVersion = "1.0.24"
-    schemasContractVersion = "2.1.8"
-    srsSchemasVersion = "0.0.16"
+    blockingSchemaVersion = "4.0.1.1"
+    consentSchemaVersion = "2.0.1.1"
+    internalMonitoringSchemaVersion = "1.0.4.1"
+    intygClinicalprocessSchemasVersion = "1.0.24.1"
+    intygHealthcondRehabilitationSchemasVersion = "1.1.3.1"
+    rivtaItintegrationMonitoringSchemasVersion = "1.0.0.5.1"
+    schemasContractVersion = "2.1.8.1"
+    srsSchemasVersion = "0.0.16.1"
 
     commonsIoVersion = "2.11.0"
     cxfVersion = "3.5.5"
     googleGuavaVersion = "31.1-jre"
     itext7Version = "7.2.3"
     jadiraUserTypeVersion = "6.0.1.GA"
+    javaxJwsApiVersion = "1.1"
+    jaxb2Version = "0.13.1"
     jsonSimpleVersion = "1.1.1"
     picocliVersion = "4.6.3"
     poiVersion = "5.2.2"
@@ -44,9 +46,7 @@ allprojects {
 
     repositories {
         mavenLocal()
-        maven {
-            url "https://nexus.drift.inera.se/repository/it-public/"
-        }
+        maven { url "https://nexus.drift.inera.se/repository/it-public/" }
         mavenCentral {
             content {
                 // this repository contains everything BUT artifacts with group starting with "se.inera"
@@ -70,6 +70,8 @@ allprojects {
     }
 
     dependencies {
+        implementation "javax.jws:javax.jws-api:${javaxJwsApiVersion}"
+
         compile "ch.qos.logback:logback-classic"
         compile "org.slf4j:slf4j-api"
 
