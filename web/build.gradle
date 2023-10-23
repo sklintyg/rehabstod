@@ -103,7 +103,7 @@ dependencies {
     }
     compile "com.itextpdf:itext7-core:${itext7Version}"
 
-    compile "mysql:mysql-connector-java"
+    compile "com.mysql:mysql-connector-j"
     compile "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
     compile "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
 
