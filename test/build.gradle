@@ -1,4 +1,4 @@
-apply plugin: 'nebula.grunt'
+apply plugin: 'com.netflix.nebula.grunt'
 
 idea {
     module {
@@ -17,7 +17,8 @@ node {
     nodeModulesDir = file("${project.projectDir}")
 }
 
-task protractorTests(type: NodeTask, dependsOn: npmInstall) {
+tasks.register('protractorTests', NodeTask) {
+    dependsOn npmInstall
     outputs.upToDateWhen { false }
     def environment = System.properties['protractor.env'] ?: "dev"
 
@@ -26,5 +27,5 @@ task protractorTests(type: NodeTask, dependsOn: npmInstall) {
 }
 
 dependencies {
-    runtime project(':rehabstod-web')
+    runtimeOnly project(':rehabstod-web')
 }

@@ -1,46 +1,8 @@
-apply plugin: 'war'
+apply plugin: 'com.netflix.nebula.grunt'
 apply plugin: 'org.gretty'
-apply plugin: 'nebula.grunt'
+apply plugin: 'war'
 
-war.rootSpec.exclude "logback.xml"
-
-test {
-    environment "catalina.base",  "${buildDir}/catalina.base"
-}
-
-idea {
-    module {
-        excludeDirs += file('node_modules')
-        excludeDirs += file('src/main/webapp/bower_components')
-    }
-}
-
-node {
-    version = "${nodeJsVersion}"
-    npmVersion = "${npmVersion}"
-    download = true
-    distBaseUrl = 'https://nodejs.org/dist/'
-    workDir = file("${rootProject.projectDir}/.gradle/nodejs")
-    npmWorkDir = file("${rootProject.projectDir}/.gradle/npm")
-    nodeModulesDir = file("${project.projectDir}")
-}
-
-if (project.hasProperty('useMinifiedJavaScript')) {
-    war {
-        webAppDirName = 'build/webapp'
-    }
-    war.dependsOn grunt_build
-} else if (project.hasProperty('useNoMinifiedJavaScriptNoKarma')) {
-    war.dependsOn grunt_build_no_minify_no_karma
-} else {
-    war.dependsOn grunt_build_no_minify
-}
-
-war.dependsOn createVersionPropertyFile
-
-grunt_build.dependsOn npmInstall
-grunt_build_no_minify.dependsOn npmInstall
-grunt_build_no_minify_no_karma.dependsOn npmInstall
+def buildDirectory = project.layout.buildDirectory.get().asFile
 
 gretty {
     def minified = System.properties['useMinifiedJavaScript'] ?: false
@@ -62,7 +24,7 @@ gretty {
     enableNaming = true
     serverConfigFile = "tomcat-gretty.xml"
 
-    jvmArgs = ["-Dcatalina.base=${buildDir}/catalina.base",
+    jvmArgs = ["-Dcatalina.base=${buildDirectory}/catalina.base",
                "-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-srs-stub,caching-enabled,rhs-security-test,ia-stub",
                "-Dlogback.file=${applicationDir}/config/logback-dev.xml",
                "-Djava.awt.headless=true",
@@ -73,73 +35,128 @@ gretty {
                "-Ddev.http.port=${useHttpPort}",
                "-Ddev.http.port.internal=${useInternalHttpPort}"
     ]
+
+    dependencies {
+        implementation "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
+        implementation "org.eclipse.jetty:apache-jstl"
+        implementation "se.inera.intyg.refdata:refdata:${refDataVersion}"
+    }
+}
+
+node {
+    version = "${nodeJsVersion}"
+    npmVersion = "${npmVersion}"
+    download = true
+    distBaseUrl = 'https://nodejs.org/dist/'
+    workDir = file("${rootProject.projectDir}/.gradle/nodejs")
+    npmWorkDir = file("${rootProject.projectDir}/.gradle/npm")
+    nodeModulesDir = file("${project.projectDir}")
+}
+
+idea {
+    module {
+        excludeDirs += file('node_modules')
+        excludeDirs += file('src/main/webapp/bower_components')
+    }
+}
+
+test {
+    environment "catalina.base",  "${buildDirectory}/catalina.base"
+}
+
+if (project.hasProperty('useMinifiedJavaScript')) {
+    war {
+        webAppDirName = 'build/webapp'
+    }
+    war.dependsOn grunt_build
+} else if (project.hasProperty('useNoMinifiedJavaScriptNoKarma')) {
+    war.dependsOn grunt_build_no_minify_no_karma
+} else {
+    war.dependsOn grunt_build_no_minify
+}
+
+war.rootSpec.exclude "logback.xml"
+war.dependsOn createVersionPropertyFile
+
+grunt_build.dependsOn npmInstall
+grunt_build_no_minify.dependsOn npmInstall
+grunt_build_no_minify_no_karma.dependsOn npmInstall
+
+publishing {
+    publications {
+        mavenWeb(MavenPublication) {
+            from components.web
+        }
+    }
 }
 
 dependencies {
-    compile project(":rehabstod-it-integration")
-    compile project(":rehabstod-samtyckestjanst-integration")
-    compile project(":rehabstod-sparrtjanst-integration")
-    compile project(":rehabstod-srs-integration")
-    compile project(":rehabstod-wc-integration")
-    compile project(":rehabstod-persistence")
+    implementation project(":rehabstod-common")
+    implementation project(":rehabstod-it-integration")
+    implementation project(":rehabstod-persistence")
+    implementation project(":rehabstod-samtyckestjanst-integration")
+    implementation project(":rehabstod-sparrtjanst-integration")
+    implementation project(":rehabstod-srs-integration")
+    implementation project(":rehabstod-wc-integration")
 
-    compile "se.riv.clinicalprocess.healthcond.monitoring:clinicalprocess-healthcond-monitoring-schemas:${internalMonitoringSchemaVersion}"
-    compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
+    implementation "se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:${intygHealthcondRehabilitationSchemasVersion}"
+    implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
+    implementation "se.riv.clinicalprocess.healthcond.monitoring:clinicalprocess-healthcond-monitoring-schemas:${internalMonitoringSchemaVersion}"
+    implementation "se.riv.informationsecurity.authorization.consent:informationsecurity-authorization-consent-schemas:${consentSchemaVersion}"
+    implementation "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${rivtaItintegrationMonitoringSchemasVersion}"
 
+    implementation "se.inera.intyg.infra:certificate:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:common-redis-cache-core:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:driftbanner-dto:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:dynamiclink:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:hsa-integration-api:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:hsatk-integration:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:ia-integration:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:log-messages:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:pu-integration:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:security-authorities:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:security-common:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:security-filter:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:security-siths:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
+
+    implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
+    implementation "com.google.guava:guava:${googleGuavaVersion}"
+    implementation "com.itextpdf:itext7-core:${itext7Version}"
+    implementation "io.prometheus:simpleclient_servlet"
+    implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
+    implementation "jakarta.ws.rs:jakarta.ws.rs-api"
+    implementation "org.apache.activemq:activemq-spring"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "org.apache.cxf:cxf-rt-features-logging:${cxfVersion}"
+    implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
+    implementation "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
+    implementation "org.apache.httpcomponents:httpclient"
+    implementation "org.apache.poi:poi-ooxml:${poiVersion}"
     implementation "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"
-
-    compile "se.inera.intyg.infra:dynamiclink:${intygInfraVersion}"
-    compile "se.inera.intyg.infra:hsatk-integration:${intygInfraVersion}"
-    compile "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
-    compile "se.inera.intyg.infra:pu-integration:${intygInfraVersion}"
-    compile "se.inera.intyg.infra:ia-integration:${intygInfraVersion}"
-    compile "se.inera.intyg.infra:security-filter:${intygInfraVersion}"
-    compile "se.inera.intyg.infra:security-siths:${intygInfraVersion}"
-    compile "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
-
-    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
-    compile ("com.googlecode.json-simple:json-simple:${jsonSimpleVersion}") {
-        exclude group: "junit", module: "junit"
-    }
-    compile "com.itextpdf:itext7-core:${itext7Version}"
-
-    compile "com.mysql:mysql-connector-j"
-    compile "net.javacrumbs.shedlock:shedlock-spring:${shedlockSpringVersion}"
-    compile "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
-
-    compile "org.apache.activemq:activemq-spring"
-    compile "org.apache.commons:commons-lang3"
-    compile "org.apache.cxf:cxf-rt-features-logging:${cxfVersion}"
-    compile "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
-    compile "org.apache.poi:poi-ooxml:${poiVersion}"
-    compile "org.apache.poi:poi:${poiVersion}"
-
-    compile "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
-    compile "org.springframework.security:spring-security-config"
-    compile "org.springframework.security:spring-security-web"
-    compile "org.springframework.session:spring-session-data-redis"
-    compile "org.springframework:spring-jms"
-    compile "org.springframework.ws:spring-ws-core"
-
-    compile "wsdl4j:wsdl4j"
-
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
+    implementation "org.springframework.data:spring-data-jpa"
+    implementation "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
+    implementation "org.springframework.security:spring-security-config"
+    implementation "org.springframework.security:spring-security-web"
+    implementation "org.springframework.session:spring-session-data-redis"
+    implementation "org.springframework:spring-jms"
+    implementation "org.springframework:spring-webmvc"
 
     compileOnly "jakarta.jms:jakarta.jms-api"
-    compileOnly "javax.servlet:javax.servlet-api"
+    compileOnly "jakarta.persistence:jakarta.persistence-api"
+    compileOnly "jakarta.servlet:jakarta.servlet-api"
     compileOnly "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
+    compileOnly 'org.projectlombok:lombok'
 
-    testCompile "jakarta.jms:jakarta.jms-api"
-    testCompile "org.hamcrest:hamcrest"
-    testCompile "org.hamcrest:hamcrest-library"
-    testCompile "org.springframework:spring-test"
-    testCompile "org.testng:testng:${testngVersion}"
+    testCompileOnly "jakarta.persistence:jakarta.persistence-api"
+    testCompileOnly 'org.projectlombok:lombok'
 
-    gretty "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
-    gretty "org.eclipse.jetty:apache-jstl"
-    gretty "se.inera.intyg.refdata:refdata:${refDataVersion}"
+    annotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    runtimeOnly "com.mysql:mysql-connector-j"
+
+    testImplementation "org.springframework:spring-test"
+    testImplementation "org.testng:testng:${testngVersion}"
 }

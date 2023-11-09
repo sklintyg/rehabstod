@@ -1,8 +1,9 @@
 plugins {
-    id "se.inera.intyg.plugin.common" version "3.2.9" apply false
-    id "org.gretty" version "3.0.9" apply false
-    id "nebula.node" version "1.4.2" apply false
-    id "io.spring.dependency-management" version "1.0.15.RELEASE"
+    id "se.inera.intyg.plugin.common" version "3.2.10-SNAPSHOT" apply false
+    id "io.spring.dependency-management" version "1.1.3" apply false
+    id "com.netflix.nebula.node" version "3.0.0" apply false
+    id "org.gretty" version "3.1.1" apply false
+    id 'test-report-aggregation'
 }
 
 ext {
@@ -15,17 +16,16 @@ ext {
     intygClinicalprocessSchemasVersion = "1.0.24.1"
     intygHealthcondRehabilitationSchemasVersion = "1.1.3.1"
     rivtaItintegrationMonitoringSchemasVersion = "1.0.0.5.1"
+    rivtaGetPersonsPersonSchemasVersion = "3.1.1.1"
     schemasContractVersion = "2.1.8.1"
     srsSchemasVersion = "0.0.16.1"
 
     commonsIoVersion = "2.14.0"
     cxfVersion = "3.6.2"
-    googleGuavaVersion = "32.0.1-jre"
+    googleGuavaVersion = "32.1.3-jre"
     itext7Version = "7.2.5"
-    jadiraUserTypeVersion = "6.0.1.GA"
     javaxJwsApiVersion = "1.1"
     jaxb2Version = "0.13.1"
-    jsonSimpleVersion = "1.1.1"
     picocliVersion = "4.7.5"
     poiVersion = "5.2.4"
     springSecurityExtensionsVersion = "1.0.3.RELEASE"
@@ -40,24 +40,55 @@ ext {
 
 allprojects {
     apply plugin: 'se.inera.intyg.plugin.common'
-    apply plugin: 'maven'
-    apply plugin: 'idea'
     apply plugin: "io.spring.dependency-management"
+    apply plugin: 'maven-publish'
+    apply plugin: 'idea'
+
+    group = 'se.inera.intyg.rehabstod'
+    version = System.properties['buildVersion'] ?: '0.0-SNAPSHOT'
+    sourceCompatibility = 11
+    targetCompatibility = 11
+
+    dependencyManagement {
+        imports { mavenBom "org.springframework.boot:spring-boot-dependencies:${springbootMavenBomVersion}" }
+    }
+
+    dependencies {
+        implementation "ch.qos.logback:logback-classic"
+        implementation "javax.jws:javax.jws-api:${javaxJwsApiVersion}"
+        implementation "org.slf4j:slf4j-api"
+
+        testImplementation "se.inera.intyg.refdata:refdata:${refDataVersion}"
+        testImplementation 'junit:junit'
+        testImplementation "org.junit.jupiter:junit-jupiter-api"
+        testImplementation "org.junit.jupiter:junit-jupiter-params"
+        testImplementation "org.mockito:mockito-junit-jupiter"
+        testImplementation "org.mockito:mockito-inline"
+
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+        testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
+    }
+
+    tasks.register('install') {
+        description("Publishes artifact to local maven repository.")
+        dependsOn(publishMavenWebPublicationToMavenLocal)
+    }
+
+    tasks.register('createVersionPropertyFile', VersionPropertyFileTask)
 
     repositories {
         mavenLocal()
         maven { url "https://nexus.drift.inera.se/repository/it-public/" }
         mavenCentral {
             content {
-                // this repository contains everything BUT artifacts with group starting with "se.inera"
                 excludeGroupByRegex "se\\.inera.*"
             }
         }
     }
 
-    test {
-        useJUnitPlatform()
-    }
+    checkstyleMain.dependsOn createVersionPropertyFile
+    compileTestJava.dependsOn createVersionPropertyFile
+    test { useJUnitPlatform() }
 
     configurations {
         // Remove these due to conflict with Spring SAML which uses bcprov-jdk15.
@@ -65,51 +96,32 @@ allprojects {
         compile.exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
     }
 
-    dependencyManagement {
-        imports { mavenBom "org.springframework.boot:spring-boot-dependencies:${springbootMavenBomVersion}" }
-    }
-
-    dependencies {
-        implementation "javax.jws:javax.jws-api:${javaxJwsApiVersion}"
-
-        compile "ch.qos.logback:logback-classic"
-        compile "org.slf4j:slf4j-api"
-
-        testCompile "se.inera.intyg.refdata:refdata:${refDataVersion}"
-        testCompile 'junit:junit'
-        testCompile "org.junit.jupiter:junit-jupiter-api"
-        testCompile "org.junit.jupiter:junit-jupiter-params"
-        testCompile "org.mockito:mockito-junit-jupiter"
-        testCompile "org.mockito:mockito-inline"
-
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-        testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
-    }
-
-    group = 'se.inera.intyg.rehabstod'
-    version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
-
-    sourceCompatibility = 11
-    targetCompatibility = 11
-
-    task createVersionPropertyFile(type: VersionPropertyFileTask)
-
-    uploadArchives.enabled = false
-
-    uploadArchives.repositories.mavenDeployer {
-        repository(url: "https://nexus.drift.inera.se/repository/maven-releases/") {
-            authentication(userName: System.properties['ineraNexusUsername'], password: System.properties['ineraNexusPassword'])
+    if (!project.name.contains("-web") && !project.name.contains("-liquibase-runner")) {
+        publishing {
+            publications {
+                mavenWeb(org.gradle.api.publish.maven.MavenPublication) {
+                    from components.java
+                }
+            }
         }
     }
 
-    [install.repositories.mavenInstaller, uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
-        pom.dependencies.findAll { dep -> dep.groupId == 'se.inera.intyg.infra' }.each {
-            it.version = se.inera.intyg.IntygPluginKt.findResolvedVersion(project, 'se.inera.intyg.infra')
-        }
+    if (project.hasProperty('codeQuality')) {
+        dependencies { spotbugsSlf4j "org.slf4j:slf4j-simple" }
+    }
+
+    clean {
+        setDelete(fileTree(project.layout.buildDirectory.get().asFile) {
+            exclude("/tmp/.cache/expanded/expanded.lock")
+        })
     }
 }
 
-task tagRelease(type: TagReleaseTask)
+tasks.register('tagRelease', TagReleaseTask)
 
-def environment = project.findProperty('env') ?: "local"
-se.inera.intyg.IntygPluginKt.addProjectPropertiesFromFile(project, file("$rootDir/env-properties/${environment}/settings.properties"))
+subprojects.collect {subproject -> subproject.name }.each { subprojectName ->
+    dependencies { testReportAggregation project(":${subprojectName}") }
+}
+
+//def environment = project.findProperty('env') ?: "local"
+//se.inera.intyg.IntygPluginKt.addProjectPropertiesFromFile(project, file("$rootDir/env-properties/${environment}/settings.properties"))

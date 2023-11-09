@@ -1,21 +1,16 @@
 dependencies {
-    compile project(":rehabstod-common")
+    implementation project(":rehabstod-common")
 
+    implementation "com.fasterxml.jackson.core:jackson-databind"
     implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
-
-    compile "se.inera.intyg.infra:common-redis-cache-core:${intygInfraVersion}"
-    compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
-    compile "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${rivtaItintegrationMonitoringSchemasVersion}"
-    compile "se.inera.intyg.clinicalprocess.healthcond.certificate:intyg-clinicalprocess-healthcond-certificate-schemas:${intygClinicalprocessSchemasVersion}"
-    compile "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
-
-    compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
+    implementation "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
+    implementation "org.springframework.data:spring-data-redis"
+    implementation "org.springframework:spring-web"
+    implementation "se.inera.intyg.clinicalprocess.healthcond.certificate:intyg-clinicalprocess-healthcond-certificate-schemas:${intygClinicalprocessSchemasVersion}"
+    implementation "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
-
-    testCompile "org.springframework:spring-test"
+    testImplementation "org.springframework:spring-test"
 }
