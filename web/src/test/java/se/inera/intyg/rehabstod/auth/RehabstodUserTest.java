@@ -56,17 +56,19 @@ public class RehabstodUserTest {
     private static final String ENHET_2 = "ENHET_2";
     private static final String ENHET_2_NAME = "En annan enhet";
 
-    @Test
-    public void testGetUrvalWithoutRole() throws Exception {
-        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", false);
-
-        assertNull(user.getUrval());
-    }
 
     @Test
     public void testGetUrvalLakare() throws Exception {
         RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
         user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_LAKARE, new Role()));
+
+        assertEquals(Urval.ISSUED_BY_ME, user.getUrval());
+    }
+
+    @Test
+    public void testGetUrvalTandlakare() throws Exception {
+        RehabstodUser user = new RehabstodUser("HSA1111", "Per Nilsson", true);
+        user.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_TANDLAKARE, new Role()));
 
         assertEquals(Urval.ISSUED_BY_ME, user.getUrval());
     }
