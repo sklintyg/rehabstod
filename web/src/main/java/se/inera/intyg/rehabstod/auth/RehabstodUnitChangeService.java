@@ -86,12 +86,4 @@ public class RehabstodUnitChangeService {
     private boolean hasSystemRoles(RehabstodUser user) {
         return user.getSystemRoles() != null && user.getSystemRoles().size() > 0;
     }
-
-    public CommonAuthoritiesResolver getCommonAuthoritiesResolver() {
-        return commonAuthoritiesResolver;
-    }
-
-    public void setCommonAuthoritiesResolver(CommonAuthoritiesResolver commonAuthoritiesResolver) {
-        this.commonAuthoritiesResolver = commonAuthoritiesResolver;
-    }
 }
