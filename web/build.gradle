@@ -82,14 +82,6 @@ grunt_build.dependsOn npmInstall
 grunt_build_no_minify.dependsOn npmInstall
 grunt_build_no_minify_no_karma.dependsOn npmInstall
 
-publishing {
-    publications {
-        mavenWeb(MavenPublication) {
-            from components.web
-        }
-    }
-}
-
 dependencies {
     implementation project(":rehabstod-common")
     implementation project(":rehabstod-it-integration")
