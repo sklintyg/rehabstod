@@ -49,7 +49,7 @@ allprojects {
     apply plugin: 'idea'
 
     group = 'se.inera.intyg.rehabstod'
-    version = System.properties['buildVersion'] ?: '0.0-SNAPSHOT'
+    version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
     sourceCompatibility = 11
     targetCompatibility = 11
 
