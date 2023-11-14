@@ -37,6 +37,7 @@ import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.rehabstod.auth.BaseFakeAuthenticationProvider;
+import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 
@@ -48,6 +49,9 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
     private SAMLUserDetailsService userDetails;
     @Autowired
     private CommonAuthoritiesResolver commonAuthoritiesResolver;
+
+    @Autowired
+    private RehabstodUnitChangeService rehabstodUnitChangeService;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -65,7 +69,7 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
 
         final var fakeCredentials = (FakeCredentials) token.getCredentials();
         if (!StringUtil.isNullOrEmpty(fakeCredentials.getEnhetId())) {
-            ((RehabstodUser) details).changeValdVardenhet(fakeCredentials.getEnhetId());
+            rehabstodUnitChangeService.changeValdVardenhet(fakeCredentials.getEnhetId(), (RehabstodUser) details);
         }
         updateFeatures(details);
 

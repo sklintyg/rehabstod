@@ -31,6 +31,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.security.common.model.IntygUser;
+import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
@@ -52,6 +53,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
     private RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
     private Map<String, Set<String>> sjfPatientVardgivare = new HashMap<>();
     private Map<String, Set<String>> sjfPatientVardenhet = new HashMap<>();
+    private Map<String, Role> originalRoles = new HashMap<>();
 
     private RehabstodUserTokens tokens;
 
@@ -103,6 +105,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
 
         this.features = intygUser.getFeatures();
         this.roles = intygUser.getRoles();
+        this.originalRoles = new HashMap<>(this.roles);
         this.authorities = intygUser.getAuthorities();
         this.origin = intygUser.getOrigin();
 
@@ -121,17 +124,11 @@ public class RehabstodUser extends IntygUser implements Serializable {
             return null;
         }
 
-        // Case 1: Lakare should get ISSUED_BY_ME
-        if (roles.containsKey(AuthoritiesConstants.ROLE_LAKARE)) {
-            return Urval.ISSUED_BY_ME;
-        }
-
-        // Case 2: Koordinator should get ALL
         if (roles.containsKey(AuthoritiesConstants.ROLE_KOORDINATOR)) {
             return Urval.ALL;
         }
 
-        return null;
+        return Urval.ISSUED_BY_ME;
     }
 
     public Map<String, List<PDLActivityEntry>> getStoredActivities() {
@@ -139,13 +136,18 @@ public class RehabstodUser extends IntygUser implements Serializable {
     }
 
     public Urval getDefaultUrval() {
-        return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE) ? Urval.ISSUED_BY_ME : Urval.ALL;
+        return roles.containsKey(AuthoritiesConstants.ROLE_LAKARE) || roles.containsKey(AuthoritiesConstants.ROLE_TANDLAKARE)
+            ? Urval.ISSUED_BY_ME : Urval.ALL;
     }
 
     @Override
     public int getTotaltAntalVardenheter() {
         // count all hasid's in the datastructure
         return (int) getVardgivare().stream().flatMap(vg -> vg.getHsaIds().stream()).count();
+    }
+
+    public Map<String, Role> getOriginalRoles() {
+        return originalRoles;
     }
 
     /**
