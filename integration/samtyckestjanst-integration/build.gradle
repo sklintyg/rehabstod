@@ -1,15 +1,16 @@
 dependencies {
-    compile project(":rehabstod-common")
+    implementation project(":rehabstod-common")
 
+    implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
+    implementation "com.google.guava:guava:${googleGuavaVersion}"
+    implementation "jakarta.ws.rs:jakarta.ws.rs-api"
     implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
+    implementation "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
     implementation "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"
+    implementation "org.springframework.data:spring-data-redis"
+    implementation "se.inera.intyg.infra:common-redis-cache-core:${intygInfraVersion}"
+    implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
+    implementation "se.riv.informationsecurity.authorization.consent:informationsecurity-authorization-consent-schemas:${consentSchemaVersion}"
 
-    compile "se.inera.intyg.infra:common-redis-cache-core:${intygInfraVersion}"
-    compile "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
-    compile "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${rivtaItintegrationMonitoringSchemasVersion}"
-    compile "se.riv.informationsecurity.authorization.consent:informationsecurity-authorization-consent-schemas:${consentSchemaVersion}"
-
-    compile "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
-
-    testCompile "org.springframework:spring-test"
+    testImplementation "org.springframework:spring-test"
 }

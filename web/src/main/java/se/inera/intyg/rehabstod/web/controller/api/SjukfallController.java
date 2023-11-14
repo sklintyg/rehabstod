@@ -32,7 +32,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -184,7 +183,7 @@ public class SjukfallController {
 
     @PostMapping(value = "/pdf", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<byte[]> getSjukfallForCareUnitAsPdf(@ModelAttribute PrintSjukfallRequest request,
-        @Context HttpServletRequest servletRequest) {
+        HttpServletRequest servletRequest) {
         try {
             final var user = userService.getUser();
             final var sjukfall = getSjukfallForCareUnit(user, request).getSjukfallList();

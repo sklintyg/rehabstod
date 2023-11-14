@@ -1,12 +1,9 @@
 dependencies {
-    compile project(":rehabstod-common")
-
+    implementation "com.fasterxml.jackson.core:jackson-databind"
     implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
-
-    compile("se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}")
-    compile "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${rivtaItintegrationMonitoringSchemasVersion}"
-
-    compile "jakarta.xml.ws:jakarta.xml.ws-api"
-
-    testCompile "org.springframework:spring-test"
+    implementation "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
+    implementation "org.springframework:spring-context-support"
+    implementation "org.springframework:spring-web"
+    implementation "se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}"
+    implementation "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${rivtaItintegrationMonitoringSchemasVersion}"
 }

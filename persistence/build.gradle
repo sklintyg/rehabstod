@@ -1,17 +1,9 @@
 dependencies {
-    compile "com.fasterxml.jackson.core:jackson-databind"
-    compile "com.h2database:h2"
+    implementation "com.h2database:h2"
+    implementation "jakarta.annotation:jakarta.annotation-api"
+    implementation "org.hibernate:hibernate-hikaricp"
+    implementation "org.liquibase:liquibase-core"
+    implementation "org.springframework.data:spring-data-jpa"
 
-    compile "org.springframework.data:spring-data-jpa"
-    compile "org.jadira.usertype:usertype.core:${jadiraUserTypeVersion}"
-    compile "org.liquibase:liquibase-core"
-    compile "org.springframework:spring-orm"
-
-    compile "org.hibernate:hibernate-core"
-    compile "org.hibernate:hibernate-hikaricp"
-    compile "org.hibernate:hibernate-entitymanager"
-
-    compile "javax.annotation:javax.annotation-api"
-
-    testCompile "org.springframework:spring-test"
+    testImplementation "org.springframework:spring-test"
 }
