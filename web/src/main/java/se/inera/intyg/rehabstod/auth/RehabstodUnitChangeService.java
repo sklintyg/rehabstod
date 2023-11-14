@@ -55,8 +55,7 @@ public class RehabstodUnitChangeService {
                 if (hasSystemRoleForSelectedUnit || hasImplicitAccessToSubUnit(user, enhetIdList)) {
                     updateUsersRoleTo(user, AuthoritiesConstants.ROLE_KOORDINATOR);
                 } else {
-                    // If no systemRole for this unit, we must change back to ROLE_LAKARE.
-                    updateUsersRoleTo(user, AuthoritiesConstants.ROLE_LAKARE);
+                    updateUsersRoleTo(user, user.getOriginalRoles().keySet().stream().findFirst().orElse(AuthoritiesConstants.ROLE_LAKARE));
                 }
             }
         }
@@ -87,5 +86,4 @@ public class RehabstodUnitChangeService {
     private boolean hasSystemRoles(RehabstodUser user) {
         return user.getSystemRoles() != null && user.getSystemRoles().size() > 0;
     }
-
 }
