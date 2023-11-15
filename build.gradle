@@ -12,7 +12,7 @@ plugins {
 }
 
 ext {
-    intygInfraVersion = System.properties['infraVersion'] ?: '3.20.0-SNAPSHOT'
+    intygInfraVersion = System.properties['infraVersion'] ?: '3.21.0-SNAPSHOT'
     refDataVersion = System.properties['refDataVersion'] ?: '1.0-SNAPSHOT'
 
     blockingSchemaVersion = "4.0.1.1"
@@ -49,7 +49,7 @@ allprojects {
     apply plugin: 'idea'
 
     group = 'se.inera.intyg.rehabstod'
-    version = System.properties['buildVersion'] ?: '0.0-SNAPSHOT'
+    version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
     sourceCompatibility = 11
     targetCompatibility = 11
 
@@ -124,17 +124,14 @@ tasks.register('unzipBuildTools', Copy) {
     }
 }
 
-tasks.register("applyGitHooks", Copy) {
-    dependsOn("unzipBuildTools")
+tasks.register('applyGitHooks', Copy) {
     def repository = IntygPluginKt.findGitRepository(project.rootProject.projectDir)
-    def commitMsg = rootProject.layout.buildDirectory.file("/build-tools/git_hooks/commit-msg").get().asFile
-    def preCommit = rootProject.layout.buildDirectory.file("/build-tools/git_hooks/pre-commit").get().asFile
+    def gitHooksDir = "${rootProject.layout.buildDirectory.get().asFile}/build-tools/git_hooks"
+    def commitMsg = file("${gitHooksDir}/commit-msg")
+    def preCommit = file("${gitHooksDir}/pre-commit")
     def toDir = Paths.get(repository.directory.path, "hooks")
 
-    if (!Files.exists(toDir)) {
-        Files.createDirectory(toDir)
-    }
-
+    if (!Files.exists(toDir)) { Files.createDirectory(toDir) }
     IntygPluginKt.copyFile(commitMsg, toDir)
     IntygPluginKt.copyFile(preCommit, toDir)
 }
