@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import java.util.Arrays;
 import java.util.List;
 import org.opensaml.saml2.core.Assertion;
 import org.slf4j.Logger;
@@ -108,6 +109,14 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
                 // User will not be able to use "Visa Intyg".
                 LOG.error("Unable to get AccessToken for user {} with reason {}", rehabstodUser.getHsaId(), exception.getMessage());
             }
+        }
+
+        if (rehabstodUser.getValdVardenhet() != null) {
+            rehabstodUser.setFeatures(
+                commonAuthoritiesResolver.getFeatures(
+                    Arrays.asList(rehabstodUser.getValdVardenhet().getId(), rehabstodUser.getValdVardgivare().getId())
+                )
+            );
         }
 
         return rehabstodUser;
