@@ -21,6 +21,7 @@ package se.inera.intyg.rehabstod.service.filter;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -104,7 +105,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
     private List<UnansweredCommunicationFilterTypeDTO> getUnansweredCommunicationTypes() {
         return Arrays
             .stream(UnansweredCommunicationFilterType.values())
-            .map((type) -> new UnansweredCommunicationFilterTypeDTO(type.toString(), type.getName()))
+            .map(type -> new UnansweredCommunicationFilterTypeDTO(type.toString(), type.getName()))
             .collect(Collectors.toList());
     }
 
@@ -124,7 +125,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         }
         return list
             .stream()
-            .map((status) -> new se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusTypeDTO(status.getId(), status.getName()))
+            .map(status -> new se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusTypeDTO(status.getId(), status.getName()))
             .collect(Collectors.toList());
     }
 
@@ -132,11 +133,13 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         if (listToConvert == null) {
             return Collections.emptyList();
         }
+
         final var lakareList = listToConvert.stream()
-            .map((lakare) -> new Lakare(lakare.getId(), sjukfallEmployeeNameResolver.getEmployeeName(lakare.getId())))
+            .map(doctor -> new Lakare(doctor.getId(), sjukfallEmployeeNameResolver.getEmployeeName(doctor.getId())))
             .collect(Collectors.toList());
 
         sjukfallEmployeeNameResolver.decorateAnyDuplicateNamesWithHsaId(lakareList);
+        lakareList.sort(Comparator.comparing(Lakare::getNamn));
 
         return lakareList;
     }
@@ -148,7 +151,7 @@ public class PopulateFiltersServiceImpl implements PopulateFiltersService {
         return diagnosisChapters
             .stream()
             .map(
-                (diagnosisChapter) ->
+                diagnosisChapter ->
                     new DiagnosKapitel(
                         convertDiagnosisCategory(diagnosisChapter.getFrom()),
                         convertDiagnosisCategory(diagnosisChapter.getTo()),
