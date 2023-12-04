@@ -97,9 +97,11 @@ public class PopulateFiltersServiceTest {
     PopulateFiltersServiceImpl populateActiveFilters;
 
     static final String HSA_ID = "HSA_ID";
+    static final String HSA_ID2 = "HSA_ID2";
+    static final String NAME_1 = "AAA1";
+    static final String NAME_2 = "BBB2";
     static final String SUB_UNIT_ID = "SUB_UNIT_ID";
     static final String UNIT_ID = "UNIT_ID";
-    static final String DOCTOR_NAME = "DOCTOR_NAME";
     static final String GAP = "5";
     static final String DAYS = "10";
     static final char LETTER_TO = 'A';
@@ -142,7 +144,7 @@ public class PopulateFiltersServiceTest {
             when(user.getPreferences()).thenReturn(userPreferences);
 
             final var response = new PopulateFiltersResponseDTO(
-                Collections.singletonList(Lakare.create(HSA_ID, HSA_ID)),
+                List.of(Lakare.create(HSA_ID2, HSA_ID2), Lakare.create(HSA_ID, HSA_ID)),
                 Collections.singletonList(enabledDiagnosisChapter),
                 TOTAL_NUMBER_OF_SICK_LEAVES,
                 HAS_ONGOING_SICK_LEAVES,
@@ -164,6 +166,9 @@ public class PopulateFiltersServiceTest {
             void setup() {
                 when(user.getValdVardenhet()).thenReturn(unit);
                 when(unit.getId()).thenReturn(UNIT_ID);
+
+                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(NAME_1);
+                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID2)).thenReturn(NAME_2);
             }
 
             @Test
@@ -241,6 +246,9 @@ public class PopulateFiltersServiceTest {
             void setup() {
                 when(user.getValdVardenhet()).thenReturn(unit);
                 when(unit.getId()).thenReturn(UNIT_ID);
+
+                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(NAME_1);
+                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID2)).thenReturn(NAME_2);
             }
 
             @Test
@@ -273,6 +281,12 @@ public class PopulateFiltersServiceTest {
 
         @Nested
         class TestITRequest {
+
+            @BeforeEach
+            void setup() {
+                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(NAME_1);
+                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID2)).thenReturn(NAME_2);
+            }
 
             @Nested
             class CareUnit {
@@ -384,132 +398,142 @@ public class PopulateFiltersServiceTest {
                 assertEquals(0, response.getActiveDoctors().size());
             }
 
-            @Test
-            void shouldConvertActiveDoctors() {
-                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-                final var response = populateActiveFilters.populateSickLeaveFilters();
-                assertEquals(1, response.getActiveDoctors().size());
-            }
-
-            @Test
-            void shouldConvertHsaIdForDoctor() {
-                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-                final var response = populateActiveFilters.populateSickLeaveFilters();
-                assertEquals(HSA_ID, response.getActiveDoctors().get(0).getHsaId());
-            }
-
-            @Test
-            void shouldConvertDoctorName() {
-                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-                final var response = populateActiveFilters.populateSickLeaveFilters();
-                assertEquals(DOCTOR_NAME, response.getActiveDoctors().get(0).getNamn());
-            }
-
-            @Test
-            void shouldDecorateDuplicateDoctorNamesWithHsaId() {
-                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-                populateActiveFilters.populateSickLeaveFilters();
-                verify(sjukfallEmployeeNameResolver, times(1))
-                    .decorateAnyDuplicateNamesWithHsaId(anyList());
-            }
-
-            @Test
-            void shouldConvertAllDiagnosisChapters() {
-                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-                final var response = populateActiveFilters.populateSickLeaveFilters();
-                assertEquals(allDiagnosisChapters, response.getAllDiagnosisChapters());
-            }
-
-            @Test
-            void shouldConvertNbrOfSickLeaves() {
-                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-                final var response = populateActiveFilters.populateSickLeaveFilters();
-                assertEquals(TOTAL_NUMBER_OF_SICK_LEAVES, response.getNbrOfSickLeaves());
-            }
-
-            @Test
-            void shouldConvertHasOngoingSickLeaves() {
-                when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(DOCTOR_NAME);
-                final var response = populateActiveFilters.populateSickLeaveFilters();
-                assertEquals(HAS_ONGOING_SICK_LEAVES, response.isHasOngoingSickLeaves());
-            }
-
-            @Test
-            void shouldConvertRekoStatusId() {
-                final var response = populateActiveFilters.populateSickLeaveFilters();
-                assertEquals(rekoStatus.getId(), response.getRekoStatusTypes().get(0).getId());
-            }
-
-            @Test
-            void shouldConvertRekoStatusName() {
-                final var response = populateActiveFilters.populateSickLeaveFilters();
-                assertEquals(rekoStatus.getName(), response.getRekoStatusTypes().get(0).getName());
-            }
-
-            @Test
-            void shouldConvertOccupationTypeId() {
-                final var response = populateActiveFilters.populateSickLeaveFilters();
-                assertEquals(occupationTypeDTO.getId(), response.getOccupationTypes().get(0).getId());
-            }
-
-            @Test
-            void shouldConvertOccupationTypeName() {
-                final var response = populateActiveFilters.populateSickLeaveFilters();
-                assertEquals(occupationTypeDTO.getName(), response.getOccupationTypes().get(0).getName());
-            }
-
             @Nested
-            class DiagnosisChapters {
+            class WithDoctorName {
 
-                @Test
-                void shouldConvertEnabledDiagnosisChapters() {
-                    when(user.getValdVardenhet()).thenReturn(unit);
-                    when(unit.getId()).thenReturn(UNIT_ID);
-
-                    final var response = populateActiveFilters.populateSickLeaveFilters();
-                    assertEquals(1, response.getEnabledDiagnosisChapters().size());
+                @BeforeEach
+                void setup() {
+                    when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID)).thenReturn(NAME_1);
+                    when(sjukfallEmployeeNameResolver.getEmployeeName(HSA_ID2)).thenReturn(NAME_2);
                 }
 
                 @Test
-                void shouldConvertEnabledDiagnosisChapterTo() {
-                    when(user.getValdVardenhet()).thenReturn(unit);
-                    when(unit.getId()).thenReturn(UNIT_ID);
-
+                void shouldConvertActiveDoctors() {
                     final var response = populateActiveFilters.populateSickLeaveFilters();
-                    final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
-                    assertEquals(enabledDiagnosisChapter.getTo().getLetter(), diagnosisChapter.getTo().getLetter());
-                    assertEquals(enabledDiagnosisChapter.getTo().getNumber(), diagnosisChapter.getTo().getNumber());
+                    assertEquals(2, response.getActiveDoctors().size());
                 }
 
                 @Test
-                void shouldConvertEnabledDiagnosisChapterFrom() {
-                    when(user.getValdVardenhet()).thenReturn(unit);
-                    when(unit.getId()).thenReturn(UNIT_ID);
-
+                void shouldConvertActiveDoctorsSortedByName() {
                     final var response = populateActiveFilters.populateSickLeaveFilters();
-                    final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
-                    assertEquals(enabledDiagnosisChapter.getFrom().getLetter(), diagnosisChapter.getFrom().getLetter());
-                    assertEquals(enabledDiagnosisChapter.getFrom().getNumber(), diagnosisChapter.getFrom().getNumber());
+                    assertEquals(HSA_ID, response.getActiveDoctors().get(0).getHsaId());
+                    assertEquals(HSA_ID2, response.getActiveDoctors().get(1).getHsaId());
                 }
 
                 @Test
-                void shouldConvertEnabledDiagnosisChapterId() {
-                    when(user.getValdVardenhet()).thenReturn(unit);
-                    when(unit.getId()).thenReturn(UNIT_ID);
-
+                void shouldConvertHsaIdForDoctor() {
                     final var response = populateActiveFilters.populateSickLeaveFilters();
-                    final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
-                    assertEquals(enabledDiagnosisChapter.getId(), diagnosisChapter.getId());
+                    assertEquals(HSA_ID, response.getActiveDoctors().get(0).getHsaId());
                 }
 
                 @Test
-                void shouldConvertEnabledDiagnosisChapterName() {
-                    when(user.getValdVardenhet()).thenReturn(unit);
-                    when(unit.getId()).thenReturn(UNIT_ID);
-
+                void shouldConvertDoctorName() {
                     final var response = populateActiveFilters.populateSickLeaveFilters();
-                    final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
-                    assertEquals(enabledDiagnosisChapter.getName(), diagnosisChapter.getName());
+                    assertEquals(NAME_1, response.getActiveDoctors().get(0).getNamn());
+                }
+
+                @Test
+                void shouldDecorateDuplicateDoctorNamesWithHsaId() {
+                    populateActiveFilters.populateSickLeaveFilters();
+                    verify(sjukfallEmployeeNameResolver, times(1))
+                        .decorateAnyDuplicateNamesWithHsaId(anyList());
+                }
+
+                @Test
+                void shouldConvertAllDiagnosisChapters() {
+                    final var response = populateActiveFilters.populateSickLeaveFilters();
+                    assertEquals(allDiagnosisChapters, response.getAllDiagnosisChapters());
+                }
+
+                @Test
+                void shouldConvertNbrOfSickLeaves() {
+                    final var response = populateActiveFilters.populateSickLeaveFilters();
+                    assertEquals(TOTAL_NUMBER_OF_SICK_LEAVES, response.getNbrOfSickLeaves());
+                }
+
+                @Test
+                void shouldConvertHasOngoingSickLeaves() {
+                    final var response = populateActiveFilters.populateSickLeaveFilters();
+                    assertEquals(HAS_ONGOING_SICK_LEAVES, response.isHasOngoingSickLeaves());
+                }
+
+                @Test
+                void shouldConvertRekoStatusId() {
+                    final var response = populateActiveFilters.populateSickLeaveFilters();
+                    assertEquals(rekoStatus.getId(), response.getRekoStatusTypes().get(0).getId());
+                }
+
+                @Test
+                void shouldConvertRekoStatusName() {
+                    final var response = populateActiveFilters.populateSickLeaveFilters();
+                    assertEquals(rekoStatus.getName(), response.getRekoStatusTypes().get(0).getName());
+                }
+
+                @Test
+                void shouldConvertOccupationTypeId() {
+                    final var response = populateActiveFilters.populateSickLeaveFilters();
+                    assertEquals(occupationTypeDTO.getId(), response.getOccupationTypes().get(0).getId());
+                }
+
+                @Test
+                void shouldConvertOccupationTypeName() {
+                    final var response = populateActiveFilters.populateSickLeaveFilters();
+                    assertEquals(occupationTypeDTO.getName(), response.getOccupationTypes().get(0).getName());
+                }
+
+                @Nested
+                class DiagnosisChapters {
+
+                    @Test
+                    void shouldConvertEnabledDiagnosisChapters() {
+                        when(user.getValdVardenhet()).thenReturn(unit);
+                        when(unit.getId()).thenReturn(UNIT_ID);
+
+                        final var response = populateActiveFilters.populateSickLeaveFilters();
+                        assertEquals(1, response.getEnabledDiagnosisChapters().size());
+                    }
+
+                    @Test
+                    void shouldConvertEnabledDiagnosisChapterTo() {
+                        when(user.getValdVardenhet()).thenReturn(unit);
+                        when(unit.getId()).thenReturn(UNIT_ID);
+
+                        final var response = populateActiveFilters.populateSickLeaveFilters();
+                        final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
+                        assertEquals(enabledDiagnosisChapter.getTo().getLetter(), diagnosisChapter.getTo().getLetter());
+                        assertEquals(enabledDiagnosisChapter.getTo().getNumber(), diagnosisChapter.getTo().getNumber());
+                    }
+
+                    @Test
+                    void shouldConvertEnabledDiagnosisChapterFrom() {
+                        when(user.getValdVardenhet()).thenReturn(unit);
+                        when(unit.getId()).thenReturn(UNIT_ID);
+
+                        final var response = populateActiveFilters.populateSickLeaveFilters();
+                        final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
+                        assertEquals(enabledDiagnosisChapter.getFrom().getLetter(), diagnosisChapter.getFrom().getLetter());
+                        assertEquals(enabledDiagnosisChapter.getFrom().getNumber(), diagnosisChapter.getFrom().getNumber());
+                    }
+
+                    @Test
+                    void shouldConvertEnabledDiagnosisChapterId() {
+                        when(user.getValdVardenhet()).thenReturn(unit);
+                        when(unit.getId()).thenReturn(UNIT_ID);
+
+                        final var response = populateActiveFilters.populateSickLeaveFilters();
+                        final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
+                        assertEquals(enabledDiagnosisChapter.getId(), diagnosisChapter.getId());
+                    }
+
+                    @Test
+                    void shouldConvertEnabledDiagnosisChapterName() {
+                        when(user.getValdVardenhet()).thenReturn(unit);
+                        when(unit.getId()).thenReturn(UNIT_ID);
+
+                        final var response = populateActiveFilters.populateSickLeaveFilters();
+                        final var diagnosisChapter = response.getEnabledDiagnosisChapters().get(0);
+                        assertEquals(enabledDiagnosisChapter.getName(), diagnosisChapter.getName());
+                    }
                 }
             }
         }
