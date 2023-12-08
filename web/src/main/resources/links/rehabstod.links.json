@@ -125,5 +125,11 @@
     "url": "https://www.inera.se/om-webbplatsen/behandling-av-personuppgifter/",
     "text": "Behandling av personuppgifter",
     "target": "_blank"
+  },
+  {
+    "key": "rehabstodTillganglighetsredogorelse",
+    "url": "https://inera.atlassian.net/wiki/spaces/EIT/pages/3411345471/Tillg+nglighetsredog+relse+Rehabst+d",
+    "text": "Tillgänglighetsredogörelse",
+    "target": "_blank"
   }
 ]
