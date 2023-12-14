@@ -148,6 +148,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
 
     runtimeOnly "com.mysql:mysql-connector-j"
+    runtimeOnly "se.inera.intyg.infra:hsa-integration-intyg-proxy-service:${intygInfraVersion}"
 
     testImplementation "org.springframework:spring-test"
     testImplementation "org.testng:testng:${testngVersion}"
