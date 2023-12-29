@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -39,7 +38,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -49,9 +47,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.mock.web.MockHttpServletRequest;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.logmessages.ActivityType;
@@ -66,7 +61,6 @@ import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 import se.inera.intyg.rehabstod.service.Urval;
-import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
@@ -76,7 +70,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallForPatientRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -117,8 +110,6 @@ public class SjukfallControllerTest {
     UserService userService;
     @Mock
     LogService logService;
-    @Mock
-    PdfExportService pdfExportService;
     @Mock
     private SjukfallService sjukfallService;
 
@@ -165,88 +156,6 @@ public class SjukfallControllerTest {
 
                 verify(sjukfallService).getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class));
                 verify(logService).logSjukfallData(toLog, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
-            }
-        }
-
-        @Test
-        void testGetSjukfallByUnitAsPDF() {
-            final var a = createSjukFallEnhet(PATIENT_ID_1);
-            final var b = createSjukFallEnhet(PATIENT_ID_2);
-            final var c = createSjukFallEnhet(PATIENT_ID_3);
-            final var allSjukFall = List.of(a, b, c);
-            final var finalList = List.of(a, b);
-            final var toLog = List.of(c);
-
-            final var servletRequest = new MockHttpServletRequest();
-            servletRequest.addHeader(HttpHeaders.USER_AGENT,
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36");
-
-            final var request = new PrintSjukfallRequest();
-            request.setPersonnummer(List.of(PATIENT_ID_1, PATIENT_ID_2));
-
-            try (MockedStatic<PDLActivityStore> pdlActivityStore = mockStatic(PDLActivityStore.class)) {
-                pdlActivityStore.when(() -> PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
-                    eq(ResourceType.RESOURCE_TYPE_SJUKFALL), anyMap())).thenReturn(toLog);
-                when(sjukfallService.getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class)))
-                    .thenReturn(new SjukfallEnhetResponse(allSjukFall, false, false));
-                when(pdfExportService.export(finalList, request, rehabstodUser, allSjukFall.size()))
-                    .thenReturn(new byte[0]);
-
-                final var response = sjukfallController.getSjukfallForCareUnitAsPdf(request, servletRequest);
-
-                pdlActivityStore.verify(() -> PDLActivityStore.addActivitiesToStore(anyString(), eq(toLog), eq(ActivityType.PRINT),
-                    eq(ResourceType.RESOURCE_TYPE_SJUKFALL), anyMap()));
-
-                pdlActivityStore.verify(() -> PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
-                    eq(ResourceType.RESOURCE_TYPE_SJUKFALL), anyMap()));
-
-                verify(sjukfallService).getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class));
-                verify(logService).logSjukfallData(toLog, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
-                assertEquals(HttpStatus.OK, response.getStatusCode());
-                assertTrue(Objects.requireNonNull(response.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION)).get(0)
-                    .startsWith("inline; filename=\"sjukfall-" + DEFAULT_VARDENHET.getNamn() + "-"));
-            }
-        }
-
-        @Test
-        void testGetSjukfallByUnitAsPDFFromInternetExplorer() {
-            final var a = createSjukFallEnhet(PATIENT_ID_1);
-            final var b = createSjukFallEnhet(PATIENT_ID_2);
-            final var c = createSjukFallEnhet(PATIENT_ID_3);
-
-            final var allSjukFall = List.of(a, b, c);
-            final var finalList = List.of(a, b);
-            final var toLog = List.of(c);
-
-            final var servletRequest = new MockHttpServletRequest();
-            servletRequest.addHeader(HttpHeaders.USER_AGENT,
-                "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; Touch; rv:11.0) like Gecko");
-
-            final var request = new PrintSjukfallRequest();
-            request.setPersonnummer(List.of(PATIENT_ID_1, PATIENT_ID_2));
-
-            try (MockedStatic<PDLActivityStore> pdlActivityStore = mockStatic(PDLActivityStore.class)) {
-                pdlActivityStore.when(() -> PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
-                    eq(ResourceType.RESOURCE_TYPE_SJUKFALL), anyMap())).thenReturn(toLog);
-
-                when(sjukfallService.getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class)))
-                    .thenReturn(new SjukfallEnhetResponse(allSjukFall, false, false));
-                when(pdfExportService.export(finalList, request, rehabstodUser, allSjukFall.size()))
-                    .thenReturn(new byte[0]);
-
-                final var response = sjukfallController.getSjukfallForCareUnitAsPdf(request, servletRequest);
-
-                pdlActivityStore.verify(() -> PDLActivityStore.addActivitiesToStore(anyString(), eq(toLog), eq(ActivityType.PRINT),
-                    eq(ResourceType.RESOURCE_TYPE_SJUKFALL), anyMap()));
-                pdlActivityStore.verify(() -> PDLActivityStore.getActivitiesNotInStore(anyString(), eq(finalList), eq(ActivityType.PRINT),
-                    eq(ResourceType.RESOURCE_TYPE_SJUKFALL), anyMap()));
-
-                verify(sjukfallService).getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class));
-                verify(logService).logSjukfallData(toLog, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
-
-                assertEquals(HttpStatus.OK, response.getStatusCode());
-                assertTrue(Objects.requireNonNull(response.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION)).get(0)
-                    .startsWith("attachment; filename=\"sjukfall-" + DEFAULT_VARDENHET.getNamn() + "-"));
             }
         }
     }

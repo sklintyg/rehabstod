@@ -51,9 +51,9 @@ public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorato
         sjukfallList.forEach(
             sjukfallEnhet -> {
                 sjukfallEnhet.setObesvaradeKompl(
-                sjukfallEnhet.getIntygLista().stream()
-                    .mapToInt(intygsId -> Optional.ofNullable(perIntyg.get(intygsId)).orElse(dummy).getComplement())
-                    .sum());
+                    sjukfallEnhet.getIntygLista().stream()
+                        .mapToInt(intygsId -> Optional.ofNullable(perIntyg.get(intygsId)).orElse(dummy).getComplement())
+                        .sum());
                 sjukfallEnhet.setUnansweredOther(
                     sjukfallEnhet.getIntygLista().stream()
                         .mapToInt(intygsId -> Optional.ofNullable(perIntyg.get(intygsId)).orElse(dummy).getOthers())

@@ -40,9 +40,7 @@ public class RehabstodRestExceptionHandler {
     public RehabstodRestExceptionResponse serviceExceptionHandler(HttpServletRequest request, RehabstodServiceException e) {
         LOG.warn("Internal exception occured! Internal error code: {} Error message: {}", e.getErrorCode(),
             e.getMessage());
-        RehabstodRestExceptionResponse response =
-            new RehabstodRestExceptionResponse(e.getErrorCode(), e.getMessage());
-        return response;
+        return new RehabstodRestExceptionResponse(e.getErrorCode(), e.getMessage());
     }
 
     @ExceptionHandler
@@ -50,9 +48,7 @@ public class RehabstodRestExceptionHandler {
     @ResponseBody
     public RehabstodRestExceptionResponse serviceExceptionHandler(HttpServletRequest request, RuntimeException re) {
         LOG.error("Unhandled RuntimeException occured!", re);
-        RehabstodRestExceptionResponse response = new RehabstodRestExceptionResponse(
+        return new RehabstodRestExceptionResponse(
             RehabstodErrorCodeEnum.UNKNOWN_INTERNAL_PROBLEM, "Unhandled runtime exception");
-        return response;
     }
-
 }
