@@ -53,34 +53,12 @@ node {
     nodeModulesDir = file("${project.projectDir}")
 }
 
-idea {
-    module {
-        excludeDirs += file('node_modules')
-        excludeDirs += file('src/main/webapp/bower_components')
-    }
-}
-
 test {
     environment "catalina.base",  "${buildDirectory}/catalina.base"
 }
 
-if (project.hasProperty('useMinifiedJavaScript')) {
-    war {
-        webAppDirName = 'build/webapp'
-    }
-    war.dependsOn grunt_build
-} else if (project.hasProperty('useNoMinifiedJavaScriptNoKarma')) {
-    war.dependsOn grunt_build_no_minify_no_karma
-} else {
-    war.dependsOn grunt_build_no_minify
-}
-
 war.rootSpec.exclude "logback.xml"
 war.dependsOn createVersionPropertyFile
-
-grunt_build.dependsOn npmInstall
-grunt_build_no_minify.dependsOn npmInstall
-grunt_build_no_minify_no_karma.dependsOn npmInstall
 
 dependencies {
     implementation project(":rehabstod-common")
