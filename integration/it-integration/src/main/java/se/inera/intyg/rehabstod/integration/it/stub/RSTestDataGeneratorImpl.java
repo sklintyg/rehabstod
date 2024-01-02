@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -200,7 +200,6 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         addToActiveSickleavesList(tolvan, hosPersonList.get(0), activeSickLeavesList);
         fillDiagnosKapitel(diagnosisChapterList);
 
-
         // Lilltolvan
         createSjfPatientData(intygsDataList, intygPerPatient);
 
@@ -310,7 +309,7 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         final var list = new ArrayList<String>();
 
         for (int i = ThreadLocalRandom.current().nextInt(4); i > 0; i--) {
-            list.add((String)array[i]);
+            list.add((String) array[i]);
         }
 
         return list;

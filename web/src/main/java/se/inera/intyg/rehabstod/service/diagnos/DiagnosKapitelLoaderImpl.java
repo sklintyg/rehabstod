@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -56,8 +56,6 @@ public class DiagnosKapitelLoaderImpl implements DiagnosKapitelLoader {
     public List<DiagnosKapitel> loadDiagnosKapitel() throws IOException {
 
         Resource resource = resourceLoader.getResource(diagnosKapitelFile);
-
-
 
         List<DiagnosKapitel> list = new ArrayList<>();
         try (LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "UTF-8")) {

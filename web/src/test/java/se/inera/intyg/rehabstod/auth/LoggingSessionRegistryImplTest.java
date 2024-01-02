@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -52,6 +52,7 @@ public class LoggingSessionRegistryImplTest {
     private Principal customPrincipal = (Principal) () -> "I'm not a real Principal";
 
     private Map<String, Role> roles = ImmutableMap.of("LAKARE", new Role());
+
     @Before
     public void before() {
         user = new RehabstodUser("hsaId", "En Användare", false);

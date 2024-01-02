@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -193,7 +193,7 @@ public class UserControllerTest {
     public void testGetAccessTokenFakeUserNotProdResponse() {
         when(rehabUserMock.getTokens()).thenReturn(null);
 
-        when(environment.getActiveProfiles()).thenReturn(new String[] {"prod"});
+        when(environment.getActiveProfiles()).thenReturn(new String[]{"prod"});
 
         GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
         verify(tokenExchangeService, never()).refresh(any(RehabstodUserTokens.class));

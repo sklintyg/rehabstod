@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -192,7 +192,7 @@ public class PuServiceImpl implements PuService {
     @Override
     public boolean shouldFilterSickLeavesOnProtectedPerson(RehabstodUser user) {
         return !((user.isLakare() && user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE))
-                || (user.isLakare() && !user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE)));
+            || (user.isLakare() && !user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE)));
     }
 
     @Override
@@ -250,7 +250,7 @@ public class PuServiceImpl implements PuService {
         boolean isNameEmpty = item.getPatient() != null
             && (item.getPatient().getNamn().equals(SEKRETESS_SKYDDAD_NAME_UNKNOWN) || item.getPatient().getNamn().equals(""))
             && personSvar.getStatus() == PersonSvar.Status.FOUND;
-        String responseFromPU =  isNameEmpty ? personSvar.getStatus().name() + "_NO_NAME" : personSvar.getStatus().name();
+        String responseFromPU = isNameEmpty ? personSvar.getStatus().name() + "_NO_NAME" : personSvar.getStatus().name();
         item.getPatient().setResponseFromPu(responseFromPU);
     }
 

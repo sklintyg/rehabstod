@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,15 +34,15 @@ public class RehabstodSAMLContextProviderLB extends SAMLContextProviderLB {
     @Value("${rehabstod.domain.name}")
     private String rehabstodDomainName;
 
-    private static final  String RS2Dot = "rs2.";
-    private static final  String RS2Dash = "rs2-";
-    private static final  String SITHS_RS2_ALIAS = "/siths-rs2";
+    private static final String RS2Dot = "rs2.";
+    private static final String RS2Dash = "rs2-";
+    private static final String SITHS_RS2_ALIAS = "/siths-rs2";
 
     @Override
     public SAMLMessageContext getLocalAndPeerEntity(
         HttpServletRequest request, HttpServletResponse response) throws MetadataProviderException {
 
-        final var isRequestFromReactClient  = isRequestFromReactClient(request);
+        final var isRequestFromReactClient = isRequestFromReactClient(request);
         setServerName(getServerName(isRequestFromReactClient));
         setLocalEntityId(isRequestFromReactClient, request);
 

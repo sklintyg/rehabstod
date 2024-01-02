@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,7 +24,10 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,11 +51,11 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
-import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -189,11 +192,11 @@ public class CertificateServiceImplTest {
 
         var diagnosedCertificateList = buildDiagnosedCertificateList();
         when(intygstjanstRestIntegrationService
-                .getDiagnosedCertificatesForCareUnit(argumentCapture.capture(), any(List.class), any(), any(), any()))
-                .thenReturn(diagnosedCertificateList);
+            .getDiagnosedCertificatesForCareUnit(argumentCapture.capture(), any(List.class), any(), any(), any()))
+            .thenReturn(diagnosedCertificateList);
 
         when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
-                .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
+            .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
 
         final var captor = ArgumentCaptor.forClass(List.class);
 
@@ -217,11 +220,11 @@ public class CertificateServiceImplTest {
 
         var diagnosedCertificateList = buildDiagnosedCertificateList();
         when(intygstjanstRestIntegrationService
-                .getDiagnosedCertificatesForCareUnit(any(), any(List.class), any(), any(), any()))
-                .thenReturn(diagnosedCertificateList);
+            .getDiagnosedCertificatesForCareUnit(any(), any(List.class), any(), any(), any()))
+            .thenReturn(diagnosedCertificateList);
 
         when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
-                .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
+            .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
 
         when(patientIdEncryption.encrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);
 
@@ -288,11 +291,11 @@ public class CertificateServiceImplTest {
 
         var diagnosedCertificateList = buildDiagnosedCertificateList();
         when(intygstjanstRestIntegrationService
-                .getDiagnosedCertificatesForPerson(anyString(), any(List.class), any()))
-                .thenReturn(diagnosedCertificateList);
+            .getDiagnosedCertificatesForPerson(anyString(), any(List.class), any()))
+            .thenReturn(diagnosedCertificateList);
 
         when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
-                .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
+            .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
 
         final var captor = ArgumentCaptor.forClass(List.class);
 
@@ -318,11 +321,11 @@ public class CertificateServiceImplTest {
 
         var diagnosedCertificateList = buildDiagnosedCertificateList();
         when(intygstjanstRestIntegrationService
-                .getDiagnosedCertificatesForPerson(anyString(), any(List.class), any()))
-                .thenReturn(diagnosedCertificateList);
+            .getDiagnosedCertificatesForPerson(anyString(), any(List.class), any()))
+            .thenReturn(diagnosedCertificateList);
 
         when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
-                .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
+            .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
 
         when(patientIdEncryption.encrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);
 

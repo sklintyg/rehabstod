@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,6 +18,15 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,13 +45,6 @@ import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.service.user.UserService;
-
-import java.time.LocalDateTime;
-import java.util.Collections;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateRekoStatusServiceTest {
@@ -80,9 +82,9 @@ public class CreateRekoStatusServiceTest {
         when(user.getNamn()).thenReturn(STAFF_NAME);
         when(userService.getUser()).thenReturn(user);
         when(intygstjanstRestIntegrationService.createRekoStatus(any())).thenReturn(
-                new RekoStatusDTO(
-                        new RekoStatusTypeDTO(REKO_ID, REKO_NAME)
-                )
+            new RekoStatusDTO(
+                new RekoStatusTypeDTO(REKO_ID, REKO_NAME)
+            )
         );
     }
 
@@ -111,6 +113,7 @@ public class CreateRekoStatusServiceTest {
 
     @Nested
     class TestITRequest {
+
         @Nested
         class CareUnit {
 
