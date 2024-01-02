@@ -24,14 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonType;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
-import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
@@ -46,9 +42,6 @@ import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
 public class IntygstjanstClientServiceImpl implements IntygstjanstClientService {
 
     @Autowired
-    private ListActiveSickLeavesForCareUnitResponderInterface careUnitService;
-
-    @Autowired
     private ListSickLeavesForPersonResponderInterface personService;
 
     @Autowired
@@ -57,38 +50,6 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
 
     @Value("${it.service.logicalAddress}")
     private String logicalAddress;
-
-    @Override
-    @PrometheusTimeMethod
-    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnit(String unitId, int maxAntalDagarSedanSjukfallAvslut) {
-        HsaId hsaId = new HsaId();
-        hsaId.setExtension(unitId);
-
-        ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
-        params.setEnhetsId(hsaId);
-        params.setMaxDagarSedanAvslut(maxAntalDagarSedanSjukfallAvslut);
-
-        return careUnitService.listActiveSickLeavesForCareUnit(logicalAddress, params);
-    }
-
-    @Override
-    @PrometheusTimeMethod
-    public ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnitAndPatient(
-        String unitId, String patientId, int maxAntalDagarSedanSjukfallAvslut) {
-
-        PersonId pId = new PersonId();
-        pId.setExtension(patientId);
-
-        HsaId hsaId = new HsaId();
-        hsaId.setExtension(unitId);
-
-        ListActiveSickLeavesForCareUnitType params = new ListActiveSickLeavesForCareUnitType();
-        params.setPersonId(pId);
-        params.setEnhetsId(hsaId);
-        params.setMaxDagarSedanAvslut(maxAntalDagarSedanSjukfallAvslut);
-
-        return careUnitService.listActiveSickLeavesForCareUnit(logicalAddress, params);
-    }
 
     @Override
     @PrometheusTimeMethod

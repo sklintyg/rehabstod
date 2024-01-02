@@ -23,13 +23,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -38,7 +34,6 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.junit.Before;
@@ -73,7 +68,6 @@ import se.inera.intyg.rehabstod.service.pu.PuService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaDataItemType;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
@@ -123,7 +117,6 @@ public class SjukfallServiceTest {
     private final String lakareId2 = "IFV1239877878-104B";
     private final String lakareNamn2 = "Åsa Andersson";
     private final String lakareId3 = "TSTNMT2321000156-103F";
-    private final String lakareNamn3 = "Leonie Koehl";
     private final String patientId1 = "19121212-1212";
 
     private int intygsIdCounter = 1;
@@ -194,17 +187,9 @@ public class SjukfallServiceTest {
 
     @Before
     public void init() {
-        when(integrationService.getIntygsDataForCareUnit(anyString(), anyInt())).thenReturn(new ArrayList<>());
         when(integrationService.getAllIntygsDataForPatient(anyString())).thenReturn(createIntygsData());
         when(puService.filterSekretessForPatientHistory(anyList()))
             .thenAnswer(returnsFirstArg());
-
-        doReturn(createSjukfallEnhetList()).when(sjukfallEngine)
-            .beraknaSjukfallForEnhet(anyList(),
-                any(se.inera.intyg.infra.sjukfall.dto.IntygParametrar.class));
-
-        when(statisticsCalculator.getSjukfallSummary(anyList())).thenReturn(
-            new SjukfallSummary(0, Collections.emptyList(), new ArrayList<>(), new ArrayList<>()));
 
         when(hsaOrganizationsService.getVardgivareInfo(anyString()))
             .thenAnswer(i -> createVardgivare((String) i.getArguments()[0], i.getArguments()[0] + "-VGNAME"));
@@ -212,66 +197,7 @@ public class SjukfallServiceTest {
         when(hsaOrganizationsService.getVardenhet(anyString()))
             .thenAnswer(i -> createVardenhet((String) i.getArguments()[0], i.getArguments()[0] + "-VENAME"));
 
-        doNothing().when(sjukfallEmployeeNameResolver).enrichWithHsaEmployeeNames(anyList());
-        doNothing().when(sjukfallEmployeeNameResolver).updateDuplicateDoctorNamesWithHsaId(anyList());
-
         when(userService.getUser()).thenReturn(buildUser());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testWhenNoUrvalSet() {
-        testee.getByUnit(enhetsId11, null, "", null, parameters);
-    }
-
-    @Test
-    public void testWhenUrvalIsAll() {
-        List<SjukfallEnhet> internalSjukfallList = testee.getByUnit(enhetsId11, null, "", Urval.ALL, parameters).getSjukfallList();
-
-        verify(integrationService).getIntygsDataForCareUnit(enhetsId11, MAX_DAGAR_SEDAN_AVSLUT);
-
-        assertEquals(15, internalSjukfallList.size());
-    }
-
-    @Test
-    public void testWhenUrvalIsAllForUnderenhet() {
-        List<SjukfallEnhet> internalSjukfallList = testee.getByUnit(enhetsId11, mottagningsId, "", Urval.ALL, parameters)
-            .getSjukfallList();
-
-        verify(integrationService).getIntygsDataForCareUnit(enhetsId11, MAX_DAGAR_SEDAN_AVSLUT);
-
-        assertEquals(7, internalSjukfallList.size());
-    }
-
-    @Test
-    public void testWhenUrvalIsIssuedByMe() {
-        List<SjukfallEnhet> internalSjukfallList = testee.getByUnit(enhetsId11, null, lakareId1, Urval.ISSUED_BY_ME, parameters)
-            .getSjukfallList();
-
-        verify(integrationService).getIntygsDataForCareUnit(enhetsId11, MAX_DAGAR_SEDAN_AVSLUT);
-
-        assertEquals(8, internalSjukfallList.size());
-        for (SjukfallEnhet internalSjukfall : internalSjukfallList) {
-            String hsaId = internalSjukfall.getLakare().getHsaId();
-            String namn = internalSjukfall.getLakare().getNamn();
-            assertEquals(lakareId1, hsaId);
-            assertEquals(lakareNamn1, namn);
-        }
-    }
-
-    @Test
-    public void testGetSjukfallSummary() {
-        testee.getSummary(enhetsId11, null, lakareId1, Urval.ALL, parameters);
-
-        verify(integrationService).getIntygsDataForCareUnit(enhetsId11, MAX_DAGAR_SEDAN_AVSLUT);
-        verify(statisticsCalculator).getSjukfallSummary(anyList());
-    }
-
-    @Test
-    public void testGetSjukfallSummaryWhenSelectedVardenhetIsMottagning() {
-        testee.getSummary(enhetsId11, mottagningsId, lakareId1, Urval.ALL, parameters);
-
-        verify(integrationService).getIntygsDataForCareUnit(enhetsId11, MAX_DAGAR_SEDAN_AVSLUT);
-        verify(statisticsCalculator).getSjukfallSummary(anyList());
     }
 
     /*

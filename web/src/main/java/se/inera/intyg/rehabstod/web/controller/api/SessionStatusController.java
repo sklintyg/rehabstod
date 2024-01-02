@@ -57,11 +57,6 @@ public class SessionStatusController {
         return createStatusResponse(request);
     }
 
-    @RequestMapping(value = SessionStatusController.SESSION_STATUS_EXTEND, method = RequestMethod.GET)
-    public GetSessionStatusResponse getExtendSession(HttpServletRequest request) {
-        return createStatusResponse(request);
-    }
-
     private GetSessionStatusResponse createStatusResponse(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         // The sessionTimeoutFilter should have put a secondsLeft attribute in the request for us to use.

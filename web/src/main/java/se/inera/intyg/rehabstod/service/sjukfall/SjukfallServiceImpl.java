@@ -56,17 +56,13 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.FilteredSjukFallByPatientRe
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaDataItem;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaDataItemType;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.IntygstjanstMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 import se.inera.intyg.rehabstod.service.sjukfall.nameresolver.SjukfallEmployeeNameResolver;
 import se.inera.intyg.rehabstod.service.sjukfall.srs.RiskPredictionService;
-import se.inera.intyg.rehabstod.service.sjukfall.statistics.StatisticsCalculator;
 import se.inera.intyg.rehabstod.service.user.UserService;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
@@ -102,9 +98,6 @@ public class SjukfallServiceImpl implements SjukfallService {
     private PuService puService;
 
     @Autowired
-    private StatisticsCalculator statisticsCalculator;
-
-    @Autowired
     private MonitoringLogService monitoringLogService;
 
     @Autowired
@@ -125,51 +118,6 @@ public class SjukfallServiceImpl implements SjukfallService {
     @Autowired
     private LogService logService;
 
-
-    @Override
-    @PrometheusTimeMethod
-    public SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval,
-        IntygParametrar parameters) {
-
-        List<SjukfallEnhet> rehabstodSjukfall = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, parameters);
-
-        // Utför sekretess-filtrering innan loggning, vi filtrerar ju ev. bort en del poster.
-        puService.enrichSjukfallWithPatientNamesAndFilterSekretess(rehabstodSjukfall);
-
-        if (rehabstodSjukfall != null) {
-            monitoringLogService.logUserViewedSjukfall(lakareId,
-                rehabstodSjukfall.size(), resolveIdOfActualUnit(enhetsId, mottagningsId));
-        }
-
-        sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(rehabstodSjukfall);
-        sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(rehabstodSjukfall);
-
-        boolean qaInfoError = false;
-        try {
-            unansweredQAsInfoDecorator.updateSjukfallEnhetQAs(rehabstodSjukfall);
-        } catch (WcIntegrationException e) {
-            qaInfoError = true;
-        }
-
-        boolean srsError = false;
-        try {
-            riskPredictionService.updateWithRiskPredictions(rehabstodSjukfall);
-        } catch (SRSServiceException e) {
-            srsError = true;
-        }
-
-        if (rehabstodSjukfall != null) {
-            rehabstodSjukfall.sort((d1, d2) -> {
-                if (d2.getStart().equals(d1.getStart())) {
-                    return 0;
-                }
-
-                return d2.getStart().isAfter(d1.getStart()) ? 1 : -1;
-            });
-        }
-
-        return new SjukfallEnhetResponse(rehabstodSjukfall, srsError, qaInfoError);
-    }
 
     @Override
     @PrometheusTimeMethod
@@ -206,71 +154,6 @@ public class SjukfallServiceImpl implements SjukfallService {
         }
 
         return new SjukfallPatientResponse(rehabstodSjukfall, result.getSjfMetaData(), srsError, qaInfoError);
-    }
-    // CHECKSTYLE:ON ParameterNumber
-
-    @Override
-    @PrometheusTimeMethod
-    public SjukfallSummary getSummary(String enhetsId, String mottagningsId,
-        String lakareId, Urval urval, IntygParametrar parameters) {
-
-        List<SjukfallEnhet> sjukfallList = getFilteredSjukfallByUnit(enhetsId, mottagningsId, lakareId, urval, parameters);
-        puService.filterSekretessForSummary(sjukfallList);
-        return statisticsCalculator.getSjukfallSummary(sjukfallList);
-    }
-
-    // private scope
-
-    /**
-     * Since we always use the vardenhetsId to query intygstjänsten (even when the
-     * selected unit is a mottagning), we must take care to use the mottagningsId
-     * when logging when present). Note that this does NOT apply to PDL logging, only monitoring logging.
-     *
-     * For PDL logging we always specify the enhetsId, never a mottagningsId.
-     */
-    private String resolveIdOfActualUnit(String enhetsId, String mottagningsId) {
-        return mottagningsId != null ? mottagningsId : enhetsId;
-    }
-
-    private List<SjukfallEnhet> getFilteredSjukfallByUnit(String enhetsId, String mottagningsId, String lakareId, Urval urval,
-        IntygParametrar parameters) {
-
-        if (urval == null) {
-            throw new IllegalArgumentException("Urval must be given to be able to get sjukfall");
-        }
-
-        LOG.debug("Calling Intygstjänsten - fetching certificate information.");
-        List<IntygsData> intygsData = intygstjanstIntegrationService.getIntygsDataForCareUnit(enhetsId,
-            parameters.getMaxAntalDagarSedanSjukfallAvslut());
-
-        LOG.debug("Calling the calculation engine - calculating and assembling 'sjukfall' by unit.");
-        List<se.inera.intyg.infra.sjukfall.dto.IntygData> data = intygsData.stream()
-            .map(o -> intygstjanstMapper.map(o)).collect(Collectors.toList());
-
-        List<se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet> sjukfallList = sjukfallEngine.beraknaSjukfallForEnhet(data, parameters);
-
-        LOG.debug("Mapping response from calculation engine to internal objects.");
-        List<SjukfallEnhet> rehabstodSjukfall = sjukfallList.stream()
-            .map(o -> sjukfallEngineMapper.mapToSjukfallEnhetDto(o,
-                parameters.getMaxAntalDagarSedanSjukfallAvslut(),
-                parameters.getAktivtDatum()))
-            .collect(Collectors.toList());
-
-        if (urval.equals(Urval.ISSUED_BY_ME)) {
-            LOG.debug("Filtering response - a doctor shall only see patients 'sjukfall' he/she has issued certificates.");
-            rehabstodSjukfall = rehabstodSjukfall.stream()
-                .filter(o -> o.getLakare().getHsaId().equals(lakareId))
-                .collect(Collectors.toList());
-        }
-
-        if (mottagningsId != null) {
-            LOG.debug("Filtering response - query for mottagning, only including 'sjukfall' with active intyg on specified mottagning");
-            rehabstodSjukfall = rehabstodSjukfall.stream()
-                .filter(o -> o.getVardEnhetId().equals(mottagningsId))
-                .collect(Collectors.toList());
-        }
-
-        return rehabstodSjukfall;
     }
 
     // CHECKSTYLE:OFF ParameterNumber

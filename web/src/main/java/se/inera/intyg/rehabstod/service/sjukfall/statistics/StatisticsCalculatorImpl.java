@@ -36,7 +36,11 @@ import org.springframework.stereotype.Component;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosGruppLoader;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallServiceException;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.*;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.DiagnosGruppStat;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.GenderStat;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveDegreeStat;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveLengthStat;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveSummary;
 import se.inera.intyg.rehabstod.web.model.Gender;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
@@ -66,20 +70,6 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
     }
 
     @Override
-    public SjukfallSummary getSjukfallSummary(List<SjukfallEnhet> sjukfall) {
-
-        int total = sjukfall.size();
-
-        // Note: Some of the items may have Gender.UNKNOWN, but the men/women stats are correct anyway
-        List<GenderStat> genderStat = calculateGenderStat(sjukfall);
-        List<DiagnosGruppStat> grupper = calculateGroupStatistics(sjukfall);
-        List<SickLeaveDegreeStat> sjukskrivningsGrader = calculateSickLeaveDegrees(sjukfall);
-
-        return new SjukfallSummary(total, genderStat, grupper, sjukskrivningsGrader);
-
-    }
-
-    @Override
     public SickLeaveSummary getSickLeaveSummary(List<SjukfallEnhet> sickLeave) {
 
         int total = sickLeave.size();
@@ -91,13 +81,13 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
         final var femaleDiagnosisGroups = calculateGroupStatistics(filterSickLeavesByGender(sickLeave, Gender.F));
 
         final var sickLeaveDegrees = filterEmptyPercentages(
-                calculateSickLeaveDegrees(sickLeave)
+            calculateSickLeaveDegrees(sickLeave)
         );
         final var maleSickLeaveDegrees = filterEmptyPercentages(
-                calculateSickLeaveDegrees(filterSickLeavesByGender(sickLeave, Gender.M))
+            calculateSickLeaveDegrees(filterSickLeavesByGender(sickLeave, Gender.M))
         );
         final var femaleSickLeaveDegrees = filterEmptyPercentages(
-                calculateSickLeaveDegrees(filterSickLeavesByGender(sickLeave, Gender.F))
+            calculateSickLeaveDegrees(filterSickLeavesByGender(sickLeave, Gender.F))
         );
 
         final var countSickLeaveDegrees = countSickLeaveDegrees(sickLeave);
@@ -109,84 +99,84 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
         final var femaleSickLeaveLength = calculateSickLeaveLength(filterSickLeavesByGender(sickLeave, Gender.F));
 
         return new SickLeaveSummary(
-                total,
-                genderStat,
-                diagnosisGroups,
-                maleDiagnosisGroups,
-                femaleDiagnosisGroups,
-                sickLeaveDegrees,
-                maleSickLeaveDegrees,
-                femaleSickLeaveDegrees,
-                countSickLeaveDegrees,
-                countMaleSickLeaveDegrees,
-                countFemaleSickLeaveDegrees,
-                sickLeaveLength,
-                maleSickLeaveLength,
-                femaleSickLeaveLength
+            total,
+            genderStat,
+            diagnosisGroups,
+            maleDiagnosisGroups,
+            femaleDiagnosisGroups,
+            sickLeaveDegrees,
+            maleSickLeaveDegrees,
+            femaleSickLeaveDegrees,
+            countSickLeaveDegrees,
+            countMaleSickLeaveDegrees,
+            countFemaleSickLeaveDegrees,
+            sickLeaveLength,
+            maleSickLeaveLength,
+            femaleSickLeaveLength
         );
 
     }
 
     private List<SickLeaveDegreeStat> filterEmptyPercentages(List<SickLeaveDegreeStat> list) {
         return list
-                .stream()
-                .filter((item) -> item.getPercentage() > 0 && item.getCount() > 0)
-                .collect(Collectors.toList());
+            .stream()
+            .filter((item) -> item.getPercentage() > 0 && item.getCount() > 0)
+            .collect(Collectors.toList());
     }
 
     private List<SickLeaveDegreeStat> countSickLeaveDegrees(List<SjukfallEnhet> sickLeaves) {
         final var bySickLeaveDegreeCount = sickLeaves
-                .stream()
-                .filter((sickLeave) -> sickLeave.getGrader() != null)
-                .collect(Collectors.groupingBy((sickLeave) -> sickLeave.getGrader().size() == 1));
+            .stream()
+            .filter((sickLeave) -> sickLeave.getGrader() != null)
+            .collect(Collectors.groupingBy((sickLeave) -> sickLeave.getGrader().size() == 1));
 
         return bySickLeaveDegreeCount
-                .entrySet()
-                .stream()
-                .map((entry) -> new SickLeaveDegreeStat(
-                        entry.getKey() ? 1 : 2,
-                        entry.getKey() ? "En" : "Flera",
-                        entry.getValue().size(),
-                        calculatePercentage(entry.getValue().size(), sickLeaves.size())))
-                .filter((item) -> item.getPercentage() > 0 && item.getCount() > 0)
-                .sorted(Comparator.comparing(SickLeaveDegreeStat::getName))
-                .collect(Collectors.toList());
+            .entrySet()
+            .stream()
+            .map((entry) -> new SickLeaveDegreeStat(
+                entry.getKey() ? 1 : 2,
+                entry.getKey() ? "En" : "Flera",
+                entry.getValue().size(),
+                calculatePercentage(entry.getValue().size(), sickLeaves.size())))
+            .filter((item) -> item.getPercentage() > 0 && item.getCount() > 0)
+            .sorted(Comparator.comparing(SickLeaveDegreeStat::getName))
+            .collect(Collectors.toList());
 
     }
 
     private List<SjukfallEnhet> filterOnSickLeaveLength(List<SjukfallEnhet> sickLeaves, Predicate<SjukfallEnhet> filter) {
         return sickLeaves
-                .stream()
-                .filter(filter)
-                .collect(Collectors.toList());
+            .stream()
+            .filter(filter)
+            .collect(Collectors.toList());
     }
 
     private List<SickLeaveLengthStat> calculateSickLeaveLength(List<SjukfallEnhet> sickLeaves) {
         final var firstLimit =
-                filterOnSickLeaveLength(sickLeaves, (sickLeave) -> sickLeave.getDagar() < 90);
+            filterOnSickLeaveLength(sickLeaves, (sickLeave) -> sickLeave.getDagar() < 90);
         final var secondLimit =
-                filterOnSickLeaveLength(sickLeaves,(sickLeave) -> sickLeave.getDagar() >= 90 && sickLeave.getDagar() <= 180);
+            filterOnSickLeaveLength(sickLeaves, (sickLeave) -> sickLeave.getDagar() >= 90 && sickLeave.getDagar() <= 180);
         final var thirdLimit =
-                filterOnSickLeaveLength(sickLeaves, (sickLeave) -> sickLeave.getDagar() <= 365 && sickLeave.getDagar() > 180);
+            filterOnSickLeaveLength(sickLeaves, (sickLeave) -> sickLeave.getDagar() <= 365 && sickLeave.getDagar() > 180);
         final var fourthLimit =
-                filterOnSickLeaveLength(sickLeaves, (sickLeave) -> sickLeave.getDagar() > 365);
+            filterOnSickLeaveLength(sickLeaves, (sickLeave) -> sickLeave.getDagar() > 365);
 
         return Stream.of(
-                    getStatForSickLeaveLength(firstLimit, 1, sickLeaves.size()),
-                    getStatForSickLeaveLength(secondLimit, 2, sickLeaves.size()),
-                    getStatForSickLeaveLength(thirdLimit, 3, sickLeaves.size()),
-                    getStatForSickLeaveLength(fourthLimit, 4, sickLeaves.size())
-                )
-                .filter((item) -> item.getPercentage() > 0 && item.getCount() > 0)
-                .collect(Collectors.toList());
+                getStatForSickLeaveLength(firstLimit, 1, sickLeaves.size()),
+                getStatForSickLeaveLength(secondLimit, 2, sickLeaves.size()),
+                getStatForSickLeaveLength(thirdLimit, 3, sickLeaves.size()),
+                getStatForSickLeaveLength(fourthLimit, 4, sickLeaves.size())
+            )
+            .filter((item) -> item.getPercentage() > 0 && item.getCount() > 0)
+            .collect(Collectors.toList());
     }
 
     private SickLeaveLengthStat getStatForSickLeaveLength(List<SjukfallEnhet> sickLeaves, int id, int totalCount) {
         return new SickLeaveLengthStat(
-                id,
-                getSickLeaveLengthName(id),
-                sickLeaves.size(),
-                calculatePercentage(sickLeaves.size(), totalCount)
+            id,
+            getSickLeaveLengthName(id),
+            sickLeaves.size(),
+            calculatePercentage(sickLeaves.size(), totalCount)
         );
     }
 
@@ -206,12 +196,12 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
 
     private List<SickLeaveDegreeStat> calculateSickLeaveDegrees(List<SjukfallEnhet> sjukfall) {
         Map<Integer, List<SjukfallEnhet>> byGrad = sjukfall.stream()
-                .collect(Collectors.groupingBy(SjukfallEnhet::getAktivGrad));
+            .collect(Collectors.groupingBy(SjukfallEnhet::getAktivGrad));
         return byGrad.entrySet().stream()
-                .map(entry -> new SickLeaveDegreeStat(entry.getKey(), "" + entry.getKey() + " %",
-                        entry.getValue().size(), calculatePercentage(entry.getValue().size(), sjukfall.size())))
-                .sorted(Comparator.comparingInt(SickLeaveDegreeStat::getId))
-                .collect(Collectors.toList());
+            .map(entry -> new SickLeaveDegreeStat(entry.getKey(), "" + entry.getKey() + " %",
+                entry.getValue().size(), calculatePercentage(entry.getValue().size(), sjukfall.size())))
+            .sorted(Comparator.comparingInt(SickLeaveDegreeStat::getId))
+            .collect(Collectors.toList());
     }
 
     private List<GenderStat> calculateGenderStat(List<SjukfallEnhet> sjukfall) {
@@ -221,15 +211,15 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
         int womenTotal = byGender.getOrDefault(Gender.F, Collections.emptyList()).size();
 
         return Arrays.asList(
-                new GenderStat(Gender.F, womenTotal, calculatePercentage(womenTotal, (womenTotal + menTotal))),
-                new GenderStat(Gender.M, menTotal, calculatePercentage(menTotal, (womenTotal + menTotal))));
+            new GenderStat(Gender.F, womenTotal, calculatePercentage(womenTotal, (womenTotal + menTotal))),
+            new GenderStat(Gender.M, menTotal, calculatePercentage(menTotal, (womenTotal + menTotal))));
     }
 
     private List<SjukfallEnhet> filterSickLeavesByGender(List<SjukfallEnhet> sickLeaves, Gender gender) {
         return sickLeaves
-                .stream()
-                .filter((sickLeave) -> sickLeave.getPatient().getKon() == gender)
-                .collect(Collectors.toList());
+            .stream()
+            .filter((sickLeave) -> sickLeave.getPatient().getKon() == gender)
+            .collect(Collectors.toList());
     }
 
     private List<DiagnosGruppStat> calculateGroupStatistics(List<SjukfallEnhet> sjukfall) {
@@ -248,7 +238,7 @@ public class StatisticsCalculatorImpl implements StatisticsCalculator {
         long sjukFallWithUnassignedCodeCount = sjukfall.size() - assignedToExistingGroupCount;
         if (sjukFallWithUnassignedCodeCount > 0) {
             stats.add(new DiagnosGruppStat(NON_MATCHING_GROUP, sjukFallWithUnassignedCodeCount,
-                    calculatePercentage(sjukFallWithUnassignedCodeCount, sjukfall.size())));
+                calculatePercentage(sjukFallWithUnassignedCodeCount, sjukfall.size())));
         }
 
         // Finally sort the stats in falling order

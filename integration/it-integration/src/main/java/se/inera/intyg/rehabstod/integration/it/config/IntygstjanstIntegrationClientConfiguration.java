@@ -58,29 +58,12 @@ public class IntygstjanstIntegrationClientConfiguration {
     @Value("${it.service.connection.timeout}")
     private String connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
 
-    @Value("${it.service.url}")
-    private String itWsUrl;
-
     @Value("${it.listsickleavesforperson.url}")
     private String listSickleavesForPersonUrl;
 
 
     @Value("${it.ping.url}")
     private String itWsPingUrl;
-
-    @Bean
-    public ListActiveSickLeavesForCareUnitResponderInterface listActiveSickLeavesForCareUnitWebServiceClient() {
-        // CHECKSTYLE:OFF LineLength
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setAddress(itWsUrl);
-        proxyFactoryBean.setServiceClass(ListActiveSickLeavesForCareUnitResponderInterface.class);
-        ListActiveSickLeavesForCareUnitResponderInterface listActiveSickLeavesForCareUnitResponderInterface =
-            (ListActiveSickLeavesForCareUnitResponderInterface) proxyFactoryBean.create();
-        Client client = ClientProxy.getClient(listActiveSickLeavesForCareUnitResponderInterface);
-        applyTimeouts(client);
-        return listActiveSickLeavesForCareUnitResponderInterface;
-        // CHECKSTYLE:ON LineLength
-    }
 
     @Bean
     public ListSickLeavesForPersonResponderInterface listSickLeavesForPersonWebServiceClient() {

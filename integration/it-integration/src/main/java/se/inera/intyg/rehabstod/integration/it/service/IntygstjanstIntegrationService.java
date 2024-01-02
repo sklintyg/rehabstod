@@ -26,10 +26,6 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
  */
 public interface IntygstjanstIntegrationService {
 
-    List<IntygsData> getIntygsDataForCareUnit(String careUnitHsaId, int maxAntalDagarSedanSjukfallAvslut);
-
-    List<IntygsData> getIntygsDataForCareUnitAndPatient(String careUnitHsaId, String personId, int maxAntalDagarSedanSjukfallAvslut);
-
     List<IntygsData> getAllIntygsDataForPatient(String personId);
 
 }

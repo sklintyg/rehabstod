@@ -21,7 +21,6 @@ package se.inera.intyg.rehabstod.web.controller.api;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -64,12 +63,10 @@ import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjfMetaData;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallForPatientRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
 import se.inera.intyg.rehabstod.web.model.Diagnos;
 import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.Patient;
@@ -134,30 +131,6 @@ public class SjukfallControllerTest {
             when(rehabstodUser.getPreferences()).thenReturn(preferences);
         }
 
-        @Test
-        void testGetSjukfallByUnit() {
-            final var a = createSjukFallEnhet(PATIENT_ID_1);
-            final var b = createSjukFallEnhet(PATIENT_ID_2);
-            final var c = createSjukFallEnhet(PATIENT_ID_3);
-            final var result = List.of(a, b);
-            final var toLog = List.of(c);
-            final var request = new GetSjukfallRequest();
-
-            try (MockedStatic<PDLActivityStore> pdlActivityStore = mockStatic(PDLActivityStore.class)) {
-                pdlActivityStore.when(() -> PDLActivityStore.getActivitiesNotInStore(anyString(), anyList(), eq(ActivityType.READ),
-                    eq(ResourceType.RESOURCE_TYPE_SJUKFALL), anyMap())).thenReturn(toLog);
-                when(sjukfallService.getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class)))
-                    .thenReturn(new SjukfallEnhetResponse(result, false, false));
-
-                sjukfallController.getSjukfallForCareUnit(request);
-
-                pdlActivityStore.verify(() -> PDLActivityStore.getActivitiesNotInStore(anyString(), anyList(), eq(ActivityType.READ),
-                    eq(ResourceType.RESOURCE_TYPE_SJUKFALL), anyMap()));
-
-                verify(sjukfallService).getByUnit(anyString(), isNull(), isNull(), any(Urval.class), any(IntygParametrar.class));
-                verify(logService).logSjukfallData(toLog, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
-            }
-        }
     }
 
     @Nested
@@ -405,80 +378,6 @@ public class SjukfallControllerTest {
             verify(logService, times(0)).logSjukfallData(any(PatientData.class),
                 eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_PREDIKTION_SRS));
         }
-
-        @Test
-        void testPDLLogSRSForSjukfallEnhetIfFeatureIsActive() {
-            final var user = buildConcreteUser();
-
-            final var feature = new Feature();
-            feature.setGlobal(true);
-            user.setFeatures(Map.of(AuthoritiesConstants.FEATURE_SRS, feature));
-
-            final var a = createSjukFallEnhet(PATIENT_ID_1, true);
-            final var b = createSjukFallEnhet(PATIENT_ID_2, false);
-            final var finalList = List.of(a, b);
-            final var request = new GetSjukfallRequest();
-
-            when(userService.getUser()).thenReturn(user);
-            when(sjukfallService.getByUnit(anyString(), isNull(), anyString(), any(Urval.class), any(IntygParametrar.class)))
-                .thenReturn(new SjukfallEnhetResponse(finalList, false, false));
-
-            sjukfallController.getSjukfallForCareUnit(request);
-
-            assertEquals(1, user.getStoredActivities().size());
-
-            final var pdlActivityEntries = user.getStoredActivities().get(DEFAULT_VARDENHET.getId());
-            assertEquals(3, pdlActivityEntries.size());
-            assertEquals(1L, pdlActivityEntries.stream()
-                .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_PREDIKTION_SRS)
-                .count());
-            assertEquals(2L, pdlActivityEntries.stream()
-                .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_SJUKFALL)
-                .count());
-
-            verify(logService, times(1)).logSjukfallData(anyList(), eq(ActivityType.READ),
-                eq(ResourceType.RESOURCE_TYPE_SJUKFALL));
-            verify(logService, times(1)).logSjukfallData(anyList(),
-                eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_PREDIKTION_SRS));
-        }
-    }
-
-    @Test
-    void pdlLogSjukfallEnhetShouldNotTriggerSRSLogEntryIfFeatureISInactive() {
-        final var user = buildConcreteUser();
-
-        final var feature = new Feature();
-        feature.setGlobal(true);
-        user.setFeatures(Map.of(AuthoritiesConstants.ROLE_LAKARE, feature));
-
-        final var sjukfallEnhet1 = createSjukFallEnhet(PATIENT_ID_1, true);
-        final var sjukfallEnhet2 = createSjukFallEnhet(PATIENT_ID_2, false);
-        final var listOfSjukfallEnhet = List.of(sjukfallEnhet1, sjukfallEnhet2);
-        final var request = new GetSjukfallRequest();
-
-        when(userService.getUser()).thenReturn(user);
-        when(sjukfallService.getByUnit(anyString(), isNull(), anyString(), any(Urval.class), any(IntygParametrar.class)))
-            .thenReturn(new SjukfallEnhetResponse(listOfSjukfallEnhet, false, false));
-
-        sjukfallController.getSjukfallForCareUnit(request);
-
-        assertEquals(1, user.getStoredActivities().size());
-
-        final var pdlActivityEntries = user.getStoredActivities().get(DEFAULT_VARDENHET.getId());
-        assertEquals(2, pdlActivityEntries.size());
-
-        assertEquals(0, pdlActivityEntries.stream()
-            .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_PREDIKTION_SRS)
-            .count());
-
-        assertEquals(2L, pdlActivityEntries.stream()
-            .filter(entry -> entry.getResourceType() == ResourceType.RESOURCE_TYPE_SJUKFALL)
-            .count());
-
-        verify(logService, times(1)).logSjukfallData(anyList(), eq(ActivityType.READ),
-            eq(ResourceType.RESOURCE_TYPE_SJUKFALL));
-        verify(logService, times(0)).logSjukfallData(anyList(),
-            eq(ActivityType.READ), eq(ResourceType.RESOURCE_TYPE_PREDIKTION_SRS));
     }
 
     private void assertPdlActivityEntries(RehabstodUser user, Vardenhet vardenhet, ResourceType resourceType) {
