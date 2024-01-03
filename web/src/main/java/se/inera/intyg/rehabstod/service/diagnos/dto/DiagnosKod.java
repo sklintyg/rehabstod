@@ -36,6 +36,11 @@ public class DiagnosKod {
         initFromString(line, firstLineInFile);
     }
 
+    public DiagnosKod(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

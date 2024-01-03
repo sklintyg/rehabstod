@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.service.diagnos;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,27 +33,22 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
+import lombok.RequiredArgsConstructor;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKod;
 
 /**
  * Created by martin on 10/02/16.
  */
 @Component
+@RequiredArgsConstructor
 public class DiagnosKoderLoaderImpl implements DiagnosKoderLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(DiagnosKoderLoaderImpl.class);
-
-    @Value("${rhs.diagnoskod.icd10se.file1}")
-    private String diagnoseCodeIcd10SeFile1;
-
-    @Value("${rhs.diagnoskod.icd10se.file2}")
-    private String diagnoseCodeIcd10SeFile2;
-
-    @Value("${rhs.diagnoskod.icd10se.file3}")
-    private String diagnoseCodeIcd10SeFile3;
-
+    private final IcdCodeConverter icdCodeConverter;
     @Value("${rhs.diagnoskod.ksh97p_kod.file}")
     private String diagnosKodKS97PKodFile;
+    @Value("${rhs.diagnosisCode.icd10se.file}")
+    private String diagnosisCodeIcd10SeFile;
 
     @Autowired
     ResourceLoader resourceLoader;
@@ -62,16 +56,12 @@ public class DiagnosKoderLoaderImpl implements DiagnosKoderLoader {
     @Override
     public Map<String, String> loadDiagnosKoder() throws IOException {
         Map<String, String> map = new HashMap<>();
-
-        map.putAll(loadDiagnosFile(diagnoseCodeIcd10SeFile1, StandardCharsets.UTF_8));
-        map.putAll(loadDiagnosFile(diagnoseCodeIcd10SeFile2, StandardCharsets.UTF_8));
-        map.putAll(loadDiagnosFile(diagnoseCodeIcd10SeFile3, StandardCharsets.UTF_8));
-        map.putAll(loadDiagnosFile(diagnosKodKS97PKodFile, StandardCharsets.ISO_8859_1));
-
+        map.putAll(icdCodeConverter.convert(diagnosisCodeIcd10SeFile));
+        map.putAll(loadDiagnosFile(diagnosKodKS97PKodFile));
         return map;
     }
 
-    private Map<String, String> loadDiagnosFile(final String file, Charset fileEncoding) throws IOException {
+    private Map<String, String> loadDiagnosFile(final String file) throws IOException {
 
         // FIXME: Legacy support, can be removed when local config has been substituted by refdata (INTYG-7701)
         String location = ResourceUtils.isUrl(file) ? file : "file://" + file;
@@ -79,7 +69,7 @@ public class DiagnosKoderLoaderImpl implements DiagnosKoderLoader {
 
         Map<String, String> map = new HashMap<>();
         int count = 0;
-        try (LineIterator it = IOUtils.lineIterator(resource.getInputStream(), fileEncoding)) {
+        try (LineIterator it = IOUtils.lineIterator(resource.getInputStream(), StandardCharsets.ISO_8859_1)) {
             while (it.hasNext()) {
                 final String line = it.nextLine();
                 final DiagnosKod kod = new DiagnosKod(line, count == 0);
