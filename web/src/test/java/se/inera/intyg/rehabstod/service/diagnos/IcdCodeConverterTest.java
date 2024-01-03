@@ -99,7 +99,7 @@ class IcdCodeConverterTest {
     }
 
     @Test
-    void shouldNotConvertLineIfNotDiagnosisIsNotActive() throws IOException {
+    void shouldNotConvertInactiveDiagnosis() throws IOException {
         final var tsvContent = "\"A02.2\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"Salmonellaartrit (M01.3*)"
             + "\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"";
 
