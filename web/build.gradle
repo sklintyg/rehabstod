@@ -1,11 +1,9 @@
-apply plugin: 'com.netflix.nebula.grunt'
 apply plugin: 'org.gretty'
 apply plugin: 'war'
 
 def buildDirectory = project.layout.buildDirectory.get().asFile
 
 gretty {
-    def minified = System.properties['useMinifiedJavaScript'] ?: false
     def instance = System.properties['instance'] ?: '0'
     def useHttpPort = 8030 + (instance as Integer)
     def useInternalHttpPort = 8130 + (instance as Integer)
@@ -31,7 +29,6 @@ gretty {
                "-Dfile.encoding=UTF-8",
                "-Dapplication.dir=${applicationDir}",
                "-Ddev.config.file=${applicationDir}/config/application-dev.properties",
-               "-DuseMinifiedJavaScript=${minified}",
                "-Ddev.http.port=${useHttpPort}",
                "-Ddev.http.port.internal=${useInternalHttpPort}"
     ]
@@ -41,16 +38,6 @@ gretty {
         implementation "org.eclipse.jetty:apache-jstl"
         implementation "se.inera.intyg.refdata:refdata:${refDataVersion}"
     }
-}
-
-node {
-    version = "${nodeJsVersion}"
-    npmVersion = "${npmVersion}"
-    download = true
-    distBaseUrl = 'https://nodejs.org/dist/'
-    workDir = file("${rootProject.projectDir}/.gradle/nodejs")
-    npmWorkDir = file("${rootProject.projectDir}/.gradle/npm")
-    nodeModulesDir = file("${project.projectDir}")
 }
 
 test {
