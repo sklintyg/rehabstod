@@ -34,9 +34,9 @@ gretty {
     ]
 
     dependencies {
-        implementation "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
-        implementation "org.eclipse.jetty:apache-jstl"
-        implementation "se.inera.intyg.refdata:refdata:${refDataVersion}"
+        gretty "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
+        gretty "org.eclipse.jetty:apache-jstl"
+        gretty "se.inera.intyg.refdata:refdata:${refDataVersion}"
     }
 }
 
