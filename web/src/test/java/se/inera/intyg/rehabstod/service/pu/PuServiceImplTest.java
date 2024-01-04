@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,7 +18,9 @@
  */
 package se.inera.intyg.rehabstod.service.pu;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

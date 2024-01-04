@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,6 +19,7 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
@@ -27,8 +28,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 
-import java.time.LocalDateTime;
-
 @Service
 public class CreateRekoStatusServiceImpl implements CreateRekoStatusService {
 
@@ -36,7 +35,7 @@ public class CreateRekoStatusServiceImpl implements CreateRekoStatusService {
     private final UserService userService;
 
     public CreateRekoStatusServiceImpl(IntygstjanstRestIntegrationService intygstjanstRestIntegrationService,
-                                       UserService userService) {
+        UserService userService) {
         this.intygstjanstRestIntegrationService = intygstjanstRestIntegrationService;
         this.userService = userService;
     }
@@ -48,14 +47,14 @@ public class CreateRekoStatusServiceImpl implements CreateRekoStatusService {
         final var unitId = user.isValdVardenhetMottagning() ? user.getValdVardenhet().getId() : null;
 
         final var request = new CreateRekoStatusRequestDTO(
-                patientId,
-                status,
-                user.getValdVardgivare().getId(),
-                careUnitId,
-                unitId,
-                user.getHsaId(),
-                user.getNamn(),
-                sickLeaveTimestamp
+            patientId,
+            status,
+            user.getValdVardgivare().getId(),
+            careUnitId,
+            unitId,
+            user.getHsaId(),
+            user.getNamn(),
+            sickLeaveTimestamp
         );
 
         return convertResponse(intygstjanstRestIntegrationService.createRekoStatus(request));
@@ -63,10 +62,10 @@ public class CreateRekoStatusServiceImpl implements CreateRekoStatusService {
 
     private RekoStatusDTO convertResponse(se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO response) {
         return new RekoStatusDTO(
-                new RekoStatusTypeDTO(
-                    response.getStatus().getId(),
-                    response.getStatus().getName()
-                )
+            new RekoStatusTypeDTO(
+                response.getStatus().getId(),
+                response.getStatus().getName()
+            )
         );
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,16 +19,16 @@
 
 package se.inera.intyg.rehabstod.integration.it.dto;
 
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetRekoStatusRequestDTO {
+
     private String patientId;
     private LocalDate endDate;
     private LocalDate startDate;

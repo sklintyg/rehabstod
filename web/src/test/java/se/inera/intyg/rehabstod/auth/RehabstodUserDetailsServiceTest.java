@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -392,8 +392,8 @@ public class RehabstodUserDetailsServiceTest {
 
     private List<HsaSystemRole> buildSystemRoles() {
         return Stream.of(SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_2,
-            SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
-            SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23)
+                SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_21,
+                SystemRolesParser.HSA_SYSTEMROLE_REHAB_UNIT_PREFIX + ENHET_HSAID_23)
             .map(s -> {
                 HsaSystemRole hsaSystemRole = new HsaSystemRole();
                 hsaSystemRole.setRole(s);

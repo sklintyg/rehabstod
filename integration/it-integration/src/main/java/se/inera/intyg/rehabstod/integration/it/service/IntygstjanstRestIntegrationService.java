@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,7 +22,13 @@ import java.time.LocalDate;
 import java.util.List;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
-import se.inera.intyg.rehabstod.integration.it.dto.*;
+import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.GetRekoStatusRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
 
 
 /**

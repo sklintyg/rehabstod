@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -47,13 +47,13 @@ public class SRSIntegrationStubConfiguration {
         return new ObjectMapper();
     }
 
-  /*  @Bean
-    public EndpointImpl srsResponder() {
-        Object implementor = srsStub;
-        EndpointImpl endpoint = new EndpointImpl(bus, implementor);
-        endpoint.publish("/stubs/get-risk-prediction-for-certificate/v1.0");
-        return endpoint;
-    }*/
+    /*  @Bean
+      public EndpointImpl srsResponder() {
+          Object implementor = srsStub;
+          EndpointImpl endpoint = new EndpointImpl(bus, implementor);
+          endpoint.publish("/stubs/get-risk-prediction-for-certificate/v1.0");
+          return endpoint;
+      }*/
     @Bean
     public EndpointImpl srsResponder() {
         Object implementor = srsStub;

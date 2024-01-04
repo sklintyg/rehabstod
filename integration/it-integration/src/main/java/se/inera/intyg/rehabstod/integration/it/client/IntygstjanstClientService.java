@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,7 +18,6 @@
  */
 package se.inera.intyg.rehabstod.integration.it.client;
 
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 
@@ -27,23 +26,6 @@ import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
  * Created by eriklupander on 2016-01-29.
  */
 public interface IntygstjanstClientService {
-
-    /**
-     * Method returns all sick leaves for a health care unit.
-     *
-     * @param unitId health care unit identifier (i.e HsaId)
-     */
-    ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnit(String unitId, int maxAntalDagarSedanSjukfallAvslut);
-
-    /**
-     * Method returns all sick leaves for a patient on a health care unit.
-     *
-     * @param unitId health care unit identifier (i.e HsaId)
-     * @param patientId patient identifier
-     */
-    ListActiveSickLeavesForCareUnitResponseType getSjukfallForUnitAndPatient(String unitId,
-        String patientId,
-        int maxAntalDagarSedanSjukfallAvslut);
 
     /**
      * Method returns all sick leaves for a patient for all health care givers and its health care units.

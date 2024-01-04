@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -50,13 +50,13 @@ public class DiagnosKoderLoaderImplTest {
 
     private void specifyDiagnosKodFiler() {
         ReflectionTestUtils.setField(diagnosKoderLoader, "diagnoseCodeIcd10SeFile1",
-                loadDiagnosKodFile("icd10se/digit3.txt"));
+            loadDiagnosKodFile("icd10se/digit3.txt"));
         ReflectionTestUtils.setField(diagnosKoderLoader, "diagnoseCodeIcd10SeFile2",
-                loadDiagnosKodFile("icd10se/digit4.txt"));
+            loadDiagnosKodFile("icd10se/digit4.txt"));
         ReflectionTestUtils.setField(diagnosKoderLoader, "diagnoseCodeIcd10SeFile3",
-                loadDiagnosKodFile("icd10se/digit5.txt"));
+            loadDiagnosKodFile("icd10se/digit5.txt"));
         ReflectionTestUtils.setField(diagnosKoderLoader, "diagnosKodKS97PKodFile",
-                loadDiagnosKodFile("KSH97P_KOD.ANS"));
+            loadDiagnosKodFile("KSH97P_KOD.ANS"));
     }
 
     private String loadDiagnosKodFile(String file) {

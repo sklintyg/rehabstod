@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,6 +18,13 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -28,14 +35,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.CreateRekoStatusService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetRekoStatusService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetRekoStatusRequestDTO;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class RekoControllerTest {
@@ -68,7 +67,7 @@ public class RekoControllerTest {
     @Test
     void shouldCallSetRekoStatusServiceWithCorrectStatus() {
         final var expectedRequest =
-                new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
+            new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
         final var captor = ArgumentCaptor.forClass(String.class);
 
         rekoController.createRekoStatus(expectedRequest);
@@ -80,7 +79,7 @@ public class RekoControllerTest {
     @Test
     void shouldCallSetRekoStatusServiceWithCorrectTimestamp() {
         final var expectedRequest =
-                new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
+            new CreateRekoStatusRequestDTO(PATIENT_ID, STATUS, TIMESTAMP.toString());
         final var captor = ArgumentCaptor.forClass(LocalDateTime.class);
 
         rekoController.createRekoStatus(expectedRequest);

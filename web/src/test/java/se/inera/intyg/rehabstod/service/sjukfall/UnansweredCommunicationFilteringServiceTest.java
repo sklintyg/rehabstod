@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,6 +19,10 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import static org.testng.Assert.assertThrows;
+
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -26,14 +30,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterType;
 import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationFilterServiceImpl;
+import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterType;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.testng.Assert.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class UnansweredCommunicationFilteringServiceTest {
@@ -46,6 +45,7 @@ public class UnansweredCommunicationFilteringServiceTest {
 
     @Nested
     class TestUnansweredCommunicationFiltering {
+
         @BeforeEach
         void setup() {
             sickLeave = new SjukfallEnhet();
@@ -181,6 +181,7 @@ public class UnansweredCommunicationFilteringServiceTest {
 
         @Nested
         class TestFilterTypeId2 {
+
             String request = UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_2.toString();
 
             @Test
@@ -226,6 +227,7 @@ public class UnansweredCommunicationFilteringServiceTest {
 
         @Nested
         class TestFilterTypeId3 {
+
             String request = UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_3.toString();
 
             @Test
@@ -271,6 +273,7 @@ public class UnansweredCommunicationFilteringServiceTest {
 
         @Nested
         class TestFilterTypeId4 {
+
             String request = UnansweredCommunicationFilterType.UNANSWERED_COMMUNICATION_FILTER_TYPE_4.toString();
 
             @Test

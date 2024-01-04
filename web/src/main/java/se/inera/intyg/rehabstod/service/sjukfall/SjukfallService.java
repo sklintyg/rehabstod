@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,27 +21,12 @@ package se.inera.intyg.rehabstod.service.sjukfall;
 import java.util.Collection;
 import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.service.Urval;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 
 /**
  * Created by eriklupander on 2016-02-01.
  */
 public interface SjukfallService {
-
-    /**
-     * The 'enhetsId' is _always_ the ID of the Vardenhet we want to query IT with regardless of whether the currently
-     * selected RehabstodUser#valdVardenhet is a Vardenhet or a Mottagning. 'mottagningsId' is always null if the selected
-     * RehabstodUser#valdVardenhet is a Vardenhet.
-     *
-     * This method will always fetch all ongoing sjukfall for the specified Vardenhet from IT, but if there is a
-     * mottagningsId
-     * specified, we'll perform filtering on our side so only Sjukfall originating from the specified mottagningsId are
-     * included in the response.
-     */
-    SjukfallEnhetResponse getByUnit(String enhetsId, String mottagningsId, String lakareId,
-        Urval urval, IntygParametrar parameters);
 
     /**
      * @param currentVardgivarId The identifier of the current care giver
@@ -55,9 +40,5 @@ public interface SjukfallService {
     SjukfallPatientResponse getByPatient(String currentVardgivarId, String enhetsId, String lakareId,
         String patientId, Urval urval, IntygParametrar parameters,
         Collection<String> vgHsaIds, Collection<String> veHsaIds);
-    // CHECKSTYLE:ON ParameterNumber
-
-    SjukfallSummary getSummary(String enhetsId, String mottagningsId, String lakareId,
-        Urval urval, IntygParametrar parameters);
 
 }

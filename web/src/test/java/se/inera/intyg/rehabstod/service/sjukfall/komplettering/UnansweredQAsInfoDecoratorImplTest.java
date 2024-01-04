@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,7 +22,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,36 +50,6 @@ public class UnansweredQAsInfoDecoratorImplTest {
 
     @InjectMocks
     private UnansweredQAsInfoDecoratorImpl testee;
-
-    @Test
-    public void updateSjukfallEnhetKompletteringar() {
-        Map<String, UnansweredQAs> qas = new HashMap<>();
-        for (int i = 0; i < 10; i++) {
-            qas.put(Integer.toString(i), new UnansweredQAs(i, i));
-        }
-
-        when(wcIntegrationService.getCertificateAdditionsForIntyg(any(List.class))).thenReturn(qas);
-        List<SjukfallEnhet> sjukfall = new ArrayList<>();
-
-        final SjukfallEnhet sjukfall0 = createSjukfall("0");
-        final SjukfallEnhet sjukfall1 = createSjukfall("1");
-        final SjukfallEnhet sjukfall23 = createSjukfall("2", "3");
-        final SjukfallEnhet sjukfall456 = createSjukfall("4", "5", "6");
-        final SjukfallEnhet sjukfallNotPresent = createSjukfall("Zero");
-        sjukfall.add(sjukfall0);
-        sjukfall.add(sjukfall1);
-        sjukfall.add(sjukfall23);
-        sjukfall.add(sjukfall456);
-        sjukfall.add(sjukfallNotPresent);
-
-        testee.updateSjukfallEnhetQAs(sjukfall);
-
-        assertEquals(0, sjukfall0.getObesvaradeKompl());
-        assertEquals(1, sjukfall1.getObesvaradeKompl());
-        assertEquals(5, sjukfall23.getObesvaradeKompl());
-        assertEquals(15, sjukfall456.getObesvaradeKompl());
-        assertEquals(0, sjukfallNotPresent.getObesvaradeKompl());
-    }
 
     @Test
     public void updateSjukfallPatientKompletteringar() {
@@ -150,36 +119,6 @@ public class UnansweredQAsInfoDecoratorImplTest {
         SjukfallEnhet sfe = new SjukfallEnhet();
         sfe.setIntygLista(Arrays.asList(intygIds));
         return sfe;
-    }
-
-    @Test
-    public void updateLUCertificatesWithKompletteringar() {
-        Map<String, UnansweredQAs> qas = new HashMap<>();
-        for (int i = 0; i < 10; i++) {
-            qas.put(Integer.toString(i), new UnansweredQAs(i, i));
-        }
-
-        when(wcIntegrationService.getCertificateAdditionsForIntyg(any(List.class))).thenReturn(qas);
-        List<LUCertificate> luCertificateList = new ArrayList<>();
-
-        final LUCertificate certificate = createLUCertificate("0");
-        final LUCertificate certificate1 = createLUCertificate("1");
-        final LUCertificate certificate2 = createLUCertificate("2");
-        final LUCertificate certificate3 = createLUCertificate("3");
-        final LUCertificate certificateNotPresent = createLUCertificate("Zero");
-        luCertificateList.add(certificate);
-        luCertificateList.add(certificate1);
-        luCertificateList.add(certificate2);
-        luCertificateList.add(certificate3);
-        luCertificateList.add(certificateNotPresent);
-
-        testee.updateLUCertificatesWithQAs(luCertificateList);
-
-        assertEquals(0, certificate.getUnAnsweredComplement());
-        assertEquals(1, certificate1.getUnAnsweredComplement());
-        assertEquals(2, certificate2.getUnAnsweredComplement());
-        assertEquals(3, certificate3.getUnAnsweredComplement());
-        assertEquals(0, certificateNotPresent.getUnAnsweredComplement());
     }
 
     @Test

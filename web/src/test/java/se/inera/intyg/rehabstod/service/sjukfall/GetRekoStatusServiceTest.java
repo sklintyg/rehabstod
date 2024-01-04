@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,6 +18,15 @@
  */
 package se.inera.intyg.rehabstod.service.sjukfall;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -32,14 +41,7 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.dto.GetRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
-
-import java.time.LocalDate;
 import se.inera.intyg.rehabstod.service.user.UserService;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class GetRekoStatusServiceTest {
@@ -68,83 +70,84 @@ public class GetRekoStatusServiceTest {
         when(user.getValdVardenhet()).thenReturn(unit);
     }
 
-     @Nested
-     class HasRekoStatus {
+    @Nested
+    class HasRekoStatus {
 
-         @BeforeEach
-         void setup() {
-             when(intygstjanstRestIntegrationService.getRekoStatus(any())).thenReturn(
-                 new RekoStatusDTO(
-                     new RekoStatusTypeDTO(REKO_ID, REKO_NAME)
-                 )
-             );
-         }
+        @BeforeEach
+        void setup() {
+            when(intygstjanstRestIntegrationService.getRekoStatus(any())).thenReturn(
+                new RekoStatusDTO(
+                    new RekoStatusTypeDTO(REKO_ID, REKO_NAME)
+                )
+            );
+        }
 
-         @Nested
-         class TestItResponse {
+        @Nested
+        class TestItResponse {
 
-             @Test
-             void shouldReturnRekoStatusId() {
-                 final var response = getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
-                 assertEquals(REKO_ID, response.getStatus().getId());
-             }
+            @Test
+            void shouldReturnRekoStatusId() {
+                final var response = getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
+                assertEquals(REKO_ID, response.getStatus().getId());
+            }
 
-             @Test
-             void shouldReturnRekoStatusName() {
-                 final var response = getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
-                 assertEquals(REKO_NAME, response.getStatus().getName());
-             }
-         }
+            @Test
+            void shouldReturnRekoStatusName() {
+                final var response = getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
+                assertEquals(REKO_NAME, response.getStatus().getName());
+            }
+        }
 
-         @Nested
-         class TestITRequest {
+        @Nested
+        class TestITRequest {
 
-             @Test
-             void shouldSetPatientId() {
-                 final var captor = ArgumentCaptor.forClass(GetRekoStatusRequestDTO.class);
-                 getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
-                 verify(intygstjanstRestIntegrationService).getRekoStatus(captor.capture());
-                 assertEquals(PATIENT_ID, captor.getValue().getPatientId());
-             }
+            @Test
+            void shouldSetPatientId() {
+                final var captor = ArgumentCaptor.forClass(GetRekoStatusRequestDTO.class);
+                getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
+                verify(intygstjanstRestIntegrationService).getRekoStatus(captor.capture());
+                assertEquals(PATIENT_ID, captor.getValue().getPatientId());
+            }
 
-             @Test
-             void shouldSetEndDate() {
-                 final var captor = ArgumentCaptor.forClass(GetRekoStatusRequestDTO.class);
-                 getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
-                 verify(intygstjanstRestIntegrationService).getRekoStatus(captor.capture());
-                 assertEquals(END_DATE, captor.getValue().getEndDate());
-             }
+            @Test
+            void shouldSetEndDate() {
+                final var captor = ArgumentCaptor.forClass(GetRekoStatusRequestDTO.class);
+                getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
+                verify(intygstjanstRestIntegrationService).getRekoStatus(captor.capture());
+                assertEquals(END_DATE, captor.getValue().getEndDate());
+            }
 
-             @Test
-             void shouldSetStartDate() {
-                 final var captor = ArgumentCaptor.forClass(GetRekoStatusRequestDTO.class);
-                 getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
-                 verify(intygstjanstRestIntegrationService).getRekoStatus(captor.capture());
-                 assertEquals(START_DATE, captor.getValue().getEndDate());
-             }
+            @Test
+            void shouldSetStartDate() {
+                final var captor = ArgumentCaptor.forClass(GetRekoStatusRequestDTO.class);
+                getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
+                verify(intygstjanstRestIntegrationService).getRekoStatus(captor.capture());
+                assertEquals(START_DATE, captor.getValue().getEndDate());
+            }
 
-             @Test
-             void shouldSetCareUnitId() {
-                 final var captor = ArgumentCaptor.forClass(GetRekoStatusRequestDTO.class);
-                 getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
-                 verify(intygstjanstRestIntegrationService).getRekoStatus(captor.capture());
-                 assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
-             }
-         }
-     }
+            @Test
+            void shouldSetCareUnitId() {
+                final var captor = ArgumentCaptor.forClass(GetRekoStatusRequestDTO.class);
+                getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
+                verify(intygstjanstRestIntegrationService).getRekoStatus(captor.capture());
+                assertEquals(UNIT_ID, captor.getValue().getCareUnitId());
+            }
+        }
+    }
 
-     @Nested
+    @Nested
     class HasNoRekoStatus {
-         @Test
-         void shouldNotThrowError() {
+
+        @Test
+        void shouldNotThrowError() {
             assertDoesNotThrow(() -> getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE));
-         }
+        }
 
-         @Test
-         void shouldReturnEmptyRekoStatus() {
-             final var response = getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
+        @Test
+        void shouldReturnEmptyRekoStatus() {
+            final var response = getRekoStatusService.get(PATIENT_ID, END_DATE, START_DATE);
 
-             assertNull(response.getStatus());
-         }
-     }
+            assertNull(response.getStatus());
+        }
+    }
 }

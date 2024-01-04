@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,6 +18,7 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import java.time.LocalDate;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +29,6 @@ import se.inera.intyg.rehabstod.service.sjukfall.GetRekoStatusService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.CreateRekoStatusRequestDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetRekoStatusRequestDTO;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/reko")
@@ -46,18 +45,18 @@ public class RekoController {
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public RekoStatusDTO createRekoStatus(@RequestBody CreateRekoStatusRequestDTO request) {
         return createRekoStatusService.create(
-                request.getPatientId(),
-                request.getStatusId(),
-                LocalDate.parse(request.getSickLeaveTimestamp()).atStartOfDay()
+            request.getPatientId(),
+            request.getStatusId(),
+            LocalDate.parse(request.getSickLeaveTimestamp()).atStartOfDay()
         );
     }
 
     @RequestMapping(value = "/patient", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public RekoStatusDTO getRekoStatus(@RequestBody GetRekoStatusRequestDTO request) {
         return getRekoStatusService.get(
-                request.getPatientId(),
-                request.getEndDate(),
-                request.getStartDate()
+            request.getPatientId(),
+            request.getEndDate(),
+            request.getStartDate()
         );
     }
 }

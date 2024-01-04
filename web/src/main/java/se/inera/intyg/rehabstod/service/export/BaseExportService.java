@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -117,7 +117,7 @@ public abstract class BaseExportService {
     }
 
     public static String getQAFilterDisplayValue(Integer qaID) {
-        String[] qaStatuses = { FILTER_TITLE_ARENDESTATUS_UTAN, FILTER_TITLE_ARENDESTATUS_MED,
+        String[] qaStatuses = {FILTER_TITLE_ARENDESTATUS_UTAN, FILTER_TITLE_ARENDESTATUS_MED,
             FILTER_TITLE_ARENDESTATUS_MED_KOMPLETTERING, FILTER_TITLE_ARENDESTATUS_MED_FRAGOR};
         if (qaID == null) {
             return FILTER_TITLE_ARENDESTATUS_ALLA;

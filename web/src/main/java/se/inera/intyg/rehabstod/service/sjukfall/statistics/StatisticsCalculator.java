@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,17 +19,13 @@
 package se.inera.intyg.rehabstod.service.sjukfall.statistics;
 
 import java.util.List;
-
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SickLeaveSummary;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /**
  * @author marced on 04/03/16.
  */
 public interface StatisticsCalculator {
-
-    SjukfallSummary getSjukfallSummary(List<SjukfallEnhet> sjukfall);
 
     SickLeaveSummary getSickLeaveSummary(List<SjukfallEnhet> sickLeaves);
 
