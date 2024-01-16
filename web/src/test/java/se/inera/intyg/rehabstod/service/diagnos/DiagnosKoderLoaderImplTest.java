@@ -34,7 +34,7 @@ import org.springframework.test.util.ReflectionTestUtils;
  * Created by eriklupander on 2016-04-14.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DiagnosKoderLoaderImpl.class)
+@ContextConfiguration(classes = {DiagnosKoderLoaderImpl.class, IcdCodeConverter.class})
 public class DiagnosKoderLoaderImplTest {
 
     @Autowired
@@ -45,16 +45,12 @@ public class DiagnosKoderLoaderImplTest {
         specifyDiagnosKodFiler();
         Map<String, String> diagnosKoder = diagnosKoderLoader.loadDiagnosKoder();
         assertNotNull(diagnosKoder);
-        assertEquals(36387, diagnosKoder.size());
+        assertEquals(39350, diagnosKoder.size());
     }
 
     private void specifyDiagnosKodFiler() {
-        ReflectionTestUtils.setField(diagnosKoderLoader, "diagnoseCodeIcd10SeFile1",
-            loadDiagnosKodFile("icd10se/digit3.txt"));
-        ReflectionTestUtils.setField(diagnosKoderLoader, "diagnoseCodeIcd10SeFile2",
-            loadDiagnosKodFile("icd10se/digit4.txt"));
-        ReflectionTestUtils.setField(diagnosKoderLoader, "diagnoseCodeIcd10SeFile3",
-            loadDiagnosKodFile("icd10se/digit5.txt"));
+        ReflectionTestUtils.setField(diagnosKoderLoader, "diagnosisCodeIcd10SeFile",
+            loadDiagnosKodFile("icd10se/icd-10-se.tsv"));
         ReflectionTestUtils.setField(diagnosKoderLoader, "diagnosKodKS97PKodFile",
             loadDiagnosKodFile("KSH97P_KOD.ANS"));
     }
