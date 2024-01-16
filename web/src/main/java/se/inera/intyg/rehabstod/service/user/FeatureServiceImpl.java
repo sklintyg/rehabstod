@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,13 +19,13 @@
 
 package se.inera.intyg.rehabstod.service.user;
 
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.security.common.model.Feature;
 
-import java.util.Optional;
-
 @Service
 public class FeatureServiceImpl implements FeatureService {
+
     private final UserService userService;
 
     public FeatureServiceImpl(UserService userService) {
@@ -35,8 +35,8 @@ public class FeatureServiceImpl implements FeatureService {
     @Override
     public boolean isFeatureActive(String authoritiesConstants) {
         return Optional.ofNullable(userService.getUser().getFeatures())
-                .map(features -> features.get(authoritiesConstants))
-                .map(Feature::getGlobal)
-                .orElse(false);
+            .map(features -> features.get(authoritiesConstants))
+            .map(Feature::getGlobal)
+            .orElse(false);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,10 +25,6 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
  * Created by eriklupander on 2016-02-01.
  */
 public interface IntygstjanstIntegrationService {
-
-    List<IntygsData> getIntygsDataForCareUnit(String careUnitHsaId, int maxAntalDagarSedanSjukfallAvslut);
-
-    List<IntygsData> getIntygsDataForCareUnitAndPatient(String careUnitHsaId, String personId, int maxAntalDagarSedanSjukfallAvslut);
 
     List<IntygsData> getAllIntygsDataForPatient(String personId);
 

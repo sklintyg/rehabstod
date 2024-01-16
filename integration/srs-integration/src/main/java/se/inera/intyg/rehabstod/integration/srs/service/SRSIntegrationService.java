@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -38,6 +38,7 @@ public interface SRSIntegrationService {
 
     /**
      * Fetch the list of diagnosis codes that has SRS support
+     *
      * @return a list of ICD-10 diagnosis codes
      */
     List<String> getDiagnosisList();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -68,8 +68,8 @@ public class CertificateController {
         LOG.info("Getting LU certificates for person");
 
         var response = certificateService.getLUCertificatesForPerson(
-                request.getEncryptedPatientId() != null
-                        ? patientIdEncryption.decrypt(request.getEncryptedPatientId()) : request.getPersonId()
+            request.getEncryptedPatientId() != null
+                ? patientIdEncryption.decrypt(request.getEncryptedPatientId()) : request.getPersonId()
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -89,7 +89,7 @@ public class CertificateController {
         LOG.info("Getting AG certificates for person");
 
         var response = certificateService.getAGCertificatesForPerson(request.getEncryptedPatientId() != null
-                ? patientIdEncryption.decrypt(request.getEncryptedPatientId()) : request.getPersonId()
+            ? patientIdEncryption.decrypt(request.getEncryptedPatientId()) : request.getPersonId()
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);

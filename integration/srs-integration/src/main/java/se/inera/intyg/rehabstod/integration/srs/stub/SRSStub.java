@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -46,7 +46,6 @@ public class SRSStub implements GetRiskPredictionForCertificateResponderInterfac
     private static final int ONE = 1;
     private static final int TWO = 2;
     private static final int THREE = 3;
-    private static final int FOUR = 4;
     private static final int FIVE = 5;
 
     private boolean active = true;
@@ -75,7 +74,7 @@ public class SRSStub implements GetRiskPredictionForCertificateResponderInterfac
     public GetDiagnosisCodesResponseType getDiagnosisCodes(GetDiagnosisCodesRequestType getDiagnosisCodesRequestType) {
         GetDiagnosisCodesResponseType response = new GetDiagnosisCodesResponseType();
         response.setPrediktionsmodellversion("2.2");
-        List<Diagnos> dList = Arrays.asList("F43","M79","S52")
+        List<Diagnos> dList = Arrays.asList("F43", "M79", "S52")
             .stream()
             .map(code -> {
                 Diagnos d = new Diagnos();

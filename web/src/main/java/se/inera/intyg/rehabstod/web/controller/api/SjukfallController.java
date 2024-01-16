@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,10 +18,7 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,20 +26,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,25 +43,16 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.service.Urval;
-import se.inera.intyg.rehabstod.service.export.pdf.PdfExportService;
-import se.inera.intyg.rehabstod.service.export.pdf.PdfExportServiceException;
-import se.inera.intyg.rehabstod.service.export.util.ExportUtil;
-import se.inera.intyg.rehabstod.service.export.xlsx.XlsxExportService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallEnhetResponse;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
-import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallSummary;
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.AddVeToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.AddVgToPatientViewRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallForPatientRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.GetSjukfallRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.PrintSjukfallRequest;
 import se.inera.intyg.rehabstod.web.controller.api.util.ControllerUtil;
 import se.inera.intyg.rehabstod.web.model.PatientData;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 import se.inera.intyg.schemas.contract.Personnummer;
 
@@ -87,47 +67,17 @@ public class SjukfallController {
 
     private static final String SRS_UNAVAILABLE_HEADER = "SRS_UNAVAILABLE";
     private static final String KOMPLETTERING_INFO_UNAVAILABLE_HEADER = "KOMPLETTERING_INFO_UNAVAILABLE";
-    private static final String FILE_EXTENSION_PDF = ".pdf";
-    private static final String IE_USER_AGENT_REGEX = ".*Trident/\\d+.*|.*MSIE \\d+.*";
-    private static final String CONTENT_DISPOSITION_INLINE = "inline";
-    private static final String CONTENT_DISPOSITION_ATTACHMENT = "attachment";
-
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm");
     private final SjukfallService sjukfallService;
     private final UserService userService;
     private final LogService logService;
-    private final XlsxExportService xlsxExportService;
-    private final PdfExportService pdfExportService;
     private final PatientIdEncryption patientIdEncryption;
 
     public SjukfallController(SjukfallService sjukfallService, UserService userService, LogService logService,
-        XlsxExportService xlsxExportService, PdfExportService pdfExportService, PatientIdEncryption patientIdEncryption) {
+        PatientIdEncryption patientIdEncryption) {
         this.sjukfallService = sjukfallService;
         this.userService = userService;
         this.logService = logService;
-        this.xlsxExportService = xlsxExportService;
-        this.pdfExportService = pdfExportService;
         this.patientIdEncryption = patientIdEncryption;
-    }
-
-    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<SjukfallEnhet>> getSjukfallForCareUnit(@RequestBody GetSjukfallRequest request) {
-
-        // Get user from session
-        RehabstodUser user = userService.getUser();
-
-        // Fetch sjukfall
-        SjukfallEnhetResponse response = getSjukfallForCareUnit(user, request);
-        List<SjukfallEnhet> sjukfall = response.getSjukfallList();
-
-        // PDL-logging based on which sjukfall that are about to be displayed to user.
-        LOG.debug("PDL logging - log which 'sjukfall' that will be displayed to the user.");
-        logSjukfallData(user, sjukfall, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
-
-        if (isActivatedForSRS(user)) {
-            logSjukfallData(user, filterHavingRiskSignal(sjukfall), ActivityType.READ, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
-        }
-        return buildSjukfallEnhetResponse(response.isSrsError(), response.isKompletteringInfoError(), sjukfall);
     }
 
     @PostMapping(value = "/patient", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -166,84 +116,6 @@ public class SjukfallController {
         }
 
         return buildSjukfallPatientResponse(response.isSrsError(), response);
-    }
-
-    /**
-     * Custom errorhandler for export error handling. For the export requests, we don't want the generic json response
-     * error handling, this handler will instead redirect the client to our generic error page with a custom reason
-     * code.
-     */
-    @ExceptionHandler(RehabExportException.class)
-    public void handleExportException(HttpServletRequest request, HttpServletResponse response,
-        RehabExportException ex) throws IOException {
-
-        LOG.error("RehabExportException caught - redirecting to errorpage", ex.getException());
-        response.sendRedirect(request.getContextPath() + "/error.jsp?reason=exporterror");
-    }
-
-    @PostMapping(value = "/pdf", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<byte[]> getSjukfallForCareUnitAsPdf(@ModelAttribute PrintSjukfallRequest request,
-        HttpServletRequest servletRequest) {
-        try {
-            final var user = userService.getUser();
-            final var sjukfall = getSjukfallForCareUnit(user, request).getSjukfallList();
-            final var finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
-            final var pdfData = pdfExportService.export(finalList, request, user, sjukfall.size());
-            final var headers = getHttpHeaders(servletRequest, user, pdfData.length);
-
-            // PDL-logging based on which sjukfall that are about to be exported. Only perform if PDF export was OK.
-            LOG.debug("PDL logging - log which 'sjukfall' that are about to be exported in PDF format.");
-            logSjukfallData(user, finalList, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
-            if (isActivatedForSRS(user)) {
-                logSjukfallData(user, filterHavingRiskSignal(finalList), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
-            }
-
-            return new ResponseEntity<>(pdfData, headers, HttpStatus.OK);
-
-        } catch (PdfExportServiceException e) {
-            throw new RehabExportException("Failed to create PDF export", e);
-        }
-    }
-
-    @PostMapping(value = "/xlsx", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<ByteArrayResource> getSjukfallForCareUnitAsXLSX(@ModelAttribute PrintSjukfallRequest request) {
-        try {
-            // Get user from session
-            RehabstodUser user = userService.getUser();
-
-            // Fetch sjukfall
-            List<SjukfallEnhet> sjukfall = getSjukfallForCareUnit(user, request).getSjukfallList();
-            List<SjukfallEnhet> finalList = ExportUtil.sortForExport(request.getPersonnummer(), sjukfall);
-            byte[] data = xlsxExportService.export(finalList, request, user, sjukfall.size());
-
-            // PDL-logging based on which sjukfall that are about to be exported. Only perform if XLSX export was OK.
-            LOG.debug("PDL logging - log which 'sjukfall' that are about to be exported in XLSX format.");
-            logSjukfallData(user, finalList, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
-            if (isActivatedForSRS(user)) {
-                logSjukfallData(user, filterHavingRiskSignal(finalList), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
-            }
-            HttpHeaders respHeaders = getHttpHeaders("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                data.length, ".xlsx", user);
-
-            return new ResponseEntity<>(new ByteArrayResource(data), respHeaders, HttpStatus.OK);
-
-        } catch (RuntimeException | IOException e) {
-            throw new RehabExportException("Failed to create XLS export", e);
-        }
-    }
-
-    @GetMapping(value = "/summary")
-    public SjukfallSummary getUnitCertificateSummary() {
-        // Get user from session
-        RehabstodUser user = userService.getUser();
-
-        String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-        String mottagningsId = getMottagningsId(user);
-        String hsaId = user.getHsaId();
-        Urval urval = user.getDefaultUrval();
-
-        IntygParametrar parameters = new IntygParametrar(0, LocalDate.now());
-        return sjukfallService.getSummary(enhetsId, mottagningsId, hsaId, urval, parameters);
     }
 
     /**
@@ -294,60 +166,9 @@ public class SjukfallController {
         }
     }
 
-    // - - - private scope - - -
-
-    private String getAttachmentFilename(RehabstodUser user, String extension) {
-        return "sjukfall-" + user.getValdVardenhet().getNamn() + "-" + LocalDateTime.now().format(dateTimeFormatter) + extension;
-    }
-
-    private List<SjukfallEnhet> filterHavingRiskSignal(List<SjukfallEnhet> finalList) {
-        return finalList.stream()
-            .filter(hasRiskSignal())
-            .collect(Collectors.toList());
-    }
-
-    // For SjukfallEnhet
-    private Predicate<SjukfallEnhet> hasRiskSignal() {
-        return se -> se.getRiskSignal() != null && se.getRiskSignal().getRiskKategori() >= 1;
-    }
-
     // For PatientData
     private Predicate<PatientData> anyIntygHasRiskSignal() {
         return pd -> pd.getRiskSignal() != null && pd.getRiskSignal().getRiskKategori() >= 1;
-    }
-
-    private HttpHeaders getHttpHeaders(String contentType, long contentLength, String filenameExtension, RehabstodUser user) {
-        HttpHeaders respHeaders = new HttpHeaders();
-        respHeaders.set(HttpHeaders.CONTENT_TYPE, contentType);
-        respHeaders.setContentLength(contentLength);
-        respHeaders.setContentDispositionFormData(CONTENT_DISPOSITION_ATTACHMENT, getAttachmentFilename(user, filenameExtension));
-        return respHeaders;
-    }
-
-    private HttpHeaders getHttpHeaders(HttpServletRequest servletRequest, RehabstodUser user, int contentLength) {
-        final var userAgent = servletRequest.getHeader(HttpHeaders.USER_AGENT);
-        final var type = userAgent.matches(IE_USER_AGENT_REGEX) ? CONTENT_DISPOSITION_ATTACHMENT : CONTENT_DISPOSITION_INLINE;
-        final var filename = getAttachmentFilename(user, FILE_EXTENSION_PDF);
-
-        final var headers = new HttpHeaders();
-        headers.setContentLength(contentLength);
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDisposition(ContentDisposition.builder(type).filename(filename).build());
-        return headers;
-    }
-
-
-    private SjukfallEnhetResponse getSjukfallForCareUnit(RehabstodUser user, GetSjukfallRequest request) {
-        String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-        String mottagningsId = getMottagningsId(user);
-        String lakarId = user.getHsaId();
-
-        Urval urval = user.getUrval();
-        IntygParametrar parameters = new IntygParametrar(ControllerUtil.getMaxGlapp(user),
-            ControllerUtil.getMaxDagarSedanSjukfallAvslut(user), request.getAktivtDatum());
-
-        LOG.debug("Calling the 'sjukfall' service to get a list of 'sjukfall' from care unit {}.", enhetsId);
-        return sjukfallService.getByUnit(enhetsId, mottagningsId, lakarId, urval, parameters);
     }
 
     private SjukfallPatientResponse getSjukfallForPatient(RehabstodUser user, String patientId, LocalDate date,
@@ -363,20 +184,6 @@ public class SjukfallController {
 
         LOG.debug("Calling the 'sjukfall' service to get a list of detailed 'sjukfall' for one patient.");
         return sjukfallService.getByPatient(currentVardgivarId, enhetsId, lakareId, patientId, urval, parameters, vgHsaId, veHsaId);
-    }
-
-    private void logSjukfallData(RehabstodUser user, List<SjukfallEnhet> sjukfallList,
-        ActivityType activityType, ResourceType resourceType) {
-
-        String enhetsId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-        if (enhetsId == null) {
-            throw new IllegalArgumentException("Cannot create PDL log statements, enhetsId was null");
-        }
-
-        List<SjukfallEnhet> sjukfallToLog = PDLActivityStore.getActivitiesNotInStore(enhetsId, sjukfallList, activityType, resourceType,
-            user.getStoredActivities());
-        logService.logSjukfallData(sjukfallToLog, activityType, resourceType);
-        PDLActivityStore.addActivitiesToStore(enhetsId, sjukfallToLog, activityType, resourceType, user.getStoredActivities());
     }
 
     private void logSjukfallData(RehabstodUser user, PatientData patientData, ActivityType activityType, ResourceType resourceType) {
@@ -404,23 +211,6 @@ public class SjukfallController {
         if (!isInStore) {
             logService.logSjukfallData(patientData, activityType, resourceType);
             PDLActivityStore.addActivityToStore(enhetsId, patientId, activityType, resourceType, user.getStoredActivities());
-        }
-    }
-
-    private String getMottagningsId(RehabstodUser user) {
-        if (user.isValdVardenhetMottagning()) {
-            return user.getValdVardenhet().getId();
-        }
-        return null;
-    }
-
-    // -- Response builders
-    private ResponseEntity<List<SjukfallEnhet>> buildSjukfallEnhetResponse(boolean srsError, boolean kompletteringInfoError,
-        List<SjukfallEnhet> payload) {
-        if (!srsError && !kompletteringInfoError) {
-            return new ResponseEntity<>(payload, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(payload, buildServicesUnavailableHeader(srsError, kompletteringInfoError), HttpStatus.OK);
         }
     }
 

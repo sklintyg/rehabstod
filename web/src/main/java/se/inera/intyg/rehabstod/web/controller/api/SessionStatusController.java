@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -54,11 +54,6 @@ public class SessionStatusController {
 
     @RequestMapping(value = SessionStatusController.SESSION_STATUS_PING, method = RequestMethod.GET)
     public GetSessionStatusResponse getSessionStatus(HttpServletRequest request) {
-        return createStatusResponse(request);
-    }
-
-    @RequestMapping(value = SessionStatusController.SESSION_STATUS_EXTEND, method = RequestMethod.GET)
-    public GetSessionStatusResponse getExtendSession(HttpServletRequest request) {
         return createStatusResponse(request);
     }
 

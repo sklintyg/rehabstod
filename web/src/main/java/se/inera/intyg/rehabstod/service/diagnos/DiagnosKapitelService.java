@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,6 +28,7 @@ public interface DiagnosKapitelService {
 
     /**
      * Get list of all defined {@link DiagnosKapitel}.
+     *
      * @return A list of DiagnosKapitel.
      */
     List<DiagnosKapitel> getDiagnosKapitelList();
@@ -35,6 +36,7 @@ public interface DiagnosKapitelService {
     /**
      * Try to match a diagnoskod string to a DiagnosKapitel.
      * Default to a unknown kapitel if no other match.
+     *
      * @param diagnosKod String diagnosKod.
      * @return A DiagnosKapitel matching String.
      */

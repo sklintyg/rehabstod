@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -47,11 +47,11 @@ import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
 import se.inera.intyg.rehabstod.service.Urval;
+import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.pu.PuService;
-import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.service.sjukfall.komplettering.UnansweredQAsInfoDecorator;
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -100,11 +100,11 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Autowired
     public CertificateServiceImpl(
-            IntygstjanstRestIntegrationService restIntegrationService, UnansweredQAsInfoDecorator unansweredQAsInfoDecorator,
-            LogService logService, UserService userService, DiagnosFactory diagnosFactory, HsaOrganizationsService hsaOrganizationsService,
-            PuService puService, EmployeeNameService employeeNameService,
-            UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService,
-            PatientIdEncryption patientIdEncryption) {
+        IntygstjanstRestIntegrationService restIntegrationService, UnansweredQAsInfoDecorator unansweredQAsInfoDecorator,
+        LogService logService, UserService userService, DiagnosFactory diagnosFactory, HsaOrganizationsService hsaOrganizationsService,
+        PuService puService, EmployeeNameService employeeNameService,
+        UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService,
+        PatientIdEncryption patientIdEncryption) {
         this.restIntegrationService = restIntegrationService;
         this.unansweredQAsInfoDecorator = unansweredQAsInfoDecorator;
         this.logService = logService;
@@ -136,7 +136,7 @@ public class CertificateServiceImpl implements CertificateService {
         var luCertificateList = transformCertificatesBasedOnMetaDataQuery(diagnosedCertificateList);
 
         final var hasDecoratedWithUnansweredCommunication =
-                unansweredCommunicationDecoratorService.decorateLuCertificates(luCertificateList);
+            unansweredCommunicationDecoratorService.decorateLuCertificates(luCertificateList);
 
         luCertificateList = filterOnQuestionAndAnswers(request, luCertificateList);
 
@@ -145,7 +145,7 @@ public class CertificateServiceImpl implements CertificateService {
         pdlLogLUCertificatesForCareUnit(luCertificateList);
 
         luCertificateList.forEach(
-                lu -> lu.setEncryptedPatientId(patientIdEncryption.encrypt(lu.getPatient().getId()))
+            lu -> lu.setEncryptedPatientId(patientIdEncryption.encrypt(lu.getPatient().getId()))
         );
 
         LOGGER.debug("Returning LU Certificates for Care Unit");
@@ -207,12 +207,12 @@ public class CertificateServiceImpl implements CertificateService {
             switch (qas) {
                 case 1: // Only show certificates without unanswered complement requests and questions
                     luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredComplement() == 0
-                        && c.getUnAnsweredOther() == 0)
+                            && c.getUnAnsweredOther() == 0)
                         .collect(Collectors.toList());
                     break;
                 case 2: // Only show certificates with unanswered complement requests or questions
                     luCertificateList = luCertificateList.stream().filter(c -> c.getUnAnsweredComplement() > 0
-                        || c.getUnAnsweredOther() > 0)
+                            || c.getUnAnsweredOther() > 0)
                         .collect(Collectors.toList());
                     break;
                 case 3: // Only show certificates with unanswered complement requests
@@ -395,7 +395,7 @@ public class CertificateServiceImpl implements CertificateService {
 
         var luCertificateList = transformDiagnosedCertificatesToLUCertificates(diagnosedCertificateList);
         final var hasDecoratedWithUnansweredCommunication =
-                unansweredCommunicationDecoratorService.decorateLuCertificates(luCertificateList);
+            unansweredCommunicationDecoratorService.decorateLuCertificates(luCertificateList);
 
         LOGGER.debug("Adding PDL log for certificate read");
         var rehabstodUser = userService.getUser();
@@ -403,7 +403,7 @@ public class CertificateServiceImpl implements CertificateService {
         pdlLogCertificatesForPerson(personId, loggedInUnitId, storedActivities);
 
         luCertificateList.forEach(
-                lu -> lu.setEncryptedPatientId(patientIdEncryption.encrypt(lu.getPatient().getId()))
+            lu -> lu.setEncryptedPatientId(patientIdEncryption.encrypt(lu.getPatient().getId()))
         );
 
         LOGGER.debug("Returning LU Certificates for Person");
@@ -602,15 +602,6 @@ public class CertificateServiceImpl implements CertificateService {
 
     private boolean commonFilter(BaseCertificate certificate) {
         return !certificate.isDeleted() && !certificate.isTestCertificate();
-    }
-
-    private boolean populateLUCertificatesWithNotificationData(List<LUCertificate> luCertificateList) {
-        try {
-            unansweredQAsInfoDecorator.updateLUCertificatesWithQAs(luCertificateList);
-            return false;
-        } catch (WcIntegrationException e) {
-            return true;
-        }
     }
 
     private LUCertificate convertDiagnosedCertificateToLUCertificate(DiagnosedCertificate diagnosedCertificate) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -57,7 +57,7 @@ public class SessionStatusControllerTest {
     private SessionStatusController controller = new SessionStatusController();
 
     @Test
-    public void testGetSessionStatusOk() throws Exception {
+    public void testGetSessionStatusOk() {
         // Arrange
         when(request.getSession((false))).thenReturn(session);
         when(session.getAttribute(anyString())).thenReturn(context);
@@ -73,7 +73,7 @@ public class SessionStatusControllerTest {
     }
 
     @Test
-    public void testGetSessionStatusNoSession() throws Exception {
+    public void testGetSessionStatusNoSession() {
         // Arrange
         when(request.getSession((false))).thenReturn(null);
 

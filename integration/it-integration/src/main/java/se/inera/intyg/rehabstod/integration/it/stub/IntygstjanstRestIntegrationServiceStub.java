@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -37,7 +37,14 @@ import se.inera.intyg.infra.sjukfall.dto.DiagnosKapitel;
 import se.inera.intyg.infra.sjukfall.dto.Lakare;
 import se.inera.intyg.infra.sjukfall.dto.RekoStatusTypeDTO;
 import se.inera.intyg.infra.sjukfall.dto.SjukfallEnhet;
-import se.inera.intyg.rehabstod.integration.it.dto.*;
+import se.inera.intyg.rehabstod.integration.it.dto.CreateRekoStatusRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.GetRekoStatusRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeaveLengthInterval;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
+import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
 
 @Profile("rhs-it-stub")
@@ -46,7 +53,6 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
 
     @Autowired
     private RSTestIntygStub rsTestIntygStub;
-    private static final String DEFAULT_TEST_DATA_MESSAGE = "Test data not generated, deactivate stub";
     private static final int[] YEAR_SEPARATOR = {0, 4};
     private static final int[] MONTH_SEPARATOR = {4, 6};
     private static final int[] DAY_SEPARATOR = {6, 8};
@@ -150,7 +156,7 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
     @Override
     public RekoStatusDTO getRekoStatus(GetRekoStatusRequestDTO request) {
         return new RekoStatusDTO(
-                new RekoStatusTypeDTO("REKO_1", "REKO_1")
+            new RekoStatusTypeDTO("REKO_1", "REKO_1")
         );
     }
 

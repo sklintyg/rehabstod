@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,9 +27,7 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.wc.service.WcIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
 import se.inera.intyg.rehabstod.web.model.AGCertificate;
-import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.PatientData;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 @Service
@@ -37,29 +35,6 @@ public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorato
 
     @Autowired
     private WcIntegrationService wcIntegrationService;
-
-    @Override
-    public void updateSjukfallEnhetQAs(List<SjukfallEnhet> sjukfallList) {
-
-        final List<String> idList = sjukfallList.stream()
-            .flatMap(sfe -> sfe.getIntygLista().stream())
-            .collect(Collectors.toList());
-
-        final Map<String, UnansweredQAs> perIntyg = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
-
-        var dummy = new UnansweredQAs(0, 0);
-        sjukfallList.forEach(
-            sjukfallEnhet -> {
-                sjukfallEnhet.setObesvaradeKompl(
-                sjukfallEnhet.getIntygLista().stream()
-                    .mapToInt(intygsId -> Optional.ofNullable(perIntyg.get(intygsId)).orElse(dummy).getComplement())
-                    .sum());
-                sjukfallEnhet.setUnansweredOther(
-                    sjukfallEnhet.getIntygLista().stream()
-                        .mapToInt(intygsId -> Optional.ofNullable(perIntyg.get(intygsId)).orElse(dummy).getOthers())
-                        .sum());
-            });
-    }
 
     @Override
     public void updateSjukfallPatientWithQAs(List<SjukfallPatient> patientSjukfallList) {
@@ -86,27 +61,6 @@ public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorato
                     }
                 }));
 
-    }
-
-    @Override
-    public void updateLUCertificatesWithQAs(List<LUCertificate> luCertificate) {
-
-        final var idList = luCertificate.stream().map(LUCertificate::getCertificateId).collect(Collectors.toList());
-
-        final var certificateAdditions = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
-
-        luCertificate
-            .forEach(
-                cert -> {
-                    var unAnsweredQAs = Optional.ofNullable(certificateAdditions.get(cert.getCertificateId())).orElse(null);
-                    if (unAnsweredQAs != null) {
-                        cert.setUnAnsweredComplement(unAnsweredQAs.getComplement());
-                        cert.setUnAnsweredOther(unAnsweredQAs.getOthers());
-                    } else {
-                        cert.setUnAnsweredComplement(0);
-                        cert.setUnAnsweredOther(0);
-                    }
-                });
     }
 
     @Override

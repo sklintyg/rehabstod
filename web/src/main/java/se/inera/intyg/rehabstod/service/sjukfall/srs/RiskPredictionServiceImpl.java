@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -175,7 +175,7 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
             .replace(".", "")
             .replace("-", "")
             .replace("_", "")
-            .substring(0,3);
+            .substring(0, 3);
         return diagnosisList.contains(diagnosisToFind);
     }
 

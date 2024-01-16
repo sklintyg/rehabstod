@@ -1,9 +1,0 @@
-<div>
-  <ul role="presentation" class="uib-datepicker-popup dropdown-menu uib-position-measure" dropdown-nested ng-if="isOpen" ng-click="$event.stopPropagation()">
-    <li ng-transclude></li>
-    <li ng-if="showButtonBar" class="uib-button-bar">
-      <button type="button" class="btn btn-success pull-right uib-close" ng-click="select(datepickerOptions.getActiveDate(), $event)">{{ getText('close') }}</button>
-      <button type="button" class="btn btn-default pull-right uib-clear" ng-click="select(null, $event);datepickerOptions.setActiveDate(null)">{{ getText('clear') }}</button>
-    </li>
-  </ul>
-</div>

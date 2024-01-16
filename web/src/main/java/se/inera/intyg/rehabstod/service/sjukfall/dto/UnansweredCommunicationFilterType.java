@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -27,6 +27,7 @@ public enum UnansweredCommunicationFilterType {
     UNANSWERED_COMMUNICATION_FILTER_TYPE_4("Sjukfall med obesvarade frågor och svar");
 
     private final String name;
+
     UnansweredCommunicationFilterType(String name) {
         this.name = name;
     }

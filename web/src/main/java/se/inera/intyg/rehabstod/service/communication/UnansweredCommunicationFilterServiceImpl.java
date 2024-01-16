@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,21 +19,21 @@
 
 package se.inera.intyg.rehabstod.service.communication;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.UnansweredCommunicationFilterType;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class UnansweredCommunicationFilterServiceImpl implements UnansweredCommunicationFilterService {
+
     @Override
     public List<SjukfallEnhet> filter(List<SjukfallEnhet> sickLeaves, String filterTypeId) {
         return sickLeaves
-                .stream()
-                .filter((sickLeave) -> filterSickLeave(sickLeave, filterTypeId))
-                .collect(Collectors.toList());
+            .stream()
+            .filter((sickLeave) -> filterSickLeave(sickLeave, filterTypeId))
+            .collect(Collectors.toList());
     }
 
     private boolean filterSickLeave(SjukfallEnhet sickLeave, String filterTypeId) {

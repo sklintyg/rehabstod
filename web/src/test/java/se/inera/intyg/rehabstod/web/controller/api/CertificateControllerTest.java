@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,6 +18,11 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,13 +35,9 @@ import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonRequest;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetLUCertificatesForPersonRequest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 public class CertificateControllerTest {
+
     private static final String ENCRYPTED_PATIENT_ID = "ENCRYPTED_PATIENT_ID";
     private static final String PATIENT_ID = "PATIENT_ID";
 
@@ -51,6 +52,7 @@ public class CertificateControllerTest {
 
     @Nested
     class AGForPerson {
+
         @Test
         void shouldUsePatientIdEncryptionIfPersonIdIsNotSet() {
             when(patientIdEncryption.decrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);
@@ -93,6 +95,7 @@ public class CertificateControllerTest {
 
     @Nested
     class LUForPerson {
+
         @Test
         void shouldUsePatientIdEncryptionIfPersonIdIsNotSet() {
             when(patientIdEncryption.decrypt(anyString())).thenReturn(ENCRYPTED_PATIENT_ID);

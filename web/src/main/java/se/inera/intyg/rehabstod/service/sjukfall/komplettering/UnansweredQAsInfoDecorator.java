@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,17 +20,11 @@ package se.inera.intyg.rehabstod.service.sjukfall.komplettering;
 
 import java.util.List;
 import se.inera.intyg.rehabstod.web.model.AGCertificate;
-import se.inera.intyg.rehabstod.web.model.LUCertificate;
-import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 public interface UnansweredQAsInfoDecorator {
 
-    void updateSjukfallEnhetQAs(List<SjukfallEnhet> sjukfallList);
-
     void updateSjukfallPatientWithQAs(List<SjukfallPatient> rehabstodSjukfall);
-
-    void updateLUCertificatesWithQAs(List<LUCertificate> luCertificate);
 
     void updateAGCertificatesWithQAs(List<AGCertificate> agCertificate);
 }

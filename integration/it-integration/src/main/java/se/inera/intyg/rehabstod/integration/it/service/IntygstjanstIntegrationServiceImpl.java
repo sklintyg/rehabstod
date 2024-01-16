@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Inera AB (http://www.inera.se)
+ * Copyright (C) 2024 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
@@ -48,45 +47,11 @@ public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrati
 
     @Override
     @PrometheusTimeMethod
-    public List<IntygsData> getIntygsDataForCareUnit(String unitId, int maxAntalDagarSedanSjukfallAvslut) {
-        verifyMandatoryParameter("unitId", unitId);
-        String errorMessage = "An error occured fetching sick leave certificates for healthcare unit. Error type: {}. Error msg: {}";
-        return getIntygsData(intygstjanstClientService.getSjukfallForUnit(unitId, maxAntalDagarSedanSjukfallAvslut), errorMessage);
-    }
-
-    @Override
-    @PrometheusTimeMethod
-    public List<IntygsData> getIntygsDataForCareUnitAndPatient(String unitId, String patientId, int maxAntalDagarSedanSjukfallAvslut) {
-        verifyMandatoryParameter("unitId", unitId);
-        verifyMandatoryParameter("patientId", patientId);
-
-        String errorMessage = "An error occured fetching sick leave certificates for patient on a care unit. Error type: {}. Error msg: {}";
-        return getIntygsData(intygstjanstClientService.getSjukfallForUnitAndPatient(unitId, patientId, maxAntalDagarSedanSjukfallAvslut),
-            errorMessage);
-    }
-
-    @Override
-    @PrometheusTimeMethod
     public List<IntygsData> getAllIntygsDataForPatient(String patientId) {
         verifyMandatoryParameter("patientId", patientId);
 
         String errorMessage = "An error occured fetching all sick leave certificates for a patient. Error type: {}. Error msg: {}";
         return getIntygsData(intygstjanstClientService.getAllSjukfallForPatient(patientId), errorMessage);
-    }
-
-    private List<IntygsData> getIntygsData(ListActiveSickLeavesForCareUnitResponseType responseType, String errorMessage) {
-        if (responseType == null) {
-            LOG.error(errorMessage);
-            throw new IntygstjanstIntegrationException();
-        }
-
-        if (responseType.getResultCode()
-            != se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ResultCodeEnum.OK) {
-            LOG.error(errorMessage, responseType.getResultCode(), responseType.getComment());
-            throw new IntygstjanstIntegrationException();
-        }
-
-        return responseType.getIntygsLista().getIntygsData();
     }
 
     private List<IntygsData> getIntygsData(ListSickLeavesForPersonResponseType responseType, String errorMessage) {
