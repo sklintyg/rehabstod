@@ -20,461 +20,444 @@
 
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:security="http://www.springframework.org/schema/security"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		xmlns:security="http://www.springframework.org/schema/security"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
               http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
               http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-  <!-- Enable auto-wiring -->
+	<!-- Enable auto-wiring -->
 
-  <context:annotation-config/>
-  <context:component-scan base-package="org.springframework.security.saml"/>
+	<context:annotation-config/>
+	<context:component-scan base-package="org.springframework.security.saml"/>
 
-  <!-- Unsecured pages -->
-  <security:http security="none" pattern="/" /> <!-- root of app, will be redirected to index.html that's in welcome-list -->
-  <security:http security="none" pattern="/index.html" /> <!-- keep this(?), if user actually enters index.html -->
-  <security:http security="none" pattern="/app/**"/> <!-- all static resources under /app is ok to access non authenticated -->
-  <security:http security="none" pattern="/assets/**"/>
-  <security:http security="none" pattern="/components/**"/>
-  <security:http security="none" pattern="/bower_components/**"/>
-  <security:http security="none" pattern="/saml/web/**"/>
-  <security:http security="none" pattern="/saml2/web/**"/>
-  <security:http security="none" create-session="never" pattern="/metrics"/>
-  <security:http security="none" pattern="/services/**"/>
-  <security:http security="none" pattern="/version.jsp"/>
-  <security:http security="none" pattern="/api/monitoring/**"/>
-  <security:http security="none" pattern="/js-monitoring-api/**"/>
-  <security:http security="none" pattern="/favicon.ico"/>
-  <security:http security="none" pattern="/error.jsp"/>
-  <security:http security="none" pattern="/api/config/**" />
-  <security:http security="none" pattern="/api/log/**" />
-  <security:http security="none" create-session="never" pattern="/api/session-auth-check/**"/>
+	<!-- Unsecured pages -->
+	<security:http security="none" pattern="/saml/web/**"/>
+	<security:http security="none" pattern="/saml2/web/**"/>
+	<security:http security="none" create-session="never" pattern="/metrics"/>
+	<security:http security="none" pattern="/services/**"/>
+	<security:http security="none" pattern="/api/config/**"/>
+	<security:http security="none" pattern="/api/log/**"/>
+	<security:http security="none" create-session="never" pattern="/api/session-auth-check/**"/>
 
-  <bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
-    <property name="redisNamespace" value="${app.name}"/>
-    <property name="flushMode" value="IMMEDIATE" />
-  </bean>
+	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
+		<property name="redisNamespace" value="${app.name}"/>
+		<property name="flushMode" value="IMMEDIATE"/>
+	</bean>
 
-  <!-- Logger for SAML messages and events -->
-  <bean id="samlLogger" class="se.inera.intyg.rehabstod.auth.SAMLStatusLogger">
-    <property name="logMessages" value="true"/>
-    <property name="logErrors" value="true"/>
-  </bean>
+	<!-- Logger for SAML messages and events -->
+	<bean id="samlLogger" class="se.inera.intyg.rehabstod.auth.SAMLStatusLogger">
+		<property name="logMessages" value="true"/>
+		<property name="logErrors" value="true"/>
+	</bean>
 
-  <bean id="rehabstodUserDetailsService" class="se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService"/>
+	<bean id="rehabstodUserDetailsService" class="se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService"/>
 
-  <!-- Initialization of OpenSAML library-->
-  <bean class="org.springframework.security.saml.SAMLBootstrap"/>
+	<!-- Initialization of OpenSAML library-->
+	<bean class="org.springframework.security.saml.SAMLBootstrap"/>
 
-  <!-- Initialization of the velocity engine -->
-  <bean id="velocityEngine" class="org.springframework.security.saml.util.VelocityFactory" factory-method="getEngine"/>
+	<!-- Initialization of the velocity engine -->
+	<bean id="velocityEngine" class="org.springframework.security.saml.util.VelocityFactory" factory-method="getEngine"/>
 
-  <!-- XML parser pool needed for OpenSAML parsing -->
-  <bean id="parserPool" class="org.opensaml.xml.parse.StaticBasicParserPool" scope="singleton"
-        init-method="initialize"/>
-  <bean id="parserPoolHolder" class="org.springframework.security.saml.parser.ParserPoolHolder" scope="singleton"/>
+	<!-- XML parser pool needed for OpenSAML parsing -->
+	<bean id="parserPool" class="org.opensaml.xml.parse.StaticBasicParserPool" scope="singleton"
+			init-method="initialize"/>
+	<bean id="parserPoolHolder" class="org.springframework.security.saml.parser.ParserPoolHolder" scope="singleton"/>
 
-  <bean id="failureHandler" class="se.inera.intyg.rehabstod.auth.RehabstodAuthenticationFailureHandler"/>
+	<bean id="failureHandler" class="se.inera.intyg.rehabstod.auth.RehabstodAuthenticationFailureHandler"/>
 
-  <bean id="http403ForbiddenEntryPoint"
-        class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
+	<bean id="http403ForbiddenEntryPoint"
+			class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint"/>
 
-  <!-- SessionRegistry is needed for keeping track of authenticated sessions (i.e users), this impl performs audit logging of login and logouts. -->
-  <bean id="loggingSessionRegistry" class="se.inera.intyg.rehabstod.auth.LoggingSessionRegistryImpl" />
+	<!-- SessionRegistry is needed for keeping track of authenticated sessions (i.e users), this impl performs audit logging of login and logouts. -->
+	<bean id="loggingSessionRegistry" class="se.inera.intyg.rehabstod.auth.LoggingSessionRegistryImpl"/>
 
-  <!-- Session authentication strategy that registers authenticated sessions with the session registry -->
-  <bean id="registerSessionAuthenticationStrategy" class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
-    <constructor-arg ref="loggingSessionRegistry" />
-  </bean>
+	<!-- Session authentication strategy that registers authenticated sessions with the session registry -->
+	<bean id="registerSessionAuthenticationStrategy" class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
+		<constructor-arg ref="loggingSessionRegistry"/>
+	</bean>
 
-  <bean id="xFrameOptionsHeaderWriter" class="org.springframework.security.web.header.writers.DelegatingRequestMatcherHeaderWriter">
-    <constructor-arg>
-      <bean class="org.springframework.security.web.util.matcher.AnyRequestMatcher"/>
-    </constructor-arg>
-    <constructor-arg>
-      <bean class="se.inera.intyg.rehabstod.auth.CustomXFrameOptionsHeaderWriter"/>
-    </constructor-arg>
-  </bean>
+	<bean id="xFrameOptionsHeaderWriter" class="org.springframework.security.web.header.writers.DelegatingRequestMatcherHeaderWriter">
+		<constructor-arg>
+			<bean class="org.springframework.security.web.util.matcher.AnyRequestMatcher"/>
+		</constructor-arg>
+		<constructor-arg>
+			<bean class="se.inera.intyg.rehabstod.auth.CustomXFrameOptionsHeaderWriter"/>
+		</constructor-arg>
+	</bean>
 
+	<!-- =============================================================== -->
+	<!-- These URLs are unsecured in all profiles except rhs-security-prod -->
+	<!-- =============================================================== -->
+	<beans profile="dev,rhs-security-dev,rhs-security-test">
+		<security:http security="none" pattern="/welcome.html"/>
+	</beans>
+	<beans profile="dev,testability-api">
+		<security:http security="none" pattern="/api/test/**"/>
+		<security:http security="none" pattern="/api/stub/**"/>
+		<security:http security="none" pattern="/api/testability/**"/>
+	</beans>
 
-  <!-- =============================================================== -->
-  <!-- These URLs are unsecured in all profiles except rhs-security-prod -->
-  <!-- =============================================================== -->
-  <beans profile="dev,rhs-security-dev,rhs-security-test">
-    <security:http security="none" pattern="/welcome.html"/>
-  </beans>
-  <beans profile="dev,testability-api">
-    <security:http security="none" pattern="/api/test/**"/>
-    <security:http security="none" pattern="/api/stub/**"/>
-    <security:http security="none" pattern="/api/testability/**"/>
-  </beans>
+	<!-- =============================================================== -->
+	<!-- The dev and rhs-security-dev profiles only supports Fake login -->
+	<!-- =============================================================== -->
+	<beans profile="!rhs-security-test">
+		<beans profile="dev,rhs-security-dev">
+			<security:http use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
+				<security:csrf request-matcher-ref="csrfRequestMatcher" token-repository-ref="csrfTokenRepository"/>
+				<security:access-denied-handler error-page="/welcome.html"/>
+				<security:logout logout-url="/logout" logout-success-url="/welcome.html" invalidate-session="true"/>
+				<security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
+				<security:custom-filter position="PRE_AUTH_FILTER" ref="fakeAuthFilter"/>
+				<security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy"/>
+				<security:headers>
+					<security:frame-options disabled="true"/>
+					<security:header ref="xFrameOptionsHeaderWriter"/>
+				</security:headers>
+			</security:http>
+			<security:authentication-manager alias="authenticationManager">
+				<security:authentication-provider ref="rehabstodAuthenticationProvider"/>
+			</security:authentication-manager>
+		</beans>
+	</beans>
 
-  <!-- =============================================================== -->
-  <!-- The dev and rhs-security-dev profiles only supports Fake login -->
-  <!-- =============================================================== -->
-  <beans profile="!rhs-security-test">
-    <beans profile="dev,rhs-security-dev">
-      <security:http use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
-        <security:csrf request-matcher-ref="csrfRequestMatcher" token-repository-ref="csrfTokenRepository"/>
-        <security:access-denied-handler error-page="/welcome.html"/>
-        <security:logout logout-url="/logout" logout-success-url="/welcome.html" invalidate-session="true"/>
-        <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
-        <security:custom-filter position="PRE_AUTH_FILTER" ref="fakeAuthFilter"/>
-        <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
-        <security:headers>
-          <security:frame-options disabled="true"/>
-          <security:header ref="xFrameOptionsHeaderWriter"/>
-        </security:headers>
-      </security:http>
-      <security:authentication-manager alias="authenticationManager">
-        <security:authentication-provider ref="rehabstodAuthenticationProvider"/>
-      </security:authentication-manager>
-    </beans>
-  </beans>
+	<!-- This requestmatcher decides which requests will be sent to saml/login if the request is not authenticated -->
+	<beans>
+		<bean id="samlRequestMatcher" class="org.springframework.security.web.util.matcher.OrRequestMatcher">
+			<constructor-arg>
+				<list>
+					<bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+						<constructor-arg index="0" value="/"/>
+					</bean>
+					<bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+						<constructor-arg index="0" value="/#/app"/>
+					</bean>
+					<bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
+						<constructor-arg index="0" value="/saml/**"/>
+					</bean>
+				</list>
+			</constructor-arg>
+		</bean>
+	</beans>
 
-  <!-- This requestmatcher decides which requests will be sent to saml/login if the request is not authenticated -->
-  <beans>
-    <bean id="samlRequestMatcher" class="org.springframework.security.web.util.matcher.OrRequestMatcher">
-      <constructor-arg>
-        <list>
-          <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-            <constructor-arg index="0" value="/" />
-          </bean>
-          <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-            <constructor-arg index="0" value="/#/app" />
-          </bean>
-          <bean class="org.springframework.security.web.util.matcher.AntPathRequestMatcher">
-            <constructor-arg index="0" value="/saml/**" />
-          </bean>
-        </list>
-      </constructor-arg>
-    </bean>
-  </beans>
+	<!-- =============================================================== -->
+	<!-- The rhs-security-test profile support both CGI eleg and Fake login -->
+	<!-- =============================================================== -->
+	<beans profile="rhs-security-test">
+		<!-- Unauthenticated requests matching samlRequestMatcher will be sent to saml login flow -->
+		<security:http use-expressions="false" entry-point-ref="samlEntryPoint" request-matcher-ref="samlRequestMatcher">
+			<security:csrf disabled="true"/>
+			<security:headers/>
+			<security:logout logout-url="/logout" logout-success-url="/welcome.html" invalidate-session="true"/>
+			<security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
+			<security:custom-filter position="PRE_AUTH_FILTER" ref="fakeAuthFilter"/>
+			<security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
+			<security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy"/>
+			<security:headers>
+				<security:frame-options disabled="true"/>
+				<security:header ref="xFrameOptionsHeaderWriter"/>
+			</security:headers>
+		</security:http>
+		<!-- Other unauthenticated requests will be returned as http status 403. -->
+		<!-- This will allow frontend to act correctly on ajax requests          -->
+		<security:http use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
+			<security:csrf request-matcher-ref="csrfRequestMatcher" token-repository-ref="csrfTokenRepository"/>
+			<security:logout logout-url="/logout" logout-success-url="/welcome.html" invalidate-session="true"/>
+			<security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
+			<security:custom-filter position="PRE_AUTH_FILTER" ref="fakeAuthFilter"/>
+			<security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy"/>
+			<security:headers>
+				<security:frame-options disabled="true"/>
+				<security:header ref="xFrameOptionsHeaderWriter"/>
+			</security:headers>
+		</security:http>
 
-  <!-- =============================================================== -->
-  <!-- The rhs-security-test profile support both CGI eleg and Fake login -->
-  <!-- =============================================================== -->
-  <beans profile="rhs-security-test">
-    <!-- Unauthenticated requests matching samlRequestMatcher will be sent to saml login flow -->
-    <security:http use-expressions="false" entry-point-ref="samlEntryPoint" request-matcher-ref="samlRequestMatcher">
-      <security:csrf disabled="true"/>
-      <security:headers/>
-      <security:logout logout-url="/logout" logout-success-url="/welcome.html" invalidate-session="true"/>
-      <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
-      <security:custom-filter position="PRE_AUTH_FILTER" ref="fakeAuthFilter"/>
-      <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
-      <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
-      <security:headers>
-        <security:frame-options disabled="true"/>
-        <security:header ref="xFrameOptionsHeaderWriter"/>
-      </security:headers>
-    </security:http>
-    <!-- Other unauthenticated requests will be returned as http status 403. -->
-    <!-- This will allow frontend to act correctly on ajax requests          -->
-    <security:http use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
-      <security:csrf request-matcher-ref="csrfRequestMatcher" token-repository-ref="csrfTokenRepository"/>
-      <security:logout logout-url="/logout" logout-success-url="/welcome.html" invalidate-session="true"/>
-      <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
-      <security:custom-filter position="PRE_AUTH_FILTER" ref="fakeAuthFilter"/>
-      <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
-      <security:headers>
-        <security:frame-options disabled="true"/>
-        <security:header ref="xFrameOptionsHeaderWriter"/>
-      </security:headers>
-    </security:http>
+		<security:authentication-manager alias="authenticationManager">
+			<security:authentication-provider ref="samlAuthenticationProvider"/>
+			<security:authentication-provider ref="rehabstodAuthenticationProvider"/>
+		</security:authentication-manager>
+	</beans>
 
-    <security:authentication-manager alias="authenticationManager">
-      <security:authentication-provider ref="samlAuthenticationProvider"/>
-      <security:authentication-provider ref="rehabstodAuthenticationProvider"/>
-    </security:authentication-manager>
-  </beans>
+	<!-- =============================================================== -->
+	<!-- The rhs-security-prod profile only supports SITHS login         -->
+	<!-- =============================================================== -->
 
-  <!-- =============================================================== -->
-  <!-- The rhs-security-prod profile only supports SITHS login         -->
-  <!-- =============================================================== -->
+	<beans profile="prod,rhs-security-prod">
+		<security:http use-expressions="false" entry-point-ref="samlEntryPoint" request-matcher-ref="samlRequestMatcher">
+			<security:csrf disabled="true"/>
+			<security:headers/>
+			<security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
+			<security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
+			<security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy"/>
+			<security:headers>
+				<security:frame-options disabled="true"/>
+				<security:header ref="xFrameOptionsHeaderWriter"/>
+			</security:headers>
+		</security:http>
+		<security:http use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
+			<security:csrf request-matcher-ref="csrfRequestMatcher" token-repository-ref="csrfTokenRepository"/>
+			<security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
+			<security:headers>
+				<security:frame-options disabled="true"/>
+				<security:header ref="xFrameOptionsHeaderWriter"/>
+			</security:headers>
+		</security:http>
+		<security:authentication-manager alias="authenticationManager">
+			<security:authentication-provider ref="samlAuthenticationProvider"/>
+		</security:authentication-manager>
+	</beans>
 
-  <beans profile="prod,rhs-security-prod">
-    <security:http use-expressions="false" entry-point-ref="samlEntryPoint" request-matcher-ref="samlRequestMatcher">
-      <security:csrf disabled="true"/>
-      <security:headers/>
-      <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
-      <security:custom-filter after="BASIC_AUTH_FILTER" ref="samlFilter"/>
-      <security:session-management session-authentication-strategy-ref="registerSessionAuthenticationStrategy" />
-      <security:headers>
-        <security:frame-options disabled="true"/>
-        <security:header ref="xFrameOptionsHeaderWriter"/>
-      </security:headers>
-    </security:http>
-    <security:http  use-expressions="false" entry-point-ref="http403ForbiddenEntryPoint">
-      <security:csrf request-matcher-ref="csrfRequestMatcher" token-repository-ref="csrfTokenRepository"/>
-      <security:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY"/>
-      <security:headers>
-        <security:frame-options disabled="true"/>
-        <security:header ref="xFrameOptionsHeaderWriter"/>
-      </security:headers>
-    </security:http>
-    <security:authentication-manager alias="authenticationManager">
-      <security:authentication-provider ref="samlAuthenticationProvider"/>
-    </security:authentication-manager>
-  </beans>
-
-  <beans profile="dev,rhs-security-dev,rhs-security-test">
-    <bean id="fakeAuthFilter" class="se.inera.intyg.rehabstod.auth.fake.FakeAuthenticationFilter">
-      <property name="authenticationManager" ref="authenticationManager"/>
-      <property name="sessionAuthenticationStrategy" ref="registerSessionAuthenticationStrategy"/>
-      <property name="authenticationSuccessHandler" ref="fakeSuccessHandler"/>
-      <property name="authenticationFailureHandler" ref="failureHandler"/>
-    </bean>
-    <bean id="fakeSuccessHandler"
-        class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
-      <property name="defaultTargetUrl" value="/#/app"/>
-    </bean>
-    <bean id="rehabstodAuthenticationProvider"
-        class="se.inera.intyg.rehabstod.auth.fake.FakeAuthenticationProvider">
-      <property name="userDetails" ref="rehabstodUserDetailsService"/>
-    </bean>
-  </beans>
-
-  <beans profile="hsa-integration-intyg-proxy-service">
-    <import resource="classpath:/hsa-integration-intyg-proxy-service-config.xml"/>
-  </beans>
+	<beans profile="dev,rhs-security-dev,rhs-security-test">
+		<bean id="fakeAuthFilter" class="se.inera.intyg.rehabstod.auth.fake.FakeAuthenticationFilter">
+			<property name="authenticationManager" ref="authenticationManager"/>
+			<property name="sessionAuthenticationStrategy" ref="registerSessionAuthenticationStrategy"/>
+			<property name="authenticationSuccessHandler" ref="fakeSuccessHandler"/>
+			<property name="authenticationFailureHandler" ref="failureHandler"/>
+		</bean>
+		<bean id="fakeSuccessHandler"
+				class="org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler">
+			<property name="defaultTargetUrl" value="/#/app"/>
+		</bean>
+		<bean id="rehabstodAuthenticationProvider"
+				class="se.inera.intyg.rehabstod.auth.fake.FakeAuthenticationProvider">
+			<property name="userDetails" ref="rehabstodUserDetailsService"/>
+		</bean>
+	</beans>
 
 	<beans profile="prod,rhs-security-test,rhs-security-prod">
 
-    <bean id="samlFilter" class="org.springframework.security.web.FilterChainProxy">
-      <security:filter-chain-map request-matcher="ant">
-        <security:filter-chain pattern="/saml/login/**" filters="samlEntryPoint"/>
-        <security:filter-chain pattern="/saml/logout/**" filters="samlLogoutFilter"/>
-        <security:filter-chain pattern="/saml/SSO/**" filters="samlWebSSOProcessingFilter"/>
-        <security:filter-chain pattern="/saml/SingleLogout/**" filters="samlLogoutProcessingFilter"/>
-        <security:filter-chain pattern="/saml/metadata/**" filters="metadataDisplayFilter"/>
-      </security:filter-chain-map>
-    </bean>
+		<bean id="samlFilter" class="org.springframework.security.web.FilterChainProxy">
+			<security:filter-chain-map request-matcher="ant">
+				<security:filter-chain pattern="/saml/login/**" filters="samlEntryPoint"/>
+				<security:filter-chain pattern="/saml/logout/**" filters="samlLogoutFilter"/>
+				<security:filter-chain pattern="/saml/SSO/**" filters="samlWebSSOProcessingFilter"/>
+				<security:filter-chain pattern="/saml/SingleLogout/**" filters="samlLogoutProcessingFilter"/>
+				<security:filter-chain pattern="/saml/metadata/**" filters="metadataDisplayFilter"/>
+			</security:filter-chain-map>
+		</bean>
 
-    <!-- Handler deciding where to redirect user after successful login -->
-    <bean id="successRedirectHandler"
-          class="se.inera.intyg.rehabstod.auth.RehabstodAuthenticationSuccessHandler">
-      <constructor-arg index="0" value="/"/>
-    </bean>
+		<!-- Handler deciding where to redirect user after successful login -->
+		<bean id="successRedirectHandler"
+				class="se.inera.intyg.rehabstod.auth.RehabstodAuthenticationSuccessHandler">
+			<constructor-arg index="0" value="/"/>
+		</bean>
 
-    <!-- Central storage of cryptographic keys -->
-    <bean id="keyManager" class="org.springframework.security.saml.key.JKSKeyManager">
-      <constructor-arg value="${saml.keystore.file}"/>
-      <constructor-arg type="java.lang.String" value="${saml.keystore.password}"/>
-      <constructor-arg>
-        <map>
-          <entry key="${saml.keystore.alias}" value="${saml.keystore.password}"/>
-        </map>
-      </constructor-arg>
-      <constructor-arg type="java.lang.String" value="${saml.keystore.alias}"/>
-    </bean>
+		<!-- Central storage of cryptographic keys -->
+		<bean id="keyManager" class="org.springframework.security.saml.key.JKSKeyManager">
+			<constructor-arg value="${saml.keystore.file}"/>
+			<constructor-arg type="java.lang.String" value="${saml.keystore.password}"/>
+			<constructor-arg>
+				<map>
+					<entry key="${saml.keystore.alias}" value="${saml.keystore.password}"/>
+				</map>
+			</constructor-arg>
+			<constructor-arg type="java.lang.String" value="${saml.keystore.alias}"/>
+		</bean>
 
+		<!-- Entry point to initialize authentication, default values taken from properties file -->
+		<bean id="samlEntryPoint" class="org.springframework.security.saml.SAMLEntryPoint">
+			<property name="defaultProfileOptions">
+				<bean class="org.springframework.security.saml.websso.WebSSOProfileOptions">
+					<property name="includeScoping" value="false"/>
+					<property name="authnContexts">
+						<set>
+							<value>http://id.sambi.se/loa/loa3</value>
+							<value>http://id.sambi.se/loa/loa2</value>
+						</set>
+					</property>
+				</bean>
+			</property>
+		</bean>
 
-    <!-- Entry point to initialize authentication, default values taken from properties file -->
-    <bean id="samlEntryPoint" class="org.springframework.security.saml.SAMLEntryPoint">
-      <property name="defaultProfileOptions">
-        <bean class="org.springframework.security.saml.websso.WebSSOProfileOptions">
-          <property name="includeScoping" value="false"/>
-          <property name="authnContexts">
-               <set>
-                 <value>http://id.sambi.se/loa/loa3</value>
-                 <value>http://id.sambi.se/loa/loa2</value>
-               </set>
-          </property>
-        </bean>
-      </property>
-    </bean>
+		<bean id="metadataDisplayFilter" class="org.springframework.security.saml.metadata.MetadataDisplayFilter"/>
 
-    <bean id="metadataDisplayFilter" class="org.springframework.security.saml.metadata.MetadataDisplayFilter"/>
+		<!-- IDP Metadata configuration - paths to metadata of IDPs in circle of trust is here -->
+		<!-- Do no forget to call initalize method on providers -->
+		<bean id="metadata" class="org.springframework.security.saml.metadata.CachingMetadataManager">
+			<constructor-arg>
+				<list>
 
-    <!-- IDP Metadata configuration - paths to metadata of IDPs in circle of trust is here -->
-    <!-- Do no forget to call initalize method on providers -->
-    <bean id="metadata" class="org.springframework.security.saml.metadata.CachingMetadataManager">
-      <constructor-arg>
-        <list>
+					<!-- START SERVICE PROVIDER BEAN FOR SITHS -->
+					<bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+						<constructor-arg>
+							<bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
+								<constructor-arg>
+									<value type="java.io.File">${saml.sp.metadata.file}</value>
+								</constructor-arg>
+								<property name="parserPool" ref="parserPool"/>
+							</bean>
+						</constructor-arg>
+						<property name="metadataTrustCheck" value="true"/>
 
-          <!-- START SERVICE PROVIDER BEAN FOR SITHS -->
-          <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
-            <constructor-arg>
-              <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
-                <constructor-arg>
-                  <value type="java.io.File">${saml.sp.metadata.file}</value>
-                </constructor-arg>
-                <property name="parserPool" ref="parserPool"/>
-              </bean>
-            </constructor-arg>
-            <property name="metadataTrustCheck" value="true"/>
+						<constructor-arg>
+							<bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
+								<property name="alias" value="defaultAlias"/>
+								<property name="local" value="true"/>
+								<property name="securityProfile" value="metaiop"/>
+								<property name="sslSecurityProfile" value="metaiop"/>
+								<property name="signMetadata" value="true"/>
+								<!-- The signingKey and encryptionKey refers to the _aliases_ of the key in the keystore defined in the keyManager bean -->
+								<property name="signingKey" value="${saml.keystore.alias}"/>
+								<property name="encryptionKey" value="${saml.keystore.alias}"/>
+								<property name="requireArtifactResolveSigned" value="true"/>
+								<property name="requireLogoutRequestSigned" value="true"/>
+								<property name="requireLogoutResponseSigned" value="false"/>
 
-            <constructor-arg>
-              <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
-                <property name="alias" value="defaultAlias"/>
-                <property name="local" value="true"/>
-                <property name="securityProfile" value="metaiop"/>
-                <property name="sslSecurityProfile" value="metaiop"/>
-                <property name="signMetadata" value="true"/>
-                <!-- The signingKey and encryptionKey refers to the _aliases_ of the key in the keystore defined in the keyManager bean -->
-                <property name="signingKey" value="${saml.keystore.alias}"/>
-                <property name="encryptionKey" value="${saml.keystore.alias}"/>
-                <property name="requireArtifactResolveSigned" value="true"/>
-                <property name="requireLogoutRequestSigned" value="true"/>
-                <property name="requireLogoutResponseSigned" value="false"/>
+								<property name="idpDiscoveryEnabled" value="false"/>
+							</bean>
+						</constructor-arg>
+					</bean>
 
-                <property name="idpDiscoveryEnabled" value="false" />
-              </bean>
-            </constructor-arg>
-          </bean>
+					<bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+						<constructor-arg>
+							<bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
+								<constructor-arg>
+									<value type="java.io.File">${application.dir}/config/sp-inera-rs2.xml</value>
+								</constructor-arg>
+								<property name="parserPool" ref="parserPool"/>
+							</bean>
+						</constructor-arg>
+						<property name="metadataTrustCheck" value="true"/>
 
-          <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
-            <constructor-arg>
-              <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
-                <constructor-arg>
-                  <value type="java.io.File">${application.dir}/config/sp-inera-rs2.xml</value>
-                </constructor-arg>
-                <property name="parserPool" ref="parserPool"/>
-              </bean>
-            </constructor-arg>
-            <property name="metadataTrustCheck" value="true"/>
+						<constructor-arg>
+							<bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
+								<property name="alias" value="siths-rs2"/>
+								<property name="local" value="true"/>
+								<property name="securityProfile" value="metaiop"/>
+								<property name="sslSecurityProfile" value="metaiop"/>
+								<property name="signMetadata" value="true"/>
+								<!-- The signingKey and encryptionKey refers to the _aliases_ of the key in the keystore defined in the keyManager bean -->
+								<property name="signingKey" value="${saml.keystore.alias}"/>
+								<property name="encryptionKey" value="${saml.keystore.alias}"/>
+								<property name="requireArtifactResolveSigned" value="true"/>
+								<property name="requireLogoutRequestSigned" value="true"/>
+								<property name="requireLogoutResponseSigned" value="false"/>
 
-            <constructor-arg>
-              <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
-                <property name="alias" value="siths-rs2"/>
-                <property name="local" value="true"/>
-                <property name="securityProfile" value="metaiop"/>
-                <property name="sslSecurityProfile" value="metaiop"/>
-                <property name="signMetadata" value="true"/>
-                <!-- The signingKey and encryptionKey refers to the _aliases_ of the key in the keystore defined in the keyManager bean -->
-                <property name="signingKey" value="${saml.keystore.alias}"/>
-                <property name="encryptionKey" value="${saml.keystore.alias}"/>
-                <property name="requireArtifactResolveSigned" value="true"/>
-                <property name="requireLogoutRequestSigned" value="true"/>
-                <property name="requireLogoutResponseSigned" value="false"/>
+								<property name="idpDiscoveryEnabled" value="false"/>
+							</bean>
+						</constructor-arg>
+					</bean>
+					<!--  END SERVICE PROVIDER BEAN FOR SITHS -->
 
-                <property name="idpDiscoveryEnabled" value="false" />
-              </bean>
-            </constructor-arg>
-          </bean>
-          <!--  END SERVICE PROVIDER BEAN FOR SITHS -->
+					<!-- START IDENTITY PROVIDER BEAN FOR SITHS -->
+					<bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+						<constructor-arg>
+							<bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
+								<constructor-arg>
+									<value type="java.io.File">${saml.idp.metadata.file}</value>
+								</constructor-arg>
+								<property name="parserPool" ref="parserPool"/>
+							</bean>
+						</constructor-arg>
+						<constructor-arg>
+							<bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
+								<property name="alias" value="defaultAlias"/>
+							</bean>
+						</constructor-arg>
 
-          <!-- START IDENTITY PROVIDER BEAN FOR SITHS -->
-          <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
-            <constructor-arg>
-              <bean class="org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider">
-                <constructor-arg>
-                  <value type="java.io.File">${saml.idp.metadata.file}</value>
-                </constructor-arg>
-                <property name="parserPool" ref="parserPool"/>
-              </bean>
-            </constructor-arg>
-            <constructor-arg>
-              <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
-                <property name="alias" value="defaultAlias"/>
-              </bean>
-            </constructor-arg>
+						<property name="metadataTrustCheck" value="false"/>
+					</bean>
+					<!-- END IDENTITY PROVIDER BEAN FOR SITHS -->
 
-            <property name="metadataTrustCheck" value="false"/>
-          </bean>
-          <!-- END IDENTITY PROVIDER BEAN FOR SITHS -->
+				</list>
+			</constructor-arg>
+			<property name="refreshCheckInterval" value="86400000"/>
+			<property name="hostedSPName" value="https://${rehabstod.domain.name}"/>
+		</bean>
 
-        </list>
-      </constructor-arg>
-      <property name="refreshCheckInterval" value="86400000"/>
-      <property name="hostedSPName" value="https://${rehabstod.domain.name}"/>
-    </bean>
+		<!-- SAML Authentication Provider responsible for validating of received SAML messages over SITHS or e-leg -->
+		<bean id="samlAuthenticationProvider" class="org.springframework.security.saml.SAMLAuthenticationProvider">
+			<property name="userDetails" ref="rehabstodUserDetailsService"/>
+			<property name="forcePrincipalAsString" value="false"/>
+		</bean>
 
-    <!-- SAML Authentication Provider responsible for validating of received SAML messages over SITHS or e-leg -->
-    <bean id="samlAuthenticationProvider" class="org.springframework.security.saml.SAMLAuthenticationProvider">
-      <property name="userDetails" ref="rehabstodUserDetailsService"/>
-      <property name="forcePrincipalAsString" value="false"/>
-    </bean>
+		<!-- Processing filter for WebSSO profile messages -->
+		<bean id="samlWebSSOProcessingFilter" class="org.springframework.security.saml.SAMLProcessingFilter">
+			<property name="authenticationManager" ref="authenticationManager"/>
+			<property name="sessionAuthenticationStrategy" ref="registerSessionAuthenticationStrategy"/>
+			<property name="authenticationSuccessHandler" ref="successRedirectHandler"/>
+			<property name="authenticationFailureHandler" ref="failureHandler"/>
+		</bean>
 
-    <!-- Processing filter for WebSSO profile messages -->
-    <bean id="samlWebSSOProcessingFilter" class="org.springframework.security.saml.SAMLProcessingFilter">
-      <property name="authenticationManager" ref="authenticationManager"/>
-      <property name="sessionAuthenticationStrategy" ref="registerSessionAuthenticationStrategy"/>
-      <property name="authenticationSuccessHandler" ref="successRedirectHandler"/>
-      <property name="authenticationFailureHandler" ref="failureHandler"/>
-    </bean>
+		<!-- Class loading incoming SAML messages from httpRequest stream -->
+		<bean id="processor" class="org.springframework.security.saml.processor.SAMLProcessorImpl">
+			<constructor-arg>
+				<list>
+					<ref bean="redirectBinding"/>
+					<ref bean="postBinding"/>
+					<ref bean="artifactBinding"/>
+				</list>
+			</constructor-arg>
+		</bean>
 
-    <!-- Class loading incoming SAML messages from httpRequest stream -->
-    <bean id="processor" class="org.springframework.security.saml.processor.SAMLProcessorImpl">
-      <constructor-arg>
-        <list>
-          <ref bean="redirectBinding"/>
-          <ref bean="postBinding"/>
-          <ref bean="artifactBinding"/>
-        </list>
-      </constructor-arg>
-    </bean>
+		<bean id="artifactBinding" class="org.springframework.security.saml.processor.HTTPArtifactBinding">
+			<constructor-arg ref="parserPool"/>
+			<constructor-arg ref="velocityEngine"/>
+			<constructor-arg>
+				<bean class="org.springframework.security.saml.websso.ArtifactResolutionProfileImpl">
+					<constructor-arg>
+						<bean class="org.apache.commons.httpclient.HttpClient"/>
+					</constructor-arg>
+					<property name="processor">
+						<bean id="soapProcessor" class="org.springframework.security.saml.processor.SAMLProcessorImpl">
+							<constructor-arg ref="soapBinding"/>
+						</bean>
+					</property>
+				</bean>
+			</constructor-arg>
+		</bean>
 
-    <bean id="artifactBinding" class="org.springframework.security.saml.processor.HTTPArtifactBinding">
-      <constructor-arg ref="parserPool"/>
-      <constructor-arg ref="velocityEngine"/>
-      <constructor-arg>
-        <bean class="org.springframework.security.saml.websso.ArtifactResolutionProfileImpl">
-          <constructor-arg>
-            <bean class="org.apache.commons.httpclient.HttpClient"/>
-          </constructor-arg>
-          <property name="processor">
-            <bean id="soapProcessor" class="org.springframework.security.saml.processor.SAMLProcessorImpl">
-              <constructor-arg ref="soapBinding"/>
-            </bean>
-          </property>
-        </bean>
-      </constructor-arg>
-    </bean>
+		<bean id="soapBinding" class="org.springframework.security.saml.processor.HTTPSOAP11Binding">
+			<constructor-arg ref="parserPool"/>
+		</bean>
 
-    <bean id="soapBinding" class="org.springframework.security.saml.processor.HTTPSOAP11Binding">
-      <constructor-arg ref="parserPool"/>
-    </bean>
+		<!-- SAML 2.0 WebSSO Assertion Consumer -->
+		<bean id="webSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerImpl">
+			<property name="responseSkew" value="${saml.responseSkew}"/>
+			<property name="releaseDOM" value="false"/>
+		</bean>
 
-    <!-- SAML 2.0 WebSSO Assertion Consumer -->
-    <bean id="webSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerImpl">
-      <property name="responseSkew" value="${saml.responseSkew}"/>
-      <property name="releaseDOM" value="false"/>
-    </bean>
+		<!-- SAML 2.0 Holder-of-Key WebSSO Assertion Consumer -->
+		<bean id="hokWebSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerHoKImpl"/>
 
-    <!-- SAML 2.0 Holder-of-Key WebSSO Assertion Consumer -->
-    <bean id="hokWebSSOprofileConsumer" class="org.springframework.security.saml.websso.WebSSOProfileConsumerHoKImpl"/>
+		<!-- SAML 2.0 Web SSO profile -->
+		<bean id="webSSOprofile" class="se.inera.intyg.rehabstod.auth.RehabstodWebSSOProfileImpl"/>
 
-    <!-- SAML 2.0 Web SSO profile -->
-    <bean id="webSSOprofile" class="se.inera.intyg.rehabstod.auth.RehabstodWebSSOProfileImpl"/>
+		<!-- SAML 2.0 Logout Profile -->
+		<bean id="logoutprofile" class="org.springframework.security.saml.websso.SingleLogoutProfileImpl"/>
 
-    <!-- SAML 2.0 Logout Profile -->
-    <bean id="logoutprofile" class="org.springframework.security.saml.websso.SingleLogoutProfileImpl"/>
+		<!-- Bindings, encoders and decoders used for creating and parsing messages -->
+		<bean id="postBinding" class="org.springframework.security.saml.processor.HTTPPostBinding">
+			<constructor-arg ref="parserPool"/>
+			<constructor-arg ref="velocityEngine"/>
+		</bean>
 
-    <!-- Bindings, encoders and decoders used for creating and parsing messages -->
-    <bean id="postBinding" class="org.springframework.security.saml.processor.HTTPPostBinding">
-      <constructor-arg ref="parserPool"/>
-      <constructor-arg ref="velocityEngine"/>
-    </bean>
+		<bean id="redirectBinding" class="org.springframework.security.saml.processor.HTTPRedirectDeflateBinding">
+			<constructor-arg ref="parserPool"/>
+		</bean>
 
-    <bean id="redirectBinding" class="org.springframework.security.saml.processor.HTTPRedirectDeflateBinding">
-      <constructor-arg ref="parserPool"/>
-    </bean>
+		<!-- Logout handler terminating local session -->
+		<bean id="logoutHandler" class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
 
-    <!-- Logout handler terminating local session -->
-    <bean id="logoutHandler" class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+		<!-- Override default logout processing filter with the one processing SAML messages -->
+		<bean id="samlLogoutFilter" class="org.springframework.security.saml.SAMLLogoutFilter">
+			<constructor-arg index="0" ref="successLogoutHandler"/>
+			<constructor-arg index="1" ref="logoutHandler"/>
+			<constructor-arg index="2" ref="logoutHandler"/>
+		</bean>
 
-    <!-- Override default logout processing filter with the one processing SAML messages -->
-    <bean id="samlLogoutFilter" class="org.springframework.security.saml.SAMLLogoutFilter">
-      <constructor-arg index="0" ref="successLogoutHandler"/>
-      <constructor-arg index="1" ref="logoutHandler"/>
-      <constructor-arg index="2" ref="logoutHandler"/>
-    </bean>
+		<!-- Filter processing incoming logout messages -->
+		<!-- First argument determines URL user will be redirected to after successful global logout -->
+		<bean id="samlLogoutProcessingFilter" class="org.springframework.security.saml.SAMLLogoutProcessingFilter">
+			<constructor-arg index="0" ref="successLogoutHandler"/>
+			<constructor-arg index="1" ref="logoutHandler"/>
+		</bean>
 
-    <!-- Filter processing incoming logout messages -->
-    <!-- First argument determines URL user will be redirected to after successful global logout -->
-    <bean id="samlLogoutProcessingFilter" class="org.springframework.security.saml.SAMLLogoutProcessingFilter">
-      <constructor-arg index="0" ref="successLogoutHandler"/>
-      <constructor-arg index="1" ref="logoutHandler"/>
-    </bean>
-
-    <!-- Handler for successful logout -->
-    <bean id="successLogoutHandler"
-          class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
-      <property name="defaultTargetUrl" value="/"/>
-    </bean>
-  </beans>
+		<!-- Handler for successful logout -->
+		<bean id="successLogoutHandler"
+				class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
+			<property name="defaultTargetUrl" value="/"/>
+		</bean>
+	</beans>
 </beans>
