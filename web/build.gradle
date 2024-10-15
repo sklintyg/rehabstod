@@ -32,14 +32,10 @@ gretty {
                "-Ddev.http.port=${useHttpPort}",
                "-Ddev.http.port.internal=${useInternalHttpPort}"
     ]
-
-    dependencies {
-        gretty "se.inera.intyg.refdata:refdata:${refDataVersion}"
-    }
 }
 
 test {
-    environment "catalina.base",  "${buildDirectory}/catalina.base"
+    environment "catalina.base", "${buildDirectory}/catalina.base"
 }
 
 war.rootSpec.exclude "logback.xml"
