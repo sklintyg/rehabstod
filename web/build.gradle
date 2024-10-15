@@ -9,7 +9,7 @@ gretty {
     def useInternalHttpPort = 8130 + (instance as Integer)
     def applicationDir = "${rootProject.projectDir}/devops/dev"
 
-    servletContainer = 'tomcat9'
+    servletContainer = 'tomcat10'
     contextPath = '/'
 
     integrationTestTask = null

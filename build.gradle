@@ -1,7 +1,6 @@
 plugins {
-    id "io.spring.dependency-management" version "1.1.3" apply false
-    id "com.netflix.nebula.node" version "3.0.0" apply false
-    id "org.gretty" version "3.0.9" apply false
+    id "io.spring.dependency-management" version "1.1.6" apply false
+    id "org.gretty" version "4.1.5" apply false
     id 'test-report-aggregation'
     id 'org.sonarqube' version '5.1.0.4882'
     id "org.owasp.dependencycheck" version "10.0.4"
@@ -9,35 +8,32 @@ plugins {
 }
 
 ext {
-    intygInfraVersion = System.properties['infraVersion'] ?: '3.21.0-SNAPSHOT'
+    intygInfraVersion = System.properties['infraVersion'] ?: '4.0.0-SNAPSHOT'
     refDataVersion = System.properties['refDataVersion'] ?: '1.0-SNAPSHOT'
 
-    blockingSchemaVersion = "4.0.1.1"
-    consentSchemaVersion = "2.0.1.1"
-    internalMonitoringSchemaVersion = "1.0.4.1"
-    intygClinicalprocessSchemasVersion = "1.0.24.1"
-    intygHealthcondRehabilitationSchemasVersion = "1.1.3.1"
-    rivtaItintegrationMonitoringSchemasVersion = "1.0.0.5.1"
-    rivtaGetPersonsPersonSchemasVersion = "3.1.1.1"
-    schemasContractVersion = "2.1.8.1"
-    srsSchemasVersion = "0.0.16.1"
+    blockingSchemaVersion = "4.0.1.3"
+    consentSchemaVersion = "2.0.1.2"
+    internalMonitoringSchemaVersion = "1.0.4.3"
+    intygClinicalprocessSchemasVersion = "1.0.24.2"
+    intygHealthcondRehabilitationSchemasVersion = "1.1.3.2"
+    rivtaItintegrationMonitoringSchemasVersion = "1.0.0.5.2"
+    rivtaGetPersonsPersonSchemasVersion = "3.1.1.2"
+    schemasContractVersion = "2.1.8.2"
+    srsSchemasVersion = "0.0.16.2"
 
     commonsIoVersion = "2.14.0"
-    cxfVersion = "3.6.2"
-    googleGuavaVersion = "32.1.3-jre"
-    itext7Version = "7.2.5"
-    jakartaJwsApiVersion = "2.1.0" // version 3.0.0 -> warning: "class file for javax.jws.soap.SOAPBinding$ParameterStyle not found"
-    jaxb2Version = "0.13.1"
+    cxfVersion = "4.0.5"
+    googleGuavaVersion = "33.0.0-jre"
+    itext7Version = "7.2.6"
+    jakartaJwsApiVersion = "3.0.0"
+    jaxb2Version = "3.0.0"
     picocliVersion = "4.7.5"
-    poiVersion = "5.2.4"
+    poiVersion = "5.3.0"
     springSecurityExtensionsVersion = "1.0.3.RELEASE"
-    shedlockSpringVersion = "4.46.0"
+    shedlockSpringVersion = "5.16.0"
     testngVersion = "7.8.0"
 
-    nodeJsVersion = "12.22.12"
-    npmVersion = "6.14.16"
-
-    springbootMavenBomVersion = "2.7.17"
+    springbootMavenBomVersion = "3.3.4"
 
     nvdMirror = 'https://vulnz-nvd-mirror-devtest.intyg.nordicmedtest.se'
 }
@@ -50,8 +46,8 @@ allprojects {
 
     group = 'se.inera.intyg.rehabstod'
     version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
-    sourceCompatibility = 11
-    targetCompatibility = 11
+    sourceCompatibility = 21
+    targetCompatibility = 21
 
     dependencyManagement {
         imports { mavenBom "org.springframework.boot:spring-boot-dependencies:${springbootMavenBomVersion}" }
