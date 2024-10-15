@@ -105,5 +105,6 @@ dependencies {
     runtimeOnly "se.inera.intyg.infra:hsa-integration-intyg-proxy-service:${intygInfraVersion}"
 
     testImplementation "org.springframework:spring-test"
-    testImplementation "org.testng:testng:${testngVersion}"
+
+    testRuntimeOnly "jakarta.servlet:jakarta.servlet-api"
 }

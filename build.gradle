@@ -29,7 +29,6 @@ ext {
     poiVersion = "5.3.0"
     springSecurityExtensionsVersion = "1.0.3.RELEASE"
     shedlockSpringVersion = "5.16.0"
-    testngVersion = "7.8.0"
 
     springbootMavenBomVersion = "3.3.4"
 
