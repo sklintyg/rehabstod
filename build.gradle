@@ -53,6 +53,11 @@ allprojects {
         imports { mavenBom "org.springframework.boot:spring-boot-dependencies:${springbootMavenBomVersion}" }
     }
 
+    compileJava {
+        options.encoding = "UTF-8"
+        options.compilerArgs.add("-parameters")
+    }
+
     dependencies {
         implementation "ch.qos.logback:logback-classic"
         implementation "jakarta.jws:jakarta.jws-api:${jakartaJwsApiVersion}"
@@ -121,7 +126,7 @@ dependencyCheck {
 }
 
 reporting {
-    subprojects.collect {subproject -> subproject.name }.each { subprojectName ->
+    subprojects.collect { subproject -> subproject.name }.each { subprojectName ->
         dependencies { testReportAggregation project(":${subprojectName}") }
     }
 }

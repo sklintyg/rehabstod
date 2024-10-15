@@ -1,7 +1,7 @@
 dependencies {
     implementation project(":rehabstod-common")
 
-    implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
+    implementation "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider"
     implementation "com.google.guava:guava:${googleGuavaVersion}"
     implementation "jakarta.ws.rs:jakarta.ws.rs-api"
     implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
