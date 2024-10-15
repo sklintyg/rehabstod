@@ -70,7 +70,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 
         AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
 
-        appContext.register(ApplicationConfig.class, CacheConfigurationFromInfra.class, HsaConfiguration.class,
+        appContext.register(ApplicationConfig.class, CacheConfigurationFromInfra.class,
             PuConfiguration.class, ServiceConfig.class,
             IaConfiguration.class, JobConfig.class,
             IntygstjanstIntegrationConfiguration.class,

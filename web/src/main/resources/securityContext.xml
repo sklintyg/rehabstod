@@ -241,7 +241,7 @@
     <import resource="classpath:/hsa-integration-intyg-proxy-service-config.xml"/>
   </beans>
 
-  <beans profile="prod,rhs-security-test,rhs-security-prod">
+	<beans profile="prod,rhs-security-test,rhs-security-prod">
 
     <bean id="samlFilter" class="org.springframework.security.web.FilterChainProxy">
       <security:filter-chain-map request-matcher="ant">
