@@ -37,7 +37,7 @@ public class AnvandarPreference {
     private static final int INT = 31;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long internReferens;
 
     @Column(name = "HSA_ID", nullable = false)
