@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.config;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import org.apache.cxf.Bus;
 import org.apache.cxf.ext.logging.LoggingFeature;
 import org.springframework.beans.factory.annotation.Autowired;

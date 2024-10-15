@@ -24,7 +24,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
-import se.inera.intyg.infra.integration.hsatk.stub.HsaServiceStub;
+//import se.inera.intyg.infra.integration.hsatk.stub.HsaServiceStub;
 
 /**
  * Created by eriklupander on 2016-01-18.
@@ -35,10 +35,10 @@ import se.inera.intyg.infra.integration.hsatk.stub.HsaServiceStub;
 @Profile({"dev", "wc-hsa-stub"})
 public class HsaStubConfiguration {
 
-    @Bean
-    HsaServiceStub hsaServiceStub() {
-        return new HsaServiceStub();
-    }
+    //@Bean
+    //HsaServiceStub hsaServiceStub() {
+    //    return new HsaServiceStub();
+    //}
 
     @Bean
     public ObjectMapper objectMapper() {

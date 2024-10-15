@@ -34,15 +34,11 @@ public class IntygstjanstRestIntegrationConfiguration {
     @Value("${it.rest.connection.timeout}")
     private int connectionTimeout;
 
-    @Value("${it.rest.read.timeout}")
-    private int readTimeout;
-
     @Bean
     public RestTemplate itRestTemplate() {
         final var httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
         httpRequestFactory.setConnectionRequestTimeout(requestTimeout);
         httpRequestFactory.setConnectTimeout(connectionTimeout);
-        httpRequestFactory.setReadTimeout(readTimeout);
 
         return new RestTemplate(httpRequestFactory);
     }

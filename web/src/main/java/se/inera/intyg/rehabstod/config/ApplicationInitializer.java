@@ -22,10 +22,10 @@ import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusControlle
 import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_EXTEND;
 import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_REQUEST_MAPPING;
 
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration;
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.WebApplicationInitializer;
@@ -63,7 +63,7 @@ import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
 public class ApplicationInitializer implements WebApplicationInitializer {
 
     @Override
-    public void onStartup(javax.servlet.ServletContext servletContext) throws ServletException {
+    public void onStartup(jakarta.servlet.ServletContext servletContext) throws ServletException {
 
         servletContext.setInitParameter("logbackConfigParameter", "logback.file");
         servletContext.addListener(new LogbackConfiguratorContextListener());

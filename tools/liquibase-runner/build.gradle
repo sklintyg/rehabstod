@@ -37,6 +37,6 @@ dependencies {
     implementation "info.picocli:picocli:${picocliVersion}"
     runtimeOnly "org.liquibase:liquibase-core"
     runtimeOnly "com.mysql:mysql-connector-j"
-    runtimeOnly "org.liquibase.ext:liquibase-hibernate5:" + liquibaseVersion
+    runtimeOnly "org.liquibase.ext:liquibase-hibernate6:" + liquibaseVersion
     runtimeOnly project(":rehabstod-persistence")
 }

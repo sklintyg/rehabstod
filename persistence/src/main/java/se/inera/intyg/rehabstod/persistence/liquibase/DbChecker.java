@@ -18,9 +18,9 @@
  */
 package se.inera.intyg.rehabstod.persistence.liquibase;
 
+import jakarta.annotation.PostConstruct;
 import java.sql.SQLException;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import liquibase.Liquibase;
 import liquibase.changelog.ChangeSet;
@@ -37,9 +37,9 @@ public class DbChecker {
 
     private static final Logger LOG = LoggerFactory.getLogger(DbChecker.class);
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
-    private String script;
+    private final String script;
 
     public DbChecker(DataSource dataSource, String script) {
         this.dataSource = dataSource;

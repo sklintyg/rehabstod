@@ -23,14 +23,14 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.net.ssl.SSLContext;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
+import org.apache.hc.core5.ssl.TrustStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -61,20 +61,22 @@ public class SecurityConfig {
     RestTemplate restTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
         TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
 
-        SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
+        SSLContext sslContext = org.apache.hc.core5.ssl.SSLContexts.custom()
             .loadTrustMaterial(null, acceptingTrustStrategy)
             .build();
 
-        SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
-
         CloseableHttpClient httpClient = HttpClients.custom()
-            .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
-            .setSSLSocketFactory(csf)
+            .setConnectionManager(PoolingHttpClientConnectionManagerBuilder.create()
+                .setSSLSocketFactory(SSLConnectionSocketFactoryBuilder.create()
+                    .setSslContext(sslContext)
+                    .setHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+                    .build())
+                .build())
             .build();
+
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.setConnectionRequestTimeout(RESTTEMPLATE_TIMEOUT_MS);
         requestFactory.setConnectTimeout(RESTTEMPLATE_TIMEOUT_MS);
-        requestFactory.setReadTimeout(RESTTEMPLATE_TIMEOUT_MS);
         requestFactory.setHttpClient(httpClient);
         return new RestTemplate(requestFactory);
     }
@@ -95,9 +97,9 @@ public class SecurityConfig {
     //
     private List<RequestMatcher> antMatchers(String path, HttpMethod... methods) {
         return Stream.of(methods)
-            .map(Enum::name)
-            .map(m -> new AntPathRequestMatcher(path, m, false))
-            .collect(Collectors.toList());
+            .map(HttpMethod::name)
+            .map(m -> (RequestMatcher) new AntPathRequestMatcher(path, m, false))
+            .toList();
     }
 
 }
