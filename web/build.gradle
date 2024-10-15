@@ -45,7 +45,6 @@ test {
 }
 
 war.rootSpec.exclude "logback.xml"
-war.dependsOn createVersionPropertyFile
 
 dependencies {
     implementation project(":rehabstod-common")
