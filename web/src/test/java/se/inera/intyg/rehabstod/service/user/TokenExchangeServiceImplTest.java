@@ -25,7 +25,7 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-import jakarta.xml.transform.stream.StreamSource;
+import javax.xml.transform.stream.StreamSource;
 import org.apache.cxf.staxutils.StaxUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
