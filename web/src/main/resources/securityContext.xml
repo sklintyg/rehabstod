@@ -454,15 +454,6 @@
       <constructor-arg ref="parserPool"/>
     </bean>
 
-    <!-- Provider of default SAML Context -->
-    <bean id="contextProvider" class="se.inera.intyg.rehabstod.auth.RehabstodSAMLContextProviderLB">
-      <property name="scheme" value="https"/>
-      <property name="serverName" value="${rehabstod.domain.name}"/>
-      <property name="includeServerPortInRequestURL" value="false"/>
-      <property name="contextPath" value="/"/>
-      <property name="keyManager" ref="keyManager"/>
-    </bean>
-
     <!-- Logout handler terminating local session -->
     <bean id="logoutHandler" class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
 
