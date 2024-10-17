@@ -27,7 +27,8 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRegistration;
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.session.web.context.AbstractHttpSessionApplicationInitializer;
+import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -58,44 +59,16 @@ import se.inera.intyg.rehabstod.integration.wc.stub.WcIntegrationStubConfigurati
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfig;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
 
-public class ApplicationInitializer extends AbstractHttpSessionApplicationInitializer {
-
-    public ApplicationInitializer() {
-        super(WebSecurityConfig.class,
-            ApplicationConfig.class,
-            CacheConfigurationFromInfra.class,
-            PuConfiguration.class, ServiceConfig.class,
-            IaConfiguration.class, JobConfig.class,
-            IntygstjanstIntegrationConfiguration.class,
-            IntygstjanstRestIntegrationConfiguration.class,
-            IntygstjanstIntegrationClientConfiguration.class,
-            IntygstjanstIntegrationStubConfiguration.class,
-            WcClientConfiguration.class,
-            WcIntegrationConfiguration.class,
-            WcIntegrationStubConfiguration.class,
-            SamtyckestjanstConfiguration.class,
-            SamtyckestjanstClientConfiguration.class,
-            SamtyckestjanstStubConfiguration.class,
-            SparrtjanstConfiguration.class,
-            SparrtjanstClientConfiguration.class,
-            SparrtjanstStubConfiguration.class,
-            SRSIntegrationConfiguration.class,
-            SRSIntegrationClientConfiguration.class,
-            SRSIntegrationStubConfiguration.class,
-            JmsConfig.class, NTjPPingConfig.class, SecurityConfig.class,
-            SjukfallConfig.class, EmployeeNameCacheConfig.class, InfraConfig.class, PersistenceConfig.class,
-            PersistenceConfigDev.class, MonitoringConfiguration.class);
-    }
+public class ApplicationInitializer implements WebApplicationInitializer {
 
     @Override
     public void onStartup(jakarta.servlet.ServletContext servletContext) {
-        super.onStartup(servletContext);
         servletContext.setInitParameter("logbackConfigParameter", "logback.file");
         servletContext.addListener(new LogbackConfiguratorContextListener());
 
         AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
 
-        appContext.register(ApplicationConfig.class, CacheConfigurationFromInfra.class,
+        appContext.register(WebSecurityConfig.class, ApplicationConfig.class, CacheConfigurationFromInfra.class,
             PuConfiguration.class, ServiceConfig.class,
             IaConfiguration.class, JobConfig.class,
             IntygstjanstIntegrationConfiguration.class,
@@ -118,7 +91,7 @@ public class ApplicationInitializer extends AbstractHttpSessionApplicationInitia
             SjukfallConfig.class, EmployeeNameCacheConfig.class, InfraConfig.class, PersistenceConfig.class,
             PersistenceConfigDev.class, MonitoringConfiguration.class);
 
-//        servletContext.addListener(new ContextLoaderListener(appContext));
+        servletContext.addListener(new ContextLoaderListener(appContext));
 
         AnnotationConfigWebApplicationContext webConfig = new AnnotationConfigWebApplicationContext();
         webConfig.register(WebConfig.class);
@@ -154,9 +127,9 @@ public class ApplicationInitializer extends AbstractHttpSessionApplicationInitia
         sessionTimeoutFilter.setInitParameter("skipRenewSessionUrls", SESSION_STATUS_CHECK_URI);
 
         // Spring security filter
-//        FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain",
-//            DelegatingFilterProxy.class);
-//        springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
+        FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain",
+            DelegatingFilterProxy.class);
+        springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
 
         // principalUpdatedFilter filter
         FilterRegistration.Dynamic principalUpdatedFilter = servletContext.addFilter("principalUpdatedFilter",
@@ -201,5 +174,4 @@ public class ApplicationInitializer extends AbstractHttpSessionApplicationInitia
         RSSecurityHeadersFilter filter = new RSSecurityHeadersFilter();
         servletContext.addFilter("securityHeadersFilter", filter).addMappingForUrlPatterns(null, true, "/*");
     }
-
 }

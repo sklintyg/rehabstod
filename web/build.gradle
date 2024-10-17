@@ -73,6 +73,7 @@ dependencies {
     implementation "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider"
     implementation "com.google.guava:guava:${googleGuavaVersion}"
     implementation "io.prometheus:simpleclient_servlet"
+    implementation "io.lettuce:lettuce-core"
     implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
     implementation "jakarta.ws.rs:jakarta.ws.rs-api"
     implementation "org.apache.activemq:activemq-spring"
