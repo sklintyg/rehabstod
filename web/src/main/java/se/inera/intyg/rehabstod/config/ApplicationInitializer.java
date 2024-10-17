@@ -24,11 +24,10 @@ import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusControlle
 
 import jakarta.servlet.FilterRegistration;
 import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRegistration;
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.web.WebApplicationInitializer;
+import org.springframework.session.web.context.AbstractHttpSessionApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -60,10 +59,10 @@ import se.inera.intyg.rehabstod.integration.wc.stub.WcIntegrationStubConfigurati
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfig;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
 
-public class ApplicationInitializer implements WebApplicationInitializer {
+public class ApplicationInitializer extends AbstractHttpSessionApplicationInitializer {
 
     @Override
-    public void onStartup(jakarta.servlet.ServletContext servletContext) throws ServletException {
+    public void onStartup(jakarta.servlet.ServletContext servletContext) {
 
         servletContext.setInitParameter("logbackConfigParameter", "logback.file");
         servletContext.addListener(new LogbackConfiguratorContextListener());
@@ -109,9 +108,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         characterEncodingFilter.setInitParameter("forceEncoding", "true");
 
         // Spring session filter
-        FilterRegistration.Dynamic springSessionRepositoryFilter = servletContext.addFilter("springSessionRepositoryFilter",
-            DelegatingFilterProxy.class);
-        springSessionRepositoryFilter.addMappingForUrlPatterns(null, false, "/*");
+//        FilterRegistration.Dynamic springSessionRepositoryFilter = servletContext.addFilter("springSessionRepositoryFilter",
+//            DelegatingFilterProxy.class);
+//        springSessionRepositoryFilter.addMappingForUrlPatterns(null, false, "/*");
 
         // Update RequestContext with spring session
         FilterRegistration.Dynamic requestContextHolderUpdateFilter = servletContext.addFilter("requestContextHolderUpdateFilter",
@@ -129,9 +128,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         sessionTimeoutFilter.setInitParameter("skipRenewSessionUrls", SESSION_STATUS_CHECK_URI);
 
         // Spring security filter
-        FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain",
-            DelegatingFilterProxy.class);
-        springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
+//        FilterRegistration.Dynamic springSecurityFilterChain = servletContext.addFilter("springSecurityFilterChain",
+//            DelegatingFilterProxy.class);
+//        springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
 
         // principalUpdatedFilter filter
         FilterRegistration.Dynamic principalUpdatedFilter = servletContext.addFilter("principalUpdatedFilter",
