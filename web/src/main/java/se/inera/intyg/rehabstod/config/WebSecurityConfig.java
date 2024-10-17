@@ -38,6 +38,7 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(request -> request.
                 requestMatchers("/metrics").permitAll().
                 requestMatchers("/api/testability/**").permitAll().
+                requestMatchers("/fake").permitAll().
                 requestMatchers("/services/**").permitAll().
                 requestMatchers("/api/config/**").permitAll().
                 requestMatchers("/api/log/**").permitAll().
@@ -46,6 +47,6 @@ public class WebSecurityConfig {
             )
             .logout(logout -> logout.logoutSuccessUrl(samlLogoutSuccessUrl));
 
-        return http.getOrBuild();
+        return http.build();
     }
 }
