@@ -84,6 +84,7 @@ dependencies {
     implementation "org.apache.poi:poi-ooxml:${poiVersion}"
     implementation "codes.rafael.jaxb2_commons:jaxb2-basics:${jaxb2Version}"
     implementation "org.springframework.data:spring-data-jpa"
+    implementation 'org.springframework.security:spring-security-saml2-service-provider'
     implementation "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
     implementation "org.springframework.security:spring-security-config"
     implementation "org.springframework.security:spring-security-web"

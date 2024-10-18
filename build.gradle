@@ -74,6 +74,7 @@ allprojects {
     repositories {
         mavenLocal()
         maven { url "https://nexus.drift.inera.se/repository/it-public/" }
+        maven { url 'https://build.shibboleth.net/nexus/content/repositories/releases/' }
         mavenCentral {
             content {
                 excludeGroupByRegex "se\\.inera.*"
@@ -103,6 +104,8 @@ allprojects {
         // Remove these due to conflict with Spring SAML which uses bcprov-jdk15.
         implementation.exclude group: "org.bouncycastle", module: "bcpkix-jdk15on"
         implementation.exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
+        implementation.exclude group: "org.bouncycastle", module: "bcprov-jdk15"
+//        implementation.exclude group: "org.opensaml", module: "xmltooling"
     }
 }
 
