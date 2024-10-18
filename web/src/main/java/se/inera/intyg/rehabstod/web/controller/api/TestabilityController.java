@@ -16,41 +16,57 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.web.controller.api;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.testability.TestabilityService;
+import se.inera.intyg.rehabstod.service.testability.FakeLoginService;
+import se.inera.intyg.rehabstod.web.controller.api.dto.FakeLoginDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.TestabilityResponseDTO;
 
 @RestController
 @RequestMapping("/api/testability")
+@RequiredArgsConstructor
 public class TestabilityController {
 
     private final TestabilityService testabilityService;
+    private final FakeLoginService fakeLoginService;
 
-    public TestabilityController(TestabilityService testabilityService) {
-        this.testabilityService = testabilityService;
-    }
-
-    @RequestMapping(value = "/createDefault", method = RequestMethod.POST)
+    @PostMapping(value = "/createDefault")
     public TestabilityResponseDTO createDefaultTestData() {
         return new TestabilityResponseDTO(testabilityService.getDefaultTestData());
     }
 
-    @RequestMapping(value = "/createSickLeave", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/createSickLeave", consumes = MediaType.APPLICATION_JSON_VALUE)
     public TestabilityResponseDTO createSickLeave(@RequestBody CreateSickLeaveRequestDTO request) {
         return new TestabilityResponseDTO(testabilityService.createSickleave(request));
     }
 
-    @RequestMapping(value = "/testDataOptions", method = RequestMethod.GET)
+    @GetMapping(value = "/testDataOptions")
     public TestDataOptionsDTO getTestDataOptions() {
         return testabilityService.getTestDataOptions();
+    }
+
+    @PostMapping(value = "/fake")
+    public void login(@RequestBody FakeLoginDTO fakeLoginDTO, final HttpServletRequest request) {
+        fakeLoginService.login(
+            new FakeCredentials.FakeCredentialsBuilder(fakeLoginDTO.getHsaId(), fakeLoginDTO.getEnhetId()).build(),
+            request
+        );
+    }
+
+    @PostMapping("/logout")
+    public void logout(HttpServletRequest request) {
+        fakeLoginService.logout(request.getSession(false));
     }
 }
