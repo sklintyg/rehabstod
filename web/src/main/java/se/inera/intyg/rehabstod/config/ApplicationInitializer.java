@@ -105,9 +105,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         characterEncodingFilter.setInitParameter("forceEncoding", "true");
 
         // Spring session filter
-//        FilterRegistration.Dynamic springSessionRepositoryFilter = servletContext.addFilter("springSessionRepositoryFilter",
-//            DelegatingFilterProxy.class);
-//        springSessionRepositoryFilter.addMappingForUrlPatterns(null, false, "/*");
+        FilterRegistration.Dynamic springSessionRepositoryFilter = servletContext.addFilter("springSessionRepositoryFilter",
+            DelegatingFilterProxy.class);
+        springSessionRepositoryFilter.addMappingForUrlPatterns(null, false, "/*");
 
         // Update RequestContext with spring session
         FilterRegistration.Dynamic requestContextHolderUpdateFilter = servletContext.addFilter("requestContextHolderUpdateFilter",

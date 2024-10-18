@@ -79,7 +79,7 @@ public class FakeAuthenticationProvider extends BaseFakeAuthenticationProvider {
         }
         updateFeatures(details);
 
-        ExpiringUsernameAuthenticationToken result = new ExpiringUsernameAuthenticationToken(null, details, credential,
+        ExpiringUsernameAuthenticationToken result = new ExpiringUsernameAuthenticationToken(null, details, null,
             new ArrayList<>());
         result.setDetails(details);
 
