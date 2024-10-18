@@ -6,8 +6,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+import se.inera.intyg.rehabstod.auth.CsrfCookieFilter;
+import se.inera.intyg.rehabstod.auth.SpaCsrfTokenRequestHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -34,7 +38,12 @@ public class WebSecurityConfig {
                 requestMatchers("/api/session-auth-check/**").permitAll().
                 anyRequest().fullyAuthenticated()
             )
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrfConfigurer -> csrfConfigurer
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+                .ignoringRequestMatchers("/api/testability/**", "/services/**")
+            )
+            .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
             .logout(logout -> logout.logoutSuccessUrl(samlLogoutSuccessUrl));
 
         return http.build();
