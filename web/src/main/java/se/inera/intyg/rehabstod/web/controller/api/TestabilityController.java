@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.web.controller.api;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +36,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.FakeLoginDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.TestabilityResponseDTO;
 
 @RestController
+@Profile("testability")
 @RequestMapping("/api/testability")
 @RequiredArgsConstructor
 public class TestabilityController {

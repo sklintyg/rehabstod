@@ -20,14 +20,11 @@ package se.inera.intyg.rehabstod.web.controller.api;
 
 import static se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService.PDL_CONSENT_GIVEN;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,20 +32,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
-import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
-import se.inera.intyg.rehabstod.auth.RehabstodUserTokens;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
-import se.inera.intyg.rehabstod.service.user.TokenExchangeService;
-import se.inera.intyg.rehabstod.service.user.TokenServiceException;
 import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.GetAccessTokenResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetUserResponse;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GivePdlLoggingConsentRequest;
 
@@ -74,49 +66,10 @@ public class UserController {
     @Autowired
     private CommonAuthoritiesResolver commonAuthoritiesResolver;
 
-    @Autowired
-    private TokenExchangeService tokenExchangeService;
-
-    @Autowired
-    private Environment environment;
-
     @RequestMapping(value = "", method = RequestMethod.GET)
     public GetUserResponse getUser() {
         RehabstodUser user = getRehabstodUser();
         return new GetUserResponse(user);
-    }
-
-    @RequestMapping(value = "/accesstoken", method = RequestMethod.GET)
-    public GetAccessTokenResponse getAccessToken() {
-        RehabstodUser user = getRehabstodUser();
-
-        // Check if Tokens are available and refresh access token if applicable
-        RehabstodUserTokens tokens = user.getTokens();
-        if (tokens != null) {
-            if (LocalDateTime.now().plusMinutes(ACCESSTOKEN_EXPIRE_LIMIT_MINUTES).isAfter(tokens.getAccessTokenExpiration())) {
-                try {
-                    tokens = tokenExchangeService.refresh(tokens);
-                    user.setTokens(tokens);
-                } catch (TokenServiceException exception) {
-                    // Couldn't get AccessToken. Log and continue since this is not vital for Rehabstod.
-                    // User will not be able to use "Visa Intyg".
-                    LOG.error("Unable to refresh AccessToken for user {} with reason {}", user.getHsaId(), exception.getMessage());
-                }
-            }
-        }
-
-        // Don't use when prod profile is active
-        String[] activeProfiles = environment.getActiveProfiles();
-        if (Stream.of(activeProfiles).noneMatch("prod"::equalsIgnoreCase)) {
-            if (tokens == null) {
-                if (AuthenticationMethod.FAKE.equals(user.getAuthenticationMethod())) {
-                    tokens = new RehabstodUserTokens();
-                    tokens.setAccessToken("fakeToken-" + user.getHsaId());
-                }
-            }
-        }
-
-        return new GetAccessTokenResponse(tokens);
     }
 
     /**

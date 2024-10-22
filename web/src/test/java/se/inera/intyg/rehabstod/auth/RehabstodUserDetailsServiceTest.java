@@ -37,8 +37,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.xml.transform.stream.StreamSource;
-import org.apache.cxf.staxutils.StaxUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -46,18 +44,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.opensaml.DefaultBootstrap;
-import org.opensaml.saml2.core.Assertion;
-import org.opensaml.saml2.core.NameID;
-import org.opensaml.xml.Configuration;
-import org.opensaml.xml.io.Unmarshaller;
-import org.opensaml.xml.io.UnmarshallerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.saml.SAMLCredential;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.w3c.dom.Document;
 import se.inera.intyg.infra.integration.hsatk.model.HsaSystemRole;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation;
 import se.inera.intyg.infra.integration.hsatk.model.PersonInformation.PaTitle;
@@ -70,7 +59,6 @@ import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsSe
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaPersonService;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.infra.security.authorities.bootstrap.SecurityConfigurationLoader;
-import se.inera.intyg.infra.security.common.exception.GenericAuthenticationException;
 import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.common.model.UserOrigin;
 import se.inera.intyg.infra.security.common.model.UserOriginType;
@@ -83,7 +71,6 @@ import se.inera.intyg.rehabstod.auth.exceptions.MissingUnitWithRehabSystemRoleEx
 import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
-import se.inera.intyg.rehabstod.service.user.TokenExchangeService;
 
 /**
  * Created by marced on 29/01/16.
@@ -134,13 +121,8 @@ public class RehabstodUserDetailsServiceTest {
     @Mock
     private RehabstodUnitChangeService rehabstodUnitChangeService;
 
-    @Mock
-    private TokenExchangeService tokenExchangeService;
-
     @BeforeClass
     public static void setupAuthoritiesConfiguration() throws Exception {
-
-        DefaultBootstrap.bootstrap();
 
         // Load configuration
         CONFIGURATION_LOADER.afterPropertiesSet();
@@ -168,7 +150,6 @@ public class RehabstodUserDetailsServiceTest {
     @Test
     public void assertLoadsOkWhenHasMatchingSystemRole() throws Exception {
         // given
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         UserCredentials userCredz = new UserCredentials();
         userCredz.getHsaSystemRole().addAll(buildSystemRoles());
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
@@ -177,7 +158,7 @@ public class RehabstodUserDetailsServiceTest {
         setupCallToGetHsaPersonInfoNonDoctor();
 
         // then
-        IntygUser rehabstodUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser rehabstodUser = userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
 
         AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_KOORDINATOR).orThrow();
         assertEquals(3, rehabstodUser.getTotaltAntalVardenheter());
@@ -189,7 +170,6 @@ public class RehabstodUserDetailsServiceTest {
     @Test
     public void assertSelectsDefaultVardenhetWhenOnlyOneExists() throws Exception {
         // given
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         UserCredentials userCredz = new UserCredentials();
         userCredz.getHsaSystemRole().addAll(buildSystemRoles());
 
@@ -205,7 +185,7 @@ public class RehabstodUserDetailsServiceTest {
         setupCallToGetHsaPersonInfoNonDoctor();
 
         // then
-        IntygUser rehabstodUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser rehabstodUser = userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
 
         AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_KOORDINATOR).orThrow();
         assertEquals(1, rehabstodUser.getTotaltAntalVardenheter());
@@ -216,7 +196,6 @@ public class RehabstodUserDetailsServiceTest {
     @Test
     public void assertSelectsDefaultVardenhetWhenOnlyOneExistsEvenIfMottagningarExists() throws Exception {
         // given
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         UserCredentials userCredz = new UserCredentials();
         userCredz.getHsaSystemRole().addAll(buildSystemRoles());
 
@@ -236,7 +215,7 @@ public class RehabstodUserDetailsServiceTest {
         setupCallToGetHsaPersonInfoNonDoctor();
 
         // then
-        IntygUser rehabstodUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser rehabstodUser = userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
 
         AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_KOORDINATOR).orThrow();
         assertEquals(2, rehabstodUser.getTotaltAntalVardenheter());
@@ -247,45 +226,31 @@ public class RehabstodUserDetailsServiceTest {
     @Test(expected = MissingUnitWithRehabSystemRoleException.class)
     public void assertThrowsExceptionWhenNoMatchingSystemRole() throws Exception {
         // given
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         setupCallToAuthorizedEnheterForHosPerson();
         setupCallToGetHsaPersonInfoNonDoctor();
 
         // then
-        userDetailsService.loadUserBySAML(samlCredential);
-
+        userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
     }
 
     @Test(expected = MissingUnitWithRehabSystemRoleException.class)
     public void assertNoRoleWhenUserHasTitleLakareButNoSystemRoles() throws Exception {
         // given
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         setupCallToAuthorizedEnheterForHosPerson();
         setupCallToGetHsaPersonInfoNonDoctor("Läkare");
 
         // then
-        userDetailsService.loadUserBySAML(samlCredential);
-    }
-
-    @Test(expected = GenericAuthenticationException.class)
-    public void testGenericAuthenticationExceptionIsThrownWhenNoSamlCredentialsGiven() {
-        userDetailsService.loadUserBySAML(null);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetAssertionWithNullThrowsIllegalArgumentException() {
-        userDetailsService.getAssertion(null);
+        userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
     }
 
     @Test(expected = HsaServiceException.class)
     public void testHsaServiceExceptionIsThrownWhenHsaGetPersonThrowsUncheckedException() throws Exception {
         // given
         when(hsaPersonService.getHsaPersonInfo(anyString())).thenThrow(new RuntimeException("some-exception"));
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
         setupCallToAuthorizedEnheterForHosPerson();
 
         // then
-        userDetailsService.loadUserBySAML(samlCredential);
+        userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
     }
 
     @Test(expected = HsaServiceException.class)
@@ -293,10 +258,10 @@ public class RehabstodUserDetailsServiceTest {
         // given
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
             .thenThrow(new RuntimeException("some-hsa-exception"));
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
 
         // then
-        userDetailsService.loadUserBySAML(samlCredential);
+        userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
+
     }
 
     @Test(expected = MissingMedarbetaruppdragException.class)
@@ -305,10 +270,9 @@ public class RehabstodUserDetailsServiceTest {
         setupCallToGetHsaPersonInfo();
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
             .thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>(), new HashMap<>()));
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
 
         // then
-        userDetailsService.loadUserBySAML(samlCredential);
+        userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
     }
 
     @Test(expected = MissingMedarbetaruppdragException.class)
@@ -317,10 +281,9 @@ public class RehabstodUserDetailsServiceTest {
         when(hsaOrganizationsService.getAuthorizedEnheterForHosPerson(PERSONAL_HSAID))
             .thenReturn(new UserAuthorizationInfo(new UserCredentials(), new ArrayList<>(), new HashMap<>()));
         setupCallToGetHsaPersonInfo();
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
 
         // then
-        userDetailsService.loadUserBySAML(samlCredential);
+        userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
     }
 
     // INTYG-2629
@@ -332,8 +295,7 @@ public class RehabstodUserDetailsServiceTest {
             .thenReturn(new UserAuthorizationInfo(userCredz, buildVardgivareList(), buildMiuPerCareUnitMap()));
         setupCallToGetHsaPersonInfoNonDoctor("Läkare");
 
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
-        IntygUser rehabstodUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser rehabstodUser = userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
 
         AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_KOORDINATOR).orThrow();
 
@@ -346,8 +308,7 @@ public class RehabstodUserDetailsServiceTest {
             .thenReturn(new UserAuthorizationInfo(userCredz, buildVardgivareList(), buildMiuPerCareUnitMap()));
         setupCallToGetHsaPersonInfo("Läkare");
 
-        SAMLCredential samlCredential = createSamlCredential("saml-assertion-uppdragslos.xml");
-        IntygUser rehabstodUser = (IntygUser) userDetailsService.loadUserBySAML(samlCredential);
+        IntygUser rehabstodUser = userDetailsService.buildUserPrincipal(PERSONAL_HSAID, "fake");
 
         AUTHORITIES_VALIDATOR.given(rehabstodUser).roles(AuthoritiesConstants.ROLE_LAKARE).orThrow();
         assertEquals(4, rehabstodUser.getTotaltAntalVardenheter());
@@ -448,17 +409,6 @@ public class RehabstodUserDetailsServiceTest {
         // Act
         userDetailsService.removeEnheterMissingRehabKoordinatorRole(original, systemRoles, "userHsaId");
 
-    }
-
-    private SAMLCredential createSamlCredential(String filename) throws Exception {
-        Document doc = StaxUtils.read(new StreamSource(new ClassPathResource(
-            "RehabstodUserDetailsServiceTest/" + filename).getInputStream()));
-        UnmarshallerFactory unmarshallerFactory = Configuration.getUnmarshallerFactory();
-        Unmarshaller unmarshaller = unmarshallerFactory.getUnmarshaller(Assertion.DEFAULT_ELEMENT_NAME);
-
-        Assertion assertion = (Assertion) unmarshaller.unmarshall(doc.getDocumentElement());
-        NameID nameId = assertion.getSubject().getNameID();
-        return new SAMLCredential(nameId, assertion, "remoteId", "localId");
     }
 
     private void setupCallToAuthorizedEnheterForHosPerson() {

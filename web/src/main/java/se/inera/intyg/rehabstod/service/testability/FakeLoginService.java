@@ -10,6 +10,9 @@ import org.springframework.security.authentication.event.LogoutSuccessEvent;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
+import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
+import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
+import se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService;
 import se.inera.intyg.rehabstod.auth.fake.FakeAuthenticationToken;
 import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 
@@ -18,14 +21,19 @@ import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 public class FakeLoginService {
 
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final FakeAuthenticationProvider fakeAuthenticationProvider;
+    private final RehabstodUserDetailsService rehabstodUserDetailsService;
+    private final CommonAuthoritiesResolver commonAuthoritiesResolver;
+    private final RehabstodUnitChangeService rehabstodUnitChangeService;
 
     public void login(FakeCredentials fakeCredentials, HttpServletRequest request) {
         final var oldSession = request.getSession(false);
         Optional.ofNullable(oldSession).ifPresent(HttpSession::invalidate);
 
-        final var fakeAuthenticationToken = fakeAuthenticationProvider.authenticate(
-            new FakeAuthenticationToken(fakeCredentials)
+        final var fakeAuthenticationToken = new FakeAuthenticationToken(
+            rehabstodUserDetailsService.buildUserPrincipal(
+                fakeCredentials.getHsaId(),
+                "urn:inera:rehabstod:siths:fake"
+            )
         );
 
         final var context = SecurityContextHolder.createEmptyContext();
