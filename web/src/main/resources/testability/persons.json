@@ -1,0 +1,3248 @@
+[
+  {
+    "hsaId": "lakare_my",
+    "personalIdentityNumber": null,
+    "givenName": "My",
+    "middleAndSurname": "Åsgren",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": null,
+    "personalIdentityNumber": "196405165942",
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [
+      {
+        "specialityName": "specialityName1",
+        "specialityCode": "specialityCode1"
+      },
+      {
+        "specialityName": "specialityName2",
+        "specialityCode": "specialityCode2"
+      }
+    ],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": "1234569",
+    "systemRoles": null,
+    "educationCodes": [
+      "educationCode1",
+      "educationCode2"
+    ],
+    "restrictions": [
+      {
+        "restrictionCode": "restrictionCode1",
+        "restrictionName": "restriction1"
+      },
+      {
+        "restrictionCode": "restrictionCode2",
+        "restrictionName": "restriction2"
+      }
+    ],
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": [
+      {
+        "healthCareProfessionalLicenceCode": "LK",
+        "healthCareProfessionalLicenceName": "Läkare"
+      }
+    ]
+  },
+  {
+    "hsaId": "pelle-uppdragslos",
+    "personalIdentityNumber": null,
+    "givenName": "Pelle",
+    "middleAndSurname": "Uppdragslös",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": null,
+      "env": null,
+      "readOnly": true,
+      "allowedInApplications": [
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "",
+          "beskrivning": "Pelle Uppdragslös (Saknar medarbetaruppdrag)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "user1",
+    "personalIdentityNumber": null,
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "adamo",
+    "personalIdentityNumber": null,
+    "givenName": "Adamo",
+    "middleAndSurname": "Admin",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "190",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "centrum-vast",
+          "beskrivning": "Adamo Admin (Vårdadmin | Centrum Väst)"
+        },
+        {
+          "forvaldEnhet": "centrum-ost",
+          "beskrivning": "Adamo Admin (Vårdadmin | Centrum Öst)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "user2",
+    "personalIdentityNumber": null,
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-VAAA",
+    "personalIdentityNumber": null,
+    "givenName": "Alva",
+    "middleAndSurname": "Vårdadministratör",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;Rehab-TSTNMT2321000156-ALMC"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "90",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-ALMC",
+          "beskrivning": "Vårdadministratör ALVA (Vårdadministratör | Alfa Regionen)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "user7",
+    "personalIdentityNumber": null,
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "user8",
+    "personalIdentityNumber": null,
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "SE4815162344-1B01",
+    "personalIdentityNumber": null,
+    "givenName": "Ivar",
+    "middleAndSurname": "Integration",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "170",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "SE4815162344-1A02",
+          "beskrivning": "Ivar Integration (Läkare, djupintegration | WebCert-Integration Enhet 1)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "user3",
+    "personalIdentityNumber": null,
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "user4",
+    "personalIdentityNumber": null,
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "user5",
+    "personalIdentityNumber": null,
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "test1",
+    "personalIdentityNumber": null,
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "user6",
+    "personalIdentityNumber": null,
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-VAZB",
+    "personalIdentityNumber": null,
+    "givenName": "Zeb",
+    "middleAndSurname": "Vårdadministratör",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "90",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-ZEMC",
+          "beskrivning": "Vårdadministratör Zeb (Vårdadministratör | Alfa Regionen)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "ib-user-5",
+    "personalIdentityNumber": null,
+    "givenName": "Grillbritt",
+    "middleAndSurname": "Gunnarsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-VARDADMIN-IFV1239877878-1045"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": null,
+      "env": null,
+      "readOnly": true,
+      "allowedInApplications": [
+        "IB"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "IFV1239877878-1045",
+          "beskrivning": "Grillbritt Gunnarsson (Vårdadminstratör 2 | Intygsbeställning)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "test2",
+    "personalIdentityNumber": null,
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "ib-user-4",
+    "personalIdentityNumber": null,
+    "givenName": "Gunnel",
+    "middleAndSurname": "Grävling",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-SAMORDNARE-IFV1239877878-1043"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": null,
+      "env": null,
+      "readOnly": true,
+      "allowedInApplications": [
+        "IB"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "IFV1239877878-1045",
+          "beskrivning": "Gunnel Grävling (Samordnare 2 | Intygsbeställning)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "ib-user-3",
+    "personalIdentityNumber": null,
+    "givenName": "Harald",
+    "middleAndSurname": "Alltsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-VARDADMIN-IFV1239877878-1042",
+      "INTYG;FMU-VARDADMIN-linkoping",
+      "INTYG;FMU-SAMORDNARE-kronoberg",
+      "INTYG;FMU-SAMORDNARE-IFV1239877878-1041",
+      "INTYG;FMU-VARDADMIN-IFV1239877878-104D"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": null,
+      "env": null,
+      "readOnly": true,
+      "allowedInApplications": [
+        "IB"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "IFV1239877878-1042",
+          "beskrivning": "Harald Alltsson (Alla roller | Intygsbeställning)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "ib-user-2",
+    "personalIdentityNumber": null,
+    "givenName": "Ingbritt",
+    "middleAndSurname": "Filt",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-VARDADMIN-IFV1239877878-1042"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": null,
+      "env": null,
+      "readOnly": true,
+      "allowedInApplications": [
+        "IB"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "IFV1239877878-1042",
+          "beskrivning": "Ingbritt Filt (Vårdadminstratör 1 | Intygsbeställning)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "ib-user-1",
+    "personalIdentityNumber": null,
+    "givenName": "Simona",
+    "middleAndSurname": "Samordnare",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-SAMORDNARE-IFV1239877878-1041"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": null,
+      "env": null,
+      "readOnly": true,
+      "allowedInApplications": [
+        "IB"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "IFV1239877878-1042",
+          "beskrivning": "Simona Samordnare (Samordnare 1 | Intygsbeställning)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": null,
+    "personalIdentityNumber": "195205292260",
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": "2222222",
+    "systemRoles": null,
+    "educationCodes": [],
+    "restrictions": [],
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": [
+      {
+        "healthCareProfessionalLicenceCode": "DT",
+        "healthCareProfessionalLicenceName": "Dietist"
+      }
+    ]
+  },
+  {
+    "hsaId": "peter-enkel",
+    "personalIdentityNumber": null,
+    "givenName": "Peter",
+    "middleAndSurname": "Enkel",
+    "protectedPerson": false,
+    "specialities": [
+      {
+        "specialityName": "Kirurgi",
+        "specialityCode": "100"
+      },
+      {
+        "specialityName": "Oftalmologi",
+        "specialityCode": "200"
+      }
+    ],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "5",
+      "env": null,
+      "readOnly": true,
+      "allowedInApplications": [
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "",
+          "beskrivning": "Peter Enkel (Läkare | 1 VE med underenhet)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "toth-gergo-1",
+    "personalIdentityNumber": null,
+    "givenName": "Tóth Gergő",
+    "middleAndSurname": "Mészáros",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;Rehab-TSTNMT2321000156-105N"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "340",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-105N",
+          "beskrivning": "Tóth Gergő Mészáros (Läkare | Har intyg och ärenden)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "hans-hosplosa",
+    "personalIdentityNumber": null,
+    "givenName": "Hans",
+    "middleAndSurname": "Hosplösa",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105H",
+    "personalIdentityNumber": null,
+    "givenName": "Erik",
+    "middleAndSurname": "Nilsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": [
+      {
+        "titleCode": "204090",
+        "titleName": "a"
+      }
+    ],
+    "personalPrescriptionCode": "9100009",
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "330",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-105F",
+          "beskrivning": "Erik Nilsson (Läkare | NMT)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105J",
+    "personalIdentityNumber": null,
+    "givenName": "Susanne",
+    "middleAndSurname": "Karlsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;Rehab-TSTNMT2321000156-105F"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "340",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-105F",
+          "beskrivning": "Susanne Karlsson (Vårdadmin | NMT)"
+        }
+      ],
+      "extraContextProperties": {
+        "pdlConsentGiven": "true"
+      }
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": null,
+    "personalIdentityNumber": "199008252398",
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [
+      {
+        "specialityName": "specialityName1",
+        "specialityCode": "specialityCode1"
+      },
+      {
+        "specialityName": "specialityName2",
+        "specialityCode": "specialityCode2"
+      }
+    ],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": "1234567",
+    "systemRoles": null,
+    "educationCodes": [
+      "educationCode1",
+      "educationCode2"
+    ],
+    "restrictions": [
+      {
+        "restrictionCode": "restrictionCode1",
+        "restrictionName": "restriction1"
+      },
+      {
+        "restrictionCode": "restrictionCode2",
+        "restrictionName": "restriction2"
+      }
+    ],
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": [
+      {
+        "healthCareProfessionalLicenceCode": "LK",
+        "healthCareProfessionalLicenceName": "Läkare"
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-DRAA",
+    "personalIdentityNumber": null,
+    "givenName": "Ajla",
+    "middleAndSurname": "Doktor",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": [
+      {
+        "titleCode": "204010",
+        "titleName": "b"
+      }
+    ],
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "90",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-ALMC",
+          "beskrivning": "Doktor AJLA (Läkare | Alfa Regionen)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TST5565594230-12T1",
+    "personalIdentityNumber": null,
+    "givenName": "Erik",
+    "middleAndSurname": "Svensson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1077",
+      "INTYG;Rehab-TSTNMT2321000156-105N"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "500",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "IB",
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Erik Svensson (Läkare | SITHS-kort)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TST5565594230-12T2",
+    "personalIdentityNumber": null,
+    "givenName": "Susanne",
+    "middleAndSurname": "Persson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1077",
+      "INTYG;Rehab-TSTNMT2321000156-105N"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "500",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "IB",
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Susanne Persson (Läkare | SITHS-kort)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TST5565594230-12T3",
+    "personalIdentityNumber": null,
+    "givenName": "Fredrik",
+    "middleAndSurname": "Svensson Andersson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1077",
+      "INTYG;Rehab-TSTNMT2321000156-105N"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "500",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "IB",
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Fredrik Svensson Andersson (Läkare | SITHS-kort)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-DRAF",
+    "personalIdentityNumber": null,
+    "givenName": "Alf",
+    "middleAndSurname": "Doktor",
+    "protectedPerson": true,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;Rehab-TSTNMT2321000156-ALMC"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "90",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-ALVC",
+          "beskrivning": "Doktor ALF (Läkare | Alfa Regionen)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TST5565594230-12T4",
+    "personalIdentityNumber": null,
+    "givenName": "Eva",
+    "middleAndSurname": "Johansson Svensson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1077",
+      "INTYG;Rehab-TSTNMT2321000156-105N"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "500",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "IB",
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Eva Johansson Svensson (Läkare | SITHS-kort)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TST5565594230-12T0",
+    "personalIdentityNumber": null,
+    "givenName": "Ulla",
+    "middleAndSurname": "Karlsson Karlsson Karlsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1077",
+      "INTYG;Rehab-TSTNMT2321000156-105N"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "500",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "IB",
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Ulla Karlsson Karlsson Karlsson (Läkare | SITHS-kort)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "HSA-AM",
+    "personalIdentityNumber": null,
+    "givenName": "Anna",
+    "middleAndSurname": "Modig",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "lakare_vieux",
+    "personalIdentityNumber": null,
+    "givenName": "Vieux",
+    "middleAndSurname": "En",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TST5565594230-106J",
+    "personalIdentityNumber": null,
+    "givenName": "Markus",
+    "middleAndSurname": "Gran",
+    "protectedPerson": false,
+    "specialities": [
+      {
+        "specialityName": "Allergisjukdomar",
+        "specialityCode": "77"
+      },
+      {
+        "specialityName": "Barn- och ungdomskirurgi",
+        "specialityCode": "10080"
+      }
+    ],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "110",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "IFV1239877878-103D",
+          "beskrivning": "Markus Gran (Läkare | VårdEnhetA)"
+        },
+        {
+          "forvaldEnhet": "IFV1239877878-103F",
+          "beskrivning": "Markus Gran (Läkare | VårdEnhet1A)"
+        },
+        {
+          "forvaldEnhet": "IFV1239877878-103H",
+          "beskrivning": "Markus Gran (Läkare | VårdEnhet2A)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": null,
+    "personalIdentityNumber": "195206142597",
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": "1111111",
+    "systemRoles": null,
+    "educationCodes": [],
+    "restrictions": [],
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": [
+      {
+        "healthCareProfessionalLicenceCode": "LK",
+        "healthCareProfessionalLicenceName": "Läkare"
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105R",
+    "personalIdentityNumber": null,
+    "givenName": "Emma",
+    "middleAndSurname": "Nilsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "350",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-105N",
+          "beskrivning": "Emma Nilsson (Läkare 1 | Rehabstöd)"
+        }
+      ],
+      "extraContextProperties": {
+        "pdlConsentGiven": "true"
+      }
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105S",
+    "personalIdentityNumber": null,
+    "givenName": "Anders",
+    "middleAndSurname": "Karlsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "360",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-105N",
+          "beskrivning": "Anders Karlsson (Läkare 2 | Rehabstöd)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105T",
+    "personalIdentityNumber": null,
+    "givenName": "Ingrid",
+    "middleAndSurname": "Nilsson Olsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "370",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-105P",
+          "beskrivning": "Ingrid Nilsson Olsson (Läkare 3 | Rehabstöd)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TST5565594230-106C",
+    "personalIdentityNumber": null,
+    "givenName": "Hanna",
+    "middleAndSurname": "Andersson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1066",
+    "personalIdentityNumber": null,
+    "givenName": "Lars",
+    "middleAndSurname": "Olsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;Rehab-TSTNMT2321000156-1062",
+      "INTYG;Rehab-TSTNMT2321000156-1063"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "390",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1062",
+          "beskrivning": "Lars Olsson (Vårdadmin | Cambio | 2 VE)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1067",
+    "personalIdentityNumber": null,
+    "givenName": "Elin",
+    "middleAndSurname": "Johansson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "380",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1062",
+          "beskrivning": "Elin Johansson (Läkare | Cambio)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105V",
+    "personalIdentityNumber": null,
+    "givenName": "Nils",
+    "middleAndSurname": "Ericsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;Rehab-TSTNMT2321000156-105N"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": null,
+      "env": null,
+      "readOnly": true,
+      "allowedInApplications": [
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-105N",
+          "beskrivning": "Nils Ericsson (Vårdadmin 1 | Rehabstöd))"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1100",
+    "personalIdentityNumber": null,
+    "givenName": "Sara",
+    "middleAndSurname": "Andersson",
+    "protectedPerson": true,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "10",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Sara Andersson (Läkare (sekretessmarkerad)| Har intyg och ärenden)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105W",
+    "personalIdentityNumber": null,
+    "givenName": "Kerstin",
+    "middleAndSurname": "Johansson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;Rehab-TSTNMT2321000156-105P",
+      "INTYG;Rehab-TSTNMT2321000156-105Q"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": null,
+      "env": null,
+      "readOnly": true,
+      "allowedInApplications": [
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-105P",
+          "beskrivning": "Kerstin Johansson (Vårdadmin 2 | Rehabstöd)"
+        }
+      ],
+      "extraContextProperties": {
+        "pdlConsentGiven": "true"
+      }
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "staffan",
+    "personalIdentityNumber": null,
+    "givenName": "Staffan",
+    "middleAndSurname": "Stafett",
+    "protectedPerson": false,
+    "specialities": [
+      {
+        "specialityName": "Ortopedi",
+        "specialityCode": "200"
+      }
+    ],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "150",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "",
+          "beskrivning": "Staffan Stafett (Läkare | Centrum Väst, Linköping, Norrköping, Motala)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "HSA-BS",
+    "personalIdentityNumber": null,
+    "givenName": "Bengt",
+    "middleAndSurname": "Siffersson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-DRBE",
+    "personalIdentityNumber": null,
+    "givenName": "Beata",
+    "middleAndSurname": "Doktor",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": [
+      {
+        "titleCode": "204010",
+        "titleName": "b"
+      }
+    ],
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "90",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-BEVC",
+          "beskrivning": "Doktor BEATA (Läkare | Beta Regionen)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-DRZA",
+    "personalIdentityNumber": null,
+    "givenName": "Zenta",
+    "middleAndSurname": "Doktor",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": [
+      {
+        "titleCode": "204010",
+        "titleName": "b"
+      }
+    ],
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "90",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-ZEMC",
+          "beskrivning": "Doktor Zenta (Läkare | Zeta Regionen)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1079",
+    "personalIdentityNumber": null,
+    "givenName": "Arnold",
+    "middleAndSurname": "Johansson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "1",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Arnold Johansson (Läkare | Har intyg och ärenden)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-998V",
+    "personalIdentityNumber": null,
+    "givenName": "Ralf",
+    "middleAndSurname": "Enhetslöse",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;Rehab-some-other-careunit"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "5",
+      "env": null,
+      "readOnly": true,
+      "allowedInApplications": [
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-105N",
+          "beskrivning": "Ralf Enhetlöse (saknar rätt enhet på systemroll)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "capio-user-1",
+    "personalIdentityNumber": null,
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": null,
+    "personalIdentityNumber": "194606109108",
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [
+      {
+        "specialityName": "specialityName1",
+        "specialityCode": "specialityCode1"
+      },
+      {
+        "specialityName": "specialityName2",
+        "specialityCode": "specialityCode2"
+      }
+    ],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": "1234569",
+    "systemRoles": null,
+    "educationCodes": [
+      "educationCode1",
+      "educationCode2"
+    ],
+    "restrictions": [
+      {
+        "restrictionCode": "restrictionCode1",
+        "restrictionName": "restriction1"
+      },
+      {
+        "restrictionCode": "restrictionCode2",
+        "restrictionName": "restriction2"
+      }
+    ],
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": [
+      {
+        "healthCareProfessionalLicenceCode": "LK",
+        "healthCareProfessionalLicenceName": "Läkare"
+      }
+    ]
+  },
+  {
+    "hsaId": null,
+    "personalIdentityNumber": "197705232382",
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [
+      {
+        "specialityName": "specialityName1",
+        "specialityCode": "specialityCode1"
+      },
+      {
+        "specialityName": "specialityName2",
+        "specialityCode": "specialityCode2"
+      }
+    ],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": "1234568",
+    "systemRoles": null,
+    "educationCodes": [
+      "educationCode1",
+      "educationCode2"
+    ],
+    "restrictions": [
+      {
+        "restrictionCode": "restrictionCode1",
+        "restrictionName": "restriction1"
+      },
+      {
+        "restrictionCode": "restrictionCode2",
+        "restrictionName": "restriction2"
+      }
+    ],
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": [
+      {
+        "healthCareProfessionalLicenceCode": "LK",
+        "healthCareProfessionalLicenceName": "Läkare"
+      }
+    ]
+  },
+  {
+    "hsaId": "adam",
+    "personalIdentityNumber": null,
+    "givenName": "Adam",
+    "middleAndSurname": "Admin",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "180",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "centrum-vast",
+          "beskrivning": "Adam Admin (Vårdadmin | Centrum Väst)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": null,
+    "personalIdentityNumber": "191212121212",
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [
+      {
+        "specialityName": "Klinisk fysiologi",
+        "specialityCode": "32"
+      },
+      {
+        "specialityName": "Nukleärmedicin",
+        "specialityCode": "74"
+      }
+    ],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": "1234567",
+    "systemRoles": null,
+    "educationCodes": [
+      "educationCode1",
+      "educationCode2"
+    ],
+    "restrictions": [
+      {
+        "restrictionCode": "restrictionCode1",
+        "restrictionName": "restriction1"
+      },
+      {
+        "restrictionCode": "restrictionCode2",
+        "restrictionName": "restriction2"
+      }
+    ],
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": [
+      {
+        "healthCareProfessionalLicenceCode": "LK",
+        "healthCareProfessionalLicenceName": "Läkare"
+      }
+    ]
+  },
+  {
+    "hsaId": "fitness1",
+    "personalIdentityNumber": null,
+    "givenName": "Test",
+    "middleAndSurname": "Testsson",
+    "protectedPerson": false,
+    "specialities": [
+      {
+        "specialityName": "Kirurgi",
+        "specialityCode": "100"
+      },
+      {
+        "specialityName": "Ortopedi",
+        "specialityCode": "200"
+      }
+    ],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "fitness2",
+    "personalIdentityNumber": null,
+    "givenName": "Fit",
+    "middleAndSurname": "Nesse",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": "2481632",
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-999V",
+    "personalIdentityNumber": null,
+    "givenName": "Rolf",
+    "middleAndSurname": "Rollöse",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": null,
+      "env": null,
+      "readOnly": true,
+      "allowedInApplications": [
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-105N",
+          "beskrivning": "Rolf Rollöse (saknar HSA systemroll Rehab för enheter)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-10J0",
+    "personalIdentityNumber": null,
+    "givenName": "Per",
+    "middleAndSurname": "Persson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-SAMORDNARE-TSTNMT2321000156-1002",
+      "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1003"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "240",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "IB"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1003",
+          "beskrivning": "Per Persson (Läkare | SITHS-kort)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1019",
+    "personalIdentityNumber": null,
+    "givenName": "Ingrid",
+    "middleAndSurname": "Andersson Larsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1077",
+      "INTYG;Rehab-TSTNMT2321000156-105N"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "500",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "IB",
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Ingrid Andersson Larsson (Läkare | SITHS-kort)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "HSA-UF",
+    "personalIdentityNumber": null,
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "eva",
+    "personalIdentityNumber": null,
+    "givenName": "Eva",
+    "middleAndSurname": "Holgersson",
+    "protectedPerson": false,
+    "specialities": [
+      {
+        "specialityName": "Kirurgi",
+        "specialityCode": "100"
+      },
+      {
+        "specialityName": "Oftalmologi",
+        "specialityCode": "200"
+      }
+    ],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "140",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "centrum-vast",
+          "beskrivning": "Eva Holgersson (Läkare | Centrum Väst, Linköping, 'Enhet-finns-ej')"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "PERSONALHSA-ID",
+    "personalIdentityNumber": null,
+    "givenName": "En",
+    "middleAndSurname": "Läkare",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": "1111111",
+    "systemRoles": null,
+    "educationCodes": [],
+    "restrictions": [],
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-100L",
+    "personalIdentityNumber": null,
+    "givenName": "Åsa",
+    "middleAndSurname": "Svensson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "280",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1003",
+          "beskrivning": "Åsa Svensson (NMT variabel testperson)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1099",
+    "personalIdentityNumber": null,
+    "givenName": "Sara",
+    "middleAndSurname": "Sekretess",
+    "protectedPerson": true,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "10",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Sara Sekretess (Läkare (sekretessmarkerad)| Har intyg och ärenden)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "sture-adminsson",
+    "personalIdentityNumber": null,
+    "givenName": "Sture",
+    "middleAndSurname": "Adminsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "11",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Sture Adminsson (Vårdadmin | Har intyg och ärenden)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-10CN",
+    "personalIdentityNumber": "199103222395",
+    "givenName": "Eva",
+    "middleAndSurname": "Olsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-SAMORDNARE-TSTNMT2321000156-102Q"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "490",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "IB"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Eva Olsson (Läkare | EFOS-kort)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1028",
+    "personalIdentityNumber": null,
+    "givenName": "Maria",
+    "middleAndSurname": "Johansson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "tore-tandlakare",
+    "personalIdentityNumber": null,
+    "givenName": "Tore",
+    "middleAndSurname": "Tandläkare",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Tandläkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "270",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "tandenheten-1",
+          "beskrivning": "Tore Tandläkare (Tandläkare)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "IFV1239877878-104K",
+    "personalIdentityNumber": null,
+    "givenName": "Lars",
+    "middleAndSurname": "Andersson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "60",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "IFV1239877878-1045",
+          "beskrivning": "Lars Andersson (Läkare | WebCert Enhet 2 + 2UE)"
+        },
+        {
+          "forvaldEnhet": "IFV1239877878-104D",
+          "beskrivning": "Lars Andersson (Läkare | WebCert Enhet 3)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "HSA-AM1",
+    "personalIdentityNumber": null,
+    "givenName": "Anna",
+    "middleAndSurname": "Urmodig",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "HSA-AM2",
+    "personalIdentityNumber": null,
+    "givenName": "Anna",
+    "middleAndSurname": "Vemodig",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "IFV1239877878-104M",
+    "personalIdentityNumber": null,
+    "givenName": "Anders",
+    "middleAndSurname": "Larsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": [
+      {
+        "titleCode": "204010",
+        "titleName": "b"
+      }
+    ],
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "90",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "IFV1239877878-1045",
+          "beskrivning": "Anders Larsson (AT Läkare | WebCert Enhet 2 + 2UE)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "IFV1239877878-104N",
+    "personalIdentityNumber": null,
+    "givenName": "Lena",
+    "middleAndSurname": "Karlsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "100",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "IFV1239877878-1045",
+          "beskrivning": "Lena Karlsson (Vårdadmin | WebCert Enhet 2 + 2UE)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "vgr-user-1",
+    "personalIdentityNumber": null,
+    "givenName": null,
+    "middleAndSurname": null,
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": null,
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-10C0",
+    "personalIdentityNumber": null,
+    "givenName": "Anita",
+    "middleAndSurname": "Nilsson Nilsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-SAMORDNARE-TSTNMT2321000156-1002",
+      "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1004"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "505",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "IB"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1003",
+          "beskrivning": "Anita Nilsson Nilsson (Läkare | SITHS-kort)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "IFV1239877878-104R",
+    "personalIdentityNumber": null,
+    "givenName": "Bertil",
+    "middleAndSurname": "Larsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": [
+      {
+        "titleCode": "203020",
+        "titleName": "b"
+      }
+    ],
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;Rehab-IFV1239877878-1045"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "90",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "IFV1239877878-1045",
+          "beskrivning": "Bertil Larsson (BT Läkare | WebCert Enhet 2 + 2UE)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "hansolo",
+    "personalIdentityNumber": null,
+    "givenName": "Han",
+    "middleAndSurname": "Solo",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "230",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "centrum-norr",
+          "beskrivning": "Han Solo (Vårdadmin | Centrum Norr)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1023",
+    "personalIdentityNumber": null,
+    "givenName": "Jenny Ingrid Susanne",
+    "middleAndSurname": "Andersson Svensson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-SAMORDNARE-TSTNMT2321000156-1002",
+      "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1003"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "505",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "IB"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1004",
+          "beskrivning": "Jenny Ingrid Susanne Andersson Svensson (Läkare | SITHS-kort)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1025",
+    "personalIdentityNumber": null,
+    "givenName": "Karin",
+    "middleAndSurname": "Persson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-SAMORDNARE-TSTNMT2321000156-1002",
+      "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1004"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "510",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "IB"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1003",
+          "beskrivning": "Karin Persson (Läkare | SITHS-kort)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "SE4815162344-1B02",
+    "personalIdentityNumber": null,
+    "givenName": "Journa",
+    "middleAndSurname": "La System",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "160",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "SE4815162344-1A03",
+          "beskrivning": "Journa La System (Läkare, djupintegration | WebCert-Integration Enhet 2)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-103B",
+    "personalIdentityNumber": null,
+    "givenName": "Louise",
+    "middleAndSurname": "Ericsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Tandläkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "290",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1039",
+          "beskrivning": "Louise Ericsson (Tandläkare)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-BEBE",
+    "personalIdentityNumber": null,
+    "givenName": "Bent",
+    "middleAndSurname": "Vårdadministratör",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;Rehab-TSTNMT2321000156-BEMC"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "90",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-BEMC",
+          "beskrivning": "Vårdadministratör BENT (Vårdadministratör| Beta Regionen)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-103F",
+    "personalIdentityNumber": null,
+    "givenName": "Leonie",
+    "middleAndSurname": "Koehl",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": [
+      {
+        "titleCode": "204010",
+        "titleName": "b"
+      }
+    ],
+    "personalPrescriptionCode": "9300005",
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "20",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1039",
+          "beskrivning": "Leonie Koehl (Läkare inom EU/ESS/Schweiz)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-103G",
+    "personalIdentityNumber": null,
+    "givenName": "Bill",
+    "middleAndSurname": "Smith",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": [
+      {
+        "titleCode": "203090",
+        "titleName": "c"
+      }
+    ],
+    "personalPrescriptionCode": "9400003",
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "310",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1039",
+          "beskrivning": "Bill Smith (Läkare utom EU/ESS/Schweiz)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-103H",
+    "personalIdentityNumber": null,
+    "givenName": "Martin",
+    "middleAndSurname": "Johansson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": [
+      {
+        "titleCode": "204090",
+        "titleName": "a"
+      }
+    ],
+    "personalPrescriptionCode": "9100009",
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "320",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1039",
+          "beskrivning": "Martin Johansson (Vikarierande examinerad läkare)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "IFV1239877878-1049",
+    "personalIdentityNumber": null,
+    "givenName": "Jan",
+    "middleAndSurname": "Nilsson",
+    "protectedPerson": false,
+    "specialities": [
+      {
+        "specialityName": "Kirurgi i käkpartiet",
+        "specialityCode": "Kod1"
+      }
+    ],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "30",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "IFV1239877878-1042",
+          "beskrivning": "Jan Nilsson (Läkare | WebCert Enhet 1)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "IFV1239877878-104B",
+    "personalIdentityNumber": null,
+    "givenName": "Åsa",
+    "middleAndSurname": "Andersson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "30",
+      "env": "dev",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "IFV1239877878-1042",
+          "beskrivning": "Åsa Andersson (Läkare | WebCert Enhet 1)"
+        },
+        {
+          "forvaldEnhet": "IFV1239877878-1045",
+          "beskrivning": "Åsa Andersson (Läkare | WebCert Enhet 2 + 2UE)"
+        },
+        {
+          "forvaldEnhet": "IFV1239877878-1046",
+          "beskrivning": "Åsa Andersson (Läkare | WebCert Enhet 2 - Underenhet 1)"
+        },
+        {
+          "forvaldEnhet": "IFV1239877878-104C",
+          "beskrivning": "Åsa Andersson (Läkare | WebCert Enhet 2 - Underenhet 2)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-10KK",
+    "personalIdentityNumber": null,
+    "givenName": "Karl",
+    "middleAndSurname": "Nilsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Läkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1077",
+      "INTYG;Rehab-TSTNMT2321000156-105N"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "500",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "IB",
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Karl Nilsson (Läkare | SITHS-kort)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-TLZR",
+    "personalIdentityNumber": null,
+    "givenName": "Zandor",
+    "middleAndSurname": "Tandläkare",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [
+      "Tandläkare"
+    ],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": null,
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "270",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-ZEMC",
+          "beskrivning": "Zandor Tandläkare (Tandläkare)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-10CD",
+    "personalIdentityNumber": null,
+    "givenName": "Annika",
+    "middleAndSurname": "Larsson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;Rehab-TSTNMT2321000156-1077"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "2",
+      "env": null,
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Annika Larsson (Vårdadmin | Alfaenheten)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-10KL",
+    "personalIdentityNumber": null,
+    "givenName": "Lena",
+    "middleAndSurname": "Svensson",
+    "protectedPerson": false,
+    "specialities": [],
+    "unitIds": [],
+    "title": null,
+    "healthCareProfessionalLicence": [],
+    "paTitle": null,
+    "personalPrescriptionCode": null,
+    "systemRoles": [
+      "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1077",
+      "INTYG;FMU-VARDADMIN-TSTNMT2321000156-1076",
+      "INTYG;Rehab-TSTNMT2321000156-105N"
+    ],
+    "educationCodes": null,
+    "restrictions": null,
+    "fakeProperties": {
+      "displayOrder": "500",
+      "env": "demo",
+      "readOnly": true,
+      "allowedInApplications": [
+        "WC",
+        "IB",
+        "RS"
+      ],
+      "logins": [
+        {
+          "forvaldEnhet": "TSTNMT2321000156-1077",
+          "beskrivning": "Lena Svensson (Vårdadmin | SITHS-kort)"
+        }
+      ],
+      "extraContextProperties": {}
+    },
+    "gender": null,
+    "age": null,
+    "healthCareProfessionalLicenceType": []
+  }
+]

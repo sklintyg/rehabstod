@@ -61,6 +61,10 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService {
 
     @Override
     public RehabstodUser buildUserPrincipal(String employeeHsaId, String authenticationScheme) {
+        return buildUserPrincipal(employeeHsaId, null, authenticationScheme);
+    }
+
+    public RehabstodUser buildUserPrincipal(String employeeHsaId, String unitId, String authenticationScheme) {
         // All rehab customization is done in the overridden decorateXXX methods, so just return a new rehabuser
         IntygUser intygUser = super.buildUserPrincipal(employeeHsaId, authenticationScheme);
         RehabstodUser rehabstodUser = new RehabstodUser(intygUser, isPdlConsentGiven(intygUser.getHsaId()), intygUser.isLakare());
@@ -84,6 +88,11 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService {
                 LOG.debug("Setting default_login_hsa_unit_id " + savedDefaultLoginHsaUnitId + " for User " + rehabstodUser.getHsaId());
             }
         }
+
+        if (!StringUtil.isNullOrEmpty(unitId)) {
+            rehabstodUnitChangeService.changeValdVardenhet(unitId, rehabstodUser);
+        }
+
         // INTYG-5068: Explicitly changing vardenhet on session creation to possibly appyl REHABKOORDINATOR role for
         // this unit in case the user is LAKARE and has systemRole Rehab- for the current unit.
         // This is only performed if there were a unit selected, e.g. user only has access to a single unit.

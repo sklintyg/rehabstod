@@ -1,0 +1,2317 @@
+[
+  {
+    "hsaId": "lakare_my",
+    "givenName": "My",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet4",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "adam",
+    "givenName": "Adam",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "centrum-vast",
+        "commissionPurpose": [
+          "Admin"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "pelle-uppdragslos",
+    "givenName": "Pelle",
+    "commissionList": []
+  },
+  {
+    "hsaId": "user1",
+    "givenName": null,
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet1",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "adamo",
+    "givenName": "Adamo",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "centrum-vast",
+        "commissionPurpose": [
+          "Admin"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "centrum-ost",
+        "commissionPurpose": [
+          "Admin"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "user2",
+    "givenName": null,
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet1",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet2",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "fitness1",
+    "givenName": "Test",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vardenhet-fit-1",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "fitness2",
+    "givenName": "Fit",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vardenhet-fit-2",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-VAAA",
+    "givenName": "Alva",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALVC",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALPC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALMC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALHC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "user7",
+    "givenName": null,
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet4",
+        "commissionPurpose": [
+          "INGET"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "user8",
+    "givenName": null,
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet5",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "SE4815162344-1B01",
+    "givenName": "Ivar",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE4815162344-1A02",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-999V",
+    "givenName": "Rolf",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "user3",
+    "givenName": null,
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet3",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "user4",
+    "givenName": null,
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet2",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "user5",
+    "givenName": null,
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet1",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet2",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet3",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet4",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "test1",
+    "givenName": null,
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE2321000131-E000000004004",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE2321000131-E000000000431",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "user6",
+    "givenName": null,
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet4",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-VAZB",
+    "givenName": "Zeb",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ZEVC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ZEMC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "ib-user-5",
+    "givenName": "Grillbritt",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1045",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-10J0",
+    "givenName": "Per",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1004",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1003",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "test2",
+    "givenName": null,
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE2321000131-E000000004004",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "ib-user-4",
+    "givenName": "Gunnel",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1045",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "ib-user-3",
+    "givenName": "Harald",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1042",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "linkoping",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "centrum-ost",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1045",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-104D",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1019",
+    "givenName": "Ingrid",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "ib-user-2",
+    "givenName": "Ingbritt",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1042",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "ib-user-1",
+    "givenName": "Simona",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1042",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "HSA-UF",
+    "givenName": null,
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-1",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-2",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-3",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-4",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-5",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-6",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-7",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-8",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-9",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-10",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-11",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-12",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-13",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-14",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-15",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-16",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-17",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-18",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-19",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-20",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "peter-enkel",
+    "givenName": "Peter",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-103H",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "toth-gergo-1",
+    "givenName": "Tóth Gergő",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105P",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "hans-hosplosa",
+    "givenName": "Hans",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105F",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105H",
+    "givenName": "Erik",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105F",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105J",
+    "givenName": "Susanne",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105F",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "eva",
+    "givenName": "Eva",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "centrum-vast",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "linkoping",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet-finns-ej",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "PERSONALHSA-ID",
+    "givenName": "En",
+    "commissionList": []
+  },
+  {
+    "hsaId": "TSTNMT2321000156-100L",
+    "givenName": "Åsa",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1003",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "Admin"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1099",
+    "givenName": "Sara",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "sture-adminsson",
+    "givenName": "Sture",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-DRAA",
+    "givenName": "Ajla",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALVC",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALPC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALMC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALHC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1028",
+    "givenName": "Maria",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1003",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "tore-tandlakare",
+    "givenName": "Tore",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "tandenheten-1",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "IFV1239877878-104K",
+    "givenName": "Lars",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1045",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-104D",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "HSA-AM1",
+    "givenName": "Anna",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O19466",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O11156",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O17893",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O11632",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O11118",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O10590",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O16287",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O15380",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O17894",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O11206",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O16803",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O11178",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "HSA-AM2",
+    "givenName": "Anna",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O11635",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "IFV1239877878-104M",
+    "givenName": "Anders",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1045",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TST5565594230-12T1",
+    "givenName": "Erik",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALMC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALVC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "IFV1239877878-104N",
+    "givenName": "Lena",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1045",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TST5565594230-12T2",
+    "givenName": "Susanne",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TST5565594230-12T3",
+    "givenName": "Fredrik",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "vgr-user-1",
+    "givenName": null,
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE2321000131-E000000000740",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-10C0",
+    "givenName": "Anita",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1003",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1004",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-DRAF",
+    "givenName": "Alf",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALVC",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALPC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALMC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALHC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TST5565594230-12T4",
+    "givenName": "Eva",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALMC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALVC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "IFV1239877878-104R",
+    "givenName": "Bertil",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1045",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "hansolo",
+    "givenName": "Han",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "centrum-norr",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TST5565594230-12T0",
+    "givenName": "Ulla",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "HSA-AM",
+    "givenName": "Anna",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-1",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-2",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-3",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-4",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-5",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-6",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-7",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-8",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-9",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-10",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-11",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-12",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-13",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-14",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-15",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-16",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-17",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-18",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-19",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-20",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "lakare_vieux",
+    "givenName": "Vieux",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "enhet4",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TST5565594230-106J",
+    "givenName": "Markus",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-103D",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-103F",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-103H",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105R",
+    "givenName": "Emma",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105S",
+    "givenName": "Anders",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105P",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105T",
+    "givenName": "Ingrid",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105P",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105Q",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TST5565594230-106C",
+    "givenName": "Hanna",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-103F",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-103H",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-103D",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1066",
+    "givenName": "Lars",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1062",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1063",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1067",
+    "givenName": "Elin",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1062",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1063",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1023",
+    "givenName": "Jenny Ingrid Susanne",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1004",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1003",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105V",
+    "givenName": "Nils",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1100",
+    "givenName": "Sara",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-105W",
+    "givenName": "Kerstin",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105P",
+        "commissionPurpose": [
+          "STATISTIK",
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105Q",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "staffan",
+    "givenName": "Staffan",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "centrum-vast",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "linkoping",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "norrkoping",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "motala",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1025",
+    "givenName": "Karin",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1003",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1004",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "HSA-BS",
+    "givenName": "Bengt",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "verksamhet1",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "verksamhet2",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "verksamhet3",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "SE4815162344-1B02",
+    "givenName": "Journa",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE4815162344-1A03",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE4815162344-1A02",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-DRBE",
+    "givenName": "Beata",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-BEVC",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-BEPC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-BEOC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-BEMC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-BEHC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-10CN",
+    "givenName": "Eva",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-103B",
+    "givenName": "Louise",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1039",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-BEBE",
+    "givenName": "Bent",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-BEVC",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-BEPC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-BEOC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-BEMC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-BEHC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-103F",
+    "givenName": "Leonie",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1039",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-103G",
+    "givenName": "Bill",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1039",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-103H",
+    "givenName": "Martin",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1039",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "IFV1239877878-1049",
+    "givenName": "Jan",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1042",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "Admin"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "IFV1239877878-104B",
+    "givenName": "Åsa",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1042",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1045",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "IFV1239877878-1046",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-DRZA",
+    "givenName": "Zenta",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ZEVC",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ZEPC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ZEMC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ZEHC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-10KK",
+    "givenName": "Karl",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-1",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-2",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-3",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-4",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-5",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-6",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-7",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-8",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-9",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-10",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-11",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-12",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-13",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-14",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-15",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-16",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-17",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-18",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-19",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-20",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-TLZR",
+    "givenName": "Zandor",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ZEVC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ZEMC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-10CD",
+    "givenName": "Annika",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1076",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-10KL",
+    "givenName": "Lena",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1076",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALMC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-ALVC",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "Vård och behandling"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-1",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-2",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-3",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-4",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-5",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-6",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-7",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-8",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-9",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-10",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-11",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-12",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-13",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-14",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-15",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-16",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-17",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-18",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-19",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "vg1-enhet-20",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-1079",
+    "givenName": "Arnold",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1077",
+        "commissionPurpose": [
+          "Vård och behandling",
+          "STATISTIK"
+        ]
+      },
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-1076",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "TSTNMT2321000156-998V",
+    "givenName": "Ralf",
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "TSTNMT2321000156-105N",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  },
+  {
+    "hsaId": "capio-user-1",
+    "givenName": null,
+    "commissionList": [
+      {
+        "healthCareProviderHsaId": null,
+        "healthCareUnitHsaId": "SE162321000255-O16010",
+        "commissionPurpose": [
+          "STATISTIK"
+        ]
+      }
+    ]
+  }
+]

@@ -10,8 +10,6 @@ import org.springframework.security.authentication.event.LogoutSuccessEvent;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
-import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService;
 import se.inera.intyg.rehabstod.auth.fake.FakeAuthenticationToken;
 
@@ -21,8 +19,6 @@ public class FakeLoginService {
 
     private final ApplicationEventPublisher applicationEventPublisher;
     private final RehabstodUserDetailsService rehabstodUserDetailsService;
-    private final CommonAuthoritiesResolver commonAuthoritiesResolver;
-    private final RehabstodUnitChangeService rehabstodUnitChangeService;
 
     public void login(String hsaId, String enhetId, HttpServletRequest request) {
         final var oldSession = request.getSession(false);
@@ -31,6 +27,7 @@ public class FakeLoginService {
         final var fakeAuthenticationToken = new FakeAuthenticationToken(
             rehabstodUserDetailsService.buildUserPrincipal(
                 hsaId,
+                enhetId,
                 "urn:inera:rehabstod:siths:fake"
             )
         );

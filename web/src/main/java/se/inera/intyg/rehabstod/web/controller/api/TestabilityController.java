@@ -19,9 +19,13 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +38,7 @@ import se.inera.intyg.rehabstod.service.testability.FakeLoginService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.FakeLoginDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.TestabilityResponseDTO;
 
+@Slf4j
 @RestController
 @Profile("testability")
 @RequestMapping("/api/testability")
@@ -66,5 +71,27 @@ public class TestabilityController {
     @PostMapping("/logout")
     public void logout(HttpServletRequest request) {
         fakeLoginService.logout(request.getSession(false));
+    }
+
+    @RequestMapping(value = "/commissions", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String commissions() {
+        return readFile("testability/commissions.json");
+    }
+
+    @RequestMapping(value = "/persons", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String persons() {
+        return readFile("/testability/persons.json");
+    }
+
+    private static String readFile(String path) {
+        final var cpr = new ClassPathResource(path);
+        try (final var inputStream = cpr.getInputStream()) {
+            return new String(
+                FileCopyUtils.copyToByteArray(inputStream),
+                StandardCharsets.UTF_8
+            );
+        } catch (Exception exception) {
+            throw new IllegalStateException(exception);
+        }
     }
 }
