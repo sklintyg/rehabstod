@@ -3,6 +3,7 @@ package se.inera.intyg.rehabstod.config;
 import static org.springframework.security.config.Customizer.withDefaults;
 import static se.inera.intyg.rehabstod.auth.AuthenticationConstants.AUTHN_METHOD;
 import static se.inera.intyg.rehabstod.auth.AuthenticationConstants.EMPLOYEE_HSA_ID;
+import static se.inera.intyg.rehabstod.auth.AuthenticationConstants.RELYING_PARTY_REGISTRATION_ID;
 
 import com.google.common.base.Strings;
 import java.io.FileInputStream;
@@ -121,7 +122,7 @@ public class WebSecurityConfig {
 
         final var registration = RelyingPartyRegistrations
             .fromMetadataLocation(samlIdpMetadataLocation)
-            .registrationId("siths")
+            .registrationId(RELYING_PARTY_REGISTRATION_ID)
             .entityId(samlEntityId)
             .assertionConsumerServiceLocation(assertionConsumerServiceLocation)
             .singleLogoutServiceLocation(singleLogoutServiceLocation)

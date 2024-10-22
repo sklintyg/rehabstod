@@ -14,7 +14,6 @@ import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService;
 import se.inera.intyg.rehabstod.auth.fake.FakeAuthenticationToken;
-import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 
 @Service
 @RequiredArgsConstructor
@@ -25,13 +24,13 @@ public class FakeLoginService {
     private final CommonAuthoritiesResolver commonAuthoritiesResolver;
     private final RehabstodUnitChangeService rehabstodUnitChangeService;
 
-    public void login(FakeCredentials fakeCredentials, HttpServletRequest request) {
+    public void login(String hsaId, String enhetId, HttpServletRequest request) {
         final var oldSession = request.getSession(false);
         Optional.ofNullable(oldSession).ifPresent(HttpSession::invalidate);
 
         final var fakeAuthenticationToken = new FakeAuthenticationToken(
             rehabstodUserDetailsService.buildUserPrincipal(
-                fakeCredentials.getHsaId(),
+                hsaId,
                 "urn:inera:rehabstod:siths:fake"
             )
         );

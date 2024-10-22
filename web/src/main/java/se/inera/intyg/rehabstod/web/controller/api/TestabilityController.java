@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import se.inera.intyg.rehabstod.auth.fake.FakeCredentials;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
 import se.inera.intyg.rehabstod.service.sjukfall.testability.TestabilityService;
@@ -61,10 +60,7 @@ public class TestabilityController {
 
     @PostMapping(value = "/fake")
     public void login(@RequestBody FakeLoginDTO fakeLoginDTO, final HttpServletRequest request) {
-        fakeLoginService.login(
-            new FakeCredentials.FakeCredentialsBuilder(fakeLoginDTO.getHsaId(), fakeLoginDTO.getEnhetId()).build(),
-            request
-        );
+        fakeLoginService.login(fakeLoginDTO.getHsaId(), fakeLoginDTO.getEnhetId(), request);
     }
 
     @PostMapping("/logout")

@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import static se.inera.intyg.rehabstod.auth.AuthenticationConstants.RELYING_PARTY_REGISTRATION_ID;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -55,8 +57,6 @@ public class RehabstodUser extends IntygUser implements Serializable, Saml2Authe
     private Map<String, Set<String>> sjfPatientVardgivare = new HashMap<>();
     private Map<String, Set<String>> sjfPatientVardenhet = new HashMap<>();
     private Map<String, Role> originalRoles = new HashMap<>();
-
-    private RehabstodUserTokens tokens;
 
     /**
      * Typically used by unit tests.
@@ -252,14 +252,6 @@ public class RehabstodUser extends IntygUser implements Serializable, Saml2Authe
                 .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(enhetId)));
     }
 
-    public RehabstodUserTokens getTokens() {
-        return tokens;
-    }
-
-    public void setTokens(RehabstodUserTokens tokens) {
-        this.tokens = tokens;
-    }
-
     // CHECKSTYLE:OFF NeedBraces
     @Override
     public boolean equals(Object o) {
@@ -302,6 +294,6 @@ public class RehabstodUser extends IntygUser implements Serializable, Saml2Authe
 
     @Override
     public String getRelyingPartyRegistrationId() {
-        return "siths";
+        return RELYING_PARTY_REGISTRATION_ID;
     }
 }
