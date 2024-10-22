@@ -14,6 +14,7 @@ import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opensaml.core.xml.schema.impl.XSStringImpl;
 import org.opensaml.saml.common.xml.SAMLConstants;
@@ -29,7 +30,6 @@ import org.opensaml.saml.saml2.core.impl.AudienceRestrictionBuilder;
 import org.opensaml.saml.saml2.core.impl.AuthnContextClassRefBuilder;
 import org.opensaml.saml.saml2.core.impl.ConditionsBuilder;
 import org.opensaml.saml.saml2.core.impl.RequestedAuthnContextBuilder;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,6 +50,7 @@ import org.springframework.security.saml2.provider.service.web.authentication.Sa
 import org.springframework.security.saml2.provider.service.web.authentication.logout.OpenSaml4LogoutRequestResolver;
 import org.springframework.security.saml2.provider.service.web.authentication.logout.Saml2LogoutRequestResolver;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -60,6 +61,7 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import se.inera.intyg.infra.security.common.cookie.IneraCookieSerializer;
 import se.inera.intyg.rehabstod.auth.CsrfCookieFilter;
+import se.inera.intyg.rehabstod.auth.CustomAuthenticationFailureHandler;
 import se.inera.intyg.rehabstod.auth.RehabstodUserDetailsService;
 import se.inera.intyg.rehabstod.auth.Saml2AuthenticationToken;
 import se.inera.intyg.rehabstod.auth.SpaCsrfTokenRequestHandler;
@@ -68,9 +70,11 @@ import se.inera.intyg.rehabstod.auth.SpaCsrfTokenRequestHandler;
 @EnableWebSecurity
 @EnableRedisHttpSession
 @Slf4j
+@RequiredArgsConstructor
 public class WebSecurityConfig {
 
     private final RehabstodUserDetailsService rehabstodUserDetailsService;
+    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
     @Value("${saml.sp.entity.id}")
     private String samlEntityId;
@@ -100,10 +104,6 @@ public class WebSecurityConfig {
     private String keyAlias;
     @Value("${saml.keystore.password}")
     private String keyStorePassword;
-
-    public WebSecurityConfig(@Qualifier("rehabstodUserDetailsService") RehabstodUserDetailsService rehabstodUserDetailsService) {
-        this.rehabstodUserDetailsService = rehabstodUserDetailsService;
-    }
 
     @Bean(name = "mvcHandlerMappingIntrospector")
     public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
@@ -157,6 +157,7 @@ public class WebSecurityConfig {
                         getOpenSaml4AuthenticationProvider()
                     )
                 )
+                .failureHandler(customAuthenticationFailureHandler)
                 .defaultSuccessUrl(samlLoginSuccessUrl, samlLoginSuccessUrlAlwaysUse)
             )
             .saml2Logout(saml2 -> saml2.logoutRequest(logout -> logout.logoutRequestResolver(logoutRequestResolver)))
@@ -169,6 +170,9 @@ public class WebSecurityConfig {
                         ? new NullRequestCache()
                         : new HttpSessionRequestCache()
                 )
+            )
+            .exceptionHandling(exceptionConfigurer -> exceptionConfigurer
+                .authenticationEntryPoint(new Http403ForbiddenEntryPoint())
             )
             .csrf(csrfConfigurer -> csrfConfigurer
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
