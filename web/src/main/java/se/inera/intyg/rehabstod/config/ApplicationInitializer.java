@@ -19,6 +19,8 @@
 package se.inera.intyg.rehabstod.config;
 
 import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_CHECK_URI;
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_EXTEND;
+import static se.inera.intyg.rehabstod.web.controller.api.SessionStatusController.SESSION_STATUS_REQUEST_MAPPING;
 
 import jakarta.servlet.FilterRegistration;
 import jakarta.servlet.ServletContext;
@@ -136,21 +138,21 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         principalUpdatedFilter.addMappingForUrlPatterns(null, false, "/*");
 
         // unitSelectedAssurance filter
-//        FilterRegistration.Dynamic unitSelectedAssuranceFilter = servletContext.addFilter("unitSelectedAssuranceFilter",
-//            DelegatingFilterProxy.class);
-//        unitSelectedAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
-//        unitSelectedAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
-//        unitSelectedAssuranceFilter.setInitParameter("ignoredUrls", "/api/config,/api/user,/api/user/andraenhet");
+        FilterRegistration.Dynamic unitSelectedAssuranceFilter = servletContext.addFilter("unitSelectedAssuranceFilter",
+            DelegatingFilterProxy.class);
+        unitSelectedAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
+        unitSelectedAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
+        unitSelectedAssuranceFilter.setInitParameter("ignoredUrls", "/api/config,/api/user,/api/user/andraenhet");
 
         // pdlConsentGiven filter
-//        FilterRegistration.Dynamic pdlConsentGivenAssuranceFilter = servletContext.addFilter("pdlConsentGivenAssuranceFilter",
-//            DelegatingFilterProxy.class);
-//        pdlConsentGivenAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
-//        pdlConsentGivenAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
-//        pdlConsentGivenAssuranceFilter.setInitParameter("ignoredUrls",
-//            SESSION_STATUS_CHECK_URI + "," + SESSION_STATUS_REQUEST_MAPPING + SESSION_STATUS_EXTEND
-//                + ",/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary,/api/stub,/api/sickleaves,/api/lu,/api/testability,"
-//                + "/api/log/error");
+        FilterRegistration.Dynamic pdlConsentGivenAssuranceFilter = servletContext.addFilter("pdlConsentGivenAssuranceFilter",
+            DelegatingFilterProxy.class);
+        pdlConsentGivenAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
+        pdlConsentGivenAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
+        pdlConsentGivenAssuranceFilter.setInitParameter("ignoredUrls",
+            SESSION_STATUS_CHECK_URI + "," + SESSION_STATUS_REQUEST_MAPPING + SESSION_STATUS_EXTEND
+                + ",/api/config,/api/user,/api/user/giveconsent,/api/sjukfall/summary,/api/stub,/api/sickleaves,/api/lu,/api/testability,"
+                + "/api/log/error");
 
         FilterRegistration.Dynamic hiddenHttpMethodFilter = servletContext.addFilter("hiddenHttpMethodFilter",
             HiddenHttpMethodFilter.class);
