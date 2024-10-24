@@ -30,11 +30,8 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 public class GetConfigResponse {
 
     private List<DiagnosKapitel> diagnosKapitelList;
-    private String webcertViewIntygTemplateUrl;
-    private String webcertViewIntygLogoutUrl;
     private String webcertLaunchUrlTemplate;
     private String sithsIdpUrl;
-    private String statistikSsoUrl;
     private String version;
     private List<Banner> banners;
 }

@@ -5,7 +5,6 @@ import static se.inera.intyg.rehabstod.auth.AuthenticationConstants.AUTHN_METHOD
 import static se.inera.intyg.rehabstod.auth.AuthenticationConstants.EMPLOYEE_HSA_ID;
 import static se.inera.intyg.rehabstod.auth.AuthenticationConstants.RELYING_PARTY_REGISTRATION_ID;
 
-import com.google.common.base.Strings;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
@@ -19,17 +18,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opensaml.core.xml.schema.impl.XSStringImpl;
 import org.opensaml.saml.common.xml.SAMLConstants;
-import org.opensaml.saml.saml2.core.Audience;
-import org.opensaml.saml.saml2.core.AudienceRestriction;
 import org.opensaml.saml.saml2.core.AuthnContextClassRef;
 import org.opensaml.saml.saml2.core.AuthnContextComparisonTypeEnumeration;
-import org.opensaml.saml.saml2.core.Conditions;
 import org.opensaml.saml.saml2.core.RequestedAuthnContext;
 import org.opensaml.saml.saml2.core.SessionIndex;
-import org.opensaml.saml.saml2.core.impl.AudienceBuilder;
-import org.opensaml.saml.saml2.core.impl.AudienceRestrictionBuilder;
 import org.opensaml.saml.saml2.core.impl.AuthnContextClassRefBuilder;
-import org.opensaml.saml.saml2.core.impl.ConditionsBuilder;
 import org.opensaml.saml.saml2.core.impl.RequestedAuthnContextBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -93,10 +86,6 @@ public class WebSecurityConfig {
     private boolean samlLoginSuccessUrlAlwaysUse;
     @Value("${saml.logout.success.url}")
     private String samlLogoutSuccessUrl;
-    @Value("${oidc.op.identity}")
-    private String opIdentity;
-    @Value("${oidc.client.id}")
-    private String rpIdentity;
     @Value("${saml.keystore.type:PKCS12}")
     private String keyStoreType;
     @Value("${saml.keystore.file}")
@@ -228,9 +217,8 @@ public class WebSecurityConfig {
             new DefaultRelyingPartyRegistrationResolver(registrations);
         OpenSaml4AuthenticationRequestResolver authenticationRequestResolver =
             new OpenSaml4AuthenticationRequestResolver(registrationResolver);
-        authenticationRequestResolver.setAuthnRequestCustomizer((context) -> {
+        authenticationRequestResolver.setAuthnRequestCustomizer(context -> {
                 context.getAuthnRequest().setAttributeConsumingServiceIndex(1);
-                context.getAuthnRequest().setConditions(buildConditions());
                 context.getAuthnRequest().setRequestedAuthnContext(buildRequestedAuthnContext());
             }
         );
@@ -261,26 +249,6 @@ public class WebSecurityConfig {
 
         public MySessionIndex(String namespaceURI, String elementLocalName, String namespacePrefix) {
             super(namespaceURI, elementLocalName, namespacePrefix);
-        }
-    }
-
-    private Conditions buildConditions() {
-        AudienceRestriction audienceRestriction = new AudienceRestrictionBuilder().buildObject();
-
-        addAudienceIfApplicable(audienceRestriction, rpIdentity);
-        addAudienceIfApplicable(audienceRestriction, opIdentity);
-
-        Conditions conditions = new ConditionsBuilder().buildObject();
-        conditions.getConditions().add(audienceRestriction);
-
-        return conditions;
-    }
-
-    private void addAudienceIfApplicable(AudienceRestriction audienceRestriction, String audienceValue) {
-        if (!Strings.isNullOrEmpty(audienceValue)) {
-            Audience audience = new AudienceBuilder().buildObject();
-            audience.setURI(audienceValue);
-            audienceRestriction.getAudiences().add(audience);
         }
     }
 
