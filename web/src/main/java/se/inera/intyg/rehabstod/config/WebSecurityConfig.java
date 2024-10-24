@@ -130,14 +130,14 @@ public class WebSecurityConfig {
         Saml2LogoutRequestResolver logoutRequestResolver)
         throws Exception {
         http
-            .authorizeHttpRequests(request -> request.
-                requestMatchers("/metrics").permitAll().
-                requestMatchers("/api/testability/**").permitAll().
-                requestMatchers("/services/**").permitAll().
-                requestMatchers("/api/config/**").permitAll().
-                requestMatchers("/api/log/**").permitAll().
-                requestMatchers("/api/session-auth-check/**").permitAll().
-                anyRequest().fullyAuthenticated()
+            .authorizeHttpRequests(request -> request
+                .requestMatchers("/metrics").permitAll()
+                .requestMatchers("/api/testability/**").permitAll()
+                .requestMatchers("/services/**").permitAll()
+                .requestMatchers("/api/config/**").permitAll()
+                .requestMatchers("/api/log/**").permitAll()
+                .requestMatchers("/api/session-auth-check/**").permitAll()
+                .anyRequest().fullyAuthenticated()
             )
             .saml2Metadata(withDefaults())
             .saml2Login(saml2 -> saml2
@@ -205,10 +205,9 @@ public class WebSecurityConfig {
         final var principal = (DefaultSaml2AuthenticatedPrincipal) samlCredential.getPrincipal();
         final var attributes = principal.getAttributes();
         if (attributes.containsKey(attributeId)) {
-            return (String) attributes.get(attributeId).get(0);
+            return (String) attributes.get(attributeId).getFirst();
         }
-        throw new IllegalArgumentException(
-            "Could not extract attribute '" + attributeId + "' from Saml2Authentication.");
+        throw new IllegalArgumentException("Could not extract attribute '%s' from Saml2Authentication.".formatted(attributeId));
     }
 
     @Bean
@@ -245,7 +244,7 @@ public class WebSecurityConfig {
         return logoutRequestResolver;
     }
 
-    public class MySessionIndex extends XSStringImpl implements SessionIndex {
+    public static class MySessionIndex extends XSStringImpl implements SessionIndex {
 
         public MySessionIndex(String namespaceURI, String elementLocalName, String namespacePrefix) {
             super(namespaceURI, elementLocalName, namespacePrefix);
