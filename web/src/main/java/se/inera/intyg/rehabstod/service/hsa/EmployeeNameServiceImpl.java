@@ -21,7 +21,7 @@ package se.inera.intyg.rehabstod.service.hsa;
 import static se.inera.intyg.rehabstod.config.EmployeeNameCacheConfig.EMPLOYEE_NAME_CACHE_NAME;
 
 import java.util.List;
-import javax.xml.ws.WebServiceException;
+import jakarta.xml.ws.WebServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

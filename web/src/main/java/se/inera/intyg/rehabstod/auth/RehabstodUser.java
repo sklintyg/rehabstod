@@ -18,6 +18,8 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import static se.inera.intyg.rehabstod.auth.AuthenticationConstants.RELYING_PARTY_REGISTRATION_ID;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticatedPrincipal;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.AbstractVardenhet;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Mottagning;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
@@ -40,7 +43,7 @@ import se.inera.intyg.rehabstod.service.Urval;
 /**
  * @author pebe on 2015-08-11.
  */
-public class RehabstodUser extends IntygUser implements Serializable {
+public class RehabstodUser extends IntygUser implements Serializable, Saml2AuthenticatedPrincipal {
 
     private static final long serialVersionUID = 8711015219408194075L;
 
@@ -54,8 +57,6 @@ public class RehabstodUser extends IntygUser implements Serializable {
     private Map<String, Set<String>> sjfPatientVardgivare = new HashMap<>();
     private Map<String, Set<String>> sjfPatientVardenhet = new HashMap<>();
     private Map<String, Role> originalRoles = new HashMap<>();
-
-    private RehabstodUserTokens tokens;
 
     /**
      * Typically used by unit tests.
@@ -77,9 +78,7 @@ public class RehabstodUser extends IntygUser implements Serializable {
      * systemRoles for being Rehabkoordinator on one or more care units must be able to "switch" between roles when
      * changing units without losing the original "isLakare" information. See INTYG-5068.
      *
-     * @param intygUser User principal, typically constructed in the
-     * {@link org.springframework.security.saml.userdetails.SAMLUserDetailsService}
-     * implementor.
+     * @param intygUser User principal
      * @param pdlConsentGiven Whether the user has given PDL logging consent.
      * @param isLakare Wheter the user is LAKARE or not. Immutable once set.
      */
@@ -253,14 +252,6 @@ public class RehabstodUser extends IntygUser implements Serializable {
                 .anyMatch(systemRoleEnhetId -> systemRoleEnhetId.equals(enhetId)));
     }
 
-    public RehabstodUserTokens getTokens() {
-        return tokens;
-    }
-
-    public void setTokens(RehabstodUserTokens tokens) {
-        this.tokens = tokens;
-    }
-
     // CHECKSTYLE:OFF NeedBraces
     @Override
     public boolean equals(Object o) {
@@ -294,5 +285,15 @@ public class RehabstodUser extends IntygUser implements Serializable {
 
     private void readObject(java.io.ObjectInputStream stream) throws java.io.IOException, ClassNotFoundException {
         stream.defaultReadObject();
+    }
+
+    @Override
+    public String getName() {
+        return "";
+    }
+
+    @Override
+    public String getRelyingPartyRegistrationId() {
+        return RELYING_PARTY_REGISTRATION_ID;
     }
 }

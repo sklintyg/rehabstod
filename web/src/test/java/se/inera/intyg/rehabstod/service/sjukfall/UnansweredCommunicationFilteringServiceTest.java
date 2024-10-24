@@ -19,7 +19,7 @@
 
 package se.inera.intyg.rehabstod.service.sjukfall;
 
-import static org.testng.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collections;
 import java.util.List;

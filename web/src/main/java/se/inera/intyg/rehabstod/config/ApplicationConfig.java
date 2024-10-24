@@ -18,14 +18,15 @@
  */
 package se.inera.intyg.rehabstod.config;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider;
+import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javax.annotation.PostConstruct;
 import org.apache.cxf.Bus;
 import org.apache.cxf.ext.logging.LoggingFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
@@ -48,6 +49,7 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
     "file:${dev.config.file}",
     "classpath:version.properties"})
 @Import(MonitoringConfiguration.class)
+@ComponentScan(basePackages = "se.inera.intyg.infra.integration.intygproxyservice")
 public class ApplicationConfig implements TransactionManagementConfigurer {
 
     @Autowired
@@ -101,11 +103,9 @@ public class ApplicationConfig implements TransactionManagementConfigurer {
     }
 
     @Bean(name = "jacksonJsonProvider")
-    public JacksonJaxbJsonProvider jacksonJsonProvider() {
-
-        return new JacksonJaxbJsonProvider();
+    public JacksonJsonProvider jacksonJsonProvider() {
+        return new JacksonJsonProvider();
     }
-
 
     @Bean
     public DiagnosFactory diagnosFactory() {

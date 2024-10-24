@@ -18,16 +18,11 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,17 +34,13 @@ import org.springframework.core.env.Environment;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
 import se.inera.intyg.infra.security.authorities.AuthoritiesException;
 import se.inera.intyg.infra.security.authorities.CommonAuthoritiesResolver;
-import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
-import se.inera.intyg.rehabstod.auth.RehabstodUserTokens;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
-import se.inera.intyg.rehabstod.service.user.TokenExchangeService;
 import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ChangeSelectedUnitRequest;
-import se.inera.intyg.rehabstod.web.controller.api.dto.GetAccessTokenResponse;
 
 /**
  * Created by marced on 01/02/16.
@@ -78,9 +69,6 @@ public class UserControllerTest {
     private UserPreferencesService userPreferencesService;
 
     @Mock
-    TokenExchangeService tokenExchangeService;
-
-    @Mock
     private Environment environment;
 
     @InjectMocks
@@ -94,7 +82,6 @@ public class UserControllerTest {
         when(rehabUserMock.getHsaId()).thenReturn(HSA_ID);
         when(rehabUserMock.getPreferences()).thenReturn(RehabstodUserPreferences.empty());
         when(userService.getUser()).thenReturn(rehabUserMock);
-        when(environment.getActiveProfiles()).thenReturn(new String[0]);
     }
 
     @Test
@@ -151,74 +138,6 @@ public class UserControllerTest {
         RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
         preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "-1");
         preferences.validate();
-    }
-
-    @Test
-    public void testGetAccessTokenWithResponseNoRefresh() {
-        String oldAccessToken = "abc123";
-
-        // Previous access token expires in 1800 seconds
-        when(rehabUserMock.getTokens())
-            .thenReturn(new RehabstodUserTokens(oldAccessToken, "cba321", LocalDateTime.now().plusSeconds(1800)));
-
-        GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
-        verify(tokenExchangeService, never())
-            .refresh(any(RehabstodUserTokens.class));
-        assertEquals(oldAccessToken, accessTokenResponse.getAccessToken());
-
-    }
-
-    @Test
-    public void testGetAccessTokenNoResponse() {
-        when(rehabUserMock.getTokens()).thenReturn(null);
-
-        GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
-        verify(tokenExchangeService, never())
-            .refresh(any(RehabstodUserTokens.class));
-        assertNull(accessTokenResponse.getAccessToken());
-    }
-
-    @Test
-    public void testGetAccessTokenFakeUserResponse() {
-        when(rehabUserMock.getTokens()).thenReturn(null);
-
-        when(rehabUserMock.getAuthenticationMethod()).thenReturn(AuthenticationMethod.FAKE);
-
-        GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
-        verify(tokenExchangeService, never()).refresh(any(RehabstodUserTokens.class));
-        assertEquals("fakeToken-" + HSA_ID, accessTokenResponse.getAccessToken());
-    }
-
-    @Test
-    public void testGetAccessTokenFakeUserNotProdResponse() {
-        when(rehabUserMock.getTokens()).thenReturn(null);
-
-        when(environment.getActiveProfiles()).thenReturn(new String[]{"prod"});
-
-        GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
-        verify(tokenExchangeService, never()).refresh(any(RehabstodUserTokens.class));
-        assertNull(accessTokenResponse.getAccessToken());
-    }
-
-    @Test
-    public void testGetAccessTokenWithResponseWithRefresh() {
-        String refreshToken = "cba321";
-        String oldAccessToken = "abc123";
-        String newAccessToken = "abc456";
-        RehabstodUserTokens oldRehabstodUserTokens = new RehabstodUserTokens(oldAccessToken, refreshToken,
-            LocalDateTime.now().plusSeconds(30));
-        RehabstodUserTokens newRehabstodUserTokens = new RehabstodUserTokens(newAccessToken, refreshToken,
-            LocalDateTime.now().plusSeconds(3600));
-
-        // Previous access token expires in 30 seconds
-        when(rehabUserMock.getTokens()).thenReturn(oldRehabstodUserTokens);
-        when(tokenExchangeService.refresh(any(RehabstodUserTokens.class)))
-            .thenReturn(newRehabstodUserTokens);
-
-        GetAccessTokenResponse accessTokenResponse = userController.getAccessToken();
-        verify(tokenExchangeService, times(1))
-            .refresh(any(RehabstodUserTokens.class));
-        assertEquals(newAccessToken, accessTokenResponse.getAccessToken());
     }
 
     private RehabstodUserPreferences defaultPreferences() {

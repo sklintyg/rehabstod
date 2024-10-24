@@ -18,20 +18,18 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
-import org.opensaml.saml2.core.Assertion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.saml.SAMLCredential;
-import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.UserCredentials;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
-import se.inera.intyg.infra.security.common.model.AuthenticationMethod;
 import se.inera.intyg.infra.security.common.model.IntygUser;
-import se.inera.intyg.infra.security.siths.BaseSakerhetstjanstAssertion;
 import se.inera.intyg.infra.security.siths.BaseUserDetailsService;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
@@ -40,14 +38,12 @@ import se.inera.intyg.rehabstod.auth.util.SystemRolesParser;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
-import se.inera.intyg.rehabstod.service.user.TokenExchangeService;
-import se.inera.intyg.rehabstod.service.user.TokenServiceException;
 
 /**
  * @author andreaskaltenbach
  */
 @Service
-public class RehabstodUserDetailsService extends BaseUserDetailsService implements SAMLUserDetailsService {
+public class RehabstodUserDetailsService extends BaseUserDetailsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(RehabstodUserDetailsService.class);
 
@@ -59,17 +55,18 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
     @Autowired
     private RehabstodUnitChangeService rehabstodUnitChangeService;
 
-    @Autowired
-    private TokenExchangeService tokenExchangeService;
-
     // =====================================================================================
     // ~ Protected scope
     // =====================================================================================
 
     @Override
-    protected RehabstodUser buildUserPrincipal(SAMLCredential credential) {
+    public RehabstodUser buildUserPrincipal(String employeeHsaId, String authenticationScheme) {
+        return buildUserPrincipal(employeeHsaId, null, authenticationScheme);
+    }
+
+    public RehabstodUser buildUserPrincipal(String employeeHsaId, String unitId, String authenticationScheme) {
         // All rehab customization is done in the overridden decorateXXX methods, so just return a new rehabuser
-        IntygUser intygUser = super.buildUserPrincipal(credential);
+        IntygUser intygUser = super.buildUserPrincipal(employeeHsaId, authenticationScheme);
         RehabstodUser rehabstodUser = new RehabstodUser(intygUser, isPdlConsentGiven(intygUser.getHsaId()), intygUser.isLakare());
 
         RehabstodUserPreferences preferences = RehabstodUserPreferences
@@ -91,24 +88,16 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
                 LOG.debug("Setting default_login_hsa_unit_id " + savedDefaultLoginHsaUnitId + " for User " + rehabstodUser.getHsaId());
             }
         }
+
+        if (!StringUtil.isNullOrEmpty(unitId)) {
+            rehabstodUnitChangeService.changeValdVardenhet(unitId, rehabstodUser);
+        }
+
         // INTYG-5068: Explicitly changing vardenhet on session creation to possibly appyl REHABKOORDINATOR role for
         // this unit in case the user is LAKARE and has systemRole Rehab- for the current unit.
         // This is only performed if there were a unit selected, e.g. user only has access to a single unit.
         if (!usedDefaultUnit && rehabstodUser.getValdVardenhet() != null) {
             rehabstodUnitChangeService.changeValdVardenhet(rehabstodUser.getValdVardenhet().getId(), rehabstodUser);
-        }
-
-        // Get AccessToken to use in Webcert iFrame, but only when SITHS authentication is performed.
-        // This only works with Inera IdP, so needs to be modified if other IdP's should be used.
-        if (AuthenticationMethod.SITHS.equals(rehabstodUser.getAuthenticationMethod())) {
-            try {
-                RehabstodUserTokens tokens = tokenExchangeService.exchange(credential);
-                rehabstodUser.setTokens(tokens);
-            } catch (TokenServiceException exception) {
-                // Couldn't get AccessToken. Log and continue since this is not vital for Rehabstod.
-                // User will not be able to use "Visa Intyg".
-                LOG.error("Unable to get AccessToken for user {} with reason {}", rehabstodUser.getHsaId(), exception.getMessage());
-            }
         }
 
         if (rehabstodUser.getValdVardenhet() != null) {
@@ -157,11 +146,6 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         return AuthoritiesConstants.ROLE_KOORDINATOR;
     }
 
-    @Override
-    protected BaseSakerhetstjanstAssertion getAssertion(Assertion assertion) {
-        return super.getAssertion(assertion);
-    }
-
     void removeEnheterMissingRehabKoordinatorRole(List<Vardgivare> authorizedVardgivare, List<String> systemRoles, String hsaId) {
         long unitsBefore = authorizedVardgivare.stream().mapToInt(vg -> vg.getVardenheter().size()).sum();
 
@@ -184,4 +168,8 @@ public class RehabstodUserDetailsService extends BaseUserDetailsService implemen
         }
     }
 
+    @Override
+    protected HttpServletRequest getCurrentRequest() {
+        return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    }
 }

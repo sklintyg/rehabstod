@@ -19,7 +19,7 @@
 package se.inera.intyg.rehabstod.integration.samtyckestjanst.stub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

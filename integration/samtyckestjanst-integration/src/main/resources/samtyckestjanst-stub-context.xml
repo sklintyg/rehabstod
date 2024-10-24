@@ -19,39 +19,39 @@
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:jaxws="http://cxf.apache.org/jaxws"
-  xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:jaxws="http://cxf.apache.org/jaxws"
+		xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
   http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
   http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd"
-  profile="rhs-samtyckestjanst-stub">
+		profile="rhs-samtyckestjanst-stub">
 
-  <jaxws:endpoint
-      address="/stubs/informationsecurity/authorization/consent/CheckConsent/2/rivtabp21"
-      implementor="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.CheckConsentStub"/>
+	<jaxws:endpoint
+			address="/stubs/informationsecurity/authorization/consent/CheckConsent/2/rivtabp21"
+			implementor="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.CheckConsentStub"/>
 
-  <jaxws:endpoint
-      address="/stubs/informationsecurity/authorization/consent/RegisterExtendedConsent/2/rivtabp21"
-      implementor="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.RegisterExtendedConsentStub"/>
+	<jaxws:endpoint
+			address="/stubs/informationsecurity/authorization/consent/RegisterExtendedConsent/2/rivtabp21"
+			implementor="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.RegisterExtendedConsentStub"/>
 
-  <bean id="samtyckestjanstStubRestApi" class="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstStubRestApi"/>
+	<bean id="samtyckestjanstStubRestApi" class="se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstStubRestApi"/>
 
-  <jaxrs:server address="/api/stub/samtyckestjanst-api">
-    <jaxrs:serviceBeans>
-      <ref bean="samtyckestjanstStubRestApi"/>
-    </jaxrs:serviceBeans>
-    <jaxrs:providers>
-      <ref bean="customJacksonJsonProvider"/>
-    </jaxrs:providers>
-    <jaxrs:extensionMappings>
-      <entry key="json" value="application/json"/>
-    </jaxrs:extensionMappings>
-  </jaxrs:server>
+	<jaxrs:server address="/api/stub/samtyckestjanst-api">
+		<jaxrs:serviceBeans>
+			<ref bean="samtyckestjanstStubRestApi"/>
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<ref bean="customJacksonJsonProvider"/>
+		</jaxrs:providers>
+		<jaxrs:extensionMappings>
+			<entry key="json" value="application/json"/>
+		</jaxrs:extensionMappings>
+	</jaxrs:server>
 
-  <bean id="customJacksonJsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
-    <property name="mapper">
-      <bean class="se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper"/>
-    </property>
-  </bean>
+	<bean id="customJacksonJsonProvider" class="com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider">
+		<property name="mapper">
+			<bean class="se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper"/>
+		</property>
+	</bean>
 </beans>

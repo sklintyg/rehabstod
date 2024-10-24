@@ -18,29 +18,52 @@
  */
 package se.inera.intyg.rehabstod.auth.fake;
 
+import java.io.Serial;
+import java.util.Collections;
+import java.util.Objects;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import se.inera.intyg.rehabstod.auth.RehabstodUser;
 
-/**
- * @author andreaskaltenbach
- */
 public class FakeAuthenticationToken extends AbstractAuthenticationToken {
 
-    private static final long serialVersionUID = 6816599869136456844L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    private FakeCredentials fakeCredentials;
+    private final RehabstodUser rehabstodUser;
 
-    public FakeAuthenticationToken(FakeCredentials fakeCredentials) {
-        super(null);
-        this.fakeCredentials = fakeCredentials;
+    public FakeAuthenticationToken(RehabstodUser rehabstodUser) {
+        super(Collections.emptyList());
+        this.rehabstodUser = rehabstodUser;
+        setAuthenticated(true);
     }
 
     @Override
     public Object getCredentials() {
-        return fakeCredentials;
+        return rehabstodUser.getPersonId();
     }
 
     @Override
     public Object getPrincipal() {
-        return null;
+        return rehabstodUser;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        final var that = (FakeAuthenticationToken) o;
+        return Objects.equals(rehabstodUser, that.rehabstodUser);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), rehabstodUser);
     }
 }

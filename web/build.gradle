@@ -9,7 +9,7 @@ gretty {
     def useInternalHttpPort = 8130 + (instance as Integer)
     def applicationDir = "${rootProject.projectDir}/devops/dev"
 
-    servletContainer = 'tomcat9'
+    servletContainer = 'tomcat10'
     contextPath = '/'
 
     integrationTestTask = null
@@ -23,7 +23,7 @@ gretty {
     serverConfigFile = "tomcat-gretty.xml"
 
     jvmArgs = ["-Dcatalina.base=${buildDirectory}/catalina.base",
-               "-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-srs-stub,caching-enabled,rhs-security-test,ia-stub",
+               "-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-srs-stub,caching-enabled,rhs-security-test,ia-stub,testability",
                "-Dlogback.file=${applicationDir}/config/logback-dev.xml",
                "-Djava.awt.headless=true",
                "-Dfile.encoding=UTF-8",
@@ -32,20 +32,13 @@ gretty {
                "-Ddev.http.port=${useHttpPort}",
                "-Ddev.http.port.internal=${useInternalHttpPort}"
     ]
-
-    dependencies {
-        gretty "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
-        gretty "org.eclipse.jetty:apache-jstl"
-        gretty "se.inera.intyg.refdata:refdata:${refDataVersion}"
-    }
 }
 
 test {
-    environment "catalina.base",  "${buildDirectory}/catalina.base"
+    environment "catalina.base", "${buildDirectory}/catalina.base"
 }
 
 war.rootSpec.exclude "logback.xml"
-war.dependsOn createVersionPropertyFile
 
 dependencies {
     implementation project(":rehabstod-common")
@@ -67,7 +60,6 @@ dependencies {
     implementation "se.inera.intyg.infra:driftbanner-dto:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:dynamiclink:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:hsa-integration-api:${intygInfraVersion}"
-    implementation "se.inera.intyg.infra:hsatk-integration:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:ia-integration:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:log-messages:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
@@ -78,9 +70,8 @@ dependencies {
     implementation "se.inera.intyg.infra:security-siths:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
 
-    implementation "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
+    implementation "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider"
     implementation "com.google.guava:guava:${googleGuavaVersion}"
-    implementation "com.itextpdf:itext7-core:${itext7Version}"
     implementation "io.prometheus:simpleclient_servlet"
     implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
     implementation "jakarta.ws.rs:jakarta.ws.rs-api"
@@ -89,11 +80,11 @@ dependencies {
     implementation "org.apache.cxf:cxf-rt-features-logging:${cxfVersion}"
     implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
     implementation "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
-    implementation "org.apache.httpcomponents:httpclient"
+    implementation "org.apache.httpcomponents.client5:httpclient5"
     implementation "org.apache.poi:poi-ooxml:${poiVersion}"
-    implementation "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:${jaxb2Version}"
+    implementation "codes.rafael.jaxb2_commons:jaxb2-basics:${jaxb2Version}"
     implementation "org.springframework.data:spring-data-jpa"
-    implementation "org.springframework.security.extensions:spring-security-saml2-core:${springSecurityExtensionsVersion}"
+    implementation 'org.springframework.security:spring-security-saml2-service-provider'
     implementation "org.springframework.security:spring-security-config"
     implementation "org.springframework.security:spring-security-web"
     implementation "org.springframework.session:spring-session-data-redis"
@@ -102,8 +93,6 @@ dependencies {
 
     compileOnly "jakarta.jms:jakarta.jms-api"
     compileOnly "jakarta.persistence:jakarta.persistence-api"
-    compileOnly "jakarta.servlet:jakarta.servlet-api"
-    compileOnly "jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api"
     compileOnly 'org.projectlombok:lombok'
 
     testCompileOnly "jakarta.persistence:jakarta.persistence-api"
@@ -116,5 +105,6 @@ dependencies {
     runtimeOnly "se.inera.intyg.infra:hsa-integration-intyg-proxy-service:${intygInfraVersion}"
 
     testImplementation "org.springframework:spring-test"
-    testImplementation "org.testng:testng:${testngVersion}"
+
+    testRuntimeOnly "jakarta.servlet:jakarta.servlet-api"
 }

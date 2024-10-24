@@ -36,10 +36,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetConfigResponse;
 @RequestMapping("/api/config")
 public class ConfigController {
 
-    protected static final String WEBCERT_VIEW_INTYG_URL_TEMPLATE = "webcert.view.urltemplate";
-    protected static final String WEBCERT_VIEW_INTYG_URL_LOGOUT = "webcert.view.urllogout";
     protected static final String WEBCERT_LAUNCH_URL_TEMPLATE = "webcert.launch.url.template";
-    protected static final String STATISTIK_SSO_URL = "statistik.sso.url";
     protected static final String PROJECT_VERSION_PROPERTY = "project.version";
     protected static final String SITHS_IDP_URL = "siths.idp.url";
 
@@ -64,11 +61,8 @@ public class ConfigController {
 
         GetConfigResponse configResponse = new GetConfigResponse();
         configResponse.setDiagnosKapitelList(diagnosKapitelService.getDiagnosKapitelList());
-        configResponse.setWebcertViewIntygTemplateUrl(env.getProperty(WEBCERT_VIEW_INTYG_URL_TEMPLATE));
-        configResponse.setWebcertViewIntygLogoutUrl(env.getProperty(WEBCERT_VIEW_INTYG_URL_LOGOUT));
         configResponse.setWebcertLaunchUrlTemplate(env.getProperty(WEBCERT_LAUNCH_URL_TEMPLATE));
         configResponse.setSithsIdpUrl(env.getProperty(SITHS_IDP_URL));
-        configResponse.setStatistikSsoUrl(env.getProperty(STATISTIK_SSO_URL));
         configResponse.setVersion(env.getProperty(PROJECT_VERSION_PROPERTY));
         configResponse.setBanners(iaBannerService.getCurrentBanners());
 
