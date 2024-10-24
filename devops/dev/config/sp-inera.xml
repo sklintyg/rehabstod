@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://rs.localtest.me/saml2/service-provider-metadata/siths">
+<md:EntityDescriptor ID="https___rs_localtest_me" entityID="https://rs.localtest.me/saml2/service-provider-metadata/siths" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata">
 	<md:SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
 		<md:KeyDescriptor use="signing">
 			<ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
