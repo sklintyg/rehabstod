@@ -179,7 +179,7 @@ public class WebSecurityConfig {
 
     @Bean
     public DefaultCookieSerializer cookieSerializer() {
-        return new IneraCookieSerializer(true);
+        return new IneraCookieSerializer();
     }
 
     private OpenSaml4AuthenticationProvider getOpenSaml4AuthenticationProvider() {

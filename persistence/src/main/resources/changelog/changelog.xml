@@ -25,7 +25,7 @@
 		logicalFilePath="classpath:changelog/changelog.xml">
 
 	<changeSet id="1" author="el">
-		<validCheckSum>8:8:e5aca87c599fa4c71ad7ad4346e89895</validCheckSum>
+		<validCheckSum>8:e5aca87c599fa4c71ad7ad4346e89895</validCheckSum>
 		<createTable tableName="ANVANDARE_PREFERENCE">
 			<column name="INTERNREFERENS" type="bigint" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false"/>
