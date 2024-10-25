@@ -31,12 +31,4 @@
 		<servlet-name>metrics</servlet-name>
 		<url-pattern>/metrics</url-pattern>
 	</servlet-mapping>
-
-	<!-- Listener for external logback configuration file -->
-	<listener>
-		<listener-class>se.inera.intyg.rehabstod.config.logback.LogbackConfiguratorContextListener</listener-class>
-	</listener>
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-</web-app> 
+</web-app>

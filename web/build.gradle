@@ -48,6 +48,7 @@ dependencies {
     implementation project(":rehabstod-sparrtjanst-integration")
     implementation project(":rehabstod-srs-integration")
     implementation project(":rehabstod-wc-integration")
+    implementation project(":rehabstod-logging")
 
     implementation "se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:${intygHealthcondRehabilitationSchemasVersion}"
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
