@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.inera.intyg.rehabstod.logging.MdcHelper.LOG_SESSION_ID_HEADER;
 import static se.inera.intyg.rehabstod.logging.MdcHelper.LOG_TRACE_ID_HEADER;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -25,10 +25,11 @@ class MdcHelperTest {
     class SessionId {
 
         @Test
-        void shouldReturnTraceIdFromHeader() {
+        void shouldReturnSessionIdFromCookie() {
             final var expectedValue = "sessionId";
             final var httpServletRequest = mock(HttpServletRequest.class);
-            when(httpServletRequest.getHeader(LOG_SESSION_ID_HEADER)).thenReturn(expectedValue);
+            when(httpServletRequest.getCookies()).thenReturn(
+                new Cookie[]{new Cookie("SESSION", expectedValue)});
             final var result = mdcHelper.sessionId(httpServletRequest);
             assertEquals(expectedValue, result);
         }
