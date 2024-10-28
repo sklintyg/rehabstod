@@ -1,5 +1,6 @@
 dependencies {
     implementation project(":rehabstod-common")
+    implementation project(":rehabstod-logging")
 
     implementation "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider"
     implementation "com.google.guava:guava:${googleGuavaVersion}"

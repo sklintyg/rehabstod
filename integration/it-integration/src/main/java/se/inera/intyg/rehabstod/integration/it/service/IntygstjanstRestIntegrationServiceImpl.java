@@ -72,6 +72,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-diagnosed-certificates-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(String personId, List<String> certificateTypes,
         List<String> units) {
         return getDiagnosedCertificatesForPerson(personId, certificateTypes, null, null, units);
@@ -90,6 +91,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-sick-leave-certificates-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes,
         List<String> units) {
         return getSickLeaveCertificatesForPerson(personId, certificateTypes, null, null, units);
