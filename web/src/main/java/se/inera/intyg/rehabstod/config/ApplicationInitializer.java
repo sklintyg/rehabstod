@@ -142,7 +142,8 @@ public class ApplicationInitializer implements WebApplicationInitializer {
             DelegatingFilterProxy.class);
         unitSelectedAssuranceFilter.setInitParameter("targetFilterLifecycle", "true");
         unitSelectedAssuranceFilter.addMappingForUrlPatterns(null, false, "/api/*");
-        unitSelectedAssuranceFilter.setInitParameter("ignoredUrls", "/api/config,/api/user,/api/user/andraenhet");
+        unitSelectedAssuranceFilter.setInitParameter("ignoredUrls",
+            SESSION_STATUS_CHECK_URI + ",/api/config,/api/user,/api/user/andraenhet");
 
         // pdlConsentGiven filter
         FilterRegistration.Dynamic pdlConsentGivenAssuranceFilter = servletContext.addFilter("pdlConsentGivenAssuranceFilter",
