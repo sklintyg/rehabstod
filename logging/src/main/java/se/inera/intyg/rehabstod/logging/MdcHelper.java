@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 public class MdcHelper {
 
     public static final String LOG_TRACE_ID_HEADER = "x-trace-id";
+    public static final String LOG_SESSION_ID_HEADER = "x-session-id";
     private static final String SESSION_COOKIE_NAME = "SESSION";
     private static final int LENGTH_LIMIT = 8;
     private static final char[] BASE62CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
