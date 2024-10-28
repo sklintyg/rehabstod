@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.infra.dynamiclink.model.DynamicLink;
 import se.inera.intyg.infra.dynamiclink.service.DynamicLinkService;
 import se.inera.intyg.infra.integration.ia.services.IABannerService;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosKapitelService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetConfigResponse;
 
@@ -57,6 +59,7 @@ public class ConfigController {
     private Environment env;
 
     @RequestMapping(value = "")
+    @PerformanceLogging(eventAction = "get-configuration", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public GetConfigResponse getConfig() {
 
         GetConfigResponse configResponse = new GetConfigResponse();
@@ -70,6 +73,7 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "/links", produces = "application/json")
+    @PerformanceLogging(eventAction = "get-dynamic-links", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public Map<String, DynamicLink> getDynamicLinks() {
         return dynamicLinkService.getAllAsMap();
     }

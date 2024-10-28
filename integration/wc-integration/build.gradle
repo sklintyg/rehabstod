@@ -1,5 +1,6 @@
 dependencies {
     implementation project(":rehabstod-common")
+    implementation project(":rehabstod-logging")
 
     implementation "com.fasterxml.jackson.core:jackson-databind"
     implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"

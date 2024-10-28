@@ -28,6 +28,8 @@ import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesfo
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonType;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
@@ -53,6 +55,7 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
 
     @Override
     @PrometheusTimeMethod
+    @PerformanceLogging(eventAction = "get-sick-leave-for-patient", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public ListSickLeavesForPersonResponseType getAllSjukfallForPatient(String patientId) {
         PersonId pId = new PersonId();
         pId.setExtension(patientId);
@@ -65,6 +68,7 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
 
     @Override
     @PrometheusTimeMethod
+    @PerformanceLogging(eventAction = "ping-for-configuration", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public PingForConfigurationResponseType pingForConfiguration() {
         PingForConfigurationType reqType = new PingForConfigurationType();
         reqType.setLogicalAddress(logicalAddress);

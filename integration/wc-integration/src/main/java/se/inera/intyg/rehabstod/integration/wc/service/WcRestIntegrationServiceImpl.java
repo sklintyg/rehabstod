@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 
 @Service
 public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
@@ -43,6 +45,7 @@ public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-unanswered-communication-for-patients", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public UnansweredCommunicationResponse getUnansweredCommunicationForPatients(UnansweredCommunicationRequest request) {
         final var url = wcUrl + "/internalapi/unanswered-communication";
 

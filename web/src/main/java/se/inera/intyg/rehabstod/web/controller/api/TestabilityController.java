@@ -33,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.integration.it.dto.CreateSickLeaveRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.service.sjukfall.testability.TestabilityService;
 import se.inera.intyg.rehabstod.service.testability.FakeLoginService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.FakeLoginDTO;
@@ -49,36 +51,43 @@ public class TestabilityController {
     private final FakeLoginService fakeLoginService;
 
     @PostMapping(value = "/createDefault")
+    @PerformanceLogging(eventAction = "testability-create-default-test-data", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
     public TestabilityResponseDTO createDefaultTestData() {
         return new TestabilityResponseDTO(testabilityService.getDefaultTestData());
     }
 
     @PostMapping(value = "/createSickLeave", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "testability-create-sick-leave", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
     public TestabilityResponseDTO createSickLeave(@RequestBody CreateSickLeaveRequestDTO request) {
         return new TestabilityResponseDTO(testabilityService.createSickleave(request));
     }
 
     @GetMapping(value = "/testDataOptions")
+    @PerformanceLogging(eventAction = "testability-get-test-data-options", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public TestDataOptionsDTO getTestDataOptions() {
         return testabilityService.getTestDataOptions();
     }
 
     @PostMapping(value = "/fake")
+    @PerformanceLogging(eventAction = "testability-login", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public void login(@RequestBody FakeLoginDTO fakeLoginDTO, final HttpServletRequest request) {
         fakeLoginService.login(fakeLoginDTO.getHsaId(), fakeLoginDTO.getEnhetId(), request);
     }
 
     @PostMapping("/logout")
+    @PerformanceLogging(eventAction = "testability-logout", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public void logout(HttpServletRequest request) {
         fakeLoginService.logout(request.getSession(false));
     }
 
     @RequestMapping(value = "/commissions", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "testability-get-commissions", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public String commissions() {
         return readFile("testability/commissions.json");
     }
 
     @RequestMapping(value = "/persons", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "testability-get-persons", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public String persons() {
         return readFile("/testability/persons.json");
     }

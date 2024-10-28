@@ -42,6 +42,8 @@ import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.authorities.AuthoritiesConstants;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.SjukfallService;
@@ -81,6 +83,7 @@ public class SjukfallController {
     }
 
     @PostMapping(value = "/patient", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "get-sick-leave-for-patient", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public ResponseEntity<SjukfallPatientResponse> getSjukfallForPatient(@RequestBody GetSjukfallForPatientRequest request) {
 
         // Get user from session
@@ -123,6 +126,7 @@ public class SjukfallController {
      */
     @PostMapping(value = "/patient/addVardgivare", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "add-care-provider-to-patient-view", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
     public ResponseEntity<Collection<String>> addVgToPatientView(@RequestBody AddVgToPatientViewRequest request) {
         // Get logged in user
         RehabstodUser user = userService.getUser();
@@ -147,6 +151,7 @@ public class SjukfallController {
      */
     @PostMapping(value = "/patient/addVardenhet", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "add-care-unit-to-patient-view", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
     public ResponseEntity<Collection<String>> addVeToPatientView(@RequestBody AddVeToPatientViewRequest request) {
         // Get logged in user
         RehabstodUser user = userService.getUser();

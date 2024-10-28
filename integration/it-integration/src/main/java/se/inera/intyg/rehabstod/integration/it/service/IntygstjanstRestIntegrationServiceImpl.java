@@ -39,6 +39,8 @@ import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 
 @Profile("!rhs-it-stub")
 @Service
@@ -57,6 +59,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-diagnosed-certificates-for-care-unit", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(List<String> units, List<String> certificateTypes,
         LocalDate fromDate, LocalDate toDate, List<String> doctorIds) {
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/diagnosed/unit";
@@ -75,6 +78,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-diagnosed-certificates-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate, List<String> units) {
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/diagnosed/person";
@@ -92,6 +96,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-sick-leave-certificates-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate, List<String> units) {
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/sickleave/person";
@@ -103,6 +108,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-signing-doctors-for-unit", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<String> getSigningDoctorsForUnit(List<String> units, List<String> certificateTypes) {
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/doctors";
         TypedCertificateRequest requestObject = getTypedCertificateRequest(units, certificateTypes, null, null, null);
@@ -113,6 +119,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-active-sick-leaves", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public SickLeavesResponseDTO getActiveSickLeaves(SickLeavesRequestDTO request) {
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/sickleave/active";
 
@@ -122,6 +129,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     }
 
     @Override
+    @PerformanceLogging(eventAction = "create-reko-status", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
     public RekoStatusDTO createRekoStatus(CreateRekoStatusRequestDTO request) {
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/reko";
 
@@ -131,6 +139,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-reko-status", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public RekoStatusDTO getRekoStatus(GetRekoStatusRequestDTO request) {
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/reko/patient";
 
@@ -140,6 +149,7 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-populated-filers-for-active-sick-leaves", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request) {
         final String url = intygstjanstUrl + "/inera-certificate/internalapi/sickleave/filters";
 
