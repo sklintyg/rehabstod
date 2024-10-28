@@ -1,6 +1,7 @@
 dependencies {
     implementation project(":rehabstod-common")
     implementation project(":rehabstod-wc-integration")
+    implementation project(":rehabstod-logging")
 
     implementation "com.fasterxml.jackson.core:jackson-databind"
     implementation "com.google.guava:guava:${googleGuavaVersion}"

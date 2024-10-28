@@ -35,6 +35,8 @@ import se.inera.intyg.infra.logmessages.ActivityType;
 import se.inera.intyg.infra.logmessages.ResourceType;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.service.pdl.LogService;
 import se.inera.intyg.rehabstod.service.sjukfall.ConsentService;
 import se.inera.intyg.rehabstod.service.user.UserService;
@@ -65,6 +67,7 @@ public class ConsentController {
     @RequestMapping(value = "", method = RequestMethod.POST,
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "register-consent-for-patient", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
     public RegisterExtendedConsentResponse registerConsent(@RequestBody RegisterExtendedConsentRequest request) {
 
         RegisterExtendedConsentResponse response;

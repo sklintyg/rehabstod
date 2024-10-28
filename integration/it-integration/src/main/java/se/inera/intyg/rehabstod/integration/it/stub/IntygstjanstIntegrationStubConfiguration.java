@@ -37,9 +37,6 @@ public class IntygstjanstIntegrationStubConfiguration {
     private ApplicationContext applicationContext;
 
     @Autowired
-    private ListActiveSickLeavesForCareUnitStub listActiveSickLeavesForCareUnitStub;
-
-    @Autowired
     private ListSickLeavesForPersonStub listSickLeavesForPersonStub;
 
     @Autowired
@@ -48,14 +45,6 @@ public class IntygstjanstIntegrationStubConfiguration {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
-    }
-
-    @Bean
-    public EndpointImpl listActiveSickLeavesForCareUnitResponder() {
-        Object implementor = listActiveSickLeavesForCareUnitStub;
-        EndpointImpl endpoint = new EndpointImpl(bus, implementor);
-        endpoint.publish("/get-active-sickleaves-for-careunit/v1.0");
-        return endpoint;
     }
 
     @Bean

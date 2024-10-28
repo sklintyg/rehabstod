@@ -19,35 +19,60 @@
 
 package se.inera.intyg.rehabstod.integration.wc.service;
 
+import static se.inera.intyg.rehabstod.logging.MdcHelper.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.rehabstod.logging.MdcHelper.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.rehabstod.logging.MdcLogConstants.EVENT_TYPE_ACCESSED;
+import static se.inera.intyg.rehabstod.logging.MdcLogConstants.SESSION_ID_KEY;
+import static se.inera.intyg.rehabstod.logging.MdcLogConstants.TRACE_ID_KEY;
+
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 
 @Service
+@RequiredArgsConstructor
 public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
-
-
-    @Value("${webcert.internal.host.url}")
-    private String wcUrl;
 
     private static final Logger LOG = LoggerFactory.getLogger(WcRestIntegrationServiceImpl.class);
 
-    private final RestTemplate restTemplate;
+    private final RestClient wcRestClient;
 
-    public WcRestIntegrationServiceImpl(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+    @Value("${integration.webcert.scheme}")
+    private String scheme;
+    @Value("${integration.webcert.baseurl}")
+    private String baseUrl;
+    @Value("${integration.webcert.port}")
+    private int port;
 
     @Override
+    @PerformanceLogging(eventAction = "get-unanswered-communication-for-patients", eventType = EVENT_TYPE_ACCESSED)
     public UnansweredCommunicationResponse getUnansweredCommunicationForPatients(UnansweredCommunicationRequest request) {
-        final var url = wcUrl + "/internalapi/unanswered-communication";
+        final var url = "/internalapi/unanswered-communication";
 
         try {
-            return restTemplate.postForObject(url, request, UnansweredCommunicationResponse.class);
+            return wcRestClient
+                .post()
+                .uri(uriBuilder -> uriBuilder
+                    .scheme(scheme)
+                    .host(baseUrl)
+                    .port(port)
+                    .path(url)
+                    .build()
+                )
+                .body(request)
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .contentType(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(UnansweredCommunicationResponse.class);
         } catch (Exception e) {
             LOG.error("Error getting unanswered communication from Webcert", e);
             return new UnansweredCommunicationResponse(null, true);

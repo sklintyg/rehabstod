@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.infra.security.filter.SessionTimeoutFilter;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetSessionStatusResponse;
 
 /**
@@ -53,6 +55,7 @@ public class SessionStatusController {
     public static final String SESSION_STATUS_CHECK_URI = SESSION_STATUS_REQUEST_MAPPING + SESSION_STATUS_PING;
 
     @RequestMapping(value = SessionStatusController.SESSION_STATUS_PING, method = RequestMethod.GET)
+    @PerformanceLogging(eventAction = "get-session-status", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public GetSessionStatusResponse getSessionStatus(HttpServletRequest request) {
         return createStatusResponse(request);
     }

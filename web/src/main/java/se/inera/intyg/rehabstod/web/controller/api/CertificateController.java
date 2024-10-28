@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.service.certificate.CertificateService;
 import se.inera.intyg.rehabstod.service.sjukfall.util.PatientIdEncryption;
 import se.inera.intyg.rehabstod.web.controller.api.dto.GetAGCertificatesForPersonRequest;
@@ -55,6 +57,7 @@ public class CertificateController {
     }
 
     @RequestMapping(value = "/lu/unit", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "get-lu-for-care-unit", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public ResponseEntity<GetLUCertificatesForCareUnitResponse> getLUForCareUnit(@RequestBody GetLUCertificatesForCareUnitRequest request) {
         LOG.info("Getting LU certificates for care unit");
 
@@ -64,6 +67,7 @@ public class CertificateController {
     }
 
     @RequestMapping(value = "/lu/person", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "get-lu-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public ResponseEntity<GetLUCertificatesForPersonResponse> getLUForPerson(@RequestBody GetLUCertificatesForPersonRequest request) {
         LOG.info("Getting LU certificates for person");
 
@@ -76,6 +80,7 @@ public class CertificateController {
     }
 
     @RequestMapping(value = "/lu/doctors", method = RequestMethod.GET)
+    @PerformanceLogging(eventAction = "get-doctors-for-unit", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public ResponseEntity<GetDoctorsForUnitResponse> getDoctorsForUnit() {
         LOG.info("Getting LU signing doctors for unit");
 
@@ -85,6 +90,7 @@ public class CertificateController {
     }
 
     @RequestMapping(value = "/ag/person", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "get-ag-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public ResponseEntity<GetAGCertificatesForPersonResponse> getAGForPerson(@RequestBody GetAGCertificatesForPersonRequest request) {
         LOG.info("Getting AG certificates for person");
 

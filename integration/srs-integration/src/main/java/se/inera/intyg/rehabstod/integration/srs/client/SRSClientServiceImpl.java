@@ -31,6 +31,8 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertifi
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
@@ -55,6 +57,7 @@ public class SRSClientServiceImpl implements SRSClientService {
     private String logicalAddress;
 
     @Override
+    @PerformanceLogging(eventAction = "ping-for-configuration", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public PingForConfigurationResponseType pingForConfiguration() {
         PingForConfigurationType reqType = new PingForConfigurationType();
         reqType.setLogicalAddress(logicalAddress);
@@ -62,6 +65,7 @@ public class SRSClientServiceImpl implements SRSClientService {
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-risk-prediction-for-certificate", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<RiskPrediktion> getRiskPrediktionForCertificate(List<String> intygsId) {
 
         GetRiskPredictionForCertificateRequestType reqType = new GetRiskPredictionForCertificateRequestType();
@@ -71,6 +75,7 @@ public class SRSClientServiceImpl implements SRSClientService {
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-diagnosis-list", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<Diagnos> getDiagnosisList() {
         GetDiagnosisCodesRequestType reqType = new GetDiagnosisCodesRequestType();
         GetDiagnosisCodesResponseType response = getDiagnosisCodesService.getDiagnosisCodes(reqType);

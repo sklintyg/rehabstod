@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.service.filter.PopulateFiltersService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetActiveSickLeavesResponseService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetSickLeaveSummaryService;
@@ -52,6 +54,7 @@ public class SickLeaveController {
     private static final boolean SHOULD_PDL_LOG = true;
 
     @RequestMapping(value = "/active", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "get-sick-leaves-for-unit", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public SickLeavesResponseDTO getSickLeavesForUnit(@RequestBody SickLeavesFilterRequestDTO request) {
         final var response = getActiveSickLeavesResponseService.get(request, INCLUDE_PARAMETERS, SHOULD_PDL_LOG);
         return new SickLeavesResponseDTO(
@@ -62,6 +65,7 @@ public class SickLeaveController {
     }
 
     @RequestMapping(value = "/filters", method = RequestMethod.GET)
+    @PerformanceLogging(eventAction = "populate-sick-leave-filters", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
     public PopulateFiltersResponseDTO populateFilters() {
         final var response = populateFiltersService.populateSickLeaveFilters();
         return new PopulateFiltersResponseDTO(
@@ -78,11 +82,13 @@ public class SickLeaveController {
     }
 
     @RequestMapping(value = "/summary", method = RequestMethod.GET)
+    @PerformanceLogging(eventAction = "get-sick-leaves-summary", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public SickLeaveSummary getSummary() {
         return getSickLeaveSummaryService.get();
     }
 
     @PostMapping(value = "/print", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "print-sick-leaves", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public void print(@RequestBody SickLeavePrintRequestDTO sickLeavesPrintRequest) {
         pdlLogSickLeavesService.logPrint(sickLeavesPrintRequest.getSickLeaves());
     }

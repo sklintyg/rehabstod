@@ -18,11 +18,14 @@
  */
 package se.inera.intyg.rehabstod.service.monitoring;
 
+import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.infra.monitoring.logging.LogMarkers;
+import se.inera.intyg.rehabstod.logging.MdcCloseableMap;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 
 @Service("webMonitoringLogService")
 public class MonitoringLogServiceImpl implements MonitoringLogService {
@@ -33,38 +36,85 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
     @Override
     @PrometheusTimeMethod
     public void logUserLogin(String userHsaId, String role, String roleTypeName, String authenticationScheme, String origin) {
-        // Origin is not interesting for Rehabstod so we ignore it
-        logEvent(MonitoringEvent.USER_LOGIN, userHsaId, role, roleTypeName, authenticationScheme);
+        try (MdcCloseableMap mdc =
+            MdcCloseableMap.builder()
+                .put(MdcLogConstants.EVENT_TYPE, toEventType(MonitoringEvent.USER_LOGIN))
+                .put(MdcLogConstants.USER_ID, userHsaId)
+                .put(MdcLogConstants.USER_ROLES, Arrays.toString(new String[]{role}))
+                .put(MdcLogConstants.EVENT_AUTHENTICATION_SCHEME, authenticationScheme)
+                .build()
+        ) {
+            logEvent(MonitoringEvent.USER_LOGIN, userHsaId, role, roleTypeName, authenticationScheme);
+        }
     }
 
     @Override
     @PrometheusTimeMethod
     public void logUserLogout(String userHsaId, String authenticationScheme) {
-        logEvent(MonitoringEvent.USER_LOGOUT, userHsaId, authenticationScheme);
+        try (MdcCloseableMap mdc =
+            MdcCloseableMap.builder()
+                .put(MdcLogConstants.EVENT_TYPE, toEventType(MonitoringEvent.USER_LOGOUT))
+                .put(MdcLogConstants.USER_ID, userHsaId)
+                .put(MdcLogConstants.EVENT_AUTHENTICATION_SCHEME, authenticationScheme)
+                .build()
+        ) {
+            logEvent(MonitoringEvent.USER_LOGOUT, userHsaId, authenticationScheme);
+        }
     }
 
     @Override
     @PrometheusTimeMethod
     public void logUserSessionExpired(String userHsaId, String authScheme) {
-        logEvent(MonitoringEvent.USER_SESSION_EXPIRY, userHsaId, authScheme);
+        try (MdcCloseableMap mdc =
+            MdcCloseableMap.builder()
+                .put(MdcLogConstants.EVENT_TYPE, toEventType(MonitoringEvent.USER_SESSION_EXPIRY))
+                .put(MdcLogConstants.USER_ID, userHsaId)
+                .put(MdcLogConstants.EVENT_AUTHENTICATION_SCHEME, authScheme)
+                .build()
+        ) {
+            logEvent(MonitoringEvent.USER_SESSION_EXPIRY, userHsaId, authScheme);
+        }
     }
 
     @Override
     @PrometheusTimeMethod
     public void logMissingMedarbetarUppdrag(String userHsaId) {
-        logEvent(MonitoringEvent.USER_MISSING_MIU, userHsaId);
+        try (MdcCloseableMap mdc =
+            MdcCloseableMap.builder()
+                .put(MdcLogConstants.EVENT_TYPE, toEventType(MonitoringEvent.USER_MISSING_MIU))
+                .put(MdcLogConstants.USER_ID, userHsaId)
+                .build()
+        ) {
+            logEvent(MonitoringEvent.USER_MISSING_MIU, userHsaId);
+        }
     }
 
     @Override
     @PrometheusTimeMethod
     public void logMissingMedarbetarUppdrag(String userHsaId, String enhetsId) {
-        logEvent(MonitoringEvent.USER_MISSING_MIU_ON_ENHET, userHsaId, enhetsId);
+        try (MdcCloseableMap mdc =
+            MdcCloseableMap.builder()
+                .put(MdcLogConstants.EVENT_TYPE, toEventType(MonitoringEvent.USER_MISSING_MIU_ON_ENHET))
+                .put(MdcLogConstants.USER_ID, userHsaId)
+                .put(MdcLogConstants.ORGANIZATION_ID, enhetsId)
+                .build()
+        ) {
+            logEvent(MonitoringEvent.USER_MISSING_MIU_ON_ENHET, userHsaId, enhetsId);
+        }
     }
 
     @Override
     @PrometheusTimeMethod
     public void logUserViewedSjukfall(String userHsaId, int numberOfSjukfall, String vardEnhet) {
-        logEvent(MonitoringEvent.USER_VIEWED_SJUKFALL, userHsaId, numberOfSjukfall, vardEnhet);
+        try (MdcCloseableMap mdc =
+            MdcCloseableMap.builder()
+                .put(MdcLogConstants.EVENT_TYPE, toEventType(MonitoringEvent.USER_VIEWED_SJUKFALL))
+                .put(MdcLogConstants.USER_ID, userHsaId)
+                .put(MdcLogConstants.ORGANIZATION_ID, vardEnhet)
+                .build()
+        ) {
+            logEvent(MonitoringEvent.USER_VIEWED_SJUKFALL, userHsaId, numberOfSjukfall, vardEnhet);
+        }
     }
 
     @Override
@@ -79,7 +129,17 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
 
     @Override
     public void logClientError(String errorId, String errorCode, String message, String stackTrace) {
-        logEvent(MonitoringEvent.CLIENT_ERROR, errorId, errorCode, message, stackTrace);
+        try (MdcCloseableMap mdc =
+            MdcCloseableMap.builder()
+                .put(MdcLogConstants.EVENT_TYPE, toEventType(MonitoringEvent.CLIENT_ERROR))
+                .put(MdcLogConstants.ERROR_ID, errorId)
+                .put(MdcLogConstants.ERROR_CODE, errorCode)
+                .put(MdcLogConstants.ERROR_MESSAGE, message)
+                .put(MdcLogConstants.ERROR_STACK_TRACE, stackTrace)
+                .build()
+        ) {
+            logEvent(MonitoringEvent.CLIENT_ERROR, errorId, errorCode, message, stackTrace);
+        }
     }
 
     private void logEvent(MonitoringEvent logEvent, Object... logMsgArgs) {
@@ -87,9 +147,13 @@ public class MonitoringLogServiceImpl implements MonitoringLogService {
     }
 
     private String buildMessage(MonitoringEvent logEvent) {
-        StringBuilder logMsg = new StringBuilder();
+        final var logMsg = new StringBuilder();
         logMsg.append(logEvent.name()).append(SPACE).append(logEvent.getMessage());
         return logMsg.toString();
+    }
+
+    private String toEventType(MonitoringEvent monitoringEvent) {
+        return monitoringEvent.name().toLowerCase().replace("_", "-");
     }
 
     private enum MonitoringEvent {

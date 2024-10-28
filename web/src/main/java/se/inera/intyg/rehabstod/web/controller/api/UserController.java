@@ -36,6 +36,8 @@ import se.inera.intyg.rehabstod.auth.RehabstodUnitChangeService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
 import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences.Preference;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.persistence.model.AnvandarPreference;
 import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceRepository;
 import se.inera.intyg.rehabstod.service.user.UserPreferencesService;
@@ -76,6 +78,7 @@ public class UserController {
      * Changes the selected care unit in the security context for the logged in user.
      */
     @RequestMapping(value = "/andraenhet", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "change-selected-unit-on-user", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
     public GetUserResponse changeSelectedUnitOnUser(@RequestBody ChangeSelectedUnitRequest changeSelectedEnhetRequest) {
 
         RehabstodUser user = getRehabstodUser();
@@ -101,6 +104,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/giveconsent", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "give-pdl-logging-consent", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
     public GetUserResponse givePdlLoggingConsent(@RequestBody GivePdlLoggingConsentRequest pdlLoggingConsentRequest) {
 
         RehabstodUser user = getRehabstodUser();
@@ -127,6 +131,7 @@ public class UserController {
 
     @RequestMapping(value = "/preferences", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "update-user-preferences", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
     public Map<String, String> updatePref(@RequestBody Map<String, String> keyValueMap) {
 
         RehabstodUserPreferences newPreferences = RehabstodUserPreferences.fromFrontend(keyValueMap);
@@ -157,6 +162,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/preferences", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "get-user-preferences", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public Map<String, String> getAllPrefs() {
         return userPreferencesService.getAllPreferences().toFrontendMap();
     }

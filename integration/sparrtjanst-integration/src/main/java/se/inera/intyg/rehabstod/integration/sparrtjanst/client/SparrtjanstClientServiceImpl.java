@@ -29,6 +29,8 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.exception.SparrtjanstIntegrationException;
 import se.inera.intyg.rehabstod.integration.sparrtjanst.util.SparrtjanstUtil;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocks.v4.rivtabp21.CheckBlocksResponderInterface;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;
@@ -50,6 +52,7 @@ public class SparrtjanstClientServiceImpl implements SparrtjanstClientService {
     private String logicalAddress;
 
     @Override
+    @PerformanceLogging(eventAction = "get-check-blocks", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public CheckBlocksResponseType getCheckBlocks(String vgHsaId, String veHsaId, String userHsaId, String patientId,
         List<IntygData> intygLista) {
 

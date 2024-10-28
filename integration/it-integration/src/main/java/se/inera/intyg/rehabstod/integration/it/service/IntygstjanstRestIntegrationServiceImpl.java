@@ -18,17 +18,24 @@
  */
 package se.inera.intyg.rehabstod.integration.it.service;
 
+import static se.inera.intyg.rehabstod.logging.MdcHelper.LOG_SESSION_ID_HEADER;
+import static se.inera.intyg.rehabstod.logging.MdcHelper.LOG_TRACE_ID_HEADER;
+import static se.inera.intyg.rehabstod.logging.MdcLogConstants.SESSION_ID_KEY;
+import static se.inera.intyg.rehabstod.logging.MdcLogConstants.TRACE_ID_KEY;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
 import se.inera.intyg.infra.certificate.dto.SickLeaveCertificate;
 import se.inera.intyg.infra.certificate.dto.TypedCertificateRequest;
@@ -39,113 +46,245 @@ import se.inera.intyg.rehabstod.integration.it.dto.PopulateFiltersResponseDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesRequestDTO;
 import se.inera.intyg.rehabstod.integration.it.dto.SickLeavesResponseDTO;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 
 @Profile("!rhs-it-stub")
 @Service
+@RequiredArgsConstructor
 public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestIntegrationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IntygstjanstRestIntegrationServiceImpl.class);
 
-    private final RestTemplate itRestTemplate;
+    private final RestClient itRestClient;
 
-    @Value("${intygstjanst.host.url}")
-    private String intygstjanstUrl;
-
-    @Autowired
-    public IntygstjanstRestIntegrationServiceImpl(RestTemplate itRestTemplate) {
-        this.itRestTemplate = itRestTemplate;
-    }
+    @Value("${integration.intygstjanst.scheme}")
+    private String scheme;
+    @Value("${integration.intygstjanst.baseurl}")
+    private String baseUrl;
+    @Value("${integration.intygstjanst.port}")
+    private int port;
 
     @Override
+    @PerformanceLogging(eventAction = "get-diagnosed-certificates-for-care-unit", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<DiagnosedCertificate> getDiagnosedCertificatesForCareUnit(List<String> units, List<String> certificateTypes,
         LocalDate fromDate, LocalDate toDate, List<String> doctorIds) {
-        final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/diagnosed/unit";
-        TypedCertificateRequest requestObject = getTypedCertificateRequest(units, certificateTypes, fromDate, toDate, null);
+        final var url = "/inera-certificate/internalapi/typedcertificate/diagnosed/unit";
+        final var requestObject = getTypedCertificateRequest(units, certificateTypes, fromDate, toDate, null);
         requestObject.setDoctorIds(doctorIds);
 
         LOGGER.debug("Getting diagnosed certificates for care unit from intygstjansten");
 
-        return buildListResponseFromArray(itRestTemplate.postForObject(url, requestObject, DiagnosedCertificate[].class));
+        return buildListResponseFromArray(
+            itRestClient
+                .post()
+                .uri(uriBuilder -> uriBuilder
+                    .scheme(scheme)
+                    .host(baseUrl)
+                    .port(port)
+                    .path(url)
+                    .build()
+                )
+                .body(requestObject)
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .contentType(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(DiagnosedCertificate[].class)
+        );
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-diagnosed-certificates-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(String personId, List<String> certificateTypes,
         List<String> units) {
         return getDiagnosedCertificatesForPerson(personId, certificateTypes, null, null, units);
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-diagnosed-certificates-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<DiagnosedCertificate> getDiagnosedCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate, List<String> units) {
-        final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/diagnosed/person";
-        TypedCertificateRequest requestObject = getTypedCertificateRequest(units, certificateTypes, fromDate, toDate, personId);
+        final var url = "/inera-certificate/internalapi/typedcertificate/diagnosed/person";
+        final var requestObject = getTypedCertificateRequest(units, certificateTypes, fromDate, toDate, personId);
 
         LOGGER.debug("Getting diagnosed certificates for person from intygstjansten");
 
-        return buildListResponseFromArray(itRestTemplate.postForObject(url, requestObject, DiagnosedCertificate[].class));
+        return buildListResponseFromArray(
+            itRestClient
+                .post()
+                .uri(uriBuilder -> uriBuilder
+                    .scheme(scheme)
+                    .host(baseUrl)
+                    .port(port)
+                    .path(url)
+                    .build()
+                )
+                .body(requestObject)
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .contentType(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(DiagnosedCertificate[].class)
+        );
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-sick-leave-certificates-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes,
         List<String> units) {
         return getSickLeaveCertificatesForPerson(personId, certificateTypes, null, null, units);
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-sick-leave-certificates-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
         LocalDate toDate, List<String> units) {
-        final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/sickleave/person";
-        TypedCertificateRequest requestObject = getTypedCertificateRequest(units, certificateTypes, fromDate, toDate, personId);
+        final var url = "/inera-certificate/internalapi/typedcertificate/sickleave/person";
+        final var requestObject = getTypedCertificateRequest(units, certificateTypes, fromDate, toDate, personId);
 
         LOGGER.debug("Getting sick leave certificates for person from intygstjansten");
 
-        return buildListResponseFromArray(itRestTemplate.postForObject(url, requestObject, SickLeaveCertificate[].class));
+        return buildListResponseFromArray(
+            itRestClient
+                .post()
+                .uri(uriBuilder -> uriBuilder
+                    .scheme(scheme)
+                    .host(baseUrl)
+                    .port(port)
+                    .path(url)
+                    .build()
+                )
+                .body(requestObject)
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .contentType(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(SickLeaveCertificate[].class)
+        );
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-signing-doctors-for-unit", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<String> getSigningDoctorsForUnit(List<String> units, List<String> certificateTypes) {
-        final String url = intygstjanstUrl + "/inera-certificate/internalapi/typedcertificate/doctors";
-        TypedCertificateRequest requestObject = getTypedCertificateRequest(units, certificateTypes, null, null, null);
+        final var url = "/inera-certificate/internalapi/typedcertificate/doctors";
+        final var requestObject = getTypedCertificateRequest(units, certificateTypes, null, null, null);
 
         LOGGER.debug("Getting signing doctors for unit from intygstjansten");
 
-        return buildListResponseFromArray(itRestTemplate.postForObject(url, requestObject, String[].class));
+        return buildListResponseFromArray(
+            itRestClient
+                .post()
+                .uri(uriBuilder -> uriBuilder
+                    .scheme(scheme)
+                    .host(baseUrl)
+                    .port(port)
+                    .path(url)
+                    .build()
+                )
+                .body(requestObject)
+                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+                .contentType(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(String[].class)
+        );
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-active-sick-leaves", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public SickLeavesResponseDTO getActiveSickLeaves(SickLeavesRequestDTO request) {
-        final String url = intygstjanstUrl + "/inera-certificate/internalapi/sickleave/active";
+        final var url = "/inera-certificate/internalapi/sickleave/active";
 
         LOGGER.debug("Getting active sick leaves from Intygstjansten");
 
-        return itRestTemplate.postForObject(url, request, SickLeavesResponseDTO.class);
+        return itRestClient
+            .post()
+            .uri(uriBuilder -> uriBuilder
+                .scheme(scheme)
+                .host(baseUrl)
+                .port(port)
+                .path(url)
+                .build()
+            )
+            .body(request)
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .body(SickLeavesResponseDTO.class);
     }
 
     @Override
+    @PerformanceLogging(eventAction = "create-reko-status", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
     public RekoStatusDTO createRekoStatus(CreateRekoStatusRequestDTO request) {
-        final String url = intygstjanstUrl + "/inera-certificate/internalapi/reko";
+        final var url = "/inera-certificate/internalapi/reko";
 
         LOGGER.debug("Setting reko status to sick leave");
 
-        return itRestTemplate.postForObject(url, request, RekoStatusDTO.class);
+        return itRestClient
+            .post()
+            .uri(uriBuilder -> uriBuilder
+                .scheme(scheme)
+                .host(baseUrl)
+                .port(port)
+                .path(url)
+                .build()
+            )
+            .body(request)
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .body(RekoStatusDTO.class);
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-reko-status", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public RekoStatusDTO getRekoStatus(GetRekoStatusRequestDTO request) {
-        final String url = intygstjanstUrl + "/inera-certificate/internalapi/reko/patient";
+        final var url = "/inera-certificate/internalapi/reko/patient";
 
         LOGGER.debug("Getting reko status for patient");
 
-        return itRestTemplate.postForObject(url, request, RekoStatusDTO.class);
+        return itRestClient
+            .post()
+            .uri(uriBuilder -> uriBuilder
+                .scheme(scheme)
+                .host(baseUrl)
+                .port(port)
+                .path(url)
+                .build()
+            )
+            .body(request)
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .body(RekoStatusDTO.class);
     }
 
     @Override
+    @PerformanceLogging(eventAction = "get-populated-filers-for-active-sick-leaves", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public PopulateFiltersResponseDTO getPopulatedFiltersForActiveSickLeaves(PopulateFiltersRequestDTO request) {
-        final String url = intygstjanstUrl + "/inera-certificate/internalapi/sickleave/filters";
+        final var url = "/inera-certificate/internalapi/sickleave/filters";
 
         LOGGER.debug("Getting doctors with active sick leaves from Intygstjansten");
 
-        return itRestTemplate.postForObject(url, request, PopulateFiltersResponseDTO.class);
+        return itRestClient
+            .post()
+            .uri(uriBuilder -> uriBuilder
+                .scheme(scheme)
+                .host(baseUrl)
+                .port(port)
+                .path(url)
+                .build()
+            )
+            .body(request)
+            .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+            .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+            .contentType(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .body(PopulateFiltersResponseDTO.class);
     }
 
     private <E> List<E> buildListResponseFromArray(E[] array) {

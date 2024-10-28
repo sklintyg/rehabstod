@@ -28,6 +28,8 @@ import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateaddit
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsResponseType;
 import se.inera.intyg.clinicalprocess.healthcond.certificate.getcertificateadditions.v1.GetCertificateAdditionsType;
 import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 
 /**
  * Created by marced 2019-05-17.
@@ -43,6 +45,7 @@ public class WcClientServiceImpl implements WcClientService {
 
     @Override
     @PrometheusTimeMethod
+    @PerformanceLogging(eventAction = "get-certificate-additions", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public GetCertificateAdditionsResponseType getCertificateAdditions(List<String> intygsIdn) {
         GetCertificateAdditionsType parameters = new GetCertificateAdditionsType();
         // convert to JAXB params

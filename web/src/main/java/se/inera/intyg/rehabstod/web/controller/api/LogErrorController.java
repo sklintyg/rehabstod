@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.service.monitoring.error.ErrorLogService;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ErrorDataDTO;
 
@@ -43,6 +45,7 @@ public class LogErrorController {
     }
 
     @RequestMapping(value = "/error", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "log-error", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
     public Response logError(@RequestBody @NotNull ErrorDataDTO errorDataDTO) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Logging error with id: '{}'", errorDataDTO.getErrorData().getErrorId());

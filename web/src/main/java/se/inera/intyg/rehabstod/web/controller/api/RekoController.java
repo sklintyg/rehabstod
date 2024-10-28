@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.service.sjukfall.CreateRekoStatusService;
 import se.inera.intyg.rehabstod.service.sjukfall.GetRekoStatusService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.RekoStatusDTO;
@@ -43,6 +45,7 @@ public class RekoController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "create-reko-status", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
     public RekoStatusDTO createRekoStatus(@RequestBody CreateRekoStatusRequestDTO request) {
         return createRekoStatusService.create(
             request.getPatientId(),
@@ -52,6 +55,7 @@ public class RekoController {
     }
 
     @RequestMapping(value = "/patient", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PerformanceLogging(eventAction = "get-reko-status", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public RekoStatusDTO getRekoStatus(@RequestBody GetRekoStatusRequestDTO request) {
         return getRekoStatusService.get(
             request.getPatientId(),

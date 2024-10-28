@@ -22,6 +22,8 @@ package se.inera.intyg.rehabstod.web.controller.api;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.rehabstod.service.filter.PopulateFiltersService;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.PopulateLUFilterResponseDTO;
 
@@ -36,6 +38,7 @@ public class LUController {
     }
 
     @RequestMapping(value = "/filters", method = RequestMethod.GET)
+    @PerformanceLogging(eventAction = "populate-LU-filters", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
     public PopulateLUFilterResponseDTO populateFilters() {
         return populateFiltersService.populateLUFilters();
     }

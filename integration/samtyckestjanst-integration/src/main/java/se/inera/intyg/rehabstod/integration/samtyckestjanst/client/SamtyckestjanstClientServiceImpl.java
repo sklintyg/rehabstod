@@ -29,6 +29,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.exception.SamtyckestjanstIntegrationException;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.util.SamtyckestjanstUtil;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
+import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.consent.CheckConsent.v2.rivtabp21.CheckConsentResponderInterface;
 import se.riv.informationsecurity.authorization.consent.CheckConsentResponder.v2.CheckConsentResponseType;
@@ -64,6 +66,7 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
      * @see SamtyckestjanstClientService#checkConsent(String, String, String, String) checkConsent
      */
     @Override
+    @PerformanceLogging(eventAction = "check-consent", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public CheckConsentResponseType checkConsent(String vgHsaId, String veHsaId, String userHsaId, String patientId) {
 
         final Personnummer personnummer = createPersonnummer(patientId, "PatientId");
@@ -85,6 +88,7 @@ public class SamtyckestjanstClientServiceImpl implements SamtyckestjanstClientSe
      * LocalDateTime, LocalDateTime, ActionType) registerConsent
      */
     @Override
+    @PerformanceLogging(eventAction = "register-extended-consent", eventType = MdcLogConstants.EVENT_TYPE_CHANGE)
     // CHECKSTYLE:OFF ParameterNumber
     public RegisterExtendedConsentResponseType registerExtendedConsent(String vgHsaId,
         String veHsaId,

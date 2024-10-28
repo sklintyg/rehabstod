@@ -49,7 +49,7 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
     "file:${dev.config.file}",
     "classpath:version.properties"})
 @Import(MonitoringConfiguration.class)
-@ComponentScan(basePackages = "se.inera.intyg.infra.integration.intygproxyservice")
+@ComponentScan({"se.inera.intyg.infra.integration.intygproxyservice", "se.inera.intyg.rehabstod.logging"})
 public class ApplicationConfig implements TransactionManagementConfigurer {
 
     @Autowired
