@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.OncePerRequestFilter;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.logging.HashPatientIdHelper;
 import se.inera.intyg.rehabstod.service.user.UserService;
 
 /**
@@ -59,8 +60,8 @@ public class PdlConsentGivenAssuranceFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
-        LOG.error("User accessed " + request.getRequestURI() + " but has not given consent to PDL logging.");
+        throws IOException {
+        LOG.error("User accessed " + HashPatientIdHelper.fromUrl(request.getRequestURI()) + " but has not given consent to PDL logging.");
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
 
@@ -68,7 +69,7 @@ public class PdlConsentGivenAssuranceFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         RehabstodUser user = getUser();
         boolean shouldNotFilterIf = (user != null && user.isPdlConsentGiven()) || isIgnoredUrl(request);
-        LOG.debug("shouldNotFilter " + request.getRequestURI() + " = " + shouldNotFilterIf);
+        LOG.debug("shouldNotFilter " + HashPatientIdHelper.fromUrl(request.getRequestURI()) + " = " + shouldNotFilterIf);
         return shouldNotFilterIf;
     }
 

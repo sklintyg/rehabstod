@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.OncePerRequestFilter;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.logging.HashPatientIdHelper;
 import se.inera.intyg.rehabstod.service.user.UserService;
 
 /**
@@ -59,16 +60,16 @@ public class UnitSelectedAssuranceFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
-        LOG.error("User accessed " + request.getRequestURI() + " but has not selected a vardEnhet");
+        throws IOException {
+        LOG.error("User accessed " + HashPatientIdHelper.fromUrl(request.getRequestURI()) + " but has not selected a vardEnhet");
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         RehabstodUser user = getUser();
         boolean shouldNotFilterIf = user == null || user.getValdVardenhet() != null || isIgnoredUrl(request);
-        LOG.debug("shouldNotFilter " + request.getRequestURI() + " = " + shouldNotFilterIf);
+        LOG.debug("shouldNotFilter " + HashPatientIdHelper.fromUrl(request.getRequestURI()) + " = " + shouldNotFilterIf);
         return shouldNotFilterIf;
     }
 
