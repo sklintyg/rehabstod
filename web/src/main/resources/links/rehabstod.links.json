@@ -27,7 +27,6 @@
     "key": "statistiktjanstenTooltip",
     "url": "https://statistik.intygstjanster.se/",
     "text": "Gå vidare till Intygsstatistik",
-    "tooltip": "Observera att om du inte har behörighet till Intygsstatistik så kan du endast se den nationella statistiken som är tillgänglig för alla.",
     "target": "_blank"
   },
   {
