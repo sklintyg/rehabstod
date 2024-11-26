@@ -61,6 +61,7 @@ dependencies {
     implementation "se.inera.intyg.infra:driftbanner-dto:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:dynamiclink:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:hsa-integration-api:${intygInfraVersion}"
+    implementation "se.inera.intyg.infra:pu-integration-api:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:ia-integration:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:log-messages:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
@@ -105,6 +106,7 @@ dependencies {
 
     runtimeOnly "com.mysql:mysql-connector-j"
     runtimeOnly "se.inera.intyg.infra:hsa-integration-intyg-proxy-service:${intygInfraVersion}"
+    runtimeOnly "se.inera.intyg.infra:pu-integration-intyg-proxy-service:${intygInfraVersion}"
 
     testImplementation "org.springframework:spring-test"
 

@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -49,7 +50,10 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
     "file:${dev.config.file}",
     "classpath:version.properties"})
 @Import(MonitoringConfiguration.class)
-@ComponentScan({"se.inera.intyg.infra.integration.intygproxyservice", "se.inera.intyg.rehabstod.logging"})
+@ImportResource({"classpath:META-INF/cxf/cxf.xml"})
+@ComponentScan({"se.inera.intyg.infra.integration.intygproxyservice", "se.inera.intyg.rehabstod.logging",
+    "se.inera.intyg.infra.pu.integration.intygproxyservice", "se.inera.intyg.rehabstod.integration.it",
+    "se.inera.intyg.rehabstod.integration.wc"})
 public class ApplicationConfig implements TransactionManagementConfigurer {
 
     @Autowired

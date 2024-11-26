@@ -20,22 +20,14 @@ package se.inera.intyg.rehabstod.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Profile;
 
-/**
- * Created by eriklupander on 2017-03-01.
- */
 @Configuration
-@ImportResource("classpath:pu-services-config.xml")
-@Import(PuStubConfiguration.class)
-@ComponentScan("se.inera.intyg.infra.integration.pu.services")
-@Profile("!pu-integration-intyg-proxy-service")
-public class PuConfiguration {
-
-    public PuConfiguration() { //NOSONAR
-    }
+@ImportResource("classpath:pu-integration-intyg-proxy-service-config.xml")
+@ComponentScan("se.inera.intyg.infra.pu.integration.intygproxyservice")
+@Profile("pu-integration-intyg-proxy-service")
+public class PuIntygProxyServiceConfiguration {
 
 
 }

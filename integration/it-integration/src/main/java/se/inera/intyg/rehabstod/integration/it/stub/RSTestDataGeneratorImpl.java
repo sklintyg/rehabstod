@@ -74,7 +74,7 @@ import se.riv.strategicresourcemanagement.persons.person.v3.PersonRecordType;
  */
 // CHECKSTYLE:OFF MagicNumber
 @Component
-@Profile({"dev", "rhs-it-stub"})
+@Profile({"dev && rhs-it-stub && !pu-integration-intyg-proxy-service"})
 public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
 
     public static final String VE_TSTNMT2321000156_105N = "TSTNMT2321000156-105N";

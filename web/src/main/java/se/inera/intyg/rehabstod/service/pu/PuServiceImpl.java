@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
-import se.inera.intyg.infra.integration.pu.model.PersonSvar;
-import se.inera.intyg.infra.integration.pu.services.PUService;
+import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
+import se.inera.intyg.infra.pu.integration.api.services.PUService;
 import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -89,14 +89,14 @@ public class PuServiceImpl implements PuService {
             } else {
                 boolean patientNotFound = personSvar.getStatus() == PersonSvar.Status.NOT_FOUND;
                 if (personSvar.getStatus() == PersonSvar.Status.FOUND || patientNotFound) {
-                    if (patientNotFound || personSvar.getPerson().isSekretessmarkering()) {
+                    if (patientNotFound || personSvar.getPerson().sekretessmarkering()) {
                         // RS-US-GE-002: Om användaren EJ är läkare ELLER om intyget utfärdades på annan VE,
                         // då får vi ej visa sjukfall för s-märkt patient.
                         if (!hasLakareRoleAndIsLakare(user, item.getLakare().getHsaId())
                             || !userService.isUserLoggedInOnEnhetOrUnderenhet(item.getVardEnhetId())) {
                             i.remove();
                         }
-                    } else if (personSvar.getPerson().isAvliden()) {
+                    } else if (personSvar.getPerson().avliden()) {
                         // The patient is dead...remove...
                         i.remove();
                     }
@@ -124,7 +124,7 @@ public class PuServiceImpl implements PuService {
 
         PersonSvar personSvar = puService.getPerson(personnummer);
         if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
-            if (personSvar.getPerson().isSekretessmarkering()) {
+            if (personSvar.getPerson().sekretessmarkering()) {
                 filteredIntyg = filterOnCareUnit(intygsData);
             }
         } else if (personSvar.getStatus() == PersonSvar.Status.ERROR) {
@@ -161,7 +161,7 @@ public class PuServiceImpl implements PuService {
             PersonSvar personSvar = personSvarMap.get(optionalPersonnummer.get());
             boolean patientNotFound = personSvar.getStatus() == PersonSvar.Status.NOT_FOUND;
             if (personSvar.getStatus() == PersonSvar.Status.FOUND || patientNotFound) {
-                if (patientNotFound || personSvar.getPerson().isSekretessmarkering()) {
+                if (patientNotFound || personSvar.getPerson().sekretessmarkering()) {
 
                     // RS-US-GE-002: RS-15 => Om patienten är sekretessmarkerad, skall namnet bytas ut mot placeholder.
                     String updatedName = patientNotFound ? SEKRETESS_SKYDDAD_NAME_UNKNOWN : SEKRETESS_SKYDDAD_NAME_PLACEHOLDER;
@@ -174,7 +174,7 @@ public class PuServiceImpl implements PuService {
                         iterator.remove();
                     }
 
-                } else if (personSvar.getPerson().isAvliden()) {
+                } else if (personSvar.getPerson().avliden()) {
                     iterator.remove();
                 } else if (joinNames(personSvar).equals("")) {
                     certificate.setPatientFullName(SEKRETESS_SKYDDAD_NAME_UNKNOWN);
@@ -217,7 +217,7 @@ public class PuServiceImpl implements PuService {
             PersonSvar personSvar = personSvarMap.get(pnr.get());
             boolean patientNotFound = personSvar.getStatus() == PersonSvar.Status.NOT_FOUND;
             if (personSvar.getStatus() == PersonSvar.Status.FOUND || patientNotFound) {
-                if (patientNotFound || personSvar.getPerson().isSekretessmarkering()) {
+                if (patientNotFound || personSvar.getPerson().sekretessmarkering()) {
 
                     // RS-US-GE-002: RS-15 => Om patienten är sekretessmarkerad, skall namnet bytas ut mot placeholder.
                     String updatedName = patientNotFound ? SEKRETESS_SKYDDAD_NAME_UNKNOWN : SEKRETESS_SKYDDAD_NAME_PLACEHOLDER;
@@ -230,7 +230,7 @@ public class PuServiceImpl implements PuService {
                         i.remove();
                     }
 
-                } else if (personSvar.getPerson().isAvliden()) {
+                } else if (personSvar.getPerson().avliden()) {
                     i.remove();
                 } else if (joinNames(personSvar).equals("")) {
                     item.getPatient().setNamn(SEKRETESS_SKYDDAD_NAME_UNKNOWN);
@@ -308,13 +308,13 @@ public class PuServiceImpl implements PuService {
 
         if (personSvar.getStatus() == PersonSvar.Status.FOUND) {
             // If patient is deceased, we shouldn't be here at all.
-            if (personSvar.getPerson().isAvliden()) {
+            if (personSvar.getPerson().avliden()) {
                 throw new IllegalStateException("Cannot display sjukfall for deceased patient.");
             }
 
             RehabstodUser user = userService.getUser();
 
-            if (personSvar.getPerson().isSekretessmarkering()) {
+            if (personSvar.getPerson().sekretessmarkering()) {
                 if (!(hasLakareRoleAndIsLakare(user, firstPatientDataItem.getLakare().getHsaId())
                     && userService.isUserLoggedInOnEnhetOrUnderenhet(firstPatientDataItem.getVardenhetId()))) {
                     throw new IllegalStateException("Cannot show patient details for patient having sekretessmarkering");
@@ -415,9 +415,9 @@ public class PuServiceImpl implements PuService {
 
     private String joinNames(PersonSvar personSvar) {
         return Joiner.on(' ').skipNulls()
-            .join(personSvar.getPerson().getFornamn(),
-                personSvar.getPerson().getMellannamn(),
-                personSvar.getPerson().getEfternamn());
+            .join(personSvar.getPerson().fornamn(),
+                personSvar.getPerson().mellannamn(),
+                personSvar.getPerson().efternamn());
     }
 
 }
