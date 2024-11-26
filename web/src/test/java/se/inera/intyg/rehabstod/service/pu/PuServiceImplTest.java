@@ -606,7 +606,7 @@ public class PuServiceImplTest {
     private Map<Personnummer, PersonSvar> buildPersonMap(PersonSvar... arr) {
         Map<Personnummer, PersonSvar> persons = new HashMap<>();
         Arrays.stream(arr).forEach(ps -> {
-            Personnummer pnr = ps.getPerson() == null ? null : ps.getPerson().getPersonnummer();
+            Personnummer pnr = ps.getPerson() == null ? null : ps.getPerson().personnummer();
             persons.put(pnr, ps);
         });
         return persons;
