@@ -29,7 +29,7 @@ import org.springframework.context.annotation.Profile;
  */
 @Configuration
 @ImportResource("classpath:pu-stub-context.xml")
-@Profile({"dev", "pu-stub", "wc-pu-stub"})
+@Profile({"dev", "pu-stub", "wc-pu-stub", "!pu-integration-intyg-proxy-service"})
 public class PuStubConfiguration {
 
     @Bean
@@ -38,4 +38,3 @@ public class PuStubConfiguration {
     }
 
 }
-

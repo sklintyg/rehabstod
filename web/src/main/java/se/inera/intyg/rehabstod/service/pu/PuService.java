@@ -20,7 +20,7 @@ package se.inera.intyg.rehabstod.service.pu;
 
 import java.util.List;
 import se.inera.intyg.infra.certificate.dto.DiagnosedCertificate;
-import se.inera.intyg.infra.integration.pu.model.PersonSvar;
+import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;

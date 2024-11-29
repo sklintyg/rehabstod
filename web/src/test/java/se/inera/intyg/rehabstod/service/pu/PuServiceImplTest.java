@@ -37,9 +37,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardenhet;
-import se.inera.intyg.infra.integration.pu.model.Person;
-import se.inera.intyg.infra.integration.pu.model.PersonSvar;
-import se.inera.intyg.infra.integration.pu.services.PUService;
+import se.inera.intyg.infra.pu.integration.api.model.Person;
+import se.inera.intyg.infra.pu.integration.api.model.PersonSvar;
+import se.inera.intyg.infra.pu.integration.api.services.PUService;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
@@ -606,7 +606,7 @@ public class PuServiceImplTest {
     private Map<Personnummer, PersonSvar> buildPersonMap(PersonSvar... arr) {
         Map<Personnummer, PersonSvar> persons = new HashMap<>();
         Arrays.stream(arr).forEach(ps -> {
-            Personnummer pnr = ps.getPerson() == null ? null : ps.getPerson().getPersonnummer();
+            Personnummer pnr = ps.getPerson() == null ? null : ps.getPerson().personnummer();
             persons.put(pnr, ps);
         });
         return persons;
