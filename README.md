@@ -38,7 +38,7 @@ Vid stängning av patienthistoriken loggas man ut ur WC, så steg 7 behövs gör
 Vill man se något i SRS fliken måste man även se till att intygets diagnos är en diagnos som SRS-stubben har info om.
 
 ## Licens
-Copyright (C) 2021 Inera AB (http://www.inera.se)
+Copyright (C) 2025 Inera AB (http://www.inera.se)
 
 Rehabstöd is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
