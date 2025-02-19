@@ -37,6 +37,7 @@ import se.inera.intyg.infra.pu.integration.api.services.PUService;
 import se.inera.intyg.infra.security.common.model.AuthoritiesConstants;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
+import se.inera.intyg.rehabstod.logging.HashUtility;
 import se.inera.intyg.rehabstod.service.user.UserService;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
@@ -56,6 +57,9 @@ public class PuServiceImpl implements PuService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private HashUtility hashUtility;
 
     @Override
     public void filterSekretessForSummary(List<SjukfallEnhet> sjukfallList) {
@@ -84,7 +88,7 @@ public class PuServiceImpl implements PuService {
             PersonSvar personSvar = personSvarMap.get(pnr.get());
             if (personSvar == null) {
                 LOG.info("Removing item from list of sjukfall. PU service returned an empty response for person '{}'",
-                    pnr.get().getPersonnummerHash());
+                    hashUtility.hash(pnr.get().getPersonnummer()));
                 i.remove();
             } else {
                 boolean patientNotFound = personSvar.getStatus() == PersonSvar.Status.NOT_FOUND;
@@ -104,7 +108,7 @@ public class PuServiceImpl implements PuService {
                     throw new IllegalStateException("Could not contact PU service, not showing any sjukfall.");
                 } else {
                     LOG.info("Removing item from list of sjukfall. PU service returned an unexpected status response for person '{}'",
-                        pnr.get().getPersonnummerHash());
+                        hashUtility.hash(pnr.get().getPersonnummer()));
                     i.remove();
                 }
             }
@@ -392,7 +396,7 @@ public class PuServiceImpl implements PuService {
             .orElseThrow(() -> new RuntimeException("Found unparsable personnummer '" + pnr + "'"));
 
         if (!personnummer.verifyControlDigit()) {
-            throw new RuntimeException("Found personnummer '" + personnummer.getPersonnummerHash() + "' with invalid control digit");
+            throw new RuntimeException("Found personnummer '" + hashUtility.hash(personnummer.getPersonnummer()) + "' with invalid control digit");
         }
 
         return personnummer;
