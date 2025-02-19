@@ -23,7 +23,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
-import se.inera.intyg.schemas.contract.util.HashUtility;
 
 /**
  * Logback converter that returns information about the current user.
@@ -49,7 +48,7 @@ public class UserConverter extends ClassicConverter {
 
         if (principal instanceof RehabstodUser) {
             RehabstodUser user = (RehabstodUser) auth.getPrincipal();
-            return HashUtility.hash(user.getHsaId());
+            return user.getHsaId();
         }
 
         return NO_USER;
