@@ -63,6 +63,12 @@ public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryServic
             SHOULD_NOT_PDL_LOG
         ).getContent();
         puService.filterSekretessForSummary(sickLeaves);
+
+        try {
+            Thread.sleep(75000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return statisticsCalculator.getSickLeaveSummary(sickLeaves);
     }
 }
