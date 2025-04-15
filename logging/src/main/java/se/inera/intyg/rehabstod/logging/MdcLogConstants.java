@@ -41,6 +41,7 @@ public class MdcLogConstants {
     public static final String ERROR_MESSAGE = "error.message";
     public static final String EVENT_AUTHENTICATION_SCHEME = "event.authentication.scheme";
     public static final String ORGANIZATION_ID = "organization.id";
+    public static final String ORGANIZATION_CARE_PROVIDER_ID = "organization.care_provider.id";
     public static final String SESSION_ID_KEY = "session.id";
     public static final String SPAN_ID_KEY = "span.id";
     public static final String TRACE_ID_KEY = "trace.id";

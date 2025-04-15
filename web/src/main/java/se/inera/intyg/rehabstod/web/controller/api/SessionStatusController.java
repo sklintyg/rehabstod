@@ -55,7 +55,7 @@ public class SessionStatusController {
     public static final String SESSION_STATUS_CHECK_URI = SESSION_STATUS_REQUEST_MAPPING + SESSION_STATUS_PING;
 
     @RequestMapping(value = SessionStatusController.SESSION_STATUS_PING, method = RequestMethod.GET)
-    @PerformanceLogging(eventAction = "get-session-status", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+    @PerformanceLogging(eventAction = "get-session-status", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED, isActive = false)
     public GetSessionStatusResponse getSessionStatus(HttpServletRequest request) {
         return createStatusResponse(request);
     }

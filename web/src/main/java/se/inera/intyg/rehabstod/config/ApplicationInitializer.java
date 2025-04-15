@@ -131,6 +131,11 @@ public class ApplicationInitializer implements WebApplicationInitializer {
             DelegatingFilterProxy.class);
         springSecurityFilterChain.addMappingForUrlPatterns(null, false, "/*");
 
+        // LogMDCUserServletFilter
+        FilterRegistration.Dynamic logMdcUserFilter = servletContext.addFilter("mdcUserServletFilter",
+            DelegatingFilterProxy.class);
+        logMdcUserFilter.addMappingForUrlPatterns(null, false, "/*");
+
         // principalUpdatedFilter filter
         FilterRegistration.Dynamic principalUpdatedFilter = servletContext.addFilter("principalUpdatedFilter",
             DelegatingFilterProxy.class);
