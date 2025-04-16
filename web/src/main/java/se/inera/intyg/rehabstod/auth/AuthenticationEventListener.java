@@ -18,13 +18,19 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.authentication.event.LogoutSuccessEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.service.monitoring.MonitoringLogService;
 
 @Component
@@ -36,6 +42,8 @@ public class AuthenticationEventListener {
 
     @EventListener
     public void onLoginSuccess(InteractiveAuthenticationSuccessEvent success) {
+        updateMDCWithNewSessionId();
+
         final var rehabstodUser = getRehabstodUser(success.getAuthentication().getPrincipal());
         rehabstodUser.ifPresent(user ->
             monitoringLogService.logUserLogin(
@@ -46,6 +54,25 @@ public class AuthenticationEventListener {
                 user.getOrigin()
             )
         );
+    }
+
+    /**
+     * Spring Security will by default invalidate the old session and create a new one after authentication.
+     * It’s a security feature to protect against session fixation attacks.
+     * Update the MDC with the new session id.
+     */
+    private static void updateMDCWithNewSessionId() {
+        final var attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attrs != null) {
+            final var request = attrs.getRequest();
+            final var session = request.getSession(false);
+
+            if (session != null && session.getId() != null) {
+                final var sessionId = session.getId();
+                final var encodedSessionId = Base64.getEncoder().encodeToString(sessionId.getBytes(StandardCharsets.UTF_8));
+                MDC.put(MdcLogConstants.SESSION_ID_KEY, encodedSessionId);
+            }
+        }
     }
 
     @EventListener

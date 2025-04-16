@@ -23,6 +23,7 @@ import java.util.Properties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -40,9 +41,13 @@ import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 
 @EnableWebMvc
 @Configuration
+@EnableAspectJAutoProxy
 @ComponentScan({"se.inera.intyg.rehabstod.web",
     "se.inera.intyg.rehabstod.integration.wc.stub.api",
-    "se.inera.intyg.rehabstod.integration.srs.stub.api"})
+    "se.inera.intyg.rehabstod.integration.srs.stub.api",
+    "se.inera.intyg.rehabstod.logging",
+    "se.inera.intyg.rehabstod.web.controller.api",
+})
 @ImportResource({"classpath:META-INF/cxf/cxf.xml"})
 public class WebConfig implements WebMvcConfigurer {
 

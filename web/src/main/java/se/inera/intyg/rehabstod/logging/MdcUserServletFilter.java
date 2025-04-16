@@ -18,41 +18,42 @@
  */
 package se.inera.intyg.rehabstod.logging;
 
-import static se.inera.intyg.rehabstod.logging.MdcLogConstants.SESSION_ID_KEY;
-import static se.inera.intyg.rehabstod.logging.MdcLogConstants.SPAN_ID_KEY;
-import static se.inera.intyg.rehabstod.logging.MdcLogConstants.TRACE_ID_KEY;
-
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import se.inera.intyg.rehabstod.service.user.UserService;
 
 @Component
 @RequiredArgsConstructor
-public class MdcServletFilter implements Filter {
+public class MdcUserServletFilter implements Filter {
 
-    private final MdcHelper mdcHelper;
-    
+    private final UserService userService;
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
-        try {
-            if (request instanceof HttpServletRequest http) {
-                MDC.put(SESSION_ID_KEY, mdcHelper.sessionId(http));
-                MDC.put(TRACE_ID_KEY, mdcHelper.traceId(http));
-                MDC.put(SPAN_ID_KEY, mdcHelper.spanId());
+        final var user = userService.getUser();
+        if (user != null) {
+            final var selectedUnit = user.getValdVardenhet();
+            final var selectedCareProvider = user.getValdVardgivare();
+            try (final var mdcLogConstants =
+                MdcCloseableMap.builder()
+                    .put(MdcLogConstants.USER_ID, user.getHsaId())
+                    .put(MdcLogConstants.ORGANIZATION_ID, selectedUnit != null ? selectedUnit.getId() : "-")
+                    .put(MdcLogConstants.ORGANIZATION_CARE_PROVIDER_ID, selectedCareProvider != null ? selectedCareProvider.getId() : "-")
+                    .build()
+            ) {
+                chain.doFilter(request, response);
             }
+        } else {
             chain.doFilter(request, response);
-        } finally {
-            MDC.clear();
         }
     }
 
