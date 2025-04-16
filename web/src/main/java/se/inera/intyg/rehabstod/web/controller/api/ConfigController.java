@@ -59,7 +59,7 @@ public class ConfigController {
     private Environment env;
 
     @RequestMapping(value = "")
-    @PerformanceLogging(eventAction = "get-configuration", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+    @PerformanceLogging(eventAction = "get-configuration", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED, isActive = false)
     public GetConfigResponse getConfig() {
 
         GetConfigResponse configResponse = new GetConfigResponse();
@@ -73,7 +73,7 @@ public class ConfigController {
     }
 
     @RequestMapping(value = "/links", produces = "application/json")
-    @PerformanceLogging(eventAction = "get-dynamic-links", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+    @PerformanceLogging(eventAction = "get-dynamic-links", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED, isActive = false)
     public Map<String, DynamicLink> getDynamicLinks() {
         return dynamicLinkService.getAllAsMap();
     }
