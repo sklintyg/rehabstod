@@ -46,9 +46,8 @@ public class MdcUserServletFilter implements Filter {
             try (final var mdcLogConstants =
                 MdcCloseableMap.builder()
                     .put(MdcLogConstants.USER_ID, user.getHsaId())
-                    .put(MdcLogConstants.ORGANIZATION_ID, selectedUnit != null ? selectedUnit.getId() : "NO_UNIT")
-                    .put(MdcLogConstants.ORGANIZATION_CARE_PROVIDER_ID,
-                        selectedCareProvider != null ? selectedCareProvider.getId() : "NO_CARE_PROVIDER")
+                    .put(MdcLogConstants.ORGANIZATION_ID, selectedUnit != null ? selectedUnit.getId() : "-")
+                    .put(MdcLogConstants.ORGANIZATION_CARE_PROVIDER_ID, selectedCareProvider != null ? selectedCareProvider.getId() : "-")
                     .build()
             ) {
                 chain.doFilter(request, response);
