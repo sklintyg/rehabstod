@@ -81,9 +81,11 @@ public interface IntygstjanstRestIntegrationService {
      * @param personId Id of the person to get certificates for
      * @param certificateTypes The specific type of certificates to get
      * @param units List of units the certificates are bound to
+     * @param doctorIds List of doctor ids to filter on
      * @return List of certificates with sickleave information
      */
-    List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, List<String> units);
+    List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, List<String> units,
+        List<String> doctorIds);
 
     /**
      * List certificates for person with sickleave information
@@ -94,10 +96,11 @@ public interface IntygstjanstRestIntegrationService {
      * @param fromDate First signing date of selection
      * @param toDate Last signing date of selection
      * @param units List of units the certificates are bound to
+     * @param doctorIds List of doctor ids to filter on
      * @return List of certificates with sickleave information
      */
     List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
-        LocalDate toDate, List<String> units);
+        LocalDate toDate, List<String> units, List<String> doctorIds);
 
     /**
      * List doctors that have signed certificates on unit(s)

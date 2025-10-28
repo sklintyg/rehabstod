@@ -132,16 +132,17 @@ public class IntygstjanstRestIntegrationServiceImpl implements IntygstjanstRestI
     @Override
     @PerformanceLogging(eventAction = "get-sick-leave-certificates-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes,
-        List<String> units) {
-        return getSickLeaveCertificatesForPerson(personId, certificateTypes, null, null, units);
+        List<String> units, List<String> doctorIds) {
+        return getSickLeaveCertificatesForPerson(personId, certificateTypes, null, null, units, doctorIds);
     }
 
     @Override
     @PerformanceLogging(eventAction = "get-sick-leave-certificates-for-person", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
     public List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
-        LocalDate toDate, List<String> units) {
+        LocalDate toDate, List<String> units, List<String> doctorIds) {
         final var url = "/inera-certificate/internalapi/typedcertificate/sickleave/person";
         final var requestObject = getTypedCertificateRequest(units, certificateTypes, fromDate, toDate, personId);
+        requestObject.setDoctorIds(doctorIds);
 
         LOGGER.debug("Getting sick leave certificates for person from intygstjansten");
 
