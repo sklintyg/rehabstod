@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -51,6 +52,7 @@ import se.inera.intyg.infra.integration.hsatk.model.legacy.Vardgivare;
 import se.inera.intyg.infra.integration.hsatk.services.legacy.HsaOrganizationsService;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
+import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
 import se.inera.intyg.rehabstod.service.hsa.EmployeeNameService;
@@ -337,13 +339,14 @@ public class CertificateServiceImplTest {
     }
 
     @Test
-    public void getAGCertificatesForPerson() {
+    public void getAGCertificatesForPersonWhenAdmin() {
         final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
 
         final var argumentCapture = ArgumentCaptor.forClass(List.class);
         final var selectableVardenhet = mock(SelectableVardenhet.class);
 
         doReturn(user).when(userService).getUser();
+        doReturn(Urval.ALL).when(user).getUrval();
         doReturn(selectableVardenhet).when(user).getValdVardenhet();
         doReturn(expectedUnitIds).when(selectableVardenhet).getHsaIds();
         doReturn(getCareUnit().getId()).when(selectableVardenhet).getId();
@@ -353,7 +356,7 @@ public class CertificateServiceImplTest {
 
         var sickLeaveCertificateList = buildSickLeaveCertificateList();
         when(intygstjanstRestIntegrationService
-            .getSickLeaveCertificatesForPerson(anyString(), any(List.class), argumentCapture.capture()))
+            .getSickLeaveCertificatesForPerson(anyString(), anyList(), argumentCapture.capture(), eq(List.of())))
             .thenReturn(sickLeaveCertificateList);
 
         when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
@@ -381,6 +384,36 @@ public class CertificateServiceImplTest {
         for (var actualUnitId : actualUnitIds) {
             assertTrue("Doesn't expect unitId: " + actualUnitId, expectedUnitIds.contains(actualUnitId));
         }
+    }
+
+    @Test
+    public void getAGCertificatesForPersonWhenDoctor() {
+        final var expectedUnitIds = Arrays.asList("VE-ID", "VE-Mottagning-ID-1", "VE-Mottagning-ID-2");
+
+        final var argumentCapture = ArgumentCaptor.forClass(List.class);
+        final var selectableVardenhet = mock(SelectableVardenhet.class);
+
+        final var userHsaId = "UserHsaId";
+        doReturn(user).when(userService).getUser();
+        doReturn(Urval.ISSUED_BY_ME).when(user).getUrval();
+        doReturn(userHsaId).when(user).getHsaId();
+        doReturn(selectableVardenhet).when(user).getValdVardenhet();
+        doReturn(expectedUnitIds).when(selectableVardenhet).getHsaIds();
+        doReturn(getCareUnit().getId()).when(selectableVardenhet).getId();
+
+        when(hsaOrganizationsService.getVardenhet(anyString())).thenReturn(getCareUnit());
+        when(hsaOrganizationsService.getVardgivareInfo(anyString())).thenReturn(getCareProvider());
+
+        final var sickLeaveCertificateList = buildSickLeaveCertificateList();
+        when(intygstjanstRestIntegrationService
+            .getSickLeaveCertificatesForPerson(anyString(), anyList(), anyList(), argumentCapture.capture()))
+            .thenReturn(sickLeaveCertificateList);
+        when(diagnosFactory.getDiagnos(anyString(), anyString(), any()))
+            .thenReturn(new Diagnos(DIAGNOSE_CODE, DIAGNOSE_CODE, DIAGNOSE_CODE));
+
+        service.getAGCertificatesForPerson(PERSON_ID);
+        final var actualStaffIds = argumentCapture.getValue();
+        assertEquals(List.of(userHsaId), actualStaffIds);
     }
 
     @Test

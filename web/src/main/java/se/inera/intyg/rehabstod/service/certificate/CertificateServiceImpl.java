@@ -412,12 +412,15 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public GetAGCertificatesForPersonResponse getAGCertificatesForPerson(String personId) {
-        final var unitIds = userService.getUser().getValdVardenhet().getHsaIds();
-        final var loggedInUnitId = userService.getUser().getValdVardenhet().getId();
-        var sickLeaveCertificateList = restIntegrationService
-            .getSickLeaveCertificatesForPerson(personId, Arrays.asList(AG_TYPE_LIST), unitIds);
+        final var user = userService.getUser();
+        final var unitIds = user.getValdVardenhet().getHsaIds();
+        final var loggedInUnitId = user.getValdVardenhet().getId();
+        final var doctorIds = doctorIds(user);
 
-        var agCertificateList = transformSickLeaveCertificatesToAGCertificates(sickLeaveCertificateList);
+        final var sickLeaveCertificateList = restIntegrationService
+            .getSickLeaveCertificatesForPerson(personId, Arrays.asList(AG_TYPE_LIST), unitIds, doctorIds);
+
+        final var agCertificateList = transformSickLeaveCertificatesToAGCertificates(sickLeaveCertificateList);
         boolean qaInfoError = false;
         try {
             populateAGCertificatesWithNotificationData(agCertificateList);
@@ -426,12 +429,18 @@ public class CertificateServiceImpl implements CertificateService {
         }
 
         LOGGER.debug("Adding PDL log for certificate read");
-        var rehabstodUser = userService.getUser();
-        var storedActivities = rehabstodUser.getStoredActivities();
+        final var storedActivities = user.getStoredActivities();
         pdlLogCertificatesForPerson(personId, loggedInUnitId, storedActivities);
 
         LOGGER.debug("Returning AG Certificates for Person");
         return new GetAGCertificatesForPersonResponse(agCertificateList, qaInfoError);
+    }
+
+    private List<String> doctorIds(RehabstodUser user) {
+        if (user.getUrval() == Urval.ISSUED_BY_ME) {
+            return Collections.singletonList(user.getHsaId());
+        }
+        return Collections.emptyList();
     }
 
     private void pdlLogCertificatesForPerson(String personId, String unitId,

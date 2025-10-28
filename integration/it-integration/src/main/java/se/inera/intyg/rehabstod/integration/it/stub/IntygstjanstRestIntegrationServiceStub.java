@@ -79,15 +79,18 @@ public class IntygstjanstRestIntegrationServiceStub implements IntygstjanstRestI
 
     @Override
     public List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes,
-        List<String> units) {
-        return getSickLeaveCertificatesForPerson(personId, certificateTypes, null, null, units);
+        List<String> units, List<String> doctorIds) {
+        return getSickLeaveCertificatesForPerson(personId, certificateTypes, null, null, units, doctorIds);
     }
 
     @Override
     public List<SickLeaveCertificate> getSickLeaveCertificatesForPerson(String personId, List<String> certificateTypes, LocalDate fromDate,
-        LocalDate toDate, List<String> units) {
+        LocalDate toDate, List<String> units, List<String> doctorIds) {
         var agCertificateData = rsTestIntygStub.getAGCertificateData();
-        return agCertificateData.stream().filter(c -> personId.equals(c.getPersonId())).collect(Collectors.toList());
+        return agCertificateData.stream()
+            .filter(c -> personId.equals(c.getPersonId()))
+            .filter(c -> doctorIds == null || doctorIds.isEmpty() || doctorIds.contains(c.getPersonalHsaId()))
+            .toList();
     }
 
     @Override
