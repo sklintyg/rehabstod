@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -45,6 +46,7 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 /**
  * Created by eriklupander on 2017-11-01.
  */
+@Slf4j
 @Service
 public class RiskPredictionServiceImpl implements RiskPredictionService {
 
@@ -171,11 +173,18 @@ public class RiskPredictionServiceImpl implements RiskPredictionService {
         if (diagnosis == null || StringUtils.isBlank(diagnosis.getKod()) || diagnosisList == null || diagnosisList.isEmpty()) {
             return false;
         }
-        String diagnosisToFind = diagnosis.getKod().toUpperCase(Locale.ENGLISH)
+
+        final var cleanedDiagnosis = diagnosis.getKod().toUpperCase(Locale.ENGLISH)
             .replace(".", "")
             .replace("-", "")
-            .replace("_", "")
-            .substring(0, 3);
+            .replace("_", "");
+
+        if (cleanedDiagnosis.length() < 3) {
+            log.info("Diagnosis code too short for SRS support: '{}'", cleanedDiagnosis);
+            return false;
+        }
+
+        final var diagnosisToFind = cleanedDiagnosis.substring(0, 3);
         return diagnosisList.contains(diagnosisToFind);
     }
 
