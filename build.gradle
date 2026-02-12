@@ -1,54 +1,41 @@
 plugins {
-    id "io.spring.dependency-management" version "1.1.6" apply false
-    id "org.gretty" version "4.1.5" apply false
+    alias(libs.plugins.org.sonarqube)
+    alias(libs.plugins.org.owasp.dependencycheck)
+    alias(libs.plugins.org.cyclonedx.bom)
+    id "org.gretty" version "4.1.10" apply false
     id 'test-report-aggregation'
-    id 'org.sonarqube' version '6.3.1.5724'
-    id "org.owasp.dependencycheck" version '12.1.6'
     id 'jacoco'
 }
 
 ext {
-    intygInfraVersion = System.properties['infraVersion'] ?: '4.0.0-SNAPSHOT'
+    intygBomVersion = '1.0.0.6'
 
-    blockingSchemaVersion = "4.0.1.3"
-    consentSchemaVersion = "2.0.1.2"
-    internalMonitoringSchemaVersion = "1.0.4.3"
-    intygClinicalprocessSchemasVersion = "1.0.24.2"
-    intygHealthcondRehabilitationSchemasVersion = "1.1.3.2"
-    rivtaItintegrationMonitoringSchemasVersion = "1.0.0.5.2"
-    rivtaGetPersonsPersonSchemasVersion = "3.1.1.2"
-    schemasContractVersion = "2.1.8.2"
-    srsSchemasVersion = "0.0.16.2"
+    intygInfraVersion = System.properties['infraVersion'] ?: '4.1.0-SNAPSHOT'
 
-    commonsIoVersion = "2.14.0"
-    cxfVersion = "4.0.5"
-    googleGuavaVersion = "33.0.0-jre"
-    jakartaJwsApiVersion = "3.0.0"
-    jaxb2Version = "3.0.0"
-    logbackEcsEncoderVersion = "1.6.0"
-    picocliVersion = "4.7.5"
-    poiVersion = "5.3.0"
-    springSecurityExtensionsVersion = "1.0.3.RELEASE"
-    shedlockSpringVersion = "5.16.0"
-
-    springbootMavenBomVersion = "3.3.4"
+    blockingSchemaVersion = "4.0.1.4"
+    consentSchemaVersion = "2.0.1.3"
+    intygClinicalprocessSchemasVersion = "1.1.0.1"
+    intygHealthcondRehabilitationSchemasVersion = "1.2.0.1"
+    schemasContractVersion = "2.2.0.1"
+    srsSchemasVersion = "1.0.0.1"
 
     nvdMirror = 'https://vulnz-nvd-mirror-devtest.intyg.nordicmedtest.se'
 }
 
+apply from: 'gradle/configureIntygBom.gradle'
+
 allprojects {
-    apply plugin: "io.spring.dependency-management"
     apply plugin: 'java'
     apply plugin: 'jacoco'
     apply plugin: 'idea'
 
     group = 'se.inera.intyg.rehabstod'
-    version = System.properties['buildVersion'] ?: '0-SNAPSHOT'
-    sourceCompatibility = 21
-    targetCompatibility = 21
+    version = System.properties['buildVersion'] ?: '1.0.0-SNAPSHOT'
 
-    dependencyManagement {
-        imports { mavenBom "org.springframework.boot:spring-boot-dependencies:${springbootMavenBomVersion}" }
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
     }
 
     compileJava {
@@ -57,8 +44,12 @@ allprojects {
     }
 
     dependencies {
+        implementation platform("se.inera.intyg.bom:platform:${intygBomVersion}")
+        annotationProcessor platform("se.inera.intyg.bom:platform:${intygBomVersion}")
+        testImplementation platform("se.inera.intyg.bom:platform:${intygBomVersion}")
+        testAnnotationProcessor platform("se.inera.intyg.bom:platform:${intygBomVersion}")
+
         implementation "ch.qos.logback:logback-classic"
-        implementation "jakarta.jws:jakarta.jws-api:${jakartaJwsApiVersion}"
 
         testImplementation 'junit:junit'
         testImplementation "org.junit.jupiter:junit-jupiter-api"
@@ -74,7 +65,9 @@ allprojects {
         annotationProcessor 'org.projectlombok:lombok'
     }
 
-    test { useJUnitPlatform() }
+    testing.suites {
+        test { useJUnitJupiter() }
+    }
 
     repositories {
         mavenLocal()

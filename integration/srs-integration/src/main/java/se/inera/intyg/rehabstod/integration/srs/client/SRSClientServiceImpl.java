@@ -20,8 +20,6 @@ package se.inera.intyg.rehabstod.integration.srs.client;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.Diagnos;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesRequestType;
@@ -33,9 +31,6 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertifi
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
-import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
-import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
-import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
 
 /**
  * Created by eriklupander on 2017-10-31.
@@ -48,21 +43,6 @@ public class SRSClientServiceImpl implements SRSClientService {
 
     @Autowired
     private GetDiagnosisCodesResponderInterface getDiagnosisCodesService;
-
-    @Autowired
-    @Qualifier("srsPingForConfigurationWebServiceClient")
-    private PingForConfigurationResponderInterface pingService;
-
-    @Value("${it.service.logicalAddress}")
-    private String logicalAddress;
-
-    @Override
-    @PerformanceLogging(eventAction = "ping-for-configuration", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public PingForConfigurationResponseType pingForConfiguration() {
-        PingForConfigurationType reqType = new PingForConfigurationType();
-        reqType.setLogicalAddress(logicalAddress);
-        return pingService.pingForConfiguration(logicalAddress, reqType);
-    }
 
     @Override
     @PerformanceLogging(eventAction = "get-risk-prediction-for-certificate", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)

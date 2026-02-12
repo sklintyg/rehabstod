@@ -31,7 +31,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.GetDiagnosisCodesResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.GetRiskPredictionForCertificateResponderInterface;
-import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 
 // CHECKSTYLE:ON LineLength
 
@@ -64,9 +63,6 @@ public class SRSIntegrationClientConfiguration {
     @Value("${srs.getdiagnosiscodes.service.url}")
     private String srsGetDiagnosisCodesWsUrl;
 
-    @Value("${srs.ping.url}")
-    private String srsWsPingUrl;
-
     @Bean
     public GetRiskPredictionForCertificateResponderInterface getRiskPredictionForCertificateWebServiceClient() {
         // CHECKSTYLE:OFF LineLength
@@ -91,21 +87,6 @@ public class SRSIntegrationClientConfiguration {
         Client client = ClientProxy.getClient(getDiagnosisCodesResponderInterface);
         applyTimeouts(client);
         return getDiagnosisCodesResponderInterface;
-    }
-
-    @Bean
-    public PingForConfigurationResponderInterface srsPingForConfigurationWebServiceClient() {
-        // CHECKSTYLE:OFF LineLength
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setAddress(srsWsPingUrl);
-        proxyFactoryBean.setServiceClass(PingForConfigurationResponderInterface.class);
-
-        PingForConfigurationResponderInterface pingForConfigurationResponderInterface =
-            (PingForConfigurationResponderInterface) proxyFactoryBean.create();
-        Client client = ClientProxy.getClient(pingForConfigurationResponderInterface);
-        applyTimeouts(client);
-        return pingForConfigurationResponderInterface;
-        // CHECKSTYLE:ON LineLength
     }
 
     private void applyTimeouts(Client client) {

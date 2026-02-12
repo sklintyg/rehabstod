@@ -19,7 +19,6 @@
 package se.inera.intyg.rehabstod.integration.it.client;
 
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponseType;
-import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 
 
 /**
@@ -33,6 +32,4 @@ public interface IntygstjanstClientService {
      * @param patientId patient identifier
      */
     ListSickLeavesForPersonResponseType getAllSjukfallForPatient(String patientId);
-
-    PingForConfigurationResponseType pingForConfiguration();
 }
