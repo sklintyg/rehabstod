@@ -21,7 +21,6 @@ package se.inera.intyg.rehabstod.integration.it.client;
 // CHECKSTYLE:OFF LineLength
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponderInterface;
@@ -31,9 +30,6 @@ import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 import se.riv.clinicalprocess.healthcond.certificate.types.v2.PersonId;
-import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
-import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
-import se.riv.itintegration.monitoring.v1.PingForConfigurationType;
 
 // CHECKSTYLE:ON LineLength
 
@@ -45,10 +41,6 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
 
     @Autowired
     private ListSickLeavesForPersonResponderInterface personService;
-
-    @Autowired
-    @Qualifier("itPingForConfigurationWebServiceClient")
-    private PingForConfigurationResponderInterface pingService;
 
     @Value("${it.service.logicalAddress}")
     private String logicalAddress;
@@ -65,14 +57,4 @@ public class IntygstjanstClientServiceImpl implements IntygstjanstClientService 
 
         return personService.listSickLeavesForPerson(logicalAddress, params);
     }
-
-    @Override
-    @PrometheusTimeMethod
-    @PerformanceLogging(eventAction = "ping-for-configuration", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public PingForConfigurationResponseType pingForConfiguration() {
-        PingForConfigurationType reqType = new PingForConfigurationType();
-        reqType.setLogicalAddress(logicalAddress);
-        return pingService.pingForConfiguration(logicalAddress, reqType);
-    }
-
 }

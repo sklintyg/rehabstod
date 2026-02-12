@@ -21,14 +21,11 @@ package se.inera.intyg.rehabstod.integration.srs.client;
 import java.util.List;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getdiagnosiscodes.v1.Diagnos;
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.RiskPrediktion;
-import se.riv.itintegration.monitoring.v1.PingForConfigurationResponseType;
 
 /**
  * Created by eriklupander on 2017-10-31.
  */
 public interface SRSClientService {
-
-    PingForConfigurationResponseType pingForConfiguration();
 
     List<RiskPrediktion> getRiskPrediktionForCertificate(List<String> intygsId);
 

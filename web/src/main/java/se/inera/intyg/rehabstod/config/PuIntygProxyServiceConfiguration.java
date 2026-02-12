@@ -21,12 +21,10 @@ package se.inera.intyg.rehabstod.config;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.Profile;
 
 @Configuration
 @ImportResource("classpath:pu-integration-intyg-proxy-service-config.xml")
 @ComponentScan("se.inera.intyg.infra.pu.integration.intygproxyservice")
-@Profile("pu-integration-intyg-proxy-service")
 public class PuIntygProxyServiceConfiguration {
 
 

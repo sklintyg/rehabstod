@@ -1,11 +1,10 @@
 dependencies {
     implementation project(":rehabstod-logging")
-    
+
     implementation "com.fasterxml.jackson.core:jackson-databind"
-    implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
-    implementation "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
+    implementation "org.apache.cxf:cxf-rt-frontend-jaxws"
+    implementation "org.apache.cxf:cxf-rt-transports-http"
     implementation "org.springframework:spring-context-support"
     implementation "org.springframework:spring-web"
     implementation "se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}"
-    implementation "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${rivtaItintegrationMonitoringSchemasVersion}"
 }

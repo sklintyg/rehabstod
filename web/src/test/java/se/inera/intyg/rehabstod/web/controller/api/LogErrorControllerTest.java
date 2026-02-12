@@ -31,7 +31,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.ErrorDataDTO;
 import se.inera.intyg.rehabstod.web.controller.api.dto.ErrorLogRequestDTO;
 
 @ExtendWith(MockitoExtension.class)
-public class LogErrorControllerTest {
+class LogErrorControllerTest {
 
     @Mock
     private ErrorLogService errorLogService;
