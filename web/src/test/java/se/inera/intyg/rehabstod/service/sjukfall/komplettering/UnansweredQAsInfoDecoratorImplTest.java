@@ -34,12 +34,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import se.inera.intyg.rehabstod.integration.wc.service.WcIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
-import se.inera.intyg.rehabstod.web.model.AGCertificate;
 import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
@@ -47,8 +45,6 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 public class UnansweredQAsInfoDecoratorImplTest {
 
     public static final String PATIENT_ID = "191212121212";
-    @Mock
-    private WcIntegrationService wcIntegrationService;
 
     @Mock
     private WcRestIntegrationService wcRestIntegrationService;
@@ -123,39 +119,5 @@ public class UnansweredQAsInfoDecoratorImplTest {
         SjukfallPatient sfp = new SjukfallPatient();
         sfp.setIntyg(Arrays.asList(patientData));
         return sfp;
-    }
-
-    @Test
-    public void updateAGCertificatesWithKompletteringar() {
-        Map<String, UnansweredQAs> qas = new HashMap<>();
-        for (int i = 0; i < 10; i++) {
-            qas.put(Integer.toString(i), new UnansweredQAs(i, i));
-        }
-
-        when(wcIntegrationService.getCertificateAdditionsForIntyg(any(List.class))).thenReturn(qas);
-        List<AGCertificate> agCertificateList = new ArrayList<>();
-
-        final AGCertificate certificate = createAGCertificate("0");
-        final AGCertificate certificate1 = createAGCertificate("1");
-        final AGCertificate certificate2 = createAGCertificate("2");
-        final AGCertificate certificate3 = createAGCertificate("3");
-        final AGCertificate certificateNotPresent = createAGCertificate("Zero");
-        agCertificateList.add(certificate);
-        agCertificateList.add(certificate1);
-        agCertificateList.add(certificate2);
-        agCertificateList.add(certificate3);
-        agCertificateList.add(certificateNotPresent);
-
-        testee.updateAGCertificatesWithQAs(agCertificateList);
-
-        assertEquals(0, certificate.getUnAnsweredComplement());
-        assertEquals(1, certificate1.getUnAnsweredComplement());
-        assertEquals(2, certificate2.getUnAnsweredComplement());
-        assertEquals(3, certificate3.getUnAnsweredComplement());
-        assertEquals(0, certificateNotPresent.getUnAnsweredComplement());
-    }
-
-    private AGCertificate createAGCertificate(String id) {
-        return AGCertificate.builder().certificateId(id).build();
     }
 }

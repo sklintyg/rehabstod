@@ -143,8 +143,6 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
     private PersonnummerLoader personnummerLoader;
     @Autowired
     private StubResidentStore residentStore;
-    @Autowired
-    private WcStubStore wcStore;
 
     @PostConstruct
     public void init() {
@@ -223,12 +221,6 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         var sickLeaveCertificate = new SickLeaveCertificate();
         buildSickleaveCertificate(sickLeaveCertificate, patient, hosPerson);
         sickleaveCertificateList.add(sickLeaveCertificate);
-
-        //For 25% of certificates, add at least 1 unanswered complement and the same for others
-        int randomNumberOfUnansweredComplement = getRandomNumber();
-        int randomNumberOfUnansweredOthers = getRandomNumber();
-        addToWcStubStore(sickLeaveCertificate, randomNumberOfUnansweredComplement, randomNumberOfUnansweredOthers);
-
     }
 
     private void addToDiagnosedCertificates(Patient patient, HosPersonal hosPerson, List<DiagnosedCertificate> diagnosedCertificateList) {
@@ -238,12 +230,6 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
         var diagnosedCertificate = new DiagnosedCertificate();
         buildDiagnosedCertificate(diagnosedCertificate, patient, hosPerson);
         diagnosedCertificateList.add(diagnosedCertificate);
-
-        //For 25% of certificates, add at least 1 unanswered complement and the same for others
-        int randomNumberOfUnansweredComplement = getRandomNumber();
-        int randomNumberOfUnansweredOthers = getRandomNumber();
-        addToWcStubStore(diagnosedCertificate, randomNumberOfUnansweredComplement, randomNumberOfUnansweredOthers);
-
     }
 
     private int getRandomNumber() {
@@ -428,11 +414,6 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
             intygsDataList.add(intygData);
             // Add random nr of days glapp between intyg
             timeSimulator = timeSimulator.plusDays(ThreadLocalRandom.current().nextInt(0, 10));
-
-            //For 25% of certificates, add at least 1 unanswered complement and the same for others
-            int randomNumberOfUnansweredComplement = getRandomNumber();
-            int randomNumberOfUnansweredOthers = getRandomNumber();
-            addToWcStubStore(intygData, randomNumberOfUnansweredComplement, randomNumberOfUnansweredOthers);
         }
         // Once for each patient > 50 years old, add a 2 really old intyg to get som history
         if (getAge(patient) > 50) {
@@ -440,20 +421,6 @@ public class RSTestDataGeneratorImpl implements RSTestDataGenerator {
             intygsDataList.add(buildIntygsData(patient, hosPerson));
             intygsDataList.add(buildIntygsData(patient, hosPerson));
         }
-    }
-
-    private void addToWcStubStore(IntygsData intygsData, int nrUnansweredComplement, int nrUnansweredOthers) {
-        wcStore.addAddition(intygsData.getIntygsId(), intygsData.getSigneringsTidpunkt(), nrUnansweredComplement, nrUnansweredOthers);
-    }
-
-    private void addToWcStubStore(SickLeaveCertificate sickLeaveCertificate, int nrUnansweredComplement, int nrUnansweredOthers) {
-        wcStore.addAddition(sickLeaveCertificate.getCertificateId(), sickLeaveCertificate.getSigningDateTime(), nrUnansweredComplement,
-            nrUnansweredOthers);
-    }
-
-    private void addToWcStubStore(DiagnosedCertificate diagnosedCertificate, int nrUnansweredComplement, int nrUnansweredOthers) {
-        wcStore.addAddition(diagnosedCertificate.getCertificateId(), diagnosedCertificate.getSigningDateTime(), nrUnansweredComplement,
-            nrUnansweredOthers);
     }
 
     private int getAge(Patient patient) {

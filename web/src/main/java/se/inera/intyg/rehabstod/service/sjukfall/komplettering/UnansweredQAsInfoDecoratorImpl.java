@@ -19,14 +19,10 @@
 package se.inera.intyg.rehabstod.service.sjukfall.komplettering;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import se.inera.intyg.rehabstod.integration.wc.service.WcIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
-import se.inera.intyg.rehabstod.web.model.AGCertificate;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 @Service
@@ -34,8 +30,6 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorator {
 
   private static final int MAX_DAYS_OF_UNANSWERED_COMMUNICATION = 90;
-
-    private final WcIntegrationService wcIntegrationService;
 
     private final WcRestIntegrationService wcRestIntegrationService;
 
@@ -62,26 +56,4 @@ public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorato
                 }));
 
     }
-
-    @Override
-    public void updateAGCertificatesWithQAs(List<AGCertificate> agCertificate) {
-
-        final var idList = agCertificate.stream().map(AGCertificate::getCertificateId).collect(Collectors.toList());
-
-        final var certificateAdditions = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
-
-        agCertificate
-            .forEach(
-                cert -> {
-                    var unAnsweredQAs = Optional.ofNullable(certificateAdditions.get(cert.getCertificateId())).orElse(null);
-                    if (unAnsweredQAs != null) {
-                        cert.setUnAnsweredComplement(unAnsweredQAs.getComplement());
-                        cert.setUnAnsweredOther(unAnsweredQAs.getOthers());
-                    } else {
-                        cert.setUnAnsweredComplement(0);
-                        cert.setUnAnsweredOther(0);
-                    }
-                });
-    }
-
 }
