@@ -21,12 +21,14 @@ package se.inera.intyg.rehabstod.integration.wc.service.dto;
 
 import java.util.Map;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class UnansweredCommunicationResponse {
 
     private Map<String, UnansweredQAs> unansweredQAsMap;

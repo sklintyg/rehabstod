@@ -19,39 +19,39 @@
 package se.inera.intyg.rehabstod.service.sjukfall.komplettering;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.wc.service.WcIntegrationService;
-import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredQAs;
+import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
+import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
 import se.inera.intyg.rehabstod.web.model.AGCertificate;
-import se.inera.intyg.rehabstod.web.model.PatientData;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 @Service
+@RequiredArgsConstructor
 public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorator {
 
-    @Autowired
-    private WcIntegrationService wcIntegrationService;
+  private static final int MAX_DAYS_OF_UNANSWERED_COMMUNICATION = 90;
+
+    private final WcIntegrationService wcIntegrationService;
+
+    private final WcRestIntegrationService wcRestIntegrationService;
 
     @Override
-    public void updateSjukfallPatientWithQAs(List<SjukfallPatient> patientSjukfallList) {
+    public void updateSjukfallPatientWithQAs(List<SjukfallPatient> patientSjukfallList, String patientId) {
 
-        // Get all intygsidn to query for kompletteringsinfo, excluding sjf intyg
-        final List<String> idList = patientSjukfallList.stream()
-            .flatMap(sjukfallPatient -> sjukfallPatient.getIntyg().stream())
-            .filter(patientData -> !patientData.isOtherVardgivare() && !patientData.isOtherVardenhet())
-            .map(PatientData::getIntygsId)
-            .collect(Collectors.toList());
-
-        final Map<String, UnansweredQAs> perIntyg = wcIntegrationService.getCertificateAdditionsForIntyg(idList);
+      final var perIntyg = wcRestIntegrationService.getUnansweredCommunicationForPatients(
+          UnansweredCommunicationRequest.builder()
+              .patientIds(List.of(patientId))
+              .maxDaysOfUnansweredCommunication(MAX_DAYS_OF_UNANSWERED_COMMUNICATION)
+              .build());
 
         patientSjukfallList
             .forEach(sjukfallPatient -> sjukfallPatient.getIntyg().forEach(
                 patientData -> {
-                    var unAnsweredQAs = Optional.ofNullable(perIntyg.get(patientData.getIntygsId())).orElse(null);
+                    var unAnsweredQAs = perIntyg.getUnansweredQAsMap().get(patientData.getIntygsId());
                     if (unAnsweredQAs != null) {
                         patientData.setObesvaradeKompl(unAnsweredQAs.getComplement());
                         patientData.setUnansweredOther(unAnsweredQAs.getOthers());
