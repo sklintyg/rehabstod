@@ -24,7 +24,7 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 public interface UnansweredQAsInfoDecorator {
 
-    void updateSjukfallPatientWithQAs(List<SjukfallPatient> rehabstodSjukfall);
+    void updateSjukfallPatientWithQAs(List<SjukfallPatient> rehabstodSjukfall, String patientId);
 
     void updateAGCertificatesWithQAs(List<AGCertificate> agCertificate);
 }
