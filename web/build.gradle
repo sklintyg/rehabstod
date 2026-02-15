@@ -1,3 +1,4 @@
+apply plugin: 'org.cyclonedx.bom'
 apply plugin: 'org.gretty'
 apply plugin: 'war'
 
@@ -38,8 +39,6 @@ test {
     environment "catalina.base", "${buildDirectory}/catalina.base"
 }
 
-war.rootSpec.exclude "logback.xml"
-
 dependencies {
     implementation project(":rehabstod-common")
     implementation project(":rehabstod-it-integration")
@@ -69,6 +68,7 @@ dependencies {
     implementation "se.inera.intyg.infra:security-siths:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
 
+    implementation "ch.qos.logback:logback-classic"
     implementation "co.elastic.logging:logback-ecs-encoder"
     implementation "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider"
     implementation "com.google.guava:guava"
@@ -94,10 +94,8 @@ dependencies {
 
     compileOnly "jakarta.jms:jakarta.jms-api"
     compileOnly "jakarta.persistence:jakarta.persistence-api"
-    compileOnly 'org.projectlombok:lombok'
 
     testCompileOnly "jakarta.persistence:jakarta.persistence-api"
-    testCompileOnly 'org.projectlombok:lombok'
 
     annotationProcessor 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
@@ -106,7 +104,10 @@ dependencies {
     runtimeOnly "se.inera.intyg.infra:hsa-integration-intyg-proxy-service:${intygInfraVersion}"
     runtimeOnly "se.inera.intyg.infra:pu-integration-intyg-proxy-service:${intygInfraVersion}"
 
+    testImplementation 'junit:junit'
+    testImplementation "org.mockito:mockito-junit-jupiter"
     testImplementation "org.springframework:spring-test"
 
     testRuntimeOnly "jakarta.servlet:jakarta.servlet-api"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
 }

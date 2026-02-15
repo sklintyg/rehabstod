@@ -1,15 +1,11 @@
 plugins {
-    alias(libs.plugins.org.sonarqube)
-    alias(libs.plugins.org.owasp.dependencycheck)
+    alias(libs.plugins.com.github.ben.manes.versions)
     alias(libs.plugins.org.cyclonedx.bom)
+    alias(libs.plugins.org.sonarqube)
     id "org.gretty" version "4.1.10" apply false
-    id 'test-report-aggregation'
-    id 'jacoco'
 }
 
 ext {
-    intygBomVersion = '1.0.0.6'
-
     intygInfraVersion = System.properties['infraVersion'] ?: '4.1.0-SNAPSHOT'
 
     blockingSchemaVersion = "4.0.1.4"
@@ -26,15 +22,32 @@ apply from: 'gradle/configureIntygBom.gradle'
 
 allprojects {
     apply plugin: 'java'
-    apply plugin: 'jacoco'
-    apply plugin: 'idea'
+    apply plugin: 'test-report-aggregation'
 
     group = 'se.inera.intyg.rehabstod'
     version = System.properties['buildVersion'] ?: '1.0.0-SNAPSHOT'
 
+    repositories {
+        mavenLocal()
+        maven { url "https://nexus.drift.inera.se/repository/it-public/" }
+        maven { url 'https://build.shibboleth.net/nexus/content/repositories/releases/' }
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'jacoco'
+
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(21)
+            languageVersion = JavaLanguageVersion.of(javaVersion)
+        }
+    }
+
+    configurations {
+        mockitoAgent
+        compileOnly {
+            extendsFrom annotationProcessor
         }
     }
 
@@ -48,34 +61,21 @@ allprojects {
         annotationProcessor platform("se.inera.intyg.bom:platform:${intygBomVersion}")
         testImplementation platform("se.inera.intyg.bom:platform:${intygBomVersion}")
         testAnnotationProcessor platform("se.inera.intyg.bom:platform:${intygBomVersion}")
-
-        implementation "ch.qos.logback:logback-classic"
-
-        testImplementation 'junit:junit'
-        testImplementation "org.junit.jupiter:junit-jupiter-api"
-        testImplementation "org.junit.jupiter:junit-jupiter-params"
-        testImplementation "org.mockito:mockito-junit-jupiter"
-        testImplementation "org.mockito:mockito-core"
-
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-        testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
-
-        compileOnly 'org.projectlombok:lombok'
-
-        annotationProcessor 'org.projectlombok:lombok'
+        mockitoAgent platform("se.inera.intyg.bom:platform:${intygBomVersion}")
+        mockitoAgent("org.mockito:mockito-core") { transitive = false }
     }
 
-    testing.suites {
-        test { useJUnitJupiter() }
+    test {
+        jvmArgs += [
+                "-javaagent:${configurations.mockitoAgent.asPath}",
+                "-Xshare:off"
+        ]
     }
 
-    repositories {
-        mavenLocal()
-        maven { url "https://nexus.drift.inera.se/repository/it-public/" }
-        maven { url 'https://build.shibboleth.net/nexus/content/repositories/releases/' }
-        mavenCentral {
-            content {
-                excludeGroupByRegex "se\\.inera.*"
+    testing {
+        suites {
+            test {
+                useJUnitJupiter()
             }
         }
     }
@@ -98,12 +98,14 @@ allprojects {
         }
     }
 
-    configurations {
-        // Remove these due to conflict with Spring SAML which uses bcprov-jdk15.
-        implementation.exclude group: "org.bouncycastle", module: "bcpkix-jdk15on"
-        implementation.exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
-        implementation.exclude group: "org.bouncycastle", module: "bcprov-jdk15"
-//        implementation.exclude group: "org.opensaml", module: "xmltooling"
+    tasks.matching { it.name == "cyclonedxDirectBom" }.configureEach { t ->
+        t.includeConfigs = ['^runtimeClasspath$']
+    }
+}
+
+reporting {
+    subprojects.collect { subproject -> subproject.name }.each { subprojectName ->
+        dependencies { testReportAggregation project(":${subprojectName}") }
     }
 }
 
@@ -111,22 +113,5 @@ sonar {
     properties {
         property "sonar.projectKey", "intyg-rehabstod"
         property "sonar.projectName", "intyg-rehabstod"
-        property "sonar.dependencyCheck.jsonReportPath", "${layout.buildDirectory.get()}/reports/dependency-check-report.json" as String
-        property "sonar.dependencyCheck.htmlReportPath", "${layout.buildDirectory.get()}/reports/dependency-check-report.html" as String
-    }
-}
-
-dependencyCheck {
-    formats = ['HTML', 'JSON']
-    nvd.setDatafeedUrl(nvdMirror)
-    analyzers.setAssemblyEnabled(false)
-    analyzers.setCentralEnabled(false)
-    analyzers.ossIndex.setUsername(project.properties.get('ossIndexUsername') as String)
-    analyzers.ossIndex.setPassword(project.properties.get('ossIndexPassword') as String)
-}
-
-reporting {
-    subprojects.collect { subproject -> subproject.name }.each { subprojectName ->
-        dependencies { testReportAggregation project(":${subprojectName}") }
     }
 }

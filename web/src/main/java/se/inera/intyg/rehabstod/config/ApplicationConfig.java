@@ -46,9 +46,7 @@ import se.inera.intyg.rehabstod.web.filters.UnitSelectedAssuranceFilter;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource(ignoreResourceNotFound = true, value = {"classpath:application.properties",
-    "file:${dev.config.file}",
-    "classpath:version.properties"})
+@PropertySource(ignoreResourceNotFound = true, value = {"classpath:application.properties", "file:${dev.config.file}"})
 @Import(MonitoringConfiguration.class)
 @ImportResource({"classpath:META-INF/cxf/cxf.xml"})
 @ComponentScan({"se.inera.intyg.infra.integration.intygproxyservice", "se.inera.intyg.rehabstod.logging",
