@@ -6,8 +6,6 @@ plugins {
 }
 
 ext {
-    intygBomVersion = '1.0.0.7'
-
     intygInfraVersion = System.properties['infraVersion'] ?: '4.1.0-SNAPSHOT'
 
     blockingSchemaVersion = "4.0.1.4"
