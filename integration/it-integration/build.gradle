@@ -3,6 +3,7 @@ dependencies {
     implementation project(":rehabstod-wc-integration")
     implementation project(":rehabstod-logging")
 
+    implementation "ch.qos.logback:logback-classic"
     implementation "com.fasterxml.jackson.core:jackson-databind"
     implementation "com.google.guava:guava"
     implementation "commons-io:commons-io"
@@ -17,6 +18,8 @@ dependencies {
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
 
     compileOnly "jakarta.xml.bind:jakarta.xml.bind-api"
-    compileOnly "org.projectlombok:lombok"
+
     annotationProcessor "org.projectlombok:lombok"
+
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
 }

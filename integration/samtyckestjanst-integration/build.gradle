@@ -13,5 +13,9 @@ dependencies {
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
     implementation "se.riv.informationsecurity.authorization.consent:informationsecurity-authorization-consent-schemas:${consentSchemaVersion}"
 
+    testImplementation 'junit:junit'
+    testImplementation "org.mockito:mockito-junit-jupiter"
     testImplementation "org.springframework:spring-test"
+
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
 }

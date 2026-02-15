@@ -7,4 +7,9 @@ dependencies {
     implementation "org.springframework:spring-context-support"
     implementation "org.springframework:spring-web"
     implementation "se.inera.intyg.clinicalprocess.healthcond.srs:intyg-clinicalprocess-healthcond-srs-schemas:${srsSchemasVersion}"
+
+    testImplementation 'junit:junit'
+    testImplementation "org.mockito:mockito-junit-jupiter"
+
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
 }

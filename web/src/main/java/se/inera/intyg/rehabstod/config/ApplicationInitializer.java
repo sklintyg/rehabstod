@@ -56,7 +56,6 @@ import se.inera.intyg.rehabstod.integration.wc.config.WcClientConfiguration;
 import se.inera.intyg.rehabstod.integration.wc.config.WcIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.wc.stub.WcIntegrationStubConfiguration;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfig;
-import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
 
 public class ApplicationInitializer implements WebApplicationInitializer {
 
@@ -87,7 +86,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
             SRSIntegrationStubConfiguration.class,
             JmsConfig.class, SecurityConfig.class,
             SjukfallConfig.class, EmployeeNameCacheConfig.class, InfraConfig.class, PersistenceConfig.class,
-            PersistenceConfigDev.class, MonitoringConfiguration.class);
+            MonitoringConfiguration.class);
 
         servletContext.addListener(new ContextLoaderListener(appContext));
 

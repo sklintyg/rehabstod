@@ -13,7 +13,7 @@ dependencyResolutionManagement {
 
 rootProject.name = 'rehabstod'
 
-include ':web', ':common', ':persistence', ':logging', ':integration/it-integration', ':integration/srs-integration', ':integration/samtyckestjanst-integration', ':integration/sparrtjanst-integration', ':integration/wc-integration', ':rehabstod-liquibase-runner'
+include ':web', ':common', ':persistence', ':logging', ':integration/it-integration', ':integration/srs-integration', ':integration/samtyckestjanst-integration', ':integration/sparrtjanst-integration', ':integration/wc-integration'
 
 project(':web').name = 'rehabstod-web'
 project(':common').name = 'rehabstod-common'
@@ -24,4 +24,3 @@ project(':integration/samtyckestjanst-integration').name = 'rehabstod-samtyckest
 project(':integration/sparrtjanst-integration').name = 'rehabstod-sparrtjanst-integration'
 project(':integration/wc-integration').name = 'rehabstod-wc-integration'
 project(':integration/srs-integration').name = 'rehabstod-srs-integration'
-project(':rehabstod-liquibase-runner').projectDir = "$rootDir/tools/liquibase-runner" as File
