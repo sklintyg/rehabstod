@@ -100,12 +100,6 @@ subprojects {
         }
     }
 
-    configurations {
-        implementation.exclude group: "org.bouncycastle", module: "bcpkix-jdk15on"
-        implementation.exclude group: "org.bouncycastle", module: "bcprov-jdk15on"
-        implementation.exclude group: "org.bouncycastle", module: "bcprov-jdk15"
-    }
-
     tasks.matching { it.name == "cyclonedxDirectBom" }.configureEach { t ->
         t.includeConfigs = ['^runtimeClasspath$']
     }
