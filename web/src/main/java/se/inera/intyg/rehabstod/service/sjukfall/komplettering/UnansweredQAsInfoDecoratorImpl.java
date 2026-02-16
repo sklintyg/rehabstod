@@ -20,6 +20,7 @@ package se.inera.intyg.rehabstod.service.sjukfall.komplettering;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
@@ -29,31 +30,33 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 @RequiredArgsConstructor
 public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorator {
 
-  private static final int MAX_DAYS_OF_UNANSWERED_COMMUNICATION = 90;
+    @Value("${wc.getadditions.max.age.days:90}")
+    private int maxDaysOfUnansweredCommunication;
 
     private final WcRestIntegrationService wcRestIntegrationService;
 
     @Override
     public void updateSjukfallPatientWithQAs(List<SjukfallPatient> patientSjukfallList, String patientId) {
 
-      final var perIntyg = wcRestIntegrationService.getUnansweredCommunicationForPatients(
+      final var unansweredQAsResponse = wcRestIntegrationService.getUnansweredCommunicationForPatients(
           UnansweredCommunicationRequest.builder()
               .patientIds(List.of(patientId))
-              .maxDaysOfUnansweredCommunication(MAX_DAYS_OF_UNANSWERED_COMMUNICATION)
+              .maxDaysOfUnansweredCommunication(maxDaysOfUnansweredCommunication)
               .build());
 
-        patientSjukfallList
-            .forEach(sjukfallPatient -> sjukfallPatient.getIntyg().forEach(
-                patientData -> {
-                    var unAnsweredQAs = perIntyg.getUnansweredQAsMap().get(patientData.getIntygsId());
-                    if (unAnsweredQAs != null) {
+
+        patientSjukfallList.stream()
+            .flatMap(sjukfallPatient -> sjukfallPatient.getIntyg().stream())
+            .forEach(patientData -> {
+                    var unAnsweredQAs = unansweredQAsResponse.getUnansweredQAsMap().get(patientData.getIntygsId());
+                    if (!patientData.isOtherVardgivare() && !patientData.isOtherVardenhet() && unAnsweredQAs != null) {
                         patientData.setObesvaradeKompl(unAnsweredQAs.getComplement());
                         patientData.setUnansweredOther(unAnsweredQAs.getOthers());
                     } else {
                         patientData.setObesvaradeKompl(0);
                         patientData.setUnansweredOther(0);
                     }
-                }));
+                });
 
     }
 }

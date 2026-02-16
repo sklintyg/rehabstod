@@ -61,6 +61,10 @@ public class UnansweredQAsInfoDecoratorImplTest {
         kompl.put("1", new UnansweredQAs(1, 1));
         kompl.put("2", new UnansweredQAs(2, 2));
         kompl.put("3", new UnansweredQAs(3, 3));
+        kompl.put("4", new UnansweredQAs(3, 3));
+        kompl.put("5", new UnansweredQAs(3, 3));
+        kompl.put("6", new UnansweredQAs(3, 3));
+        kompl.put("n/a", new UnansweredQAs(0, 0));
 
         final var response = UnansweredCommunicationResponse.builder()
             .unansweredQAsMap(kompl)
