@@ -31,7 +31,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listactivesickleavesforcareunit.v1.ListActiveSickLeavesForCareUnitResponderInterface;
 import se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ListSickLeavesForPersonResponderInterface;
-import se.riv.itintegration.monitoring.rivtabp21.v1.PingForConfigurationResponderInterface;
 
 // CHECKSTYLE:ON LineLength
 
@@ -61,10 +60,6 @@ public class IntygstjanstIntegrationClientConfiguration {
     @Value("${it.listsickleavesforperson.url}")
     private String listSickleavesForPersonUrl;
 
-
-    @Value("${it.ping.url}")
-    private String itWsPingUrl;
-
     @Bean
     public ListSickLeavesForPersonResponderInterface listSickLeavesForPersonWebServiceClient() {
         // CHECKSTYLE:OFF LineLength
@@ -76,21 +71,6 @@ public class IntygstjanstIntegrationClientConfiguration {
         Client client = ClientProxy.getClient(listSickLeavesForPersonResponderInterface);
         applyTimeouts(client);
         return listSickLeavesForPersonResponderInterface;
-        // CHECKSTYLE:ON LineLength
-    }
-
-    @Bean
-    public PingForConfigurationResponderInterface itPingForConfigurationWebServiceClient() {
-        // CHECKSTYLE:OFF LineLength
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setAddress(itWsPingUrl);
-        proxyFactoryBean.setServiceClass(PingForConfigurationResponderInterface.class);
-
-        PingForConfigurationResponderInterface pingForConfigurationResponderInterface =
-            (PingForConfigurationResponderInterface) proxyFactoryBean.create();
-        Client client = ClientProxy.getClient(pingForConfigurationResponderInterface);
-        applyTimeouts(client);
-        return pingForConfigurationResponderInterface;
         // CHECKSTYLE:ON LineLength
     }
 

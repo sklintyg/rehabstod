@@ -3,15 +3,18 @@ dependencies {
     implementation project(":rehabstod-logging")
 
     implementation "com.fasterxml.jackson.core:jackson-databind"
-    implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
-    implementation "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
+    implementation "org.apache.cxf:cxf-rt-frontend-jaxws"
+    implementation "org.apache.cxf:cxf-rt-transports-http"
     implementation "org.springframework.data:spring-data-redis"
     implementation "org.springframework:spring-web"
     implementation "se.inera.intyg.clinicalprocess.healthcond.certificate:intyg-clinicalprocess-healthcond-certificate-schemas:${intygClinicalprocessSchemasVersion}"
     implementation "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
 
-    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    testImplementation 'junit:junit'
+    testImplementation "org.mockito:mockito-junit-jupiter"
     testImplementation "org.springframework:spring-test"
+
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
 }

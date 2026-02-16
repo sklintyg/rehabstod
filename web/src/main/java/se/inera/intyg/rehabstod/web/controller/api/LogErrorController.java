@@ -20,13 +20,12 @@
 package se.inera.intyg.rehabstod.web.controller.api;
 
 import com.sun.istack.NotNull;
-import jakarta.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
@@ -44,13 +43,13 @@ public class LogErrorController {
         this.errorLogService = errorLogService;
     }
 
-    @RequestMapping(value = "/error", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/error")
     @PerformanceLogging(eventAction = "log-error", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
-    public Response logError(@RequestBody @NotNull ErrorDataDTO errorDataDTO) {
+    public ResponseEntity<Void> logError(@RequestBody @NotNull ErrorDataDTO errorDataDTO) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Logging error with id: '{}'", errorDataDTO.getErrorData().getErrorId());
         }
         errorLogService.logError(errorDataDTO.getErrorData());
-        return Response.ok().build();
+        return ResponseEntity.ok().build();
     }
 }

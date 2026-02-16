@@ -43,7 +43,6 @@ import se.inera.intyg.rehabstod.auth.RSSecurityHeadersFilter;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationClientConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.it.config.IntygstjanstRestIntegrationConfiguration;
-import se.inera.intyg.rehabstod.integration.it.stub.IntygstjanstIntegrationStubConfiguration;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.config.SamtyckestjanstClientConfiguration;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.config.SamtyckestjanstConfiguration;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstStubConfiguration;
@@ -54,7 +53,6 @@ import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationClientConfi
 import se.inera.intyg.rehabstod.integration.srs.config.SRSIntegrationConfiguration;
 import se.inera.intyg.rehabstod.integration.srs.stub.SRSIntegrationStubConfiguration;
 import se.inera.intyg.rehabstod.persistence.config.PersistenceConfig;
-import se.inera.intyg.rehabstod.persistence.config.PersistenceConfigDev;
 
 public class ApplicationInitializer implements WebApplicationInitializer {
 
@@ -66,12 +64,11 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         AnnotationConfigWebApplicationContext appContext = new AnnotationConfigWebApplicationContext();
 
         appContext.register(WebSecurityConfig.class, ApplicationConfig.class, CacheConfigurationFromInfra.class,
-            PuConfiguration.class, ServiceConfig.class,
+            ServiceConfig.class,
             IaConfiguration.class, JobConfig.class,
             IntygstjanstIntegrationConfiguration.class,
             IntygstjanstRestIntegrationConfiguration.class,
             IntygstjanstIntegrationClientConfiguration.class,
-            IntygstjanstIntegrationStubConfiguration.class,
             SamtyckestjanstConfiguration.class,
             SamtyckestjanstClientConfiguration.class,
             SamtyckestjanstStubConfiguration.class,
@@ -81,9 +78,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
             SRSIntegrationConfiguration.class,
             SRSIntegrationClientConfiguration.class,
             SRSIntegrationStubConfiguration.class,
-            JmsConfig.class, NTjPPingConfig.class, SecurityConfig.class,
+            JmsConfig.class, SecurityConfig.class,
             SjukfallConfig.class, EmployeeNameCacheConfig.class, InfraConfig.class, PersistenceConfig.class,
-            PersistenceConfigDev.class, MonitoringConfiguration.class);
+            MonitoringConfiguration.class);
 
         servletContext.addListener(new ContextLoaderListener(appContext));
 

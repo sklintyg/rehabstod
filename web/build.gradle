@@ -1,3 +1,4 @@
+apply plugin: 'org.cyclonedx.bom'
 apply plugin: 'org.gretty'
 apply plugin: 'war'
 
@@ -23,7 +24,7 @@ gretty {
     serverConfigFile = "tomcat-gretty.xml"
 
     jvmArgs = ["-Dcatalina.base=${buildDirectory}/catalina.base",
-               "-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-srs-stub,caching-enabled,rhs-security-test,ia-stub,testability,pu-integration-intyg-proxy-service",
+               "-Dspring.profiles.active=dev,rhs-samtyckestjanst-stub,rhs-sparrtjanst-stub,rhs-srs-stub,caching-enabled,rhs-security-test,ia-stub,testability",
                "-Dlogback.file=${applicationDir}/config/logback-spring.xml",
                "-Djava.awt.headless=true",
                "-Dfile.encoding=UTF-8",
@@ -38,8 +39,6 @@ test {
     environment "catalina.base", "${buildDirectory}/catalina.base"
 }
 
-war.rootSpec.exclude "logback.xml"
-
 dependencies {
     implementation project(":rehabstod-common")
     implementation project(":rehabstod-it-integration")
@@ -52,9 +51,7 @@ dependencies {
 
     implementation "se.inera.intyg.clinicalprocess.healthcond.rehabilitation:intyg-clinicalprocess-healthcond-rehabilitation-schemas:${intygHealthcondRehabilitationSchemasVersion}"
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
-    implementation "se.riv.clinicalprocess.healthcond.monitoring:clinicalprocess-healthcond-monitoring-schemas:${internalMonitoringSchemaVersion}"
     implementation "se.riv.informationsecurity.authorization.consent:informationsecurity-authorization-consent-schemas:${consentSchemaVersion}"
-    implementation "se.riv.itintegration.monitoring:itintegration-monitoring-schemas:${rivtaItintegrationMonitoringSchemasVersion}"
 
     implementation "se.inera.intyg.infra:certificate:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:common-redis-cache-core:${intygInfraVersion}"
@@ -65,27 +62,28 @@ dependencies {
     implementation "se.inera.intyg.infra:ia-integration:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:log-messages:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:monitoring:${intygInfraVersion}"
-    implementation "se.inera.intyg.infra:pu-integration:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:security-authorities:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:security-common:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:security-filter:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:security-siths:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
 
-    implementation "co.elastic.logging:logback-ecs-encoder:${logbackEcsEncoderVersion}"
+    implementation "ch.qos.logback:logback-classic"
+    implementation "co.elastic.logging:logback-ecs-encoder"
     implementation "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider"
-    implementation "com.google.guava:guava:${googleGuavaVersion}"
+    implementation "com.google.guava:guava"
     implementation "io.prometheus:simpleclient_servlet"
-    implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring:${shedlockSpringVersion}"
+    implementation "net.javacrumbs.shedlock:shedlock-provider-redis-spring"
     implementation "jakarta.ws.rs:jakarta.ws.rs-api"
     implementation "org.apache.activemq:activemq-spring"
     implementation "org.apache.commons:commons-lang3"
-    implementation "org.apache.cxf:cxf-rt-features-logging:${cxfVersion}"
-    implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
-    implementation "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
+    implementation "org.apache.cxf:cxf-rt-features-logging"
+    implementation "org.apache.cxf:cxf-rt-frontend-jaxrs"
+    implementation "org.apache.cxf:cxf-rt-frontend-jaxws"
+    implementation "org.apache.cxf:cxf-rt-transports-http"
     implementation "org.apache.httpcomponents.client5:httpclient5"
-    implementation "org.apache.poi:poi-ooxml:${poiVersion}"
-    implementation "codes.rafael.jaxb2_commons:jaxb2-basics:${jaxb2Version}"
+    implementation "org.apache.poi:poi-ooxml"
+    implementation "codes.rafael.jaxb2_commons:jaxb2-basics"
     implementation "org.springframework.data:spring-data-jpa"
     implementation 'org.springframework.security:spring-security-saml2-service-provider'
     implementation "org.springframework.security:spring-security-config"
@@ -96,10 +94,8 @@ dependencies {
 
     compileOnly "jakarta.jms:jakarta.jms-api"
     compileOnly "jakarta.persistence:jakarta.persistence-api"
-    compileOnly 'org.projectlombok:lombok'
 
     testCompileOnly "jakarta.persistence:jakarta.persistence-api"
-    testCompileOnly 'org.projectlombok:lombok'
 
     annotationProcessor 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
@@ -108,7 +104,10 @@ dependencies {
     runtimeOnly "se.inera.intyg.infra:hsa-integration-intyg-proxy-service:${intygInfraVersion}"
     runtimeOnly "se.inera.intyg.infra:pu-integration-intyg-proxy-service:${intygInfraVersion}"
 
+    testImplementation 'junit:junit'
+    testImplementation "org.mockito:mockito-junit-jupiter"
     testImplementation "org.springframework:spring-test"
 
     testRuntimeOnly "jakarta.servlet:jakarta.servlet-api"
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
 }

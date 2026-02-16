@@ -3,16 +3,20 @@ dependencies {
     implementation project(":rehabstod-logging")
 
     implementation "com.fasterxml.jackson.jakarta.rs:jackson-jakarta-rs-json-provider"
-    implementation "com.google.guava:guava:${googleGuavaVersion}"
+    implementation "com.google.guava:guava"
     implementation "jakarta.ws.rs:jakarta.ws.rs-api"
-    implementation "org.apache.cxf:cxf-rt-frontend-jaxws:${cxfVersion}"
-    implementation "org.apache.cxf:cxf-rt-transports-http:${cxfVersion}"
-    implementation "codes.rafael.jaxb2_commons:jaxb2-basics:${jaxb2Version}"
+    implementation "org.apache.cxf:cxf-rt-frontend-jaxws"
+    implementation "org.apache.cxf:cxf-rt-transports-http"
+    implementation "codes.rafael.jaxb2_commons:jaxb2-basics"
     implementation "org.springframework.data:spring-data-redis"
     implementation "se.inera.intyg.infra:common-redis-cache-core:${intygInfraVersion}"
     implementation "se.inera.intyg.infra:sjukfall-engine:${intygInfraVersion}"
     implementation "se.inera.intyg.schemas:schemas-contract:${schemasContractVersion}"
     implementation "se.riv.informationsecurity.authorization.blocking:informationsecurity-authorization-blocking-schemas:${blockingSchemaVersion}"
 
+    testImplementation 'junit:junit'
+    testImplementation "org.mockito:mockito-junit-jupiter"
     testImplementation "org.springframework:spring-test"
+
+    testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
 }
