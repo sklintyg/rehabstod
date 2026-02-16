@@ -83,7 +83,7 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
 
         sickLeaves.forEach(sickLeave ->
             log.info("Active sickleave for patient '{}' with active intyg '{}' with intygIds '{}'",
-                sickLeave.getPatient().getId(),
+                sickLeave.getPatient() == null ? "patient null" : sickLeave.getPatient().getId(),
                 sickLeave.getAktivIntygsId(),
                 sickLeave.getIntygLista()
             )
