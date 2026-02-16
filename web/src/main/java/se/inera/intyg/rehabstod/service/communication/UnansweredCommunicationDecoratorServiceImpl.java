@@ -22,6 +22,7 @@ package se.inera.intyg.rehabstod.service.communication;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,7 @@ import se.inera.intyg.rehabstod.web.model.LUCertificate;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 @Service
+@Slf4j
 public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCommunicationDecoratorService {
 
     private final WcRestIntegrationService wcRestIntegrationService;
@@ -61,6 +63,8 @@ public class UnansweredCommunicationDecoratorServiceImpl implements UnansweredCo
         final var response = wcRestIntegrationService.getUnansweredCommunicationForPatients(
             new UnansweredCommunicationRequest(maxDaysOfUnansweredCommunication, patientIds)
         );
+
+        log.info("Unanswered-communication for patients response: {}", response);
 
         if (response.isUnansweredCommunicationError()) {
             return false;

@@ -20,6 +20,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDT
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 @Service
+@Slf4j
 public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeavesResponseService {
 
     private final SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
@@ -78,6 +80,7 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
     public GetActiveSickLeavesResponseDTO get(SickLeavesFilterRequestDTO filterRequest, boolean includeParameters, boolean shouldPdlLog) {
         final var request = createSickLeaveRequestService.create(filterRequest, includeParameters);
         final var sickLeaves = getActiveSickLeavesService.get(request);
+        log.info("Active sickleaves fetched from IT: {}", sickLeaves);
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(sickLeaves);
         sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(sickLeaves);
 

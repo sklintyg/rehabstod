@@ -26,6 +26,7 @@ import static se.inera.intyg.rehabstod.logging.MdcLogConstants.SESSION_ID_KEY;
 import static se.inera.intyg.rehabstod.logging.MdcLogConstants.TRACE_ID_KEY;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -39,6 +40,7 @@ import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
 
     private static final Logger LOG = LoggerFactory.getLogger(WcRestIntegrationServiceImpl.class);
@@ -57,6 +59,8 @@ public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
     public UnansweredCommunicationResponse getUnansweredCommunicationForPatients(UnansweredCommunicationRequest request) {
         final var url = "/internalapi/unanswered-communication";
 
+        log.info("Get unanswered-communication for patients request: {}", request);
+        
         try {
             return wcRestClient
                 .post()
