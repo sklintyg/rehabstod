@@ -80,7 +80,15 @@ public class GetActiveSickLeavesResponseServiceImpl implements GetActiveSickLeav
     public GetActiveSickLeavesResponseDTO get(SickLeavesFilterRequestDTO filterRequest, boolean includeParameters, boolean shouldPdlLog) {
         final var request = createSickLeaveRequestService.create(filterRequest, includeParameters);
         final var sickLeaves = getActiveSickLeavesService.get(request);
-        log.info("Active sickleaves fetched from IT: {}", sickLeaves);
+
+        sickLeaves.forEach(sickLeave ->
+            log.info("Active sickleave for patient '{}' with active intyg '{}' with intygIds '{}'",
+                sickLeave.getPatient().getId(),
+                sickLeave.getAktivIntygsId(),
+                sickLeave.getIntygLista()
+            )
+        );
+
         sjukfallEmployeeNameResolver.enrichWithHsaEmployeeNames(sickLeaves);
         sjukfallEmployeeNameResolver.updateDuplicateDoctorNamesWithHsaId(sickLeaves);
 

@@ -18,17 +18,14 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.List;
-import lombok.ToString;
 import se.inera.intyg.rehabstod.integration.it.dto.RekoStatusDTO;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 
 /**
  * Created by eriklupander on 2016-02-19.
  */
-@ToString
 public class SjukfallEnhet {
 
     private String vardGivareId;
@@ -51,14 +48,12 @@ public class SjukfallEnhet {
     private int obesvaradeKompl;
     private int unansweredOther;
 
-    @JsonIgnore
     private List<String> intygLista;
 
     private int aktivGrad;
 
     private List<Integer> grader;
 
-    @JsonIgnore
     private String aktivIntygsId;
 
     private List<String> sysselsattning;
