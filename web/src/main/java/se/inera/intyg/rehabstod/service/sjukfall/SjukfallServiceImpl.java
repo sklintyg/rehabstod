@@ -137,7 +137,7 @@ public class SjukfallServiceImpl implements SjukfallService {
 
         boolean qaInfoError = false;
         try {
-            unansweredQAsInfoDecorator.updateSjukfallPatientWithQAs(rehabstodSjukfall);
+            unansweredQAsInfoDecorator.updateSjukfallPatientWithQAs(rehabstodSjukfall, patientId);
         } catch (WcIntegrationException e) {
             qaInfoError = true;
         }

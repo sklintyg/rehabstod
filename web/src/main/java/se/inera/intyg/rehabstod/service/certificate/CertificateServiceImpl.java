@@ -45,7 +45,6 @@ import se.inera.intyg.rehabstod.auth.RehabstodUser;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityEntry;
 import se.inera.intyg.rehabstod.auth.pdl.PDLActivityStore;
 import se.inera.intyg.rehabstod.integration.it.service.IntygstjanstRestIntegrationService;
-import se.inera.intyg.rehabstod.integration.wc.exception.WcIntegrationException;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.communication.UnansweredCommunicationDecoratorService;
 import se.inera.intyg.rehabstod.service.diagnos.DiagnosFactory;
@@ -422,11 +421,6 @@ public class CertificateServiceImpl implements CertificateService {
 
         final var agCertificateList = transformSickLeaveCertificatesToAGCertificates(sickLeaveCertificateList);
         boolean qaInfoError = false;
-        try {
-            populateAGCertificatesWithNotificationData(agCertificateList);
-        } catch (WcIntegrationException e) {
-            qaInfoError = true;
-        }
 
         LOGGER.debug("Adding PDL log for certificate read");
         final var storedActivities = user.getStoredActivities();
@@ -488,10 +482,6 @@ public class CertificateServiceImpl implements CertificateService {
 
         return sickLeaveCertificateList.stream().filter(this::commonFilter).map(this::convertSickLeaveCertificateToLUCertificate)
             .sorted(Comparator.comparing(AGCertificate::getStart).reversed()).collect(Collectors.toList());
-    }
-
-    private void populateAGCertificatesWithNotificationData(List<AGCertificate> agCertificateList) {
-        unansweredQAsInfoDecorator.updateAGCertificatesWithQAs(agCertificateList);
     }
 
     private AGCertificate convertSickLeaveCertificateToLUCertificate(SickLeaveCertificate sickLeaveCertificate) {
