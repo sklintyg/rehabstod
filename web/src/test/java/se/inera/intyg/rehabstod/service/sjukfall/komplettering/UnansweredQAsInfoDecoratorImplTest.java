@@ -19,6 +19,7 @@
 package se.inera.intyg.rehabstod.service.sjukfall.komplettering;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -101,9 +102,9 @@ public class UnansweredQAsInfoDecoratorImplTest {
         assertEquals(1, sjukfall1.getIntyg().get(0).getObesvaradeKompl().intValue());
         assertEquals(2, sjukfall23.getIntyg().get(0).getObesvaradeKompl().intValue());
         assertEquals(3, sjukfall23.getIntyg().get(1).getObesvaradeKompl().intValue());
-        assertEquals(0, sjukfall4.getIntyg().get(0).getObesvaradeKompl().intValue());
-        assertEquals(0, sjukfall5.getIntyg().get(0).getObesvaradeKompl().intValue());
-        assertEquals(0, sjukfall6.getIntyg().get(0).getObesvaradeKompl().intValue());
+        assertNull(sjukfall4.getIntyg().get(0).getObesvaradeKompl());
+        assertNull(sjukfall5.getIntyg().get(0).getObesvaradeKompl());
+        assertNull(sjukfall6.getIntyg().get(0).getObesvaradeKompl());
         assertEquals(0, sjukfallNotPresent.getIntyg().get(0).getObesvaradeKompl().intValue());
     }
 

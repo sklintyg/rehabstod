@@ -43,7 +43,10 @@ public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorato
               .build());
 
         patientSjukfallList
-            .forEach(sjukfallPatient -> sjukfallPatient.getIntyg().forEach(
+            .forEach(sjukfallPatient -> sjukfallPatient.getIntyg()
+                .stream()
+                .filter(patientData -> !patientData.isOtherVardgivare() && !patientData.isOtherVardenhet())
+                .forEach(
                 patientData -> {
                     var unAnsweredQAs = perIntyg.getUnansweredQAsMap().get(patientData.getIntygsId());
                     if (unAnsweredQAs != null) {
