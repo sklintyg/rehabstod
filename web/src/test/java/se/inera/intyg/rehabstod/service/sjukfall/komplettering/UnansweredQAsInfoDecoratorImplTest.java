@@ -61,6 +61,10 @@ public class UnansweredQAsInfoDecoratorImplTest {
         kompl.put("1", new UnansweredQAs(1, 1));
         kompl.put("2", new UnansweredQAs(2, 2));
         kompl.put("3", new UnansweredQAs(3, 3));
+        kompl.put("4", new UnansweredQAs(3, 3));
+        kompl.put("5", new UnansweredQAs(3, 3));
+        kompl.put("6", new UnansweredQAs(3, 3));
+        kompl.put("n/a", new UnansweredQAs(0, 0));
 
         final var response = UnansweredCommunicationResponse.builder()
             .unansweredQAsMap(kompl)
@@ -97,14 +101,14 @@ public class UnansweredQAsInfoDecoratorImplTest {
 
         verify(wcRestIntegrationService).getUnansweredCommunicationForPatients(requestCaptor.capture());
 
-        assertEquals(0, sjukfall0.getIntyg().get(0).getObesvaradeKompl().intValue());
-        assertEquals(1, sjukfall1.getIntyg().get(0).getObesvaradeKompl().intValue());
+        assertEquals(0, sjukfall0.getIntyg().getFirst().getObesvaradeKompl().intValue());
+        assertEquals(1, sjukfall1.getIntyg().getFirst().getObesvaradeKompl().intValue());
         assertEquals(2, sjukfall23.getIntyg().get(0).getObesvaradeKompl().intValue());
         assertEquals(3, sjukfall23.getIntyg().get(1).getObesvaradeKompl().intValue());
-        assertEquals(0, sjukfall4.getIntyg().get(0).getObesvaradeKompl().intValue());
-        assertEquals(0, sjukfall5.getIntyg().get(0).getObesvaradeKompl().intValue());
-        assertEquals(0, sjukfall6.getIntyg().get(0).getObesvaradeKompl().intValue());
-        assertEquals(0, sjukfallNotPresent.getIntyg().get(0).getObesvaradeKompl().intValue());
+        assertEquals(0, sjukfall4.getIntyg().getFirst().getObesvaradeKompl().intValue());
+        assertEquals(0, sjukfall5.getIntyg().getFirst().getObesvaradeKompl().intValue());
+        assertEquals(0, sjukfall6.getIntyg().getFirst().getObesvaradeKompl().intValue());
+        assertEquals(0, sjukfallNotPresent.getIntyg().getFirst().getObesvaradeKompl().intValue());
     }
 
     private PatientData createPatientData(String intygId, boolean otherVardgivare, boolean otherVardenhet) {
