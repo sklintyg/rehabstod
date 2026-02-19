@@ -19,11 +19,13 @@
 package se.inera.intyg.rehabstod.service.sjukfall.komplettering;
 
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.wc.service.WcRestIntegrationService;
 import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationRequest;
+import se.inera.intyg.rehabstod.integration.wc.service.dto.UnansweredCommunicationResponse;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 @Service
@@ -48,8 +50,9 @@ public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorato
         patientSjukfallList.stream()
             .flatMap(sjukfallPatient -> sjukfallPatient.getIntyg().stream())
             .forEach(patientData -> {
-                    var unAnsweredQAs = unansweredQAsResponse.getUnansweredQAsMap().get(patientData.getIntygsId());
-                    if (!patientData.isOtherVardgivare() && !patientData.isOtherVardenhet() && unAnsweredQAs != null) {
+                    if (!patientData.isOtherVardgivare() && !patientData.isOtherVardenhet()
+                        && isUnansweredQAsResponseAvailable(unansweredQAsResponse)) {
+                        var unAnsweredQAs = unansweredQAsResponse.getUnansweredQAsMap().get(patientData.getIntygsId());
                         patientData.setObesvaradeKompl(unAnsweredQAs.getComplement());
                         patientData.setUnansweredOther(unAnsweredQAs.getOthers());
                     } else {
@@ -59,4 +62,9 @@ public class UnansweredQAsInfoDecoratorImpl implements UnansweredQAsInfoDecorato
                 });
 
     }
+
+  private static boolean isUnansweredQAsResponseAvailable(UnansweredCommunicationResponse unansweredQAsResponse) {
+    return !Objects.isNull(unansweredQAsResponse) && !Objects.isNull(
+        unansweredQAsResponse.getUnansweredQAsMap());
+  }
 }

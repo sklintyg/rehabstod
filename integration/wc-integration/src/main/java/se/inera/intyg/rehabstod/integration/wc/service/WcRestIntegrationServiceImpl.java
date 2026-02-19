@@ -25,6 +25,7 @@ import static se.inera.intyg.rehabstod.logging.MdcLogConstants.EVENT_TYPE_ACCESS
 import static se.inera.intyg.rehabstod.logging.MdcLogConstants.SESSION_ID_KEY;
 import static se.inera.intyg.rehabstod.logging.MdcLogConstants.TRACE_ID_KEY;
 
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
