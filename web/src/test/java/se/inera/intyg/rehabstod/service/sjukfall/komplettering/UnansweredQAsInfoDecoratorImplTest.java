@@ -111,6 +111,40 @@ public class UnansweredQAsInfoDecoratorImplTest {
         assertEquals(0, sjukfallNotPresent.getIntyg().getFirst().getObesvaradeKompl().intValue());
     }
 
+    @Test
+    public void shouldReturnZeroWhenResponseIsNull() {
+        when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any(
+            UnansweredCommunicationRequest.class))).thenReturn(null);
+
+        List<SjukfallPatient> sjukfall = new ArrayList<>();
+        final SjukfallPatient sjukfall0 = createSjukfallPatient(createPatientData("0", false, false));
+        sjukfall.add(sjukfall0);
+
+        testee.updateSjukfallPatientWithQAs(sjukfall, PATIENT_ID);
+
+        assertEquals(0, sjukfall0.getIntyg().getFirst().getObesvaradeKompl().intValue());
+        assertEquals(0, sjukfall0.getIntyg().getFirst().getUnansweredOther().intValue());
+    }
+
+    @Test
+    public void shouldReturnZeroWhenUnansweredQAsInResponseIsNull() {
+        when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any(
+            UnansweredCommunicationRequest.class)))
+            .thenReturn(UnansweredCommunicationResponse.builder()
+                .unansweredQAsMap(null)
+                .unansweredCommunicationError(true)
+            .build());
+
+        List<SjukfallPatient> sjukfall = new ArrayList<>();
+        final SjukfallPatient sjukfall0 = createSjukfallPatient(createPatientData("0", false, false));
+        sjukfall.add(sjukfall0);
+
+        testee.updateSjukfallPatientWithQAs(sjukfall, PATIENT_ID);
+
+        assertEquals(0, sjukfall0.getIntyg().getFirst().getObesvaradeKompl().intValue());
+        assertEquals(0, sjukfall0.getIntyg().getFirst().getUnansweredOther().intValue());
+    }
+
     private PatientData createPatientData(String intygId, boolean otherVardgivare, boolean otherVardenhet) {
         PatientData patientData = new PatientData();
         patientData.setIntygsId(intygId);
