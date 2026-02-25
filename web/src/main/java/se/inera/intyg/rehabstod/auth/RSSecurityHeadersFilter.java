@@ -21,6 +21,8 @@ package se.inera.intyg.rehabstod.auth;
 import static org.springframework.security.web.server.header.StrictTransportSecurityServerHttpHeadersWriter.STRICT_TRANSPORT_SECURITY;
 import static org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter.X_FRAME_OPTIONS;
 import static org.springframework.security.web.server.header.XXssProtectionServerHttpHeadersWriter.X_XSS_PROTECTION;
+import static org.springframework.security.web.server.header.ContentSecurityPolicyServerHttpHeadersWriter.CONTENT_SECURITY_POLICY;
+import static org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter.REFERRER_POLICY;
 
 import java.io.IOException;
 import jakarta.servlet.FilterChain;
@@ -38,6 +40,8 @@ public class RSSecurityHeadersFilter extends SecurityHeadersFilter {
         response.setHeader(STRICT_TRANSPORT_SECURITY, "max-age=31536000 ; includeSubDomains");
         response.setHeader(X_XSS_PROTECTION, "1; mode=block");
         response.setHeader(X_FRAME_OPTIONS, "DENY");
+        response.setHeader(CONTENT_SECURITY_POLICY, "frame-ancestors 'none'");
+        response.setHeader(REFERRER_POLICY, "origin-when-cross-origin");
 
         super.doFilterInternal(request, response, filterChain);
     }
