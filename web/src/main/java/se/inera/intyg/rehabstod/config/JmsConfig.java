@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,45 +26,44 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.jms.core.JmsTemplate;
 
-/**
- * Created by eriklupander on 2016-02-18.
- */
+/** Created by eriklupander on 2016-02-18. */
 @Configuration
 public class JmsConfig {
 
-    @Value("${activemq.broker.url}")
-    private String activeMqBrokerUrl;
+  @Value("${activemq.broker.url}")
+  private String activeMqBrokerUrl;
 
-    @Value("${activemq.broker.username}")
-    private String activeMqBrokerUsername;
+  @Value("${activemq.broker.username}")
+  private String activeMqBrokerUsername;
 
-    @Value("${activemq.broker.password}")
-    private String activeMqBrokerPassword;
+  @Value("${activemq.broker.password}")
+  private String activeMqBrokerPassword;
 
-    @Value("${pdl.logging.queue.name}")
-    private String loggingQueueName;
+  @Value("${pdl.logging.queue.name}")
+  private String loggingQueueName;
 
-    @Bean
-    public JmsTransactionManager jmsTransactionManager() {
-        return new JmsTransactionManager(connectionFactory());
-    }
+  @Bean
+  public JmsTransactionManager jmsTransactionManager() {
+    return new JmsTransactionManager(connectionFactory());
+  }
 
-    @Bean
-    public ConnectionFactory connectionFactory() {
-        return new ActiveMQConnectionFactory(activeMqBrokerUsername, activeMqBrokerPassword, activeMqBrokerUrl);
-    }
+  @Bean
+  public ConnectionFactory connectionFactory() {
+    return new ActiveMQConnectionFactory(
+        activeMqBrokerUsername, activeMqBrokerPassword, activeMqBrokerUrl);
+  }
 
-    @Bean
-    public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
-        return new JmsTemplate(connectionFactory);
-    }
+  @Bean
+  public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
+    return new JmsTemplate(connectionFactory);
+  }
 
-    @Bean
-    public JmsTemplate jmsPDLLogTemplate() {
-        JmsTemplate jmsTemplate = new JmsTemplate();
-        jmsTemplate.setDefaultDestinationName(loggingQueueName);
-        jmsTemplate.setConnectionFactory(connectionFactory());
-        jmsTemplate.setSessionTransacted(true);
-        return jmsTemplate;
-    }
+  @Bean
+  public JmsTemplate jmsPDLLogTemplate() {
+    JmsTemplate jmsTemplate = new JmsTemplate();
+    jmsTemplate.setDefaultDestinationName(loggingQueueName);
+    jmsTemplate.setConnectionFactory(connectionFactory());
+    jmsTemplate.setSessionTransacted(true);
+    return jmsTemplate;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -32,33 +32,35 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertifi
 import se.inera.intyg.rehabstod.logging.MdcLogConstants;
 import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 
-/**
- * Created by eriklupander on 2017-10-31.
- */
+/** Created by eriklupander on 2017-10-31. */
 @Service
 public class SRSClientServiceImpl implements SRSClientService {
 
-    @Autowired
-    private GetRiskPredictionForCertificateResponderInterface service;
+  @Autowired private GetRiskPredictionForCertificateResponderInterface service;
 
-    @Autowired
-    private GetDiagnosisCodesResponderInterface getDiagnosisCodesService;
+  @Autowired private GetDiagnosisCodesResponderInterface getDiagnosisCodesService;
 
-    @Override
-    @PerformanceLogging(eventAction = "get-risk-prediction-for-certificate", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public List<RiskPrediktion> getRiskPrediktionForCertificate(List<String> intygsId) {
+  @Override
+  @PerformanceLogging(
+      eventAction = "get-risk-prediction-for-certificate",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public List<RiskPrediktion> getRiskPrediktionForCertificate(List<String> intygsId) {
 
-        GetRiskPredictionForCertificateRequestType reqType = new GetRiskPredictionForCertificateRequestType();
-        reqType.getIntygsId().addAll(intygsId);
-        GetRiskPredictionForCertificateResponseType responseType = service.getRiskPredictionForCertificate(reqType);
-        return responseType.getRiskPrediktioner();
-    }
+    GetRiskPredictionForCertificateRequestType reqType =
+        new GetRiskPredictionForCertificateRequestType();
+    reqType.getIntygsId().addAll(intygsId);
+    GetRiskPredictionForCertificateResponseType responseType =
+        service.getRiskPredictionForCertificate(reqType);
+    return responseType.getRiskPrediktioner();
+  }
 
-    @Override
-    @PerformanceLogging(eventAction = "get-diagnosis-list", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public List<Diagnos> getDiagnosisList() {
-        GetDiagnosisCodesRequestType reqType = new GetDiagnosisCodesRequestType();
-        GetDiagnosisCodesResponseType response = getDiagnosisCodesService.getDiagnosisCodes(reqType);
-        return response.getDiagnos();
-    }
+  @Override
+  @PerformanceLogging(
+      eventAction = "get-diagnosis-list",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public List<Diagnos> getDiagnosisList() {
+    GetDiagnosisCodesRequestType reqType = new GetDiagnosisCodesRequestType();
+    GetDiagnosisCodesResponseType response = getDiagnosisCodesService.getDiagnosisCodes(reqType);
+    return response.getDiagnos();
+  }
 }

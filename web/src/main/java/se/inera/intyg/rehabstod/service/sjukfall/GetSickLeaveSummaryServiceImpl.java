@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.util.Collections;
@@ -29,40 +28,43 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDT
 @Service
 public class GetSickLeaveSummaryServiceImpl implements GetSickLeaveSummaryService {
 
-    private final PuService puService;
-    private final StatisticsCalculator statisticsCalculator;
-    private final GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
-    private static final boolean EXCLUDE_PARAMETERS = false;
-    private static final boolean SHOULD_NOT_PDL_LOG = false;
-    private static final String TEXT_SEARCH = "textSearch";
+  private final PuService puService;
+  private final StatisticsCalculator statisticsCalculator;
+  private final GetActiveSickLeavesResponseService getActiveSickLeavesResponseService;
+  private static final boolean EXCLUDE_PARAMETERS = false;
+  private static final boolean SHOULD_NOT_PDL_LOG = false;
+  private static final String TEXT_SEARCH = "textSearch";
 
-    public GetSickLeaveSummaryServiceImpl(PuService puService, StatisticsCalculator statisticsCalculator,
-        GetActiveSickLeavesResponseService getActiveSickLeavesResponseService) {
-        this.puService = puService;
-        this.statisticsCalculator = statisticsCalculator;
-        this.getActiveSickLeavesResponseService = getActiveSickLeavesResponseService;
-    }
+  public GetSickLeaveSummaryServiceImpl(
+      PuService puService,
+      StatisticsCalculator statisticsCalculator,
+      GetActiveSickLeavesResponseService getActiveSickLeavesResponseService) {
+    this.puService = puService;
+    this.statisticsCalculator = statisticsCalculator;
+    this.getActiveSickLeavesResponseService = getActiveSickLeavesResponseService;
+  }
 
-    @Override
-    public SickLeaveSummary get() {
-        final var sickLeaves = getActiveSickLeavesResponseService.get(
-            new SickLeavesFilterRequestDTO(
-                Collections.emptyList(),
-                Collections.emptyList(),
-                Collections.emptyList(),
-                null,
-                null,
-                null,
-                null,
-                Collections.emptyList(),
-                Collections.emptyList(),
-                null,
-                null
-            ),
-            EXCLUDE_PARAMETERS,
-            SHOULD_NOT_PDL_LOG
-        ).getContent();
-        puService.filterSekretessForSummary(sickLeaves);
-        return statisticsCalculator.getSickLeaveSummary(sickLeaves);
-    }
+  @Override
+  public SickLeaveSummary get() {
+    final var sickLeaves =
+        getActiveSickLeavesResponseService
+            .get(
+                new SickLeavesFilterRequestDTO(
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    null,
+                    null),
+                EXCLUDE_PARAMETERS,
+                SHOULD_NOT_PDL_LOG)
+            .getContent();
+    puService.filterSekretessForSummary(sickLeaves);
+    return statisticsCalculator.getSickLeaveSummary(sickLeaves);
+  }
 }

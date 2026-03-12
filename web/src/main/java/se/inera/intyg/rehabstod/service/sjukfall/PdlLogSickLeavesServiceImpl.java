@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import java.util.List;
@@ -36,54 +35,57 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 @Service
 public class PdlLogSickLeavesServiceImpl implements PdlLogSickLeavesService {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    private final LogService logService;
+  private final LogService logService;
 
-    public PdlLogSickLeavesServiceImpl(UserService userService, LogService logService) {
-        this.userService = userService;
-        this.logService = logService;
+  public PdlLogSickLeavesServiceImpl(UserService userService, LogService logService) {
+    this.userService = userService;
+    this.logService = logService;
+  }
+
+  @Override
+  public void log(
+      List<SjukfallEnhet> sickLeaves, ActivityType activityType, ResourceType resourceType) {
+    final var user = userService.getUser();
+    final var unitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
+    if (unitId == null) {
+      throw new IllegalArgumentException("Cannot create PDL log statements, unitId was null");
     }
 
-    @Override
-    public void log(List<SjukfallEnhet> sickLeaves, ActivityType activityType, ResourceType resourceType) {
-        final var user = userService.getUser();
-        final var unitId = ControllerUtil.getEnhetsIdForQueryingIntygstjansten(user);
-        if (unitId == null) {
-            throw new IllegalArgumentException("Cannot create PDL log statements, unitId was null");
-        }
+    final var sickLeavesToLog =
+        PDLActivityStore.getActivitiesNotInStore(
+            unitId, sickLeaves, activityType, resourceType, user.getStoredActivities());
+    logService.logSjukfallData(sickLeavesToLog, activityType, resourceType);
+    PDLActivityStore.addActivitiesToStore(
+        unitId, sickLeavesToLog, activityType, resourceType, user.getStoredActivities());
+  }
 
-        final var sickLeavesToLog = PDLActivityStore.getActivitiesNotInStore(
-            unitId, sickLeaves, activityType, resourceType, user.getStoredActivities()
-        );
-        logService.logSjukfallData(sickLeavesToLog, activityType, resourceType);
-        PDLActivityStore.addActivitiesToStore(unitId, sickLeavesToLog, activityType, resourceType, user.getStoredActivities());
+  @Override
+  public void logPrint(List<SjukfallEnhet> sickLeaves) {
+    final var user = userService.getUser();
+    log(sickLeaves, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
+
+    if (isActivatedForSRS(user)) {
+      log(
+          filterHavingRiskSignal(sickLeaves),
+          ActivityType.PRINT,
+          ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
     }
+  }
 
-    @Override
-    public void logPrint(List<SjukfallEnhet> sickLeaves) {
-        final var user = userService.getUser();
-        log(sickLeaves, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
-
-        if (isActivatedForSRS(user)) {
-            log(filterHavingRiskSignal(sickLeaves), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
-        }
+  private List<SjukfallEnhet> filterHavingRiskSignal(List<SjukfallEnhet> finalList) {
+    if (finalList == null) {
+      return null;
     }
+    return finalList.stream().filter(hasRiskSignal()).collect(Collectors.toList());
+  }
 
-    private List<SjukfallEnhet> filterHavingRiskSignal(List<SjukfallEnhet> finalList) {
-        if (finalList == null) {
-            return null;
-        }
-        return finalList.stream()
-            .filter(hasRiskSignal())
-            .collect(Collectors.toList());
-    }
+  private Predicate<SjukfallEnhet> hasRiskSignal() {
+    return se -> se.getRiskSignal() != null && se.getRiskSignal().getRiskKategori() >= 1;
+  }
 
-    private Predicate<SjukfallEnhet> hasRiskSignal() {
-        return se -> se.getRiskSignal() != null && se.getRiskSignal().getRiskKategori() >= 1;
-    }
-
-    private boolean isActivatedForSRS(RehabstodUser user) {
-        return user.isFeatureActive(AuthoritiesConstants.FEATURE_SRS);
-    }
+  private boolean isActivatedForSRS(RehabstodUser user) {
+    return user.isFeatureActive(AuthoritiesConstants.FEATURE_SRS);
+  }
 }

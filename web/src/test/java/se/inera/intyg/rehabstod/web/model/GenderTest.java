@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,35 +22,33 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-/**
- * Created by martin on 11/02/16.
- */
+/** Created by martin on 11/02/16. */
 public class GenderTest {
 
-    @Test
-    public void testGetMale() {
-        assertEquals(Gender.M, Gender.getGenderFromString("1"));
-        assertEquals(Gender.M, Gender.getGenderFromString("3"));
-        assertEquals(Gender.M, Gender.getGenderFromString("5"));
-        assertEquals(Gender.M, Gender.getGenderFromString("7"));
-        assertEquals(Gender.M, Gender.getGenderFromString("9"));
-    }
+  @Test
+  public void testGetMale() {
+    assertEquals(Gender.M, Gender.getGenderFromString("1"));
+    assertEquals(Gender.M, Gender.getGenderFromString("3"));
+    assertEquals(Gender.M, Gender.getGenderFromString("5"));
+    assertEquals(Gender.M, Gender.getGenderFromString("7"));
+    assertEquals(Gender.M, Gender.getGenderFromString("9"));
+  }
 
-    @Test
-    public void testGetFemale() {
-        assertEquals(Gender.F, Gender.getGenderFromString("0"));
-        assertEquals(Gender.F, Gender.getGenderFromString("2"));
-        assertEquals(Gender.F, Gender.getGenderFromString("4"));
-        assertEquals(Gender.F, Gender.getGenderFromString("6"));
-        assertEquals(Gender.F, Gender.getGenderFromString("8"));
-    }
+  @Test
+  public void testGetFemale() {
+    assertEquals(Gender.F, Gender.getGenderFromString("0"));
+    assertEquals(Gender.F, Gender.getGenderFromString("2"));
+    assertEquals(Gender.F, Gender.getGenderFromString("4"));
+    assertEquals(Gender.F, Gender.getGenderFromString("6"));
+    assertEquals(Gender.F, Gender.getGenderFromString("8"));
+  }
 
-    @Test
-    public void testGetUnknown() {
-        assertEquals(Gender.UNKNOWN, Gender.getGenderFromString("A"));
-        assertEquals(Gender.UNKNOWN, Gender.getGenderFromString(""));
-        assertEquals(Gender.UNKNOWN, Gender.getGenderFromString(null));
-        assertEquals(Gender.UNKNOWN, Gender.getGenderFromString("+"));
-        assertEquals(Gender.UNKNOWN, Gender.getGenderFromString("12"));
-    }
+  @Test
+  public void testGetUnknown() {
+    assertEquals(Gender.UNKNOWN, Gender.getGenderFromString("A"));
+    assertEquals(Gender.UNKNOWN, Gender.getGenderFromString(""));
+    assertEquals(Gender.UNKNOWN, Gender.getGenderFromString(null));
+    assertEquals(Gender.UNKNOWN, Gender.getGenderFromString("+"));
+    assertEquals(Gender.UNKNOWN, Gender.getGenderFromString("12"));
+  }
 }

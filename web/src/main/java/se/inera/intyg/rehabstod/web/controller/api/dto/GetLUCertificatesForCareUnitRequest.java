@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,13 +25,13 @@ import lombok.Data;
 @Data
 public class GetLUCertificatesForCareUnitRequest {
 
-    LocalDate fromDate;
-    LocalDate toDate;
-    List<String> certTypes;
-    int fromAge;
-    int toAge;
-    List<String> diagnoses;
-    List<String> doctors;
-    String searchText;
-    int questionAndAnswers;
+  LocalDate fromDate;
+  LocalDate toDate;
+  List<String> certTypes;
+  int fromAge;
+  int toAge;
+  List<String> diagnoses;
+  List<String> doctors;
+  String searchText;
+  int questionAndAnswers;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,59 +26,60 @@ import java.util.Objects;
  */
 public class RegisterExtendedConsentResponse implements Serializable {
 
-    public enum ResponseCode { OK, ERROR }
+  public enum ResponseCode {
+    OK,
+    ERROR
+  }
 
-    private static final long serialVersionUID = -5797795536344707201L;
+  private static final long serialVersionUID = -5797795536344707201L;
 
-    private ResponseCode responseCode;
-    private String responseMessage;
+  private ResponseCode responseCode;
+  private String responseMessage;
 
-    private String registeredBy;
+  private String registeredBy;
 
-    public RegisterExtendedConsentResponse() {
+  public RegisterExtendedConsentResponse() {}
+
+  public ResponseCode getResponseCode() {
+    return responseCode;
+  }
+
+  public String getResponseMessage() {
+    return responseMessage;
+  }
+
+  public String getRegisteredBy() {
+    return registeredBy;
+  }
+
+  public void setResponseCode(ResponseCode responseCode) {
+    this.responseCode = responseCode;
+  }
+
+  public void setRegisteredBy(String registeredBy) {
+    this.registeredBy = registeredBy;
+  }
+
+  public void setResponseMessage(String responseMessage) {
+    this.responseMessage = responseMessage;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public ResponseCode getResponseCode() {
-        return responseCode;
+    if (!(o instanceof RegisterExtendedConsentResponse)) {
+      return false;
     }
+    RegisterExtendedConsentResponse that = (RegisterExtendedConsentResponse) o;
+    return responseCode == that.responseCode
+        && Objects.equals(responseMessage, that.responseMessage)
+        && Objects.equals(registeredBy, that.registeredBy);
+  }
 
-    public String getResponseMessage() {
-        return responseMessage;
-    }
-
-    public String getRegisteredBy() {
-        return registeredBy;
-    }
-
-    public void setResponseCode(ResponseCode responseCode) {
-        this.responseCode = responseCode;
-    }
-
-    public void setRegisteredBy(String registeredBy) {
-        this.registeredBy = registeredBy;
-    }
-
-    public void setResponseMessage(String responseMessage) {
-        this.responseMessage = responseMessage;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof RegisterExtendedConsentResponse)) {
-            return false;
-        }
-        RegisterExtendedConsentResponse that = (RegisterExtendedConsentResponse) o;
-        return responseCode == that.responseCode
-            && Objects.equals(responseMessage, that.responseMessage)
-            && Objects.equals(registeredBy, that.registeredBy);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(responseCode, responseMessage, registeredBy);
-    }
-
+  @Override
+  public int hashCode() {
+    return Objects.hash(responseCode, responseMessage, registeredBy);
+  }
 }

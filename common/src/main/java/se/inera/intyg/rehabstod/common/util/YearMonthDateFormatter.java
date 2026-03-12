@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,21 +25,19 @@ import java.time.format.DateTimeFormatter;
 /**
  * Formats {@link java.time.LocalDateTime} and {@link java.time.LocalDate} into yyyy-MM-dd format.
  *
- * Created by eriklupander on 2016-09-02.
+ * <p>Created by eriklupander on 2016-09-02.
  */
 public final class YearMonthDateFormatter {
 
-    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+  private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    private YearMonthDateFormatter() {
+  private YearMonthDateFormatter() {}
 
-    }
+  public static String print(LocalDate local) {
+    return local.format(dateTimeFormatter);
+  }
 
-    public static String print(LocalDate local) {
-        return local.format(dateTimeFormatter);
-    }
-
-    public static String print(LocalDateTime local) {
-        return local.format(dateTimeFormatter);
-    }
+  public static String print(LocalDateTime local) {
+    return local.format(dateTimeFormatter);
+  }
 }

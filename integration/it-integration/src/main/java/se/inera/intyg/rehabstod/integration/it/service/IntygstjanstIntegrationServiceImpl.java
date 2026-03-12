@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,44 +34,49 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.IntygsData;
 
 // CHECKSTYLE:ON LineLength
 
-/**
- * Created by eriklupander on 2016-02-01.
- */
+/** Created by eriklupander on 2016-02-01. */
 @Service
 public class IntygstjanstIntegrationServiceImpl implements IntygstjanstIntegrationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(IntygstjanstIntegrationServiceImpl.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(IntygstjanstIntegrationServiceImpl.class);
 
-    @Autowired
-    private IntygstjanstClientService intygstjanstClientService;
+  @Autowired private IntygstjanstClientService intygstjanstClientService;
 
-    @Override
-    @PrometheusTimeMethod
-    public List<IntygsData> getAllIntygsDataForPatient(String patientId) {
-        verifyMandatoryParameter("patientId", patientId);
+  @Override
+  @PrometheusTimeMethod
+  public List<IntygsData> getAllIntygsDataForPatient(String patientId) {
+    verifyMandatoryParameter("patientId", patientId);
 
-        String errorMessage = "An error occured fetching all sick leave certificates for a patient. Error type: {}. Error msg: {}";
-        return getIntygsData(intygstjanstClientService.getAllSjukfallForPatient(patientId), errorMessage);
+    String errorMessage =
+        "An error occured fetching all sick leave certificates for a patient. Error type: {}. Error msg: {}";
+    return getIntygsData(
+        intygstjanstClientService.getAllSjukfallForPatient(patientId), errorMessage);
+  }
+
+  private List<IntygsData> getIntygsData(
+      ListSickLeavesForPersonResponseType responseType, String errorMessage) {
+    if (responseType == null) {
+      LOG.error(errorMessage);
+      throw new IntygstjanstIntegrationException();
     }
 
-    private List<IntygsData> getIntygsData(ListSickLeavesForPersonResponseType responseType, String errorMessage) {
-        if (responseType == null) {
-            LOG.error(errorMessage);
-            throw new IntygstjanstIntegrationException();
-        }
-
-        if (responseType.getResult().getResultCode()
-            != se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1.ResultCodeEnum.OK) {
-            LOG.error(errorMessage, responseType.getResult().getResultCode(), responseType.getResult().getResultMessage());
-            throw new IntygstjanstIntegrationException();
-        }
-
-        return responseType.getIntygsLista().getIntygsData();
+    if (responseType.getResult().getResultCode()
+        != se.inera.intyg.clinicalprocess.healthcond.rehabilitation.listsickleavesforperson.v1
+            .ResultCodeEnum.OK) {
+      LOG.error(
+          errorMessage,
+          responseType.getResult().getResultCode(),
+          responseType.getResult().getResultMessage());
+      throw new IntygstjanstIntegrationException();
     }
 
-    private void verifyMandatoryParameter(String name, String value) {
-        if (StringUtil.isNullOrEmpty(value)) {
-            throw new IllegalArgumentException("Parameter '" + name + "' must be non-empty string");
-        }
+    return responseType.getIntygsLista().getIntygsData();
+  }
+
+  private void verifyMandatoryParameter(String name, String value) {
+    if (StringUtil.isNullOrEmpty(value)) {
+      throw new IllegalArgumentException("Parameter '" + name + "' must be non-empty string");
     }
+  }
 }

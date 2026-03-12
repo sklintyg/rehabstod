@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.integration.wc.service;
 
 import static se.inera.intyg.rehabstod.logging.MdcHelper.LOG_SESSION_ID_HEADER;
@@ -41,41 +40,40 @@ import se.inera.intyg.rehabstod.logging.PerformanceLogging;
 @RequiredArgsConstructor
 public class WcRestIntegrationServiceImpl implements WcRestIntegrationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WcRestIntegrationServiceImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(WcRestIntegrationServiceImpl.class);
 
-    private final RestClient wcRestClient;
+  private final RestClient wcRestClient;
 
-    @Value("${integration.webcert.scheme}")
-    private String scheme;
-    @Value("${integration.webcert.baseurl}")
-    private String baseUrl;
-    @Value("${integration.webcert.port}")
-    private int port;
+  @Value("${integration.webcert.scheme}")
+  private String scheme;
 
-    @Override
-    @PerformanceLogging(eventAction = "get-unanswered-communication-for-patients", eventType = EVENT_TYPE_ACCESSED)
-    public UnansweredCommunicationResponse getUnansweredCommunicationForPatients(UnansweredCommunicationRequest request) {
-        final var url = "/internalapi/unanswered-communication";
+  @Value("${integration.webcert.baseurl}")
+  private String baseUrl;
 
-        try {
-            return wcRestClient
-                .post()
-                .uri(uriBuilder -> uriBuilder
-                    .scheme(scheme)
-                    .host(baseUrl)
-                    .port(port)
-                    .path(url)
-                    .build()
-                )
-                .body(request)
-                .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
-                .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
-                .contentType(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .body(UnansweredCommunicationResponse.class);
-        } catch (Exception e) {
-            LOG.error("Error getting unanswered communication from Webcert", e);
-            return new UnansweredCommunicationResponse(null, true);
-        }
+  @Value("${integration.webcert.port}")
+  private int port;
+
+  @Override
+  @PerformanceLogging(
+      eventAction = "get-unanswered-communication-for-patients",
+      eventType = EVENT_TYPE_ACCESSED)
+  public UnansweredCommunicationResponse getUnansweredCommunicationForPatients(
+      UnansweredCommunicationRequest request) {
+    final var url = "/internalapi/unanswered-communication";
+
+    try {
+      return wcRestClient
+          .post()
+          .uri(uriBuilder -> uriBuilder.scheme(scheme).host(baseUrl).port(port).path(url).build())
+          .body(request)
+          .header(LOG_TRACE_ID_HEADER, MDC.get(TRACE_ID_KEY))
+          .header(LOG_SESSION_ID_HEADER, MDC.get(SESSION_ID_KEY))
+          .contentType(MediaType.APPLICATION_JSON)
+          .retrieve()
+          .body(UnansweredCommunicationResponse.class);
+    } catch (Exception e) {
+      LOG.error("Error getting unanswered communication from Webcert", e);
+      return new UnansweredCommunicationResponse(null, true);
     }
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,32 +23,32 @@ import org.hamcrest.TypeSafeMatcher;
 import se.inera.intyg.rehabstod.common.exception.RehabstodErrorCodeEnum;
 import se.inera.intyg.rehabstod.common.exception.RehabstodServiceException;
 
-/**
- * Created by pebe on 2015-08-17.
- */
-public final class RehabstodServiceExceptionMatcher extends TypeSafeMatcher<RehabstodServiceException> {
+/** Created by pebe on 2015-08-17. */
+public final class RehabstodServiceExceptionMatcher
+    extends TypeSafeMatcher<RehabstodServiceException> {
 
-    public static RehabstodServiceExceptionMatcher hasErrorCode(RehabstodErrorCodeEnum errorCode) {
-        return new RehabstodServiceExceptionMatcher(errorCode);
-    }
+  public static RehabstodServiceExceptionMatcher hasErrorCode(RehabstodErrorCodeEnum errorCode) {
+    return new RehabstodServiceExceptionMatcher(errorCode);
+  }
 
-    private RehabstodErrorCodeEnum foundErrorCode;
-    private final RehabstodErrorCodeEnum expectedErrorCode;
+  private RehabstodErrorCodeEnum foundErrorCode;
+  private final RehabstodErrorCodeEnum expectedErrorCode;
 
-    private RehabstodServiceExceptionMatcher(RehabstodErrorCodeEnum expectedErrorCode) {
-        this.expectedErrorCode = expectedErrorCode;
-    }
+  private RehabstodServiceExceptionMatcher(RehabstodErrorCodeEnum expectedErrorCode) {
+    this.expectedErrorCode = expectedErrorCode;
+  }
 
-    @Override
-    protected boolean matchesSafely(final RehabstodServiceException exception) {
-        foundErrorCode = exception.getErrorCode();
-        return foundErrorCode == expectedErrorCode;
-    }
+  @Override
+  protected boolean matchesSafely(final RehabstodServiceException exception) {
+    foundErrorCode = exception.getErrorCode();
+    return foundErrorCode == expectedErrorCode;
+  }
 
-    @Override
-    public void describeTo(Description description) {
-        description.appendValue(foundErrorCode)
-            .appendText(" was not found instead of ")
-            .appendValue(expectedErrorCode);
-    }
+  @Override
+  public void describeTo(Description description) {
+    description
+        .appendValue(foundErrorCode)
+        .appendText(" was not found instead of ")
+        .appendValue(expectedErrorCode);
+  }
 }

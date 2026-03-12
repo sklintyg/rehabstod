@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,12 +22,10 @@ import java.util.List;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-/**
- * Created by eriklupander on 2017-11-01.
- */
+/** Created by eriklupander on 2017-11-01. */
 public interface RiskPredictionService {
 
-    void updateWithRiskPredictions(List<SjukfallEnhet> rehabstodSjukfall);
+  void updateWithRiskPredictions(List<SjukfallEnhet> rehabstodSjukfall);
 
-    void updateSjukfallPatientListWithRiskPredictions(List<SjukfallPatient> rehabstodSjukfall);
+  void updateSjukfallPatientListWithRiskPredictions(List<SjukfallPatient> rehabstodSjukfall);
 }

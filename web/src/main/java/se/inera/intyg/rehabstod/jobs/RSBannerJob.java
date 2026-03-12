@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,14 +22,12 @@ import org.springframework.stereotype.Component;
 import se.inera.intyg.infra.driftbannerdto.Application;
 import se.inera.intyg.infra.integration.ia.jobs.BannerJob;
 
-/**
- * Load banners from IntygsAdmin.
- */
+/** Load banners from IntygsAdmin. */
 @Component
 public class RSBannerJob extends BannerJob {
 
-    @Override
-    protected Application getApplication() {
-        return Application.REHABSTOD;
-    }
+  @Override
+  protected Application getApplication() {
+    return Application.REHABSTOD;
+  }
 }

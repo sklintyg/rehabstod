@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,23 +24,21 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-/**
- * Created by eriklupander on 2017-01-31.
- */
+/** Created by eriklupander on 2017-01-31. */
 public class LogUserTest {
 
-    @Test
-    public void testBuildLogUserWithRequiredValues() {
-        LogUser logUser = new LogUser.Builder("1", "2", "3").build();
-        assertNotNull(logUser);
-        assertEquals("1", logUser.getUserId());
-        assertEquals("2", logUser.getEnhetsId());
-        assertEquals("3", logUser.getVardgivareId());
-    }
+  @Test
+  public void testBuildLogUserWithRequiredValues() {
+    LogUser logUser = new LogUser.Builder("1", "2", "3").build();
+    assertNotNull(logUser);
+    assertEquals("1", logUser.getUserId());
+    assertEquals("2", logUser.getEnhetsId());
+    assertEquals("3", logUser.getVardgivareId());
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testBuildLogUserWithNullRequiredValues() {
-        new LogUser.Builder("1", "2", null);
-        fail("This assert should be unreachable!");
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void testBuildLogUserWithNullRequiredValues() {
+    new LogUser.Builder("1", "2", null);
+    fail("This assert should be unreachable!");
+  }
 }

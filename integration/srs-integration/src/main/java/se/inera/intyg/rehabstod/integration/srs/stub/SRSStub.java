@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -35,89 +35,96 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertifi
 import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertificate.v1.Risksignal;
 
 /**
- * Stub for SRS. Will round-robin risk categories so first intygsId queried gets 1, the next 2...3...4...1...2...3...
+ * Stub for SRS. Will round-robin risk categories so first intygsId queried gets 1, the next
+ * 2...3...4...1...2...3...
  *
- * Created by eriklupander on 2017-10-31.
+ * <p>Created by eriklupander on 2017-10-31.
  */
 @Service
 @Profile({"rhs-srs-stub"})
-public class SRSStub implements GetRiskPredictionForCertificateResponderInterface, GetDiagnosisCodesResponderInterface {
+public class SRSStub
+    implements GetRiskPredictionForCertificateResponderInterface,
+        GetDiagnosisCodesResponderInterface {
 
-    private static final int ONE = 1;
-    private static final int TWO = 2;
-    private static final int THREE = 3;
-    private static final int FIVE = 5;
+  private static final int ONE = 1;
+  private static final int TWO = 2;
+  private static final int THREE = 3;
+  private static final int FIVE = 5;
 
-    private boolean active = true;
+  private boolean active = true;
 
-    @Override
-    public GetRiskPredictionForCertificateResponseType getRiskPredictionForCertificate(GetRiskPredictionForCertificateRequestType reqType) {
-        if (!active) {
-            throw new RuntimeException("Faking an error in the stub!");
-        }
-
-        GetRiskPredictionForCertificateResponseType resp = new GetRiskPredictionForCertificateResponseType();
-        for (int a = 0; a < reqType.getIntygsId().size(); a++) {
-
-            // Skip adding every 5th result to mimic items having no prediction in SRS.
-            if (a % FIVE != 0) {
-                RiskPrediktion riskPred = new RiskPrediktion();
-                riskPred.setIntygsId(reqType.getIntygsId().get(a));
-                riskPred.setRisksignal(buildRiskSignal(a));
-                resp.getRiskPrediktioner().add(riskPred);
-            }
-        }
-        return resp;
+  @Override
+  public GetRiskPredictionForCertificateResponseType getRiskPredictionForCertificate(
+      GetRiskPredictionForCertificateRequestType reqType) {
+    if (!active) {
+      throw new RuntimeException("Faking an error in the stub!");
     }
 
-    @Override
-    public GetDiagnosisCodesResponseType getDiagnosisCodes(GetDiagnosisCodesRequestType getDiagnosisCodesRequestType) {
-        GetDiagnosisCodesResponseType response = new GetDiagnosisCodesResponseType();
-        response.setPrediktionsmodellversion("2.2");
-        List<Diagnos> dList = Arrays.asList("F43", "M79", "S52")
-            .stream()
-            .map(code -> {
-                Diagnos d = new Diagnos();
-                d.setCode(code);
-                d.setCodeSystem("1.2.752.116.1.1.1.1.3");
-                return d;
-            })
+    GetRiskPredictionForCertificateResponseType resp =
+        new GetRiskPredictionForCertificateResponseType();
+    for (int a = 0; a < reqType.getIntygsId().size(); a++) {
+
+      // Skip adding every 5th result to mimic items having no prediction in SRS.
+      if (a % FIVE != 0) {
+        RiskPrediktion riskPred = new RiskPrediktion();
+        riskPred.setIntygsId(reqType.getIntygsId().get(a));
+        riskPred.setRisksignal(buildRiskSignal(a));
+        resp.getRiskPrediktioner().add(riskPred);
+      }
+    }
+    return resp;
+  }
+
+  @Override
+  public GetDiagnosisCodesResponseType getDiagnosisCodes(
+      GetDiagnosisCodesRequestType getDiagnosisCodesRequestType) {
+    GetDiagnosisCodesResponseType response = new GetDiagnosisCodesResponseType();
+    response.setPrediktionsmodellversion("2.2");
+    List<Diagnos> dList =
+        Arrays.asList("F43", "M79", "S52").stream()
+            .map(
+                code -> {
+                  Diagnos d = new Diagnos();
+                  d.setCode(code);
+                  d.setCodeSystem("1.2.752.116.1.1.1.1.3");
+                  return d;
+                })
             .collect(Collectors.toList());
-        response.getDiagnos().addAll(dList);
-        return response;
-    }
+    response.getDiagnos().addAll(dList);
+    return response;
+  }
 
-    public boolean isActive() {
-        return active;
-    }
+  public boolean isActive() {
+    return active;
+  }
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+  public void setActive(boolean active) {
+    this.active = active;
+  }
 
-    private Risksignal buildRiskSignal(int index) {
-        Risksignal riskSignal = new Risksignal();
-        riskSignal.setRiskkategori(getRiskInt(index));
-        riskSignal.setBeskrivning(getRiskBeskrivning(riskSignal.getRiskkategori()));
-        riskSignal.setBerakningstidpunkt(LocalDateTime.now());
-        return riskSignal;
-    }
+  private Risksignal buildRiskSignal(int index) {
+    Risksignal riskSignal = new Risksignal();
+    riskSignal.setRiskkategori(getRiskInt(index));
+    riskSignal.setBeskrivning(getRiskBeskrivning(riskSignal.getRiskkategori()));
+    riskSignal.setBerakningstidpunkt(LocalDateTime.now());
+    return riskSignal;
+  }
 
-    private String getRiskBeskrivning(int risk) {
-        switch (risk) {
-            case ONE:
-                return "Måttlig risk att sjukfallet varar i mer än 90 dagar";
-            case TWO:
-                return "Hög risk att sjukfallet varar i mer än 90 dagar";
-            case THREE:
-                return "Mycket hög risk att sjukfallet varar i mer än 90 dagar";
-            default:
-                throw new IllegalArgumentException("Only risks 1,2 and 3 are possible");
-        }
+  private String getRiskBeskrivning(int risk) {
+    switch (risk) {
+      case ONE:
+        return "Måttlig risk att sjukfallet varar i mer än 90 dagar";
+      case TWO:
+        return "Hög risk att sjukfallet varar i mer än 90 dagar";
+      case THREE:
+        return "Mycket hög risk att sjukfallet varar i mer än 90 dagar";
+      default:
+        throw new IllegalArgumentException("Only risks 1,2 and 3 are possible");
     }
+  }
 
-    // Package public for unit-tests
-    Integer getRiskInt(int index) {
-        return index % THREE + ONE;
-    }
+  // Package public for unit-tests
+  Integer getRiskInt(int index) {
+    return index % THREE + ONE;
+  }
 }

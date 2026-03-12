@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -52,140 +52,158 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentRe
 import se.inera.intyg.rehabstod.web.controller.api.dto.RegisterExtendedConsentResponse;
 import se.inera.intyg.schemas.contract.Personnummer;
 
-/**
- * Created by Magnus Ekstrand on 03/02/16.
- */
+/** Created by Magnus Ekstrand on 03/02/16. */
 @RunWith(MockitoJUnitRunner.class)
 public class ConsentControllerTest {
 
-    private static final String PERSON_ID = "19121212-1212";
-    private static final String LAKARE_ID = "L999";
-    private static final String LAKARE_NAMN = "L. Lakarsson";
-    private static final String VARDGIVARE_ID = "VG123";
-    private static final String VARDENHETS_ID = "VEA";
+  private static final String PERSON_ID = "19121212-1212";
+  private static final String LAKARE_ID = "L999";
+  private static final String LAKARE_NAMN = "L. Lakarsson";
+  private static final String VARDGIVARE_ID = "VG123";
+  private static final String VARDENHETS_ID = "VEA";
 
-    private static final int DAYS = 30;
+  private static final int DAYS = 30;
 
-    @Mock
-    LogService logServiceMock;
+  @Mock LogService logServiceMock;
 
-    @Mock
-    private UserService userServiceMock;
+  @Mock private UserService userServiceMock;
 
-    @Mock
-    private ConsentService consentServiceMock;
+  @Mock private ConsentService consentServiceMock;
 
-    @InjectMocks
-    ConsentController testee = new ConsentController();
+  @InjectMocks ConsentController testee = new ConsentController();
 
-    @Before
-    public void before() {
-        when(userServiceMock.getUser()).thenReturn(buildUser());
-    }
+  @Before
+  public void before() {
+    when(userServiceMock.getUser()).thenReturn(buildUser());
+  }
 
-    @Test
-    public void testRegisterExtendedConsent() {
-        LocalDateTime result = LocalDateTime.now();
+  @Test
+  public void testRegisterExtendedConsent() {
+    LocalDateTime result = LocalDateTime.now();
 
-        when(consentServiceMock.giveConsent(any(), anyBoolean(), isNull(), any(), any(), any()))
-            .thenReturn(result);
+    when(consentServiceMock.giveConsent(any(), anyBoolean(), isNull(), any(), any(), any()))
+        .thenReturn(result);
 
-        RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest(PERSON_ID));
+    RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest(PERSON_ID));
 
-        LocalDateTime consentFrom = LocalDate.now().atStartOfDay();
-        LocalDateTime consentTo = LocalDate.now().plusDays(DAYS).atTime(23, 59, 59);
+    LocalDateTime consentFrom = LocalDate.now().atStartOfDay();
+    LocalDateTime consentTo = LocalDate.now().plusDays(DAYS).atTime(23, 59, 59);
 
-        assertEquals(LAKARE_ID, response.getRegisteredBy());
-        assertEquals(RegisterExtendedConsentResponse.ResponseCode.OK, response.getResponseCode());
+    assertEquals(LAKARE_ID, response.getRegisteredBy());
+    assertEquals(RegisterExtendedConsentResponse.ResponseCode.OK, response.getResponseCode());
 
-        Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
+    Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
 
-        verify(consentServiceMock).giveConsent(eq(personnummer.get()), eq(false),
-            eq(null), eq(consentFrom), eq(consentTo), any(RehabstodUser.class));
-        verify(logServiceMock).logConsentActivity(eq(personnummer.get()), eq(ActivityType.CREATE), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
-    }
+    verify(consentServiceMock)
+        .giveConsent(
+            eq(personnummer.get()),
+            eq(false),
+            eq(null),
+            eq(consentFrom),
+            eq(consentTo),
+            any(RehabstodUser.class));
+    verify(logServiceMock)
+        .logConsentActivity(
+            eq(personnummer.get()),
+            eq(ActivityType.CREATE),
+            eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
+  }
 
-    @Test
-    public void testRegisterExtendedConsentMaxDays() {
-        LocalDateTime result = LocalDateTime.now();
+  @Test
+  public void testRegisterExtendedConsentMaxDays() {
+    LocalDateTime result = LocalDateTime.now();
 
-        when(consentServiceMock.giveConsent(any(), anyBoolean(), isNull(), any(), any(), any()))
-            .thenReturn(result);
+    when(consentServiceMock.giveConsent(any(), anyBoolean(), isNull(), any(), any(), any()))
+        .thenReturn(result);
 
-        RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest(PERSON_ID, ConsentController.MAX_DAYS_FOR_CONSENT));
+    RegisterExtendedConsentResponse response =
+        testee.registerConsent(buildRequest(PERSON_ID, ConsentController.MAX_DAYS_FOR_CONSENT));
 
-        LocalDateTime consentFrom = LocalDate.now().atStartOfDay();
-        LocalDateTime consentTo = LocalDate.now().plusDays(ConsentController.MAX_DAYS_FOR_CONSENT).atTime(23, 59, 59);
+    LocalDateTime consentFrom = LocalDate.now().atStartOfDay();
+    LocalDateTime consentTo =
+        LocalDate.now().plusDays(ConsentController.MAX_DAYS_FOR_CONSENT).atTime(23, 59, 59);
 
-        assertEquals(LAKARE_ID, response.getRegisteredBy());
-        assertEquals(RegisterExtendedConsentResponse.ResponseCode.OK, response.getResponseCode());
+    assertEquals(LAKARE_ID, response.getRegisteredBy());
+    assertEquals(RegisterExtendedConsentResponse.ResponseCode.OK, response.getResponseCode());
 
-        Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
+    Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
 
-        verify(consentServiceMock).giveConsent(eq(personnummer.get()), eq(false),
-            eq(null), eq(consentFrom), eq(consentTo), any(RehabstodUser.class));
-        verify(logServiceMock).logConsentActivity(eq(personnummer.get()), eq(ActivityType.CREATE), eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
-    }
+    verify(consentServiceMock)
+        .giveConsent(
+            eq(personnummer.get()),
+            eq(false),
+            eq(null),
+            eq(consentFrom),
+            eq(consentTo),
+            any(RehabstodUser.class));
+    verify(logServiceMock)
+        .logConsentActivity(
+            eq(personnummer.get()),
+            eq(ActivityType.CREATE),
+            eq(ResourceType.RESOURCE_TYPE_SAMTYCKE));
+  }
 
-    @Test
-    public void testRegisterExtendedConsent_invalidPersonnummer() {
-        RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest("21121212-1212"));
+  @Test
+  public void testRegisterExtendedConsent_invalidPersonnummer() {
+    RegisterExtendedConsentResponse response =
+        testee.registerConsent(buildRequest("21121212-1212"));
 
-        assertEquals(LAKARE_ID, response.getRegisteredBy());
-        assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
-        assertFalse(Strings.isNullOrEmpty(response.getResponseMessage()));
+    assertEquals(LAKARE_ID, response.getRegisteredBy());
+    assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
+    assertFalse(Strings.isNullOrEmpty(response.getResponseMessage()));
 
-        verifyNoInteractions(consentServiceMock);
-    }
+    verifyNoInteractions(consentServiceMock);
+  }
 
-    @Test
-    public void testRegisterExtendedConsent_invalidConsentBoundary() {
-        RegisterExtendedConsentResponse response = testee.registerConsent(
-            buildRequest(PERSON_ID, ConsentController.MAX_DAYS_FOR_CONSENT + 1));
+  @Test
+  public void testRegisterExtendedConsent_invalidConsentBoundary() {
+    RegisterExtendedConsentResponse response =
+        testee.registerConsent(buildRequest(PERSON_ID, ConsentController.MAX_DAYS_FOR_CONSENT + 1));
 
-        assertEquals(LAKARE_ID, response.getRegisteredBy());
-        assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
-        assertTrue(!Strings.isNullOrEmpty(response.getResponseMessage()));
+    assertEquals(LAKARE_ID, response.getRegisteredBy());
+    assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
+    assertTrue(!Strings.isNullOrEmpty(response.getResponseMessage()));
 
-        verifyNoInteractions(consentServiceMock);
-    }
+    verifyNoInteractions(consentServiceMock);
+  }
 
-    @Test
-    public void testRegisterExtendedConsent_error() {
-        when(consentServiceMock.giveConsent(any(), anyBoolean(), isNull(), any(), any(), any()))
-            .thenReturn(null);
+  @Test
+  public void testRegisterExtendedConsent_error() {
+    when(consentServiceMock.giveConsent(any(), anyBoolean(), isNull(), any(), any(), any()))
+        .thenReturn(null);
 
-        RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest(PERSON_ID));
+    RegisterExtendedConsentResponse response = testee.registerConsent(buildRequest(PERSON_ID));
 
-        assertEquals(LAKARE_ID, response.getRegisteredBy());
-        assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
-        assertFalse(Strings.isNullOrEmpty(response.getResponseMessage()));
+    assertEquals(LAKARE_ID, response.getRegisteredBy());
+    assertEquals(RegisterExtendedConsentResponse.ResponseCode.ERROR, response.getResponseCode());
+    assertFalse(Strings.isNullOrEmpty(response.getResponseMessage()));
 
-        verify(consentServiceMock).giveConsent(any(), anyBoolean(), isNull(), any(), any(), any());
-    }
+    verify(consentServiceMock).giveConsent(any(), anyBoolean(), isNull(), any(), any(), any());
+  }
 
-    private RehabstodUser buildUser() {
-        RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
-        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
-        preferences.updatePreference(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "0");
+  private RehabstodUser buildUser() {
+    RehabstodUserPreferences preferences = RehabstodUserPreferences.empty();
+    preferences.updatePreference(
+        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG, "5");
+    preferences.updatePreference(
+        RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT, "0");
 
-        RehabstodUser user = new RehabstodUser(LAKARE_ID, LAKARE_NAMN, true);
-        user.setPreferences(preferences);
-        user.setValdVardgivare(new Vardgivare(VARDGIVARE_ID, "vårdgivare"));
-        user.setValdVardenhet(new Vardenhet(VARDENHETS_ID, "enhet"));
+    RehabstodUser user = new RehabstodUser(LAKARE_ID, LAKARE_NAMN, true);
+    user.setPreferences(preferences);
+    user.setValdVardgivare(new Vardgivare(VARDGIVARE_ID, "vårdgivare"));
+    user.setValdVardenhet(new Vardenhet(VARDENHETS_ID, "enhet"));
 
-        return user;
-    }
+    return user;
+  }
 
-    private RegisterExtendedConsentRequest buildRequest(String personId) {
-        return buildRequest(personId, DAYS);
-    }
+  private RegisterExtendedConsentRequest buildRequest(String personId) {
+    return buildRequest(personId, DAYS);
+  }
 
-    private RegisterExtendedConsentRequest buildRequest(String personId, int days) {
-        RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
-        request.setPatientId(personId);
-        request.setDays(days);
-        return request;
-    }
-
+  private RegisterExtendedConsentRequest buildRequest(String personId, int days) {
+    RegisterExtendedConsentRequest request = new RegisterExtendedConsentRequest();
+    request.setPatientId(personId);
+    request.setDays(days);
+    return request;
+  }
 }

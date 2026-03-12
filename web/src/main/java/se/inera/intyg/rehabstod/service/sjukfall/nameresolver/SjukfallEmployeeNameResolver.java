@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,18 +23,16 @@ import se.inera.intyg.rehabstod.web.model.Lakare;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
-/**
- * Created by eriklupander on 2017-02-23.
- */
+/** Created by eriklupander on 2017-02-23. */
 public interface SjukfallEmployeeNameResolver {
 
-    void enrichWithHsaEmployeeNames(List<SjukfallEnhet> sjukfallList);
+  void enrichWithHsaEmployeeNames(List<SjukfallEnhet> sjukfallList);
 
-    void enrichSjukfallPaientWithHsaEmployeeNames(List<SjukfallPatient> sjukfallList);
+  void enrichSjukfallPaientWithHsaEmployeeNames(List<SjukfallPatient> sjukfallList);
 
-    void updateDuplicateDoctorNamesWithHsaId(List<SjukfallEnhet> sjukfallList);
+  void updateDuplicateDoctorNamesWithHsaId(List<SjukfallEnhet> sjukfallList);
 
-    void decorateAnyDuplicateNamesWithHsaId(List<Lakare> lakareList);
+  void decorateAnyDuplicateNamesWithHsaId(List<Lakare> lakareList);
 
-    String getEmployeeName(String employeeHsaId);
+  String getEmployeeName(String employeeHsaId);
 }

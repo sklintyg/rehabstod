@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -36,79 +36,99 @@ import se.riv.informationsecurity.authorization.blocking.v4.CheckResultType;
 import se.riv.informationsecurity.authorization.blocking.v4.CheckStatusType;
 import se.riv.informationsecurity.authorization.blocking.v4.ResultCodeType;
 
-/**
- * Created by marced on 2018-09-28.
- */
+/** Created by marced on 2018-09-28. */
 @Service
 public class SparrtjanstIntegrationServiceImpl implements SparrtjanstIntegrationService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SparrtjanstIntegrationServiceImpl.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(SparrtjanstIntegrationServiceImpl.class);
 
-    @Autowired
-    private SparrtjanstClientService sparrtjanstClientService;
+  @Autowired private SparrtjanstClientService sparrtjanstClientService;
 
-    @Override
-    public void decorateWithBlockStatus(String currentVardgivarHsaId, String currentVardenhetHsaId, String userHsaId, String patientId,
-        Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> intygOnOtherUnitsOnly) {
+  @Override
+  public void decorateWithBlockStatus(
+      String currentVardgivarHsaId,
+      String currentVardenhetHsaId,
+      String userHsaId,
+      String patientId,
+      Map<String, IntygAccessControlMetaData> intygAccessMetaData,
+      List<IntygData> intygOnOtherUnitsOnly) {
 
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardgivarHsaId), "vgHsaId may not be null or empty");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(currentVardenhetHsaId), "veHsaId may not be null or empty");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(userHsaId), "userHsaId may not be null or empty");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
+    Preconditions.checkArgument(
+        !Strings.isNullOrEmpty(currentVardgivarHsaId), "vgHsaId may not be null or empty");
+    Preconditions.checkArgument(
+        !Strings.isNullOrEmpty(currentVardenhetHsaId), "veHsaId may not be null or empty");
+    Preconditions.checkArgument(
+        !Strings.isNullOrEmpty(userHsaId), "userHsaId may not be null or empty");
+    Preconditions.checkArgument(
+        !Strings.isNullOrEmpty(patientId), "patientId may not be null or empty");
 
-        // Nothing to do - just return
-        if (intygOnOtherUnitsOnly.isEmpty()) {
-            return;
-        }
-
-        final CheckBlocksResponseType checkBlocksForPersonResponse = sparrtjanstClientService.getCheckBlocks(currentVardgivarHsaId,
-            currentVardenhetHsaId, userHsaId, patientId, intygOnOtherUnitsOnly);
-
-        final CheckBlocksResultType response = checkBlocksForPersonResponse.getCheckBlocksResult();
-        // OK   = Response is good
-        // INFO = Some of the requested information has a validation error,
-        //        but a response should still have been provided
-        if (response.getResult().getResultCode() != ResultCodeType.OK) {
-            if (response.getResult().getResultCode() == ResultCodeType.INFO) {
-                LOG.warn("Blocking service responded with result code INFO and resultText '{}' - "
-                    + "a partially valid response is still expected.", response.getResult().getResultText());
-            } else {
-                throw new SparrtjanstIntegrationException(
-                    String.format("Blocking service failed with resultCode '%s' and resultText '%s'",
-                        response.getResult().getResultCode(),
-                        response.getResult().getResultText()));
-            }
-        }
-
-        updateBlockStatuses(intygAccessMetaData, intygOnOtherUnitsOnly, response.getCheckResults());
+    // Nothing to do - just return
+    if (intygOnOtherUnitsOnly.isEmpty()) {
+      return;
     }
 
-    private void updateBlockStatuses(Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> queryList,
-        List<CheckResultType> responseList) {
+    final CheckBlocksResponseType checkBlocksForPersonResponse =
+        sparrtjanstClientService.getCheckBlocks(
+            currentVardgivarHsaId,
+            currentVardenhetHsaId,
+            userHsaId,
+            patientId,
+            intygOnOtherUnitsOnly);
 
-        // Sanity check before processing result - we must have gotten exactly the same number of responses as in list.
-        if (responseList.size() != queryList.size()) {
-            throw new SparrtjanstIntegrationException(
-                "Fatal error - expected " + queryList.size() + " results - got " + responseList.size());
-        }
-
-        for (int i = 0; i < queryList.size(); i++) {
-            final IntygData intygData = queryList.get(i);
-
-            // get the corresponding access metadata item
-            final IntygAccessControlMetaData metadata = intygAccessMetaData.get(intygData.getIntygId());
-
-            // Contract doesn't specify that order of element in xml is sequential,
-            // so we use rowNumber to match request/response.
-            final int rowNumber = i;
-            final CheckResultType checkResultType = responseList
-                .stream()
-                .filter(cr -> cr.getRowNumber() == rowNumber).findFirst()
-                .orElseThrow(() -> new SparrtjanstIntegrationException("Found no result for source row " + rowNumber));
-
-            // We consider all CheckStatusType's but CheckStatusType.OK as blocked.
-            metadata.setSparr(!checkResultType.getStatus().equals(CheckStatusType.OK));
-        }
+    final CheckBlocksResultType response = checkBlocksForPersonResponse.getCheckBlocksResult();
+    // OK   = Response is good
+    // INFO = Some of the requested information has a validation error,
+    //        but a response should still have been provided
+    if (response.getResult().getResultCode() != ResultCodeType.OK) {
+      if (response.getResult().getResultCode() == ResultCodeType.INFO) {
+        LOG.warn(
+            "Blocking service responded with result code INFO and resultText '{}' - "
+                + "a partially valid response is still expected.",
+            response.getResult().getResultText());
+      } else {
+        throw new SparrtjanstIntegrationException(
+            String.format(
+                "Blocking service failed with resultCode '%s' and resultText '%s'",
+                response.getResult().getResultCode(), response.getResult().getResultText()));
+      }
     }
 
+    updateBlockStatuses(intygAccessMetaData, intygOnOtherUnitsOnly, response.getCheckResults());
+  }
+
+  private void updateBlockStatuses(
+      Map<String, IntygAccessControlMetaData> intygAccessMetaData,
+      List<IntygData> queryList,
+      List<CheckResultType> responseList) {
+
+    // Sanity check before processing result - we must have gotten exactly the same number of
+    // responses as in list.
+    if (responseList.size() != queryList.size()) {
+      throw new SparrtjanstIntegrationException(
+          "Fatal error - expected " + queryList.size() + " results - got " + responseList.size());
+    }
+
+    for (int i = 0; i < queryList.size(); i++) {
+      final IntygData intygData = queryList.get(i);
+
+      // get the corresponding access metadata item
+      final IntygAccessControlMetaData metadata = intygAccessMetaData.get(intygData.getIntygId());
+
+      // Contract doesn't specify that order of element in xml is sequential,
+      // so we use rowNumber to match request/response.
+      final int rowNumber = i;
+      final CheckResultType checkResultType =
+          responseList.stream()
+              .filter(cr -> cr.getRowNumber() == rowNumber)
+              .findFirst()
+              .orElseThrow(
+                  () ->
+                      new SparrtjanstIntegrationException(
+                          "Found no result for source row " + rowNumber));
+
+      // We consider all CheckStatusType's but CheckStatusType.OK as blocked.
+      metadata.setSparr(!checkResultType.getStatus().equals(CheckStatusType.OK));
+    }
+  }
 }

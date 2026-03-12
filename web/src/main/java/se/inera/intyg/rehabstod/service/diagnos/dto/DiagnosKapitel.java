@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,119 +25,124 @@ import java.util.regex.Pattern;
 import se.inera.intyg.rehabstod.common.util.StringUtil;
 
 /**
- * Represents an group of diagnoses ("DiagnosKaptiel") in an range interval, e.g "A00-C49" which would include also a
- * code of B34.
+ * Represents an group of diagnoses ("DiagnosKaptiel") in an range interval, e.g "A00-C49" which
+ * would include also a code of B34.
  *
  * @author marced on 08/02/16.
  */
 public class DiagnosKapitel {
 
-    public static final Pattern VALID_DIAGNOSKAPITEL_ROW_FORMAT = Pattern.compile("^([A-Z]{1})([0-9]{2})-([A-Z]{1})([0-9]{2})(.*)");
+  public static final Pattern VALID_DIAGNOSKAPITEL_ROW_FORMAT =
+      Pattern.compile("^([A-Z]{1})([0-9]{2})-([A-Z]{1})([0-9]{2})(.*)");
 
-    private static final int FROM_CHAR = 1;
-    private static final int FROM_NUMBER = 2;
-    private static final int TO_CHAR = 3;
-    private static final int TO_NUMBER = 4;
-    private static final int GROUP_NAME = 5;
-    private static final int CHAR_MULTIPLIER = 100;
+  private static final int FROM_CHAR = 1;
+  private static final int FROM_NUMBER = 2;
+  private static final int TO_CHAR = 3;
+  private static final int TO_NUMBER = 4;
+  private static final int GROUP_NAME = 5;
+  private static final int CHAR_MULTIPLIER = 100;
 
-    private static final String SEPARATOR = "-";
+  private static final String SEPARATOR = "-";
 
-    private DiagnosKategori from;
-    private DiagnosKategori to;
+  private DiagnosKategori from;
+  private DiagnosKategori to;
 
-    private String name;
+  private String name;
 
-    // constructors
+  // constructors
 
-    /**
-     * Constructor that only accepts a diagnose code interval source string in the form "AXX-BXXSome description".
-     * This is mainly to accommodate simple ingestion of config from a flat file.
-     *
-     * @see DiagnosKapitel#VALID_DIAGNOSKAPITEL_ROW_FORMAT
-     */
-    public DiagnosKapitel(String rangeString) {
-        Matcher matcher = VALID_DIAGNOSKAPITEL_ROW_FORMAT.matcher(rangeString);
-        if (matcher.find()) {
-            this.from = new DiagnosKategori(matcher.group(FROM_CHAR).charAt(0), Integer.parseInt(matcher.group(FROM_NUMBER)));
-            this.to = new DiagnosKategori(matcher.group(TO_CHAR).charAt(0), Integer.parseInt(matcher.group(TO_NUMBER)));
-            this.name = matcher.group(GROUP_NAME);
-        } else {
-            throw new IllegalArgumentException("rangeString argument '" + rangeString + "' does not match expected format of "
-                + VALID_DIAGNOSKAPITEL_ROW_FORMAT.pattern());
-        }
+  /**
+   * Constructor that only accepts a diagnose code interval source string in the form "AXX-BXXSome
+   * description". This is mainly to accommodate simple ingestion of config from a flat file.
+   *
+   * @see DiagnosKapitel#VALID_DIAGNOSKAPITEL_ROW_FORMAT
+   */
+  public DiagnosKapitel(String rangeString) {
+    Matcher matcher = VALID_DIAGNOSKAPITEL_ROW_FORMAT.matcher(rangeString);
+    if (matcher.find()) {
+      this.from =
+          new DiagnosKategori(
+              matcher.group(FROM_CHAR).charAt(0), Integer.parseInt(matcher.group(FROM_NUMBER)));
+      this.to =
+          new DiagnosKategori(
+              matcher.group(TO_CHAR).charAt(0), Integer.parseInt(matcher.group(TO_NUMBER)));
+      this.name = matcher.group(GROUP_NAME);
+    } else {
+      throw new IllegalArgumentException(
+          "rangeString argument '"
+              + rangeString
+              + "' does not match expected format of "
+              + VALID_DIAGNOSKAPITEL_ROW_FORMAT.pattern());
     }
+  }
 
-    public DiagnosKapitel() {
+  public DiagnosKapitel() {}
 
+  public DiagnosKapitel(DiagnosKategori from, DiagnosKategori to, String name) {
+    this.from = from;
+    this.to = to;
+    this.name = name;
+  }
+
+  // getters and setters
+
+  public String getName() {
+    return name;
+  }
+
+  public DiagnosKategori getFrom() {
+    return from;
+  }
+
+  public DiagnosKategori getTo() {
+    return to;
+  }
+
+  // api
+
+  /**
+   * Returns an composite indentifying string for the interval in the form of "A00-B99".
+   *
+   * @return the composite id of the diagnosKapitel
+   */
+  public String getId() {
+    if (StringUtil.isNullOrEmpty(from.getId() + to.getId())) {
+      return "";
     }
+    return from.getId() + SEPARATOR + to.getId();
+  }
 
-    public DiagnosKapitel(DiagnosKategori from, DiagnosKategori to, String name) {
-        this.from = from;
-        this.to = to;
-        this.name = name;
+  /** Determines if a given diagnosKategori is considered to be included in this DiagnosKapitel. */
+  public boolean includes(Optional<DiagnosKategori> diagnosKategori) {
+    if (diagnosKategori.isPresent()) {
+      // We use the fact that a char has a numerical value in a natural order (for A-Z at least)
+      // By using this to caluculate a numerical value for a diagnosKategori we can then easily
+      // compare.
+      int min = this.from.getLetter() * CHAR_MULTIPLIER + this.from.getNumber();
+      int max = this.to.getLetter() * CHAR_MULTIPLIER + this.to.getNumber();
+      int value =
+          diagnosKategori.get().getLetter() * CHAR_MULTIPLIER + diagnosKategori.get().getNumber();
+      return (min <= value) && (value <= max);
     }
+    return false;
+  }
 
-    // getters and setters
-
-    public String getName() {
-        return name;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public DiagnosKategori getFrom() {
-        return from;
+    if (!(o instanceof DiagnosKapitel)) {
+      return false;
     }
+    DiagnosKapitel that = (DiagnosKapitel) o;
+    return Objects.equals(from, that.from)
+        && Objects.equals(to, that.to)
+        && Objects.equals(name, that.name);
+  }
 
-    public DiagnosKategori getTo() {
-        return to;
-    }
-
-    // api
-
-    /**
-     * Returns an composite indentifying string for the interval in the form of "A00-B99".
-     *
-     * @return the composite id of the diagnosKapitel
-     */
-    public String getId() {
-        if (StringUtil.isNullOrEmpty(from.getId() + to.getId())) {
-            return "";
-        }
-        return from.getId() + SEPARATOR + to.getId();
-    }
-
-    /**
-     * Determines if a given diagnosKategori is considered to be included in this DiagnosKapitel.
-     */
-    public boolean includes(Optional<DiagnosKategori> diagnosKategori) {
-        if (diagnosKategori.isPresent()) {
-            // We use the fact that a char has a numerical value in a natural order (for A-Z at least)
-            // By using this to caluculate a numerical value for a diagnosKategori we can then easily compare.
-            int min = this.from.getLetter() * CHAR_MULTIPLIER + this.from.getNumber();
-            int max = this.to.getLetter() * CHAR_MULTIPLIER + this.to.getNumber();
-            int value = diagnosKategori.get().getLetter() * CHAR_MULTIPLIER + diagnosKategori.get().getNumber();
-            return (min <= value) && (value <= max);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof DiagnosKapitel)) {
-            return false;
-        }
-        DiagnosKapitel that = (DiagnosKapitel) o;
-        return Objects.equals(from, that.from)
-            && Objects.equals(to, that.to)
-            && Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(from, to, name);
-    }
-
+  @Override
+  public int hashCode() {
+    return Objects.hash(from, to, name);
+  }
 }

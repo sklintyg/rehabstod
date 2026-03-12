@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,23 +23,25 @@ import java.util.Map;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.inera.intyg.rehabstod.common.model.IntygAccessControlMetaData;
 
-/**
- * Created by marced on 2018-09-28.
- */
+/** Created by marced on 2018-09-28. */
 public interface SparrtjanstIntegrationService {
 
-    /**
-     * Updates the corresponding {@link IntygAccessControlMetaData} sparr attributes for each {@link IntygData} in
-     * intygLista.
-     *
-     * @param currentVardgivarHsaId - The hsaId of the current vardgivare
-     * @param currentVardenhetHsaId - The hsaId of the current varenhet
-     * @param userHsaId - The hsaId of the current user
-     * @param patientId - The id of the current patient
-     * @param intygAccessMetaData -Map containing access control metadata
-     * @param intygLista -Map containing the intyg to process
-     */
-    void decorateWithBlockStatus(String currentVardgivarHsaId, String currentVardenhetHsaId, String userHsaId, String patientId,
-        Map<String, IntygAccessControlMetaData> intygAccessMetaData, List<IntygData> intygLista);
-
+  /**
+   * Updates the corresponding {@link IntygAccessControlMetaData} sparr attributes for each {@link
+   * IntygData} in intygLista.
+   *
+   * @param currentVardgivarHsaId - The hsaId of the current vardgivare
+   * @param currentVardenhetHsaId - The hsaId of the current varenhet
+   * @param userHsaId - The hsaId of the current user
+   * @param patientId - The id of the current patient
+   * @param intygAccessMetaData -Map containing access control metadata
+   * @param intygLista -Map containing the intyg to process
+   */
+  void decorateWithBlockStatus(
+      String currentVardgivarHsaId,
+      String currentVardenhetHsaId,
+      String userHsaId,
+      String patientId,
+      Map<String, IntygAccessControlMetaData> intygAccessMetaData,
+      List<IntygData> intygLista);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,36 +29,33 @@ import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.common.model.Role;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 
-/**
- * Created by marced on 14/04/16.
- */
+/** Created by marced on 14/04/16. */
 public class AuthExpectationSpecImplTest {
 
-    private static final String LAKARE = "LAKARE";
-    IntygUser user = new RehabstodUser("11111", "Dr Doctor", true);
+  private static final String LAKARE = "LAKARE";
+  IntygUser user = new RehabstodUser("11111", "Dr Doctor", true);
 
-    @Before
-    public void setUp() throws Exception {
-        user.setRoles(ImmutableMap.of(LAKARE, new Role()));
+  @Before
+  public void setUp() throws Exception {
+    user.setRoles(ImmutableMap.of(LAKARE, new Role()));
+  }
 
-    }
+  @Test
+  public void testIsVerified() throws Exception {
+    AuthExpectationSpecImpl authExpectationSpec = new AuthExpectationSpecImpl(user, null);
+    assertTrue(authExpectationSpec.roles(LAKARE).isVerified());
+    assertTrue(authExpectationSpec.notRoles("ANNAN").isVerified());
+  }
 
-    @Test
-    public void testIsVerified() throws Exception {
-        AuthExpectationSpecImpl authExpectationSpec = new AuthExpectationSpecImpl(user, null);
-        assertTrue(authExpectationSpec.roles(LAKARE).isVerified());
-        assertTrue(authExpectationSpec.notRoles("ANNAN").isVerified());
-    }
+  @Test(expected = AuthoritiesException.class)
+  public void testOrThrowRole() throws Exception {
+    AuthExpectationSpecImpl authExpectationSpec = new AuthExpectationSpecImpl(user, null);
+    authExpectationSpec.roles("ANNAN").orThrow();
+  }
 
-    @Test(expected = AuthoritiesException.class)
-    public void testOrThrowRole() throws Exception {
-        AuthExpectationSpecImpl authExpectationSpec = new AuthExpectationSpecImpl(user, null);
-        authExpectationSpec.roles("ANNAN").orThrow();
-    }
-
-    @Test(expected = AuthoritiesException.class)
-    public void testOrThrowRoleNot() throws Exception {
-        AuthExpectationSpecImpl authExpectationSpec = new AuthExpectationSpecImpl(user, null);
-        authExpectationSpec.notRoles(LAKARE).orThrow();
-    }
+  @Test(expected = AuthoritiesException.class)
+  public void testOrThrowRoleNot() throws Exception {
+    AuthExpectationSpecImpl authExpectationSpec = new AuthExpectationSpecImpl(user, null);
+    authExpectationSpec.notRoles(LAKARE).orThrow();
+  }
 }

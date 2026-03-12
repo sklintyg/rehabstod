@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,27 +25,25 @@ import java.io.IOException;
 import java.time.LocalDate;
 import org.junit.Test;
 
-/**
- * Created by eriklupander on 2016-02-01.
- */
+/** Created by eriklupander on 2016-02-01. */
 public class CustomObjectMapperTest {
 
-    private static final int YEAR = 2016;
-    private static final int MONTH = 2;
-    private static final int DAY = 11;
+  private static final int YEAR = 2016;
+  private static final int MONTH = 2;
+  private static final int DAY = 11;
 
-    @Test
-    public void testLocalDateSerializesIntoYYYYMMDD() throws JsonProcessingException {
-        String serializedLocalDate = new CustomObjectMapper().writeValueAsString(LocalDate.parse("2016-02-11"));
-        assertEquals("\"2016-02-11\"", serializedLocalDate);
-    }
+  @Test
+  public void testLocalDateSerializesIntoYYYYMMDD() throws JsonProcessingException {
+    String serializedLocalDate =
+        new CustomObjectMapper().writeValueAsString(LocalDate.parse("2016-02-11"));
+    assertEquals("\"2016-02-11\"", serializedLocalDate);
+  }
 
-    @Test
-    public void testLocalDateDeserializesFromYYYYMMDD() throws IOException {
-        LocalDate localDate = new CustomObjectMapper().readValue("\"2016-02-11\"", LocalDate.class);
-        assertEquals(YEAR, localDate.getYear());
-        assertEquals(MONTH, localDate.getMonthValue());
-        assertEquals(DAY, localDate.getDayOfMonth());
-    }
-
+  @Test
+  public void testLocalDateDeserializesFromYYYYMMDD() throws IOException {
+    LocalDate localDate = new CustomObjectMapper().readValue("\"2016-02-11\"", LocalDate.class);
+    assertEquals(YEAR, localDate.getYear());
+    assertEquals(MONTH, localDate.getMonthValue());
+    assertEquals(DAY, localDate.getDayOfMonth());
+  }
 }

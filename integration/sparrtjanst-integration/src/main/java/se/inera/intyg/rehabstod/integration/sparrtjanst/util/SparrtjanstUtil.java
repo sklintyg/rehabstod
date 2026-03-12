@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,60 +25,59 @@ import se.inera.intyg.schemas.contract.Personnummer;
 import se.riv.informationsecurity.authorization.blocking.v4.AccessingActorType;
 import se.riv.informationsecurity.authorization.blocking.v4.IIType;
 
-/**
- * Created by marced on 2018-09-26.
- */
+/** Created by marced on 2018-09-26. */
 public final class SparrtjanstUtil {
 
-    public static final String KODVERK_SAMORDNINGSNUMMER = "1.2.752.129.2.1.3.3";
-    public static final String KODVERK_PERSONNUMMER = "1.2.752.129.2.1.3.1";
+  public static final String KODVERK_SAMORDNINGSNUMMER = "1.2.752.129.2.1.3.3";
+  public static final String KODVERK_PERSONNUMMER = "1.2.752.129.2.1.3.1";
 
-    private static final int SAMORDNING_MONTH_INDEX = 6;
-    private static final int SAMORDNING_MONTH_VALUE_MIN = 6;
+  private static final int SAMORDNING_MONTH_INDEX = 6;
+  private static final int SAMORDNING_MONTH_VALUE_MIN = 6;
 
-    private SparrtjanstUtil() {
+  private SparrtjanstUtil() {}
 
+  /**
+   * Controls if a civic registration number is a 'samordningsnummer' or not.
+   *
+   * @param personNummer the civic registration number
+   * @return true if the civic registration number is a 'samordningsnummer', otherwise false
+   */
+  private static boolean isSamordningsNummer(Personnummer personNummer) {
+    // In order to determine if a personnummer is a samordningsnummer, we need to have a normalized
+    // yyyyMMddNNNN
+    // number. If we cannot parse the encapsulated string, it certainly isn't a personnummer.
+    if (Optional.ofNullable(personNummer).isPresent()) {
+      String normalizedPersonnummer = personNummer.getPersonnummer();
+      char dateDigit = normalizedPersonnummer.charAt(SAMORDNING_MONTH_INDEX);
+      return Character.getNumericValue(dateDigit) >= SAMORDNING_MONTH_VALUE_MIN;
     }
 
-    /**
-     * Controls if a civic registration number is a 'samordningsnummer' or not.
-     *
-     * @param personNummer the civic registration number
-     * @return true if the civic registration number is a 'samordningsnummer', otherwise false
-     */
-    private static boolean isSamordningsNummer(Personnummer personNummer) {
-        // In order to determine if a personnummer is a samordningsnummer, we need to have a normalized yyyyMMddNNNN
-        // number. If we cannot parse the encapsulated string, it certainly isn't a personnummer.
-        if (Optional.ofNullable(personNummer).isPresent()) {
-            String normalizedPersonnummer = personNummer.getPersonnummer();
-            char dateDigit = normalizedPersonnummer.charAt(SAMORDNING_MONTH_INDEX);
-            return Character.getNumericValue(dateDigit) >= SAMORDNING_MONTH_VALUE_MIN;
-        }
+    // An invalid personnummer cannot be a samordningsnummer.
+    return false;
+  }
 
-        // An invalid personnummer cannot be a samordningsnummer.
-        return false;
-    }
+  public static String getRootForPersonnummer(Personnummer personnummer) {
+    return isSamordningsNummer(personnummer) ? KODVERK_SAMORDNINGSNUMMER : KODVERK_PERSONNUMMER;
+  }
 
-    public static String getRootForPersonnummer(Personnummer personnummer) {
-        return isSamordningsNummer(personnummer) ? KODVERK_SAMORDNINGSNUMMER : KODVERK_PERSONNUMMER;
-    }
+  public static IIType buildIITypeForPersonOrSamordningsnummer(Personnummer personnummer) {
+    IIType patient = new IIType();
+    patient.setRoot(getRootForPersonnummer(personnummer));
+    patient.setExtension(personnummer.getPersonnummer());
+    return patient;
+  }
 
-    public static IIType buildIITypeForPersonOrSamordningsnummer(Personnummer personnummer) {
-        IIType patient = new IIType();
-        patient.setRoot(getRootForPersonnummer(personnummer));
-        patient.setExtension(personnummer.getPersonnummer());
-        return patient;
-    }
-
-    public static AccessingActorType buildAccessingActorType(String careProviderId, String careUnitId, String employeeId) {
-        // In AccessingActorType schema, alla properties are mandatory...
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(careProviderId), "careProviderId is mandatory");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(careUnitId), "careUnitId is mandatory");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(employeeId), "employeeId is mandatory");
-        AccessingActorType accessingActor = new AccessingActorType();
-        accessingActor.setCareProviderId(careProviderId);
-        accessingActor.setCareUnitId(careUnitId);
-        accessingActor.setEmployeeId(employeeId);
-        return accessingActor;
-    }
+  public static AccessingActorType buildAccessingActorType(
+      String careProviderId, String careUnitId, String employeeId) {
+    // In AccessingActorType schema, alla properties are mandatory...
+    Preconditions.checkArgument(
+        !Strings.isNullOrEmpty(careProviderId), "careProviderId is mandatory");
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(careUnitId), "careUnitId is mandatory");
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(employeeId), "employeeId is mandatory");
+    AccessingActorType accessingActor = new AccessingActorType();
+    accessingActor.setCareProviderId(careProviderId);
+    accessingActor.setCareUnitId(careUnitId);
+    accessingActor.setEmployeeId(employeeId);
+    return accessingActor;
+  }
 }

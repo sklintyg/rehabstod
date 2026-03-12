@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,12 +18,10 @@
  */
 package se.inera.intyg.rehabstod.integration.wc.exception;
 
-/**
- * Created by marced on 2018-09-26.
- */
+/** Created by marced on 2018-09-26. */
 public class WcIntegrationException extends RuntimeException {
 
-    public WcIntegrationException(String message) {
-        super(message);
-    }
+  public WcIntegrationException(String message) {
+    super(message);
+  }
 }

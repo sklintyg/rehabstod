@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,43 +20,40 @@ package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
 import se.inera.intyg.rehabstod.web.model.Gender;
 
-/**
- * Created by marced on 15/03/16.
- */
+/** Created by marced on 15/03/16. */
 public class GenderStat {
 
-    private Gender gender;
-    private int count;
-    private float percentage;
+  private Gender gender;
+  private int count;
+  private float percentage;
 
-    public GenderStat(Gender gender, int count, float percentage) {
-        this.gender = gender;
-        this.count = count;
-        this.percentage = percentage;
-    }
+  public GenderStat(Gender gender, int count, float percentage) {
+    this.gender = gender;
+    this.count = count;
+    this.percentage = percentage;
+  }
 
-    public Gender getGender() {
-        return gender;
-    }
+  public Gender getGender() {
+    return gender;
+  }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
+  public void setGender(Gender gender) {
+    this.gender = gender;
+  }
 
-    public int getCount() {
-        return count;
-    }
+  public int getCount() {
+    return count;
+  }
 
-    public void setCount(int count) {
-        this.count = count;
-    }
+  public void setCount(int count) {
+    this.count = count;
+  }
 
-    public float getPercentage() {
-        return percentage;
-    }
+  public float getPercentage() {
+    return percentage;
+  }
 
-    public void setPercentage(float percentage) {
-        this.percentage = percentage;
-    }
-
+  public void setPercentage(float percentage) {
+    this.percentage = percentage;
+  }
 }

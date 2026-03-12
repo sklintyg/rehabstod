@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,43 +28,43 @@ import se.inera.intyg.rehabstod.web.model.PatientData;
  */
 public final class LogUtil {
 
-    public static final String PDL_TITEL_LAKARE = "Läkare";
-    public static final String PDL_TITEL_REHABSTOD = "Rehabkoordinator";
+  public static final String PDL_TITEL_LAKARE = "Läkare";
+  public static final String PDL_TITEL_REHABSTOD = "Rehabkoordinator";
 
+  private LogUtil() {}
 
-    private LogUtil() {
-    }
+  public static LogPatient getLogPatient(PatientData patientData) {
+    return new LogPatient.Builder(
+            patientData.getPatient().getId(),
+            patientData.getVardenhetId(),
+            patientData.getVardgivareId())
+        .patientNamn(patientData.getPatient().getNamn())
+        .enhetsNamn(patientData.getVardenhetNamn())
+        .vardgivareNamn(patientData.getVardgivareNamn())
+        .build();
+  }
 
-    public static LogPatient getLogPatient(PatientData patientData) {
-        return new LogPatient.Builder(
-            patientData.getPatient().getId(), patientData.getVardenhetId(), patientData.getVardgivareId())
-            .patientNamn(patientData.getPatient().getNamn())
-            .enhetsNamn(patientData.getVardenhetNamn())
-            .vardgivareNamn(patientData.getVardgivareNamn())
-            .build();
-    }
+  public static LogUser getLogUser(RehabstodUser user) {
+    SelectableVardenhet valdVardgivare = user.getValdVardgivare();
+    SelectableVardenhet valdVardenhet = user.getValdVardenhet();
 
-    public static LogUser getLogUser(RehabstodUser user) {
-        SelectableVardenhet valdVardgivare = user.getValdVardgivare();
-        SelectableVardenhet valdVardenhet = user.getValdVardenhet();
+    return new LogUser.Builder(user.getHsaId(), valdVardenhet.getId(), valdVardgivare.getId())
+        .userName(user.getNamn())
+        .userAssignment(user.getSelectedMedarbetarUppdragNamn())
+        .userTitle(resolveUserTitle(user))
+        .enhetsNamn(valdVardenhet.getNamn())
+        .vardgivareNamn(valdVardgivare.getNamn())
+        .build();
+  }
 
-        return new LogUser.Builder(user.getHsaId(), valdVardenhet.getId(), valdVardgivare.getId())
-            .userName(user.getNamn())
-            .userAssignment(user.getSelectedMedarbetarUppdragNamn())
-            .userTitle(resolveUserTitle(user))
-            .enhetsNamn(valdVardenhet.getNamn())
-            .vardgivareNamn(valdVardgivare.getNamn())
-            .build();
-    }
-
-    /**
-     * LAKARE if user has LAKARE as current ROLE AND isLakare() is true.
-     * REHABKOORDINATOR if user has REHABKOORDINATOR as current role and isLakare is true.
-     * REHABKOORDINATOR if user has REHABKOORDINATOR as current role and isLakare is false.
-     */
-    private static String resolveUserTitle(RehabstodUser user) {
-        return user.isLakare() && user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE)
-            ? PDL_TITEL_LAKARE : PDL_TITEL_REHABSTOD;
-    }
-
+  /**
+   * LAKARE if user has LAKARE as current ROLE AND isLakare() is true. REHABKOORDINATOR if user has
+   * REHABKOORDINATOR as current role and isLakare is true. REHABKOORDINATOR if user has
+   * REHABKOORDINATOR as current role and isLakare is false.
+   */
+  private static String resolveUserTitle(RehabstodUser user) {
+    return user.isLakare() && user.getRoles().containsKey(AuthoritiesConstants.ROLE_LAKARE)
+        ? PDL_TITEL_LAKARE
+        : PDL_TITEL_REHABSTOD;
+  }
 }

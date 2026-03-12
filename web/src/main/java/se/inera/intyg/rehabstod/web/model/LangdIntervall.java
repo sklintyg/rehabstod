@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,48 +20,46 @@ package se.inera.intyg.rehabstod.web.model;
 
 import java.util.Objects;
 
-/**
- * Created by Magnus Ekstrand on 03/02/16.
- */
+/** Created by Magnus Ekstrand on 03/02/16. */
 public class LangdIntervall {
 
-    private String min;
-    private String max;
+  private String min;
+  private String max;
 
-    // getters and setters
+  // getters and setters
 
-    public String getMin() {
-        return min;
+  public String getMin() {
+    return min;
+  }
+
+  public void setMin(String min) {
+    this.min = min;
+  }
+
+  public String getMax() {
+    return max;
+  }
+
+  public void setMax(String max) {
+    this.max = max;
+  }
+
+  // api
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public void setMin(String min) {
-        this.min = min;
+    if (!(o instanceof LangdIntervall)) {
+      return false;
     }
+    LangdIntervall that = (LangdIntervall) o;
+    return Objects.equals(min, that.min) && Objects.equals(max, that.max);
+  }
 
-    public String getMax() {
-        return max;
-    }
-
-    public void setMax(String max) {
-        this.max = max;
-    }
-
-    // api
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof LangdIntervall)) {
-            return false;
-        }
-        LangdIntervall that = (LangdIntervall) o;
-        return Objects.equals(min, that.min) && Objects.equals(max, that.max);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(min, max);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(min, max);
+  }
 }

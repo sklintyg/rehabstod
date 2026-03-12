@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,28 +24,27 @@ import static org.junit.Assert.assertTrue;
 import java.util.Optional;
 import org.junit.Test;
 
-/**
- * Created by marced on 09/02/16.
- */
+/** Created by marced on 09/02/16. */
 public class DiagnosKategoriTest {
 
-    private static final Optional<DiagnosKategori> EXPECTED_A = Optional.of(new DiagnosKategori('A', 22));
+  private static final Optional<DiagnosKategori> EXPECTED_A =
+      Optional.of(new DiagnosKategori('A', 22));
 
-    @Test
-    public void testExtractFromStringSuccesses() throws Exception {
-        assertTrue(DiagnosKategori.extractFromString("A22").isPresent());
-        assertTrue(DiagnosKategori.extractFromString("A22").equals(EXPECTED_A));
-        assertTrue(DiagnosKategori.extractFromString("A2230.5").equals(EXPECTED_A));
-    }
+  @Test
+  public void testExtractFromStringSuccesses() throws Exception {
+    assertTrue(DiagnosKategori.extractFromString("A22").isPresent());
+    assertTrue(DiagnosKategori.extractFromString("A22").equals(EXPECTED_A));
+    assertTrue(DiagnosKategori.extractFromString("A2230.5").equals(EXPECTED_A));
+  }
 
-    @Test
-    public void testExtractFromStringFailures() throws Exception {
-        assertFalse(DiagnosKategori.extractFromString(null).isPresent());
-        assertFalse(DiagnosKategori.extractFromString("").isPresent());
-        assertFalse(DiagnosKategori.extractFromString("A").isPresent());
-        assertFalse(DiagnosKategori.extractFromString("A2").isPresent());
-        assertFalse(DiagnosKategori.extractFromString("AB22").isPresent());
-        assertFalse(DiagnosKategori.extractFromString("2F46").isPresent());
-        assertFalse(DiagnosKategori.extractFromString("A 22").isPresent());
-    }
+  @Test
+  public void testExtractFromStringFailures() throws Exception {
+    assertFalse(DiagnosKategori.extractFromString(null).isPresent());
+    assertFalse(DiagnosKategori.extractFromString("").isPresent());
+    assertFalse(DiagnosKategori.extractFromString("A").isPresent());
+    assertFalse(DiagnosKategori.extractFromString("A2").isPresent());
+    assertFalse(DiagnosKategori.extractFromString("AB22").isPresent());
+    assertFalse(DiagnosKategori.extractFromString("2F46").isPresent());
+    assertFalse(DiagnosKategori.extractFromString("A 22").isPresent());
+  }
 }

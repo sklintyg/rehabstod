@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -29,7 +29,96 @@ import se.riv.informationsecurity.authorization.consent.v2.ScopeType;
  */
 public class ConsentData implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
+
+  private String assertionId;
+  private String vardgivareId;
+  private String vardenhetId;
+  private String patientId;
+  private String employeeId;
+  private String representedBy;
+
+  private LocalDateTime consentFrom;
+  private LocalDateTime consentTo;
+
+  private ActionType registrationAction;
+
+  private final ScopeType scopeType = ScopeType.NATIONAL_LEVEL;
+  private final AssertionTypeType assertionType = AssertionTypeType.CONSENT;
+
+  ConsentData(Builder builder) {
+    this.assertionId = builder.assertionId;
+    this.vardgivareId = builder.vardgivareId;
+    this.vardenhetId = builder.vardenhetId;
+    this.patientId = builder.patientId;
+    this.employeeId = builder.employeeId;
+    this.representedBy = builder.representedBy;
+    this.consentFrom = builder.consentFrom;
+    this.consentTo = builder.consentTo;
+    this.registrationAction = builder.registrationAction;
+  }
+
+  public String getAssertionId() {
+    return assertionId;
+  }
+
+  public String getVardgivareId() {
+    return vardgivareId;
+  }
+
+  public String getVardenhetId() {
+    return vardenhetId;
+  }
+
+  public String getPatientId() {
+    return patientId;
+  }
+
+  public String getEmployeeId() {
+    return employeeId;
+  }
+
+  public String getRepresentedBy() {
+    return representedBy;
+  }
+
+  public LocalDateTime getConsentFrom() {
+    return consentFrom;
+  }
+
+  public LocalDateTime getConsentTo() {
+    return consentTo;
+  }
+
+  public ActionType getRegistrationAction() {
+    return registrationAction;
+  }
+
+  public ScopeType getScopeType() {
+    return scopeType;
+  }
+
+  public AssertionTypeType getAssertionType() {
+    return assertionType;
+  }
+
+  public void setEmployeeId(String employeeId) {
+    this.employeeId = employeeId;
+  }
+
+  public void setRepresentedBy(String representedBy) {
+    this.representedBy = representedBy;
+  }
+
+  public void setConsentFrom(LocalDateTime consentFrom) {
+    this.consentFrom = consentFrom;
+  }
+
+  public void setConsentTo(LocalDateTime consentTo) {
+    this.consentTo = consentTo;
+  }
+
+  public static final class Builder {
 
     private String assertionId;
     private String vardgivareId;
@@ -37,129 +126,45 @@ public class ConsentData implements Serializable {
     private String patientId;
     private String employeeId;
     private String representedBy;
-
     private LocalDateTime consentFrom;
     private LocalDateTime consentTo;
-
     private ActionType registrationAction;
 
-    private final ScopeType scopeType = ScopeType.NATIONAL_LEVEL;
-    private final AssertionTypeType assertionType = AssertionTypeType.CONSENT;
-
-    ConsentData(Builder builder) {
-        this.assertionId = builder.assertionId;
-        this.vardgivareId = builder.vardgivareId;
-        this.vardenhetId = builder.vardenhetId;
-        this.patientId = builder.patientId;
-        this.employeeId = builder.employeeId;
-        this.representedBy = builder.representedBy;
-        this.consentFrom = builder.consentFrom;
-        this.consentTo = builder.consentTo;
-        this.registrationAction = builder.registrationAction;
+    public Builder(
+        String assertionId,
+        String vgHsaId,
+        String veHsaId,
+        String patientId,
+        ActionType registrationAction) {
+      this.assertionId = assertionId;
+      this.vardgivareId = vgHsaId;
+      this.vardenhetId = veHsaId;
+      this.patientId = patientId;
+      this.registrationAction = registrationAction;
     }
 
-    public String getAssertionId() {
-        return assertionId;
+    public Builder employeeId(String userHsaId) {
+      this.employeeId = userHsaId;
+      return this;
     }
 
-    public String getVardgivareId() {
-        return vardgivareId;
+    public Builder representedBy(String representedBy) {
+      this.representedBy = representedBy;
+      return this;
     }
 
-    public String getVardenhetId() {
-        return vardenhetId;
+    public Builder consentFrom(LocalDateTime consentFrom) {
+      this.consentFrom = consentFrom;
+      return this;
     }
 
-    public String getPatientId() {
-        return patientId;
+    public Builder consentTo(LocalDateTime consentTo) {
+      this.consentTo = consentTo;
+      return this;
     }
 
-    public String getEmployeeId() {
-        return employeeId;
+    public ConsentData build() {
+      return new ConsentData(this);
     }
-
-    public String getRepresentedBy() {
-        return representedBy;
-    }
-
-    public LocalDateTime getConsentFrom() {
-        return consentFrom;
-    }
-
-    public LocalDateTime getConsentTo() {
-        return consentTo;
-    }
-
-    public ActionType getRegistrationAction() {
-        return registrationAction;
-    }
-
-    public ScopeType getScopeType() {
-        return scopeType;
-    }
-
-    public AssertionTypeType getAssertionType() {
-        return assertionType;
-    }
-
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
-    }
-
-    public void setRepresentedBy(String representedBy) {
-        this.representedBy = representedBy;
-    }
-
-    public void setConsentFrom(LocalDateTime consentFrom) {
-        this.consentFrom = consentFrom;
-    }
-
-    public void setConsentTo(LocalDateTime consentTo) {
-        this.consentTo = consentTo;
-    }
-
-    public static final class Builder {
-
-        private String assertionId;
-        private String vardgivareId;
-        private String vardenhetId;
-        private String patientId;
-        private String employeeId;
-        private String representedBy;
-        private LocalDateTime consentFrom;
-        private LocalDateTime consentTo;
-        private ActionType registrationAction;
-
-        public Builder(String assertionId, String vgHsaId, String veHsaId, String patientId, ActionType registrationAction) {
-            this.assertionId = assertionId;
-            this.vardgivareId = vgHsaId;
-            this.vardenhetId = veHsaId;
-            this.patientId = patientId;
-            this.registrationAction = registrationAction;
-        }
-
-        public Builder employeeId(String userHsaId) {
-            this.employeeId = userHsaId;
-            return this;
-        }
-
-        public Builder representedBy(String representedBy) {
-            this.representedBy = representedBy;
-            return this;
-        }
-
-        public Builder consentFrom(LocalDateTime consentFrom) {
-            this.consentFrom = consentFrom;
-            return this;
-        }
-
-        public Builder consentTo(LocalDateTime consentTo) {
-            this.consentTo = consentTo;
-            return this;
-        }
-
-        public ConsentData build() {
-            return new ConsentData(this);
-        }
-    }
+  }
 }

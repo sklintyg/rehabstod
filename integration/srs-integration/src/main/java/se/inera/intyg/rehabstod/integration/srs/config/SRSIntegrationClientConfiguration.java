@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -35,80 +35,86 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertifi
 // CHECKSTYLE:ON LineLength
 
 /**
- * Declares and bootstraps the Intygstjänst client for {@link GetRiskPredictionForCertificateResponderInterface}
+ * Declares and bootstraps the Intygstjänst client for {@link
+ * GetRiskPredictionForCertificateResponderInterface}
  *
- * Somewhat "hackish" use of profiles:
+ * <p>Somewhat "hackish" use of profiles:
  *
- * Bean is only active when rhs-it-stub is NOT active. The underlying getRiskPredictionForCertificateWebServiceClient() @Bean and (PfC) is
- * active for either of dev,test,prod (which should be possible to replace with no @Profile at all)
+ * <p>Bean is only active when rhs-it-stub is NOT active. The underlying
+ * getRiskPredictionForCertificateWebServiceClient() @Bean and (PfC) is active for either of
+ * dev,test,prod (which should be possible to replace with no @Profile at all)
  *
- * Created by eriklupander on 2016-02-05.
+ * <p>Created by eriklupander on 2016-02-05.
  */
 @Configuration
 @Profile("!rhs-srs-stub")
 public class SRSIntegrationClientConfiguration {
 
-    private static final String DEFAULT_RECEIVE_TIMEOUT = "60000";
-    private static final String DEFAULT_CONNECTION_TIMEOUT = "15000";
+  private static final String DEFAULT_RECEIVE_TIMEOUT = "60000";
+  private static final String DEFAULT_CONNECTION_TIMEOUT = "15000";
 
-    @Value("${srs.service.receive.timeout}")
-    private String receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
+  @Value("${srs.service.receive.timeout}")
+  private String receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
 
-    @Value("${srs.service.connection.timeout}")
-    private String connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
+  @Value("${srs.service.connection.timeout}")
+  private String connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
 
-    @Value("${srs.getriskpredictionforcertificate.service.url}")
-    private String srsWsUrl;
+  @Value("${srs.getriskpredictionforcertificate.service.url}")
+  private String srsWsUrl;
 
-    @Value("${srs.getdiagnosiscodes.service.url}")
-    private String srsGetDiagnosisCodesWsUrl;
+  @Value("${srs.getdiagnosiscodes.service.url}")
+  private String srsGetDiagnosisCodesWsUrl;
 
-    @Bean
-    public GetRiskPredictionForCertificateResponderInterface getRiskPredictionForCertificateWebServiceClient() {
-        // CHECKSTYLE:OFF LineLength
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setAddress(srsWsUrl);
-        proxyFactoryBean.setServiceClass(GetRiskPredictionForCertificateResponderInterface.class);
-        GetRiskPredictionForCertificateResponderInterface getRiskPredictionForCertificateResponderInterface =
+  @Bean
+  public GetRiskPredictionForCertificateResponderInterface
+      getRiskPredictionForCertificateWebServiceClient() {
+    // CHECKSTYLE:OFF LineLength
+    JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
+    proxyFactoryBean.setAddress(srsWsUrl);
+    proxyFactoryBean.setServiceClass(GetRiskPredictionForCertificateResponderInterface.class);
+    GetRiskPredictionForCertificateResponderInterface
+        getRiskPredictionForCertificateResponderInterface =
             (GetRiskPredictionForCertificateResponderInterface) proxyFactoryBean.create();
-        Client client = ClientProxy.getClient(getRiskPredictionForCertificateResponderInterface);
-        applyTimeouts(client);
-        return getRiskPredictionForCertificateResponderInterface;
-        // CHECKSTYLE:ON LineLength
-    }
+    Client client = ClientProxy.getClient(getRiskPredictionForCertificateResponderInterface);
+    applyTimeouts(client);
+    return getRiskPredictionForCertificateResponderInterface;
+    // CHECKSTYLE:ON LineLength
+  }
 
-    @Bean
-    public GetDiagnosisCodesResponderInterface getDiagnosisCodesResponderInterfaceWebServiceClient() {
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setAddress(srsGetDiagnosisCodesWsUrl);
-        proxyFactoryBean.setServiceClass(GetDiagnosisCodesResponderInterface.class);
-        GetDiagnosisCodesResponderInterface getDiagnosisCodesResponderInterface = (GetDiagnosisCodesResponderInterface) proxyFactoryBean
-            .create();
-        Client client = ClientProxy.getClient(getDiagnosisCodesResponderInterface);
-        applyTimeouts(client);
-        return getDiagnosisCodesResponderInterface;
-    }
+  @Bean
+  public GetDiagnosisCodesResponderInterface getDiagnosisCodesResponderInterfaceWebServiceClient() {
+    JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
+    proxyFactoryBean.setAddress(srsGetDiagnosisCodesWsUrl);
+    proxyFactoryBean.setServiceClass(GetDiagnosisCodesResponderInterface.class);
+    GetDiagnosisCodesResponderInterface getDiagnosisCodesResponderInterface =
+        (GetDiagnosisCodesResponderInterface) proxyFactoryBean.create();
+    Client client = ClientProxy.getClient(getDiagnosisCodesResponderInterface);
+    applyTimeouts(client);
+    return getDiagnosisCodesResponderInterface;
+  }
 
-    private void applyTimeouts(Client client) {
-        Long connTimeout = parseTimeout(connectionTimeout);
-        Long recTimeout = parseTimeout(receiveTimeout);
+  private void applyTimeouts(Client client) {
+    Long connTimeout = parseTimeout(connectionTimeout);
+    Long recTimeout = parseTimeout(receiveTimeout);
 
-        if (client != null) {
-            HTTPConduit conduit = (HTTPConduit) client.getConduit();
-            HTTPClientPolicy policy = new HTTPClientPolicy();
-            policy.setConnectionTimeout(connTimeout);
-            policy.setReceiveTimeout(recTimeout);
-            conduit.setClient(policy);
-        }
+    if (client != null) {
+      HTTPConduit conduit = (HTTPConduit) client.getConduit();
+      HTTPClientPolicy policy = new HTTPClientPolicy();
+      policy.setConnectionTimeout(connTimeout);
+      policy.setReceiveTimeout(recTimeout);
+      conduit.setClient(policy);
     }
+  }
 
-    private Long parseTimeout(String timeout) {
-        try {
-            return Long.parseLong(timeout);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(
-                "Cannot apply timeouts for SRSIntegrationClientConfiguration, unparsable String value: " + timeout
-                    + ". Message: " + e.getMessage());
-        }
+  private Long parseTimeout(String timeout) {
+    try {
+      return Long.parseLong(timeout);
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException(
+          "Cannot apply timeouts for SRSIntegrationClientConfiguration, unparsable String value: "
+              + timeout
+              + ". Message: "
+              + e.getMessage());
     }
+  }
 }

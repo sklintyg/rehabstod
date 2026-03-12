@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,39 +20,37 @@ package se.inera.intyg.rehabstod.integration.srs.model;
 
 import java.time.LocalDateTime;
 
-/**
- * Created by eriklupander on 2017-11-01.
- */
+/** Created by eriklupander on 2017-11-01. */
 public class RiskSignal {
 
-    private String intygsId;
-    private int riskKategori;
-    private String riskDescription;
-    private LocalDateTime berakningstidpunkt;
+  private String intygsId;
+  private int riskKategori;
+  private String riskDescription;
+  private LocalDateTime berakningstidpunkt;
 
-    private RiskSignal() {
-    }
+  private RiskSignal() {}
 
-    public RiskSignal(String intygsId, int riskKategori, String riskDescription, LocalDateTime berakningstidpunkt) {
-        this.intygsId = intygsId;
-        this.riskKategori = riskKategori;
-        this.riskDescription = riskDescription;
-        this.berakningstidpunkt = berakningstidpunkt;
-    }
+  public RiskSignal(
+      String intygsId, int riskKategori, String riskDescription, LocalDateTime berakningstidpunkt) {
+    this.intygsId = intygsId;
+    this.riskKategori = riskKategori;
+    this.riskDescription = riskDescription;
+    this.berakningstidpunkt = berakningstidpunkt;
+  }
 
-    public String getIntygsId() {
-        return intygsId;
-    }
+  public String getIntygsId() {
+    return intygsId;
+  }
 
-    public int getRiskKategori() {
-        return riskKategori;
-    }
+  public int getRiskKategori() {
+    return riskKategori;
+  }
 
-    public String getRiskDescription() {
-        return riskDescription;
-    }
+  public String getRiskDescription() {
+    return riskDescription;
+  }
 
-    public LocalDateTime getBerakningstidpunkt() {
-        return berakningstidpunkt;
-    }
+  public LocalDateTime getBerakningstidpunkt() {
+    return berakningstidpunkt;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -42,72 +42,80 @@ import se.inera.intyg.rehabstod.common.integration.json.CustomObjectMapper;
 @EnableWebMvc
 @Configuration
 @EnableAspectJAutoProxy
-@ComponentScan({"se.inera.intyg.rehabstod.web",
-    "se.inera.intyg.rehabstod.integration.wc.stub.api",
-    "se.inera.intyg.rehabstod.integration.srs.stub.api",
-    "se.inera.intyg.rehabstod.logging",
-    "se.inera.intyg.rehabstod.web.controller.api",
+@ComponentScan({
+  "se.inera.intyg.rehabstod.web",
+  "se.inera.intyg.rehabstod.integration.wc.stub.api",
+  "se.inera.intyg.rehabstod.integration.srs.stub.api",
+  "se.inera.intyg.rehabstod.logging",
+  "se.inera.intyg.rehabstod.web.controller.api",
 })
 @ImportResource({"classpath:META-INF/cxf/cxf.xml"})
 public class WebConfig implements WebMvcConfigurer {
 
-    private static final int SECONDS_IN_HOUR = 3600;
-    private static final int HOURS_IN_DAY = 24;
-    private static final int DAYS_TO_CACHE = 15;
+  private static final int SECONDS_IN_HOUR = 3600;
+  private static final int HOURS_IN_DAY = 24;
+  private static final int DAYS_TO_CACHE = 15;
 
-    @Bean
-    public ViewResolver viewResolver() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setOrder(0);
-        viewResolver.setViewClass(InternalResourceView.class);
-        viewResolver.setPrefix("/");
-        viewResolver.setSuffix(".html");
-        return viewResolver;
-    }
+  @Bean
+  public ViewResolver viewResolver() {
+    InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+    viewResolver.setOrder(0);
+    viewResolver.setViewClass(InternalResourceView.class);
+    viewResolver.setPrefix("/");
+    viewResolver.setSuffix(".html");
+    return viewResolver;
+  }
 
-    @Bean
-    public ViewResolver jspViewResolver() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setOrder(1);
-        viewResolver.setViewClass(JstlView.class);
-        viewResolver.setPrefix("/");
-        viewResolver.setSuffix(".jsp");
-        return viewResolver;
-    }
+  @Bean
+  public ViewResolver jspViewResolver() {
+    InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+    viewResolver.setOrder(1);
+    viewResolver.setViewClass(JstlView.class);
+    viewResolver.setPrefix("/");
+    viewResolver.setSuffix(".jsp");
+    return viewResolver;
+  }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        int cachePeriodInDays = SECONDS_IN_HOUR * HOURS_IN_DAY * DAYS_TO_CACHE;
-        registry.addResourceHandler("/index.html").addResourceLocations("/");
-        registry.addResourceHandler("/favicon.ico").addResourceLocations("/").setCachePeriod(cachePeriodInDays);
-        registry.addResourceHandler("/robots.txt").addResourceLocations("/").setCachePeriod(cachePeriodInDays);
-        registry.addResourceHandler("/bower_components/**").addResourceLocations("/bower_components/");
-        registry.addResourceHandler("/app/**").addResourceLocations("/app/");
-        registry.addResourceHandler("/components/**").addResourceLocations("/components/");
-    }
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    int cachePeriodInDays = SECONDS_IN_HOUR * HOURS_IN_DAY * DAYS_TO_CACHE;
+    registry.addResourceHandler("/index.html").addResourceLocations("/");
+    registry
+        .addResourceHandler("/favicon.ico")
+        .addResourceLocations("/")
+        .setCachePeriod(cachePeriodInDays);
+    registry
+        .addResourceHandler("/robots.txt")
+        .addResourceLocations("/")
+        .setCachePeriod(cachePeriodInDays);
+    registry.addResourceHandler("/bower_components/**").addResourceLocations("/bower_components/");
+    registry.addResourceHandler("/app/**").addResourceLocations("/app/");
+    registry.addResourceHandler("/components/**").addResourceLocations("/components/");
+  }
 
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-    }
+  @Override
+  public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+    configurer.enable();
+  }
 
-    @Override
-    public void extendMessageConverters(final List<HttpMessageConverter<?>> converters) {
-        for (HttpMessageConverter converter : converters) {
-            if (converter instanceof MappingJackson2HttpMessageConverter) {
-                MappingJackson2HttpMessageConverter jsonConverter = (MappingJackson2HttpMessageConverter) converter;
-                jsonConverter.setObjectMapper(new CustomObjectMapper());
-            }
-        }
+  @Override
+  public void extendMessageConverters(final List<HttpMessageConverter<?>> converters) {
+    for (HttpMessageConverter converter : converters) {
+      if (converter instanceof MappingJackson2HttpMessageConverter) {
+        MappingJackson2HttpMessageConverter jsonConverter =
+            (MappingJackson2HttpMessageConverter) converter;
+        jsonConverter.setObjectMapper(new CustomObjectMapper());
+      }
     }
+  }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        // Disable browser caching of all /api requests
-        WebContentInterceptor webContentInterceptor = new WebContentInterceptor();
-        Properties cacheMappings = new Properties();
-        cacheMappings.setProperty("/api/**", "0");
-        webContentInterceptor.setCacheMappings(cacheMappings);
-        registry.addInterceptor(webContentInterceptor);
-    }
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    // Disable browser caching of all /api requests
+    WebContentInterceptor webContentInterceptor = new WebContentInterceptor();
+    Properties cacheMappings = new Properties();
+    cacheMappings.setProperty("/api/**", "0");
+    webContentInterceptor.setCacheMappings(cacheMappings);
+    registry.addInterceptor(webContentInterceptor);
+  }
 }

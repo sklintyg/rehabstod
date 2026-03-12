@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,30 +30,30 @@ import se.inera.intyg.rehabstod.integration.wc.stub.WcStubStore;
 /**
  * Created by marced on 2010-05-20.
  *
- * Provides a simple "REST" API for activating or inactivating the WC stub.
+ * <p>Provides a simple "REST" API for activating or inactivating the WC stub.
  *
- * If inactive, a RuntimeException will be thrown to fake problems.
+ * <p>If inactive, a RuntimeException will be thrown to fake problems.
  */
 @Profile({"rhs-wc-stub"})
 @RestController
 @RequestMapping("/api/stub/wc-api")
 public class WcStubRestApi {
 
-    @Autowired
-    private WcStubStore wcStubStore;
+  @Autowired private WcStubStore wcStubStore;
 
-    @RequestMapping(method = RequestMethod.GET, path = "/active")
-    public ResponseEntity<String> activate() {
-        boolean lastState = wcStubStore.isActive();
-        wcStubStore.setActive(true);
-        return new ResponseEntity<>("Set to 'true', previous state was '" + lastState + "'", HttpStatus.OK);
-    }
+  @RequestMapping(method = RequestMethod.GET, path = "/active")
+  public ResponseEntity<String> activate() {
+    boolean lastState = wcStubStore.isActive();
+    wcStubStore.setActive(true);
+    return new ResponseEntity<>(
+        "Set to 'true', previous state was '" + lastState + "'", HttpStatus.OK);
+  }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/inactive")
-    public ResponseEntity<String> deactivate() {
-        boolean lastState = wcStubStore.isActive();
-        wcStubStore.setActive(false);
-        return new ResponseEntity<>("Set to 'false', previous state was '" + lastState + "'", HttpStatus.OK);
-    }
-
+  @RequestMapping(method = RequestMethod.GET, path = "/inactive")
+  public ResponseEntity<String> deactivate() {
+    boolean lastState = wcStubStore.isActive();
+    wcStubStore.setActive(false);
+    return new ResponseEntity<>(
+        "Set to 'false', previous state was '" + lastState + "'", HttpStatus.OK);
+  }
 }

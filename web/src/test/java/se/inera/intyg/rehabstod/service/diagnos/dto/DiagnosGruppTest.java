@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,56 +25,51 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import org.junit.Test;
 
-/**
- * Created by marced on 14/03/16.
- */
+/** Created by marced on 14/03/16. */
 public class DiagnosGruppTest {
 
-    @Test
-    public void testConstructor() {
-        DiagnosKapitel expected = new DiagnosKapitel("A00-D88");
+  @Test
+  public void testConstructor() {
+    DiagnosKapitel expected = new DiagnosKapitel("A00-D88");
 
-        DiagnosGrupp grupp = new DiagnosGrupp(expected.getId() + ":En grupp av diagnoser");
-        assertEquals("En grupp av diagnoser", grupp.getName());
-        assertEquals("A00-D88", grupp.getId());
+    DiagnosGrupp grupp = new DiagnosGrupp(expected.getId() + ":En grupp av diagnoser");
+    assertEquals("En grupp av diagnoser", grupp.getName());
+    assertEquals("A00-D88", grupp.getId());
 
-        assertTrue(grupp.getKapitelList().contains(expected));
-    }
+    assertTrue(grupp.getKapitelList().contains(expected));
+  }
 
-    @Test
-    public void testConstructorMultipleKapitels() {
-        DiagnosKapitel expected1 = new DiagnosKapitel("A00-D88");
-        DiagnosKapitel expected2 = new DiagnosKapitel("B00-B67");
-        DiagnosKapitel expected3 = new DiagnosKapitel("C00-C99");
+  @Test
+  public void testConstructorMultipleKapitels() {
+    DiagnosKapitel expected1 = new DiagnosKapitel("A00-D88");
+    DiagnosKapitel expected2 = new DiagnosKapitel("B00-B67");
+    DiagnosKapitel expected3 = new DiagnosKapitel("C00-C99");
 
-        DiagnosGrupp grupp = new DiagnosGrupp("A00-D88,B00-B67,C00-C99:En grupp av diagnoser");
-        assertEquals("En grupp av diagnoser", grupp.getName());
-        assertEquals("A00-D88,B00-B67,C00-C99", String.valueOf(grupp.getId()));
-        assertEquals(3, grupp.getKapitelList().size());
-        assertTrue(grupp.getKapitelList().containsAll(Arrays.asList(expected1, expected2, expected3)));
-    }
+    DiagnosGrupp grupp = new DiagnosGrupp("A00-D88,B00-B67,C00-C99:En grupp av diagnoser");
+    assertEquals("En grupp av diagnoser", grupp.getName());
+    assertEquals("A00-D88,B00-B67,C00-C99", String.valueOf(grupp.getId()));
+    assertEquals(3, grupp.getKapitelList().size());
+    assertTrue(grupp.getKapitelList().containsAll(Arrays.asList(expected1, expected2, expected3)));
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testBadFormatConstructor() {
-        DiagnosKapitel grupp = new DiagnosKapitel("A00 D00En grupp av diagnoser");
+  @Test(expected = IllegalArgumentException.class)
+  public void testBadFormatConstructor() {
+    DiagnosKapitel grupp = new DiagnosKapitel("A00 D00En grupp av diagnoser");
+  }
 
-    }
+  @Test
+  public void testInclude() {
+    DiagnosGrupp grupp = new DiagnosGrupp("A00-D88,F00-V67:En saling blandning av diagnoser");
 
-    @Test
-    public void testInclude() {
-        DiagnosGrupp grupp = new DiagnosGrupp("A00-D88,F00-V67:En saling blandning av diagnoser");
+    assertTrue(grupp.includes("A22"));
+    assertTrue(grupp.includes("B22"));
+    assertTrue(grupp.includes("F22"));
+    assertTrue(grupp.includes("F6765"));
+    assertTrue(grupp.includes("O999999"));
+    assertTrue(grupp.includes("V67"));
 
-        assertTrue(grupp.includes("A22"));
-        assertTrue(grupp.includes("B22"));
-        assertTrue(grupp.includes("F22"));
-        assertTrue(grupp.includes("F6765"));
-        assertTrue(grupp.includes("O999999"));
-        assertTrue(grupp.includes("V67"));
-
-        assertFalse(grupp.includes("E22"));
-        assertFalse(grupp.includes("V68"));
-        assertFalse(grupp.includes("Z2222"));
-
-    }
-
+    assertFalse(grupp.includes("E22"));
+    assertFalse(grupp.includes("V68"));
+    assertFalse(grupp.includes("Z2222"));
+  }
 }

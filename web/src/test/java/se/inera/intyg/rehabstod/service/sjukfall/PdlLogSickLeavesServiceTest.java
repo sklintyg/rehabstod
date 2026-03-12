@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -50,109 +50,118 @@ import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 @ExtendWith(MockitoExtension.class)
 public class PdlLogSickLeavesServiceTest {
 
-    @Mock
-    UserService userService;
+  @Mock UserService userService;
 
-    @Mock
-    LogService logService;
+  @Mock LogService logService;
 
-    @InjectMocks
-    PdlLogSickLeavesServiceImpl pdlLogSickLeavesService;
+  @InjectMocks PdlLogSickLeavesServiceImpl pdlLogSickLeavesService;
 
-    RehabstodUser user;
-    SelectableVardenhet unit;
-    SjukfallEnhet loggedSickLeave = new SjukfallEnhet();
-    SjukfallEnhet notLoggedSickLeave = new SjukfallEnhet();
-    List<SjukfallEnhet> list = Arrays.asList(loggedSickLeave, notLoggedSickLeave);
+  RehabstodUser user;
+  SelectableVardenhet unit;
+  SjukfallEnhet loggedSickLeave = new SjukfallEnhet();
+  SjukfallEnhet notLoggedSickLeave = new SjukfallEnhet();
+  List<SjukfallEnhet> list = Arrays.asList(loggedSickLeave, notLoggedSickLeave);
 
-    static final String LOGGED_PATIENT_ID = "191212121212";
-    static final String NOT_LOGGED_PATIENT_ID = "201212121212";
+  static final String LOGGED_PATIENT_ID = "191212121212";
+  static final String NOT_LOGGED_PATIENT_ID = "201212121212";
 
-    @BeforeEach
-    void setup() {
-        user = mock(RehabstodUser.class);
-        unit = mock(SelectableVardenhet.class);
-        when(userService.getUser()).thenReturn(user);
-        when(user.getValdVardenhet()).thenReturn(unit);
-        loggedSickLeave.setPatient(new Patient(LOGGED_PATIENT_ID, "name"));
-        notLoggedSickLeave.setPatient(new Patient(NOT_LOGGED_PATIENT_ID, "name"));
+  @BeforeEach
+  void setup() {
+    user = mock(RehabstodUser.class);
+    unit = mock(SelectableVardenhet.class);
+    when(userService.getUser()).thenReturn(user);
+    when(user.getValdVardenhet()).thenReturn(unit);
+    loggedSickLeave.setPatient(new Patient(LOGGED_PATIENT_ID, "name"));
+    notLoggedSickLeave.setPatient(new Patient(NOT_LOGGED_PATIENT_ID, "name"));
+  }
+
+  @Nested
+  class Log {
+
+    @Test
+    void shouldThrowErrorIfUnitIdIsNull() {
+      assertThrows(
+          IllegalArgumentException.class,
+          () ->
+              pdlLogSickLeavesService.log(
+                  list, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL));
     }
 
-    @Nested
-    class Log {
+    @Test
+    void shouldOnlyLogSickLeavesWhichHaveNotBeenLogged() {
+      final var activities = new HashMap<String, List<PDLActivityEntry>>();
+      final var activity =
+          new PDLActivityEntry(
+              LOGGED_PATIENT_ID, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
+      activities.put("UNIT_ID", Collections.singletonList(activity));
+      when(user.getStoredActivities()).thenReturn(activities);
+      when(unit.getId()).thenReturn("UNIT_ID");
 
-        @Test
-        void shouldThrowErrorIfUnitIdIsNull() {
-            assertThrows(IllegalArgumentException.class,
-                () -> pdlLogSickLeavesService.log(list, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL)
-            );
-        }
+      pdlLogSickLeavesService.log(list, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
 
-        @Test
-        void shouldOnlyLogSickLeavesWhichHaveNotBeenLogged() {
-            final var activities = new HashMap<String, List<PDLActivityEntry>>();
-            final var activity = new PDLActivityEntry(LOGGED_PATIENT_ID, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
-            activities.put("UNIT_ID", Collections.singletonList(activity));
-            when(user.getStoredActivities()).thenReturn(activities);
-            when(unit.getId()).thenReturn("UNIT_ID");
+      verify(logService)
+          .logSjukfallData(
+              Collections.singletonList(notLoggedSickLeave),
+              ActivityType.READ,
+              ResourceType.RESOURCE_TYPE_SJUKFALL);
+    }
+  }
 
-            pdlLogSickLeavesService.log(list, ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
+  @Nested
+  class LogPrint {
 
-            verify(logService).logSjukfallData(
-                Collections.singletonList(notLoggedSickLeave), ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL
-            );
-        }
+    @Test
+    void shouldThrowErrorIfUnitIdIsNull() {
+      assertThrows(IllegalArgumentException.class, () -> pdlLogSickLeavesService.logPrint(list));
     }
 
-    @Nested
-    class LogPrint {
-
-        @Test
-        void shouldThrowErrorIfUnitIdIsNull() {
-            assertThrows(IllegalArgumentException.class,
-                () -> pdlLogSickLeavesService.logPrint(list)
-            );
-        }
-
-        @Test
-        void shouldLogActivityPrintAndResourceTypeSjukfall() {
-            when(unit.getId()).thenReturn("UNIT_ID");
-            pdlLogSickLeavesService.logPrint(list);
-            verify(logService).logSjukfallData(list, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
-        }
-
-        @Test
-        void shouldLogActivityPrintAndResourceTypeSRSIfFeatureActive() {
-            when(user.isFeatureActive(AuthoritiesConstants.FEATURE_SRS)).thenReturn(true);
-            when(unit.getId()).thenReturn("UNIT_ID");
-            final var sickLeave = new SjukfallEnhet();
-            sickLeave.setRiskSignal(new RiskSignal("ID", 1, "description", LocalDateTime.now()));
-            sickLeave.setPatient(new Patient(LOGGED_PATIENT_ID, "name"));
-            final var sickLeaveWithRisk = List.of(sickLeave);
-            pdlLogSickLeavesService.logPrint(sickLeaveWithRisk);
-            verify(logService).logSjukfallData(Collections.singletonList(sickLeave), ActivityType.PRINT,
-                ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
-        }
-
-        @Test
-        void shouldOnlyLogActivityPrintAndResourceTypeSjukfallIfSRSFeatureInactive() {
-            when(user.isFeatureActive(AuthoritiesConstants.FEATURE_SRS)).thenReturn(false);
-            when(unit.getId()).thenReturn("UNIT_ID");
-            final var sickLeave = new SjukfallEnhet();
-            sickLeave.setRiskSignal(new RiskSignal("ID", 1, "description", LocalDateTime.now()));
-            sickLeave.setPatient(new Patient(LOGGED_PATIENT_ID, "name"));
-            final var sickLeaveWithRisk = List.of(sickLeave);
-            pdlLogSickLeavesService.logPrint(sickLeaveWithRisk);
-            verify(logService).logSjukfallData(Collections.singletonList(sickLeave), ActivityType.PRINT,
-                ResourceType.RESOURCE_TYPE_SJUKFALL);
-        }
-
-        @Test
-        void shouldHandleNullValues() {
-            when(unit.getId()).thenReturn("UNIT_ID");
-            pdlLogSickLeavesService.logPrint(null);
-            verify(logService).logSjukfallData(Collections.emptyList(), ActivityType.PRINT,
-                ResourceType.RESOURCE_TYPE_SJUKFALL);
-        }
+    @Test
+    void shouldLogActivityPrintAndResourceTypeSjukfall() {
+      when(unit.getId()).thenReturn("UNIT_ID");
+      pdlLogSickLeavesService.logPrint(list);
+      verify(logService)
+          .logSjukfallData(list, ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
     }
+
+    @Test
+    void shouldLogActivityPrintAndResourceTypeSRSIfFeatureActive() {
+      when(user.isFeatureActive(AuthoritiesConstants.FEATURE_SRS)).thenReturn(true);
+      when(unit.getId()).thenReturn("UNIT_ID");
+      final var sickLeave = new SjukfallEnhet();
+      sickLeave.setRiskSignal(new RiskSignal("ID", 1, "description", LocalDateTime.now()));
+      sickLeave.setPatient(new Patient(LOGGED_PATIENT_ID, "name"));
+      final var sickLeaveWithRisk = List.of(sickLeave);
+      pdlLogSickLeavesService.logPrint(sickLeaveWithRisk);
+      verify(logService)
+          .logSjukfallData(
+              Collections.singletonList(sickLeave),
+              ActivityType.PRINT,
+              ResourceType.RESOURCE_TYPE_PREDIKTION_SRS);
+    }
+
+    @Test
+    void shouldOnlyLogActivityPrintAndResourceTypeSjukfallIfSRSFeatureInactive() {
+      when(user.isFeatureActive(AuthoritiesConstants.FEATURE_SRS)).thenReturn(false);
+      when(unit.getId()).thenReturn("UNIT_ID");
+      final var sickLeave = new SjukfallEnhet();
+      sickLeave.setRiskSignal(new RiskSignal("ID", 1, "description", LocalDateTime.now()));
+      sickLeave.setPatient(new Patient(LOGGED_PATIENT_ID, "name"));
+      final var sickLeaveWithRisk = List.of(sickLeave);
+      pdlLogSickLeavesService.logPrint(sickLeaveWithRisk);
+      verify(logService)
+          .logSjukfallData(
+              Collections.singletonList(sickLeave),
+              ActivityType.PRINT,
+              ResourceType.RESOURCE_TYPE_SJUKFALL);
+    }
+
+    @Test
+    void shouldHandleNullValues() {
+      when(unit.getId()).thenReturn("UNIT_ID");
+      pdlLogSickLeavesService.logPrint(null);
+      verify(logService)
+          .logSjukfallData(
+              Collections.emptyList(), ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
+    }
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,36 +22,40 @@ import java.util.List;
 import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 
 /**
- * Encapsulates the response for sjukfall for a patient with a flag indicating whether SRS predictions could be fetched.
+ * Encapsulates the response for sjukfall for a patient with a flag indicating whether SRS
+ * predictions could be fetched.
  */
 public class SjukfallPatientResponse {
 
-    private final SjfMetaData sjfMetaData;
-    private List<SjukfallPatient> sjukfallList;
-    private boolean srsError = false;
-    private boolean kompletteringInfoError = false;
+  private final SjfMetaData sjfMetaData;
+  private List<SjukfallPatient> sjukfallList;
+  private boolean srsError = false;
+  private boolean kompletteringInfoError = false;
 
-    public SjukfallPatientResponse(List<SjukfallPatient> rehabstodSjukfall, SjfMetaData sjfMetaData, boolean srsError,
-        boolean kompletteringInfoError) {
-        this.sjukfallList = rehabstodSjukfall;
-        this.sjfMetaData = sjfMetaData;
-        this.srsError = srsError;
-        this.kompletteringInfoError = kompletteringInfoError;
-    }
+  public SjukfallPatientResponse(
+      List<SjukfallPatient> rehabstodSjukfall,
+      SjfMetaData sjfMetaData,
+      boolean srsError,
+      boolean kompletteringInfoError) {
+    this.sjukfallList = rehabstodSjukfall;
+    this.sjfMetaData = sjfMetaData;
+    this.srsError = srsError;
+    this.kompletteringInfoError = kompletteringInfoError;
+  }
 
-    public List<SjukfallPatient> getSjukfallList() {
-        return sjukfallList;
-    }
+  public List<SjukfallPatient> getSjukfallList() {
+    return sjukfallList;
+  }
 
-    public boolean isSrsError() {
-        return srsError;
-    }
+  public boolean isSrsError() {
+    return srsError;
+  }
 
-    public SjfMetaData getSjfMetaData() {
-        return sjfMetaData;
-    }
+  public SjfMetaData getSjfMetaData() {
+    return sjfMetaData;
+  }
 
-    public boolean isKompletteringInfoError() {
-        return kompletteringInfoError;
-    }
+  public boolean isKompletteringInfoError() {
+    return kompletteringInfoError;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -54,202 +54,200 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.SickLeavesFilterRequestDT
 @ExtendWith(MockitoExtension.class)
 public class GetActiveSickLeavesResponseServiceTest {
 
-    @Mock
-    private UserService userService;
-    @Mock
-    private MonitoringLogService monitoringLogService;
-    @Mock
-    private PdlLogSickLeavesService pdlLogSickLeavesService;
+  @Mock private UserService userService;
+  @Mock private MonitoringLogService monitoringLogService;
+  @Mock private PdlLogSickLeavesService pdlLogSickLeavesService;
 
-    @Mock
-    private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
+  @Mock private SjukfallEmployeeNameResolver sjukfallEmployeeNameResolver;
 
-    @Mock
-    private RiskPredictionService riskPredictionService;
+  @Mock private RiskPredictionService riskPredictionService;
 
-    @Mock
-    private UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
+  @Mock private UnansweredCommunicationDecoratorService unansweredCommunicationDecoratorService;
 
-    @Mock
-    private UnansweredCommunicationFilterService unansweredCommunicationFilterService;
-    @Mock
-    private CreateSickLeaveRequestService createSickLeaveRequestService;
-    @Mock
-    private GetActiveSickLeavesService getActiveSickLeavesService;
+  @Mock private UnansweredCommunicationFilterService unansweredCommunicationFilterService;
+  @Mock private CreateSickLeaveRequestService createSickLeaveRequestService;
+  @Mock private GetActiveSickLeavesService getActiveSickLeavesService;
 
+  @InjectMocks private GetActiveSickLeavesResponseServiceImpl getActiveSickLeavesResponseService;
+  private se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave;
+  static RehabstodUser user;
+  static final String HSA_ID = "HSA_ID";
+  static final String UNIT_ID = "UNIT_ID";
 
-    @InjectMocks
-    private GetActiveSickLeavesResponseServiceImpl getActiveSickLeavesResponseService;
-    private se.inera.intyg.rehabstod.web.model.SjukfallEnhet sickLeave;
-    static RehabstodUser user;
-    static final String HSA_ID = "HSA_ID";
-    static final String UNIT_ID = "UNIT_ID";
+  static final SickLeavesFilterRequestDTO SICK_LEAVES_FILTER_REQUEST =
+      new SickLeavesFilterRequestDTO();
+  static final SickLeavesRequestDTO SICK_LEAVES_REQUEST =
+      SickLeavesRequestDTO.builder().unitId(UNIT_ID).build();
 
-    static final SickLeavesFilterRequestDTO SICK_LEAVES_FILTER_REQUEST = new SickLeavesFilterRequestDTO();
-    static final SickLeavesRequestDTO SICK_LEAVES_REQUEST = SickLeavesRequestDTO.builder()
-        .unitId(UNIT_ID)
-        .build();
+  @BeforeEach
+  void setup() {
+    user = mock(RehabstodUser.class);
+    when(userService.getUser()).thenReturn(user);
+    when(user.getHsaId()).thenReturn(HSA_ID);
+    sickLeave = new se.inera.intyg.rehabstod.web.model.SjukfallEnhet();
+    when(createSickLeaveRequestService.create(eq(SICK_LEAVES_FILTER_REQUEST), anyBoolean()))
+        .thenReturn(SICK_LEAVES_REQUEST);
+    when(getActiveSickLeavesService.get(SICK_LEAVES_REQUEST)).thenReturn(List.of(sickLeave));
+    when(unansweredCommunicationFilterService.filter(any(), any()))
+        .thenReturn(Collections.singletonList(sickLeave));
+  }
 
-    @BeforeEach
-    void setup() {
-        user = mock(RehabstodUser.class);
-        when(userService.getUser()).thenReturn(user);
-        when(user.getHsaId()).thenReturn(HSA_ID);
-        sickLeave = new se.inera.intyg.rehabstod.web.model.SjukfallEnhet();
-        when(createSickLeaveRequestService.create(eq(SICK_LEAVES_FILTER_REQUEST), anyBoolean())).thenReturn(SICK_LEAVES_REQUEST);
-        when(getActiveSickLeavesService.get(SICK_LEAVES_REQUEST)).thenReturn(List.of(sickLeave));
-        when(unansweredCommunicationFilterService.filter(any(), any()))
-            .thenReturn(Collections.singletonList(sickLeave));
+  @Nested
+  class GetActiveSickLeavesResponse {
+
+    @Test
+    void shallReturnContent() {
+      final var result =
+          getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
+      assertEquals(List.of(sickLeave), result.getContent());
     }
 
-    @Nested
-    class GetActiveSickLeavesResponse {
-
-        @Test
-        void shallReturnContent() {
-            final var result = getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
-            assertEquals(List.of(sickLeave), result.getContent());
-        }
-
-        @Test
-        void shallReturnHasDecoratedWithSrsInfo() {
-            final var result = getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
-            assertFalse(result.isSrsError());
-        }
-
-        @Test
-        void shallReturnHasDecoratedWithUnansweredCommunications() {
-            final var expectedResult = true;
-            when(unansweredCommunicationDecoratorService.decorateSickLeaves(List.of(sickLeave))).thenReturn(false);
-            final var result = getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
-            assertEquals(expectedResult, result.isUnansweredCommunicationError());
-        }
+    @Test
+    void shallReturnHasDecoratedWithSrsInfo() {
+      final var result =
+          getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
+      assertFalse(result.isSrsError());
     }
 
-    @Nested
-    class CreateSickLeaveRequestServiceTest {
+    @Test
+    void shallReturnHasDecoratedWithUnansweredCommunications() {
+      final var expectedResult = true;
+      when(unansweredCommunicationDecoratorService.decorateSickLeaves(List.of(sickLeave)))
+          .thenReturn(false);
+      final var result =
+          getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
+      assertEquals(expectedResult, result.isUnansweredCommunicationError());
+    }
+  }
 
-        @Test
-        void shouldUseFilterRequest() {
-            final var captor = ArgumentCaptor.forClass(SickLeavesFilterRequestDTO.class);
-            getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
-            verify(createSickLeaveRequestService).create(captor.capture(), anyBoolean());
-            assertEquals(SICK_LEAVES_FILTER_REQUEST, captor.getValue());
-        }
+  @Nested
+  class CreateSickLeaveRequestServiceTest {
 
-        @Test
-        void shouldUseIncludeParameters() {
-            final var captor = ArgumentCaptor.forClass(Boolean.class);
-            getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
-            verify(createSickLeaveRequestService).create(eq(SICK_LEAVES_FILTER_REQUEST), captor.capture());
-            assertEquals(true, captor.getValue());
-        }
+    @Test
+    void shouldUseFilterRequest() {
+      final var captor = ArgumentCaptor.forClass(SickLeavesFilterRequestDTO.class);
+      getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
+      verify(createSickLeaveRequestService).create(captor.capture(), anyBoolean());
+      assertEquals(SICK_LEAVES_FILTER_REQUEST, captor.getValue());
     }
 
-    @Nested
-    class GetActiveSickLeaveServiceTest {
+    @Test
+    void shouldUseIncludeParameters() {
+      final var captor = ArgumentCaptor.forClass(Boolean.class);
+      getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
+      verify(createSickLeaveRequestService)
+          .create(eq(SICK_LEAVES_FILTER_REQUEST), captor.capture());
+      assertEquals(true, captor.getValue());
+    }
+  }
 
-        @Test
-        void shouldUseRequestFromCreateRequest() {
-            final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
-            getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
-            verify(getActiveSickLeavesService).get(captor.capture());
-            assertEquals(SICK_LEAVES_REQUEST, captor.getValue());
-        }
+  @Nested
+  class GetActiveSickLeaveServiceTest {
+
+    @Test
+    void shouldUseRequestFromCreateRequest() {
+      final var captor = ArgumentCaptor.forClass(SickLeavesRequestDTO.class);
+      getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
+      verify(getActiveSickLeavesService).get(captor.capture());
+      assertEquals(SICK_LEAVES_REQUEST, captor.getValue());
+    }
+  }
+
+  @Nested
+  class TestDecoratingServices {
+
+    @Test
+    void shouldCallRiskPredictionService() {
+      final var captor = ArgumentCaptor.forClass(List.class);
+      getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
+      verify(riskPredictionService).updateWithRiskPredictions(captor.capture());
+      assertEquals(1, captor.getValue().size());
+      assertEquals(sickLeave, captor.getValue().get(0));
     }
 
+    @Test
+    void shouldCallUnansweredCommunicationDecorator() {
+      final var captor = ArgumentCaptor.forClass(List.class);
+      getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
+      verify(unansweredCommunicationDecoratorService).decorateSickLeaves(captor.capture());
+      assertEquals(1, captor.getValue().size());
+      assertEquals(sickLeave, captor.getValue().get(0));
+    }
+  }
 
-    @Nested
-    class TestDecoratingServices {
+  @Nested
+  class TestUnansweredCommunicationFilteringService {
 
-        @Test
-        void shouldCallRiskPredictionService() {
-            final var captor = ArgumentCaptor.forClass(List.class);
-            getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
-            verify(riskPredictionService).updateWithRiskPredictions(captor.capture());
-            assertEquals(1, captor.getValue().size());
-            assertEquals(sickLeave, captor.getValue().get(0));
-        }
+    @Test
+    void shouldCallUnansweredCommunicationFilteringServiceWithSickLeave() {
+      final var captor = ArgumentCaptor.forClass(List.class);
+      getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
 
-        @Test
-        void shouldCallUnansweredCommunicationDecorator() {
-            final var captor = ArgumentCaptor.forClass(List.class);
-            getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
-            verify(unansweredCommunicationDecoratorService).decorateSickLeaves(captor.capture());
-            assertEquals(1, captor.getValue().size());
-            assertEquals(sickLeave, captor.getValue().get(0));
-        }
+      verify(unansweredCommunicationFilterService).filter(captor.capture(), any());
+      assertEquals(1, captor.getValue().size());
     }
 
-    @Nested
-    class TestUnansweredCommunicationFilteringService {
+    @Test
+    void shouldCallUnansweredCommunicationFilteringServiceWithFilterId() {
+      final var captor = ArgumentCaptor.forClass(String.class);
+      getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
 
-        @Test
-        void shouldCallUnansweredCommunicationFilteringServiceWithSickLeave() {
-            final var captor = ArgumentCaptor.forClass(List.class);
-            getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
+      verify(unansweredCommunicationFilterService).filter(any(), captor.capture());
+      assertEquals(
+          SICK_LEAVES_FILTER_REQUEST.getUnansweredCommunicationFilterTypeId(), captor.getValue());
+    }
+  }
 
-            verify(unansweredCommunicationFilterService).filter(captor.capture(), any());
-            assertEquals(1, captor.getValue().size());
-        }
+  @Nested
+  class TestMonitorLogging {
 
-        @Test
-        void shouldCallUnansweredCommunicationFilteringServiceWithFilterId() {
-            final var captor = ArgumentCaptor.forClass(String.class);
-            getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
+    @Test
+    void shouldLogUsingUnitIdFromRequest() {
+      getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
 
-            verify(unansweredCommunicationFilterService).filter(any(), captor.capture());
-            assertEquals(SICK_LEAVES_FILTER_REQUEST.getUnansweredCommunicationFilterTypeId(), captor.getValue());
-        }
+      verify(monitoringLogService).logUserViewedSjukfall(HSA_ID, 1, UNIT_ID);
+    }
+  }
+
+  @Nested
+  class TestPdlLogging {
+
+    @Test
+    void shouldPerformPdlLog() {
+      getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, true);
+
+      verify(pdlLogSickLeavesService)
+          .log(
+              Collections.singletonList(sickLeave),
+              ActivityType.READ,
+              ResourceType.RESOURCE_TYPE_SJUKFALL);
     }
 
-    @Nested
-    class TestMonitorLogging {
+    @Test
+    void shouldNotPerformPdlLog() {
+      getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
 
-        @Test
-        void shouldLogUsingUnitIdFromRequest() {
-            getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
+      verifyNoInteractions(pdlLogSickLeavesService);
+    }
+  }
 
-            verify(monitoringLogService).logUserViewedSjukfall(HSA_ID, 1, UNIT_ID);
-        }
+  @Nested
+  class TestUpdateHsaNames {
+
+    @Test
+    void shouldEnrichWithHsaEmployeeNames() {
+      getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
+
+      verify(sjukfallEmployeeNameResolver, times(1))
+          .enrichWithHsaEmployeeNames(Collections.singletonList(sickLeave));
     }
 
-    @Nested
-    class TestPdlLogging {
+    @Test
+    void shouldUpdateDuplicateDoctorNamesWithHsaId() {
+      getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
 
-        @Test
-        void shouldPerformPdlLog() {
-            getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, true);
-
-            verify(pdlLogSickLeavesService)
-                .log(Collections.singletonList(sickLeave), ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
-        }
-
-        @Test
-        void shouldNotPerformPdlLog() {
-            getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
-
-            verifyNoInteractions(pdlLogSickLeavesService);
-        }
+      verify(sjukfallEmployeeNameResolver, times(1))
+          .updateDuplicateDoctorNamesWithHsaId(Collections.singletonList(sickLeave));
     }
-
-    @Nested
-    class TestUpdateHsaNames {
-
-        @Test
-        void shouldEnrichWithHsaEmployeeNames() {
-            getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
-
-            verify(sjukfallEmployeeNameResolver, times(1))
-                .enrichWithHsaEmployeeNames(Collections.singletonList(sickLeave));
-        }
-
-        @Test
-        void shouldUpdateDuplicateDoctorNamesWithHsaId() {
-            getActiveSickLeavesResponseService.get(SICK_LEAVES_FILTER_REQUEST, true, false);
-
-            verify(sjukfallEmployeeNameResolver, times(1))
-                .updateDuplicateDoctorNamesWithHsaId(Collections.singletonList(sickLeave));
-        }
-    }
+  }
 }

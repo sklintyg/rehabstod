@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,75 +43,73 @@ import se.inera.intyg.rehabstod.service.sjukfall.mappers.SjukfallEngineMapper;
 @ExtendWith(MockitoExtension.class)
 class GetActiveSickLeavesServiceImplTest {
 
-    @Mock
-    private IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
-    @Mock
-    private SjukfallEngineMapper sjukfallEngineMapper;
-    @InjectMocks
-    private GetActiveSickLeavesServiceImpl getSickLeavesService;
+  @Mock private IntygstjanstRestIntegrationService intygstjanstRestIntegrationService;
+  @Mock private SjukfallEngineMapper sjukfallEngineMapper;
+  @InjectMocks private GetActiveSickLeavesServiceImpl getSickLeavesService;
 
-    private SickLeavesRequestDTO request;
-    private SickLeavesResponseDTO response;
+  private SickLeavesRequestDTO request;
+  private SickLeavesResponseDTO response;
 
-    @BeforeEach
-    void setUp() {
-        response = getSickLeavesResponseDTO();
-        request = getSickLeavesRequestDTO(5);
-        when(intygstjanstRestIntegrationService.getActiveSickLeaves(request)).thenReturn(response);
-    }
+  @BeforeEach
+  void setUp() {
+    response = getSickLeavesResponseDTO();
+    request = getSickLeavesRequestDTO(5);
+    when(intygstjanstRestIntegrationService.getActiveSickLeaves(request)).thenReturn(response);
+  }
 
-    @Test
-    void shouldReturnActiveSickLeaves() {
-        final var expectedResult = new se.inera.intyg.rehabstod.web.model.SjukfallEnhet();
-        when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
+  @Test
+  void shouldReturnActiveSickLeaves() {
+    final var expectedResult = new se.inera.intyg.rehabstod.web.model.SjukfallEnhet();
+    when(sjukfallEngineMapper.mapToSjukfallEnhetDto(
             response.getContent().get(0),
             request.getMaxDaysSinceSickLeaveCompleted(),
             LocalDate.now()))
-            .thenReturn(expectedResult);
-        final var result = getSickLeavesService.get(request);
-        assertEquals(List.of(expectedResult), result);
+        .thenReturn(expectedResult);
+    final var result = getSickLeavesService.get(request);
+    assertEquals(List.of(expectedResult), result);
+  }
+
+  @Nested
+  class Request {
+
+    @Test
+    void shouldUseSickLeave() {
+      final var captor = ArgumentCaptor.forClass(SjukfallEnhet.class);
+      getSickLeavesService.get(request);
+      verify(sjukfallEngineMapper)
+          .mapToSjukfallEnhetDto(captor.capture(), anyInt(), any(LocalDate.class));
+      assertEquals(response.getContent().get(0), captor.getValue());
     }
 
-    @Nested
-    class Request {
-
-        @Test
-        void shouldUseSickLeave() {
-            final var captor = ArgumentCaptor.forClass(SjukfallEnhet.class);
-            getSickLeavesService.get(request);
-            verify(sjukfallEngineMapper).mapToSjukfallEnhetDto(captor.capture(), anyInt(), any(LocalDate.class));
-            assertEquals(response.getContent().get(0), captor.getValue());
-        }
-
-        @Test
-        void shouldUseMaxDaysFromRequest() {
-            final var expectedResult = 5;
-            final var captor = ArgumentCaptor.forClass(Integer.class);
-            getSickLeavesService.get(request);
-            verify(sjukfallEngineMapper).mapToSjukfallEnhetDto(any(SjukfallEnhet.class), captor.capture(), any(LocalDate.class));
-            assertEquals(expectedResult, captor.getValue());
-        }
-
-        @Test
-        void shouldUseLocalDateNow() {
-            final var expectedResult = LocalDate.now();
-            final var captor = ArgumentCaptor.forClass(LocalDate.class);
-            getSickLeavesService.get(request);
-            verify(sjukfallEngineMapper).mapToSjukfallEnhetDto(any(SjukfallEnhet.class), anyInt(), captor.capture());
-            assertEquals(expectedResult, captor.getValue());
-        }
+    @Test
+    void shouldUseMaxDaysFromRequest() {
+      final var expectedResult = 5;
+      final var captor = ArgumentCaptor.forClass(Integer.class);
+      getSickLeavesService.get(request);
+      verify(sjukfallEngineMapper)
+          .mapToSjukfallEnhetDto(any(SjukfallEnhet.class), captor.capture(), any(LocalDate.class));
+      assertEquals(expectedResult, captor.getValue());
     }
 
-    private static SickLeavesResponseDTO getSickLeavesResponseDTO() {
-        final var sickLeave = new SjukfallEnhet();
-        return SickLeavesResponseDTO.builder()
-            .content(List.of(sickLeave))
-            .build();
+    @Test
+    void shouldUseLocalDateNow() {
+      final var expectedResult = LocalDate.now();
+      final var captor = ArgumentCaptor.forClass(LocalDate.class);
+      getSickLeavesService.get(request);
+      verify(sjukfallEngineMapper)
+          .mapToSjukfallEnhetDto(any(SjukfallEnhet.class), anyInt(), captor.capture());
+      assertEquals(expectedResult, captor.getValue());
     }
+  }
 
-    private static SickLeavesRequestDTO getSickLeavesRequestDTO(int maxDaysSinceSickLeaveCompleted) {
-        return SickLeavesRequestDTO.builder()
-            .maxDaysSinceSickLeaveCompleted(maxDaysSinceSickLeaveCompleted)
-            .build();
-    }
+  private static SickLeavesResponseDTO getSickLeavesResponseDTO() {
+    final var sickLeave = new SjukfallEnhet();
+    return SickLeavesResponseDTO.builder().content(List.of(sickLeave)).build();
+  }
+
+  private static SickLeavesRequestDTO getSickLeavesRequestDTO(int maxDaysSinceSickLeaveCompleted) {
+    return SickLeavesRequestDTO.builder()
+        .maxDaysSinceSickLeaveCompleted(maxDaysSinceSickLeaveCompleted)
+        .build();
+  }
 }

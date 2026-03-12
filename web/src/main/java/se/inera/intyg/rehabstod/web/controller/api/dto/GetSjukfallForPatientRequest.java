@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,44 +20,39 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.time.LocalDate;
 
-/**
- * Created by Magnus Ekstrand on 03/02/16.
- */
+/** Created by Magnus Ekstrand on 03/02/16. */
 public class GetSjukfallForPatientRequest {
 
-    private LocalDate aktivtDatum;
-    private String patientId;
-    private String encryptedPatientId;
+  private LocalDate aktivtDatum;
+  private String patientId;
+  private String encryptedPatientId;
 
-    /**
-     * The sole constructor.
-     **/
-    public GetSjukfallForPatientRequest() {
-        aktivtDatum = LocalDate.now();
-    }
+  /** The sole constructor. */
+  public GetSjukfallForPatientRequest() {
+    aktivtDatum = LocalDate.now();
+  }
 
+  public LocalDate getAktivtDatum() {
+    return aktivtDatum;
+  }
 
-    public LocalDate getAktivtDatum() {
-        return aktivtDatum;
-    }
+  public void setAktivtDatum(LocalDate aktivtDatum) {
+    this.aktivtDatum = aktivtDatum;
+  }
 
-    public void setAktivtDatum(LocalDate aktivtDatum) {
-        this.aktivtDatum = aktivtDatum;
-    }
+  public String getPatientId() {
+    return patientId;
+  }
 
-    public String getPatientId() {
-        return patientId;
-    }
+  public void setPatientId(String patientId) {
+    this.patientId = patientId;
+  }
 
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
+  public String getEncryptedPatientId() {
+    return encryptedPatientId;
+  }
 
-    public String getEncryptedPatientId() {
-        return encryptedPatientId;
-    }
-
-    public void setEncryptedPatientId(String encryptedPatientId) {
-        this.encryptedPatientId = encryptedPatientId;
-    }
+  public void setEncryptedPatientId(String encryptedPatientId) {
+    this.encryptedPatientId = encryptedPatientId;
+  }
 }

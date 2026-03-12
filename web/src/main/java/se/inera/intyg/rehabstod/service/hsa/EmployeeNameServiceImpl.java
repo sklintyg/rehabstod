@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,8 +20,8 @@ package se.inera.intyg.rehabstod.service.hsa;
 
 import static se.inera.intyg.rehabstod.config.EmployeeNameCacheConfig.EMPLOYEE_NAME_CACHE_NAME;
 
-import java.util.List;
 import jakarta.xml.ws.WebServiceException;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -32,33 +32,32 @@ import se.inera.intyg.infra.monitoring.annotation.PrometheusTimeMethod;
 @Service
 public class EmployeeNameServiceImpl implements EmployeeNameService {
 
-    @Autowired
-    private HsaEmployeeService employeeService;
+  @Autowired private HsaEmployeeService employeeService;
 
-    @Override
-    @PrometheusTimeMethod
-    @Cacheable(value = EMPLOYEE_NAME_CACHE_NAME, key = "#employeeHsaId")
-    public String getEmployeeHsaName(String employeeHsaId) {
-        final var employeeInfo = getEmployee(employeeHsaId);
-        if (isEmpty(employeeInfo)) {
-            return employeeHsaId;
-        }
-        return getName(employeeInfo);
+  @Override
+  @PrometheusTimeMethod
+  @Cacheable(value = EMPLOYEE_NAME_CACHE_NAME, key = "#employeeHsaId")
+  public String getEmployeeHsaName(String employeeHsaId) {
+    final var employeeInfo = getEmployee(employeeHsaId);
+    if (isEmpty(employeeInfo)) {
+      return employeeHsaId;
     }
+    return getName(employeeInfo);
+  }
 
-    private List<PersonInformation> getEmployee(String employeeHsaId) {
-        try {
-            return employeeService.getEmployee(employeeHsaId, null, null);
-        } catch (WebServiceException e) {
-            return null;
-        }
+  private List<PersonInformation> getEmployee(String employeeHsaId) {
+    try {
+      return employeeService.getEmployee(employeeHsaId, null, null);
+    } catch (WebServiceException e) {
+      return null;
     }
+  }
 
-    private boolean isEmpty(List<PersonInformation> employeeInfo) {
-        return employeeInfo == null || employeeInfo.isEmpty();
-    }
+  private boolean isEmpty(List<PersonInformation> employeeInfo) {
+    return employeeInfo == null || employeeInfo.isEmpty();
+  }
 
-    private String getName(List<PersonInformation> employeeInfo) {
-        return employeeInfo.get(0).getGivenName() + " " + employeeInfo.get(0).getMiddleAndSurName();
-    }
+  private String getName(List<PersonInformation> employeeInfo) {
+    return employeeInfo.get(0).getGivenName() + " " + employeeInfo.get(0).getMiddleAndSurName();
+  }
 }

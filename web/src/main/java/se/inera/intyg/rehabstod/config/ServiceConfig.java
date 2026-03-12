@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,20 +26,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.context.support.ServletContextAttributeExporter;
 
-/**
- * Created by pebe on 2015-09-07.
- */
+/** Created by pebe on 2015-09-07. */
 @Configuration
-@ComponentScan({"se.inera.intyg.rehabstod.service", "se.inera.intyg.rehabstod.auth", "se.inera.intyg.rehabstod.common",
-    "se.inera.intyg.rehabstod.integration.it.service"})
+@ComponentScan({
+  "se.inera.intyg.rehabstod.service",
+  "se.inera.intyg.rehabstod.auth",
+  "se.inera.intyg.rehabstod.common",
+  "se.inera.intyg.rehabstod.integration.it.service"
+})
 @EnableScheduling
 public class ServiceConfig {
 
-    @Bean
-    public ServletContextAttributeExporter contextAttributes() {
-        final Map<String, Object> attributes = new HashMap<>();
-        final ServletContextAttributeExporter exporter = new ServletContextAttributeExporter();
-        exporter.setAttributes(attributes);
-        return exporter;
-    }
+  @Bean
+  public ServletContextAttributeExporter contextAttributes() {
+    final Map<String, Object> attributes = new HashMap<>();
+    final ServletContextAttributeExporter exporter = new ServletContextAttributeExporter();
+    exporter.setAttributes(attributes);
+    return exporter;
+  }
 }

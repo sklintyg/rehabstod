@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,25 +23,24 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
  */
 public class AddVeToPatientViewRequest {
 
-    private String patientId;
-    private String vardenhetId;
+  private String patientId;
+  private String vardenhetId;
 
-    public AddVeToPatientViewRequest() {
-    }
+  public AddVeToPatientViewRequest() {}
 
-    public String getPatientId() {
-        return patientId;
-    }
+  public String getPatientId() {
+    return patientId;
+  }
 
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
+  public void setPatientId(String patientId) {
+    this.patientId = patientId;
+  }
 
-    public String getVardenhetId() {
-        return vardenhetId;
-    }
+  public String getVardenhetId() {
+    return vardenhetId;
+  }
 
-    public void setVardenhetId(String vardenhetId) {
-        this.vardenhetId = vardenhetId;
-    }
+  public void setVardenhetId(String vardenhetId) {
+    this.vardenhetId = vardenhetId;
+  }
 }

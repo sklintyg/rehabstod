@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,19 +24,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
-/**
- * Created by eriklupander on 2017-10-31.
- */
+/** Created by eriklupander on 2017-10-31. */
 @RunWith(MockitoJUnitRunner.class)
 public class SRSStubTest {
 
-    private SRSStub testee = new SRSStub();
+  private SRSStub testee = new SRSStub();
 
-    @Test
-    public void generateRiskInt() {
-        assertEquals(1, testee.getRiskInt(0).intValue());
-        assertEquals(2, testee.getRiskInt(1).intValue());
-        assertEquals(3, testee.getRiskInt(2).intValue());
-        assertEquals(1, testee.getRiskInt(3).intValue());
-    }
+  @Test
+  public void generateRiskInt() {
+    assertEquals(1, testee.getRiskInt(0).intValue());
+    assertEquals(2, testee.getRiskInt(1).intValue());
+    assertEquals(3, testee.getRiskInt(2).intValue());
+    assertEquals(1, testee.getRiskInt(3).intValue());
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -33,43 +33,44 @@ import se.inera.intyg.rehabstod.persistence.repository.AnvandarPreferenceReposit
 @Service
 public class UserPreferencesServiceImpl implements UserPreferencesService {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+  private final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private UserService userService;
+  @Autowired private UserService userService;
 
-    @Autowired
-    private AnvandarPreferenceRepository anvandarPreferenceRepository;
+  @Autowired private AnvandarPreferenceRepository anvandarPreferenceRepository;
 
-    @Override
-    public RehabstodUserPreferences getAllPreferences() {
-        RehabstodUser user = userService.getUser();
-        log.debug("Getting all preferences for {}.", user.getHsaId());
-        return RehabstodUserPreferences.fromBackend(anvandarPreferenceRepository.getAnvandarPreference(user.getHsaId()));
+  @Override
+  public RehabstodUserPreferences getAllPreferences() {
+    RehabstodUser user = userService.getUser();
+    log.debug("Getting all preferences for {}.", user.getHsaId());
+    return RehabstodUserPreferences.fromBackend(
+        anvandarPreferenceRepository.getAnvandarPreference(user.getHsaId()));
+  }
+
+  @Override
+  @Transactional
+  public void updatePreferences(RehabstodUserPreferences keyValueMap) {
+    RehabstodUser user = userService.getUser();
+    log.debug("Updating preference {} for {}.", keyValueMap.toFrontendMap(), user.getHsaId());
+    for (Map.Entry<Preference, String> pref : keyValueMap.preferences().entrySet()) {
+      AnvandarPreference anvPref =
+          anvandarPreferenceRepository.findByHsaIdAndKey(
+              user.getHsaId(), pref.getKey().getBackendKeyName());
+      if (anvPref == null) {
+        anvPref =
+            new AnvandarPreference(
+                user.getHsaId(), pref.getKey().getBackendKeyName(), pref.getValue());
+      } else {
+        anvPref.setValue(pref.getValue());
+      }
+      anvandarPreferenceRepository.save(anvPref);
+      user.getPreferences().updatePreference(pref.getKey(), pref.getValue());
     }
+  }
 
-    @Override
-    @Transactional
-    public void updatePreferences(RehabstodUserPreferences keyValueMap) {
-        RehabstodUser user = userService.getUser();
-        log.debug("Updating preference {} for {}.", keyValueMap.toFrontendMap(), user.getHsaId());
-        for (Map.Entry<Preference, String> pref : keyValueMap.preferences().entrySet()) {
-            AnvandarPreference anvPref = anvandarPreferenceRepository.findByHsaIdAndKey(user.getHsaId(),
-                pref.getKey().getBackendKeyName());
-            if (anvPref == null) {
-                anvPref = new AnvandarPreference(user.getHsaId(), pref.getKey().getBackendKeyName(), pref.getValue());
-            } else {
-                anvPref.setValue(pref.getValue());
-            }
-            anvandarPreferenceRepository.save(anvPref);
-            user.getPreferences().updatePreference(pref.getKey(), pref.getValue());
-        }
-    }
-
-    @Override
-    public String getPreferenceValue(Preference pref) {
-        RehabstodUserPreferences allPreferences = getAllPreferences();
-        return allPreferences.get(pref);
-    }
-
+  @Override
+  public String getPreferenceValue(Preference pref) {
+    RehabstodUserPreferences allPreferences = getAllPreferences();
+    return allPreferences.get(pref);
+  }
 }

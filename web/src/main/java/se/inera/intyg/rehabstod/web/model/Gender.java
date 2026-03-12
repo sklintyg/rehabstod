@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,33 +18,32 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
-/**
- * Created by martin on 11/02/16.
- */
+/** Created by martin on 11/02/16. */
 public enum Gender {
+  F("Kvinna"),
+  M("Man"),
+  UNKNOWN("Okänt");
 
-    F("Kvinna"), M("Man"), UNKNOWN("Okänt");
+  private final String desc;
 
-    private final String desc;
+  Gender(String desc) {
+    this.desc = desc;
+  }
 
-    Gender(String desc) {
-        this.desc = desc;
+  public String getDescription() {
+    return this.desc;
+  }
+
+  public static Gender getGenderFromString(String genderString) {
+
+    if (genderString != null && genderString.length() == 1) {
+      if (genderString.matches("^\\d*[13579]$")) {
+        return M;
+      } else if (genderString.matches("^\\d*[02468]$")) {
+        return F;
+      }
     }
 
-    public String getDescription() {
-        return this.desc;
-    }
-
-    public static Gender getGenderFromString(String genderString) {
-
-        if (genderString != null && genderString.length() == 1) {
-            if (genderString.matches("^\\d*[13579]$")) {
-                return M;
-            } else if (genderString.matches("^\\d*[02468]$")) {
-                return F;
-            }
-        }
-
-        return UNKNOWN;
-    }
+    return UNKNOWN;
+  }
 }

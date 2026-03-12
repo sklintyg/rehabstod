@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -44,84 +44,88 @@ import se.inera.intyg.rehabstod.web.model.SjukfallPatient;
 @RunWith(MockitoJUnitRunner.class)
 public class UnansweredQAsInfoDecoratorImplTest {
 
-    public static final String PATIENT_ID = "191212121212";
+  public static final String PATIENT_ID = "191212121212";
 
-    @Mock
-    private WcRestIntegrationService wcRestIntegrationService;
+  @Mock private WcRestIntegrationService wcRestIntegrationService;
 
-    @InjectMocks
-    private UnansweredQAsInfoDecoratorImpl testee;
+  @InjectMocks private UnansweredQAsInfoDecoratorImpl testee;
 
-    @Test
-    public void updateSjukfallPatientKompletteringar() {
+  @Test
+  public void updateSjukfallPatientKompletteringar() {
 
-        // Results returned from wc integration service..
-        Map<String, UnansweredQAs> kompl = new HashMap<>();
-        kompl.put("0", new UnansweredQAs(0, 0));
-        kompl.put("1", new UnansweredQAs(1, 1));
-        kompl.put("2", new UnansweredQAs(2, 2));
-        kompl.put("3", new UnansweredQAs(3, 3));
-        kompl.put("4", new UnansweredQAs(3, 3));
-        kompl.put("5", new UnansweredQAs(3, 3));
-        kompl.put("6", new UnansweredQAs(3, 3));
-        kompl.put("n/a", new UnansweredQAs(0, 0));
+    // Results returned from wc integration service..
+    Map<String, UnansweredQAs> kompl = new HashMap<>();
+    kompl.put("0", new UnansweredQAs(0, 0));
+    kompl.put("1", new UnansweredQAs(1, 1));
+    kompl.put("2", new UnansweredQAs(2, 2));
+    kompl.put("3", new UnansweredQAs(3, 3));
+    kompl.put("4", new UnansweredQAs(3, 3));
+    kompl.put("5", new UnansweredQAs(3, 3));
+    kompl.put("6", new UnansweredQAs(3, 3));
+    kompl.put("n/a", new UnansweredQAs(0, 0));
 
-        final var response = UnansweredCommunicationResponse.builder()
+    final var response =
+        UnansweredCommunicationResponse.builder()
             .unansweredQAsMap(kompl)
             .unansweredCommunicationError(false)
             .build();
 
-        ArgumentCaptor<UnansweredCommunicationRequest> requestCaptor = ArgumentCaptor.forClass(UnansweredCommunicationRequest.class);
+    ArgumentCaptor<UnansweredCommunicationRequest> requestCaptor =
+        ArgumentCaptor.forClass(UnansweredCommunicationRequest.class);
 
-        when(wcRestIntegrationService.getUnansweredCommunicationForPatients(any(
-            UnansweredCommunicationRequest.class))).thenReturn(response);
+    when(wcRestIntegrationService.getUnansweredCommunicationForPatients(
+            any(UnansweredCommunicationRequest.class)))
+        .thenReturn(response);
 
-        List<SjukfallPatient> sjukfall = new ArrayList<>();
-        final SjukfallPatient sjukfall0 = createSjukfallPatient(createPatientData("0", false, false));
-        final SjukfallPatient sjukfall1 = createSjukfallPatient(createPatientData("1", false, false));
-        final SjukfallPatient sjukfall23 = createSjukfallPatient(createPatientData("2", false, false),
-            createPatientData("3", false, false));
-        // Should be 0 because not queried for (because other vg and/or ve rule)
-        final SjukfallPatient sjukfall4 = createSjukfallPatient(createPatientData("4", true, false));
-        final SjukfallPatient sjukfall5 = createSjukfallPatient(createPatientData("5", false, true));
-        final SjukfallPatient sjukfall6 = createSjukfallPatient(createPatientData("6", true, true));
+    List<SjukfallPatient> sjukfall = new ArrayList<>();
+    final SjukfallPatient sjukfall0 = createSjukfallPatient(createPatientData("0", false, false));
+    final SjukfallPatient sjukfall1 = createSjukfallPatient(createPatientData("1", false, false));
+    final SjukfallPatient sjukfall23 =
+        createSjukfallPatient(
+            createPatientData("2", false, false), createPatientData("3", false, false));
+    // Should be 0 because not queried for (because other vg and/or ve rule)
+    final SjukfallPatient sjukfall4 = createSjukfallPatient(createPatientData("4", true, false));
+    final SjukfallPatient sjukfall5 = createSjukfallPatient(createPatientData("5", false, true));
+    final SjukfallPatient sjukfall6 = createSjukfallPatient(createPatientData("6", true, true));
 
-        // should be 0 because no matching results
-        final SjukfallPatient sjukfallNotPresent = createSjukfallPatient(createPatientData("n/a", false, false));
+    // should be 0 because no matching results
+    final SjukfallPatient sjukfallNotPresent =
+        createSjukfallPatient(createPatientData("n/a", false, false));
 
-        sjukfall.add(sjukfall0);
-        sjukfall.add(sjukfall1);
-        sjukfall.add(sjukfall23);
-        sjukfall.add(sjukfall4);
-        sjukfall.add(sjukfall5);
-        sjukfall.add(sjukfall6);
-        sjukfall.add(sjukfallNotPresent);
+    sjukfall.add(sjukfall0);
+    sjukfall.add(sjukfall1);
+    sjukfall.add(sjukfall23);
+    sjukfall.add(sjukfall4);
+    sjukfall.add(sjukfall5);
+    sjukfall.add(sjukfall6);
+    sjukfall.add(sjukfallNotPresent);
 
-        testee.updateSjukfallPatientWithQAs(sjukfall, PATIENT_ID);
+    testee.updateSjukfallPatientWithQAs(sjukfall, PATIENT_ID);
 
-        verify(wcRestIntegrationService).getUnansweredCommunicationForPatients(requestCaptor.capture());
+    verify(wcRestIntegrationService).getUnansweredCommunicationForPatients(requestCaptor.capture());
 
-        assertEquals(0, sjukfall0.getIntyg().getFirst().getObesvaradeKompl().intValue());
-        assertEquals(1, sjukfall1.getIntyg().getFirst().getObesvaradeKompl().intValue());
-        assertEquals(2, sjukfall23.getIntyg().get(0).getObesvaradeKompl().intValue());
-        assertEquals(3, sjukfall23.getIntyg().get(1).getObesvaradeKompl().intValue());
-        assertEquals(0, sjukfall4.getIntyg().getFirst().getObesvaradeKompl().intValue());
-        assertEquals(0, sjukfall5.getIntyg().getFirst().getObesvaradeKompl().intValue());
-        assertEquals(0, sjukfall6.getIntyg().getFirst().getObesvaradeKompl().intValue());
-        assertEquals(0, sjukfallNotPresent.getIntyg().getFirst().getObesvaradeKompl().intValue());
-    }
+    assertEquals(0, sjukfall0.getIntyg().getFirst().getObesvaradeKompl().intValue());
+    assertEquals(1, sjukfall1.getIntyg().getFirst().getObesvaradeKompl().intValue());
+    assertEquals(2, sjukfall23.getIntyg().get(0).getObesvaradeKompl().intValue());
+    assertEquals(3, sjukfall23.getIntyg().get(1).getObesvaradeKompl().intValue());
+    assertEquals(0, sjukfall4.getIntyg().getFirst().getObesvaradeKompl().intValue());
+    assertEquals(0, sjukfall5.getIntyg().getFirst().getObesvaradeKompl().intValue());
+    assertEquals(0, sjukfall6.getIntyg().getFirst().getObesvaradeKompl().intValue());
+    assertEquals(0, sjukfallNotPresent.getIntyg().getFirst().getObesvaradeKompl().intValue());
+  }
 
-    private PatientData createPatientData(String intygId, boolean otherVardgivare, boolean otherVardenhet) {
-        PatientData patientData = new PatientData();
-        patientData.setIntygsId(intygId);
-        patientData.setOtherVardgivare(otherVardgivare);
-        patientData.setOtherVardenhet(otherVardenhet);
-        return patientData;
-    }
+  private PatientData createPatientData(
+      String intygId, boolean otherVardgivare, boolean otherVardenhet) {
+    PatientData patientData = new PatientData();
+    patientData.setIntygsId(intygId);
+    patientData.setOtherVardgivare(otherVardgivare);
+    patientData.setOtherVardenhet(otherVardenhet);
+    return patientData;
+  }
 
-    private SjukfallPatient createSjukfallPatient(PatientData... patientData) {
-        SjukfallPatient sfp = new SjukfallPatient();
-        sfp.setIntyg(Arrays.asList(patientData));
-        return sfp;
-    }
+  private SjukfallPatient createSjukfallPatient(PatientData... patientData) {
+    SjukfallPatient sfp = new SjukfallPatient();
+    sfp.setIntyg(Arrays.asList(patientData));
+    return sfp;
+  }
 }

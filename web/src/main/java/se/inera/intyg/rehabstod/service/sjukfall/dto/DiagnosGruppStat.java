@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,61 +21,59 @@ package se.inera.intyg.rehabstod.service.sjukfall.dto;
 import java.util.Objects;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosGrupp;
 
-/**
- * Created by marced on 14/03/16.
- */
+/** Created by marced on 14/03/16. */
 public class DiagnosGruppStat {
 
-    private DiagnosGrupp grupp;
-    private Long count;
-    private float percentage;
+  private DiagnosGrupp grupp;
+  private Long count;
+  private float percentage;
 
-    public DiagnosGruppStat(DiagnosGrupp grupp, Long count, float percentage) {
-        this.grupp = grupp;
-        this.count = count;
-        this.percentage = percentage;
-    }
+  public DiagnosGruppStat(DiagnosGrupp grupp, Long count, float percentage) {
+    this.grupp = grupp;
+    this.count = count;
+    this.percentage = percentage;
+  }
 
-    public DiagnosGrupp getGrupp() {
-        return grupp;
-    }
+  public DiagnosGrupp getGrupp() {
+    return grupp;
+  }
 
-    public void setGrupp(DiagnosGrupp grupp) {
-        this.grupp = grupp;
-    }
+  public void setGrupp(DiagnosGrupp grupp) {
+    this.grupp = grupp;
+  }
 
-    public Long getCount() {
-        return count;
-    }
+  public Long getCount() {
+    return count;
+  }
 
-    public void setCount(Long count) {
-        this.count = count;
-    }
+  public void setCount(Long count) {
+    this.count = count;
+  }
 
-    public float getPercentage() {
-        return percentage;
-    }
+  public float getPercentage() {
+    return percentage;
+  }
 
-    public void setPercentage(float percentage) {
-        this.percentage = percentage;
-    }
+  public void setPercentage(float percentage) {
+    this.percentage = percentage;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof DiagnosGruppStat)) {
-            return false;
-        }
-        DiagnosGruppStat that = (DiagnosGruppStat) o;
-        return Objects.equals(grupp, that.grupp)
-            && Objects.equals(count, that.count)
-            && Float.compare(that.percentage, percentage) == 0;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (!(o instanceof DiagnosGruppStat)) {
+      return false;
+    }
+    DiagnosGruppStat that = (DiagnosGruppStat) o;
+    return Objects.equals(grupp, that.grupp)
+        && Objects.equals(count, that.count)
+        && Float.compare(that.percentage, percentage) == 0;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(grupp, count, percentage);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(grupp, count, percentage);
+  }
 }

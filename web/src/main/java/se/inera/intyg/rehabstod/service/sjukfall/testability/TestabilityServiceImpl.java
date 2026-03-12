@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.sjukfall.testability;
 
 import org.slf4j.Logger;
@@ -31,34 +30,36 @@ import se.inera.intyg.rehabstod.integration.it.dto.TestDataOptionsDTO;
 @Service
 public class TestabilityServiceImpl implements TestabilityService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestabilityServiceImpl.class);
-    private final RestTemplate restTemplate;
-    @Value("${intygstjanst.host.url}")
-    private String intygstjanstUrl;
+  private static final Logger LOGGER = LoggerFactory.getLogger(TestabilityServiceImpl.class);
+  private final RestTemplate restTemplate;
 
-    public TestabilityServiceImpl(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+  @Value("${intygstjanst.host.url}")
+  private String intygstjanstUrl;
 
-    @Override
-    public String getDefaultTestData() {
-        final String url = intygstjanstUrl + "/inera-certificate/resources/testability/createDefault";
-        LOGGER.debug("Getting default test data from Intygstjansten");
-        return restTemplate.postForObject(url, null, String.class);
-    }
+  public TestabilityServiceImpl(RestTemplate restTemplate) {
+    this.restTemplate = restTemplate;
+  }
 
-    @Override
-    public String createSickleave(CreateSickLeaveRequestDTO request) {
-        final String url = intygstjanstUrl + "/inera-certificate/resources/testability/createSickLeave";
-        LOGGER.debug("Creating sick leave test data");
-        final var createSickLeaveResponseDTO = restTemplate.postForObject(url, request, CreateSickLeaveResponseDTO.class);
-        return createSickLeaveResponseDTO.getCertificateId();
-    }
+  @Override
+  public String getDefaultTestData() {
+    final String url = intygstjanstUrl + "/inera-certificate/resources/testability/createDefault";
+    LOGGER.debug("Getting default test data from Intygstjansten");
+    return restTemplate.postForObject(url, null, String.class);
+  }
 
-    @Override
-    public TestDataOptionsDTO getTestDataOptions() {
-        final String url = intygstjanstUrl + "/inera-certificate/resources/testability/testDataOptions";
-        LOGGER.debug("Getting sick leave test data");
-        return restTemplate.getForObject(url, TestDataOptionsDTO.class);
-    }
+  @Override
+  public String createSickleave(CreateSickLeaveRequestDTO request) {
+    final String url = intygstjanstUrl + "/inera-certificate/resources/testability/createSickLeave";
+    LOGGER.debug("Creating sick leave test data");
+    final var createSickLeaveResponseDTO =
+        restTemplate.postForObject(url, request, CreateSickLeaveResponseDTO.class);
+    return createSickLeaveResponseDTO.getCertificateId();
+  }
+
+  @Override
+  public TestDataOptionsDTO getTestDataOptions() {
+    final String url = intygstjanstUrl + "/inera-certificate/resources/testability/testDataOptions";
+    LOGGER.debug("Getting sick leave test data");
+    return restTemplate.getForObject(url, TestDataOptionsDTO.class);
+  }
 }

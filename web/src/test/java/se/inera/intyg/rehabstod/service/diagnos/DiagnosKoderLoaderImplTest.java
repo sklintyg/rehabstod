@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -30,32 +30,31 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
-/**
- * Created by eriklupander on 2016-04-14.
- */
+/** Created by eriklupander on 2016-04-14. */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {DiagnosKoderLoaderImpl.class, IcdCodeConverter.class})
 public class DiagnosKoderLoaderImplTest {
 
-    @Autowired
-    private DiagnosKoderLoaderImpl diagnosKoderLoader;
+  @Autowired private DiagnosKoderLoaderImpl diagnosKoderLoader;
 
-    @Test
-    public void testLoadDiagnosKoder() throws IOException {
-        specifyDiagnosKodFiler();
-        Map<String, String> diagnosKoder = diagnosKoderLoader.loadDiagnosKoder();
-        assertNotNull(diagnosKoder);
-        assertEquals(39350, diagnosKoder.size());
-    }
+  @Test
+  public void testLoadDiagnosKoder() throws IOException {
+    specifyDiagnosKodFiler();
+    Map<String, String> diagnosKoder = diagnosKoderLoader.loadDiagnosKoder();
+    assertNotNull(diagnosKoder);
+    assertEquals(39350, diagnosKoder.size());
+  }
 
-    private void specifyDiagnosKodFiler() {
-        ReflectionTestUtils.setField(diagnosKoderLoader, "diagnosisCodeIcd10SeFile",
-            loadDiagnosKodFile("icd10se/icd-10-se.tsv"));
-        ReflectionTestUtils.setField(diagnosKoderLoader, "diagnosKodKS97PKodFile",
-            loadDiagnosKodFile("KSH97P_KOD.ANS"));
-    }
+  private void specifyDiagnosKodFiler() {
+    ReflectionTestUtils.setField(
+        diagnosKoderLoader,
+        "diagnosisCodeIcd10SeFile",
+        loadDiagnosKodFile("icd10se/icd-10-se.tsv"));
+    ReflectionTestUtils.setField(
+        diagnosKoderLoader, "diagnosKodKS97PKodFile", loadDiagnosKodFile("KSH97P_KOD.ANS"));
+  }
 
-    private String loadDiagnosKodFile(String file) {
-        return "classpath:DiagnosKoderLoaderTest/" + file;
-    }
+  private String loadDiagnosKodFile(String file) {
+    return "classpath:DiagnosKoderLoaderTest/" + file;
+  }
 }

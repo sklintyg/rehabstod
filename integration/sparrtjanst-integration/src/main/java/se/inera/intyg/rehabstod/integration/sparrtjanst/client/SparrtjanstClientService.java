@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,12 +22,13 @@ import java.util.List;
 import se.inera.intyg.infra.sjukfall.dto.IntygData;
 import se.riv.informationsecurity.authorization.blocking.CheckBlocksResponder.v4.CheckBlocksResponseType;
 
-/**
- * Created by marced 2018-09-28.
- */
+/** Created by marced 2018-09-28. */
 public interface SparrtjanstClientService {
 
-    CheckBlocksResponseType getCheckBlocks(String vgHsaId, String veHsaId, String userHsaId, String patientId,
-        List<IntygData> intygLista);
-
+  CheckBlocksResponseType getCheckBlocks(
+      String vgHsaId,
+      String veHsaId,
+      String userHsaId,
+      String patientId,
+      List<IntygData> intygLista);
 }

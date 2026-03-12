@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,22 +23,27 @@ import se.inera.intyg.infra.sjukfall.dto.IntygParametrar;
 import se.inera.intyg.rehabstod.service.Urval;
 import se.inera.intyg.rehabstod.service.sjukfall.dto.SjukfallPatientResponse;
 
-/**
- * Created by eriklupander on 2016-02-01.
- */
+/** Created by eriklupander on 2016-02-01. */
 public interface SjukfallService {
 
-    /**
-     * @param currentVardgivarId The identifier of the current care giver
-     * @param enhetsId The care unit identifier
-     * @param lakareId The physician's identifier
-     * @param patientId The patient's identifier
-     * @param vgHsaIds Identifiers of care givers that shall be included in the calculation of the active 'sjukfall'
-     * @param veHsaIds Identifiers of care units that shall be included in the calculation of the active 'sjukfall'
-     */
-    // CHECKSTYLE:OFF ParameterNumber
-    SjukfallPatientResponse getByPatient(String currentVardgivarId, String enhetsId, String lakareId,
-        String patientId, Urval urval, IntygParametrar parameters,
-        Collection<String> vgHsaIds, Collection<String> veHsaIds);
-
+  /**
+   * @param currentVardgivarId The identifier of the current care giver
+   * @param enhetsId The care unit identifier
+   * @param lakareId The physician's identifier
+   * @param patientId The patient's identifier
+   * @param vgHsaIds Identifiers of care givers that shall be included in the calculation of the
+   *     active 'sjukfall'
+   * @param veHsaIds Identifiers of care units that shall be included in the calculation of the
+   *     active 'sjukfall'
+   */
+  // CHECKSTYLE:OFF ParameterNumber
+  SjukfallPatientResponse getByPatient(
+      String currentVardgivarId,
+      String enhetsId,
+      String lakareId,
+      String patientId,
+      Urval urval,
+      IntygParametrar parameters,
+      Collection<String> vgHsaIds,
+      Collection<String> veHsaIds);
 }

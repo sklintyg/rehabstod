@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,18 +20,16 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
 
 import java.util.List;
 
-/**
- * Created by eriklupander on 2016-02-23.
- */
+/** Created by eriklupander on 2016-02-23. */
 public class PrintSjukfallRequest extends GetSjukfallRequest {
 
-    private List<String> personnummer;
+  private List<String> personnummer;
 
-    public List<String> getPersonnummer() {
-        return personnummer;
-    }
+  public List<String> getPersonnummer() {
+    return personnummer;
+  }
 
-    public void setPersonnummer(List<String> personnummer) {
-        this.personnummer = personnummer;
-    }
+  public void setPersonnummer(List<String> personnummer) {
+    this.personnummer = personnummer;
+  }
 }

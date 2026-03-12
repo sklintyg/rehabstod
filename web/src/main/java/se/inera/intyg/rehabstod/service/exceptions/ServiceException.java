@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -19,35 +19,32 @@
 package se.inera.intyg.rehabstod.service.exceptions;
 
 /**
- * Abstract superclass for all exceptions related to a Service object
- * being invalid for whatever reason.
+ * Abstract superclass for all exceptions related to a Service object being invalid for whatever
+ * reason.
  *
  * @author by Magnus Ekstrand on 2016-04-12.
  */
 public abstract class ServiceException extends RuntimeException {
 
-    // ~ Constructors
-    // ===================================================================================================
+  // ~ Constructors
+  // ===================================================================================================
 
-    /**
-     * Constructs an {@code ServiceException} with the specified message and root
-     * cause.
-     *
-     * @param msg the detail message
-     * @param t the root cause
-     */
-    public ServiceException(String msg, Throwable t) {
-        super(msg, t);
-    }
+  /**
+   * Constructs an {@code ServiceException} with the specified message and root cause.
+   *
+   * @param msg the detail message
+   * @param t the root cause
+   */
+  public ServiceException(String msg, Throwable t) {
+    super(msg, t);
+  }
 
-    /**
-     * Constructs an {@code ServiceException} with the specified message and no
-     * root cause.
-     *
-     * @param msg the detail message
-     */
-    public ServiceException(String msg) {
-        super(msg);
-    }
-
+  /**
+   * Constructs an {@code ServiceException} with the specified message and no root cause.
+   *
+   * @param msg the detail message
+   */
+  public ServiceException(String msg) {
+    super(msg);
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.monitoring.error;
 
 import org.springframework.stereotype.Service;
@@ -26,27 +25,26 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.ErrorLogRequestDTO;
 @Service
 public class ErrorLogServiceImpl implements ErrorLogService {
 
-    private final MonitoringLogService monitoringLogService;
+  private final MonitoringLogService monitoringLogService;
 
-    public ErrorLogServiceImpl(MonitoringLogService monitoringLogService) {
-        this.monitoringLogService = monitoringLogService;
-    }
+  public ErrorLogServiceImpl(MonitoringLogService monitoringLogService) {
+    this.monitoringLogService = monitoringLogService;
+  }
 
-    @Override
-    public void logError(ErrorLogRequestDTO errorLogRequestDTO) {
-        monitoringLogService.logClientError(
-            errorLogRequestDTO.getErrorId(),
-            errorLogRequestDTO.getErrorCode(),
-            errorLogRequestDTO.getMessage(),
-            getStackTrace(errorLogRequestDTO.getStackTrace())
-        );
-    }
+  @Override
+  public void logError(ErrorLogRequestDTO errorLogRequestDTO) {
+    monitoringLogService.logClientError(
+        errorLogRequestDTO.getErrorId(),
+        errorLogRequestDTO.getErrorCode(),
+        errorLogRequestDTO.getMessage(),
+        getStackTrace(errorLogRequestDTO.getStackTrace()));
+  }
 
-    private String getStackTrace(String stackTrace) {
-        return isDefined(stackTrace) ? stackTrace : "NO_STACK_TRACE";
-    }
+  private String getStackTrace(String stackTrace) {
+    return isDefined(stackTrace) ? stackTrace : "NO_STACK_TRACE";
+  }
 
-    private boolean isDefined(String value) {
-        return value != null && !value.isEmpty() && !value.isBlank();
-    }
+  private boolean isDefined(String value) {
+    return value != null && !value.isEmpty() && !value.isBlank();
+  }
 }

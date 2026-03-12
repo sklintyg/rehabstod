@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,14 +18,11 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
-/**
- * Created by marced on 08/02/16.
- */
-
+/** Created by marced on 08/02/16. */
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,44 +33,42 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKategori;
 @Component
 public class DiagnosKapitelServiceImpl implements DiagnosKapitelService {
 
-    public static final DiagnosKapitel OGILTIGA_DIAGNOSKODER_KAPITEL = new DiagnosKapitel(
-        new DiagnosKategori(' ', 0),
-        new DiagnosKategori(' ', 0),
-        "Utan giltig diagnoskod");
+  public static final DiagnosKapitel OGILTIGA_DIAGNOSKODER_KAPITEL =
+      new DiagnosKapitel(
+          new DiagnosKategori(' ', 0), new DiagnosKategori(' ', 0), "Utan giltig diagnoskod");
 
-    private static final Logger LOG = LoggerFactory.getLogger(DiagnosKapitelServiceImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DiagnosKapitelServiceImpl.class);
 
-    private List<DiagnosKapitel> diagnosKapitelList;
+  private List<DiagnosKapitel> diagnosKapitelList;
 
-    @Autowired
-    private DiagnosKapitelLoader diagnosKapitelLoader;
+  @Autowired private DiagnosKapitelLoader diagnosKapitelLoader;
 
-    @PostConstruct
-    public void init() {
-        try {
-            diagnosKapitelList = diagnosKapitelLoader.loadDiagnosKapitel();
-            diagnosKapitelList.add(OGILTIGA_DIAGNOSKODER_KAPITEL);
-        } catch (IOException e) {
-            throw new DiagnosServiceException("Failed to load diagnosKapitelList!", e);
-        }
-        LOG.info("Loaded " + diagnosKapitelList.size() + " diagnosKapitelList definitions");
+  @PostConstruct
+  public void init() {
+    try {
+      diagnosKapitelList = diagnosKapitelLoader.loadDiagnosKapitel();
+      diagnosKapitelList.add(OGILTIGA_DIAGNOSKODER_KAPITEL);
+    } catch (IOException e) {
+      throw new DiagnosServiceException("Failed to load diagnosKapitelList!", e);
     }
+    LOG.info("Loaded " + diagnosKapitelList.size() + " diagnosKapitelList definitions");
+  }
 
-    @Override
-    public List<DiagnosKapitel> getDiagnosKapitelList() {
-        return diagnosKapitelList;
-    }
+  @Override
+  public List<DiagnosKapitel> getDiagnosKapitelList() {
+    return diagnosKapitelList;
+  }
 
-    @Override
-    public DiagnosKapitel getDiagnosKapitel(String diagnosKod) {
-        return getDiagnosKapitelForDiagnosKategori(DiagnosKategori.extractFromString(diagnosKod));
-    }
+  @Override
+  public DiagnosKapitel getDiagnosKapitel(String diagnosKod) {
+    return getDiagnosKapitelForDiagnosKategori(DiagnosKategori.extractFromString(diagnosKod));
+  }
 
-    private DiagnosKapitel getDiagnosKapitelForDiagnosKategori(Optional<DiagnosKategori> diagnosKategori) {
-        return this.diagnosKapitelList.stream()
-            .filter(dk -> dk.includes(diagnosKategori))
-            .findFirst()
-            .orElse(OGILTIGA_DIAGNOSKODER_KAPITEL);
-    }
-
+  private DiagnosKapitel getDiagnosKapitelForDiagnosKategori(
+      Optional<DiagnosKategori> diagnosKategori) {
+    return this.diagnosKapitelList.stream()
+        .filter(dk -> dk.includes(diagnosKategori))
+        .findFirst()
+        .orElse(OGILTIGA_DIAGNOSKODER_KAPITEL);
+  }
 }

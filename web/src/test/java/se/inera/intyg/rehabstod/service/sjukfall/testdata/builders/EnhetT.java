@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,46 +22,42 @@ import se.riv.clinicalprocess.healthcond.certificate.types.v2.HsaId;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Vardgivare;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-10.
- */
+/** Created by Magnus Ekstrand on 2016-02-10. */
 public final class EnhetT {
 
-    public EnhetT() {
+  public EnhetT() {}
+
+  public static class EnhetBuilder implements Builder<Enhet> {
+
+    private HsaId enhetsId;
+    private String enhetsnamn;
+    private Vardgivare vardgivare;
+
+    public EnhetBuilder() {}
+
+    public EnhetBuilder enhetsId(HsaId enhetsId) {
+      this.enhetsId = enhetsId;
+      return this;
     }
 
-    public static class EnhetBuilder implements Builder<Enhet> {
-
-        private HsaId enhetsId;
-        private String enhetsnamn;
-        private Vardgivare vardgivare;
-
-        public EnhetBuilder() {
-        }
-
-        public EnhetBuilder enhetsId(HsaId enhetsId) {
-            this.enhetsId = enhetsId;
-            return this;
-        }
-
-        public EnhetBuilder enhetsnamn(String enhetsnamn) {
-            this.enhetsnamn = enhetsnamn;
-            return this;
-        }
-
-        public EnhetBuilder vardgivare(Vardgivare vardgivare) {
-            this.vardgivare = vardgivare;
-            return this;
-        }
-
-        @Override
-        public Enhet build() {
-            Enhet enhet = new Enhet();
-            enhet.setEnhetsId(enhetsId);
-            enhet.setEnhetsnamn(enhetsnamn);
-            enhet.setVardgivare(vardgivare);
-
-            return enhet;
-        }
+    public EnhetBuilder enhetsnamn(String enhetsnamn) {
+      this.enhetsnamn = enhetsnamn;
+      return this;
     }
+
+    public EnhetBuilder vardgivare(Vardgivare vardgivare) {
+      this.vardgivare = vardgivare;
+      return this;
+    }
+
+    @Override
+    public Enhet build() {
+      Enhet enhet = new Enhet();
+      enhet.setEnhetsId(enhetsId);
+      enhet.setEnhetsnamn(enhetsnamn);
+      enhet.setVardgivare(vardgivare);
+
+      return enhet;
+    }
+  }
 }

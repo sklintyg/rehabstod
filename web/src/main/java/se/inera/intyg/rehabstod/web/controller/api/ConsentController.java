@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -48,103 +48,125 @@ import se.inera.intyg.schemas.contract.Personnummer;
 @RequestMapping("/api/consent")
 public class ConsentController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ConsentController.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ConsentController.class);
 
-    public static final int MAX_DAYS_FOR_CONSENT = 365;
+  public static final int MAX_DAYS_FOR_CONSENT = 365;
 
-    @Autowired
-    private ConsentService consentService;
+  @Autowired private ConsentService consentService;
 
-    @Autowired
-    private UserService userService;
+  @Autowired private UserService userService;
 
-    @Autowired
-    private LogService logService;
+  @Autowired private LogService logService;
 
-    /**
-     * Register a consent for a patient.
-     */
-    @RequestMapping(value = "", method = RequestMethod.POST,
-        consumes = MediaType.APPLICATION_JSON_VALUE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "register-consent-for-patient", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
-    public RegisterExtendedConsentResponse registerConsent(@RequestBody RegisterExtendedConsentRequest request) {
+  /** Register a consent for a patient. */
+  @RequestMapping(
+      value = "",
+      method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "register-consent-for-patient",
+      eventType = MdcLogConstants.EVENT_TYPE_CREATION)
+  public RegisterExtendedConsentResponse registerConsent(
+      @RequestBody RegisterExtendedConsentRequest request) {
 
-        RegisterExtendedConsentResponse response;
+    RegisterExtendedConsentResponse response;
 
-        // Get logged in user
-        RehabstodUser user = userService.getUser();
+    // Get logged in user
+    RehabstodUser user = userService.getUser();
 
-        LocalDate today = LocalDate.now();
+    LocalDate today = LocalDate.now();
 
-        // CHECKSTYLE:OFF MagicNumber
-        LocalDateTime consentFrom = today.atStartOfDay();
-        LocalDateTime consentTo = today.plusDays(request.getDays()).atTime(23, 59, 59);
-        // CHECKSTYLE:ON MagicNumber
+    // CHECKSTYLE:OFF MagicNumber
+    LocalDateTime consentFrom = today.atStartOfDay();
+    LocalDateTime consentTo = today.plusDays(request.getDays()).atTime(23, 59, 59);
+    // CHECKSTYLE:ON MagicNumber
 
-        // Business rule: RS-VR-007
-        // Ett samtycke får inte gälla längre än 1 år framåt i tiden
-        if (request.getDays() > MAX_DAYS_FOR_CONSENT) {
-            return createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(),
-                "Ett samtycke får inte gälla längre än 1 år framåt i tiden");
-        }
+    // Business rule: RS-VR-007
+    // Ett samtycke får inte gälla längre än 1 år framåt i tiden
+    if (request.getDays() > MAX_DAYS_FOR_CONSENT) {
+      return createResponse(
+          RegisterExtendedConsentResponse.ResponseCode.ERROR,
+          user.getHsaId(),
+          "Ett samtycke får inte gälla längre än 1 år framåt i tiden");
+    }
 
-        Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
-        if (!personnummer.isPresent()) {
-            return createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(),
-                "Felaktigt personnummer");
-        }
+    Optional<Personnummer> personnummer = Personnummer.createPersonnummer(request.getPatientId());
+    if (!personnummer.isPresent()) {
+      return createResponse(
+          RegisterExtendedConsentResponse.ResponseCode.ERROR,
+          user.getHsaId(),
+          "Felaktigt personnummer");
+    }
 
-        // Try to register consent
-        LocalDateTime consentDataTime = consentService.giveConsent(
+    // Try to register consent
+    LocalDateTime consentDataTime =
+        consentService.giveConsent(
             personnummer.get(), request.isOnlyCurrentUser(), null, consentFrom, consentTo, user);
 
-        if (consentDataTime == null) {
-            String errMsg = "Det gick inte att registrera samtycke";
-            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(), errMsg);
-        } else {
-            // Call to consent service executed OK
-            String msg = String.format("Samtycke registrerat vid tidpunkt '%s'", consentDataTime.toString());
-            response = createResponse(RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId(), msg);
+    if (consentDataTime == null) {
+      String errMsg = "Det gick inte att registrera samtycke";
+      response =
+          createResponse(
+              RegisterExtendedConsentResponse.ResponseCode.ERROR, user.getHsaId(), errMsg);
+    } else {
+      // Call to consent service executed OK
+      String msg =
+          String.format("Samtycke registrerat vid tidpunkt '%s'", consentDataTime.toString());
+      response =
+          createResponse(RegisterExtendedConsentResponse.ResponseCode.OK, user.getHsaId(), msg);
 
-            LOG.debug("PDL logging - log registration of consent");
-            logRegistrationOfConsent(user, personnummer.get(), ActivityType.CREATE, ResourceType.RESOURCE_TYPE_SAMTYCKE);
-        }
-
-        return response;
+      LOG.debug("PDL logging - log registration of consent");
+      logRegistrationOfConsent(
+          user, personnummer.get(), ActivityType.CREATE, ResourceType.RESOURCE_TYPE_SAMTYCKE);
     }
 
-    private RegisterExtendedConsentResponse createResponse(RegisterExtendedConsentResponse.ResponseCode responseCode,
-        String registeredBy,
-        String responseMessage) {
-        Preconditions.checkNotNull(responseCode);
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(registeredBy));
+    return response;
+  }
 
-        RegisterExtendedConsentResponse response = new RegisterExtendedConsentResponse();
-        response.setResponseCode(responseCode);
-        response.setRegisteredBy(registeredBy);
+  private RegisterExtendedConsentResponse createResponse(
+      RegisterExtendedConsentResponse.ResponseCode responseCode,
+      String registeredBy,
+      String responseMessage) {
+    Preconditions.checkNotNull(responseCode);
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(registeredBy));
 
-        if (!Strings.isNullOrEmpty(responseMessage)) {
-            response.setResponseMessage(responseMessage);
-        }
+    RegisterExtendedConsentResponse response = new RegisterExtendedConsentResponse();
+    response.setResponseCode(responseCode);
+    response.setRegisteredBy(registeredBy);
 
-        return response;
+    if (!Strings.isNullOrEmpty(responseMessage)) {
+      response.setResponseMessage(responseMessage);
     }
 
-    private void logRegistrationOfConsent(RehabstodUser user, Personnummer personnummer,
-        ActivityType activityType, ResourceType resourceType) {
+    return response;
+  }
 
-        String errMsg = "Cannot make lookup in PDL activity store, %s was null.";
-        Preconditions.checkNotNull(personnummer, String.format(errMsg, "enhetsId"));
+  private void logRegistrationOfConsent(
+      RehabstodUser user,
+      Personnummer personnummer,
+      ActivityType activityType,
+      ResourceType resourceType) {
 
-        boolean isInStore = PDLActivityStore.isActivityInStore(user.getValdVardenhet().getId(), personnummer.getPersonnummer(),
-            activityType, resourceType, user.getStoredActivities());
+    String errMsg = "Cannot make lookup in PDL activity store, %s was null.";
+    Preconditions.checkNotNull(personnummer, String.format(errMsg, "enhetsId"));
 
-        if (!isInStore) {
-            logService.logConsentActivity(personnummer, activityType, resourceType);
-            PDLActivityStore.addActivityToStore(user.getValdVardenhet().getId(), personnummer.getPersonnummer(),
-                activityType, resourceType, user.getStoredActivities());
-        }
+    boolean isInStore =
+        PDLActivityStore.isActivityInStore(
+            user.getValdVardenhet().getId(),
+            personnummer.getPersonnummer(),
+            activityType,
+            resourceType,
+            user.getStoredActivities());
+
+    if (!isInStore) {
+      logService.logConsentActivity(personnummer, activityType, resourceType);
+      PDLActivityStore.addActivityToStore(
+          user.getValdVardenhet().getId(),
+          personnummer.getPersonnummer(),
+          activityType,
+          resourceType,
+          user.getStoredActivities());
     }
-
+  }
 }

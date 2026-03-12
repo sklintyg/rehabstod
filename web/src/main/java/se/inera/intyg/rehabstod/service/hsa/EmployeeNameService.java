@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,11 +18,8 @@
  */
 package se.inera.intyg.rehabstod.service.hsa;
 
-/**
- * Created by eriklupander on 2017-02-23.
- */
+/** Created by eriklupander on 2017-02-23. */
 public interface EmployeeNameService {
 
-    String getEmployeeHsaName(String employeeHsaId);
-
+  String getEmployeeHsaName(String employeeHsaId);
 }

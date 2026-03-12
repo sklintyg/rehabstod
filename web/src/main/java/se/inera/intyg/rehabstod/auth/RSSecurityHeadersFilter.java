@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,31 +18,32 @@
  */
 package se.inera.intyg.rehabstod.auth;
 
+import static org.springframework.security.web.server.header.ContentSecurityPolicyServerHttpHeadersWriter.CONTENT_SECURITY_POLICY;
+import static org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter.REFERRER_POLICY;
 import static org.springframework.security.web.server.header.StrictTransportSecurityServerHttpHeadersWriter.STRICT_TRANSPORT_SECURITY;
 import static org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter.X_FRAME_OPTIONS;
 import static org.springframework.security.web.server.header.XXssProtectionServerHttpHeadersWriter.X_XSS_PROTECTION;
-import static org.springframework.security.web.server.header.ContentSecurityPolicyServerHttpHeadersWriter.CONTENT_SECURITY_POLICY;
-import static org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter.REFERRER_POLICY;
 
-import java.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import se.inera.intyg.infra.security.filter.SecurityHeadersFilter;
 
 public class RSSecurityHeadersFilter extends SecurityHeadersFilter {
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
+  @Override
+  protected void doFilterInternal(
+      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws ServletException, IOException {
 
-        response.setHeader(STRICT_TRANSPORT_SECURITY, "max-age=31536000 ; includeSubDomains");
-        response.setHeader(X_XSS_PROTECTION, "1; mode=block");
-        response.setHeader(X_FRAME_OPTIONS, "DENY");
-        response.setHeader(CONTENT_SECURITY_POLICY, "frame-ancestors 'none'");
-        response.setHeader(REFERRER_POLICY, "origin-when-cross-origin");
+    response.setHeader(STRICT_TRANSPORT_SECURITY, "max-age=31536000 ; includeSubDomains");
+    response.setHeader(X_XSS_PROTECTION, "1; mode=block");
+    response.setHeader(X_FRAME_OPTIONS, "DENY");
+    response.setHeader(CONTENT_SECURITY_POLICY, "frame-ancestors 'none'");
+    response.setHeader(REFERRER_POLICY, "origin-when-cross-origin");
 
-        super.doFilterInternal(request, response, filterChain);
-    }
+    super.doFilterInternal(request, response, filterChain);
+  }
 }

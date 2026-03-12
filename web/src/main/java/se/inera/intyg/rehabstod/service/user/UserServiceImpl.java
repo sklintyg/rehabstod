@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,33 +24,33 @@ import se.inera.intyg.infra.security.common.model.IntygUser;
 import se.inera.intyg.infra.security.common.service.CareUnitAccessHelper;
 import se.inera.intyg.rehabstod.auth.RehabstodUser;
 
-/**
- * Created by eriklupander on 2016-01-19.
- */
+/** Created by eriklupander on 2016-01-19. */
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Override
-    public RehabstodUser getUser() {
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            return null;
-        }
-        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof RehabstodUser rehabstodUser) {
-            return rehabstodUser;
-        }
-        return null;
+  @Override
+  public RehabstodUser getUser() {
+    if (SecurityContextHolder.getContext().getAuthentication() == null) {
+      return null;
     }
-
-    /**
-     * Note - this is just a proxy for accessing {@link CareUnitAccessHelper#userIsLoggedInOnEnhetOrUnderenhet(IntygUser, String)}.
-     *
-     * @param enhetsId HSA-id of a vardenhet or mottagning.
-     * @return True if the current IntygUser has access to the specified enhetsId including mottagningsnivå.
-     */
-    @Override
-    public boolean isUserLoggedInOnEnhetOrUnderenhet(String enhetsId) {
-        RehabstodUser user = getUser();
-        return CareUnitAccessHelper.userIsLoggedInOnEnhetOrUnderenhet(user, enhetsId);
+    if (SecurityContextHolder.getContext().getAuthentication().getPrincipal()
+        instanceof RehabstodUser rehabstodUser) {
+      return rehabstodUser;
     }
+    return null;
+  }
 
+  /**
+   * Note - this is just a proxy for accessing {@link
+   * CareUnitAccessHelper#userIsLoggedInOnEnhetOrUnderenhet(IntygUser, String)}.
+   *
+   * @param enhetsId HSA-id of a vardenhet or mottagning.
+   * @return True if the current IntygUser has access to the specified enhetsId including
+   *     mottagningsnivå.
+   */
+  @Override
+  public boolean isUserLoggedInOnEnhetOrUnderenhet(String enhetsId) {
+    RehabstodUser user = getUser();
+    return CareUnitAccessHelper.userIsLoggedInOnEnhetOrUnderenhet(user, enhetsId);
+  }
 }

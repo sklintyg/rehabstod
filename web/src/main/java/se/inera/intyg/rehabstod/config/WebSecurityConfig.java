@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
+ *
+ * This file is part of sklintyg (https://github.com/sklintyg).
+ *
+ * sklintyg is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * sklintyg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package se.inera.intyg.rehabstod.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -67,205 +85,238 @@ import se.inera.intyg.rehabstod.auth.SpaCsrfTokenRequestHandler;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-    private final RehabstodUserDetailsService rehabstodUserDetailsService;
-    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+  private final RehabstodUserDetailsService rehabstodUserDetailsService;
+  private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
-    @Value("${saml.sp.entity.id}")
-    private String samlEntityId;
-    @Value("${saml.idp.metadata.location}")
-    private String samlIdpMetadataLocation;
-    @Value("${saml.sp.assertion.consumer.service.location}")
-    private String assertionConsumerServiceLocation;
-    @Value("${saml.sp.single.logout.service.location}")
-    private String singleLogoutServiceLocation;
-    @Value("${saml.sp.single.logout.service.response.location}")
-    private String singleLogoutServiceResponseLocation;
-    @Value("${saml.login.success.url}")
-    private String samlLoginSuccessUrl;
-    @Value("${saml.login.success.url.always.use}")
-    private boolean samlLoginSuccessUrlAlwaysUse;
-    @Value("${saml.logout.success.url}")
-    private String samlLogoutSuccessUrl;
-    @Value("${saml.keystore.type:PKCS12}")
-    private String keyStoreType;
-    @Value("${saml.keystore.file}")
-    private String keyStorePath;
-    @Value("${saml.keystore.alias}")
-    private String keyAlias;
-    @Value("${saml.keystore.password}")
-    private String keyStorePassword;
+  @Value("${saml.sp.entity.id}")
+  private String samlEntityId;
 
-    @Bean(name = "mvcHandlerMappingIntrospector")
-    public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
-        return new HandlerMappingIntrospector();
-    }
+  @Value("${saml.idp.metadata.location}")
+  private String samlIdpMetadataLocation;
 
-    @Bean
-    public RelyingPartyRegistrationRepository relyingPartyRegistrationRepository()
-        throws KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException, IOException, CertificateException {
+  @Value("${saml.sp.assertion.consumer.service.location}")
+  private String assertionConsumerServiceLocation;
 
-        final var keyStore = KeyStore.getInstance(keyStoreType);
-        keyStore.load(new FileInputStream(ResourceUtils.getFile(keyStorePath)), keyStorePassword.toCharArray());
-        final var appPrivateKey = (PrivateKey) keyStore.getKey(keyAlias, keyStorePassword.toCharArray());
-        final var appCertificate = (X509Certificate) keyStore.getCertificate(keyAlias);
+  @Value("${saml.sp.single.logout.service.location}")
+  private String singleLogoutServiceLocation;
 
-        final var registration = RelyingPartyRegistrations
-            .fromMetadataLocation(samlIdpMetadataLocation)
+  @Value("${saml.sp.single.logout.service.response.location}")
+  private String singleLogoutServiceResponseLocation;
+
+  @Value("${saml.login.success.url}")
+  private String samlLoginSuccessUrl;
+
+  @Value("${saml.login.success.url.always.use}")
+  private boolean samlLoginSuccessUrlAlwaysUse;
+
+  @Value("${saml.logout.success.url}")
+  private String samlLogoutSuccessUrl;
+
+  @Value("${saml.keystore.type:PKCS12}")
+  private String keyStoreType;
+
+  @Value("${saml.keystore.file}")
+  private String keyStorePath;
+
+  @Value("${saml.keystore.alias}")
+  private String keyAlias;
+
+  @Value("${saml.keystore.password}")
+  private String keyStorePassword;
+
+  @Bean(name = "mvcHandlerMappingIntrospector")
+  public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
+    return new HandlerMappingIntrospector();
+  }
+
+  @Bean
+  public RelyingPartyRegistrationRepository relyingPartyRegistrationRepository()
+      throws KeyStoreException,
+          UnrecoverableKeyException,
+          NoSuchAlgorithmException,
+          IOException,
+          CertificateException {
+
+    final var keyStore = KeyStore.getInstance(keyStoreType);
+    keyStore.load(
+        new FileInputStream(ResourceUtils.getFile(keyStorePath)), keyStorePassword.toCharArray());
+    final var appPrivateKey =
+        (PrivateKey) keyStore.getKey(keyAlias, keyStorePassword.toCharArray());
+    final var appCertificate = (X509Certificate) keyStore.getCertificate(keyAlias);
+
+    final var registration =
+        RelyingPartyRegistrations.fromMetadataLocation(samlIdpMetadataLocation)
             .registrationId(RELYING_PARTY_REGISTRATION_ID)
             .entityId(samlEntityId)
             .assertionConsumerServiceLocation(assertionConsumerServiceLocation)
             .singleLogoutServiceLocation(singleLogoutServiceLocation)
             .singleLogoutServiceResponseLocation(singleLogoutServiceResponseLocation)
-            .signingX509Credentials(signing ->
-                signing.add(
-                    Saml2X509Credential.signing(appPrivateKey, appCertificate)
-                )
-            )
+            .signingX509Credentials(
+                signing -> signing.add(Saml2X509Credential.signing(appPrivateKey, appCertificate)))
             .build();
-        return new InMemoryRelyingPartyRegistrationRepository(registration);
-    }
+    return new InMemoryRelyingPartyRegistrationRepository(registration);
+  }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, RelyingPartyRegistrationRepository relyingPartyRegistrationRepository,
-        Saml2LogoutRequestResolver logoutRequestResolver)
-        throws Exception {
-        http
-            .authorizeHttpRequests(request -> request
-                .requestMatchers("/metrics").permitAll()
-                .requestMatchers("/api/testability/**").permitAll()
-                .requestMatchers("/services/**").permitAll()
-                .requestMatchers("/api/config/**").permitAll()
-                .requestMatchers("/api/log/**").permitAll()
-                .requestMatchers("/api/session-auth-check/**").permitAll()
-                .anyRequest().fullyAuthenticated()
-            )
-            .saml2Metadata(withDefaults())
-            .saml2Login(saml2 -> saml2
-                .relyingPartyRegistrationRepository(relyingPartyRegistrationRepository)
-                .authenticationManager(
-                    new ProviderManager(
-                        getOpenSaml4AuthenticationProvider()
-                    )
-                )
-                .failureHandler(customAuthenticationFailureHandler)
-                .defaultSuccessUrl(samlLoginSuccessUrl, samlLoginSuccessUrlAlwaysUse)
-            )
-            .saml2Logout(saml2 -> saml2.logoutRequest(logout -> logout.logoutRequestResolver(logoutRequestResolver)))
-            .logout(logout ->
-                logout.logoutSuccessUrl(samlLogoutSuccessUrl)
-            )
-            .requestCache(cacheConfigurer -> cacheConfigurer
-                .requestCache(
+  @Bean
+  public SecurityFilterChain filterChain(
+      HttpSecurity http,
+      RelyingPartyRegistrationRepository relyingPartyRegistrationRepository,
+      Saml2LogoutRequestResolver logoutRequestResolver)
+      throws Exception {
+    http.authorizeHttpRequests(
+            request ->
+                request
+                    .requestMatchers("/metrics")
+                    .permitAll()
+                    .requestMatchers("/api/testability/**")
+                    .permitAll()
+                    .requestMatchers("/services/**")
+                    .permitAll()
+                    .requestMatchers("/api/config/**")
+                    .permitAll()
+                    .requestMatchers("/api/log/**")
+                    .permitAll()
+                    .requestMatchers("/api/session-auth-check/**")
+                    .permitAll()
+                    .anyRequest()
+                    .fullyAuthenticated())
+        .saml2Metadata(withDefaults())
+        .saml2Login(
+            saml2 ->
+                saml2
+                    .relyingPartyRegistrationRepository(relyingPartyRegistrationRepository)
+                    .authenticationManager(
+                        new ProviderManager(getOpenSaml4AuthenticationProvider()))
+                    .failureHandler(customAuthenticationFailureHandler)
+                    .defaultSuccessUrl(samlLoginSuccessUrl, samlLoginSuccessUrlAlwaysUse))
+        .saml2Logout(
+            saml2 ->
+                saml2.logoutRequest(logout -> logout.logoutRequestResolver(logoutRequestResolver)))
+        .logout(logout -> logout.logoutSuccessUrl(samlLogoutSuccessUrl))
+        .requestCache(
+            cacheConfigurer ->
+                cacheConfigurer.requestCache(
                     samlLoginSuccessUrlAlwaysUse
                         ? new NullRequestCache()
-                        : new HttpSessionRequestCache()
-                )
-            )
-            .exceptionHandling(exceptionConfigurer -> exceptionConfigurer
-                .authenticationEntryPoint(new Http403ForbiddenEntryPoint())
-            )
-            .csrf(csrfConfigurer -> csrfConfigurer
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
-                .ignoringRequestMatchers(
-                    "/api/testability/**",
-                    "/services/**"
-                )
-            )
-            .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);
+                        : new HttpSessionRequestCache()))
+        .exceptionHandling(
+            exceptionConfigurer ->
+                exceptionConfigurer.authenticationEntryPoint(new Http403ForbiddenEntryPoint()))
+        .csrf(
+            csrfConfigurer ->
+                csrfConfigurer
+                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                    .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+                    .ignoringRequestMatchers("/api/testability/**", "/services/**"))
+        .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class);
 
-        return http.build();
-    }
+    return http.build();
+  }
 
-    @Bean
-    public DefaultCookieSerializer cookieSerializer() {
-        return new IneraCookieSerializer();
-    }
+  @Bean
+  public DefaultCookieSerializer cookieSerializer() {
+    return new IneraCookieSerializer();
+  }
 
-    private OpenSaml4AuthenticationProvider getOpenSaml4AuthenticationProvider() {
-        final var authenticationProvider = new OpenSaml4AuthenticationProvider();
-        authenticationProvider.setResponseAuthenticationConverter(responseToken -> {
-            final var authentication = OpenSaml4AuthenticationProvider
-                .createDefaultResponseAuthenticationConverter()
-                .convert(responseToken);
-            if (!(authentication != null && authentication.isAuthenticated())) {
-                return null;
-            }
-            final var personId = getAttribute(authentication, EMPLOYEE_HSA_ID);
-            final var authMethod = getAttribute(authentication, AUTHN_METHOD);
-            final var principal = rehabstodUserDetailsService.buildUserPrincipal(personId, authMethod);
-            final var saml2AuthenticationToken = new Saml2AuthenticationToken(principal, authentication);
-            saml2AuthenticationToken.setAuthenticated(true);
-            return saml2AuthenticationToken;
+  private OpenSaml4AuthenticationProvider getOpenSaml4AuthenticationProvider() {
+    final var authenticationProvider = new OpenSaml4AuthenticationProvider();
+    authenticationProvider.setResponseAuthenticationConverter(
+        responseToken -> {
+          final var authentication =
+              OpenSaml4AuthenticationProvider.createDefaultResponseAuthenticationConverter()
+                  .convert(responseToken);
+          if (!(authentication != null && authentication.isAuthenticated())) {
+            return null;
+          }
+          final var personId = getAttribute(authentication, EMPLOYEE_HSA_ID);
+          final var authMethod = getAttribute(authentication, AUTHN_METHOD);
+          final var principal =
+              rehabstodUserDetailsService.buildUserPrincipal(personId, authMethod);
+          final var saml2AuthenticationToken =
+              new Saml2AuthenticationToken(principal, authentication);
+          saml2AuthenticationToken.setAuthenticated(true);
+          return saml2AuthenticationToken;
         });
-        return authenticationProvider;
+    return authenticationProvider;
+  }
+
+  private String getAttribute(Saml2Authentication samlCredential, String attributeId) {
+    final var principal = (DefaultSaml2AuthenticatedPrincipal) samlCredential.getPrincipal();
+    final var attributes = principal.getAttributes();
+    if (attributes.containsKey(attributeId)) {
+      return (String) attributes.get(attributeId).getFirst();
     }
+    throw new IllegalArgumentException(
+        "Could not extract attribute '%s' from Saml2Authentication.".formatted(attributeId));
+  }
 
-    private String getAttribute(Saml2Authentication samlCredential, String attributeId) {
-        final var principal = (DefaultSaml2AuthenticatedPrincipal) samlCredential.getPrincipal();
-        final var attributes = principal.getAttributes();
-        if (attributes.containsKey(attributeId)) {
-            return (String) attributes.get(attributeId).getFirst();
-        }
-        throw new IllegalArgumentException("Could not extract attribute '%s' from Saml2Authentication.".formatted(attributeId));
-    }
-
-    @Bean
-    Saml2AuthenticationRequestResolver authenticationRequestResolver(RelyingPartyRegistrationRepository registrations) {
-        RelyingPartyRegistrationResolver registrationResolver =
-            new DefaultRelyingPartyRegistrationResolver(registrations);
-        OpenSaml4AuthenticationRequestResolver authenticationRequestResolver =
-            new OpenSaml4AuthenticationRequestResolver(registrationResolver);
-        authenticationRequestResolver.setAuthnRequestCustomizer(context -> {
-                context.getAuthnRequest().setAttributeConsumingServiceIndex(1);
-                context.getAuthnRequest().setRequestedAuthnContext(buildRequestedAuthnContext());
-            }
-        );
-        return authenticationRequestResolver;
-    }
-
-    @Bean
-    Saml2LogoutRequestResolver logoutRequestResolver(RelyingPartyRegistrationRepository registrations) {
-        final var logoutRequestResolver = new OpenSaml4LogoutRequestResolver(registrations);
-        logoutRequestResolver.setParametersConsumer(parameters -> {
-            final var token = (Saml2AuthenticationToken) parameters.getAuthentication();
-            final var principal = (DefaultSaml2AuthenticatedPrincipal) token.getSaml2Authentication().getPrincipal();
-            final var name = principal.getName();
-            final var format = "urn:oasis:names:tc:SAML:2.0:nameid-format:transient";
-            final var logoutRequest = parameters.getLogoutRequest();
-            final var nameId = logoutRequest.getNameID();
-            nameId.setValue(name);
-            nameId.setFormat(format);
-
-            final var sessionIndex = new MySessionIndex("urn:oasis:names:tc:SAML:2.0:protocol", "SessionIndex", "saml2p");
-            sessionIndex.setValue(principal.getSessionIndexes().getFirst());
-            logoutRequest.getSessionIndexes().add(sessionIndex);
+  @Bean
+  Saml2AuthenticationRequestResolver authenticationRequestResolver(
+      RelyingPartyRegistrationRepository registrations) {
+    RelyingPartyRegistrationResolver registrationResolver =
+        new DefaultRelyingPartyRegistrationResolver(registrations);
+    OpenSaml4AuthenticationRequestResolver authenticationRequestResolver =
+        new OpenSaml4AuthenticationRequestResolver(registrationResolver);
+    authenticationRequestResolver.setAuthnRequestCustomizer(
+        context -> {
+          context.getAuthnRequest().setAttributeConsumingServiceIndex(1);
+          context.getAuthnRequest().setRequestedAuthnContext(buildRequestedAuthnContext());
         });
-        return logoutRequestResolver;
+    return authenticationRequestResolver;
+  }
+
+  @Bean
+  Saml2LogoutRequestResolver logoutRequestResolver(
+      RelyingPartyRegistrationRepository registrations) {
+    final var logoutRequestResolver = new OpenSaml4LogoutRequestResolver(registrations);
+    logoutRequestResolver.setParametersConsumer(
+        parameters -> {
+          final var token = (Saml2AuthenticationToken) parameters.getAuthentication();
+          final var principal =
+              (DefaultSaml2AuthenticatedPrincipal) token.getSaml2Authentication().getPrincipal();
+          final var name = principal.getName();
+          final var format = "urn:oasis:names:tc:SAML:2.0:nameid-format:transient";
+          final var logoutRequest = parameters.getLogoutRequest();
+          final var nameId = logoutRequest.getNameID();
+          nameId.setValue(name);
+          nameId.setFormat(format);
+
+          final var sessionIndex =
+              new MySessionIndex("urn:oasis:names:tc:SAML:2.0:protocol", "SessionIndex", "saml2p");
+          sessionIndex.setValue(principal.getSessionIndexes().getFirst());
+          logoutRequest.getSessionIndexes().add(sessionIndex);
+        });
+    return logoutRequestResolver;
+  }
+
+  public static class MySessionIndex extends XSStringImpl implements SessionIndex {
+
+    public MySessionIndex(String namespaceURI, String elementLocalName, String namespacePrefix) {
+      super(namespaceURI, elementLocalName, namespacePrefix);
     }
+  }
 
-    public static class MySessionIndex extends XSStringImpl implements SessionIndex {
+  private RequestedAuthnContext buildRequestedAuthnContext() {
+    final var authnContextClassRefBuilder = new AuthnContextClassRefBuilder();
+    final var authnContextClassRefLoa2 =
+        authnContextClassRefBuilder.buildObject(
+            SAMLConstants.SAML20_NS,
+            AuthnContextClassRef.DEFAULT_ELEMENT_LOCAL_NAME,
+            SAMLConstants.SAML20_PREFIX);
+    final var authnContextClassRefLoa3 =
+        authnContextClassRefBuilder.buildObject(
+            SAMLConstants.SAML20_NS,
+            AuthnContextClassRef.DEFAULT_ELEMENT_LOCAL_NAME,
+            SAMLConstants.SAML20_PREFIX);
+    authnContextClassRefLoa2.setURI("http://id.sambi.se/loa/loa2");
+    authnContextClassRefLoa3.setURI("http://id.sambi.se/loa/loa3");
 
-        public MySessionIndex(String namespaceURI, String elementLocalName, String namespacePrefix) {
-            super(namespaceURI, elementLocalName, namespacePrefix);
-        }
-    }
+    final var requestedAuthnContextBuilder = new RequestedAuthnContextBuilder();
+    final var requestedAuthnContext = requestedAuthnContextBuilder.buildObject();
+    requestedAuthnContext.setComparison(AuthnContextComparisonTypeEnumeration.EXACT);
+    requestedAuthnContext.getAuthnContextClassRefs().add(authnContextClassRefLoa2);
+    requestedAuthnContext.getAuthnContextClassRefs().add(authnContextClassRefLoa3);
 
-    private RequestedAuthnContext buildRequestedAuthnContext() {
-        final var authnContextClassRefBuilder = new AuthnContextClassRefBuilder();
-        final var authnContextClassRefLoa2 = authnContextClassRefBuilder.buildObject(SAMLConstants.SAML20_NS,
-            AuthnContextClassRef.DEFAULT_ELEMENT_LOCAL_NAME, SAMLConstants.SAML20_PREFIX);
-        final var authnContextClassRefLoa3 = authnContextClassRefBuilder.buildObject(SAMLConstants.SAML20_NS,
-            AuthnContextClassRef.DEFAULT_ELEMENT_LOCAL_NAME, SAMLConstants.SAML20_PREFIX);
-        authnContextClassRefLoa2.setURI("http://id.sambi.se/loa/loa2");
-        authnContextClassRefLoa3.setURI("http://id.sambi.se/loa/loa3");
-
-        final var requestedAuthnContextBuilder = new RequestedAuthnContextBuilder();
-        final var requestedAuthnContext = requestedAuthnContextBuilder.buildObject();
-        requestedAuthnContext.setComparison(AuthnContextComparisonTypeEnumeration.EXACT);
-        requestedAuthnContext.getAuthnContextClassRefs().add(authnContextClassRefLoa2);
-        requestedAuthnContext.getAuthnContextClassRefs().add(authnContextClassRefLoa3);
-
-        return requestedAuthnContext;
-    }
+    return requestedAuthnContext;
+  }
 }

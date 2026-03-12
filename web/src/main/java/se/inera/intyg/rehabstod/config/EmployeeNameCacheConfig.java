@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -25,24 +25,21 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import se.inera.intyg.infra.rediscache.core.RedisCacheOptionsSetter;
 
-/**
- * Created by eriklupander on 2017-02-23.
- */
+/** Created by eriklupander on 2017-02-23. */
 @Configuration
 @Profile("caching-enabled")
 public class EmployeeNameCacheConfig {
 
-    public static final String EMPLOYEE_NAME_CACHE_NAME = "employeeName";
-    private static final String EMPLOYEE_NAME_CACHE_EXPIRY = "employee.name.cache.expiry";
+  public static final String EMPLOYEE_NAME_CACHE_NAME = "employeeName";
+  private static final String EMPLOYEE_NAME_CACHE_EXPIRY = "employee.name.cache.expiry";
 
-    @Value("${" + EMPLOYEE_NAME_CACHE_EXPIRY + "}")
-    private String employeeNameCacheExpirySeconds;
+  @Value("${" + EMPLOYEE_NAME_CACHE_EXPIRY + "}")
+  private String employeeNameCacheExpirySeconds;
 
-    @Autowired
-    private RedisCacheOptionsSetter redisCacheOptionsSetter;
+  @Autowired private RedisCacheOptionsSetter redisCacheOptionsSetter;
 
-    @PostConstruct
-    public void init() {
-        redisCacheOptionsSetter.createCache(EMPLOYEE_NAME_CACHE_NAME, EMPLOYEE_NAME_CACHE_EXPIRY);
-    }
+  @PostConstruct
+  public void init() {
+    redisCacheOptionsSetter.createCache(EMPLOYEE_NAME_CACHE_NAME, EMPLOYEE_NAME_CACHE_EXPIRY);
+  }
 }

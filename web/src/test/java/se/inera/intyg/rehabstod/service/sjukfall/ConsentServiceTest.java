@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -40,57 +40,69 @@ import se.inera.intyg.schemas.contract.Personnummer;
 @RunWith(MockitoJUnitRunner.class)
 public class ConsentServiceTest {
 
-    private static final String PERSON_ID = "19121212-1212";
-    private static final String VARDGIVARE_ID = "VG123";
-    private static final String VARDENHETS_ID = "VG123-VEA";
-    private static final String MOTTAGNINGS_ID = "VG123-VEA-E1";
-    private static final String USER_HSA_ID = "USERHSA";
+  private static final String PERSON_ID = "19121212-1212";
+  private static final String VARDGIVARE_ID = "VG123";
+  private static final String VARDENHETS_ID = "VG123-VEA";
+  private static final String MOTTAGNINGS_ID = "VG123-VEA-E1";
+  private static final String USER_HSA_ID = "USERHSA";
 
-    @Mock
-    private RehabstodUser rehabstodUserMock;
+  @Mock private RehabstodUser rehabstodUserMock;
 
-    @Mock
-    private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+  @Mock private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
-    @InjectMocks
-    private ConsentServiceImpl testee = new ConsentServiceImpl();
+  @InjectMocks private ConsentServiceImpl testee = new ConsentServiceImpl();
 
+  @Test
+  public void testGiveConsentLoggedInOnCareUnit() {
+    LocalDateTime consentFrom = LocalDateTime.now();
+    LocalDateTime consentTo = consentFrom.plusDays(10);
 
-    @Test
-    public void testGiveConsentLoggedInOnCareUnit() {
-        LocalDateTime consentFrom = LocalDateTime.now();
-        LocalDateTime consentTo = consentFrom.plusDays(10);
+    Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
 
-        Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
+    when(rehabstodUserMock.getValdVardgivare())
+        .thenReturn(new Vardgivare(VARDGIVARE_ID, "vårdgivare"));
+    when(rehabstodUserMock.getValdVardenhet()).thenReturn(new Vardenhet(VARDENHETS_ID, "enhet"));
+    when(rehabstodUserMock.getHsaId()).thenReturn(USER_HSA_ID);
 
-        when(rehabstodUserMock.getValdVardgivare()).thenReturn(new Vardgivare(VARDGIVARE_ID, "vårdgivare"));
-        when(rehabstodUserMock.getValdVardenhet()).thenReturn(new Vardenhet(VARDENHETS_ID, "enhet"));
-        when(rehabstodUserMock.getHsaId()).thenReturn(USER_HSA_ID);
+    testee.giveConsent(personnummer.get(), true, null, consentFrom, consentTo, rehabstodUserMock);
 
-        testee.giveConsent(personnummer.get(), true, null, consentFrom, consentTo, rehabstodUserMock);
+    verify(samtyckestjanstIntegrationService)
+        .registerConsent(
+            eq(VARDGIVARE_ID),
+            eq(VARDENHETS_ID),
+            eq(personnummer.get()),
+            eq(USER_HSA_ID),
+            eq(null),
+            eq(consentFrom),
+            eq(consentTo),
+            any());
+  }
 
-        verify(samtyckestjanstIntegrationService)
-            .registerConsent(eq(VARDGIVARE_ID), eq(VARDENHETS_ID), eq(personnummer.get()), eq(USER_HSA_ID), eq(null), eq(consentFrom),
-                eq(consentTo), any());
-    }
+  @Test
+  public void testGiveConsentLoggedInOnSubUnit() {
+    LocalDateTime consentFrom = LocalDateTime.now();
+    LocalDateTime consentTo = consentFrom.plusDays(10);
 
-    @Test
-    public void testGiveConsentLoggedInOnSubUnit() {
-        LocalDateTime consentFrom = LocalDateTime.now();
-        LocalDateTime consentTo = consentFrom.plusDays(10);
+    Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
+    Mottagning mottagning = new Mottagning(MOTTAGNINGS_ID, "enhet");
+    mottagning.setParentHsaId(VARDENHETS_ID);
 
-        Optional<Personnummer> personnummer = Personnummer.createPersonnummer(PERSON_ID);
-        Mottagning mottagning = new Mottagning(MOTTAGNINGS_ID, "enhet");
-        mottagning.setParentHsaId(VARDENHETS_ID);
+    when(rehabstodUserMock.getValdVardgivare())
+        .thenReturn(new Vardgivare(VARDGIVARE_ID, "vårdgivare"));
+    when(rehabstodUserMock.getValdVardenhet()).thenReturn(mottagning);
+    when(rehabstodUserMock.getHsaId()).thenReturn(USER_HSA_ID);
 
-        when(rehabstodUserMock.getValdVardgivare()).thenReturn(new Vardgivare(VARDGIVARE_ID, "vårdgivare"));
-        when(rehabstodUserMock.getValdVardenhet()).thenReturn(mottagning);
-        when(rehabstodUserMock.getHsaId()).thenReturn(USER_HSA_ID);
+    testee.giveConsent(personnummer.get(), true, null, consentFrom, consentTo, rehabstodUserMock);
 
-        testee.giveConsent(personnummer.get(), true, null, consentFrom, consentTo, rehabstodUserMock);
-
-        verify(samtyckestjanstIntegrationService)
-            .registerConsent(eq(VARDGIVARE_ID), eq(VARDENHETS_ID), eq(personnummer.get()), eq(USER_HSA_ID), eq(null), eq(consentFrom),
-                eq(consentTo), any());
-    }
+    verify(samtyckestjanstIntegrationService)
+        .registerConsent(
+            eq(VARDGIVARE_ID),
+            eq(VARDENHETS_ID),
+            eq(personnummer.get()),
+            eq(USER_HSA_ID),
+            eq(null),
+            eq(consentFrom),
+            eq(consentTo),
+            any());
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -24,20 +24,16 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import se.inera.intyg.rehabstod.integration.samtyckestjanst.stub.SamtyckestjanstStubConfiguration;
 
-/**
- * Java config entry for Samtyckestjanst
- * Created by Magnus Ekstrand on 2018-10-16.
- */
+/** Java config entry for Samtyckestjanst Created by Magnus Ekstrand on 2018-10-16. */
 @Configuration
 @ComponentScan({
-    "se.inera.intyg.rehabstod.integration.samtyckestjanst.client",
-    "se.inera.intyg.rehabstod.integration.samtyckestjanst.service"
+  "se.inera.intyg.rehabstod.integration.samtyckestjanst.client",
+  "se.inera.intyg.rehabstod.integration.samtyckestjanst.service"
 })
 @ImportResource("classpath:samtyckestjanst-services-config.xml")
 @Import(SamtyckestjanstStubConfiguration.class)
 public class SamtyckestjanstConfiguration {
 
-    public SamtyckestjanstConfiguration() { // NOSONAR
-    }
-
+  public SamtyckestjanstConfiguration() { // NOSONAR
+  }
 }

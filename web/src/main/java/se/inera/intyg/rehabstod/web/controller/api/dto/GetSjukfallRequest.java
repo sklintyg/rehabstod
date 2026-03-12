@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,118 +23,114 @@ import java.util.List;
 import se.inera.intyg.rehabstod.web.model.LangdIntervall;
 import se.inera.intyg.rehabstod.web.model.Sortering;
 
-/**
- * Created by Magnus Ekstrand on 03/02/16.
- */
+/** Created by Magnus Ekstrand on 03/02/16. */
 public class GetSjukfallRequest {
 
-    private Sortering sortering;
-    private LangdIntervall langdIntervall;
-    private LangdIntervall aldersIntervall;
-    private LangdIntervall slutdatumIntervall;
+  private Sortering sortering;
+  private LangdIntervall langdIntervall;
+  private LangdIntervall aldersIntervall;
+  private LangdIntervall slutdatumIntervall;
 
-    private boolean showPatientId;
-    private LocalDate aktivtDatum;
+  private boolean showPatientId;
+  private LocalDate aktivtDatum;
 
-    private List<String> lakare;
-    private List<String> diagnosGrupper;
+  private List<String> lakare;
+  private List<String> diagnosGrupper;
 
-    private String patientId;
-    private String fritext;
-    private Integer qa;
+  private String patientId;
+  private String fritext;
+  private Integer qa;
 
-    /**
-     * The sole constructor.
-     **/
-    public GetSjukfallRequest() {
-        aktivtDatum = LocalDate.now();
-    }
+  /** The sole constructor. */
+  public GetSjukfallRequest() {
+    aktivtDatum = LocalDate.now();
+  }
 
-    public Sortering getSortering() {
-        return sortering;
-    }
+  public Sortering getSortering() {
+    return sortering;
+  }
 
-    public void setSortering(Sortering sortering) {
-        this.sortering = sortering;
-    }
+  public void setSortering(Sortering sortering) {
+    this.sortering = sortering;
+  }
 
-    public LangdIntervall getLangdIntervall() {
-        return langdIntervall;
-    }
+  public LangdIntervall getLangdIntervall() {
+    return langdIntervall;
+  }
 
-    public void setLangdIntervall(LangdIntervall langdIntervall) {
-        this.langdIntervall = langdIntervall;
-    }
+  public void setLangdIntervall(LangdIntervall langdIntervall) {
+    this.langdIntervall = langdIntervall;
+  }
 
-    public LangdIntervall getAldersIntervall() {
-        return aldersIntervall;
-    }
+  public LangdIntervall getAldersIntervall() {
+    return aldersIntervall;
+  }
 
-    public void setAldersIntervall(LangdIntervall aldersIntervall) {
-        this.aldersIntervall = aldersIntervall;
-    }
+  public void setAldersIntervall(LangdIntervall aldersIntervall) {
+    this.aldersIntervall = aldersIntervall;
+  }
 
-    public LangdIntervall getSlutdatumIntervall() {
-        return slutdatumIntervall;
-    }
+  public LangdIntervall getSlutdatumIntervall() {
+    return slutdatumIntervall;
+  }
 
-    public void setSlutdatumIntervall(LangdIntervall slutdatumIntervall) {
-        this.slutdatumIntervall = slutdatumIntervall;
-    }
+  public void setSlutdatumIntervall(LangdIntervall slutdatumIntervall) {
+    this.slutdatumIntervall = slutdatumIntervall;
+  }
 
-    public LocalDate getAktivtDatum() {
-        return aktivtDatum;
-    }
+  public LocalDate getAktivtDatum() {
+    return aktivtDatum;
+  }
 
-    public void setAktivtDatum(LocalDate aktivtDatum) {
-        this.aktivtDatum = aktivtDatum;
-    }
+  public void setAktivtDatum(LocalDate aktivtDatum) {
+    this.aktivtDatum = aktivtDatum;
+  }
 
-    public List<String> getLakare() {
-        return lakare;
-    }
+  public List<String> getLakare() {
+    return lakare;
+  }
 
-    public void setLakare(List<String> lakare) {
-        this.lakare = lakare;
-    }
+  public void setLakare(List<String> lakare) {
+    this.lakare = lakare;
+  }
 
-    public List<String> getDiagnosGrupper() {
-        return diagnosGrupper;
-    }
+  public List<String> getDiagnosGrupper() {
+    return diagnosGrupper;
+  }
 
-    public void setDiagnosGrupper(List<String> diagnosGrupper) {
-        this.diagnosGrupper = diagnosGrupper;
-    }
+  public void setDiagnosGrupper(List<String> diagnosGrupper) {
+    this.diagnosGrupper = diagnosGrupper;
+  }
 
-    public String getPatientId() {
-        return patientId;
-    }
+  public String getPatientId() {
+    return patientId;
+  }
 
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
+  public void setPatientId(String patientId) {
+    this.patientId = patientId;
+  }
 
-    public String getFritext() {
-        return fritext;
-    }
+  public String getFritext() {
+    return fritext;
+  }
 
-    public void setFritext(String fritext) {
-        this.fritext = fritext;
-    }
+  public void setFritext(String fritext) {
+    this.fritext = fritext;
+  }
 
-    public boolean isShowPatientId() {
-        return showPatientId;
-    }
+  public boolean isShowPatientId() {
+    return showPatientId;
+  }
 
-    public void setShowPatientId(boolean showPatientId) {
-        this.showPatientId = showPatientId;
-    }
+  public void setShowPatientId(boolean showPatientId) {
+    this.showPatientId = showPatientId;
+  }
 
-    public Integer getQa() {
-        return qa;
-    }
+  public Integer getQa() {
+    return qa;
+  }
 
-    public void setQa(Integer qa) {
-        this.qa = qa;
-    }
+  public void setQa(Integer qa) {
+    this.qa = qa;
+  }
 }

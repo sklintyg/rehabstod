@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -44,60 +44,63 @@ import se.riv.informationsecurity.authorization.consent.v2.ResultType;
 @RunWith(MockitoJUnitRunner.class)
 public class SamtyckestjanstIntegrationServiceImplTest {
 
-    private static final String USER_HSA_ID = UUID.randomUUID().toString();
-    private static final String PATIENT_ID = "20121212-1212";
-    private static final String VG_HSAID_2 = "vgHsaId-2";
-    private static final String VE_HSAID_2 = "veHsaId-2";
+  private static final String USER_HSA_ID = UUID.randomUUID().toString();
+  private static final String PATIENT_ID = "20121212-1212";
+  private static final String VG_HSAID_2 = "vgHsaId-2";
+  private static final String VE_HSAID_2 = "veHsaId-2";
 
-    @Mock
-    private SamtyckestjanstClientService samtyckestjanstClientService;
+  @Mock private SamtyckestjanstClientService samtyckestjanstClientService;
 
-    @InjectMocks
-    private SamtyckestjanstIntegrationServiceImpl testee = new SamtyckestjanstIntegrationServiceImpl();
+  @InjectMocks
+  private SamtyckestjanstIntegrationServiceImpl testee =
+      new SamtyckestjanstIntegrationServiceImpl();
 
-
-    @Before
-    public void setUp() {
-        doAnswer(new Answer<CheckConsentResponseType>() {
-            @Override
-            public CheckConsentResponseType answer(InvocationOnMock invocation) {
+  @Before
+  public void setUp() {
+    doAnswer(
+            new Answer<CheckConsentResponseType>() {
+              @Override
+              public CheckConsentResponseType answer(InvocationOnMock invocation) {
                 if (invocation.getArgument(0, String.class).equals(VG_HSAID_2)
                     && invocation.getArgument(1, String.class).equals(VE_HSAID_2)) {
-                    return createCheckConsentResponseType(true);
+                  return createCheckConsentResponseType(true);
                 } else {
-                    return createCheckConsentResponseType(false);
+                  return createCheckConsentResponseType(false);
                 }
-            }
-        }).when(samtyckestjanstClientService).checkConsent(anyString(), anyString(), anyString(), anyString());
-    }
+              }
+            })
+        .when(samtyckestjanstClientService)
+        .checkConsent(anyString(), anyString(), anyString(), anyString());
+  }
 
-    @Test
-    public void testCheckForConsent_missing() {
-        String currentVgHsaId = "vgHsaId-3";
-        String currentVeHsaId = "veHsaId-3";
+  @Test
+  public void testCheckForConsent_missing() {
+    String currentVgHsaId = "vgHsaId-3";
+    String currentVeHsaId = "veHsaId-3";
 
-        boolean haveConsent = testee.checkForConsent(PATIENT_ID, USER_HSA_ID, currentVgHsaId, currentVeHsaId);
+    boolean haveConsent =
+        testee.checkForConsent(PATIENT_ID, USER_HSA_ID, currentVgHsaId, currentVeHsaId);
 
-        assertFalse(haveConsent);
-    }
+    assertFalse(haveConsent);
+  }
 
-    @Test
-    public void testCheckForConsent() {
-        boolean haveConsent = testee.checkForConsent(PATIENT_ID, USER_HSA_ID, VG_HSAID_2, VE_HSAID_2);
+  @Test
+  public void testCheckForConsent() {
+    boolean haveConsent = testee.checkForConsent(PATIENT_ID, USER_HSA_ID, VG_HSAID_2, VE_HSAID_2);
 
-        assertTrue(haveConsent);
-    }
+    assertTrue(haveConsent);
+  }
 
-    private CheckConsentResponseType createCheckConsentResponseType(boolean hasConsent) {
-        ResultType resultType = new ResultType();
-        resultType.setResultCode(ResultCodeType.OK);
+  private CheckConsentResponseType createCheckConsentResponseType(boolean hasConsent) {
+    ResultType resultType = new ResultType();
+    resultType.setResultCode(ResultCodeType.OK);
 
-        CheckResultType checkResultType = new CheckResultType();
-        checkResultType.setHasConsent(hasConsent);
-        checkResultType.setResult(resultType);
+    CheckResultType checkResultType = new CheckResultType();
+    checkResultType.setHasConsent(hasConsent);
+    checkResultType.setResult(resultType);
 
-        CheckConsentResponseType response = new CheckConsentResponseType();
-        response.setCheckResult(checkResultType);
-        return response;
-    }
+    CheckConsentResponseType response = new CheckConsentResponseType();
+    response.setCheckResult(checkResultType);
+    return response;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,52 +23,48 @@ import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Befattningar;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.Enhet;
 import se.riv.clinicalprocess.healthcond.rehabilitation.v1.HosPersonal;
 
-/**
- * Created by Magnus Ekstrand on 2016-02-10.
- */
+/** Created by Magnus Ekstrand on 2016-02-10. */
 public final class HosPersonalT {
 
-    public HosPersonalT() {
+  public HosPersonalT() {}
+
+  public static class HosPersonalBuilder implements Builder<HosPersonal> {
+
+    private HsaId personalId;
+    private String fullstandigtNamn;
+    private Befattningar befattningar;
+    private Enhet enhet;
+
+    public HosPersonalBuilder() {}
+
+    public HosPersonalBuilder personalId(HsaId personalId) {
+      this.personalId = personalId;
+      return this;
     }
 
-    public static class HosPersonalBuilder implements Builder<HosPersonal> {
-
-        private HsaId personalId;
-        private String fullstandigtNamn;
-        private Befattningar befattningar;
-        private Enhet enhet;
-
-        public HosPersonalBuilder() {
-        }
-
-        public HosPersonalBuilder personalId(HsaId personalId) {
-            this.personalId = personalId;
-            return this;
-        }
-
-        public HosPersonalBuilder fullstandigtNamn(String fullstandigtNamn) {
-            this.fullstandigtNamn = fullstandigtNamn;
-            return this;
-        }
-
-        public HosPersonalBuilder befattningar(Befattningar befattningar) {
-            this.befattningar = befattningar;
-            return this;
-        }
-
-        public HosPersonalBuilder enhet(Enhet enhet) {
-            this.enhet = enhet;
-            return this;
-        }
-
-        @Override
-        public HosPersonal build() {
-            HosPersonal hosPersonal = new HosPersonal();
-            hosPersonal.setPersonalId(personalId);
-            hosPersonal.setFullstandigtNamn(fullstandigtNamn);
-            hosPersonal.setEnhet(enhet);
-
-            return hosPersonal;
-        }
+    public HosPersonalBuilder fullstandigtNamn(String fullstandigtNamn) {
+      this.fullstandigtNamn = fullstandigtNamn;
+      return this;
     }
+
+    public HosPersonalBuilder befattningar(Befattningar befattningar) {
+      this.befattningar = befattningar;
+      return this;
+    }
+
+    public HosPersonalBuilder enhet(Enhet enhet) {
+      this.enhet = enhet;
+      return this;
+    }
+
+    @Override
+    public HosPersonal build() {
+      HosPersonal hosPersonal = new HosPersonal();
+      hosPersonal.setPersonalId(personalId);
+      hosPersonal.setFullstandigtNamn(fullstandigtNamn);
+      hosPersonal.setEnhet(enhet);
+
+      return hosPersonal;
+    }
+  }
 }

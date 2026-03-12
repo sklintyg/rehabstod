@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,20 +26,19 @@ import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
  */
 public interface DiagnosKapitelService {
 
-    /**
-     * Get list of all defined {@link DiagnosKapitel}.
-     *
-     * @return A list of DiagnosKapitel.
-     */
-    List<DiagnosKapitel> getDiagnosKapitelList();
+  /**
+   * Get list of all defined {@link DiagnosKapitel}.
+   *
+   * @return A list of DiagnosKapitel.
+   */
+  List<DiagnosKapitel> getDiagnosKapitelList();
 
-    /**
-     * Try to match a diagnoskod string to a DiagnosKapitel.
-     * Default to a unknown kapitel if no other match.
-     *
-     * @param diagnosKod String diagnosKod.
-     * @return A DiagnosKapitel matching String.
-     */
-    DiagnosKapitel getDiagnosKapitel(String diagnosKod);
-
+  /**
+   * Try to match a diagnoskod string to a DiagnosKapitel. Default to a unknown kapitel if no other
+   * match.
+   *
+   * @param diagnosKod String diagnosKod.
+   * @return A DiagnosKapitel matching String.
+   */
+  DiagnosKapitel getDiagnosKapitel(String diagnosKod);
 }

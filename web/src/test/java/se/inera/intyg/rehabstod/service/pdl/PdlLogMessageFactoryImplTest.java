@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -40,117 +40,135 @@ import se.inera.intyg.rehabstod.service.pdl.dto.LogUtil;
 import se.inera.intyg.rehabstod.testutil.TestDataGen;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
-/**
- * Created by eriklupander on 2016-03-03.
- */
+/** Created by eriklupander on 2016-03-03. */
 public class PdlLogMessageFactoryImplTest {
 
-    private PdlLogMessageFactoryImpl testee = new PdlLogMessageFactoryImpl();
+  private PdlLogMessageFactoryImpl testee = new PdlLogMessageFactoryImpl();
 
-    @Test
-    public void testBuildLogMessage() {
+  @Test
+  public void testBuildLogMessage() {
 
-        // Then
-        PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
+    // Then
+    PdlLogMessage pdlLogMessage =
+        testee.buildLogMessage(
+            TestDataGen.buildSjukfallList(5),
             LogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
-            ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
+            ActivityType.READ,
+            ResourceType.RESOURCE_TYPE_SJUKFALL);
 
-        assertNotNull(pdlLogMessage);
+    assertNotNull(pdlLogMessage);
 
-        assertEquals(ActivityType.READ, pdlLogMessage.getActivityType());
-        assertEquals(ActivityPurpose.CARE_TREATMENT, pdlLogMessage.getPurpose());
+    assertEquals(ActivityType.READ, pdlLogMessage.getActivityType());
+    assertEquals(ActivityPurpose.CARE_TREATMENT, pdlLogMessage.getPurpose());
 
-        // INTYG-8349: Assert user name is removed for PDL-logging.
-        assertEquals("", pdlLogMessage.getUserName());
+    // INTYG-8349: Assert user name is removed for PDL-logging.
+    assertEquals("", pdlLogMessage.getUserName());
 
-        assertEquals("careunit-1", pdlLogMessage.getUserCareUnit().getEnhetsId());
-        assertEquals("Vårdenhet 1", pdlLogMessage.getUserCareUnit().getEnhetsNamn());
-        assertEquals("caregiver-1", pdlLogMessage.getUserCareUnit().getVardgivareId());
-        assertEquals("Vårdgivare 1", pdlLogMessage.getUserCareUnit().getVardgivareNamn());
+    assertEquals("careunit-1", pdlLogMessage.getUserCareUnit().getEnhetsId());
+    assertEquals("Vårdenhet 1", pdlLogMessage.getUserCareUnit().getEnhetsNamn());
+    assertEquals("caregiver-1", pdlLogMessage.getUserCareUnit().getVardgivareId());
+    assertEquals("Vårdgivare 1", pdlLogMessage.getUserCareUnit().getVardgivareNamn());
 
-        assertEquals(5, pdlLogMessage.getPdlResourceList().size());
-        PdlResource pdlResource = pdlLogMessage.getPdlResourceList().get(0);
-        assertEquals(ResourceType.RESOURCE_TYPE_SJUKFALL.getResourceTypeName(), pdlResource.getResourceType());
+    assertEquals(5, pdlLogMessage.getPdlResourceList().size());
+    PdlResource pdlResource = pdlLogMessage.getPdlResourceList().get(0);
+    assertEquals(
+        ResourceType.RESOURCE_TYPE_SJUKFALL.getResourceTypeName(), pdlResource.getResourceType());
 
-        // INTYG-4647: Assert patient's name is removed for PDL-logging.
-        assertEquals("", pdlResource.getPatient().getPatientNamn());
-        assertEquals("191212121212", pdlResource.getPatient().getPatientId());
+    // INTYG-4647: Assert patient's name is removed for PDL-logging.
+    assertEquals("", pdlResource.getPatient().getPatientNamn());
+    assertEquals("191212121212", pdlResource.getPatient().getPatientId());
 
-        assertEquals("careunit-1", pdlResource.getResourceOwner().getEnhetsId());
-        assertEquals("Vårdenhet 1", pdlResource.getResourceOwner().getEnhetsNamn());
-        assertEquals("caregiver-1", pdlResource.getResourceOwner().getVardgivareId());
-        assertEquals("Vårdgivare 1", pdlResource.getResourceOwner().getVardgivareNamn());
-    }
+    assertEquals("careunit-1", pdlResource.getResourceOwner().getEnhetsId());
+    assertEquals("Vårdenhet 1", pdlResource.getResourceOwner().getEnhetsNamn());
+    assertEquals("caregiver-1", pdlResource.getResourceOwner().getVardgivareId());
+    assertEquals("Vårdgivare 1", pdlResource.getResourceOwner().getVardgivareNamn());
+  }
 
-    @Test
-    public void testBuildLogMessageWithEmptyCareGiverName() {
-        PdlLogMessage pdlLogMessage = testee.buildLogMessage(buildSjukfallListWithEmptyCareGiverName(),
+  @Test
+  public void testBuildLogMessageWithEmptyCareGiverName() {
+    PdlLogMessage pdlLogMessage =
+        testee.buildLogMessage(
+            buildSjukfallListWithEmptyCareGiverName(),
             LogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
-            ActivityType.READ, ResourceType.RESOURCE_TYPE_SJUKFALL);
+            ActivityType.READ,
+            ResourceType.RESOURCE_TYPE_SJUKFALL);
 
-        assertNotNull(pdlLogMessage);
-        assertEquals(1, pdlLogMessage.getPdlResourceList().size());
-        PdlResource pdlResource = pdlLogMessage.getPdlResourceList().get(0);
-        assertEquals("Vårdgivare 1", pdlResource.getResourceOwner().getVardgivareNamn());
-    }
+    assertNotNull(pdlLogMessage);
+    assertEquals(1, pdlLogMessage.getPdlResourceList().size());
+    PdlResource pdlResource = pdlLogMessage.getPdlResourceList().get(0);
+    assertEquals("Vårdgivare 1", pdlResource.getResourceOwner().getVardgivareNamn());
+  }
 
-    private List<SjukfallEnhet> buildSjukfallListWithEmptyCareGiverName() {
-        List<SjukfallEnhet> sjukfallList = TestDataGen.buildSjukfallList(1);
-        sjukfallList.stream().forEach(sfe -> sfe.setVardGivareNamn(null));
-        return sjukfallList;
-    }
+  private List<SjukfallEnhet> buildSjukfallListWithEmptyCareGiverName() {
+    List<SjukfallEnhet> sjukfallList = TestDataGen.buildSjukfallList(1);
+    sjukfallList.stream().forEach(sfe -> sfe.setVardGivareNamn(null));
+    return sjukfallList;
+  }
 
-    @Test
-    public void testBuildPrintLogMessage() {
-        // Then
-        PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
+  @Test
+  public void testBuildPrintLogMessage() {
+    // Then
+    PdlLogMessage pdlLogMessage =
+        testee.buildLogMessage(
+            TestDataGen.buildSjukfallList(5),
             LogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
-            ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
+            ActivityType.PRINT,
+            ResourceType.RESOURCE_TYPE_SJUKFALL);
 
-        assertNotNull(pdlLogMessage);
-        assertEquals(ActivityType.PRINT, pdlLogMessage.getActivityType());
-    }
+    assertNotNull(pdlLogMessage);
+    assertEquals(ActivityType.PRINT, pdlLogMessage.getActivityType());
+  }
 
-    @Test
-    public void testBuildLogMessageForLakare() {
-        PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
+  @Test
+  public void testBuildLogMessageForLakare() {
+    PdlLogMessage pdlLogMessage =
+        testee.buildLogMessage(
+            TestDataGen.buildSjukfallList(5),
             LogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
-            ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
+            ActivityType.PRINT,
+            ResourceType.RESOURCE_TYPE_SJUKFALL);
 
-        assertEquals("Läkare", pdlLogMessage.getUserTitle());
-    }
+    assertEquals("Läkare", pdlLogMessage.getUserTitle());
+  }
 
-    @Test
-    public void testBuildLogMessageForLakareHavingRehabkoordinatorRole() {
-        Map<String, Role> rolesMap = mock(Map.class);
-        RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser(true);
-        rehabstodUser.setRoles(rolesMap);
+  @Test
+  public void testBuildLogMessageForLakareHavingRehabkoordinatorRole() {
+    Map<String, Role> rolesMap = mock(Map.class);
+    RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser(true);
+    rehabstodUser.setRoles(rolesMap);
 
-        when(rolesMap.containsKey(eq("LAKARE"))).thenReturn(false);
+    when(rolesMap.containsKey(eq("LAKARE"))).thenReturn(false);
 
-        PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
+    PdlLogMessage pdlLogMessage =
+        testee.buildLogMessage(
+            TestDataGen.buildSjukfallList(5),
             LogUtil.getLogUser(rehabstodUser),
-            ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
+            ActivityType.PRINT,
+            ResourceType.RESOURCE_TYPE_SJUKFALL);
 
-        assertEquals("Rehabkoordinator", pdlLogMessage.getUserTitle());
-    }
+    assertEquals("Rehabkoordinator", pdlLogMessage.getUserTitle());
+  }
 
-    @Test
-    public void testBuildLogMessageForIckeLakare() {
-        RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser(false);
-        rehabstodUser.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_KOORDINATOR, new Role()));
-        PdlLogMessage pdlLogMessage = testee.buildLogMessage(TestDataGen.buildSjukfallList(5),
+  @Test
+  public void testBuildLogMessageForIckeLakare() {
+    RehabstodUser rehabstodUser = TestDataGen.buildRehabStodUser(false);
+    rehabstodUser.setRoles(ImmutableMap.of(AuthoritiesConstants.ROLE_KOORDINATOR, new Role()));
+    PdlLogMessage pdlLogMessage =
+        testee.buildLogMessage(
+            TestDataGen.buildSjukfallList(5),
             LogUtil.getLogUser(rehabstodUser),
-            ActivityType.PRINT, ResourceType.RESOURCE_TYPE_SJUKFALL);
+            ActivityType.PRINT,
+            ResourceType.RESOURCE_TYPE_SJUKFALL);
 
-        assertEquals("Rehabkoordinator", pdlLogMessage.getUserTitle());
-    }
+    assertEquals("Rehabkoordinator", pdlLogMessage.getUserTitle());
+  }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testBuildWithUnknownType() {
-        testee.buildLogMessage(TestDataGen.buildSjukfallList(1),
-            LogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
-            ActivityType.EMERGENCY_ACCESS, ResourceType.RESOURCE_TYPE_SJUKFALL);
-    }
-
+  @Test(expected = IllegalArgumentException.class)
+  public void testBuildWithUnknownType() {
+    testee.buildLogMessage(
+        TestDataGen.buildSjukfallList(1),
+        LogUtil.getLogUser(TestDataGen.buildRehabStodUser(true)),
+        ActivityType.EMERGENCY_ACCESS,
+        ResourceType.RESOURCE_TYPE_SJUKFALL);
+  }
 }

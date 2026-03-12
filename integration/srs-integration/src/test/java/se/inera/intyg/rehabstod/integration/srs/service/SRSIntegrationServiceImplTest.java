@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -37,46 +37,43 @@ import se.inera.intyg.clinicalprocess.healthcond.srs.getriskpredictionforcertifi
 import se.inera.intyg.rehabstod.integration.srs.client.SRSClientService;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 
-/**
- * Created by eriklupander on 2017-11-01.
- */
+/** Created by eriklupander on 2017-11-01. */
 @RunWith(MockitoJUnitRunner.class)
 public class SRSIntegrationServiceImplTest {
 
-    @Mock
-    private SRSClientService srsClientService;
+  @Mock private SRSClientService srsClientService;
 
-    @InjectMocks
-    private SRSIntegrationServiceImpl testee;
+  @InjectMocks private SRSIntegrationServiceImpl testee;
 
-    @Test
-    public void testHappyPath() {
-        String intygsId = UUID.randomUUID().toString();
+  @Test
+  public void testHappyPath() {
+    String intygsId = UUID.randomUUID().toString();
 
-        when(srsClientService.getRiskPrediktionForCertificate(anyList())).thenReturn(buildResult(intygsId));
-        List<RiskSignal> result = testee.getRiskPrediktionerForIntygsId(Arrays.asList(intygsId));
-        assertEquals(1, result.size());
-        assertEquals(intygsId, result.get(0).getIntygsId());
-        assertEquals(1, result.get(0).getRiskKategori());
-        assertEquals("Beskrivning", result.get(0).getRiskDescription());
-    }
+    when(srsClientService.getRiskPrediktionForCertificate(anyList()))
+        .thenReturn(buildResult(intygsId));
+    List<RiskSignal> result = testee.getRiskPrediktionerForIntygsId(Arrays.asList(intygsId));
+    assertEquals(1, result.size());
+    assertEquals(intygsId, result.get(0).getIntygsId());
+    assertEquals(1, result.get(0).getRiskKategori());
+    assertEquals("Beskrivning", result.get(0).getRiskDescription());
+  }
 
-    @Test
-    public void testEmptyListReturnedWhenNullIdsSupplied() {
-        List<RiskSignal> result = testee.getRiskPrediktionerForIntygsId(null);
-        assertEquals(0, result.size());
-        verifyNoInteractions(srsClientService);
-    }
+  @Test
+  public void testEmptyListReturnedWhenNullIdsSupplied() {
+    List<RiskSignal> result = testee.getRiskPrediktionerForIntygsId(null);
+    assertEquals(0, result.size());
+    verifyNoInteractions(srsClientService);
+  }
 
-    private List<RiskPrediktion> buildResult(String intygsId) {
-        List<RiskPrediktion> result = new ArrayList<>();
-        RiskPrediktion rp = new RiskPrediktion();
-        rp.setIntygsId(intygsId);
-        Risksignal signal = new Risksignal();
-        signal.setRiskkategori(1);
-        signal.setBeskrivning("Beskrivning");
-        rp.setRisksignal(signal);
-        result.add(rp);
-        return result;
-    }
+  private List<RiskPrediktion> buildResult(String intygsId) {
+    List<RiskPrediktion> result = new ArrayList<>();
+    RiskPrediktion rp = new RiskPrediktion();
+    rp.setIntygsId(intygsId);
+    Risksignal signal = new Risksignal();
+    signal.setRiskkategori(1);
+    signal.setBeskrivning("Beskrivning");
+    rp.setRisksignal(signal);
+    result.add(rp);
+    return result;
+  }
 }

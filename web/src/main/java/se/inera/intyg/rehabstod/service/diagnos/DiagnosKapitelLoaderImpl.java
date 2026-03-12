@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,10 +18,10 @@
  */
 package se.inera.intyg.rehabstod.service.diagnos;
 
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.annotation.PostConstruct;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,39 +32,37 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 import se.inera.intyg.rehabstod.service.diagnos.dto.DiagnosKapitel;
 
-/**
- * Created by marced on 08/02/16.
- */
+/** Created by marced on 08/02/16. */
 @Component
 public class DiagnosKapitelLoaderImpl implements DiagnosKapitelLoader {
 
-    @Value("${rhs.diagnoskapitel.file}")
-    private String diagnosKapitelFile;
+  @Value("${rhs.diagnoskapitel.file}")
+  private String diagnosKapitelFile;
 
-    @Autowired
-    ResourceLoader resourceLoader;
+  @Autowired ResourceLoader resourceLoader;
 
-    @PostConstruct
-    void initialize() {
-        // FIXME: Legacy support, can be removed when local config has been substituted by refdata (INTYG-7701)
-        if (!ResourceUtils.isUrl(diagnosKapitelFile)) {
-            diagnosKapitelFile = "file://" + diagnosKapitelFile;
-        }
+  @PostConstruct
+  void initialize() {
+    // FIXME: Legacy support, can be removed when local config has been substituted by refdata
+    // (INTYG-7701)
+    if (!ResourceUtils.isUrl(diagnosKapitelFile)) {
+      diagnosKapitelFile = "file://" + diagnosKapitelFile;
     }
+  }
 
-    @Override
-    public List<DiagnosKapitel> loadDiagnosKapitel() throws IOException {
+  @Override
+  public List<DiagnosKapitel> loadDiagnosKapitel() throws IOException {
 
-        Resource resource = resourceLoader.getResource(diagnosKapitelFile);
+    Resource resource = resourceLoader.getResource(diagnosKapitelFile);
 
-        List<DiagnosKapitel> list = new ArrayList<>();
-        try (LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "UTF-8")) {
+    List<DiagnosKapitel> list = new ArrayList<>();
+    try (LineIterator it = IOUtils.lineIterator(resource.getInputStream(), "UTF-8")) {
 
-            while (it.hasNext()) {
-                final String line = it.nextLine();
-                list.add(new DiagnosKapitel(line));
-            }
-        }
-        return list;
+      while (it.hasNext()) {
+        final String line = it.nextLine();
+        list.add(new DiagnosKapitel(line));
+      }
     }
+    return list;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -23,34 +23,33 @@ package se.inera.intyg.rehabstod.web.controller.api.dto;
  */
 public class RegisterExtendedConsentRequest {
 
-    private String patientId;
-    private boolean onlyCurrentUser;
-    private int days;
+  private String patientId;
+  private boolean onlyCurrentUser;
+  private int days;
 
-    public RegisterExtendedConsentRequest() {
-    }
+  public RegisterExtendedConsentRequest() {}
 
-    public String getPatientId() {
-        return patientId;
-    }
+  public String getPatientId() {
+    return patientId;
+  }
 
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
+  public void setPatientId(String patientId) {
+    this.patientId = patientId;
+  }
 
-    public boolean isOnlyCurrentUser() {
-        return onlyCurrentUser;
-    }
+  public boolean isOnlyCurrentUser() {
+    return onlyCurrentUser;
+  }
 
-    public void setOnlyCurrentUser(boolean onlyCurrentUser) {
-        this.onlyCurrentUser = onlyCurrentUser;
-    }
+  public void setOnlyCurrentUser(boolean onlyCurrentUser) {
+    this.onlyCurrentUser = onlyCurrentUser;
+  }
 
-    public int getDays() {
-        return days;
-    }
+  public int getDays() {
+    return days;
+  }
 
-    public void setDays(int days) {
-        this.days = days;
-    }
+  public void setDays(int days) {
+    this.days = days;
+  }
 }

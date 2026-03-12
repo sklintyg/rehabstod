@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -34,14 +34,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ComponentScan({"se.inera.intyg.rehabstod.jobs"})
 public class JobConfig {
 
-    private static final int POOL_SIZE = 10;
-    private static final int LOCK_AT_MOST_MINUTES = 10;
+  private static final int POOL_SIZE = 10;
+  private static final int LOCK_AT_MOST_MINUTES = 10;
 
-    @Autowired
-    private JedisConnectionFactory jedisConnectionFactory;
+  @Autowired private JedisConnectionFactory jedisConnectionFactory;
 
-    @Bean
-    public LockProvider lockProvider() {
-        return new RedisLockProvider(jedisConnectionFactory, "webcert");
-    }
+  @Bean
+  public LockProvider lockProvider() {
+    return new RedisLockProvider(jedisConnectionFactory, "webcert");
+  }
 }

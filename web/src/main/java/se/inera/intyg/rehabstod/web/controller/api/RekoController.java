@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -36,31 +36,38 @@ import se.inera.intyg.rehabstod.web.controller.api.dto.GetRekoStatusRequestDTO;
 @RequestMapping("/api/reko")
 public class RekoController {
 
-    private final CreateRekoStatusService createRekoStatusService;
-    private final GetRekoStatusService getRekoStatusService;
+  private final CreateRekoStatusService createRekoStatusService;
+  private final GetRekoStatusService getRekoStatusService;
 
-    public RekoController(CreateRekoStatusService createRekoStatusService, GetRekoStatusService getRekoStatusService) {
-        this.createRekoStatusService = createRekoStatusService;
-        this.getRekoStatusService = getRekoStatusService;
-    }
+  public RekoController(
+      CreateRekoStatusService createRekoStatusService, GetRekoStatusService getRekoStatusService) {
+    this.createRekoStatusService = createRekoStatusService;
+    this.getRekoStatusService = getRekoStatusService;
+  }
 
-    @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "create-reko-status", eventType = MdcLogConstants.EVENT_TYPE_CREATION)
-    public RekoStatusDTO createRekoStatus(@RequestBody CreateRekoStatusRequestDTO request) {
-        return createRekoStatusService.create(
-            request.getPatientId(),
-            request.getStatusId(),
-            LocalDate.parse(request.getSickLeaveTimestamp()).atStartOfDay()
-        );
-    }
+  @RequestMapping(
+      value = "",
+      method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "create-reko-status",
+      eventType = MdcLogConstants.EVENT_TYPE_CREATION)
+  public RekoStatusDTO createRekoStatus(@RequestBody CreateRekoStatusRequestDTO request) {
+    return createRekoStatusService.create(
+        request.getPatientId(),
+        request.getStatusId(),
+        LocalDate.parse(request.getSickLeaveTimestamp()).atStartOfDay());
+  }
 
-    @RequestMapping(value = "/patient", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @PerformanceLogging(eventAction = "get-reko-status", eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
-    public RekoStatusDTO getRekoStatus(@RequestBody GetRekoStatusRequestDTO request) {
-        return getRekoStatusService.get(
-            request.getPatientId(),
-            request.getEndDate(),
-            request.getStartDate()
-        );
-    }
+  @RequestMapping(
+      value = "/patient",
+      method = RequestMethod.POST,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PerformanceLogging(
+      eventAction = "get-reko-status",
+      eventType = MdcLogConstants.EVENT_TYPE_ACCESSED)
+  public RekoStatusDTO getRekoStatus(@RequestBody GetRekoStatusRequestDTO request) {
+    return getRekoStatusService.get(
+        request.getPatientId(), request.getEndDate(), request.getStartDate());
+  }
 }

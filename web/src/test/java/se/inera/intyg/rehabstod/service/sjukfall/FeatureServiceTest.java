@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.sjukfall;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -41,54 +40,52 @@ import se.inera.intyg.rehabstod.service.user.UserService;
 @ExtendWith(MockitoExtension.class)
 public class FeatureServiceTest {
 
-    @Mock
-    UserService userService;
+  @Mock UserService userService;
 
-    @InjectMocks
-    FeatureServiceImpl featureService;
+  @InjectMocks FeatureServiceImpl featureService;
 
-    RehabstodUser user;
+  RehabstodUser user;
 
-    @Nested
-    class SRS {
+  @Nested
+  class SRS {
 
-        @BeforeEach
-        void setup() {
-            user = mock(RehabstodUser.class);
-            when(userService.getUser()).thenReturn(user);
-        }
-
-        @Test
-        void shouldReturnTrueIfFeatureIsAvailable() {
-            final var features = new HashMap<String, Feature>();
-            final var feature = new Feature();
-            feature.setGlobal(true);
-            features.put(AuthoritiesConstants.FEATURE_SRS, feature);
-            when(user.getFeatures()).thenReturn(features);
-
-            final var response = featureService.isFeatureActive(AuthoritiesConstants.FEATURE_SRS);
-
-            assertTrue(response);
-        }
-
-        @Test
-        void shouldReturnFalseIfFeatureIsNotGlobal() {
-            final var features = new HashMap<String, Feature>();
-            final var feature = new Feature();
-            feature.setGlobal(false);
-            features.put(AuthoritiesConstants.FEATURE_SRS, feature);
-            when(user.getFeatures()).thenReturn(features);
-
-            final var response = featureService.isFeatureActive(AuthoritiesConstants.FEATURE_SRS);
-
-            assertFalse(response);
-        }
-
-        @Test
-        void shouldReturnFalseIfFeatureIsNotAvailable() {
-            final var response = featureService.isFeatureActive(AuthoritiesConstants.FEATURE_SRS);
-
-            assertFalse(response);
-        }
+    @BeforeEach
+    void setup() {
+      user = mock(RehabstodUser.class);
+      when(userService.getUser()).thenReturn(user);
     }
+
+    @Test
+    void shouldReturnTrueIfFeatureIsAvailable() {
+      final var features = new HashMap<String, Feature>();
+      final var feature = new Feature();
+      feature.setGlobal(true);
+      features.put(AuthoritiesConstants.FEATURE_SRS, feature);
+      when(user.getFeatures()).thenReturn(features);
+
+      final var response = featureService.isFeatureActive(AuthoritiesConstants.FEATURE_SRS);
+
+      assertTrue(response);
+    }
+
+    @Test
+    void shouldReturnFalseIfFeatureIsNotGlobal() {
+      final var features = new HashMap<String, Feature>();
+      final var feature = new Feature();
+      feature.setGlobal(false);
+      features.put(AuthoritiesConstants.FEATURE_SRS, feature);
+      when(user.getFeatures()).thenReturn(features);
+
+      final var response = featureService.isFeatureActive(AuthoritiesConstants.FEATURE_SRS);
+
+      assertFalse(response);
+    }
+
+    @Test
+    void shouldReturnFalseIfFeatureIsNotAvailable() {
+      final var response = featureService.isFeatureActive(AuthoritiesConstants.FEATURE_SRS);
+
+      assertFalse(response);
+    }
+  }
 }

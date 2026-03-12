@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -36,45 +36,47 @@ import se.inera.intyg.rehabstod.auth.RehabstodUserPreferences;
  */
 public final class ControllerUtil {
 
-    private ControllerUtil() {
-    }
+  private ControllerUtil() {}
 
-    @SafeVarargs
-    public static <T> Predicate<T> distinctByKeys(Function<? super T, ?>... keyExtractors) {
-        final Map<List<?>, Boolean> seen = new ConcurrentHashMap<>();
-        return t -> {
-            final List<?> keys = Arrays.stream(keyExtractors)
-                .map(ke -> ke.apply(t))
-                .collect(Collectors.toList());
-            return seen.putIfAbsent(keys, Boolean.TRUE) == null;
-        };
-    }
+  @SafeVarargs
+  public static <T> Predicate<T> distinctByKeys(Function<? super T, ?>... keyExtractors) {
+    final Map<List<?>, Boolean> seen = new ConcurrentHashMap<>();
+    return t -> {
+      final List<?> keys =
+          Arrays.stream(keyExtractors).map(ke -> ke.apply(t)).collect(Collectors.toList());
+      return seen.putIfAbsent(keys, Boolean.TRUE) == null;
+    };
+  }
 
-    public static String getEnhetsIdForQueryingIntygstjansten(RehabstodUser user) {
-        if (user.isValdVardenhetMottagning()) {
-            // Must return PARENT id if selected unit is an underenhet aka mottagning.
-            for (Vardgivare vg : user.getVardgivare()) {
-                for (Vardenhet ve : vg.getVardenheter()) {
-                    for (Mottagning m : ve.getMottagningar()) {
-                        if (m.getId().equals(user.getValdVardenhet().getId())) {
-                            return ve.getId();
-                        }
-                    }
-                }
+  public static String getEnhetsIdForQueryingIntygstjansten(RehabstodUser user) {
+    if (user.isValdVardenhetMottagning()) {
+      // Must return PARENT id if selected unit is an underenhet aka mottagning.
+      for (Vardgivare vg : user.getVardgivare()) {
+        for (Vardenhet ve : vg.getVardenheter()) {
+          for (Mottagning m : ve.getMottagningar()) {
+            if (m.getId().equals(user.getValdVardenhet().getId())) {
+              return ve.getId();
             }
-            throw new IllegalStateException("User object is in invalid state. "
-                + "Current selected enhet is an underenhet, but no ID for the parent enhet was found.");
-        } else {
-            return user.getValdVardenhet().getId();
+          }
         }
+      }
+      throw new IllegalStateException(
+          "User object is in invalid state. "
+              + "Current selected enhet is an underenhet, but no ID for the parent enhet was found.");
+    } else {
+      return user.getValdVardenhet().getId();
     }
+  }
 
-    public static int getMaxGlapp(RehabstodUser user) {
-        return Integer.parseInt(user.getPreferences().get(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG));
-    }
+  public static int getMaxGlapp(RehabstodUser user) {
+    return Integer.parseInt(
+        user.getPreferences()
+            .get(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_MELLAN_INTYG));
+  }
 
-    public static int getMaxDagarSedanSjukfallAvslut(RehabstodUser user) {
-        return Integer.parseInt(user.getPreferences().get(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT));
-    }
-
+  public static int getMaxDagarSedanSjukfallAvslut(RehabstodUser user) {
+    return Integer.parseInt(
+        user.getPreferences()
+            .get(RehabstodUserPreferences.Preference.MAX_ANTAL_DAGAR_SEDAN_SJUKFALL_AVSLUT));
+  }
 }

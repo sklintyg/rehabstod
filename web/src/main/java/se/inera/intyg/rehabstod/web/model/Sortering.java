@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,58 +18,55 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
-/**
- * Created by Magnus Ekstrand on 03/02/16.
- */
+/** Created by Magnus Ekstrand on 03/02/16. */
 public class Sortering {
 
-    private static final int HASH_SEED = 31;
+  private static final int HASH_SEED = 31;
 
-    private String kolumn;
-    private String order;
+  private String kolumn;
+  private String order;
 
-    // getters and setters
+  // getters and setters
 
-    public String getKolumn() {
-        return kolumn;
+  public String getKolumn() {
+    return kolumn;
+  }
+
+  public void setKolumn(String kolumn) {
+    this.kolumn = kolumn;
+  }
+
+  public String getOrder() {
+    return order;
+  }
+
+  public void setOrder(String order) {
+    this.order = order;
+  }
+
+  // api
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Sortering)) {
+      return false;
     }
 
-    public void setKolumn(String kolumn) {
-        this.kolumn = kolumn;
+    Sortering sortering = (Sortering) o;
+
+    if (!kolumn.equals(sortering.kolumn)) {
+      return false;
     }
+    return order.equals(sortering.order);
+  }
 
-    public String getOrder() {
-        return order;
-    }
-
-    public void setOrder(String order) {
-        this.order = order;
-    }
-
-    // api
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Sortering)) {
-            return false;
-        }
-
-        Sortering sortering = (Sortering) o;
-
-        if (!kolumn.equals(sortering.kolumn)) {
-            return false;
-        }
-        return order.equals(sortering.order);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = kolumn.hashCode();
-        result = HASH_SEED * result + order.hashCode();
-        return result;
-    }
+  @Override
+  public int hashCode() {
+    int result = kolumn.hashCode();
+    result = HASH_SEED * result + order.hashCode();
+    return result;
+  }
 }

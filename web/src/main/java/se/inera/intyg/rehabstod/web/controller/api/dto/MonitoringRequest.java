@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,42 +22,41 @@ import java.util.Map;
 
 public class MonitoringRequest {
 
+  public static final String WIDTH = "width";
+  public static final String HEIGHT = "height";
 
-    public static final String WIDTH = "width";
-    public static final String HEIGHT = "height";
+  private MonitoringRequestEvent event;
+  private Map<String, String> info;
 
-    private MonitoringRequestEvent event;
-    private Map<String, String> info;
+  public MonitoringRequestEvent getEvent() {
+    return event;
+  }
 
-    public MonitoringRequestEvent getEvent() {
-        return event;
+  public void setEvent(MonitoringRequestEvent event) {
+    this.event = event;
+  }
+
+  public Map<String, String> getInfo() {
+    return info;
+  }
+
+  public void setInfo(Map<String, String> info) {
+    this.info = info;
+  }
+
+  public boolean isValid() {
+    if (event == null) {
+      return false;
     }
-
-    public void setEvent(MonitoringRequestEvent event) {
-        this.event = event;
+    switch (event) {
+      case SCREEN_RESOLUTION:
+        return info != null && info.get(WIDTH) != null && info.get(HEIGHT) != null;
+      default:
+        return false;
     }
+  }
 
-    public Map<String, String> getInfo() {
-        return info;
-    }
-
-    public void setInfo(Map<String, String> info) {
-        this.info = info;
-    }
-
-    public boolean isValid() {
-        if (event == null) {
-            return false;
-        }
-        switch (event) {
-            case SCREEN_RESOLUTION:
-                return info != null && info.get(WIDTH) != null && info.get(HEIGHT) != null;
-            default:
-                return false;
-        }
-    }
-
-    public enum MonitoringRequestEvent {
-        SCREEN_RESOLUTION
-    }
+  public enum MonitoringRequestEvent {
+    SCREEN_RESOLUTION
+  }
 }

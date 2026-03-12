@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.service.sjukfall.dto;
 
 import java.util.List;
@@ -33,6 +32,6 @@ import se.inera.intyg.rehabstod.web.model.Lakare;
 @AllArgsConstructor
 public class PopulateLUFilterResponseDTO {
 
-    private List<Lakare> doctors;
-    private List<DiagnosKapitel> allDiagnosisChapters;
+  private List<Lakare> doctors;
+  private List<DiagnosKapitel> allDiagnosisChapters;
 }

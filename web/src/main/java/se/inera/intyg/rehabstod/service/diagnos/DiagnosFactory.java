@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,20 +28,17 @@ import se.inera.intyg.rehabstod.web.model.Diagnos;
 @Component
 public class DiagnosFactory {
 
-    @Autowired
-    private DiagnosBeskrivningService diagnosBeskrivningService;
+  @Autowired private DiagnosBeskrivningService diagnosBeskrivningService;
 
-    @Autowired
-    private DiagnosKapitelService diagnosKapitelService;
+  @Autowired private DiagnosKapitelService diagnosKapitelService;
 
-    public Diagnos getDiagnos(String orginalVarde, String diagnosKod, String diagnosNamn) {
-        Diagnos diagnos = new Diagnos(orginalVarde, diagnosKod, diagnosNamn);
+  public Diagnos getDiagnos(String orginalVarde, String diagnosKod, String diagnosNamn) {
+    Diagnos diagnos = new Diagnos(orginalVarde, diagnosKod, diagnosNamn);
 
-        // populate beskrivning and kapitel
-        diagnos.setBeskrivning(diagnosBeskrivningService.getDiagnosBeskrivning(diagnosKod));
-        diagnos.setKapitel(diagnosKapitelService.getDiagnosKapitel(diagnosKod).getId());
+    // populate beskrivning and kapitel
+    diagnos.setBeskrivning(diagnosBeskrivningService.getDiagnosBeskrivning(diagnosKod));
+    diagnos.setKapitel(diagnosKapitelService.getDiagnosKapitel(diagnosKod).getId());
 
-        return diagnos;
-    }
-
+    return diagnos;
+  }
 }

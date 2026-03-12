@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,14 +21,11 @@ package se.inera.intyg.rehabstod.integration.srs.config;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Just a placeholder class to configure by @ComponentScan and @ImportResource.
- */
+/** Just a placeholder class to configure by @ComponentScan and @ImportResource. */
 @Configuration
 @ComponentScan({
-    "se.inera.intyg.rehabstod.integration.srs.client",
-    "se.inera.intyg.rehabstod.integration.srs.service"})
+  "se.inera.intyg.rehabstod.integration.srs.client",
+  "se.inera.intyg.rehabstod.integration.srs.service"
+})
 @SuppressWarnings("all")
-public class SRSIntegrationConfiguration {
-
-}
+public class SRSIntegrationConfiguration {}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -22,30 +22,32 @@ import java.util.List;
 import se.inera.intyg.rehabstod.web.model.SjukfallEnhet;
 
 /**
- * Encapsulates the response for sjukfall on a unit with a flag indicating whether SRS predictions could be fetched.
+ * Encapsulates the response for sjukfall on a unit with a flag indicating whether SRS predictions
+ * could be fetched.
  */
 public class SjukfallEnhetResponse {
 
-    private List<SjukfallEnhet> sjukfallList;
-    private boolean srsError = false;
+  private List<SjukfallEnhet> sjukfallList;
+  private boolean srsError = false;
 
-    private boolean kompletteringInfoError = false;
+  private boolean kompletteringInfoError = false;
 
-    public SjukfallEnhetResponse(List<SjukfallEnhet> sjukfallList, boolean srsError, boolean kompletteringInfoError) {
-        this.sjukfallList = sjukfallList;
-        this.srsError = srsError;
-        this.kompletteringInfoError = kompletteringInfoError;
-    }
+  public SjukfallEnhetResponse(
+      List<SjukfallEnhet> sjukfallList, boolean srsError, boolean kompletteringInfoError) {
+    this.sjukfallList = sjukfallList;
+    this.srsError = srsError;
+    this.kompletteringInfoError = kompletteringInfoError;
+  }
 
-    public List<SjukfallEnhet> getSjukfallList() {
-        return sjukfallList;
-    }
+  public List<SjukfallEnhet> getSjukfallList() {
+    return sjukfallList;
+  }
 
-    public boolean isSrsError() {
-        return srsError;
-    }
+  public boolean isSrsError() {
+    return srsError;
+  }
 
-    public boolean isKompletteringInfoError() {
-        return kompletteringInfoError;
-    }
+  public boolean isKompletteringInfoError() {
+    return kompletteringInfoError;
+  }
 }

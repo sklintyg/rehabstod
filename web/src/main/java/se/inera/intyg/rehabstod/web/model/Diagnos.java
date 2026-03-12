@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,98 +18,97 @@
  */
 package se.inera.intyg.rehabstod.web.model;
 
-/**
- * Created by Magnus Ekstrand on 03/02/16.
- */
+/** Created by Magnus Ekstrand on 03/02/16. */
 public class Diagnos {
 
-    private static final int HASH_SEED = 31;
+  private static final int HASH_SEED = 31;
 
-    private String intygsVarde;
-    private String kod;
-    private String namn;
-    private String beskrivning;
-    private String kapitel;
+  private String intygsVarde;
+  private String kod;
+  private String namn;
+  private String beskrivning;
+  private String kapitel;
 
-    public Diagnos() {
-        // When we try to deserialize a JSON String to Diagnos an Exception
-        // “JsonMappingException: No suitable constructor found” will be thrown
-        // in absence of a default constructor
+  public Diagnos() {
+    // When we try to deserialize a JSON String to Diagnos an Exception
+    // “JsonMappingException: No suitable constructor found” will be thrown
+    // in absence of a default constructor
+  }
+
+  public Diagnos(String intygsVarde, String kod, String namn) {
+    this.intygsVarde = intygsVarde;
+    this.kod = kod;
+    this.namn = namn;
+  }
+
+  // getters and setters
+
+  public String getIntygsVarde() {
+    return intygsVarde;
+  }
+
+  public String getKod() {
+    return kod;
+  }
+
+  public String getNamn() {
+    return namn;
+  }
+
+  public String getBeskrivning() {
+    return beskrivning;
+  }
+
+  public void setBeskrivning(String beskrivning) {
+    this.beskrivning = beskrivning;
+  }
+
+  public String getKapitel() {
+    return kapitel;
+  }
+
+  public void setKapitel(String kapitel) {
+    this.kapitel = kapitel;
+  }
+
+  // api
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Diagnos)) {
+      return false;
     }
 
-    public Diagnos(String intygsVarde, String kod, String namn) {
-        this.intygsVarde = intygsVarde;
-        this.kod = kod;
-        this.namn = namn;
+    Diagnos diagnos = (Diagnos) o;
+
+    if (!intygsVarde.equals(diagnos.intygsVarde)) {
+      return false;
+    }
+    if (!kod.equals(diagnos.kod)) {
+      return false;
+    }
+    if (!namn.equals(diagnos.namn)) {
+      return false;
+    }
+    if (beskrivning != null
+        ? !beskrivning.equals(diagnos.beskrivning)
+        : diagnos.beskrivning != null) {
+      return false;
     }
 
-    // getters and setters
+    return !(kapitel != null ? !kapitel.equals(diagnos.kapitel) : diagnos.kapitel != null);
+  }
 
-    public String getIntygsVarde() {
-        return intygsVarde;
-    }
-
-    public String getKod() {
-        return kod;
-    }
-
-    public String getNamn() {
-        return namn;
-    }
-
-    public String getBeskrivning() {
-        return beskrivning;
-    }
-
-    public void setBeskrivning(String beskrivning) {
-        this.beskrivning = beskrivning;
-    }
-
-    public String getKapitel() {
-        return kapitel;
-    }
-
-    public void setKapitel(String kapitel) {
-        this.kapitel = kapitel;
-    }
-
-    // api
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Diagnos)) {
-            return false;
-        }
-
-        Diagnos diagnos = (Diagnos) o;
-
-        if (!intygsVarde.equals(diagnos.intygsVarde)) {
-            return false;
-        }
-        if (!kod.equals(diagnos.kod)) {
-            return false;
-        }
-        if (!namn.equals(diagnos.namn)) {
-            return false;
-        }
-        if (beskrivning != null ? !beskrivning.equals(diagnos.beskrivning) : diagnos.beskrivning != null) {
-            return false;
-        }
-
-        return !(kapitel != null ? !kapitel.equals(diagnos.kapitel) : diagnos.kapitel != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = intygsVarde.hashCode();
-        result = HASH_SEED * result + kod.hashCode();
-        result = HASH_SEED * result + namn.hashCode();
-        result = HASH_SEED * result + (beskrivning != null ? beskrivning.hashCode() : 0);
-        result = HASH_SEED * result + (kapitel != null ? kapitel.hashCode() : 0);
-        return result;
-    }
-
+  @Override
+  public int hashCode() {
+    int result = intygsVarde.hashCode();
+    result = HASH_SEED * result + kod.hashCode();
+    result = HASH_SEED * result + namn.hashCode();
+    result = HASH_SEED * result + (beskrivning != null ? beskrivning.hashCode() : 0);
+    result = HASH_SEED * result + (kapitel != null ? kapitel.hashCode() : 0);
+    return result;
+  }
 }

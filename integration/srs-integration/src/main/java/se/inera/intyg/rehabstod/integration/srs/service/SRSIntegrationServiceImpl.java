@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -26,32 +26,34 @@ import org.springframework.stereotype.Service;
 import se.inera.intyg.rehabstod.integration.srs.client.SRSClientService;
 import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
 
-/**
- * Created by eriklupander on 2016-02-01.
- */
+/** Created by eriklupander on 2016-02-01. */
 @Service
 public class SRSIntegrationServiceImpl implements SRSIntegrationService {
 
-    @Autowired
-    private SRSClientService srsClientService;
+  @Autowired private SRSClientService srsClientService;
 
-    @Override
-    public List<RiskSignal> getRiskPrediktionerForIntygsId(List<String> intygsIdn) {
-        // Just return empty list if no intygsId's was supplied.
-        if (intygsIdn == null || intygsIdn.size() == 0) {
-            return new ArrayList<>();
-        }
-
-        return srsClientService.getRiskPrediktionForCertificate(intygsIdn)
-            .stream()
-            .map(rp -> new RiskSignal(rp.getIntygsId(), rp.getRisksignal().getRiskkategori(),
-                rp.getRisksignal().getBeskrivning(), rp.getRisksignal().getBerakningstidpunkt()))
-            .collect(Collectors.toList());
+  @Override
+  public List<RiskSignal> getRiskPrediktionerForIntygsId(List<String> intygsIdn) {
+    // Just return empty list if no intygsId's was supplied.
+    if (intygsIdn == null || intygsIdn.size() == 0) {
+      return new ArrayList<>();
     }
 
-    @Override
-    public List<String> getDiagnosisList() {
-        return srsClientService.getDiagnosisList().stream()
-            .map(d -> d.getCode()).collect(Collectors.toList());
-    }
+    return srsClientService.getRiskPrediktionForCertificate(intygsIdn).stream()
+        .map(
+            rp ->
+                new RiskSignal(
+                    rp.getIntygsId(),
+                    rp.getRisksignal().getRiskkategori(),
+                    rp.getRisksignal().getBeskrivning(),
+                    rp.getRisksignal().getBerakningstidpunkt()))
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<String> getDiagnosisList() {
+    return srsClientService.getDiagnosisList().stream()
+        .map(d -> d.getCode())
+        .collect(Collectors.toList());
+  }
 }

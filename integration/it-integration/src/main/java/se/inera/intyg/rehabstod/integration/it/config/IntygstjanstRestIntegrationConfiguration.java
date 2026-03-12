@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package se.inera.intyg.rehabstod.integration.it.config;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -28,18 +27,18 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class IntygstjanstRestIntegrationConfiguration {
 
-    @Value("${it.rest.connection.request.timeout}")
-    private int requestTimeout;
+  @Value("${it.rest.connection.request.timeout}")
+  private int requestTimeout;
 
-    @Value("${it.rest.connection.timeout}")
-    private int connectionTimeout;
+  @Value("${it.rest.connection.timeout}")
+  private int connectionTimeout;
 
-    @Bean
-    public RestTemplate itRestTemplate() {
-        final var httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-        httpRequestFactory.setConnectionRequestTimeout(requestTimeout);
-        httpRequestFactory.setConnectTimeout(connectionTimeout);
+  @Bean
+  public RestTemplate itRestTemplate() {
+    final var httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+    httpRequestFactory.setConnectionRequestTimeout(requestTimeout);
+    httpRequestFactory.setConnectTimeout(connectionTimeout);
 
-        return new RestTemplate(httpRequestFactory);
-    }
+    return new RestTemplate(httpRequestFactory);
+  }
 }

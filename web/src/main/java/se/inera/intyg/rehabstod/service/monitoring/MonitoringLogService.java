@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -21,22 +21,30 @@ package se.inera.intyg.rehabstod.service.monitoring;
 import se.inera.intyg.infra.security.common.service.AuthenticationLogger;
 
 /**
- * Interface used when logging to monitoring file. Used to ensure that the log entries are uniform and easy to parse.
+ * Interface used when logging to monitoring file. Used to ensure that the log entries are uniform
+ * and easy to parse.
  */
 public interface MonitoringLogService extends AuthenticationLogger {
 
-    @Override
-    void logUserLogin(String id, String role, String roleTypeName, String authenticationScheme, String origin);
+  @Override
+  void logUserLogin(
+      String id, String role, String roleTypeName, String authenticationScheme, String origin);
 
-    @Override
-    void logUserLogout(String id, String authenticationScheme);
+  @Override
+  void logUserLogout(String id, String authenticationScheme);
 
-    void logUserViewedSjukfall(String userId, int numberOfSjukfall, String vardEnhet);
+  void logUserViewedSjukfall(String userId, int numberOfSjukfall, String vardEnhet);
 
-    void logBrowserInfo(String browserName, String browserVersion, String osFamily, String osVersion, String width, String height);
+  void logBrowserInfo(
+      String browserName,
+      String browserVersion,
+      String osFamily,
+      String osVersion,
+      String width,
+      String height);
 
-    // Saml
-    void logSamlStatusForFailedLogin(String issuer, String samlStatus);
+  // Saml
+  void logSamlStatusForFailedLogin(String issuer, String samlStatus);
 
-    void logClientError(String errorId, String errorCode, String message, String stackTrace);
+  void logClientError(String errorId, String errorCode, String message, String stackTrace);
 }

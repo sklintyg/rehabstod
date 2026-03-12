@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,59 +28,58 @@ import se.inera.intyg.infra.logmessages.ResourceType;
  */
 public class PDLActivityEntry implements Serializable {
 
-    private static final long serialVersionUID = -3747905461916881904L;
+  private static final long serialVersionUID = -3747905461916881904L;
 
-    private String patientId;
-    private ActivityType activityType;
-    private ResourceType resourceType;
+  private String patientId;
+  private ActivityType activityType;
+  private ResourceType resourceType;
 
-    public PDLActivityEntry(String patientId, ActivityType activityType, ResourceType resourceType) {
-        this.patientId = patientId;
-        this.activityType = activityType;
-        this.resourceType = resourceType;
+  public PDLActivityEntry(String patientId, ActivityType activityType, ResourceType resourceType) {
+    this.patientId = patientId;
+    this.activityType = activityType;
+    this.resourceType = resourceType;
+  }
+
+  public String getPatientId() {
+    return patientId;
+  }
+
+  public void setPatientId(String patientId) {
+    this.patientId = patientId;
+  }
+
+  public ActivityType getActivityType() {
+    return activityType;
+  }
+
+  public void setActivityType(ActivityType activityType) {
+    this.activityType = activityType;
+  }
+
+  public ResourceType getResourceType() {
+    return resourceType;
+  }
+
+  public void setResourceType(ResourceType resourceType) {
+    this.resourceType = resourceType;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public String getPatientId() {
-        return patientId;
+    if (!(o instanceof PDLActivityEntry)) {
+      return false;
     }
+    PDLActivityEntry pdlActivityEntry = (PDLActivityEntry) o;
+    return Objects.equals(patientId, pdlActivityEntry.patientId)
+        && activityType == pdlActivityEntry.activityType
+        && resourceType == pdlActivityEntry.resourceType;
+  }
 
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
-
-    public ActivityType getActivityType() {
-        return activityType;
-    }
-
-    public void setActivityType(ActivityType activityType) {
-        this.activityType = activityType;
-    }
-
-    public ResourceType getResourceType() {
-        return resourceType;
-    }
-
-    public void setResourceType(ResourceType resourceType) {
-        this.resourceType = resourceType;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof PDLActivityEntry)) {
-            return false;
-        }
-        PDLActivityEntry pdlActivityEntry = (PDLActivityEntry) o;
-        return Objects.equals(patientId, pdlActivityEntry.patientId)
-            && activityType == pdlActivityEntry.activityType
-            && resourceType == pdlActivityEntry.resourceType;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(patientId, activityType, resourceType);
-    }
-
+  @Override
+  public int hashCode() {
+    return Objects.hash(patientId, activityType, resourceType);
+  }
 }

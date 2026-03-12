@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -18,21 +18,18 @@
  */
 package se.inera.intyg.rehabstod.web.controller.api.dto;
 
-/**
- * Created by eriklupander on 2017-06-19.
- */
+/** Created by eriklupander on 2017-06-19. */
 public class GivePdlLoggingConsentRequest {
 
-    private boolean consentGiven;
+  private boolean consentGiven;
 
-    public GivePdlLoggingConsentRequest() {
-    }
+  public GivePdlLoggingConsentRequest() {}
 
-    public boolean isConsentGiven() {
-        return consentGiven;
-    }
+  public boolean isConsentGiven() {
+    return consentGiven;
+  }
 
-    public void setConsentGiven(boolean consentGiven) {
-        this.consentGiven = consentGiven;
-    }
+  public void setConsentGiven(boolean consentGiven) {
+    this.consentGiven = consentGiven;
+  }
 }

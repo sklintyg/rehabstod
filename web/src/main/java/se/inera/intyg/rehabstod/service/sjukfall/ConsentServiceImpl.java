@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -38,57 +38,68 @@ import se.riv.informationsecurity.authorization.consent.v2.ActorType;
 @Service("consentService")
 public class ConsentServiceImpl implements ConsentService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+  private static final Logger LOG =
+      LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
-    @Autowired
-    private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
+  @Autowired private SamtyckestjanstIntegrationService samtyckestjanstIntegrationService;
 
-    @Override
-    public LocalDateTime giveConsent(Personnummer personnummer, boolean onlyCurrentUser, String representedBy,
-        LocalDateTime consentFrom, LocalDateTime consentTo, RehabstodUser user) {
+  @Override
+  public LocalDateTime giveConsent(
+      Personnummer personnummer,
+      boolean onlyCurrentUser,
+      String representedBy,
+      LocalDateTime consentFrom,
+      LocalDateTime consentTo,
+      RehabstodUser user) {
 
-        LocalDateTime registrationDate = LocalDateTime.now();
-        ActionType registrationAction = createActionType(user, registrationDate);
+    LocalDateTime registrationDate = LocalDateTime.now();
+    ActionType registrationAction = createActionType(user, registrationDate);
 
-        String userHsaId = onlyCurrentUser ? user.getHsaId() : null;
-        String vgHsaId = user.getValdVardgivare().getId();
-        String veHsaId = getCareUnit(user);
+    String userHsaId = onlyCurrentUser ? user.getHsaId() : null;
+    String vgHsaId = user.getValdVardgivare().getId();
+    String veHsaId = getCareUnit(user);
 
-        try {
-            LOG.debug("Calling Samtyckestjänsten - registering consent.");
-            samtyckestjanstIntegrationService.registerConsent(vgHsaId, veHsaId,
-                personnummer, userHsaId, representedBy,
-                consentFrom, consentTo, registrationAction);
+    try {
+      LOG.debug("Calling Samtyckestjänsten - registering consent.");
+      samtyckestjanstIntegrationService.registerConsent(
+          vgHsaId,
+          veHsaId,
+          personnummer,
+          userHsaId,
+          representedBy,
+          consentFrom,
+          consentTo,
+          registrationAction);
 
-        } catch (Exception e) {
-            LOG.error("INTEGRATION_CONSENT_SERVICE: Fatal error - message is '{}'", e.getMessage());
-            registrationDate = null;
-        }
-
-        return registrationDate;
+    } catch (Exception e) {
+      LOG.error("INTEGRATION_CONSENT_SERVICE: Fatal error - message is '{}'", e.getMessage());
+      registrationDate = null;
     }
 
-    private String getCareUnit(RehabstodUser user) {
-        final SelectableVardenhet unit = user.getValdVardenhet();
-        if (unit instanceof Mottagning) {
-            return ((Mottagning) unit).getParentHsaId();
-        }
-        return unit.getId();
-    }
+    return registrationDate;
+  }
 
-    private ActionType createActionType(RehabstodUser user, LocalDateTime registrationDate) {
-        ActionType registrationAction = new ActionType();
-        registrationAction.setRegisteredBy(createActorType(user));
-        registrationAction.setRegistrationDate(registrationDate);
-        registrationAction.setRequestedBy(createActorType(user));
-        registrationAction.setRequestDate(registrationDate);
-        return registrationAction;
+  private String getCareUnit(RehabstodUser user) {
+    final SelectableVardenhet unit = user.getValdVardenhet();
+    if (unit instanceof Mottagning) {
+      return ((Mottagning) unit).getParentHsaId();
     }
+    return unit.getId();
+  }
 
-    private ActorType createActorType(RehabstodUser user) {
-        ActorType actorType = new ActorType();
-        actorType.setEmployeeId(user.getHsaId());
-        actorType.setAssignmentName(user.getSelectedMedarbetarUppdragNamn());
-        return actorType;
-    }
+  private ActionType createActionType(RehabstodUser user, LocalDateTime registrationDate) {
+    ActionType registrationAction = new ActionType();
+    registrationAction.setRegisteredBy(createActorType(user));
+    registrationAction.setRegistrationDate(registrationDate);
+    registrationAction.setRequestedBy(createActorType(user));
+    registrationAction.setRequestDate(registrationDate);
+    return registrationAction;
+  }
+
+  private ActorType createActorType(RehabstodUser user) {
+    ActorType actorType = new ActorType();
+    actorType.setEmployeeId(user.getHsaId());
+    actorType.setAssignmentName(user.getSelectedMedarbetarUppdragNamn());
+    return actorType;
+  }
 }

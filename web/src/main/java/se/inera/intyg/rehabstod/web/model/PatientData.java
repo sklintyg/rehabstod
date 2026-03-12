@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -28,207 +28,207 @@ import se.inera.intyg.rehabstod.integration.srs.model.RiskSignal;
  */
 public class PatientData {
 
-    private String vardgivareId;
-    private String vardgivareNamn;
-    private String vardenhetNamn;
-    private String vardenhetId;
+  private String vardgivareId;
+  private String vardgivareNamn;
+  private String vardenhetNamn;
+  private String vardenhetId;
 
-    private Patient patient;
+  private Patient patient;
 
-    private Diagnos diagnos;
-    private List<Diagnos> bidiagnoser;
+  private Diagnos diagnos;
+  private List<Diagnos> bidiagnoser;
 
-    private LocalDate start;
-    private LocalDate slut;
+  private LocalDate start;
+  private LocalDate slut;
 
-    private LocalDateTime signeringsTidpunkt;
+  private LocalDateTime signeringsTidpunkt;
 
-    private int dagar;
+  private int dagar;
 
-    private List<Integer> grader;
+  private List<Integer> grader;
 
-    private Lakare lakare;
+  private Lakare lakare;
 
-    private List<String> sysselsattning;
+  private List<String> sysselsattning;
 
-    private boolean aktivtIntyg;
+  private boolean aktivtIntyg;
 
-    private String intygsId;
-    private Integer obesvaradeKompl;
-    private Integer unansweredOther;
+  private String intygsId;
+  private Integer obesvaradeKompl;
+  private Integer unansweredOther;
 
-    private RiskSignal riskSignal;
+  private RiskSignal riskSignal;
 
-    private boolean otherVardgivare;
-    private boolean otherVardenhet;
+  private boolean otherVardgivare;
+  private boolean otherVardenhet;
 
-    // - - - getters and setters
+  // - - - getters and setters
 
-    public String getVardgivareId() {
-        return vardgivareId;
-    }
+  public String getVardgivareId() {
+    return vardgivareId;
+  }
 
-    public void setVardgivareId(String vardgivareId) {
-        this.vardgivareId = vardgivareId;
-    }
+  public void setVardgivareId(String vardgivareId) {
+    this.vardgivareId = vardgivareId;
+  }
 
-    public String getVardgivareNamn() {
-        return vardgivareNamn;
-    }
+  public String getVardgivareNamn() {
+    return vardgivareNamn;
+  }
 
-    public void setVardgivareNamn(String vardgivareNamn) {
-        this.vardgivareNamn = vardgivareNamn;
-    }
+  public void setVardgivareNamn(String vardgivareNamn) {
+    this.vardgivareNamn = vardgivareNamn;
+  }
 
-    public String getVardenhetNamn() {
-        return vardenhetNamn;
-    }
+  public String getVardenhetNamn() {
+    return vardenhetNamn;
+  }
 
-    public void setVardenhetNamn(String vardenhetNamn) {
-        this.vardenhetNamn = vardenhetNamn;
-    }
+  public void setVardenhetNamn(String vardenhetNamn) {
+    this.vardenhetNamn = vardenhetNamn;
+  }
 
-    public String getVardenhetId() {
-        return vardenhetId;
-    }
+  public String getVardenhetId() {
+    return vardenhetId;
+  }
 
-    public void setVardenhetId(String vardenhetId) {
-        this.vardenhetId = vardenhetId;
-    }
+  public void setVardenhetId(String vardenhetId) {
+    this.vardenhetId = vardenhetId;
+  }
 
-    public Patient getPatient() {
-        return patient;
-    }
+  public Patient getPatient() {
+    return patient;
+  }
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
+  public void setPatient(Patient patient) {
+    this.patient = patient;
+  }
 
-    public Diagnos getDiagnos() {
-        return diagnos;
-    }
+  public Diagnos getDiagnos() {
+    return diagnos;
+  }
 
-    public void setDiagnos(Diagnos diagnos) {
-        this.diagnos = diagnos;
-    }
+  public void setDiagnos(Diagnos diagnos) {
+    this.diagnos = diagnos;
+  }
 
-    public List<Diagnos> getBidiagnoser() {
-        return bidiagnoser;
-    }
+  public List<Diagnos> getBidiagnoser() {
+    return bidiagnoser;
+  }
 
-    public void setBidiagnoser(List<Diagnos> bidiagnoser) {
-        this.bidiagnoser = bidiagnoser;
-    }
+  public void setBidiagnoser(List<Diagnos> bidiagnoser) {
+    this.bidiagnoser = bidiagnoser;
+  }
 
-    public LocalDate getStart() {
-        return start;
-    }
+  public LocalDate getStart() {
+    return start;
+  }
 
-    public void setStart(LocalDate start) {
-        this.start = start;
-    }
+  public void setStart(LocalDate start) {
+    this.start = start;
+  }
 
-    public LocalDate getSlut() {
-        return slut;
-    }
+  public LocalDate getSlut() {
+    return slut;
+  }
 
-    public void setSlut(LocalDate slut) {
-        this.slut = slut;
-    }
+  public void setSlut(LocalDate slut) {
+    this.slut = slut;
+  }
 
-    public LocalDateTime getSigneringsTidpunkt() {
-        return signeringsTidpunkt;
-    }
+  public LocalDateTime getSigneringsTidpunkt() {
+    return signeringsTidpunkt;
+  }
 
-    public void setSigneringsTidpunkt(LocalDateTime signeringsTidpunkt) {
-        this.signeringsTidpunkt = signeringsTidpunkt;
-    }
+  public void setSigneringsTidpunkt(LocalDateTime signeringsTidpunkt) {
+    this.signeringsTidpunkt = signeringsTidpunkt;
+  }
 
-    public int getDagar() {
-        return dagar;
-    }
+  public int getDagar() {
+    return dagar;
+  }
 
-    public void setDagar(int dagar) {
-        this.dagar = dagar;
-    }
+  public void setDagar(int dagar) {
+    this.dagar = dagar;
+  }
 
-    public List<Integer> getGrader() {
-        return grader;
-    }
+  public List<Integer> getGrader() {
+    return grader;
+  }
 
-    public void setGrader(List<Integer> grader) {
-        this.grader = grader;
-    }
+  public void setGrader(List<Integer> grader) {
+    this.grader = grader;
+  }
 
-    public Lakare getLakare() {
-        return lakare;
-    }
+  public Lakare getLakare() {
+    return lakare;
+  }
 
-    public void setLakare(Lakare lakare) {
-        this.lakare = lakare;
-    }
+  public void setLakare(Lakare lakare) {
+    this.lakare = lakare;
+  }
 
-    public List<String> getSysselsattning() {
-        return sysselsattning;
-    }
+  public List<String> getSysselsattning() {
+    return sysselsattning;
+  }
 
-    public void setSysselsattning(List<String> sysselsattning) {
-        this.sysselsattning = sysselsattning;
-    }
+  public void setSysselsattning(List<String> sysselsattning) {
+    this.sysselsattning = sysselsattning;
+  }
 
-    public boolean isAktivtIntyg() {
-        return aktivtIntyg;
-    }
+  public boolean isAktivtIntyg() {
+    return aktivtIntyg;
+  }
 
-    public void setAktivtIntyg(boolean aktivtIntyg) {
-        this.aktivtIntyg = aktivtIntyg;
-    }
+  public void setAktivtIntyg(boolean aktivtIntyg) {
+    this.aktivtIntyg = aktivtIntyg;
+  }
 
-    public String getIntygsId() {
-        return intygsId;
-    }
+  public String getIntygsId() {
+    return intygsId;
+  }
 
-    public void setIntygsId(String intygsId) {
-        this.intygsId = intygsId;
-    }
+  public void setIntygsId(String intygsId) {
+    this.intygsId = intygsId;
+  }
 
-    public RiskSignal getRiskSignal() {
-        return riskSignal;
-    }
+  public RiskSignal getRiskSignal() {
+    return riskSignal;
+  }
 
-    public void setRiskSignal(RiskSignal riskSignal) {
-        this.riskSignal = riskSignal;
-    }
+  public void setRiskSignal(RiskSignal riskSignal) {
+    this.riskSignal = riskSignal;
+  }
 
-    public boolean isOtherVardgivare() {
-        return otherVardgivare;
-    }
+  public boolean isOtherVardgivare() {
+    return otherVardgivare;
+  }
 
-    public void setOtherVardgivare(boolean otherVardgivare) {
-        this.otherVardgivare = otherVardgivare;
-    }
+  public void setOtherVardgivare(boolean otherVardgivare) {
+    this.otherVardgivare = otherVardgivare;
+  }
 
-    public boolean isOtherVardenhet() {
-        return otherVardenhet;
-    }
+  public boolean isOtherVardenhet() {
+    return otherVardenhet;
+  }
 
-    public void setOtherVardenhet(boolean otherVardenhet) {
-        this.otherVardenhet = otherVardenhet;
-    }
+  public void setOtherVardenhet(boolean otherVardenhet) {
+    this.otherVardenhet = otherVardenhet;
+  }
 
-    public Integer getObesvaradeKompl() {
-        return obesvaradeKompl;
-    }
+  public Integer getObesvaradeKompl() {
+    return obesvaradeKompl;
+  }
 
-    public void setObesvaradeKompl(Integer obesvaradeKompl) {
-        this.obesvaradeKompl = obesvaradeKompl;
-    }
+  public void setObesvaradeKompl(Integer obesvaradeKompl) {
+    this.obesvaradeKompl = obesvaradeKompl;
+  }
 
-    public Integer getUnansweredOther() {
-        return unansweredOther;
-    }
+  public Integer getUnansweredOther() {
+    return unansweredOther;
+  }
 
-    public void setUnansweredOther(Integer unansweredOther) {
-        this.unansweredOther = unansweredOther;
-    }
+  public void setUnansweredOther(Integer unansweredOther) {
+    this.unansweredOther = unansweredOther;
+  }
 }

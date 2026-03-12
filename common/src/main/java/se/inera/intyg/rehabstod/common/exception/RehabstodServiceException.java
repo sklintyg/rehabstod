@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Inera AB (http://www.inera.se)
+ * Copyright (C) 2026 Inera AB (http://www.inera.se)
  *
  * This file is part of sklintyg (https://github.com/sklintyg).
  *
@@ -20,14 +20,14 @@ package se.inera.intyg.rehabstod.common.exception;
 
 public class RehabstodServiceException extends RuntimeException {
 
-    private final RehabstodErrorCodeEnum errorCode;
+  private final RehabstodErrorCodeEnum errorCode;
 
-    public RehabstodServiceException(RehabstodErrorCodeEnum errorCode, String message) {
-        super(message);
-        this.errorCode = errorCode;
-    }
+  public RehabstodServiceException(RehabstodErrorCodeEnum errorCode, String message) {
+    super(message);
+    this.errorCode = errorCode;
+  }
 
-    public RehabstodErrorCodeEnum getErrorCode() {
-        return errorCode;
-    }
+  public RehabstodErrorCodeEnum getErrorCode() {
+    return errorCode;
+  }
 }
